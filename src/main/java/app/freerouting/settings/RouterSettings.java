@@ -31,7 +31,8 @@ public class RouterSettings implements Serializable {
   @SerializedName("allowed_via_types")
   public boolean vias_allowed = true;
   /**
-   * If true, the trace width at static pins smaller the trace width will be lowered automatically to the pin with, if necessary.
+   * If true, the trace width at static pins smaller the trace width will be
+   * lowered automatically to the pin with, if necessary.
    */
   @SerializedName("automatic_neckdown")
   public boolean automatic_neckdown = true;
@@ -47,9 +48,6 @@ public class RouterSettings implements Serializable {
       .availableProcessors() - 1);
   @SerializedName("random_seed")
   public transient Long random_seed = new Random().nextLong();
-  // This is auto-progress's Interval, Set to 0 means disabled.
-  @SerializedName("progress_interval")
-  public transient int progress_interval = 1000;
   // The starting and current pass number.
   private transient int start_pass_no = 1;
   // The stopping pass number.
@@ -63,7 +61,8 @@ public class RouterSettings implements Serializable {
   }
 
   /**
-   * Creates a new instance of AutorouteSettings with default values and @p_layer_count layers.
+   * Creates a new instance of AutorouteSettings with default values
+   * and @p_layer_count layers.
    */
   public RouterSettings(int p_layer_count) {
     setLayerCount(p_layer_count);
@@ -80,7 +79,8 @@ public class RouterSettings implements Serializable {
 
     int layer_count = p_board.get_layer_count();
 
-    // additional costs against  preferred direction with 1 digit behind the decimal point.
+    // additional costs against preferred direction with 1 digit behind the decimal
+    // point.
     double horizontal_add_costs_against_preferred_dir = 0.1 * Math.round(10 * horizontal_width / vertical_width);
 
     double vertical_add_costs_against_preferred_dir = 0.1 * Math.round(10 * vertical_width / horizontal_width);
@@ -152,9 +152,12 @@ public class RouterSettings implements Serializable {
     result.ignoreNetClasses = this.ignoreNetClasses.clone();
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     System.arraycopy(this.isLayerActive, 0, result.isLayerActive, 0, isLayerActive.length);
-    System.arraycopy(this.isPreferredDirectionHorizontalOnLayer, 0, result.isPreferredDirectionHorizontalOnLayer, 0, isPreferredDirectionHorizontalOnLayer.length);
-    System.arraycopy(this.scoring.preferredDirectionTraceCost, 0, result.scoring.preferredDirectionTraceCost, 0, scoring.preferredDirectionTraceCost.length);
-    System.arraycopy(this.scoring.undesiredDirectionTraceCost, 0, result.scoring.undesiredDirectionTraceCost, 0, scoring.undesiredDirectionTraceCost.length);
+    System.arraycopy(this.isPreferredDirectionHorizontalOnLayer, 0, result.isPreferredDirectionHorizontalOnLayer, 0,
+        isPreferredDirectionHorizontalOnLayer.length);
+    System.arraycopy(this.scoring.preferredDirectionTraceCost, 0, result.scoring.preferredDirectionTraceCost, 0,
+        scoring.preferredDirectionTraceCost.length);
+    System.arraycopy(this.scoring.undesiredDirectionTraceCost, 0, result.scoring.undesiredDirectionTraceCost, 0,
+        scoring.undesiredDirectionTraceCost.length);
     result.fanout.enabled = this.fanout.enabled;
     result.enabled = this.enabled;
     result.optimizer.enabled = this.optimizer.enabled;
@@ -166,7 +169,6 @@ public class RouterSettings implements Serializable {
     result.random_seed = this.random_seed;
     result.start_pass_no = this.start_pass_no;
     result.stop_pass_no = this.stop_pass_no;
-    result.progress_interval = this.progress_interval;
     return result;
   }
 
@@ -349,14 +351,16 @@ public class RouterSettings implements Serializable {
   }
 
   /**
-   * If true, the trace width at static pins smaller the trace width will be lowered automatically to the pin with, if necessary.
+   * If true, the trace width at static pins smaller the trace width will be
+   * lowered automatically to the pin with, if necessary.
    */
   public boolean get_automatic_neckdown() {
     return this.automatic_neckdown;
   }
 
   /**
-   * If true, the trace width at static pins smaller the trace width will be lowered automatically to the pin with, if necessary.
+   * If true, the trace width at static pins smaller the trace width will be
+   * lowered automatically to the pin with, if necessary.
    */
   public void set_automatic_neckdown(boolean p_value) {
     this.automatic_neckdown = p_value;

@@ -45,19 +45,6 @@ public class Freerouting {
   public static GlobalSettings globalSettings;
   private static Server apiServer; // API server instance
 
-  private static void DisplayProgress(RoutingJob routingJob) {
-    try{
-      BoardStatistics job = new BoardStatistics(routingJob.board);
-      float completePercent = (1.0f - (job.connections.incompleteCount / (float)job.connections.maximumCount)) * 100.0f;
-      Integer completed = job.connections.maximumCount - job.connections.incompleteCount;
-      FRLogger.info(String.format("[%.2f%%] Completed: %d Total: %d Length: %.2f %s Vias: %d",
-          completePercent, completed, job.connections.maximumCount, job.traces.totalLength, job.unit, job.vias.totalCount),
-          null);
-    } catch (NullPointerException e){
-      // Maybe it will throw NullPointer Exception, just catch them
-    }
-  }
-
   private static void InitializeCLI(GlobalSettings globalSettings) {
     if ((globalSettings.design_input_filename == null) || (globalSettings.design_output_filename == null)) {
       FRLogger.error(
@@ -100,16 +87,7 @@ public class Freerouting {
     // Wait for the RoutingJobScheduler to do its work
     while ((routingJob.state != RoutingJobState.COMPLETED) && (routingJob.state != RoutingJobState.TERMINATED)) {
       try {
-        // NOTE: progress_interval too long leads to the thread wait too long
-        // NOTE: but it's safe because anyway it will sleep >= 500ms
-        // NOTE: Maybe it's not a good idea :-)
-        // NOTE: But it works :-)
         Thread.sleep(500);
-        if(routingJob.routerSettings.progress_interval > 0 && routingJob.state == RoutingJobState.RUNNING){ 
-          // progress_interval = 0 means disabled
-          Thread.sleep(routingJob.routerSettings.progress_interval);
-          DisplayProgress(routingJob); // display in the last to ensure progress entirely
-        }
       } catch (InterruptedException _) {
         routingJob.state = RoutingJobState.CANCELLED;
         break;
@@ -479,7 +457,8 @@ public class Freerouting {
 
     // check if the user wants to see the help only
     if (globalSettings.show_help_option) {
-      // fix bug: just display 'command_line_help'
+      // WindowsWelcome is used here because the command_line_help is in its resource
+      // file
       TextManager ctm = new TextManager(WindowWelcome.class, globalSettings.currentLocale);
       IO.print(ctm.getText("command_line_help"));
       System.exit(0);
