@@ -115,26 +115,14 @@ public class DesignRulesChecker {
       }
 
       // If there are multiple connected sets, we have unconnected items
-      // Only report if there are exactly 2 sets (one pair of unconnected groups)
-      // This matches KiCad's behavior of reporting specific unconnected pairs
-      if (connectedSets.size() == 2) {
-        // Find representative items from each set (prefer Pins over other items)
+      // Report only ONE unconnected item per net (matching KiCad's behavior)
+      if (connectedSets.size() >= 2) {
+        // Find representative items from the first two sets
         Item item1 = findRepresentativeItem(connectedSets.get(0));
         Item item2 = findRepresentativeItem(connectedSets.get(1));
 
         if (item1 != null && item2 != null) {
           unconnectedItems.add(new UnconnectedItems(item1, item2));
-        }
-      } else if (connectedSets.size() > 2) {
-        // Multiple disconnected groups - report each pair
-        // This is a simplified approach; KiCad might use a more sophisticated algorithm
-        for (int i = 0; i < connectedSets.size() - 1; i++) {
-          Item item1 = findRepresentativeItem(connectedSets.get(i));
-          Item item2 = findRepresentativeItem(connectedSets.get(i + 1));
-
-          if (item1 != null && item2 != null) {
-            unconnectedItems.add(new UnconnectedItems(item1, item2));
-          }
         }
       }
     }

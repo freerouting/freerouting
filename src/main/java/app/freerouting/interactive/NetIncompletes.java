@@ -1,6 +1,7 @@
 package app.freerouting.interactive;
 
 import app.freerouting.board.BasicBoard;
+import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Item;
 import app.freerouting.board.Pin;
 import app.freerouting.boardgraphics.GraphicsContext;
@@ -55,7 +56,14 @@ public class NetIncompletes {
     Collection<Item> filtered_items = new LinkedList<>();
     int dangling_count = 0;
     int unconnected_count = 0;
+    int conduction_area_count = 0;
+    int conduction_area_filtered_count = 0;
     for (Item item : p_net_items) {
+      // Track ConductionArea items
+      if (item instanceof ConductionArea) {
+        conduction_area_count++;
+      }
+
       // Skip dangling vias and traces - they're violations, not incomplete
       // connections
       if (item.is_tail()) {
@@ -64,11 +72,30 @@ public class NetIncompletes {
       }
       // Skip items with no contacts - they're isolated/unconnected, not incomplete
       // connections
-      if (item.get_normal_contacts().isEmpty()) {
+      // EXCEPT for ConductionArea which acts as a connection medium
+      if (!(item instanceof ConductionArea) && item.get_normal_contacts().isEmpty()) {
         unconnected_count++;
         continue;
       }
+
+      // Track if ConductionArea made it through the filter
+      if (item instanceof ConductionArea) {
+        conduction_area_filtered_count++;
+      }
+
       filtered_items.add(item);
+    }
+
+    // Debug logging for ConductionArea filtering
+    if (conduction_area_count > 0) {
+      app.freerouting.logger.FRLogger.warn(
+          String.format(
+              "NetIncompletes: Net %s has %d ConductionArea items, %d passed filter, %d total items, %d after filtering",
+              this.net.name,
+              conduction_area_count,
+              conduction_area_filtered_count,
+              p_net_items.size(),
+              filtered_items.size()));
     }
 
     // Create an array of Item-connected_set pairs.
