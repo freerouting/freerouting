@@ -94,9 +94,6 @@ public class Freerouting {
       }
     }
 
-    // Print the serialized routingJob statistics to the console
-    IO.println(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)));
-
     // Save the output file
     if (routingJob.state == RoutingJobState.COMPLETED) {
       try {
@@ -460,7 +457,10 @@ public class Freerouting {
 
     // check if the user wants to see the help only
     if (globalSettings.show_help_option) {
-      IO.print(tm.getText("command_line_help"));
+      // WindowsWelcome is used here because the command_line_help is in its resource
+      // file
+      TextManager ctm = new TextManager(WindowWelcome.class, globalSettings.currentLocale);
+      IO.print(ctm.getText("command_line_help"));
       System.exit(0);
     }
 

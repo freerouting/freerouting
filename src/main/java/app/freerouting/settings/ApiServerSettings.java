@@ -10,7 +10,7 @@ public class ApiServerSettings implements Serializable {
   @SerializedName("running")
   public transient Boolean isRunning = false;
   @SerializedName("http_allowed")
-  public Boolean isHttpAllowed = false;
+  public Boolean isHttpAllowed = true;
   @SerializedName("endpoints")
   public String[] endpoints = {"https://0.0.0.0:37864"};
   @SerializedName("keys_location")
