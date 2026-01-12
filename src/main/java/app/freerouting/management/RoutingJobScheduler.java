@@ -23,7 +23,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * This singleton class is responsible for managing the jobs that will be processed by the router. The jobs are stored in a priority queue where the jobs with the highest priority are processed first.
+ * This singleton class is responsible for managing the jobs that will be
+ * processed by the router. The jobs are stored in a priority queue where the
+ * jobs with the highest priority are processed first.
  * There is only one instance of this class in the Freerouting process.
  */
 public class RoutingJobScheduler {
@@ -35,11 +37,11 @@ public class RoutingJobScheduler {
   // Private constructor to prevent instantiation
   private RoutingJobScheduler() {
     // start a loop to process the jobs on another thread
-    Thread loopThread = new Thread(() ->
-    {
+    Thread loopThread = new Thread(() -> {
       while (true) {
         try {
-          // loop through jobs with the READY_TO_START state, order them according to their priority and start them up to the maximum number of parallel jobs
+          // loop through jobs with the READY_TO_START state, order them according to
+          // their priority and start them up to the maximum number of parallel jobs
           while (jobs
               .stream()
               .count() > 0) {
@@ -51,7 +53,8 @@ public class RoutingJobScheduler {
               jobsArray = jobs.toArray(RoutingJob[]::new);
             }
 
-            // start the jobs up to the maximum number of parallel jobs (and make a copy of the list to avoid concurrent modification)
+            // start the jobs up to the maximum number of parallel jobs (and make a copy of
+            // the list to avoid concurrent modification)
             for (RoutingJob job : jobsArray) {
               if (job.state == RoutingJobState.READY_TO_START) {
                 int parallelJobs = (int) jobs
@@ -69,8 +72,26 @@ public class RoutingJobScheduler {
                   // load the board from the input into a RoutingBoard object
                   if (job.input.format == FileFormat.DSN) {
                     HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
-                    boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
+                    boardManager.loadFromSpecctraDsn(job.input.getData(), null,
+                        new ItemIdentificationNumberGenerator());
                     job.board = boardManager.get_routing_board();
+
+                    // Load SES file if specified
+                    if (globalSettings.design_session_filename != null) {
+                      try {
+                        java.io.File sesFile = new java.io.File(globalSettings.design_session_filename);
+                        if (sesFile.exists()) {
+                          FRLogger.info("Loading SES file: " + globalSettings.design_session_filename);
+                          java.io.FileInputStream sesStream = new java.io.FileInputStream(sesFile);
+                          app.freerouting.designforms.specctra.SesFileReader.read(sesStream, job.board);
+                          sesStream.close();
+                        } else {
+                          FRLogger.warn("SES file not found: " + globalSettings.design_session_filename);
+                        }
+                      } catch (Exception e) {
+                        FRLogger.error("Failed to load SES file", e);
+                      }
+                    }
                   } else {
                     FRLogger.warn("Only DSN format is supported as an input.");
                     job.state = RoutingJobState.INVALID;
@@ -163,7 +184,8 @@ public class RoutingJobScheduler {
             .getSession(job.sessionId.toString());
 
         if (session == null) {
-          FRLogger.error("Failed to save job in session '%s' to disk, because the session does not exist.".formatted(job.sessionId), null);
+          FRLogger.error("Failed to save job in session '%s' to disk, because the session does not exist."
+              .formatted(job.sessionId), null);
         }
 
         sessionIdString = session.id.toString();
@@ -171,7 +193,8 @@ public class RoutingJobScheduler {
 
         saveJob("U-" + UUIDtoShortCode(session.userId), "S-" + UUIDtoShortCode(session.id), job);
       } catch (IOException e) {
-        FRLogger.error("Failed to save job for user '%s' in session '%s' to disk.".formatted(userIdString, sessionIdString), e);
+        FRLogger.error(
+            "Failed to save job for user '%s' in session '%s' to disk.".formatted(userIdString, sessionIdString), e);
       }
     }
 
@@ -184,10 +207,12 @@ public class RoutingJobScheduler {
         .resolve("data")
         .resolve(userFolder);
 
-    // Make sure that we have the directory structure in place, and create it if it doesn't exist
+    // Make sure that we have the directory structure in place, and create it if it
+    // doesn't exist
     Files.createDirectories(userFolderPath);
 
-    // Check if we already have a directory that has a name with the ending of sessionFolder
+    // Check if we already have a directory that has a name with the ending of
+    // sessionFolder
     Path sessionFolderPath = Files
         .list(userFolderPath)
         .filter(Files::isDirectory)
@@ -200,7 +225,8 @@ public class RoutingJobScheduler {
 
     if (sessionFolderPath == null) {
       // List all directories in the user folder and check if they start with a number
-      // If they do, then they are job folders, and we can get the highest number and increment it
+      // If they do, then they are job folders, and we can get the highest number and
+      // increment it
       int jobFolderCount = Files
           .list(userFolderPath)
           .filter(Files::isDirectory)
@@ -219,7 +245,8 @@ public class RoutingJobScheduler {
     Files.createDirectories(sessionFolderPath);
 
     // Save the job to the session's folder using ISO standard date and time format
-    String jobFilename = "FRJ_" + TextManager.convertInstantToString(job.createdAt) + "__J-" + UUIDtoShortCode(job.id) + ".json";
+    String jobFilename = "FRJ_" + TextManager.convertInstantToString(job.createdAt) + "__J-" + UUIDtoShortCode(job.id)
+        + ".json";
     Path jobFilePath = sessionFolderPath.resolve(jobFilename);
 
     try (Writer writer = Files.newBufferedWriter(jobFilePath, StandardCharsets.UTF_8)) {
@@ -238,7 +265,8 @@ public class RoutingJobScheduler {
           .readAllBytes());
     }
 
-    // Save the output file if the filename is defined and there is data stored in it
+    // Save the output file if the filename is defined and there is data stored in
+    // it
     if (job.output != null && job.output.getFilename() != null && !job.output
         .getFilename()
         .isEmpty() && job.output.getData() != null) {
@@ -253,7 +281,8 @@ public class RoutingJobScheduler {
    * Returns the position of the job in the queue.
    *
    * @param job The job to get the position of.
-   * @return The position of the job in the queue or -1 if the job is not in the queue. 0 means the job is next in line.
+   * @return The position of the job in the queue or -1 if the job is not in the
+   *         queue. 0 means the job is next in line.
    */
   public int getQueuePosition(RoutingJob job) {
     synchronized (jobs) {

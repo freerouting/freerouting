@@ -1,0 +1,640 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-01-12T09:32:28.699277+01:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.1.2-SNAPSHOT",
+  "source": "Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn",
+  "unconnected_items": [
+    {
+      "description": "Unconnected items: Pin [GND] and Pin [GND]",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 168.30870000000002,
+            "y": -103.2239
+          },
+          "uuid": "929"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 159.0087,
+            "y": -103.2239
+          },
+          "uuid": "946"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [Net-(C15-Pad1)] and Pin [Net-(C15-Pad1)]",
+      "items": [
+        {
+          "description": "Pin [Net-(C15-Pad1)]",
+          "pos": {
+            "x": 154.3762,
+            "y": -105.7778
+          },
+          "uuid": "324"
+        },
+        {
+          "description": "Pin [Net-(C15-Pad1)]",
+          "pos": {
+            "x": 154.3762,
+            "y": -100.6978
+          },
+          "uuid": "328"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [Net-(D5-Pad2)] and Pin [Net-(D5-Pad2)]",
+      "items": [
+        {
+          "description": "Pin [Net-(D5-Pad2)]",
+          "pos": {
+            "x": 182.35,
+            "y": -105.8
+          },
+          "uuid": "847"
+        },
+        {
+          "description": "Pin [Net-(D5-Pad2)]",
+          "pos": {
+            "x": 140.55,
+            "y": -107.5
+          },
+          "uuid": "564"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [+5V] and Pin [+5V]",
+      "items": [
+        {
+          "description": "Pin [+5V]",
+          "pos": {
+            "x": 168.30870000000002,
+            "y": -100.6839
+          },
+          "uuid": "927"
+        },
+        {
+          "description": "Pin [+5V]",
+          "pos": {
+            "x": 175.954,
+            "y": -117.729
+          },
+          "uuid": "464"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [Net-(J1-Pad1)] and Pin [Net-(J1-Pad1)]",
+      "items": [
+        {
+          "description": "Pin [Net-(J1-Pad1)]",
+          "pos": {
+            "x": 140.55,
+            "y": -101.252
+          },
+          "uuid": "769"
+        },
+        {
+          "description": "Pin [Net-(J1-Pad1)]",
+          "pos": {
+            "x": 168.30870000000002,
+            "y": -105.76389999999999
+          },
+          "uuid": "931"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [Net-(J5-Pad1)] and Pin [Net-(J5-Pad1)]",
+      "items": [
+        {
+          "description": "Pin [Net-(J5-Pad1)]",
+          "pos": {
+            "x": 168.3377,
+            "y": -107.03389999999999
+          },
+          "uuid": "281"
+        },
+        {
+          "description": "Pin [Net-(J5-Pad1)]",
+          "pos": {
+            "x": 139.684,
+            "y": -117.729
+          },
+          "uuid": "449"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [Net-(J22-Pad1)] and Pin [Net-(J22-Pad1)]",
+      "items": [
+        {
+          "description": "Pin [Net-(J22-Pad1)]",
+          "pos": {
+            "x": 179.05,
+            "y": -111.5
+          },
+          "uuid": "660"
+        },
+        {
+          "description": "Pin [Net-(J22-Pad1)]",
+          "pos": {
+            "x": 120.185,
+            "y": -117.729
+          },
+          "uuid": "181"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [Net-(R3-Pad1)] and Pin [Net-(R3-Pad1)]",
+      "items": [
+        {
+          "description": "Pin [Net-(R3-Pad1)]",
+          "pos": {
+            "x": 159.0087,
+            "y": -107.03389999999999
+          },
+          "uuid": "943"
+        },
+        {
+          "description": "Pin [Net-(R3-Pad1)]",
+          "pos": {
+            "x": 131.812,
+            "y": -101.51
+          },
+          "uuid": "195"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [Net-(U2-Pad22)] and Pin [Net-(U2-Pad22)]",
+      "items": [
+        {
+          "description": "Pin [Net-(U2-Pad22)]",
+          "pos": {
+            "x": 154.3762,
+            "y": -110.8578
+          },
+          "uuid": "320"
+        },
+        {
+          "description": "Pin [Net-(U2-Pad22)]",
+          "pos": {
+            "x": 159.0377,
+            "y": -110.84389999999999
+          },
+          "uuid": "297"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    }
+  ],
+  "violations": [
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [GND] on Bottom, length 0.1000 mm",
+          "pos": {
+            "x": 170.148,
+            "y": -98.14989999999999
+          },
+          "uuid": "2372"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [GND] on Top, length 0.5510 mm",
+          "pos": {
+            "x": 145.3515,
+            "y": -109.588
+          },
+          "uuid": "2340"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [GND] on Top, length 0.3734 mm",
+          "pos": {
+            "x": 152.043,
+            "y": -104.088
+          },
+          "uuid": "2331"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [GND] on Bottom, length 1.3718 mm",
+          "pos": {
+            "x": 152.66,
+            "y": -107.106
+          },
+          "uuid": "2307"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [GND] on Top, length 0.7470 mm",
+          "pos": {
+            "x": 166.5115,
+            "y": -101.319
+          },
+          "uuid": "2293"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [GND] on Top, length 0.1881 mm",
+          "pos": {
+            "x": 152.1085,
+            "y": -108.2275
+          },
+          "uuid": "2286"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [Net-(C15-Pad1)] on Bottom, length 0.5170 mm",
+          "pos": {
+            "x": 145.3345,
+            "y": -109.588
+          },
+          "uuid": "2098"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [Net-(C15-Pad1)] on Top, length 0.5910 mm",
+          "pos": {
+            "x": 153.9245,
+            "y": -100.698
+          },
+          "uuid": "2064"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [Net-(C15-Pad1)] on Top, length 0.3130 mm",
+          "pos": {
+            "x": 154.2195,
+            "y": -100.698
+          },
+          "uuid": "2063"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [+5V] on Top, length 0.9250 mm",
+          "pos": {
+            "x": 169.7375,
+            "y": -98.76039999999999
+          },
+          "uuid": "1869"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [+5V] on Top, length 3.1594 mm",
+          "pos": {
+            "x": 171.317,
+            "y": -108.768
+          },
+          "uuid": "1867"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [+5V] on Top, length 3.4320 mm",
+          "pos": {
+            "x": 157.195,
+            "y": -111.987
+          },
+          "uuid": "1861"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [+5V] on Bottom, length 0.5060 mm",
+          "pos": {
+            "x": 154.629,
+            "y": -105.778
+          },
+          "uuid": "1857"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [+5V] on Top, length 0.4810 mm",
+          "pos": {
+            "x": 154.6165,
+            "y": -112.128
+          },
+          "uuid": "1856"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [+5V] on Top, length 3.7760 mm",
+          "pos": {
+            "x": 127.587,
+            "y": -99.605
+          },
+          "uuid": "1846"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [+5V] on Top, length 4.3660 mm",
+          "pos": {
+            "x": 122.081,
+            "y": -98.1704
+          },
+          "uuid": "1844"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [+5V] on Top, length 1.5655 mm",
+          "pos": {
+            "x": 170.7535,
+            "y": -101.2685
+          },
+          "uuid": "1825"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [+5V] on Top, length 4.7640 mm",
+          "pos": {
+            "x": 136.694,
+            "y": -99.605
+          },
+          "uuid": "1811"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [+5V] on Top, length 3.5670 mm",
+          "pos": {
+            "x": 131.2585,
+            "y": -100.875
+          },
+          "uuid": "1809"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [+5V] on Bottom, length 0.1660 mm",
+          "pos": {
+            "x": 156.521,
+            "y": -98.7883
+          },
+          "uuid": "1802"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [Net-(J6-Pad1)] on Bottom, length 0.1750 mm",
+          "pos": {
+            "x": 168.2215,
+            "y": -110.844
+          },
+          "uuid": "1694"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [Net-(R4-Pad1)] on Top, length 0.1140 mm",
+          "pos": {
+            "x": 154.433,
+            "y": -108.318
+          },
+          "uuid": "1411"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [Net-(U1-Pad24)] on Top, length 0.1820 mm",
+          "pos": {
+            "x": 159.038,
+            "y": -113.293
+          },
+          "uuid": "1240"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [Net-(U1-Pad3)] on Bottom, length 0.5510 mm",
+          "pos": {
+            "x": 168.0335,
+            "y": -101.954
+          },
+          "uuid": "1137"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    },
+    {
+      "description": "Via is not connected or connected on only one layer",
+      "items": [
+        {
+          "description": "Via [+5V]",
+          "pos": {
+            "x": 176.234,
+            "y": -109.885
+          },
+          "uuid": "2522"
+        }
+      ],
+      "severity": "warning",
+      "type": "via_dangling"
+    },
+    {
+      "description": "Via is not connected or connected on only one layer",
+      "items": [
+        {
+          "description": "Via [Net-(J9-Pad1)]",
+          "pos": {
+            "x": 149.702,
+            "y": -108.585
+          },
+          "uuid": "2498"
+        }
+      ],
+      "severity": "warning",
+      "type": "via_dangling"
+    },
+    {
+      "description": "Via is not connected or connected on only one layer",
+      "items": [
+        {
+          "description": "Via [Net-(J9-Pad1)]",
+          "pos": {
+            "x": 149.265,
+            "y": -110.88
+          },
+          "uuid": "2497"
+        }
+      ],
+      "severity": "warning",
+      "type": "via_dangling"
+    },
+    {
+      "description": "Via is not connected or connected on only one layer",
+      "items": [
+        {
+          "description": "Via [Net-(J22-Pad1)]",
+          "pos": {
+            "x": 177.174,
+            "y": -112.249
+          },
+          "uuid": "2486"
+        }
+      ],
+      "severity": "warning",
+      "type": "via_dangling"
+    }
+  ],
+  "schematic_parity": []
+}

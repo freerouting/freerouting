@@ -82,6 +82,10 @@ public class GlobalSettings implements Serializable {
    */
   @Deprecated
   public transient String design_rules_filename;
+  /**
+   * The design_session_filename field stores the optional Specctra session file (.ses) path provided via the -de command line argument.
+   */
+  public transient String design_session_filename;
   public transient Locale currentLocale = Locale.getDefault();
 
   public GlobalSettings() {
@@ -121,7 +125,8 @@ public class GlobalSettings implements Serializable {
 
     GlobalSettings defaultSettings = new GlobalSettings();
     if (loadedSettings != null) {
-      // If the version numbers are different, we must save the file again to update it
+      // If the version numbers are different, we must save the file again to update
+      // it
       boolean isSaveNeeded = !loadedSettings.version.equals(defaultSettings.version);
 
       // Apply all the loaded settings to the result if they are not null
@@ -140,7 +145,8 @@ public class GlobalSettings implements Serializable {
    * Saves the settings to the default JSON settings file
    */
   public static void saveAsJson(GlobalSettings globalSettings) throws IOException {
-    // Make sure that we have the directory structure in place, and create it if it doesn't exist
+    // Make sure that we have the directory structure in place, and create it if it
+    // doesn't exist
     Files.createDirectories(configurationFilePath.getParent());
 
     // Write the settings to the file
@@ -150,8 +156,10 @@ public class GlobalSettings implements Serializable {
   }
 
   /*
-   * Sets a property value in the settings, and it permanently saves it into the settings file.
-   * Property names are in the format of "section.property" (eg. "router.max_passes", "gui:input_directory" or "profile-email").
+   * Sets a property value in the settings, and it permanently saves it into the
+   * settings file.
+   * Property names are in the format of "section.property" (eg.
+   * "router.max_passes", "gui:input_directory" or "profile-email").
    */
   public static Boolean setDefaultValue(String propertyName, String newValue) {
     try {
@@ -187,9 +195,12 @@ public class GlobalSettings implements Serializable {
   }
 
   /*
-   * Sets a property value in the settings for the current process, but it does so without permanently saving it into the settings file.
-   * For scenarios where the settings also needs to be saved in the settings file, use the save() method instead.
-   * Property names are in the format of "section.property" (eg. "router.max_passes", "gui:input_directory" or "profile-email").
+   * Sets a property value in the settings for the current process, but it does so
+   * without permanently saving it into the settings file.
+   * For scenarios where the settings also needs to be saved in the settings file,
+   * use the save() method instead.
+   * Property names are in the format of "section.property" (eg.
+   * "router.max_passes", "gui:input_directory" or "profile-email").
    */
   public Boolean setValue(String propertyName, String newValue) {
     try {
@@ -217,9 +228,61 @@ public class GlobalSettings implements Serializable {
             setValue(parts[0], parts[1]);
           }
         } else if (p_args[i].startsWith("-de")) {
-          // the design file is provided
+          // the design file(s) are provided - can be DSN, SES, and/or RULES files
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            design_input_filename = p_args[i + 1];
+            // Collect all file arguments (they can be separated by + or spaces)
+            StringBuilder filesBuilder = new StringBuilder();
+            int j = i + 1;
+            while (j < p_args.length && !p_args[j].startsWith("-")) {
+              if (filesBuilder.length() > 0) {
+                filesBuilder.append(" ");
+              }
+              filesBuilder.append(p_args[j]);
+              j++;
+            }
+
+            // Split by + or space to get individual files
+            String filesString = filesBuilder.toString();
+            String[] files = filesString.split("[+\\s]+");
+
+            // Track which file types we've seen to ensure only one of each
+            boolean hasDsn = false;
+            boolean hasSes = false;
+            boolean hasRules = false;
+
+            // Process each file and identify its type by extension
+            for (String file : files) {
+              file = file.trim();
+              if (file.isEmpty()) {
+                continue;
+              }
+
+              String lowerFile = file.toLowerCase();
+              if (lowerFile.endsWith(".dsn")) {
+                if (hasDsn) {
+                  FRLogger.warn("Multiple DSN files provided in -de argument. Only the last one will be used.");
+                }
+                design_input_filename = file;
+                hasDsn = true;
+              } else if (lowerFile.endsWith(".ses")) {
+                if (hasSes) {
+                  FRLogger.warn("Multiple SES files provided in -de argument. Only the last one will be used.");
+                }
+                design_session_filename = file;
+                hasSes = true;
+              } else if (lowerFile.endsWith(".rules")) {
+                if (hasRules) {
+                  FRLogger.warn("Multiple RULES files provided in -de argument. Only the last one will be used.");
+                }
+                design_rules_filename = file;
+                hasRules = true;
+              } else {
+                FRLogger.warn("Unknown file type in -de argument: " + file + ". Expected .dsn, .ses, or .rules");
+              }
+            }
+
+            // Skip the processed arguments
+            i = j - 1;
           }
         } else if (p_args[i].startsWith("-di")) {
           // the design directory is provided
@@ -278,15 +341,16 @@ public class GlobalSettings implements Serializable {
             String op = p_args[i + 1]
                 .toLowerCase()
                 .trim();
-            routerSettings.optimizer.boardUpdateStrategy = "global".equals(op) ? BoardUpdateStrategy.GLOBAL_OPTIMAL : ("hybrid".equals(op) ? BoardUpdateStrategy.HYBRID : BoardUpdateStrategy.GREEDY);
+            routerSettings.optimizer.boardUpdateStrategy = "global".equals(op) ? BoardUpdateStrategy.GLOBAL_OPTIMAL
+                : ("hybrid".equals(op) ? BoardUpdateStrategy.HYBRID : BoardUpdateStrategy.GREEDY);
           }
         } else if (p_args[i].startsWith("-is")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             String op = p_args[i + 1]
                 .toLowerCase()
                 .trim();
-            routerSettings.optimizer.itemSelectionStrategy =
-                op.indexOf("seq") == 0 ? ItemSelectionStrategy.SEQUENTIAL : (op.indexOf("rand") == 0 ? ItemSelectionStrategy.RANDOM : ItemSelectionStrategy.PRIORITIZED);
+            routerSettings.optimizer.itemSelectionStrategy = op.indexOf("seq") == 0 ? ItemSelectionStrategy.SEQUENTIAL
+                : (op.indexOf("rand") == 0 ? ItemSelectionStrategy.RANDOM : ItemSelectionStrategy.PRIORITIZED);
           }
         } else if (p_args[i].startsWith("-hr")) { // hybrid ratio
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
@@ -310,27 +374,20 @@ public class GlobalSettings implements Serializable {
           } else if (localeString.startsWith("zh")) {
             currentLocale = Locale.SIMPLIFIED_CHINESE;
           } else if (localeString.startsWith("hi")) {
-            //current_locale = Locale.HINDI;
             currentLocale = Locale.forLanguageTag("hi-IN");
           } else if (localeString.startsWith("es")) {
-            //current_locale = Locale.SPANISH;
             currentLocale = Locale.forLanguageTag("es-ES");
           } else if (localeString.startsWith("it")) {
-            //current_locale = Locale.ITALIAN;
             currentLocale = Locale.forLanguageTag("it-IT");
           } else if (localeString.startsWith("fr")) {
             currentLocale = Locale.FRENCH;
           } else if (localeString.startsWith("ar")) {
-            //current_locale = Locale.ARABIC;
             currentLocale = Locale.forLanguageTag("ar-EG");
           } else if (localeString.startsWith("bn")) {
-            //current_locale = Locale.BENGALI;
             currentLocale = Locale.forLanguageTag("bn-BD");
           } else if (localeString.startsWith("ru")) {
-            //current_locale = Locale.RUSSIAN;
             currentLocale = Locale.forLanguageTag("ru-RU");
           } else if (localeString.startsWith("pt")) {
-            //current_locale = Locale.PORTUGUESE;
             currentLocale = Locale.forLanguageTag("pt-PT");
           } else if (localeString.startsWith("ja")) {
             currentLocale = Locale.JAPANESE;

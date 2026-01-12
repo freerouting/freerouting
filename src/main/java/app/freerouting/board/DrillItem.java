@@ -30,19 +30,23 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
    */
   private Point center;
   /**
-   * Contains the precalculated minimal width of the shapes of this DrillItem on all layers. If {@literal <} 0, the value is not yet calculated
+   * Contains the precalculated minimal width of the shapes of this DrillItem on
+   * all layers. If {@literal <} 0, the value is not yet calculated
    */
   private double precalculated_min_width = -1;
   /**
-   * Contains the precalculated first layer, where this DrillItem contains a pad shape. If {@literal <} 0, the value is not yet calculated
+   * Contains the precalculated first layer, where this DrillItem contains a pad
+   * shape. If {@literal <} 0, the value is not yet calculated
    */
   private int precalculated_first_layer = -1;
   /**
-   * Contains the precalculated last layer, where this DrillItem contains a pad shape. If {@literal <} 0, the value is not yet calculated
+   * Contains the precalculated last layer, where this DrillItem contains a pad
+   * shape. If {@literal <} 0, the value is not yet calculated
    */
   private int precalculated_last_layer = -1;
 
-  public DrillItem(Point p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, FixedState p_fixed_state, BasicBoard p_board) {
+  public DrillItem(Point p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no,
+      FixedState p_fixed_state, BasicBoard p_board) {
     super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
     this.center = p_center;
   }
@@ -86,12 +90,13 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   @Override
   public void move_by(Vector p_vector) {
     Point old_center = this.get_center();
-    // remember the contact situation of this drillitem  to traces on each layer
+    // remember the contact situation of this drillitem to traces on each layer
     Set<TraceInfo> contact_trace_info = new TreeSet<>();
     Collection<Item> contacts = this.get_normal_contacts();
     for (Item curr_contact : contacts) {
       if (curr_contact instanceof Trace curr_trace) {
-        TraceInfo curr_trace_info = new TraceInfo(curr_trace.get_layer(), curr_trace.get_half_width(), curr_trace.clearance_class_no());
+        TraceInfo curr_trace_info = new TraceInfo(curr_trace.get_layer(), curr_trace.get_half_width(),
+            curr_trace.clearance_class_no());
         contact_trace_info.add(curr_trace_info);
       }
     }
@@ -121,7 +126,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       connect_points[i] = it3.next();
     }
     for (TraceInfo curr_trace_info : contact_trace_info) {
-      board.insert_trace(connect_points, curr_trace_info.layer, curr_trace_info.half_width, this.net_no_arr, curr_trace_info.clearance_type, FixedState.NOT_FIXED);
+      board.insert_trace(connect_points, curr_trace_info.layer, curr_trace_info.half_width, this.net_no_arr,
+          curr_trace_info.clearance_type, FixedState.NOT_FIXED);
     }
   }
 
@@ -193,7 +199,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   /**
-   * Returns the smallest distance from the center to the border of the shape on any layer.
+   * Returns the smallest distance from the center to the border of the shape on
+   * any layer.
    */
   public double smallest_radius() {
     double result = Double.MAX_VALUE;
@@ -256,6 +263,9 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   @Override
   public Set<Item> get_normal_contacts() {
     Point drill_center = this.get_center();
+    // Use tolerance for connectivity detection: min_width/2 + 1
+    // This matches the tolerance used in Trace (half_width + 1)
+    int tolerance = (int) (this.min_width() / 2) + 1;
     TileShape search_shape = TileShape.get_instance(drill_center);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, -1);
     Set<Item> result = new TreeSet<>();
@@ -265,11 +275,13 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       }
       if (curr_item != this && curr_item.shares_net(this) && curr_item.shares_layer(this)) {
         if (curr_item instanceof Trace curr_trace) {
-          if (drill_center.equals(curr_trace.first_corner()) || drill_center.equals(curr_trace.last_corner())) {
+          // Check if points are within tolerance distance
+          if (isWithinTolerance(drill_center, curr_trace.first_corner(), tolerance) ||
+              isWithinTolerance(drill_center, curr_trace.last_corner(), tolerance)) {
             result.add(curr_item);
           }
         } else if (curr_item instanceof DrillItem curr_drill_item) {
-          if (drill_center.equals(curr_drill_item.get_center())) {
+          if (isWithinTolerance(drill_center, curr_drill_item.get_center(), tolerance)) {
             result.add(curr_item);
           }
         } else if (curr_item instanceof ConductionArea curr_area) {
@@ -280,6 +292,25 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       }
     }
     return result;
+  }
+
+  /**
+   * Checks if two points are within the specified tolerance distance.
+   * Uses Manhattan distance for efficiency.
+   */
+  private boolean isWithinTolerance(Point p1, Point p2, int tolerance) {
+    if (p1 == null || p2 == null) {
+      return false;
+    }
+    // Convert to FloatPoint for distance calculation
+    FloatPoint fp1 = p1.to_float();
+    FloatPoint fp2 = p2.to_float();
+
+    // Use Manhattan distance (|x1-x2| + |y1-y2|) which is faster than Euclidean
+    // and sufficient for connectivity detection
+    double dx = Math.abs(fp1.x - fp2.x);
+    double dy = Math.abs(fp1.y - fp2.y);
+    return (dx + dy) <= tolerance;
   }
 
   @Override
@@ -327,7 +358,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   /**
-   * Return the minimal width of the shapes of this DrillItem on all signal layers.
+   * Return the minimal width of the shapes of this DrillItem on all signal
+   * layers.
    */
   public double min_width() {
     if (this.precalculated_min_width < 0) {

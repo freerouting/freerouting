@@ -45,8 +45,11 @@ public class BatchAutorouterThread extends StoppableThread {
   private final boolean useSlowAlgorithm;
 
   public FloatLine latest_air_line;
+  private int routedCount = 0;
+  private int failedCount = 0;
 
-  public BatchAutorouterThread(RoutingBoard board, List<Item> autorouteItemList, int passNo, boolean useSlowAlgorithm, RouterSettings routerSettings, int startRipupCosts, int tracePullTightAccuracy,
+  public BatchAutorouterThread(RoutingBoard board, List<Item> autorouteItemList, int passNo, boolean useSlowAlgorithm,
+      RouterSettings routerSettings, int startRipupCosts, int tracePullTightAccuracy,
       boolean p_remove_unconnected_vias, boolean p_with_preferred_directions) {
     this.board = board;
     this.settings = routerSettings;
@@ -71,7 +74,8 @@ public class BatchAutorouterThread extends StoppableThread {
     this.retain_autoroute_database = false;
   }
 
-  // Calculates the shortest distance between two sets of items, specifically between Pin and Via items (pins and vias are connectable DrillItems)
+  // Calculates the shortest distance between two sets of items, specifically
+  // between Pin and Via items (pins and vias are connectable DrillItems)
   private static FloatLine calc_airline(Collection<Item> p_from_items, Collection<Item> p_to_items) {
     FloatPoint from_corner = null;
     FloatPoint to_corner = null;
@@ -207,9 +211,11 @@ public class BatchAutorouterThread extends StoppableThread {
   /**
    * Finds the closest points between two traces
    *
-   * @return an array with two FloatPoints: [point_on_first_trace, point_on_second_trace]
+   * @return an array with two FloatPoints: [point_on_first_trace,
+   *         point_on_second_trace]
    */
-  private static FloatPoint[] find_closest_points_between_traces(PolylineTrace p_first_trace, PolylineTrace p_second_trace) {
+  private static FloatPoint[] find_closest_points_between_traces(PolylineTrace p_first_trace,
+      PolylineTrace p_second_trace) {
     double min_distance = Double.MAX_VALUE;
     FloatPoint[] result = new FloatPoint[2];
 
@@ -328,6 +334,16 @@ public class BatchAutorouterThread extends StoppableThread {
         break;
       }
 
+      // Check if this item should be skipped due to repeated failures
+      if (this.board.failureLog.shouldSkip(curr_item)) {
+        Net net = board.rules.nets.get(curr_item.get_net_no(0));
+        String netName = (net != null) ? net.name : "net#" + curr_item.get_net_no(0);
+        FRLogger.debug("Skipping " + curr_item.getClass().getSimpleName() + " on net '" + netName
+            + "' - exceeded failure threshold (" + board.failureLog.getFailureCount(curr_item) + " failures)");
+        --items_to_go_count;
+        continue;
+      }
+
       // Let's go through all nets of this item
       for (int i = 0; i < curr_item.net_count(); i++) {
         // If the user requested to stop the auto-router, we stop it
@@ -341,17 +357,34 @@ public class BatchAutorouterThread extends StoppableThread {
         // Do the auto-routing step for this item (typically PolylineTrace or Pin)
         SortedSet<Item> ripped_item_list = new TreeSet<>();
 
-        var autorouterResult = autoroute_item(board, curr_item, curr_item.get_net_no(i), ripped_item_list, passNo, useSlowAlgorithm);
+        var autorouterResult = autoroute_item(board, curr_item, curr_item.get_net_no(i), ripped_item_list, passNo,
+            useSlowAlgorithm);
         if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
           // The item was successfully routed
           ++routed;
-        } else if ((autorouterResult.state == AutorouteAttemptState.ALREADY_CONNECTED) || (autorouterResult.state == AutorouteAttemptState.NO_UNCONNECTED_NETS) || (autorouterResult.state
-            == AutorouteAttemptState.CONNECTED_TO_PLANE)) {
+          this.routedCount++;
+        } else if ((autorouterResult.state == AutorouteAttemptState.ALREADY_CONNECTED)
+            || (autorouterResult.state == AutorouteAttemptState.NO_UNCONNECTED_NETS)
+            || (autorouterResult.state == AutorouteAttemptState.CONNECTED_TO_PLANE)) {
           // The item doesn't need to be routed
           ++skipped;
         } else {
+          Net net = board.rules.nets.get(curr_item.get_net_no(i));
+          String netName = (net != null) ? net.name : "net#" + curr_item.get_net_no(i);
+
+          // Record the failure
+          this.board.failureLog.recordFailure(curr_item, passNo, autorouterResult.state, autorouterResult.details);
+
           FRLogger.debug("Autorouter " + autorouterResult.details);
+          // Log details when we're down to last few items or item has many failures
+          int failureCount = board.failureLog.getFailureCount(curr_item);
+          if (items_to_go_count <= 5 || failureCount >= 3) {
+            FRLogger.debug("Pass #" + passNo + ": Failed to route " + curr_item.getClass().getSimpleName()
+                + " on net '" + netName + "' (" + items_to_go_count + " items remaining, "
+                + failureCount + " failures). State: " + autorouterResult.state);
+          }
           ++not_routed;
+          this.failedCount++;
         }
         --items_to_go_count;
         ripped_item_count += ripped_item_list.size();
@@ -377,8 +410,10 @@ public class BatchAutorouterThread extends StoppableThread {
     return this.board;
   }
 
-  // Tries to route an item on a specific net. Returns true, if the item is routed.
-  private AutorouteAttemptResult autoroute_item(RoutingBoard board, Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no, boolean useSlowAlgorithm) {
+  // Tries to route an item on a specific net. Returns true, if the item is
+  // routed.
+  private AutorouteAttemptResult autoroute_item(RoutingBoard board, Item p_item, int p_route_net_no,
+      SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no, boolean useSlowAlgorithm) {
     try {
       boolean contains_plane = false;
 
@@ -396,8 +431,10 @@ public class BatchAutorouterThread extends StoppableThread {
         curr_via_costs = settings.get_via_costs();
       }
 
-      // Get and calculate the auto-router settings based on the board and net we are working on
-      AutorouteControl autoroute_control = new AutorouteControl(board, p_route_net_no, settings, curr_via_costs, trace_cost_arr);
+      // Get and calculate the auto-router settings based on the board and net we are
+      // working on
+      AutorouteControl autoroute_control = new AutorouteControl(board, p_route_net_no, settings, curr_via_costs,
+          trace_cost_arr);
       autoroute_control.ripup_allowed = true;
       autoroute_control.ripup_costs = start_ripup_costs * p_ripup_pass_no;
       autoroute_control.remove_unconnected_vias = remove_unconnected_vias;
@@ -435,14 +472,18 @@ public class BatchAutorouterThread extends StoppableThread {
       TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
 
       // Initialize the auto-router engine
-      AutorouteEngine autoroute_engine = board.init_autoroute(p_route_net_no, autoroute_control.trace_clearance_class_no, this, time_limit, this.retain_autoroute_database, useSlowAlgorithm);
+      AutorouteEngine autoroute_engine = board.init_autoroute(p_route_net_no,
+          autoroute_control.trace_clearance_class_no, this, time_limit, this.retain_autoroute_database,
+          useSlowAlgorithm);
 
       // Do the auto-routing between the two sets of items
-      AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set, autoroute_control, p_ripped_item_list);
+      AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
+          autoroute_control, p_ripped_item_list);
 
       // Update the changed area of the board
       if (autoroute_result.state == AutorouteAttemptState.ROUTED) {
-        board.opt_changed_area(new int[0], null, trace_pull_tight_accuracy, autoroute_control.trace_costs, this, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+        board.opt_changed_area(new int[0], null, trace_pull_tight_accuracy, autoroute_control.trace_costs, this,
+            TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
       }
 
       return autoroute_result;
@@ -455,7 +496,8 @@ public class BatchAutorouterThread extends StoppableThread {
   private void remove_tails(Item.StopConnectionOption p_stop_connection_option) {
     board.start_marking_changed_area();
     board.remove_trace_tails(-1, p_stop_connection_option);
-    board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, this.trace_cost_arr, this, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+    board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, this.trace_cost_arr, this,
+        TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
   }
 
   @Override
@@ -468,9 +510,11 @@ public class BatchAutorouterThread extends StoppableThread {
   }
 
   /**
-   * Fires a board updated event. This happens when the board has been updated, e.g. after a route has been added.
+   * Fires a board updated event. This happens when the board has been updated,
+   * e.g. after a route has been added.
    */
-  public void fireBoardUpdatedEvent(BoardStatistics boardStatistics, RouterCounters routerCounters, RoutingBoard board) {
+  public void fireBoardUpdatedEvent(BoardStatistics boardStatistics, RouterCounters routerCounters,
+      RoutingBoard board) {
     BoardUpdatedEvent event = new BoardUpdatedEvent(this, boardStatistics, routerCounters, board);
     for (BoardUpdatedEventListener listener : boardUpdatedEventListeners) {
       listener.onBoardUpdatedEvent(event);
@@ -479,5 +523,13 @@ public class BatchAutorouterThread extends StoppableThread {
 
   public RoutingBoard getBoard() {
     return board;
+  }
+
+  public int getRoutedCount() {
+    return routedCount;
+  }
+
+  public int getFailedCount() {
+    return failedCount;
   }
 }

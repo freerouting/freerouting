@@ -4,7 +4,7 @@
     "date": "2025-11-24T16:55:49+0100",
     "kicad_version": "9.0.1",
     "schematic_parity": [],
-    "source": "Test.kicad_pcb",
+    "source": "Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn",
     "unconnected_items": [
         {
             "description": "Missing connection between items",
