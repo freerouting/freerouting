@@ -30,7 +30,6 @@ public class TestBasedOnAnIssue {
 
   protected RoutingJob GetRoutingJob(String filename) {
     RoutingJob job = GetRoutingJob(filename, null);
-    job.routerSettings.jobTimeoutString = "00:05:00";
     return job;
   }
 
@@ -43,9 +42,6 @@ public class TestBasedOnAnIssue {
 
     // Create a new job
     RoutingJob job = new RoutingJob(session.id);
-    if (seed != null) {
-      job.routerSettings.random_seed = seed;
-    }
 
     // Look for the file in the current directory and its parent directories
     Path testDirectory = Path
@@ -79,6 +75,12 @@ public class TestBasedOnAnIssue {
       job.routerSettings.applyNewValuesFrom(jobSettings);
     } catch (IOException e) {
       throw new RuntimeException(testFile + " not found.", e);
+    }
+
+    job.routerSettings.jobTimeoutString = "00:01:00";
+    job.routerSettings.maxPasses = 100;
+    if (seed != null) {
+      job.routerSettings.random_seed = seed;
     }
 
     return job;
