@@ -115,14 +115,18 @@ public class DesignRulesChecker {
       }
 
       // If there are multiple connected sets, we have unconnected items
-      // Report only ONE unconnected item per net (matching KiCad's behavior)
+      // Report only ONE entry per net, but include items from the disconnected groups
       if (connectedSets.size() >= 2) {
         // Find representative items from the first two sets
         Item item1 = findRepresentativeItem(connectedSets.get(0));
         Item item2 = findRepresentativeItem(connectedSets.get(1));
 
         if (item1 != null && item2 != null) {
-          unconnectedItems.add(new UnconnectedItems(item1, item2));
+          // Include only items from the two disconnected groups for investigation
+          List<Item> unconnectedGroupItems = new ArrayList<>();
+          unconnectedGroupItems.addAll(connectedSets.get(0));
+          unconnectedGroupItems.addAll(connectedSets.get(1));
+          unconnectedItems.add(new UnconnectedItems(item1, item2, unconnectedGroupItems));
         }
       }
     }
@@ -316,38 +320,26 @@ public class DesignRulesChecker {
       return new DrcViolation(unconnectedItems.type, description, "warning", items);
     }
 
-    // Create items for from object
+    // Create items for all items from the unconnected net
+    // This provides better visibility of all affected components/pins
+    for (Item item : unconnectedItems.all_items) {
+      String itemDesc = getItemDescription(item);
+      var itemCenterOfGravity = item.bounding_box().centre_of_gravity();
+      DrcPosition itemPos = new DrcPosition(
+          convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
+          convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
+      String uuid = String.valueOf(item.get_id_no());
+      items.add(new DrcViolationItem(itemDesc, itemPos, uuid));
+    }
+
+    // Create violation description using the first two representative items
     String fromItemDesc = getItemDescription(unconnectedItems.first_item);
-    var fromItemCenterOfGravity = unconnectedItems.first_item
-        .bounding_box()
-        .centre_of_gravity();
-    DrcPosition fromItemPos = new DrcPosition(
-        convertCoordinate(fromItemCenterOfGravity.x, coordinateUnit),
-        convertCoordinate(fromItemCenterOfGravity.y, coordinateUnit));
-
-    // Use item IDs as UUIDs (they are unique within the board)
-    String fromUuid = String.valueOf(unconnectedItems.first_item.get_id_no());
-
-    items.add(new DrcViolationItem(fromItemDesc, fromItemPos, fromUuid));
-
     if (unconnectedItems.second_item != null) {
       String toItemDesc = getItemDescription(unconnectedItems.second_item);
-      var toItemCenterOfGravity = unconnectedItems.second_item
-          .bounding_box()
-          .centre_of_gravity();
-      DrcPosition toItemPos = new DrcPosition(
-          convertCoordinate(toItemCenterOfGravity.x, coordinateUnit),
-          convertCoordinate(toItemCenterOfGravity.y, coordinateUnit));
-      String toUuid = String.valueOf(unconnectedItems.second_item.get_id_no());
-      items.add(new DrcViolationItem(toItemDesc, toItemPos, toUuid));
-
-      // Create violation description
-      description = "Unconnected items: %s and %s".formatted(fromItemDesc, toItemDesc);
+      description = "Unconnected items: %s and %s (%d total items in net)".formatted(
+          fromItemDesc, toItemDesc, unconnectedItems.all_items.size());
     } else {
-      description = switch (unconnectedItems.type) {
-        case "via_dangling" -> "Dangling via: %s".formatted(fromItemDesc);
-        default -> "Unconnected item: %s".formatted(fromItemDesc);
-      };
+      description = "Unconnected item: %s".formatted(fromItemDesc);
     }
 
     return new DrcViolation(unconnectedItems.type, description, "warning", items);
