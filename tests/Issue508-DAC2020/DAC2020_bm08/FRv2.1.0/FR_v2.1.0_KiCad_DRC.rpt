@@ -1,0 +1,98 @@
+** Drc report for bm8.unrouted.kicad_pcb **
+** Created on 2026-01-11T17:57:47-0600 **
+
+** Found 22 DRC violations **
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1838 mm)
+    Rule: netclass 'Default'; error
+    @(146.3094 mm, 103.0778 mm): Pad 1 [Net-(U1-Pad1)] of U5 on Top
+    @(147.1884 mm, 103.9568 mm): Pad 24 [/SDA] of U5 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1838 mm)
+    Rule: netclass 'Default'; error
+    @(143.8094 mm, 103.0778 mm): Pad 6 [GND] of U5 on Top
+    @(142.9304 mm, 103.9568 mm): Pad 7 [Net-(C2-Pad2)] of U5 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1838 mm)
+    Rule: netclass 'Default'; error
+    @(142.9304 mm, 106.4568 mm): Pad 12 [Net-(U1-Pad12)] of U5 on Top
+    @(143.8094 mm, 107.3358 mm): Pad 13 [Net-(U1-Pad13)] of U5 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1838 mm)
+    Rule: netclass 'Default'; error
+    @(146.3094 mm, 107.3358 mm): Pad 18 [VDD] of U5 on Top
+    @(147.1884 mm, 106.4568 mm): Pad 19 [Net-(R1-Pad1)] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.3094 mm, 103.0778 mm): Pad 1 [Net-(U1-Pad1)] of U5 on Top
+    @(145.8094 mm, 103.0778 mm): Pad 2 [GND] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.3094 mm, 103.0778 mm): Pad 1 [Net-(U1-Pad1)] of U5 on Top
+    @(147.1884 mm, 103.9568 mm): Pad 24 [/SDA] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(143.8094 mm, 103.0778 mm): Pad 6 [GND] of U5 on Top
+    @(142.9304 mm, 103.9568 mm): Pad 7 [Net-(C2-Pad2)] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(142.9304 mm, 103.9568 mm): Pad 7 [Net-(C2-Pad2)] of U5 on Top
+    @(142.9304 mm, 104.4568 mm): Pad 8 [Net-(C1-Pad2)] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(142.9304 mm, 104.4568 mm): Pad 8 [Net-(C1-Pad2)] of U5 on Top
+    @(142.9304 mm, 104.9568 mm): Pad 9 [Net-(C1-Pad1)] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(142.9304 mm, 104.9568 mm): Pad 9 [Net-(C1-Pad1)] of U5 on Top
+    @(142.9304 mm, 105.4568 mm): Pad 10 [Net-(U1-Pad10)] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(142.9304 mm, 105.4568 mm): Pad 10 [Net-(U1-Pad10)] of U5 on Top
+    @(142.9304 mm, 105.9568 mm): Pad 11 [Net-(U1-Pad11)] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(142.9304 mm, 105.9568 mm): Pad 11 [Net-(U1-Pad11)] of U5 on Top
+    @(142.9304 mm, 106.4568 mm): Pad 12 [Net-(U1-Pad12)] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(142.9304 mm, 106.4568 mm): Pad 12 [Net-(U1-Pad12)] of U5 on Top
+    @(143.8094 mm, 107.3358 mm): Pad 13 [Net-(U1-Pad13)] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(143.8094 mm, 107.3358 mm): Pad 13 [Net-(U1-Pad13)] of U5 on Top
+    @(144.3094 mm, 107.3358 mm): Pad 14 [Net-(U1-Pad14)] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.3094 mm, 107.3358 mm): Pad 14 [Net-(U1-Pad14)] of U5 on Top
+    @(144.8094 mm, 107.3358 mm): Pad 15 [VDD] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.3094 mm, 107.3358 mm): Pad 18 [VDD] of U5 on Top
+    @(147.1884 mm, 106.4568 mm): Pad 19 [Net-(R1-Pad1)] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.1884 mm, 106.4568 mm): Pad 19 [Net-(R1-Pad1)] of U5 on Top
+    @(147.1884 mm, 105.9568 mm): Pad 20 [Net-(R2-Pad1)] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.1884 mm, 105.9568 mm): Pad 20 [Net-(R2-Pad1)] of U5 on Top
+    @(147.1884 mm, 105.4568 mm): Pad 21 [/SCL] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.1884 mm, 105.4568 mm): Pad 21 [/SCL] of U5 on Top
+    @(147.1884 mm, 104.9568 mm): Pad 22 [GND] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.1884 mm, 104.4568 mm): Pad 23 [GND] of U5 on Top
+    @(147.1884 mm, 103.9568 mm): Pad 24 [/SDA] of U5 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.4790 mm, 107.7604 mm): Pad 1 [Net-(R1-Pad1)] of U6 on Top
+    @(149.4790 mm, 109.4604 mm): Pad 2 [VDD] of U6 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(151.7396 mm, 107.7350 mm): Pad 1 [Net-(R2-Pad1)] of U7 on Top
+    @(151.7396 mm, 109.4350 mm): Pad 2 [VDD] of U7 on Top
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
