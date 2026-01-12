@@ -5,7 +5,6 @@ import app.freerouting.board.BoardLoader;
 import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
-import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.WindowWelcome;
@@ -14,7 +13,6 @@ import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import java.awt.Dimension;
@@ -45,12 +43,12 @@ public class Freerouting {
   public static GlobalSettings globalSettings;
   private static Server apiServer; // API server instance
 
-  private static void InitializeCLI(GlobalSettings globalSettings) {
+  private static boolean InitializeCLI(GlobalSettings globalSettings) {
     if ((globalSettings.design_input_filename == null) || (globalSettings.design_output_filename == null)) {
       FRLogger.error(
           "Both an input file and an output file must be specified with command line arguments if you are running in CLI mode.",
           null);
-      System.exit(1);
+      return false;
     }
 
     // Start a new Freerouting session
@@ -105,12 +103,14 @@ public class Freerouting {
         FRLogger.error("Couldn't save the output file '" + globalSettings.design_output_filename + "'", e);
       }
     }
+
+    return true;
   }
 
-  private static void InitializeDRC(GlobalSettings globalSettings) {
+  private static boolean InitializeDRC(GlobalSettings globalSettings) {
     if (globalSettings.design_input_filename == null) {
       FRLogger.error("An input file must be specified with -de argument in DRC mode.", null);
-      System.exit(1);
+      return false;
     }
 
     // Start a new Freerouting session
@@ -161,6 +161,8 @@ public class Freerouting {
       // Print to console
       IO.println(drcReportJson);
     }
+
+    return true;
   }
 
   private static void ShutdownApplication() {
@@ -487,13 +489,20 @@ public class Freerouting {
       }
     }
 
-    // We both GUI and API are disabled (or failed to start) we are in CLI mode
-    if (!globalSettings.guiSettings.isEnabled && !globalSettings.apiServerSettings.isEnabled) {
+    // If the GUI is disabled then we are in CLI mode
+    boolean cliResult = true;
+    if (!globalSettings.guiSettings.isEnabled) {
       if ((!globalSettings.routerSettings.enabled) && (globalSettings.drcSettings.enabled)) {
-        InitializeDRC(globalSettings);
+        cliResult = InitializeDRC(globalSettings);
       } else {
-        InitializeCLI(globalSettings);
+        cliResult = InitializeCLI(globalSettings);
       }
+    }
+
+    if ((!cliResult) && !globalSettings.apiServerSettings.isEnabled) {
+      ShutdownApplication();
+      FRLogger.traceExit("MainApplication.main()");
+      System.exit(1);
     }
 
     while (globalSettings.guiSettings.isRunning || globalSettings.apiServerSettings.isRunning) {
