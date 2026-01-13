@@ -243,7 +243,8 @@ public class MazeSearchAlgo {
         next_element_found = true;
         break;
       }
-      // Element already occupied, discard and continue
+      // Element already occupied, recycle and continue
+      MazeListElement.recycle(list_element);
     }
     if (!next_element_found) {
       return false;
@@ -410,7 +411,7 @@ public class MazeSearchAlgo {
               if (ripup_costs > 0) {
                 // delay the occupation by ripup to allow shoving the room by another door
                 // sections.
-                MazeListElement new_element = new MazeListElement(p_list_element.door,
+                MazeListElement new_element = MazeListElement.obtain(p_list_element.door,
                     p_list_element.section_no_of_door, p_list_element.backtrack_door,
                     p_list_element.section_no_of_backtrack_door,
                     p_list_element.expansion_value + ripup_costs, p_list_element.sorting_value + ripup_costs,
@@ -634,7 +635,7 @@ public class MazeSearchAlgo {
     boolean room_ripped = p_add_costs > 0 && p_adjustment == MazeSearchElement.Adjustment.NONE
         || p_from_element.already_checked && p_from_element.room_ripped;
 
-    MazeListElement new_element = new MazeListElement(p_door, p_section_no, p_from_element.door,
+    MazeListElement new_element = MazeListElement.obtain(p_door, p_section_no, p_from_element.door,
         p_from_element.section_no_of_door, expansion_value, sorting_value, next_room, p_shape_entry,
         room_ripped, p_adjustment, false);
     this.maze_expansion_list.add(new_element);
@@ -694,7 +695,7 @@ public class MazeSearchAlgo {
       expansion_value += ctrl.min_normal_via_cost;
     }
     double sorting_value = expansion_value + this.destination_distance.calculate(nearest_point, layer);
-    MazeListElement new_element = new MazeListElement(p_drill, section_no, new_backtrack_door,
+    MazeListElement new_element = MazeListElement.obtain(p_drill, section_no, new_backtrack_door,
         new_section_no_of_backtrack_door, expansion_value, sorting_value, null, shape_entry,
         p_from_element.room_ripped, MazeSearchElement.Adjustment.NONE, false);
     this.maze_expansion_list.add(new_element);
@@ -717,7 +718,7 @@ public class MazeSearchAlgo {
             ctrl.trace_costs[layer].vertical)
         + this.destination_distance.calculate(
             nearest_point, layer);
-    MazeListElement new_element = new MazeListElement(p_drill_page, layer, p_from_element.door,
+    MazeListElement new_element = MazeListElement.obtain(p_drill_page, layer, p_from_element.door,
         p_from_element.section_no_of_door, expansion_value, sorting_value, p_from_element.next_room,
         p_from_element.shape_entry, p_from_element.room_ripped, MazeSearchElement.Adjustment.NONE, false);
     this.maze_expansion_list.add(new_element);
@@ -868,7 +869,7 @@ public class MazeSearchAlgo {
       FloatPoint shape_entry_middle = p_list_element.shape_entry.a.middle_point(p_list_element.shape_entry.b);
       double sorting_value = expansion_value + this.destination_distance.calculate(shape_entry_middle, to_layer);
       int curr_room_index = to_layer - curr_drill.first_layer;
-      MazeListElement new_element = new MazeListElement(curr_drill, curr_room_index, curr_drill,
+      MazeListElement new_element = MazeListElement.obtain(curr_drill, curr_room_index, curr_drill,
           p_list_element.section_no_of_door, expansion_value, sorting_value,
           curr_drill.room_arr[curr_room_index], p_list_element.shape_entry, room_ripped,
           MazeSearchElement.Adjustment.NONE, false);
@@ -963,7 +964,7 @@ public class MazeSearchAlgo {
         FloatPoint curr_center = connection_shape.centre_of_gravity();
         FloatLine shape_entry = new FloatLine(curr_center, curr_center);
         double sorting_value = this.destination_distance.calculate(curr_center, curr_room.get_layer());
-        MazeListElement new_list_element = new MazeListElement(curr_door, 0, null, 0, 0, sorting_value, curr_room,
+        MazeListElement new_list_element = MazeListElement.obtain(curr_door, 0, null, 0, 0, sorting_value, curr_room,
             shape_entry, false, MazeSearchElement.Adjustment.NONE, false);
         maze_expansion_list.add(new_list_element);
         start_ok = true;
