@@ -1,6 +1,7 @@
 package app.freerouting.autoroute;
 
 import static java.util.Collections.shuffle;
+import java.util.Comparator;
 
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
@@ -339,8 +340,9 @@ public class BatchAutorouter extends NamedAlgorithm {
       // TODO: Start mutliple instances of the following part in parallel, wait for
       // the results and keep the best one
 
-      // Shuffle the items to route
-      shuffle(autoroute_item_list, this.random);
+      // Sort items by airline distance (shortest first) for deterministic routing
+      // This prioritizes local connections which typically route faster
+      autoroute_item_list.sort(Comparator.comparingDouble(this::calculateItemDistance));
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list) {
@@ -950,5 +952,76 @@ public class BatchAutorouter extends NamedAlgorithm {
       return String.valueOf((char) ('A' + firstLetterIndex)) + (char) ('A' + secondLetterIndex)
           + (char) ('A' + thirdLetterIndex);
     }
+  }
+
+  /**
+   * Calculates the airline distance for an item to be routed.
+   * Returns the shortest distance from the item to any item in its incomplete
+   * connections.
+   *
+   * @param p_item The item to calculate distance for
+   * @return The shortest airline distance, or Double.MAX_VALUE if no connections
+   *         exist
+   */
+  private double calculateItemDistance(Item p_item) {
+    if (p_item.net_count() == 0) {
+      return Double.MAX_VALUE;
+    }
+
+    // Get the first net number (items typically have one net)
+    int net_no = p_item.get_net_no(0);
+
+    // Get incomplete items for this net
+    Set<Item> unconnected_set = p_item.get_unconnected_set(net_no);
+    Set<Item> connected_set = p_item.get_connected_set(net_no);
+
+    if (unconnected_set.isEmpty()) {
+      return 0; // Already connected, prioritize
+    }
+
+    // Calculate minimum distance from connected items to unconnected items
+    return calculateMinDistance(connected_set.isEmpty() ? Set.of(p_item) : connected_set, unconnected_set);
+  }
+
+  /**
+   * Helper method to calculate the minimum distance between two sets of items.
+   */
+  private double calculateMinDistance(Collection<Item> p_from_items, Collection<Item> p_to_items) {
+    double min_distance = Double.MAX_VALUE;
+
+    for (Item from_item : p_from_items) {
+      FloatPoint from_point = getItemReferencePoint(from_item);
+      if (from_point == null)
+        continue;
+
+      for (Item to_item : p_to_items) {
+        FloatPoint to_point = getItemReferencePoint(to_item);
+        if (to_point == null)
+          continue;
+
+        double distance = from_point.distance(to_point);
+        if (distance < min_distance) {
+          min_distance = distance;
+        }
+      }
+    }
+
+    return min_distance;
+  }
+
+  /**
+   * Gets a representative point for an item (center for DrillItems, midpoint for
+   * traces).
+   */
+  private FloatPoint getItemReferencePoint(Item p_item) {
+    if (p_item instanceof DrillItem drillItem) {
+      return drillItem.get_center().to_float();
+    } else if (p_item instanceof PolylineTrace trace) {
+      // Use the midpoint of the trace as a reference
+      FloatPoint first = trace.first_corner().to_float();
+      FloatPoint last = trace.last_corner().to_float();
+      return new FloatPoint((first.x + last.x) / 2, (first.y + last.y) / 2);
+    }
+    return null;
   }
 }
