@@ -71,7 +71,21 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Time when the routing session started.
    */
+  /**
+   * Time when the routing session started.
+   */
   private Instant sessionStartTime;
+
+  private long lastBoardUpdateTimestamp = 0;
+
+  private boolean shouldFireBoardUpdate() {
+    long currentTime = System.currentTimeMillis();
+    if (currentTime - lastBoardUpdateTimestamp > 250) { // Limit updates to 4 times per second (250ms)
+      lastBoardUpdateTimestamp = currentTime;
+      return true;
+    }
+    return false;
+  }
 
   // Reusable collections to reduce memory churn (thread-safe as each thread has
   // its own BatchAutorouter instance)
@@ -453,17 +467,18 @@ public class BatchAutorouter extends NamedAlgorithm {
           --items_to_go_count;
           ripped_item_count += ripped_item_list.size();
 
-          BoardStatistics boardStatistics = board.get_statistics();
-          routerCounters.passCount = p_pass_no;
-          routerCounters.queuedToBeRoutedCount = items_to_go_count;
-          routerCounters.skippedCount = skipped;
-          routerCounters.rippedCount = ripped_item_count;
-          routerCounters.failedToBeRoutedCount = not_routed;
-          routerCounters.routedCount = routed;
-          routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
-
           PerformanceProfiler.start("autoroute_pass.fire_event(loop)");
-          this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
+          if (shouldFireBoardUpdate()) {
+            BoardStatistics boardStatistics = board.get_statistics();
+            routerCounters.passCount = p_pass_no;
+            routerCounters.queuedToBeRoutedCount = items_to_go_count;
+            routerCounters.skippedCount = skipped;
+            routerCounters.rippedCount = ripped_item_count;
+            routerCounters.failedToBeRoutedCount = not_routed;
+            routerCounters.routedCount = routed;
+            routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
+            this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
+          }
           PerformanceProfiler.end("autoroute_pass.fire_event(loop)");
         }
       }
@@ -477,6 +492,19 @@ public class BatchAutorouter extends NamedAlgorithm {
         remove_tails(Item.StopConnectionOption.FANOUT_VIA);
         PerformanceProfiler.end("autoroute_pass.remove_tails");
       }
+
+      // Fire final update for this pass
+      PerformanceProfiler.start("autoroute_pass.fire_event(final)");
+      BoardStatistics boardStatistics = board.get_statistics();
+      routerCounters.passCount = p_pass_no;
+      routerCounters.queuedToBeRoutedCount = items_to_go_count;
+      routerCounters.skippedCount = skipped;
+      routerCounters.rippedCount = ripped_item_count;
+      routerCounters.failedToBeRoutedCount = not_routed;
+      routerCounters.routedCount = routed;
+      routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
+      this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
+      PerformanceProfiler.end("autoroute_pass.fire_event(final)");
 
       // We are done with this pass
       this.air_line = null;
