@@ -9,7 +9,8 @@ param(
 
 # Test files to run
 $testFiles = @(
-    "Issue508-DAC2020_bm07.dsn"
+    "Issue508-DAC2020_bm05.dsn",
+    "Issue508-DAC2020_bm06.dsn"
 )
 
 # Results array
@@ -40,10 +41,16 @@ foreach ($testFile in $testFiles) {
     $fileSize = (Get-Item $dsnPath).Length
     $fileSizeKB = [math]::Round($fileSize / 1KB, 0)
     
+    # Clean up potentially leftover output files from previous runs
+    if (Test-Path $sesPath) {
+        Remove-Item $sesPath -Force
+    }
+    
     # Build command - INFO level logging, capture full output
     $cmd = "java -jar `"$JarPath`" -de `"$dsnPath`" -do `"$sesPath`" -mp $MaxPasses --router.job_timeout=`"$MaxTime`" --router.optimizer.enabled=false --gui.enabled=false --api_server.enabled=false -ll INFO"
     
     # Run test, capture output
+    $runAt = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $output = & cmd /c "$cmd 2>&1" | Out-String
     
     # Initialize metrics
@@ -97,7 +104,6 @@ foreach ($testFile in $testFiles) {
         # The summary says "started with X unrouted nets", not total nets. 
         # But we can try to parse total nets from earlier logs or JSON if present.
         # Actually JSON is likely still printed? Check debug output.
-        # Debug output had JSON at end? 
         # Looking at debug output... NO JSON at the end because we didn't use -do json? 
         # Wait, the previous script parsed JSON from output.
         # Does -ll INFO suppress JSON? No.
@@ -112,6 +118,7 @@ foreach ($testFile in $testFiles) {
         $totalNets = $matches[1]
     }
 
+    Write-Host "  Run At: $runAt" -ForegroundColor Gray
     Write-Host "  File Size: $fileSizeKB kB" -ForegroundColor Gray
     Write-Host "  Total Nets: $totalNets" -ForegroundColor Gray
     Write-Host "  Unrouted: $unroutedNets" -ForegroundColor $(if ($unroutedNets -eq "0") { "Green" } else { "Yellow" })
@@ -133,12 +140,18 @@ foreach ($testFile in $testFiles) {
         Passes        = $passesCompleted
         MemoryMB      = $memoryMB
         QualityScore  = $qualityScore
+        RunAt         = $runAt
     }
     
     # Clean up output files
     if (Test-Path $sesPath) {
         Remove-Item $sesPath -Force
     }
+}
+
+# Cleanup potential global log files
+if (Test-Path "freerouting.log") {
+    Remove-Item "freerouting.log" -Force
 }
 
 Write-Host "========================================" -ForegroundColor Cyan
@@ -156,15 +169,15 @@ Write-Host "Results exported to: $csvPath" -ForegroundColor Green
 Write-Host ""
 
 # Generate markdown table rows
-Write-Host "Markdown table rows for Benchmarks.md:" -ForegroundColor Yellow
+Write-Host "Markdown table rows for benchmarks.md:" -ForegroundColor Yellow
 Write-Host ""
 foreach ($result in $results) {
-    # Markdown columns: | Filename | File size | Nets to route | Freerouting version | Unrouted nets | Clearance violations | Passes to complete | Time to complete | Memory allocated | Quality score |
+    # Markdown columns: | Filename | File size | Nets to route | Freerouting version | Unrouted nets | Clearance violations | Passes to complete | Time to complete | Memory allocated | Quality score | Run at |
     
     # Memory formatted
     $memStr = if ($result.MemoryMB -ne "?") { "{0} MB" -f $result.MemoryMB } else { "?" }
     
-    $row = "| {0,-30} `t| {1,9} kB `t| {2,13} `t| {3,19} `t| {4,13} `t| {5,20} `t| {6,18} `t| {7,16} `t| {8,16} `t| {9,13} `t|" -f `
+    $row = "| {0,-30} `t| {1,9} kB `t| {2,13} `t| {3,19} `t| {4,13} `t| {5,20} `t| {6,18} `t| {7,16} `t| {8,16} `t| {9,13} `t| {10,15} |" -f `
         $result.Filename, `
         $result.FileSizeKB, `
         $result.TotalNets, `
@@ -174,9 +187,9 @@ foreach ($result in $results) {
         $result.Passes, `
         $result.TimeFormatted, `
         $memStr, `
-        $result.QualityScore
+        $result.QualityScore, `
+        $result.RunAt
     Write-Host $row
 }
 
 Write-Host ""
-
