@@ -3,8 +3,9 @@
 Freerouting v1.9 used GUI with default settings and route optimizer turned off.
 
 Freerouting v2.2 used CLI with default settings, both the route optimizer and API server turned off.
+
 The command line used for testing is:
-'-de .\tests\Issue508-DAC2020_bm??.dsn -do .\tests\Issue508-DAC2020_bm??.ses --router.optimizer.enabled=false --gui.enabled=false --api_server.enabled=false'
+'-de .\tests\Issue508-DAC2020_bm01.dsn -do .\tests\Issue508-DAC2020_bm01.ses --router.optimizer.enabled=false --gui.enabled=false --api_server.enabled=false --router.max_passes=500 --router.job_timeout="00:05:00"'
 
 ## Results
 | Filename                  	| File size 	| Nets to route 	| Freerouting version 	| Unrouted nets 	| Clearance violations 	| Passes to complete 	| Time to complete 	| Memory allocated 	| Quality score 	|
