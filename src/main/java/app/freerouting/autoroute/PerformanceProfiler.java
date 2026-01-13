@@ -66,6 +66,31 @@ public class PerformanceProfiler {
     /**
      * Print profiling results sorted by total time
      */
+    private static final java.util.List<PassInfo> passHistory = java.util.Collections
+            .synchronizedList(new java.util.ArrayList<>());
+
+    public static class PassInfo {
+        int passNo;
+        int unroutedItems;
+        long durationMs;
+
+        public PassInfo(int passNo, int unroutedItems, long durationMs) {
+            this.passNo = passNo;
+            this.unroutedItems = unroutedItems;
+            this.durationMs = durationMs;
+        }
+    }
+
+    /**
+     * Record statistics for a completed pass
+     */
+    public static void recordPass(int passNo, int unroutedItems, long durationMs) {
+        passHistory.add(new PassInfo(passNo, unroutedItems, durationMs));
+    }
+
+    /**
+     * Print profiling results sorted by total time
+     */
     public static void printResults() {
         FRLogger.info("=== Performance Profile ===");
 
@@ -80,6 +105,20 @@ public class PerformanceProfiler {
                     FRLogger.info(String.format("  %-40s: %8d ms total, %8d calls, %6d ms avg",
                             section, totalMs, count, avgMs));
                 });
+
+        if (!passHistory.isEmpty()) {
+            FRLogger.info("");
+            FRLogger.info("=== Pass History ===");
+            synchronized (passHistory) {
+                // Sort by pass info just in case threads messed up order, though auto-router is
+                // single threaded per board usually
+                passHistory.sort(java.util.Comparator.comparingInt(p -> p.passNo));
+                for (PassInfo pass : passHistory) {
+                    FRLogger.info(String.format("  Pass %-3d: %4d unrouted items, %8.2f s",
+                            pass.passNo, pass.unroutedItems, pass.durationMs / 1000.0));
+                }
+            }
+        }
 
         FRLogger.info("===========================");
     }

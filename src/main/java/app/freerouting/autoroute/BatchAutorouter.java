@@ -324,11 +324,14 @@ public class BatchAutorouter extends NamedAlgorithm {
    * Auto-routes one ripup pass of all items of the board. Returns false, if the
    * board is already completely routed.
    */
+  /**
+   * Auto-routes one ripup pass of all items of the board. Returns false, if the
+   * board is already completely routed.
+   */
   private boolean autoroute_pass(int p_pass_no) {
+    long passStartTime = System.currentTimeMillis();
     try {
-      PerformanceProfiler.start("autoroute_pass.get_items");
       List<Item> autoroute_item_list = getAutorouteItems(this.board);
-      PerformanceProfiler.end("autoroute_pass.get_items");
 
       // If there are no items to route, we're done
       if (autoroute_item_list.isEmpty()) {
@@ -366,18 +369,14 @@ public class BatchAutorouter extends NamedAlgorithm {
         }
       }
 
-      PerformanceProfiler.start("autoroute_pass.fire_event");
       this.fireBoardUpdatedEvent(stats, routerCounters, this.board);
-      PerformanceProfiler.end("autoroute_pass.fire_event");
 
       // TODO: Start mutliple instances of the following part in parallel, wait for
       // the results and keep the best one
 
       // Sort items by airline distance (shortest first) for deterministic routing
       // This prioritizes local connections which typically route faster
-      PerformanceProfiler.start("autoroute_pass.sort_items");
       autoroute_item_list.sort(Comparator.comparingDouble(this::calculateItemDistance));
-      PerformanceProfiler.end("autoroute_pass.sort_items");
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list) {
@@ -407,9 +406,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           // setup
           // This avoids overhead if a previous item in this pass already routed this
           // connection
-          PerformanceProfiler.start("check_already_connected");
           Set<Item> unconnected_set = curr_item.get_unconnected_set(curr_item.get_net_no(i));
-          PerformanceProfiler.end("check_already_connected");
 
           if (unconnected_set.isEmpty()) {
             ++skipped;
@@ -428,11 +425,9 @@ public class BatchAutorouter extends NamedAlgorithm {
 
           // The item could not be routed, so we have to remove the ripped traces
           if (!ripped_item_list.isEmpty()) {
-            PerformanceProfiler.start("remove_ripped_traces");
             for (Item curr_ripped_item : ripped_item_list) {
               board.remove_item(curr_ripped_item);
             }
-            PerformanceProfiler.end("remove_ripped_traces");
           }
           boolean useSlowAlgorithm = p_pass_no % 4 == 0;
           PerformanceProfiler.start("autoroute_item");
@@ -467,7 +462,6 @@ public class BatchAutorouter extends NamedAlgorithm {
           --items_to_go_count;
           ripped_item_count += ripped_item_list.size();
 
-          PerformanceProfiler.start("autoroute_pass.fire_event(loop)");
           if (shouldFireBoardUpdate()) {
             BoardStatistics boardStatistics = board.get_statistics();
             routerCounters.passCount = p_pass_no;
@@ -479,22 +473,16 @@ public class BatchAutorouter extends NamedAlgorithm {
             routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
             this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
           }
-          PerformanceProfiler.end("autoroute_pass.fire_event(loop)");
         }
       }
 
       if (this.remove_unconnected_vias) {
-        PerformanceProfiler.start("autoroute_pass.remove_tails");
         remove_tails(Item.StopConnectionOption.NONE);
-        PerformanceProfiler.end("autoroute_pass.remove_tails");
       } else {
-        PerformanceProfiler.start("autoroute_pass.remove_tails");
         remove_tails(Item.StopConnectionOption.FANOUT_VIA);
-        PerformanceProfiler.end("autoroute_pass.remove_tails");
       }
 
       // Fire final update for this pass
-      PerformanceProfiler.start("autoroute_pass.fire_event(final)");
       BoardStatistics boardStatistics = board.get_statistics();
       routerCounters.passCount = p_pass_no;
       routerCounters.queuedToBeRoutedCount = items_to_go_count;
@@ -504,7 +492,9 @@ public class BatchAutorouter extends NamedAlgorithm {
       routerCounters.routedCount = routed;
       routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
       this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
-      PerformanceProfiler.end("autoroute_pass.fire_event(final)");
+
+      long passDuration = System.currentTimeMillis() - passStartTime;
+      PerformanceProfiler.recordPass(p_pass_no, routerCounters.incompleteCount, passDuration);
 
       // We are done with this pass
       this.air_line = null;
@@ -662,6 +652,10 @@ public class BatchAutorouter extends NamedAlgorithm {
 
     bh.clear();
 
+    // Print all profiling results at the end of session
+    PerformanceProfiler.printResults();
+    PerformanceProfiler.reset();
+
     if (!this.thread.is_stop_auto_router_requested()) {
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED,
           this.settings.get_start_pass_no(), this.board.get_hash()));
@@ -761,9 +755,6 @@ public class BatchAutorouter extends NamedAlgorithm {
     } catch (Exception e) {
       FRLogger.error("Error during routing passes", e);
       return new AutorouteAttemptResult(AutorouteAttemptState.FAILED);
-    } finally {
-      // Print profiling results
-      PerformanceProfiler.printResults();
     }
   }
 
