@@ -223,20 +223,27 @@ public class MazeSearchAlgo {
     MazeListElement list_element = null;
     MazeSearchElement curr_door_section = null;
     // Search the next element, which is not yet expanded.
+    // Use poll() to efficiently get and remove the best element (O(log n) instead
+    // of O(n))
     boolean next_element_found = false;
     while (!maze_expansion_list.isEmpty()) {
       if (this.autoroute_engine.is_stop_requested()) {
         return false;
       }
-      Iterator<MazeListElement> it = maze_expansion_list.iterator();
-      list_element = it.next();
+
+      list_element = maze_expansion_list.poll(); // O(log n) - gets highest priority element
+      if (list_element == null) {
+        break; // Queue unexpectedly empty
+      }
+
       int curr_section_no = list_element.section_no_of_door;
       curr_door_section = list_element.door.get_maze_search_element(curr_section_no);
-      it.remove();
+
       if (!curr_door_section.is_occupied) {
         next_element_found = true;
         break;
       }
+      // Element already occupied, discard and continue
     }
     if (!next_element_found) {
       return false;
