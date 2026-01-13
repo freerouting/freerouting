@@ -312,7 +312,9 @@ public class BatchAutorouter extends NamedAlgorithm {
    */
   private boolean autoroute_pass(int p_pass_no) {
     try {
+      PerformanceProfiler.start("autoroute_pass.get_items");
       List<Item> autoroute_item_list = getAutorouteItems(this.board);
+      PerformanceProfiler.end("autoroute_pass.get_items");
 
       // If there are no items to route, we're done
       if (autoroute_item_list.isEmpty()) {
@@ -350,14 +352,18 @@ public class BatchAutorouter extends NamedAlgorithm {
         }
       }
 
+      PerformanceProfiler.start("autoroute_pass.fire_event");
       this.fireBoardUpdatedEvent(stats, routerCounters, this.board);
+      PerformanceProfiler.end("autoroute_pass.fire_event");
 
       // TODO: Start mutliple instances of the following part in parallel, wait for
       // the results and keep the best one
 
       // Sort items by airline distance (shortest first) for deterministic routing
       // This prioritizes local connections which typically route faster
+      PerformanceProfiler.start("autoroute_pass.sort_items");
       autoroute_item_list.sort(Comparator.comparingDouble(this::calculateItemDistance));
+      PerformanceProfiler.end("autoroute_pass.sort_items");
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list) {
@@ -383,6 +389,21 @@ public class BatchAutorouter extends NamedAlgorithm {
             break;
           }
 
+          // OPTIMIZATION: Check if the item is already connected before doing expensive
+          // setup
+          // This avoids overhead if a previous item in this pass already routed this
+          // connection
+          PerformanceProfiler.start("check_already_connected");
+          Set<Item> unconnected_set = curr_item.get_unconnected_set(curr_item.get_net_no(i));
+          PerformanceProfiler.end("check_already_connected");
+
+          if (unconnected_set.isEmpty()) {
+            ++skipped;
+            --items_to_go_count;
+            // No need to fire event for simple skip
+            continue;
+          }
+
           // We visually mark the area of the board, which is changed by the auto-router
           board.start_marking_changed_area();
 
@@ -393,13 +414,17 @@ public class BatchAutorouter extends NamedAlgorithm {
 
           // The item could not be routed, so we have to remove the ripped traces
           if (!ripped_item_list.isEmpty()) {
+            PerformanceProfiler.start("remove_ripped_traces");
             for (Item curr_ripped_item : ripped_item_list) {
               board.remove_item(curr_ripped_item);
             }
+            PerformanceProfiler.end("remove_ripped_traces");
           }
           boolean useSlowAlgorithm = p_pass_no % 4 == 0;
+          PerformanceProfiler.start("autoroute_item");
           var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no,
               useSlowAlgorithm);
+          PerformanceProfiler.end("autoroute_item");
           if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
             // The item was successfully routed
             ++routed;
@@ -437,14 +462,20 @@ public class BatchAutorouter extends NamedAlgorithm {
           routerCounters.routedCount = routed;
           routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
 
+          PerformanceProfiler.start("autoroute_pass.fire_event(loop)");
           this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
+          PerformanceProfiler.end("autoroute_pass.fire_event(loop)");
         }
       }
 
       if (this.remove_unconnected_vias) {
+        PerformanceProfiler.start("autoroute_pass.remove_tails");
         remove_tails(Item.StopConnectionOption.NONE);
+        PerformanceProfiler.end("autoroute_pass.remove_tails");
       } else {
+        PerformanceProfiler.start("autoroute_pass.remove_tails");
         remove_tails(Item.StopConnectionOption.FANOUT_VIA);
+        PerformanceProfiler.end("autoroute_pass.remove_tails");
       }
 
       // We are done with this pass
