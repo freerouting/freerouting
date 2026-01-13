@@ -1,7 +1,7 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.geometry.planar.TileShape;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,17 +19,21 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
   private TileShape shape;
   /**
    * The list of doors to neighbour expansion rooms
+   * Using ArrayList for better cache locality and O(1) indexed access
    */
   private List<ExpansionDoor> doors;
 
   /**
-   * Creates a new instance of FreeSpaceExpansionRoom. The shape is normally unbounded at construction time of this room. The final (completed) shape will be a subshape of the start shape, which does
-   * not overlap with any obstacle, and is as big as possible. p_contained_points will remain contained in the shape, after it is completed.
+   * Creates a new instance of FreeSpaceExpansionRoom. The shape is normally
+   * unbounded at construction time of this room. The final (completed) shape will
+   * be a subshape of the start shape, which does
+   * not overlap with any obstacle, and is as big as possible. p_contained_points
+   * will remain contained in the shape, after it is completed.
    */
   public FreeSpaceExpansionRoom(TileShape p_shape, int p_layer) {
     shape = p_shape;
     layer = p_layer;
-    doors = new LinkedList<>();
+    doors = new ArrayList<>(); // ArrayList for better performance
   }
 
   /**
@@ -53,7 +57,7 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
    */
   @Override
   public void clear_doors() {
-    this.doors = new LinkedList<>();
+    this.doors = new ArrayList<>(); // ArrayList for better performance
   }
 
   @Override

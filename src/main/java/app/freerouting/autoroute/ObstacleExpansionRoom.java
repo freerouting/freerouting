@@ -8,12 +8,13 @@ import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.TileShape;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Expansion Room used for pushing and ripping obstacles in the autoroute algorithm.
+ * Expansion Room used for pushing and ripping obstacles in the autoroute
+ * algorithm.
  */
 public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
@@ -33,7 +34,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     this.item = p_item;
     this.index_in_item = p_index_in_item;
     this.shape = p_item.get_tree_shape(p_shape_tree, p_index_in_item);
-    this.doors = new LinkedList<>();
+    this.doors = new ArrayList<>();
   }
 
   public int get_index_in_item() {
@@ -74,7 +75,9 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
   }
 
   /**
-   * Creates a 2-dim door with the other obstacle room, if that is useful for the autoroute algorithm. It is assumed that this room and p_other have a 2-dimensional overlap. Returns false, if no door
+   * Creates a 2-dim door with the other obstacle room, if that is useful for the
+   * autoroute algorithm. It is assumed that this room and p_other have a
+   * 2-dimensional overlap. Returns false, if no door
    * was created.
    */
   public boolean create_overlap_door(ObstacleExpansionRoom p_other) {
@@ -115,7 +118,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
    */
   @Override
   public void clear_doors() {
-    this.doors = new LinkedList<>();
+    this.doors = new ArrayList<>();
   }
 
   @Override
@@ -127,7 +130,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   @Override
   public Collection<TargetItemExpansionDoor> get_target_doors() {
-    return new LinkedList<>();
+    return new ArrayList<>();
   }
 
   public Item get_item() {

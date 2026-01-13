@@ -8,11 +8,12 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 
 /**
- * A special simple ShapeSearchtree, where the shapes are of class IntBox. It is used in the 90-degree autorouter algorithm.
+ * A special simple ShapeSearchtree, where the shapes are of class IntBox. It is
+ * used in the 90-degree autorouter algorithm.
  */
 public class ShapeSearchTree90Degree extends ShapeSearchTree {
 
@@ -24,36 +25,41 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   }
 
   /**
-   * Calculates a new incomplete room with a maximal TileShape contained in the shape of p_room, which may overlap only with items of the input net on the input layer. p_room.get_contained_shape()
-   * will be contained in the shape of the result room. If that is not possible, several rooms are returned with shapes, which intersect with p_room.get_contained_shape(). The result room is not yet
+   * Calculates a new incomplete room with a maximal TileShape contained in the
+   * shape of p_room, which may overlap only with items of the input net on the
+   * input layer. p_room.get_contained_shape()
+   * will be contained in the shape of the result room. If that is not possible,
+   * several rooms are returned with shapes, which intersect with
+   * p_room.get_contained_shape(). The result room is not yet
    * complete, because its doors are not yet calculated.
    */
   @Override
-  public Collection<IncompleteFreeSpaceExpansionRoom> complete_shape(IncompleteFreeSpaceExpansionRoom p_room, int p_net_no, SearchTreeObject p_ignore_object, TileShape p_ignore_shape) {
+  public Collection<IncompleteFreeSpaceExpansionRoom> complete_shape(IncompleteFreeSpaceExpansionRoom p_room,
+      int p_net_no, SearchTreeObject p_ignore_object, TileShape p_ignore_shape) {
     if (!(p_room.get_contained_shape() instanceof IntBox shape_to_be_contained)) {
       FRLogger.warn("BoxShapeSearchTree.complete_shape: unexpected p_shape_to_be_contained");
-      return new LinkedList<>();
+      return new ArrayList<>();
     }
     if (this.root == null) {
-      return new LinkedList<>();
+      return new ArrayList<>();
     }
     IntBox start_shape = board.get_bounding_box();
     if (p_room.get_shape() != null) {
       if (!(p_room.get_shape() instanceof IntBox)) {
         FRLogger.warn("BoxShapeSearchTree.complete_shape: p_start_shape of type IntBox expected");
-        return new LinkedList<>();
+        return new ArrayList<>();
       }
       start_shape = ((IntBox) p_room.get_shape()).intersection(start_shape);
     }
     IntBox bounding_shape = start_shape;
     int room_layer = p_room.get_layer();
-    Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
+    Collection<IncompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
     result.add(new IncompleteFreeSpaceExpansionRoom(start_shape, room_layer, shape_to_be_contained));
     this.node_stack.reset();
     this.node_stack.push(this.root);
     TreeNode curr_node;
 
-    for (; ; ) {
+    for (;;) {
       curr_node = this.node_stack.pop();
       if (curr_node == null) {
         break;
@@ -62,10 +68,11 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         if (curr_node instanceof Leaf curr_leaf) {
           SearchTreeObject curr_object = (SearchTreeObject) curr_leaf.object;
           int shape_index = curr_leaf.shape_index_in_object;
-          if (curr_object.is_trace_obstacle(p_net_no) && curr_object.shape_layer(shape_index) == room_layer && curr_object != p_ignore_object) {
+          if (curr_object.is_trace_obstacle(p_net_no) && curr_object.shape_layer(shape_index) == room_layer
+              && curr_object != p_ignore_object) {
 
             IntBox curr_object_shape = curr_object.get_tree_shape(this, shape_index).bounding_box();
-            Collection<IncompleteFreeSpaceExpansionRoom> new_result = new LinkedList<>();
+            Collection<IncompleteFreeSpaceExpansionRoom> new_result = new ArrayList<>();
             IntBox new_bounding_shape = IntBox.EMPTY;
             for (IncompleteFreeSpaceExpansionRoom curr_room : result) {
               IntBox curr_shape = (IntBox) curr_room.get_shape();
@@ -78,10 +85,11 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
                     continue;
                   }
                 }
-                Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room, curr_object_shape);
+                Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
+                    curr_object_shape);
                 new_result.addAll(new_restrained_shapes);
 
-                for (IncompleteFreeSpaceExpansionRoom tmp_shape : new_result) {
+                for (IncompleteFreeSpaceExpansionRoom tmp_shape : new_restrained_shapes) {
                   new_bounding_shape = new_bounding_shape.union(tmp_shape.get_shape().bounding_box());
                 }
               } else {
@@ -102,10 +110,13 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   }
 
   /**
-   * Restrains the shape of p_incomplete_room to a box shape, which does not intersect with the interior of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the shape of
+   * Restrains the shape of p_incomplete_room to a box shape, which does not
+   * intersect with the interior of p_obstacle_shape.
+   * p_incomplete_room.get_contained_shape() must be contained in the shape of
    * the result room.
    */
-  private Collection<IncompleteFreeSpaceExpansionRoom> restrain_shape(IncompleteFreeSpaceExpansionRoom p_incomplete_room, IntBox p_obstacle_shape) {
+  private Collection<IncompleteFreeSpaceExpansionRoom> restrain_shape(
+      IncompleteFreeSpaceExpansionRoom p_incomplete_room, IntBox p_obstacle_shape) {
     // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained
     // are on the right side of this line, and that the line segment
     // intersects with the interior of p_shape.
@@ -114,7 +125,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     // Then intersect p_shape with the halfplane defined by the
     // opposite of this line.
 
-    Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
+    Collection<IncompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
 
     TileShape contained_shape = p_incomplete_room.get_contained_shape();
     if (contained_shape == null || contained_shape.is_empty()) {
@@ -126,32 +137,40 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     int cut_line_distance = 0;
     IntBox restrained_shape = null;
 
-    if (room_shape.ll.x < p_obstacle_shape.ur.x && room_shape.ur.x > p_obstacle_shape.ur.x && room_shape.ur.y > p_obstacle_shape.ll.y && room_shape.ll.y < p_obstacle_shape.ur.y) {
-      // The right line segment of the obstacle_shape intersects the interior of p_shape
+    if (room_shape.ll.x < p_obstacle_shape.ur.x && room_shape.ur.x > p_obstacle_shape.ur.x
+        && room_shape.ur.y > p_obstacle_shape.ll.y && room_shape.ll.y < p_obstacle_shape.ur.y) {
+      // The right line segment of the obstacle_shape intersects the interior of
+      // p_shape
       int curr_distance = shape_to_be_contained.ll.x - p_obstacle_shape.ur.x;
       if (curr_distance > cut_line_distance) {
         cut_line_distance = curr_distance;
         restrained_shape = new IntBox(p_obstacle_shape.ur.x, room_shape.ll.y, room_shape.ur.x, room_shape.ur.y);
       }
     }
-    if (room_shape.ll.x < p_obstacle_shape.ll.x && room_shape.ur.x > p_obstacle_shape.ll.x && room_shape.ur.y > p_obstacle_shape.ll.y && room_shape.ll.y < p_obstacle_shape.ur.y) {
-      // The left line segment of the obstacle_shape intersects the interior of p_shape
+    if (room_shape.ll.x < p_obstacle_shape.ll.x && room_shape.ur.x > p_obstacle_shape.ll.x
+        && room_shape.ur.y > p_obstacle_shape.ll.y && room_shape.ll.y < p_obstacle_shape.ur.y) {
+      // The left line segment of the obstacle_shape intersects the interior of
+      // p_shape
       int curr_distance = p_obstacle_shape.ll.x - shape_to_be_contained.ur.x;
       if (curr_distance > cut_line_distance) {
         cut_line_distance = curr_distance;
         restrained_shape = new IntBox(room_shape.ll.x, room_shape.ll.y, p_obstacle_shape.ll.x, room_shape.ur.y);
       }
     }
-    if (room_shape.ll.y < p_obstacle_shape.ll.y && room_shape.ur.y > p_obstacle_shape.ll.y && room_shape.ur.x > p_obstacle_shape.ll.x && room_shape.ll.x < p_obstacle_shape.ur.x) {
-      // The lower  line segment of the obstacle_shape intersects the interior of p_shape
+    if (room_shape.ll.y < p_obstacle_shape.ll.y && room_shape.ur.y > p_obstacle_shape.ll.y
+        && room_shape.ur.x > p_obstacle_shape.ll.x && room_shape.ll.x < p_obstacle_shape.ur.x) {
+      // The lower line segment of the obstacle_shape intersects the interior of
+      // p_shape
       int curr_distance = p_obstacle_shape.ll.y - shape_to_be_contained.ur.y;
       if (curr_distance > cut_line_distance) {
         cut_line_distance = curr_distance;
         restrained_shape = new IntBox(room_shape.ll.x, room_shape.ll.y, room_shape.ur.x, p_obstacle_shape.ll.y);
       }
     }
-    if (room_shape.ll.y < p_obstacle_shape.ur.y && room_shape.ur.y > p_obstacle_shape.ur.y && room_shape.ur.x > p_obstacle_shape.ll.x && room_shape.ll.x < p_obstacle_shape.ur.x) {
-      // The upper line segment of the obstacle_shape intersects the interior of p_shape
+    if (room_shape.ll.y < p_obstacle_shape.ur.y && room_shape.ur.y > p_obstacle_shape.ur.y
+        && room_shape.ur.x > p_obstacle_shape.ll.x && room_shape.ll.x < p_obstacle_shape.ur.x) {
+      // The upper line segment of the obstacle_shape intersects the interior of
+      // p_shape
       int curr_distance = shape_to_be_contained.ll.y - p_obstacle_shape.ur.y;
       if (curr_distance > cut_line_distance) {
         cut_line_distance = curr_distance;
@@ -159,7 +178,8 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
       }
     }
     if (restrained_shape != null) {
-      result.add(new IncompleteFreeSpaceExpansionRoom(restrained_shape, p_incomplete_room.get_layer(), shape_to_be_contained));
+      result.add(
+          new IncompleteFreeSpaceExpansionRoom(restrained_shape, p_incomplete_room.get_layer(), shape_to_be_contained));
       return result;
     }
 
@@ -167,7 +187,8 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     // shape_to_be_contained and p_shape evtl. need to be divided in two.
     IntBox is = shape_to_be_contained.intersection(p_obstacle_shape);
     if (is.is_empty()) {
-      FRLogger.warn("BoxShapeSearchTree.restrain_shape: Intersection between obstacle_shape and shape_to_be_contained expected");
+      FRLogger.warn(
+          "BoxShapeSearchTree.restrain_shape: Intersection between obstacle_shape and shape_to_be_contained expected");
       return result;
     }
     IntBox new_shape_1 = null;
@@ -188,8 +209,10 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     if (new_shape_1 != null) {
       IntBox new_shape_to_be_contained = shape_to_be_contained.intersection(new_shape_1);
       if (new_shape_to_be_contained.dimension() > 0) {
-        result.add(new IncompleteFreeSpaceExpansionRoom(new_shape_1, p_incomplete_room.get_layer(), new_shape_to_be_contained));
-        IncompleteFreeSpaceExpansionRoom new_incomplete_room = new IncompleteFreeSpaceExpansionRoom(new_shape_2, p_incomplete_room.get_layer(), shape_to_be_contained.intersection(new_shape_2));
+        result.add(new IncompleteFreeSpaceExpansionRoom(new_shape_1, p_incomplete_room.get_layer(),
+            new_shape_to_be_contained));
+        IncompleteFreeSpaceExpansionRoom new_incomplete_room = new IncompleteFreeSpaceExpansionRoom(new_shape_2,
+            p_incomplete_room.get_layer(), shape_to_be_contained.intersection(new_shape_2));
         result.addAll(restrain_shape(new_incomplete_room, p_obstacle_shape));
       }
     }
@@ -208,7 +231,8 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         result[i] = null;
       } else {
         IntBox curr_tile_shape = curr_shape.bounding_box();
-        int offset_width = this.clearance_compensation_value(p_drill_item.clearance_class_no(), p_drill_item.shape_layer(i));
+        int offset_width = this.clearance_compensation_value(p_drill_item.clearance_class_no(),
+            p_drill_item.shape_layer(i));
         if (curr_tile_shape == null) {
           FRLogger.warn("BoxShapeSearchTree.calculate_tree_shapes: shape is null");
         } else {

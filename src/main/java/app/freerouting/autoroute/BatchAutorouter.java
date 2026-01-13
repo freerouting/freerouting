@@ -385,9 +385,19 @@ public class BatchAutorouter extends NamedAlgorithm {
           reusable_ripped_item_list.clear();
           SortedSet<Item> ripped_item_list = reusable_ripped_item_list;
 
+          // The item could not be routed, so we have to remove the ripped traces
+          if (!ripped_item_list.isEmpty()) {
+            PerformanceProfiler.start("remove_ripped_traces");
+            for (Item curr_ripped_item : ripped_item_list) {
+              board.remove_item(curr_ripped_item);
+            }
+            PerformanceProfiler.end("remove_ripped_traces");
+          }
           boolean useSlowAlgorithm = p_pass_no % 4 == 0;
+          PerformanceProfiler.start("autoroute_item");
           var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no,
               useSlowAlgorithm);
+          PerformanceProfiler.end("autoroute_item");
           if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
             // The item was successfully routed
             ++routed;
@@ -687,8 +697,11 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       return autoroute_result;
     } catch (Exception e) {
-      job.logError("Error during autoroute_item", e);
+      FRLogger.error("Error during routing passes", e);
       return new AutorouteAttemptResult(AutorouteAttemptState.FAILED);
+    } finally {
+      // Print profiling results
+      PerformanceProfiler.printResults();
     }
   }
 

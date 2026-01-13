@@ -203,9 +203,11 @@ public class MazeSearchAlgo {
    * Otherwise, the return value will be null.
    */
   public Result find_connection() {
+    PerformanceProfiler.start("maze_search_loop");
     while (occupy_next_element()) {
       continue;
     }
+    PerformanceProfiler.end("maze_search_loop");
     if (this.destination_door == null) {
       return null;
     }
@@ -231,10 +233,13 @@ public class MazeSearchAlgo {
         return false;
       }
 
+      PerformanceProfiler.start("queue_poll");
       list_element = maze_expansion_list.poll(); // O(log n) - gets highest priority element
       if (list_element == null) {
+        PerformanceProfiler.end("queue_poll");
         break; // Queue unexpectedly empty
       }
+      PerformanceProfiler.end("queue_poll");
 
       int curr_section_no = list_element.section_no_of_door;
       curr_door_section = list_element.door.get_maze_search_element(curr_section_no);
@@ -276,15 +281,20 @@ public class MazeSearchAlgo {
     }
     if (ctrl.vias_allowed && list_element.door instanceof ExpansionDrill
         && !(list_element.backtrack_door instanceof ExpansionDrill)) {
+      PerformanceProfiler.start("expand_other_layers");
       expand_to_other_layers(list_element);
+      PerformanceProfiler.end("expand_other_layers");
     }
 
     if (list_element.next_room != null) {
+      PerformanceProfiler.start("expand_room_doors");
       if (!expand_to_room_doors(list_element)) {
+        PerformanceProfiler.end("expand_room_doors");
         return true; // occupation by ripup is delayed or nothing was expanded
         // In case nothing was expanded allow the section to be occupied from
         // somewhere else, if the next room is thin.
       }
+      PerformanceProfiler.end("expand_room_doors");
     }
     curr_door_section.is_occupied = true;
     return true;
@@ -322,7 +332,9 @@ public class MazeSearchAlgo {
       curr_door_is_small = door_is_small(curr_door, 2 * half_width_add);
     }
 
+    PerformanceProfiler.start("complete_neighbour_rooms");
     this.autoroute_engine.complete_neighbour_rooms(p_list_element.next_room);
+    PerformanceProfiler.end("complete_neighbour_rooms");
 
     FloatPoint shape_entry_middle = p_list_element.shape_entry.a.middle_point(p_list_element.shape_entry.b);
 
@@ -371,8 +383,10 @@ public class MazeSearchAlgo {
         }
       }
     }
+    PerformanceProfiler.start("expand_to_target_doors");
     boolean something_expanded = expand_to_target_doors(p_list_element, next_room_is_thick, curr_door_is_small,
         shape_entry_middle);
+    PerformanceProfiler.end("expand_to_target_doors");
 
     if (!layer_active) {
       return true;
@@ -387,7 +401,9 @@ public class MazeSearchAlgo {
           if (next_room_is_thick) {
             // check to enter the thick room from a ripped item through a small door (after
             // ripup)
+            PerformanceProfiler.start("check_leaving_ripped_item");
             enter_through_small_door = check_leaving_ripped_item(p_list_element);
+            PerformanceProfiler.end("check_leaving_ripped_item");
           }
           if (!enter_through_small_door) {
             return something_expanded;
@@ -399,7 +415,9 @@ public class MazeSearchAlgo {
       if (!p_list_element.already_checked) {
         boolean room_rippable = false;
         if (this.ctrl.ripup_allowed) {
+          PerformanceProfiler.start("check_ripup");
           ripup_costs = check_ripup(p_list_element, obstacle_room.get_item(), curr_door_is_small);
+          PerformanceProfiler.end("check_ripup");
           room_rippable = ripup_costs >= 0;
         }
 
@@ -433,9 +451,11 @@ public class MazeSearchAlgo {
       if (to_door == p_list_element.door) {
         continue;
       }
+      PerformanceProfiler.start("expand_to_door");
       if (expand_to_door(to_door, p_list_element, ripup_costs, next_room_is_thick, MazeSearchElement.Adjustment.NONE)) {
         something_expanded = true;
       }
+      PerformanceProfiler.end("expand_to_door");
     }
 
     // Expand also the drill pages intersecting the room.
@@ -779,10 +799,12 @@ public class MazeSearchAlgo {
       int curr_layer = from_layer;
       for (;;) {
         TileShape curr_room_shape = curr_drill.room_arr[curr_layer - curr_drill.first_layer].get_shape();
+        PerformanceProfiler.start("ForcedViaAlgo.check_layer");
         ForcedPadAlgo.CheckDrillResult drill_result = ForcedViaAlgo.check_layer(ctrl.via_radius_arr[curr_layer],
             ctrl.via_clearance_class, ctrl.attach_smd_allowed, curr_room_shape,
             curr_drill.location, curr_layer, net_no_arr, ctrl.max_shove_trace_recursion_depth, 0,
             autoroute_engine.board);
+        PerformanceProfiler.end("ForcedViaAlgo.check_layer");
         if (drill_result == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
           via_lower_bound = curr_layer + 1;
           break;
@@ -809,10 +831,12 @@ public class MazeSearchAlgo {
           break;
         }
         TileShape curr_room_shape = curr_drill.room_arr[curr_layer - curr_drill.first_layer].get_shape();
+        PerformanceProfiler.start("ForcedViaAlgo.check_layer");
         ForcedPadAlgo.CheckDrillResult drill_result = ForcedViaAlgo.check_layer(ctrl.via_radius_arr[curr_layer],
             ctrl.via_clearance_class, ctrl.attach_smd_allowed, curr_room_shape,
             curr_drill.location, curr_layer, net_no_arr, ctrl.max_shove_trace_recursion_depth, 0,
             autoroute_engine.board);
+        PerformanceProfiler.end("ForcedViaAlgo.check_layer");
         if (drill_result == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
           via_upper_bound = curr_layer - 1;
           break;
