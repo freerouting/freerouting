@@ -393,17 +393,13 @@ public class BatchAutorouter extends NamedAlgorithm {
 
           // The item could not be routed, so we have to remove the ripped traces
           if (!ripped_item_list.isEmpty()) {
-            PerformanceProfiler.start("remove_ripped_traces");
             for (Item curr_ripped_item : ripped_item_list) {
               board.remove_item(curr_ripped_item);
             }
-            PerformanceProfiler.end("remove_ripped_traces");
           }
           boolean useSlowAlgorithm = p_pass_no % 4 == 0;
-          PerformanceProfiler.start("autoroute_item");
           var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no,
               useSlowAlgorithm);
-          PerformanceProfiler.end("autoroute_item");
           if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
             // The item was successfully routed
             ++routed;
@@ -440,6 +436,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           routerCounters.failedToBeRoutedCount = not_routed;
           routerCounters.routedCount = routed;
           routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
+
           this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
         }
       }
