@@ -398,10 +398,8 @@ public class AutorouteEngine {
           break;
         }
       }
-      PerformanceProfiler.start("complete_shape");
       Collection<IncompleteFreeSpaceExpansionRoom> completed_shapes = this.autoroute_search_tree.complete_shape(p_room,
           this.net_no, ignore_object, from_door_shape);
-      PerformanceProfiler.end("complete_shape");
       this.remove_incomplete_expansion_room(p_room);
       boolean is_first_completed_room = true;
       for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : completed_shapes) {
@@ -412,9 +410,7 @@ public class AutorouteEngine {
         }
         if (is_first_completed_room) {
           is_first_completed_room = false;
-          PerformanceProfiler.start("add_complete_room");
           CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(curr_incomplete_room);
-          PerformanceProfiler.end("add_complete_room");
           if (completed_room != null) {
             result.add(completed_room);
           }
@@ -422,14 +418,10 @@ public class AutorouteEngine {
           // the shape of the first completed room may have changed and may
           // intersect now with the other shapes. Therefore, the completed shapes
           // have to be recalculated.
-          PerformanceProfiler.start("complete_shape");
           Collection<IncompleteFreeSpaceExpansionRoom> curr_completed_shapes = this.autoroute_search_tree
               .complete_shape(curr_incomplete_room, this.net_no, ignore_object, from_door_shape);
-          PerformanceProfiler.end("complete_shape");
           for (IncompleteFreeSpaceExpansionRoom tmp_room : curr_completed_shapes) {
-            PerformanceProfiler.start("add_complete_room");
             CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(tmp_room);
-            PerformanceProfiler.end("add_complete_room");
             if (completed_room != null) {
               result.add(completed_room);
             }
@@ -499,9 +491,7 @@ public class AutorouteEngine {
         continue;
       }
       if (neighbour_room instanceof IncompleteFreeSpaceExpansionRoom room) {
-        PerformanceProfiler.start("complete_expansion_room");
         this.complete_expansion_room(room);
-        PerformanceProfiler.end("complete_expansion_room");
       } else if (neighbour_room instanceof ObstacleExpansionRoom obstacle_neighbour_room) {
         if (!obstacle_neighbour_room.all_doors_calculated()) {
           this.calculate_doors(obstacle_neighbour_room);
