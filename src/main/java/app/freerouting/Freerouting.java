@@ -243,6 +243,9 @@ public class Freerouting {
         apiServer.join(); // This will now run in the new thread
       } catch (Exception e) {
         FRLogger.error("Error starting or joining API server", e);
+        if (globalSettings != null) {
+          globalSettings.apiServerSettings.isRunning = false;
+        }
       }
     }).start();
 
