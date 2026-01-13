@@ -73,6 +73,12 @@ public class BatchAutorouter extends NamedAlgorithm {
    */
   private Instant sessionStartTime;
 
+  // Reusable collections to reduce memory churn (thread-safe as each thread has
+  // its own BatchAutorouter instance)
+  private final SortedSet<Item> reusable_ripped_item_list = new TreeSet<>();
+  private final List<Item> reusable_autoroute_item_list = new ArrayList<>();
+  private final Set<Item> reusable_handled_items = new TreeSet<>();
+
   public BatchAutorouter(RoutingJob job) {
     this(job.thread, job.board, job.routerSettings, !job.routerSettings.getRunFanout(), true,
         job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
@@ -133,9 +139,12 @@ public class BatchAutorouter extends NamedAlgorithm {
     return curr_pass_no;
   }
 
-  private static LinkedList<Item> getAutorouteItems(RoutingBoard board) {
-    LinkedList<Item> autoroute_item_list = new LinkedList<>();
-    Set<Item> handled_items = new TreeSet<>();
+  private List<Item> getAutorouteItems(RoutingBoard board) {
+    // Reuse instance collections to reduce memory allocation
+    reusable_autoroute_item_list.clear();
+    reusable_handled_items.clear();
+    List<Item> autoroute_item_list = reusable_autoroute_item_list;
+    Set<Item> handled_items = reusable_handled_items;
     Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
     for (;;) {
       UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
@@ -184,7 +193,7 @@ public class BatchAutorouter extends NamedAlgorithm {
    */
   private boolean autoroute_pass_multi_thread(int p_pass_no) {
     try {
-      LinkedList<Item> autoroute_item_list = getAutorouteItems(this.board);
+      List<Item> autoroute_item_list = getAutorouteItems(this.board);
 
       // If there are no items to route, we're done
       if (autoroute_item_list.isEmpty()) {
@@ -297,7 +306,7 @@ public class BatchAutorouter extends NamedAlgorithm {
    */
   private boolean autoroute_pass(int p_pass_no) {
     try {
-      LinkedList<Item> autoroute_item_list = getAutorouteItems(this.board);
+      List<Item> autoroute_item_list = getAutorouteItems(this.board);
 
       // If there are no items to route, we're done
       if (autoroute_item_list.isEmpty()) {
@@ -372,7 +381,9 @@ public class BatchAutorouter extends NamedAlgorithm {
           board.start_marking_changed_area();
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
-          SortedSet<Item> ripped_item_list = new TreeSet<>();
+          // Reuse instance collection to reduce memory allocation
+          reusable_ripped_item_list.clear();
+          SortedSet<Item> ripped_item_list = reusable_ripped_item_list;
 
           boolean useSlowAlgorithm = p_pass_no % 4 == 0;
           var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no,
