@@ -271,6 +271,10 @@ public class BatchAutorouter extends NamedAlgorithm {
             + FRLogger.formatScore(clonedBoardScore,
                 clonedBoardStatistics.connections.incompleteCount,
                 clonedBoardStatistics.clearanceViolations.totalCount));
+
+        // Aggregate resource usage
+        job.resourceUsage.cpuTimeUsed += autorouterThread.cpuTimeUsed;
+        job.resourceUsage.maxMemoryUsed += autorouterThread.maxMemoryUsed;
       }
 
       BatchAutorouterThread bestThread = autorouterThreads[0];

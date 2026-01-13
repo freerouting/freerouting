@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.lang.management.ManagementFactory;
+import com.sun.management.ThreadMXBean;
 
 /**
  * Handles the sequencing of the auto-router passes.
@@ -47,6 +49,9 @@ public class BatchAutorouterThread extends StoppableThread {
   public FloatLine latest_air_line;
   private int routedCount = 0;
   private int failedCount = 0;
+
+  public float cpuTimeUsed = 0.0f;
+  public float maxMemoryUsed = 0.0f;
 
   public BatchAutorouterThread(RoutingBoard board, List<Item> autorouteItemList, int passNo, boolean useSlowAlgorithm,
       RouterSettings routerSettings, int startRipupCosts, int tracePullTightAccuracy,
@@ -505,6 +510,14 @@ public class BatchAutorouterThread extends StoppableThread {
   @Override
   protected void thread_action() {
     autorouteItems();
+    captureStats();
+  }
+
+  private void captureStats() {
+    ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+    long id = this.threadId();
+    this.cpuTimeUsed = threadMXBean.getThreadCpuTime(id) / 1000.0f / 1000.0f / 1000.0f;
+    this.maxMemoryUsed = threadMXBean.getThreadAllocatedBytes(id) / (1024.0f * 1024.0f);
   }
 
   public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener) {

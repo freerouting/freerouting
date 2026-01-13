@@ -150,7 +150,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         }
 
         String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, ran %d passes in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f CPU seconds and %d MB memory.",
+            "Auto-router session %s started with %d unrouted nets, ran %d passes in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f total CPU seconds and %d MB total allocated memory.",
             completionStatus,
             router.getInitialUnroutedCount(),
             (currentPassNo > job.routerSettings.get_stop_pass_no()) ? currentPassNo - 1 : currentPassNo,
@@ -209,8 +209,16 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         float allocatedMB = allocatedMemory / (1024.0f * 1024.0f);
 
         // Update the job's resource usage
-        job.resourceUsage.cpuTimeUsed += cpuTime;
-        job.resourceUsage.maxMemoryUsed = Math.max(job.resourceUsage.maxMemoryUsed, allocatedMB);
+        // Fix: Use assignment instead of accumulation for total time, as
+        // getThreadCpuTime returns cumulative time
+        // Note: This only tracks the main thread. Worker threads add their stats
+        // separately.
+        job.resourceUsage.cpuTimeUsed = cpuTime;
+        // Fix: maxMemoryUsed represents total allocated bytes here, so we accumulate if
+        // we track partials,
+        // but here it tracks the monotonically increasing allocation of the main
+        // thread.
+        job.resourceUsage.maxMemoryUsed = allocatedMB;
       }
     }
   }
