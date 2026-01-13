@@ -171,13 +171,17 @@ public class OptViaAlgo {
       return false;
     }
     Point via_center = p_via.get_center();
+
+    // Use tolerance based on via size, matching the logic in opt_via_location
+    int tolerance = (int) (p_via.min_width() / 2) + 1;
+
     boolean at_first_corner;
-    if (contact_trace.first_corner().equals(via_center)) {
+    if (isWithinTolerance(contact_trace.first_corner(), via_center, tolerance)) {
       at_first_corner = true;
-    } else if (contact_trace.last_corner().equals(via_center)) {
+    } else if (isWithinTolerance(contact_trace.last_corner(), via_center, tolerance)) {
       at_first_corner = false;
     } else {
-      FRLogger.warn("OptViaAlgo.opt_plane_or_fanout_via: inconsistent contact");
+      // Via is not connected at trace endpoints - skip optimization
       return false;
     }
     Polyline trace_polyline = contact_trace.polyline();

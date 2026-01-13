@@ -10,16 +10,19 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- * Database of objects, for which Undo and Redo operations are made possible. The algorithm works only for objects containing no references.
+ * Database of objects, for which Undo and Redo operations are made possible.
+ * The algorithm works only for objects containing no references.
  */
 public class UndoableObjects implements Serializable {
 
   /**
-   * The entries of this map are of type UndoableObject, the keys of type UndoableObjects.Storable.
+   * The entries of this map are of type UndoableObject, the keys of type
+   * UndoableObjects.Storable.
    */
   private final ConcurrentMap<Storable, UndoableObjectNode> objects;
   /**
-   * the lists of deleted objects on each undo level, which where already existing before the previous snapshot.
+   * the lists of deleted objects on each undo level, which where already existing
+   * before the previous snapshot.
    */
   private final Vector<Collection<UndoableObjectNode>> deleted_objects_stack;
   /**
@@ -49,7 +52,8 @@ public class UndoableObjects implements Serializable {
   }
 
   /**
-   * Reads the next object in this list. Returns null, if the list is exhausted. p_it must be created by start_read_object.
+   * Reads the next object in this list. Returns null, if the list is exhausted.
+   * p_it must be created by start_read_object.
    */
   public UndoableObjects.Storable read_object(Iterator<UndoableObjectNode> p_it) {
     while (p_it.hasNext()) {
@@ -72,7 +76,8 @@ public class UndoableObjects implements Serializable {
   }
 
   /**
-   * Removes p_object from the top level of the UndoableObjectsList. Returns false, if p_object was not found in the list.
+   * Removes p_object from the top level of the UndoableObjectsList. Returns
+   * false, if p_object was not found in the list.
    */
   public boolean delete(UndoableObjects.Storable p_object) {
     disable_redo();
@@ -123,17 +128,20 @@ public class UndoableObjects implements Serializable {
   }
 
   /**
-   * Restores the situation before the last snapshot. Outputs the cancelled and the restored objects (if != null) to enable the calling function to take additional actions needed for these objects.
+   * Restores the situation before the last snapshot. Outputs the cancelled and
+   * the restored objects (if != null) to enable the calling function to take
+   * additional actions needed for these objects.
    * Returns false, if no more undo is possible
    */
-  public boolean undo(Collection<UndoableObjects.Storable> p_cancelled_objects, Collection<UndoableObjects.Storable> p_restored_objects) {
+  public boolean undo(Collection<UndoableObjects.Storable> p_cancelled_objects,
+      Collection<UndoableObjects.Storable> p_restored_objects) {
     if (stack_level == 0) {
       return false; // no more undo possible
     }
     for (UndoableObjectNode curr_node : objects.values()) {
       if (curr_node.level == stack_level) {
         if (curr_node.undo_object != null) {
-          // replace the current object by  its previous state.
+          // replace the current object by its previous state.
           curr_node.undo_object.redo_object = curr_node;
           objects.put(curr_node.object, curr_node.undo_object);
           if (p_restored_objects != null) {
@@ -159,10 +167,13 @@ public class UndoableObjects implements Serializable {
   }
 
   /**
-   * Restores the situation before the last undo. Outputs the cancelled and the restored objects (if != null) to enable the calling function to take additional actions needed for these objects.
+   * Restores the situation before the last undo. Outputs the cancelled and the
+   * restored objects (if != null) to enable the calling function to take
+   * additional actions needed for these objects.
    * Returns false, if no more redo is possible.
    */
-  public boolean redo(Collection<UndoableObjects.Storable> p_cancelled_objects, Collection<UndoableObjects.Storable> p_restored_objects) {
+  public boolean redo(Collection<UndoableObjects.Storable> p_cancelled_objects,
+      Collection<UndoableObjects.Storable> p_restored_objects) {
     if (this.stack_level >= deleted_objects_stack.size()) {
       return false; // already at the top level
     }
@@ -204,7 +215,8 @@ public class UndoableObjects implements Serializable {
   }
 
   /**
-   * Removes the top snapshot from the undo stack, so that its situation cannot be restored anymore. Returns false, if no more snapshot could be popped.
+   * Removes the top snapshot from the undo stack, so that its situation cannot be
+   * restored anymore. Returns false, if no more snapshot could be popped.
    */
   public boolean pop_snapshot() {
     disable_redo();
@@ -242,7 +254,8 @@ public class UndoableObjects implements Serializable {
   }
 
   /**
-   * Must be called before p_object will be modified after a snapshot for the first time, if it may have existed before that snapshot.
+   * Must be called before p_object will be modified after a snapshot for the
+   * first time, if it may have existed before that snapshot.
    */
   public void save_for_undo(UndoableObjects.Storable p_object) {
     disable_redo();
@@ -254,7 +267,8 @@ public class UndoableObjects implements Serializable {
     }
     if (curr_node.level < this.stack_level) {
 
-      UndoableObjectNode old_node = new UndoableObjectNode((UndoableObjects.Storable) p_object.clone(), curr_node.level);
+      UndoableObjectNode old_node = new UndoableObjectNode((UndoableObjects.Storable) p_object.clone(),
+          curr_node.level);
       old_node.undo_object = curr_node.undo_object;
       old_node.redo_object = curr_node;
       curr_node.undo_object = old_node;
@@ -288,18 +302,22 @@ public class UndoableObjects implements Serializable {
   }
 
   /**
-   * Condition for an Object to be stored in an UndoableObjects database. An object of class UndoableObjects.Storable must not contain any references.
+   * Condition for an Object to be stored in an UndoableObjects database. An
+   * object of class UndoableObjects.Storable must not contain any references.
    */
   public interface Storable extends Comparable<Object> {
 
     /**
-     * Creates an exact copy of this object Public overwriting of the protected clone method in java.lang.Object,
+     * Creates an exact copy of this object Public overwriting of the protected
+     * clone method in java.lang.Object,
      */
     Object clone();
   }
 
   /**
-   * Stores information for correct restoring or cancelling an object in an undo or redo operation. p_level is the level in the Undo stack, where this object was inserted.
+   * Stores information for correct restoring or cancelling an object in an undo
+   * or redo operation. p_level is the level in the Undo stack, where this object
+   * was inserted.
    */
   public static class UndoableObjectNode implements Serializable {
 
