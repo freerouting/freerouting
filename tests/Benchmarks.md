@@ -11,4 +11,6 @@ The command line used for testing is:
 | Filename                  	| File size 	| Nets to route 	| Freerouting version 	| Unrouted nets 	| Clearance violations 	| Passes to complete 	| Time to complete 	| Memory allocated 	| Quality score 	|
 |---------------------------	|----------:	|--------------:	|--------------------:	|--------------:	|---------------------:	|-------------------:	|-----------------:	|-----------------:	|--------------:	|
 | Issue508-DAC2020_bm01.dsn 	|     31 kB 	|             ? 	|                v1.9 	|             0 	|                    ? 	|                214 	|       45 seconds 	|              N/A 	|           N/A 	|
+| Issue508-DAC2020_bm01.dsn 	|     31 kB 	|           195 	|                v2.2 	|            45 	|                    0 	|                 36 	|       5+ minutes 	|        228585 MB 	|        922,89 	|
 | Issue508-DAC2020_bm07.dsn 	|     15 kB 	|             ? 	|                v1.9 	|             0 	|                    ? 	|                  4 	|        2 seconds 	|              N/A 	|           N/A 	|
+| Issue508-DAC2020_bm07.dsn 	|     15 kB 	|            86 	|                v2.2 	|             0 	|                    0 	|                 24 	|       10 seconds 	|          5557 MB 	|        990,75 	|
