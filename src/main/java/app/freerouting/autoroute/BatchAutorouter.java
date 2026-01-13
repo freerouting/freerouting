@@ -24,6 +24,7 @@ import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -62,6 +63,14 @@ public class BatchAutorouter extends NamedAlgorithm {
    * Used to draw the airline of the current routed incomplete.
    */
   private FloatLine air_line;
+  /**
+   * Initial number of unrouted nets at the start of the routing session.
+   */
+  private int initialUnroutedCount;
+  /**
+   * Time when the routing session started.
+   */
+  private Instant sessionStartTime;
 
   public BatchAutorouter(RoutingJob job) {
     this(job.thread, job.board, job.routerSettings, !job.routerSettings.getRunFanout(), true,
@@ -448,11 +457,31 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
+   * Returns the initial number of unrouted nets at the start of the routing
+   * session.
+   */
+  public int getInitialUnroutedCount() {
+    return this.initialUnroutedCount;
+  }
+
+  /**
+   * Returns the time when the routing session started.
+   */
+  public Instant getSessionStartTime() {
+    return this.sessionStartTime;
+  }
+
+  /**
    * Autoroutes ripup passes until the board is completed or the autorouter is
    * stopped by the user. Returns true if the board is completed.
    */
   public boolean runBatchLoop() {
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
+
+    // Capture initial state for session summary
+    this.sessionStartTime = Instant.now();
+    RatsNest initialRatsNest = new RatsNest(this.board);
+    this.initialUnroutedCount = initialRatsNest.incomplete_count();
 
     boolean continueAutorouting = true;
     BoardHistory bh = new BoardHistory(job.routerSettings.scoring);

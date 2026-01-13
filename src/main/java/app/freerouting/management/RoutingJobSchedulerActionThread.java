@@ -21,7 +21,8 @@ import java.lang.management.ManagementFactory;
 import java.time.Instant;
 
 /**
- * Used for running an action in a separate thread, that can be stopped by the user. This typically represents an action that is triggered by job scheduler
+ * Used for running an action in a separate thread, that can be stopped by the
+ * user. This typically represents an action that is triggered by job scheduler
  */
 public class RoutingJobSchedulerActionThread extends StoppableThread {
 
@@ -37,7 +38,8 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
   protected void thread_action() {
     job.startedAt = Instant.now();
     // Use ISO standard time format
-    job.logInfo("Job '" + job.shortName + "' started at " + job.startedAt.toString() + " with the seed of " + TextManager.longToHexadecimalString(job.routerSettings.random_seed) + ".");
+    job.logInfo("Job '" + job.shortName + "' started at " + job.startedAt.toString() + " with the seed of "
+        + TextManager.longToHexadecimalString(job.routerSettings.random_seed) + ".");
 
     // check if we need to check for timeout
     Long timeout = TextManager.parseTimespanString(job.routerSettings.jobTimeoutString);
@@ -51,8 +53,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     }
 
     // Start a new thread that will monitor the job thread
-    new Thread(() ->
-    {
+    new Thread(() -> {
       while ((job != null) && (job.thread != null)) {
 
         try {
@@ -70,7 +71,8 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
               .now()
               .isBefore(job.timeoutAt)) {
 
-            // signal the job thread to stop, and wait gracefully for up to 30 seconds for it
+            // signal the job thread to stop, and wait gracefully for up to 30 seconds for
+            // it
             job.thread.requestStop();
             while ((job.state == RoutingJobState.RUNNING) && Instant
                 .now()
@@ -113,6 +115,31 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         }
       });
       router.runBatchLoop();
+
+      // Log session summary
+      if (router.getSessionStartTime() != null) {
+        Instant sessionEndTime = Instant.now();
+        long totalSeconds = java.time.Duration.between(router.getSessionStartTime(), sessionEndTime).getSeconds();
+        double totalTime = totalSeconds
+            + (java.time.Duration.between(router.getSessionStartTime(), sessionEndTime).getNano() / 1000000000.0);
+
+        var finalStats = job.board.get_statistics();
+        int finalPassNo = job.routerSettings.get_start_pass_no();
+
+        String sessionSummary = String.format(
+            "Auto-router session completed: started with %d unrouted nets, ran %d passes in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f CPU seconds and %d MB memory.",
+            router.getInitialUnroutedCount(),
+            finalPassNo,
+            totalTime,
+            finalStats.getNormalizedScore(job.routerSettings.scoring),
+            finalStats.connections.incompleteCount,
+            finalStats.clearanceViolations.totalCount,
+            job.resourceUsage.cpuTimeUsed,
+            (int) job.resourceUsage.maxMemoryUsed);
+
+        job.logInfo(sessionSummary);
+      }
+
       job.stage = RoutingStage.IDLE;
     }
 
