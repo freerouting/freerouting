@@ -14,25 +14,52 @@ public class PerformanceProfiler {
 
     private static final Map<String, AtomicLong> timings = new ConcurrentHashMap<>();
     private static final Map<String, AtomicLong> counts = new ConcurrentHashMap<>();
-    private static final ThreadLocal<Long> startTime = new ThreadLocal<>();
+    private static final ThreadLocal<java.util.Deque<Invocation>> stack = ThreadLocal
+            .withInitial(java.util.ArrayDeque::new);
+
+    private static class Invocation {
+        String name;
+        long startTime;
+
+        Invocation(String name, long startTime) {
+            this.name = name;
+            this.startTime = startTime;
+        }
+    }
 
     /**
      * Start timing a section
      */
     public static void start(String section) {
-        startTime.set(System.nanoTime());
+        stack.get().push(new Invocation(section, System.nanoTime()));
     }
 
     /**
      * End timing a section and record the duration
      */
     public static void end(String section) {
-        Long start = startTime.get();
-        if (start != null) {
-            long duration = System.nanoTime() - start;
-            timings.computeIfAbsent(section, k -> new AtomicLong()).addAndGet(duration);
-            counts.computeIfAbsent(section, k -> new AtomicLong()).incrementAndGet();
-            startTime.remove();
+        java.util.Deque<Invocation> s = stack.get();
+        if (!s.isEmpty()) {
+            Invocation inv = s.pop();
+            // Optional: verify inv.name.equals(section)
+            if (inv.name.equals(section)) {
+                long duration = System.nanoTime() - inv.startTime;
+                timings.computeIfAbsent(section, k -> new AtomicLong()).addAndGet(duration);
+                counts.computeIfAbsent(section, k -> new AtomicLong()).incrementAndGet();
+            } else {
+                // Imbalance or wrong nesting. Put it back? Or ignore?
+                // Ideally log error but for now just ignore strict check to avoid crashes
+                // Actually if mismatch, it means we missed an end() call somewhere or crossed
+                // threads (impossible with ThreadLocal)
+                // But let's record it anyway if possible? No, duration would be wrong.
+                // For robustness in this debugging session, allow mismatch if name matches (it
+                // should).
+                // If mismatch, maybe we popped the wrong one.
+                // Let's assume correct usage for now.
+                // Re-add to timings even if name doesn't match? No, that corrupts data.
+                // If name doesn't match, we likely popped a child that wasn't closed.
+                // Let's rely on correct nesting.
+            }
         }
     }
 

@@ -323,7 +323,9 @@ public class MazeSearchAlgo {
       double half_width_add = half_width + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
       if (this.ctrl.with_neckdown) {
         // try evtl. neckdown at a destination pin
+        PerformanceProfiler.start("check_neck_down");
         double neck_down_half_width = check_neck_down_at_dest_pin(p_list_element.next_room);
+        PerformanceProfiler.end("check_neck_down");
         if (neck_down_half_width > 0) {
           half_width_add = Math.min(half_width_add, neck_down_half_width);
           half_width = half_width_add;
@@ -362,7 +364,9 @@ public class MazeSearchAlgo {
         // That is only the case for 1 dimensional doors.
         // For small doors the check is done in check_leaving_via below.
 
+        PerformanceProfiler.start("nearest_border_points");
         FloatPoint[] nearest_points = next_room_shape.nearest_border_points_approx(shape_entry_middle, 2);
+        PerformanceProfiler.end("nearest_border_points");
         if (nearest_points.length < 2) {
           FRLogger.warn("MazeSearchAlgo.expand_to_room_doors: nearest_points.length == 2 expected");
           next_room_is_thick = false;
@@ -376,7 +380,9 @@ public class MazeSearchAlgo {
       // check for drill to a foreign conduction area on split plane.
       Point drill_location = drill.location;
       ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.CONDUCTION);
+      PerformanceProfiler.start("pick_items");
       Set<Item> picked_items = autoroute_engine.board.pick_items(drill_location, layer_no, filter);
+      PerformanceProfiler.end("pick_items");
       for (Item curr_item : picked_items) {
         if (!curr_item.contains_net(ctrl.net_no)) {
           return true;
@@ -425,7 +431,10 @@ public class MazeSearchAlgo {
           Item obstacle_item = obstacle_room.get_item();
           if (!curr_door_is_small && this.ctrl.max_shove_trace_recursion_depth > 0
               && obstacle_item instanceof PolylineTrace) {
-            if (!shove_trace_room(p_list_element, obstacle_room)) {
+            PerformanceProfiler.start("shove_trace_room");
+            boolean shoved = shove_trace_room(p_list_element, obstacle_room);
+            PerformanceProfiler.end("shove_trace_room");
+            if (!shoved) {
               if (ripup_costs > 0) {
                 // delay the occupation by ripup to allow shoving the room by another door
                 // sections.
@@ -465,8 +474,10 @@ public class MazeSearchAlgo {
         // avoid setting something_expanded to true when next_room is thin to allow
         // occupying by
         // different sections of the door
+        PerformanceProfiler.start("overlapping_drill_pages");
         Collection<DrillPage> overlapping_drill_pages = this.autoroute_engine.drill_page_array
             .overlapping_pages(p_list_element.next_room.get_shape());
+        PerformanceProfiler.end("overlapping_drill_pages");
         {
           for (DrillPage to_drill_page : overlapping_drill_pages) {
             expand_to_drill_page(to_drill_page, p_list_element);
@@ -478,7 +489,9 @@ public class MazeSearchAlgo {
         if (curr_obstacle_item instanceof Via curr_via) {
           ExpansionDrill via_drill_info = curr_via
               .get_autoroute_drill_info(this.autoroute_engine.autoroute_search_tree);
+          PerformanceProfiler.start("expand_to_drill");
           expand_to_drill(via_drill_info, p_list_element, ripup_costs);
+          PerformanceProfiler.end("expand_to_drill");
         }
       }
     }

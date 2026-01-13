@@ -389,6 +389,7 @@ public class BatchAutorouterThread extends StoppableThread {
         --items_to_go_count;
         ripped_item_count += ripped_item_list.size();
 
+        PerformanceProfiler.start("stats_update");
         BoardStatistics boardStatistics = board.get_statistics();
         routerCounters.passCount = passNo;
         routerCounters.queuedToBeRoutedCount = items_to_go_count;
@@ -398,6 +399,7 @@ public class BatchAutorouterThread extends StoppableThread {
         routerCounters.routedCount = routed;
         routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
         this.fireBoardUpdatedEvent(boardStatistics, routerCounters, board);
+        PerformanceProfiler.end("stats_update");
       }
     }
 

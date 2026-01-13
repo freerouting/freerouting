@@ -212,7 +212,9 @@ public class BatchAutorouter extends NamedAlgorithm {
       // Prepare the threads
       for (int threadIndex = 0; threadIndex < job.routerSettings.maxThreads; threadIndex++) {
         // deep copy the board
+        PerformanceProfiler.start("board.deepCopy");
         RoutingBoard clonedBoard = this.board.deepCopy();
+        PerformanceProfiler.end("board.deepCopy");
 
         // clone the auto-route item list to avoid concurrent modification
         List<Item> clonedAutorouteItemList = new ArrayList<>(getAutorouteItems(clonedBoard));
