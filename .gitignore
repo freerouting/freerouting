@@ -36,6 +36,3 @@ freerouting.ses
 
 # GitHub App credentials
 gha-creds-*.json
-
-# Older Freerouting source code
-/src_v19/
