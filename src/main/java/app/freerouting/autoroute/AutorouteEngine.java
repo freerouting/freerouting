@@ -77,13 +77,11 @@ public class AutorouteEngine {
    * autorouter database is maintained after a connection is completed for
    * performance reasons.
    */
-  public AutorouteEngine(RoutingBoard p_board, int p_trace_clearance_class_no, boolean p_maintain_database,
-      boolean p_use_slow_algorithm) {
+  public AutorouteEngine(RoutingBoard p_board, int p_trace_clearance_class_no, boolean p_maintain_database) {
     this.board = p_board;
     this.maintain_database = p_maintain_database;
     this.net_no = -1;
-    this.autoroute_search_tree = p_board.search_tree_manager.get_autoroute_tree(p_trace_clearance_class_no,
-        p_use_slow_algorithm);
+    this.autoroute_search_tree = p_board.search_tree_manager.get_autoroute_tree(p_trace_clearance_class_no);
     int max_drill_page_width = (int) (5 * p_board.rules.get_default_via_diameter());
     max_drill_page_width = Math.max(max_drill_page_width, 10000);
     this.drill_page_array = new DrillPageArray(this.board, max_drill_page_width);

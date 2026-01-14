@@ -73,19 +73,21 @@ public class PerformanceProfiler {
         int passNo;
         int unroutedItems;
         long durationMs;
+        int ripupCost;
 
-        public PassInfo(int passNo, int unroutedItems, long durationMs) {
+        public PassInfo(int passNo, int unroutedItems, long durationMs, int ripupCost) {
             this.passNo = passNo;
             this.unroutedItems = unroutedItems;
             this.durationMs = durationMs;
+            this.ripupCost = ripupCost;
         }
     }
 
     /**
      * Record statistics for a completed pass
      */
-    public static void recordPass(int passNo, int unroutedItems, long durationMs) {
-        passHistory.add(new PassInfo(passNo, unroutedItems, durationMs));
+    public static void recordPass(int passNo, int unroutedItems, long durationMs, int ripupCost) {
+        passHistory.add(new PassInfo(passNo, unroutedItems, durationMs, ripupCost));
     }
 
     /**
@@ -114,8 +116,8 @@ public class PerformanceProfiler {
                 // single threaded per board usually
                 passHistory.sort(java.util.Comparator.comparingInt(p -> p.passNo));
                 for (PassInfo pass : passHistory) {
-                    FRLogger.info(String.format("  Pass %-3d: %4d unrouted items, %8.2f s",
-                            pass.passNo, pass.unroutedItems, pass.durationMs / 1000.0));
+                    FRLogger.info(String.format("  Pass %-3d: %4d unrouted items, %8.2f s, %5d ripup cost",
+                            pass.passNo, pass.unroutedItems, pass.durationMs / 1000.0, pass.ripupCost));
                 }
             }
         }

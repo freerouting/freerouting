@@ -42,19 +42,23 @@ public class SelectedItemState extends InteractiveState {
   /**
    * Creates a new instance of SelectedItemState
    */
-  private SelectedItemState(Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
+  private SelectedItemState(Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling,
+      ActivityReplayFile p_activityReplayFile) {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
     item_list = p_item_list;
   }
 
   /**
-   * Creates a new SelectedItemState with the items in p_item_list selected. Returns null, if p_item_list is empty.
+   * Creates a new SelectedItemState with the items in p_item_list selected.
+   * Returns null, if p_item_list is empty.
    */
-  public static SelectedItemState get_instance(Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
+  public static SelectedItemState get_instance(Set<Item> p_item_list, InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
     if (p_item_list.isEmpty()) {
       return null;
     }
-    SelectedItemState new_state = new SelectedItemState(p_item_list, p_parent_state, p_board_handling, p_activityReplayFile);
+    SelectedItemState new_state = new SelectedItemState(p_item_list, p_parent_state, p_board_handling,
+        p_activityReplayFile);
     return new_state;
   }
 
@@ -89,10 +93,12 @@ public class SelectedItemState extends InteractiveState {
       case 'e' -> result = this.extent_to_whole_connections();
       case 'f' -> this.fix_items();
       case 'i' -> result = this.info();
-      case 'm' -> result = MoveItemState.get_instance(hdlg.get_current_mouse_position(), item_list, this.return_state, hdlg, activityReplayFile);
+      case 'm' -> result = MoveItemState.get_instance(hdlg.get_current_mouse_position(), item_list, this.return_state,
+          hdlg, activityReplayFile);
       case 'n' -> this.extent_to_whole_nets();
       case 'p' -> this.hdlg.optimize_selected_items();
-      case 'r' -> result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
+      case 'r' ->
+        result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
       case 's' -> result = this.extent_to_whole_connected_sets();
       case 'u' -> this.unfix_items();
       case 'v' -> this.toggle_clearance_violations();
@@ -132,7 +138,8 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Makes all items in this selected_set connectable and assigns them to a new net.
+   * Makes all items in this selected_set connectable and assigns them to a new
+   * net.
    */
   public InteractiveState assign_items_to_new_net() {
     RoutingBoard board = hdlg.get_routing_board();
@@ -153,7 +160,8 @@ public class SelectedItemState extends InteractiveState {
       }
     }
     if (items_already_connected) {
-      hdlg.screen_messages.set_status_message(tm.getText("some_items_are_not_changed_because_they_are_already_connected"));
+      hdlg.screen_messages
+          .set_status_message(tm.getText("some_items_are_not_changed_because_they_are_already_connected"));
     } else {
       hdlg.screen_messages.set_status_message(tm.getText("new_net_created_from_selected_items"));
     }
@@ -166,12 +174,14 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Assigns all items in this selected_set to a new group( new component for example)
+   * Assigns all items in this selected_set to a new group( new component for
+   * example)
    */
   public InteractiveState assign_items_to_new_group() {
     RoutingBoard board = hdlg.get_routing_board();
     board.generate_snapshot();
-    // Take the gravity point of all item centers for the location of the new component.
+    // Take the gravity point of all item centers for the location of the new
+    // component.
     double gravity_x = 0;
     double gravity_y = 0;
     int pin_count = 0;
@@ -227,7 +237,8 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Deletes all unfixed items in this selected set and pulls tight the neighbour traces.
+   * Deletes all unfixed items in this selected set and pulls tight the neighbour
+   * traces.
    */
   public InteractiveState delete_items() {
     hdlg
@@ -248,7 +259,8 @@ public class SelectedItemState extends InteractiveState {
     if (hdlg.settings.push_enabled) {
       all_items_removed = hdlg
           .get_routing_board()
-          .remove_items_and_pull_tight(item_list, hdlg.settings.trace_pull_tight_region_width, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
+          .remove_items_and_pull_tight(item_list, hdlg.settings.trace_pull_tight_region_width,
+              hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
     } else {
       all_items_removed = hdlg
           .get_routing_board()
@@ -276,7 +288,8 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Autoroutes the selected items. If p_stoppable_thread != null, the algorithm can be requested to terminate.
+   * Autoroutes the selected items. If p_stoppable_thread != null, the algorithm
+   * can be requested to terminate.
    */
   public InteractiveState autoroute(Stoppable p_stoppable_thread) {
     boolean saved_board_read_only = hdlg.is_board_read_only();
@@ -337,7 +350,7 @@ public class SelectedItemState extends InteractiveState {
           .start_marking_changed_area();
       AutorouteAttemptResult autoroute_result = hdlg
           .get_routing_board()
-          .autoroute(curr_item, hdlg.settings.autoroute_settings, via_costs, p_stoppable_thread, null, false);
+          .autoroute(curr_item, hdlg.settings.autoroute_settings, via_costs, p_stoppable_thread, null);
       if (autoroute_result.state == AutorouteAttemptState.ROUTED) {
         ++found_count;
         hdlg.repaint();
@@ -355,8 +368,8 @@ public class SelectedItemState extends InteractiveState {
       } else {
         curr_message = tm.getText("completed");
       }
-      String end_message =
-          tm.getText("autoroute") + " " + curr_message + ": " + found_count + " " + tm.getText("connections_found") + ", " + not_found_count + " " + tm.getText("connections_not_found");
+      String end_message = tm.getText("autoroute") + " " + curr_message + ": " + found_count + " "
+          + tm.getText("connections_found") + ", " + not_found_count + " " + tm.getText("connections_not_found");
       hdlg.screen_messages.set_status_message(end_message);
     }
     hdlg.set_board_read_only(saved_board_read_only);
@@ -373,7 +386,8 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Fanouts the pins contained in the selected items. If p_stoppable_thread != null, the algorithm can be requested to terminate.
+   * Fanouts the pins contained in the selected items. If p_stoppable_thread !=
+   * null, the algorithm can be requested to terminate.
    */
   public InteractiveState fanout(Stoppable p_stoppable_thread) {
     boolean saved_board_read_only = hdlg.is_board_read_only();
@@ -433,7 +447,8 @@ public class SelectedItemState extends InteractiveState {
       } else {
         curr_message = tm.getText("completed");
       }
-      String end_message = tm.getText("fanout") + " " + curr_message + ": " + found_count + " " + tm.getText("connections_found") + ", " + not_found_count + " " + tm.getText("connections_not_found");
+      String end_message = tm.getText("fanout") + " " + curr_message + ": " + found_count + " "
+          + tm.getText("connections_found") + ", " + not_found_count + " " + tm.getText("connections_not_found");
       hdlg.screen_messages.set_status_message(end_message);
     }
     hdlg.set_board_read_only(saved_board_read_only);
@@ -450,7 +465,8 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Optimizes the selected items. If p_stoppable_thread != null, the algorithm can be requested to terminate.
+   * Optimizes the selected items. If p_stoppable_thread != null, the algorithm
+   * can be requested to terminate.
    */
   public InteractiveState pull_tight(Stoppable p_stoppable_thread) {
     boolean saved_board_read_only = hdlg.is_board_read_only();
@@ -472,12 +488,15 @@ public class SelectedItemState extends InteractiveState {
         continue;
       }
       if (curr_item instanceof PolylineTrace curr_trace) {
-        boolean something_changed = curr_trace.pull_tight(!hdlg.settings.push_enabled, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, p_stoppable_thread);
+        boolean something_changed = curr_trace.pull_tight(!hdlg.settings.push_enabled,
+            hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, p_stoppable_thread);
         if (!something_changed) {
-          curr_trace.smoothen_end_corners_fork(!hdlg.settings.push_enabled, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, p_stoppable_thread);
+          curr_trace.smoothen_end_corners_fork(!hdlg.settings.push_enabled,
+              hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, p_stoppable_thread);
         }
       } else if (curr_item instanceof Via via) {
-        OptViaAlgo.opt_via_location(hdlg.get_routing_board(), via, null, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, 10);
+        OptViaAlgo.opt_via_location(hdlg.get_routing_board(), via, null,
+            hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, 10);
       }
     }
     String curr_message;
@@ -485,7 +504,8 @@ public class SelectedItemState extends InteractiveState {
     if (hdlg.settings.push_enabled && !interrupted) {
       hdlg
           .get_routing_board()
-          .opt_changed_area(new int[0], null, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, null, p_stoppable_thread, 0);
+          .opt_changed_area(new int[0], null, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, null,
+              p_stoppable_thread, 0);
     }
 
     if (p_stoppable_thread != null) {
@@ -590,7 +610,8 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Select also all items belonging to any connected set of the current selected items.
+   * Select also all items belonging to any connected set of the current selected
+   * items.
    */
   public InteractiveState extent_to_whole_connected_sets() {
     Set<Item> new_selected_items = new TreeSet<>();
@@ -612,7 +633,8 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Select also all items belonging to any connection of the current selected items.
+   * Select also all items belonging to any connection of the current selected
+   * items.
    */
   public InteractiveState extent_to_whole_connections() {
     Set<Item> new_selected_items = new TreeSet<>();
@@ -634,7 +656,9 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Picks item at p_point. Removes it from the selected_items list, if it is already in there, otherwise adds it to the list. Returns true (to change to the return_state) if nothing was picked.
+   * Picks item at p_point. Removes it from the selected_items list, if it is
+   * already in there, otherwise adds it to the list. Returns true (to change to
+   * the return_state) if nothing was picked.
    */
   public InteractiveState toggle_select(FloatPoint p_point) {
     Collection<Item> picked_items = hdlg.pick_items(p_point);
@@ -682,7 +706,8 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Removes items not selected by the current interactive filter from the selected item list.
+   * Removes items not selected by the current interactive filter from the
+   * selected item list.
    */
   public InteractiveState filter() {
     item_list = hdlg.settings.item_selection_filter.filter(item_list);
@@ -698,7 +723,8 @@ public class SelectedItemState extends InteractiveState {
    * Prints information about the selected item into a graphical text window.
    */
   public SelectedItemState info() {
-    WindowObjectInfo.display(this.item_list, hdlg.get_panel().board_frame, hdlg.coordinate_transform, new java.awt.Point(100, 100));
+    WindowObjectInfo.display(this.item_list, hdlg.get_panel().board_frame, hdlg.coordinate_transform,
+        new java.awt.Point(100, 100));
     return this;
   }
 
@@ -714,7 +740,8 @@ public class SelectedItemState extends InteractiveState {
     }
 
     for (Item curr_item : item_list) {
-      curr_item.draw(p_graphics, hdlg.graphics_context, hdlg.graphics_context.get_hilight_color(), hdlg.graphics_context.get_hilight_color_intensity());
+      curr_item.draw(p_graphics, hdlg.graphics_context, hdlg.graphics_context.get_hilight_color(),
+          hdlg.graphics_context.get_hilight_color_intensity());
     }
     if (clearance_violations != null) {
       clearance_violations.draw(p_graphics, hdlg.graphics_context);

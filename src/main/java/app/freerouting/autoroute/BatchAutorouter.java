@@ -1,7 +1,6 @@
 package app.freerouting.autoroute;
 
 import static java.util.Collections.shuffle;
-import java.util.Comparator;
 
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
@@ -29,7 +28,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -58,7 +56,15 @@ public class BatchAutorouter extends NamedAlgorithm {
   private final boolean retain_autoroute_database;
   private final int start_ripup_costs;
   private final int trace_pull_tight_accuracy;
+  // Reusable collections to reduce memory churn (thread-safe as each thread has
+  // its own BatchAutorouter instance)
+  private final SortedSet<Item> reusable_ripped_item_list = new TreeSet<>();
+  private final List<Item> reusable_autoroute_item_list = new ArrayList<>();
+  private final Set<Item> reusable_handled_items = new TreeSet<>();
   protected RoutingJob job;
+  /**
+   * Time when the routing session started.
+   */
   private Random random;
   /**
    * Used to draw the airline of the current routed incomplete.
@@ -71,27 +77,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Time when the routing session started.
    */
-  /**
-   * Time when the routing session started.
-   */
   private Instant sessionStartTime;
-
   private long lastBoardUpdateTimestamp = 0;
-
-  private boolean shouldFireBoardUpdate() {
-    long currentTime = System.currentTimeMillis();
-    if (currentTime - lastBoardUpdateTimestamp > 250) { // Limit updates to 4 times per second (250ms)
-      lastBoardUpdateTimestamp = currentTime;
-      return true;
-    }
-    return false;
-  }
-
-  // Reusable collections to reduce memory churn (thread-safe as each thread has
-  // its own BatchAutorouter instance)
-  private final SortedSet<Item> reusable_ripped_item_list = new TreeSet<>();
-  private final List<Item> reusable_autoroute_item_list = new ArrayList<>();
-  private final Set<Item> reusable_handled_items = new TreeSet<>();
 
   public BatchAutorouter(RoutingJob job) {
     this(job.thread, job.board, job.routerSettings, !job.routerSettings.getRunFanout(), true,
@@ -151,6 +138,15 @@ public class BatchAutorouter extends NamedAlgorithm {
       --curr_pass_no;
     }
     return curr_pass_no;
+  }
+
+  private boolean shouldFireBoardUpdate() {
+    long currentTime = System.currentTimeMillis();
+    if (currentTime - lastBoardUpdateTimestamp > 250) { // Limit updates to 4 times per second (250ms)
+      lastBoardUpdateTimestamp = currentTime;
+      return true;
+    }
+    return false;
   }
 
   private List<Item> getAutorouteItems(RoutingBoard board) {
@@ -215,7 +211,7 @@ public class BatchAutorouter extends NamedAlgorithm {
         return false;
       }
 
-      boolean useSlowAlgorithm = p_pass_no % 4 == 0;
+      boolean useSlowAlgorithm = false;
 
       BatchAutorouterThread[] autorouterThreads = new BatchAutorouterThread[job.routerSettings.maxThreads];
       BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
@@ -237,7 +233,7 @@ public class BatchAutorouter extends NamedAlgorithm {
         shuffle(clonedAutorouteItemList, this.random);
 
         autorouterThreads[threadIndex] = new BatchAutorouterThread(clonedBoard, clonedAutorouteItemList, p_pass_no,
-            useSlowAlgorithm, job.routerSettings, this.start_ripup_costs,
+            job.routerSettings, this.start_ripup_costs,
             this.trace_pull_tight_accuracy, this.remove_unconnected_vias, true);
         autorouterThreads[threadIndex].setName("Router thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex));
         autorouterThreads[threadIndex].setDaemon(true);
@@ -376,7 +372,9 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       // Sort items by airline distance (shortest first) for deterministic routing
       // This prioritizes local connections which typically route faster
-      autoroute_item_list.sort(Comparator.comparingDouble(this::calculateItemDistance));
+      // NOTE: Disabled in v2.3 because it negatively impacts convergence compared to
+      // v1.9 (natural order)
+      // autoroute_item_list.sort(Comparator.comparingDouble(this::calculateItemDistance));
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list) {
@@ -429,10 +427,8 @@ public class BatchAutorouter extends NamedAlgorithm {
               board.remove_item(curr_ripped_item);
             }
           }
-          boolean useSlowAlgorithm = p_pass_no % 4 == 0;
           PerformanceProfiler.start("autoroute_item");
-          var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no,
-              useSlowAlgorithm);
+          var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no);
           PerformanceProfiler.end("autoroute_item");
           if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
             // The item was successfully routed
@@ -494,7 +490,8 @@ public class BatchAutorouter extends NamedAlgorithm {
       this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
 
       long passDuration = System.currentTimeMillis() - passStartTime;
-      PerformanceProfiler.recordPass(p_pass_no, routerCounters.incompleteCount, passDuration);
+      int currentRipupCost = this.start_ripup_costs * p_pass_no;
+      PerformanceProfiler.recordPass(p_pass_no, routerCounters.incompleteCount, passDuration, currentRipupCost);
 
       // We are done with this pass
       this.air_line = null;
@@ -678,7 +675,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   // Tries to route an item on a specific net. Returns true, if the item is
   // routed.
   private AutorouteAttemptResult autoroute_item(Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list,
-      int p_ripup_pass_no, boolean useSlowAlgorithm) {
+      int p_ripup_pass_no) {
     try {
       boolean contains_plane = false;
 
@@ -738,8 +735,7 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       // Initialize the auto-router engine
       AutorouteEngine autoroute_engine = board.init_autoroute(p_route_net_no,
-          autoroute_control.trace_clearance_class_no, this.thread, time_limit, this.retain_autoroute_database,
-          useSlowAlgorithm);
+          autoroute_control.trace_clearance_class_no, this.thread, time_limit, this.retain_autoroute_database);
 
       // Do the auto-routing between the two sets of items
       AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
