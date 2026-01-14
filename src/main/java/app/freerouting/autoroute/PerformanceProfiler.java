@@ -93,8 +93,47 @@ public class PerformanceProfiler {
     /**
      * Print profiling results sorted by total time
      */
+    /**
+     * Store configuration metrics for reporting
+     */
+    private static class ConfigInfo {
+        int viaCosts;
+        int planeViaCosts;
+        double[] preferredCosts;
+        double[] againstCosts;
+
+        ConfigInfo(int viaCosts, int planeViaCosts, double[] preferredCosts, double[] againstCosts) {
+            this.viaCosts = viaCosts;
+            this.planeViaCosts = planeViaCosts;
+            this.preferredCosts = preferredCosts;
+            this.againstCosts = againstCosts;
+        }
+    }
+
+    private static ConfigInfo configInfo;
+
+    public static void recordConfiguration(int viaCosts, int planeViaCosts, double[] preferredCosts,
+            double[] againstCosts) {
+        configInfo = new ConfigInfo(viaCosts, planeViaCosts, preferredCosts, againstCosts);
+    }
+
+    /**
+     * Print profiling results sorted by total time
+     */
     public static void printResults() {
         FRLogger.info("=== Performance Profile ===");
+
+        if (configInfo != null) {
+            FRLogger.info("=== Routing Parameters ===");
+            FRLogger.info(String.format("  Via Costs: %d, Plane Via Costs: %d", configInfo.viaCosts,
+                    configInfo.planeViaCosts));
+            FRLogger.info("  Layer Costs (Preferred / Against):");
+            for (int i = 0; i < configInfo.preferredCosts.length; i++) {
+                FRLogger.info(String.format("    Layer %d: %.1f / %.1f", i + 1, configInfo.preferredCosts[i],
+                        configInfo.againstCosts[i]));
+            }
+            FRLogger.info("");
+        }
 
         timings.entrySet().stream()
                 .sorted((e1, e2) -> Long.compare(e2.getValue().get(), e1.getValue().get()))

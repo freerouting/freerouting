@@ -558,6 +558,22 @@ public class BatchAutorouter extends NamedAlgorithm {
     boolean continueAutorouting = true;
     BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
 
+    // Record configuration for profiler
+    if (this.settings.isLayerActive != null) {
+      int layerCount = this.settings.isLayerActive.length;
+      double[] prefCosts = new double[layerCount];
+      double[] againstCosts = new double[layerCount];
+      for (int i = 0; i < layerCount; i++) {
+        prefCosts[i] = this.settings.get_preferred_direction_trace_costs(i);
+        againstCosts[i] = this.settings.get_against_preferred_direction_trace_costs(i);
+      }
+      PerformanceProfiler.recordConfiguration(
+          this.settings.get_via_costs(),
+          this.settings.get_plane_via_costs(),
+          prefCosts,
+          againstCosts);
+    }
+
     while (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
       if (job != null && job.state == RoutingJobState.TIMED_OUT) {
         this.thread.request_stop_auto_router();
