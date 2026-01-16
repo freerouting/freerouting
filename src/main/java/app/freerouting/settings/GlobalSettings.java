@@ -236,6 +236,8 @@ public class GlobalSettings implements Serializable {
               .split("=");
           if ((parts.length == 2) && (!Objects.equals(parts[0], "user_data_path"))) {
             setValue(parts[0], parts[1]);
+          } else if (!Objects.equals(parts[0], "user_data_path")) {
+            FRLogger.warn("Unknown command line argument: " + p_args[i]);
           }
         } else if (p_args[i].startsWith("-de")) {
           // the design file(s) are provided - can be DSN, SES, and/or RULES files

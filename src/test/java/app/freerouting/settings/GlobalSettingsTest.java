@@ -93,4 +93,18 @@ class GlobalSettingsTest {
         assertTrue(Arrays.stream(FRLogger.getLogEntries().get())
                 .anyMatch(s -> s.contains("Unknown settings property: unknown_settings.unknown_field")));
     }
+
+    @Test
+    void testApplyCommandLineArguments_MalformedDoubleHyphen() {
+        GlobalSettings settings = new GlobalSettings();
+        String[] args = new String[] {
+                "--someflag"
+        };
+
+        settings.applyCommandLineArguments(args);
+
+        assertEquals(1, FRLogger.getLogEntries().getWarningCount(), "Should warn on double-dash arg without equals");
+        assertTrue(Arrays.stream(FRLogger.getLogEntries().get())
+                .anyMatch(s -> s.contains("Unknown command line argument: --someflag")));
+    }
 }
