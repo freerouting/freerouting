@@ -275,10 +275,44 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       var scoreBeforeOptimization = bs.getNormalizedScore(routingJob.routerSettings.scoring);
 
       double autoroutingSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
-      routingJob.logInfo("Auto-routing was completed in " + FRLogger.formatDuration(autoroutingSecondsToComplete)
-          + " with the score of " + FRLogger.formatScore(scoreBeforeOptimization,
-              bs.connections.incompleteCount, bs.clearanceViolations.totalCount)
-          + ".");
+
+      // Log detailed session summary
+      int initialUnroutedCount = 0;
+      Instant sessionStartTime = null;
+      int currentPassNo = routingJob.routerSettings.get_start_pass_no();
+
+      if (batchAutorouter instanceof BatchAutorouter) {
+        sessionStartTime = ((BatchAutorouter) batchAutorouter).getSessionStartTime();
+        initialUnroutedCount = ((BatchAutorouter) batchAutorouter).getInitialUnroutedCount();
+      } else if (batchAutorouter instanceof BatchAutorouterV19) {
+        sessionStartTime = ((BatchAutorouterV19) batchAutorouter).getSessionStartTime();
+        initialUnroutedCount = ((BatchAutorouterV19) batchAutorouter).getInitialUnroutedCount();
+      }
+
+      if (sessionStartTime != null) {
+        String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
+        if (!this.isStopRequested() && currentPassNo > routingJob.routerSettings.get_stop_pass_no()) {
+          completionStatus = "completed with pass number limit hit:";
+        }
+
+        String sessionSummary = String.format(
+            "Auto-router session %s started with %d unrouted nets, ran %d passes in %.2f seconds, final score: %.2f (%d unrouted, %d violations).",
+            completionStatus,
+            initialUnroutedCount,
+            (currentPassNo > routingJob.routerSettings.get_stop_pass_no()) ? currentPassNo - 1 : currentPassNo,
+            autoroutingSecondsToComplete,
+            scoreBeforeOptimization,
+            bs.connections.incompleteCount,
+            bs.clearanceViolations.totalCount);
+
+        routingJob.logInfo(sessionSummary);
+      } else {
+        // Fallback to simple logging if session info not available
+        routingJob.logInfo("Auto-routing was completed in " + FRLogger.formatDuration(autoroutingSecondsToComplete)
+            + " with the score of " + FRLogger.formatScore(scoreBeforeOptimization,
+                bs.connections.incompleteCount, bs.clearanceViolations.totalCount)
+            + ".");
+      }
       FRAnalytics.autorouterFinished();
 
       Thread.sleep(100);

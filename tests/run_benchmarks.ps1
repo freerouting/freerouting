@@ -64,9 +64,9 @@ foreach ($testFile in $testFiles) {
     
     
     # Parse Summary Line
-    # Example 1: Auto-router session completed with pass number limit hit: started with 195 unrouted nets, ran 1 passes in 14.74 seconds, final score: 822.58 (86 unrouted, 0 violations), using 13.50 total CPU seconds and 14.8 GB total allocated memory (with 392 MB peak).
-    # Example 2: Auto-router session completed: started with 86 unrouted nets, ran 104 passes in 28.54 seconds, final score: 988.57 (1 unrouted, 0 violations), using 392.05 CPU seconds and 21.3 GB total allocated memory (with 512 MB peak).
-    if ($output -match "Auto-router session completed(?: with (.+?))?: started with (\d+) unrouted nets, ran (\d+) passes in ([\d,.]+) seconds, final score: ([\d,.]+) \((\d+) unrouted, (\d+) violations\), using .*? and ([\d,.]+) GB total allocated memory \(with ([\d,.]+) MB peak\)") {
+    # Example 1: Auto-router session completed with pass number limit hit: started with 195 unrouted nets, ran 1 passes in 14.74 seconds, final score: 822.58 (86 unrouted, 0 violations), using 13.50 total CPU seconds, 14.8 GB total allocated, and 392 MB peak heap usage.
+    # Example 2: Auto-router session completed: started with 86 unrouted nets, ran 104 passes in 28.54 seconds, final score: 988.57 (1 unrouted, 0 violations), using 392.05 total CPU seconds, 21.3 GB total allocated, and 512 MB peak heap usage.
+    if ($output -match "Auto-router session completed(?: with (.+?))?: started with (\d+) unrouted nets, ran (\d+) passes in ([\d,.]+) seconds, final score: ([\d,.]+) \((\d+) unrouted, (\d+) violations\), using [\d,.]+ total CPU seconds, ([\d,.]+) GB total allocated, and ([\d,.]+) MB peak heap usage") {
         $reason = $matches[1]
         $totalNets = $matches[2]
         $passesCompleted = $matches[3]

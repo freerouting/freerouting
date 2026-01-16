@@ -184,7 +184,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         }
 
         String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, ran %d passes in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f total CPU seconds and %.2f GB total allocated memory (with %.0f MB peak).",
+            "Auto-router session %s started with %d unrouted nets, ran %d passes in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f total CPU seconds, %.2f GB total allocated, and %.0f MB peak heap usage.",
             completionStatus,
             initialUnroutedCount,
             (currentPassNo > job.routerSettings.get_stop_pass_no()) ? currentPassNo - 1 : currentPassNo,
