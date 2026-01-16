@@ -213,6 +213,9 @@ public class GlobalSettings implements Serializable {
     try {
       ReflectionUtil.setFieldValue(this, propertyName, newValue);
       return true;
+    } catch (NoSuchFieldException e) {
+      FRLogger.warn("Unknown settings property: " + propertyName);
+      return false;
     } catch (Exception e) {
       FRLogger.error("Failed to set property value for: " + propertyName, e);
       return false;

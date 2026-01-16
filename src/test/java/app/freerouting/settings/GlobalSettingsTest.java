@@ -81,4 +81,16 @@ class GlobalSettingsTest {
         assertEquals(20, settings.routerSettings.maxPasses);
         assertEquals(0, FRLogger.getLogEntries().getWarningCount());
     }
+
+    @Test
+    void testSetUnknownProperty() {
+        GlobalSettings settings = new GlobalSettings();
+        // This should log a warning instead of incorrect stack trace
+        settings.setValue("unknown_settings.unknown_field", "true");
+
+        assertEquals(1, FRLogger.getLogEntries().getWarningCount(), "Should log a warning for unknown property");
+        assertEquals(0, FRLogger.getLogEntries().getErrorCount(), "Should NOT log an error with stack trace");
+        assertTrue(Arrays.stream(FRLogger.getLogEntries().get())
+                .anyMatch(s -> s.contains("Unknown settings property: unknown_settings.unknown_field")));
+    }
 }
