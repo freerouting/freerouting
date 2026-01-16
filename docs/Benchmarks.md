@@ -39,7 +39,7 @@ The following command line arguments were used for the v2.2 tests:
 | Filename                  	| File size 	| Nets to route 	| Freerouting version 	| Unrouted nets 	| Clearance violations 	| Passes to complete 	| Time to complete 	| Total allocation 	| Quality score 	| Run at 				|
 |---------------------------	|----------:	|--------------:	|--------------------:	|--------------:	|---------------------:	|-------------------:	|-----------------:	|-----------------:	|--------------:	| ------------------:	|
 | Issue508-DAC2020_bm01.dsn 	|     31 kB 	|           195 	|                v1.9 	|             0 	|                    ? 	|                214 	|       45 seconds 	|              N/A 	|           N/A 	| 						|
-| Issue508-DAC2020_bm01.dsn 	|     31 kB 	|           195 	|                v2.2 	|            45 	|                    0 	|                 36 	|       5+ minutes 	|        228585 MB 	|        922,89 	| 						|
+| Issue508-DAC2020_bm01.dsn 	|     31 kB 	|           195 	|                v2.2 	|            45 	|                    0 	|                 36 	|       5+ minutes 	|        228585 MB 	|        922,89 	| 	2026-01-13			|
 | Issue508-DAC2020_bm02.dsn 	|         ? 	|             ? 	|                v1.9 	|             0 	|                    ? 	|                  ? 	|       		? 	|              N/A 	|           N/A 	| 						|
 | Issue508-DAC2020_bm04.dsn 	|         ? 	|             ? 	|                v1.9 	|             0 	|                    ? 	|                  ? 	|       		? 	|              N/A 	|           N/A 	| 						|
 | Issue508-DAC2020_bm05.dsn 	|         ? 	|             ? 	|                v1.9 	|            46 	|                    ? 	|                  ? 	|       		? 	|              N/A 	|           N/A 	| 						|
