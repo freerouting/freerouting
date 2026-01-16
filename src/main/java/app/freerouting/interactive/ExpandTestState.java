@@ -154,7 +154,7 @@ public class ExpandTestState extends InteractiveState {
         hdlg.settings.autoroute_settings);
     // this.control_settings.ripup_allowed = true;
     // this.control_settings.is_fanout = true;
-    this.control_settings.ripup_pass_no = hdlg.settings.autoroute_settings.get_start_pass_no();
+    this.control_settings.ripup_pass_no = 1; // Expand test always starts from pass 1
     this.control_settings.ripup_costs = this.control_settings.ripup_pass_no
         * hdlg.settings.autoroute_settings.get_start_ripup_costs();
     this.control_settings.vias_allowed = false;

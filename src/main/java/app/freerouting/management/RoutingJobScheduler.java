@@ -152,11 +152,6 @@ public class RoutingJobScheduler {
                       }
                     }
 
-                    // CRITICAL: Recalculate stop_pass_no based on the maxPasses value
-                    // (this was calculated in Freerouting.java but might have been lost)
-                    job.routerSettings.set_stop_pass_no(
-                        job.routerSettings.get_start_pass_no() + job.routerSettings.maxPasses - 1);
-
                     // Load SES file if specified
                     if (globalSettings.design_session_filename != null) {
                       try {
@@ -200,6 +195,7 @@ public class RoutingJobScheduler {
     });
 
     loopThread.start();
+
   }
 
   /**

@@ -129,7 +129,6 @@ public class BatchAutorouter extends NamedAlgorithm {
     while (still_unrouted_items && !job.thread.is_stop_auto_router_requested() && curr_pass_no <= p_max_pass_count) {
       still_unrouted_items = router_instance.autoroute_pass(curr_pass_no);
       if (still_unrouted_items && !job.thread.is_stop_auto_router_requested() && updated_routing_board == null) {
-        routerSettings.increment_pass_no();
       }
       ++curr_pass_no;
     }
@@ -574,6 +573,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           againstCosts);
     }
 
+    int currentPass = 1;
     while (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
       if (job != null && job.state == RoutingJobState.TIMED_OUT) {
         this.thread.request_stop_auto_router();
@@ -581,27 +581,26 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       String current_board_hash = this.board.get_hash();
 
-      int curr_pass_no = this.settings.get_start_pass_no();
-      if (curr_pass_no > this.settings.get_stop_pass_no()) {
+      if (currentPass > this.settings.maxPasses) {
         thread.request_stop_auto_router();
         break;
       }
 
       this.fireTaskStateChangedEvent(
-          new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
+          new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, current_board_hash));
 
       float boardScoreBefore = new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
       bh.add(this.board);
 
-      FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "'");
+      FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + currentPass + " on board '" + current_board_hash + "'");
 
-      continueAutorouting = autoroute_pass(curr_pass_no);
+      continueAutorouting = autoroute_pass(currentPass);
 
       BoardStatistics boardStatisticsAfter = new BoardStatistics(this.board);
       float boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
 
       if ((bh.size() >= STOP_AT_PASS_MINIMUM) || (this.thread.is_stop_auto_router_requested())) {
-        if (((curr_pass_no % STOP_AT_PASS_MODULO == 0) && (curr_pass_no >= STOP_AT_PASS_MINIMUM))
+        if (((currentPass % STOP_AT_PASS_MODULO == 0) && (currentPass >= STOP_AT_PASS_MINIMUM))
             || (this.thread.is_stop_auto_router_requested())) {
           // Check if the score improved compared to the previous passes, restore a
           // previous board if not
@@ -632,9 +631,9 @@ public class BatchAutorouter extends NamedAlgorithm {
         }
       }
       double autorouter_pass_duration = FRLogger
-          .traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "'");
+          .traceExit("BatchAutorouter.autoroute_pass #" + currentPass + " on board '" + current_board_hash + "'");
 
-      String passCompletedMessage = "Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash
+      String passCompletedMessage = "Auto-router pass #" + currentPass + " on board '" + current_board_hash
           + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration) + " with the score of "
           + FRLogger.formatScore(boardScoreAfter, boardStatisticsAfter.connections.incompleteCount,
               boardStatisticsAfter.clearanceViolations.totalCount);
@@ -653,7 +652,7 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       // check if there are still unrouted items
       if (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
-        this.settings.increment_pass_no();
+        currentPass++;
       }
     }
 
@@ -672,11 +671,11 @@ public class BatchAutorouter extends NamedAlgorithm {
 
     if (!this.thread.is_stop_auto_router_requested()) {
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED,
-          this.settings.get_start_pass_no(), this.board.get_hash()));
+          currentPass, this.board.get_hash()));
     } else {
       // TODO: set it to TIMED_OUT if it was interrupted because of timeout
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.CANCELLED,
-          this.settings.get_start_pass_no(), this.board.get_hash()));
+          currentPass, this.board.get_hash()));
     }
 
     return !this.thread.is_stop_auto_router_requested();

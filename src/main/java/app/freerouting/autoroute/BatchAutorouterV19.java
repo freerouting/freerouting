@@ -161,6 +161,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
         job.logInfo("Starting V1.9 router with " + this.initialUnroutedCount + " incomplete connections.");
 
         boolean continueAutorouting = true;
+        int currentPass = 1;
 
         while (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
             if (job != null && job.state == RoutingJobState.TIMED_OUT) {
@@ -169,29 +170,28 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
             String current_board_hash = this.board.get_hash();
 
-            int curr_pass_no = this.settings.get_start_pass_no();
-            if (curr_pass_no > this.settings.get_stop_pass_no()) {
+            if (currentPass > this.settings.maxPasses) {
                 thread.request_stop_auto_router();
                 break;
             }
 
             this.fireTaskStateChangedEvent(
-                    new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
+                    new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, current_board_hash));
 
             FRLogger.traceEntry(
-                    "BatchAutorouterV19.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "'");
+                    "BatchAutorouterV19.autoroute_pass #" + currentPass + " on board '" + current_board_hash + "'");
 
             // Run one pass using v1.9 logic
-            continueAutorouting = autoroute_pass(curr_pass_no, true);
+            continueAutorouting = autoroute_pass(currentPass, true);
 
             double autorouter_pass_duration = FRLogger
-                    .traceExit("BatchAutorouterV19.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash
+                    .traceExit("BatchAutorouterV19.autoroute_pass #" + currentPass + " on board '" + current_board_hash
                             + "'");
 
             var boardStatistics = this.board.get_statistics();
             float boardScore = boardStatistics.getNormalizedScore(job.routerSettings.scoring);
 
-            String passCompletedMessage = "V1.9 Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash
+            String passCompletedMessage = "V1.9 Auto-router pass #" + currentPass + " on board '" + current_board_hash
                     + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration) + " with the score of "
                     + FRLogger.formatScore(boardScore, boardStatistics.connections.incompleteCount,
                             boardStatistics.clearanceViolations.totalCount);
@@ -211,7 +211,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
             // check if there are still unrouted items
             if (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
-                this.settings.increment_pass_no();
+                currentPass++;
             }
         }
 
@@ -224,10 +224,10 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
         if (!this.thread.is_stop_auto_router_requested()) {
             this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED,
-                    this.settings.get_start_pass_no(), this.board.get_hash()));
+                    currentPass, this.board.get_hash()));
         } else {
             this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.CANCELLED,
-                    this.settings.get_start_pass_no(), this.board.get_hash()));
+                    currentPass, this.board.get_hash()));
         }
 
         return !this.thread.is_stop_auto_router_requested();

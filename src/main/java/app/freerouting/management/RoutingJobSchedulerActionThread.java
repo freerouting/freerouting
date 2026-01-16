@@ -158,16 +158,6 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
             + (java.time.Duration.between(sessionStartTime, sessionEndTime).getNano() / 1000000000.0);
 
         var finalStats = job.board.get_statistics();
-        // The start_pass_no is incremented in the loop, so it represents the next pass
-        // or the one that exceeded the limit
-        int currentPassNo = job.routerSettings.get_start_pass_no();
-        // If the loop finished, it might have incremented one past the last executed
-        // pass if it didn't break early.
-        // However, for the summary, we want to know how many passes ran.
-        // If we started at 1 and ran 1 pass, start_pass_no becomes 2. So passes run = 2
-        // - 1 = 1.
-        // But if we broke early?
-        // Let's rely on the fact that if we hit the limit, start_pass > stop_pass.
 
         String completionStatus = "completed:";
         // Check for timeout explicitly because job.state might not be updated to
@@ -177,17 +167,14 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
         if (isTimedOut) {
           completionStatus = "completed with timeout:";
-        } else if (job.routerSettings.get_start_pass_no() > job.routerSettings.get_stop_pass_no()) {
-          completionStatus = "completed with pass number limit hit:";
         } else if (job.thread.isStopRequested()) {
           completionStatus = "interrupted:";
         }
 
         String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, ran %d passes in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f total CPU seconds, %.2f GB total allocated, and %.0f MB peak heap usage.",
+            "Auto-router session %s started with %d unrouted nets, completed in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f total CPU seconds, %.2f GB total allocated, and %.0f MB peak heap usage.",
             completionStatus,
             initialUnroutedCount,
-            (currentPassNo > job.routerSettings.get_stop_pass_no()) ? currentPassNo - 1 : currentPassNo,
             totalTime,
             finalStats.getNormalizedScore(job.routerSettings.scoring),
             finalStats.connections.incompleteCount,

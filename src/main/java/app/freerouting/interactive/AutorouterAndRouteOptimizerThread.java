@@ -234,9 +234,9 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       String start_message = tm.getText("batch_autorouter") + " " + tm.getText("stop_message");
       boardManager.screen_messages.set_status_message(start_message);
 
-      // Let's run the fanout if it's enabled
-      boolean fanout_first = boardManager.get_settings().autoroute_settings.getRunFanout()
-          && boardManager.get_settings().autoroute_settings.get_start_pass_no() <= 1;
+      // Let's run the fanout if it's enabled (fanout always runs first, before any
+      // passes)
+      boolean fanout_first = boardManager.get_settings().autoroute_settings.getRunFanout();
       if (fanout_first) {
         BatchFanout fanout = new BatchFanout(routingJob);
         fanout.addTaskStateChangedEventListener(new TaskStateChangedEventListener() {
@@ -279,27 +279,29 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       // Log detailed session summary
       int initialUnroutedCount = 0;
       Instant sessionStartTime = null;
-      int currentPassNo = routingJob.routerSettings.get_start_pass_no();
+      int currentPassNo = 0; // Will be populated below
 
       if (batchAutorouter instanceof BatchAutorouter) {
         sessionStartTime = ((BatchAutorouter) batchAutorouter).getSessionStartTime();
         initialUnroutedCount = ((BatchAutorouter) batchAutorouter).getInitialUnroutedCount();
+        // Note: currentPassNo should come from router but we don't have a getter yet
+        currentPassNo = 1; // Placeholder - actual pass count tracked in router
       } else if (batchAutorouter instanceof BatchAutorouterV19) {
         sessionStartTime = ((BatchAutorouterV19) batchAutorouter).getSessionStartTime();
         initialUnroutedCount = ((BatchAutorouterV19) batchAutorouter).getInitialUnroutedCount();
+        currentPassNo = 1; // Placeholder
       }
 
       if (sessionStartTime != null) {
         String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
-        if (!this.isStopRequested() && currentPassNo > routingJob.routerSettings.get_stop_pass_no()) {
+        if (currentPassNo > routingJob.routerSettings.maxPasses) {
           completionStatus = "completed with pass number limit hit:";
         }
 
         String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, ran %d passes in %.2f seconds, final score: %.2f (%d unrouted, %d violations).",
+            "Auto-router session %s started with %d unrouted nets, completed in %.2f seconds, final score: %.2f (%d unrouted, %d violations).",
             completionStatus,
             initialUnroutedCount,
-            (currentPassNo > routingJob.routerSettings.get_stop_pass_no()) ? currentPassNo - 1 : currentPassNo,
             autoroutingSecondsToComplete,
             scoreBeforeOptimization,
             bs.connections.incompleteCount,

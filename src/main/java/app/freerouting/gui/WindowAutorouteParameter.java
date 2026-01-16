@@ -43,10 +43,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final JFormattedTextField via_cost_field;
   private final JFormattedTextField plane_via_cost_field;
   private final JFormattedTextField start_ripup_costs;
-  private final JFormattedTextField start_pass_no;
-  private final JComboBox<String> settings_autorouter_detailed_speed_combo_box;
-  private final String speed_fast;
-  private final String speed_slow;
+  private final JFormattedTextField max_passes_field;
+  private final JFormattedTextField job_timeout_field;
+  private final JFormattedTextField max_threads_field;
   private final JComboBox<String> settings_autorouter_algorithm_combo_box;
   private final String algorithm_current;
   private final String algorithm_v19;
@@ -57,6 +56,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private boolean via_cost_input_completed = true;
   private boolean plane_via_cost_input_completed = true;
   private boolean start_ripup_cost_input_completed = true;
+  private boolean max_passes_input_completed = true;
+  private boolean job_timeout_input_completed = true;
+  private boolean max_threads_input_completed = true;
 
   /**
    * Creates a new instance of WindowAutorouteParameter
@@ -239,21 +241,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(plane_via_cost_field, gridbag_constraints);
     main_panel.add(plane_via_cost_field);
 
-    // add label and number field for the start pass no.
-
-    gridbag_constraints.gridwidth = 2;
-    JLabel start_pass_label = new JLabel(tm.getText("start_pass"));
-    gridbag.setConstraints(start_pass_label, gridbag_constraints);
-    main_panel.add(start_pass_label);
-
-    start_pass_no = new JFormattedTextField(number_format);
-    start_pass_no.setColumns(5);
-    this.start_pass_no.addKeyListener(new WindowAutorouteParameter.StartPassFieldKeyListener());
-    this.start_pass_no.addFocusListener(new WindowAutorouteParameter.StartPassFieldFocusListener());
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(start_pass_no, gridbag_constraints);
-    main_panel.add(start_pass_no);
-
     // add label and number field for the start ripup costs.
 
     gridbag_constraints.gridwidth = 2;
@@ -270,31 +257,50 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(start_ripup_costs, gridbag_constraints);
     main_panel.add(start_ripup_costs);
 
-    // add label and combo box for the router speed if the speed is set to slow,
-    // free angle
-    // geometry
-    // is used also in the 45 and 90 degree modes.
-    this.speed_fast = tm.getText("fast");
-    this.speed_slow = tm.getText("slow");
-    settings_autorouter_detailed_speed_combo_box = new JComboBox<>();
-    settings_autorouter_detailed_speed_combo_box.addItem(this.speed_fast);
-    settings_autorouter_detailed_speed_combo_box.addItem(this.speed_slow);
-    settings_autorouter_detailed_speed_combo_box.addActionListener(new WindowAutorouteParameter.SpeedListener());
-    settings_autorouter_detailed_speed_combo_box
-        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_detailed_speed_combo_box",
-            settings_autorouter_detailed_speed_combo_box
-                .getSelectedItem()
-                .toString()));
+    // add label and number field for max passes
 
     gridbag_constraints.gridwidth = 2;
-    JLabel speed_label = new JLabel();
-    speed_label.setText(tm.getText("speed"));
-    gridbag.setConstraints(speed_label, gridbag_constraints);
-    main_panel.add(speed_label);
+    JLabel max_passes_label = new JLabel(tm.getText("max_passes"));
+    gridbag.setConstraints(max_passes_label, gridbag_constraints);
+    main_panel.add(max_passes_label);
 
+    max_passes_field = new JFormattedTextField(number_format);
+    max_passes_field.setColumns(5);
+    this.max_passes_field.addKeyListener(new WindowAutorouteParameter.MaxPassesFieldKeyListener());
+    this.max_passes_field.addFocusListener(new WindowAutorouteParameter.MaxPassesFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(settings_autorouter_detailed_speed_combo_box, gridbag_constraints);
-    main_panel.add(settings_autorouter_detailed_speed_combo_box);
+    gridbag.setConstraints(max_passes_field, gridbag_constraints);
+    main_panel.add(max_passes_field);
+
+    // add label and text field for job timeout
+
+    gridbag_constraints.gridwidth = 2;
+    JLabel job_timeout_label = new JLabel(tm.getText("job_timeout"));
+    gridbag.setConstraints(job_timeout_label, gridbag_constraints);
+    main_panel.add(job_timeout_label);
+
+    job_timeout_field = new JFormattedTextField();
+    job_timeout_field.setColumns(10);
+    this.job_timeout_field.addKeyListener(new WindowAutorouteParameter.JobTimeoutFieldKeyListener());
+    this.job_timeout_field.addFocusListener(new WindowAutorouteParameter.JobTimeoutFieldFocusListener());
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(job_timeout_field, gridbag_constraints);
+    main_panel.add(job_timeout_field);
+
+    // add label and number field for max threads
+
+    gridbag_constraints.gridwidth = 2;
+    JLabel max_threads_label = new JLabel(tm.getText("max_threads"));
+    gridbag.setConstraints(max_threads_label, gridbag_constraints);
+    main_panel.add(max_threads_label);
+
+    max_threads_field = new JFormattedTextField(number_format);
+    max_threads_field.setColumns(3);
+    this.max_threads_field.addKeyListener(new WindowAutorouteParameter.MaxThreadsFieldKeyListener());
+    this.max_threads_field.addFocusListener(new WindowAutorouteParameter.MaxThreadsFieldFocusListener());
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(max_threads_field, gridbag_constraints);
+    main_panel.add(max_threads_field);
 
     // add label and combo box for the router algorithm selection
     this.algorithm_current = tm.getText("algorithm_current");
@@ -418,7 +424,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.via_cost_field.setValue(settings.get_via_costs());
     this.plane_via_cost_field.setValue(settings.get_plane_via_costs());
     this.start_ripup_costs.setValue(settings.get_start_ripup_costs());
-    this.start_pass_no.setValue(settings.get_start_pass_no());
+    this.max_passes_field.setValue(settings.maxPasses);
+    this.job_timeout_field.setValue(settings.jobTimeoutString);
+    this.max_threads_field.setValue(settings.maxThreads);
     for (int i = 0; i < preferred_direction_trace_cost_arr.length; i++) {
       this.preferred_direction_trace_cost_arr[i]
           .setValue(settings.get_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
@@ -449,15 +457,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   @Override
   public void parent_deiconified() {
     super.parent_deiconified();
-  }
-
-  public void set_start_pass_no(int input_value) {
-    board_handling.settings.autoroute_settings.set_start_pass_no(input_value);
-    start_pass_no.setValue(input_value);
-  }
-
-  public void set_stop_pass_no(int input_value) {
-    board_handling.settings.autoroute_settings.set_stop_pass_no(input_value);
   }
 
   private class LayerActiveListener implements ActionListener {
@@ -508,7 +507,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       RouterSettings autoroute_settings = board_handling.settings.autoroute_settings;
       autoroute_settings.setRunFanout(settings_autorouter_fanout_pass_button.isSelected());
-      autoroute_settings.set_start_pass_no(1);
     }
   }
 
@@ -518,7 +516,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       RouterSettings autoroute_settings = board_handling.settings.autoroute_settings;
       autoroute_settings.setRunRouter(settings_autorouter_autoroute_pass_button.isSelected());
-      autoroute_settings.set_start_pass_no(1);
     }
   }
 
@@ -528,7 +525,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       RouterSettings autoroute_settings = board_handling.settings.autoroute_settings;
       autoroute_settings.setRunOptimizer(settings_autorouter_postroute_pass_button.isSelected());
-      autoroute_settings.set_start_pass_no(1);
     }
   }
 
@@ -658,36 +654,40 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class StartPassFieldKeyListener extends KeyAdapter {
+  private class MaxPassesFieldKeyListener extends KeyAdapter {
 
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        int old_value = board_handling.settings.autoroute_settings.get_start_pass_no();
-        Object input = start_pass_no.getValue();
+        int old_value = board_handling.settings.autoroute_settings.maxPasses;
+        Object input = max_passes_field.getValue();
         int input_value;
         if (input instanceof Number number) {
           input_value = number.intValue();
           if (input_value < 1) {
             input_value = 1;
           }
-          if (input_value > 99) {
-            input_value = 99;
+          if (input_value > 9999) {
+            input_value = 9999;
           }
         } else {
           input_value = old_value;
         }
-
-        set_start_pass_no(input_value);
+        board_handling.settings.autoroute_settings.maxPasses = input_value;
+        max_passes_field.setValue(input_value);
+        max_passes_input_completed = true;
+      } else {
+        max_passes_input_completed = false;
       }
     }
   }
 
-  private class StartPassFieldFocusListener implements FocusListener {
+  private class MaxPassesFieldFocusListener implements FocusListener {
 
     @Override
     public void focusLost(FocusEvent p_evt) {
-      if (!start_ripup_cost_input_completed) {
+      if (!max_passes_input_completed) {
+        max_passes_input_completed = true;
         refresh();
       }
     }
@@ -697,16 +697,89 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class SpeedListener implements ActionListener {
+  private class JobTimeoutFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      boolean old_is_slow = board_handling.get_routing_board().rules.get_use_slow_autoroute_algorithm();
-      boolean new_is_slow = settings_autorouter_detailed_speed_combo_box.getSelectedItem() == speed_slow;
-      if (old_is_slow != new_is_slow) {
-        board_handling.get_routing_board().rules.set_use_slow_autoroute_algorithm(new_is_slow);
-        board_handling.get_routing_board().search_tree_manager.reset_compensated_trees();
+    public void keyTyped(KeyEvent p_evt) {
+      if (p_evt.getKeyChar() == '\n') {
+        String old_value = board_handling.settings.autoroute_settings.jobTimeoutString;
+        Object input = job_timeout_field.getValue();
+        String input_value;
+        if (input instanceof String str) {
+          input_value = str;
+          // Basic validation: check if it matches timespan format (HH:MM:SS or
+          // D.HH:MM:SS)
+          if (!input_value.matches("^(\\d+\\.)?\\d{1,2}:\\d{2}:\\d{2}$")) {
+            input_value = old_value;
+          }
+        } else {
+          input_value = old_value;
+        }
+        board_handling.settings.autoroute_settings.jobTimeoutString = input_value;
+        job_timeout_field.setValue(input_value);
+        job_timeout_input_completed = true;
+      } else {
+        job_timeout_input_completed = false;
       }
+    }
+  }
+
+  private class JobTimeoutFieldFocusListener implements FocusListener {
+
+    @Override
+    public void focusLost(FocusEvent p_evt) {
+      if (!job_timeout_input_completed) {
+        job_timeout_input_completed = true;
+        refresh();
+      }
+    }
+
+    @Override
+    public void focusGained(FocusEvent p_evt) {
+    }
+  }
+
+  private class MaxThreadsFieldKeyListener extends KeyAdapter {
+
+    @Override
+    public void keyTyped(KeyEvent p_evt) {
+      if (p_evt.getKeyChar() == '\n') {
+        int old_value = board_handling.settings.autoroute_settings.maxThreads;
+        Object input = max_threads_field.getValue();
+        int input_value;
+        int max_available = Runtime.getRuntime().availableProcessors();
+        if (input instanceof Number number) {
+          input_value = number.intValue();
+          if (input_value < 1) {
+            input_value = 1;
+          }
+          if (input_value > max_available) {
+            input_value = max_available;
+          }
+        } else {
+          input_value = old_value;
+        }
+        board_handling.settings.autoroute_settings.maxThreads = input_value;
+        max_threads_field.setValue(input_value);
+        max_threads_input_completed = true;
+      } else {
+        max_threads_input_completed = false;
+      }
+    }
+  }
+
+  private class MaxThreadsFieldFocusListener implements FocusListener {
+
+    @Override
+    public void focusLost(FocusEvent p_evt) {
+      if (!max_threads_input_completed) {
+        max_threads_input_completed = true;
+        refresh();
+      }
+    }
+
+    @Override
+    public void focusGained(FocusEvent p_evt) {
     }
   }
 

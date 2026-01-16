@@ -49,10 +49,6 @@ public class RouterSettings implements Serializable {
   public int maxThreads = Math.max(1, Runtime
       .getRuntime()
       .availableProcessors() - 1);
-  // The starting and current pass number.
-  private transient int start_pass_no = 1;
-  // The stopping pass number.
-  private transient int stop_pass_no = 999;
 
   /**
    * We need a parameterless constructor for the serialization.
@@ -167,8 +163,6 @@ public class RouterSettings implements Serializable {
     result.scoring.via_costs = this.scoring.via_costs;
     result.scoring.plane_via_costs = this.scoring.plane_via_costs;
     result.scoring.start_ripup_costs = this.scoring.start_ripup_costs;
-    result.start_pass_no = this.start_pass_no;
-    result.stop_pass_no = this.stop_pass_no;
     return result;
   }
 
@@ -178,28 +172,6 @@ public class RouterSettings implements Serializable {
 
   public void set_start_ripup_costs(int p_value) {
     scoring.start_ripup_costs = Math.max(p_value, 1);
-  }
-
-  public int get_start_pass_no() {
-    return start_pass_no;
-  }
-
-  public void set_start_pass_no(int p_value) {
-    start_pass_no = Math.max(p_value, 1);
-    start_pass_no = Math.min(start_pass_no, 99999);
-  }
-
-  public int get_stop_pass_no() {
-    return stop_pass_no;
-  }
-
-  public void set_stop_pass_no(int p_value) {
-    stop_pass_no = Math.max(p_value, start_pass_no);
-    stop_pass_no = Math.min(stop_pass_no, 99999);
-  }
-
-  public void increment_pass_no() {
-    ++start_pass_no;
   }
 
   public boolean getRunFanout() {
