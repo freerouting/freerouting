@@ -140,7 +140,14 @@ Below is a comprehensive list of command-line options available in Freerouting, 
     - `ALL` (7)
   - Accepts both string names and numerical values.
 
-- **`-help`**  
+- **`--user_data_path=[directory]`**
+  Defines the directory where configuration and log files are stored.
+  - Purpose:
+    - `freerouting.log` will be created in this directory.
+    - `freerouting.json` (settings) will be read from this directory if it exists, or created there if it doesn't.
+  - Format constraint: Must use the `--user_data_path=path` syntax with an equals sign.
+
+- **`-help`**
   Displays help information and exits.
 
 ## Adjusting Internal Settings
