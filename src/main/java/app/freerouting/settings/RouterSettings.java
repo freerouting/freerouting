@@ -12,8 +12,12 @@ public class RouterSettings implements Serializable {
 
   @SerializedName("enabled")
   public boolean enabled = true;
+  // Valid algorithm values
+  public static final String ALGORITHM_CURRENT = "freerouting-router";
+  public static final String ALGORITHM_V19 = "freerouting-router-v19";
+
   @SerializedName("algorithm")
-  public String algorithm = "freerouting-router";
+  public String algorithm = ALGORITHM_CURRENT;
   @SerializedName("job_timeout")
   public String jobTimeoutString = "12:00:00";
   @SerializedName("max_passes")

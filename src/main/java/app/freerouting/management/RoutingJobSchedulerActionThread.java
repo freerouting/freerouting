@@ -3,8 +3,10 @@ package app.freerouting.management;
 import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.autoroute.BatchAutorouter;
+import app.freerouting.autoroute.BatchAutorouterV19;
 import app.freerouting.autoroute.BatchFanout;
 import app.freerouting.autoroute.BatchOptimizer;
+import app.freerouting.autoroute.NamedAlgorithm;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
 import app.freerouting.core.BoardFileDetails;
@@ -15,6 +17,7 @@ import app.freerouting.core.StoppableThread;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.RouterSettings;
 import com.sun.management.ThreadMXBean;
 import java.io.ByteArrayOutputStream;
 import java.lang.management.ManagementFactory;
@@ -106,22 +109,54 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
     if (job.routerSettings.getRunRouter()) {
       job.stage = RoutingStage.ROUTING;
-      // start the routing task
-      BatchAutorouter router = new BatchAutorouter(job);
+
+      // Select router implementation based on algorithm setting
+      NamedAlgorithm router;
+      String algorithm = job.routerSettings.algorithm;
+
+      if (RouterSettings.ALGORITHM_V19.equals(algorithm)) {
+        job.logInfo("Using V1.9 router algorithm (freerouting-router-v19)");
+        router = new BatchAutorouterV19(job);
+      } else {
+        // Default to current router
+        if (!RouterSettings.ALGORITHM_CURRENT.equals(algorithm)) {
+          job.logInfo("Unknown router algorithm '" + algorithm + "', using default (freerouting-router)");
+        }
+        job.logInfo("Using current router algorithm (freerouting-router)");
+        router = new BatchAutorouter(job);
+      }
+
       router.addBoardUpdatedEventListener(new BoardUpdatedEventListener() {
         @Override
         public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
           setJobOutputToSpecctraSes(job);
         }
       });
-      router.runBatchLoop();
+
+      // Call runBatchLoop - both router types have this method
+      if (router instanceof BatchAutorouterV19) {
+        ((BatchAutorouterV19) router).runBatchLoop();
+      } else {
+        ((BatchAutorouter) router).runBatchLoop();
+      }
 
       // Log session summary
-      if (router.getSessionStartTime() != null) {
+      Instant sessionStartTime = null;
+      int initialUnroutedCount = 0;
+
+      if (router instanceof BatchAutorouterV19) {
+        sessionStartTime = ((BatchAutorouterV19) router).getSessionStartTime();
+        initialUnroutedCount = ((BatchAutorouterV19) router).getInitialUnroutedCount();
+      } else if (router instanceof BatchAutorouter) {
+        sessionStartTime = ((BatchAutorouter) router).getSessionStartTime();
+        initialUnroutedCount = ((BatchAutorouter) router).getInitialUnroutedCount();
+      }
+
+      if (sessionStartTime != null) {
         Instant sessionEndTime = Instant.now();
-        long totalSeconds = java.time.Duration.between(router.getSessionStartTime(), sessionEndTime).getSeconds();
+        long totalSeconds = java.time.Duration.between(sessionStartTime, sessionEndTime).getSeconds();
         double totalTime = totalSeconds
-            + (java.time.Duration.between(router.getSessionStartTime(), sessionEndTime).getNano() / 1000000000.0);
+            + (java.time.Duration.between(sessionStartTime, sessionEndTime).getNano() / 1000000000.0);
 
         var finalStats = job.board.get_statistics();
         // The start_pass_no is incremented in the loop, so it represents the next pass
@@ -152,7 +187,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         String sessionSummary = String.format(
             "Auto-router session %s started with %d unrouted nets, ran %d passes in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f total CPU seconds and %d MB total allocated memory.",
             completionStatus,
-            router.getInitialUnroutedCount(),
+            initialUnroutedCount,
             (currentPassNo > job.routerSettings.get_stop_pass_no()) ? currentPassNo - 1 : currentPassNo,
             totalTime,
             finalStats.getNormalizedScore(job.routerSettings.scoring),
