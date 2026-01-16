@@ -11,7 +11,7 @@ import java.util.Random;
 public class RouterSettings implements Serializable {
 
   @SerializedName("enabled")
-  public transient boolean enabled = true;
+  public boolean enabled = true;
   @SerializedName("algorithm")
   public String algorithm = "freerouting-router";
   @SerializedName("job_timeout")
