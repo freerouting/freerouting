@@ -94,52 +94,66 @@ public class RoutingJobScheduler {
                       }
                     }
 
-                    // CRITICAL FIX: Reinitialize RouterSettings with the board to get
-                    // board-specific optimizations
-                    // (preferred directions, trace costs based on board dimensions, etc.)
-                    // Without this, CLI uses generic default settings while GUI gets optimized
-                    // settings,
-                    // causing significant performance differences (70 vs 135 unrouted items)
+                    // CRITICAL FIX: Only reinitialize RouterSettings with board-specific
+                    // optimizations
+                    // if the settings were created with defaults (layer count = 0 or null).
+                    // If settings already have proper layer configuration (from test or DSN),
+                    // preserve them to avoid changing preferred directions which can break routing.
 
-                    // Save the current settings (which include command-line overrides)
-                    app.freerouting.settings.RouterSettings cliSettings = job.routerSettings;
+                    boolean hasLayerConfiguration = (job.routerSettings.isLayerActive != null &&
+                        job.routerSettings.isLayerActive.length > 0);
 
-                    // Create new settings with board-specific optimizations
-                    job.routerSettings = new app.freerouting.settings.RouterSettings(job.board);
+                    if (!hasLayerConfiguration) {
+                      FRLogger.info("Applying board-specific initialization (settings have no layer configuration)");
 
-                    // DEBUG: Log settings AFTER board initialization
-                    FRLogger.info("=== AFTER board initialization ===");
-                    FRLogger.info("RouterSettings layer count: "
-                        + (job.routerSettings.isLayerActive != null ? job.routerSettings.isLayerActive.length
-                            : "null"));
-                    if (job.routerSettings.isLayerActive != null) {
-                      for (int i = 0; i < job.routerSettings.isLayerActive.length; i++) {
-                        FRLogger.info("  Layer " + i + ": active=" + job.routerSettings.isLayerActive[i] +
-                            ", horizontal="
-                            + (job.routerSettings.isPreferredDirectionHorizontalOnLayer != null
-                                ? job.routerSettings.isPreferredDirectionHorizontalOnLayer[i]
-                                : "null"));
+                      // Save the current settings (which include command-line overrides)
+                      app.freerouting.settings.RouterSettings cliSettings = job.routerSettings;
+
+                      // Create new settings with board-specific optimizations
+                      job.routerSettings = new app.freerouting.settings.RouterSettings(job.board);
+
+                      // DEBUG: Log settings AFTER board initialization
+                      FRLogger.info("=== AFTER board initialization ===");
+                      FRLogger.info("RouterSettings layer count: "
+                          + (job.routerSettings.isLayerActive != null ? job.routerSettings.isLayerActive.length
+                              : "null"));
+                      if (job.routerSettings.isLayerActive != null) {
+                        for (int i = 0; i < job.routerSettings.isLayerActive.length; i++) {
+                          FRLogger.info("  Layer " + i + ": active=" + job.routerSettings.isLayerActive[i] +
+                              ", horizontal="
+                              + (job.routerSettings.isPreferredDirectionHorizontalOnLayer != null
+                                  ? job.routerSettings.isPreferredDirectionHorizontalOnLayer[i]
+                                  : "null"));
+                        }
+                      }
+
+                      // Manually copy critical command-line parameters that must be preserved
+                      // (reflection-based copying doesn't work reliably for all fields)
+                      job.routerSettings.enabled = cliSettings.enabled;
+                      job.routerSettings.algorithm = cliSettings.algorithm;
+                      job.routerSettings.jobTimeoutString = cliSettings.jobTimeoutString;
+                      job.routerSettings.maxPasses = cliSettings.maxPasses;
+                      job.routerSettings.trace_pull_tight_accuracy = cliSettings.trace_pull_tight_accuracy;
+                      job.routerSettings.vias_allowed = cliSettings.vias_allowed;
+                      job.routerSettings.automatic_neckdown = cliSettings.automatic_neckdown;
+                      job.routerSettings.maxThreads = cliSettings.maxThreads;
+                      job.routerSettings.random_seed = cliSettings.random_seed;
+                      job.routerSettings.ignoreNetClasses = cliSettings.ignoreNetClasses;
+                      // Copy nested settings objects using reflection
+                      job.setSettings(cliSettings);
+                    } else {
+                      FRLogger.info("Preserving existing layer configuration (settings already initialized)");
+                      // Settings already have proper layer configuration from test/DSN
+                      // Just ensure layer count matches the board
+                      if (job.routerSettings.isLayerActive.length != job.board.get_layer_count()) {
+                        FRLogger.warn("Layer count mismatch: settings=" + job.routerSettings.isLayerActive.length +
+                            ", board=" + job.board.get_layer_count());
+                        job.routerSettings.setLayerCount(job.board.get_layer_count());
                       }
                     }
 
-                    // Manually copy critical command-line parameters that must be preserved
-                    // (reflection-based copying doesn't work reliably for all fields)
-                    job.routerSettings.enabled = cliSettings.enabled;
-                    job.routerSettings.algorithm = cliSettings.algorithm;
-                    job.routerSettings.jobTimeoutString = cliSettings.jobTimeoutString;
-                    job.routerSettings.maxPasses = cliSettings.maxPasses;
-                    job.routerSettings.trace_pull_tight_accuracy = cliSettings.trace_pull_tight_accuracy;
-                    job.routerSettings.vias_allowed = cliSettings.vias_allowed;
-                    job.routerSettings.automatic_neckdown = cliSettings.automatic_neckdown;
-                    job.routerSettings.maxThreads = cliSettings.maxThreads;
-                    job.routerSettings.random_seed = cliSettings.random_seed;
-                    job.routerSettings.ignoreNetClasses = cliSettings.ignoreNetClasses;
-                    // Copy nested settings objects using reflection
-                    job.setSettings(cliSettings);
-
-                    // CRITICAL: Recalculate stop_pass_no based on the CLI maxPasses value
-                    // (this was calculated in Freerouting.java but got lost when we replaced the
-                    // settings)
+                    // CRITICAL: Recalculate stop_pass_no based on the maxPasses value
+                    // (this was calculated in Freerouting.java but might have been lost)
                     job.routerSettings.set_stop_pass_no(
                         job.routerSettings.get_start_pass_no() + job.routerSettings.maxPasses - 1);
 
