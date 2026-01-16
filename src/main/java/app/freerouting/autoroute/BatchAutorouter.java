@@ -91,7 +91,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       int p_pull_tight_accuracy) {
     super(p_thread, board, settings);
 
-    this.random = new Random(settings.random_seed);
+    this.random = new Random();
 
     this.remove_unconnected_vias = p_remove_unconnected_vias;
     if (p_with_preferred_directions) {

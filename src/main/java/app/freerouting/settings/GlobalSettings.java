@@ -449,11 +449,6 @@ public class GlobalSettings implements Serializable {
             }
             i++;
           }
-        } else if (p_args[i].startsWith("-random_seed")) {
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            routerSettings.random_seed = TextManager.hexadecimalStringToLong(p_args[i + 1]);
-            i++;
-          }
         } else {
           FRLogger.warn("Unknown command line argument: " + p_args[i]);
         }

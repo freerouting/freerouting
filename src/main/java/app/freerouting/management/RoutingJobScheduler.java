@@ -137,7 +137,6 @@ public class RoutingJobScheduler {
                       job.routerSettings.vias_allowed = cliSettings.vias_allowed;
                       job.routerSettings.automatic_neckdown = cliSettings.automatic_neckdown;
                       job.routerSettings.maxThreads = cliSettings.maxThreads;
-                      job.routerSettings.random_seed = cliSettings.random_seed;
                       job.routerSettings.ignoreNetClasses = cliSettings.ignoreNetClasses;
                       // Copy nested settings objects using reflection
                       job.setSettings(cliSettings);

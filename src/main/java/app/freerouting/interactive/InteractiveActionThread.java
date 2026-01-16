@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Used for running an interactive action in a separate thread, that can be stopped by the user. This typically represents an action that is triggered by the user on the GUI, such as autorouting,
+ * Used for running an interactive action in a separate thread, that can be
+ * stopped by the user. This typically represents an action that is triggered by
+ * the user on the GUI, such as autorouting,
  * fanout, etc.
  */
 public abstract class InteractiveActionThread extends StoppableThread {
@@ -35,14 +37,18 @@ public abstract class InteractiveActionThread extends StoppableThread {
     return new AutorouteThread(boardManager, job);
   }
 
-  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(GuiBoardManager boardManager, RoutingJob job) {
-    // TODO: we need to clone the settings here for now, because the GUI modifies the settings of the boardmanager (but this should be eliminated in the future)
-    // The main issue here is that the job.routerSettings is modified by the command line argument, but the boardManager.settings.autoroute_settings is modified by the GUI
-    // Both should be kept in sync properly instead of cloning here, because now the command line argument is ignored if it wasn't loaded to the GUI first.
-    // Some arguments are never loaded to the GUI (eg. router.random_seed), so they are lost now. As a temporary fix, we preserve the random seed here.
-    Long randomSeed = job.routerSettings.random_seed;
+  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(GuiBoardManager boardManager,
+      RoutingJob job) {
+    // TODO: we need to clone the settings here for now, because the GUI modifies
+    // the settings of the boardmanager (but this should be eliminated in the
+    // future)
+    // The main issue here is that the job.routerSettings is modified by the command
+    // line argument, but the boardManager.settings.autoroute_settings is modified
+    // by the GUI
+    // Both should be kept in sync properly instead of cloning here, because now the
+    // command line argument is ignored if it wasn't loaded to the GUI first.
+    // Some arguments are never loaded to the GUI, so they are lost now.
     job.routerSettings = boardManager.settings.autoroute_settings.clone();
-    job.routerSettings.random_seed = randomSeed;
 
     var routerThread = new AutorouterAndRouteOptimizerThread(boardManager, job);
     routerThread.addListener(new ThreadActionListener() {
@@ -62,7 +68,9 @@ public abstract class InteractiveActionThread extends StoppableThread {
           FRLogger.warn("InteractiveActionThread: unable to save global settings");
         }
 
-        // Show the user settings dialog after auto-routing is finished if the number of completed jobs is greater than 5 and the user has not yet set their email address
+        // Show the user settings dialog after auto-routing is finished if the number of
+        // completed jobs is greater than 5 and the user has not yet set their email
+        // address
         if ((globalSettings.statistics.jobsCompleted >= 5) && globalSettings.userProfileSettings.userEmail.isEmpty()) {
           boardManager.get_panel().board_frame.menubar.showProfileDialog();
         }
@@ -80,7 +88,8 @@ public abstract class InteractiveActionThread extends StoppableThread {
     return new PullTightThread(boardManager, job);
   }
 
-  public static InteractiveActionThread get_read_logfile_instance(GuiBoardManager boardManager, RoutingJob job, InputStream p_input_stream) {
+  public static InteractiveActionThread get_read_logfile_instance(GuiBoardManager boardManager, RoutingJob job,
+      InputStream p_input_stream) {
     return new ReadLogfileThread(boardManager, job, p_input_stream);
   }
 
@@ -185,7 +194,8 @@ public abstract class InteractiveActionThread extends StoppableThread {
         }
         if (!done) {
           try {
-            InteractiveState new_state = logfile_scope.read_scope(boardManager.activityReplayFile, boardManager.interactive_state, boardManager);
+            InteractiveState new_state = logfile_scope.read_scope(boardManager.activityReplayFile,
+                boardManager.interactive_state, boardManager);
             if (new_state == null) {
               FRLogger.warn("BoardHandling:read_logfile: inconsistent logfile scope");
               new_state = previous_state;

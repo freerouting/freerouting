@@ -29,11 +29,6 @@ public class TestBasedOnAnIssue {
   }
 
   protected RoutingJob GetRoutingJob(String filename) {
-    RoutingJob job = GetRoutingJob(filename, null);
-    return job;
-  }
-
-  protected RoutingJob GetRoutingJob(String filename, Long seed) {
     // Create a new session
     UUID sessionId = UUID.randomUUID();
     Session session = SessionManager
@@ -79,9 +74,6 @@ public class TestBasedOnAnIssue {
 
     job.routerSettings.jobTimeoutString = "00:01:00";
     job.routerSettings.maxPasses = 100;
-    if (seed != null) {
-      job.routerSettings.random_seed = seed;
-    }
 
     return job;
   }
@@ -99,7 +91,8 @@ public class TestBasedOnAnIssue {
     long startTime = System.currentTimeMillis();
     long timeoutInMillis = TextManager.parseTimespanString(settings.jobTimeoutString) * 1000;
 
-    while ((job.state != RoutingJobState.COMPLETED) && (job.state != RoutingJobState.CANCELLED) && (job.state != RoutingJobState.TERMINATED)) {
+    while ((job.state != RoutingJobState.COMPLETED) && (job.state != RoutingJobState.CANCELLED)
+        && (job.state != RoutingJobState.TERMINATED)) {
       try {
         Thread.sleep(100);
       } catch (InterruptedException e) {
