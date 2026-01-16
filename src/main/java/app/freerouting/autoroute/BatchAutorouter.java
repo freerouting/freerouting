@@ -640,7 +640,8 @@ public class BatchAutorouter extends NamedAlgorithm {
               boardStatisticsAfter.clearanceViolations.totalCount);
       if (job.resourceUsage.cpuTimeUsed > 0) {
         passCompletedMessage += ", using " + FRLogger.defaultFloatFormat.format(job.resourceUsage.cpuTimeUsed)
-            + " CPU seconds and the job allocated " + (int) job.resourceUsage.maxMemoryUsed + " MB of memory so far.";
+            + " CPU seconds and the job allocated "
+            + FRLogger.defaultFloatFormat.format(job.resourceUsage.maxMemoryUsed / 1024.0f) + " GB of memory so far.";
       } else {
         passCompletedMessage += ".";
       }

@@ -184,7 +184,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         }
 
         String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, ran %d passes in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f total CPU seconds and %d MB total allocated memory.",
+            "Auto-router session %s started with %d unrouted nets, ran %d passes in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f total CPU seconds and %.2f GB total allocated memory (with %.0f MB peak).",
             completionStatus,
             initialUnroutedCount,
             (currentPassNo > job.routerSettings.get_stop_pass_no()) ? currentPassNo - 1 : currentPassNo,
@@ -193,7 +193,8 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
             finalStats.connections.incompleteCount,
             finalStats.clearanceViolations.totalCount,
             job.resourceUsage.cpuTimeUsed,
-            (int) job.resourceUsage.maxMemoryUsed);
+            job.resourceUsage.maxMemoryUsed / 1024.0f,
+            job.resourceUsage.peakMemoryUsed);
 
         job.logInfo(sessionSummary);
       }
@@ -254,6 +255,16 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         // thread.
         job.resourceUsage.maxMemoryUsed = allocatedMB;
       }
+    }
+
+    // Track peak heap memory usage across all threads
+    java.lang.management.MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+    long heapUsed = memoryMXBean.getHeapMemoryUsage().getUsed();
+    float heapUsedMB = heapUsed / (1024.0f * 1024.0f);
+
+    // Update peak memory if current usage is higher
+    if (heapUsedMB > job.resourceUsage.peakMemoryUsed) {
+      job.resourceUsage.peakMemoryUsed = heapUsedMB;
     }
   }
 

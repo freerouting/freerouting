@@ -62,10 +62,11 @@ foreach ($testFile in $testFiles) {
     $violations = "?"
     $qualityScore = "?"
     
+    
     # Parse Summary Line
-    # Example 1: Auto-router session completed with pass number limit hit: started with 86 unrouted nets, ran 500 passes in 67,66 seconds, final score: 987,99 (1 unrouted, 0 violations), using 2205,06 CPU seconds and 49394 MB memory.
-    # Example 2: Auto-router session completed: started with 86 unrouted nets, ran 104 passes in 28,54 seconds, final score: 988,57 (1 unrouted, 0 violations), using 392,05 CPU seconds and 21813 MB memory.
-    if ($output -match "Auto-router session completed(?: with (.+?))?: started with (\d+) unrouted nets, ran (\d+) passes in ([\d,.]+) seconds, final score: ([\d,.]+) \((\d+) unrouted, (\d+) violations\), using .*? and (\d+) MB memory") {
+    # Example 1: Auto-router session completed with pass number limit hit: started with 195 unrouted nets, ran 1 passes in 14.74 seconds, final score: 822.58 (86 unrouted, 0 violations), using 13.50 total CPU seconds and 14.8 GB total allocated memory (with 392 MB peak).
+    # Example 2: Auto-router session completed: started with 86 unrouted nets, ran 104 passes in 28.54 seconds, final score: 988.57 (1 unrouted, 0 violations), using 392.05 CPU seconds and 21.3 GB total allocated memory (with 512 MB peak).
+    if ($output -match "Auto-router session completed(?: with (.+?))?: started with (\d+) unrouted nets, ran (\d+) passes in ([\d,.]+) seconds, final score: ([\d,.]+) \((\d+) unrouted, (\d+) violations\), using .*? and ([\d,.]+) GB total allocated memory \(with ([\d,.]+) MB peak\)") {
         $reason = $matches[1]
         $totalNets = $matches[2]
         $passesCompleted = $matches[3]
@@ -73,7 +74,11 @@ foreach ($testFile in $testFiles) {
         $qualityScore = $matches[5]
         $unroutedNets = $matches[6]
         $violations = $matches[7]
-        $memoryMB = $matches[8]
+        $memoryGB = $matches[8]
+        $peakMemoryMB = $matches[9]
+        
+        # Convert GB to MB for display consistency
+        $memoryMB = [math]::Round([double]($memoryGB -replace ',', '.') * 1024, 0)
         
         # Handle decimal separator for time if comma
         $rawSeconds = [double]($rawSecondsStr -replace ',', '.')
