@@ -76,6 +76,40 @@ public class RoutingJobScheduler {
                         new ItemIdentificationNumberGenerator());
                     job.board = boardManager.get_routing_board();
 
+                    // CRITICAL FIX: Reinitialize RouterSettings with the board to get
+                    // board-specific optimizations
+                    // (preferred directions, trace costs based on board dimensions, etc.)
+                    // Without this, CLI uses generic default settings while GUI gets optimized
+                    // settings,
+                    // causing significant performance differences (70 vs 135 unrouted items)
+
+                    // Save the current settings (which include command-line overrides)
+                    app.freerouting.settings.RouterSettings cliSettings = job.routerSettings;
+
+                    // Create new settings with board-specific optimizations
+                    job.routerSettings = new app.freerouting.settings.RouterSettings(job.board);
+
+                    // Manually copy critical command-line parameters that must be preserved
+                    // (reflection-based copying doesn't work reliably for all fields)
+                    job.routerSettings.enabled = cliSettings.enabled;
+                    job.routerSettings.algorithm = cliSettings.algorithm;
+                    job.routerSettings.jobTimeoutString = cliSettings.jobTimeoutString;
+                    job.routerSettings.maxPasses = cliSettings.maxPasses;
+                    job.routerSettings.trace_pull_tight_accuracy = cliSettings.trace_pull_tight_accuracy;
+                    job.routerSettings.vias_allowed = cliSettings.vias_allowed;
+                    job.routerSettings.automatic_neckdown = cliSettings.automatic_neckdown;
+                    job.routerSettings.maxThreads = cliSettings.maxThreads;
+                    job.routerSettings.random_seed = cliSettings.random_seed;
+                    job.routerSettings.ignoreNetClasses = cliSettings.ignoreNetClasses;
+                    // Copy nested settings objects using reflection
+                    job.setSettings(cliSettings);
+
+                    // CRITICAL: Recalculate stop_pass_no based on the CLI maxPasses value
+                    // (this was calculated in Freerouting.java but got lost when we replaced the
+                    // settings)
+                    job.routerSettings.set_stop_pass_no(
+                        job.routerSettings.get_start_pass_no() + job.routerSettings.maxPasses - 1);
+
                     // Load SES file if specified
                     if (globalSettings.design_session_filename != null) {
                       try {

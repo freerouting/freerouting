@@ -47,6 +47,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final JComboBox<String> settings_autorouter_detailed_speed_combo_box;
   private final String speed_fast;
   private final String speed_slow;
+  private final JComboBox<String> settings_autorouter_algorithm_combo_box;
+  private final String algorithm_current;
+  private final String algorithm_v19;
   private final JFormattedTextField[] preferred_direction_trace_cost_arr;
   private final JFormattedTextField[] against_preferred_direction_trace_cost_arr;
   private final boolean[] preferred_direction_trace_costs_input_completed;
@@ -97,7 +100,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     LayerStructure layer_structure = board_handling.get_routing_board().layer_structure;
     int layer_count = layer_structure.arr.length;
 
-    // every layer is a row in the gridbag and has 3 columns: name, active, preferred direction
+    // every layer is a row in the gridbag and has 3 columns: name, active,
+    // preferred direction
     layer_name_arr = new JLabel[layer_count];
     settings_autorouter_layer_active_arr = new JCheckBox[layer_count];
     settings_autorouter_combo_box_arr = new ArrayList<>(layer_count);
@@ -115,7 +119,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       // set the active checkbox
       settings_autorouter_layer_active_arr[i] = new JCheckBox();
       settings_autorouter_layer_active_arr[i].addActionListener(new LayerActiveListener(i));
-      settings_autorouter_layer_active_arr[i].addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_layer_active_arr", null));
+      settings_autorouter_layer_active_arr[i]
+          .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_layer_active_arr", null));
       board_handling.settings.autoroute_settings.set_layer_active(i, curr_layer.is_signal);
       settings_autorouter_layer_active_arr[i].setEnabled(curr_layer.is_signal);
       gridbag.setConstraints(settings_autorouter_layer_active_arr[i], gridbag_constraints);
@@ -132,7 +137,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       settings_autorouter_combo_box_arr
           .get(i)
           .addActionListener(new PreferredDirectionListener(i));
-      //settings_autorouter_combo_box_arr.get(i).addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_combo_box_arr", null));
+      // settings_autorouter_combo_box_arr.get(i).addActionListener(evt ->
+      // FRAnalytics.buttonClicked("settings_autorouter_combo_box_arr", null));
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(settings_autorouter_combo_box_arr.get(i), gridbag_constraints);
       main_panel.add(settings_autorouter_combo_box_arr.get(i));
@@ -149,7 +155,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     settings_autorouter_vias_allowed = new JCheckBox();
     settings_autorouter_vias_allowed.addActionListener(new ViasAllowedListener());
-    settings_autorouter_vias_allowed.addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_vias_allowed", settings_autorouter_vias_allowed.getText()));
+    settings_autorouter_vias_allowed.addActionListener(
+        _ -> FRAnalytics.buttonClicked("settings_autorouter_vias_allowed", settings_autorouter_vias_allowed.getText()));
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(settings_autorouter_vias_allowed, gridbag_constraints);
@@ -174,11 +181,16 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.settings_autorouter_postroute_pass_button.setToolTipText(tm.getText("postroute_tooltip"));
 
     settings_autorouter_fanout_pass_button.addActionListener(new FanoutListener());
-    settings_autorouter_fanout_pass_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_fanout_pass_button", settings_autorouter_fanout_pass_button.getText()));
+    settings_autorouter_fanout_pass_button.addActionListener(_ -> FRAnalytics
+        .buttonClicked("settings_autorouter_fanout_pass_button", settings_autorouter_fanout_pass_button.getText()));
     settings_autorouter_autoroute_pass_button.addActionListener(new AutorouteListener());
-    settings_autorouter_autoroute_pass_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_autoroute_pass_button", settings_autorouter_autoroute_pass_button.getText()));
+    settings_autorouter_autoroute_pass_button
+        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_autoroute_pass_button",
+            settings_autorouter_autoroute_pass_button.getText()));
     settings_autorouter_postroute_pass_button.addActionListener(new PostrouteListener());
-    settings_autorouter_postroute_pass_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_postroute_pass_button", settings_autorouter_postroute_pass_button.getText()));
+    settings_autorouter_postroute_pass_button
+        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_postroute_pass_button",
+            settings_autorouter_postroute_pass_button.getText()));
 
     settings_autorouter_fanout_pass_button.setSelected(false);
     settings_autorouter_autoroute_pass_button.setSelected(true);
@@ -258,7 +270,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(start_ripup_costs, gridbag_constraints);
     main_panel.add(start_ripup_costs);
 
-    // add label and combo box for the router speed if the speed is set to slow, free angle
+    // add label and combo box for the router speed if the speed is set to slow,
+    // free angle
     // geometry
     // is used also in the 45 and 90 degree modes.
     this.speed_fast = tm.getText("fast");
@@ -267,9 +280,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     settings_autorouter_detailed_speed_combo_box.addItem(this.speed_fast);
     settings_autorouter_detailed_speed_combo_box.addItem(this.speed_slow);
     settings_autorouter_detailed_speed_combo_box.addActionListener(new WindowAutorouteParameter.SpeedListener());
-    settings_autorouter_detailed_speed_combo_box.addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_detailed_speed_combo_box", settings_autorouter_detailed_speed_combo_box
-        .getSelectedItem()
-        .toString()));
+    settings_autorouter_detailed_speed_combo_box
+        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_detailed_speed_combo_box",
+            settings_autorouter_detailed_speed_combo_box
+                .getSelectedItem()
+                .toString()));
 
     gridbag_constraints.gridwidth = 2;
     JLabel speed_label = new JLabel();
@@ -280,6 +295,29 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(settings_autorouter_detailed_speed_combo_box, gridbag_constraints);
     main_panel.add(settings_autorouter_detailed_speed_combo_box);
+
+    // add label and combo box for the router algorithm selection
+    this.algorithm_current = tm.getText("algorithm_current");
+    this.algorithm_v19 = tm.getText("algorithm_v19");
+    settings_autorouter_algorithm_combo_box = new JComboBox<>();
+    settings_autorouter_algorithm_combo_box.addItem(this.algorithm_current);
+    settings_autorouter_algorithm_combo_box.addItem(this.algorithm_v19);
+    settings_autorouter_algorithm_combo_box.addActionListener(new WindowAutorouteParameter.AlgorithmListener());
+    settings_autorouter_algorithm_combo_box
+        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_algorithm_combo_box",
+            settings_autorouter_algorithm_combo_box
+                .getSelectedItem()
+                .toString()));
+
+    gridbag_constraints.gridwidth = 2;
+    JLabel algorithm_label = new JLabel();
+    algorithm_label.setText(tm.getText("algorithm"));
+    gridbag.setConstraints(algorithm_label, gridbag_constraints);
+    main_panel.add(algorithm_label);
+
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(settings_autorouter_algorithm_combo_box, gridbag_constraints);
+    main_panel.add(settings_autorouter_algorithm_combo_box);
 
     JLabel separator2 = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator2, gridbag_constraints);
@@ -320,14 +358,18 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       main_panel.add(signal_layer_name_arr[i]);
       preferred_direction_trace_cost_arr[i] = new JFormattedTextField(float_number_format);
       preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
-      preferred_direction_trace_cost_arr[i].addKeyListener(new WindowAutorouteParameter.PreferredDirectionTraceCostKeyListener(i));
-      preferred_direction_trace_cost_arr[i].addFocusListener(new WindowAutorouteParameter.PreferredDirectionTraceCostFocusListener(i));
+      preferred_direction_trace_cost_arr[i]
+          .addKeyListener(new WindowAutorouteParameter.PreferredDirectionTraceCostKeyListener(i));
+      preferred_direction_trace_cost_arr[i]
+          .addFocusListener(new WindowAutorouteParameter.PreferredDirectionTraceCostFocusListener(i));
       gridbag.setConstraints(preferred_direction_trace_cost_arr[i], gridbag_constraints);
       main_panel.add(preferred_direction_trace_cost_arr[i]);
       against_preferred_direction_trace_cost_arr[i] = new JFormattedTextField(float_number_format);
       against_preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
-      against_preferred_direction_trace_cost_arr[i].addKeyListener(new WindowAutorouteParameter.AgainstPreferredDirectionTraceCostKeyListener(i));
-      against_preferred_direction_trace_cost_arr[i].addFocusListener(new WindowAutorouteParameter.AgainstPreferredDirectionTraceCostFocusListener(i));
+      against_preferred_direction_trace_cost_arr[i]
+          .addKeyListener(new WindowAutorouteParameter.AgainstPreferredDirectionTraceCostKeyListener(i));
+      against_preferred_direction_trace_cost_arr[i]
+          .addFocusListener(new WindowAutorouteParameter.AgainstPreferredDirectionTraceCostFocusListener(i));
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(against_preferred_direction_trace_cost_arr[i], gridbag_constraints);
       main_panel.add(against_preferred_direction_trace_cost_arr[i]);
@@ -378,10 +420,19 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.start_ripup_costs.setValue(settings.get_start_ripup_costs());
     this.start_pass_no.setValue(settings.get_start_pass_no());
     for (int i = 0; i < preferred_direction_trace_cost_arr.length; i++) {
-      this.preferred_direction_trace_cost_arr[i].setValue(settings.get_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
+      this.preferred_direction_trace_cost_arr[i]
+          .setValue(settings.get_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
     }
     for (int i = 0; i < against_preferred_direction_trace_cost_arr.length; i++) {
-      this.against_preferred_direction_trace_cost_arr[i].setValue(settings.get_against_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
+      this.against_preferred_direction_trace_cost_arr[i]
+          .setValue(settings.get_against_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
+    }
+
+    // Set algorithm selection
+    if (RouterSettings.ALGORITHM_V19.equals(settings.algorithm)) {
+      this.settings_autorouter_algorithm_combo_box.setSelectedItem(this.algorithm_v19);
+    } else {
+      this.settings_autorouter_algorithm_combo_box.setSelectedItem(this.algorithm_current);
     }
   }
 
@@ -420,7 +471,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       int curr_layer_no = this.signal_layer_no;
-      board_handling.settings.autoroute_settings.set_layer_active(curr_layer_no, settings_autorouter_layer_active_arr[this.signal_layer_no].isSelected());
+      board_handling.settings.autoroute_settings.set_layer_active(curr_layer_no,
+          settings_autorouter_layer_active_arr[this.signal_layer_no].isSelected());
     }
   }
 
@@ -435,9 +487,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-      board_handling.settings.autoroute_settings.set_preferred_direction_is_horizontal(curr_layer_no, settings_autorouter_combo_box_arr
-          .get(signal_layer_no)
-          .getSelectedItem() == horizontal);
+      board_handling.settings.autoroute_settings.set_preferred_direction_is_horizontal(curr_layer_no,
+          settings_autorouter_combo_box_arr
+              .get(signal_layer_no)
+              .getSelectedItem() == horizontal);
     }
   }
 
@@ -657,6 +710,23 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
   }
 
+  private class AlgorithmListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent p_evt) {
+      String oldAlgorithm = board_handling.settings.autoroute_settings.algorithm;
+      String newAlgorithm;
+      if (settings_autorouter_algorithm_combo_box.getSelectedItem() == algorithm_v19) {
+        newAlgorithm = RouterSettings.ALGORITHM_V19;
+      } else {
+        newAlgorithm = RouterSettings.ALGORITHM_CURRENT;
+      }
+      if (!oldAlgorithm.equals(newAlgorithm)) {
+        board_handling.settings.autoroute_settings.algorithm = newAlgorithm;
+      }
+    }
+  }
+
   private class PreferredDirectionTraceCostKeyListener extends KeyAdapter {
 
     private final int signal_layer_no;
@@ -669,7 +739,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-        double old_value = board_handling.settings.autoroute_settings.get_preferred_direction_trace_costs(curr_layer_no);
+        double old_value = board_handling.settings.autoroute_settings
+            .get_preferred_direction_trace_costs(curr_layer_no);
         Object input = preferred_direction_trace_cost_arr[this.signal_layer_no].getValue();
         double input_value;
         if (input instanceof Number number) {
@@ -723,7 +794,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-        double old_value = board_handling.settings.autoroute_settings.get_against_preferred_direction_trace_costs(curr_layer_no);
+        double old_value = board_handling.settings.autoroute_settings
+            .get_against_preferred_direction_trace_costs(curr_layer_no);
         Object input = against_preferred_direction_trace_cost_arr[this.signal_layer_no].getValue();
         double input_value;
         if (input instanceof Number number) {
@@ -734,7 +806,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           input_value = old_value;
         }
-        board_handling.settings.autoroute_settings.set_against_preferred_direction_trace_costs(curr_layer_no, input_value);
+        board_handling.settings.autoroute_settings.set_against_preferred_direction_trace_costs(curr_layer_no,
+            input_value);
         against_preferred_direction_trace_cost_arr[this.signal_layer_no].setValue(input_value);
         against_preferred_direction_trace_costs_input_completed[this.signal_layer_no] = true;
 
