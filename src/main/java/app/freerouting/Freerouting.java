@@ -335,7 +335,7 @@ public class Freerouting {
 
     try {
       globalSettings = GlobalSettings.load();
-      FRLogger.info("Settings were loaded from freerouting.json");
+      FRLogger.debug("Settings were loaded from freerouting.json");
     } catch (Exception _) {
       // we don't want to stop if the configuration file doesn't exist
     }
