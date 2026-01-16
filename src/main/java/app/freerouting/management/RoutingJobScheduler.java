@@ -76,6 +76,24 @@ public class RoutingJobScheduler {
                         new ItemIdentificationNumberGenerator());
                     job.board = boardManager.get_routing_board();
 
+                    // DEBUG: Log settings BEFORE board initialization
+                    FRLogger.info("=== BEFORE board initialization ===");
+                    FRLogger.info("Board dimensions: " + job.board.bounding_box.width() + " x "
+                        + job.board.bounding_box.height());
+                    FRLogger.info("Board layer count: " + job.board.get_layer_count());
+                    FRLogger.info("RouterSettings layer count: "
+                        + (job.routerSettings.isLayerActive != null ? job.routerSettings.isLayerActive.length
+                            : "null"));
+                    if (job.routerSettings.isLayerActive != null) {
+                      for (int i = 0; i < job.routerSettings.isLayerActive.length; i++) {
+                        FRLogger.info("  Layer " + i + ": active=" + job.routerSettings.isLayerActive[i] +
+                            ", horizontal="
+                            + (job.routerSettings.isPreferredDirectionHorizontalOnLayer != null
+                                ? job.routerSettings.isPreferredDirectionHorizontalOnLayer[i]
+                                : "null"));
+                      }
+                    }
+
                     // CRITICAL FIX: Reinitialize RouterSettings with the board to get
                     // board-specific optimizations
                     // (preferred directions, trace costs based on board dimensions, etc.)
@@ -88,6 +106,21 @@ public class RoutingJobScheduler {
 
                     // Create new settings with board-specific optimizations
                     job.routerSettings = new app.freerouting.settings.RouterSettings(job.board);
+
+                    // DEBUG: Log settings AFTER board initialization
+                    FRLogger.info("=== AFTER board initialization ===");
+                    FRLogger.info("RouterSettings layer count: "
+                        + (job.routerSettings.isLayerActive != null ? job.routerSettings.isLayerActive.length
+                            : "null"));
+                    if (job.routerSettings.isLayerActive != null) {
+                      for (int i = 0; i < job.routerSettings.isLayerActive.length; i++) {
+                        FRLogger.info("  Layer " + i + ": active=" + job.routerSettings.isLayerActive[i] +
+                            ", horizontal="
+                            + (job.routerSettings.isPreferredDirectionHorizontalOnLayer != null
+                                ? job.routerSettings.isPreferredDirectionHorizontalOnLayer[i]
+                                : "null"));
+                      }
+                    }
 
                     // Manually copy critical command-line parameters that must be preserved
                     // (reflection-based copying doesn't work reliably for all fields)
