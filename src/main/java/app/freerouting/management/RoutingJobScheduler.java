@@ -144,11 +144,12 @@ public class RoutingJobScheduler {
                     } else {
                       FRLogger.info("Preserving existing layer configuration (settings already initialized)");
                       // Settings already have proper layer configuration from test/DSN
-                      // Just ensure layer count matches the board
+                      // Verify layer count matches the board
                       if (job.routerSettings.isLayerActive.length != job.board.get_layer_count()) {
                         FRLogger.warn("Layer count mismatch: settings=" + job.routerSettings.isLayerActive.length +
-                            ", board=" + job.board.get_layer_count());
-                        job.routerSettings.setLayerCount(job.board.get_layer_count());
+                            ", board=" + job.board.get_layer_count() +
+                            " - This should not happen and may cause routing issues!");
+                        // DO NOT call setLayerCount() here as it would reset all layer preferences!
                       }
                     }
 
