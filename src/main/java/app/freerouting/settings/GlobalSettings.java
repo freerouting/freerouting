@@ -65,25 +65,32 @@ public class GlobalSettings implements Serializable {
   // DRC report file details that we got from the command line arguments.
   public transient BoardFileDetails drc_report_file;
   /**
-   * The design_input_filename field is deprecated and should not be used. They are kept here for compatibility reasons. Its function is now moved to the input.getFilename() method of RoutingJob
+   * The design_input_filename field is deprecated and should not be used. They
+   * are kept here for compatibility reasons. Its function is now moved to the
+   * input.getFilename() method of RoutingJob
    * object.
    */
   @Deprecated
   public transient String design_input_filename;
   /**
-   * The design_output_filename field is deprecated and should not be used. They are kept here for compatibility reasons. Its function is now moved to the output.getFilename() method of RoutingJob
+   * The design_output_filename field is deprecated and should not be used. They
+   * are kept here for compatibility reasons. Its function is now moved to the
+   * output.getFilename() method of RoutingJob
    * object.
    */
   @Deprecated
   public transient String design_output_filename;
   /**
-   * The design_rules_filename field is deprecated and should not be used. They are kept here for compatibility reasons. Its function is now removed, .rules files are considered to be deprecated, and
+   * The design_rules_filename field is deprecated and should not be used. They
+   * are kept here for compatibility reasons. Its function is now removed, .rules
+   * files are considered to be deprecated, and
    * other configuration methods should be used instead.
    */
   @Deprecated
   public transient String design_rules_filename;
   /**
-   * The design_session_filename field stores the optional Specctra session file (.ses) path provided via the -de command line argument.
+   * The design_session_filename field stores the optional Specctra session file
+   * (.ses) path provided via the -de command line argument.
    */
   public transient String design_session_filename;
   public transient Locale currentLocale = Locale.getDefault();
@@ -288,10 +295,12 @@ public class GlobalSettings implements Serializable {
           // the design directory is provided
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             guiSettings.inputDirectory = p_args[i + 1];
+            i++;
           }
         } else if (p_args[i].startsWith("-do")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             design_output_filename = p_args[i + 1];
+            i++;
           }
         } else if (p_args[i].startsWith("-drc")) {
           // DRC-only mode (must be checked before -dr)
@@ -301,10 +310,12 @@ public class GlobalSettings implements Serializable {
             drc_report_file = new BoardFileDetails();
             drc_report_file.format = FileFormat.DRC_JSON;
             drc_report_file.setFilename(p_args[i + 1]);
+            i++;
           }
         } else if (p_args[i].startsWith("-dr")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             design_rules_filename = p_args[i + 1];
+            i++;
           }
         } else if (p_args[i].startsWith("-mp")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
@@ -316,6 +327,7 @@ public class GlobalSettings implements Serializable {
             if (routerSettings.maxPasses > 99998) {
               routerSettings.maxPasses = 99998;
             }
+            i++;
           }
         } else if (p_args[i].startsWith("-mt")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
@@ -327,6 +339,7 @@ public class GlobalSettings implements Serializable {
             if (routerSettings.optimizer.maxThreads > 1024) {
               routerSettings.optimizer.maxThreads = 1024;
             }
+            i++;
           }
         } else if (p_args[i].startsWith("-oit")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
@@ -335,6 +348,7 @@ public class GlobalSettings implements Serializable {
             if (routerSettings.optimizer.optimizationImprovementThreshold <= 0) {
               routerSettings.optimizer.optimizationImprovementThreshold = 0;
             }
+            i++;
           }
         } else if (p_args[i].startsWith("-us")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
@@ -343,6 +357,7 @@ public class GlobalSettings implements Serializable {
                 .trim();
             routerSettings.optimizer.boardUpdateStrategy = "global".equals(op) ? BoardUpdateStrategy.GLOBAL_OPTIMAL
                 : ("hybrid".equals(op) ? BoardUpdateStrategy.HYBRID : BoardUpdateStrategy.GREEDY);
+            i++;
           }
         } else if (p_args[i].startsWith("-is")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
@@ -351,17 +366,20 @@ public class GlobalSettings implements Serializable {
                 .trim();
             routerSettings.optimizer.itemSelectionStrategy = op.indexOf("seq") == 0 ? ItemSelectionStrategy.SEQUENTIAL
                 : (op.indexOf("rand") == 0 ? ItemSelectionStrategy.RANDOM : ItemSelectionStrategy.PRIORITIZED);
+            i++;
           }
         } else if (p_args[i].startsWith("-hr")) { // hybrid ratio
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             routerSettings.optimizer.hybridRatio = p_args[i + 1].trim();
+            i++;
           }
         } else if ("-l".equals(p_args[i])) {
           String localeString = "";
-          if (p_args.length > i + 1) {
+          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             localeString = p_args[i + 1]
                 .toLowerCase()
                 .replace("-", "_");
+            i++;
           }
 
           // the locale is provided
@@ -398,6 +416,7 @@ public class GlobalSettings implements Serializable {
           featureFlags.snapshots = true;
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             featureFlags.snapshots = !Objects.equals(p_args[i + 1], "0");
+            i++;
           }
         } else if (p_args[i].startsWith("-dl")) {
           featureFlags.logging = false;
@@ -406,12 +425,16 @@ public class GlobalSettings implements Serializable {
         } else if (p_args[i].startsWith("-host")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             environmentSettings.host = p_args[i + 1].trim();
+            i++;
           }
         } else if (p_args[i].startsWith("-help")) {
           show_help_option = true;
         } else if (p_args[i].startsWith("-inc")) {
           // ignore net class(es)
-          routerSettings.ignoreNetClasses = p_args[i + 1].split(",");
+          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+            routerSettings.ignoreNetClasses = p_args[i + 1].split(",");
+            i++;
+          }
         } else if (p_args[i].startsWith("-dct")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             guiSettings.dialogConfirmationTimeout = Integer.parseInt(p_args[i + 1]);
@@ -419,12 +442,15 @@ public class GlobalSettings implements Serializable {
             if (guiSettings.dialogConfirmationTimeout <= 0) {
               guiSettings.dialogConfirmationTimeout = 0;
             }
+            i++;
           }
         } else if (p_args[i].startsWith("-random_seed")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             routerSettings.random_seed = TextManager.hexadecimalStringToLong(p_args[i + 1]);
             i++;
           }
+        } else {
+          FRLogger.warn("Unknown command line argument: " + p_args[i]);
         }
       } catch (Exception e) {
         FRLogger.error("There was a problem parsing the '" + p_args[i] + "' parameter", e);
