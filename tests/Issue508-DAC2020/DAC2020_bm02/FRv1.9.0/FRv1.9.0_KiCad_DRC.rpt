@@ -1,0 +1,30 @@
+** Drc report for bm2.unrouted.kicad_pcb **
+** Created on 2026-01-11T17:07:21-0600 **
+
+** Found 5 DRC violations **
+[copper_edge_clearance]: Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.4330 mm)
+    Rule: board setup constraints edge; error
+    @(123.1011 mm, 113.8936 mm): Segment on Edge.Cuts
+    @(125.5341 mm, 103.6066 mm): Pad - [GND] of B1 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(153.4541 mm, 98.1456 mm): Polygon of SJ1 on F.Mask
+    @(153.9621 mm, 98.9076 mm): Track [CS] on Top, length 1.1430 mm
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(153.4541 mm, 98.1456 mm): Polygon of SJ1 on F.Mask
+    @(153.9621 mm, 98.9076 mm): Track [CS] on Top, length 1.1430 mm
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(170.4721 mm, 101.4476 mm): Arc of FID1 on F.Mask
+    @(171.3231 mm, 98.5156 mm): Track [GND] on Top, length 7.7517 mm
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(170.4721 mm, 101.4476 mm): Arc of FID1 on F.Mask
+    @(171.3231 mm, 98.5156 mm): Track [GND] on Top, length 7.7517 mm
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

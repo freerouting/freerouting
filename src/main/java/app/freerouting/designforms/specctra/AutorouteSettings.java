@@ -18,7 +18,7 @@ public class AutorouteSettings {
     boolean with_autoroute = true;
     boolean with_postroute = true;
     Object next_token = null;
-    for (; ; ) {
+    for (;;) {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
@@ -27,7 +27,8 @@ public class AutorouteSettings {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("AutorouteSettings.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger
+            .warn("AutorouteSettings.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -49,8 +50,6 @@ public class AutorouteSettings {
           result.set_plane_via_costs(DsnFile.read_integer_scope(p_scanner));
         } else if (next_token == Keyword.START_RIPUP_COSTS) {
           result.set_start_ripup_costs(DsnFile.read_integer_scope(p_scanner));
-        } else if (next_token == Keyword.START_PASS_NO) {
-          result.set_start_pass_no(DsnFile.read_integer_scope(p_scanner));
         } else if (next_token == Keyword.LAYER_RULE) {
           result = read_layer_rule(p_scanner, p_layer_structure, result);
           if (result == null) {
@@ -67,7 +66,8 @@ public class AutorouteSettings {
     return result;
   }
 
-  static RouterSettings read_layer_rule(IJFlexScanner p_scanner, LayerStructure p_layer_structure, RouterSettings p_settings) {
+  static RouterSettings read_layer_rule(IJFlexScanner p_scanner, LayerStructure p_layer_structure,
+      RouterSettings p_settings) {
     p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
     Object next_token;
     try {
@@ -85,7 +85,7 @@ public class AutorouteSettings {
       FRLogger.warn("AutorouteSettings.read_layer_rule: layer not found at '" + p_scanner.get_scope_identifier() + "'");
       return null;
     }
-    for (; ; ) {
+    for (;;) {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
@@ -94,7 +94,8 @@ public class AutorouteSettings {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "AutorouteSettings.read_layer_rule: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -111,13 +112,15 @@ public class AutorouteSettings {
             if (next_token == Keyword.VERTICAL) {
               pref_dir_is_horizontal = false;
             } else if (next_token != Keyword.HORIZONTAL) {
-              FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected key word at '" + p_scanner.get_scope_identifier() + "'");
+              FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected key word at '"
+                  + p_scanner.get_scope_identifier() + "'");
               return null;
             }
             p_settings.set_preferred_direction_is_horizontal(layer_no, pref_dir_is_horizontal);
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET) {
-              FRLogger.warn("AutorouteSettings.read_layer_rule: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+              FRLogger.warn("AutorouteSettings.read_layer_rule: closing bracket expected at '"
+                  + p_scanner.get_scope_identifier() + "'");
               return null;
             }
           } catch (IOException e) {
@@ -136,7 +139,8 @@ public class AutorouteSettings {
     return p_settings;
   }
 
-  static void write_scope(IndentFileWriter p_file, RouterSettings p_settings, app.freerouting.board.LayerStructure p_layer_structure, IdentifierType p_identifier_type) throws IOException {
+  static void write_scope(IndentFileWriter p_file, RouterSettings p_settings,
+      app.freerouting.board.LayerStructure p_layer_structure, IdentifierType p_identifier_type) throws IOException {
     p_file.start_scope();
     p_file.write("autoroute_settings");
     p_file.new_line();
@@ -189,12 +193,6 @@ public class AutorouteSettings {
     }
     p_file.write(")");
     p_file.new_line();
-    p_file.write("(start_pass_no ");
-    {
-      int pass_no = p_settings.get_start_pass_no();
-      p_file.write(String.valueOf(pass_no));
-    }
-    p_file.write(")");
     for (int i = 0; i < p_layer_structure.arr.length; i++) {
       Layer curr_layer = p_layer_structure.arr[i];
       p_file.start_scope();

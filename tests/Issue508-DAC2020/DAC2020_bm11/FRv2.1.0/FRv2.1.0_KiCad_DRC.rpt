@@ -1,0 +1,610 @@
+** Drc report for bm11.unrouted.kicad_pcb **
+** Created on 2026-01-11T18:11:43-0600 **
+
+** Found 125 DRC violations **
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+    @(149.1461 mm, 103.1786 mm): Pad VDD2 [3V3] of U50 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+    @(150.0061 mm, 103.1786 mm): Pad VDDIO [3V3] of U50 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(148.2861 mm, 103.1786 mm): Pad CAP [Net-(C18-Pad1)] of U50 on Top
+    @(147.8561 mm, 103.1786 mm): Pad GND2 [GND] of U50 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(148.2861 mm, 103.1786 mm): Pad CAP [Net-(C18-Pad1)] of U50 on Top
+    @(148.7161 mm, 103.1786 mm): Pad VDD1 [3V3] of U50 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(149.1461 mm, 100.3286 mm): Pad CS_M [3V3] of U50 on Top
+    @(148.7161 mm, 100.3286 mm): Pad DRDY_M [<no net>] of U50 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(146.9961 mm, 100.3286 mm): Pad DEN_A/G [3V3] of U50 on Top
+    @(147.4261 mm, 100.3286 mm): Pad INT2_A/G [<no net>] of U50 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(148.7161 mm, 100.3286 mm): Pad DRDY_M [<no net>] of U50 on Top
+    @(148.2861 mm, 100.3286 mm): Pad INT_M [<no net>] of U50 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(147.8561 mm, 100.3286 mm): Pad INT1_A/G [<no net>] of U50 on Top
+    @(147.4261 mm, 100.3286 mm): Pad INT2_A/G [<no net>] of U50 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(147.8561 mm, 100.3286 mm): Pad INT1_A/G [<no net>] of U50 on Top
+    @(148.2861 mm, 100.3286 mm): Pad INT_M [<no net>] of U50 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(150.1761 mm, 102.3986 mm): Pad SCL/SPC [/SCL] of U50 on Top
+    @(150.1761 mm, 101.9686 mm): Pad VDDIO2 [3V3] of U50 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(150.1761 mm, 101.5386 mm): Pad SDA/SDI/SDO [/SDA] of U50 on Top
+    @(150.1761 mm, 101.1086 mm): Pad SDO_A/G [3V3] of U50 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1600 mm)
+    Rule: netclass 'Default'; error
+    @(150.1761 mm, 101.5386 mm): Pad SDA/SDI/SDO [/SDA] of U50 on Top
+    @(150.1761 mm, 101.9686 mm): Pad VDDIO2 [3V3] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.7011 mm, 83.2662 mm): Pad 1 [Net-(B1-Pad1)] of U3 on Top
+    @(144.7011 mm, 83.9162 mm): Pad 2 [Net-(B1-Pad2)] of U3 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.7011 mm, 83.9162 mm): Pad 2 [Net-(B1-Pad2)] of U3 on Top
+    @(144.7011 mm, 84.5662 mm): Pad 3 [Net-(B1-Pad3)] of U3 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.3011 mm, 84.5662 mm): Pad 4 [Net-(B1-Pad4)] of U3 on Top
+    @(146.3011 mm, 83.9162 mm): Pad 5 [GND] of U3 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.3011 mm, 83.9162 mm): Pad 5 [GND] of U3 on Top
+    @(146.3011 mm, 83.2662 mm): Pad 6 [<no net>] of U3 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.2511 mm, 86.8726 mm): Pad 1 [<no net>] of U45 on Top
+    @(148.7511 mm, 86.8726 mm): Pad 2 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.2511 mm, 86.8726 mm): Pad 1 [<no net>] of U45 on Top
+    @(150.3821 mm, 88.0036 mm): Pad 64 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.7511 mm, 86.8726 mm): Pad 2 [<no net>] of U45 on Top
+    @(148.2511 mm, 86.8726 mm): Pad 3 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.2511 mm, 86.8726 mm): Pad 3 [<no net>] of U45 on Top
+    @(147.7511 mm, 86.8726 mm): Pad 4 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.7511 mm, 86.8726 mm): Pad 4 [<no net>] of U45 on Top
+    @(147.2511 mm, 86.8726 mm): Pad 5 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.2511 mm, 86.8726 mm): Pad 5 [<no net>] of U45 on Top
+    @(146.7511 mm, 86.8726 mm): Pad 6 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.7511 mm, 86.8726 mm): Pad 6 [<no net>] of U45 on Top
+    @(146.2511 mm, 86.8726 mm): Pad 7 [GND] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.2511 mm, 86.8726 mm): Pad 7 [GND] of U45 on Top
+    @(145.7511 mm, 86.8726 mm): Pad 8 [Net-(B1-Pad4)] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(145.7511 mm, 86.8726 mm): Pad 8 [Net-(B1-Pad4)] of U45 on Top
+    @(145.2511 mm, 86.8726 mm): Pad 9 [Net-(B1-Pad3)] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(145.2511 mm, 86.8726 mm): Pad 9 [Net-(B1-Pad3)] of U45 on Top
+    @(144.7511 mm, 86.8726 mm): Pad 10 [GND] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.2511 mm, 86.8726 mm): Pad 11 [GND] of U45 on Top
+    @(143.7511 mm, 86.8726 mm): Pad 12 [/RESET] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(143.7511 mm, 86.8726 mm): Pad 12 [/RESET] of U45 on Top
+    @(143.2511 mm, 86.8726 mm): Pad 13 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(143.2511 mm, 86.8726 mm): Pad 13 [<no net>] of U45 on Top
+    @(142.7511 mm, 86.8726 mm): Pad 14 [/LED1] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(142.7511 mm, 86.8726 mm): Pad 14 [/LED1] of U45 on Top
+    @(142.2511 mm, 86.8726 mm): Pad 15 [/LED2] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(142.2511 mm, 86.8726 mm): Pad 15 [/LED2] of U45 on Top
+    @(141.7511 mm, 86.8726 mm): Pad 16 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(141.7511 mm, 86.8726 mm): Pad 16 [<no net>] of U45 on Top
+    @(140.6201 mm, 88.0036 mm): Pad 17 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 88.0036 mm): Pad 17 [<no net>] of U45 on Top
+    @(140.6201 mm, 88.5036 mm): Pad 18 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 88.5036 mm): Pad 18 [<no net>] of U45 on Top
+    @(140.6201 mm, 89.0036 mm): Pad 19 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 89.0036 mm): Pad 19 [<no net>] of U45 on Top
+    @(140.6201 mm, 89.5036 mm): Pad 20 [GND] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 89.5036 mm): Pad 20 [GND] of U45 on Top
+    @(140.6201 mm, 90.0036 mm): Pad 21 [Net-(C4-Pad1)] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 90.5036 mm): Pad 22 [Net-(C4-Pad1)] of U45 on Top
+    @(140.6201 mm, 91.0036 mm): Pad 23 [3V3] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 91.0036 mm): Pad 23 [3V3] of U45 on Top
+    @(140.6201 mm, 91.5036 mm): Pad 24 [GND] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 91.5036 mm): Pad 24 [GND] of U45 on Top
+    @(140.6201 mm, 92.0036 mm): Pad 25 [/SCL] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 92.0036 mm): Pad 25 [/SCL] of U45 on Top
+    @(140.6201 mm, 92.5036 mm): Pad 26 [/SDA] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 92.5036 mm): Pad 26 [/SDA] of U45 on Top
+    @(140.6201 mm, 93.0036 mm): Pad 27 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 93.0036 mm): Pad 27 [<no net>] of U45 on Top
+    @(140.6201 mm, 93.5036 mm): Pad 28 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 93.5036 mm): Pad 28 [<no net>] of U45 on Top
+    @(140.6201 mm, 94.0036 mm): Pad 29 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 94.0036 mm): Pad 29 [<no net>] of U45 on Top
+    @(140.6201 mm, 94.5036 mm): Pad 30 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 94.5036 mm): Pad 30 [<no net>] of U45 on Top
+    @(140.6201 mm, 95.0036 mm): Pad 31 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 95.0036 mm): Pad 31 [<no net>] of U45 on Top
+    @(140.6201 mm, 95.5036 mm): Pad 32 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.6201 mm, 95.5036 mm): Pad 32 [<no net>] of U45 on Top
+    @(141.7511 mm, 96.6346 mm): Pad 33 [GND] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(141.7511 mm, 96.6346 mm): Pad 33 [GND] of U45 on Top
+    @(142.2511 mm, 96.6346 mm): Pad 34 [3V3] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(142.2511 mm, 96.6346 mm): Pad 34 [3V3] of U45 on Top
+    @(142.7511 mm, 96.6346 mm): Pad 35 [GND] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(142.7511 mm, 96.6346 mm): Pad 35 [GND] of U45 on Top
+    @(143.2511 mm, 96.6346 mm): Pad 36 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(143.2511 mm, 96.6346 mm): Pad 36 [<no net>] of U45 on Top
+    @(143.7511 mm, 96.6346 mm): Pad 37 [/SCK] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(143.7511 mm, 96.6346 mm): Pad 37 [/SCK] of U45 on Top
+    @(144.2511 mm, 96.6346 mm): Pad 38 [/MOSI] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.2511 mm, 96.6346 mm): Pad 38 [/MOSI] of U45 on Top
+    @(144.7511 mm, 96.6346 mm): Pad 39 [/MISO] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.7511 mm, 96.6346 mm): Pad 39 [/MISO] of U45 on Top
+    @(145.2511 mm, 96.6346 mm): Pad 40 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(145.2511 mm, 96.6346 mm): Pad 40 [<no net>] of U45 on Top
+    @(145.7511 mm, 96.6346 mm): Pad 41 [/PWM4] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(145.7511 mm, 96.6346 mm): Pad 41 [/PWM4] of U45 on Top
+    @(146.2511 mm, 96.6346 mm): Pad 42 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.2511 mm, 96.6346 mm): Pad 42 [<no net>] of U45 on Top
+    @(146.7511 mm, 96.6346 mm): Pad 43 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.7511 mm, 96.6346 mm): Pad 43 [<no net>] of U45 on Top
+    @(147.2511 mm, 96.6346 mm): Pad 44 [3V3] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.2511 mm, 96.6346 mm): Pad 44 [3V3] of U45 on Top
+    @(147.7511 mm, 96.6346 mm): Pad 45 [GND] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.7511 mm, 96.6346 mm): Pad 45 [GND] of U45 on Top
+    @(148.2511 mm, 96.6346 mm): Pad 46 [/RX0] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.2511 mm, 96.6346 mm): Pad 46 [/RX0] of U45 on Top
+    @(148.7511 mm, 96.6346 mm): Pad 47 [/TX0] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.7511 mm, 96.6346 mm): Pad 47 [/TX0] of U45 on Top
+    @(149.2511 mm, 96.6346 mm): Pad 48 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.2511 mm, 96.6346 mm): Pad 48 [<no net>] of U45 on Top
+    @(150.3821 mm, 95.5036 mm): Pad 49 [/PWM1] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 95.5036 mm): Pad 49 [/PWM1] of U45 on Top
+    @(150.3821 mm, 95.0036 mm): Pad 50 [/PWM2] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 95.0036 mm): Pad 50 [/PWM2] of U45 on Top
+    @(150.3821 mm, 94.5036 mm): Pad 51 [/PWM3] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 94.5036 mm): Pad 51 [/PWM3] of U45 on Top
+    @(150.3821 mm, 94.0036 mm): Pad 52 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 94.0036 mm): Pad 52 [<no net>] of U45 on Top
+    @(150.3821 mm, 93.5036 mm): Pad 53 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 93.5036 mm): Pad 53 [<no net>] of U45 on Top
+    @(150.3821 mm, 93.0036 mm): Pad 54 [3V3] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 93.0036 mm): Pad 54 [3V3] of U45 on Top
+    @(150.3821 mm, 92.5036 mm): Pad 55 [GND] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 92.5036 mm): Pad 55 [GND] of U45 on Top
+    @(150.3821 mm, 92.0036 mm): Pad 56 [Net-(C2-Pad1)] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 92.0036 mm): Pad 56 [Net-(C2-Pad1)] of U45 on Top
+    @(150.3821 mm, 91.5036 mm): Pad 57 [Net-(C1-Pad1)] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 91.5036 mm): Pad 57 [Net-(C1-Pad1)] of U45 on Top
+    @(150.3821 mm, 91.0036 mm): Pad 58 [GND] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 91.0036 mm): Pad 58 [GND] of U45 on Top
+    @(150.3821 mm, 90.5036 mm): Pad 59 [3V3] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 90.5036 mm): Pad 59 [3V3] of U45 on Top
+    @(150.3821 mm, 90.0036 mm): Pad 60 [Net-(C3-Pad1)] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 90.0036 mm): Pad 60 [Net-(C3-Pad1)] of U45 on Top
+    @(150.3821 mm, 89.5036 mm): Pad 61 [GND] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 89.5036 mm): Pad 61 [GND] of U45 on Top
+    @(150.3821 mm, 89.0036 mm): Pad 62 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 89.0036 mm): Pad 62 [<no net>] of U45 on Top
+    @(150.3821 mm, 88.5036 mm): Pad 63 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.3821 mm, 88.5036 mm): Pad 63 [<no net>] of U45 on Top
+    @(150.3821 mm, 88.0036 mm): Pad 64 [<no net>] of U45 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+    @(150.1761 mm, 102.3986 mm): Pad SCL/SPC [/SCL] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+    @(149.1461 mm, 103.1786 mm): Pad VDD2 [3V3] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+    @(150.0061 mm, 103.1786 mm): Pad VDDIO [3V3] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.2861 mm, 103.1786 mm): Pad CAP [Net-(C18-Pad1)] of U50 on Top
+    @(147.8561 mm, 103.1786 mm): Pad GND2 [GND] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.2861 mm, 103.1786 mm): Pad CAP [Net-(C18-Pad1)] of U50 on Top
+    @(148.7161 mm, 103.1786 mm): Pad VDD1 [3V3] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.1461 mm, 100.3286 mm): Pad CS_M [3V3] of U50 on Top
+    @(148.7161 mm, 100.3286 mm): Pad DRDY_M [<no net>] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.9961 mm, 100.3286 mm): Pad DEN_A/G [3V3] of U50 on Top
+    @(147.4261 mm, 100.3286 mm): Pad INT2_A/G [<no net>] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.9961 mm, 100.3286 mm): Pad DEN_A/G [3V3] of U50 on Top
+    @(146.8261 mm, 101.1086 mm): Pad RES1 [GND] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.7161 mm, 100.3286 mm): Pad DRDY_M [<no net>] of U50 on Top
+    @(148.2861 mm, 100.3286 mm): Pad INT_M [<no net>] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.8561 mm, 100.3286 mm): Pad INT1_A/G [<no net>] of U50 on Top
+    @(147.4261 mm, 100.3286 mm): Pad INT2_A/G [<no net>] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.8561 mm, 100.3286 mm): Pad INT1_A/G [<no net>] of U50 on Top
+    @(148.2861 mm, 100.3286 mm): Pad INT_M [<no net>] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.4261 mm, 100.3286 mm): Pad INT2_A/G [<no net>] of U50 on Top
+    @(146.8261 mm, 101.1086 mm): Pad RES1 [GND] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.1761 mm, 102.3986 mm): Pad SCL/SPC [/SCL] of U50 on Top
+    @(150.0061 mm, 103.1786 mm): Pad VDDIO [3V3] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.1761 mm, 102.3986 mm): Pad SCL/SPC [/SCL] of U50 on Top
+    @(150.1761 mm, 101.9686 mm): Pad VDDIO2 [3V3] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.1761 mm, 101.5386 mm): Pad SDA/SDI/SDO [/SDA] of U50 on Top
+    @(150.1761 mm, 101.1086 mm): Pad SDO_A/G [3V3] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.1761 mm, 101.5386 mm): Pad SDA/SDI/SDO [/SDA] of U50 on Top
+    @(150.1761 mm, 101.9686 mm): Pad VDDIO2 [3V3] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.9011 mm, 100.6536 mm): Polygon of U50 on F.Mask
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(174.5011 mm, 124.6176 mm): Pad D [Net-(D1-PadA)] of U51 on Top
+    @(173.5511 mm, 126.8996 mm): Pad G [/PWM1] of U51 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(174.5011 mm, 124.6176 mm): Pad D [Net-(D1-PadA)] of U51 on Top
+    @(175.4511 mm, 126.8996 mm): Pad S [BAT_GND] of U51 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(174.5011 mm, 90.6176 mm): Pad D [Net-(D2-PadA)] of U52 on Top
+    @(173.5511 mm, 92.8996 mm): Pad G [/PWM2] of U52 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(174.5011 mm, 90.6176 mm): Pad D [Net-(D2-PadA)] of U52 on Top
+    @(175.4511 mm, 92.8996 mm): Pad S [BAT_GND] of U52 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(122.5011 mm, 90.6176 mm): Pad D [Net-(D3-PadA)] of U53 on Top
+    @(121.5511 mm, 92.8996 mm): Pad G [/PWM3] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(122.5011 mm, 90.6176 mm): Pad D [Net-(D3-PadA)] of U53 on Top
+    @(123.4511 mm, 92.8996 mm): Pad S [BAT_GND] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(122.5011 mm, 124.6176 mm): Pad D [Net-(D4-PadA)] of U54 on Top
+    @(121.5511 mm, 126.8996 mm): Pad G [/PWM4] of U54 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(122.5011 mm, 124.6176 mm): Pad D [Net-(D4-PadA)] of U54 on Top
+    @(123.4511 mm, 126.8996 mm): Pad S [BAT_GND] of U54 on Top
+
+** Found 25 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(146.9961 mm, 100.3286 mm): Pad DEN_A/G [3V3] of U50 on Top
+    @(149.1461 mm, 100.3286 mm): Pad CS_M [3V3] of U50 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(146.9961 mm, 100.3286 mm): Pad DEN_A/G [3V3] of U50 on Top
+    @(144.4427 mm, 100.3422 mm): Track [3V3] on Top, length 0.0826 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(149.1461 mm, 103.1786 mm): Pad VDD2 [3V3] of U50 on Top
+    @(148.7161 mm, 103.1786 mm): Pad VDD1 [3V3] of U50 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(149.5011 mm, 114.7986 mm): Pad 2 [3V3] of U39 on Top
+    @(145.5011 mm, 114.7986 mm): Pad 2 [3V3] of U38 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(149.5761 mm, 100.3286 mm): Track [3V3] on Top, length 0.4300 mm
+    @(149.1461 mm, 100.3286 mm): Pad CS_M [3V3] of U50 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.0061 mm, 103.1786 mm): Pad VDDIO [3V3] of U50 on Top
+    @(149.1461 mm, 103.1786 mm): Pad VDD2 [3V3] of U50 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.0061 mm, 103.1786 mm): Pad VDDIO [3V3] of U50 on Top
+    @(150.1761 mm, 101.9686 mm): Pad VDDIO2 [3V3] of U50 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.1761 mm, 101.1086 mm): Pad SDO_A/G [3V3] of U50 on Top
+    @(149.5761 mm, 100.3286 mm): Track [3V3] on Top, length 0.4300 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.1761 mm, 101.1086 mm): Pad SDO_A/G [3V3] of U50 on Top
+    @(150.1761 mm, 101.9686 mm): Pad VDDIO2 [3V3] of U50 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.3821 mm, 93.0036 mm): Pad 54 [3V3] of U45 on Top
+    @(150.3821 mm, 90.5036 mm): Track [3V3] on Top, length 1.1829 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(154.3164 mm, 100.8333 mm): Track [3V3] on Top, length 2.5672 mm
+    @(150.1761 mm, 101.9686 mm): Pad VDDIO2 [3V3] of U50 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(142.7511 mm, 96.6346 mm): Track [GND] on Top, length 1.0827 mm
+    @(145.6977 mm, 99.7707 mm): Track [GND] on Top, length 1.6813 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(147.4261 mm, 103.1786 mm): Track [GND] on Top, length 0.4300 mm
+    @(147.8561 mm, 103.1786 mm): Pad GND2 [GND] of U50 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(156.5011 mm, 107.2136 mm): PTH pad 2 [GND] of U57
+    @(149.5011 mm, 107.6486 mm): Track [GND] on Top, length 3.0000 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(166.2311 mm, 96.1171 mm): Track [GND] on Top, length 5.4220 mm
+    @(158.5011 mm, 94.6486 mm): Pad 2 [GND] of U12 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(148.7511 mm, 96.6346 mm): Pad 47 [/TX0] of U45 on Top
+    @(139.0411 mm, 117.7536 mm): Track [/TX0] on Route15, length 6.1943 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.1761 mm, 101.5386 mm): Pad SDA/SDI/SDO [/SDA] of U50 on Top
+    @(155.1851 mm, 103.4496 mm): Track [/SDA] on Route15, length 18.2680 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.1761 mm, 101.5386 mm): Pad SDA/SDI/SDO [/SDA] of U50 on Top
+    @(140.6201 mm, 92.5036 mm): Pad 26 [/SDA] of U45 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.1761 mm, 102.3986 mm): Pad SCL/SPC [/SCL] of U50 on Top
+    @(140.6201 mm, 92.0036 mm): Pad 25 [/SCL] of U45 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(156.5011 mm, 104.6736 mm): Track [/SCL] on Route15, length 4.8508 mm
+    @(150.1761 mm, 102.3986 mm): Pad SCL/SPC [/SCL] of U50 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(146.5011 mm, 105.8586 mm): Pad 1 [Net-(C18-Pad1)] of U10 on Top
+    @(148.2861 mm, 103.1786 mm): Pad CAP [Net-(C18-Pad1)] of U50 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(149.5761 mm, 103.1786 mm): Pad C1 [Net-(C19-Pad1)] of U50 on Top
+    @(152.5011 mm, 105.8586 mm): Pad 1 [Net-(C19-Pad1)] of U11 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(142.1511 mm, 128.5336 mm): PTH pad DTR [/DTR] of U32
+    @(157.5011 mm, 114.8586 mm): Pad 1 [/DTR] of U9 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(157.5011 mm, 114.8586 mm): Pad 1 [/DTR] of U9 on Top
+    @(158.5699 mm, 87.6848 mm): Track [/DTR] on Route2, length 0.0737 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(142.7511 mm, 86.8726 mm): Pad 14 [/LED1] of U45 on Top
+    @(168.5011 mm, 105.7986 mm): Pad 2 [/LED1] of U2 on Top
+
+** Found 0 Footprint errors **
+
+** End of Report **

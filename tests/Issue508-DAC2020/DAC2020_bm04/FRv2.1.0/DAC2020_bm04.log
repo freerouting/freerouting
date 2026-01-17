@@ -1,0 +1,745 @@
+2026-01-11 13:38:40.883 INFO   Freerouting v2.1.0 (build-date: 2025-04-12)
+2026-01-11 13:38:40.993 WARN   No default constructor found for field: currentLocale
+2026-01-11 13:38:40.994 INFO   Settings were loaded from freerouting.json
+2026-01-11 13:38:42.318 INFO   [0DABF3\8F8E41] Job '0DABF3\8F8E41' started at 2026-01-11T19:38:42.317892118Z
+2026-01-11 13:38:42.342 INFO   New version available: v2.1.0
+2026-01-11 13:38:46.186 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:38:46.187 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: Cannot invoke "app.freerouting.geometry.planar.TileShape.nearest_point_approx(app.freerouting.geometry.planar.FloatPoint)" because "target_shape" is null
+	at app.freerouting.autoroute.MazeSearchAlgo.expand_to_target_doors(MazeSearchAlgo.java:534) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.expand_to_room_doors(MazeSearchAlgo.java:398) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.occupy_next_element(MazeSearchAlgo.java:286) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.find_connection(MazeSearchAlgo.java:206) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:155) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:610) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:332) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:447) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:131) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:26) [freerouting-executable-2.1.0.jar:unspecified]
+2026-01-11 13:38:46.441 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:38:46.442 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: Cannot invoke "app.freerouting.geometry.planar.TileShape.nearest_point_approx(app.freerouting.geometry.planar.FloatPoint)" because "target_shape" is null
+	at app.freerouting.autoroute.MazeSearchAlgo.expand_to_target_doors(MazeSearchAlgo.java:534) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.expand_to_room_doors(MazeSearchAlgo.java:398) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.occupy_next_element(MazeSearchAlgo.java:286) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.find_connection(MazeSearchAlgo.java:206) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:155) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:610) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:332) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:447) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:131) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:26) [freerouting-executable-2.1.0.jar:unspecified]
+2026-01-11 13:38:47.210 INFO   [0DABF3\8F8E41] Auto-router pass #1 on board '185eaca4ca3beb906a936e59a90dbf28' was completed in 4.76 seconds with the score of 748.04 (80 unrouted), using 9.72 CPU seconds and 2718 MB memory.
+2026-01-11 13:38:48.303 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:38:48.303 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: Cannot invoke "app.freerouting.geometry.planar.TileShape.nearest_point_approx(app.freerouting.geometry.planar.FloatPoint)" because "target_shape" is null
+	at app.freerouting.autoroute.MazeSearchAlgo.expand_to_target_doors(MazeSearchAlgo.java:534) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.expand_to_room_doors(MazeSearchAlgo.java:398) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.occupy_next_element(MazeSearchAlgo.java:286) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.find_connection(MazeSearchAlgo.java:206) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:155) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:610) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:332) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:447) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:131) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:26) [freerouting-executable-2.1.0.jar:unspecified]
+2026-01-11 13:38:48.737 INFO   [0DABF3\8F8E41] Auto-router pass #2 on board '8e381ebcdb958663f4896f5f51e21810' was completed in 1.50 seconds with the score of 761.69 (77 unrouted), using 20.69 CPU seconds and 4269 MB memory.
+2026-01-11 13:38:49.944 INFO   [0DABF3\8F8E41] Auto-router pass #3 on board 'c35b90550d4a07807556cd54a4c5f2cd' was completed in 1.19 seconds with the score of 760.23 (77 unrouted), using 27.70 CPU seconds and 5285 MB memory.
+2026-01-11 13:39:03.844 INFO   [0DABF3\8F8E41] Auto-router pass #4 on board 'ce1cf7eaa8846728a5b198e33de84f2d' was completed in 13.88 seconds with the score of 945.89 (22 unrouted), using 191.09 CPU seconds and 15225 MB memory.
+2026-01-11 13:39:03.964 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:39:03.964 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: null
+2026-01-11 13:39:04.411 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:39:04.411 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: null
+2026-01-11 13:39:04.485 INFO   [0DABF3\8F8E41] Auto-router pass #5 on board '138877d94c4ba99780f15cf29a586241' was completed in 0.62 seconds with the score of 945.54 (22 unrouted), using 211.27 CPU seconds and 16083 MB memory.
+2026-01-11 13:39:04.891 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:39:04.891 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: null
+2026-01-11 13:39:05.297 INFO   [0DABF3\8F8E41] Auto-router pass #6 on board '8ae9dc38c13389d01d023a54a0d8bee8' was completed in 0.80 seconds with the score of 945.62 (22 unrouted), using 232.48 CPU seconds and 17102 MB memory.
+2026-01-11 13:39:05.882 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:39:05.882 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: null
+2026-01-11 13:39:05.917 INFO   [0DABF3\8F8E41] Auto-router pass #7 on board '8fc5483e0eab79eb14583059d1b1e655' was completed in 0.61 seconds with the score of 945.47 (22 unrouted), using 232.48 CPU seconds and 17102 MB memory.
+2026-01-11 13:39:09.595 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.ArrayIndexOutOfBoundsException: Index 4 out of bounds for length 4
+	at app.freerouting.autoroute.MazeShoveTraceAlgo.check_shove_trace_line(MazeShoveTraceAlgo.java:123) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.shove_trace_room(MazeSearchAlgo.java:1214) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.expand_to_room_doors(MazeSearchAlgo.java:443) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.occupy_next_element(MazeSearchAlgo.java:286) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.MazeSearchAlgo.find_connection(MazeSearchAlgo.java:206) ~[freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:155) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:610) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:332) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:447) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:131) [freerouting-executable-2.1.0.jar:unspecified]
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:26) [freerouting-executable-2.1.0.jar:unspecified]
+2026-01-11 13:39:09.810 INFO   [0DABF3\8F8E41] Auto-router pass #8 on board '51c073f380d737dfde5e60f214f9068c' was completed in 3.88 seconds with the score of 957.04 (18 unrouted), using 327.42 CPU seconds and 20701 MB memory.
+2026-01-11 13:39:10.451 WARN   Polyline.corner_approx: p_no must be less than arr.length - 1
+2026-01-11 13:39:10.452 WARN   Polyline.corner_approx: p_no must be less than arr.length - 1
+2026-01-11 13:39:10.511 INFO   [0DABF3\8F8E41] Auto-router pass #9 on board 'a7b3eb438c90a6dfa8f82b021e774fb8' was completed in 0.69 seconds with the score of 956.38 (18 unrouted), using 353.67 CPU seconds and 21891 MB memory.
+2026-01-11 13:39:10.712 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:39:10.713 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: null
+2026-01-11 13:39:10.991 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:39:10.991 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: null
+2026-01-11 13:39:11.207 INFO   [0DABF3\8F8E41] Auto-router pass #10 on board '87e999e09422584973bae08915c3edfd' was completed in 0.68 seconds with the score of 956.38 (18 unrouted), using 353.67 CPU seconds and 21891 MB memory.
+2026-01-11 13:39:11.849 INFO   [0DABF3\8F8E41] Auto-router pass #11 on board '81ad9338bf1b8f3e85f11c76a45b685f' was completed in 0.63 seconds with the score of 956.38 (18 unrouted), using 380.95 CPU seconds and 23046 MB memory.
+2026-01-11 13:39:13.529 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 957.04 (18 unrouted).
+2026-01-11 13:39:13.529 INFO   [0DABF3\8F8E41] Auto-router pass #12 on board '508780c00b7b1558a4f6c9a72814440c' was completed in 1.67 seconds with the score of 946.53 (22 unrouted), using 438.58 CPU seconds and 25204 MB memory.
+2026-01-11 13:39:17.788 INFO   [0DABF3\8F8E41] Auto-router pass #13 on board 'a7b3eb438c90a6dfa8f82b021e774fb8' was completed in 4.25 seconds with the score of 976.80 (9 unrouted), using 566.01 CPU seconds and 29365 MB memory.
+2026-01-11 13:39:18.489 INFO   [0DABF3\8F8E41] Auto-router pass #14 on board '540dc758ece64c0d1569864a35d9fbd5' was completed in 0.69 seconds with the score of 978.26 (8 unrouted), using 600.38 CPU seconds and 30473 MB memory.
+2026-01-11 13:39:19.067 INFO   [0DABF3\8F8E41] Auto-router pass #15 on board 'fd850ea275b2a74fa66d840eb5f7262c' was completed in 0.56 seconds with the score of 968.24 (13 unrouted), using 600.38 CPU seconds and 30473 MB memory.
+2026-01-11 13:39:27.311 INFO   [0DABF3\8F8E41] Auto-router pass #16 on board 'ac21356c7c11ebe775978b0fed7c568c' was completed in 8.23 seconds with the score of 980.93 (7 unrouted), using 955.14 CPU seconds and 39375 MB memory.
+2026-01-11 13:39:27.817 INFO   [0DABF3\8F8E41] Auto-router pass #17 on board '7cea59a600957a57f64fdcb98bd17f23' was completed in 0.49 seconds with the score of 976.47 (9 unrouted), using 955.14 CPU seconds and 39375 MB memory.
+2026-01-11 13:39:27.858 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:39:27.858 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: null
+2026-01-11 13:39:27.942 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:39:27.943 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: null
+2026-01-11 13:39:28.156 WARN   PolylineTrace.get_trace_connection_shape p_index out of range
+2026-01-11 13:39:28.156 ERROR  AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection
+java.lang.NullPointerException: null
+2026-01-11 13:39:28.211 INFO   [0DABF3\8F8E41] Auto-router pass #18 on board '4ca5683f6e181362dd31c814635f7c15' was completed in 0.38 seconds with the score of 974.27 (10 unrouted), using 955.14 CPU seconds and 39375 MB memory.
+2026-01-11 13:39:28.829 INFO   [0DABF3\8F8E41] Auto-router pass #19 on board '19ff691d2732eccaf10f43cb37589678' was completed in 0.60 seconds with the score of 976.44 (9 unrouted), using 999.63 CPU seconds and 40542 MB memory.
+2026-01-11 13:39:40.755 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 980.93 (7 unrouted).
+2026-01-11 13:39:40.755 INFO   [0DABF3\8F8E41] Auto-router pass #20 on board '5e163a813e0a9585b0ec2e43629eadbd' was completed in 11.91 seconds with the score of 959.33 (17 unrouted), using 1499.84 CPU seconds and 50104 MB memory.
+2026-01-11 13:39:46.446 INFO   [0DABF3\8F8E41] Auto-router pass #21 on board '7cea59a600957a57f64fdcb98bd17f23' was completed in 5.69 seconds with the score of 985.94 (4 unrouted), using 1848.26 CPU seconds and 57103 MB memory.
+2026-01-11 13:39:48.170 INFO   [0DABF3\8F8E41] Auto-router pass #22 on board '7e7b18b9e65a4e8add30e07a86ae2543' was completed in 1.71 seconds with the score of 985.93 (4 unrouted), using 1909.83 CPU seconds and 58100 MB memory.
+2026-01-11 13:39:49.830 INFO   [0DABF3\8F8E41] Auto-router pass #23 on board '453101c9c4ab89c122e9d7771b1d59d6' was completed in 1.65 seconds with the score of 986.05 (4 unrouted), using 2035.95 CPU seconds and 60265 MB memory.
+2026-01-11 13:39:53.903 INFO   [0DABF3\8F8E41] Auto-router pass #24 on board '8b74579dbf1796ffdbafb75eb3cfad01' was completed in 4.06 seconds with the score of 989.56 (2 unrouted), using 2300.13 CPU seconds and 64282 MB memory.
+2026-01-11 13:39:54.509 INFO   [0DABF3\8F8E41] Auto-router pass #25 on board '42513810ef6c38595ea9bbe9640cb7cd' was completed in 0.59 seconds with the score of 991.36 (1 unrouted), using 2368.66 CPU seconds and 65683 MB memory.
+2026-01-11 13:39:56.580 INFO   [0DABF3\8F8E41] Auto-router pass #26 on board 'eec828bc5fd7f572fd0d3b7b98bb98db' was completed in 2.06 seconds with the score of 984.40 (5 unrouted), using 2508.70 CPU seconds and 68608 MB memory.
+2026-01-11 13:39:56.963 INFO   [0DABF3\8F8E41] Auto-router pass #27 on board '220c3324e080081404b15253c001a3ae' was completed in 0.37 seconds with the score of 991.66 (1 unrouted), using 2508.70 CPU seconds and 68608 MB memory.
+2026-01-11 13:39:57.290 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.66 (1 unrouted).
+2026-01-11 13:39:57.290 INFO   [0DABF3\8F8E41] Auto-router pass #28 on board '70684aca272a4c3782f837f813863692' was completed in 0.31 seconds with the score of 985.80 (4 unrouted), using 2508.70 CPU seconds and 68608 MB memory.
+2026-01-11 13:39:59.490 INFO   [0DABF3\8F8E41] Auto-router pass #29 on board '70684aca272a4c3782f837f813863692' was completed in 2.19 seconds with the score of 980.05 (7 unrouted), using 2726.24 CPU seconds and 73053 MB memory.
+2026-01-11 13:40:00.407 INFO   [0DABF3\8F8E41] Auto-router pass #30 on board '19563f0527f036559c91fd27086734fb' was completed in 0.90 seconds with the score of 983.73 (5 unrouted), using 2800.75 CPU seconds and 73961 MB memory.
+2026-01-11 13:40:05.989 INFO   [0DABF3\8F8E41] Auto-router pass #31 on board '65d6a395ca4cf1b97daaae6e4d90253a' was completed in 5.57 seconds with the score of 981.99 (6 unrouted), using 3030.26 CPU seconds and 78062 MB memory.
+2026-01-11 13:40:08.404 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.66 (1 unrouted).
+2026-01-11 13:40:08.404 INFO   [0DABF3\8F8E41] Auto-router pass #32 on board '2e076b910d3c8e495b10908197609cd4' was completed in 2.40 seconds with the score of 985.78 (4 unrouted), using 3268.73 CPU seconds and 81411 MB memory.
+2026-01-11 13:40:10.628 INFO   [0DABF3\8F8E41] Auto-router pass #33 on board '70684aca272a4c3782f837f813863692' was completed in 2.22 seconds with the score of 980.05 (7 unrouted), using 3432.70 CPU seconds and 84381 MB memory.
+2026-01-11 13:40:11.688 INFO   [0DABF3\8F8E41] Auto-router pass #34 on board 'b5f56097ab500ba77c3d3167b2e0aca7' was completed in 1.04 seconds with the score of 987.53 (3 unrouted), using 3516.19 CPU seconds and 85702 MB memory.
+2026-01-11 13:40:13.808 INFO   [0DABF3\8F8E41] Auto-router pass #35 on board '164b351d7bd213f39b2b609cfdc90358' was completed in 2.11 seconds with the score of 980.06 (7 unrouted), using 3686.19 CPU seconds and 88092 MB memory.
+2026-01-11 13:40:15.777 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.66 (1 unrouted).
+2026-01-11 13:40:15.778 INFO   [0DABF3\8F8E41] Auto-router pass #36 on board '2bd684648acdca8b544eeaec99acf457' was completed in 1.96 seconds with the score of 987.75 (3 unrouted), using 3860.20 CPU seconds and 90576 MB memory.
+2026-01-11 13:40:16.054 INFO   [0DABF3\8F8E41] Auto-router pass #37 on board '70684aca272a4c3782f837f813863692' was completed in 0.27 seconds with the score of 985.70 (4 unrouted), using 3860.20 CPU seconds and 90576 MB memory.
+2026-01-11 13:40:16.954 INFO   [0DABF3\8F8E41] Auto-router pass #38 on board 'eb1e9d228ecb39d72cfacaa721f2dda0' was completed in 0.89 seconds with the score of 987.38 (3 unrouted), using 3948.73 CPU seconds and 91801 MB memory.
+2026-01-11 13:40:17.230 INFO   [0DABF3\8F8E41] Auto-router pass #39 on board 'a229265e2c6907df2fe3c81814810cda' was completed in 0.26 seconds with the score of 981.94 (6 unrouted), using 3948.73 CPU seconds and 91801 MB memory.
+2026-01-11 13:40:18.849 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.66 (1 unrouted).
+2026-01-11 13:40:18.849 INFO   [0DABF3\8F8E41] Auto-router pass #40 on board 'aad4200cb507eda71b0f1e3611942f72' was completed in 1.60 seconds with the score of 981.57 (6 unrouted), using 4128.83 CPU seconds and 93941 MB memory.
+2026-01-11 13:40:21.014 INFO   [0DABF3\8F8E41] Auto-router pass #41 on board '70684aca272a4c3782f837f813863692' was completed in 2.16 seconds with the score of 980.05 (7 unrouted), using 4312.93 CPU seconds and 96756 MB memory.
+2026-01-11 13:40:22.211 INFO   [0DABF3\8F8E41] Auto-router pass #42 on board 'd1f85cb348b43b44820f5fc906615fa5' was completed in 1.18 seconds with the score of 987.42 (3 unrouted), using 4406.48 CPU seconds and 98265 MB memory.
+2026-01-11 13:40:24.206 INFO   [0DABF3\8F8E41] Auto-router pass #43 on board '9642a3650f5a7a9ee76303f302fb9f2c' was completed in 1.98 seconds with the score of 987.36 (3 unrouted), using 4596.62 CPU seconds and 100687 MB memory.
+2026-01-11 13:40:26.044 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.36 (1 unrouted).
+2026-01-11 13:40:26.044 INFO   [0DABF3\8F8E41] Auto-router pass #44 on board '8b0b8e08da2d5d57023e2031d2e49c75' was completed in 1.82 seconds with the score of 989.19 (2 unrouted), using 4790.76 CPU seconds and 102735 MB memory.
+2026-01-11 13:40:28.074 INFO   [0DABF3\8F8E41] Auto-router pass #45 on board 'eec828bc5fd7f572fd0d3b7b98bb98db' was completed in 2.01 seconds with the score of 984.40 (5 unrouted), using 4988.85 CPU seconds and 105226 MB memory.
+2026-01-11 13:40:28.574 INFO   [0DABF3\8F8E41] Auto-router pass #46 on board '6eb86fec22f0312ca7c1152c32d445da' was completed in 0.48 seconds with the score of 991.63 (1 unrouted), using 5089.39 CPU seconds and 106951 MB memory.
+2026-01-11 13:40:28.890 INFO   [0DABF3\8F8E41] Auto-router pass #47 on board '0c2d01c60d9de42f190b918182effa9c' was completed in 0.30 seconds with the score of 985.73 (4 unrouted), using 5089.39 CPU seconds and 106951 MB memory.
+2026-01-11 13:40:30.726 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.63 (1 unrouted).
+2026-01-11 13:40:30.726 INFO   [0DABF3\8F8E41] Auto-router pass #48 on board '50d8b13a7a684a05e00cd92bdc774e8c' was completed in 1.82 seconds with the score of 983.74 (5 unrouted), using 5293.52 CPU seconds and 109689 MB memory.
+2026-01-11 13:40:33.132 INFO   [0DABF3\8F8E41] Auto-router pass #49 on board '0c2d01c60d9de42f190b918182effa9c' was completed in 2.40 seconds with the score of 976.20 (9 unrouted), using 5501.65 CPU seconds and 112444 MB memory.
+2026-01-11 13:40:34.018 INFO   [0DABF3\8F8E41] Auto-router pass #50 on board '2446f26b1e8ee7b83060a994ebef743e' was completed in 0.87 seconds with the score of 985.58 (4 unrouted), using 5607.22 CPU seconds and 113974 MB memory.
+2026-01-11 13:40:35.886 INFO   [0DABF3\8F8E41] Auto-router pass #51 on board '2176d1038d8c923c7ebbf620fbdcfcaf' was completed in 1.85 seconds with the score of 985.58 (4 unrouted), using 5821.37 CPU seconds and 116059 MB memory.
+2026-01-11 13:40:37.363 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.63 (1 unrouted).
+2026-01-11 13:40:37.364 INFO   [0DABF3\8F8E41] Auto-router pass #52 on board '2176d1038d8c923c7ebbf620fbdcfcaf' was completed in 1.47 seconds with the score of 986.08 (4 unrouted), using 6039.53 CPU seconds and 118140 MB memory.
+2026-01-11 13:40:41.660 INFO   [0DABF3\8F8E41] Auto-router pass #53 on board '0c2d01c60d9de42f190b918182effa9c' was completed in 4.29 seconds with the score of 976.20 (9 unrouted), using 6261.69 CPU seconds and 120960 MB memory.
+2026-01-11 13:40:42.991 INFO   [0DABF3\8F8E41] Auto-router pass #54 on board '8614f65132e52051aa7a95136573fd2d' was completed in 1.32 seconds with the score of 989.55 (2 unrouted), using 6374.28 CPU seconds and 122349 MB memory.
+2026-01-11 13:40:44.745 INFO   [0DABF3\8F8E41] Auto-router pass #55 on board '1cab82b71f28ca34810aa1d6c74d796e' was completed in 1.74 seconds with the score of 989.55 (2 unrouted), using 6602.48 CPU seconds and 124383 MB memory.
+2026-01-11 13:40:47.209 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.63 (1 unrouted).
+2026-01-11 13:40:47.209 INFO   [0DABF3\8F8E41] Auto-router pass #56 on board '1cab82b71f28ca34810aa1d6c74d796e' was completed in 2.46 seconds with the score of 989.49 (2 unrouted), using 6834.66 CPU seconds and 126449 MB memory.
+2026-01-11 13:40:47.511 INFO   [0DABF3\8F8E41] Auto-router pass #57 on board '0c2d01c60d9de42f190b918182effa9c' was completed in 0.29 seconds with the score of 985.76 (4 unrouted), using 6952.25 CPU seconds and 127501 MB memory.
+2026-01-11 13:40:48.460 INFO   [0DABF3\8F8E41] Auto-router pass #58 on board 'd772afe50bf8de9e9ff0fceb30a94f78' was completed in 0.94 seconds with the score of 987.76 (3 unrouted), using 7070.84 CPU seconds and 128652 MB memory.
+2026-01-11 13:40:50.970 INFO   [0DABF3\8F8E41] Auto-router pass #59 on board '128c8f367bc9134dc47d970aae38574a' was completed in 2.50 seconds with the score of 991.25 (1 unrouted), using 7311.05 CPU seconds and 130881 MB memory.
+2026-01-11 13:40:51.083 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.154 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.154 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.216 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.245 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.278 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.383 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.416 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.476 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.476 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.590 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.663 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:51.851 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:53.504 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.63 (1 unrouted).
+2026-01-11 13:40:53.504 INFO   [0DABF3\8F8E41] Auto-router pass #60 on board '68faafb7e2e9b68ecfd3dd154bfa3840' was completed in 2.52 seconds with the score of 991.25 (1 unrouted), using 7678.84 CPU seconds and 133760 MB memory.
+2026-01-11 13:40:53.814 INFO   [0DABF3\8F8E41] Auto-router pass #61 on board '0c2d01c60d9de42f190b918182effa9c' was completed in 0.30 seconds with the score of 985.76 (4 unrouted), using 7678.84 CPU seconds and 133760 MB memory.
+2026-01-11 13:40:54.790 INFO   [0DABF3\8F8E41] Auto-router pass #62 on board 'd772afe50bf8de9e9ff0fceb30a94f78' was completed in 0.97 seconds with the score of 987.76 (3 unrouted), using 7803.43 CPU seconds and 134900 MB memory.
+2026-01-11 13:40:56.921 INFO   [0DABF3\8F8E41] Auto-router pass #63 on board '128c8f367bc9134dc47d970aae38574a' was completed in 2.12 seconds with the score of 989.46 (2 unrouted), using 8055.66 CPU seconds and 136953 MB memory.
+2026-01-11 13:40:56.965 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:57.020 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:57.020 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:57.057 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:40:57.342 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:02.550 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.36 (1 unrouted).
+2026-01-11 13:41:02.550 INFO   [0DABF3\8F8E41] Auto-router pass #64 on board 'e1a976c0e2de1ec52712becec8ed0e24' was completed in 5.62 seconds with the score of 980.50 (7 unrouted), using 8836.40 CPU seconds and 142865 MB memory.
+2026-01-11 13:41:04.594 INFO   [0DABF3\8F8E41] Auto-router pass #65 on board 'eec828bc5fd7f572fd0d3b7b98bb98db' was completed in 2.04 seconds with the score of 984.40 (5 unrouted), using 9104.65 CPU seconds and 145505 MB memory.
+2026-01-11 13:41:06.738 INFO   [0DABF3\8F8E41] Auto-router pass #66 on board '9dc53afba0897ba23d595092af966b6e' was completed in 2.13 seconds with the score of 991.23 (1 unrouted), using 9376.92 CPU seconds and 148753 MB memory.
+2026-01-11 13:41:06.895 INFO   [0DABF3\8F8E41] Auto-router pass #67 on board '05106d19de02b5560a085fceba36d423' was completed in 0.14 seconds with the score of 983.97 (5 unrouted), using 9376.92 CPU seconds and 148753 MB memory.
+2026-01-11 13:41:09.022 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.36 (1 unrouted).
+2026-01-11 13:41:09.022 INFO   [0DABF3\8F8E41] Auto-router pass #68 on board '0c3d64b6efce037aebb76aa8e5de7140' was completed in 2.11 seconds with the score of 987.33 (3 unrouted), using 9653.22 CPU seconds and 151327 MB memory.
+2026-01-11 13:41:09.090 INFO   [0DABF3\8F8E41] Auto-router pass #69 on board 'eec828bc5fd7f572fd0d3b7b98bb98db' was completed in 0.06 seconds with the score of 991.47 (1 unrouted), using 9653.22 CPU seconds and 151327 MB memory.
+2026-01-11 13:41:11.072 INFO   [0DABF3\8F8E41] Auto-router pass #70 on board '0ea90c96ff928b51e548ce7c5b9c2eb8' was completed in 1.97 seconds with the score of 991.16 (1 unrouted), using 9933.55 CPU seconds and 154426 MB memory.
+2026-01-11 13:41:14.749 INFO   [0DABF3\8F8E41] Auto-router pass #71 on board '08376bf61141d040242024dedee49219' was completed in 3.66 seconds with the score of 991.16 (1 unrouted), using 10217.87 CPU seconds and 156950 MB memory.
+2026-01-11 13:41:17.113 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.47 (1 unrouted).
+2026-01-11 13:41:17.113 INFO   [0DABF3\8F8E41] Auto-router pass #72 on board '08376bf61141d040242024dedee49219' was completed in 2.36 seconds with the score of 991.16 (1 unrouted), using 10506.18 CPU seconds and 159003 MB memory.
+2026-01-11 13:41:17.246 INFO   [0DABF3\8F8E41] Auto-router pass #73 on board '0ea90c96ff928b51e548ce7c5b9c2eb8' was completed in 0.13 seconds with the score of 991.56 (1 unrouted), using 10651.83 CPU seconds and 159974 MB memory.
+2026-01-11 13:41:17.525 INFO   [0DABF3\8F8E41] Auto-router pass #74 on board '96d0a51a83511f57f6134e87eabb9957' was completed in 0.26 seconds with the score of 985.64 (4 unrouted), using 10651.83 CPU seconds and 159974 MB memory.
+2026-01-11 13:41:19.557 INFO   [0DABF3\8F8E41] Auto-router pass #75 on board '11da9aacbf67c21f0a5c9886eb7e2c17' was completed in 2.01 seconds with the score of 985.68 (4 unrouted), using 10946.11 CPU seconds and 162652 MB memory.
+2026-01-11 13:41:21.377 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.56 (1 unrouted).
+2026-01-11 13:41:21.377 INFO   [0DABF3\8F8E41] Auto-router pass #76 on board '256c26a4ea224f8aa153d85b5b47c2d2' was completed in 1.81 seconds with the score of 987.54 (3 unrouted), using 11244.40 CPU seconds and 164676 MB memory.
+2026-01-11 13:41:23.678 INFO   [0DABF3\8F8E41] Auto-router pass #77 on board '96d0a51a83511f57f6134e87eabb9957' was completed in 2.29 seconds with the score of 978.03 (8 unrouted), using 11546.69 CPU seconds and 167368 MB memory.
+2026-01-11 13:41:25.212 INFO   [0DABF3\8F8E41] Auto-router pass #78 on board 'f6bf60095605c0673c9d6d92ac0c8f6c' was completed in 1.52 seconds with the score of 980.24 (7 unrouted), using 11852.99 CPU seconds and 169871 MB memory.
+2026-01-11 13:41:26.983 INFO   [0DABF3\8F8E41] Auto-router pass #79 on board '0015e58591492034450c63d0a84bd505' was completed in 1.76 seconds with the score of 980.12 (7 unrouted), using 12007.66 CPU seconds and 171065 MB memory.
+2026-01-11 13:41:27.016 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:27.019 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:27.019 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:27.022 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:27.025 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:27.032 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:27.032 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:27.033 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:27.033 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:27.033 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:27.119 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:31.455 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.56 (1 unrouted).
+2026-01-11 13:41:31.455 INFO   [0DABF3\8F8E41] Auto-router pass #80 on board 'e63797da027e5488f995812c6a98868e' was completed in 4.46 seconds with the score of 975.88 (9 unrouted), using 12796.14 CPU seconds and 176358 MB memory.
+2026-01-11 13:41:31.730 INFO   [0DABF3\8F8E41] Auto-router pass #81 on board '96d0a51a83511f57f6134e87eabb9957' was completed in 0.27 seconds with the score of 985.64 (4 unrouted), using 12796.14 CPU seconds and 176358 MB memory.
+2026-01-11 13:41:32.706 INFO   [0DABF3\8F8E41] Auto-router pass #82 on board 'b2291a63ae4485fc4fcbbb329c165c96' was completed in 0.96 seconds with the score of 989.46 (2 unrouted), using 12956.86 CPU seconds and 177748 MB memory.
+2026-01-11 13:41:34.557 INFO   [0DABF3\8F8E41] Auto-router pass #83 on board '49b0ea7d2f82d418ee56f3c5d6581653' was completed in 1.83 seconds with the score of 985.86 (4 unrouted), using 13281.34 CPU seconds and 180172 MB memory.
+2026-01-11 13:41:37.661 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.56 (1 unrouted).
+2026-01-11 13:41:37.661 INFO   [0DABF3\8F8E41] Auto-router pass #84 on board '74c78e951ada413e983572ab0fd3c7a1' was completed in 3.09 seconds with the score of 989.52 (2 unrouted), using 13775.56 CPU seconds and 183820 MB memory.
+2026-01-11 13:41:40.019 INFO   [0DABF3\8F8E41] Auto-router pass #85 on board '96d0a51a83511f57f6134e87eabb9957' was completed in 2.35 seconds with the score of 978.03 (8 unrouted), using 14110.07 CPU seconds and 186526 MB memory.
+2026-01-11 13:41:40.991 INFO   [0DABF3\8F8E41] Auto-router pass #86 on board '2c629b5a29910fc2ca8df78f2f6621be' was completed in 0.96 seconds with the score of 983.80 (5 unrouted), using 14278.83 CPU seconds and 187979 MB memory.
+2026-01-11 13:41:42.861 INFO   [0DABF3\8F8E41] Auto-router pass #87 on board '51178cad0b0792f96b97da10c37b3aa1' was completed in 1.85 seconds with the score of 982.16 (6 unrouted), using 14619.36 CPU seconds and 190046 MB memory.
+2026-01-11 13:41:42.895 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:43.021 WARN   ItemAutorouteInfo.get_expansion_room: p_index out of range
+2026-01-11 13:41:49.465 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.56 (1 unrouted).
+2026-01-11 13:41:49.465 INFO   [0DABF3\8F8E41] Auto-router pass #88 on board 'b02ad03a641a19fbeca81ff2f5db536b' was completed in 6.59 seconds with the score of 981.58 (6 unrouted), using 15488.19 CPU seconds and 195024 MB memory.
+2026-01-11 13:41:51.803 INFO   [0DABF3\8F8E41] Auto-router pass #89 on board '96d0a51a83511f57f6134e87eabb9957' was completed in 2.33 seconds with the score of 978.03 (8 unrouted), using 15842.73 CPU seconds and 197706 MB memory.
+2026-01-11 13:41:52.836 INFO   [0DABF3\8F8E41] Auto-router pass #90 on board 'a9dca8e59a8a2fc097f3ec4c6d51cd1a' was completed in 1.02 seconds with the score of 987.93 (3 unrouted), using 16021.50 CPU seconds and 199148 MB memory.
+2026-01-11 13:41:54.768 INFO   [0DABF3\8F8E41] Auto-router pass #91 on board 'd58de220d47f711ca3bf61fff5405ae3' was completed in 1.92 seconds with the score of 985.71 (4 unrouted), using 16382.07 CPU seconds and 201233 MB memory.
+2026-01-11 13:41:56.241 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.47 (1 unrouted).
+2026-01-11 13:41:56.241 INFO   [0DABF3\8F8E41] Auto-router pass #92 on board 'afd942f3a2ccd2eda3991090780089b8' was completed in 1.46 seconds with the score of 989.78 (2 unrouted), using 16746.65 CPU seconds and 203396 MB memory.
+2026-01-11 13:41:58.190 INFO   [0DABF3\8F8E41] Auto-router pass #93 on board '0ea90c96ff928b51e548ce7c5b9c2eb8' was completed in 1.94 seconds with the score of 991.16 (1 unrouted), using 17115.24 CPU seconds and 206513 MB memory.
+2026-01-11 13:42:00.051 INFO   [0DABF3\8F8E41] Auto-router pass #94 on board '975ee8bcdf665c0bf6e9efa3191e3d44' was completed in 1.85 seconds with the score of 991.16 (1 unrouted), using 17301.02 CPU seconds and 207816 MB memory.
+2026-01-11 13:42:00.104 INFO   [0DABF3\8F8E41] Auto-router pass #95 on board '975ee8bcdf665c0bf6e9efa3191e3d44' was completed in 0.04 seconds with the score of 991.16 (1 unrouted), using 17487.81 CPU seconds and 208842 MB memory.
+2026-01-11 13:42:02.526 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.47 (1 unrouted).
+2026-01-11 13:42:02.527 INFO   [0DABF3\8F8E41] Auto-router pass #96 on board '975ee8bcdf665c0bf6e9efa3191e3d44' was completed in 2.42 seconds with the score of 991.16 (1 unrouted), using 17864.39 CPU seconds and 210818 MB memory.
+2026-01-11 13:42:04.572 INFO   [0DABF3\8F8E41] Auto-router pass #97 on board '0ea90c96ff928b51e548ce7c5b9c2eb8' was completed in 2.04 seconds with the score of 991.16 (1 unrouted), using 18244.98 CPU seconds and 213640 MB memory.
+2026-01-11 13:42:06.389 INFO   [0DABF3\8F8E41] Auto-router pass #98 on board '975ee8bcdf665c0bf6e9efa3191e3d44' was completed in 1.81 seconds with the score of 991.16 (1 unrouted), using 18629.56 CPU seconds and 216094 MB memory.
+2026-01-11 13:42:06.437 INFO   [0DABF3\8F8E41] Auto-router pass #99 on board '975ee8bcdf665c0bf6e9efa3191e3d44' was completed in 0.04 seconds with the score of 991.16 (1 unrouted), using 18629.56 CPU seconds and 216094 MB memory.
+2026-01-11 13:42:08.895 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.47 (1 unrouted).
+2026-01-11 13:42:08.895 INFO   [0DABF3\8F8E41] Auto-router pass #100 on board '975ee8bcdf665c0bf6e9efa3191e3d44' was completed in 2.45 seconds with the score of 991.16 (1 unrouted), using 19018.15 CPU seconds and 218057 MB memory.
+2026-01-11 13:42:09.036 INFO   [0DABF3\8F8E41] Auto-router pass #101 on board '0ea90c96ff928b51e548ce7c5b9c2eb8' was completed in 0.14 seconds with the score of 991.56 (1 unrouted), using 19018.15 CPU seconds and 218057 MB memory.
+2026-01-11 13:42:09.311 INFO   [0DABF3\8F8E41] Auto-router pass #102 on board '96d0a51a83511f57f6134e87eabb9957' was completed in 0.27 seconds with the score of 985.64 (4 unrouted), using 19213.95 CPU seconds and 219088 MB memory.
+2026-01-11 13:42:09.989 INFO   [0DABF3\8F8E41] Auto-router pass #103 on board '11da9aacbf67c21f0a5c9886eb7e2c17' was completed in 0.67 seconds with the score of 989.19 (2 unrouted), using 19213.95 CPU seconds and 219088 MB memory.
+2026-01-11 13:42:13.496 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.36 (1 unrouted).
+2026-01-11 13:42:13.496 INFO   [0DABF3\8F8E41] Auto-router pass #104 on board 'f4b7d9891e6e6af49509eea1dcd56d96' was completed in 3.49 seconds with the score of 981.80 (6 unrouted), using 20007.25 CPU seconds and 223111 MB memory.
+2026-01-11 13:42:15.694 INFO   [0DABF3\8F8E41] Auto-router pass #105 on board 'eec828bc5fd7f572fd0d3b7b98bb98db' was completed in 2.19 seconds with the score of 984.40 (5 unrouted), using 20409.93 CPU seconds and 225519 MB memory.
+2026-01-11 13:42:17.843 INFO   [0DABF3\8F8E41] Auto-router pass #106 on board '392a5a9e1ed49ed932c9c0850830da84' was completed in 2.13 seconds with the score of 991.19 (1 unrouted), using 20816.62 CPU seconds and 228875 MB memory.
+2026-01-11 13:42:17.991 INFO   [0DABF3\8F8E41] Auto-router pass #107 on board '1d1be624d49415f88d1dc6bd5d37e43c' was completed in 0.14 seconds with the score of 983.91 (5 unrouted), using 20816.62 CPU seconds and 228875 MB memory.
+2026-01-11 13:42:24.769 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.25 (1 unrouted).
+2026-01-11 13:42:24.769 INFO   [0DABF3\8F8E41] Auto-router pass #108 on board 'bdb093e0be36d304f327a996ace1325d' was completed in 6.77 seconds with the score of 987.74 (3 unrouted), using 21850.85 CPU seconds and 234616 MB memory.
+2026-01-11 13:42:24.957 INFO   [0DABF3\8F8E41] Auto-router pass #109 on board '68faafb7e2e9b68ecfd3dd154bfa3840' was completed in 0.18 seconds with the score of 989.42 (2 unrouted), using 21850.85 CPU seconds and 234616 MB memory.
+2026-01-11 13:42:25.414 INFO   [0DABF3\8F8E41] Auto-router pass #110 on board 'db609ad592ed2bc8b958d81b8bb9687c' was completed in 0.44 seconds with the score of 989.52 (2 unrouted), using 22060.71 CPU seconds and 235924 MB memory.
+2026-01-11 13:42:26.953 INFO   [0DABF3\8F8E41] Auto-router pass #111 on board 'e696769dfa425784db30042b0759ba2f' was completed in 1.53 seconds with the score of 991.09 (1 unrouted), using 22271.58 CPU seconds and 237217 MB memory.
+2026-01-11 13:42:27.130 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.25 (1 unrouted).
+2026-01-11 13:42:27.131 INFO   [0DABF3\8F8E41] Auto-router pass #112 on board '3d33630cfa2bf55c145b21cf6c5518d0' was completed in 0.17 seconds with the score of 991.19 (1 unrouted), using 22483.45 CPU seconds and 238361 MB memory.
+2026-01-11 13:42:28.666 INFO   [0DABF3\8F8E41] Auto-router pass #113 on board '68faafb7e2e9b68ecfd3dd154bfa3840' was completed in 1.53 seconds with the score of 991.25 (1 unrouted), using 22696.29 CPU seconds and 239584 MB memory.
+2026-01-11 13:42:28.715 INFO   [0DABF3\8F8E41] Auto-router pass #114 on board '68faafb7e2e9b68ecfd3dd154bfa3840' was completed in 0.04 seconds with the score of 991.25 (1 unrouted), using 22696.29 CPU seconds and 239584 MB memory.
+2026-01-11 13:42:28.757 INFO   [0DABF3\8F8E41] Auto-router pass #115 on board '68faafb7e2e9b68ecfd3dd154bfa3840' was completed in 0.04 seconds with the score of 991.25 (1 unrouted), using 22696.29 CPU seconds and 239584 MB memory.
+2026-01-11 13:42:30.972 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.25 (1 unrouted).
+2026-01-11 13:42:30.973 INFO   [0DABF3\8F8E41] Auto-router pass #116 on board '68faafb7e2e9b68ecfd3dd154bfa3840' was completed in 2.21 seconds with the score of 989.52 (2 unrouted), using 23124.99 CPU seconds and 241712 MB memory.
+2026-01-11 13:42:32.587 INFO   [0DABF3\8F8E41] Auto-router pass #117 on board '68faafb7e2e9b68ecfd3dd154bfa3840' was completed in 1.61 seconds with the score of 991.25 (1 unrouted), using 23557.68 CPU seconds and 243885 MB memory.
+2026-01-11 13:42:32.630 INFO   [0DABF3\8F8E41] Auto-router pass #118 on board '68faafb7e2e9b68ecfd3dd154bfa3840' was completed in 0.04 seconds with the score of 991.25 (1 unrouted), using 23557.68 CPU seconds and 243885 MB memory.
+2026-01-11 13:42:32.679 INFO   [0DABF3\8F8E41] Auto-router pass #119 on board '68faafb7e2e9b68ecfd3dd154bfa3840' was completed in 0.04 seconds with the score of 991.25 (1 unrouted), using 23557.68 CPU seconds and 243885 MB memory.
+2026-01-11 13:42:34.908 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.25 (1 unrouted).
+2026-01-11 13:42:34.908 INFO   [0DABF3\8F8E41] Auto-router pass #120 on board '68faafb7e2e9b68ecfd3dd154bfa3840' was completed in 2.22 seconds with the score of 989.52 (2 unrouted), using 23994.36 CPU seconds and 246001 MB memory.
+2026-01-11 13:42:35.112 INFO   [0DABF3\8F8E41] Auto-router pass #121 on board '68faafb7e2e9b68ecfd3dd154bfa3840' was completed in 0.20 seconds with the score of 989.42 (2 unrouted), using 24214.20 CPU seconds and 247126 MB memory.
+2026-01-11 13:42:35.325 INFO   [0DABF3\8F8E41] Auto-router pass #122 on board 'db609ad592ed2bc8b958d81b8bb9687c' was completed in 0.21 seconds with the score of 989.45 (2 unrouted), using 24214.20 CPU seconds and 247126 MB memory.
+2026-01-11 13:42:35.643 INFO   [0DABF3\8F8E41] Auto-router pass #123 on board '92be7fc33447db24340e8f9e4b38f3fc' was completed in 0.30 seconds with the score of 991.28 (1 unrouted), using 24214.20 CPU seconds and 247126 MB memory.
+2026-01-11 13:42:35.837 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.28 (1 unrouted).
+2026-01-11 13:42:35.837 INFO   [0DABF3\8F8E41] Auto-router pass #124 on board '57698c6e6c1184102ea6f2ac5ece2d94' was completed in 0.18 seconds with the score of 991.26 (1 unrouted), using 24214.20 CPU seconds and 247126 MB memory.
+2026-01-11 13:42:36.342 INFO   [0DABF3\8F8E41] Auto-router pass #125 on board '57698c6e6c1184102ea6f2ac5ece2d94' was completed in 0.49 seconds with the score of 991.27 (1 unrouted), using 24435.07 CPU seconds and 248251 MB memory.
+2026-01-11 13:42:38.067 INFO   [0DABF3\8F8E41] Auto-router pass #126 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 1.71 seconds with the score of 991.27 (1 unrouted), using 24656.94 CPU seconds and 249355 MB memory.
+2026-01-11 13:42:38.120 INFO   [0DABF3\8F8E41] Auto-router pass #127 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 0.05 seconds with the score of 991.27 (1 unrouted), using 24879.82 CPU seconds and 250374 MB memory.
+2026-01-11 13:42:40.594 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.28 (1 unrouted).
+2026-01-11 13:42:40.594 INFO   [0DABF3\8F8E41] Auto-router pass #128 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 2.47 seconds with the score of 991.27 (1 unrouted), using 25328.58 CPU seconds and 252263 MB memory.
+2026-01-11 13:42:40.708 INFO   [0DABF3\8F8E41] Auto-router pass #129 on board '57698c6e6c1184102ea6f2ac5ece2d94' was completed in 0.11 seconds with the score of 991.26 (1 unrouted), using 25328.58 CPU seconds and 252263 MB memory.
+2026-01-11 13:42:42.518 INFO   [0DABF3\8F8E41] Auto-router pass #130 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 1.80 seconds with the score of 991.26 (1 unrouted), using 25781.35 CPU seconds and 254277 MB memory.
+2026-01-11 13:42:42.569 INFO   [0DABF3\8F8E41] Auto-router pass #131 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 0.04 seconds with the score of 991.26 (1 unrouted), using 25781.35 CPU seconds and 254277 MB memory.
+2026-01-11 13:42:43.577 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.28 (1 unrouted).
+2026-01-11 13:42:43.580 INFO   [0DABF3\8F8E41] Auto-router pass #132 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 1.01 seconds with the score of 991.19 (1 unrouted), using 26009.24 CPU seconds and 255250 MB memory.
+2026-01-11 13:42:43.700 INFO   [0DABF3\8F8E41] Auto-router pass #133 on board '57698c6e6c1184102ea6f2ac5ece2d94' was completed in 0.11 seconds with the score of 991.26 (1 unrouted), using 26009.24 CPU seconds and 255250 MB memory.
+2026-01-11 13:42:43.957 INFO   [0DABF3\8F8E41] Auto-router pass #134 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 0.25 seconds with the score of 989.52 (2 unrouted), using 26009.24 CPU seconds and 255250 MB memory.
+2026-01-11 13:42:45.608 INFO   [0DABF3\8F8E41] Auto-router pass #135 on board 'abb041f4edf8df1546b4f130335c3c5a' was completed in 1.63 seconds with the score of 985.71 (4 unrouted), using 26467.99 CPU seconds and 257509 MB memory.
+2026-01-11 13:42:46.869 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.28 (1 unrouted).
+2026-01-11 13:42:46.870 INFO   [0DABF3\8F8E41] Auto-router pass #136 on board 'b797462d7dce93970e4596ce8ba55c12' was completed in 1.25 seconds with the score of 983.33 (5 unrouted), using 26698.87 CPU seconds and 258547 MB memory.
+2026-01-11 13:42:47.008 INFO   [0DABF3\8F8E41] Auto-router pass #137 on board '57698c6e6c1184102ea6f2ac5ece2d94' was completed in 0.13 seconds with the score of 991.26 (1 unrouted), using 26698.87 CPU seconds and 258547 MB memory.
+2026-01-11 13:42:48.888 INFO   [0DABF3\8F8E41] Auto-router pass #138 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 1.87 seconds with the score of 991.26 (1 unrouted), using 27163.65 CPU seconds and 260485 MB memory.
+2026-01-11 13:42:48.949 INFO   [0DABF3\8F8E41] Auto-router pass #139 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 0.05 seconds with the score of 991.26 (1 unrouted), using 27163.65 CPU seconds and 260485 MB memory.
+2026-01-11 13:42:50.065 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.27 (1 unrouted).
+2026-01-11 13:42:50.065 INFO   [0DABF3\8F8E41] Auto-router pass #140 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 1.11 seconds with the score of 991.19 (1 unrouted), using 27397.55 CPU seconds and 261382 MB memory.
+2026-01-11 13:42:51.714 INFO   [0DABF3\8F8E41] Auto-router pass #141 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 1.64 seconds with the score of 991.27 (1 unrouted), using 27868.34 CPU seconds and 263404 MB memory.
+2026-01-11 13:42:51.758 INFO   [0DABF3\8F8E41] Auto-router pass #142 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 0.04 seconds with the score of 991.27 (1 unrouted), using 27868.34 CPU seconds and 263404 MB memory.
+2026-01-11 13:42:51.804 INFO   [0DABF3\8F8E41] Auto-router pass #143 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 0.04 seconds with the score of 991.27 (1 unrouted), using 27868.34 CPU seconds and 263404 MB memory.
+2026-01-11 13:42:54.228 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.27 (1 unrouted).
+2026-01-11 13:42:54.228 INFO   [0DABF3\8F8E41] Auto-router pass #144 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 2.42 seconds with the score of 991.27 (1 unrouted), using 28582.01 CPU seconds and 266378 MB memory.
+2026-01-11 13:42:57.959 INFO   [0DABF3\8F8E41] Auto-router pass #145 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 3.73 seconds with the score of 991.27 (1 unrouted), using 28821.91 CPU seconds and 267352 MB memory.
+2026-01-11 13:42:58.003 INFO   [0DABF3\8F8E41] Auto-router pass #146 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 0.04 seconds with the score of 991.27 (1 unrouted), using 28821.91 CPU seconds and 267352 MB memory.
+2026-01-11 13:42:58.052 INFO   [0DABF3\8F8E41] Auto-router pass #147 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 0.04 seconds with the score of 991.27 (1 unrouted), using 29062.80 CPU seconds and 268385 MB memory.
+2026-01-11 13:42:59.061 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.27 (1 unrouted).
+2026-01-11 13:42:59.061 INFO   [0DABF3\8F8E41] Auto-router pass #148 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 1.00 seconds with the score of 991.19 (1 unrouted), using 29304.69 CPU seconds and 269328 MB memory.
+2026-01-11 13:43:00.857 INFO   [0DABF3\8F8E41] Auto-router pass #149 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 1.79 seconds with the score of 991.27 (1 unrouted), using 29547.57 CPU seconds and 270359 MB memory.
+2026-01-11 13:43:00.906 INFO   [0DABF3\8F8E41] Auto-router pass #150 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 0.04 seconds with the score of 991.27 (1 unrouted), using 29547.57 CPU seconds and 270359 MB memory.
+2026-01-11 13:43:00.957 INFO   [0DABF3\8F8E41] Auto-router pass #151 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 0.04 seconds with the score of 991.27 (1 unrouted), using 29547.57 CPU seconds and 270359 MB memory.
+2026-01-11 13:43:03.378 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.27 (1 unrouted).
+2026-01-11 13:43:03.378 INFO   [0DABF3\8F8E41] Auto-router pass #152 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 2.42 seconds with the score of 991.27 (1 unrouted), using 30282.21 CPU seconds and 273245 MB memory.
+2026-01-11 13:43:05.056 INFO   [0DABF3\8F8E41] Auto-router pass #153 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 1.67 seconds with the score of 991.27 (1 unrouted), using 30776.97 CPU seconds and 275345 MB memory.
+2026-01-11 13:43:05.107 INFO   [0DABF3\8F8E41] Auto-router pass #154 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 0.04 seconds with the score of 991.27 (1 unrouted), using 30776.97 CPU seconds and 275345 MB memory.
+2026-01-11 13:43:05.153 INFO   [0DABF3\8F8E41] Auto-router pass #155 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 0.04 seconds with the score of 991.27 (1 unrouted), using 30776.97 CPU seconds and 275345 MB memory.
+2026-01-11 13:43:07.693 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.26 (1 unrouted).
+2026-01-11 13:43:07.694 INFO   [0DABF3\8F8E41] Auto-router pass #156 on board 'e5218fbcdcbdce3e7b4c840e50032d16' was completed in 2.54 seconds with the score of 991.27 (1 unrouted), using 31275.73 CPU seconds and 277190 MB memory.
+2026-01-11 13:43:09.558 INFO   [0DABF3\8F8E41] Auto-router pass #157 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 1.86 seconds with the score of 991.26 (1 unrouted), using 31778.50 CPU seconds and 279137 MB memory.
+2026-01-11 13:43:09.605 INFO   [0DABF3\8F8E41] Auto-router pass #158 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 0.04 seconds with the score of 991.26 (1 unrouted), using 31778.50 CPU seconds and 279137 MB memory.
+2026-01-11 13:43:09.648 INFO   [0DABF3\8F8E41] Auto-router pass #159 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 0.04 seconds with the score of 991.26 (1 unrouted), using 31778.50 CPU seconds and 279137 MB memory.
+2026-01-11 13:43:12.302 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.26 (1 unrouted).
+2026-01-11 13:43:12.302 INFO   [0DABF3\8F8E41] Auto-router pass #160 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 2.65 seconds with the score of 991.26 (1 unrouted), using 32540.18 CPU seconds and 281929 MB memory.
+2026-01-11 13:43:12.528 INFO   [0DABF3\8F8E41] Auto-router pass #161 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 0.22 seconds with the score of 989.52 (2 unrouted), using 32540.18 CPU seconds and 281929 MB memory.
+2026-01-11 13:43:15.657 INFO   [0DABF3\8F8E41] Auto-router pass #162 on board 'abb041f4edf8df1546b4f130335c3c5a' was completed in 3.12 seconds with the score of 974.34 (10 unrouted), using 33310.87 CPU seconds and 285656 MB memory.
+2026-01-11 13:43:18.008 INFO   [0DABF3\8F8E41] Auto-router pass #163 on board 'cddb6fd9242e3b789a16bfb17502b2f8' was completed in 2.33 seconds with the score of 983.41 (5 unrouted), using 33829.68 CPU seconds and 287976 MB memory.
+2026-01-11 13:43:21.496 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.26 (1 unrouted).
+2026-01-11 13:43:21.497 INFO   [0DABF3\8F8E41] Auto-router pass #164 on board '8ea236f54f79e2f37be3392a6cef879d' was completed in 3.47 seconds with the score of 987.63 (3 unrouted), using 34879.35 CPU seconds and 292207 MB memory.
+2026-01-11 13:43:23.186 INFO   [0DABF3\8F8E41] Auto-router pass #165 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 1.68 seconds with the score of 991.26 (1 unrouted), using 35410.21 CPU seconds and 294373 MB memory.
+2026-01-11 13:43:23.238 INFO   [0DABF3\8F8E41] Auto-router pass #166 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 0.04 seconds with the score of 991.26 (1 unrouted), using 35410.21 CPU seconds and 294373 MB memory.
+2026-01-11 13:43:23.294 INFO   [0DABF3\8F8E41] Auto-router pass #167 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 0.05 seconds with the score of 991.26 (1 unrouted), using 35410.21 CPU seconds and 294373 MB memory.
+2026-01-11 13:43:25.753 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.26 (1 unrouted).
+2026-01-11 13:43:25.753 INFO   [0DABF3\8F8E41] Auto-router pass #168 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 2.45 seconds with the score of 991.26 (1 unrouted), using 35945.07 CPU seconds and 296386 MB memory.
+2026-01-11 13:43:27.384 INFO   [0DABF3\8F8E41] Auto-router pass #169 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 1.63 seconds with the score of 991.26 (1 unrouted), using 36483.92 CPU seconds and 298533 MB memory.
+2026-01-11 13:43:27.431 INFO   [0DABF3\8F8E41] Auto-router pass #170 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 0.04 seconds with the score of 991.26 (1 unrouted), using 36483.92 CPU seconds and 298533 MB memory.
+2026-01-11 13:43:27.474 INFO   [0DABF3\8F8E41] Auto-router pass #171 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 0.04 seconds with the score of 991.26 (1 unrouted), using 36483.92 CPU seconds and 298533 MB memory.
+2026-01-11 13:43:31.847 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.23 (1 unrouted).
+2026-01-11 13:43:31.847 INFO   [0DABF3\8F8E41] Auto-router pass #172 on board '550532fb62f8b7b749bb0bb9a0ee0b1e' was completed in 4.37 seconds with the score of 991.26 (1 unrouted), using 37026.76 CPU seconds and 300630 MB memory.
+2026-01-11 13:43:33.522 INFO   [0DABF3\8F8E41] Auto-router pass #173 on board '05106d19de02b5560a085fceba36d423' was completed in 1.67 seconds with the score of 976.31 (9 unrouted), using 37573.58 CPU seconds and 303042 MB memory.
+2026-01-11 13:43:35.652 INFO   [0DABF3\8F8E41] Auto-router pass #174 on board '3e3702112fd1ad6ae39d5202ce9565d1' was completed in 2.11 seconds with the score of 980.27 (7 unrouted), using 38124.39 CPU seconds and 305744 MB memory.
+2026-01-11 13:43:35.995 INFO   [0DABF3\8F8E41] Auto-router pass #175 on board 'aebe927a4df8d4e17d837b590bfeebe2' was completed in 0.33 seconds with the score of 984.07 (5 unrouted), using 38124.39 CPU seconds and 305744 MB memory.
+2026-01-11 13:43:40.560 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.23 (1 unrouted).
+2026-01-11 13:43:40.560 INFO   [0DABF3\8F8E41] Auto-router pass #176 on board 'd7a9501dbd9ab7d3378c09d647d58daa' was completed in 4.55 seconds with the score of 974.77 (10 unrouted), using 39519.02 CPU seconds and 311449 MB memory.
+2026-01-11 13:43:42.266 INFO   [0DABF3\8F8E41] Auto-router pass #177 on board '05106d19de02b5560a085fceba36d423' was completed in 1.70 seconds with the score of 976.31 (9 unrouted), using 40083.91 CPU seconds and 313890 MB memory.
+2026-01-11 13:43:44.422 INFO   [0DABF3\8F8E41] Auto-router pass #178 on board '3e3702112fd1ad6ae39d5202ce9565d1' was completed in 2.15 seconds with the score of 974.86 (10 unrouted), using 40652.83 CPU seconds and 316164 MB memory.
+2026-01-11 13:43:50.319 INFO   [0DABF3\8F8E41] Auto-router pass #179 on board '58596033ab79ca2d4a8ac578e5625007' was completed in 5.88 seconds with the score of 980.06 (7 unrouted), using 42383.61 CPU seconds and 323217 MB memory.
+2026-01-11 13:43:53.050 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.23 (1 unrouted).
+2026-01-11 13:43:53.050 INFO   [0DABF3\8F8E41] Auto-router pass #180 on board '6aa6e3463f6f488dddb5735af39f3624' was completed in 2.72 seconds with the score of 983.72 (5 unrouted), using 43262.55 CPU seconds and 326499 MB memory.
+2026-01-11 13:43:53.185 INFO   [0DABF3\8F8E41] Auto-router pass #181 on board '05106d19de02b5560a085fceba36d423' was completed in 0.13 seconds with the score of 983.97 (5 unrouted), using 43262.55 CPU seconds and 326499 MB memory.
+2026-01-11 13:43:53.985 INFO   [0DABF3\8F8E41] Auto-router pass #182 on board '814c84d4c703b2458ca14b969d6b7e5f' was completed in 0.78 seconds with the score of 987.66 (3 unrouted), using 43262.55 CPU seconds and 326499 MB memory.
+2026-01-11 13:43:55.773 INFO   [0DABF3\8F8E41] Auto-router pass #183 on board '8330254279a75cf9f9892e30bc73f21c' was completed in 1.77 seconds with the score of 982.34 (6 unrouted), using 43853.55 CPU seconds and 329118 MB memory.
+2026-01-11 13:43:58.786 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.23 (1 unrouted).
+2026-01-11 13:43:58.786 INFO   [0DABF3\8F8E41] Auto-router pass #184 on board '6c7edf87431c08ca76cd9f5dafad66b9' was completed in 3.00 seconds with the score of 991.15 (1 unrouted), using 44747.55 CPU seconds and 332754 MB memory.
+2026-01-11 13:44:00.506 INFO   [0DABF3\8F8E41] Auto-router pass #185 on board '05106d19de02b5560a085fceba36d423' was completed in 1.72 seconds with the score of 976.31 (9 unrouted), using 45348.57 CPU seconds and 335330 MB memory.
+2026-01-11 13:44:02.698 INFO   [0DABF3\8F8E41] Auto-router pass #186 on board '3e3702112fd1ad6ae39d5202ce9565d1' was completed in 2.19 seconds with the score of 978.37 (8 unrouted), using 45953.58 CPU seconds and 337953 MB memory.
+2026-01-11 13:44:02.941 INFO   [0DABF3\8F8E41] Auto-router pass #187 on board '9eee32948946f3cfeebe2b44f2825283' was completed in 0.22 seconds with the score of 978.37 (8 unrouted), using 45953.58 CPU seconds and 337953 MB memory.
+2026-01-11 13:44:07.810 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.19 (1 unrouted).
+2026-01-11 13:44:07.811 INFO   [0DABF3\8F8E41] Auto-router pass #188 on board '9eee32948946f3cfeebe2b44f2825283' was completed in 4.86 seconds with the score of 980.33 (7 unrouted), using 46868.61 CPU seconds and 341077 MB memory.
+2026-01-11 13:44:09.581 INFO   [0DABF3\8F8E41] Auto-router pass #189 on board '1d1be624d49415f88d1dc6bd5d37e43c' was completed in 1.76 seconds with the score of 978.26 (8 unrouted), using 47483.63 CPU seconds and 343724 MB memory.
+2026-01-11 13:44:12.397 INFO   [0DABF3\8F8E41] Auto-router pass #190 on board '4bd56a3e7c903425770bb6be5435c10e' was completed in 2.80 seconds with the score of 980.38 (7 unrouted), using 48413.66 CPU seconds and 347706 MB memory.
+2026-01-11 13:44:14.301 INFO   [0DABF3\8F8E41] Auto-router pass #191 on board '1d055b89a5412896265800690567f19d' was completed in 1.89 seconds with the score of 981.88 (6 unrouted), using 49038.75 CPU seconds and 351573 MB memory.
+2026-01-11 13:44:17.725 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.19 (1 unrouted).
+2026-01-11 13:44:17.726 INFO   [0DABF3\8F8E41] Auto-router pass #192 on board 'd955f0b066952b751e0aac37bfe5aedc' was completed in 3.41 seconds with the score of 987.46 (3 unrouted), using 49983.96 CPU seconds and 355829 MB memory.
+2026-01-11 13:44:19.396 INFO   [0DABF3\8F8E41] Auto-router pass #193 on board '1d1be624d49415f88d1dc6bd5d37e43c' was completed in 1.66 seconds with the score of 978.26 (8 unrouted), using 50619.12 CPU seconds and 358463 MB memory.
+2026-01-11 13:44:20.134 INFO   [0DABF3\8F8E41] Auto-router pass #194 on board '4bd56a3e7c903425770bb6be5435c10e' was completed in 0.73 seconds with the score of 991.31 (1 unrouted), using 50938.21 CPU seconds and 359748 MB memory.
+2026-01-11 13:44:20.243 INFO   [0DABF3\8F8E41] Auto-router pass #195 on board '79f3deea216ef122fe3e03235e6bb2d7' was completed in 0.10 seconds with the score of 989.53 (2 unrouted), using 50938.21 CPU seconds and 359748 MB memory.
+2026-01-11 13:44:23.105 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:44:23.105 INFO   [0DABF3\8F8E41] Auto-router pass #196 on board '4bb033d86469ddea8624c88b0256e6e3' was completed in 2.85 seconds with the score of 991.39 (1 unrouted), using 51901.53 CPU seconds and 363412 MB memory.
+2026-01-11 13:44:23.202 INFO   [0DABF3\8F8E41] Auto-router pass #197 on board '79f3deea216ef122fe3e03235e6bb2d7' was completed in 0.09 seconds with the score of 989.53 (2 unrouted), using 51901.53 CPU seconds and 363412 MB memory.
+2026-01-11 13:44:24.977 INFO   [0DABF3\8F8E41] Auto-router pass #198 on board '4bb033d86469ddea8624c88b0256e6e3' was completed in 1.77 seconds with the score of 991.31 (1 unrouted), using 52224.64 CPU seconds and 364863 MB memory.
+2026-01-11 13:44:26.536 INFO   [0DABF3\8F8E41] Auto-router pass #199 on board '15eb3cd22d1dc267ece46161013b085e' was completed in 1.54 seconds with the score of 991.31 (1 unrouted), using 52873.84 CPU seconds and 367197 MB memory.
+2026-01-11 13:44:26.861 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:44:26.861 INFO   [0DABF3\8F8E41] Auto-router pass #200 on board '05256249bd5e1f7d5c6b77850c5afb19' was completed in 0.31 seconds with the score of 991.36 (1 unrouted), using 52873.84 CPU seconds and 367197 MB memory.
+2026-01-11 13:44:28.370 INFO   [0DABF3\8F8E41] Auto-router pass #201 on board '15eb3cd22d1dc267ece46161013b085e' was completed in 1.50 seconds with the score of 991.31 (1 unrouted), using 53527.04 CPU seconds and 369537 MB memory.
+2026-01-11 13:44:28.497 INFO   [0DABF3\8F8E41] Auto-router pass #202 on board '19fc177f9bca7ce73e1e8351e5172f7d' was completed in 0.11 seconds with the score of 991.31 (1 unrouted), using 53527.04 CPU seconds and 369537 MB memory.
+2026-01-11 13:44:30.018 INFO   [0DABF3\8F8E41] Auto-router pass #203 on board 'a20176f43849ff63cc0a143c48bcdc0b' was completed in 1.50 seconds with the score of 991.31 (1 unrouted), using 54184.23 CPU seconds and 372032 MB memory.
+2026-01-11 13:44:32.737 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:44:32.737 INFO   [0DABF3\8F8E41] Auto-router pass #204 on board 'd182f3c7e0c4de6192a248408f9121d6' was completed in 2.71 seconds with the score of 991.33 (1 unrouted), using 54845.41 CPU seconds and 374445 MB memory.
+2026-01-11 13:44:34.125 INFO   [0DABF3\8F8E41] Auto-router pass #205 on board '15eb3cd22d1dc267ece46161013b085e' was completed in 1.38 seconds with the score of 991.31 (1 unrouted), using 55510.61 CPU seconds and 376899 MB memory.
+2026-01-11 13:44:35.731 INFO   [0DABF3\8F8E41] Auto-router pass #206 on board '19fc177f9bca7ce73e1e8351e5172f7d' was completed in 1.60 seconds with the score of 991.31 (1 unrouted), using 55844.69 CPU seconds and 378269 MB memory.
+2026-01-11 13:44:35.878 INFO   [0DABF3\8F8E41] Auto-router pass #207 on board '71eb0c4d9e34c30fa1a37eaeb9494492' was completed in 0.13 seconds with the score of 991.31 (1 unrouted), using 55844.69 CPU seconds and 378269 MB memory.
+2026-01-11 13:44:40.424 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:44:40.424 INFO   [0DABF3\8F8E41] Auto-router pass #208 on board '8ca62a957d2032557e1b8df289083033' was completed in 4.53 seconds with the score of 991.31 (1 unrouted), using 56852.92 CPU seconds and 381922 MB memory.
+2026-01-11 13:44:40.537 INFO   [0DABF3\8F8E41] Auto-router pass #209 on board '15eb3cd22d1dc267ece46161013b085e' was completed in 0.11 seconds with the score of 991.31 (1 unrouted), using 56852.92 CPU seconds and 381922 MB memory.
+2026-01-11 13:44:42.137 INFO   [0DABF3\8F8E41] Auto-router pass #210 on board 'fb47ee7b9863ebe1a645bf53c4cd7877' was completed in 1.59 seconds with the score of 991.31 (1 unrouted), using 57530.06 CPU seconds and 384449 MB memory.
+2026-01-11 13:44:42.268 INFO   [0DABF3\8F8E41] Auto-router pass #211 on board '510e62fd06442406595b072cc7be3bd6' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 57530.06 CPU seconds and 384449 MB memory.
+2026-01-11 13:44:45.012 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:44:45.012 INFO   [0DABF3\8F8E41] Auto-router pass #212 on board '57621befa88cb667171f69d47bdc4465' was completed in 2.73 seconds with the score of 991.31 (1 unrouted), using 58553.25 CPU seconds and 387871 MB memory.
+2026-01-11 13:44:46.493 INFO   [0DABF3\8F8E41] Auto-router pass #213 on board '15eb3cd22d1dc267ece46161013b085e' was completed in 1.48 seconds with the score of 991.31 (1 unrouted), using 58896.32 CPU seconds and 389110 MB memory.
+2026-01-11 13:44:48.115 INFO   [0DABF3\8F8E41] Auto-router pass #214 on board '19fc177f9bca7ce73e1e8351e5172f7d' was completed in 1.62 seconds with the score of 991.31 (1 unrouted), using 59585.45 CPU seconds and 391630 MB memory.
+2026-01-11 13:44:48.234 INFO   [0DABF3\8F8E41] Auto-router pass #215 on board '71eb0c4d9e34c30fa1a37eaeb9494492' was completed in 0.11 seconds with the score of 991.31 (1 unrouted), using 59585.45 CPU seconds and 391630 MB memory.
+2026-01-11 13:44:50.863 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:44:50.863 INFO   [0DABF3\8F8E41] Auto-router pass #216 on board '8ca62a957d2032557e1b8df289083033' was completed in 2.62 seconds with the score of 991.31 (1 unrouted), using 60278.57 CPU seconds and 394152 MB memory.
+2026-01-11 13:44:52.328 INFO   [0DABF3\8F8E41] Auto-router pass #217 on board '71eb0c4d9e34c30fa1a37eaeb9494492' was completed in 1.46 seconds with the score of 991.31 (1 unrouted), using 60975.70 CPU seconds and 396474 MB memory.
+2026-01-11 13:44:53.955 INFO   [0DABF3\8F8E41] Auto-router pass #218 on board 'ab54904796f4d25108638f149dc491ca' was completed in 1.61 seconds with the score of 991.31 (1 unrouted), using 61325.75 CPU seconds and 397800 MB memory.
+2026-01-11 13:44:54.085 INFO   [0DABF3\8F8E41] Auto-router pass #219 on board 'd61cfafd4639d583a60c49803c47a03d' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 61676.82 CPU seconds and 398990 MB memory.
+2026-01-11 13:44:56.875 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:44:56.875 INFO   [0DABF3\8F8E41] Auto-router pass #220 on board 'acf9c2c4694e605f0876255d52f6a860' was completed in 2.78 seconds with the score of 991.31 (1 unrouted), using 62381.94 CPU seconds and 401384 MB memory.
+2026-01-11 13:44:58.350 INFO   [0DABF3\8F8E41] Auto-router pass #221 on board '71eb0c4d9e34c30fa1a37eaeb9494492' was completed in 1.47 seconds with the score of 991.31 (1 unrouted), using 63091.09 CPU seconds and 403631 MB memory.
+2026-01-11 13:45:00.166 INFO   [0DABF3\8F8E41] Auto-router pass #222 on board 'ab54904796f4d25108638f149dc491ca' was completed in 1.81 seconds with the score of 991.31 (1 unrouted), using 63804.25 CPU seconds and 405936 MB memory.
+2026-01-11 13:45:01.779 INFO   [0DABF3\8F8E41] Auto-router pass #223 on board 'd61cfafd4639d583a60c49803c47a03d' was completed in 1.60 seconds with the score of 991.31 (1 unrouted), using 64162.34 CPU seconds and 407096 MB memory.
+2026-01-11 13:45:04.697 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:04.697 INFO   [0DABF3\8F8E41] Auto-router pass #224 on board 'ac59ce51e5f9fd44409d29fcd484bf44' was completed in 2.90 seconds with the score of 991.33 (1 unrouted), using 65242.62 CPU seconds and 410444 MB memory.
+2026-01-11 13:45:04.829 INFO   [0DABF3\8F8E41] Auto-router pass #225 on board '71eb0c4d9e34c30fa1a37eaeb9494492' was completed in 0.13 seconds with the score of 991.31 (1 unrouted), using 65242.62 CPU seconds and 410444 MB memory.
+2026-01-11 13:45:04.958 INFO   [0DABF3\8F8E41] Auto-router pass #226 on board '4b4220fce7c4a2a246f702c8a7f8777d' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 65242.62 CPU seconds and 410444 MB memory.
+2026-01-11 13:45:05.087 INFO   [0DABF3\8F8E41] Auto-router pass #227 on board 'cdf84790ba584a96f1893b8df5c05e5f' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 65604.73 CPU seconds and 411545 MB memory.
+2026-01-11 13:45:07.786 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:07.787 INFO   [0DABF3\8F8E41] Auto-router pass #228 on board 'cc212c3bd3346adb1adea07926dbbff9' was completed in 2.69 seconds with the score of 991.31 (1 unrouted), using 66331.94 CPU seconds and 414014 MB memory.
+2026-01-11 13:45:09.359 INFO   [0DABF3\8F8E41] Auto-router pass #229 on board '71eb0c4d9e34c30fa1a37eaeb9494492' was completed in 1.57 seconds with the score of 991.31 (1 unrouted), using 67063.16 CPU seconds and 416229 MB memory.
+2026-01-11 13:45:11.160 INFO   [0DABF3\8F8E41] Auto-router pass #230 on board 'ab54904796f4d25108638f149dc491ca' was completed in 1.80 seconds with the score of 991.31 (1 unrouted), using 67798.38 CPU seconds and 418509 MB memory.
+2026-01-11 13:45:14.735 INFO   [0DABF3\8F8E41] Auto-router pass #231 on board 'd61cfafd4639d583a60c49803c47a03d' was completed in 3.57 seconds with the score of 991.31 (1 unrouted), using 68167.48 CPU seconds and 419666 MB memory.
+2026-01-11 13:45:17.608 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:17.609 INFO   [0DABF3\8F8E41] Auto-router pass #232 on board 'ac59ce51e5f9fd44409d29fcd484bf44' was completed in 2.87 seconds with the score of 991.33 (1 unrouted), using 69280.78 CPU seconds and 423044 MB memory.
+2026-01-11 13:45:17.737 INFO   [0DABF3\8F8E41] Auto-router pass #233 on board '510e62fd06442406595b072cc7be3bd6' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 69280.78 CPU seconds and 423044 MB memory.
+2026-01-11 13:45:17.865 INFO   [0DABF3\8F8E41] Auto-router pass #234 on board 'a2454e73900eb6d6ed88e7fd02ac4f23' was completed in 0.11 seconds with the score of 991.31 (1 unrouted), using 69280.78 CPU seconds and 423044 MB memory.
+2026-01-11 13:45:19.439 INFO   [0DABF3\8F8E41] Auto-router pass #235 on board '7cd822c7d1d251e9605144d3b8fbc385' was completed in 1.55 seconds with the score of 991.31 (1 unrouted), using 70028.00 CPU seconds and 425352 MB memory.
+2026-01-11 13:45:19.769 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:19.769 INFO   [0DABF3\8F8E41] Auto-router pass #236 on board 'e47a27899b04da856413257da2c0e0cc' was completed in 0.31 seconds with the score of 991.36 (1 unrouted), using 70028.00 CPU seconds and 425352 MB memory.
+2026-01-11 13:45:19.892 INFO   [0DABF3\8F8E41] Auto-router pass #237 on board '510e62fd06442406595b072cc7be3bd6' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 70028.00 CPU seconds and 425352 MB memory.
+2026-01-11 13:45:21.638 INFO   [0DABF3\8F8E41] Auto-router pass #238 on board 'a2454e73900eb6d6ed88e7fd02ac4f23' was completed in 1.74 seconds with the score of 991.31 (1 unrouted), using 70779.21 CPU seconds and 427796 MB memory.
+2026-01-11 13:45:23.081 INFO   [0DABF3\8F8E41] Auto-router pass #239 on board '7204ee5bb55128ff0142fc51536084a0' was completed in 1.43 seconds with the score of 991.31 (1 unrouted), using 71534.39 CPU seconds and 430213 MB memory.
+2026-01-11 13:45:25.811 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:25.811 INFO   [0DABF3\8F8E41] Auto-router pass #240 on board '924fa9a4698818ea4b99a081d6bb4760' was completed in 2.72 seconds with the score of 991.33 (1 unrouted), using 72293.58 CPU seconds and 432653 MB memory.
+2026-01-11 13:45:25.934 INFO   [0DABF3\8F8E41] Auto-router pass #241 on board '510e62fd06442406595b072cc7be3bd6' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 72293.58 CPU seconds and 432653 MB memory.
+2026-01-11 13:45:27.515 INFO   [0DABF3\8F8E41] Auto-router pass #242 on board 'a2454e73900eb6d6ed88e7fd02ac4f23' was completed in 1.58 seconds with the score of 991.31 (1 unrouted), using 73056.80 CPU seconds and 435136 MB memory.
+2026-01-11 13:45:29.073 INFO   [0DABF3\8F8E41] Auto-router pass #243 on board '7204ee5bb55128ff0142fc51536084a0' was completed in 1.55 seconds with the score of 991.31 (1 unrouted), using 73824.04 CPU seconds and 437473 MB memory.
+2026-01-11 13:45:31.919 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:31.920 INFO   [0DABF3\8F8E41] Auto-router pass #244 on board '924fa9a4698818ea4b99a081d6bb4760' was completed in 2.84 seconds with the score of 991.33 (1 unrouted), using 74595.30 CPU seconds and 439804 MB memory.
+2026-01-11 13:45:33.445 INFO   [0DABF3\8F8E41] Auto-router pass #245 on board '510e62fd06442406595b072cc7be3bd6' was completed in 1.52 seconds with the score of 991.31 (1 unrouted), using 75370.60 CPU seconds and 442013 MB memory.
+2026-01-11 13:45:35.024 INFO   [0DABF3\8F8E41] Auto-router pass #246 on board 'dafce02ddf2c24358c06174b64303b44' was completed in 1.57 seconds with the score of 991.31 (1 unrouted), using 76149.91 CPU seconds and 444602 MB memory.
+2026-01-11 13:45:36.543 INFO   [0DABF3\8F8E41] Auto-router pass #247 on board '540307946fdb698c79296373ce4838fa' was completed in 1.50 seconds with the score of 991.31 (1 unrouted), using 76541.08 CPU seconds and 445866 MB memory.
+2026-01-11 13:45:39.273 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:39.273 INFO   [0DABF3\8F8E41] Auto-router pass #248 on board '972d5dd91c4c5d9b02ce9e74b22672d6' was completed in 2.72 seconds with the score of 991.33 (1 unrouted), using 77720.60 CPU seconds and 449404 MB memory.
+2026-01-11 13:45:39.402 INFO   [0DABF3\8F8E41] Auto-router pass #249 on board 'd61cfafd4639d583a60c49803c47a03d' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 77720.60 CPU seconds and 449404 MB memory.
+2026-01-11 13:45:41.070 INFO   [0DABF3\8F8E41] Auto-router pass #250 on board '3fabb42c30ef07d8895bcb512778aed9' was completed in 1.65 seconds with the score of 991.31 (1 unrouted), using 78511.98 CPU seconds and 451813 MB memory.
+2026-01-11 13:45:42.684 INFO   [0DABF3\8F8E41] Auto-router pass #251 on board 'c8f8e8867720972f9c496c91d6fa549e' was completed in 1.60 seconds with the score of 991.31 (1 unrouted), using 78909.17 CPU seconds and 452957 MB memory.
+2026-01-11 13:45:45.426 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:45.427 INFO   [0DABF3\8F8E41] Auto-router pass #252 on board '79900fb45f7342510281c1f80423af97' was completed in 2.73 seconds with the score of 991.33 (1 unrouted), using 80106.71 CPU seconds and 456465 MB memory.
+2026-01-11 13:45:45.563 INFO   [0DABF3\8F8E41] Auto-router pass #253 on board 'd61cfafd4639d583a60c49803c47a03d' was completed in 0.13 seconds with the score of 991.31 (1 unrouted), using 80106.71 CPU seconds and 456465 MB memory.
+2026-01-11 13:45:49.122 INFO   [0DABF3\8F8E41] Auto-router pass #254 on board '3fabb42c30ef07d8895bcb512778aed9' was completed in 3.55 seconds with the score of 991.31 (1 unrouted), using 80910.08 CPU seconds and 458965 MB memory.
+2026-01-11 13:45:50.588 INFO   [0DABF3\8F8E41] Auto-router pass #255 on board 'c8f8e8867720972f9c496c91d6fa549e' was completed in 1.46 seconds with the score of 991.31 (1 unrouted), using 81313.25 CPU seconds and 460218 MB memory.
+2026-01-11 13:45:50.890 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:50.891 INFO   [0DABF3\8F8E41] Auto-router pass #256 on board '79900fb45f7342510281c1f80423af97' was completed in 0.30 seconds with the score of 991.36 (1 unrouted), using 81313.25 CPU seconds and 460218 MB memory.
+2026-01-11 13:45:52.354 INFO   [0DABF3\8F8E41] Auto-router pass #257 on board 'd61cfafd4639d583a60c49803c47a03d' was completed in 1.46 seconds with the score of 991.31 (1 unrouted), using 82122.58 CPU seconds and 462714 MB memory.
+2026-01-11 13:45:52.489 INFO   [0DABF3\8F8E41] Auto-router pass #258 on board '2d97e2f62c52c259e74dc27db0dacd24' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 82122.58 CPU seconds and 462714 MB memory.
+2026-01-11 13:45:52.622 INFO   [0DABF3\8F8E41] Auto-router pass #259 on board '017993376a57190458da59e38e682122' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 82122.58 CPU seconds and 462714 MB memory.
+2026-01-11 13:45:55.284 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:55.284 INFO   [0DABF3\8F8E41] Auto-router pass #260 on board '2456df1457043f044e01163012825ca4' was completed in 2.65 seconds with the score of 991.31 (1 unrouted), using 83344.05 CPU seconds and 466338 MB memory.
+2026-01-11 13:45:55.421 INFO   [0DABF3\8F8E41] Auto-router pass #261 on board 'd61cfafd4639d583a60c49803c47a03d' was completed in 0.13 seconds with the score of 991.31 (1 unrouted), using 83344.05 CPU seconds and 466338 MB memory.
+2026-01-11 13:45:57.049 INFO   [0DABF3\8F8E41] Auto-router pass #262 on board '3fabb42c30ef07d8895bcb512778aed9' was completed in 1.62 seconds with the score of 991.31 (1 unrouted), using 84163.37 CPU seconds and 468783 MB memory.
+2026-01-11 13:45:57.176 INFO   [0DABF3\8F8E41] Auto-router pass #263 on board 'c8f8e8867720972f9c496c91d6fa549e' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 84163.37 CPU seconds and 468783 MB memory.
+2026-01-11 13:45:57.413 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:57.413 INFO   [0DABF3\8F8E41] Auto-router pass #264 on board 'eb779689b5c5d7c333cbd40fd51766fc' was completed in 0.22 seconds with the score of 991.31 (1 unrouted), using 84163.37 CPU seconds and 468783 MB memory.
+2026-01-11 13:45:57.534 INFO   [0DABF3\8F8E41] Auto-router pass #265 on board '7204ee5bb55128ff0142fc51536084a0' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 84163.37 CPU seconds and 468783 MB memory.
+2026-01-11 13:45:57.651 INFO   [0DABF3\8F8E41] Auto-router pass #266 on board '8a84af08098b95c61aded94425c291e5' was completed in 0.10 seconds with the score of 991.31 (1 unrouted), using 84163.37 CPU seconds and 468783 MB memory.
+2026-01-11 13:45:57.780 INFO   [0DABF3\8F8E41] Auto-router pass #267 on board 'a33234e1b9086284d837ed419743c51c' was completed in 0.11 seconds with the score of 991.31 (1 unrouted), using 84163.37 CPU seconds and 468783 MB memory.
+2026-01-11 13:45:58.003 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:45:58.003 INFO   [0DABF3\8F8E41] Auto-router pass #268 on board '499cde989f37741706ebca7adae2fef9' was completed in 0.21 seconds with the score of 991.31 (1 unrouted), using 84574.54 CPU seconds and 470311 MB memory.
+2026-01-11 13:45:58.124 INFO   [0DABF3\8F8E41] Auto-router pass #269 on board '7204ee5bb55128ff0142fc51536084a0' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 84574.54 CPU seconds and 470311 MB memory.
+2026-01-11 13:45:59.706 INFO   [0DABF3\8F8E41] Auto-router pass #270 on board '8a84af08098b95c61aded94425c291e5' was completed in 1.58 seconds with the score of 991.31 (1 unrouted), using 84986.73 CPU seconds and 471723 MB memory.
+2026-01-11 13:46:01.252 INFO   [0DABF3\8F8E41] Auto-router pass #271 on board '26ada7355898d7ed834b9036c8f24325' was completed in 1.53 seconds with the score of 991.31 (1 unrouted), using 85814.13 CPU seconds and 474091 MB memory.
+2026-01-11 13:46:01.557 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:46:01.557 INFO   [0DABF3\8F8E41] Auto-router pass #272 on board 'c3912361fd90559c8f62985fc8392b9b' was completed in 0.29 seconds with the score of 991.36 (1 unrouted), using 85814.13 CPU seconds and 474091 MB memory.
+2026-01-11 13:46:03.083 INFO   [0DABF3\8F8E41] Auto-router pass #273 on board '7204ee5bb55128ff0142fc51536084a0' was completed in 1.52 seconds with the score of 991.31 (1 unrouted), using 86645.57 CPU seconds and 476497 MB memory.
+2026-01-11 13:46:03.238 INFO   [0DABF3\8F8E41] Auto-router pass #274 on board 'b5d6fad22a0175093fbeab0f90af5b28' was completed in 0.14 seconds with the score of 991.31 (1 unrouted), using 86645.57 CPU seconds and 476497 MB memory.
+2026-01-11 13:46:03.367 INFO   [0DABF3\8F8E41] Auto-router pass #275 on board '875d24b384b5fc07722e99d8ce486163' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 86645.57 CPU seconds and 476497 MB memory.
+2026-01-11 13:46:06.121 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:46:06.122 INFO   [0DABF3\8F8E41] Auto-router pass #276 on board 'ca273907861114fd2a80cf80c0a4b32d' was completed in 2.74 seconds with the score of 991.31 (1 unrouted), using 87900.30 CPU seconds and 479959 MB memory.
+2026-01-11 13:46:06.248 INFO   [0DABF3\8F8E41] Auto-router pass #277 on board '7204ee5bb55128ff0142fc51536084a0' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 87900.30 CPU seconds and 479959 MB memory.
+2026-01-11 13:46:07.887 INFO   [0DABF3\8F8E41] Auto-router pass #278 on board '8a84af08098b95c61aded94425c291e5' was completed in 1.63 seconds with the score of 991.31 (1 unrouted), using 88320.56 CPU seconds and 481289 MB memory.
+2026-01-11 13:46:09.424 INFO   [0DABF3\8F8E41] Auto-router pass #279 on board '26ada7355898d7ed834b9036c8f24325' was completed in 1.53 seconds with the score of 991.31 (1 unrouted), using 89164.09 CPU seconds and 483613 MB memory.
+2026-01-11 13:46:12.151 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:46:12.152 INFO   [0DABF3\8F8E41] Auto-router pass #280 on board 'cb19f7124c2c607d1748197b2a220904' was completed in 2.71 seconds with the score of 991.33 (1 unrouted), using 90436.91 CPU seconds and 487127 MB memory.
+2026-01-11 13:46:12.271 INFO   [0DABF3\8F8E41] Auto-router pass #281 on board '540307946fdb698c79296373ce4838fa' was completed in 0.11 seconds with the score of 991.31 (1 unrouted), using 90436.91 CPU seconds and 487127 MB memory.
+2026-01-11 13:46:13.909 INFO   [0DABF3\8F8E41] Auto-router pass #282 on board '4eb3772f48eff285445b763dab3e8962' was completed in 1.61 seconds with the score of 991.31 (1 unrouted), using 90863.20 CPU seconds and 488494 MB memory.
+2026-01-11 13:46:15.440 INFO   [0DABF3\8F8E41] Auto-router pass #283 on board '49ab8a62c4937495f7b8e94c0b8c1266' was completed in 1.52 seconds with the score of 991.31 (1 unrouted), using 91718.75 CPU seconds and 490829 MB memory.
+2026-01-11 13:46:18.207 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:46:18.207 INFO   [0DABF3\8F8E41] Auto-router pass #284 on board '431126550bc1c6e3a76b1b128dc848a4' was completed in 2.75 seconds with the score of 991.33 (1 unrouted), using 93009.55 CPU seconds and 494316 MB memory.
+2026-01-11 13:46:19.695 INFO   [0DABF3\8F8E41] Auto-router pass #285 on board '540307946fdb698c79296373ce4838fa' was completed in 1.48 seconds with the score of 991.31 (1 unrouted), using 93441.83 CPU seconds and 495521 MB memory.
+2026-01-11 13:46:23.394 INFO   [0DABF3\8F8E41] Auto-router pass #286 on board '5fc9d2f3e6bf53481d06efbe64d9fdd7' was completed in 3.68 seconds with the score of 991.31 (1 unrouted), using 94309.35 CPU seconds and 498049 MB memory.
+2026-01-11 13:46:23.533 INFO   [0DABF3\8F8E41] Auto-router pass #287 on board '4c5bd69761cb955688577090e4d2a4a6' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 94309.35 CPU seconds and 498049 MB memory.
+2026-01-11 13:46:26.426 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:46:26.427 INFO   [0DABF3\8F8E41] Auto-router pass #288 on board 'd7d49f94a193288240475d2de7f2d22e' was completed in 2.88 seconds with the score of 991.31 (1 unrouted), using 95618.03 CPU seconds and 501329 MB memory.
+2026-01-11 13:46:27.985 INFO   [0DABF3\8F8E41] Auto-router pass #289 on board '540307946fdb698c79296373ce4838fa' was completed in 1.55 seconds with the score of 991.31 (1 unrouted), using 96495.41 CPU seconds and 503585 MB memory.
+2026-01-11 13:46:29.742 INFO   [0DABF3\8F8E41] Auto-router pass #290 on board '5fc9d2f3e6bf53481d06efbe64d9fdd7' was completed in 1.75 seconds with the score of 991.31 (1 unrouted), using 96935.58 CPU seconds and 504836 MB memory.
+2026-01-11 13:46:29.867 INFO   [0DABF3\8F8E41] Auto-router pass #291 on board '4c5bd69761cb955688577090e4d2a4a6' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 96935.58 CPU seconds and 504836 MB memory.
+2026-01-11 13:46:30.104 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:46:30.104 INFO   [0DABF3\8F8E41] Auto-router pass #292 on board 'd7d49f94a193288240475d2de7f2d22e' was completed in 0.23 seconds with the score of 991.31 (1 unrouted), using 97376.72 CPU seconds and 505941 MB memory.
+2026-01-11 13:46:30.237 INFO   [0DABF3\8F8E41] Auto-router pass #293 on board '540307946fdb698c79296373ce4838fa' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 97376.72 CPU seconds and 505941 MB memory.
+2026-01-11 13:46:30.361 INFO   [0DABF3\8F8E41] Auto-router pass #294 on board '4eb3772f48eff285445b763dab3e8962' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 97376.72 CPU seconds and 505941 MB memory.
+2026-01-11 13:46:31.882 INFO   [0DABF3\8F8E41] Auto-router pass #295 on board 'fcd63a8f261cd4285b5cbab69bcc0370' was completed in 1.51 seconds with the score of 991.31 (1 unrouted), using 97818.84 CPU seconds and 507229 MB memory.
+2026-01-11 13:46:32.228 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:46:32.231 INFO   [0DABF3\8F8E41] Auto-router pass #296 on board 'f2ae638b06d0a8c193fa64fa04d4212c' was completed in 0.33 seconds with the score of 991.36 (1 unrouted), using 98262.00 CPU seconds and 508483 MB memory.
+2026-01-11 13:46:33.709 INFO   [0DABF3\8F8E41] Auto-router pass #297 on board 'c8f8e8867720972f9c496c91d6fa549e' was completed in 1.47 seconds with the score of 991.31 (1 unrouted), using 98706.19 CPU seconds and 509746 MB memory.
+2026-01-11 13:46:35.397 INFO   [0DABF3\8F8E41] Auto-router pass #298 on board 'a2204f66ffebed49c8fd039fddbed12a' was completed in 1.68 seconds with the score of 991.31 (1 unrouted), using 99597.66 CPU seconds and 512202 MB memory.
+2026-01-11 13:46:35.544 INFO   [0DABF3\8F8E41] Auto-router pass #299 on board '3d702d3cab34832c88cedc36950ab417' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 99597.66 CPU seconds and 512202 MB memory.
+2026-01-11 13:46:35.781 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:46:35.781 INFO   [0DABF3\8F8E41] Auto-router pass #300 on board '307201ae7f57ba08e2a12ef41885c029' was completed in 0.22 seconds with the score of 991.31 (1 unrouted), using 99597.66 CPU seconds and 512202 MB memory.
+2026-01-11 13:46:35.906 INFO   [0DABF3\8F8E41] Auto-router pass #301 on board 'c8f8e8867720972f9c496c91d6fa549e' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 99597.66 CPU seconds and 512202 MB memory.
+2026-01-11 13:46:36.039 INFO   [0DABF3\8F8E41] Auto-router pass #302 on board 'f204e7678fdad4846bde856271c54307' was completed in 0.12 seconds with the score of 991.31 (1 unrouted), using 100044.95 CPU seconds and 513523 MB memory.
+2026-01-11 13:46:36.186 INFO   [0DABF3\8F8E41] Auto-router pass #303 on board '5e4879d002761ef345884957c8bc3799' was completed in 0.13 seconds with the score of 991.31 (1 unrouted), using 100044.95 CPU seconds and 513523 MB memory.
+2026-01-11 13:46:39.137 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:46:39.137 INFO   [0DABF3\8F8E41] Auto-router pass #304 on board '4bb00002a54eed293f338b47ae1d5d3f' was completed in 2.94 seconds with the score of 991.31 (1 unrouted), using 101392.88 CPU seconds and 516728 MB memory.
+2026-01-11 13:46:39.274 INFO   [0DABF3\8F8E41] Auto-router pass #305 on board 'c8f8e8867720972f9c496c91d6fa549e' was completed in 0.13 seconds with the score of 991.31 (1 unrouted), using 101392.88 CPU seconds and 516728 MB memory.
+2026-01-11 13:46:41.035 INFO   [0DABF3\8F8E41] Auto-router pass #306 on board 'f204e7678fdad4846bde856271c54307' was completed in 1.76 seconds with the score of 991.31 (1 unrouted), using 102296.52 CPU seconds and 519039 MB memory.
+2026-01-11 13:46:42.721 INFO   [0DABF3\8F8E41] Auto-router pass #307 on board '8af7b96de2f756c6c892e70e3f0133a4' was completed in 1.67 seconds with the score of 991.31 (1 unrouted), using 102749.84 CPU seconds and 520196 MB memory.
+2026-01-11 13:46:43.040 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:46:43.040 INFO   [0DABF3\8F8E41] Auto-router pass #308 on board '8237694dca09b0264b6fc47d3e05411c' was completed in 0.30 seconds with the score of 991.36 (1 unrouted), using 103204.16 CPU seconds and 521248 MB memory.
+2026-01-11 13:46:44.636 INFO   [0DABF3\8F8E41] Auto-router pass #309 on board 'c8f8e8867720972f9c496c91d6fa549e' was completed in 1.59 seconds with the score of 991.31 (1 unrouted), using 103659.47 CPU seconds and 522398 MB memory.
+2026-01-11 13:46:44.770 INFO   [0DABF3\8F8E41] Auto-router pass #310 on board 'a2204f66ffebed49c8fd039fddbed12a' was completed in 0.13 seconds with the score of 991.31 (1 unrouted), using 103659.47 CPU seconds and 522398 MB memory.
+2026-01-11 13:46:46.434 INFO   [0DABF3\8F8E41] Auto-router pass #311 on board '98a162d672e347b02046491a041fd27e' was completed in 1.65 seconds with the score of 991.31 (1 unrouted), using 104573.09 CPU seconds and 524670 MB memory.
+2026-01-11 13:46:49.207 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.31 (1 unrouted).
+2026-01-11 13:46:49.207 INFO   [0DABF3\8F8E41] Auto-router pass #312 on board 'de07e92d1799faa7c4f98ee81fa7f24e' was completed in 2.76 seconds with the score of 991.33 (1 unrouted), using 105951.00 CPU seconds and 528133 MB memory.
+2026-01-11 13:46:50.689 INFO   [0DABF3\8F8E41] Auto-router pass #313 on board '26ada7355898d7ed834b9036c8f24325' was completed in 1.48 seconds with the score of 991.31 (1 unrouted), using 106412.30 CPU seconds and 529334 MB memory.
+2026-01-11 13:46:50.992 INFO   [0DABF3\8F8E41] Auto-router pass #314 on board '9e423f2e998602deccc11f9eb845dad3' was completed in 0.29 seconds with the score of 991.24 (1 unrouted), using 106874.59 CPU seconds and 530579 MB memory.
+2026-01-11 13:46:51.056 INFO   [0DABF3\8F8E41] Auto-router pass #315 on board 'fc40a14e6b9f27750466dcbfc7743d59' was completed in 0.05 seconds with the score of 991.33 (1 unrouted), using 106874.59 CPU seconds and 530579 MB memory.
+2026-01-11 13:46:52.021 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.33 (1 unrouted).
+2026-01-11 13:46:52.021 INFO   [0DABF3\8F8E41] Auto-router pass #316 on board '975dd3d5c251ce9aa03ee8c7fd4d3c1e' was completed in 0.95 seconds with the score of 991.31 (1 unrouted), using 107337.89 CPU seconds and 531890 MB memory.
+2026-01-11 13:46:52.593 INFO   [0DABF3\8F8E41] Auto-router pass #317 on board '975dd3d5c251ce9aa03ee8c7fd4d3c1e' was completed in 0.57 seconds with the score of 991.31 (1 unrouted), using 107337.89 CPU seconds and 531890 MB memory.
+2026-01-11 13:46:52.717 INFO   [0DABF3\8F8E41] Auto-router pass #318 on board '4eec75600beb4b61149fb5b25b3fcedc' was completed in 0.11 seconds with the score of 991.30 (1 unrouted), using 107337.89 CPU seconds and 531890 MB memory.
+2026-01-11 13:46:52.932 INFO   [0DABF3\8F8E41] Auto-router pass #319 on board 'ac6d5af722043cc9aaf6674089733786' was completed in 0.20 seconds with the score of 991.31 (1 unrouted), using 107337.89 CPU seconds and 531890 MB memory.
+2026-01-11 13:46:57.597 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.33 (1 unrouted).
+2026-01-11 13:46:57.597 INFO   [0DABF3\8F8E41] Auto-router pass #320 on board '5f59b1dd1d80b971bb0a8d1aa6be2f1d' was completed in 4.65 seconds with the score of 991.29 (1 unrouted), using 108733.77 CPU seconds and 535621 MB memory.
+2026-01-11 13:46:57.715 INFO   [0DABF3\8F8E41] Auto-router pass #321 on board '975dd3d5c251ce9aa03ee8c7fd4d3c1e' was completed in 0.11 seconds with the score of 991.30 (1 unrouted), using 108733.77 CPU seconds and 535621 MB memory.
+2026-01-11 13:46:58.507 INFO   [0DABF3\8F8E41] Auto-router pass #322 on board '6a5dfd15528d44f36a831eb2c731f742' was completed in 0.78 seconds with the score of 991.26 (1 unrouted), using 109201.05 CPU seconds and 536765 MB memory.
+2026-01-11 13:47:00.329 INFO   [0DABF3\8F8E41] Auto-router pass #323 on board '0345c2891789b97ef11779807f587ffa' was completed in 1.80 seconds with the score of 991.36 (1 unrouted), using 110138.52 CPU seconds and 539187 MB memory.
+2026-01-11 13:47:03.035 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.36 (1 unrouted).
+2026-01-11 13:47:03.036 INFO   [0DABF3\8F8E41] Auto-router pass #324 on board '7bcb2641313be1c87b94b09376ef29a2' was completed in 2.69 seconds with the score of 991.36 (1 unrouted), using 111552.05 CPU seconds and 542855 MB memory.
+2026-01-11 13:47:04.541 INFO   [0DABF3\8F8E41] Auto-router pass #325 on board '7bcb2641313be1c87b94b09376ef29a2' was completed in 1.50 seconds with the score of 991.36 (1 unrouted), using 112025.18 CPU seconds and 544068 MB memory.
+2026-01-11 13:47:04.736 INFO   [0DABF3\8F8E41] Auto-router pass #326 on board 'e33956c6fc5ca8077401fa2d478dc3af' was completed in 0.18 seconds with the score of 991.39 (1 unrouted), using 112025.18 CPU seconds and 544068 MB memory.
+2026-01-11 13:47:06.849 INFO   [0DABF3\8F8E41] Auto-router pass #327 on board '5dab5394fcfe399b29770b78e1f37810' was completed in 2.10 seconds with the score of 982.72 (6 unrouted), using 112974.41 CPU seconds and 546522 MB memory.
+2026-01-11 13:47:07.690 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.39 (1 unrouted).
+2026-01-11 13:47:07.691 INFO   [0DABF3\8F8E41] Auto-router pass #328 on board '2901ee1aa06f5446431e158d30c15848' was completed in 0.83 seconds with the score of 991.64 (1 unrouted), using 113450.52 CPU seconds and 548006 MB memory.
+2026-01-11 13:47:09.679 INFO   [0DABF3\8F8E41] Auto-router pass #329 on board '5dab5394fcfe399b29770b78e1f37810' was completed in 1.98 seconds with the score of 982.72 (6 unrouted), using 114405.77 CPU seconds and 550427 MB memory.
+2026-01-11 13:47:11.683 INFO   [0DABF3\8F8E41] Auto-router pass #330 on board '2901ee1aa06f5446431e158d30c15848' was completed in 2.00 seconds with the score of 989.61 (2 unrouted), using 115365.04 CPU seconds and 553101 MB memory.
+2026-01-11 13:47:13.314 INFO   [0DABF3\8F8E41] Auto-router pass #331 on board '77704ffd7683eb123f4eaccd9cacba6b' was completed in 1.62 seconds with the score of 991.40 (1 unrouted), using 116328.31 CPU seconds and 555371 MB memory.
+2026-01-11 13:47:13.784 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.40 (1 unrouted).
+2026-01-11 13:47:13.784 INFO   [0DABF3\8F8E41] Auto-router pass #332 on board 'f2cd3ee75eebbf6de962aa03f03a6499' was completed in 0.46 seconds with the score of 986.08 (4 unrouted), using 116328.31 CPU seconds and 555371 MB memory.
+2026-01-11 13:47:13.849 INFO   [0DABF3\8F8E41] Auto-router pass #333 on board 'f2cd3ee75eebbf6de962aa03f03a6499' was completed in 0.06 seconds with the score of 991.37 (1 unrouted), using 116328.31 CPU seconds and 555371 MB memory.
+2026-01-11 13:47:13.948 INFO   [0DABF3\8F8E41] Auto-router pass #334 on board '8625618b417ff99f07f25ec64b78999a' was completed in 0.09 seconds with the score of 989.63 (2 unrouted), using 116328.31 CPU seconds and 555371 MB memory.
+2026-01-11 13:47:15.705 INFO   [0DABF3\8F8E41] Auto-router pass #335 on board '24db81327c3a75cf842be94d27837855' was completed in 1.74 seconds with the score of 991.47 (1 unrouted), using 117295.68 CPU seconds and 557919 MB memory.
+2026-01-11 13:47:15.902 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.47 (1 unrouted).
+2026-01-11 13:47:15.903 INFO   [0DABF3\8F8E41] Auto-router pass #336 on board '8cdb807cdb2950febf5341ee7397cec2' was completed in 0.18 seconds with the score of 991.46 (1 unrouted), using 117295.68 CPU seconds and 557919 MB memory.
+2026-01-11 13:47:16.028 INFO   [0DABF3\8F8E41] Auto-router pass #337 on board '8cdb807cdb2950febf5341ee7397cec2' was completed in 0.12 seconds with the score of 991.46 (1 unrouted), using 117780.91 CPU seconds and 559439 MB memory.
+2026-01-11 13:47:17.593 INFO   [0DABF3\8F8E41] Auto-router pass #338 on board 'add7b67d610cb6b4d036129ff5d26aae' was completed in 1.55 seconds with the score of 991.41 (1 unrouted), using 118267.16 CPU seconds and 561072 MB memory.
+2026-01-11 13:47:17.666 INFO   [0DABF3\8F8E41] Auto-router pass #339 on board '4c02d787f20353dbcd2e708fc78f27f7' was completed in 0.06 seconds with the score of 991.54 (1 unrouted), using 118267.16 CPU seconds and 561072 MB memory.
+2026-01-11 13:47:20.284 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.54 (1 unrouted).
+2026-01-11 13:47:20.284 INFO   [0DABF3\8F8E41] Auto-router pass #340 on board 'a032738ab0ee758d9fd11b4a9001dd56' was completed in 2.61 seconds with the score of 991.50 (1 unrouted), using 119732.03 CPU seconds and 564979 MB memory.
+2026-01-11 13:47:20.478 INFO   [0DABF3\8F8E41] Auto-router pass #341 on board 'a032738ab0ee758d9fd11b4a9001dd56' was completed in 0.19 seconds with the score of 991.35 (1 unrouted), using 119732.03 CPU seconds and 564979 MB memory.
+2026-01-11 13:47:20.545 INFO   [0DABF3\8F8E41] Auto-router pass #342 on board 'd31e4aea91e6ab1651d1d80bfc04568d' was completed in 0.06 seconds with the score of 991.52 (1 unrouted), using 119732.03 CPU seconds and 564979 MB memory.
+2026-01-11 13:47:20.655 INFO   [0DABF3\8F8E41] Auto-router pass #343 on board 'afc36c298373de26d5f2bff56e429917' was completed in 0.09 seconds with the score of 991.44 (1 unrouted), using 119732.03 CPU seconds and 564979 MB memory.
+2026-01-11 13:47:20.875 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.54 (1 unrouted).
+2026-01-11 13:47:20.875 INFO   [0DABF3\8F8E41] Auto-router pass #344 on board 'fcd2f8281f06d3e2108491d374ec5741' was completed in 0.21 seconds with the score of 991.47 (1 unrouted), using 119732.03 CPU seconds and 564979 MB memory.
+2026-01-11 13:47:21.063 INFO   [0DABF3\8F8E41] Auto-router pass #345 on board 'a032738ab0ee758d9fd11b4a9001dd56' was completed in 0.18 seconds with the score of 991.35 (1 unrouted), using 120222.33 CPU seconds and 566294 MB memory.
+2026-01-11 13:47:21.126 INFO   [0DABF3\8F8E41] Auto-router pass #346 on board 'd31e4aea91e6ab1651d1d80bfc04568d' was completed in 0.06 seconds with the score of 991.52 (1 unrouted), using 120222.33 CPU seconds and 566294 MB memory.
+2026-01-11 13:47:21.239 INFO   [0DABF3\8F8E41] Auto-router pass #347 on board 'afc36c298373de26d5f2bff56e429917' was completed in 0.11 seconds with the score of 991.44 (1 unrouted), using 120222.33 CPU seconds and 566294 MB memory.
+2026-01-11 13:47:22.571 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.54 (1 unrouted).
+2026-01-11 13:47:22.571 INFO   [0DABF3\8F8E41] Auto-router pass #348 on board 'fcd2f8281f06d3e2108491d374ec5741' was completed in 1.33 seconds with the score of 991.44 (1 unrouted), using 120713.64 CPU seconds and 567411 MB memory.
+2026-01-11 13:47:24.416 INFO   [0DABF3\8F8E41] Auto-router pass #349 on board 'a032738ab0ee758d9fd11b4a9001dd56' was completed in 1.84 seconds with the score of 991.50 (1 unrouted), using 121699.26 CPU seconds and 569885 MB memory.
+2026-01-11 13:47:24.521 INFO   [0DABF3\8F8E41] Auto-router pass #350 on board '525ae2aef3d59a781307ce50dcf3033a' was completed in 0.09 seconds with the score of 991.63 (1 unrouted), using 121699.26 CPU seconds and 569885 MB memory.
+2026-01-11 13:47:26.528 INFO   [0DABF3\8F8E41] Auto-router pass #351 on board 'f1a43e7c1f45520cf023defea92e86fa' was completed in 1.99 seconds with the score of 991.59 (1 unrouted), using 122688.87 CPU seconds and 572375 MB memory.
+2026-01-11 13:47:26.667 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.63 (1 unrouted).
+2026-01-11 13:47:26.667 INFO   [0DABF3\8F8E41] Auto-router pass #352 on board '2b9e367d3f41faf3798f17316e7e953e' was completed in 0.12 seconds with the score of 991.55 (1 unrouted), using 122688.87 CPU seconds and 572375 MB memory.
+2026-01-11 13:47:30.391 INFO   [0DABF3\8F8E41] Auto-router pass #353 on board 'f1a43e7c1f45520cf023defea92e86fa' was completed in 3.72 seconds with the score of 991.59 (1 unrouted), using 123682.48 CPU seconds and 574959 MB memory.
+2026-01-11 13:47:32.809 INFO   [0DABF3\8F8E41] Auto-router pass #354 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 2.40 seconds with the score of 991.59 (1 unrouted), using 124680.05 CPU seconds and 577567 MB memory.
+2026-01-11 13:47:32.859 INFO   [0DABF3\8F8E41] Auto-router pass #355 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 0.04 seconds with the score of 991.59 (1 unrouted), using 125180.30 CPU seconds and 579345 MB memory.
+2026-01-11 13:47:35.492 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.63 (1 unrouted).
+2026-01-11 13:47:35.492 INFO   [0DABF3\8F8E41] Auto-router pass #356 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 2.63 seconds with the score of 991.59 (1 unrouted), using 126183.74 CPU seconds and 581924 MB memory.
+2026-01-11 13:47:35.685 INFO   [0DABF3\8F8E41] Auto-router pass #357 on board 'f1a43e7c1f45520cf023defea92e86fa' was completed in 0.19 seconds with the score of 991.38 (1 unrouted), using 126183.74 CPU seconds and 581924 MB memory.
+2026-01-11 13:47:37.377 INFO   [0DABF3\8F8E41] Auto-router pass #358 on board 'dc10ed179b660af18609bc1ac0132028' was completed in 1.67 seconds with the score of 991.38 (1 unrouted), using 127191.09 CPU seconds and 584284 MB memory.
+2026-01-11 13:47:37.419 INFO   [0DABF3\8F8E41] Auto-router pass #359 on board 'dc10ed179b660af18609bc1ac0132028' was completed in 0.04 seconds with the score of 991.38 (1 unrouted), using 127191.09 CPU seconds and 584284 MB memory.
+2026-01-11 13:47:39.966 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.63 (1 unrouted).
+2026-01-11 13:47:39.966 INFO   [0DABF3\8F8E41] Auto-router pass #360 on board 'dc10ed179b660af18609bc1ac0132028' was completed in 2.54 seconds with the score of 991.38 (1 unrouted), using 128709.50 CPU seconds and 587960 MB memory.
+2026-01-11 13:47:40.193 INFO   [0DABF3\8F8E41] Auto-router pass #361 on board 'f1a43e7c1f45520cf023defea92e86fa' was completed in 0.22 seconds with the score of 991.38 (1 unrouted), using 128709.50 CPU seconds and 587960 MB memory.
+2026-01-11 13:47:40.261 INFO   [0DABF3\8F8E41] Auto-router pass #362 on board 'dc10ed179b660af18609bc1ac0132028' was completed in 0.06 seconds with the score of 991.55 (1 unrouted), using 128709.50 CPU seconds and 587960 MB memory.
+2026-01-11 13:47:40.401 INFO   [0DABF3\8F8E41] Auto-router pass #363 on board '45485e54862af8011aa7110f9f203e04' was completed in 0.12 seconds with the score of 991.47 (1 unrouted), using 128709.50 CPU seconds and 587960 MB memory.
+2026-01-11 13:47:41.628 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.63 (1 unrouted).
+2026-01-11 13:47:41.628 INFO   [0DABF3\8F8E41] Auto-router pass #364 on board '16c19d5ffd216db3b298386d86855206' was completed in 1.22 seconds with the score of 991.44 (1 unrouted), using 129217.66 CPU seconds and 589047 MB memory.
+2026-01-11 13:47:43.295 INFO   [0DABF3\8F8E41] Auto-router pass #365 on board 'f1a43e7c1f45520cf023defea92e86fa' was completed in 1.66 seconds with the score of 991.59 (1 unrouted), using 130236.96 CPU seconds and 591703 MB memory.
+2026-01-11 13:47:43.442 INFO   [0DABF3\8F8E41] Auto-router pass #366 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 0.14 seconds with the score of 991.58 (1 unrouted), using 130236.96 CPU seconds and 591703 MB memory.
+2026-01-11 13:47:45.103 INFO   [0DABF3\8F8E41] Auto-router pass #367 on board '93fe91e4ac6e05ab6cea78b32697a9d3' was completed in 1.65 seconds with the score of 991.51 (1 unrouted), using 131260.27 CPU seconds and 594552 MB memory.
+2026-01-11 13:47:47.863 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:47:47.863 INFO   [0DABF3\8F8E41] Auto-router pass #368 on board 'cd47014a7ca726d0d4868a2beafcbf5e' was completed in 2.75 seconds with the score of 991.59 (1 unrouted), using 132802.78 CPU seconds and 598259 MB memory.
+2026-01-11 13:47:50.084 INFO   [0DABF3\8F8E41] Auto-router pass #369 on board '2b9e367d3f41faf3798f17316e7e953e' was completed in 2.21 seconds with the score of 991.59 (1 unrouted), using 133836.31 CPU seconds and 601321 MB memory.
+2026-01-11 13:47:50.138 INFO   [0DABF3\8F8E41] Auto-router pass #370 on board '2b9e367d3f41faf3798f17316e7e953e' was completed in 0.05 seconds with the score of 991.59 (1 unrouted), using 133836.31 CPU seconds and 601321 MB memory.
+2026-01-11 13:47:50.187 INFO   [0DABF3\8F8E41] Auto-router pass #371 on board '2b9e367d3f41faf3798f17316e7e953e' was completed in 0.04 seconds with the score of 991.59 (1 unrouted), using 133836.31 CPU seconds and 601321 MB memory.
+2026-01-11 13:47:52.543 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:47:52.543 INFO   [0DABF3\8F8E41] Auto-router pass #372 on board '2b9e367d3f41faf3798f17316e7e953e' was completed in 2.35 seconds with the score of 991.59 (1 unrouted), using 134874.02 CPU seconds and 603908 MB memory.
+2026-01-11 13:47:54.655 INFO   [0DABF3\8F8E41] Auto-router pass #373 on board '2b9e367d3f41faf3798f17316e7e953e' was completed in 2.11 seconds with the score of 991.59 (1 unrouted), using 135915.72 CPU seconds and 606437 MB memory.
+2026-01-11 13:47:54.705 INFO   [0DABF3\8F8E41] Auto-router pass #374 on board '2b9e367d3f41faf3798f17316e7e953e' was completed in 0.04 seconds with the score of 991.59 (1 unrouted), using 135915.72 CPU seconds and 606437 MB memory.
+2026-01-11 13:47:54.750 INFO   [0DABF3\8F8E41] Auto-router pass #375 on board '2b9e367d3f41faf3798f17316e7e953e' was completed in 0.04 seconds with the score of 991.59 (1 unrouted), using 135915.72 CPU seconds and 606437 MB memory.
+2026-01-11 13:47:57.377 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:47:57.378 INFO   [0DABF3\8F8E41] Auto-router pass #376 on board '2b9e367d3f41faf3798f17316e7e953e' was completed in 2.62 seconds with the score of 991.59 (1 unrouted), using 137485.80 CPU seconds and 610923 MB memory.
+2026-01-11 13:47:57.518 INFO   [0DABF3\8F8E41] Auto-router pass #377 on board '2b9e367d3f41faf3798f17316e7e953e' was completed in 0.13 seconds with the score of 991.58 (1 unrouted), using 137485.80 CPU seconds and 610923 MB memory.
+2026-01-11 13:47:59.235 INFO   [0DABF3\8F8E41] Auto-router pass #378 on board '8c7be8dd9854122aedcc3e6496253f88' was completed in 1.70 seconds with the score of 991.51 (1 unrouted), using 138537.52 CPU seconds and 613447 MB memory.
+2026-01-11 13:48:00.851 INFO   [0DABF3\8F8E41] Auto-router pass #379 on board '78679bdc6f83fc32c4a419806e60225f' was completed in 1.60 seconds with the score of 991.59 (1 unrouted), using 139064.88 CPU seconds and 614959 MB memory.
+2026-01-11 13:48:01.277 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:48:01.277 INFO   [0DABF3\8F8E41] Auto-router pass #380 on board '010903861aee1bb25159a98de21eeeb4' was completed in 0.41 seconds with the score of 991.54 (1 unrouted), using 139593.22 CPU seconds and 616175 MB memory.
+2026-01-11 13:48:04.870 INFO   [0DABF3\8F8E41] Auto-router pass #381 on board '010903861aee1bb25159a98de21eeeb4' was completed in 3.59 seconds with the score of 991.51 (1 unrouted), using 140652.89 CPU seconds and 619086 MB memory.
+2026-01-11 13:48:06.728 INFO   [0DABF3\8F8E41] Auto-router pass #382 on board 'fcc8762638f40d602cf097fa98a73e9f' was completed in 1.84 seconds with the score of 991.51 (1 unrouted), using 141184.19 CPU seconds and 620431 MB memory.
+2026-01-11 13:48:06.777 INFO   [0DABF3\8F8E41] Auto-router pass #383 on board 'fcc8762638f40d602cf097fa98a73e9f' was completed in 0.04 seconds with the score of 991.51 (1 unrouted), using 141184.19 CPU seconds and 620431 MB memory.
+2026-01-11 13:48:09.259 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:48:09.259 INFO   [0DABF3\8F8E41] Auto-router pass #384 on board 'fcc8762638f40d602cf097fa98a73e9f' was completed in 2.48 seconds with the score of 991.59 (1 unrouted), using 142783.83 CPU seconds and 624248 MB memory.
+2026-01-11 13:48:09.570 INFO   [0DABF3\8F8E41] Auto-router pass #385 on board '010903861aee1bb25159a98de21eeeb4' was completed in 0.31 seconds with the score of 991.47 (1 unrouted), using 142783.83 CPU seconds and 624248 MB memory.
+2026-01-11 13:48:09.641 INFO   [0DABF3\8F8E41] Auto-router pass #386 on board '80ab1190f5dde60bea5c2fc8168b2a53' was completed in 0.06 seconds with the score of 991.58 (1 unrouted), using 142783.83 CPU seconds and 624248 MB memory.
+2026-01-11 13:48:11.442 INFO   [0DABF3\8F8E41] Auto-router pass #387 on board 'ea093a660a8e5ac32edd1a647f90c7f2' was completed in 1.79 seconds with the score of 991.50 (1 unrouted), using 143855.08 CPU seconds and 626970 MB memory.
+2026-01-11 13:48:14.199 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:48:14.199 INFO   [0DABF3\8F8E41] Auto-router pass #388 on board '57bb1458b8e3cda1fa986b470c230dcf' was completed in 2.74 seconds with the score of 991.58 (1 unrouted), using 145469.41 CPU seconds and 630668 MB memory.
+2026-01-11 13:48:14.523 INFO   [0DABF3\8F8E41] Auto-router pass #389 on board '010903861aee1bb25159a98de21eeeb4' was completed in 0.32 seconds with the score of 991.47 (1 unrouted), using 145469.41 CPU seconds and 630668 MB memory.
+2026-01-11 13:48:16.072 INFO   [0DABF3\8F8E41] Auto-router pass #390 on board '80ab1190f5dde60bea5c2fc8168b2a53' was completed in 1.54 seconds with the score of 991.47 (1 unrouted), using 146550.69 CPU seconds and 633389 MB memory.
+2026-01-11 13:48:16.115 INFO   [0DABF3\8F8E41] Auto-router pass #391 on board '80ab1190f5dde60bea5c2fc8168b2a53' was completed in 0.04 seconds with the score of 991.47 (1 unrouted), using 146550.69 CPU seconds and 633389 MB memory.
+2026-01-11 13:48:18.507 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:48:18.507 INFO   [0DABF3\8F8E41] Auto-router pass #392 on board '80ab1190f5dde60bea5c2fc8168b2a53' was completed in 2.39 seconds with the score of 991.47 (1 unrouted), using 147636.03 CPU seconds and 636143 MB memory.
+2026-01-11 13:48:18.801 INFO   [0DABF3\8F8E41] Auto-router pass #393 on board '010903861aee1bb25159a98de21eeeb4' was completed in 0.29 seconds with the score of 991.47 (1 unrouted), using 148180.22 CPU seconds and 637459 MB memory.
+2026-01-11 13:48:18.868 INFO   [0DABF3\8F8E41] Auto-router pass #394 on board '80ab1190f5dde60bea5c2fc8168b2a53' was completed in 0.06 seconds with the score of 991.58 (1 unrouted), using 148180.22 CPU seconds and 637459 MB memory.
+2026-01-11 13:48:20.489 INFO   [0DABF3\8F8E41] Auto-router pass #395 on board 'ea093a660a8e5ac32edd1a647f90c7f2' was completed in 1.62 seconds with the score of 991.50 (1 unrouted), using 148725.42 CPU seconds and 639004 MB memory.
+2026-01-11 13:48:23.217 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:48:23.218 INFO   [0DABF3\8F8E41] Auto-router pass #396 on board '71eafcd74fedeacc35ca4a19ba27118c' was completed in 2.71 seconds with the score of 991.58 (1 unrouted), using 150367.11 CPU seconds and 642785 MB memory.
+2026-01-11 13:48:23.358 INFO   [0DABF3\8F8E41] Auto-router pass #397 on board '2b9e367d3f41faf3798f17316e7e953e' was completed in 0.13 seconds with the score of 991.58 (1 unrouted), using 150367.11 CPU seconds and 642785 MB memory.
+2026-01-11 13:48:23.623 INFO   [0DABF3\8F8E41] Auto-router pass #398 on board '8c7be8dd9854122aedcc3e6496253f88' was completed in 0.26 seconds with the score of 991.35 (1 unrouted), using 150367.11 CPU seconds and 642785 MB memory.
+2026-01-11 13:48:23.690 INFO   [0DABF3\8F8E41] Auto-router pass #399 on board '53d9c315131560440c424cd8f3941462' was completed in 0.05 seconds with the score of 991.38 (1 unrouted), using 150367.11 CPU seconds and 642785 MB memory.
+2026-01-11 13:48:24.104 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:48:24.104 INFO   [0DABF3\8F8E41] Auto-router pass #400 on board 'ea112896cb822226d6ee8e8a7d37a6d3' was completed in 0.40 seconds with the score of 987.94 (3 unrouted), using 150916.41 CPU seconds and 644179 MB memory.
+2026-01-11 13:48:26.278 INFO   [0DABF3\8F8E41] Auto-router pass #401 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 2.17 seconds with the score of 991.59 (1 unrouted), using 152018.09 CPU seconds and 647202 MB memory.
+2026-01-11 13:48:26.328 INFO   [0DABF3\8F8E41] Auto-router pass #402 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 0.04 seconds with the score of 991.59 (1 unrouted), using 152018.09 CPU seconds and 647202 MB memory.
+2026-01-11 13:48:26.375 INFO   [0DABF3\8F8E41] Auto-router pass #403 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 0.04 seconds with the score of 991.59 (1 unrouted), using 152018.09 CPU seconds and 647202 MB memory.
+2026-01-11 13:48:28.649 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:48:28.649 INFO   [0DABF3\8F8E41] Auto-router pass #404 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 2.27 seconds with the score of 991.59 (1 unrouted), using 153123.83 CPU seconds and 650066 MB memory.
+2026-01-11 13:48:30.829 INFO   [0DABF3\8F8E41] Auto-router pass #405 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 2.17 seconds with the score of 991.59 (1 unrouted), using 154789.91 CPU seconds and 654449 MB memory.
+2026-01-11 13:48:30.878 INFO   [0DABF3\8F8E41] Auto-router pass #406 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 0.04 seconds with the score of 991.59 (1 unrouted), using 154789.91 CPU seconds and 654449 MB memory.
+2026-01-11 13:48:30.923 INFO   [0DABF3\8F8E41] Auto-router pass #407 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 0.04 seconds with the score of 991.59 (1 unrouted), using 154789.91 CPU seconds and 654449 MB memory.
+2026-01-11 13:48:33.379 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:48:33.379 INFO   [0DABF3\8F8E41] Auto-router pass #408 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 2.45 seconds with the score of 991.59 (1 unrouted), using 155905.62 CPU seconds and 657131 MB memory.
+2026-01-11 13:48:33.511 INFO   [0DABF3\8F8E41] Auto-router pass #409 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 0.13 seconds with the score of 991.58 (1 unrouted), using 155905.62 CPU seconds and 657131 MB memory.
+2026-01-11 13:48:33.808 INFO   [0DABF3\8F8E41] Auto-router pass #410 on board '47fb4ec81bca6c301864c58061a3b2b4' was completed in 0.28 seconds with the score of 991.35 (1 unrouted), using 156464.98 CPU seconds and 658443 MB memory.
+2026-01-11 13:48:35.454 INFO   [0DABF3\8F8E41] Auto-router pass #411 on board 'fcb286d86a497e5c84813f47ff5b8829' was completed in 1.63 seconds with the score of 991.35 (1 unrouted), using 157025.33 CPU seconds and 659843 MB memory.
+2026-01-11 13:48:39.937 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.59 (1 unrouted).
+2026-01-11 13:48:39.937 INFO   [0DABF3\8F8E41] Auto-router pass #412 on board 'fcb286d86a497e5c84813f47ff5b8829' was completed in 4.48 seconds with the score of 991.35 (1 unrouted), using 158712.33 CPU seconds and 663520 MB memory.
+2026-01-11 13:48:42.154 INFO   [0DABF3\8F8E41] Auto-router pass #413 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 2.21 seconds with the score of 991.59 (1 unrouted), using 159841.81 CPU seconds and 666365 MB memory.
+2026-01-11 13:48:42.217 INFO   [0DABF3\8F8E41] Auto-router pass #414 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 0.05 seconds with the score of 991.59 (1 unrouted), using 159841.81 CPU seconds and 666365 MB memory.
+2026-01-11 13:48:42.284 INFO   [0DABF3\8F8E41] Auto-router pass #415 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 0.06 seconds with the score of 991.59 (1 unrouted), using 159841.81 CPU seconds and 666365 MB memory.
+2026-01-11 13:48:44.633 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.58 (1 unrouted).
+2026-01-11 13:48:44.633 INFO   [0DABF3\8F8E41] Auto-router pass #416 on board '7e5aa1ebb7a14b0cd68ec737614886f6' was completed in 2.34 seconds with the score of 991.59 (1 unrouted), using 160975.14 CPU seconds and 669035 MB memory.
+2026-01-11 13:48:44.884 INFO   [0DABF3\8F8E41] Auto-router pass #417 on board 'ea093a660a8e5ac32edd1a647f90c7f2' was completed in 0.24 seconds with the score of 991.55 (1 unrouted), using 161543.27 CPU seconds and 670100 MB memory.
+2026-01-11 13:48:44.960 INFO   [0DABF3\8F8E41] Auto-router pass #418 on board '95601031a05d6e2ff8da767df62d3bd9' was completed in 0.06 seconds with the score of 991.62 (1 unrouted), using 161543.27 CPU seconds and 670100 MB memory.
+2026-01-11 13:48:45.223 INFO   [0DABF3\8F8E41] Auto-router pass #419 on board '6ab51fb753c5a506ad13c7496f2667e3' was completed in 0.25 seconds with the score of 991.56 (1 unrouted), using 161543.27 CPU seconds and 670100 MB memory.
+2026-01-11 13:48:45.359 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.62 (1 unrouted).
+2026-01-11 13:48:45.360 INFO   [0DABF3\8F8E41] Auto-router pass #420 on board '599d072ed475953eb3e8b0a9db06ef56' was completed in 0.12 seconds with the score of 991.51 (1 unrouted), using 161543.27 CPU seconds and 670100 MB memory.
+2026-01-11 13:48:45.603 INFO   [0DABF3\8F8E41] Auto-router pass #421 on board '6ab51fb753c5a506ad13c7496f2667e3' was completed in 0.24 seconds with the score of 991.59 (1 unrouted), using 161543.27 CPU seconds and 670100 MB memory.
+2026-01-11 13:48:47.970 INFO   [0DABF3\8F8E41] Auto-router pass #422 on board 'e6aeb818dd3ddcf0d88cf24fe2102001' was completed in 2.35 seconds with the score of 991.59 (1 unrouted), using 163253.70 CPU seconds and 675545 MB memory.
+2026-01-11 13:48:48.016 INFO   [0DABF3\8F8E41] Auto-router pass #423 on board 'e6aeb818dd3ddcf0d88cf24fe2102001' was completed in 0.04 seconds with the score of 991.59 (1 unrouted), using 163253.70 CPU seconds and 675545 MB memory.
+2026-01-11 13:48:50.533 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.62 (1 unrouted).
+2026-01-11 13:48:50.533 INFO   [0DABF3\8F8E41] Auto-router pass #424 on board 'e6aeb818dd3ddcf0d88cf24fe2102001' was completed in 2.51 seconds with the score of 991.59 (1 unrouted), using 164399.08 CPU seconds and 679006 MB memory.
+2026-01-11 13:48:50.773 INFO   [0DABF3\8F8E41] Auto-router pass #425 on board '6ab51fb753c5a506ad13c7496f2667e3' was completed in 0.23 seconds with the score of 991.59 (1 unrouted), using 164973.30 CPU seconds and 680272 MB memory.
+2026-01-11 13:48:53.231 INFO   [0DABF3\8F8E41] Auto-router pass #426 on board 'e6aeb818dd3ddcf0d88cf24fe2102001' was completed in 2.45 seconds with the score of 991.59 (1 unrouted), using 166124.78 CPU seconds and 683892 MB memory.
+2026-01-11 13:48:53.282 INFO   [0DABF3\8F8E41] Auto-router pass #427 on board 'e6aeb818dd3ddcf0d88cf24fe2102001' was completed in 0.04 seconds with the score of 991.59 (1 unrouted), using 166124.78 CPU seconds and 683892 MB memory.
+2026-01-11 13:48:55.970 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.62 (1 unrouted).
+2026-01-11 13:48:55.970 INFO   [0DABF3\8F8E41] Auto-router pass #428 on board 'e6aeb818dd3ddcf0d88cf24fe2102001' was completed in 2.68 seconds with the score of 991.59 (1 unrouted), using 167859.61 CPU seconds and 688911 MB memory.
+2026-01-11 13:48:56.209 INFO   [0DABF3\8F8E41] Auto-router pass #429 on board '6ab51fb753c5a506ad13c7496f2667e3' was completed in 0.23 seconds with the score of 991.59 (1 unrouted), using 167859.61 CPU seconds and 688911 MB memory.
+2026-01-11 13:48:56.269 INFO   [0DABF3\8F8E41] Auto-router pass #430 on board 'e6aeb818dd3ddcf0d88cf24fe2102001' was completed in 0.06 seconds with the score of 991.68 (1 unrouted), using 167859.61 CPU seconds and 688911 MB memory.
+2026-01-11 13:48:56.391 INFO   [0DABF3\8F8E41] Auto-router pass #431 on board '7de0fb15dc2f9f7123cc3a1182803a2a' was completed in 0.11 seconds with the score of 991.57 (1 unrouted), using 167859.61 CPU seconds and 688911 MB memory.
+2026-01-11 13:48:56.596 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.68 (1 unrouted).
+2026-01-11 13:48:56.596 INFO   [0DABF3\8F8E41] Auto-router pass #432 on board 'e2e5ea980d8833177fc6042f72759e2f' was completed in 0.19 seconds with the score of 991.56 (1 unrouted), using 167859.61 CPU seconds and 688911 MB memory.
+2026-01-11 13:48:56.706 INFO   [0DABF3\8F8E41] Auto-router pass #433 on board '7de0fb15dc2f9f7123cc3a1182803a2a' was completed in 0.10 seconds with the score of 991.57 (1 unrouted), using 167859.61 CPU seconds and 688911 MB memory.
+2026-01-11 13:48:56.834 INFO   [0DABF3\8F8E41] Auto-router pass #434 on board 'e2e5ea980d8833177fc6042f72759e2f' was completed in 0.12 seconds with the score of 991.56 (1 unrouted), using 168439.89 CPU seconds and 690358 MB memory.
+2026-01-11 13:48:59.088 INFO   [0DABF3\8F8E41] Auto-router pass #435 on board 'dea25138364085cfa4db8affde8c48e5' was completed in 2.24 seconds with the score of 991.48 (1 unrouted), using 169603.45 CPU seconds and 694237 MB memory.
+2026-01-11 13:49:02.113 INFO   [0DABF3\8F8E41] Restoring an earlier board that has the score of 991.68 (1 unrouted).
+2026-01-11 13:49:02.113 INFO   [0DABF3\8F8E41] Auto-router pass #436 on board 'ccfdb893a4a621136ed571d0083df744' was completed in 3.01 seconds with the score of 991.56 (1 unrouted), using 171356.30 CPU seconds and 698765 MB memory.
+2026-01-11 13:49:04.383 INFO   [0DABF3\8F8E41] Auto-router pass #437 on board '7de0fb15dc2f9f7123cc3a1182803a2a' was completed in 2.26 seconds with the score of 991.60 (1 unrouted), using 172529.86 CPU seconds and 702763 MB memory.
+2026-01-11 13:49:06.900 INFO   [0DABF3\8F8E41] Auto-router pass #438 on board '3fb0009bb063d2b136d889ff3f701730' was completed in 2.50 seconds with the score of 991.60 (1 unrouted), using 174297.70 CPU seconds and 708025 MB memory.
+2026-01-11 13:49:06.949 INFO   [0DABF3\8F8E41] Auto-router pass #439 on board '3fb0009bb063d2b136d889ff3f701730' was completed in 0.04 seconds with the score of 991.60 (1 unrouted), using 174297.70 CPU seconds and 708025 MB memory.
+2026-01-11 13:49:09.547 INFO   [0DABF3\8F8E41] Auto-router pass #440 on board '3fb0009bb063d2b136d889ff3f701730' was completed in 2.59 seconds with the score of 991.73 (1 unrouted), using 175481.27 CPU seconds and 711220 MB memory.
+2026-01-11 13:49:09.588 WARN   ShapeSearchTree45Degree.complete_shape: cannot convert room shape Simplex to IntOctagon
+2026-01-11 13:49:09.588 WARN   ShapeSearchTree45Degree.complete_shape: cannot convert room shape Simplex to IntOctagon
+2026-01-11 13:49:09.588 WARN   ShapeSearchTree45Degree.complete_shape: cannot convert room shape Simplex to IntOctagon
+2026-01-11 13:49:09.623 INFO   [0DABF3\8F8E41] Auto-router pass #441 on board '4670964d70d051c1c2ac3ab891c75959' was completed in 0.06 seconds with the score of 991.73 (1 unrouted), using 175481.27 CPU seconds and 711220 MB memory.
+2026-01-11 13:49:09.672 INFO   [0DABF3\8F8E41] Auto-router pass #442 on board '4670964d70d051c1c2ac3ab891c75959' was completed in 0.04 seconds with the score of 991.73 (1 unrouted), using 175481.27 CPU seconds and 711220 MB memory.
+2026-01-11 13:49:09.724 INFO   [0DABF3\8F8E41] Auto-router pass #443 on board '4670964d70d051c1c2ac3ab891c75959' was completed in 0.05 seconds with the score of 991.73 (1 unrouted), using 175481.27 CPU seconds and 711220 MB memory.
+2026-01-11 13:49:15.550 INFO   [0DABF3\8F8E41] Auto-router pass #444 on board '4670964d70d051c1c2ac3ab891c75959' was completed in 5.82 seconds with the score of 991.74 (1 unrouted), using 177860.36 CPU seconds and 716985 MB memory.
+2026-01-11 13:49:15.629 INFO   [0DABF3\8F8E41] Auto-router pass #445 on board '279c730bfefc42d6d226841c7acacf84' was completed in 0.06 seconds with the score of 991.74 (1 unrouted), using 178457.58 CPU seconds and 718155 MB memory.
+2026-01-11 13:49:15.687 INFO   [0DABF3\8F8E41] Auto-router pass #446 on board '279c730bfefc42d6d226841c7acacf84' was completed in 0.05 seconds with the score of 991.74 (1 unrouted), using 178457.58 CPU seconds and 718155 MB memory.
+2026-01-11 13:49:15.746 INFO   [0DABF3\8F8E41] Auto-router pass #447 on board '279c730bfefc42d6d226841c7acacf84' was completed in 0.05 seconds with the score of 991.74 (1 unrouted), using 178457.58 CPU seconds and 718155 MB memory.
+2026-01-11 13:49:16.667 INFO   [0DABF3\8F8E41] Auto-router pass #448 on board '279c730bfefc42d6d226841c7acacf84' was completed in 0.92 seconds with the score of 993.15, using 179055.78 CPU seconds and 719589 MB memory.
+2026-01-11 13:49:16.688 INFO   [0DABF3\8F8E41] Auto-router pass #449 on board '8f5e287eb135569789b04b045e209361' was completed in 0.00 seconds with the score of 993.15, using 179055.78 CPU seconds and 719589 MB memory.
+{
+  "host": "KiCad's Pcbnew,9.0.6",
+  "unit": "mm",
+  "board": {
+    "bounding_box": {
+      "x": 1705.59,
+      "y": -873.649,
+      "width": 1264.43,
+      "height": -1226.42
+    },
+    "size": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 441.16,
+      "height": 352.771
+    }
+  },
+  "layers": {
+    "total_count": 16,
+    "signal_count": 16
+  },
+  "items": {
+    "total_count": 678,
+    "trace_count": 411,
+    "via_count": 37,
+    "conduction_area_count": 0,
+    "drill_item_count": 229,
+    "pin_count": 0,
+    "component_count": 0,
+    "other_count": 1
+  },
+  "components": {
+    "total_count": 58
+  },
+  "pads": {
+    "total_count": 229
+  },
+  "nets": {
+    "total_count": 80,
+    "class_count": 2
+  },
+  "connections": {
+    "maximum_count": 591,
+    "incomplete_count": 0
+  },
+  "traces": {
+    "total_count": 411,
+    "total_segment_count": 673,
+    "total_length": 11733.76,
+    "total_weighted_length": 3.3570664E7,
+    "average_length": 28.549295,
+    "total_vertical_length": 2544.621,
+    "total_horizontal_length": 3160.316,
+    "total_angled_length": 2919.623
+  },
+  "bends": {
+    "total_count": 262,
+    "90_degree_count": 2,
+    "45_degree_count": 260,
+    "other_angle_count": 0
+  },
+  "vias": {
+    "total_count": 37,
+    "through_hole_count": 37,
+    "blind_count": 0,
+    "buried_count": 0
+  },
+  "clearance_violations": {
+    "total_count": 0
+  }
+}

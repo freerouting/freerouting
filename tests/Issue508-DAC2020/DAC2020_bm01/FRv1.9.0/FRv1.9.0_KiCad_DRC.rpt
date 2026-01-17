@@ -1,0 +1,906 @@
+** Drc report for bm1.unrouted.kicad_pcb **
+** Created on 2026-01-11T16:56:25-0600 **
+
+** Found 224 DRC violations **
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1994 mm)
+    Rule: netclass 'Default'; error
+    @(125.0941 mm, 90.0176 mm): Pad 1 [PB7] of U34 on Top
+    @(124.7057 mm, 91.0718 mm): Track [+5V] on Top, length 0.8393 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 97.3272 mm): Pad 1 [PG5] of U56 on Top
+    @(140.5011 mm, 97.8272 mm): Pad 2 [PE0] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 97.8272 mm): Pad 2 [PE0] of U56 on Top
+    @(140.5011 mm, 98.3272 mm): Pad 3 [PE1] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 98.3272 mm): Pad 3 [PE1] of U56 on Top
+    @(140.5011 mm, 98.8272 mm): Pad 4 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 98.8272 mm): Pad 4 [<no net>] of U56 on Top
+    @(140.5011 mm, 99.3272 mm): Pad 5 [PE3] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 99.3272 mm): Pad 5 [PE3] of U56 on Top
+    @(140.5011 mm, 99.8272 mm): Pad 6 [PE4] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 99.8272 mm): Pad 6 [PE4] of U56 on Top
+    @(140.5011 mm, 100.3272 mm): Pad 7 [PE5] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 100.3272 mm): Pad 7 [PE5] of U56 on Top
+    @(140.5011 mm, 100.8272 mm): Pad 8 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 100.8272 mm): Pad 8 [<no net>] of U56 on Top
+    @(140.5011 mm, 101.3272 mm): Pad 9 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 101.3272 mm): Pad 9 [<no net>] of U56 on Top
+    @(140.5011 mm, 101.8272 mm): Pad 10 [+5V] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 101.8272 mm): Pad 10 [+5V] of U56 on Top
+    @(140.5011 mm, 102.3272 mm): Pad 11 [GND] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 102.3272 mm): Pad 11 [GND] of U56 on Top
+    @(140.5011 mm, 102.8272 mm): Pad 12 [RXD2] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 102.8272 mm): Pad 12 [RXD2] of U56 on Top
+    @(140.5011 mm, 103.3272 mm): Pad 13 [TXD2] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 103.3272 mm): Pad 13 [TXD2] of U56 on Top
+    @(140.5011 mm, 103.8272 mm): Pad 14 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 103.8272 mm): Pad 14 [<no net>] of U56 on Top
+    @(140.5011 mm, 104.3272 mm): Pad 15 [PH3] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 104.3272 mm): Pad 15 [PH3] of U56 on Top
+    @(140.5011 mm, 104.8272 mm): Pad 16 [PH4] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 104.8272 mm): Pad 16 [PH4] of U56 on Top
+    @(140.5011 mm, 105.3272 mm): Pad 17 [PH5] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 105.3272 mm): Pad 17 [PH5] of U56 on Top
+    @(140.5011 mm, 105.8272 mm): Pad 18 [PH6] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 105.8272 mm): Pad 18 [PH6] of U56 on Top
+    @(140.5011 mm, 106.3272 mm): Pad 19 [PB0] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 106.3272 mm): Pad 19 [PB0] of U56 on Top
+    @(140.5011 mm, 106.8272 mm): Pad 20 [PB1] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 106.8272 mm): Pad 20 [PB1] of U56 on Top
+    @(140.5011 mm, 107.3272 mm): Pad 21 [PB2] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 107.3272 mm): Pad 21 [PB2] of U56 on Top
+    @(140.5011 mm, 107.8272 mm): Pad 22 [PB3] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 107.8272 mm): Pad 22 [PB3] of U56 on Top
+    @(140.5011 mm, 108.3272 mm): Pad 23 [PB4] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 108.3272 mm): Pad 23 [PB4] of U56 on Top
+    @(140.5011 mm, 108.8272 mm): Pad 24 [PB5] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(140.5011 mm, 108.8272 mm): Pad 24 [PB5] of U56 on Top
+    @(140.5011 mm, 109.3272 mm): Pad 25 [PB6] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(142.5011 mm, 111.3272 mm): Pad 26 [PB7] of U56 on Top
+    @(143.0011 mm, 111.3272 mm): Pad 27 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(143.0011 mm, 111.3272 mm): Pad 27 [<no net>] of U56 on Top
+    @(143.5011 mm, 111.3272 mm): Pad 28 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(143.5011 mm, 111.3272 mm): Pad 28 [<no net>] of U56 on Top
+    @(144.0011 mm, 111.3272 mm): Pad 29 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(144.0011 mm, 111.3272 mm): Pad 29 [<no net>] of U56 on Top
+    @(144.5011 mm, 111.3272 mm): Pad 30 [RESET] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(144.5011 mm, 111.3272 mm): Pad 30 [RESET] of U56 on Top
+    @(145.0011 mm, 111.3272 mm): Pad 31 [+5V] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(145.0011 mm, 111.3272 mm): Pad 31 [+5V] of U56 on Top
+    @(145.5011 mm, 111.3272 mm): Pad 32 [GND] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(145.5011 mm, 111.3272 mm): Pad 32 [GND] of U56 on Top
+    @(146.0011 mm, 111.3272 mm): Pad 33 [N$7] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(146.0011 mm, 111.3272 mm): Pad 33 [N$7] of U56 on Top
+    @(146.5011 mm, 111.3272 mm): Pad 34 [N$6] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(146.5011 mm, 111.3272 mm): Pad 34 [N$6] of U56 on Top
+    @(147.0011 mm, 111.3272 mm): Pad 35 [PL0] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(147.0011 mm, 111.3272 mm): Pad 35 [PL0] of U56 on Top
+    @(147.5011 mm, 111.3272 mm): Pad 36 [PL1] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(147.5011 mm, 111.3272 mm): Pad 36 [PL1] of U56 on Top
+    @(148.0011 mm, 111.3272 mm): Pad 37 [PL2] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(148.0011 mm, 111.3272 mm): Pad 37 [PL2] of U56 on Top
+    @(148.5011 mm, 111.3272 mm): Pad 38 [PL3] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(148.5011 mm, 111.3272 mm): Pad 38 [PL3] of U56 on Top
+    @(149.0011 mm, 111.3272 mm): Pad 39 [PL4] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(149.0011 mm, 111.3272 mm): Pad 39 [PL4] of U56 on Top
+    @(149.5011 mm, 111.3272 mm): Pad 40 [PL5] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(149.5011 mm, 111.3272 mm): Pad 40 [PL5] of U56 on Top
+    @(150.0011 mm, 111.3272 mm): Pad 41 [PL6] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(150.0011 mm, 111.3272 mm): Pad 41 [PL6] of U56 on Top
+    @(150.5011 mm, 111.3272 mm): Pad 42 [PL7] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(150.5011 mm, 111.3272 mm): Pad 42 [PL7] of U56 on Top
+    @(151.0011 mm, 111.3272 mm): Pad 43 [SCL] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(151.0011 mm, 111.3272 mm): Pad 43 [SCL] of U56 on Top
+    @(151.5011 mm, 111.3272 mm): Pad 44 [SDA] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(151.5011 mm, 111.3272 mm): Pad 44 [SDA] of U56 on Top
+    @(152.0011 mm, 111.3272 mm): Pad 45 [RXD1] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(152.0011 mm, 111.3272 mm): Pad 45 [RXD1] of U56 on Top
+    @(152.5011 mm, 111.3272 mm): Pad 46 [TXD1] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(152.5011 mm, 111.3272 mm): Pad 46 [TXD1] of U56 on Top
+    @(153.0011 mm, 111.3272 mm): Pad 47 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(153.0011 mm, 111.3272 mm): Pad 47 [<no net>] of U56 on Top
+    @(153.5011 mm, 111.3272 mm): Pad 48 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(153.5011 mm, 111.3272 mm): Pad 48 [<no net>] of U56 on Top
+    @(154.0011 mm, 111.3272 mm): Pad 49 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(154.0011 mm, 111.3272 mm): Pad 49 [<no net>] of U56 on Top
+    @(154.5011 mm, 111.3272 mm): Pad 50 [PD7] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 109.3272 mm): Pad 51 [PG0] of U56 on Top
+    @(156.5011 mm, 108.8272 mm): Pad 52 [PG1] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 108.8272 mm): Pad 52 [PG1] of U56 on Top
+    @(156.5011 mm, 108.3272 mm): Pad 53 [PC0] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 108.3272 mm): Pad 53 [PC0] of U56 on Top
+    @(156.5011 mm, 107.8272 mm): Pad 54 [PC1] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 107.8272 mm): Pad 54 [PC1] of U56 on Top
+    @(156.5011 mm, 107.3272 mm): Pad 55 [PC2] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 107.3272 mm): Pad 55 [PC2] of U56 on Top
+    @(156.5011 mm, 106.8272 mm): Pad 56 [PC3] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 106.8272 mm): Pad 56 [PC3] of U56 on Top
+    @(156.5011 mm, 106.3272 mm): Pad 57 [PC4] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 106.3272 mm): Pad 57 [PC4] of U56 on Top
+    @(156.5011 mm, 105.8272 mm): Pad 58 [PC5] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 105.8272 mm): Pad 58 [PC5] of U56 on Top
+    @(156.5011 mm, 105.3272 mm): Pad 59 [PC6] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 105.3272 mm): Pad 59 [PC6] of U56 on Top
+    @(156.5011 mm, 104.8272 mm): Pad 60 [PC7] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 104.8272 mm): Pad 60 [PC7] of U56 on Top
+    @(156.5011 mm, 104.3272 mm): Pad 61 [+5V] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 104.3272 mm): Pad 61 [+5V] of U56 on Top
+    @(156.5011 mm, 103.8272 mm): Pad 62 [GND] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 103.8272 mm): Pad 62 [GND] of U56 on Top
+    @(156.5011 mm, 103.3272 mm): Pad 63 [RXD3] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 103.3272 mm): Pad 63 [RXD3] of U56 on Top
+    @(156.5011 mm, 102.8272 mm): Pad 64 [TXD3] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 102.8272 mm): Pad 64 [TXD3] of U56 on Top
+    @(156.5011 mm, 102.3272 mm): Pad 65 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 102.3272 mm): Pad 65 [<no net>] of U56 on Top
+    @(156.5011 mm, 101.8272 mm): Pad 66 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 101.8272 mm): Pad 66 [<no net>] of U56 on Top
+    @(156.5011 mm, 101.3272 mm): Pad 67 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 101.3272 mm): Pad 67 [<no net>] of U56 on Top
+    @(156.5011 mm, 100.8272 mm): Pad 68 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 100.8272 mm): Pad 68 [<no net>] of U56 on Top
+    @(156.5011 mm, 100.3272 mm): Pad 69 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 100.3272 mm): Pad 69 [<no net>] of U56 on Top
+    @(156.5011 mm, 99.8272 mm): Pad 70 [PG2] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 99.8272 mm): Pad 70 [PG2] of U56 on Top
+    @(156.5011 mm, 99.3272 mm): Pad 71 [PA7] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 99.3272 mm): Pad 71 [PA7] of U56 on Top
+    @(156.5011 mm, 98.8272 mm): Pad 72 [PA6] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 98.8272 mm): Pad 72 [PA6] of U56 on Top
+    @(156.5011 mm, 98.3272 mm): Pad 73 [PA5] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 98.3272 mm): Pad 73 [PA5] of U56 on Top
+    @(156.5011 mm, 97.8272 mm): Pad 74 [PA4] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(156.5011 mm, 97.8272 mm): Pad 74 [PA4] of U56 on Top
+    @(156.5011 mm, 97.3272 mm): Pad 75 [PA3] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(154.5011 mm, 95.3272 mm): Pad 76 [PA2] of U56 on Top
+    @(154.0011 mm, 95.3272 mm): Pad 77 [PA1] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(154.0011 mm, 95.3272 mm): Pad 77 [PA1] of U56 on Top
+    @(153.5011 mm, 95.3272 mm): Pad 78 [PA0] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(153.5011 mm, 95.3272 mm): Pad 78 [PA0] of U56 on Top
+    @(153.0011 mm, 95.3272 mm): Pad 79 [<no net>] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(153.0011 mm, 95.3272 mm): Pad 79 [<no net>] of U56 on Top
+    @(152.5011 mm, 95.3272 mm): Pad 80 [+5V] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(152.5011 mm, 95.3272 mm): Pad 80 [+5V] of U56 on Top
+    @(152.0011 mm, 95.3272 mm): Pad 81 [GND] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(152.0011 mm, 95.3272 mm): Pad 81 [GND] of U56 on Top
+    @(151.5011 mm, 95.3272 mm): Pad 82 [ADC15] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(151.5011 mm, 95.3272 mm): Pad 82 [ADC15] of U56 on Top
+    @(151.0011 mm, 95.3272 mm): Pad 83 [ADC14] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(151.0011 mm, 95.3272 mm): Pad 83 [ADC14] of U56 on Top
+    @(150.5011 mm, 95.3272 mm): Pad 84 [ADC13] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(150.5011 mm, 95.3272 mm): Pad 84 [ADC13] of U56 on Top
+    @(150.0011 mm, 95.3272 mm): Pad 85 [ADC12] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(150.0011 mm, 95.3272 mm): Pad 85 [ADC12] of U56 on Top
+    @(149.5011 mm, 95.3272 mm): Pad 86 [ADC11] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(149.5011 mm, 95.3272 mm): Pad 86 [ADC11] of U56 on Top
+    @(149.0011 mm, 95.3272 mm): Pad 87 [ADC10] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(149.0011 mm, 95.3272 mm): Pad 87 [ADC10] of U56 on Top
+    @(148.5011 mm, 95.3272 mm): Pad 88 [ADC9] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(148.5011 mm, 95.3272 mm): Pad 88 [ADC9] of U56 on Top
+    @(148.0011 mm, 95.3272 mm): Pad 89 [ADC8] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(148.0011 mm, 95.3272 mm): Pad 89 [ADC8] of U56 on Top
+    @(147.5011 mm, 95.3272 mm): Pad 90 [ADC7] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(147.5011 mm, 95.3272 mm): Pad 90 [ADC7] of U56 on Top
+    @(147.0011 mm, 95.3272 mm): Pad 91 [ADC6] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(147.0011 mm, 95.3272 mm): Pad 91 [ADC6] of U56 on Top
+    @(146.5011 mm, 95.3272 mm): Pad 92 [ADC5] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(146.5011 mm, 95.3272 mm): Pad 92 [ADC5] of U56 on Top
+    @(146.0011 mm, 95.3272 mm): Pad 93 [ADC4] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(146.0011 mm, 95.3272 mm): Pad 93 [ADC4] of U56 on Top
+    @(145.5011 mm, 95.3272 mm): Pad 94 [ADC3] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(145.5011 mm, 95.3272 mm): Pad 94 [ADC3] of U56 on Top
+    @(145.0011 mm, 95.3272 mm): Pad 95 [ADC2] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(145.0011 mm, 95.3272 mm): Pad 95 [ADC2] of U56 on Top
+    @(144.5011 mm, 95.3272 mm): Pad 96 [ADC1] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(144.5011 mm, 95.3272 mm): Pad 96 [ADC1] of U56 on Top
+    @(144.0011 mm, 95.3272 mm): Pad 97 [ADC0] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(144.0011 mm, 95.3272 mm): Pad 97 [ADC0] of U56 on Top
+    @(143.5011 mm, 95.3272 mm): Pad 98 [AREF] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(143.5011 mm, 95.3272 mm): Pad 98 [AREF] of U56 on Top
+    @(143.0011 mm, 95.3272 mm): Pad 99 [GND] of U56 on Top
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(143.0011 mm, 95.3272 mm): Pad 99 [GND] of U56 on Top
+    @(142.5011 mm, 95.3272 mm): Pad 100 [+5V] of U56 on Top
+[copper_edge_clearance]: Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.2126 mm)
+    Rule: board setup constraints edge; error
+    @(97.7011 mm, 78.3336 mm): Segment on Edge.Cuts
+    @(143.3017 mm, 78.6462 mm): Track [PE4] on Bottom, length 2.2632 mm
+[copper_edge_clearance]: Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.2126 mm)
+    Rule: board setup constraints edge; error
+    @(97.7011 mm, 78.3336 mm): Segment on Edge.Cuts
+    @(155.7194 mm, 78.6462 mm): Track [PE4] on Bottom, length 12.4177 mm
+[copper_edge_clearance]: Board edge clearance violation (board setup constraints edge clearance 0.5000 mm; actual 0.2126 mm)
+    Rule: board setup constraints edge; error
+    @(97.7011 mm, 78.3336 mm): Segment on Edge.Cuts
+    @(156.1211 mm, 79.0479 mm): Track [PE4] on Bottom, length 0.5681 mm
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 97.3272 mm): Pad 1 [PG5] of U56 on Top
+    @(140.5011 mm, 97.8272 mm): Pad 2 [PE0] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 97.8272 mm): Pad 2 [PE0] of U56 on Top
+    @(140.5011 mm, 98.3272 mm): Pad 3 [PE1] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 98.3272 mm): Pad 3 [PE1] of U56 on Top
+    @(140.5011 mm, 98.8272 mm): Pad 4 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 98.8272 mm): Pad 4 [<no net>] of U56 on Top
+    @(140.5011 mm, 99.3272 mm): Pad 5 [PE3] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 99.3272 mm): Pad 5 [PE3] of U56 on Top
+    @(140.5011 mm, 99.8272 mm): Pad 6 [PE4] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 99.8272 mm): Pad 6 [PE4] of U56 on Top
+    @(140.5011 mm, 100.3272 mm): Pad 7 [PE5] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 100.3272 mm): Pad 7 [PE5] of U56 on Top
+    @(140.5011 mm, 100.8272 mm): Pad 8 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 100.8272 mm): Pad 8 [<no net>] of U56 on Top
+    @(140.5011 mm, 101.3272 mm): Pad 9 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 101.3272 mm): Pad 9 [<no net>] of U56 on Top
+    @(140.5011 mm, 101.8272 mm): Pad 10 [+5V] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 101.8272 mm): Pad 10 [+5V] of U56 on Top
+    @(140.5011 mm, 102.3272 mm): Pad 11 [GND] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 102.3272 mm): Pad 11 [GND] of U56 on Top
+    @(140.5011 mm, 102.8272 mm): Pad 12 [RXD2] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 102.8272 mm): Pad 12 [RXD2] of U56 on Top
+    @(140.5011 mm, 103.3272 mm): Pad 13 [TXD2] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 103.3272 mm): Pad 13 [TXD2] of U56 on Top
+    @(140.5011 mm, 103.8272 mm): Pad 14 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 103.8272 mm): Pad 14 [<no net>] of U56 on Top
+    @(140.5011 mm, 104.3272 mm): Pad 15 [PH3] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 104.3272 mm): Pad 15 [PH3] of U56 on Top
+    @(140.5011 mm, 104.8272 mm): Pad 16 [PH4] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 104.8272 mm): Pad 16 [PH4] of U56 on Top
+    @(140.5011 mm, 105.3272 mm): Pad 17 [PH5] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 105.3272 mm): Pad 17 [PH5] of U56 on Top
+    @(140.5011 mm, 105.8272 mm): Pad 18 [PH6] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 105.8272 mm): Pad 18 [PH6] of U56 on Top
+    @(140.5011 mm, 106.3272 mm): Pad 19 [PB0] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 106.3272 mm): Pad 19 [PB0] of U56 on Top
+    @(140.5011 mm, 106.8272 mm): Pad 20 [PB1] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 106.8272 mm): Pad 20 [PB1] of U56 on Top
+    @(140.5011 mm, 107.3272 mm): Pad 21 [PB2] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 107.3272 mm): Pad 21 [PB2] of U56 on Top
+    @(140.5011 mm, 107.8272 mm): Pad 22 [PB3] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 107.8272 mm): Pad 22 [PB3] of U56 on Top
+    @(140.5011 mm, 108.3272 mm): Pad 23 [PB4] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 108.3272 mm): Pad 23 [PB4] of U56 on Top
+    @(140.5011 mm, 108.8272 mm): Pad 24 [PB5] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(140.5011 mm, 108.8272 mm): Pad 24 [PB5] of U56 on Top
+    @(140.5011 mm, 109.3272 mm): Pad 25 [PB6] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(142.5011 mm, 111.3272 mm): Pad 26 [PB7] of U56 on Top
+    @(143.0011 mm, 111.3272 mm): Pad 27 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(143.0011 mm, 111.3272 mm): Pad 27 [<no net>] of U56 on Top
+    @(143.5011 mm, 111.3272 mm): Pad 28 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(143.5011 mm, 111.3272 mm): Pad 28 [<no net>] of U56 on Top
+    @(144.0011 mm, 111.3272 mm): Pad 29 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.0011 mm, 111.3272 mm): Pad 29 [<no net>] of U56 on Top
+    @(144.5011 mm, 111.3272 mm): Pad 30 [RESET] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.5011 mm, 111.3272 mm): Pad 30 [RESET] of U56 on Top
+    @(145.0011 mm, 111.3272 mm): Pad 31 [+5V] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(145.0011 mm, 111.3272 mm): Pad 31 [+5V] of U56 on Top
+    @(145.5011 mm, 111.3272 mm): Pad 32 [GND] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(145.5011 mm, 111.3272 mm): Pad 32 [GND] of U56 on Top
+    @(146.0011 mm, 111.3272 mm): Pad 33 [N$7] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.0011 mm, 111.3272 mm): Pad 33 [N$7] of U56 on Top
+    @(146.5011 mm, 111.3272 mm): Pad 34 [N$6] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.5011 mm, 111.3272 mm): Pad 34 [N$6] of U56 on Top
+    @(147.0011 mm, 111.3272 mm): Pad 35 [PL0] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.0011 mm, 111.3272 mm): Pad 35 [PL0] of U56 on Top
+    @(147.5011 mm, 111.3272 mm): Pad 36 [PL1] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.5011 mm, 111.3272 mm): Pad 36 [PL1] of U56 on Top
+    @(148.0011 mm, 111.3272 mm): Pad 37 [PL2] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.0011 mm, 111.3272 mm): Pad 37 [PL2] of U56 on Top
+    @(148.5011 mm, 111.3272 mm): Pad 38 [PL3] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.5011 mm, 111.3272 mm): Pad 38 [PL3] of U56 on Top
+    @(149.0011 mm, 111.3272 mm): Pad 39 [PL4] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.0011 mm, 111.3272 mm): Pad 39 [PL4] of U56 on Top
+    @(149.5011 mm, 111.3272 mm): Pad 40 [PL5] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.5011 mm, 111.3272 mm): Pad 40 [PL5] of U56 on Top
+    @(150.0011 mm, 111.3272 mm): Pad 41 [PL6] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.0011 mm, 111.3272 mm): Pad 41 [PL6] of U56 on Top
+    @(150.5011 mm, 111.3272 mm): Pad 42 [PL7] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.5011 mm, 111.3272 mm): Pad 42 [PL7] of U56 on Top
+    @(151.0011 mm, 111.3272 mm): Pad 43 [SCL] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(151.0011 mm, 111.3272 mm): Pad 43 [SCL] of U56 on Top
+    @(151.5011 mm, 111.3272 mm): Pad 44 [SDA] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(151.5011 mm, 111.3272 mm): Pad 44 [SDA] of U56 on Top
+    @(152.0011 mm, 111.3272 mm): Pad 45 [RXD1] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(152.0011 mm, 111.3272 mm): Pad 45 [RXD1] of U56 on Top
+    @(152.5011 mm, 111.3272 mm): Pad 46 [TXD1] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(152.5011 mm, 111.3272 mm): Pad 46 [TXD1] of U56 on Top
+    @(153.0011 mm, 111.3272 mm): Pad 47 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(153.0011 mm, 111.3272 mm): Pad 47 [<no net>] of U56 on Top
+    @(153.5011 mm, 111.3272 mm): Pad 48 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(153.5011 mm, 111.3272 mm): Pad 48 [<no net>] of U56 on Top
+    @(154.0011 mm, 111.3272 mm): Pad 49 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(154.0011 mm, 111.3272 mm): Pad 49 [<no net>] of U56 on Top
+    @(154.5011 mm, 111.3272 mm): Pad 50 [PD7] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 109.3272 mm): Pad 51 [PG0] of U56 on Top
+    @(156.5011 mm, 108.8272 mm): Pad 52 [PG1] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 108.8272 mm): Pad 52 [PG1] of U56 on Top
+    @(156.5011 mm, 108.3272 mm): Pad 53 [PC0] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 108.3272 mm): Pad 53 [PC0] of U56 on Top
+    @(156.5011 mm, 107.8272 mm): Pad 54 [PC1] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 107.8272 mm): Pad 54 [PC1] of U56 on Top
+    @(156.5011 mm, 107.3272 mm): Pad 55 [PC2] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 107.3272 mm): Pad 55 [PC2] of U56 on Top
+    @(156.5011 mm, 106.8272 mm): Pad 56 [PC3] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 106.8272 mm): Pad 56 [PC3] of U56 on Top
+    @(156.5011 mm, 106.3272 mm): Pad 57 [PC4] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 106.3272 mm): Pad 57 [PC4] of U56 on Top
+    @(156.5011 mm, 105.8272 mm): Pad 58 [PC5] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 105.8272 mm): Pad 58 [PC5] of U56 on Top
+    @(156.5011 mm, 105.3272 mm): Pad 59 [PC6] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 105.3272 mm): Pad 59 [PC6] of U56 on Top
+    @(156.5011 mm, 104.8272 mm): Pad 60 [PC7] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 104.8272 mm): Pad 60 [PC7] of U56 on Top
+    @(156.5011 mm, 104.3272 mm): Pad 61 [+5V] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 104.3272 mm): Pad 61 [+5V] of U56 on Top
+    @(156.5011 mm, 103.8272 mm): Pad 62 [GND] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 103.8272 mm): Pad 62 [GND] of U56 on Top
+    @(156.5011 mm, 103.3272 mm): Pad 63 [RXD3] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 103.3272 mm): Pad 63 [RXD3] of U56 on Top
+    @(156.5011 mm, 102.8272 mm): Pad 64 [TXD3] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 102.8272 mm): Pad 64 [TXD3] of U56 on Top
+    @(156.5011 mm, 102.3272 mm): Pad 65 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 102.3272 mm): Pad 65 [<no net>] of U56 on Top
+    @(156.5011 mm, 101.8272 mm): Pad 66 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 101.8272 mm): Pad 66 [<no net>] of U56 on Top
+    @(156.5011 mm, 101.3272 mm): Pad 67 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 101.3272 mm): Pad 67 [<no net>] of U56 on Top
+    @(156.5011 mm, 100.8272 mm): Pad 68 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 100.8272 mm): Pad 68 [<no net>] of U56 on Top
+    @(156.5011 mm, 100.3272 mm): Pad 69 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 100.3272 mm): Pad 69 [<no net>] of U56 on Top
+    @(156.5011 mm, 99.8272 mm): Pad 70 [PG2] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 99.8272 mm): Pad 70 [PG2] of U56 on Top
+    @(156.5011 mm, 99.3272 mm): Pad 71 [PA7] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 99.3272 mm): Pad 71 [PA7] of U56 on Top
+    @(156.5011 mm, 98.8272 mm): Pad 72 [PA6] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 98.8272 mm): Pad 72 [PA6] of U56 on Top
+    @(156.5011 mm, 98.3272 mm): Pad 73 [PA5] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 98.3272 mm): Pad 73 [PA5] of U56 on Top
+    @(156.5011 mm, 97.8272 mm): Pad 74 [PA4] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(156.5011 mm, 97.8272 mm): Pad 74 [PA4] of U56 on Top
+    @(156.5011 mm, 97.3272 mm): Pad 75 [PA3] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(154.5011 mm, 95.3272 mm): Pad 76 [PA2] of U56 on Top
+    @(154.0011 mm, 95.3272 mm): Pad 77 [PA1] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(154.0011 mm, 95.3272 mm): Pad 77 [PA1] of U56 on Top
+    @(153.5011 mm, 95.3272 mm): Pad 78 [PA0] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(153.5011 mm, 95.3272 mm): Pad 78 [PA0] of U56 on Top
+    @(153.0011 mm, 95.3272 mm): Pad 79 [<no net>] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(153.0011 mm, 95.3272 mm): Pad 79 [<no net>] of U56 on Top
+    @(152.5011 mm, 95.3272 mm): Pad 80 [+5V] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(152.5011 mm, 95.3272 mm): Pad 80 [+5V] of U56 on Top
+    @(152.0011 mm, 95.3272 mm): Pad 81 [GND] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(152.0011 mm, 95.3272 mm): Pad 81 [GND] of U56 on Top
+    @(151.5011 mm, 95.3272 mm): Pad 82 [ADC15] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(151.5011 mm, 95.3272 mm): Pad 82 [ADC15] of U56 on Top
+    @(151.0011 mm, 95.3272 mm): Pad 83 [ADC14] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(151.0011 mm, 95.3272 mm): Pad 83 [ADC14] of U56 on Top
+    @(150.5011 mm, 95.3272 mm): Pad 84 [ADC13] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.5011 mm, 95.3272 mm): Pad 84 [ADC13] of U56 on Top
+    @(150.0011 mm, 95.3272 mm): Pad 85 [ADC12] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.0011 mm, 95.3272 mm): Pad 85 [ADC12] of U56 on Top
+    @(149.5011 mm, 95.3272 mm): Pad 86 [ADC11] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.5011 mm, 95.3272 mm): Pad 86 [ADC11] of U56 on Top
+    @(149.0011 mm, 95.3272 mm): Pad 87 [ADC10] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.0011 mm, 95.3272 mm): Pad 87 [ADC10] of U56 on Top
+    @(148.5011 mm, 95.3272 mm): Pad 88 [ADC9] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.5011 mm, 95.3272 mm): Pad 88 [ADC9] of U56 on Top
+    @(148.0011 mm, 95.3272 mm): Pad 89 [ADC8] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.0011 mm, 95.3272 mm): Pad 89 [ADC8] of U56 on Top
+    @(147.5011 mm, 95.3272 mm): Pad 90 [ADC7] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.5011 mm, 95.3272 mm): Pad 90 [ADC7] of U56 on Top
+    @(147.0011 mm, 95.3272 mm): Pad 91 [ADC6] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.0011 mm, 95.3272 mm): Pad 91 [ADC6] of U56 on Top
+    @(146.5011 mm, 95.3272 mm): Pad 92 [ADC5] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.5011 mm, 95.3272 mm): Pad 92 [ADC5] of U56 on Top
+    @(146.0011 mm, 95.3272 mm): Pad 93 [ADC4] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.0011 mm, 95.3272 mm): Pad 93 [ADC4] of U56 on Top
+    @(145.5011 mm, 95.3272 mm): Pad 94 [ADC3] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(145.5011 mm, 95.3272 mm): Pad 94 [ADC3] of U56 on Top
+    @(145.0011 mm, 95.3272 mm): Pad 95 [ADC2] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(145.0011 mm, 95.3272 mm): Pad 95 [ADC2] of U56 on Top
+    @(144.5011 mm, 95.3272 mm): Pad 96 [ADC1] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.5011 mm, 95.3272 mm): Pad 96 [ADC1] of U56 on Top
+    @(144.0011 mm, 95.3272 mm): Pad 97 [ADC0] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.0011 mm, 95.3272 mm): Pad 97 [ADC0] of U56 on Top
+    @(143.5011 mm, 95.3272 mm): Pad 98 [AREF] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(143.5011 mm, 95.3272 mm): Pad 98 [AREF] of U56 on Top
+    @(143.0011 mm, 95.3272 mm): Pad 99 [GND] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(143.0011 mm, 95.3272 mm): Pad 99 [GND] of U56 on Top
+    @(142.5011 mm, 95.3272 mm): Pad 100 [+5V] of U56 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(111.7641 mm, 96.1826 mm): Pad 1 [M8RXD] of U53 on Top
+    @(112.4141 mm, 96.1826 mm): Pad 2 [DTR] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(112.4141 mm, 96.1826 mm): Pad 2 [DTR] of U53 on Top
+    @(113.0641 mm, 96.1826 mm): Pad 3 [<no net>] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(113.0641 mm, 96.1826 mm): Pad 3 [<no net>] of U53 on Top
+    @(113.7141 mm, 96.1826 mm): Pad 4 [+5V] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(113.7141 mm, 96.1826 mm): Pad 4 [+5V] of U53 on Top
+    @(114.3641 mm, 96.1826 mm): Pad 5 [M8TXD] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(114.3641 mm, 96.1826 mm): Pad 5 [M8TXD] of U53 on Top
+    @(115.0141 mm, 96.1826 mm): Pad 6 [RI] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(115.0141 mm, 96.1826 mm): Pad 6 [RI] of U53 on Top
+    @(115.6641 mm, 96.1826 mm): Pad 7 [GND] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(115.6641 mm, 96.1826 mm): Pad 7 [GND] of U53 on Top
+    @(116.3141 mm, 96.1826 mm): Pad 8 [<no net>] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(116.3141 mm, 96.1826 mm): Pad 8 [<no net>] of U53 on Top
+    @(116.9641 mm, 96.1826 mm): Pad 9 [DSR] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(116.9641 mm, 96.1826 mm): Pad 9 [DSR] of U53 on Top
+    @(117.6141 mm, 96.1826 mm): Pad 10 [DCD] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(117.6141 mm, 96.1826 mm): Pad 10 [DCD] of U53 on Top
+    @(118.2641 mm, 96.1826 mm): Pad 11 [CTS] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(118.2641 mm, 96.1826 mm): Pad 11 [CTS] of U53 on Top
+    @(118.9141 mm, 96.1826 mm): Pad 12 [<no net>] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(118.9141 mm, 96.1826 mm): Pad 12 [<no net>] of U53 on Top
+    @(119.5641 mm, 96.1826 mm): Pad 13 [<no net>] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(119.5641 mm, 96.1826 mm): Pad 13 [<no net>] of U53 on Top
+    @(120.2141 mm, 96.1826 mm): Pad 14 [<no net>] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(120.2141 mm, 88.9326 mm): Pad 15 [D+] of U53 on Top
+    @(119.5641 mm, 88.9326 mm): Pad 16 [D-] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(119.5641 mm, 88.9326 mm): Pad 16 [D-] of U53 on Top
+    @(118.9141 mm, 88.9326 mm): Pad 17 [+3V3] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(118.9141 mm, 88.9326 mm): Pad 17 [+3V3] of U53 on Top
+    @(118.2641 mm, 88.9326 mm): Pad 18 [GND] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(118.2641 mm, 88.9326 mm): Pad 18 [GND] of U53 on Top
+    @(117.6141 mm, 88.9326 mm): Pad 19 [+5V] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(116.9641 mm, 88.9326 mm): Pad 20 [+5V] of U53 on Top
+    @(116.3141 mm, 88.9326 mm): Pad 21 [GND] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(116.3141 mm, 88.9326 mm): Pad 21 [GND] of U53 on Top
+    @(115.6641 mm, 88.9326 mm): Pad 22 [N$53] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(115.6641 mm, 88.9326 mm): Pad 22 [N$53] of U53 on Top
+    @(115.0141 mm, 88.9326 mm): Pad 23 [N$15] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(115.0141 mm, 88.9326 mm): Pad 23 [N$15] of U53 on Top
+    @(114.3641 mm, 88.9326 mm): Pad 24 [<no net>] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(114.3641 mm, 88.9326 mm): Pad 24 [<no net>] of U53 on Top
+    @(113.7141 mm, 88.9326 mm): Pad 25 [GND] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(113.0641 mm, 88.9326 mm): Pad 26 [GND] of U53 on Top
+    @(112.4141 mm, 88.9326 mm): Pad 27 [<no net>] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(112.4141 mm, 88.9326 mm): Pad 27 [<no net>] of U53 on Top
+    @(111.7641 mm, 88.9326 mm): Pad 28 [<no net>] of U53 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(106.2211 mm, 94.8236 mm): PTH pad 1 [N$60] of U54
+    @(104.2211 mm, 94.8236 mm): PTH pad 4 [GND] of U54
+[solder_mask_bridge]: Rear solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(106.2211 mm, 94.8236 mm): PTH pad 1 [N$60] of U54
+    @(104.2211 mm, 94.8236 mm): PTH pad 4 [GND] of U54
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(106.2211 mm, 92.3236 mm): PTH pad 2 [D-] of U54
+    @(104.2211 mm, 92.3236 mm): PTH pad 3 [D+] of U54
+[solder_mask_bridge]: Rear solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(106.2211 mm, 92.3236 mm): PTH pad 2 [D-] of U54
+    @(104.2211 mm, 92.3236 mm): PTH pad 3 [D+] of U54
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

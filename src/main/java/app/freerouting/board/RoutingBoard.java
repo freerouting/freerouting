@@ -788,12 +788,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * maintained after the algorithm for performance reasons.
    */
   public AutorouteEngine init_autoroute(int p_net_no, int p_trace_clearance_class_no, Stoppable p_stoppable_thread,
-      TimeLimit p_time_limit, boolean p_retain_autoroute_database,
-      boolean p_use_slow_algorithm) {
+      TimeLimit p_time_limit, boolean p_retain_autoroute_database) {
     if (this.autoroute_engine == null || !p_retain_autoroute_database
         || this.autoroute_engine.autoroute_search_tree.compensated_clearance_class_no != p_trace_clearance_class_no) {
-      this.autoroute_engine = new AutorouteEngine(this, p_trace_clearance_class_no, p_retain_autoroute_database,
-          p_use_slow_algorithm);
+      this.autoroute_engine = new AutorouteEngine(this, p_trace_clearance_class_no, p_retain_autoroute_database);
     }
     this.autoroute_engine.init_connection(p_net_no, p_stoppable_thread, p_time_limit);
     return this.autoroute_engine;
@@ -814,7 +812,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * not yet electrically connected. Returns an enum of type AutorouteAttemptState
    */
   public AutorouteAttemptResult autoroute(Item p_item, RouterSettings routerSettings, int p_via_costs,
-      Stoppable p_stoppable_thread, TimeLimit p_time_limit, boolean p_use_slow_algorithm) {
+      Stoppable p_stoppable_thread, TimeLimit p_time_limit) {
     if (!(p_item instanceof Connectable) || p_item.net_count() == 0) {
       return new AutorouteAttemptResult(AutorouteAttemptState.NO_CONNECTIONS,
           "The item '" + p_item + "' is not connectable.");
@@ -843,7 +841,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     SortedSet<Item> ripped_item_list = new TreeSet<>();
     AutorouteEngine curr_autoroute_engine = init_autoroute(p_item.get_net_no(0), ctrl_settings.trace_clearance_class_no,
-        p_stoppable_thread, p_time_limit, false, p_use_slow_algorithm);
+        p_stoppable_thread, p_time_limit, false);
     AutorouteAttemptResult result = curr_autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
         ctrl_settings, ripped_item_list);
     if (result.state == AutorouteAttemptState.ROUTED) {
@@ -889,7 +887,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     SortedSet<Item> ripped_item_list = new TreeSet<>();
     AutorouteEngine curr_autoroute_engine = init_autoroute(pin_net_no, ctrl_settings.trace_clearance_class_no,
-        p_stoppable_thread, p_time_limit, false, false);
+        p_stoppable_thread, p_time_limit, false);
     AutorouteAttemptResult result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
         ctrl_settings, ripped_item_list);
     if (result.state == AutorouteAttemptState.ROUTED) {

@@ -204,9 +204,6 @@ public class WindowWelcome extends WindowBase {
       new_frame.board_panel.board_handling.screen_messages.set_board_score(
           bs.getNormalizedScore(routingJob.routerSettings.scoring), bs.connections.incompleteCount,
           bs.clearanceViolations.totalCount);
-      new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(
-          new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no()
-              + globalSettings.routerSettings.maxPasses - 1);
       new_frame.board_panel.board_handling.set_num_threads(globalSettings.routerSettings.optimizer.maxThreads);
       new_frame.board_panel.board_handling
           .set_board_update_strategy(globalSettings.routerSettings.optimizer.boardUpdateStrategy);
@@ -570,8 +567,6 @@ public class WindowWelcome extends WindowBase {
       return;
     }
 
-    new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(
-        new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + this.max_passes - 1);
     new_frame.board_panel.board_handling.set_num_threads(this.num_threads);
     new_frame.board_panel.board_handling.set_board_update_strategy(this.board_update_strategy);
     new_frame.board_panel.board_handling.set_hybrid_ratio(this.hybrid_ratio);

@@ -1,0 +1,715 @@
+(pcb C:\Users\danbo\Documents\Projects\Autorouter\Test_Cases\DAC_2020_Benchmarks_Without_Routing\bm9\bm9.unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "9.0.6")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Route2
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (layer Route3
+      (type signal)
+      (property
+        (index 2)
+      )
+    )
+    (layer Route4
+      (type signal)
+      (property
+        (index 3)
+      )
+    )
+    (layer Route5
+      (type signal)
+      (property
+        (index 4)
+      )
+    )
+    (layer Route6
+      (type signal)
+      (property
+        (index 5)
+      )
+    )
+    (layer Route7
+      (type signal)
+      (property
+        (index 6)
+      )
+    )
+    (layer Route8
+      (type signal)
+      (property
+        (index 7)
+      )
+    )
+    (layer Route9
+      (type signal)
+      (property
+        (index 8)
+      )
+    )
+    (layer Route10
+      (type signal)
+      (property
+        (index 9)
+      )
+    )
+    (layer Route11
+      (type signal)
+      (property
+        (index 10)
+      )
+    )
+    (layer Route12
+      (type signal)
+      (property
+        (index 11)
+      )
+    )
+    (layer Route13
+      (type signal)
+      (property
+        (index 12)
+      )
+    )
+    (layer Route14
+      (type signal)
+      (property
+        (index 13)
+      )
+    )
+    (layer Route15
+      (type signal)
+      (property
+        (index 14)
+      )
+    )
+    (layer Bottom
+      (type signal)
+      (property
+        (index 15)
+      )
+    )
+    (boundary
+      (path pcb 0  176695 -148184  120307 -148184  120307 -61823.6  176695 -61823.6
+            176695 -148184)
+    )
+    (via "Via[0-15]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component picDevBoard:DIL40
+      (place U1 160520.378000 -103560.879000 front -90.000000)
+    )
+    (component "picDevBoard:B3F-10XX"
+      (place U2 160520.378000 -73080.879000 front 0.000000)
+      (place U36 143502.378000 -141406.879000 front 180.000000)
+    )
+    (component "picDevBoard:C025-024X044"
+      (place U3 142740.378000 -102290.879000 front -90.000000)
+      (place U7 168140.378000 -74350.879000 front -90.000000)
+      (place U10 139184.378000 -127944.879000 front -90.000000)
+      (place U19 150858.178000 -71810.879000 front 90.000000)
+      (place U20 153900.000000 -71800.000000 front -90.000000)
+      (place U21 150858.178000 -66110.000000 front 90.000000)
+      (place U22 155170.000000 -66660.000000 front -90.000000)
+      (place U28 160520.378000 -65460.879000 front 0.000000)
+      (place U31 136644.378000 -127944.879000 front -90.000000)
+      (place U34 136898.378000 -142676.879000 front -90.000000)
+      (place U35 141724.378000 -127944.879000 front -90.000000)
+    )
+    (component picDevBoard:HC49_S
+      (place U4 142740.378000 -111180.879000 front -90.000000)
+    )
+    (component "picDevBoard:C050-024X044"
+      (place U5 136644.378000 -108640.879000 front 180.000000)
+      (place U6 136644.378000 -113466.879000 front 180.000000)
+      (place U8 138452.878000 -68000.879000 front -90.000000)
+      (place U13 133850.378000 -78160.879000 front 0.000000)
+      (place U14 126230.378000 -99242.879000 front 90.000000)
+      (place U15 141470.378000 -84510.879000 front -90.000000)
+      (place U16 126230.378000 -84510.879000 front -90.000000)
+      (place U17 126230.378000 -92130.879000 front -90.000000)
+    )
+    (component picDevBoard:LED3MM
+      (place U9 141978.378000 -134548.879000 front -90.000000)
+      (place U27 166870.378000 -65460.879000 front 0.000000)
+      (place U30 137406.378000 -134548.879000 front -90.000000)
+    )
+    (component picDevBoard:1X06
+      (place U11 173220.378000 -70540.879000 front 90.000000)
+      (place U24 153855.478000 -139029.379000 front 90.000000)
+      (place U25 171676.178000 -139009.079000 front -90.000000)
+    )
+    (component picDevBoard:DIL16
+      (place U12 133850.378000 -90860.879000 front -90.000000)
+    )
+    (component picDevBoard:DB9
+      (place U18 130944.678000 -131744.879000 front 90.000000)
+    )
+    (component picDevBoard:317TS
+      (place U23 143075.678000 -68021.279000 front 90.000000)
+    )
+    (component "picDevBoard:733980-62"
+      (place U26 128902.459000 -67472.557000 front 180.000000)
+    )
+    (component "picDevBoard:MA03-1"
+      (place U29 139184.378000 -122610.879000 front 0.000000)
+    )
+    (component "picDevBoard:MA20-1"
+      (place U32 147820.378000 -103560.879000 front 90.000000)
+      (place U33 173220.378000 -103560.879000 front -90.000000)
+    )
+  )
+  (library
+    (image picDevBoard:DIL40
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 1 -24130 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 2 -21590 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 3 -19050 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 4 -16510 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 5 -13970 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 6 -11430 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 7 -8890 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 8 -6350 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 9 -3810 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 10 -1270 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 11 1270 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 12 3810 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 13 6350 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 14 8890 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 15 11430 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 16 13970 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 17 16510 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 18 19050 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 19 21590 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 20 24130 -7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 21 24130 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 22 21590 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 23 19050 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 24 16510 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 25 13970 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 26 11430 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 27 8890 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 28 6350 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 29 3810 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 30 1270 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 31 -1270 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 32 -3810 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 33 -6350 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 34 -8890 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 35 -11430 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 36 -13970 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 37 -16510 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 38 -19050 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 39 -21590 7620)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 40 -24130 7620)
+    )
+    (image "picDevBoard:B3F-10XX"
+      (pin Oval[A]Pad_3048.000000x1524.000000_um 1 -3251.2 2260.6)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um 2 3251.2 2260.6)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um 3 -3251.2 -2260.6)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um 4 3251.2 -2260.6)
+    )
+    (image "picDevBoard:C025-024X044"
+      (pin Round[A]Pad_1320.800000_um 1 -1270 0)
+      (pin Round[A]Pad_1320.800000_um 2 1270 0)
+    )
+    (image picDevBoard:HC49_S
+      (pin Round[A]Pad_1320.800000_um 1 -2413 0)
+      (pin Round[A]Pad_1320.800000_um 2 2413 0)
+    )
+    (image "picDevBoard:C050-024X044"
+      (pin Round[A]Pad_1320.800000_um 1 -2540 0)
+      (pin Round[A]Pad_1320.800000_um 2 2540 0)
+    )
+    (image picDevBoard:LED3MM
+      (pin Round[A]Pad_1320.800000_um A -1270 0)
+      (pin Round[A]Pad_1320.800000_um K 1270 0)
+    )
+    (image picDevBoard:1X06
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 1 -6350 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 2 -3810 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 3 -1270 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 4 1270 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 5 3810 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 6 6350 0)
+    )
+    (image picDevBoard:DIL16
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 1 -8890 -3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 2 -6350 -3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 3 -3810 -3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 4 -1270 -3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 5 1270 -3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 6 3810 -3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 7 6350 -3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 8 8890 -3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 9 8890 3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 10 6350 3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 11 3810 3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 12 1270 3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 13 -1270 3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 14 -3810 3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 15 -6350 3810)
+      (pin Oval[A]Pad_2641.600000x1320.800000_um (rotate 90) 16 -8890 3810)
+    )
+    (image picDevBoard:DB9
+      (pin Rect[A]Pad_1879.600000x1879.600000_um 1 -5540 -1420)
+      (pin Round[A]Pad_1879.600000_um 2 -2770 -1420)
+      (pin Round[A]Pad_1879.600000_um 3 0 -1420)
+      (pin Round[A]Pad_1879.600000_um 4 2770 -1420)
+      (pin Round[A]Pad_1879.600000_um 5 5540 -1420)
+      (pin Round[A]Pad_1879.600000_um 6 -4150 1420)
+      (pin Round[A]Pad_1879.600000_um 7 -1380 1420)
+      (pin Round[A]Pad_1879.600000_um 8 1380 1420)
+      (pin Round[A]Pad_1879.600000_um 9 4150 1420)
+      (pin Round[A]Pad_5080.000000_um G1 -12500 0)
+      (pin Round[A]Pad_5080.000000_um G2 12500 0)
+    )
+    (image picDevBoard:317TS
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 1 -2540 -2540)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 2 0 -2540)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 3 2540 -2540)
+    )
+    (image "picDevBoard:733980-62"
+      (pin Oval[A]Pad_5000.000000x2500.000000_um 1 0 8570)
+      (pin Oval[A]Pad_5000.000000x2500.000000_um 2 0 2420)
+      (pin Oval[A]Pad_5000.000000x2500.000000_um (rotate 90) 3 5000 5570)
+    )
+    (image "picDevBoard:MA03-1"
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 1 -2540 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 2 0 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 3 2540 0)
+    )
+    (image "picDevBoard:MA20-1"
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 1 -24130 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 2 -21590 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 3 -19050 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 4 -16510 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 5 -13970 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 6 -11430 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 7 -8890 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 8 -6350 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 9 -3810 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 10 -1270 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 11 1270 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 12 3810 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 13 6350 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 14 8890 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 15 11430 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 16 13970 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 17 16510 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 18 19050 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 19 21590 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 20 24130 0)
+    )
+    (padstack Round[A]Pad_1320.800000_um
+      (shape (circle Top 1320.8))
+      (shape (circle Route2 1320.8))
+      (shape (circle Route3 1320.8))
+      (shape (circle Route4 1320.8))
+      (shape (circle Route5 1320.8))
+      (shape (circle Route6 1320.8))
+      (shape (circle Route7 1320.8))
+      (shape (circle Route8 1320.8))
+      (shape (circle Route9 1320.8))
+      (shape (circle Route10 1320.8))
+      (shape (circle Route11 1320.8))
+      (shape (circle Route12 1320.8))
+      (shape (circle Route13 1320.8))
+      (shape (circle Route14 1320.8))
+      (shape (circle Route15 1320.8))
+      (shape (circle Bottom 1320.8))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1879.600000_um
+      (shape (circle Top 1879.6))
+      (shape (circle Route2 1879.6))
+      (shape (circle Route3 1879.6))
+      (shape (circle Route4 1879.6))
+      (shape (circle Route5 1879.6))
+      (shape (circle Route6 1879.6))
+      (shape (circle Route7 1879.6))
+      (shape (circle Route8 1879.6))
+      (shape (circle Route9 1879.6))
+      (shape (circle Route10 1879.6))
+      (shape (circle Route11 1879.6))
+      (shape (circle Route12 1879.6))
+      (shape (circle Route13 1879.6))
+      (shape (circle Route14 1879.6))
+      (shape (circle Route15 1879.6))
+      (shape (circle Bottom 1879.6))
+      (attach off)
+    )
+    (padstack Round[A]Pad_5080.000000_um
+      (shape (circle Top 5080))
+      (shape (circle Route2 5080))
+      (shape (circle Route3 5080))
+      (shape (circle Route4 5080))
+      (shape (circle Route5 5080))
+      (shape (circle Route6 5080))
+      (shape (circle Route7 5080))
+      (shape (circle Route8 5080))
+      (shape (circle Route9 5080))
+      (shape (circle Route10 5080))
+      (shape (circle Route11 5080))
+      (shape (circle Route12 5080))
+      (shape (circle Route13 5080))
+      (shape (circle Route14 5080))
+      (shape (circle Route15 5080))
+      (shape (circle Bottom 5080))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2641.600000x1320.800000_um
+      (shape (path Top 1320.8  -660.4 0  660.4 0))
+      (shape (path Route2 1320.8  -660.4 0  660.4 0))
+      (shape (path Route3 1320.8  -660.4 0  660.4 0))
+      (shape (path Route4 1320.8  -660.4 0  660.4 0))
+      (shape (path Route5 1320.8  -660.4 0  660.4 0))
+      (shape (path Route6 1320.8  -660.4 0  660.4 0))
+      (shape (path Route7 1320.8  -660.4 0  660.4 0))
+      (shape (path Route8 1320.8  -660.4 0  660.4 0))
+      (shape (path Route9 1320.8  -660.4 0  660.4 0))
+      (shape (path Route10 1320.8  -660.4 0  660.4 0))
+      (shape (path Route11 1320.8  -660.4 0  660.4 0))
+      (shape (path Route12 1320.8  -660.4 0  660.4 0))
+      (shape (path Route13 1320.8  -660.4 0  660.4 0))
+      (shape (path Route14 1320.8  -660.4 0  660.4 0))
+      (shape (path Route15 1320.8  -660.4 0  660.4 0))
+      (shape (path Bottom 1320.8  -660.4 0  660.4 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_3048.000000x1524.000000_um
+      (shape (path Top 1524  -762 0  762 0))
+      (shape (path Route2 1524  -762 0  762 0))
+      (shape (path Route3 1524  -762 0  762 0))
+      (shape (path Route4 1524  -762 0  762 0))
+      (shape (path Route5 1524  -762 0  762 0))
+      (shape (path Route6 1524  -762 0  762 0))
+      (shape (path Route7 1524  -762 0  762 0))
+      (shape (path Route8 1524  -762 0  762 0))
+      (shape (path Route9 1524  -762 0  762 0))
+      (shape (path Route10 1524  -762 0  762 0))
+      (shape (path Route11 1524  -762 0  762 0))
+      (shape (path Route12 1524  -762 0  762 0))
+      (shape (path Route13 1524  -762 0  762 0))
+      (shape (path Route14 1524  -762 0  762 0))
+      (shape (path Route15 1524  -762 0  762 0))
+      (shape (path Bottom 1524  -762 0  762 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_5000.000000x2500.000000_um
+      (shape (path Top 2500  -1250 0  1250 0))
+      (shape (path Route2 2500  -1250 0  1250 0))
+      (shape (path Route3 2500  -1250 0  1250 0))
+      (shape (path Route4 2500  -1250 0  1250 0))
+      (shape (path Route5 2500  -1250 0  1250 0))
+      (shape (path Route6 2500  -1250 0  1250 0))
+      (shape (path Route7 2500  -1250 0  1250 0))
+      (shape (path Route8 2500  -1250 0  1250 0))
+      (shape (path Route9 2500  -1250 0  1250 0))
+      (shape (path Route10 2500  -1250 0  1250 0))
+      (shape (path Route11 2500  -1250 0  1250 0))
+      (shape (path Route12 2500  -1250 0  1250 0))
+      (shape (path Route13 2500  -1250 0  1250 0))
+      (shape (path Route14 2500  -1250 0  1250 0))
+      (shape (path Route15 2500  -1250 0  1250 0))
+      (shape (path Bottom 2500  -1250 0  1250 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1879.600000x1879.600000_um
+      (shape (rect Top -939.8 -939.8 939.8 939.8))
+      (shape (rect Route2 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route3 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route4 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route5 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route6 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route7 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route8 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route9 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route10 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route11 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route12 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route13 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route14 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route15 -939.8 -939.8 939.8 939.8))
+      (shape (rect Bottom -939.8 -939.8 939.8 939.8))
+      (attach off)
+    )
+    (padstack "Via[0-15]_600:300_um"
+      (shape (circle Top 600))
+      (shape (circle Route2 600))
+      (shape (circle Route3 600))
+      (shape (circle Route4 600))
+      (shape (circle Route5 600))
+      (shape (circle Route6 600))
+      (shape (circle Route7 600))
+      (shape (circle Route8 600))
+      (shape (circle Route9 600))
+      (shape (circle Route10 600))
+      (shape (circle Route11 600))
+      (shape (circle Route12 600))
+      (shape (circle Route13 600))
+      (shape (circle Route14 600))
+      (shape (circle Route15 600))
+      (shape (circle Bottom 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(IC3-Pad40)"
+      (pins U1-40 U11-4 U33-1)
+    )
+    (net "Net-(IC3-Pad39)"
+      (pins U1-39 U11-5 U33-2)
+    )
+    (net "Net-(IC3-Pad38)"
+      (pins U1-38 U33-3)
+    )
+    (net "Net-(IC3-Pad37)"
+      (pins U1-37 U33-4)
+    )
+    (net "Net-(IC3-Pad36)"
+      (pins U1-36 U33-5)
+    )
+    (net "Net-(IC3-Pad35)"
+      (pins U1-35 U33-6)
+    )
+    (net /MRF_INT
+      (pins U1-34 U25-3 U33-7)
+    )
+    (net "Net-(IC3-Pad33)"
+      (pins U1-33 U33-8)
+    )
+    (net /3.3V_SRC
+      (pins U1-11 U1-32 U3-1 U7-1 U11-2 U12-16 U13-2 U15-1 U21-2 U22-1 U23-2 U24-3
+        U28-1 U32-10 U33-9 U36-1)
+    )
+    (net GND
+      (pins U1-12 U1-31 U2-1 U3-2 U5-2 U6-2 U8-2 U9-K U11-3 U12-15 U14-1 U15-2 U18-5
+        U20-1 U22-2 U24-1 U24-2 U25-6 U26-1 U27-K U30-K U32-9 U33-10 U34-2)
+    )
+    (net "Net-(IC3-Pad30)"
+      (pins U1-30 U33-11)
+    )
+    (net "Net-(IC3-Pad29)"
+      (pins U1-29 U33-12)
+    )
+    (net "Net-(IC3-Pad28)"
+      (pins U1-28 U33-13)
+    )
+    (net "Net-(IC3-Pad27)"
+      (pins U1-27 U33-14)
+    )
+    (net /N$17
+      (pins U1-26 U12-9 U33-15)
+    )
+    (net /N$21
+      (pins U1-25 U12-10 U33-16)
+    )
+    (net /MRF_SDO
+      (pins U1-24 U25-2 U33-17)
+    )
+    (net /MRF_SDI
+      (pins U1-23 U24-6 U33-18)
+    )
+    (net "Net-(IC3-Pad22)"
+      (pins U1-22 U33-19)
+    )
+    (net "Net-(IC3-Pad21)"
+      (pins U1-21 U33-20)
+    )
+    (net "Net-(IC3-Pad20)"
+      (pins U1-20 U32-1)
+    )
+    (net "Net-(IC3-Pad19)"
+      (pins U1-19 U32-2)
+    )
+    (net /MRF_SCK
+      (pins U1-18 U25-1 U32-3)
+    )
+    (net /MRF_CS
+      (pins U1-17 U24-5 U32-4)
+    )
+    (net /MRF_WAKE
+      (pins U1-16 U25-4 U32-5)
+    )
+    (net /MRF_RESET
+      (pins U1-15 U25-5 U32-6)
+    )
+    (net /OSC2
+      (pins U1-14 U4-2 U6-1 U32-7)
+    )
+    (net /OS1
+      (pins U1-13 U4-1 U5-1 U32-8)
+    )
+    (net "Net-(IC3-Pad10)"
+      (pins U1-10 U32-11)
+    )
+    (net "Net-(IC3-Pad9)"
+      (pins U1-9 U32-12)
+    )
+    (net "Net-(IC3-Pad8)"
+      (pins U1-8 U32-13)
+    )
+    (net "Net-(IC3-Pad7)"
+      (pins U1-7 U32-14)
+    )
+    (net "Net-(IC3-Pad6)"
+      (pins U1-6 U32-15)
+    )
+    (net "Net-(IC3-Pad5)"
+      (pins U1-5 U32-16)
+    )
+    (net "Net-(IC3-Pad4)"
+      (pins U1-4 U32-17)
+    )
+    (net "Net-(IC3-Pad3)"
+      (pins U1-3 U32-18)
+    )
+    (net "Net-(IC3-Pad2)"
+      (pins U1-2 U32-19)
+    )
+    (net "Net-(IC3-Pad1)"
+      (pins U1-1 U2-3 U7-2 U11-1 U32-20)
+    )
+    (net "Net-(S1-Pad4)"
+      (pins U2-4)
+    )
+    (net "Net-(S1-Pad2)"
+      (pins U2-2)
+    )
+    (net "Net-(C6-Pad1)"
+      (pins U8-1 U23-3 U26-2)
+    )
+    (net "Net-(LED3-PadA)"
+      (pins U9-A U10-2)
+    )
+    (net "Net-(R5-Pad1)"
+      (pins U10-1 U29-2)
+    )
+    (net "Net-(JP3-Pad6)"
+      (pins U11-6)
+    )
+    (net "Net-(IC2-Pad14)"
+      (pins U12-14)
+    )
+    (net "Net-(IC2-Pad13)"
+      (pins U12-13)
+    )
+    (net "Net-(IC2-Pad12)"
+      (pins U12-12)
+    )
+    (net "Net-(IC2-Pad11)"
+      (pins U12-11)
+    )
+    (net "Net-(C5-Pad2)"
+      (pins U12-5 U17-2)
+    )
+    (net "Net-(C2-Pad2)"
+      (pins U12-6 U14-2)
+    )
+    (net "Net-(C5-Pad1)"
+      (pins U12-4 U17-1)
+    )
+    (net "Net-(C4-Pad2)"
+      (pins U12-3 U16-2)
+    )
+    (net "Net-(IC2-Pad8)"
+      (pins U12-8 U18-3)
+    )
+    (net "Net-(IC2-Pad7)"
+      (pins U12-7 U18-2)
+    )
+    (net "Net-(C1-Pad1)"
+      (pins U12-2 U13-1)
+    )
+    (net "Net-(C4-Pad1)"
+      (pins U12-1 U16-1)
+    )
+    (net "Net-(X1-Pad9)"
+      (pins U18-9)
+    )
+    (net "Net-(X1-Pad7)"
+      (pins U18-7 U18-8)
+    )
+    (net "Net-(X1-Pad1)"
+      (pins U18-1 U18-4 U18-6)
+    )
+    (net "Net-(IC4-Pad1)"
+      (pins U19-2 U21-1 U23-1)
+    )
+    (net "Net-(R8-Pad1)"
+      (pins U19-1 U20-2)
+    )
+    (net "Net-(JP4-Pad4)"
+      (pins U24-4)
+    )
+    (net "Net-(X3-Pad3)"
+      (pins U26-3)
+    )
+    (net "Net-(LED1-PadA)"
+      (pins U27-A U28-2)
+    )
+    (net "Net-(R2-Pad1)"
+      (pins U29-3 U35-1)
+    )
+    (net "Net-(R6-Pad1)"
+      (pins U29-1 U31-1)
+    )
+    (net "Net-(LED2-PadA)"
+      (pins U30-A U31-2)
+    )
+    (net "Net-(R1-Pad1)"
+      (pins U34-1 U35-2 U36-3)
+    )
+    (net "Net-(S2-Pad4)"
+      (pins U36-4)
+    )
+    (net "Net-(S2-Pad2)"
+      (pins U36-2)
+    )
+    (class kicad_default /3.3V_SRC /MRF_CS /MRF_INT /MRF_RESET /MRF_SCK /MRF_SDI
+      /MRF_SDO /MRF_WAKE /N$17 /N$21 /OS1 /OSC2 GND "Net-(C1-Pad1)" "Net-(C2-Pad2)"
+      "Net-(C4-Pad1)" "Net-(C4-Pad2)" "Net-(C5-Pad1)" "Net-(C5-Pad2)" "Net-(C6-Pad1)"
+      "Net-(IC2-Pad11)" "Net-(IC2-Pad12)" "Net-(IC2-Pad13)" "Net-(IC2-Pad14)"
+      "Net-(IC2-Pad7)" "Net-(IC2-Pad8)" "Net-(IC3-Pad1)" "Net-(IC3-Pad10)"
+      "Net-(IC3-Pad19)" "Net-(IC3-Pad2)" "Net-(IC3-Pad20)" "Net-(IC3-Pad21)"
+      "Net-(IC3-Pad22)" "Net-(IC3-Pad27)" "Net-(IC3-Pad28)" "Net-(IC3-Pad29)"
+      "Net-(IC3-Pad3)" "Net-(IC3-Pad30)" "Net-(IC3-Pad33)" "Net-(IC3-Pad35)"
+      "Net-(IC3-Pad36)" "Net-(IC3-Pad37)" "Net-(IC3-Pad38)" "Net-(IC3-Pad39)"
+      "Net-(IC3-Pad4)" "Net-(IC3-Pad40)" "Net-(IC3-Pad5)" "Net-(IC3-Pad6)"
+      "Net-(IC3-Pad7)" "Net-(IC3-Pad8)" "Net-(IC3-Pad9)" "Net-(IC4-Pad1)"
+      "Net-(JP3-Pad6)" "Net-(JP4-Pad4)" "Net-(LED1-PadA)" "Net-(LED2-PadA)"
+      "Net-(LED3-PadA)" "Net-(R1-Pad1)" "Net-(R2-Pad1)" "Net-(R5-Pad1)" "Net-(R6-Pad1)"
+      "Net-(R8-Pad1)" "Net-(S1-Pad2)" "Net-(S1-Pad4)" "Net-(S2-Pad2)" "Net-(S2-Pad4)"
+      "Net-(X1-Pad1)" "Net-(X1-Pad7)" "Net-(X1-Pad9)" "Net-(X3-Pad3)"
+      (circuit
+        (use_via "Via[0-15]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

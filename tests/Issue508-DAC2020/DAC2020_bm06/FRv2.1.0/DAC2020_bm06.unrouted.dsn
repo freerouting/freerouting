@@ -1,0 +1,534 @@
+(pcb C:\Users\danbo\Documents\Projects\Autorouter\Test_Cases\DAC_2020_Benchmarks_Without_Routing\bm6\bm6.unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "9.0.6")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Bottom
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  176001 -119004  121001 -119004  121001 -91003.6  176001 -91003.6
+            176001 -119004)
+    )
+    (keepout "" (polygon signal 0  122167 -100981  122089 -101024  122033 -101093  122008 -101179
+            122011 -101224  122008 -101268  122033 -101354  122089 -101423
+            122167 -101467  122211 -101474  123011 -101474  123055 -101467
+            123133 -101423  123189 -101354  123214 -101268  123211 -101224
+            123214 -101179  123189 -101093  123133 -101024  123055 -100981
+            123011 -100974  122211 -100974  122167 -100981))
+    (keepout "" (polygon signal 0  122167 -94380.7  122089 -94423.7  122033 -94493.4  122008 -94579
+            122011 -94623.6  122008 -94668.2  122033 -94753.8  122089 -94823.5
+            122167 -94866.5  122211 -94873.6  123011 -94873.6  123055 -94866.5
+            123133 -94823.5  123189 -94753.8  123214 -94668.2  123211 -94623.6
+            123214 -94579  123189 -94493.4  123133 -94423.7  123055 -94380.7
+            123011 -94373.6  122211 -94373.6  122167 -94380.7))
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component batteryCharger:0603
+      (place U2 160051.100000 -99043.600000 front 90.000000)
+      (place U3 151751.100000 -101853.600000 front -90.000000)
+      (place U4 142261.100000 -99253.600000 front 180.000000)
+      (place U5 141851.100000 -96183.600000 front 90.000000)
+      (place U6 156001.100000 -96453.600000 front 0.000000)
+      (place U7 144151.100000 -108293.600000 front -90.000000)
+      (place U18 128581.100000 -108053.600000 front 0.000000)
+      (place U19 132891.100000 -103143.600000 front 0.000000)
+      (place U20 128581.100000 -110843.600000 front 0.000000)
+      (place U21 128561.100000 -113733.600000 front 0.000000)
+      (place U22 128551.100000 -116633.600000 front 0.000000)
+      (place U23 159271.100000 -93573.600000 front 180.000000)
+      (place U24 139441.100000 -97353.600000 front 90.000000)
+      (place U25 138941.100000 -108263.600000 front 90.000000)
+      (place U26 141241.100000 -108273.600000 front 90.000000)
+      (place U27 140281.100000 -92763.600000 front 180.000000)
+      (place U1 146701.100000 -93103.600000 front 90.000000)
+      (place U29 149601.100000 -93103.600000 front 90.000000)
+      (place U30 152401.100000 -93103.600000 front 90.000000)
+      (place U32 144301.100000 -112003.600000 front 0.000000)
+      (place U33 150501.100000 -96903.600000 front -90.000000)
+      (place U34 133601.100000 -116903.600000 front 90.000000)
+    )
+    (component "batteryCharger:LED-0603"
+      (place U8 129831.100000 -104093.600000 front 90.000000)
+    )
+    (component "batteryCharger:QFN50P400X400X100-25N"
+      (place U9 139181.100000 -102913.600000 front 0.000000)
+    )
+    (component batteryCharger:BQ27441DRZRG1A
+      (place U10 138921.100000 -114543.600000 front -90.000000)
+    )
+    (component "batteryCharger:SON50P300X300X100-11N"
+      (place U11 156561.100000 -100073.600000 front 180.000000)
+    )
+    (component "batteryCharger:10118193-0001LF"
+      (place U12 122611.100000 -97923.600000 front -90.000000)
+    )
+    (component batteryCharger:UE27AC54100
+      (place U13 162631.100000 -100193.600000 front 90.000000)
+    )
+    (component "batteryCharger:JST-2-SMD"
+      (place U14 150561.100000 -115353.600000 front 180.000000)
+    )
+    (component batteryCharger:1X06
+      (place U15 123431.100000 -116693.600000 front 90.000000)
+    )
+    (component batteryCharger:INDPM3630X200N
+      (place U16 146771.100000 -100933.600000 front 0.000000)
+    )
+    (component batteryCharger:INDPM5552X200N
+      (place U17 156271.100000 -105863.600000 front 0.000000)
+    )
+    (component batteryCharger:1206
+      (place U28 148131.100000 -107483.600000 front 0.000000)
+    )
+    (component batteryCharger:DSN2_1
+      (place U31 145201.100000 -96403.600000 front -90.000000)
+    )
+  )
+  (library
+    (image batteryCharger:0603
+      (pin Rect[T]Pad_1100.000000x1000.000000_um 1 -850 0)
+      (pin Rect[T]Pad_1100.000000x1000.000000_um 2 850 0)
+    )
+    (image "batteryCharger:LED-0603"
+      (pin RoundRect[T]Pad_1000.000000x1000.000000_150.571000_um_0.000000_0 (rotate 270) A -877 0)
+      (pin RoundRect[T]Pad_1000.000000x1000.000000_150.571000_um_0.000000_0 (rotate 270) C 877 0)
+    )
+    (image "batteryCharger:QFN50P400X400X100-25N"
+      (pin Rect[T]Pad_800.000000x300.000000_um 1 -2000 1250)
+      (pin Rect[T]Pad_800.000000x300.000000_um 2 -2000 750)
+      (pin Rect[T]Pad_800.000000x300.000000_um 3 -2000 250)
+      (pin Rect[T]Pad_800.000000x300.000000_um 4 -2000 -250)
+      (pin Rect[T]Pad_800.000000x300.000000_um 5 -2000 -750)
+      (pin Rect[T]Pad_800.000000x300.000000_um 6 -2000 -1250)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 7 -1250 -2000)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 8 -750 -2000)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 9 -250 -2000)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 10 250 -2000)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 11 750 -2000)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 12 1250 -2000)
+      (pin Rect[T]Pad_800.000000x300.000000_um 13 2000 -1250)
+      (pin Rect[T]Pad_800.000000x300.000000_um 14 2000 -750)
+      (pin Rect[T]Pad_800.000000x300.000000_um 15 2000 -250)
+      (pin Rect[T]Pad_800.000000x300.000000_um 16 2000 250)
+      (pin Rect[T]Pad_800.000000x300.000000_um 17 2000 750)
+      (pin Rect[T]Pad_800.000000x300.000000_um 18 2000 1250)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 19 1250 2000)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 20 750 2000)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 21 250 2000)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 22 -250 2000)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 23 -750 2000)
+      (pin Rect[T]Pad_800.000000x300.000000_um (rotate 90) 24 -1250 2000)
+      (pin Rect[T]Pad_2800.000000x2800.000000_um (rotate 90) 25 0 0)
+    )
+    (image batteryCharger:BQ27441DRZRG1A
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 1 -1000 -1975)
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 2 -600 -1975)
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 3 -200 -1975)
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 4 200 -1975)
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 5 600 -1975)
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 6 1000 -1975)
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 7 1000 1975)
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 8 600 1975)
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 9 200 1975)
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 10 -200 1975)
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 11 -600 1975)
+      (pin Rect[T]Pad_850.000000x200.000000_um (rotate 90) 12 -1000 1975)
+      (pin Cust[T]Pad_1397.000000x1930.400000_1397.000000x1930.400000_5_um_2A385133AC22FC6C545E8CDC94B0B16A (rotate 90) 13 0 0)
+      (pin Rect[T]Pad_3300.000000x250.000000_um 14 0 1100)
+      (pin Rect[T]Pad_3300.000000x250.000000_um 15 0 -1100)
+    )
+    (image "batteryCharger:SON50P300X300X100-11N"
+      (pin Rect[T]Pad_850.000000x296.800000_um 1 -1475 1000)
+      (pin Rect[T]Pad_850.000000x296.800000_um 2 -1475 500)
+      (pin Rect[T]Pad_850.000000x296.800000_um 3 -1475 0)
+      (pin Rect[T]Pad_850.000000x296.800000_um 4 -1475 -500)
+      (pin Rect[T]Pad_850.000000x296.800000_um 5 -1475 -1000)
+      (pin Rect[T]Pad_850.000000x296.800000_um 6 1475 -1000)
+      (pin Rect[T]Pad_850.000000x296.800000_um 7 1475 -500)
+      (pin Rect[T]Pad_850.000000x296.800000_um 8 1475 0)
+      (pin Rect[T]Pad_850.000000x296.800000_um 9 1475 500)
+      (pin Rect[T]Pad_850.000000x296.800000_um 10 1475 1000)
+      (pin Rect[T]Pad_160.000000x762.000000_um GND@1 -615 1450)
+      (pin Rect[T]Pad_160.000000x762.000000_um GND@2 -205 1450)
+      (pin Rect[T]Pad_160.000000x762.000000_um GND@3 205 1450)
+      (pin Rect[T]Pad_160.000000x762.000000_um GND@4 615 1450)
+      (pin Rect[T]Pad_160.000000x762.000000_um GND@5 -615 -1455)
+      (pin Rect[T]Pad_160.000000x762.000000_um GND@6 -205 -1455)
+      (pin Rect[T]Pad_160.000000x762.000000_um GND@7 205 -1455)
+      (pin Rect[T]Pad_160.000000x762.000000_um GND@8 615 -1455)
+      (pin Rect[T]Pad_1600.000000x2209.800000_um GND@9 0 -4)
+    )
+    (image "batteryCharger:10118193-0001LF"
+      (outline (path signal 50  -3550 -400  -3550 400))
+      (outline (path signal 50  3050 -400  3050 400))
+      (outline (path signal 50  -3050 400  -3050 -400))
+      (outline (path signal 50  3550 400  3550 -400))
+      (outline (path signal 0  -3573.1 -402.567  -3573.1 -390.433  -3559.57 -376.903  -3540.43 -376.903
+            -3526.9 -390.433  -3526.9 -397.433  -3525.15 -397.239  -3508.49 -458.002
+            -3473.86 -510.639  -3424.66 -549.999  -3365.7 -572.229  -3302.76 -575.153
+            -3302.57 -576.903  -3290.43 -576.903  -3276.9 -590.433  -3276.9 -609.567
+            -3290.43 -623.097  -3297.43 -623.097  -3297.24 -624.847  -3375.8 -621.198
+            -3449.4 -593.448  -3510.81 -544.316  -3554.04 -478.609  -3572.94 -409.729
+            -3573.1 -409.567  -3573.1 -409.14  -3574.85 -402.761))
+      (outline (path signal 0  3026.9 -402.567  3026.9 -390.433  3040.43 -376.903  3059.57 -376.903
+            3073.1 -390.433  3073.1 -397.433  3074.85 -397.239  3091.51 -458.002
+            3126.14 -510.639  3175.34 -549.999  3234.3 -572.229  3297.24 -575.153
+            3297.43 -576.903  3309.57 -576.903  3323.1 -590.433  3323.1 -609.567
+            3309.57 -623.097  3302.57 -623.097  3302.76 -624.847  3224.2 -621.198
+            3150.6 -593.448  3089.19 -544.316  3045.96 -478.609  3027.06 -409.729
+            3026.9 -409.567  3026.9 -409.14  3025.15 -402.761))
+      (outline (path signal 0  -3309.57 -576.903  -3297.43 -576.903  -3297.24 -575.153
+            -3234.3 -572.229  -3175.34 -549.999  -3126.14 -510.639  -3091.51 -458.002
+            -3074.85 -397.239  -3073.1 -397.433  -3073.1 -390.433  -3059.57 -376.903
+            -3040.43 -376.903  -3026.9 -390.433  -3026.9 -402.567  -3025.15 -402.761
+            -3026.9 -409.14  -3026.9 -409.567  -3027.07 -409.729  -3045.96 -478.609
+            -3089.19 -544.316  -3150.6 -593.448  -3224.2 -621.198  -3302.76 -624.847
+            -3302.57 -623.097  -3309.57 -623.097  -3323.1 -609.567  -3323.1 -590.433))
+      (outline (path signal 0  3290.43 -576.903  3302.57 -576.903  3302.76 -575.153  3365.7 -572.229
+            3424.66 -549.999  3473.86 -510.639  3508.49 -458.002  3525.15 -397.239
+            3526.9 -397.433  3526.9 -390.433  3540.43 -376.903  3559.57 -376.903
+            3573.1 -390.433  3573.1 -402.567  3574.85 -402.761  3573.1 -409.14
+            3573.1 -409.567  3572.93 -409.729  3554.04 -478.609  3510.81 -544.316
+            3449.4 -593.448  3375.8 -621.198  3297.24 -624.847  3297.43 -623.097
+            3290.43 -623.097  3276.9 -609.567  3276.9 -590.433))
+      (outline (path signal 0  -3573.1 409.14  -3573.1 409.567  -3572.94 409.728  -3554.04 478.609
+            -3510.81 544.316  -3449.4 593.448  -3375.8 621.198  -3297.24 624.847
+            -3297.43 623.097  -3290.43 623.097  -3276.9 609.567  -3276.9 590.433
+            -3290.43 576.903  -3302.57 576.903  -3302.76 575.153  -3365.7 572.229
+            -3424.66 549.999  -3473.86 510.639  -3508.49 458.002  -3525.15 397.239
+            -3526.9 397.433  -3526.9 390.433  -3540.43 376.903  -3559.57 376.903
+            -3573.1 390.433  -3573.1 402.567  -3574.85 402.761))
+      (outline (path signal 0  3026.9 409.14  3026.9 409.567  3027.06 409.728  3045.96 478.609
+            3089.19 544.316  3150.6 593.448  3224.2 621.198  3302.76 624.847
+            3302.57 623.097  3309.57 623.097  3323.1 609.567  3323.1 590.433
+            3309.57 576.903  3297.43 576.903  3297.24 575.153  3234.3 572.229
+            3175.34 549.999  3126.14 510.639  3091.51 458.002  3074.85 397.239
+            3073.1 397.433  3073.1 390.433  3059.57 376.903  3040.43 376.903
+            3026.9 390.433  3026.9 402.567  3025.15 402.761))
+      (outline (path signal 0  -3309.57 623.097  -3302.57 623.097  -3302.76 624.847  -3224.2 621.198
+            -3150.6 593.448  -3089.19 544.316  -3045.96 478.609  -3027.07 409.728
+            -3026.9 409.567  -3026.9 409.14  -3025.15 402.761  -3026.9 402.567
+            -3026.9 390.433  -3040.43 376.903  -3059.57 376.903  -3073.1 390.433
+            -3073.1 397.433  -3074.85 397.239  -3091.51 458.002  -3126.14 510.639
+            -3175.34 549.999  -3234.3 572.229  -3297.24 575.153  -3297.43 576.903
+            -3309.57 576.903  -3323.1 590.433  -3323.1 609.567))
+      (outline (path signal 0  3290.43 623.097  3297.43 623.097  3297.24 624.847  3375.8 621.198
+            3449.4 593.448  3510.81 544.316  3554.04 478.609  3572.93 409.728
+            3573.1 409.567  3573.1 409.14  3574.85 402.761  3573.1 402.567
+            3573.1 390.433  3559.57 376.903  3540.43 376.903  3526.9 390.433
+            3526.9 397.433  3525.15 397.239  3508.49 458.002  3473.86 510.639
+            3424.66 549.999  3365.7 572.229  3302.76 575.153  3302.57 576.903
+            3290.43 576.903  3276.9 590.433  3276.9 609.567))
+      (pin Rect[T]Pad_400.000000x1350.000000_um D+ 0 2675)
+      (pin Rect[T]Pad_400.000000x1350.000000_um "D-" -650 2675)
+      (pin Rect[T]Pad_400.000000x1350.000000_um GND 1300 2675)
+      (pin Rect[T]Pad_400.000000x1350.000000_um ID 650 2675)
+      (pin Rect[T]Pad_1600.000000x1400.000000_um SHIELD$1 -3200 2450)
+      (pin Rect[T]Pad_1600.000000x1400.000000_um SHIELD$2 3200 2450)
+      (pin Rect[T]Pad_1900.000000x1900.000000_um SHIELD$3 -1200 0)
+      (pin Rect[T]Pad_1900.000000x1900.000000_um SHIELD$4 1200 0)
+      (pin Rect[T]Pad_400.000000x1350.000000_um VCC -1300 2675)
+    )
+    (image batteryCharger:UE27AC54100
+      (pin Round[A]Pad_1500.000000_um 1 -3500 0)
+      (pin Round[A]Pad_1500.000000_um 2 -1000 0)
+      (pin Round[A]Pad_1500.000000_um 3 1000 0)
+      (pin Round[A]Pad_1500.000000_um 4 3500 0)
+      (pin Round[A]Pad_3580.000000_um 5 -6570 -2710)
+      (pin Round[A]Pad_3580.000000_um 6 6570 -2710)
+    )
+    (image "batteryCharger:JST-2-SMD"
+      (pin Rect[T]Pad_1000.000000x4600.000000_um 1 -1000 -3700)
+      (pin Rect[T]Pad_1000.000000x4600.000000_um 2 1000 -3700)
+      (pin Rect[T]Pad_3400.000000x1600.000000_um (rotate 90) NC1 -3400 1500)
+      (pin Rect[T]Pad_3400.000000x1600.000000_um (rotate 90) NC2 3400 1500)
+    )
+    (image batteryCharger:1X06
+      (pin Round[A]Pad_1879.600000_um (rotate 90) 1 0 0)
+      (pin Round[A]Pad_1879.600000_um (rotate 90) 2 2540 0)
+      (pin Round[A]Pad_1879.600000_um (rotate 90) 3 5080 0)
+      (pin Round[A]Pad_1879.600000_um (rotate 90) 4 7620 0)
+      (pin Round[A]Pad_1879.600000_um (rotate 90) 5 10160 0)
+      (pin Round[A]Pad_1879.600000_um (rotate 90) 6 12700 0)
+    )
+    (image batteryCharger:INDPM3630X200N
+      (pin Rect[T]Pad_1750.000000x600.000000_um 1 -1550 0)
+      (pin Rect[T]Pad_1750.000000x600.000000_um 2 1550 0)
+    )
+    (image batteryCharger:INDPM5552X200N
+      (pin Rect[T]Pad_2700.000000x2050.000000_um (rotate 90) 1 -2350 0)
+      (pin Rect[T]Pad_2700.000000x2050.000000_um (rotate 90) 2 2350 0)
+    )
+    (image batteryCharger:1206
+      (pin Rect[T]Pad_1600.000000x1800.000000_um 1 -1400 0)
+      (pin Rect[T]Pad_1600.000000x1800.000000_um 2 1400 0)
+    )
+    (image batteryCharger:DSN2_1
+      (pin Rect[T]Pad_600.000000x470.000000_um (rotate 90) 1 -550 0)
+      (pin Rect[T]Pad_950.000000x600.000000_um 2 375 0)
+    )
+    (padstack Round[A]Pad_1500.000000_um
+      (shape (circle Top 1500))
+      (shape (circle Bottom 1500))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1879.600000_um
+      (shape (circle Top 1879.6))
+      (shape (circle Bottom 1879.6))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3580.000000_um
+      (shape (circle Top 3580))
+      (shape (circle Bottom 3580))
+      (attach off)
+    )
+    (padstack RoundRect[T]Pad_1000.000000x1000.000000_150.571000_um_0.000000_0
+      (shape (polygon Top 0  -500.571 350  -489.109 407.621  -456.47 456.47  -407.621 489.109
+            -349.999 500.57  350 500.571  407.621 489.109  456.47 456.47
+            489.109 407.621  500.57 349.999  500.571 -350  489.109 -407.621
+            456.47 -456.47  407.621 -489.109  349.999 -500.57  -350 -500.571
+            -407.621 -489.109  -456.47 -456.47  -489.109 -407.621  -500.57 -349.999
+            -500.571 350))
+      (attach off)
+    )
+    (padstack Cust[T]Pad_1397.000000x1930.400000_1397.000000x1930.400000_5_um_2A385133AC22FC6C545E8CDC94B0B16A
+      (shape (polygon Top 0  -698.5 965.2  698.5 965.2  698.5 -965.2  -698.5 -965.2  -698.5 965.2))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2700.000000x2050.000000_um
+      (shape (rect Top -1350 -1025 1350 1025))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2800.000000x2800.000000_um
+      (shape (rect Top -1400 -1400 1400 1400))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3300.000000x250.000000_um
+      (shape (rect Top -1650 -125 1650 125))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3400.000000x1600.000000_um
+      (shape (rect Top -1700 -800 1700 800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x1350.000000_um
+      (shape (rect Top -200 -675 200 675))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600.000000x470.000000_um
+      (shape (rect Top -300 -235 300 235))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x300.000000_um
+      (shape (rect Top -400 -150 400 150))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_850.000000x200.000000_um
+      (shape (rect Top -425 -100 425 100))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_850.000000x296.800000_um
+      (shape (rect Top -425 -148.4 425 148.4))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_950.000000x600.000000_um
+      (shape (rect Top -475 -300 475 300))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x4600.000000_um
+      (shape (rect Top -500 -2300 500 2300))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1100.000000x1000.000000_um
+      (shape (rect Top -550 -500 550 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_160.000000x762.000000_um
+      (shape (rect Top -80 -381 80 381))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.000000x2209.800000_um
+      (shape (rect Top -800 -1104.9 800 1104.9))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.000000x1400.000000_um
+      (shape (rect Top -800 -700 800 700))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.000000x1800.000000_um
+      (shape (rect Top -800 -900 800 900))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1750.000000x600.000000_um
+      (shape (rect Top -875 -300 875 300))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1900.000000x1900.000000_um
+      (shape (rect Top -950 -950 950 950))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle Top 600))
+      (shape (circle Bottom 600))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins U2-2 U3-2 U5-2 U6-2 U7-2 U9-17 U9-18 U9-25 U10-3 U10-13 U11-GND@1 U11-GND@2
+        U11-GND@3 U11-GND@4 U11-GND@5 U11-GND@6 U11-GND@7 U11-GND@8 U11-GND@9 U12-GND
+        U12-SHIELD$1 U12-SHIELD$2 U12-SHIELD$3 U12-SHIELD$4 U13-4 U13-5 U13-6 U14-1
+        U15-6 U25-1 U26-1 U27-1 U1-2 U29-2 U30-2 U32-1 U34-2)
+    )
+    (net 3.3V
+      (pins U15-5 U18-2 U20-2 U21-2 U22-2)
+    )
+    (net 5V
+      (pins U2-1 U11-3 U11-4 U11-7 U13-1 U23-1 U33-2)
+    )
+    (net "Net-(IC1-Pad24)"
+      (pins U9-24)
+    )
+    (net "Net-(C4-Pad1)"
+      (pins U9-23 U1-1 U29-1 U30-1 U31-1 U33-1)
+    )
+    (net /REG
+      (pins U5-1 U9-22 U24-1)
+    )
+    (net "Net-(C3-Pad2)"
+      (pins U4-2 U9-21)
+    )
+    (net "Net-(C3-Pad1)"
+      (pins U4-1 U9-19 U9-20 U16-1 U31-2)
+    )
+    (net /VBAT_MAIN
+      (pins U3-1 U8-A U9-8 U9-15 U9-16 U11-9 U11-10 U16-2 U17-1)
+    )
+    (net /VBAT_CELL
+      (pins U7-1 U9-13 U9-14 U10-7 U28-1)
+    )
+    (net "Net-(IC1-Pad12)"
+      (pins U9-12)
+    )
+    (net "Net-(IC1-Pad11)"
+      (pins U9-11 U24-2 U27-2)
+    )
+    (net "Net-(IC1-Pad10)"
+      (pins U9-10 U26-2)
+    )
+    (net "Net-(IC1-Pad9)"
+      (pins U9-9 U25-2)
+    )
+    (net /CHG_INT
+      (pins U9-7 U15-2 U21-1)
+    )
+    (net /SDA
+      (pins U9-6 U10-1 U15-3 U20-1)
+    )
+    (net /SCL
+      (pins U9-5 U10-2 U15-4 U18-1)
+    )
+    (net "Net-(IC1-Pad4)"
+      (pins U9-4 U19-2)
+    )
+    (net "Net-(IC1-Pad3)"
+      (pins U9-3 U12-"D-")
+    )
+    (net "Net-(IC1-Pad2)"
+      (pins U9-2 U12-D+)
+    )
+    (net "Net-(IC1-Pad1)"
+      (pins U9-1 U12-VCC)
+    )
+    (net /FUEL_INT
+      (pins U10-12 U15-1 U22-1)
+    )
+    (net "Net-(IC2-Pad11)"
+      (pins U10-11)
+    )
+    (net "Net-(IC2-Pad10)"
+      (pins U10-10 U32-2)
+    )
+    (net "Net-(IC2-Pad9)"
+      (pins U10-9)
+    )
+    (net "Net-(IC2-Pad6)"
+      (pins U10-6 U10-8 U14-2 U28-2)
+    )
+    (net "Net-(C10-Pad1)"
+      (pins U10-5 U34-1)
+    )
+    (net "Net-(IC2-Pad4)"
+      (pins U10-4)
+    )
+    (net "Net-(J1-PadID)"
+      (pins U12-ID)
+    )
+    (net "Net-(J2-Pad3)"
+      (pins U13-3)
+    )
+    (net "Net-(J2-Pad2)"
+      (pins U13-2)
+    )
+    (net "Net-(J3-PadNC2)"
+      (pins U14-NC2)
+    )
+    (net "Net-(J3-PadNC1)"
+      (pins U14-NC1)
+    )
+    (net "Net-(D2-PadC)"
+      (pins U8-C U19-1)
+    )
+    (net "Net-(IC3-Pad8)"
+      (pins U11-8)
+    )
+    (net "Net-(C7-Pad1)"
+      (pins U6-1 U11-6)
+    )
+    (net "Net-(IC3-Pad5)"
+      (pins U11-5 U23-2)
+    )
+    (net "Net-(IC3-Pad1)"
+      (pins U11-1 U11-2 U17-2)
+    )
+    (class kicad_default /CHG_INT /FUEL_INT /REG /SCL /SDA /VBAT_CELL /VBAT_MAIN
+      3.3V 5V GND "Net-(C10-Pad1)" "Net-(C3-Pad1)" "Net-(C3-Pad2)" "Net-(C4-Pad1)"
+      "Net-(C7-Pad1)" "Net-(D2-PadC)" "Net-(IC1-Pad1)" "Net-(IC1-Pad10)" "Net-(IC1-Pad11)"
+      "Net-(IC1-Pad12)" "Net-(IC1-Pad2)" "Net-(IC1-Pad24)" "Net-(IC1-Pad3)"
+      "Net-(IC1-Pad4)" "Net-(IC1-Pad9)" "Net-(IC2-Pad10)" "Net-(IC2-Pad11)"
+      "Net-(IC2-Pad4)" "Net-(IC2-Pad6)" "Net-(IC2-Pad9)" "Net-(IC3-Pad1)"
+      "Net-(IC3-Pad5)" "Net-(IC3-Pad8)" "Net-(J1-PadID)" "Net-(J2-Pad2)" "Net-(J2-Pad3)"
+      "Net-(J3-PadNC1)" "Net-(J3-PadNC2)"
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

@@ -1,0 +1,20 @@
+2026-01-11 14:18:05.039 [main] INFO  Freerouting v1.9.0 (build-date: 2023-10-30)
+2026-01-11 14:18:05.117 [main] INFO  Settings were loaded from freerouting.json
+2026-01-11 14:18:06.148 [main] INFO  Opening 'DAC2020_bm06.unrouted.dsn'...
+2026-01-11 14:18:06.510 [ForkJoinPool.commonPool-worker-1] INFO  New version available: v2.1.0
+2026-01-11 14:18:30.178 [Thread-24] INFO  Starting auto-routing...
+2026-01-11 14:18:38.763 [Thread-24] WARN  There were only 19.40 changes in the last 20 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 14:18:46.212 [Thread-24] WARN  There were only 16.57 changes in the last 40 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 14:18:55.570 [Thread-24] WARN  There were only 15.65 changes in the last 60 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 14:19:03.137 [Thread-24] WARN  There were only 15.40 changes in the last 80 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 14:19:10.462 [Thread-24] WARN  There were only 15.21 changes in the last 100 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 14:19:17.999 [Thread-24] WARN  There were only 15.14 changes in the last 120 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 14:19:25.450 [Thread-24] WARN  There were only 15.11 changes in the last 140 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 14:19:35.056 [Thread-24] WARN  There were only 15.05 changes in the last 160 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 14:19:43.042 [Thread-24] WARN  There were only 15.05 changes in the last 180 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 14:19:51.118 [Thread-24] WARN  There were only 15.00 changes in the last 200 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 14:19:51.119 [Thread-24] WARN  There was so little change during the recent passes that autorouter will be stopped now.
+2026-01-11 14:19:51.119 [Thread-24] INFO  Auto-routing was completed in 1 minute(s) 20.94 seconds.
+2026-01-11 14:19:51.220 [Thread-24] INFO  Starting route optimization on 1 thread...
+2026-01-11 14:35:15.190 [Thread-24] INFO  Route optimization was completed in 15 minute(s) 23.97 seconds and it improved the design by ~52.27%.
+2026-01-11 14:35:15.200 [Thread-24] INFO  Saving 'DAC2020_bm06.ses'...

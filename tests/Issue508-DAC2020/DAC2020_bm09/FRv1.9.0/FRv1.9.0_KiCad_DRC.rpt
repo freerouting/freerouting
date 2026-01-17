@@ -1,0 +1,14 @@
+** Drc report for bm9.unrouted.kicad_pcb **
+** Created on 2026-01-11T18:01:26-0600 **
+
+** Found 0 DRC violations **
+
+** Found 1 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(129.7332 mm, 135.8949 mm): Track [Net-(X1-Pad1)] on Route2, length 1.9658 mm
+    @(132.3647 mm, 128.9749 mm): PTH pad 4 [Net-(X1-Pad1)] of U18
+
+** Found 0 Footprint errors **
+
+** End of Report **
