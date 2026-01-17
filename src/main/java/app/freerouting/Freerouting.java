@@ -7,7 +7,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.gui.DefaultExceptionHandler;
-import app.freerouting.gui.WindowWelcome;
+import app.freerouting.gui.GuiManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
@@ -460,9 +460,7 @@ public class Freerouting {
 
     // check if the user wants to see the help only
     if (globalSettings.show_help_option) {
-      // WindowsWelcome is used here because the command_line_help is in its resource
-      // file
-      TextManager ctm = new TextManager(WindowWelcome.class, globalSettings.currentLocale);
+      TextManager ctm = new TextManager(Freerouting.class, globalSettings.currentLocale);
       IO.print(ctm.getText("command_line_help"));
       System.exit(0);
     }
@@ -482,7 +480,7 @@ public class Freerouting {
 
     // Initialize the GUI
     if (globalSettings.guiSettings.isEnabled) {
-      if (!WindowWelcome.InitializeGUI(globalSettings)) {
+      if (!GuiManager.InitializeGUI(globalSettings)) {
         FRLogger.error("Couldn't initialize the GUI", null);
         globalSettings.guiSettings.isEnabled = false;
       } else {

@@ -70,7 +70,7 @@ public class BoardFrame extends WindowBase {
    * The windows above stored in an array
    */
   static final int SUBWINDOW_COUNT = 24;
-  static final String[] log_file_extensions = {"log"};
+  static final String[] log_file_extensions = { "log" };
   static final String GUI_DEFAULTS_FILE_NAME = "gui_defaults.par";
   static final String GUI_DEFAULTS_FILE_BACKUP_NAME = "gui_defaults.par.bak";
   static final FileFilter logfile_filter = new FileFilter(log_file_extensions);
@@ -135,7 +135,8 @@ public class BoardFrame extends WindowBase {
   private LocalDateTime intermediate_stage_file_last_saved_at;
 
   /**
-   * Creates a new BoardFrame that is the GUI element containing the Menu, Toolbar, Canvas and Status bar.
+   * Creates a new BoardFrame that is the GUI element containing the Menu,
+   * Toolbar, Canvas and Status bar.
    */
   public BoardFrame(RoutingJob p_design, GlobalSettings globalSettings) {
     this(p_design, new BoardObserverAdaptor(), globalSettings);
@@ -157,8 +158,7 @@ public class BoardFrame extends WindowBase {
     // Set the menu bar of this frame.
     this.menubar = new BoardMenuBar(this, globalSettings.featureFlags);
 
-    this.menubar.fileMenu.addOpenEventListener((File selectedFile) ->
-    {
+    this.menubar.fileMenu.addOpenEventListener((File selectedFile) -> {
       if (selectedFile == null) {
         // There was no file selected in the dialog, so we do nothing
         return;
@@ -178,7 +178,8 @@ public class BoardFrame extends WindowBase {
       }
 
       if (routingJob.input.getFile() != null) {
-        // We allow only one job in the queue for GUI sessions, so we need to remove any existing ones before adding a new one
+        // We allow only one job in the queue for GUI sessions, so we need to remove any
+        // existing ones before adding a new one
         String sessionId = SessionManager
             .getInstance()
             .getGuiSession().id.toString();
@@ -195,7 +196,8 @@ public class BoardFrame extends WindowBase {
         String oldInputDirectory = globalSettings.guiSettings.inputDirectory;
         globalSettings.guiSettings.inputDirectory = this.routingJob.input.getDirectoryPath();
 
-        // Save the global settings to the configuration file if the input directory was changed
+        // Save the global settings to the configuration file if the input directory was
+        // changed
         if (!oldInputDirectory.equals(globalSettings.guiSettings.inputDirectory)) {
           try {
             GlobalSettings.saveAsJson(globalSettings);
@@ -213,7 +215,8 @@ public class BoardFrame extends WindowBase {
       }
 
       // Load the file into the frame based on its recognised format
-      if ((board_panel != null) && (board_panel.board_handling != null) && (routingJob.input.format != FileFormat.UNKNOWN)) {
+      if ((board_panel != null) && (board_panel.board_handling != null)
+          && (routingJob.input.format != FileFormat.UNKNOWN)) {
         switch (routingJob.input.format) {
           case DSN:
             this.load(routingJob.input.getData(), true, null, routingJob);
@@ -231,8 +234,7 @@ public class BoardFrame extends WindowBase {
       }
     });
 
-    this.menubar.fileMenu.addSaveAsEventListener((File selectedFile) ->
-    {
+    this.menubar.fileMenu.addSaveAsEventListener((File selectedFile) -> {
       if (selectedFile == null) {
         // There was no file selected in the dialog, so we do nothing
         return;
@@ -247,10 +249,12 @@ public class BoardFrame extends WindowBase {
       switch (routingJob.output.format) {
         case SES:
           // Save the file as a Specctra SES file
-          boolean sesFileSaved = this.saveAsSpecctraSessionSes(this.routingJob.output.getFile(), this.routingJob.input.getFilename());
+          boolean sesFileSaved = this.saveAsSpecctraSessionSes(this.routingJob.output.getFile(),
+              this.routingJob.input.getFilename());
           // Save the rules file as well, if the user wants to
           if (sesFileSaved && WindowMessage.confirm(tm.getText("confirm_rules_save"), JOptionPane.NO_OPTION)) {
-            saveRulesAs(this.routingJob.getRulesFile(), this.routingJob.input.getFilename(), board_panel.board_handling);
+            saveRulesAs(this.routingJob.getRulesFile(), this.routingJob.input.getFilename(),
+                board_panel.board_handling);
           }
           FRAnalytics.buttonClicked("fileio_saveses", this.routingJob.getOutputFileDetails());
           break;
@@ -261,12 +265,13 @@ public class BoardFrame extends WindowBase {
           break;
         case FRB:
           // Save the file as a freerouting binary file
-          // TODO: it should be enough to save the binary data that we already have in the routingJob.output.data
+          // TODO: it should be enough to save the binary data that we already have in the
+          // routingJob.output.data
           this.saveAsBinary(this.routingJob.output.getFile());
           FRAnalytics.buttonClicked("fileio_savefrb", this.routingJob.getOutputFileDetails());
           break;
         case SCR:
-          //  Save the file as an Eagle script file
+          // Save the file as an Eagle script file
           this.saveAsEagleScriptScr(this.routingJob.getEagleScriptFile(), this.routingJob.input.getFilename());
           FRAnalytics.buttonClicked("fileio_savescr", "");
           break;
@@ -283,18 +288,19 @@ public class BoardFrame extends WindowBase {
     this.toolbar_panel = new BoardToolbar(this, !globalSettings.featureFlags.selectMode);
     this.add(this.toolbar_panel, BorderLayout.NORTH);
 
-    // Create and move the status bar one-liners (like current layer, cursor position, etc.) below the canvas.
+    // Create and move the status bar one-liners (like current layer, cursor
+    // position, etc.) below the canvas.
     this.message_panel = new BoardPanelStatus(this.locale);
     this.add(this.message_panel, BorderLayout.SOUTH);
 
-    this.message_panel.addErrorOrWarningLabelClickedListener(() ->
-    {
+    this.message_panel.addErrorOrWarningLabelClickedListener(() -> {
       LogEntries logEntries = FRLogger.getLogEntries();
 
       // Filter the log entries that are not errors or warnings
       LogEntries filteredLogEntries = new LogEntries();
       for (LogEntry entry : logEntries.getEntries(null, null)) {
-        if (entry.getType() == LogEntryType.Error || entry.getType() == LogEntryType.Warning || entry.getType() == LogEntryType.Info) {
+        if (entry.getType() == LogEntryType.Error || entry.getType() == LogEntryType.Warning
+            || entry.getType() == LogEntryType.Info) {
           filteredLogEntries.add(entry.getType(), entry.getMessage(), entry.getTopic());
         }
       }
@@ -306,8 +312,7 @@ public class BoardFrame extends WindowBase {
       scrollPane.setPreferredSize(new Dimension(1000, 600));
 
       // Append the new log entries to the text area
-      log_entry_added_listener = (LogEntry logEntry) ->
-      {
+      log_entry_added_listener = (LogEntry logEntry) -> {
         var type = logEntry.getType();
         if (type == LogEntryType.Error || type == LogEntryType.Warning || type == LogEntryType.Info) {
           textArea.append(logEntry + "\n");
@@ -315,7 +320,8 @@ public class BoardFrame extends WindowBase {
       };
       logEntries.addLogEntryAddedListener(log_entry_added_listener);
 
-      int messageType = filteredLogEntries.getErrorCount() > 0 ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
+      int messageType = filteredLogEntries.getErrorCount() > 0 ? JOptionPane.ERROR_MESSAGE
+          : JOptionPane.WARNING_MESSAGE;
 
       JOptionPane.showMessageDialog(null, scrollPane, tm.getText("logs_window_title"), messageType);
     });
@@ -324,8 +330,10 @@ public class BoardFrame extends WindowBase {
     this.select_toolbar = new BoardToolbarSelectedItem(this);
 
     // Screen messages are displayed in the status bar, below the canvas.
-    this.screen_messages = new ScreenMessages(this.message_panel.errorLabel, this.message_panel.warningLabel, this.message_panel.statusMessage, this.message_panel.additionalMessage,
-        this.message_panel.currentLayer, this.message_panel.currentBoardScore, this.message_panel.mousePosition, this.message_panel.unitLabel, this.locale);
+    this.screen_messages = new ScreenMessages(this.message_panel.errorLabel, this.message_panel.warningLabel,
+        this.message_panel.statusMessage, this.message_panel.additionalMessage,
+        this.message_panel.currentLayer, this.message_panel.currentBoardScore, this.message_panel.mousePosition,
+        this.message_panel.unitLabel, this.locale);
 
     // The scroll pane for the canvas of the routing board.
     this.scroll_pane = new JScrollPane();
@@ -338,8 +346,7 @@ public class BoardFrame extends WindowBase {
 
     this.addWindowListener(new WindowStateListener());
 
-    this.addBoardLoadedEventListener((RoutingBoard board) ->
-    {
+    this.addBoardLoadedEventListener((RoutingBoard board) -> {
       boolean isBoardEmpty = (board == null) || (board.components.count() == 0);
       this.menubar.fileMenu.file_save_as_menuitem.setEnabled(!isBoardEmpty);
       this.menubar.appereanceMenu.setEnabled(!isBoardEmpty);
@@ -371,7 +378,8 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Reads an existing board design from file. If isSpecctraDsn, the design is read from a specctra dsn file. Returns false, if the file is invalid.
+   * Reads an existing board design from file. If isSpecctraDsn, the design is
+   * read from a specctra dsn file. Returns false, if the file is invalid.
    */
   boolean load(InputStream inputStream, boolean isSpecctraDsn, JTextField p_message_field, RoutingJob routingJob) {
     Point viewport_position = null;
@@ -387,7 +395,8 @@ public class BoardFrame extends WindowBase {
     }
 
     if (isSpecctraDsn) {
-      read_result = board_panel.board_handling.loadFromSpecctraDsn(inputStream, this.board_observers, new ItemIdentificationNumberGenerator());
+      read_result = board_panel.board_handling.loadFromSpecctraDsn(inputStream, this.board_observers,
+          new ItemIdentificationNumberGenerator());
 
       // If the file was read successfully, initialize the windows
       if (read_result == DsnFile.ReadResult.OK) {
@@ -395,7 +404,8 @@ public class BoardFrame extends WindowBase {
         initialize_windows();
 
         // Raise an event to notify the observers that a new board has been loaded
-        this.boardLoadedEventListeners.forEach(listener -> listener.accept(board_panel.board_handling.get_routing_board()));
+        this.boardLoadedEventListeners
+            .forEach(listener -> listener.accept(board_panel.board_handling.get_routing_board()));
       }
     } else {
       ObjectInputStream object_stream;
@@ -410,7 +420,8 @@ public class BoardFrame extends WindowBase {
       }
 
       // Raise an event to notify the observers that a new board has been loaded
-      this.boardLoadedEventListeners.forEach(listener -> listener.accept(board_panel.board_handling.get_routing_board()));
+      this.boardLoadedEventListeners
+          .forEach(listener -> listener.accept(board_panel.board_handling.get_routing_board()));
 
       // Read and set the GUI settings from the binary file
       Point frame_location;
@@ -441,7 +452,8 @@ public class BoardFrame extends WindowBase {
     return update_gui(isSpecctraDsn, read_result, viewport_position, p_message_field);
   }
 
-  private boolean update_gui(boolean isSpecctraDsn, DsnFile.ReadResult read_result, Point viewport_position, JTextField p_message_field) {
+  private boolean update_gui(boolean isSpecctraDsn, DsnFile.ReadResult read_result, Point viewport_position,
+      JTextField p_message_field) {
     if (isSpecctraDsn) {
       if (read_result != DsnFile.ReadResult.OK) {
         if (p_message_field != null) {
@@ -509,7 +521,6 @@ public class BoardFrame extends WindowBase {
     }
   }
 
-
   @Deprecated
   public boolean save_intermediate_stage_file() {
     if ((intermediate_stage_file_last_saved_at != null) && (intermediate_stage_file_last_saved_at
@@ -532,8 +543,8 @@ public class BoardFrame extends WindowBase {
     return this.routingJob.snapshot.getFile() != null && this.routingJob.snapshot
         .getFile()
         .exists() && this.routingJob.snapshot
-        .getFile()
-        .canRead();
+            .getFile()
+            .canRead();
   }
 
   public LocalDateTime get_intermediate_stage_file_modification_time() {
@@ -544,7 +555,8 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Saves the board, GUI settings and subwindows to disk as a version-specific binary stream. Returns false, if the save failed.
+   * Saves the board, GUI settings and subwindows to disk as a version-specific
+   * binary stream. Returns false, if the save failed.
    */
   private boolean saveAsBinary(OutputStream outputStream) throws Exception {
     ObjectOutputStream objectStream;
@@ -572,7 +584,8 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Saves the board, GUI settings and subwindows to disk as a binary file. Returns false, if the save failed.
+   * Saves the board, GUI settings and subwindows to disk as a binary file.
+   * Returns false, if the save failed.
    */
   private boolean saveAsBinary(File outputFile) {
     if (outputFile == null) {
@@ -604,7 +617,9 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Saves the board, GUI settings and subwindows to disk as a binary file. Returns false, if the save failed. DEPRECATED: do not use this version-specific binary file format anymore, use SES, DSN,
+   * Saves the board, GUI settings and subwindows to disk as a binary file.
+   * Returns false, if the save failed. DEPRECATED: do not use this
+   * version-specific binary file format anymore, use SES, DSN,
    * RoutingJob-JSON format instead
    */
   @Deprecated
@@ -627,7 +642,8 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Writes a Specctra Session File (SES). Returns false, if write operation fails. DEPRECATED: use HeadlessBoardManager.saveAsSpecctraSessionSes instead
+   * Writes a Specctra Session File (SES). Returns false, if write operation
+   * fails. DEPRECATED: use HeadlessBoardManager.saveAsSpecctraSessionSes instead
    */
   @Deprecated
   public boolean saveAsSpecctraSessionSes(File outputFile, String designName) {
@@ -714,7 +730,6 @@ public class BoardFrame extends WindowBase {
     return fileChooser.getSelectedFile();
   }
 
-
   /**
    * Saves the board rule to file, so that they can be reused later on.
    */
@@ -785,7 +800,8 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Sets the toolbar buttons to the select. route and drag menu buttons of the main menu.
+   * Sets the toolbar buttons to the select. route and drag menu buttons of the
+   * main menu.
    */
   public void set_menu_toolbar() {
     getContentPane().remove(select_toolbar);
@@ -794,7 +810,8 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Calculates the absolute location of the board frame in his outmost parent frame.
+   * Calculates the absolute location of the board frame in his outmost parent
+   * frame.
    */
   Point absolute_panel_location() {
     int x = this.scroll_pane.getX();
@@ -975,7 +992,6 @@ public class BoardFrame extends WindowBase {
     this.toolbar_panel.setUnitSelectionPanelValue(unit);
   }
 
-
   /**
    * Restore the selected snapshot in the snapshot window.
    */
@@ -986,7 +1002,8 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Selects the snapshot, which is previous to the current selected snapshot. Thecurent selected snapshot will be no more selected.
+   * Selects the snapshot, which is previous to the current selected snapshot.
+   * Thecurent selected snapshot will be no more selected.
    */
   public void select_previous_snapshot() {
     if (this.snapshot_window != null) {
@@ -995,7 +1012,8 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Selects the snapshot, which is next to the current selected snapshot. Thecurent selected snapshot will be no more selected.
+   * Selects the snapshot, which is next to the current selected snapshot.
+   * Thecurent selected snapshot will be no more selected.
    */
   public void select_next_snapshot() {
     if (this.snapshot_window != null) {
@@ -1069,7 +1087,8 @@ public class BoardFrame extends WindowBase {
             tm.getText("confirm_exit_yes"),
             tm.getText("confirm_exit_no")
         };
-        JOptionPane optionPane = new JOptionPane(tm.getText("confirm_cancel"), JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION, null, options, options[1] // Default to "No"
+        JOptionPane optionPane = new JOptionPane(tm.getText("confirm_cancel"), JOptionPane.WARNING_MESSAGE,
+            JOptionPane.YES_NO_OPTION, null, options, options[1] // Default to "No"
         );
         JDialog dialog = optionPane.createDialog(null, "Warning");
         dialog.setVisible(true);
@@ -1084,12 +1103,13 @@ public class BoardFrame extends WindowBase {
       }
 
       try {
-        WindowWelcome.saveSettings();
+        GuiManager.saveSettings();
       } catch (IOException e) {
         FRLogger.error("Error saving settings to the freerouting.json file.", e);
       }
 
-      // If we started the GUI, we must shut down both the GUI and the API (if it's running)
+      // If we started the GUI, we must shut down both the GUI and the API (if it's
+      // running)
       Freerouting.globalSettings.guiSettings.isRunning = false;
       Freerouting.globalSettings.apiServerSettings.isRunning = false;
     }
