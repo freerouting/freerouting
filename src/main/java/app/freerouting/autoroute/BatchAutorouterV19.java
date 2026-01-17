@@ -67,7 +67,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
      * needs.
      */
     public BatchAutorouterV19(RoutingJob job) {
-        this(job.thread, job.board, job.routerSettings, !job.routerSettings.getRunFanout(), true,
+        this(job.thread, job.board, job.routerSettings, true, true,
                 job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
         this.job = job;
     }

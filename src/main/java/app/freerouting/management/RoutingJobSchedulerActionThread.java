@@ -4,7 +4,7 @@ import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.autoroute.BatchAutorouter;
 import app.freerouting.autoroute.BatchAutorouterV19;
-import app.freerouting.autoroute.BatchFanout;
+
 import app.freerouting.autoroute.BatchOptimizer;
 import app.freerouting.autoroute.NamedAlgorithm;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
@@ -91,21 +91,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       }
     }).start();
 
-    // start the fanout, routing, optimizer task(s) if needed
-    if (job.routerSettings.getRunFanout()) {
-      job.stage = RoutingStage.FANOUT;
-      // start the fanout task
-      BatchFanout fanout = new BatchFanout(job);
-      fanout.addBoardUpdatedEventListener(new BoardUpdatedEventListener() {
-        @Override
-        public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-          setJobOutputToSpecctraSes(job);
-        }
-      });
-      fanout.runBatchLoop();
-      job.stage = RoutingStage.IDLE;
-    }
-
+    // start the routing task if needed
     if (job.routerSettings.getRunRouter()) {
       job.stage = RoutingStage.ROUTING;
 

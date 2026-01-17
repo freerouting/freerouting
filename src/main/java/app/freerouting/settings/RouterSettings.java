@@ -39,8 +39,7 @@ public class RouterSettings implements Serializable {
    */
   @SerializedName("automatic_neckdown")
   public boolean automatic_neckdown = true;
-  @SerializedName("fanout")
-  public RouterFanoutSettings fanout = new RouterFanoutSettings();
+
   @SerializedName("optimizer")
   public RouterOptimizerSettings optimizer = new RouterOptimizerSettings();
   @SerializedName("scoring")
@@ -155,7 +154,7 @@ public class RouterSettings implements Serializable {
         scoring.preferredDirectionTraceCost.length);
     System.arraycopy(this.scoring.undesiredDirectionTraceCost, 0, result.scoring.undesiredDirectionTraceCost, 0,
         scoring.undesiredDirectionTraceCost.length);
-    result.fanout.enabled = this.fanout.enabled;
+
     result.enabled = this.enabled;
     result.optimizer.enabled = this.optimizer.enabled;
     result.vias_allowed = this.vias_allowed;
@@ -172,14 +171,6 @@ public class RouterSettings implements Serializable {
 
   public void set_start_ripup_costs(int p_value) {
     scoring.start_ripup_costs = Math.max(p_value, 1);
-  }
-
-  public boolean getRunFanout() {
-    return fanout.enabled;
-  }
-
-  public void setRunFanout(boolean p_value) {
-    fanout.enabled = p_value;
   }
 
   public boolean getRunRouter() {

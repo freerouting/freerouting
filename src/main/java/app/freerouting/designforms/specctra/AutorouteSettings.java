@@ -60,7 +60,6 @@ public class AutorouteSettings {
         }
       }
     }
-    result.setRunFanout(with_fanout);
     result.setRunRouter(with_autoroute);
     result.setRunOptimizer(with_postroute);
     return result;
@@ -143,13 +142,6 @@ public class AutorouteSettings {
       app.freerouting.board.LayerStructure p_layer_structure, IdentifierType p_identifier_type) throws IOException {
     p_file.start_scope();
     p_file.write("autoroute_settings");
-    p_file.new_line();
-    p_file.write("(fanout ");
-    if (p_settings.getRunFanout()) {
-      p_file.write("on)");
-    } else {
-      p_file.write("off)");
-    }
     p_file.new_line();
     p_file.write("(autoroute ");
     if (p_settings.getRunRouter()) {

@@ -4,7 +4,7 @@ import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.autoroute.BatchAutorouter;
 import app.freerouting.autoroute.BatchAutorouterV19;
-import app.freerouting.autoroute.BatchFanout;
+
 import app.freerouting.autoroute.BatchOptimizer;
 import app.freerouting.autoroute.BatchOptimizerMultiThreaded;
 import app.freerouting.autoroute.NamedAlgorithm;
@@ -233,26 +233,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
 
       String start_message = tm.getText("batch_autorouter") + " " + tm.getText("stop_message");
       boardManager.screen_messages.set_status_message(start_message);
-
-      // Let's run the fanout if it's enabled (fanout always runs first, before any
-      // passes)
-      boolean fanout_first = boardManager.get_settings().autoroute_settings.getRunFanout();
-      if (fanout_first) {
-        BatchFanout fanout = new BatchFanout(routingJob);
-        fanout.addTaskStateChangedEventListener(new TaskStateChangedEventListener() {
-          @Override
-          public void onTaskStateChangedEvent(TaskStateChangedEvent event) {
-            boardManager.screen_messages.set_batch_fanout_info(event.getPassNumber(), 0);
-          }
-        });
-        fanout.addBoardUpdatedEventListener(new BoardUpdatedEventListener() {
-          @Override
-          public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-            boardManager.repaint();
-          }
-        });
-        fanout.runBatchLoop();
-      }
 
       // Let's run the autorouter
       if (boardManager.get_settings().autoroute_settings.getRunRouter() && !this.is_stop_auto_router_requested()) {
