@@ -31,7 +31,7 @@ public class DrcCoordinateTest {
     @Test
     void test_DrcCoordinates_AreInCorrectRange() {
         // Create a routing job with a DSN file that has known coordinates
-        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unrouted_nets.dsn");
 
         assertNotNull(job, "Job should not be null");
         assertNotNull(job.board, "Board should be loaded");

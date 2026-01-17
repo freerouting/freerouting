@@ -52,9 +52,9 @@ public class Issue575Test extends TestBasedOnAnIssue {
   }
 
   @Test
-  public void test_Issue_575_7_unconnected_items() {
+  public void test_Issue_575_7_unrouted_nets() {
     // Get a routing job
-    job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+    job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unrouted_nets.dsn");
 
     // Configure the router settings
     RouterSettings testSettings = job.routerSettings;

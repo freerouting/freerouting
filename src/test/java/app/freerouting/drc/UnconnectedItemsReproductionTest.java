@@ -8,11 +8,11 @@ import app.freerouting.Freerouting;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.Session;
-import app.freerouting.board.SearchTreeObject;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.gui.FileFormat;
@@ -36,7 +36,7 @@ public class UnconnectedItemsReproductionTest {
     @Test
     void test_Connectivity_Of_Overlapping_Traces() {
         // Load the problematic board
-        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unrouted_nets.dsn");
         assertNotNull(job, "Job should not be null");
         assertNotNull(job.board, "Board should be loaded");
 
@@ -85,7 +85,7 @@ public class UnconnectedItemsReproductionTest {
     @Test
     void test_Connectivity_Of_Via_2522() {
         // Load the problematic board
-        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unrouted_nets.dsn");
         assertNotNull(job, "Job should not be null");
         assertNotNull(job.board, "Board should be loaded");
 
@@ -115,7 +115,7 @@ public class UnconnectedItemsReproductionTest {
     @Test
     void test_Connectivity_Of_Trace_2576() {
         // Load the problematic board
-        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unrouted_nets.dsn");
         assertNotNull(job, "Job should not be null");
         assertNotNull(job.board, "Board should be loaded");
 
