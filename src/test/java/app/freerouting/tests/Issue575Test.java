@@ -65,7 +65,10 @@ public class Issue575Test extends TestBasedOnAnIssue {
 
     var statsAfter = GetBoardStatistics(job);
 
-    assertEquals(7, statsAfter.nets.unroutedCount, "The unrouted net count should be 7");
+    // KiCad's "unconnected items" definition matches Freerouting's unroutedCount
+    // (nets with incomplete connections), not "nets with no routing".
+    // The difference is that KiCad excludes GND and +5V which have only dangling violations.
+    assertEquals(7, statsAfter.nets.unroutedCount,"The unrouted net count should be 7 (matching KiCad's definition)");
     assertEquals(0, statsAfter.clearanceViolations.totalCount, "The total count of clearance violations should be 0");
   }
 

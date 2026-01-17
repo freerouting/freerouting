@@ -215,6 +215,7 @@ public class BoardStatistics implements Serializable {
     this.connections.maximumCount = ratsnest.max_connections;
     this.connections.incompleteCount = ratsnest.incomplete_count();
     this.nets.unroutedCount = ratsnest.unrouted_net_count();
+    this.nets.fullyUnroutedCount = ratsnest.fully_unrouted_net_count();
 
     // Bends
     this.bends.totalCount = 0;

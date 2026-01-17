@@ -112,6 +112,22 @@ public class RatsNest {
     return result;
   }
 
+  /**
+   * Returns the number of nets that are fully unrouted (have no routing at all).
+   * This differs from unrouted_net_count() which includes partially routed nets.
+   * A net is considered "fully unrouted" if it has incomplete connections AND
+   * has no traces connecting any of its items.
+   */
+  public int fully_unrouted_net_count() {
+    int result = 0;
+    for (int i = 0; i < net_incompletes.length; i++) {
+      if (net_incompletes[i].is_fully_unrouted()) {
+        result++;
+      }
+    }
+    return result;
+  }
+
   public int incomplete_count(int p_net_no) {
     if (p_net_no <= 0 || p_net_no > net_incompletes.length) {
       return 0;

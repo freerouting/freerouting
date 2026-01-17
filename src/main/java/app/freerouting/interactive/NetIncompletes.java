@@ -41,6 +41,12 @@ public class NetIncompletes {
    * has no length restrictions
    */
   private double length_violation = 0;
+  /**
+   * True if the net has any traces (routing), false if it has only pins/pads with
+   * no connections.
+   * Used to distinguish fully unrouted nets from partially routed nets.
+   */
+  private boolean has_any_traces = false;
 
   /**
    * Creates a new instance of NetIncompletes
@@ -94,6 +100,17 @@ public class NetIncompletes {
     NetItem[] net_items = calculate_net_items(filtered_items);
     if (net_items.length <= 1) {
       return;
+    }
+
+    // Determine if this net is fully unrouted by checking if all items are isolated
+    // A net is fully unrouted if every item is in its own connected set (size 1)
+    this.has_any_traces = false;
+    for (NetItem net_item : net_items) {
+      if (net_item.connected_set.size() > 1) {
+        // This item is connected to at least one other item
+        this.has_any_traces = true;
+        break;
+      }
     }
 
     // create a Delaunay Triangulation for the net_items
@@ -165,6 +182,20 @@ public class NetIncompletes {
    */
   public int count() {
     return incompletes.size();
+  }
+
+  /**
+   * Returns true if this net is fully unrouted (has incomplete connections but no
+   * traces).
+   * This is used to distinguish between:
+   * - Fully unrouted nets: pins/pads with no routing at all (KiCad's definition)
+   * - Partially routed nets: has some routing but with disconnected segments
+   */
+  public boolean is_fully_unrouted() {
+    // A net is fully unrouted if it has incompletes AND has no traces
+    // We determine "has no traces" by checking if has_any_traces is false
+    // has_any_traces is set to true if any connected set has size > 1
+    return !this.incompletes.isEmpty() && !this.has_any_traces;
   }
 
   /**
