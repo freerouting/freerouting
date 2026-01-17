@@ -70,9 +70,7 @@ public class Issue555Test extends TestBasedOnAnIssue {
     }
 
     // Check if we could finish within 1 minute
-    assertTrue(Duration
-        .between(job.startedAt, job.finishedAt)
-        .compareTo(Duration.ofMinutes(1)) < 0,
+    assertTrue(job.getDuration().compareTo(Duration.ofMinutes(1)) < 0,
         "Routing of the reference board 'Issue555-CNH_Functional_Tester_1.dsn' should complete within 1 minute.");
 
     // Check if we could finish within 40 passes
