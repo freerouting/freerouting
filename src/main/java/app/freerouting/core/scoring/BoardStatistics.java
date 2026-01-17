@@ -73,12 +73,14 @@ public class BoardStatistics implements Serializable {
   }
 
   /**
-   * Creates a new BoardFileStatistics object from a RoutingBoard object and defines the preferred unit for the statistics.
+   * Creates a new BoardFileStatistics object from a RoutingBoard object and
+   * defines the preferred unit for the statistics.
    */
   public BoardStatistics(BasicBoard board, Unit unit) {
     var bb = board.get_bounding_box();
 
-    this.host = board.communication.specctra_parser_info.host_cad + "," + board.communication.specctra_parser_info.host_version;
+    this.host = board.communication.specctra_parser_info.host_cad + ","
+        + board.communication.specctra_parser_info.host_version;
     if ((host == null) || host.isEmpty()) {
       this.host = "Freerouting," + Constants.FREEROUTING_VERSION;
     }
@@ -87,8 +89,10 @@ public class BoardStatistics implements Serializable {
     this.unit = board.communication.unit.toString();
 
     // Board
-    this.board.boundingBox = new Rectangle2D.Float((float) bb.ur.x, (float) board.get_bounding_box().ur.y, (float) board.get_bounding_box().ll.x, (float) board.get_bounding_box().ll.y);
-    this.board.size = new Rectangle2D.Float(0, 0, Math.abs((float) board.get_bounding_box().ll.x - (float) board.get_bounding_box().ur.x),
+    this.board.boundingBox = new Rectangle2D.Float((float) bb.ur.x, (float) board.get_bounding_box().ur.y,
+        (float) board.get_bounding_box().ll.x, (float) board.get_bounding_box().ll.y);
+    this.board.size = new Rectangle2D.Float(0, 0,
+        Math.abs((float) board.get_bounding_box().ll.x - (float) board.get_bounding_box().ur.x),
         Math.abs((float) board.get_bounding_box().ll.y - (float) board.get_bounding_box().ur.y));
 
     // Layers
@@ -105,7 +109,7 @@ public class BoardStatistics implements Serializable {
     this.items.componentOutlineCount = 0;
     this.items.otherCount = 0;
     Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
-    for (; ; ) {
+    for (;;) {
       Item curr_item = (Item) board.item_list.read_object(it);
       if (curr_item == null) {
         break;
@@ -187,7 +191,7 @@ public class BoardStatistics implements Serializable {
     this.traces.totalWeightedLength = 0.0f;
     int default_clearance_class = BoardRules.default_clearance_class();
     Iterator<UndoableObjects.UndoableObjectNode> it2 = board.item_list.start_read_object();
-    for (; ; ) {
+    for (;;) {
       UndoableObjects.Storable curr_item = board.item_list.read_object(it2);
       if (curr_item == null) {
         break;
@@ -195,8 +199,8 @@ public class BoardStatistics implements Serializable {
       if (curr_item instanceof Trace curr_trace) {
         FixedState fixed_state = curr_trace.get_fixed_state();
         if (fixed_state == FixedState.NOT_FIXED || fixed_state == FixedState.SHOVE_FIXED) {
-          double weighted_trace_length =
-              curr_trace.get_length() * (curr_trace.get_half_width() + board.clearance_value(curr_trace.clearance_class_no(), default_clearance_class, curr_trace.get_layer()));
+          double weighted_trace_length = curr_trace.get_length() * (curr_trace.get_half_width() + board
+              .clearance_value(curr_trace.clearance_class_no(), default_clearance_class, curr_trace.get_layer()));
           if (fixed_state == FixedState.SHOVE_FIXED) {
             // to produce less violations with pin exit directions.
             weighted_trace_length /= 2;
@@ -210,6 +214,7 @@ public class BoardStatistics implements Serializable {
     var ratsnest = new RatsNest(board);
     this.connections.maximumCount = ratsnest.max_connections;
     this.connections.incompleteCount = ratsnest.incomplete_count();
+    this.nets.unroutedCount = ratsnest.unrouted_net_count();
 
     // Bends
     this.bends.totalCount = 0;
@@ -222,7 +227,8 @@ public class BoardStatistics implements Serializable {
         Polyline polyline = polylineTrace.polyline();
         int cornerCount = polyline.corner_count();
 
-        // We have (cornerCount - 2) internal corners, each representing a potential bend
+        // We have (cornerCount - 2) internal corners, each representing a potential
+        // bend
         if (cornerCount >= 3) {
           // Count all internal corners as bends
           int bendsInTrace = cornerCount - 2;
@@ -299,9 +305,12 @@ public class BoardStatistics implements Serializable {
       this.unit = unit.toString();
 
       // Board
-      this.board.boundingBox = new Rectangle2D.Float((float) Unit.scale(this.board.boundingBox.x, fromUnit, toUnit), (float) Unit.scale(this.board.boundingBox.y, fromUnit, toUnit),
-          (float) Unit.scale(this.board.boundingBox.width, fromUnit, toUnit), (float) Unit.scale(this.board.boundingBox.height, fromUnit, toUnit));
-      this.board.size = new Rectangle2D.Float(0, 0, (float) Unit.scale(this.board.size.width, fromUnit, toUnit), (float) Unit.scale(this.board.size.height, fromUnit, toUnit));
+      this.board.boundingBox = new Rectangle2D.Float((float) Unit.scale(this.board.boundingBox.x, fromUnit, toUnit),
+          (float) Unit.scale(this.board.boundingBox.y, fromUnit, toUnit),
+          (float) Unit.scale(this.board.boundingBox.width, fromUnit, toUnit),
+          (float) Unit.scale(this.board.boundingBox.height, fromUnit, toUnit));
+      this.board.size = new Rectangle2D.Float(0, 0, (float) Unit.scale(this.board.size.width, fromUnit, toUnit),
+          (float) Unit.scale(this.board.size.height, fromUnit, toUnit));
 
       // Traces
       this.traces.totalLength = (float) Unit.scale(this.traces.totalLength, fromUnit, toUnit);
@@ -314,10 +323,13 @@ public class BoardStatistics implements Serializable {
   }
 
   /**
-   * Creates a new BoardFileStatistics object from a file. This method should be used only if the board object is not available, because the board object based method is more detailed.
+   * Creates a new BoardFileStatistics object from a file. This method should be
+   * used only if the board object is not available, because the board object
+   * based method is more detailed.
    *
    * @param data   Binary data of the file.
-   * @param format Format of the file. Only SES and DSN formats are supported at the moment.
+   * @param format Format of the file. Only SES and DSN formats are supported at
+   *               the moment.
    */
   public BoardStatistics(byte[] data, FileFormat format) {
     // set the statistical data based on the file content
@@ -326,8 +338,10 @@ public class BoardStatistics implements Serializable {
       String content = new String(data, StandardCharsets.UTF_8);
 
       if (format == FileFormat.SES) {
-        // to get the affected layers, we need to all "(path {layer}" occurrences, and count the different layers
-        // find all occurrences of "(path " substring, and collect these lines in to a list
+        // to get the affected layers, we need to all "(path {layer}" occurrences, and
+        // count the different layers
+        // find all occurrences of "(path " substring, and collect these lines in to a
+        // list
         String[] lines = content.split("\\(path ");
 
         // create a list to store the layer names
@@ -405,13 +419,16 @@ public class BoardStatistics implements Serializable {
   }
 
   /**
-   * Calculates the score/cost of the board based on the given scoring settings. Higher score means better board.
+   * Calculates the score/cost of the board based on the given scoring settings.
+   * Higher score means better board.
    */
   public float calculateScore(RouterScoringSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
-    float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
+    float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
+        + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
         + this.bends.totalCount * scoringSettings.bendPenalty;
-    float costs = (float) (this.traces.totalLength * scoringSettings.defaultPreferredDirectionTraceCost + this.vias.totalCount * scoringSettings.via_costs);
+    float costs = (float) (this.traces.totalLength * scoringSettings.defaultPreferredDirectionTraceCost
+        + this.vias.totalCount * scoringSettings.via_costs);
 
     return maximumScore - penalties - costs;
   }

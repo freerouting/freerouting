@@ -12,4 +12,6 @@ public class BoardStatisticsNets implements Serializable {
   public Integer totalCount;
   @SerializedName("class_count")
   public Integer classCount;
+  @SerializedName("unrouted_count")
+  public Integer unroutedCount;
 }

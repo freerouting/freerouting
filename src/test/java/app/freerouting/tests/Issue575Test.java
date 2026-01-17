@@ -52,7 +52,6 @@ public class Issue575Test extends TestBasedOnAnIssue {
   }
 
   @Test
-  @Disabled("Temporary disabled: KiCad and Freerouting DRC don't agree.")
   public void test_Issue_575_7_unconnected_items() {
     // Get a routing job
     job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
@@ -66,7 +65,7 @@ public class Issue575Test extends TestBasedOnAnIssue {
 
     var statsAfter = GetBoardStatistics(job);
 
-    assertEquals(7, statsAfter.connections.incompleteCount, "The incomplete count should be 7");
+    assertEquals(7, statsAfter.nets.unroutedCount, "The unrouted net count should be 7");
     assertEquals(0, statsAfter.clearanceViolations.totalCount, "The total count of clearance violations should be 0");
   }
 

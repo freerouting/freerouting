@@ -41,7 +41,7 @@ public class RatsNest {
       net_item_lists.add(new LinkedList<>());
     }
     Iterator<UndoableObjects.UndoableObjectNode> it = p_board.item_list.start_read_object();
-    for (; ; ) {
+    for (;;) {
       Item curr_item = (Item) p_board.item_list.read_object(it);
       if (curr_item == null) {
         break;
@@ -77,23 +77,37 @@ public class RatsNest {
   }
 
   /**
-   * Recalculates the incomplete connections for the input net with the input item list.
+   * Recalculates the incomplete connections for the input net with the input item
+   * list.
    */
   public void recalculate(int p_net_no, Collection<Item> p_item_list, BasicBoard p_board) {
     if (p_net_no >= 1 && p_net_no <= net_incompletes.length) {
-      // copy p_item_list, because it will be changed inside the constructor of NetIncompletes
+      // copy p_item_list, because it will be changed inside the constructor of
+      // NetIncompletes
       Collection<Item> item_list = new LinkedList<>(p_item_list);
       net_incompletes[p_net_no - 1] = new NetIncompletes(p_net_no, item_list, p_board);
     }
   }
 
   /**
-   * Returns the number of incomplete connections (airlines) of the ratsnest. This values might be higher than the number of nets, if the nets have multiple unrouted connections.
+   * Returns the number of incomplete connections (airlines) of the ratsnest. This
+   * values might be higher than the number of nets, if the nets have multiple
+   * unrouted connections.
    */
   public int incomplete_count() {
     int result = 0;
     for (int i = 0; i < net_incompletes.length; i++) {
       result += net_incompletes[i].count();
+    }
+    return result;
+  }
+
+  public int unrouted_net_count() {
+    int result = 0;
+    for (int i = 0; i < net_incompletes.length; i++) {
+      if (net_incompletes[i].count() > 0) {
+        result++;
+      }
     }
     return result;
   }
@@ -116,7 +130,9 @@ public class RatsNest {
   }
 
   /**
-   * Returns the length of the violation of the length restriction of the net with number p_net_no, {@literal >} 0, if the cumulative trace length is too big, {@literal <} 0, if the trace length is
+   * Returns the length of the violation of the length restriction of the net with
+   * number p_net_no, {@literal >} 0, if the cumulative trace length is too big,
+   * {@literal <} 0, if the trace length is
    * too small, 0, if the trace length is ok or the net has no length restrictions
    */
   public double get_length_violation(int p_net_no) {
@@ -151,7 +167,8 @@ public class RatsNest {
   }
 
   /**
-   * Recalculate the length matching violations. Return false, if the length violations have not changed.
+   * Recalculate the length matching violations. Return false, if the length
+   * violations have not changed.
    */
   public boolean recalculate_length_violations() {
     boolean result = false;
