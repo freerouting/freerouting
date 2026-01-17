@@ -1286,18 +1286,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * Fanouts the selected items.
-   */
-  public void fanout_selected_items() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
-      return;
-    }
-    board.generate_snapshot();
-    this.interactive_action_thread = InteractiveActionThread.get_fanout_instance(this, routingJob);
-    this.interactive_action_thread.start();
-  }
-
-  /**
    * Start the auto-router and route optimizer on the whole board
    */
   public InteractiveActionThread start_autorouter_and_route_optimizer(RoutingJob job) {

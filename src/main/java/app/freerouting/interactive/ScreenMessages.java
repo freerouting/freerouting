@@ -10,7 +10,8 @@ import java.util.Locale;
 import javax.swing.JLabel;
 
 /**
- * Generate language-specific texts for fields at the bottom of the screen, below the PCB frame.
+ * Generate language-specific texts for fields at the bottom of the screen,
+ * below the PCB frame.
  */
 public class ScreenMessages {
 
@@ -36,7 +37,8 @@ public class ScreenMessages {
   /**
    * Creates a new instance of ScreenMessages
    */
-  public ScreenMessages(JLabel errorLabel, JLabel warningLabel, JLabel p_status_field, JLabel p_add_field, JLabel p_layer_field, JLabel p_score_field, JLabel p_mouse_position, JLabel p_unit_label,
+  public ScreenMessages(JLabel errorLabel, JLabel warningLabel, JLabel p_status_field, JLabel p_add_field,
+      JLabel p_layer_field, JLabel p_score_field, JLabel p_mouse_position, JLabel p_unit_label,
       Locale p_locale) {
 
     tm = new TextManager(this.getClass(), p_locale);
@@ -98,13 +100,6 @@ public class ScreenMessages {
     layer_field.setText(tm.getText("ripped") + " " + ripped + ", " + tm.getText("failed") + " " + failed);
   }
 
-  public void set_batch_fanout_info(int p_pass_no, int p_components_to_go) {
-    int components_to_go = p_components_to_go;
-    int pass_no = p_pass_no;
-    add_field.setText(tm.getText("fanout_pass") + " " + pass_no + ": ");
-    layer_field.setText(tm.getText("still") + " " + components_to_go + " " + tm.getText("components"));
-  }
-
   public void set_post_route_info(int p_via_count, double p_trace_length, Unit unit) {
     int via_count = p_via_count;
     add_field.setText(tm.getText("via_count") + " " + via_count);
@@ -133,7 +128,8 @@ public class ScreenMessages {
   }
 
   /**
-   * Clears the additional field, which is among others used to display the layer of the nearest target item.
+   * Clears the additional field, which is among others used to display the layer
+   * of the nearest target item.
    */
   public void clear_add_field() {
     if (!this.write_protected) {
@@ -155,13 +151,15 @@ public class ScreenMessages {
   }
 
   /**
-   * As long as write_protected is set to true, the set functions in this class will do nothing.
+   * As long as write_protected is set to true, the set functions in this class
+   * will do nothing.
    */
   public void set_write_protected(boolean p_value) {
     write_protected = p_value;
   }
 
   public void set_board_score(float score, int unrouted_count, int violation_count) {
-    score_field.setText(tm.getText("score", FRLogger.defaultFloatFormat.format(score), String.valueOf(unrouted_count), String.valueOf(violation_count)));
+    score_field.setText(tm.getText("score", FRLogger.defaultFloatFormat.format(score), String.valueOf(unrouted_count),
+        String.valueOf(violation_count)));
   }
 }

@@ -16,8 +16,7 @@ import java.util.List;
 /**
  * Used for running an interactive action in a separate thread, that can be
  * stopped by the user. This typically represents an action that is triggered by
- * the user on the GUI, such as autorouting,
- * fanout, etc.
+ * the user on the GUI, such as autorouting, etc.
  */
 public abstract class InteractiveActionThread extends StoppableThread {
 
@@ -80,10 +79,6 @@ public abstract class InteractiveActionThread extends StoppableThread {
     return routerThread;
   }
 
-  public static InteractiveActionThread get_fanout_instance(GuiBoardManager boardManager, RoutingJob job) {
-    return new FanoutThread(boardManager, job);
-  }
-
   public static InteractiveActionThread get_pull_tight_instance(GuiBoardManager boardManager, RoutingJob job) {
     return new PullTightThread(boardManager, job);
   }
@@ -119,22 +114,6 @@ public abstract class InteractiveActionThread extends StoppableThread {
         return;
       }
       InteractiveState return_state = ((SelectedItemState) boardManager.interactive_state).autoroute(this);
-      boardManager.set_interactive_state(return_state);
-    }
-  }
-
-  private static class FanoutThread extends InteractiveActionThread {
-
-    private FanoutThread(GuiBoardManager p_board_handling, RoutingJob job) {
-      super(p_board_handling, job);
-    }
-
-    @Override
-    protected void thread_action() {
-      if (!(boardManager.interactive_state instanceof SelectedItemState)) {
-        return;
-      }
-      InteractiveState return_state = ((SelectedItemState) boardManager.interactive_state).fanout(this);
       boardManager.set_interactive_state(return_state);
     }
   }
