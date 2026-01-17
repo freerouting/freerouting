@@ -15,6 +15,13 @@ tasks.register('javadocJar', Jar) {
     dependsOn javadoc
     archiveClassifier = 'javadoc'
     from javadoc.destinationDir
+    
+    // Only build when publishing or explicitly requested
+    onlyIf {
+        gradle.taskGraph.hasTask(':publish') || 
+        gradle.taskGraph.hasTask(':publishToMavenLocal') ||
+        gradle.taskGraph.hasTask(':javadocJar')
+    }
 }
 
 // create one jar for the source files
@@ -22,16 +29,15 @@ tasks.register('sourcesJar', Jar) {
     dependsOn classes
     archiveClassifier = 'sources'
     from sourceSets.main.allSource
+    
+    // Only build when publishing or explicitly requested
+    onlyIf {
+        gradle.taskGraph.hasTask(':publish') || 
+        gradle.taskGraph.hasTask(':publishToMavenLocal') ||
+        gradle.taskGraph.hasTask(':sourcesJar')
+    }
 }
 
-
-artifacts {
-    archives jar
-    archives javadocJar
-    archives sourcesJar
-
-    archives executableJar
-}
 
 // Define the POM configuration
 def pomConfig = {
@@ -72,9 +78,9 @@ tasks.register('verifyVersion') {
 publishing {
     publications {
         mavenCustom(MavenPublication) {
-            groupId publishing.groupId
-            artifactId publishing.artifactId
-            version publishing.versionId
+            groupId = publishing.groupId
+            artifactId = publishing.artifactId
+            version = publishing.versionId
             from components.java
             artifact sourcesJar
             artifact javadocJar
