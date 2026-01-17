@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -95,6 +96,16 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
   public void setCurrentPass(int currentPass) {
     this.currentPass = currentPass;
+  }
+
+  public Duration getDuration() {
+    if (startedAt == null) {
+      return null;
+    }
+    if (finishedAt != null) {
+      return Duration.between(startedAt, finishedAt);
+    }
+    return Duration.between(startedAt, Instant.now());
   }
 
   /**
