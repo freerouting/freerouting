@@ -76,8 +76,8 @@ public class Issue555Test extends TestBasedOnAnIssue {
         "Routing of the reference board 'Issue555-CNH_Functional_Tester_1.dsn' should complete within 1 minute.");
 
     // Check if we could finish within 40 passes
-    // assertTrue(job.routerSettings.get_pass_no() < 40, "..."); // verification no
-    // longer supported via settings
+    assertTrue(job.getCurrentPass() >= 1, "The routing job should have at least 1 pass.");
+    assertTrue(job.getCurrentPass() <= 40, "The routing job should stop after at most 40 passes.");
 
     // Check if we have at most 6 unrouted connections
     assertTrue(job.board.get_statistics().connections.incompleteCount <= 6,

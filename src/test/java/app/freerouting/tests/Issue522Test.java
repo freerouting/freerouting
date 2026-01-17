@@ -23,10 +23,8 @@ public class Issue522Test extends TestBasedOnAnIssue {
     // Run the job
     RunRoutingJob(job, testSettings);
 
-    // Note: Exact pass count verification is no longer supported via RouterSettings
-    // as pass tracking is internal to the router.
-    // We assume that if the job completes, the maxPasses setting was respected or
-    // the routing completed earlier.
+    // Verify that the maxPasses setting was respected
+    assertEquals(2, job.getCurrentPass(), "The routing job should stop after 2 passes.");
   }
 
   @AfterEach

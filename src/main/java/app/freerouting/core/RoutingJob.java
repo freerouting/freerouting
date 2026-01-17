@@ -86,6 +86,17 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public transient RoutingBoard board;
   public transient Instant timeoutAt;
 
+  @SerializedName("current_pass")
+  private int currentPass = 0;
+
+  public int getCurrentPass() {
+    return currentPass;
+  }
+
+  public void setCurrentPass(int currentPass) {
+    this.currentPass = currentPass;
+  }
+
   /**
    * We need a parameterless constructor for the serialization.
    */
@@ -101,7 +112,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   /**
-   * Creates a new instance of DesignFile and prepares the intermediate file handling.
+   * Creates a new instance of DesignFile and prepares the intermediate file
+   * handling.
    */
   public RoutingJob(UUID sessionId) {
     this();
@@ -109,10 +121,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     this.shortName = this.sessionId
         .toString()
         .substring(0, 6)
-        .toUpperCase() + "\\" + this.id
-        .toString()
-        .substring(0, 6)
-        .toUpperCase();
+        .toUpperCase() + "\\"
+        + this.id
+            .toString()
+            .substring(0, 6)
+            .toUpperCase();
 
   }
 
@@ -138,9 +151,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return fileChooser.getSelectedFile();
   }
 
-  public static boolean read_rules_file(String p_design_name, String p_parent_name, String rules_file_name, GuiBoardManager p_board_handling, String p_confirm_message) {
+  public static boolean read_rules_file(String p_design_name, String p_parent_name, String rules_file_name,
+      GuiBoardManager p_board_handling, String p_confirm_message) {
 
-    boolean dsn_file_generated_by_host = p_board_handling.get_routing_board().communication.specctra_parser_info.dsn_file_generated_by_host;
+    boolean dsn_file_generated_by_host = p_board_handling
+        .get_routing_board().communication.specctra_parser_info.dsn_file_generated_by_host;
 
     try {
       File rules_file = new File(p_parent_name, rules_file_name);
@@ -156,13 +171,15 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   public static FileFormat getFileFormat(byte[] content) {
-    // Open the file as a binary file and read the first 6 bytes to determine the file format
+    // Open the file as a binary file and read the first 6 bytes to determine the
+    // file format
     try (InputStream fileInputStream = new ByteArrayInputStream(content)) {
       byte[] buffer = new byte[6];
       int bytesRead = fileInputStream.read(buffer, 0, 6);
       if (bytesRead == 6) {
         // Check if the file is a binary file
-        if (buffer[0] == (byte) 0xAC && buffer[1] == (byte) 0xED && buffer[2] == (byte) 0x00 && buffer[3] == (byte) 0x05) {
+        if (buffer[0] == (byte) 0xAC && buffer[1] == (byte) 0xED && buffer[2] == (byte) 0x00
+            && buffer[3] == (byte) 0x05) {
           return FileFormat.FRB;
         }
 
@@ -176,19 +193,24 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         }
 
         // Check if the file is a DSN file (it starts with "(pcb" or "(PCB")
-        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x70 && buffer[2] == (byte) 0x63 && buffer[3] == (byte) 0x62) || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x50
-            && buffer[2] == (byte) 0x43 && buffer[3] == (byte) 0x42)) {
+        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x70 && buffer[2] == (byte) 0x63
+            && buffer[3] == (byte) 0x62)
+            || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x50
+                && buffer[2] == (byte) 0x43 && buffer[3] == (byte) 0x42)) {
           return FileFormat.DSN;
         }
 
         // Check if the file is a SES file (it starts with "(ses" or "(SES")
-        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x73 && buffer[2] == (byte) 0x65 && buffer[3] == (byte) 0x73) || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x53
-            && buffer[2] == (byte) 0x45 && buffer[3] == (byte) 0x53)) {
+        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x73 && buffer[2] == (byte) 0x65
+            && buffer[3] == (byte) 0x73)
+            || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x53
+                && buffer[2] == (byte) 0x45 && buffer[3] == (byte) 0x53)) {
           return FileFormat.SES;
         }
       }
     } catch (IOException _) {
-      // Ignore the exception, it can happen with the build-in template or if the user doesn't choose any file in the file dialog
+      // Ignore the exception, it can happen with the build-in template or if the user
+      // doesn't choose any file in the file dialog
     }
 
     return FileFormat.UNKNOWN;
@@ -231,7 +253,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     }
 
     if (crc32Checksum == 0) {
-      // We don't have a valid checksum, we can't generate the intermediate snapshot file
+      // We don't have a valid checksum, we can't generate the intermediate snapshot
+      // file
       return null;
     }
 
@@ -241,14 +264,16 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         .resolve("snapshots");
 
     try {
-      // Make sure that we have the directory structure in place, and create it if it doesn't exist
+      // Make sure that we have the directory structure in place, and create it if it
+      // doesn't exist
       Files.createDirectories(snapshotsFolderPath);
     } catch (IOException e) {
       FRLogger.error("Failed to create the snapshots directory.", e);
     }
 
     // Set the intermediate snapshot file name based on the checksum
-    String intermediate_snapshot_file_name = "snapshot-" + Long.toHexString(crc32Checksum) + "." + RoutingJob.BINARY_FILE_EXTENSION;
+    String intermediate_snapshot_file_name = "snapshot-" + Long.toHexString(crc32Checksum) + "."
+        + RoutingJob.BINARY_FILE_EXTENSION;
     return snapshotsFolderPath + File.separator + intermediate_snapshot_file_name;
   }
 
@@ -308,7 +333,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
       if (extension.equals(newFileExtension)) {
         return filePath.toString();
       }
-      String newFilename = originalFilename.substring(0, originalFilename.length() - extension.length() - 1) + "." + newFileExtension;
+      String newFilename = originalFilename.substring(0, originalFilename.length() - extension.length() - 1) + "."
+          + newFileExtension;
 
       return Path
           .of(originalFullPathWithoutFilename, newFilename)
@@ -366,7 +392,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   public void setInput(File inputFile) throws IOException {
-    // Read the file contents into a byte array and initialize the RoutingJob object with it
+    // Read the file contents into a byte array and initialize the RoutingJob object
+    // with it
     FileInputStream fileInputStream = new FileInputStream(inputFile);
     byte[] content = fileInputStream.readAllBytes();
 
@@ -401,7 +428,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   public boolean setSettings(RouterSettings settings) {
-    // Update the router settings that are defined in the settings parameter. All other settings should remain the same.
+    // Update the router settings that are defined in the settings parameter. All
+    // other settings should remain the same.
     boolean wereSettingsChanged = this.routerSettings.applyNewValuesFrom(settings) > 0;
     fireSettingsUpdatedEvent();
 

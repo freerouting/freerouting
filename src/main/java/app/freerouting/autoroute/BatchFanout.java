@@ -26,7 +26,6 @@ public class BatchFanout extends NamedAlgorithm {
     this.job = routingJob;
   }
 
-
   private BatchFanout(StoppableThread p_thread, RoutingBoard board, RouterSettings settings) {
     super(p_thread, board, settings);
 
@@ -44,22 +43,25 @@ public class BatchFanout extends NamedAlgorithm {
   public void runBatchLoop() {
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
-    int curr_pass_no;
-    for (curr_pass_no = 0; curr_pass_no < this.settings.maxPasses; curr_pass_no++) {
-      String current_board_hash = this.board.get_hash();
-      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
+    int passIndex;
+    for (passIndex = 0; passIndex < this.settings.maxPasses; passIndex++) {
+      String currentBoardHash = this.board.get_hash();
+      job.setCurrentPass(passIndex + 1);
+      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, passIndex, currentBoardHash));
 
-      int routed_count = this.fanout_pass(curr_pass_no);
-      if (routed_count == 0) {
+      int routedCount = this.fanout_pass(passIndex);
+      if (routedCount == 0) {
         break;
       }
     }
 
-    this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, curr_pass_no, this.board.get_hash()));
+    this.fireTaskStateChangedEvent(
+        new TaskStateChangedEvent(this, TaskState.FINISHED, passIndex, this.board.get_hash()));
   }
 
   /**
-   * Routes a fanout pass and returns the number of new fanouted SMD-pins in this pass.
+   * Routes a fanout pass and returns the number of new fanouted SMD-pins in this
+   * pass.
    */
   private int fanout_pass(int p_pass_no) {
     int components_to_go = this.sorted_components.size();
@@ -72,7 +74,8 @@ public class BatchFanout extends NamedAlgorithm {
         double max_milliseconds = 10000 * (p_pass_no + 1);
         TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
         this.board.start_marking_changed_area();
-        AutorouteAttemptResult curr_result = this.board.fanout(curr_pin.board_pin, settings, ripup_costs, this.thread, time_limit);
+        AutorouteAttemptResult curr_result = this.board.fanout(curr_pin.board_pin, settings, ripup_costs, this.thread,
+            time_limit);
         switch (curr_result.state) {
           case ROUTED -> ++routed_count;
           case SKIPPED -> ++not_routed_count;
@@ -87,7 +90,8 @@ public class BatchFanout extends NamedAlgorithm {
       }
       --components_to_go;
     }
-    FRLogger.debug("fanout pass: " + (p_pass_no + 1) + ", routed: " + routed_count + ", not routed: " + not_routed_count + ", errors: " + insert_error_count);
+    FRLogger.debug("fanout pass: " + (p_pass_no + 1) + ", routed: " + routed_count + ", not routed: " + not_routed_count
+        + ", errors: " + insert_error_count);
     return routed_count;
   }
 
@@ -126,7 +130,8 @@ public class BatchFanout extends NamedAlgorithm {
      */
     final FloatPoint gravity_center_of_smd_pins;
 
-    Component(app.freerouting.board.Component p_board_component, Collection<app.freerouting.board.Pin> p_board_smd_pin_list) {
+    Component(app.freerouting.board.Component p_board_component,
+        Collection<app.freerouting.board.Pin> p_board_smd_pin_list) {
       this.board_component = p_board_component;
 
       // calculate the center of gravity of all SMD pins of this component.

@@ -579,20 +579,24 @@ public class BatchAutorouter extends NamedAlgorithm {
         this.thread.request_stop_auto_router();
       }
 
-      String current_board_hash = this.board.get_hash();
+      String currentBoardHash = this.board.get_hash();
 
       if (currentPass > this.settings.maxPasses) {
         thread.request_stop_auto_router();
         break;
       }
 
+      if (job != null) {
+        job.setCurrentPass(currentPass);
+      }
+
       this.fireTaskStateChangedEvent(
-          new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, current_board_hash));
+          new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, currentBoardHash));
 
       float boardScoreBefore = new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
       bh.add(this.board);
 
-      FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + currentPass + " on board '" + current_board_hash + "'");
+      FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + currentPass + " on board '" + currentBoardHash + "'");
 
       continueAutorouting = autoroute_pass(currentPass);
 
@@ -631,9 +635,9 @@ public class BatchAutorouter extends NamedAlgorithm {
         }
       }
       double autorouter_pass_duration = FRLogger
-          .traceExit("BatchAutorouter.autoroute_pass #" + currentPass + " on board '" + current_board_hash + "'");
+          .traceExit("BatchAutorouter.autoroute_pass #" + currentPass + " on board '" + currentBoardHash + "'");
 
-      String passCompletedMessage = "Auto-router pass #" + currentPass + " on board '" + current_board_hash
+      String passCompletedMessage = "Auto-router pass #" + currentPass + " on board '" + currentBoardHash
           + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration) + " with the score of "
           + FRLogger.formatScore(boardScoreAfter, boardStatisticsAfter.connections.incompleteCount,
               boardStatisticsAfter.clearanceViolations.totalCount);
