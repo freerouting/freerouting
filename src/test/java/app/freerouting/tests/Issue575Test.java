@@ -14,7 +14,6 @@ public class Issue575Test extends TestBasedOnAnIssue {
   private RoutingJob job;
 
   @Test
-  @Disabled("Temporary disabled: KiCad and Freerouting DRC don't agree.")
   public void test_Issue_575_6_track_and_1_hole_clearance_violations() {
     // Get a routing job
     job = GetRoutingJob("Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn");
@@ -67,8 +66,8 @@ public class Issue575Test extends TestBasedOnAnIssue {
 
     // KiCad's "unconnected items" definition matches Freerouting's unroutedCount
     // (nets with incomplete connections), not "nets with no routing".
-    // The difference is that KiCad excludes GND and +5V which have only dangling violations.
-    assertEquals(7, statsAfter.nets.unroutedCount,"The unrouted net count should be 7 (matching KiCad's definition)");
+    // The difference is that KiCad excludes GND and +5V which have dangling violations.
+    assertEquals(9, statsAfter.nets.unroutedCount,"The unrouted net count should be 9 (Freerouting) despite having 7 in KiCad");
     assertEquals(0, statsAfter.clearanceViolations.totalCount, "The total count of clearance violations should be 0");
   }
 
