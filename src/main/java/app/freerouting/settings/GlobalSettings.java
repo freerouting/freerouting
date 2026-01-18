@@ -227,6 +227,7 @@ public class GlobalSettings implements Serializable {
   }
 
   public void applyCommandLineArguments(String[] p_args) {
+    FRLogger.info("[CLI Parsing] Processing " + p_args.length + " command line arguments");
     for (int i = 0; i < p_args.length; i++) {
       try {
         if (p_args[i].startsWith("--")) {
@@ -235,6 +236,7 @@ public class GlobalSettings implements Serializable {
               .substring(2)
               .split("=");
           if ((parts.length == 2) && (!Objects.equals(parts[0], "user_data_path"))) {
+            FRLogger.info("[CLI Parsing] Setting " + parts[0] + " = " + parts[1]);
             setValue(parts[0], parts[1]);
           } else if (!Objects.equals(parts[0], "user_data_path")) {
             FRLogger.warn("Unknown command line argument: " + p_args[i]);

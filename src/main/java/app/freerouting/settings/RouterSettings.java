@@ -5,9 +5,13 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.ReflectionUtil;
 import com.google.gson.annotations.SerializedName;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 
-public class RouterSettings implements Serializable {
+public class RouterSettings implements Serializable, Cloneable {
+  // PropertyChangeSupport for bidirectional binding with GUI
+  private transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
   @SerializedName("enabled")
   public Boolean enabled;
@@ -75,6 +79,83 @@ public class RouterSettings implements Serializable {
     this.scoring = new RouterScoringSettings();
 
     setLayerCount(p_layer_count);
+  }
+
+  // PropertyChangeListener support for bidirectional binding
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
+    if (pcs == null) {
+      pcs = new PropertyChangeSupport(this);
+    }
+    pcs.addPropertyChangeListener(listener);
+  }
+
+  public void removePropertyChangeListener(PropertyChangeListener listener) {
+    if (pcs != null) {
+      pcs.removePropertyChangeListener(listener);
+    }
+  }
+
+  // Setter methods that fire property change events for bidirectional binding
+  public void setMaxPasses(Integer value) {
+    Integer oldValue = this.maxPasses;
+    this.maxPasses = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("maxPasses", oldValue, value);
+    }
+  }
+
+  public void setMaxThreads(Integer value) {
+    Integer oldValue = this.maxThreads;
+    this.maxThreads = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("maxThreads", oldValue, value);
+    }
+    // Also update optimizer's maxThreads to keep them in sync
+    if (this.optimizer != null) {
+      this.optimizer.maxThreads = value;
+    }
+  }
+
+  public void setJobTimeoutString(String value) {
+    String oldValue = this.jobTimeoutString;
+    this.jobTimeoutString = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("jobTimeoutString", oldValue, value);
+    }
+  }
+
+  public void setEnabled(Boolean value) {
+    Boolean oldValue = this.enabled;
+    this.enabled = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("enabled", oldValue, value);
+    }
+  }
+
+  public void setViasAllowed(Boolean value) {
+    Boolean oldValue = this.vias_allowed;
+    this.vias_allowed = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("vias_allowed", oldValue, value);
+    }
+  }
+
+  public void setAlgorithm(String value) {
+    String oldValue = this.algorithm;
+    this.algorithm = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("algorithm", oldValue, value);
+    }
+  }
+
+  public void setOptimizerEnabled(Boolean value) {
+    Boolean oldValue = this.optimizer != null ? this.optimizer.enabled : null;
+    if (this.optimizer != null) {
+      this.optimizer.enabled = value;
+    }
+    if (pcs != null) {
+      pcs.firePropertyChange("optimizer.enabled", oldValue, value);
+    }
   }
 
   /**
@@ -352,6 +433,17 @@ public class RouterSettings implements Serializable {
    * @return The number of fields that were changed.
    */
   public int applyNewValuesFrom(RouterSettings settings) {
-    return ReflectionUtil.copyFields(settings, this);
+    int changedCount = ReflectionUtil.copyFields(settings, this);
+
+    // Fire property change events for key properties to update GUI
+    // Note: We fire events even if values didn't change to ensure GUI is in sync
+    if (pcs != null) {
+      pcs.firePropertyChange("maxPasses", null, this.maxPasses);
+      pcs.firePropertyChange("maxThreads", null, this.maxThreads);
+      pcs.firePropertyChange("jobTimeoutString", null, this.jobTimeoutString);
+      pcs.firePropertyChange("enabled", null, this.enabled);
+    }
+
+    return changedCount;
   }
 }

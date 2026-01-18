@@ -109,10 +109,17 @@ public class ReflectionUtil {
 
         // Only copy the field if the new value is not null, and not the default value
         if ((sourceValue != null) && !sourceValue.equals(getDefaultValue(field))) {
-          // Check if the field is a primitive or a string
-          if (field
-              .getType()
-              .isPrimitive() || field.getType() == String.class) {
+          // Check if the field is a primitive, wrapper type, or a string
+          if (field.getType().isPrimitive()
+              || field.getType() == String.class
+              || field.getType() == Integer.class
+              || field.getType() == Long.class
+              || field.getType() == Float.class
+              || field.getType() == Double.class
+              || field.getType() == Boolean.class
+              || field.getType() == Byte.class
+              || field.getType() == Short.class
+              || field.getType() == Character.class) {
             // check if the target field is null or its default value
             var targetValue = field.get(target);
 

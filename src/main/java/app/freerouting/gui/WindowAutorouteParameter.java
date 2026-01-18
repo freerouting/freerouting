@@ -59,6 +59,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private boolean max_passes_input_completed = true;
   private boolean job_timeout_input_completed = true;
   private boolean max_threads_input_completed = true;
+  // Flag to prevent circular updates between GUI and settings
+  private boolean isUpdatingFromSettings = false;
 
   /**
    * Creates a new instance of WindowAutorouteParameter
@@ -382,6 +384,70 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+
+    // Register as listener for settings changes (bidirectional binding)
+    this.board_handling.settings.autoroute_settings.addPropertyChangeListener(this::onSettingsChanged);
+  }
+
+  /**
+   * Handle property change events from RouterSettings to update GUI controls
+   */
+  private void onSettingsChanged(java.beans.PropertyChangeEvent evt) {
+    if (isUpdatingFromSettings) {
+      return; // Prevent circular updates
+    }
+
+    isUpdatingFromSettings = true;
+    try {
+      String propertyName = evt.getPropertyName();
+      Object newValue = evt.getNewValue();
+
+      switch (propertyName) {
+        case "maxPasses":
+          if (newValue != null) {
+            max_passes_field.setValue(newValue);
+          }
+          break;
+        case "maxThreads":
+          if (newValue != null) {
+            max_threads_field.setValue(newValue);
+          }
+          break;
+        case "jobTimeoutString":
+          if (newValue != null) {
+            job_timeout_field.setValue(newValue);
+          }
+          break;
+        case "enabled":
+          if (newValue instanceof Boolean) {
+            settings_autorouter_autoroute_pass_button.setSelected((Boolean) newValue);
+          }
+          break;
+        case "vias_allowed":
+          if (newValue instanceof Boolean) {
+            settings_autorouter_vias_allowed.setSelected((Boolean) newValue);
+          }
+          break;
+        case "algorithm":
+          if (newValue instanceof String) {
+            // Find and select the matching algorithm in the combo box
+            for (int i = 0; i < settings_autorouter_algorithm_combo_box.getItemCount(); i++) {
+              if (settings_autorouter_algorithm_combo_box.getItemAt(i).equals(newValue)) {
+                settings_autorouter_algorithm_combo_box.setSelectedIndex(i);
+                break;
+              }
+            }
+          }
+          break;
+        case "optimizer.enabled":
+          if (newValue instanceof Boolean) {
+            settings_autorouter_postroute_pass_button.setSelected((Boolean) newValue);
+          }
+          break;
+      }
+    } finally {
+      isUpdatingFromSettings = false;
+    }
   }
 
   /**
@@ -488,7 +554,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_handling.settings.autoroute_settings.set_vias_allowed(settings_autorouter_vias_allowed.isSelected());
+      isUpdatingFromSettings = true;
+      try {
+        board_handling.settings.autoroute_settings.setViasAllowed(settings_autorouter_vias_allowed.isSelected());
+      } finally {
+        isUpdatingFromSettings = false;
+      }
     }
   }
 
@@ -497,7 +568,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       RouterSettings autoroute_settings = board_handling.settings.autoroute_settings;
-      autoroute_settings.setRunRouter(settings_autorouter_autoroute_pass_button.isSelected());
+      isUpdatingFromSettings = true;
+      try {
+        autoroute_settings.setEnabled(settings_autorouter_autoroute_pass_button.isSelected());
+      } finally {
+        isUpdatingFromSettings = false;
+      }
     }
   }
 
@@ -506,7 +582,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       RouterSettings autoroute_settings = board_handling.settings.autoroute_settings;
-      autoroute_settings.setRunOptimizer(settings_autorouter_postroute_pass_button.isSelected());
+      isUpdatingFromSettings = true;
+      try {
+        autoroute_settings.setOptimizerEnabled(settings_autorouter_postroute_pass_button.isSelected());
+      } finally {
+        isUpdatingFromSettings = false;
+      }
     }
   }
 
@@ -543,8 +624,32 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!via_cost_input_completed) {
+        // Save the value when focus is lost
+        int old_value = board_handling.settings.autoroute_settings.get_via_costs();
+
+        // Commit the edit to ensure getValue() returns the typed value
+        try {
+          via_cost_field.commitEdit();
+        } catch (java.text.ParseException e) {
+          // If parse fails, revert to old value
+          via_cost_field.setValue(old_value);
+        }
+
+        Object input = via_cost_field.getValue();
+        int input_value;
+        if (input instanceof Number number) {
+          input_value = number.intValue();
+          if (input_value <= 0) {
+            input_value = 1;
+            via_cost_field.setValue(input_value);
+          }
+        } else {
+          input_value = old_value;
+          via_cost_field.setValue(old_value);
+        }
+        board_handling.settings.autoroute_settings.set_via_costs(input_value);
+        via_cost_field.setValue(input_value);
         via_cost_input_completed = true;
-        refresh();
       }
     }
 
@@ -586,8 +691,32 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!plane_via_cost_input_completed) {
+        // Save the value when focus is lost
+        int old_value = board_handling.settings.autoroute_settings.get_plane_via_costs();
+
+        // Commit the edit to ensure getValue() returns the typed value
+        try {
+          plane_via_cost_field.commitEdit();
+        } catch (java.text.ParseException e) {
+          // If parse fails, revert to old value
+          plane_via_cost_field.setValue(old_value);
+        }
+
+        Object input = plane_via_cost_field.getValue();
+        int input_value;
+        if (input instanceof Number number) {
+          input_value = number.intValue();
+          if (input_value <= 0) {
+            input_value = 1;
+            plane_via_cost_field.setValue(input_value);
+          }
+        } else {
+          input_value = old_value;
+          plane_via_cost_field.setValue(old_value);
+        }
+        board_handling.settings.autoroute_settings.set_plane_via_costs(input_value);
+        plane_via_cost_field.setValue(input_value);
         plane_via_cost_input_completed = true;
-        refresh();
       }
     }
 
@@ -626,8 +755,30 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!start_ripup_cost_input_completed) {
+        // Save the value when focus is lost
+        int old_value = board_handling.settings.autoroute_settings.get_start_ripup_costs();
+
+        // Commit the edit to ensure getValue() returns the typed value
+        try {
+          start_ripup_costs.commitEdit();
+        } catch (java.text.ParseException e) {
+          // If parse fails, revert to old value
+          start_ripup_costs.setValue(old_value);
+        }
+
+        Object input = start_ripup_costs.getValue();
+        int input_value;
+        if (input instanceof Number number) {
+          input_value = number.intValue();
+          if (input_value <= 0) {
+            input_value = 1;
+          }
+        } else {
+          input_value = old_value;
+        }
+        board_handling.settings.autoroute_settings.set_start_ripup_costs(input_value);
+        start_ripup_costs.setValue(input_value);
         start_ripup_cost_input_completed = true;
-        refresh();
       }
     }
 
@@ -655,7 +806,13 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           input_value = old_value;
         }
-        board_handling.settings.autoroute_settings.maxPasses = input_value;
+        // Use setter to fire property change event
+        isUpdatingFromSettings = true;
+        try {
+          board_handling.settings.autoroute_settings.setMaxPasses(input_value);
+        } finally {
+          isUpdatingFromSettings = false;
+        }
         max_passes_field.setValue(input_value);
         max_passes_input_completed = true;
       } else {
@@ -669,8 +826,38 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!max_passes_input_completed) {
+        // Save the value when focus is lost
+        int old_value = board_handling.settings.autoroute_settings.maxPasses;
+
+        // Commit the edit to ensure getValue() returns the typed value
+        try {
+          max_passes_field.commitEdit();
+        } catch (java.text.ParseException e) {
+          // If parse fails, revert to old value
+          max_passes_field.setValue(old_value);
+        }
+
+        Object input = max_passes_field.getValue();
+        int input_value;
+        if (input instanceof Number number) {
+          input_value = number.intValue();
+          if (input_value < 1) {
+            input_value = 1;
+          }
+          if (input_value > 9999) {
+            input_value = 9999;
+          }
+        } else {
+          input_value = old_value;
+        }
+        isUpdatingFromSettings = true;
+        try {
+          board_handling.settings.autoroute_settings.setMaxPasses(input_value);
+        } finally {
+          isUpdatingFromSettings = false;
+        }
+        max_passes_field.setValue(input_value);
         max_passes_input_completed = true;
-        refresh();
       }
     }
 
@@ -697,7 +884,13 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           input_value = old_value;
         }
-        board_handling.settings.autoroute_settings.jobTimeoutString = input_value;
+        // Use setter to fire property change event
+        isUpdatingFromSettings = true;
+        try {
+          board_handling.settings.autoroute_settings.setJobTimeoutString(input_value);
+        } finally {
+          isUpdatingFromSettings = false;
+        }
         job_timeout_field.setValue(input_value);
         job_timeout_input_completed = true;
       } else {
@@ -711,8 +904,35 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!job_timeout_input_completed) {
+        // Save the value when focus is lost
+        String old_value = board_handling.settings.autoroute_settings.jobTimeoutString;
+
+        // Commit the edit to ensure getValue() returns the typed value
+        try {
+          job_timeout_field.commitEdit();
+        } catch (java.text.ParseException e) {
+          // If parse fails, revert to old value
+          job_timeout_field.setValue(old_value);
+        }
+
+        Object input = job_timeout_field.getValue();
+        String input_value;
+        if (input instanceof String str) {
+          input_value = str;
+          if (!input_value.matches("^(\\d+\\.)?\\d{1,2}:\\d{2}:\\d{2}$")) {
+            input_value = old_value;
+          }
+        } else {
+          input_value = old_value;
+        }
+        isUpdatingFromSettings = true;
+        try {
+          board_handling.settings.autoroute_settings.setJobTimeoutString(input_value);
+        } finally {
+          isUpdatingFromSettings = false;
+        }
+        job_timeout_field.setValue(input_value);
         job_timeout_input_completed = true;
-        refresh();
       }
     }
 
@@ -741,7 +961,13 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           input_value = old_value;
         }
-        board_handling.settings.autoroute_settings.maxThreads = input_value;
+        // Use setter to fire property change event
+        isUpdatingFromSettings = true;
+        try {
+          board_handling.settings.autoroute_settings.setMaxThreads(input_value);
+        } finally {
+          isUpdatingFromSettings = false;
+        }
         max_threads_field.setValue(input_value);
         max_threads_input_completed = true;
       } else {
@@ -755,8 +981,39 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!max_threads_input_completed) {
+        // Save the value when focus is lost
+        int old_value = board_handling.settings.autoroute_settings.maxThreads;
+
+        // Commit the edit to ensure getValue() returns the typed value
+        try {
+          max_threads_field.commitEdit();
+        } catch (java.text.ParseException e) {
+          // If parse fails, revert to old value
+          max_threads_field.setValue(old_value);
+        }
+
+        Object input = max_threads_field.getValue();
+        int input_value;
+        int max_available = Runtime.getRuntime().availableProcessors();
+        if (input instanceof Number number) {
+          input_value = number.intValue();
+          if (input_value < 1) {
+            input_value = 1;
+          }
+          if (input_value > max_available) {
+            input_value = max_available;
+          }
+        } else {
+          input_value = old_value;
+        }
+        isUpdatingFromSettings = true;
+        try {
+          board_handling.settings.autoroute_settings.setMaxThreads(input_value);
+        } finally {
+          isUpdatingFromSettings = false;
+        }
+        max_threads_field.setValue(input_value);
         max_threads_input_completed = true;
-        refresh();
       }
     }
 
@@ -777,7 +1034,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         newAlgorithm = RouterSettings.ALGORITHM_CURRENT;
       }
       if (!oldAlgorithm.equals(newAlgorithm)) {
-        board_handling.settings.autoroute_settings.algorithm = newAlgorithm;
+        isUpdatingFromSettings = true;
+        try {
+          board_handling.settings.autoroute_settings.setAlgorithm(newAlgorithm);
+        } finally {
+          isUpdatingFromSettings = false;
+        }
       }
     }
   }
