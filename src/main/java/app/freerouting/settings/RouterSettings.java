@@ -10,47 +10,46 @@ import java.io.Serializable;
 public class RouterSettings implements Serializable {
 
   @SerializedName("enabled")
-  public boolean enabled = true;
+  public Boolean enabled;
   // Valid algorithm values
   public static final String ALGORITHM_CURRENT = "freerouting-router";
   public static final String ALGORITHM_V19 = "freerouting-router-v19";
 
   @SerializedName("algorithm")
-  public String algorithm = ALGORITHM_CURRENT;
+  public String algorithm;
   @SerializedName("job_timeout")
-  public String jobTimeoutString = "12:00:00";
+  public String jobTimeoutString;
   @SerializedName("max_passes")
-  public int maxPasses = 9999;
+  public Integer maxPasses;
   public transient boolean[] isLayerActive;
   public transient boolean[] isPreferredDirectionHorizontalOnLayer;
-  public transient boolean save_intermediate_stages;
+  public transient Boolean save_intermediate_stages;
   @SerializedName("ignore_net_classes")
-  public transient String[] ignoreNetClasses = new String[0];
+  public transient String[] ignoreNetClasses;
   /**
    * The accuracy of the pull tight algorithm.
    */
   @SerializedName("trace_pull_tight_accuracy")
-  public int trace_pull_tight_accuracy = 500;
+  public Integer trace_pull_tight_accuracy;
   @SerializedName("allowed_via_types")
-  public boolean vias_allowed = true;
+  public Boolean vias_allowed;
   /**
    * If true, the trace width at static pins smaller the trace width will be
    * lowered automatically to the pin with, if necessary.
    */
   @SerializedName("automatic_neckdown")
-  public boolean automatic_neckdown = true;
+  public Boolean automatic_neckdown;
 
   @SerializedName("optimizer")
-  public RouterOptimizerSettings optimizer = new RouterOptimizerSettings();
+  public RouterOptimizerSettings optimizer;
   @SerializedName("scoring")
-  public RouterScoringSettings scoring = new RouterScoringSettings();
+  public RouterScoringSettings scoring;
   @SerializedName("max_threads")
-  public int maxThreads = Math.max(1, Runtime
-      .getRuntime()
-      .availableProcessors() - 1);
+  public Integer maxThreads;
 
   /**
    * We need a parameterless constructor for the serialization.
+   * Initializes all fields with default values.
    */
   public RouterSettings() {
     this(0);
@@ -61,6 +60,20 @@ public class RouterSettings implements Serializable {
    * and @p_layer_count layers.
    */
   public RouterSettings(int p_layer_count) {
+    // Initialize with default values
+    this.enabled = true;
+    this.algorithm = ALGORITHM_CURRENT;
+    this.jobTimeoutString = "12:00:00";
+    this.maxPasses = 9999;
+    this.trace_pull_tight_accuracy = 500;
+    this.vias_allowed = true;
+    this.automatic_neckdown = true;
+    this.save_intermediate_stages = false;
+    this.ignoreNetClasses = new String[0];
+    this.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+    this.optimizer = new RouterOptimizerSettings();
+    this.scoring = new RouterScoringSettings();
+
     setLayerCount(p_layer_count);
   }
 
@@ -174,7 +187,7 @@ public class RouterSettings implements Serializable {
   }
 
   public boolean getRunRouter() {
-    return enabled;
+    return enabled != null ? enabled : true;
   }
 
   public void setRunRouter(boolean p_value) {
@@ -182,15 +195,18 @@ public class RouterSettings implements Serializable {
   }
 
   public boolean getRunOptimizer() {
-    return optimizer.enabled;
+    return optimizer != null && optimizer.enabled != null ? optimizer.enabled : false;
   }
 
   public void setRunOptimizer(boolean p_value) {
+    if (optimizer == null) {
+      optimizer = new RouterOptimizerSettings();
+    }
     optimizer.enabled = p_value;
   }
 
   public boolean get_vias_allowed() {
-    return vias_allowed;
+    return vias_allowed != null ? vias_allowed : true;
   }
 
   public void set_vias_allowed(boolean p_value) {

@@ -351,7 +351,7 @@ public class GlobalSettings implements Serializable {
             routerSettings.optimizer.optimizationImprovementThreshold = Float.parseFloat(p_args[i + 1]) / 100;
 
             if (routerSettings.optimizer.optimizationImprovementThreshold <= 0) {
-              routerSettings.optimizer.optimizationImprovementThreshold = 0;
+              routerSettings.optimizer.optimizationImprovementThreshold = 0.0f;
             }
             i++;
           }
@@ -456,6 +456,7 @@ public class GlobalSettings implements Serializable {
         FRLogger.error("There was a problem parsing the '" + p_args[i] + "' parameter", e);
       }
     }
+
   }
 
   public String getDesignDir() {
