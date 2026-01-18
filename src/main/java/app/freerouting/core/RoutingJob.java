@@ -447,6 +447,61 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return wereSettingsChanged;
   }
 
+  /**
+   * Merges router settings from all applicable sources using the new settings
+   * architecture.
+   * This method demonstrates the priority-based merging system where settings
+   * from higher
+   * priority sources override those from lower priority sources.
+   * 
+   * Priority order (lowest to highest):
+   * 1. Default settings
+   * 2. JSON file (freerouting.json)
+   * 3. DSN file settings
+   * 4. SES file settings
+   * 5. RULES file settings
+   * 6. GUI settings
+   * 7. CLI settings
+   * 8. API settings
+   * 
+   * @return Merged RouterSettings from all applicable sources
+   */
+  public RouterSettings mergeSettingsFromSources() {
+    java.util.List<app.freerouting.settings.SettingsSource> sources = new java.util.ArrayList<>();
+
+    // 1. Always start with defaults (priority 0)
+    sources.add(new app.freerouting.settings.sources.DefaultSettings());
+
+    // 2. Add JSON file settings (priority 10)
+    sources.add(new app.freerouting.settings.sources.JsonFileSettings());
+
+    // 3. Add DSN file settings if available (priority 20)
+    if (this.input != null && this.input.format == FileFormat.DSN) {
+      // TODO: Parse DSN file and extract settings
+      // For now, we'll skip this until we integrate with the DSN parser
+      // sources.add(new DsnFileSettings(...));
+    }
+
+    // 4. Add RULES file settings if available (priority 40)
+    File rulesFile = getRulesFile();
+    if (rulesFile != null && rulesFile.exists()) {
+      // TODO: Parse RULES file and extract settings
+      // sources.add(new RulesFileSettings(...));
+    }
+
+    // 5. GUI settings would be added here if in GUI mode (priority 50)
+    // This would typically be done by the GUI code before starting a job
+
+    // 6. CLI settings would be added here (priority 60)
+    // This would typically be extracted from GlobalSettings
+
+    // 7. API settings would be added here if provided (priority 70)
+    // This would be the highest priority override
+
+    // Merge all sources and return the result
+    return app.freerouting.settings.SettingsMerger.merge(sources);
+  }
+
   public void addSettingsUpdatedEventListener(RoutingJobUpdatedEventListener listener) {
     settingsUpdatedEventListeners.add(listener);
   }
