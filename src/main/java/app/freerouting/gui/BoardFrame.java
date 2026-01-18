@@ -407,11 +407,33 @@ public class BoardFrame extends WindowBase {
         viewport_position = new Point(0, 0);
 
         // Initialize the RouterSettings layer count to match the loaded board
-        // Only call setLayerCount if needed, to avoid resetting layer-specific settings
-        int boardLayerCount = board_panel.board_handling.get_routing_board().get_layer_count();
+        // Restore board-specific calculations from old RouterSettings(RoutingBoard)
+        // constructor
+        RoutingBoard board = board_panel.board_handling.get_routing_board();
+        int boardLayerCount = board.get_layer_count();
+
         if (this.routingJob.routerSettings.isLayerActive == null ||
             this.routingJob.routerSettings.isLayerActive.length != boardLayerCount) {
+
+          // Calculate board-specific layer costs based on board dimensions
+          double horizontal_width = board.bounding_box.width();
+          double vertical_width = board.bounding_box.height();
+
+          // Initialize layer arrays
           this.routingJob.routerSettings.setLayerCount(boardLayerCount);
+
+          // Calculate layer-specific costs based on board aspect ratio
+          double horizontal_add_costs = 0.1 * Math.round(10 * horizontal_width / vertical_width);
+          double vertical_add_costs = 0.1 * Math.round(10 * vertical_width / horizontal_width);
+
+          for (int i = 0; i < boardLayerCount; i++) {
+            boolean preferred_direction_is_horizontal = (i % 2 == 1);
+            if (preferred_direction_is_horizontal) {
+              this.routingJob.routerSettings.scoring.undesiredDirectionTraceCost[i] += horizontal_add_costs;
+            } else {
+              this.routingJob.routerSettings.scoring.undesiredDirectionTraceCost[i] += vertical_add_costs;
+            }
+          }
         }
 
         // Set the current routing job in the board manager so that GUI components can
