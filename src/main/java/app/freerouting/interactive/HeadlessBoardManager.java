@@ -154,6 +154,17 @@ public class HeadlessBoardManager implements BoardManager {
       // we create the board inside the DSN file reader instead at the moment, and
       // save it in the board field of the BoardHandling class
       read_result = DsnFile.read(inputStream, this, boardObservers, identificationNumberGenerator);
+
+      // Apply board-specific optimizations to RouterSettings after board is loaded
+      if (read_result == DsnFile.ReadResult.OK && this.board != null && this.routingJob != null) {
+        int boardLayerCount = this.board.get_layer_count();
+        if (this.routingJob.routerSettings.isLayerActive == null ||
+            this.routingJob.routerSettings.isLayerActive.length != boardLayerCount) {
+          this.routingJob.routerSettings.setLayerCount(boardLayerCount);
+        }
+        // Apply board-specific optimizations for better routing performance
+        this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
+      }
     } catch (Exception e) {
       read_result = DsnFile.ReadResult.ERROR;
       routingJob.logError("There was an error while reading DSN file.", e);

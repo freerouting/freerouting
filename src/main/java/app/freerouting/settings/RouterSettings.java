@@ -163,7 +163,19 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   public RouterSettings(RoutingBoard p_board) {
     this(p_board.get_layer_count());
+    applyBoardSpecificOptimizations(p_board);
+  }
 
+  /**
+   * Apply board-specific optimizations to RouterSettings based on board geometry
+   * and layer structure.
+   * This calculates layer costs based on board aspect ratio and adds penalties
+   * for outer layers.
+   * Should be called after loading a board to optimize routing performance.
+   * 
+   * @param p_board The routing board to optimize settings for
+   */
+  public void applyBoardSpecificOptimizations(RoutingBoard p_board) {
     double horizontal_width = p_board.bounding_box.width();
     double vertical_width = p_board.bounding_box.height();
 
