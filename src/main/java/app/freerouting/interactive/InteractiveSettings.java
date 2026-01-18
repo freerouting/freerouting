@@ -3,7 +3,6 @@ package app.freerouting.interactive;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.settings.RouterSettings;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -19,9 +18,17 @@ public class InteractiveSettings implements Serializable {
    * half widths.
    */
   final int[] manual_trace_half_width_arr;
-  // TODO: this is a duplicate, should be removed later (RoutingJob has its
-  // RouterSettings, we should use that)
-
+  /**
+   * Router parameter: accuracy for trace pull tight operations in interactive
+   * routing.
+   * Lower values mean more accurate but slower pull tight.
+   */
+  public int trace_pull_tight_accuracy = 500;
+  /**
+   * Router parameter: enables automatic neckdown in interactive routing.
+   * When true, traces automatically narrow down when approaching pads.
+   */
+  public boolean automatic_neckdown = true;
   /**
    * the current layer
    */
@@ -90,17 +97,6 @@ public class InteractiveSettings implements Serializable {
    * Defines the data of the snapshot selected for restoring.
    */
   SnapShot.Attributes snapshot_attributes;
-  /**
-   * Router parameter: accuracy for trace pull tight operations in interactive
-   * routing.
-   * Lower values mean more accurate but slower pull tight.
-   */
-  public int trace_pull_tight_accuracy = 500;
-  /**
-   * Router parameter: enables automatic neckdown in interactive routing.
-   * When true, traces automatically narrow down when approaching pads.
-   */
-  public boolean automatic_neckdown = true;
   /**
    * Indicates, if the data of this class are not allowed to be changed in
    * interactive board editing.
