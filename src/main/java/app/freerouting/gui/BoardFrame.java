@@ -402,6 +402,10 @@ public class BoardFrame extends WindowBase {
       if (read_result == DsnFile.ReadResult.OK) {
         viewport_position = new Point(0, 0);
 
+        // Initialize the RouterSettings layer count to match the loaded board
+        int boardLayerCount = board_panel.board_handling.get_routing_board().get_layer_count();
+        this.routingJob.routerSettings.setLayerCount(boardLayerCount);
+
         // Set the current routing job in the board manager so that GUI components can
         // access it
         board_panel.board_handling.setCurrentRoutingJob(this.routingJob);

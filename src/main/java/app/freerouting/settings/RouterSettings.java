@@ -312,7 +312,8 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public void set_layer_active(int p_layer, boolean p_value) {
     if (p_layer < 0 || p_layer >= isLayerActive.length) {
-      FRLogger.warn("AutorouteSettings.set_layer_active: p_layer out of range");
+      FRLogger.warn("AutorouteSettings.set_layer_active: p_layer=" + p_layer + " out of range [0.."
+          + (isLayerActive.length - 1) + "]");
       return;
     }
     isLayerActive[p_layer] = p_value;
@@ -320,7 +321,8 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public boolean get_layer_active(int p_layer) {
     if (p_layer < 0 || p_layer >= isLayerActive.length) {
-      FRLogger.warn("AutorouteSettings.get_layer_active: p_layer out of range");
+      FRLogger.warn("AutorouteSettings.get_layer_active: p_layer=" + p_layer + " out of range [0.."
+          + (isLayerActive.length - 1) + "]");
       return false;
     }
     return isLayerActive[p_layer];
@@ -328,7 +330,8 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public void set_preferred_direction_is_horizontal(int p_layer, boolean p_value) {
     if (p_layer < 0 || p_layer >= isLayerActive.length) {
-      FRLogger.warn("AutorouteSettings.set_preferred_direction_is_horizontal: p_layer out of range");
+      FRLogger.warn("AutorouteSettings.set_preferred_direction_is_horizontal: p_layer=" + p_layer + " out of range [0.."
+          + (isLayerActive.length - 1) + "]");
       return;
     }
     isPreferredDirectionHorizontalOnLayer[p_layer] = p_value;
@@ -336,7 +339,8 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public boolean get_preferred_direction_is_horizontal(int p_layer) {
     if (p_layer < 0 || p_layer >= isLayerActive.length) {
-      FRLogger.warn("AutorouteSettings.get_preferred_direction_is_horizontal: p_layer out of range");
+      FRLogger.warn("AutorouteSettings.get_preferred_direction_is_horizontal: p_layer=" + p_layer + " out of range [0.."
+          + (isLayerActive.length - 1) + "]");
       return false;
     }
     return isPreferredDirectionHorizontalOnLayer[p_layer];
