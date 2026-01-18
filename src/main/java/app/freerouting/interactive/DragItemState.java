@@ -20,7 +20,8 @@ public class DragItemState extends DragState {
   /**
    * Creates a new instance of MoveItemState
    */
-  protected DragItemState(Item p_item_to_move, FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
+  protected DragItemState(Item p_item_to_move, FloatPoint p_location, InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
     super(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
     item_to_move = p_item_to_move;
   }
@@ -31,7 +32,8 @@ public class DragItemState extends DragState {
   }
 
   /**
-   * Moves the items of the group to p_to_location. Return this.return_state, if an error occurred while moving, so that an undo may be necessary.
+   * Moves the items of the group to p_to_location. Return this.return_state, if
+   * an error occurred while moving, so that an undo may be necessary.
    */
   @Override
   public InteractiveState move_to(FloatPoint p_to_location) {
@@ -86,7 +88,8 @@ public class DragItemState extends DragState {
         }
         this.something_dragged = true;
       }
-      if (!move_component.insert(hdlg.settings.trace_pull_tight_region_width, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy)) {
+      if (!move_component.insert(hdlg.settings.trace_pull_tight_region_width,
+          hdlg.settings.trace_pull_tight_accuracy)) {
         // an insert error occurred, end the drag state
         return this.return_state;
       }

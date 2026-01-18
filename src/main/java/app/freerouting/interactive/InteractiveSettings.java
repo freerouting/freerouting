@@ -12,14 +12,16 @@ import java.util.Arrays;
 /**
  * Contains the values of the interactive/GUI settings of the board handling.
  */
-public class Settings implements Serializable {
+public class InteractiveSettings implements Serializable {
 
   /**
-   * The array of manual trace half widths, initially equal to the automatic trace half widths.
+   * The array of manual trace half widths, initially equal to the automatic trace
+   * half widths.
    */
   final int[] manual_trace_half_width_arr;
-  // TODO: this is a duplicate, should be removed later (RoutingJob has its RouterSettings, we should use that)
-  public RouterSettings autoroute_settings;
+  // TODO: this is a duplicate, should be removed later (RoutingJob has its
+  // RouterSettings, we should use that)
+
   /**
    * the current layer
    */
@@ -33,7 +35,8 @@ public class Settings implements Serializable {
    */
   boolean drag_components_enabled;
   /**
-   * indicates if interactive selections are made on all visible layers or only on the current layer
+   * indicates if interactive selections are made on all visible layers or only on
+   * the current layer
    */
   boolean select_on_all_visible_layers;
   /**
@@ -57,7 +60,8 @@ public class Settings implements Serializable {
    */
   int vertical_component_grid;
   /**
-   * Indicates if the routing rule selection is manual by the user or automatic by the net rules.
+   * Indicates if the routing rule selection is manual by the user or automatic by
+   * the net rules.
    */
   boolean manual_rule_selection;
   /**
@@ -65,11 +69,13 @@ public class Settings implements Serializable {
    */
   boolean hilight_routing_obstacle;
   /**
-   * The index of the clearance class used for traces in interactive routing in the clearance matrix, if manual_route_selection is on.
+   * The index of the clearance class used for traces in interactive routing in
+   * the clearance matrix, if manual_route_selection is on.
    */
   int manual_trace_clearance_class;
   /**
-   * The index of the via rule used in routing in the board via rules if manual_route_selection is on.
+   * The index of the via rule used in routing in the board via rules if
+   * manual_route_selection is on.
    */
   int manual_via_rule_index;
   /**
@@ -85,18 +91,31 @@ public class Settings implements Serializable {
    */
   SnapShot.Attributes snapshot_attributes;
   /**
-   * Indicates, if the data of this class are not allowed to be changed in interactive board editing.
+   * Router parameter: accuracy for trace pull tight operations in interactive
+   * routing.
+   * Lower values mean more accurate but slower pull tight.
+   */
+  public int trace_pull_tight_accuracy = 500;
+  /**
+   * Router parameter: enables automatic neckdown in interactive routing.
+   * When true, traces automatically narrow down when approaching pads.
+   */
+  public boolean automatic_neckdown = true;
+  /**
+   * Indicates, if the data of this class are not allowed to be changed in
+   * interactive board editing.
    */
   private transient boolean read_only;
   /**
-   * The file used for logging interactive action, so that they can be replayed later
+   * The file used for logging interactive action, so that they can be replayed
+   * later
    */
   private transient ActivityReplayFile activityReplayFile;
 
   /**
    * Creates a new interactive settings variable.
    */
-  public Settings(RoutingBoard p_board, ActivityReplayFile p_activityReplayFile) {
+  public InteractiveSettings(RoutingBoard p_board, ActivityReplayFile p_activityReplayFile) {
     this.activityReplayFile = p_activityReplayFile;
     // Initialise with default values.
     layer = 0;
@@ -113,9 +132,10 @@ public class Settings implements Serializable {
     manual_trace_clearance_class = 1;
     manual_via_rule_index = 0;
     zoom_with_wheel = true;
+    trace_pull_tight_accuracy = 500;
+    automatic_neckdown = true;
     manual_trace_half_width_arr = new int[p_board.get_layer_count()];
     Arrays.fill(manual_trace_half_width_arr, 1000);
-    autoroute_settings = new RouterSettings(p_board);
     item_selection_filter = new ItemSelectionFilter();
     snapshot_attributes = new SnapShot.Attributes();
   }
@@ -123,7 +143,7 @@ public class Settings implements Serializable {
   /**
    * Copy constructor
    */
-  public Settings(Settings p_settings) {
+  public InteractiveSettings(InteractiveSettings p_settings) {
     this.activityReplayFile = p_settings.activityReplayFile;
     this.read_only = p_settings.read_only;
     this.layer = p_settings.layer;
@@ -140,9 +160,11 @@ public class Settings implements Serializable {
     this.zoom_with_wheel = p_settings.zoom_with_wheel;
     this.manual_trace_clearance_class = p_settings.manual_trace_clearance_class;
     this.manual_via_rule_index = p_settings.manual_via_rule_index;
+    this.trace_pull_tight_accuracy = p_settings.trace_pull_tight_accuracy;
+    this.automatic_neckdown = p_settings.automatic_neckdown;
     this.manual_trace_half_width_arr = new int[p_settings.manual_trace_half_width_arr.length];
-    System.arraycopy(p_settings.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr.length);
-    this.autoroute_settings = p_settings.autoroute_settings.clone();
+    System.arraycopy(p_settings.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr, 0,
+        this.manual_trace_half_width_arr.length);
     this.item_selection_filter = new ItemSelectionFilter(p_settings.item_selection_filter);
     this.snapshot_attributes = new SnapShot.Attributes(p_settings.snapshot_attributes);
   }
@@ -195,7 +217,8 @@ public class Settings implements Serializable {
   }
 
   /**
-   * indicates if interactive selections are made on all visible layers or only on the current layer.
+   * indicates if interactive selections are made on all visible layers or only on
+   * the current layer.
    */
   public boolean get_select_on_all_visible_layers() {
     return this.select_on_all_visible_layers;
@@ -213,7 +236,8 @@ public class Settings implements Serializable {
   }
 
   /**
-   * Indicates if the routing rule selection is manual by the user or automatic by the net rules.
+   * Indicates if the routing rule selection is manual by the user or automatic by
+   * the net rules.
    */
   public boolean get_manual_rule_selection() {
     return this.manual_rule_selection;
@@ -334,14 +358,16 @@ public class Settings implements Serializable {
   }
 
   /**
-   * The index of the clearance class used for traces in interactive routing in the clearance matrix, if manual_route_selection is on.
+   * The index of the clearance class used for traces in interactive routing in
+   * the clearance matrix, if manual_route_selection is on.
    */
   public int get_manual_trace_clearance_class() {
     return this.manual_trace_clearance_class;
   }
 
   /**
-   * The index of the clearance class used for traces in interactive routing in the clearance matrix, if manual_route_selection is on.
+   * The index of the clearance class used for traces in interactive routing in
+   * the clearance matrix, if manual_route_selection is on.
    */
   public void set_manual_trace_clearance_class(int p_index) {
     if (read_only) {
@@ -352,14 +378,16 @@ public class Settings implements Serializable {
   }
 
   /**
-   * The index of the via rule used in routing in the board via rules if manual_route_selection is on.
+   * The index of the via rule used in routing in the board via rules if
+   * manual_route_selection is on.
    */
   public int get_manual_via_rule_index() {
     return this.manual_via_rule_index;
   }
 
   /**
-   * The index of the via rule used in routing in the board via rules if manual_route_selection is on.
+   * The index of the via rule used in routing in the board via rules if
+   * manual_route_selection is on.
    */
   public void set_manual_via_rule_index(int p_value) {
     if (read_only) {
@@ -380,7 +408,7 @@ public class Settings implements Serializable {
    */
   public int get_manual_trace_half_width(int p_layer_no) {
     if (p_layer_no < 0 || p_layer_no >= this.manual_trace_half_width_arr.length) {
-      FRLogger.warn("Settings.get_manual_trace_half_width p_layer_no out of range");
+      FRLogger.warn("InteractiveSettings.get_manual_trace_half_width p_layer_no out of range");
       return 0;
     }
     return this.manual_trace_half_width_arr[p_layer_no];
@@ -452,7 +480,8 @@ public class Settings implements Serializable {
   }
 
   /**
-   * Defines, if the setting attributes are allowed to be changed interactively or not.
+   * Defines, if the setting attributes are allowed to be changed interactively or
+   * not.
    */
   public void set_read_only(Boolean p_value) {
     this.read_only = p_value;
@@ -468,11 +497,11 @@ public class Settings implements Serializable {
   private void readObject(ObjectInputStream p_stream) throws IOException, ClassNotFoundException {
     p_stream.defaultReadObject();
     if (this.item_selection_filter == null) {
-      FRLogger.warn("Settings.readObject: item_selection_filter is null");
+      FRLogger.warn("InteractiveSettings.readObject: item_selection_filter is null");
       this.item_selection_filter = new ItemSelectionFilter();
     }
     if (this.snapshot_attributes == null) {
-      FRLogger.warn("Settings.readObject: snapshot_attributes is null");
+      FRLogger.warn("InteractiveSettings.readObject: snapshot_attributes is null");
       this.snapshot_attributes = new SnapShot.Attributes();
     }
     this.read_only = false;

@@ -401,6 +401,11 @@ public class BoardFrame extends WindowBase {
       // If the file was read successfully, initialize the windows
       if (read_result == DsnFile.ReadResult.OK) {
         viewport_position = new Point(0, 0);
+
+        // Set the current routing job in the board manager so that GUI components can
+        // access it
+        board_panel.board_handling.setCurrentRoutingJob(this.routingJob);
+
         initialize_windows();
 
         // Raise an event to notify the observers that a new board has been loaded

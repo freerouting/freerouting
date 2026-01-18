@@ -260,7 +260,7 @@ public class SelectedItemState extends InteractiveState {
       all_items_removed = hdlg
           .get_routing_board()
           .remove_items_and_pull_tight(item_list, hdlg.settings.trace_pull_tight_region_width,
-              hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
+              hdlg.settings.trace_pull_tight_accuracy);
     } else {
       all_items_removed = hdlg
           .get_routing_board()
@@ -341,16 +341,16 @@ public class SelectedItemState extends InteractiveState {
       }
       int via_costs;
       if (contains_plane) {
-        via_costs = hdlg.settings.autoroute_settings.get_plane_via_costs();
+        via_costs = hdlg.getCurrentRoutingJob().routerSettings.get_plane_via_costs();
       } else {
-        via_costs = hdlg.settings.autoroute_settings.get_via_costs();
+        via_costs = hdlg.getCurrentRoutingJob().routerSettings.get_via_costs();
       }
       hdlg
           .get_routing_board()
           .start_marking_changed_area();
       AutorouteAttemptResult autoroute_result = hdlg
           .get_routing_board()
-          .autoroute(curr_item, hdlg.settings.autoroute_settings, via_costs, p_stoppable_thread, null);
+          .autoroute(curr_item, hdlg.getCurrentRoutingJob().routerSettings, via_costs, p_stoppable_thread, null);
       if (autoroute_result.state == AutorouteAttemptState.ROUTED) {
         ++found_count;
         hdlg.repaint();
@@ -410,14 +410,14 @@ public class SelectedItemState extends InteractiveState {
       }
       if (curr_item instanceof PolylineTrace curr_trace) {
         boolean something_changed = curr_trace.pull_tight(!hdlg.settings.push_enabled,
-            hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, p_stoppable_thread);
+            hdlg.settings.trace_pull_tight_accuracy, p_stoppable_thread);
         if (!something_changed) {
           curr_trace.smoothen_end_corners_fork(!hdlg.settings.push_enabled,
-              hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, p_stoppable_thread);
+              hdlg.settings.trace_pull_tight_accuracy, p_stoppable_thread);
         }
       } else if (curr_item instanceof Via via) {
         OptViaAlgo.opt_via_location(hdlg.get_routing_board(), via, null,
-            hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, 10);
+            hdlg.settings.trace_pull_tight_accuracy, 10);
       }
     }
     String curr_message;
@@ -425,7 +425,7 @@ public class SelectedItemState extends InteractiveState {
     if (hdlg.settings.push_enabled && !interrupted) {
       hdlg
           .get_routing_board()
-          .opt_changed_area(new int[0], null, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, null,
+          .opt_changed_area(new int[0], null, hdlg.settings.trace_pull_tight_accuracy, null,
               p_stoppable_thread, 0);
     }
 

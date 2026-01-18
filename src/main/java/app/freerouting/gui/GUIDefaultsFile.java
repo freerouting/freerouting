@@ -17,7 +17,8 @@ import java.util.LinkedList;
 import javax.swing.JFrame;
 
 /**
- * Description of a text file, where the board independent interactive settings are stored.
+ * Description of a text file, where the board independent interactive settings
+ * are stored.
  */
 public class GUIDefaultsFile {
 
@@ -32,7 +33,8 @@ public class GUIDefaultsFile {
    */
   private final IndentFileWriter out_file;
 
-  private GUIDefaultsFile(BoardFrame p_board_frame, GuiBoardManager p_board_handling, GUIDefaultsScanner p_scanner, IndentFileWriter p_output_file) {
+  private GUIDefaultsFile(BoardFrame p_board_frame, GuiBoardManager p_board_handling, GUIDefaultsScanner p_scanner,
+      IndentFileWriter p_output_file) {
     board_frame = p_board_frame;
     board_handling = p_board_handling;
     scanner = p_scanner;
@@ -40,9 +42,11 @@ public class GUIDefaultsFile {
   }
 
   /**
-   * Writes the GUI setting of p_board_frame as default to p_file. Returns false, if an error occurred.
+   * Writes the GUI setting of p_board_frame as default to p_file. Returns false,
+   * if an error occurred.
    */
-  public static boolean write(BoardFrame p_board_frame, GuiBoardManager p_board_handling, OutputStream p_output_stream) {
+  public static boolean write(BoardFrame p_board_frame, GuiBoardManager p_board_handling,
+      OutputStream p_output_stream) {
     if (p_output_stream == null) {
       return false;
     }
@@ -67,7 +71,8 @@ public class GUIDefaultsFile {
   }
 
   /**
-   * Reads the GUI setting of p_board_frame from file. Returns false, if an error occurred while reading the file.
+   * Reads the GUI setting of p_board_frame from file. Returns false, if an error
+   * occurred while reading the file.
    */
   public static boolean read(BoardFrame p_board_frame, GuiBoardManager p_board_handling, InputStream p_input_stream) {
     if (p_input_stream == null) {
@@ -132,7 +137,7 @@ public class GUIDefaultsFile {
     }
 
     // read the direct subscopes of the gui_defaults scope
-    for (; ; ) {
+    for (;;) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -170,7 +175,7 @@ public class GUIDefaultsFile {
   private boolean read_windows_scope() throws IOException {
     // read the direct subscopes of the windows scope
     Object next_token = null;
-    for (; ; ) {
+    for (;;) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -341,7 +346,7 @@ public class GUIDefaultsFile {
   private boolean read_colors_scope() throws IOException {
     // read the direct subscopes of the colors scope
     Object next_token = null;
-    for (; ; ) {
+    for (;;) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -641,7 +646,8 @@ public class GUIDefaultsFile {
   }
 
   /**
-   * reads a java.awt.Color from the defaults file. Returns null, if no valid color was found.
+   * reads a java.awt.Color from the defaults file. Returns null, if no valid
+   * color was found.
    */
   private Color read_color() throws IOException {
     int[] rgb_color_arr = new int[3];
@@ -659,11 +665,12 @@ public class GUIDefaultsFile {
   }
 
   /**
-   * reads an array java.awt.Color from the defaults file. Returns null, if no valid colors were found.
+   * reads an array java.awt.Color from the defaults file. Returns null, if no
+   * valid colors were found.
    */
   private Color[] read_color_array() throws IOException {
     Collection<Color> color_list = new LinkedList<>();
-    for (; ; ) {
+    for (;;) {
       Color curr_color = read_color();
       if (curr_color == null) {
         break;
@@ -787,7 +794,7 @@ public class GUIDefaultsFile {
   private boolean read_parameter_scope() throws IOException {
     // read the subscopes of the parameter scope
     Object next_token = null;
-    for (; ; ) {
+    for (;;) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -1078,7 +1085,7 @@ public class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_accuracy_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.settings.autoroute_settings.trace_pull_tight_accuracy = pull_tight_accuracy;
+    this.board_handling.settings.trace_pull_tight_accuracy = pull_tight_accuracy;
     return true;
   }
 
@@ -1086,7 +1093,7 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("pull_tight_accuracy ");
     out_file.new_line();
-    int pull_tight_accuracy = this.board_handling.settings.autoroute_settings.trace_pull_tight_accuracy;
+    int pull_tight_accuracy = this.board_handling.settings.trace_pull_tight_accuracy;
     out_file.write(String.valueOf(pull_tight_accuracy));
     out_file.end_scope();
   }
@@ -1219,7 +1226,7 @@ public class GUIDefaultsFile {
   private boolean read_selectable_item_scope() throws IOException {
     ItemSelectionFilter item_selection_filter = this.board_handling.settings.get_item_selection_filter();
     item_selection_filter.deselect_all();
-    for (; ; ) {
+    for (;;) {
       Object next_token = this.scanner.next_token();
       if (next_token == Keyword.CLOSED_BRACKET) {
         break;
@@ -1328,7 +1335,7 @@ public class GUIDefaultsFile {
 
   private boolean read_deselected_snapshot_attributes() throws IOException {
     SnapShot.Attributes attributes = this.board_handling.settings.get_snapshot_attributes();
-    for (; ; ) {
+    for (;;) {
       Object next_token = this.scanner.next_token();
       if (next_token == Keyword.CLOSED_BRACKET) {
         break;
@@ -1373,6 +1380,16 @@ public class GUIDefaultsFile {
    * Keywords in the gui defaults file.
    */
   enum Keyword {
-    ALL_VISIBLE, ASSIGN_NET_RULES, AUTOMATIC_LAYER_DIMMING, BACKGROUND, BOARD_FRAME, BOUNDS, CLEARANCE_COMPENSATION, CLEARANCE_MATRIX, CLOSED_BRACKET, COLOR_MANAGER, COLORS, COMPONENT_BACK, COMPONENT_FRONT, COMPONENT_GRID, COMPONENT_INFO, CONDUCTION, CURRENT_LAYER, CURRENT_ONLY, DESELECTED_SNAPSHOT_ATTRIBUTES, DISPLAY_MISCELLANEOUS, DISPLAY_REGION, DRAG_COMPONENTS_ENABLED, DYNAMIC, EDIT_VIAS, EDIT_NET_RULES, FIXED, FIXED_TRACES, FIXED_VIAS, FORTYFIVE_DEGREE, GUI_DEFAULTS, HILIGHT, HILIGHT_ROUTING_OBSTACLE, IGNORE_CONDUCTION_AREAS, INCOMPLETES, INCOMPLETES_INFO, INTERACTIVE_STATE, KEEPOUT, LAYER_VISIBILITY, LENGTH_MATCHING, MANUAL_RULES, MANUAL_RULE_SETTINGS, MOVE_PARAMETER, NET_INFO, NINETY_DEGREE, NONE, NOT_VISIBLE, OBJECT_COLORS, OBJECT_VISIBILITY, OPEN_BRACKET, OFF, ON, OUTLINE, PARAMETER, PACKAGE_INFO, PADSTACK_INFO, PINS, PULL_TIGHT_ACCURACY, PULL_TIGHT_REGION, PUSH_AND_SHOVE_ENABLED, ROUTE_DETAILS, ROUTE_MODE, ROUTE_PARAMETER, RULE_SELECTION, SELECT_PARAMETER, SELECTABLE_ITEMS, SELECTION_LAYERS, SNAPSHOTS, SHOVE_ENABLED, STITCHING, TRACES, UNFIXED, VIA_KEEPOUT, VISIBLE, VIA_RULES, VIA_SNAP_TO_SMD_CENTER, VIAS, VIOLATIONS, VIOLATIONS_INFO, WINDOWS
+    ALL_VISIBLE, ASSIGN_NET_RULES, AUTOMATIC_LAYER_DIMMING, BACKGROUND, BOARD_FRAME, BOUNDS, CLEARANCE_COMPENSATION,
+    CLEARANCE_MATRIX, CLOSED_BRACKET, COLOR_MANAGER, COLORS, COMPONENT_BACK, COMPONENT_FRONT, COMPONENT_GRID,
+    COMPONENT_INFO, CONDUCTION, CURRENT_LAYER, CURRENT_ONLY, DESELECTED_SNAPSHOT_ATTRIBUTES, DISPLAY_MISCELLANEOUS,
+    DISPLAY_REGION, DRAG_COMPONENTS_ENABLED, DYNAMIC, EDIT_VIAS, EDIT_NET_RULES, FIXED, FIXED_TRACES, FIXED_VIAS,
+    FORTYFIVE_DEGREE, GUI_DEFAULTS, HILIGHT, HILIGHT_ROUTING_OBSTACLE, IGNORE_CONDUCTION_AREAS, INCOMPLETES,
+    INCOMPLETES_INFO, INTERACTIVE_STATE, KEEPOUT, LAYER_VISIBILITY, LENGTH_MATCHING, MANUAL_RULES, MANUAL_RULE_SETTINGS,
+    MOVE_PARAMETER, NET_INFO, NINETY_DEGREE, NONE, NOT_VISIBLE, OBJECT_COLORS, OBJECT_VISIBILITY, OPEN_BRACKET, OFF, ON,
+    OUTLINE, PARAMETER, PACKAGE_INFO, PADSTACK_INFO, PINS, PULL_TIGHT_ACCURACY, PULL_TIGHT_REGION,
+    PUSH_AND_SHOVE_ENABLED, ROUTE_DETAILS, ROUTE_MODE, ROUTE_PARAMETER, RULE_SELECTION, SELECT_PARAMETER,
+    SELECTABLE_ITEMS, SELECTION_LAYERS, SNAPSHOTS, SHOVE_ENABLED, STITCHING, TRACES, UNFIXED, VIA_KEEPOUT, VISIBLE,
+    VIA_RULES, VIA_SNAP_TO_SMD_CENTER, VIAS, VIOLATIONS, VIOLATIONS_INFO, WINDOWS
   }
 }

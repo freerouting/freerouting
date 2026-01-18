@@ -25,24 +25,28 @@ import java.io.OutputStream;
 import java.util.Locale;
 
 /**
- * Manages the routing board operations in a headless mode, where no graphical user interface is involved. This class handles the core logic and interactions required for auto-routing and other
+ * Manages the routing board operations in a headless mode, where no graphical
+ * user interface is involved. This class handles the core logic and
+ * interactions required for auto-routing and other
  * board-related tasks in a non-interactive environment.
  */
 public class HeadlessBoardManager implements BoardManager {
 
   /**
-   * The file used for logging interactive action, so that they can be replayed later
+   * The file used for logging interactive action, so that they can be replayed
+   * later
    */
   public final ActivityReplayFile activityReplayFile = new ActivityReplayFile();
   /**
    * The current settings for interactive actions on the board
    */
-  public Settings settings;
+  public InteractiveSettings settings;
   /**
    * The listener for the autorouter thread
    */
   public ThreadActionListener autorouter_listener;
-  // TODO: board management is a mess: BoardManager, NamedAlgorithm and RoutingJob all have a board, and they must be in sync
+  // TODO: board management is a mess: BoardManager, NamedAlgorithm and RoutingJob
+  // all have a board, and they must be in sync
   /**
    * The board object that contains all the data for the board
    */
@@ -70,12 +74,13 @@ public class HeadlessBoardManager implements BoardManager {
   }
 
   @Override
-  public Settings get_settings() {
+  public InteractiveSettings get_settings() {
     return settings;
   }
 
   /**
-   * Initializes the manual trace widths from the default trace widths in the board rules.
+   * Initializes the manual trace widths from the default trace widths in the
+   * board rules.
    */
   @Override
   public void initialize_manual_trace_half_widths() {
@@ -87,7 +92,8 @@ public class HeadlessBoardManager implements BoardManager {
   }
 
   @Override
-  public void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure, PolylineShape[] p_outline_shapes, String p_outline_clearance_class_name, BoardRules p_rules,
+  public void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure, PolylineShape[] p_outline_shapes,
+      String p_outline_clearance_class_name, BoardRules p_rules,
       Communication p_board_communication) {
     if (this.board != null) {
       routingJob.logWarning(" BoardHandling.create_board: board already created");
@@ -99,12 +105,14 @@ public class HeadlessBoardManager implements BoardManager {
         outline_cl_class_no = p_rules.clearance_matrix.get_no(p_outline_clearance_class_name);
         outline_cl_class_no = Math.max(outline_cl_class_no, 0);
       } else {
-        outline_cl_class_no = p_rules.get_default_net_class().default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.AREA);
+        outline_cl_class_no = p_rules.get_default_net_class().default_item_clearance_classes
+            .get(DefaultItemClearanceClasses.ItemClass.AREA);
       }
     }
-    this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules, p_board_communication);
+    this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules,
+        p_board_communication);
 
-    this.settings = new Settings(this.board, this.activityReplayFile);
+    this.settings = new InteractiveSettings(this.board, this.activityReplayFile);
   }
 
   @Override
@@ -112,7 +120,8 @@ public class HeadlessBoardManager implements BoardManager {
     return this.locale;
   }
 
-  //* Returns the checksum of the board. This checksum is used to detect changes in the board database.
+  // * Returns the checksum of the board. This checksum is used to detect changes
+  // in the board database.
   public long calculateCrc32() {
     // Create a memory stream
     ByteArrayOutputStream memoryStream = new ByteArrayOutputStream();
@@ -127,18 +136,23 @@ public class HeadlessBoardManager implements BoardManager {
   }
 
   /**
-   * Imports a board design from a Specctra dsn-file. The parameters p_item_observers and p_item_id_no_generator are used, in case the board is embedded into a host system. Returns false, if the
+   * Imports a board design from a Specctra dsn-file. The parameters
+   * p_item_observers and p_item_id_no_generator are used, in case the board is
+   * embedded into a host system. Returns false, if the
    * dsn-file is corrupted.
    */
-  public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers, IdentificationNumberGenerator identificationNumberGenerator) {
+  public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
+      IdentificationNumberGenerator identificationNumberGenerator) {
     if (inputStream == null) {
       return DsnFile.ReadResult.ERROR;
     }
 
     DsnFile.ReadResult read_result;
     try {
-      // TODO: we should have a returned object that represent the DSN file, and we should create a RoutingBoard/BasicBoard based on that as a next step
-      // we create the board inside the DSN file reader instead at the moment, and save it in the board field of the BoardHandling class
+      // TODO: we should have a returned object that represent the DSN file, and we
+      // should create a RoutingBoard/BasicBoard based on that as a next step
+      // we create the board inside the DSN file reader instead at the moment, and
+      // save it in the board field of the BoardHandling class
       read_result = DsnFile.read(inputStream, this, boardObservers, identificationNumberGenerator);
     } catch (Exception e) {
       read_result = DsnFile.ReadResult.ERROR;
@@ -149,7 +163,8 @@ public class HeadlessBoardManager implements BoardManager {
       FRAnalytics.fileLoaded("DSN", GSON.toJson(boardStats));
       this.board.reduce_nets_of_route_items();
       originalBoardChecksum = calculateCrc32();
-      FRAnalytics.boardLoaded(this.board.communication.specctra_parser_info.host_cad, this.board.communication.specctra_parser_info.host_version, this.board.get_layer_count(),
+      FRAnalytics.boardLoaded(this.board.communication.specctra_parser_info.host_cad,
+          this.board.communication.specctra_parser_info.host_version, this.board.get_layer_count(),
           this.board.components.count(), this.board.rules.nets.max_net_no());
     }
 
