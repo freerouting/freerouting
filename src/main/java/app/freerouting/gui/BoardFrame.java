@@ -426,13 +426,40 @@ public class BoardFrame extends WindowBase {
           double horizontal_add_costs = 0.1 * Math.round(10 * horizontal_width / vertical_width);
           double vertical_add_costs = 0.1 * Math.round(10 * vertical_width / horizontal_width);
 
+          // Make more horizontal preferred direction if the board is horizontal
+          boolean curr_preferred_direction_is_horizontal = horizontal_width < vertical_width;
+
           for (int i = 0; i < boardLayerCount; i++) {
-            boolean preferred_direction_is_horizontal = (i % 2 == 1);
-            if (preferred_direction_is_horizontal) {
+            // Set layer active based on whether it's a signal layer
+            this.routingJob.routerSettings.isLayerActive[i] = board.layer_structure.arr[i].is_signal;
+
+            // Alternate preferred direction for signal layers
+            if (board.layer_structure.arr[i].is_signal) {
+              curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
+            }
+
+            this.routingJob.routerSettings.isPreferredDirectionHorizontalOnLayer[i] = curr_preferred_direction_is_horizontal;
+
+            // Set base costs
+            this.routingJob.routerSettings.scoring.preferredDirectionTraceCost[i] = this.routingJob.routerSettings.scoring.defaultPreferredDirectionTraceCost;
+            this.routingJob.routerSettings.scoring.undesiredDirectionTraceCost[i] = this.routingJob.routerSettings.scoring.defaultUndesiredDirectionTraceCost;
+
+            // Add aspect-ratio-based costs
+            if (curr_preferred_direction_is_horizontal) {
               this.routingJob.routerSettings.scoring.undesiredDirectionTraceCost[i] += horizontal_add_costs;
             } else {
               this.routingJob.routerSettings.scoring.undesiredDirectionTraceCost[i] += vertical_add_costs;
             }
+          }
+
+          // Increase costs on outer layers if there are more than 2 signal layers
+          int signal_layer_count = board.layer_structure.signal_layer_count();
+          if (signal_layer_count > 2) {
+            double outer_add_costs = 0.2 * signal_layer_count;
+            this.routingJob.routerSettings.scoring.preferredDirectionTraceCost[0] += outer_add_costs;
+            this.routingJob.routerSettings.scoring.preferredDirectionTraceCost[boardLayerCount - 1] += outer_add_costs;
+            this.routingJob.routerSettings.scoring.undesiredDirectionTraceCost[0] += outer_add_costs;
+            this.routingJob.routerSettings.scoring.undesiredDirectionTraceCost[boardLayerCount - 1] += outer_add_costs;
           }
         }
 
