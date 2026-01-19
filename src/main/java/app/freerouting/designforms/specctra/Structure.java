@@ -573,6 +573,8 @@ class Structure extends ScopeKeyword {
       if (curr_ob instanceof Rule.WidthRule rule) {
         double wire_width = rule.value;
         int trace_halfwidth = (int) Math.round(p_par.coordinate_transform.dsn_to_board(wire_width) / 2);
+        FRLogger.debug("Set default trace width (all layers): DSN=" + wire_width +
+            " → board=" + (trace_halfwidth * 2) + " (" + (trace_halfwidth * 2 / 40000.0) + " mm)");
         p_board_rules.set_default_trace_half_widths(trace_halfwidth);
       }
     }
@@ -608,8 +610,12 @@ class Structure extends ScopeKeyword {
     if (p_rule.clearance_class_pairs.isEmpty()) {
       if (p_layer_no < 0) {
         p_board_rules.clearance_matrix.set_default_value(curr_clearance);
+        FRLogger.debug("Set DEFAULT clearance (all layers): " + curr_clearance +
+            " (" + (curr_clearance / 40000.0) + " mm) from DSN value " + p_rule.value);
       } else {
         p_board_rules.clearance_matrix.set_default_value(p_layer_no, curr_clearance);
+        FRLogger.debug("Set DEFAULT clearance (layer " + p_layer_no + "): " + curr_clearance +
+            " (" + (curr_clearance / 40000.0) + " mm) from DSN value " + p_rule.value);
       }
       return result;
     }
@@ -675,9 +681,15 @@ class Structure extends ScopeKeyword {
       if (p_layer_no < 0) {
         p_board_rules.clearance_matrix.set_value(first_class_no, second_class_no, curr_clearance);
         p_board_rules.clearance_matrix.set_value(second_class_no, first_class_no, curr_clearance);
+        FRLogger.debug("Set clearance (all layers): " + curr_pair[0] + "_" + curr_pair[1] +
+            " = " + curr_clearance + " (" + (curr_clearance / 40000.0) + " mm), classes [" +
+            first_class_no + "," + second_class_no + "]");
       } else {
         p_board_rules.clearance_matrix.set_value(first_class_no, second_class_no, p_layer_no, curr_clearance);
         p_board_rules.clearance_matrix.set_value(second_class_no, first_class_no, p_layer_no, curr_clearance);
+        FRLogger.debug("Set clearance (layer " + p_layer_no + "): " + curr_pair[0] + "_" + curr_pair[1] +
+            " = " + curr_clearance + " (" + (curr_clearance / 40000.0) + " mm), classes [" +
+            first_class_no + "," + second_class_no + "]");
       }
     }
     return result;
