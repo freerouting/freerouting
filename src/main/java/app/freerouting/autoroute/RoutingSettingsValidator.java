@@ -193,11 +193,12 @@ public class RoutingSettingsValidator {
         }
 
         if (item_count > 0) {
-            int board_area = board.bounding_box.width() * board.bounding_box.height();
-            estimated_min_spacing = (int) Math.sqrt(board_area / item_count) / 2;
+            long board_area = (long) board.bounding_box.width() * board.bounding_box.height();
+            // Estimate spacing as sqrt(area / items) - the average distance between items
+            estimated_min_spacing = (int) (Math.sqrt((double) board_area / item_count));
 
             FRLogger.debug("Estimated minimum spacing: " + estimated_min_spacing +
-                    " (based on " + item_count + " items)");
+                    " (based on " + item_count + " items, board area: " + board_area + ")");
 
             // Check if maximum clearance exceeds estimated spacing
             ClearanceMatrix cl_matrix = board.rules.clearance_matrix;
