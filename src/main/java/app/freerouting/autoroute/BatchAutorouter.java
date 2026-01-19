@@ -492,6 +492,38 @@ public class BatchAutorouter extends NamedAlgorithm {
       int currentRipupCost = this.start_ripup_costs * p_pass_no;
       PerformanceProfiler.recordPass(p_pass_no, routerCounters.incompleteCount, passDuration, currentRipupCost);
 
+      // DEBUG: Log detailed pass summary including per-net unrouted items breakdown
+      // This helps diagnose performance regressions by showing exactly which nets are
+      // problematic
+      if (routerCounters.incompleteCount > 0) {
+        job.logDebug("=== Pass #" + p_pass_no + " Summary ===");
+        job.logDebug("  Duration: " + (passDuration / 1000.0) + " seconds");
+        job.logDebug("  Ripup cost: " + currentRipupCost);
+        job.logDebug("  Routed: " + routed + ", Failed: " + not_routed + ", Skipped: " + skipped);
+        job.logDebug("  Total incomplete connections: " + routerCounters.incompleteCount);
+        job.logDebug("  Unrouted items breakdown by net:");
+
+        // Show which nets have unrouted items - use fresh RatsNest for accurate
+        // end-of-pass state
+        RatsNest finalRatsNest = new RatsNest(board);
+        int netsWithIncompletes = 0;
+        for (int netNo = 1; netNo <= board.rules.nets.max_net_no(); netNo++) {
+          int netIncompletes = finalRatsNest.incomplete_count(netNo);
+          if (netIncompletes > 0) {
+            netsWithIncompletes++;
+            Net net = board.rules.nets.get(netNo);
+            String netName = (net != null) ? net.name : "net#" + netNo;
+            int netItemCount = board.connectable_item_count(netNo);
+            job.logDebug("    Net '" + netName + "': " + netIncompletes + " incomplete(s), "
+                + netItemCount + " total items");
+          }
+        }
+        job.logDebug("  Total nets with incomplete connections: " + netsWithIncompletes);
+        job.logDebug("========================");
+      } else {
+        job.logDebug("=== Pass #" + p_pass_no + " completed successfully - all items routed! ===");
+      }
+
       // We are done with this pass
       this.air_line = null;
       return routed > 0 || not_routed > 0;
