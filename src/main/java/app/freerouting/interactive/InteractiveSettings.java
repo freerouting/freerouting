@@ -93,10 +93,7 @@ public class InteractiveSettings implements Serializable {
    * The filter used in interactive selection of board items.
    */
   ItemSelectionFilter item_selection_filter;
-  /**
-   * Defines the data of the snapshot selected for restoring.
-   */
-  SnapShot.Attributes snapshot_attributes;
+
   /**
    * Indicates, if the data of this class are not allowed to be changed in
    * interactive board editing.
@@ -133,7 +130,7 @@ public class InteractiveSettings implements Serializable {
     manual_trace_half_width_arr = new int[p_board.get_layer_count()];
     Arrays.fill(manual_trace_half_width_arr, 1000);
     item_selection_filter = new ItemSelectionFilter();
-    snapshot_attributes = new SnapShot.Attributes();
+
   }
 
   /**
@@ -162,7 +159,7 @@ public class InteractiveSettings implements Serializable {
     System.arraycopy(p_settings.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr, 0,
         this.manual_trace_half_width_arr.length);
     this.item_selection_filter = new ItemSelectionFilter(p_settings.item_selection_filter);
-    this.snapshot_attributes = new SnapShot.Attributes(p_settings.snapshot_attributes);
+
   }
 
   public int get_layer() {
@@ -393,13 +390,6 @@ public class InteractiveSettings implements Serializable {
   }
 
   /**
-   * Defines the data of the snapshot selected for restoring.
-   */
-  public SnapShot.Attributes get_snapshot_attributes() {
-    return this.snapshot_attributes;
-  }
-
-  /**
    * Get the trace half width in manual routing mode on layer p_layer_no
    */
   public int get_manual_trace_half_width(int p_layer_no) {
@@ -496,10 +486,7 @@ public class InteractiveSettings implements Serializable {
       FRLogger.warn("InteractiveSettings.readObject: item_selection_filter is null");
       this.item_selection_filter = new ItemSelectionFilter();
     }
-    if (this.snapshot_attributes == null) {
-      FRLogger.warn("InteractiveSettings.readObject: snapshot_attributes is null");
-      this.snapshot_attributes = new SnapShot.Attributes();
-    }
+
     this.read_only = false;
   }
 }

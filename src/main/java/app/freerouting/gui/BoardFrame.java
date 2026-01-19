@@ -42,10 +42,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -127,12 +124,11 @@ public class BoardFrame extends WindowBase {
   WindowLayerVisibility layer_visibility_window;
   WindowObjectVisibility object_visibility_window;
   WindowDisplayMisc display_misc_window;
-  WindowSnapshot snapshot_window;
+
   ColorManager color_manager;
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
   Collection<BoardTemporarySubWindow> temporary_subwindows = new LinkedList<>();
   private LogEntries.LogEntryAddedListener log_entry_added_listener;
-  private LocalDateTime intermediate_stage_file_last_saved_at;
 
   /**
    * Creates a new BoardFrame that is the GUI element containing the Menu,
@@ -523,52 +519,6 @@ public class BoardFrame extends WindowBase {
     return true;
   }
 
-  public boolean load_intermediate_stage_file() {
-    try {
-      FileInputStream input_stream = new FileInputStream(this.routingJob.snapshot.getFile());
-      return this.load(input_stream, false, null, this.routingJob);
-    } catch (IOException _) {
-      screen_messages.set_status_message(tm.getText("error_2"));
-      return false;
-    } catch (Exception _) {
-      screen_messages.set_status_message(tm.getText("error_3"));
-      return false;
-    }
-  }
-
-  @Deprecated
-  public boolean save_intermediate_stage_file() {
-    if ((intermediate_stage_file_last_saved_at != null) && (intermediate_stage_file_last_saved_at
-        .plusSeconds(30)
-        .isAfter(LocalDateTime.now()))) {
-      return false;
-    }
-
-    intermediate_stage_file_last_saved_at = LocalDateTime.now();
-    return saveAsBinary(this.routingJob.snapshot);
-  }
-
-  public boolean delete_intermediate_stage_file() {
-    return this.routingJob.snapshot
-        .getFile()
-        .delete();
-  }
-
-  public boolean is_intermediate_stage_file_available() {
-    return this.routingJob.snapshot.getFile() != null && this.routingJob.snapshot
-        .getFile()
-        .exists() && this.routingJob.snapshot
-            .getFile()
-            .canRead();
-  }
-
-  public LocalDateTime get_intermediate_stage_file_modification_time() {
-    long lastModified = this.routingJob.snapshot
-        .getFile()
-        .lastModified();
-    return LocalDateTime.ofInstant(Instant.ofEpochMilli(lastModified), ZoneId.systemDefault());
-  }
-
   /**
    * Saves the board, GUI settings and subwindows to disk as a version-specific
    * binary stream. Returns false, if the save failed.
@@ -628,31 +578,6 @@ public class BoardFrame extends WindowBase {
       screen_messages.set_status_message(tm.getText("message_binary_file_save_failed", outputFile.getPath()));
       return false;
     }
-    return true;
-  }
-
-  /**
-   * Saves the board, GUI settings and subwindows to disk as a binary file.
-   * Returns false, if the save failed. DEPRECATED: do not use this
-   * version-specific binary file format anymore, use SES, DSN,
-   * RoutingJob-JSON format instead
-   */
-  @Deprecated
-  private boolean saveAsBinary(BoardFileDetails output) {
-    if (output == null) {
-      return false;
-    }
-
-    try {
-      ByteArrayOutputStream output_stream = new ByteArrayOutputStream();
-      saveAsBinary(output_stream);
-      output.format = FileFormat.FRB;
-      output.setData(output_stream.toByteArray());
-      output_stream.close();
-    } catch (Exception _) {
-      return false;
-    }
-
     return true;
   }
 
@@ -893,8 +818,7 @@ public class BoardFrame extends WindowBase {
     this.permanent_subwindows[2] = this.layer_visibility_window;
     this.display_misc_window = new WindowDisplayMisc(this);
     this.permanent_subwindows[3] = this.display_misc_window;
-    this.snapshot_window = new WindowSnapshot(this);
-    this.permanent_subwindows[4] = this.snapshot_window;
+
     this.route_parameter_window = new WindowRouteParameter(this);
     this.permanent_subwindows[5] = this.route_parameter_window;
     this.select_parameter_window = new WindowSelectParameter(this);
@@ -963,7 +887,7 @@ public class BoardFrame extends WindowBase {
     this.net_info_window.setLocation(350, 30);
     this.unconnected_route_window.setLocation(650, 30);
     this.route_stubs_window.setLocation(600, 30);
-    this.snapshot_window.setLocation(0, 250);
+
     this.layer_visibility_window.setLocation(0, 450);
     this.object_visibility_window.setLocation(0, 550);
     this.display_misc_window.setLocation(0, 350);
@@ -1008,59 +932,6 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Restore the selected snapshot in the snapshot window.
-   */
-  public void goto_selected_snapshot() {
-    if (this.snapshot_window != null) {
-      this.snapshot_window.goto_selected();
-    }
-  }
-
-  /**
-   * Selects the snapshot, which is previous to the current selected snapshot.
-   * Thecurent selected snapshot will be no more selected.
-   */
-  public void select_previous_snapshot() {
-    if (this.snapshot_window != null) {
-      this.snapshot_window.select_previous_item();
-    }
-  }
-
-  /**
-   * Selects the snapshot, which is next to the current selected snapshot.
-   * Thecurent selected snapshot will be no more selected.
-   */
-  public void select_next_snapshot() {
-    if (this.snapshot_window != null) {
-      this.snapshot_window.select_next_item();
-    }
-  }
-
-  /**
-   * Used for storing the subwindowfilters in a snapshot.
-   */
-  public SubwindowSelections get_snapshot_subwindow_selections() {
-    SubwindowSelections result = new SubwindowSelections();
-    result.incompletes_selection = this.incompletes_window.get_snapshot_info();
-    result.packages_selection = this.packages_window.get_snapshot_info();
-    result.nets_selection = this.net_info_window.get_snapshot_info();
-    result.components_selection = this.components_window.get_snapshot_info();
-    result.padstacks_selection = this.padstacks_window.get_snapshot_info();
-    return result;
-  }
-
-  /**
-   * Used for restoring the subwindowfilters from a snapshot.
-   */
-  public void set_snapshot_subwindow_selections(SubwindowSelections p_filters) {
-    this.incompletes_window.set_snapshot_info(p_filters.incompletes_selection);
-    this.packages_window.set_snapshot_info(p_filters.packages_selection);
-    this.net_info_window.set_snapshot_info(p_filters.nets_selection);
-    this.components_window.set_snapshot_info(p_filters.components_selection);
-    this.padstacks_window.set_snapshot_info(p_filters.padstacks_selection);
-  }
-
-  /**
    * Repaints this board frame and all the subwindows of the board.
    */
   public void repaint_all() {
@@ -1076,18 +947,6 @@ public class BoardFrame extends WindowBase {
 
   public void addReadOnlyEventListener(Consumer<RoutingBoard> listener) {
     boardSavedEventListeners.add(listener);
-  }
-
-  /**
-   * Used for storing the subwindow filters in a snapshot.
-   */
-  public static class SubwindowSelections implements Serializable {
-
-    private WindowObjectListWithFilter.SnapshotInfo incompletes_selection;
-    private WindowObjectListWithFilter.SnapshotInfo packages_selection;
-    private WindowObjectListWithFilter.SnapshotInfo nets_selection;
-    private WindowObjectListWithFilter.SnapshotInfo components_selection;
-    private WindowObjectListWithFilter.SnapshotInfo padstacks_selection;
   }
 
   private class WindowStateListener extends WindowAdapter {

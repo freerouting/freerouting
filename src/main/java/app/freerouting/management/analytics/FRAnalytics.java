@@ -41,8 +41,7 @@ public class FRAnalytics {
       put("app.freerouting.gui.WindowClearanceViolations", "app.freerouting.gui/Information/ClearanceViolations");
       put("app.freerouting.gui.WindowUnconnectedRoute", "app.freerouting.gui/Information/UnconnectedRoutes");
       put("app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui/Information/RouteStubs");
-      put("app.freerouting.gui.WindowSnapshot", "app.freerouting.gui/Other/Snapshots");
-      put("app.freerouting.gui.WindowSnapshotSettings", "app.freerouting.gui/Other/Snapshots/Settings");
+
       put("app.freerouting.gui.WindowAbout", "app.freerouting.gui/Help/About");
       put("select_button", "app.freerouting.gui/Board/Toolbar/Select");
       put("route_button", "app.freerouting.gui/Board/Toolbar/Route");
@@ -83,7 +82,7 @@ public class FRAnalytics {
       put("info_clearance_violations_menuitem", "app.freerouting.gui/Board/Menu/Info/ClearanceViolations");
       put("info_unconnected_routes_menuitem", "app.freerouting.gui/Board/Menu/Info/UnconnectedRoutes");
       put("info_route_stubs_menuitem", "app.freerouting.gui/Board/Menu/Info/RoutedStubs");
-      put("other_snapshots_menuitem", "app.freerouting.gui/Board/Menu/Other/Snapshots");
+
       put("other_delete_all_tracks_menuitem", "app.freerouting.gui/Board/Menu/Other/DeleteAllTracksAndVias");
       put("help_about_menuitem", "app.freerouting.gui/Board/Menu/Help/About");
     }
@@ -105,8 +104,8 @@ public class FRAnalytics {
   }
 
   public static void setAccessKey(String libraryVersion, String key) {
-    //analytics = new SegmentClient(libraryVersion, key);
-    //analytics = new BigQueryClient(libraryVersion, key);
+    // analytics = new SegmentClient(libraryVersion, key);
+    // analytics = new BigQueryClient(libraryVersion, key);
     analytics = new FreeroutingAnalyticsClient(libraryVersion, key);
   }
 
@@ -219,8 +218,10 @@ public class FRAnalytics {
     analytics.setEnabled(enabled);
   }
 
-  public static void appStarted(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments, String osName, String osArchitecture, String osVersion, String javaVersion,
-      String javaVendor, Locale systemLanguage, Locale guiLanguage, int cpuCoreCount, long ramAmount, String host, int width, int height, int dpi) {
+  public static void appStarted(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments,
+      String osName, String osArchitecture, String osVersion, String javaVersion,
+      String javaVendor, Locale systemLanguage, Locale guiLanguage, int cpuCoreCount, long ramAmount, String host,
+      int width, int height, int dpi) {
     appStartedAt = Instant
         .now()
         .getEpochSecond();
@@ -331,7 +332,8 @@ public class FRAnalytics {
     trackAnonymousAction(permanent_user_id, "File Loaded", properties);
   }
 
-  public static void boardLoaded(String hostName, String hostVersion, int layerCount, int componentCount, int netCount) {
+  public static void boardLoaded(String hostName, String hostVersion, int layerCount, int componentCount,
+      int netCount) {
     Map<String, String> properties = new HashMap<>();
     properties.put("host_name", hostName);
     properties.put("host_version", hostVersion);

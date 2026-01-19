@@ -412,12 +412,7 @@ public class GlobalSettings implements Serializable {
           } else if (localeString.startsWith("ko")) {
             currentLocale = Locale.KOREAN;
           }
-        } else if (p_args[i].startsWith("-im")) {
-          featureFlags.snapshots = true;
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            featureFlags.snapshots = !Objects.equals(p_args[i + 1], "0");
-            i++;
-          }
+
         } else if (p_args[i].startsWith("-dl")) {
           featureFlags.logging = false;
         } else if (p_args[i].startsWith("-da")) {

@@ -5,13 +5,14 @@ import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * Abstract class for windows displaying a list of objects The object name can be filtered by an alphanumeric input string.
+ * Abstract class for windows displaying a list of objects The object name can
+ * be filtered by an alphanumeric input string.
  */
 public abstract class WindowObjectListWithFilter extends WindowObjectList {
 
@@ -55,25 +56,6 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   /**
    * Returns the filter text string of this window.
    */
-  public SnapshotInfo get_snapshot_info() {
-    int[] selected_indices;
-    if (this.list != null) {
-      selected_indices = this.list.getSelectedIndices();
-    } else {
-      selected_indices = new int[0];
-    }
-    return new SnapshotInfo(filter_string.getText(), selected_indices);
-  }
-
-  public void set_snapshot_info(SnapshotInfo p_snapshot_info) {
-    if (!p_snapshot_info.filter.equals(this.filter_string.getText())) {
-      this.filter_string.setText(p_snapshot_info.filter);
-      this.recalculate();
-    }
-    if (this.list != null && p_snapshot_info.selected_indices.length > 0) {
-      this.list.setSelectedIndices(p_snapshot_info.selected_indices);
-    }
-  }
 
   /**
    * Saves also the filter string to disk.
@@ -99,17 +81,4 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
     return super.read(p_object_stream);
   }
 
-  /**
-   * Information to be stored in a SnapShot.
-   */
-  public static class SnapshotInfo implements Serializable {
-
-    private final String filter;
-    private final int[] selected_indices;
-
-    private SnapshotInfo(String p_filter, int[] p_selected_indices) {
-      filter = p_filter;
-      selected_indices = p_selected_indices;
-    }
-  }
 }

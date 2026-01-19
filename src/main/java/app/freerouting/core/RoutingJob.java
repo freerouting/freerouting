@@ -73,8 +73,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public BoardFileDetails input;
   @SerializedName("output")
   public BoardFileDetails output;
-  @SerializedName("snapshot")
-  public BoardFileDetails snapshot;
+
   @SerializedName("drc")
   public BoardFileDetails drc;
   @SerializedName("router_settings")
@@ -252,42 +251,6 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return this.tryToSetInput(inputFileContent);
   }
 
-  private String getSnapshotFilename(File inputFile) {
-    // Calculate the CRC32 checksum of the input file
-    long crc32Checksum;
-    try (FileInputStream inputStream = new FileInputStream(inputFile.getAbsoluteFile())) {
-      crc32Checksum = BoardFileDetails
-          .calculateCrc32(inputStream)
-          .getValue();
-    } catch (IOException _) {
-      crc32Checksum = 0;
-    }
-
-    if (crc32Checksum == 0) {
-      // We don't have a valid checksum, we can't generate the intermediate snapshot
-      // file
-      return null;
-    }
-
-    // Get the temporary folder path
-    Path snapshotsFolderPath = GlobalSettings
-        .getUserDataPath()
-        .resolve("snapshots");
-
-    try {
-      // Make sure that we have the directory structure in place, and create it if it
-      // doesn't exist
-      Files.createDirectories(snapshotsFolderPath);
-    } catch (IOException e) {
-      FRLogger.error("Failed to create the snapshots directory.", e);
-    }
-
-    // Set the intermediate snapshot file name based on the checksum
-    String intermediate_snapshot_file_name = "snapshot-" + Long.toHexString(crc32Checksum) + "."
-        + RoutingJob.BINARY_FILE_EXTENSION;
-    return snapshotsFolderPath + File.separator + intermediate_snapshot_file_name;
-  }
-
   public File getRulesFile() {
     return new File(changeFileExtension(this.output.getAbsolutePath(), RULES_FILE_EXTENSION));
   }
@@ -298,7 +261,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
   public void setDummyInputFile(String filename) {
     this.input = new BoardFileDetails();
-    this.snapshot = new BoardFileDetails();
+
     this.output = new BoardFileDetails();
 
     if ((filename != null) && (filename
@@ -306,7 +269,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         .endsWith(DSN_FILE_EXTENSION))) {
       this.input.format = FileFormat.DSN;
       this.input.setFilename(filename);
-      this.snapshot.setFilename(getSnapshotFilename(this.input.getFile()));
+
     }
   }
 
@@ -431,8 +394,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
       this.input = new BoardFileDetails(inputFile);
       this.input.addUpdatedEventListener(_ -> this.fireInputUpdatedEvent());
       this.name = input.getFilenameWithoutExtension();
-      this.snapshot = new BoardFileDetails();
-      this.snapshot.setFilename(getSnapshotFilename(this.input.getFile()));
+
     }
 
     fireInputUpdatedEvent();
