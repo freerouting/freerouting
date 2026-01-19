@@ -18,7 +18,8 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
- * Inserts the traces and vias of the connection found by the autoroute algorithm.
+ * Inserts the traces and vias of the connection found by the autoroute
+ * algorithm.
  */
 public class InsertFoundConnectionAlgo {
 
@@ -36,9 +37,11 @@ public class InsertFoundConnectionAlgo {
   }
 
   /**
-   * Creates a new instance of InsertFoundConnectionAlgo . Returns null, if the insertion did not succeed.
+   * Creates a new instance of InsertFoundConnectionAlgo . Returns null, if the
+   * insertion did not succeed.
    */
-  public static InsertFoundConnectionAlgo get_instance(LocateFoundConnectionAlgo p_connection, RoutingBoard p_board, AutorouteControl p_ctrl) {
+  public static InsertFoundConnectionAlgo get_instance(LocateFoundConnectionAlgo p_connection, RoutingBoard p_board,
+      AutorouteControl p_ctrl) {
     if (p_connection == null || p_connection.connection_items == null) {
       return null;
     }
@@ -59,10 +62,12 @@ public class InsertFoundConnectionAlgo {
       return null;
     }
     if (p_connection.target_item instanceof PolylineTrace to_trace) {
-      p_board.connect_to_trace(new_instance.first_corner, to_trace, p_ctrl.trace_half_width[p_connection.start_layer], p_ctrl.trace_clearance_class_no);
+      p_board.connect_to_trace(new_instance.first_corner, to_trace, p_ctrl.trace_half_width[p_connection.start_layer],
+          p_ctrl.trace_clearance_class_no);
     }
     if (p_connection.start_item instanceof PolylineTrace to_trace) {
-      p_board.connect_to_trace(new_instance.last_corner, to_trace, p_ctrl.trace_half_width[p_connection.target_layer], p_ctrl.trace_clearance_class_no);
+      p_board.connect_to_trace(new_instance.last_corner, to_trace, p_ctrl.trace_half_width[p_connection.target_layer],
+          p_ctrl.trace_clearance_class_no);
     }
 
     try {
@@ -75,7 +80,8 @@ public class InsertFoundConnectionAlgo {
   }
 
   /**
-   * Inserts the trace by shoving aside obstacle traces and vias. Returns false, that was not possible for the whole trace.
+   * Inserts the trace by shoving aside obstacle traces and vias. Returns false,
+   * that was not possible for the whole trace.
    */
   private boolean insert_trace(LocateFoundConnectionAlgoAnyAngle.ResultItem p_trace) {
     if (p_trace.corners.length == 1) {
@@ -87,12 +93,14 @@ public class InsertFoundConnectionAlgo {
     }
     boolean result = true;
 
-    // switch off correcting connection to pin because it may get wrong in inserting the polygon
+    // switch off correcting connection to pin because it may get wrong in inserting
+    // the polygon
     // line for line.
     double saved_edge_to_turn_dist = board.rules.get_pin_edge_to_turn_dist();
     board.rules.set_pin_edge_to_turn_dist(-1);
 
-    // Look for pins att the start and the end of p_trace in case that neckdown is necessary.
+    // Look for pins att the start and the end of p_trace in case that neckdown is
+    // necessary.
     Pin start_pin = null;
     Pin end_pin = null;
     if (ctrl.with_neckdown) {
@@ -122,20 +130,26 @@ public class InsertFoundConnectionAlgo {
     for (int i = 1; i < p_trace.corners.length; i++) {
       Point[] curr_corner_arr = Arrays.copyOfRange(p_trace.corners, from_corner_no, i + 1);
       Polyline insert_polyline = new Polyline(curr_corner_arr);
-      Point ok_point = board.insert_forced_trace_polyline(insert_polyline, ctrl.trace_half_width[p_trace.layer], p_trace.layer, net_no_arr, ctrl.trace_clearance_class_no,
-          ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+      Point ok_point = board.insert_forced_trace_polyline(insert_polyline, ctrl.trace_half_width[p_trace.layer],
+          p_trace.layer, net_no_arr, ctrl.trace_clearance_class_no,
+          ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth,
+          ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
       boolean neckdown_inserted = false;
-      if (ok_point != null && ok_point != insert_polyline.last_corner() && ctrl.with_neckdown && curr_corner_arr.length == 2) {
+      if (ok_point != null && ok_point != insert_polyline.last_corner() && ctrl.with_neckdown
+          && curr_corner_arr.length == 2) {
         neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_trace.layer, start_pin, end_pin);
       }
       if (ok_point == insert_polyline.last_corner() || neckdown_inserted) {
         from_corner_no = i;
       } else if (ok_point == insert_polyline.first_corner() && i != p_trace.corners.length - 1) {
-        // if ok_point == insert_polyline.first_corner() the spring over may have failed.
-        // Spring over may correct the situation because an insertion, which is ok with clearance
+        // if ok_point == insert_polyline.first_corner() the spring over may have
+        // failed.
+        // Spring over may correct the situation because an insertion, which is ok with
+        // clearance
         // compensation
         // may cause violations without clearance compensation.
-        // In this case repeating the insertion with more distant corners may allow the spring_over
+        // In this case repeating the insertion with more distant corners may allow the
+        // spring_over
         // to correct the situation.
         if (from_corner_no > 0) {
           // p_trace.corners[i] may be inside the offset for the substitute trace around
@@ -147,6 +161,14 @@ public class InsertFoundConnectionAlgo {
         }
         FRLogger.trace("InsertFoundConnectionAlgo: violation corrected");
       } else {
+        // Log detailed information about where insertion failed
+        FRLogger.debug("InsertFoundConnectionAlgo: insert trace failed for net #" + ctrl.net_no +
+            " at corner " + i + "/" + (p_trace.corners.length - 1) +
+            " on layer " + p_trace.layer +
+            ", trace width: " + ctrl.trace_half_width[p_trace.layer] +
+            ", from corner: " + from_corner_no +
+            ", ok_point: " + (ok_point != null ? ok_point.toString() : "null") +
+            ", target: " + insert_polyline.last_corner());
         result = false;
         break;
       }
@@ -188,7 +210,8 @@ public class InsertFoundConnectionAlgo {
     FloatPoint pin_center = p_pin
         .get_center()
         .to_float();
-    double curr_clearance = this.board.rules.clearance_matrix.get_value(ctrl.trace_clearance_class_no, p_pin.clearance_class_no(), p_layer, true);
+    double curr_clearance = this.board.rules.clearance_matrix.get_value(ctrl.trace_clearance_class_no,
+        p_pin.clearance_class_no(), p_layer, true);
     double pin_neck_down_distance = 2 * (0.5 * p_pin.get_max_width(p_layer) + curr_clearance);
     if (pin_center.distance(p_to_corner.to_float()) >= pin_neck_down_distance) {
       return null;
@@ -207,7 +230,8 @@ public class InsertFoundConnectionAlgo {
     int[] net_no_arr = new int[1];
     net_no_arr[0] = ctrl.net_no;
 
-    double ok_length = board.check_trace_segment(p_from_corner, p_to_corner, p_layer, net_no_arr, ctrl.trace_half_width[p_layer], ctrl.trace_clearance_class_no, true);
+    double ok_length = board.check_trace_segment(p_from_corner, p_to_corner, p_layer, net_no_arr,
+        ctrl.trace_half_width[p_layer], ctrl.trace_clearance_class_no, true);
     if (ok_length >= Integer.MAX_VALUE) {
       return p_from_corner;
     }
@@ -218,28 +242,38 @@ public class InsertFoundConnectionAlgo {
     } else {
       FloatPoint float_neck_down_end_point = float_from_corner.change_length(float_to_corner, ok_length);
       neck_down_end_point = float_neck_down_end_point.round();
-      // add a corner in case  neck_down_end_point is not exactly on the line from p_from_corner to
+      // add a corner in case neck_down_end_point is not exactly on the line from
+      // p_from_corner to
       // p_to_corner
-      boolean horizontal_first = Math.abs(float_from_corner.x - float_neck_down_end_point.x) >= Math.abs(float_from_corner.y - float_neck_down_end_point.y);
+      boolean horizontal_first = Math.abs(float_from_corner.x - float_neck_down_end_point.x) >= Math
+          .abs(float_from_corner.y - float_neck_down_end_point.y);
       IntPoint add_corner = LocateFoundConnectionAlgo
-          .calculate_additional_corner(float_from_corner, float_neck_down_end_point, horizontal_first, board.rules.get_trace_angle_restriction())
+          .calculate_additional_corner(float_from_corner, float_neck_down_end_point, horizontal_first,
+              board.rules.get_trace_angle_restriction())
           .round();
-      Point curr_ok_point = board.insert_forced_trace_segment(p_from_corner, add_corner, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no,
-          ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+      Point curr_ok_point = board.insert_forced_trace_segment(p_from_corner, add_corner, ctrl.trace_half_width[p_layer],
+          p_layer, net_no_arr, ctrl.trace_clearance_class_no,
+          ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth,
+          ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
       if (curr_ok_point != add_corner) {
         return p_from_corner;
       }
-      curr_ok_point = board.insert_forced_trace_segment(add_corner, neck_down_end_point, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no,
-          ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+      curr_ok_point = board.insert_forced_trace_segment(add_corner, neck_down_end_point, ctrl.trace_half_width[p_layer],
+          p_layer, net_no_arr, ctrl.trace_clearance_class_no,
+          ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth,
+          ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
       if (curr_ok_point != neck_down_end_point) {
         return p_from_corner;
       }
       add_corner = LocateFoundConnectionAlgo
-          .calculate_additional_corner(float_neck_down_end_point, float_to_corner, !horizontal_first, board.rules.get_trace_angle_restriction())
+          .calculate_additional_corner(float_neck_down_end_point, float_to_corner, !horizontal_first,
+              board.rules.get_trace_angle_restriction())
           .round();
       if (!add_corner.equals(p_to_corner)) {
-        curr_ok_point = board.insert_forced_trace_segment(neck_down_end_point, add_corner, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no,
-            ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+        curr_ok_point = board.insert_forced_trace_segment(neck_down_end_point, add_corner,
+            ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no,
+            ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth,
+            ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
         if (curr_ok_point != add_corner) {
           return p_from_corner;
         }
@@ -247,13 +281,17 @@ public class InsertFoundConnectionAlgo {
       }
     }
 
-    Point ok_point = board.insert_forced_trace_segment(neck_down_end_point, p_to_corner, neck_down_halfwidth, p_layer, net_no_arr, ctrl.trace_clearance_class_no, ctrl.max_shove_trace_recursion_depth,
-        ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+    Point ok_point = board.insert_forced_trace_segment(neck_down_end_point, p_to_corner, neck_down_halfwidth, p_layer,
+        net_no_arr, ctrl.trace_clearance_class_no, ctrl.max_shove_trace_recursion_depth,
+        ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE,
+        ctrl.pull_tight_accuracy, true, null);
     return ok_point;
   }
 
   /**
-   * Searches the cheapest via masks containing p_from_layer and p_to_layer, so that a forced via is possible at p_location with this mask and inserts the via. Returns false, if no suitable via mask
+   * Searches the cheapest via masks containing p_from_layer and p_to_layer, so
+   * that a forced via is possible at p_location with this mask and inserts the
+   * via. Returns false, if no suitable via mask
    * was found or if the algorithm failed.
    */
   private boolean insert_via(Point p_location, int p_from_layer, int p_to_layer) {
@@ -279,7 +317,8 @@ public class InsertFoundConnectionAlgo {
       if (curr_via_padstack.from_layer() > from_layer || curr_via_padstack.to_layer() < to_layer) {
         continue;
       }
-      if (ForcedViaAlgo.check(curr_via_info, p_location, net_no_arr, this.ctrl.max_shove_trace_recursion_depth, this.ctrl.max_shove_via_recursion_depth, this.board)) {
+      if (ForcedViaAlgo.check(curr_via_info, p_location, net_no_arr, this.ctrl.max_shove_trace_recursion_depth,
+          this.ctrl.max_shove_via_recursion_depth, this.board)) {
         via_info = curr_via_info;
         break;
       }
@@ -289,7 +328,8 @@ public class InsertFoundConnectionAlgo {
       return false;
     }
     // insert the via
-    if (!ForcedViaAlgo.insert(via_info, p_location, net_no_arr, this.ctrl.trace_clearance_class_no, this.ctrl.trace_half_width, this.ctrl.max_shove_trace_recursion_depth,
+    if (!ForcedViaAlgo.insert(via_info, p_location, net_no_arr, this.ctrl.trace_clearance_class_no,
+        this.ctrl.trace_half_width, this.ctrl.max_shove_trace_recursion_depth,
         this.ctrl.max_shove_via_recursion_depth, this.board)) {
       FRLogger.debug("InsertFoundConnectionAlgo: forced via failed for net #" + ctrl.net_no);
       return false;

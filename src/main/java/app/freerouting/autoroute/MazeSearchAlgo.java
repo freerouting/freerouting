@@ -911,6 +911,8 @@ public class MazeSearchAlgo {
     }
 
     if (!destination_ok) {
+      FRLogger.debug("MazeSearchAlgo.init: Failed - no valid destination items found" +
+          " (dest set size: " + p_destination_items.size() + ", is_fanout: " + this.ctrl.is_fanout + ")");
       return false;
     }
     // process the start items
@@ -952,12 +954,16 @@ public class MazeSearchAlgo {
     // Put the ItemExpansionDoors of the completed start rooms into
     // the maze_expansion_list.
     boolean start_ok = false;
+    int expansion_doors_found = 0;
+    int expansion_doors_destination = 0;
     for (CompleteFreeSpaceExpansionRoom curr_room : completed_start_rooms) {
       for (TargetItemExpansionDoor curr_door : curr_room.get_target_doors()) {
+        expansion_doors_found++;
         if (this.autoroute_engine.is_stop_requested()) {
           return false;
         }
         if (curr_door.is_destination_door()) {
+          expansion_doors_destination++;
           continue;
         }
         TileShape connection_shape = ((Connectable) curr_door.item).get_trace_connection_shape(search_tree,
@@ -971,6 +977,16 @@ public class MazeSearchAlgo {
         maze_expansion_list.add(new_list_element);
         start_ok = true;
       }
+    }
+    if (!start_ok) {
+      FRLogger.debug("MazeSearchAlgo.init: Failed - no accessible expansion doors found" +
+          " (start items: " + p_start_items.size() +
+          ", start rooms: " + start_rooms.size() +
+          ", completed start rooms: " + completed_start_rooms.size() +
+          ", expansion doors found: " + expansion_doors_found +
+          ", destination doors: " + expansion_doors_destination +
+          ", ripup_allowed: " + this.ctrl.ripup_allowed +
+          ", ripup_costs: " + this.ctrl.ripup_costs + ")");
     }
     return start_ok;
   }
