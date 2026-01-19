@@ -581,6 +581,17 @@ public class BatchAutorouter extends NamedAlgorithm {
   public boolean runBatchLoop() {
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
+    // VALIDATION: Check routing settings before starting (clearances, trace widths,
+    // pin spacing)
+    job.logDebug("Validating routing settings...");
+    RoutingSettingsValidator validator = new RoutingSettingsValidator(this.board);
+    boolean settings_valid = validator.validate();
+
+    if (!settings_valid) {
+      job.logWarning("Routing settings validation found critical issues. " +
+          "Routing may fail or produce poor results. Check debug log for details.");
+    }
+
     // Capture initial state for session summary
     this.sessionStartTime = Instant.now();
     RatsNest initialRatsNest = new RatsNest(this.board);
