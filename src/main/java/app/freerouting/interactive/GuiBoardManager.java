@@ -79,13 +79,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   private final TextManager tm;
   private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
 
-  /**
-   * Reference to the current routing job. This allows interactive states to
-   * access
-   * job-specific RouterSettings without relying on the duplicate
-   * settings.autoroute_settings.
-   */
-  private RoutingJob currentRoutingJob;
   private final GlobalSettings globalSettings;
   /**
    * The graphical context for drawing the board.
@@ -158,23 +151,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * Sets the current routing job. This should be called when a new job is created
-   * or loaded.
-   * 
-   * @param job the routing job to set as current
-   */
-  public void setCurrentRoutingJob(RoutingJob job) {
-    this.currentRoutingJob = job;
-  }
-
-  /**
    * Gets the current routing job. Interactive states use this to access
    * job-specific RouterSettings.
    * 
    * @return the current routing job, or null if no job is set
    */
+  @Override
   public RoutingJob getCurrentRoutingJob() {
-    return this.currentRoutingJob;
+    return this.routingJob;
   }
 
   /**

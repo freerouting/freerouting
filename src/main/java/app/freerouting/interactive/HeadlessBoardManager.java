@@ -120,6 +120,16 @@ public class HeadlessBoardManager implements BoardManager {
     return this.locale;
   }
 
+  /**
+   * Gets the current routing job associated with this board manager.
+   * 
+   * @return the current routing job, or null if no job is set
+   */
+  @Override
+  public RoutingJob getCurrentRoutingJob() {
+    return this.routingJob;
+  }
+
   // * Returns the checksum of the board. This checksum is used to detect changes
   // in the board database.
   public long calculateCrc32() {

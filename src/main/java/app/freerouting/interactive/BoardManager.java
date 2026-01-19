@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.rules.BoardRules;
@@ -21,4 +22,11 @@ public interface BoardManager {
       Communication p_board_communication);
 
   InteractiveSettings get_settings();
+
+  /**
+   * Gets the current routing job associated with this board manager.
+   * 
+   * @return the current routing job, or null if no job is set
+   */
+  RoutingJob getCurrentRoutingJob();
 }

@@ -395,10 +395,6 @@ public class BoardFrame extends WindowBase {
     }
 
     if (isSpecctraDsn) {
-      // Set the current routing job BEFORE loading the DSN file
-      // This allows the DSN parser to apply autoroute settings to the routing job
-      board_panel.board_handling.setCurrentRoutingJob(this.routingJob);
-
       read_result = board_panel.board_handling.loadFromSpecctraDsn(inputStream, this.board_observers,
           new ItemIdentificationNumberGenerator());
 
@@ -419,10 +415,6 @@ public class BoardFrame extends WindowBase {
           this.routingJob.routerSettings.setLayerCount(boardLayerCount);
           this.routingJob.routerSettings.applyBoardSpecificOptimizations(board);
         }
-
-        // Set the current routing job in the board manager so that GUI components can
-        // access it
-        board_panel.board_handling.setCurrentRoutingJob(this.routingJob);
 
         initialize_windows();
 

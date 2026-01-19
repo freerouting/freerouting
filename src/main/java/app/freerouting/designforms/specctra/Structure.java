@@ -22,7 +22,6 @@ import app.freerouting.geometry.planar.Limits;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
-import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
@@ -950,14 +949,11 @@ class Structure extends ScopeKeyword {
     // Apply DSN autoroute settings to the current routing job if they were parsed
     if (p_par.autoroute_settings != null) {
       // Get the current routing job from the board manager
-      if (p_par.board_handling instanceof GuiBoardManager) {
-        GuiBoardManager guiBoardManager = (GuiBoardManager) p_par.board_handling;
-        RoutingJob currentJob = guiBoardManager.getCurrentRoutingJob();
-        if (currentJob != null && currentJob.routerSettings != null) {
-          // Apply the DSN file's autoroute settings to the routing job
-          currentJob.routerSettings.applyNewValuesFrom(p_par.autoroute_settings);
-          FRLogger.info("Applied DSN autoroute settings to routing job");
-        }
+      RoutingJob currentJob = p_par.board_handling.getCurrentRoutingJob();
+      if (currentJob != null && currentJob.routerSettings != null) {
+        // Apply the DSN file's autoroute settings to the routing job
+        currentJob.routerSettings.applyNewValuesFrom(p_par.autoroute_settings);
+        FRLogger.info("Applied DSN autoroute settings to routing job");
       }
     }
 
