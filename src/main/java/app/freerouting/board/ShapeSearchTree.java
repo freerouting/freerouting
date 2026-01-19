@@ -7,8 +7,8 @@ import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.IntOctagon;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.LineSegment;
 import app.freerouting.geometry.planar.Polyline;
@@ -21,11 +21,11 @@ import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ClearanceMatrix;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -599,14 +599,39 @@ public class ShapeSearchTree extends MinAreaTree {
                 // may not overlap. Therefore, that can be removed as soon as special
                 // function for 45-degree routing is used.
                 if (!ignore_expansion_room) {
-                  something_changed = true;
-                  Collection<IncompleteFreeSpaceExpansionRoom> new_rooms = restrain_shape(curr_incomplete_room,
-                      curr_object_shape);
-                  new_result.addAll(new_rooms);
-                  for (IncompleteFreeSpaceExpansionRoom tmp_room : new_rooms) {
-                    new_bounding_shape = new_bounding_shape.union(tmp_room
-                        .get_shape()
-                        .bounding_shape(this.bounding_directions));
+                  // FEATURE: Shove-aware room completion
+                  // Check if this obstacle is shoveable (routable and not fixed)
+                  boolean is_shoveable = false;
+
+                  // NOTE: Feature flag shoveAwareEnabled: default true
+                  /*
+                   * Enable shove-aware expansion room completion.
+                   * When true, routable traces are not treated as hard obstacles during room
+                   * completion.
+                   * This allows rooms to complete even when surrounded by traces from other nets,
+                   * relying on ShoveTraceAlgo to move them during trace insertion.
+                   */
+                  boolean shoveAwareEnabled = true;
+
+                  if (shoveAwareEnabled) {
+                    if (curr_object instanceof Item item) {
+                      // Routable items (traces/vias) that aren't user-fixed can be shoved
+                      is_shoveable = item.is_routable() && !item.is_user_fixed();
+                    }
+                  }
+
+                  // Only subtract if obstacle is NOT shoveable
+                  // Shoveable obstacles will be moved by ShoveTraceAlgo during trace insertion
+                  if (!is_shoveable) {
+                    something_changed = true;
+                    Collection<IncompleteFreeSpaceExpansionRoom> new_rooms = restrain_shape(curr_incomplete_room,
+                        curr_object_shape);
+                    new_result.addAll(new_rooms);
+                    for (IncompleteFreeSpaceExpansionRoom tmp_room : new_rooms) {
+                      new_bounding_shape = new_bounding_shape.union(tmp_room
+                          .get_shape()
+                          .bounding_shape(this.bounding_directions));
+                    }
                   }
                 }
               }
