@@ -71,26 +71,33 @@ public class BoardFrame extends WindowBase {
   static final String GUI_DEFAULTS_FILE_NAME = "gui_defaults.par";
   static final String GUI_DEFAULTS_FILE_BACKUP_NAME = "gui_defaults.par.bak";
 
+  /**
+   * The current routing job (design) being edited.
+   */
   public final RoutingJob routingJob;
   /**
-   * The menubar of this frame
+   * The menubar of this frame.
    */
   public final BoardMenuBar menubar;
   /**
    * The scroll pane for the panel of the routing board.
    */
   final JScrollPane scroll_pane;
+  /**
+   * Handles displaying messages to the user.
+   */
   final ScreenMessages screen_messages;
   /**
-   * The panel with the toolbars
+   * The main toolbar panel containing common tools.
    */
   private final BoardToolbar toolbar_panel;
   /**
-   * The toolbar used in the inspected item state.
+   * The toolbar used in the inspected item state (when items are selected).
+   * Note: This field is used by InspectedItemState.
    */
   private final JToolBar inspect_toolbar;
   /**
-   * The panel with the message line
+   * The panel with the message line/status bar.
    */
   private final BoardPanelStatus message_panel;
   private final Locale locale;
@@ -102,6 +109,8 @@ public class BoardFrame extends WindowBase {
    * The panel with the graphical representation of the board.
    */
   BoardPanel board_panel;
+
+  // -- Subwindows for various settings and tools --
   WindowAbout about_window;
   WindowRouteParameter route_parameter_window;
   WindowAutorouteParameter autoroute_parameter_window;
@@ -126,6 +135,13 @@ public class BoardFrame extends WindowBase {
   WindowDisplayMisc display_misc_window;
 
   ColorManager color_manager;
+
+  /**
+   * Array storing references to all "permanent" subwindows (tool windows that
+   * persist).
+   * This array allows for collective operations like saving/restoring positions
+   * and refreshing.
+   */
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
   Collection<BoardTemporarySubWindow> temporary_subwindows = new LinkedList<>();
   private LogEntries.LogEntryAddedListener log_entry_added_listener;
@@ -322,7 +338,7 @@ public class BoardFrame extends WindowBase {
       JOptionPane.showMessageDialog(null, scrollPane, tm.getText("logs_window_title"), messageType);
     });
 
-    // DEPRECATED: we don't use this toolbar anymore
+    // Toolbar for inspected items (e.g. when a component is selected)
     this.inspect_toolbar = new BoardToolbarInspectedItem(this);
 
     // Screen messages are displayed in the status bar, below the canvas.
@@ -443,7 +459,9 @@ public class BoardFrame extends WindowBase {
       allocate_permanent_subwindows();
 
       for (int i = 0; i < this.permanent_subwindows.length; i++) {
-        this.permanent_subwindows[i].read(object_stream);
+        if (this.permanent_subwindows[i] != null) {
+          this.permanent_subwindows[i].read(object_stream);
+        }
       }
     }
 
@@ -533,7 +551,9 @@ public class BoardFrame extends WindowBase {
 
     // (3) Save the permanent subwindows as binary file
     for (int i = 0; i < this.permanent_subwindows.length; i++) {
-      this.permanent_subwindows[i].save(objectStream);
+      if (this.permanent_subwindows[i] != null) {
+        this.permanent_subwindows[i].save(objectStream);
+      }
     }
 
     // (4) Flush the binary file
@@ -802,6 +822,13 @@ public class BoardFrame extends WindowBase {
     super.dispose();
   }
 
+  /**
+   * Initializes and creates instances for all the "permanent" subwindows.
+   * These are the utility windows (parameters, colors, visibility, etc.) that
+   * can be toggled via the menu but exist for the lifetime of the BoardFrame.
+   * They are stored in the {@code permanent_subwindows} array for easy
+   * management.
+   */
   private void allocate_permanent_subwindows() {
     this.color_manager = new ColorManager(this);
     this.permanent_subwindows[0] = this.color_manager;
