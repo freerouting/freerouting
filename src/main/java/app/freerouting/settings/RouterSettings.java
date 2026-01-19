@@ -245,33 +245,17 @@ public class RouterSettings implements Serializable, Cloneable {
     result.jobTimeoutString = this.jobTimeoutString;
     result.isLayerActive = this.isLayerActive.clone();
     result.isPreferredDirectionHorizontalOnLayer = this.isPreferredDirectionHorizontalOnLayer.clone();
-    result.scoring.preferredDirectionTraceCost = this.scoring.preferredDirectionTraceCost.clone();
-    result.scoring.undesiredDirectionTraceCost = this.scoring.undesiredDirectionTraceCost.clone();
-    result.scoring.defaultPreferredDirectionTraceCost = this.scoring.defaultPreferredDirectionTraceCost;
-    result.scoring.defaultUndesiredDirectionTraceCost = this.scoring.defaultUndesiredDirectionTraceCost;
     result.maxPasses = this.maxPasses;
-    result.optimizer.maxThreads = this.optimizer.maxThreads;
-    result.optimizer.optimizationImprovementThreshold = this.optimizer.optimizationImprovementThreshold;
-    result.optimizer.boardUpdateStrategy = this.optimizer.boardUpdateStrategy;
-    result.optimizer.hybridRatio = this.optimizer.hybridRatio;
-    result.optimizer.itemSelectionStrategy = this.optimizer.itemSelectionStrategy;
     result.ignoreNetClasses = this.ignoreNetClasses.clone();
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
-    System.arraycopy(this.isLayerActive, 0, result.isLayerActive, 0, isLayerActive.length);
-    System.arraycopy(this.isPreferredDirectionHorizontalOnLayer, 0, result.isPreferredDirectionHorizontalOnLayer, 0,
-        isPreferredDirectionHorizontalOnLayer.length);
-    System.arraycopy(this.scoring.preferredDirectionTraceCost, 0, result.scoring.preferredDirectionTraceCost, 0,
-        scoring.preferredDirectionTraceCost.length);
-    System.arraycopy(this.scoring.undesiredDirectionTraceCost, 0, result.scoring.undesiredDirectionTraceCost, 0,
-        scoring.undesiredDirectionTraceCost.length);
-
     result.enabled = this.enabled;
-    result.optimizer.enabled = this.optimizer.enabled;
     result.vias_allowed = this.vias_allowed;
     result.automatic_neckdown = this.automatic_neckdown;
-    result.scoring.via_costs = this.scoring.via_costs;
-    result.scoring.plane_via_costs = this.scoring.plane_via_costs;
-    result.scoring.start_ripup_costs = this.scoring.start_ripup_costs;
+
+    // Use proper clone() methods for nested objects
+    result.optimizer = this.optimizer.clone();
+    result.scoring = this.scoring.clone();
+
     return result;
   }
 
