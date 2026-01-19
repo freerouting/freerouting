@@ -26,7 +26,6 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.tests.BoardValidator;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.ByteArrayOutputStream;
@@ -385,8 +384,10 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       // Refresh the windows
       boardManager.get_panel().board_frame.refresh_windows();
       if (boardManager.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE) {
-        BoardValidator.doAllTracesHaveAnglesThatAreMultiplesOfFortyFiveDegrees("after autoroute: ",
-            boardManager.get_routing_board());
+        int non45DegreeCount = boardManager.get_routing_board().getNon45DegreeTraceCount();
+        if (non45DegreeCount > 1) {
+          routingJob.logWarning("after autoroute: " + non45DegreeCount + " traces not 45 degree");
+        }
       }
     } catch (Exception e) {
       routingJob.logError(e.getLocalizedMessage(), e);
