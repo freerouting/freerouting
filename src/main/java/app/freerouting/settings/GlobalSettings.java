@@ -65,29 +65,20 @@ public class GlobalSettings implements Serializable {
   // DRC report file details that we got from the command line arguments.
   public transient BoardFileDetails drc_report_file;
   /**
-   * The design_input_filename field is deprecated and should not be used. They
-   * are kept here for compatibility reasons. Its function is now moved to the
-   * input.getFilename() method of RoutingJob
-   * object.
+   * The initial input file path provided via command line arguments.
+   * This is used for initialization and then transferred to RoutingJob.
    */
-  @Deprecated
-  public transient String design_input_filename;
+  public transient String initialInputFile;
   /**
-   * The design_output_filename field is deprecated and should not be used. They
-   * are kept here for compatibility reasons. Its function is now moved to the
-   * output.getFilename() method of RoutingJob
-   * object.
+   * The initial output file path provided via command line arguments.
+   * This is used for initialization and then transferred to RoutingJob.
    */
-  @Deprecated
-  public transient String design_output_filename;
+  public transient String initialOutputFile;
   /**
-   * The design_rules_filename field is deprecated and should not be used. They
-   * are kept here for compatibility reasons. Its function is now removed, .rules
-   * files are considered to be deprecated, and
-   * other configuration methods should be used instead.
+   * The initial rules file path provided via command line arguments.
+   * This is used for initialization.
    */
-  @Deprecated
-  public transient String design_rules_filename;
+  public transient String initialRulesFile;
   /**
    * The design_session_filename field stores the optional Specctra session file
    * (.ses) path provided via the -de command line argument.
@@ -180,36 +171,7 @@ public class GlobalSettings implements Serializable {
     }
   }
 
-  /**
-   * Applies environment variables to the settings.
-   *
-   * @deprecated This method is kept for backward compatibility with non-router
-   *             settings.
-   *             For router settings, use
-   *             {@link app.freerouting.settings.sources.EnvironmentVariablesSource}
-   *             which integrates properly with the SettingsMerger architecture.
-   *
-   *             This method directly modifies GlobalSettings fields using
-   *             reflection,
-   *             bypassing the priority-based settings merger. It should only be
-   *             used
-   *             for settings that are not part of RouterSettings (e.g., GUI
-   *             settings,
-   *             API settings, etc.).
-   *
-   *             **IMPORTANT**: This method now SKIPS router settings (properties
-   *             starting
-   *             with "router.") to prevent conflicts with
-   *             EnvironmentVariablesSource.
-   *             Router settings are handled exclusively through the
-   *             SettingsMerger.
-   *
-   *             Environment variables must start with "FREEROUTING__" prefix.
-   *             Double underscores are converted to dots for nested properties.
-   *             Example: FREEROUTING__GUI__INPUT_DIRECTORY → gui.input_directory
-   */
-  @Deprecated
-  public void applyEnvironmentVariables() {
+  public void applyNonRouterEnvironmentVariables() {
     // Read all the environment variables that begins with "FREEROUTING__"
     for (var entry : System
         .getenv()
@@ -307,7 +269,7 @@ public class GlobalSettings implements Serializable {
                 if (hasDsn) {
                   FRLogger.warn("Multiple DSN files provided in -de argument. Only the last one will be used.");
                 }
-                design_input_filename = file;
+                initialInputFile = file;
                 hasDsn = true;
               } else if (lowerFile.endsWith(".ses")) {
                 if (hasSes) {
@@ -319,7 +281,7 @@ public class GlobalSettings implements Serializable {
                 if (hasRules) {
                   FRLogger.warn("Multiple RULES files provided in -de argument. Only the last one will be used.");
                 }
-                design_rules_filename = file;
+                initialRulesFile = file;
                 hasRules = true;
               } else {
                 FRLogger.warn("Unknown file type in -de argument: " + file + ". Expected .dsn, .ses, or .rules");
@@ -337,7 +299,7 @@ public class GlobalSettings implements Serializable {
           }
         } else if (p_args[i].startsWith("-do")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            design_output_filename = p_args[i + 1];
+            initialOutputFile = p_args[i + 1];
             i++;
           }
         } else if (p_args[i].startsWith("-drc")) {
@@ -352,7 +314,7 @@ public class GlobalSettings implements Serializable {
           }
         } else if (p_args[i].startsWith("-dr")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            design_rules_filename = p_args[i + 1];
+            initialRulesFile = p_args[i + 1];
             i++;
           }
         } else if (p_args[i].startsWith("-mp")) {

@@ -151,9 +151,9 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "myboard.dsn+myboard.ses", "-do", "output.ses", "-mp", "10" };
         settings.applyCommandLineArguments(args);
 
-        assertEquals("myboard.dsn", settings.design_input_filename);
+        assertEquals("myboard.dsn", settings.initialInputFile);
         assertEquals("myboard.ses", settings.design_session_filename);
-        assertEquals("output.ses", settings.design_output_filename);
+        assertEquals("output.ses", settings.initialOutputFile);
         assertEquals(10, settings.routerSettings.maxPasses);
     }
 }

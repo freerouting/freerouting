@@ -44,7 +44,7 @@ public class Freerouting {
   private static Server apiServer; // API server instance
 
   private static boolean InitializeCLI(GlobalSettings globalSettings) {
-    if ((globalSettings.design_input_filename == null) || (globalSettings.design_output_filename == null)) {
+    if ((globalSettings.initialInputFile == null) || (globalSettings.initialOutputFile == null)) {
       FRLogger.error(
           "Both an input file and an output file must be specified with command line arguments if you are running in CLI mode.",
           null);
@@ -60,20 +60,20 @@ public class Freerouting {
     // Create a new routing job
     RoutingJob routingJob = new RoutingJob(cliSession.id);
     try {
-      routingJob.setInput(globalSettings.design_input_filename);
+      routingJob.setInput(globalSettings.initialInputFile);
     } catch (Exception e) {
-      FRLogger.error("Couldn't load the input file '" + globalSettings.design_input_filename + "'", e);
+      FRLogger.error("Couldn't load the input file '" + globalSettings.initialInputFile + "'", e);
     }
     cliSession.addJob(routingJob);
 
-    var desiredOutputFile = new File(globalSettings.design_output_filename);
+    var desiredOutputFile = new File(globalSettings.initialOutputFile);
     if ((desiredOutputFile != null) && desiredOutputFile.exists()) {
       if (!desiredOutputFile.delete()) {
-        FRLogger.warn("Couldn't delete the file '" + globalSettings.design_output_filename + "'");
+        FRLogger.warn("Couldn't delete the file '" + globalSettings.initialOutputFile + "'");
       }
     }
 
-    routingJob.tryToSetOutputFile(new File(globalSettings.design_output_filename));
+    routingJob.tryToSetOutputFile(new File(globalSettings.initialOutputFile));
 
     routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
     routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layers.totalCount);
@@ -93,12 +93,12 @@ public class Freerouting {
     // Save the output file
     if (routingJob.state == RoutingJobState.COMPLETED) {
       try {
-        Path outputFilePath = Path.of(globalSettings.design_output_filename);
+        Path outputFilePath = Path.of(globalSettings.initialOutputFile);
         Files.write(outputFilePath, routingJob.output
             .getData()
             .readAllBytes());
       } catch (IOException e) {
-        FRLogger.error("Couldn't save the output file '" + globalSettings.design_output_filename + "'", e);
+        FRLogger.error("Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
       }
     }
 
@@ -106,7 +106,7 @@ public class Freerouting {
   }
 
   private static boolean InitializeDRC(GlobalSettings globalSettings) {
-    if (globalSettings.design_input_filename == null) {
+    if (globalSettings.initialInputFile == null) {
       FRLogger.error("An input file must be specified with -de argument in DRC mode.", null);
       return false;
     }
@@ -121,9 +121,9 @@ public class Freerouting {
     RoutingJob drcJob = new RoutingJob(drcSession.id);
     drcJob.drc = globalSettings.drc_report_file;
     try {
-      drcJob.setInput(globalSettings.design_input_filename);
+      drcJob.setInput(globalSettings.initialInputFile);
     } catch (Exception e) {
-      FRLogger.error("Couldn't load the input file '" + globalSettings.design_input_filename + "'", e);
+      FRLogger.error("Couldn't load the input file '" + globalSettings.initialInputFile + "'", e);
       System.exit(1);
     }
 
@@ -140,7 +140,7 @@ public class Freerouting {
     String coordinateUnit = "mm";
 
     // Generate DRC report
-    String sourceFileName = new File(globalSettings.design_input_filename).getName();
+    String sourceFileName = new File(globalSettings.initialInputFile).getName();
     String drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
 
     // Output the DRC report
@@ -355,7 +355,7 @@ public class Freerouting {
     }
 
     // apply environment variables to the settings
-    globalSettings.applyEnvironmentVariables();
+    globalSettings.applyNonRouterEnvironmentVariables();
 
     // if we don't have a GUI enabled then we must use the console as our output
     if ((!globalSettings.guiSettings.isEnabled) && (System.console() == null)) {
@@ -461,7 +461,6 @@ public class Freerouting {
     new Thread(checker).start();
 
     // get localization resources
-    TextManager tm = new TextManager(Freerouting.class, globalSettings.currentLocale);
 
     // check if the user wants to see the help only
     if (globalSettings.show_help_option) {
