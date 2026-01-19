@@ -200,7 +200,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
   protected void thread_action() {
     routingJob.startedAt = Instant.now();
     routingJob.state = RoutingJobState.RUNNING;
-    FRLogger.info("[Thread Count] routingJob.routerSettings.maxThreads = " + routingJob.routerSettings.maxThreads);
     boardManager.set_num_threads(routingJob.routerSettings.maxThreads);
 
     for (ThreadActionListener hl : this.listeners) {

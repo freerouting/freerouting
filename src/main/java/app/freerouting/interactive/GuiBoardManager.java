@@ -153,7 +153,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Gets the current routing job. Interactive states use this to access
    * job-specific RouterSettings.
-   * 
+   *
    * @return the current routing job, or null if no job is set
    */
   @Override
@@ -1594,7 +1594,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   public void set_num_threads(int p_value) {
-    FRLogger.info("[Thread Count] Setting num_threads to: " + p_value);
     num_threads = p_value;
   }
 

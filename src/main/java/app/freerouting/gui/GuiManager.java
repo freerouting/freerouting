@@ -87,15 +87,7 @@ public class GuiManager {
             // Apply CLI settings from GlobalSettings to the RoutingJob
             // This ensures that command-line arguments are used by the autorouter
             if (globalSettings.routerSettings != null) {
-                FRLogger.info("[CLI Settings] Applying CLI settings to RoutingJob...");
-                FRLogger.info("[CLI Settings] Before: maxPasses=" + routingJob.routerSettings.maxPasses
-                        + ", maxThreads=" + routingJob.routerSettings.maxThreads + ", jobTimeout="
-                        + routingJob.routerSettings.jobTimeoutString);
-                int changedFields = routingJob.routerSettings.applyNewValuesFrom(globalSettings.routerSettings);
-                FRLogger.info("[CLI Settings] After: maxPasses=" + routingJob.routerSettings.maxPasses + ", maxThreads="
-                        + routingJob.routerSettings.maxThreads + ", jobTimeout="
-                        + routingJob.routerSettings.jobTimeoutString);
-                FRLogger.info("[CLI Settings] Applied " + changedFields + " settings from CLI to RoutingJob");
+                routingJob.routerSettings.applyNewValuesFrom(globalSettings.routerSettings);
             } else {
                 FRLogger.warn("[CLI Settings] globalSettings.routerSettings is null, CLI settings not applied!");
             }
