@@ -9,7 +9,9 @@ import app.freerouting.rules.ViaRule;
 import java.awt.Graphics;
 
 /**
- * Class for shoving items out of a region to make space to insert something else. For that purpose traces of an invisible net are created temporary for shoving.
+ * Class for shoving items out of a region to make space to insert something
+ * else. For that purpose traces of an invisible net are created temporary for
+ * shoving.
  */
 public class MakeSpaceState extends DragState {
 
@@ -18,7 +20,8 @@ public class MakeSpaceState extends DragState {
   /**
    * Creates a new instance of MakeSpaceState
    */
-  public MakeSpaceState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
+  public MakeSpaceState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling,
+      ActivityReplayFile p_activityReplayFile) {
     super(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
     int[] shove_trace_width_arr = new int[hdlg.get_routing_board().get_layer_count()];
     boolean[] layer_active_arr = new boolean[shove_trace_width_arr.length];
@@ -30,8 +33,10 @@ public class MakeSpaceState extends DragState {
     }
     int[] route_net_no_arr = new int[1];
     route_net_no_arr[0] = Nets.hidden_net_no;
-    route = new Route(p_location.round(), hdlg.settings.layer, shove_trace_width_arr, layer_active_arr, route_net_no_arr, 0, ViaRule.EMPTY, true, hdlg.settings.trace_pull_tight_region_width,
-        hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, null, null, hdlg.get_routing_board(), false, false, false, hdlg.settings.hilight_routing_obstacle);
+    route = new Route(p_location.round(), hdlg.settings.layer, shove_trace_width_arr, layer_active_arr,
+        route_net_no_arr, 0, ViaRule.EMPTY, true, hdlg.settings.trace_pull_tight_region_width,
+        hdlg.settings.trace_pull_tight_accuracy, null, null, hdlg.get_routing_board(), false, false, false,
+        hdlg.settings.hilight_routing_obstacle);
   }
 
   @Override
@@ -55,7 +60,8 @@ public class MakeSpaceState extends DragState {
     route.next_corner(p_to_location);
 
     Point route_end = route.get_last_corner();
-    if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NONE && !route_end.equals(p_to_location.round())) {
+    if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NONE
+        && !route_end.equals(p_to_location.round())) {
       hdlg.move_mouse(route_end.to_float());
     }
     hdlg.recalculate_length_violations();

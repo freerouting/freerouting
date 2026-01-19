@@ -4,7 +4,6 @@ import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.autoroute.BatchAutorouter;
 import app.freerouting.autoroute.BatchAutorouterV19;
-
 import app.freerouting.autoroute.BatchOptimizer;
 import app.freerouting.autoroute.NamedAlgorithm;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
@@ -107,7 +106,6 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         if (!RouterSettings.ALGORITHM_CURRENT.equals(algorithm)) {
           job.logInfo("Unknown router algorithm '" + algorithm + "', using default (freerouting-router)");
         }
-        job.logInfo("Using current router algorithm (freerouting-router)");
         router = new BatchAutorouter(job);
       }
 

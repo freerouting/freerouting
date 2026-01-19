@@ -1,13 +1,13 @@
 package app.freerouting.settings;
 
+import static app.freerouting.constants.Constants.FREEROUTING_VERSION;
+
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
-import app.freerouting.constants.Constants;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.ReflectionUtil;
-import app.freerouting.management.TextManager;
 import app.freerouting.management.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class GlobalSettings implements Serializable {
   private static Path userDataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
   private static Path configurationFilePath = userDataPath.resolve("freerouting.json");
   private static Boolean isUserDataPathLocked = false;
-  public final transient EnvironmentSettings environmentSettings = new EnvironmentSettings();
+  public final transient RuntimeEnvironment runtimeEnvironment = new RuntimeEnvironment();
   @SerializedName("profile")
   public final UserProfileSettings userProfileSettings = new UserProfileSettings();
   @SerializedName("gui")
@@ -60,7 +60,7 @@ public class GlobalSettings implements Serializable {
       "ko"
   };
   @SerializedName("version")
-  public String version = Constants.FREEROUTING_VERSION;
+  public String version;
   public transient boolean show_help_option;
   // DRC report file details that we got from the command line arguments.
   public transient BoardFileDetails drc_report_file;
@@ -134,11 +134,11 @@ public class GlobalSettings implements Serializable {
     if (loadedSettings != null) {
       // If the version numbers are different, we must save the file again to update
       // it
-      boolean isSaveNeeded = !loadedSettings.version.equals(defaultSettings.version);
+      boolean isSaveNeeded = !loadedSettings.version.equals(FREEROUTING_VERSION);
 
       // Apply all the loaded settings to the result if they are not null
-      loadedSettings.version = null;
       ReflectionUtil.copyFields(defaultSettings, loadedSettings);
+      loadedSettings.version = FREEROUTING_VERSION;
 
       if (isSaveNeeded) {
         saveAsJson(loadedSettings);
@@ -180,9 +180,35 @@ public class GlobalSettings implements Serializable {
     }
   }
 
-  /*
-   * Applies the environment variables to the settings
+  /**
+   * Applies environment variables to the settings.
+   *
+   * @deprecated This method is kept for backward compatibility with non-router
+   *             settings.
+   *             For router settings, use
+   *             {@link app.freerouting.settings.sources.EnvironmentVariablesSource}
+   *             which integrates properly with the SettingsMerger architecture.
+   *
+   *             This method directly modifies GlobalSettings fields using
+   *             reflection,
+   *             bypassing the priority-based settings merger. It should only be
+   *             used
+   *             for settings that are not part of RouterSettings (e.g., GUI
+   *             settings,
+   *             API settings, etc.).
+   *
+   *             **IMPORTANT**: This method now SKIPS router settings (properties
+   *             starting
+   *             with "router.") to prevent conflicts with
+   *             EnvironmentVariablesSource.
+   *             Router settings are handled exclusively through the
+   *             SettingsMerger.
+   *
+   *             Environment variables must start with "FREEROUTING__" prefix.
+   *             Double underscores are converted to dots for nested properties.
+   *             Example: FREEROUTING__GUI__INPUT_DIRECTORY → gui.input_directory
    */
+  @Deprecated
   public void applyEnvironmentVariables() {
     // Read all the environment variables that begins with "FREEROUTING__"
     for (var entry : System
@@ -196,6 +222,13 @@ public class GlobalSettings implements Serializable {
             .substring("FREEROUTING__".length())
             .toLowerCase()
             .replace("__", ".");
+
+        // Skip router settings - they're handled by EnvironmentVariablesSource
+        // to prevent conflicts with the SettingsMerger
+        if (propertyName.startsWith("router.")) {
+          continue;
+        }
+
         setValue(propertyName, entry.getValue());
       }
     }
@@ -351,7 +384,7 @@ public class GlobalSettings implements Serializable {
             routerSettings.optimizer.optimizationImprovementThreshold = Float.parseFloat(p_args[i + 1]) / 100;
 
             if (routerSettings.optimizer.optimizationImprovementThreshold <= 0) {
-              routerSettings.optimizer.optimizationImprovementThreshold = 0;
+              routerSettings.optimizer.optimizationImprovementThreshold = 0.0f;
             }
             i++;
           }
@@ -429,7 +462,7 @@ public class GlobalSettings implements Serializable {
           usageAndDiagnosticData.disableAnalytics = true;
         } else if (p_args[i].startsWith("-host")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            environmentSettings.host = p_args[i + 1].trim();
+            runtimeEnvironment.host = p_args[i + 1].trim();
             i++;
           }
         } else if (p_args[i].startsWith("-help")) {
@@ -456,6 +489,7 @@ public class GlobalSettings implements Serializable {
         FRLogger.error("There was a problem parsing the '" + p_args[i] + "' parameter", e);
       }
     }
+
   }
 
   public String getDesignDir() {

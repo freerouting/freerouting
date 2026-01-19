@@ -65,7 +65,8 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     other_snapshots_goto_button.setToolTipText(tm.getText("goto_tooltip"));
     GotoListener goto_listener = new GotoListener();
     other_snapshots_goto_button.addActionListener(goto_listener);
-    other_snapshots_goto_button.addActionListener(_ -> FRAnalytics.buttonClicked("other_snapshots_goto_button", other_snapshots_goto_button.getText()));
+    other_snapshots_goto_button.addActionListener(
+        _ -> FRAnalytics.buttonClicked("other_snapshots_goto_button", other_snapshots_goto_button.getText()));
     main_panel.add(other_snapshots_goto_button, BorderLayout.NORTH);
 
     // create snapshot list
@@ -103,7 +104,8 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     JButton other_snapshots_add_button = new JButton(tm.getText("create"));
     AddListener add_listener = new AddListener();
     other_snapshots_add_button.addActionListener(add_listener);
-    other_snapshots_add_button.addActionListener(_ -> FRAnalytics.buttonClicked("other_snapshots_add_button", other_snapshots_add_button.getText()));
+    other_snapshots_add_button.addActionListener(
+        _ -> FRAnalytics.buttonClicked("other_snapshots_add_button", other_snapshots_add_button.getText()));
     add_panel.add(other_snapshots_add_button, BorderLayout.WEST);
 
     this.name_field = new JTextField(10);
@@ -114,14 +116,16 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     JButton other_snapshots_delete_button = new JButton(tm.getText("remove"));
     DeleteListener delete_listener = new DeleteListener();
     other_snapshots_delete_button.addActionListener(delete_listener);
-    other_snapshots_delete_button.addActionListener(_ -> FRAnalytics.buttonClicked("other_snapshots_delete_button", other_snapshots_delete_button.getText()));
+    other_snapshots_delete_button.addActionListener(
+        _ -> FRAnalytics.buttonClicked("other_snapshots_delete_button", other_snapshots_delete_button.getText()));
     gridbag.setConstraints(other_snapshots_delete_button, gridbag_constraints);
     south_panel.add(other_snapshots_delete_button);
 
     JButton other_snapshots_delete_all_button = new JButton(tm.getText("remove_all"));
     DeleteAllListener delete_all_listener = new DeleteAllListener();
     other_snapshots_delete_all_button.addActionListener(delete_all_listener);
-    other_snapshots_delete_all_button.addActionListener(_ -> FRAnalytics.buttonClicked("other_snapshots_delete_all_button", other_snapshots_delete_all_button.getText()));
+    other_snapshots_delete_all_button.addActionListener(_ -> FRAnalytics
+        .buttonClicked("other_snapshots_delete_all_button", other_snapshots_delete_all_button.getText()));
     gridbag.setConstraints(other_snapshots_delete_all_button, gridbag_constraints);
     south_panel.add(other_snapshots_delete_all_button);
 
@@ -130,7 +134,8 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     other_snapshots_settings_button.setToolTipText(tm.getText("settings_tooltip"));
     SettingsListener settings_listener = new SettingsListener();
     other_snapshots_settings_button.addActionListener(settings_listener);
-    other_snapshots_settings_button.addActionListener(_ -> FRAnalytics.buttonClicked("other_snapshots_settings_button", other_snapshots_settings_button.getText()));
+    other_snapshots_settings_button.addActionListener(
+        _ -> FRAnalytics.buttonClicked("other_snapshots_settings_button", other_snapshots_settings_button.getText()));
     gridbag.setConstraints(other_snapshots_delete_all_button, gridbag_constraints);
     south_panel.add(other_snapshots_settings_button);
 
@@ -182,7 +187,8 @@ public class WindowSnapshot extends BoardSavableSubWindow {
    */
   @Override
   public void save(ObjectOutputStream p_object_stream) {
-    SavedAttributes saved_attributes = new SavedAttributes(this.list_model, this.snapshot_count, this.getLocation(), this.isVisible());
+    SavedAttributes saved_attributes = new SavedAttributes(this.list_model, this.snapshot_count, this.getLocation(),
+        this.isVisible());
     try {
       p_object_stream.writeObject(saved_attributes);
     } catch (IOException e) {
@@ -200,8 +206,10 @@ public class WindowSnapshot extends BoardSavableSubWindow {
       curr_snapshot.go_to(board_handling);
 
       if (curr_snapshot.settings.get_snapshot_attributes().object_colors) {
-        board_handling.graphics_context.item_color_table = new ItemColorTableModel(curr_snapshot.graphics_context.item_color_table);
-        board_handling.graphics_context.other_color_table = new OtherColorTableModel(curr_snapshot.graphics_context.other_color_table);
+        board_handling.graphics_context.item_color_table = new ItemColorTableModel(
+            curr_snapshot.graphics_context.item_color_table);
+        board_handling.graphics_context.other_color_table = new OtherColorTableModel(
+            curr_snapshot.graphics_context.other_color_table);
 
         board_frame.color_manager.set_table_models(board_handling.graphics_context);
       }
@@ -209,7 +217,8 @@ public class WindowSnapshot extends BoardSavableSubWindow {
       if (curr_snapshot.settings.get_snapshot_attributes().display_region) {
         Point viewport_position = curr_snapshot.copy_viewport_position();
         if (viewport_position != null) {
-          board_handling.graphics_context.coordinate_transform = new CoordinateTransform(curr_snapshot.graphics_context.coordinate_transform);
+          board_handling.graphics_context.coordinate_transform = new CoordinateTransform(
+              curr_snapshot.graphics_context.coordinate_transform);
           Dimension panel_size = board_handling.graphics_context.get_panel_size();
           board_frame.board_panel.setSize(panel_size);
           board_frame.board_panel.setPreferredSize(panel_size);
@@ -218,7 +227,8 @@ public class WindowSnapshot extends BoardSavableSubWindow {
       }
 
       board_frame.refresh_windows();
-      board_frame.setToolbarModeSelectionPanelValue(this.board_frame.board_panel.board_handling.get_interactive_state());
+      board_frame
+          .setToolbarModeSelectionPanelValue(this.board_frame.board_panel.board_handling.get_interactive_state());
       board_frame.setVisible(true);
       board_frame.repaint();
     }
@@ -233,7 +243,8 @@ public class WindowSnapshot extends BoardSavableSubWindow {
   }
 
   /**
-   * Selects the item, which is previous to the current selected item in the list. The current selected item is then no more selected.
+   * Selects the item, which is previous to the current selected item in the list.
+   * The current selected item is then no more selected.
    */
   public void select_previous_item() {
     if (!this.isVisible()) {
@@ -247,7 +258,8 @@ public class WindowSnapshot extends BoardSavableSubWindow {
   }
 
   /**
-   * Selects the item, which is next to the current selected item in the list. The current selected item is then no more selected.
+   * Selects the item, which is next to the current selected item in the list. The
+   * current selected item is then no more selected.
    */
   public void select_next_item() {
     if (!this.isVisible()) {
@@ -271,7 +283,8 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     public final Point location;
     public final boolean is_visible;
 
-    public SavedAttributes(DefaultListModel<SnapShot> p_list_model, int p_snapshot_count, Point p_location, boolean p_is_visible) {
+    public SavedAttributes(DefaultListModel<SnapShot> p_list_model, int p_snapshot_count, Point p_location,
+        boolean p_is_visible) {
       list_model = p_list_model;
       snapshot_count = p_snapshot_count;
       location = p_location;

@@ -78,6 +78,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   private final BoardPanel panel;
   private final TextManager tm;
   private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
+
   private final GlobalSettings globalSettings;
   /**
    * The graphical context for drawing the board.
@@ -147,6 +148,17 @@ public class GuiBoardManager extends HeadlessBoardManager {
       LogEntries entries = FRLogger.getLogEntries();
       screen_messages.set_error_and_warning_count(entries.getErrorCount(), entries.getWarningCount());
     }
+  }
+
+  /**
+   * Gets the current routing job. Interactive states use this to access
+   * job-specific RouterSettings.
+   *
+   * @return the current routing job, or null if no job is set
+   */
+  @Override
+  public RoutingJob getCurrentRoutingJob() {
+    return this.routingJob;
   }
 
   /**
@@ -948,7 +960,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public boolean loadFromBinary(ObjectInputStream p_design) {
     try {
       board = (RoutingBoard) p_design.readObject();
-      settings = (Settings) p_design.readObject();
+      settings = (InteractiveSettings) p_design.readObject();
       settings.set_logfile(this.activityReplayFile);
       coordinate_transform = (CoordinateTransform) p_design.readObject();
       graphics_context = (GraphicsContext) p_design.readObject();

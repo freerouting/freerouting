@@ -940,7 +940,7 @@ public abstract class ActivityReplayFileScope {
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state,
         GuiBoardManager p_board_handling) {
       int new_accuracy = p_activityReplayFile.read_int();
-      p_board_handling.settings.autoroute_settings.trace_pull_tight_accuracy = new_accuracy;
+      p_board_handling.settings.trace_pull_tight_accuracy = new_accuracy;
       return p_return_state;
     }
   }

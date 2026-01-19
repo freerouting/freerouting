@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 public class SnapShot implements Serializable {
 
-  public final Settings settings;
+  public final InteractiveSettings settings;
   public final GraphicsContext graphics_context;
   public final BoardFrame.SubwindowSelections subwindow_filters;
   private final String name;
@@ -24,7 +24,7 @@ public class SnapShot implements Serializable {
    */
   private SnapShot(String p_name, GuiBoardManager p_board_handling) {
     this.name = p_name;
-    this.settings = new Settings(p_board_handling.settings);
+    this.settings = new InteractiveSettings(p_board_handling.settings);
     this.interactive_state_no = get_no(p_board_handling.interactive_state);
     this.graphics_context = new GraphicsContext(p_board_handling.graphics_context);
     this.viewport_position = new Point(p_board_handling.get_panel().get_viewport_position());
@@ -32,7 +32,8 @@ public class SnapShot implements Serializable {
   }
 
   /**
-   * Returns a new snapshot or null, if the current interactive state is not suitable to generate a snapshot.
+   * Returns a new snapshot or null, if the current interactive state is not
+   * suitable to generate a snapshot.
    */
   public static SnapShot get_instance(String p_name, GuiBoardManager p_board_handling) {
     InteractiveState interactive_state = p_board_handling.interactive_state;
@@ -43,7 +44,8 @@ public class SnapShot implements Serializable {
   }
 
   /**
-   * Create a number for writing an interactive state to disk. Only MenuStates are saved. The default is SelectState.
+   * Create a number for writing an interactive state to disk. Only MenuStates are
+   * saved. The default is SelectState.
    */
   private static int get_no(InteractiveState p_interactive_state) {
     int result;
@@ -76,14 +78,16 @@ public class SnapShot implements Serializable {
     SnapShot.Attributes snapshot_attributes = this.settings.snapshot_attributes;
 
     if (snapshot_attributes.object_visibility) {
-      p_board_handling.graphics_context.color_intensity_table = new ColorIntensityTable(this.graphics_context.color_intensity_table);
+      p_board_handling.graphics_context.color_intensity_table = new ColorIntensityTable(
+          this.graphics_context.color_intensity_table);
     }
     if (snapshot_attributes.layer_visibility) {
       p_board_handling.graphics_context.set_layer_visibility_arr(this.graphics_context.copy_layer_visibility_arr());
     }
 
     if (snapshot_attributes.interactive_state) {
-      p_board_handling.set_interactive_state(this.get_interactive_state(p_board_handling, p_board_handling.activityReplayFile));
+      p_board_handling
+          .set_interactive_state(this.get_interactive_state(p_board_handling, p_board_handling.activityReplayFile));
     }
     if (snapshot_attributes.selection_layers) {
       p_board_handling.settings.select_on_all_visible_layers = this.settings.select_on_all_visible_layers;
@@ -100,7 +104,9 @@ public class SnapShot implements Serializable {
     if (snapshot_attributes.manual_rule_settings) {
       p_board_handling.settings.manual_trace_clearance_class = this.settings.manual_trace_clearance_class;
       p_board_handling.settings.manual_via_rule_index = this.settings.manual_via_rule_index;
-      System.arraycopy(this.settings.manual_trace_half_width_arr, 0, p_board_handling.settings.manual_trace_half_width_arr, 0, p_board_handling.settings.manual_trace_half_width_arr.length);
+      System.arraycopy(this.settings.manual_trace_half_width_arr, 0,
+          p_board_handling.settings.manual_trace_half_width_arr, 0,
+          p_board_handling.settings.manual_trace_half_width_arr.length);
     }
     if (snapshot_attributes.push_and_shove_enabled) {
       p_board_handling.settings.push_enabled = this.settings.push_enabled;
@@ -123,7 +129,8 @@ public class SnapShot implements Serializable {
   /**
    * Returns a new InteractiveState from the data of this instance.
    */
-  public InteractiveState get_interactive_state(GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
+  public InteractiveState get_interactive_state(GuiBoardManager p_board_handling,
+      ActivityReplayFile p_activityReplayFile) {
     InteractiveState result;
     if (this.interactive_state_no == 1) {
       result = RouteMenuState.get_instance(p_board_handling, p_activityReplayFile);

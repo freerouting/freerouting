@@ -5,21 +5,53 @@ import app.freerouting.autoroute.ItemSelectionStrategy;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
-public class RouterOptimizerSettings implements Serializable {
+public class RouterOptimizerSettings implements Serializable, Cloneable {
 
   @SerializedName("enabled")
-  public boolean enabled = false;
+  public Boolean enabled;
   @SerializedName("algorithm")
-  public String algorithm = "freerouting-optimizer";
+  public String algorithm;
   @SerializedName("max_passes")
-  public int maxPasses = 100;
+  public Integer maxPasses;
   @SerializedName("max_threads")
-  public int maxThreads = Math.max(1, Runtime
-      .getRuntime()
-      .availableProcessors() - 1);
+  public Integer maxThreads;
   @SerializedName("improvement_threshold")
-  public float optimizationImprovementThreshold = 0.01f;
-  public transient BoardUpdateStrategy boardUpdateStrategy = BoardUpdateStrategy.GREEDY;
-  public transient String hybridRatio = "1:1";
-  public transient ItemSelectionStrategy itemSelectionStrategy = ItemSelectionStrategy.PRIORITIZED;
+  public Float optimizationImprovementThreshold;
+  public transient BoardUpdateStrategy boardUpdateStrategy;
+  public transient String hybridRatio;
+  public transient ItemSelectionStrategy itemSelectionStrategy;
+
+  public RouterOptimizerSettings() {
+    // Initialize with default values
+    this.enabled = false;
+    this.algorithm = "freerouting-optimizer";
+    this.maxPasses = 100;
+    this.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+    this.optimizationImprovementThreshold = 0.01f;
+    this.boardUpdateStrategy = BoardUpdateStrategy.GREEDY;
+    this.hybridRatio = "1:1";
+    this.itemSelectionStrategy = ItemSelectionStrategy.PRIORITIZED;
+  }
+
+  /**
+   * Creates a deep copy of this RouterOptimizerSettings object.
+   * All fields including transient ones are cloned.
+   * 
+   * @return A new RouterOptimizerSettings instance with the same values
+   */
+  @Override
+  public RouterOptimizerSettings clone() {
+    try {
+      RouterOptimizerSettings result = (RouterOptimizerSettings) super.clone();
+      // Primitive wrappers and Strings are immutable, so no need to clone them
+      // But we need to ensure transient fields are copied
+      result.boardUpdateStrategy = this.boardUpdateStrategy;
+      result.hybridRatio = this.hybridRatio;
+      result.itemSelectionStrategy = this.itemSelectionStrategy;
+      return result;
+    } catch (CloneNotSupportedException e) {
+      // This should never happen since we implement Cloneable
+      throw new AssertionError("Clone not supported", e);
+    }
+  }
 }

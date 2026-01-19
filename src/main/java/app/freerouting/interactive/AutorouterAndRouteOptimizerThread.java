@@ -4,7 +4,6 @@ import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.autoroute.BatchAutorouter;
 import app.freerouting.autoroute.BatchAutorouterV19;
-
 import app.freerouting.autoroute.BatchOptimizer;
 import app.freerouting.autoroute.BatchOptimizerMultiThreaded;
 import app.freerouting.autoroute.NamedAlgorithm;
@@ -63,7 +62,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
                 app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT + "' will be used instead.");
         routingJob.routerSettings.algorithm = app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT;
       }
-      routingJob.logInfo("Using current router algorithm: " + routingJob.routerSettings.algorithm);
       this.batchAutorouter = new BatchAutorouter(routingJob);
     }
 
@@ -202,7 +200,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
   protected void thread_action() {
     routingJob.startedAt = Instant.now();
     routingJob.state = RoutingJobState.RUNNING;
-    boardManager.set_num_threads(routingJob.routerSettings.optimizer.maxThreads);
+    boardManager.set_num_threads(routingJob.routerSettings.maxThreads);
 
     for (ThreadActionListener hl : this.listeners) {
       hl.autorouterStarted();
@@ -235,7 +233,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       boardManager.screen_messages.set_status_message(start_message);
 
       // Let's run the autorouter
-      if (boardManager.get_settings().autoroute_settings.getRunRouter() && !this.is_stop_auto_router_requested()) {
+      if (routingJob.routerSettings.getRunRouter() && !this.is_stop_auto_router_requested()) {
         // Cast to access runBatchLoop() which exists on both BatchAutorouter and
         // BatchAutorouterV19
         if (batchAutorouter instanceof BatchAutorouter) {
@@ -312,7 +310,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
         FRAnalytics.routeOptimizerStarted();
 
-        if (boardManager.get_settings().autoroute_settings.getRunOptimizer() && !this.isStopRequested()) {
+        if (routingJob.routerSettings.getRunOptimizer() && !this.isStopRequested()) {
           String opt_message = tm.getText("batch_optimizer") + " " + tm.getText("stop_message");
           boardManager.screen_messages.set_status_message(opt_message);
           this.batchOptimizer.runBatchLoop();

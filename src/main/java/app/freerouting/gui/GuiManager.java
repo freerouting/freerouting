@@ -83,6 +83,15 @@ public class GuiManager {
             // let's create a job in our session and queue it
             FRLogger.info("Opening '" + globalSettings.design_input_filename + "'...");
             routingJob = new RoutingJob(guiSession.id);
+
+            // Apply CLI settings from GlobalSettings to the RoutingJob
+            // This ensures that command-line arguments are used by the autorouter
+            if (globalSettings.routerSettings != null) {
+                routingJob.routerSettings.applyNewValuesFrom(globalSettings.routerSettings);
+            } else {
+                FRLogger.warn("[CLI Settings] globalSettings.routerSettings is null, CLI settings not applied!");
+            }
+
             try {
                 routingJob.setInput(globalSettings.design_input_filename);
             } catch (Exception e) {
@@ -110,7 +119,7 @@ public class GuiManager {
             new_frame.board_panel.board_handling.screen_messages.set_board_score(
                     bs.getNormalizedScore(routingJob.routerSettings.scoring), bs.connections.incompleteCount,
                     bs.clearanceViolations.totalCount);
-            new_frame.board_panel.board_handling.set_num_threads(globalSettings.routerSettings.optimizer.maxThreads);
+            new_frame.board_panel.board_handling.set_num_threads(globalSettings.routerSettings.maxThreads);
             new_frame.board_panel.board_handling
                     .set_board_update_strategy(globalSettings.routerSettings.optimizer.boardUpdateStrategy);
             new_frame.board_panel.board_handling.set_hybrid_ratio(globalSettings.routerSettings.optimizer.hybridRatio);
@@ -264,7 +273,8 @@ public class GuiManager {
                 // Start the auto-router if the user didn't cancel the dialog
                 if ((globalSettings.guiSettings.dialogConfirmationTimeout == 0) || (choice == options[0])) {
                     // Start the auto-router
-                    routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
+                    // Note: routingJob.routerSettings already has CLI settings applied in line
+                    // 87-91
                     InteractiveActionThread thread = new_frame.board_panel.board_handling
                             .start_autorouter_and_route_optimizer(routingJob);
 
@@ -315,6 +325,10 @@ public class GuiManager {
             routingJob = new RoutingJob(SessionManager
                     .getInstance()
                     .getGuiSession().id);
+
+            // Apply CLI settings from GlobalSettings to the RoutingJob
+            routingJob.routerSettings.applyNewValuesFrom(globalSettings.routerSettings);
+
             routingJob.setDummyInputFile("tutorial_board.dsn");
             // Load an empty template file from the resources
             ClassLoader classLoader = WindowBase.class.getClassLoader();

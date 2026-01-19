@@ -401,6 +401,21 @@ public class BoardFrame extends WindowBase {
       // If the file was read successfully, initialize the windows
       if (read_result == DsnFile.ReadResult.OK) {
         viewport_position = new Point(0, 0);
+
+        // Initialize the RouterSettings layer count to match the loaded board
+        // Restore board-specific calculations from old RouterSettings(RoutingBoard)
+        // constructor
+        RoutingBoard board = board_panel.board_handling.get_routing_board();
+        int boardLayerCount = board.get_layer_count();
+
+        if (this.routingJob.routerSettings.isLayerActive == null ||
+            this.routingJob.routerSettings.isLayerActive.length != boardLayerCount) {
+
+          // Initialize layer arrays and apply board-specific optimizations
+          this.routingJob.routerSettings.setLayerCount(boardLayerCount);
+          this.routingJob.routerSettings.applyBoardSpecificOptimizations(board);
+        }
+
         initialize_windows();
 
         // Raise an event to notify the observers that a new board has been loaded
