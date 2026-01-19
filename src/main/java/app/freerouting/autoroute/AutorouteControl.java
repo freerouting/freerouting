@@ -12,50 +12,88 @@ import app.freerouting.settings.RouterSettings;
 /**
  * Structure for controlling the autoroute algorithm.
  */
+/**
+ * Controls the parameters and settings for the autoroute algorithm.
+ * 
+ * This class encapsulates all configuration for a single routing attempt,
+ * including:
+ * - Layer-specific costs and restrictions
+ * - Via rules and costs
+ * - Ripup/reroute parameters
+ * - Shove trace parameters ("dragging wires" to make room)
+ * - Clearance and neckdown settings
+ */
 public class AutorouteControl {
 
+  /** Router settings from which this control was created */
   public final RouterSettings settings;
+
   /**
-   * The horizontal and vertical trace costs on each layer
+   * The horizontal and vertical trace costs on each layer (affects routing
+   * direction preference)
    */
   public final ExpansionCostFactor[] trace_costs;
+
+  /** True if automatic neckdown (trace width reduction near pins) is enabled */
   public final boolean with_neckdown;
-  /**
-   * Defines for each layer, if it may be used for routing.
-   */
+
+  /** Defines for each layer, if it may be used for routing */
   final public boolean[] layer_active;
+
+  /** Number of layers on the board */
   final int layer_count;
+
   /**
    * The currently used trace half widths in the autoroute algorithm on each layer
    */
   final int[] trace_half_width;
+
   /**
-   * The currently used compensated trace half widths in the autoroute algorithm on each layer. Equal to trace_half_width if no clearance compensation is used.
+   * The currently used compensated trace half widths in the autoroute algorithm
+   * on each layer.
+   * Equal to trace_half_width if no clearance compensation is used.
    */
   final int[] compensated_trace_half_width;
+
+  /** Via radius for each layer (used for checking via placement) */
   final double[] via_radius_arr;
+
   /**
-   * the additional costs to min_normal via_cost for inserting a via between 2 layers
+   * The additional costs to min_normal via_cost for inserting a via between 2
+   * layers
    */
   final ViaCost[] add_via_costs;
-  /**
-   * The currently used clearance class for traces in the autoroute algorithm
-   */
+
+  /** The currently used clearance class for traces in the autoroute algorithm */
   public int trace_clearance_class_no;
-  /**
-   * True, if layer change by inserting of vias is allowed
-   */
+
+  /** True, if layer change by inserting of vias is allowed */
   public boolean vias_allowed;
-  /**
-   * True, if vias may drill to the pad of SMD pins
-   */
+  /** True, if vias may drill to the pad of SMD (Surface Mount Device) pins */
   public boolean attach_smd_allowed;
-  /**
-   * The minimum cost value of all normal vias
-   */
+
+  /** The minimum cost value of all normal vias */
   public double min_normal_via_cost;
+
+  /**
+   * True if the router is allowed to rip up (remove) existing traces to make room
+   * for new routes.
+   * This is the key parameter for passes 2-5 where the router needs to reroute
+   * existing traces.
+   */
   public boolean ripup_allowed;
+
+  /**
+   * The cost threshold for ripping up an existing trace.
+   * Higher values make ripup less likely. Typically multiplied by pass number:
+   * Pass 1: 100, Pass 2: 200, Pass 3: 300, etc.
+   * 
+   * CRITICAL: This is checked during maze search expansion, NOT during expansion
+   * room completion!
+   */
   public int ripup_costs;
+
+  /** The current ripup pass number (1-5), used to scale ripup_costs */
   public int ripup_pass_no;
   /**
    * If true, the autoroute algorithm completes after the first drill
@@ -99,20 +137,48 @@ public class AutorouteControl {
    */
   int pull_tight_accuracy;
   /**
-   * The maximum recursion depth for shoving traces
+   * The maximum recursion depth for shoving ("dragging") traces to make room for
+   * new routes.
+   * 
+   * Default value: 20
+   * 
+   * When inserting a new trace, the router can "shove" existing traces aside if
+   * they block the path.
+   * This parameter limits how many nested shove operations can occur:
+   * - Level 1: Shove trace A to make room for new trace
+   * - Level 2: Shove trace B to make room for displaced trace A
+   * - Level 3: Shove trace C to make room for displaced trace B
+   * - ... up to max_shove_trace_recursion_depth levels
+   * 
+   * Higher values allow more aggressive rerouting but increase computation time.
+   * 
+   * IMPORTANT: Currently used during trace insertion in maze search, but NOT
+   * during
+   * expansion room completion (which is the root cause of the zero completed
+   * rooms issue).
    */
   int max_shove_trace_recursion_depth;
+
   /**
-   * The maximum recursion depth for shoving obstacles
+   * The maximum recursion depth for shoving vias (similar to
+   * max_shove_trace_recursion_depth).
+   * Default value: 5
    */
   int max_shove_via_recursion_depth;
+
   /**
-   * The maximum recursion depth for traces springing over obstacles
+   * The maximum recursion depth for traces "springing over" obstacles.
+   * 
+   * Default value: 5
+   * 
+   * When a trace cannot be inserted directly, it can try to "spring over" (route
+   * around)
+   * the obstacle by adding corners. This parameter limits the recursion depth of
+   * this operation.
    */
   int max_spring_over_recursion_depth;
-  /**
-   * The minimal cost value of all cheap vias
-   */
+
+  /** The minimal cost value of all cheap vias */
   double min_cheap_via_cost;
 
   /**
@@ -126,7 +192,8 @@ public class AutorouteControl {
   /**
    * Creates a new instance of AutorouteControl for the input net
    */
-  public AutorouteControl(RoutingBoard p_board, int p_net_no, RouterSettings p_settings, int p_via_costs, ExpansionCostFactor[] p_trace_cost_arr) {
+  public AutorouteControl(RoutingBoard p_board, int p_net_no, RouterSettings p_settings, int p_via_costs,
+      ExpansionCostFactor[] p_trace_cost_arr) {
     this(p_board, p_settings, p_trace_cost_arr);
     init_net(p_net_no, p_board, p_via_costs);
   }
@@ -190,7 +257,8 @@ public class AutorouteControl {
       } else {
         trace_half_width[i] = p_board.rules.get_trace_half_width(1, i);
       }
-      compensated_trace_half_width[i] = trace_half_width[i] + p_board.rules.clearance_matrix.clearance_compensation_value(trace_clearance_class_no, i);
+      compensated_trace_half_width[i] = trace_half_width[i]
+          + p_board.rules.clearance_matrix.clearance_compensation_value(trace_clearance_class_no, i);
       if (curr_net_class != null && !curr_net_class.is_active_routing_layer(i)) {
         layer_active[i] = false;
       }

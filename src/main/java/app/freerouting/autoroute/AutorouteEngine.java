@@ -398,8 +398,18 @@ public class AutorouteEngine {
       }
       Collection<IncompleteFreeSpaceExpansionRoom> completed_shapes = this.autoroute_search_tree.complete_shape(p_room,
           this.net_no, ignore_object, from_door_shape);
+
+      // DEBUG: Log when room completion fails
+      if (completed_shapes.isEmpty()) {
+        FRLogger.debug("AutorouteEngine.complete_expansion_room: No shapes returned for net #" + this.net_no +
+            " on layer " + p_room.get_layer() +
+            ", initial shape: " + (p_room.get_shape() != null ? "bounded" : "unbounded") +
+            ", contained shape: " + (p_room.get_contained_shape() != null ? "present" : "null"));
+      }
+
       this.remove_incomplete_expansion_room(p_room);
       boolean is_first_completed_room = true;
+      int rooms_before_2d_filter = completed_shapes.size();
       for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : completed_shapes) {
         if (curr_incomplete_room
             .get_shape()
@@ -426,6 +436,13 @@ public class AutorouteEngine {
           }
         }
       }
+
+      // DEBUG: Log if 2D filtering removed all rooms
+      if (result.isEmpty() && rooms_before_2d_filter > 0) {
+        FRLogger.debug("AutorouteEngine.complete_expansion_room: All " + rooms_before_2d_filter +
+            " completed shapes were < 2D for net #" + this.net_no + " on layer " + p_room.get_layer());
+      }
+
       return result;
     } catch (Exception e) {
       FRLogger.error("AutorouteEngine.complete_expansion_room: ", e);
