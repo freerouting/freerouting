@@ -93,11 +93,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
 
     @Override
     protected void thread_action() {
-      if (!(boardManager.interactive_state instanceof SelectedItemState)) {
-        return;
-      }
-      InteractiveState return_state = ((SelectedItemState) boardManager.interactive_state).autoroute(this);
-      boardManager.set_interactive_state(return_state);
+      // Autorouting selected items is disabled in inspection mode
     }
   }
 
@@ -109,11 +105,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
 
     @Override
     protected void thread_action() {
-      if (!(boardManager.interactive_state instanceof SelectedItemState)) {
-        return;
-      }
-      InteractiveState return_state = ((SelectedItemState) boardManager.interactive_state).pull_tight(this);
-      boardManager.set_interactive_state(return_state);
+      // Pull tight selected items is disabled in inspection mode
     }
   }
 }

@@ -130,7 +130,7 @@ public class BoardPanel extends JPanel {
     popup_menu_dynamic_route = new PopupMenuDynamicRoute(this.board_frame);
     popup_menu_stitch_route = new PopupMenuStitchRoute(this.board_frame);
     popup_menu_corneritem_construction = new PopupMenuCornerItemConstruction(this.board_frame);
-    popup_menu_select = new PopupMenuSelectedItems(this.board_frame);
+    popup_menu_select = new PopupMenuInspectedItems(this.board_frame);
     popup_menu_insert_cancel = new PopupMenuInsertCancel(this.board_frame);
     popup_menu_copy = new PopupMenuCopy(this.board_frame);
     popup_menu_move = new PopupMenuMove(this.board_frame);

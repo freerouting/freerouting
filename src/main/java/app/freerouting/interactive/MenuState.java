@@ -38,8 +38,8 @@ public class MenuState extends InteractiveState {
     boolean something_found = !picked_items.isEmpty();
     InteractiveState result;
     if (something_found) {
-      result = SelectedItemState.get_instance(picked_items, this, hdlg);
-      hdlg.screen_messages.set_status_message(tm.getText("in_select_mode"));
+      result = InspectedItemState.get_instance(picked_items, this, hdlg);
+      hdlg.screen_messages.set_status_message(tm.getText("in_inspect_mode"));
     } else {
       result = this;
     }
@@ -82,7 +82,7 @@ public class MenuState extends InteractiveState {
         hdlg.get_panel().board_frame.refresh_windows();
       }
       case 'r' -> curr_return_state = RouteMenuState.get_instance(hdlg);
-      case 's' -> curr_return_state = SelectMenuState.get_instance(hdlg);
+      case 's' -> curr_return_state = InspectMenuState.get_instance(hdlg);
       case 't' -> curr_return_state = RouteState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
       case 'u' -> hdlg.undo();
       case 'v' -> hdlg.toggle_clearance_violations();

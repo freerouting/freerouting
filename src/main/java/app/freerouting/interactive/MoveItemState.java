@@ -162,7 +162,7 @@ public class MoveItemState extends InteractiveState {
       }
     }
     if (!move_ok) {
-      if (p_parent_state instanceof SelectedItemState state) {
+      if (p_parent_state instanceof InspectedItemState state) {
         if (!fixed_items.isEmpty()) {
           state
               .get_item_list()

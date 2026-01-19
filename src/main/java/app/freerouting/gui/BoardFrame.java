@@ -86,9 +86,9 @@ public class BoardFrame extends WindowBase {
    */
   private final BoardToolbar toolbar_panel;
   /**
-   * The toolbar used in the selected item state.
+   * The toolbar used in the inspected item state.
    */
-  private final JToolBar select_toolbar;
+  private final JToolBar inspect_toolbar;
   /**
    * The panel with the message line
    */
@@ -281,7 +281,7 @@ public class BoardFrame extends WindowBase {
     setJMenuBar(this.menubar);
 
     // Set the toolbar panel to the top of the frame, just above the canvas.
-    this.toolbar_panel = new BoardToolbar(this, !globalSettings.featureFlags.selectMode);
+    this.toolbar_panel = new BoardToolbar(this, !globalSettings.featureFlags.inspectionMode);
     this.add(this.toolbar_panel, BorderLayout.NORTH);
 
     // Create and move the status bar one-liners (like current layer, cursor
@@ -323,7 +323,7 @@ public class BoardFrame extends WindowBase {
     });
 
     // DEPRECATED: we don't use this toolbar anymore
-    this.select_toolbar = new BoardToolbarSelectedItem(this);
+    this.inspect_toolbar = new BoardToolbarInspectedItem(this);
 
     // Screen messages are displayed in the status bar, below the canvas.
     this.screen_messages = new ScreenMessages(this.message_panel.errorLabel, this.message_panel.warningLabel,
@@ -726,9 +726,9 @@ public class BoardFrame extends WindowBase {
   /**
    * Sets the toolbar to the buttons of the selected item state.
    */
-  public void set_select_toolbar() {
+  public void set_inspect_toolbar() {
     getContentPane().remove(toolbar_panel);
-    getContentPane().add(select_toolbar, BorderLayout.NORTH);
+    getContentPane().add(inspect_toolbar, BorderLayout.NORTH);
     repaint();
   }
 
@@ -737,7 +737,7 @@ public class BoardFrame extends WindowBase {
    * main menu.
    */
   public void set_menu_toolbar() {
-    getContentPane().remove(select_toolbar);
+    getContentPane().remove(inspect_toolbar);
     getContentPane().add(toolbar_panel, BorderLayout.NORTH);
     repaint();
   }

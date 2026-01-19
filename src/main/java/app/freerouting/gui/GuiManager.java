@@ -376,7 +376,7 @@ public class GuiManager {
 
         FRAnalytics.buttonClicked("fileio_loaddsn", routingJob.getInputFileDetails());
 
-        if (!globalSettings.featureFlags.selectMode) {
+        if (!globalSettings.featureFlags.inspectionMode) {
             new_frame.board_panel.board_handling.set_route_menu_state();
         }
 

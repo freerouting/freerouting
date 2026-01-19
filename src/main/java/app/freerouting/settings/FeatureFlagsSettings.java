@@ -9,12 +9,10 @@ public class FeatureFlagsSettings implements Serializable {
   public boolean logging = true;
   @SerializedName("multi_threading")
   public boolean multiThreading = true;
-  @SerializedName("select_mode")
-  public boolean selectMode;
-
+  @SerializedName("inspection_mode")
+  public boolean inspectionMode;
   @SerializedName("other_menu")
   public boolean otherMenu;
-
   @SerializedName("save_jobs")
   public boolean saveJobs;
 }
