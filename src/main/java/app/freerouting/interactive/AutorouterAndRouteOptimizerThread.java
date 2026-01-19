@@ -4,7 +4,6 @@ import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.autoroute.BatchAutorouter;
 import app.freerouting.autoroute.BatchAutorouterV19;
-
 import app.freerouting.autoroute.BatchOptimizer;
 import app.freerouting.autoroute.BatchOptimizerMultiThreaded;
 import app.freerouting.autoroute.NamedAlgorithm;
@@ -63,7 +62,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
                 app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT + "' will be used instead.");
         routingJob.routerSettings.algorithm = app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT;
       }
-      routingJob.logInfo("Using current router algorithm: " + routingJob.routerSettings.algorithm);
       this.batchAutorouter = new BatchAutorouter(routingJob);
     }
 

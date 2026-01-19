@@ -182,13 +182,13 @@ public class GlobalSettings implements Serializable {
 
   /**
    * Applies environment variables to the settings.
-   * 
+   *
    * @deprecated This method is kept for backward compatibility with non-router
    *             settings.
    *             For router settings, use
    *             {@link app.freerouting.settings.sources.EnvironmentVariablesSource}
    *             which integrates properly with the SettingsMerger architecture.
-   * 
+   *
    *             This method directly modifies GlobalSettings fields using
    *             reflection,
    *             bypassing the priority-based settings merger. It should only be
@@ -196,14 +196,14 @@ public class GlobalSettings implements Serializable {
    *             for settings that are not part of RouterSettings (e.g., GUI
    *             settings,
    *             API settings, etc.).
-   * 
+   *
    *             **IMPORTANT**: This method now SKIPS router settings (properties
    *             starting
    *             with "router.") to prevent conflicts with
    *             EnvironmentVariablesSource.
    *             Router settings are handled exclusively through the
    *             SettingsMerger.
-   * 
+   *
    *             Environment variables must start with "FREEROUTING__" prefix.
    *             Double underscores are converted to dots for nested properties.
    *             Example: FREEROUTING__GUI__INPUT_DIRECTORY → gui.input_directory
@@ -260,7 +260,6 @@ public class GlobalSettings implements Serializable {
   }
 
   public void applyCommandLineArguments(String[] p_args) {
-    FRLogger.info("[CLI Parsing] Processing " + p_args.length + " command line arguments");
     for (int i = 0; i < p_args.length; i++) {
       try {
         if (p_args[i].startsWith("--")) {
@@ -269,7 +268,6 @@ public class GlobalSettings implements Serializable {
               .substring(2)
               .split("=");
           if ((parts.length == 2) && (!Objects.equals(parts[0], "user_data_path"))) {
-            FRLogger.info("[CLI Parsing] Setting " + parts[0] + " = " + parts[1]);
             setValue(parts[0], parts[1]);
           } else if (!Objects.equals(parts[0], "user_data_path")) {
             FRLogger.warn("Unknown command line argument: " + p_args[i]);
