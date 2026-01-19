@@ -27,20 +27,11 @@ public class BoardMenuOther extends JMenu {
 
     other_menu.setText(other_menu.tm.getText("other"));
 
-    // Add Snapshots menu item
-    JMenuItem other_snapshots_menuitem = new JMenuItem();
-    other_snapshots_menuitem.setText(other_menu.tm.getText("snapshots"));
-    other_snapshots_menuitem.setToolTipText(other_menu.tm.getText("snapshots_tooltip"));
-    other_snapshots_menuitem.addActionListener(_ -> other_menu.board_frame.snapshot_window.setVisible(true));
-    other_snapshots_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("other_snapshots_menuitem", other_snapshots_menuitem.getText()));
-    other_menu.add(other_snapshots_menuitem);
-
     // Add Delete All Tracks and Vias menu item
     JMenuItem other_delete_all_tracks_menuitem = new JMenuItem();
     other_delete_all_tracks_menuitem.setText(other_menu.tm.getText("delete_all_tracks_and_vias"));
     other_delete_all_tracks_menuitem.setToolTipText(other_menu.tm.getText("delete_all_tracks_and_vias_tooltip"));
-    other_delete_all_tracks_menuitem.addActionListener(_ ->
-    {
+    other_delete_all_tracks_menuitem.addActionListener(_ -> {
       RoutingBoard board = other_menu.board_frame.board_panel.board_handling.get_routing_board();
       // delete all tracks and vias
       board.delete_all_tracks_and_vias();
@@ -57,7 +48,8 @@ public class BoardMenuOther extends JMenu {
       // redraw the board
       other_menu.board_frame.board_panel.board_handling.repaint();
     });
-    other_delete_all_tracks_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("other_delete_all_tracks_menuitem", other_delete_all_tracks_menuitem.getText()));
+    other_delete_all_tracks_menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("other_delete_all_tracks_menuitem", other_delete_all_tracks_menuitem.getText()));
     other_menu.add(other_delete_all_tracks_menuitem);
 
     return other_menu;

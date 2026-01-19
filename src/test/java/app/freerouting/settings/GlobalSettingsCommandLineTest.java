@@ -24,9 +24,9 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "myboard.dsn" };
         settings.applyCommandLineArguments(args);
 
-        assertEquals("myboard.dsn", settings.design_input_filename);
+        assertEquals("myboard.dsn", settings.initialInputFile);
         assertNull(settings.design_session_filename);
-        assertNull(settings.design_rules_filename);
+        assertNull(settings.initialRulesFile);
     }
 
     @Test
@@ -34,9 +34,9 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "myboard.dsn+myboard.ses" };
         settings.applyCommandLineArguments(args);
 
-        assertEquals("myboard.dsn", settings.design_input_filename);
+        assertEquals("myboard.dsn", settings.initialInputFile);
         assertEquals("myboard.ses", settings.design_session_filename);
-        assertNull(settings.design_rules_filename);
+        assertNull(settings.initialRulesFile);
     }
 
     @Test
@@ -44,9 +44,9 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "myboard.dsn+myboard.rules" };
         settings.applyCommandLineArguments(args);
 
-        assertEquals("myboard.dsn", settings.design_input_filename);
+        assertEquals("myboard.dsn", settings.initialInputFile);
         assertNull(settings.design_session_filename);
-        assertEquals("myboard.rules", settings.design_rules_filename);
+        assertEquals("myboard.rules", settings.initialRulesFile);
     }
 
     @Test
@@ -54,9 +54,9 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "myboard.dsn+myboard.ses+myboard.rules" };
         settings.applyCommandLineArguments(args);
 
-        assertEquals("myboard.dsn", settings.design_input_filename);
+        assertEquals("myboard.dsn", settings.initialInputFile);
         assertEquals("myboard.ses", settings.design_session_filename);
-        assertEquals("myboard.rules", settings.design_rules_filename);
+        assertEquals("myboard.rules", settings.initialRulesFile);
     }
 
     @Test
@@ -64,9 +64,9 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "myboard.rules+myboard.dsn+myboard.ses" };
         settings.applyCommandLineArguments(args);
 
-        assertEquals("myboard.dsn", settings.design_input_filename);
+        assertEquals("myboard.dsn", settings.initialInputFile);
         assertEquals("myboard.ses", settings.design_session_filename);
-        assertEquals("myboard.rules", settings.design_rules_filename);
+        assertEquals("myboard.rules", settings.initialRulesFile);
     }
 
     @Test
@@ -74,9 +74,9 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "myboard.dsn", "myboard.ses", "myboard.rules" };
         settings.applyCommandLineArguments(args);
 
-        assertEquals("myboard.dsn", settings.design_input_filename);
+        assertEquals("myboard.dsn", settings.initialInputFile);
         assertEquals("myboard.ses", settings.design_session_filename);
-        assertEquals("myboard.rules", settings.design_rules_filename);
+        assertEquals("myboard.rules", settings.initialRulesFile);
     }
 
     @Test
@@ -84,9 +84,9 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "myboard.dsn+myboard.ses", "myboard.rules" };
         settings.applyCommandLineArguments(args);
 
-        assertEquals("myboard.dsn", settings.design_input_filename);
+        assertEquals("myboard.dsn", settings.initialInputFile);
         assertEquals("myboard.ses", settings.design_session_filename);
-        assertEquals("myboard.rules", settings.design_rules_filename);
+        assertEquals("myboard.rules", settings.initialRulesFile);
     }
 
     @Test
@@ -94,7 +94,7 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "/path/to/myboard.dsn+/path/to/myboard.ses" };
         settings.applyCommandLineArguments(args);
 
-        assertEquals("/path/to/myboard.dsn", settings.design_input_filename);
+        assertEquals("/path/to/myboard.dsn", settings.initialInputFile);
         assertEquals("/path/to/myboard.ses", settings.design_session_filename);
     }
 
@@ -103,9 +103,9 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "myboard.DSN+myboard.SES+myboard.RULES" };
         settings.applyCommandLineArguments(args);
 
-        assertEquals("myboard.DSN", settings.design_input_filename);
+        assertEquals("myboard.DSN", settings.initialInputFile);
         assertEquals("myboard.SES", settings.design_session_filename);
-        assertEquals("myboard.RULES", settings.design_rules_filename);
+        assertEquals("myboard.RULES", settings.initialRulesFile);
     }
 
     @Test
@@ -114,7 +114,7 @@ class GlobalSettingsCommandLineTest {
         settings.applyCommandLineArguments(args);
 
         // Should use the last DSN file
-        assertEquals("board2.dsn", settings.design_input_filename);
+        assertEquals("board2.dsn", settings.initialInputFile);
     }
 
     @Test
@@ -122,7 +122,7 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "myboard.ses" };
         settings.applyCommandLineArguments(args);
 
-        assertNull(settings.design_input_filename);
+        assertNull(settings.initialInputFile);
         assertEquals("myboard.ses", settings.design_session_filename);
     }
 
@@ -131,9 +131,9 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de", "myboard.rules" };
         settings.applyCommandLineArguments(args);
 
-        assertNull(settings.design_input_filename);
+        assertNull(settings.initialInputFile);
         assertNull(settings.design_session_filename);
-        assertEquals("myboard.rules", settings.design_rules_filename);
+        assertEquals("myboard.rules", settings.initialRulesFile);
     }
 
     @Test
@@ -141,9 +141,9 @@ class GlobalSettingsCommandLineTest {
         String[] args = { "-de" };
         settings.applyCommandLineArguments(args);
 
-        assertNull(settings.design_input_filename);
+        assertNull(settings.initialInputFile);
         assertNull(settings.design_session_filename);
-        assertNull(settings.design_rules_filename);
+        assertNull(settings.initialRulesFile);
     }
 
     @Test

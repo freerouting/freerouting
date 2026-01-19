@@ -24,8 +24,8 @@ public class CornerItemConstructionState extends InteractiveState {
   /**
    * Creates a new instance of CornerItemConstructionState
    */
-  protected CornerItemConstructionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_parent_state, p_board_handling, p_activityReplayFile);
+  protected CornerItemConstructionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+    super(p_parent_state, p_board_handling);
     p_board_handling.remove_ratsnest(); // Constructing an item may change the connectivity.
   }
 
@@ -45,15 +45,7 @@ public class CornerItemConstructionState extends InteractiveState {
     // make sure that the coordinates are integer
     this.corner_list.add(location);
     hdlg.repaint();
-    if (activityReplayFile != null) {
-      activityReplayFile.add_corner(p_location);
-    }
     return this;
-  }
-
-  @Override
-  public InteractiveState process_logfile_point(FloatPoint p_point) {
-    return add_corner(p_point);
   }
 
   /**
@@ -116,7 +108,8 @@ public class CornerItemConstructionState extends InteractiveState {
   }
 
   /**
-   * snaps the line from the last point in the corner_list to the input point according to this.mouse_snap_angle
+   * snaps the line from the last point in the corner_list to the input point
+   * according to this.mouse_snap_angle
    */
   private IntPoint snap(IntPoint p_point) {
     IntPoint result;
@@ -124,7 +117,8 @@ public class CornerItemConstructionState extends InteractiveState {
     if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE && !list_empty) {
       IntPoint last_corner = corner_list.getLast();
       result = p_point.orthogonal_projection(last_corner);
-    } else if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE && !list_empty) {
+    } else if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE
+        && !list_empty) {
       IntPoint last_corner = corner_list.getLast();
       result = p_point.fortyfive_degree_projection(last_corner);
     } else {

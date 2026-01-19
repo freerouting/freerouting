@@ -40,7 +40,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-import java.io.File;
+
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -133,7 +133,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     this.globalSettings = globalSettings;
     this.panel = p_panel;
     this.screen_messages = p_panel.screen_messages;
-    this.set_interactive_state(RouteMenuState.get_instance(this, activityReplayFile));
+    this.set_interactive_state(RouteMenuState.get_instance(this));
 
     this.tm = new TextManager(this.getClass(), globalSettings.currentLocale);
 
@@ -207,14 +207,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * Sets the current mouse position to the input point. Used while reading a
-   * logfile.
-   */
-  void set_current_mouse_position(FloatPoint p_point) {
-    this.current_mouse_position = p_point;
-  }
-
-  /**
    * Tells the router, if conduction areas should be ignored.
    */
   public void set_ignore_conduction(boolean p_value) {
@@ -222,8 +214,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     board.change_conduction_is_obstacle(!p_value);
-
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_IGNORE_CONDUCTION, p_value);
   }
 
   public void set_pin_edge_to_turn_dist(double p_value) {
@@ -348,8 +338,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     if (p_layer >= 0 && p_layer <= board.get_layer_count()) {
       board.rules.set_default_trace_half_width(p_layer, p_value);
-      activityReplayFile.start_scope(ActivityReplayFileScope.SET_TRACE_HALF_WIDTH, p_layer);
-      activityReplayFile.add_int(p_value);
     }
   }
 
@@ -361,7 +349,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     board.search_tree_manager.set_clearance_compensation_used(p_value);
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_CLEARANCE_COMPENSATION, p_value);
   }
 
   /**
@@ -372,7 +359,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     board.rules.set_trace_angle_restriction(p_snap_angle);
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_SNAP_ANGLE, p_snap_angle.getValue());
   }
 
   /**
@@ -385,7 +371,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
     int layer = Math.max(p_layer, 0);
     layer = Math.min(layer, board.get_layer_count() - 1);
     set_layer(layer);
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_LAYER, p_layer);
   }
 
   /**
@@ -444,8 +429,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void set_selectable(ItemSelectionFilter.SelectableChoices p_item_type, boolean p_value) {
     settings.set_selectable(p_item_type, p_value);
-    if (!p_value && this.interactive_state instanceof SelectedItemState) {
-      set_interactive_state(((SelectedItemState) interactive_state).filter());
+    if (!p_value && this.interactive_state instanceof InspectedItemState) {
+      set_interactive_state(((InspectedItemState) interactive_state).filter());
     }
   }
 
@@ -619,16 +604,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * From here on the interactive actions are written to a logfile.
-   */
-  public void start_logfile(File p_filename) {
-    if (board_is_read_only) {
-      return;
-    }
-    activityReplayFile.start_write(p_filename);
-  }
-
-  /**
    * Repaints the board panel on the screen.
    */
   public void repaint() {
@@ -705,7 +680,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     board.generate_snapshot();
-    activityReplayFile.start_scope(ActivityReplayFileScope.GENERATE_SNAPSHOT);
   }
 
   /**
@@ -729,7 +703,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
     } else {
       screen_messages.set_status_message(tm.getText("no_more_undo_possible"));
     }
-    activityReplayFile.start_scope(ActivityReplayFileScope.UNDO);
     repaint();
   }
 
@@ -749,7 +722,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
     } else {
       screen_messages.set_status_message(tm.getText("no_more_redo_possible"));
     }
-    activityReplayFile.start_scope(ActivityReplayFileScope.REDO);
     repaint();
   }
 
@@ -926,10 +898,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * Sets the interactive state to SelectMenuState
+   * Sets the interactive state to InspectMenuState
    */
-  public void set_select_menu_state() {
-    this.interactive_state = SelectMenuState.get_instance(this, activityReplayFile);
+  public void set_inspect_menu_state() {
+    this.interactive_state = InspectMenuState.get_instance(this);
     screen_messages.set_status_message(tm.getText("select_menu"));
   }
 
@@ -937,7 +909,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Sets the interactive state to RouteMenuState
    */
   public void set_route_menu_state() {
-    this.interactive_state = RouteMenuState.get_instance(this, activityReplayFile);
+    this.interactive_state = RouteMenuState.get_instance(this);
     screen_messages.set_status_message(tm.getText("route_menu"));
   }
 
@@ -945,7 +917,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Sets the interactive state to DragMenuState
    */
   public void set_drag_menu_state() {
-    this.interactive_state = DragMenuState.get_instance(this, activityReplayFile);
+    this.interactive_state = DragMenuState.get_instance(this);
     screen_messages.set_status_message(tm.getText("drag_menu"));
   }
 
@@ -961,7 +933,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
     try {
       board = (RoutingBoard) p_design.readObject();
       settings = (InteractiveSettings) p_design.readObject();
-      settings.set_logfile(this.activityReplayFile);
       coordinate_transform = (CoordinateTransform) p_design.readObject();
       graphics_context = (GraphicsContext) p_design.readObject();
       originalBoardChecksum = calculateCrc32();
@@ -1042,22 +1013,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * Processes the actions stored in the input logfile.
-   */
-  public void read_logfile(InputStream p_input_stream) {
-    if (board_is_read_only || !(interactive_state instanceof MenuState)) {
-      return;
-    }
-    this.interactive_action_thread = InteractiveActionThread.get_read_logfile_instance(this, routingJob,
-        p_input_stream);
-    this.interactive_action_thread.start();
-  }
-
-  /**
    * Closes all currently used files so that the file buffers are written to disk.
    */
   public void close_files() {
-    activityReplayFile.close_output();
   }
 
   /**
@@ -1069,7 +1027,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState new_state = RouteState.get_instance(location, this.interactive_state, this, activityReplayFile);
+    InteractiveState new_state = RouteState.get_instance(location, this.interactive_state, this);
     set_interactive_state(new_state);
   }
 
@@ -1092,7 +1050,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (board_is_read_only || !(this.interactive_state instanceof MenuState)) {
       return;
     }
-    set_interactive_state(SelectItemsInRegionState.get_instance(this.interactive_state, this, activityReplayFile));
+    set_interactive_state(InspectItemsInRegionState.get_instance(this.interactive_state, this));
   }
 
   /**
@@ -1105,8 +1063,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     this.display_layer_message();
     if (interactive_state instanceof MenuState) {
-      set_interactive_state(SelectedItemState.get_instance(p_items, interactive_state, this, activityReplayFile));
-    } else if (interactive_state instanceof SelectedItemState state) {
+      set_interactive_state(InspectedItemState.get_instance(p_items, interactive_state, this));
+    } else if (interactive_state instanceof InspectedItemState state) {
       state
           .get_item_list()
           .addAll(p_items);
@@ -1131,10 +1089,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Displays a window containing all selected items.
    */
   public void zoom_selection() {
-    if (!(interactive_state instanceof SelectedItemState)) {
+    if (!(interactive_state instanceof InspectedItemState)) {
       return;
     }
-    IntBox bounding_box = this.board.get_bounding_box(((SelectedItemState) interactive_state).get_item_list());
+    IntBox bounding_box = this.board.get_bounding_box(((InspectedItemState) interactive_state).get_item_list());
     bounding_box = bounding_box.offset(this.board.rules.get_max_trace_half_width());
     Point2D lower_left = this.graphics_context.coordinate_transform.board_to_screen(bounding_box.ll.to_float());
     Point2D upper_right = this.graphics_context.coordinate_transform.board_to_screen(bounding_box.ur.to_float());
@@ -1147,11 +1105,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * items state, if something was selected.
    */
   public void toggle_select_action(Point2D p_point) {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
+    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
       return;
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState return_state = ((SelectedItemState) interactive_state).toggle_select(location);
+    InteractiveState return_state = ((InspectedItemState) interactive_state).toggle_select(location);
     if (return_state != this.interactive_state) {
       set_interactive_state(return_state);
       repaint();
@@ -1162,139 +1120,87 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Fixes the selected items.
    */
   public void fix_selected_items() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
-      return;
-    }
-    ((SelectedItemState) interactive_state).fix_items();
+    // Editing disabled in inspection mode
   }
 
   /**
    * Unfixes the selected items.
    */
   public void unfix_selected_items() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
-      return;
-    }
-    ((SelectedItemState) interactive_state).unfix_items();
+    // Editing disabled in inspection mode
   }
 
   /**
    * Displays information about the selected item into a graphical text window.
    */
   public void display_selected_item_info() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
+    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
       return;
     }
-    ((SelectedItemState) interactive_state).info();
+    ((InspectedItemState) interactive_state).info();
   }
 
   /**
    * Makes all selected items connectable and assigns them to a new net.
    */
   public void assign_selected_to_new_net() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
-      return;
-    }
-    InteractiveState new_state = ((SelectedItemState) interactive_state).assign_items_to_new_net();
-    set_interactive_state(new_state);
+    // Editing disabled in inspection mode
   }
 
   /**
    * Assigns all selected items to a new group ( new component for example)
    */
   public void assign_selected_to_new_group() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
-      return;
-    }
-    InteractiveState new_state = ((SelectedItemState) interactive_state).assign_items_to_new_group();
-    set_interactive_state(new_state);
+    // Editing disabled in inspection mode
   }
 
   /**
    * Deletes all unfixed selected items.
    */
   public void delete_selected_items() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
-      return;
-    }
-    InteractiveState new_state = ((SelectedItemState) interactive_state).delete_items();
-    set_interactive_state(new_state);
+    // Editing disabled in inspection mode
   }
 
   /**
    * Deletes all unfixed selected traces and vias inside a rectangle.
    */
   public void cutout_selected_items() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
-      return;
-    }
-    InteractiveState new_state = ((SelectedItemState) interactive_state).cutout_items();
-    set_interactive_state(new_state);
+    // Editing disabled in inspection mode
   }
 
   /**
    * Assigns the input clearance class to the selected items
    */
   public void assign_clearance_classs_to_selected_items(int p_cl_class_index) {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
-      return;
-    }
-    InteractiveState new_state = ((SelectedItemState) interactive_state).assign_clearance_class(p_cl_class_index);
-    set_interactive_state(new_state);
+    // Editing disabled in inspection mode
   }
 
   /**
    * Moves or rotates the selected items
    */
   public void move_selected_items(Point2D p_from_location) {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState curr_state)) {
-      return;
-    }
-    Collection<Item> item_list = curr_state.get_item_list();
-    FloatPoint from_location = graphics_context.coordinate_transform.screen_to_board(p_from_location);
-    InteractiveState new_state = MoveItemState.get_instance(from_location, item_list, interactive_state, this,
-        activityReplayFile);
-    set_interactive_state(new_state);
-    repaint();
+    // Editing disabled in inspection mode
   }
 
   /**
    * Copies all selected items.
    */
   public void copy_selected_items(Point2D p_from_location) {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState curr_state)) {
-      return;
-    }
-    curr_state.extent_to_whole_components();
-    Collection<Item> item_list = curr_state.get_item_list();
-    FloatPoint from_location = graphics_context.coordinate_transform.screen_to_board(p_from_location);
-    InteractiveState new_state = CopyItemState.get_instance(from_location, item_list, interactive_state.return_state,
-        this, activityReplayFile);
-    set_interactive_state(new_state);
+    // Editing disabled in inspection mode
   }
 
   /**
    * Optimizes the selected items.
    */
   public void optimize_selected_items() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
-      return;
-    }
-    board.generate_snapshot();
-    this.interactive_action_thread = InteractiveActionThread.get_pull_tight_instance(this, routingJob);
-    this.interactive_action_thread.start();
+    // Editing disabled in inspection mode
   }
 
   /**
    * Autoroute the selected items.
    */
   public void autoroute_selected_items() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
-      return;
-    }
-    board.generate_snapshot();
-    this.interactive_action_thread = InteractiveActionThread.get_autoroute_instance(this, routingJob);
-    this.interactive_action_thread.start();
+    // Editing disabled in inspection mode
   }
 
   /**
@@ -1335,20 +1241,20 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Selects also all items belonging to a net of a currently selected item.
    */
   public void extend_selection_to_whole_nets() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
+    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(((SelectedItemState) interactive_state).extent_to_whole_nets());
+    set_interactive_state(((InspectedItemState) interactive_state).extent_to_whole_nets());
   }
 
   /**
    * Selects also all items belonging to a component of a currently selected item.
    */
   public void extend_selection_to_whole_components() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
+    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(((SelectedItemState) interactive_state).extent_to_whole_components());
+    set_interactive_state(((InspectedItemState) interactive_state).extent_to_whole_components());
   }
 
   /**
@@ -1356,10 +1262,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * item.
    */
   public void extend_selection_to_whole_connected_sets() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
+    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(((SelectedItemState) interactive_state).extent_to_whole_connected_sets());
+    set_interactive_state(((InspectedItemState) interactive_state).extent_to_whole_connected_sets());
   }
 
   /**
@@ -1367,20 +1273,20 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * item.
    */
   public void extend_selection_to_whole_connections() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
+    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(((SelectedItemState) interactive_state).extent_to_whole_connections());
+    set_interactive_state(((InspectedItemState) interactive_state).extent_to_whole_connections());
   }
 
   /**
    * Shows or hides the clearance violations of the selected items.
    */
   public void toggle_selected_item_violations() {
-    if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
+    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
       return;
     }
-    ((SelectedItemState) interactive_state).toggle_clearance_violations();
+    ((InspectedItemState) interactive_state).toggle_clearance_violations();
   }
 
   public void turn_45_degree(int p_factor) {
@@ -1403,7 +1309,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Zooms display to an interactive defined rectangle.
    */
   public void zoom_region() {
-    interactive_state = ZoomRegionState.get_instance(this.interactive_state, this, this.activityReplayFile);
+    interactive_state = ZoomRegionState.get_instance(this.interactive_state, this);
   }
 
   /**
@@ -1416,7 +1322,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
     set_interactive_state(
-        CircleConstructionState.get_instance(location, this.interactive_state, this, activityReplayFile));
+        CircleConstructionState.get_instance(location, this.interactive_state, this));
   }
 
   /**
@@ -1429,7 +1335,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
     set_interactive_state(
-        TileConstructionState.get_instance(location, this.interactive_state, this, activityReplayFile));
+        TileConstructionState.get_instance(location, this.interactive_state, this));
   }
 
   /**
@@ -1442,7 +1348,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
     set_interactive_state(
-        PolygonShapeConstructionState.get_instance(location, this.interactive_state, this, activityReplayFile));
+        PolygonShapeConstructionState.get_instance(location, this.interactive_state, this));
   }
 
   /**
@@ -1455,8 +1361,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState new_state = HoleConstructionState.get_instance(location, this.interactive_state, this,
-        activityReplayFile);
+    InteractiveState new_state = HoleConstructionState.get_instance(location, this.interactive_state, this);
     set_interactive_state(new_state);
   }
 

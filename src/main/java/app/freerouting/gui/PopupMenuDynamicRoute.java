@@ -26,23 +26,18 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
     JMenuItem popup_end_route_menuitem = new JMenuItem();
     popup_end_route_menuitem.setText(tm.getText("end_route"));
     popup_end_route_menuitem.addActionListener(_ -> board_panel.board_handling.return_from_state());
-    popup_end_route_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_end_route_menuitem", popup_end_route_menuitem.getText()));
+    popup_end_route_menuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popup_end_route_menuitem", popup_end_route_menuitem.getText()));
 
     this.add(popup_end_route_menuitem, 0);
 
     JMenuItem popup_cancel_menuitem = new JMenuItem();
     popup_cancel_menuitem.setText(tm.getText("cancel_route"));
     popup_cancel_menuitem.addActionListener(_ -> board_panel.board_handling.cancel_state());
-    popup_cancel_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
+    popup_cancel_menuitem
+        .addActionListener(_ -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
 
     this.add(popup_cancel_menuitem, 1);
-
-    JMenuItem popup_snapshot_menuitem = new JMenuItem();
-    popup_snapshot_menuitem.setText(tm.getText("generate_snapshot"));
-    popup_snapshot_menuitem.addActionListener(_ -> board_panel.board_handling.generate_snapshot());
-    popup_snapshot_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_snapshot_menuitem", popup_snapshot_menuitem.getText()));
-
-    this.add(popup_snapshot_menuitem, 2);
 
     if (layer_structure.arr.length > 0) {
       this.change_layer_menu = new PopupMenuChangeLayer(p_board_frame);

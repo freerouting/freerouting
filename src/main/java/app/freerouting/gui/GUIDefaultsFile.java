@@ -4,7 +4,7 @@ import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.interactive.SnapShot;
+
 import app.freerouting.logger.FRLogger;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -209,7 +209,7 @@ public class GUIDefaultsFile {
     write_frame_scope(this.board_frame.layer_visibility_window, "layer_visibility");
     write_frame_scope(this.board_frame.object_visibility_window, "object_visibility");
     write_frame_scope(this.board_frame.display_misc_window, "display_miscellaneous");
-    write_frame_scope(this.board_frame.snapshot_window, "snapshots");
+
     write_frame_scope(this.board_frame.select_parameter_window, "select_parameter");
     write_frame_scope(this.board_frame.route_parameter_window, "route_parameter");
     write_frame_scope(this.board_frame.route_parameter_window.manual_rule_window, "manual_rules");
@@ -267,7 +267,7 @@ public class GUIDefaultsFile {
       case OBJECT_VISIBILITY -> curr_frame = this.board_frame.object_visibility_window;
       case LAYER_VISIBILITY -> curr_frame = this.board_frame.layer_visibility_window;
       case DISPLAY_MISCELLANEOUS -> curr_frame = this.board_frame.display_misc_window;
-      case SNAPSHOTS -> curr_frame = this.board_frame.snapshot_window;
+
       case SELECT_PARAMETER -> curr_frame = this.board_frame.select_parameter_window;
       case ROUTE_PARAMETER -> curr_frame = this.board_frame.route_parameter_window;
       case MANUAL_RULES -> curr_frame = this.board_frame.route_parameter_window.manual_rule_window;
@@ -856,10 +856,7 @@ public class GUIDefaultsFile {
           if (!read_selectable_item_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.DESELECTED_SNAPSHOT_ATTRIBUTES) {
-          if (!read_deselected_snapshot_attributes()) {
-            return false;
-          }
+
         } else {
           // skip unknown scope
           skip_scope(this.scanner);
@@ -884,7 +881,7 @@ public class GUIDefaultsFile {
     write_clearance_compensation_scope();
     write_ignore_conduction_scope();
     write_automatic_layer_dimming_scope();
-    write_deselected_snapshot_attributes();
+
     out_file.end_scope();
   }
 
@@ -1270,126 +1267,20 @@ public class GUIDefaultsFile {
     out_file.end_scope();
   }
 
-  private void write_deselected_snapshot_attributes() throws IOException {
-    SnapShot.Attributes attributes = this.board_handling.settings.get_snapshot_attributes();
-    out_file.start_scope();
-    out_file.write("deselected_snapshot_attributes ");
-    if (!attributes.object_colors) {
-      out_file.new_line();
-      out_file.write("object_colors ");
-    }
-    if (!attributes.object_visibility) {
-      out_file.new_line();
-      out_file.write("object_visibility ");
-    }
-    if (!attributes.layer_visibility) {
-      out_file.new_line();
-      out_file.write("layer_visibility ");
-    }
-    if (!attributes.display_region) {
-      out_file.new_line();
-      out_file.write("display_region ");
-    }
-    if (!attributes.interactive_state) {
-      out_file.new_line();
-      out_file.write("interactive_state ");
-    }
-    if (!attributes.selection_layers) {
-      out_file.new_line();
-      out_file.write("selection_layers ");
-    }
-    if (!attributes.selectable_items) {
-      out_file.new_line();
-      out_file.write("selectable_items ");
-    }
-    if (!attributes.current_layer) {
-      out_file.new_line();
-      out_file.write("current_layer ");
-    }
-    if (!attributes.rule_selection) {
-      out_file.new_line();
-      out_file.write("rule_selection ");
-    }
-    if (!attributes.manual_rule_settings) {
-      out_file.new_line();
-      out_file.write("manual_rule_settings ");
-    }
-    if (!attributes.push_and_shove_enabled) {
-      out_file.new_line();
-      out_file.write("push_and_shove_enabled ");
-    }
-    if (!attributes.drag_components_enabled) {
-      out_file.new_line();
-      out_file.write("drag_components_enabled ");
-    }
-    if (!attributes.pull_tight_region) {
-      out_file.new_line();
-      out_file.write("pull_tight_region ");
-    }
-    if (!attributes.component_grid) {
-      out_file.new_line();
-      out_file.write("component_grid ");
-    }
-    out_file.end_scope();
-  }
-
-  private boolean read_deselected_snapshot_attributes() throws IOException {
-    SnapShot.Attributes attributes = this.board_handling.settings.get_snapshot_attributes();
-    for (;;) {
-      Object next_token = this.scanner.next_token();
-      if (next_token == Keyword.CLOSED_BRACKET) {
-        break;
-      }
-      if (next_token == Keyword.OBJECT_COLORS) {
-        attributes.object_colors = false;
-      } else if (next_token == Keyword.OBJECT_VISIBILITY) {
-        attributes.object_visibility = false;
-      } else if (next_token == Keyword.LAYER_VISIBILITY) {
-        attributes.layer_visibility = false;
-      } else if (next_token == Keyword.DISPLAY_REGION) {
-        attributes.display_region = false;
-      } else if (next_token == Keyword.INTERACTIVE_STATE) {
-        attributes.interactive_state = false;
-      } else if (next_token == Keyword.SELECTION_LAYERS) {
-        attributes.selection_layers = false;
-      } else if (next_token == Keyword.SELECTABLE_ITEMS) {
-        attributes.selectable_items = false;
-      } else if (next_token == Keyword.CURRENT_LAYER) {
-        attributes.current_layer = false;
-      } else if (next_token == Keyword.RULE_SELECTION) {
-        attributes.rule_selection = false;
-      } else if (next_token == Keyword.MANUAL_RULE_SETTINGS) {
-        attributes.manual_rule_settings = false;
-      } else if (next_token == Keyword.PUSH_AND_SHOVE_ENABLED) {
-        attributes.push_and_shove_enabled = false;
-      } else if (next_token == Keyword.DRAG_COMPONENTS_ENABLED) {
-        attributes.drag_components_enabled = false;
-      } else if (next_token == Keyword.PULL_TIGHT_REGION) {
-        attributes.pull_tight_region = false;
-      } else if (next_token == Keyword.COMPONENT_GRID) {
-        attributes.component_grid = false;
-      } else {
-        FRLogger.warn("GUIDefaultsFile.read_deselected_snapshot_attributes: unexpected token");
-        return false;
-      }
-    }
-    return true;
-  }
-
   /**
    * Keywords in the gui defaults file.
    */
   enum Keyword {
     ALL_VISIBLE, ASSIGN_NET_RULES, AUTOMATIC_LAYER_DIMMING, BACKGROUND, BOARD_FRAME, BOUNDS, CLEARANCE_COMPENSATION,
     CLEARANCE_MATRIX, CLOSED_BRACKET, COLOR_MANAGER, COLORS, COMPONENT_BACK, COMPONENT_FRONT, COMPONENT_GRID,
-    COMPONENT_INFO, CONDUCTION, CURRENT_LAYER, CURRENT_ONLY, DESELECTED_SNAPSHOT_ATTRIBUTES, DISPLAY_MISCELLANEOUS,
+    COMPONENT_INFO, CONDUCTION, CURRENT_LAYER, CURRENT_ONLY, DISPLAY_MISCELLANEOUS,
     DISPLAY_REGION, DRAG_COMPONENTS_ENABLED, DYNAMIC, EDIT_VIAS, EDIT_NET_RULES, FIXED, FIXED_TRACES, FIXED_VIAS,
     FORTYFIVE_DEGREE, GUI_DEFAULTS, HILIGHT, HILIGHT_ROUTING_OBSTACLE, IGNORE_CONDUCTION_AREAS, INCOMPLETES,
     INCOMPLETES_INFO, INTERACTIVE_STATE, KEEPOUT, LAYER_VISIBILITY, LENGTH_MATCHING, MANUAL_RULES, MANUAL_RULE_SETTINGS,
     MOVE_PARAMETER, NET_INFO, NINETY_DEGREE, NONE, NOT_VISIBLE, OBJECT_COLORS, OBJECT_VISIBILITY, OPEN_BRACKET, OFF, ON,
     OUTLINE, PARAMETER, PACKAGE_INFO, PADSTACK_INFO, PINS, PULL_TIGHT_ACCURACY, PULL_TIGHT_REGION,
     PUSH_AND_SHOVE_ENABLED, ROUTE_DETAILS, ROUTE_MODE, ROUTE_PARAMETER, RULE_SELECTION, SELECT_PARAMETER,
-    SELECTABLE_ITEMS, SELECTION_LAYERS, SNAPSHOTS, SHOVE_ENABLED, STITCHING, TRACES, UNFIXED, VIA_KEEPOUT, VISIBLE,
+    SELECTABLE_ITEMS, SELECTION_LAYERS, SHOVE_ENABLED, STITCHING, TRACES, UNFIXED, VIA_KEEPOUT, VISIBLE,
     VIA_RULES, VIA_SNAP_TO_SMD_CENTER, VIAS, VIOLATIONS, VIOLATIONS_INFO, WINDOWS
   }
 }

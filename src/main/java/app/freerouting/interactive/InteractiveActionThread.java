@@ -5,11 +5,10 @@ import static app.freerouting.Freerouting.globalSettings;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
+
 import app.freerouting.settings.GlobalSettings;
 import java.awt.Graphics;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,11 +71,6 @@ public abstract class InteractiveActionThread extends StoppableThread {
     return new PullTightThread(boardManager, job);
   }
 
-  public static InteractiveActionThread get_read_logfile_instance(GuiBoardManager boardManager, RoutingJob job,
-      InputStream p_input_stream) {
-    return new ReadLogfileThread(boardManager, job, p_input_stream);
-  }
-
   public void addListener(ThreadActionListener toAdd) {
     listeners.add(toAdd);
   }
@@ -99,11 +93,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
 
     @Override
     protected void thread_action() {
-      if (!(boardManager.interactive_state instanceof SelectedItemState)) {
-        return;
-      }
-      InteractiveState return_state = ((SelectedItemState) boardManager.interactive_state).autoroute(this);
-      boardManager.set_interactive_state(return_state);
+      // Autorouting selected items is disabled in inspection mode
     }
   }
 
@@ -115,84 +105,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
 
     @Override
     protected void thread_action() {
-      if (!(boardManager.interactive_state instanceof SelectedItemState)) {
-        return;
-      }
-      InteractiveState return_state = ((SelectedItemState) boardManager.interactive_state).pull_tight(this);
-      boardManager.set_interactive_state(return_state);
-    }
-  }
-
-  private static class ReadLogfileThread extends InteractiveActionThread {
-
-    private final InputStream input_stream;
-
-    private ReadLogfileThread(GuiBoardManager p_board_handling, RoutingJob job, InputStream p_input_stream) {
-      super(p_board_handling, job);
-      this.input_stream = p_input_stream;
-    }
-
-    @Override
-    protected void thread_action() {
-      TextManager tm = new TextManager(InteractiveState.class, boardManager.get_locale());
-
-      boolean saved_board_read_only = boardManager.is_board_read_only();
-      boardManager.set_board_read_only(true);
-      String start_message = tm.getText("logfile") + " " + tm.getText("stop_message");
-      boardManager.screen_messages.set_status_message(start_message);
-      boardManager.screen_messages.set_write_protected(true);
-      boolean done = false;
-      InteractiveState previous_state = boardManager.interactive_state;
-      if (!boardManager.activityReplayFile.start_read(this.input_stream)) {
-        done = true;
-      }
-      boolean interrupted = false;
-      int debug_counter = 0;
-      boardManager.get_panel().board_frame.refresh_windows();
-      boardManager.paint_immediately = true;
-      while (!done) {
-        if (isStopRequested()) {
-          interrupted = true;
-          done = true;
-        }
-        ++debug_counter;
-        ActivityReplayFileScope logfile_scope = boardManager.activityReplayFile.start_read_scope();
-        if (logfile_scope == null) {
-          done = true; // end of logfile
-        }
-        if (!done) {
-          try {
-            InteractiveState new_state = logfile_scope.read_scope(boardManager.activityReplayFile,
-                boardManager.interactive_state, boardManager);
-            if (new_state == null) {
-              FRLogger.warn("BoardHandling:read_logfile: inconsistent logfile scope");
-              new_state = previous_state;
-            }
-            boardManager.repaint();
-            boardManager.set_interactive_state(new_state);
-          } catch (Exception _) {
-            done = true;
-          }
-        }
-      }
-      boardManager.paint_immediately = false;
-      try {
-        this.input_stream.close();
-      } catch (IOException e) {
-        FRLogger.error("ReadLogfileThread: unable to close input stream", e);
-      }
-      boardManager.get_panel().board_frame.refresh_windows();
-      boardManager.screen_messages.set_write_protected(false);
-      String curr_message;
-      if (interrupted) {
-        curr_message = tm.getText("interrupted");
-      } else {
-        curr_message = tm.getText("completed");
-      }
-      String end_message = tm.getText("logfile") + " " + curr_message;
-      boardManager.screen_messages.set_status_message(end_message);
-      boardManager.set_board_read_only(saved_board_read_only);
-      boardManager.get_panel().board_frame.repaint_all();
+      // Pull tight selected items is disabled in inspection mode
     }
   }
 }

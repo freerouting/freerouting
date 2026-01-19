@@ -4,15 +4,16 @@ import app.freerouting.geometry.planar.FloatPoint;
 import javax.swing.JPopupMenu;
 
 /**
- * State for dynamic interactive routing, which is routing while moving the mouse pointer.
+ * State for dynamic interactive routing, which is routing while moving the
+ * mouse pointer.
  */
 public class DynamicRouteState extends RouteState {
 
   /**
    * Creates a new instance of DynamicRouteState
    */
-  protected DynamicRouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_parent_state, p_board_handling, p_activityReplayFile);
+  protected DynamicRouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+    super(p_parent_state, p_board_handling);
   }
 
   @Override
@@ -29,9 +30,6 @@ public class DynamicRouteState extends RouteState {
     if (this.observers_activated) {
       hdlg.get_routing_board().end_notify_observers();
       this.observers_activated = false;
-    }
-    if (activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
     }
     for (int curr_net_no : this.route.net_no_arr) {
       hdlg.update_ratsnest(curr_net_no);

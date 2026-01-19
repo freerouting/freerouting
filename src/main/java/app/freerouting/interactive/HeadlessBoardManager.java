@@ -33,11 +33,6 @@ import java.util.Locale;
 public class HeadlessBoardManager implements BoardManager {
 
   /**
-   * The file used for logging interactive action, so that they can be replayed
-   * later
-   */
-  public final ActivityReplayFile activityReplayFile = new ActivityReplayFile();
-  /**
    * The current settings for interactive actions on the board
    */
   public InteractiveSettings settings;
@@ -112,7 +107,7 @@ public class HeadlessBoardManager implements BoardManager {
     this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules,
         p_board_communication);
 
-    this.settings = new InteractiveSettings(this.board, this.activityReplayFile);
+    this.settings = new InteractiveSettings(this.board);
   }
 
   @Override

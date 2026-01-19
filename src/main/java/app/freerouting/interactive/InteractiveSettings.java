@@ -93,26 +93,17 @@ public class InteractiveSettings implements Serializable {
    * The filter used in interactive selection of board items.
    */
   ItemSelectionFilter item_selection_filter;
-  /**
-   * Defines the data of the snapshot selected for restoring.
-   */
-  SnapShot.Attributes snapshot_attributes;
+
   /**
    * Indicates, if the data of this class are not allowed to be changed in
    * interactive board editing.
    */
   private transient boolean read_only;
-  /**
-   * The file used for logging interactive action, so that they can be replayed
-   * later
-   */
-  private transient ActivityReplayFile activityReplayFile;
 
   /**
    * Creates a new interactive settings variable.
    */
-  public InteractiveSettings(RoutingBoard p_board, ActivityReplayFile p_activityReplayFile) {
-    this.activityReplayFile = p_activityReplayFile;
+  public InteractiveSettings(RoutingBoard p_board) {
     // Initialise with default values.
     layer = 0;
     push_enabled = true;
@@ -133,14 +124,13 @@ public class InteractiveSettings implements Serializable {
     manual_trace_half_width_arr = new int[p_board.get_layer_count()];
     Arrays.fill(manual_trace_half_width_arr, 1000);
     item_selection_filter = new ItemSelectionFilter();
-    snapshot_attributes = new SnapShot.Attributes();
+
   }
 
   /**
    * Copy constructor
    */
   public InteractiveSettings(InteractiveSettings p_settings) {
-    this.activityReplayFile = p_settings.activityReplayFile;
     this.read_only = p_settings.read_only;
     this.layer = p_settings.layer;
     this.push_enabled = p_settings.push_enabled;
@@ -162,7 +152,7 @@ public class InteractiveSettings implements Serializable {
     System.arraycopy(p_settings.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr, 0,
         this.manual_trace_half_width_arr.length);
     this.item_selection_filter = new ItemSelectionFilter(p_settings.item_selection_filter);
-    this.snapshot_attributes = new SnapShot.Attributes(p_settings.snapshot_attributes);
+
   }
 
   public int get_layer() {
@@ -184,7 +174,6 @@ public class InteractiveSettings implements Serializable {
       return;
     }
     push_enabled = p_value;
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_PUSH_ENABLED, p_value);
   }
 
   /**
@@ -209,7 +198,6 @@ public class InteractiveSettings implements Serializable {
       return;
     }
     drag_components_enabled = p_value;
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_DRAG_COMPONENTS_ENABLED, p_value);
   }
 
   /**
@@ -228,7 +216,6 @@ public class InteractiveSettings implements Serializable {
       return;
     }
     select_on_all_visible_layers = p_value;
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_SELECT_ON_ALL_LAYER, p_value);
   }
 
   /**
@@ -289,9 +276,6 @@ public class InteractiveSettings implements Serializable {
     }
     if (zoom_with_wheel != p_value) {
       zoom_with_wheel = p_value;
-      if (activityReplayFile != null) {
-        activityReplayFile.start_scope(ActivityReplayFileScope.SET_ZOOM_WITH_WHEEL, p_value);
-      }
     }
   }
 
@@ -370,7 +354,6 @@ public class InteractiveSettings implements Serializable {
       return;
     }
     manual_trace_clearance_class = p_index;
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_MANUAL_TRACE_CLEARANCE_CLASS, p_index);
   }
 
   /**
@@ -393,13 +376,6 @@ public class InteractiveSettings implements Serializable {
   }
 
   /**
-   * Defines the data of the snapshot selected for restoring.
-   */
-  public SnapShot.Attributes get_snapshot_attributes() {
-    return this.snapshot_attributes;
-  }
-
-  /**
    * Get the trace half width in manual routing mode on layer p_layer_no
    */
   public int get_manual_trace_half_width(int p_layer_no) {
@@ -418,8 +394,6 @@ public class InteractiveSettings implements Serializable {
       return;
     }
     is_stitch_route = p_value;
-
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_STITCH_ROUTE, p_value);
   }
 
   /**
@@ -430,7 +404,6 @@ public class InteractiveSettings implements Serializable {
       return;
     }
     trace_pull_tight_region_width = p_value;
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_PULL_TIGHT_REGION_WIDTH, p_value);
   }
 
   /**
@@ -441,7 +414,6 @@ public class InteractiveSettings implements Serializable {
       return;
     }
     manual_rule_selection = p_value;
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_MANUAL_TRACEWIDTH_SELECTION, p_value);
   }
 
   /**
@@ -452,8 +424,6 @@ public class InteractiveSettings implements Serializable {
       return;
     }
     manual_trace_half_width_arr[p_layer_no] = p_value;
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_MANUAL_TRACE_HALF_WIDTH, p_layer_no);
-    activityReplayFile.add_int(p_value);
   }
 
   /**
@@ -464,15 +434,6 @@ public class InteractiveSettings implements Serializable {
       return;
     }
     item_selection_filter.set_selected(p_item_type, p_value);
-
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_SELECTABLE, p_item_type.ordinal());
-    int logged_value;
-    if (p_value) {
-      logged_value = 1;
-    } else {
-      logged_value = 0;
-    }
-    activityReplayFile.add_int(logged_value);
   }
 
   /**
@@ -481,10 +442,6 @@ public class InteractiveSettings implements Serializable {
    */
   public void set_read_only(Boolean p_value) {
     this.read_only = p_value;
-  }
-
-  void set_logfile(ActivityReplayFile p_activityReplayFile) {
-    this.activityReplayFile = p_activityReplayFile;
   }
 
   /**
@@ -496,10 +453,7 @@ public class InteractiveSettings implements Serializable {
       FRLogger.warn("InteractiveSettings.readObject: item_selection_filter is null");
       this.item_selection_filter = new ItemSelectionFilter();
     }
-    if (this.snapshot_attributes == null) {
-      FRLogger.warn("InteractiveSettings.readObject: snapshot_attributes is null");
-      this.snapshot_attributes = new SnapShot.Attributes();
-    }
+
     this.read_only = false;
   }
 }

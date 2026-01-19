@@ -8,8 +8,6 @@ import app.freerouting.autoroute.BatchOptimizer;
 import app.freerouting.autoroute.BatchOptimizerMultiThreaded;
 import app.freerouting.autoroute.NamedAlgorithm;
 import app.freerouting.autoroute.TaskState;
-import app.freerouting.autoroute.events.BoardSnapshotEvent;
-import app.freerouting.autoroute.events.BoardSnapshotEventListener;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
@@ -106,13 +104,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
           String start_message = tm.getText("autorouter_started", Integer.toString(event.getPassNumber()));
           boardManager.screen_messages.set_status_message(start_message);
         }
-      }
-    });
-
-    this.batchAutorouter.addBoardSnapshotEventListener(new BoardSnapshotEventListener() {
-      @Override
-      public void onBoardSnapshotEvent(BoardSnapshotEvent event) {
-        boardManager.get_panel().board_frame.save_intermediate_stage_file();
       }
     });
 
@@ -338,9 +329,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
                     percentage_improvement) + "%." : "."));
         FRAnalytics.routeOptimizerFinished();
 
-        if (!this.isStopRequested()) {
-          boardManager.get_panel().board_frame.delete_intermediate_stage_file();
-        }
       }
 
       // Restore the board read-only state

@@ -57,7 +57,7 @@ Identifier = ({Letter}|{SpecChar})({Letter}|{Digit}|{SpecChar})*
    "conduction"                { return GUIDefaultsFile.Keyword.CONDUCTION; }
    "current_layer"             { return GUIDefaultsFile.Keyword.CURRENT_LAYER; }
    "current_only"              { return GUIDefaultsFile.Keyword.CURRENT_ONLY; }
-   "deselected_snapshot_attributes" { return GUIDefaultsFile.Keyword.DESELECTED_SNAPSHOT_ATTRIBUTES; }
+
    "display_miscellaneous"     { return GUIDefaultsFile.Keyword.DISPLAY_MISCELLANEOUS; }
    "display_region"            { return GUIDefaultsFile.Keyword.DISPLAY_REGION; }
    "drag_components_enabled"   { return GUIDefaultsFile.Keyword.DRAG_COMPONENTS_ENABLED; }
@@ -104,7 +104,7 @@ Identifier = ({Letter}|{SpecChar})({Letter}|{Digit}|{SpecChar})*
    "select_parameter"          { return GUIDefaultsFile.Keyword.SELECT_PARAMETER; }
    "selectable_items"          { return GUIDefaultsFile.Keyword.SELECTABLE_ITEMS; }
    "selection_layers"          { return GUIDefaultsFile.Keyword.SELECTION_LAYERS; }
-   "snapshots"                 { return GUIDefaultsFile.Keyword.SNAPSHOTS; }
+
    "shove_enabled"             { return GUIDefaultsFile.Keyword.SHOVE_ENABLED; }
    "stitching"                 { return GUIDefaultsFile.Keyword.STITCHING; }
    "traces"                    { return GUIDefaultsFile.Keyword.TRACES; }

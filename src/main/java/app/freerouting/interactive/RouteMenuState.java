@@ -3,28 +3,29 @@ package app.freerouting.interactive;
 import app.freerouting.geometry.planar.FloatPoint;
 
 /**
- * Class implementing the different functionality in the route menu, especially the different behaviour of the mouse button 1.
+ * Class implementing the different functionality in the route menu, especially
+ * the different behaviour of the mouse button 1.
  */
 public class RouteMenuState extends MenuState {
 
   /**
    * Creates a new instance of RouteMenuState
    */
-  private RouteMenuState(GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_board_handling, p_activityReplayFile);
+  private RouteMenuState(GuiBoardManager p_board_handling) {
+    super(p_board_handling);
   }
 
   /**
    * Returns a new instance of RouteMenuState
    */
-  public static RouteMenuState get_instance(GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    RouteMenuState new_state = new RouteMenuState(p_board_handling, p_activityReplayFile);
+  public static RouteMenuState get_instance(GuiBoardManager p_board_handling) {
+    RouteMenuState new_state = new RouteMenuState(p_board_handling);
     return new_state;
   }
 
   @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
-    return RouteState.get_instance(p_location, this, hdlg, activityReplayFile);
+    return RouteState.get_instance(p_location, this, hdlg);
   }
 
   @Override

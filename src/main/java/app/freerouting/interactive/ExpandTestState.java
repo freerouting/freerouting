@@ -33,7 +33,7 @@ public class ExpandTestState extends InteractiveState {
    * Creates a new instance of ExpandTestState
    */
   private ExpandTestState(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
-    super(p_return_state, p_board_handling, null);
+    super(p_return_state, p_board_handling);
     init(p_location);
   }
 

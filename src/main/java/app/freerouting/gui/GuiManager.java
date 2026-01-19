@@ -26,8 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.Objects;
 import java.util.UUID;
 import javax.swing.JButton;
@@ -206,17 +205,6 @@ public class GuiManager {
                 };
             }
 
-            if (new_frame.is_intermediate_stage_file_available()) {
-                LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                String load_snapshot_confirmation = tm.getText("load_snapshot_confirmation")
-                        .formatted(modification_time.format(formatter));
-
-                if (WindowMessage.confirm(load_snapshot_confirmation)) {
-                    new_frame.load_intermediate_stage_file();
-                }
-            }
-
             // start the auto-router automatically if both input and output files were
             // passed as a parameter
             if ((globalSettings.initialInputFile != null) && (globalSettings.initialOutputFile != null)) {
@@ -388,7 +376,7 @@ public class GuiManager {
 
         FRAnalytics.buttonClicked("fileio_loaddsn", routingJob.getInputFileDetails());
 
-        if (!globalSettings.featureFlags.selectMode) {
+        if (!globalSettings.featureFlags.inspectionMode) {
             new_frame.board_panel.board_handling.set_route_menu_state();
         }
 

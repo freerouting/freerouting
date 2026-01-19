@@ -8,7 +8,7 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.datastructures.FileFilter;
+
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.interactive.GuiBoardManager;
@@ -42,10 +42,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -70,30 +67,37 @@ public class BoardFrame extends WindowBase {
    * The windows above stored in an array
    */
   static final int SUBWINDOW_COUNT = 24;
-  static final String[] log_file_extensions = { "log" };
+
   static final String GUI_DEFAULTS_FILE_NAME = "gui_defaults.par";
   static final String GUI_DEFAULTS_FILE_BACKUP_NAME = "gui_defaults.par.bak";
-  static final FileFilter logfile_filter = new FileFilter(log_file_extensions);
+
+  /**
+   * The current routing job (design) being edited.
+   */
   public final RoutingJob routingJob;
   /**
-   * The menubar of this frame
+   * The menubar of this frame.
    */
   public final BoardMenuBar menubar;
   /**
    * The scroll pane for the panel of the routing board.
    */
   final JScrollPane scroll_pane;
+  /**
+   * Handles displaying messages to the user.
+   */
   final ScreenMessages screen_messages;
   /**
-   * The panel with the toolbars
+   * The main toolbar panel containing common tools.
    */
   private final BoardToolbar toolbar_panel;
   /**
-   * The toolbar used in the selected item state.
+   * The toolbar used in the inspected item state (when items are selected).
+   * Note: This field is used by InspectedItemState.
    */
-  private final JToolBar select_toolbar;
+  private final JToolBar inspect_toolbar;
   /**
-   * The panel with the message line
+   * The panel with the message line/status bar.
    */
   private final BoardPanelStatus message_panel;
   private final Locale locale;
@@ -105,6 +109,8 @@ public class BoardFrame extends WindowBase {
    * The panel with the graphical representation of the board.
    */
   BoardPanel board_panel;
+
+  // -- Subwindows for various settings and tools --
   WindowAbout about_window;
   WindowRouteParameter route_parameter_window;
   WindowAutorouteParameter autoroute_parameter_window;
@@ -127,12 +133,18 @@ public class BoardFrame extends WindowBase {
   WindowLayerVisibility layer_visibility_window;
   WindowObjectVisibility object_visibility_window;
   WindowDisplayMisc display_misc_window;
-  WindowSnapshot snapshot_window;
+
   ColorManager color_manager;
+
+  /**
+   * Array storing references to all "permanent" subwindows (tool windows that
+   * persist).
+   * This array allows for collective operations like saving/restoring positions
+   * and refreshing.
+   */
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
   Collection<BoardTemporarySubWindow> temporary_subwindows = new LinkedList<>();
   private LogEntries.LogEntryAddedListener log_entry_added_listener;
-  private LocalDateTime intermediate_stage_file_last_saved_at;
 
   /**
    * Creates a new BoardFrame that is the GUI element containing the Menu,
@@ -285,7 +297,7 @@ public class BoardFrame extends WindowBase {
     setJMenuBar(this.menubar);
 
     // Set the toolbar panel to the top of the frame, just above the canvas.
-    this.toolbar_panel = new BoardToolbar(this, !globalSettings.featureFlags.selectMode);
+    this.toolbar_panel = new BoardToolbar(this, !globalSettings.featureFlags.inspectionMode);
     this.add(this.toolbar_panel, BorderLayout.NORTH);
 
     // Create and move the status bar one-liners (like current layer, cursor
@@ -326,8 +338,8 @@ public class BoardFrame extends WindowBase {
       JOptionPane.showMessageDialog(null, scrollPane, tm.getText("logs_window_title"), messageType);
     });
 
-    // DEPRECATED: we don't use this toolbar anymore
-    this.select_toolbar = new BoardToolbarSelectedItem(this);
+    // Toolbar for inspected items (e.g. when a component is selected)
+    this.inspect_toolbar = new BoardToolbarInspectedItem(this);
 
     // Screen messages are displayed in the status bar, below the canvas.
     this.screen_messages = new ScreenMessages(this.message_panel.errorLabel, this.message_panel.warningLabel,
@@ -368,13 +380,6 @@ public class BoardFrame extends WindowBase {
     } else {
       this.setTitle(routingJob.input.getFilename() + " - " + tm.getText("title", this.freerouting_version));
     }
-  }
-
-  /**
-   * Reads interactive actions from a logfile.
-   */
-  void read_logfile(InputStream p_input_stream) {
-    board_panel.board_handling.read_logfile(p_input_stream);
   }
 
   /**
@@ -454,7 +459,9 @@ public class BoardFrame extends WindowBase {
       allocate_permanent_subwindows();
 
       for (int i = 0; i < this.permanent_subwindows.length; i++) {
-        this.permanent_subwindows[i].read(object_stream);
+        if (this.permanent_subwindows[i] != null) {
+          this.permanent_subwindows[i].read(object_stream);
+        }
       }
     }
 
@@ -523,52 +530,6 @@ public class BoardFrame extends WindowBase {
     return true;
   }
 
-  public boolean load_intermediate_stage_file() {
-    try {
-      FileInputStream input_stream = new FileInputStream(this.routingJob.snapshot.getFile());
-      return this.load(input_stream, false, null, this.routingJob);
-    } catch (IOException _) {
-      screen_messages.set_status_message(tm.getText("error_2"));
-      return false;
-    } catch (Exception _) {
-      screen_messages.set_status_message(tm.getText("error_3"));
-      return false;
-    }
-  }
-
-  @Deprecated
-  public boolean save_intermediate_stage_file() {
-    if ((intermediate_stage_file_last_saved_at != null) && (intermediate_stage_file_last_saved_at
-        .plusSeconds(30)
-        .isAfter(LocalDateTime.now()))) {
-      return false;
-    }
-
-    intermediate_stage_file_last_saved_at = LocalDateTime.now();
-    return saveAsBinary(this.routingJob.snapshot);
-  }
-
-  public boolean delete_intermediate_stage_file() {
-    return this.routingJob.snapshot
-        .getFile()
-        .delete();
-  }
-
-  public boolean is_intermediate_stage_file_available() {
-    return this.routingJob.snapshot.getFile() != null && this.routingJob.snapshot
-        .getFile()
-        .exists() && this.routingJob.snapshot
-            .getFile()
-            .canRead();
-  }
-
-  public LocalDateTime get_intermediate_stage_file_modification_time() {
-    long lastModified = this.routingJob.snapshot
-        .getFile()
-        .lastModified();
-    return LocalDateTime.ofInstant(Instant.ofEpochMilli(lastModified), ZoneId.systemDefault());
-  }
-
   /**
    * Saves the board, GUI settings and subwindows to disk as a version-specific
    * binary stream. Returns false, if the save failed.
@@ -590,7 +551,9 @@ public class BoardFrame extends WindowBase {
 
     // (3) Save the permanent subwindows as binary file
     for (int i = 0; i < this.permanent_subwindows.length; i++) {
-      this.permanent_subwindows[i].save(objectStream);
+      if (this.permanent_subwindows[i] != null) {
+        this.permanent_subwindows[i].save(objectStream);
+      }
     }
 
     // (4) Flush the binary file
@@ -628,31 +591,6 @@ public class BoardFrame extends WindowBase {
       screen_messages.set_status_message(tm.getText("message_binary_file_save_failed", outputFile.getPath()));
       return false;
     }
-    return true;
-  }
-
-  /**
-   * Saves the board, GUI settings and subwindows to disk as a binary file.
-   * Returns false, if the save failed. DEPRECATED: do not use this
-   * version-specific binary file format anymore, use SES, DSN,
-   * RoutingJob-JSON format instead
-   */
-  @Deprecated
-  private boolean saveAsBinary(BoardFileDetails output) {
-    if (output == null) {
-      return false;
-    }
-
-    try {
-      ByteArrayOutputStream output_stream = new ByteArrayOutputStream();
-      saveAsBinary(output_stream);
-      output.format = FileFormat.FRB;
-      output.setData(output_stream.toByteArray());
-      output_stream.close();
-    } catch (Exception _) {
-      return false;
-    }
-
     return true;
   }
 
@@ -808,9 +746,9 @@ public class BoardFrame extends WindowBase {
   /**
    * Sets the toolbar to the buttons of the selected item state.
    */
-  public void set_select_toolbar() {
+  public void set_inspect_toolbar() {
     getContentPane().remove(toolbar_panel);
-    getContentPane().add(select_toolbar, BorderLayout.NORTH);
+    getContentPane().add(inspect_toolbar, BorderLayout.NORTH);
     repaint();
   }
 
@@ -819,7 +757,7 @@ public class BoardFrame extends WindowBase {
    * main menu.
    */
   public void set_menu_toolbar() {
-    getContentPane().remove(select_toolbar);
+    getContentPane().remove(inspect_toolbar);
     getContentPane().add(toolbar_panel, BorderLayout.NORTH);
     repaint();
   }
@@ -884,6 +822,13 @@ public class BoardFrame extends WindowBase {
     super.dispose();
   }
 
+  /**
+   * Initializes and creates instances for all the "permanent" subwindows.
+   * These are the utility windows (parameters, colors, visibility, etc.) that
+   * can be toggled via the menu but exist for the lifetime of the BoardFrame.
+   * They are stored in the {@code permanent_subwindows} array for easy
+   * management.
+   */
   private void allocate_permanent_subwindows() {
     this.color_manager = new ColorManager(this);
     this.permanent_subwindows[0] = this.color_manager;
@@ -893,8 +838,7 @@ public class BoardFrame extends WindowBase {
     this.permanent_subwindows[2] = this.layer_visibility_window;
     this.display_misc_window = new WindowDisplayMisc(this);
     this.permanent_subwindows[3] = this.display_misc_window;
-    this.snapshot_window = new WindowSnapshot(this);
-    this.permanent_subwindows[4] = this.snapshot_window;
+
     this.route_parameter_window = new WindowRouteParameter(this);
     this.permanent_subwindows[5] = this.route_parameter_window;
     this.select_parameter_window = new WindowSelectParameter(this);
@@ -963,7 +907,7 @@ public class BoardFrame extends WindowBase {
     this.net_info_window.setLocation(350, 30);
     this.unconnected_route_window.setLocation(650, 30);
     this.route_stubs_window.setLocation(600, 30);
-    this.snapshot_window.setLocation(0, 250);
+
     this.layer_visibility_window.setLocation(0, 450);
     this.object_visibility_window.setLocation(0, 550);
     this.display_misc_window.setLocation(0, 350);
@@ -1008,59 +952,6 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Restore the selected snapshot in the snapshot window.
-   */
-  public void goto_selected_snapshot() {
-    if (this.snapshot_window != null) {
-      this.snapshot_window.goto_selected();
-    }
-  }
-
-  /**
-   * Selects the snapshot, which is previous to the current selected snapshot.
-   * Thecurent selected snapshot will be no more selected.
-   */
-  public void select_previous_snapshot() {
-    if (this.snapshot_window != null) {
-      this.snapshot_window.select_previous_item();
-    }
-  }
-
-  /**
-   * Selects the snapshot, which is next to the current selected snapshot.
-   * Thecurent selected snapshot will be no more selected.
-   */
-  public void select_next_snapshot() {
-    if (this.snapshot_window != null) {
-      this.snapshot_window.select_next_item();
-    }
-  }
-
-  /**
-   * Used for storing the subwindowfilters in a snapshot.
-   */
-  public SubwindowSelections get_snapshot_subwindow_selections() {
-    SubwindowSelections result = new SubwindowSelections();
-    result.incompletes_selection = this.incompletes_window.get_snapshot_info();
-    result.packages_selection = this.packages_window.get_snapshot_info();
-    result.nets_selection = this.net_info_window.get_snapshot_info();
-    result.components_selection = this.components_window.get_snapshot_info();
-    result.padstacks_selection = this.padstacks_window.get_snapshot_info();
-    return result;
-  }
-
-  /**
-   * Used for restoring the subwindowfilters from a snapshot.
-   */
-  public void set_snapshot_subwindow_selections(SubwindowSelections p_filters) {
-    this.incompletes_window.set_snapshot_info(p_filters.incompletes_selection);
-    this.packages_window.set_snapshot_info(p_filters.packages_selection);
-    this.net_info_window.set_snapshot_info(p_filters.nets_selection);
-    this.components_window.set_snapshot_info(p_filters.components_selection);
-    this.padstacks_window.set_snapshot_info(p_filters.padstacks_selection);
-  }
-
-  /**
    * Repaints this board frame and all the subwindows of the board.
    */
   public void repaint_all() {
@@ -1076,18 +967,6 @@ public class BoardFrame extends WindowBase {
 
   public void addReadOnlyEventListener(Consumer<RoutingBoard> listener) {
     boardSavedEventListeners.add(listener);
-  }
-
-  /**
-   * Used for storing the subwindow filters in a snapshot.
-   */
-  public static class SubwindowSelections implements Serializable {
-
-    private WindowObjectListWithFilter.SnapshotInfo incompletes_selection;
-    private WindowObjectListWithFilter.SnapshotInfo packages_selection;
-    private WindowObjectListWithFilter.SnapshotInfo nets_selection;
-    private WindowObjectListWithFilter.SnapshotInfo components_selection;
-    private WindowObjectListWithFilter.SnapshotInfo padstacks_selection;
   }
 
   private class WindowStateListener extends WindowAdapter {

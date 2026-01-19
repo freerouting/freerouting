@@ -15,8 +15,8 @@ public class SelectRegionState extends InteractiveState {
   /**
    * Creates a new instance of SelectRegionState
    */
-  protected SelectRegionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_parent_state, p_board_handling, p_activityReplayFile);
+  protected SelectRegionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+    super(p_parent_state, p_board_handling);
   }
 
   @Override
@@ -29,9 +29,6 @@ public class SelectRegionState extends InteractiveState {
   public InteractiveState mouse_dragged(FloatPoint p_point) {
     if (corner1 == null) {
       corner1 = p_point;
-      if (activityReplayFile != null) {
-        activityReplayFile.add_corner(corner1);
-      }
     }
     hdlg.repaint();
     return this;
