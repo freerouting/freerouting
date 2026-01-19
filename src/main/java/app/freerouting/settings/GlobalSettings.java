@@ -197,6 +197,13 @@ public class GlobalSettings implements Serializable {
    *             settings,
    *             API settings, etc.).
    * 
+   *             **IMPORTANT**: This method now SKIPS router settings (properties
+   *             starting
+   *             with "router.") to prevent conflicts with
+   *             EnvironmentVariablesSource.
+   *             Router settings are handled exclusively through the
+   *             SettingsMerger.
+   * 
    *             Environment variables must start with "FREEROUTING__" prefix.
    *             Double underscores are converted to dots for nested properties.
    *             Example: FREEROUTING__GUI__INPUT_DIRECTORY → gui.input_directory
@@ -215,6 +222,13 @@ public class GlobalSettings implements Serializable {
             .substring("FREEROUTING__".length())
             .toLowerCase()
             .replace("__", ".");
+
+        // Skip router settings - they're handled by EnvironmentVariablesSource
+        // to prevent conflicts with the SettingsMerger
+        if (propertyName.startsWith("router.")) {
+          continue;
+        }
+
         setValue(propertyName, entry.getValue());
       }
     }
