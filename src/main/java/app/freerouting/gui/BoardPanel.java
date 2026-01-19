@@ -1,8 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.core.RoutingJob;
-import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.ActivityReplayFileScope;
+
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
@@ -270,9 +269,7 @@ public class BoardPanel extends JPanel {
         (int) (new_center.getY() - delta.getY()));
     move_mouse(new_mouse_location);
     repaint();
-    this.board_handling.activityReplayFile.start_scope(ActivityReplayFileScope.CENTER_DISPLAY);
-    FloatPoint curr_corner = new FloatPoint(p_new_center.getX(), p_new_center.getY());
-    this.board_handling.activityReplayFile.add_corner(curr_corner);
+
   }
 
   public Point2D get_viewport_center() {

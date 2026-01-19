@@ -40,7 +40,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-import java.io.File;
+
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -133,7 +133,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     this.globalSettings = globalSettings;
     this.panel = p_panel;
     this.screen_messages = p_panel.screen_messages;
-    this.set_interactive_state(RouteMenuState.get_instance(this, activityReplayFile));
+    this.set_interactive_state(RouteMenuState.get_instance(this));
 
     this.tm = new TextManager(this.getClass(), globalSettings.currentLocale);
 
@@ -207,14 +207,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * Sets the current mouse position to the input point. Used while reading a
-   * logfile.
-   */
-  void set_current_mouse_position(FloatPoint p_point) {
-    this.current_mouse_position = p_point;
-  }
-
-  /**
    * Tells the router, if conduction areas should be ignored.
    */
   public void set_ignore_conduction(boolean p_value) {
@@ -222,8 +214,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     board.change_conduction_is_obstacle(!p_value);
-
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_IGNORE_CONDUCTION, p_value);
   }
 
   public void set_pin_edge_to_turn_dist(double p_value) {
@@ -348,8 +338,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     if (p_layer >= 0 && p_layer <= board.get_layer_count()) {
       board.rules.set_default_trace_half_width(p_layer, p_value);
-      activityReplayFile.start_scope(ActivityReplayFileScope.SET_TRACE_HALF_WIDTH, p_layer);
-      activityReplayFile.add_int(p_value);
     }
   }
 
@@ -361,7 +349,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     board.search_tree_manager.set_clearance_compensation_used(p_value);
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_CLEARANCE_COMPENSATION, p_value);
   }
 
   /**
@@ -372,7 +359,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     board.rules.set_trace_angle_restriction(p_snap_angle);
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_SNAP_ANGLE, p_snap_angle.getValue());
   }
 
   /**
@@ -385,7 +371,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
     int layer = Math.max(p_layer, 0);
     layer = Math.min(layer, board.get_layer_count() - 1);
     set_layer(layer);
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_LAYER, p_layer);
   }
 
   /**
@@ -619,16 +604,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * From here on the interactive actions are written to a logfile.
-   */
-  public void start_logfile(File p_filename) {
-    if (board_is_read_only) {
-      return;
-    }
-    activityReplayFile.start_write(p_filename);
-  }
-
-  /**
    * Repaints the board panel on the screen.
    */
   public void repaint() {
@@ -705,7 +680,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     board.generate_snapshot();
-    activityReplayFile.start_scope(ActivityReplayFileScope.GENERATE_SNAPSHOT);
   }
 
   /**
@@ -729,7 +703,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
     } else {
       screen_messages.set_status_message(tm.getText("no_more_undo_possible"));
     }
-    activityReplayFile.start_scope(ActivityReplayFileScope.UNDO);
     repaint();
   }
 
@@ -749,7 +722,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
     } else {
       screen_messages.set_status_message(tm.getText("no_more_redo_possible"));
     }
-    activityReplayFile.start_scope(ActivityReplayFileScope.REDO);
     repaint();
   }
 
@@ -929,7 +901,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Sets the interactive state to SelectMenuState
    */
   public void set_select_menu_state() {
-    this.interactive_state = SelectMenuState.get_instance(this, activityReplayFile);
+    this.interactive_state = SelectMenuState.get_instance(this);
     screen_messages.set_status_message(tm.getText("select_menu"));
   }
 
@@ -937,7 +909,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Sets the interactive state to RouteMenuState
    */
   public void set_route_menu_state() {
-    this.interactive_state = RouteMenuState.get_instance(this, activityReplayFile);
+    this.interactive_state = RouteMenuState.get_instance(this);
     screen_messages.set_status_message(tm.getText("route_menu"));
   }
 
@@ -945,7 +917,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Sets the interactive state to DragMenuState
    */
   public void set_drag_menu_state() {
-    this.interactive_state = DragMenuState.get_instance(this, activityReplayFile);
+    this.interactive_state = DragMenuState.get_instance(this);
     screen_messages.set_status_message(tm.getText("drag_menu"));
   }
 
@@ -961,7 +933,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
     try {
       board = (RoutingBoard) p_design.readObject();
       settings = (InteractiveSettings) p_design.readObject();
-      settings.set_logfile(this.activityReplayFile);
       coordinate_transform = (CoordinateTransform) p_design.readObject();
       graphics_context = (GraphicsContext) p_design.readObject();
       originalBoardChecksum = calculateCrc32();
@@ -1042,22 +1013,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * Processes the actions stored in the input logfile.
-   */
-  public void read_logfile(InputStream p_input_stream) {
-    if (board_is_read_only || !(interactive_state instanceof MenuState)) {
-      return;
-    }
-    this.interactive_action_thread = InteractiveActionThread.get_read_logfile_instance(this, routingJob,
-        p_input_stream);
-    this.interactive_action_thread.start();
-  }
-
-  /**
    * Closes all currently used files so that the file buffers are written to disk.
    */
   public void close_files() {
-    activityReplayFile.close_output();
   }
 
   /**
@@ -1069,7 +1027,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState new_state = RouteState.get_instance(location, this.interactive_state, this, activityReplayFile);
+    InteractiveState new_state = RouteState.get_instance(location, this.interactive_state, this);
     set_interactive_state(new_state);
   }
 
@@ -1092,7 +1050,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (board_is_read_only || !(this.interactive_state instanceof MenuState)) {
       return;
     }
-    set_interactive_state(SelectItemsInRegionState.get_instance(this.interactive_state, this, activityReplayFile));
+    set_interactive_state(SelectItemsInRegionState.get_instance(this.interactive_state, this));
   }
 
   /**
@@ -1105,7 +1063,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     this.display_layer_message();
     if (interactive_state instanceof MenuState) {
-      set_interactive_state(SelectedItemState.get_instance(p_items, interactive_state, this, activityReplayFile));
+      set_interactive_state(SelectedItemState.get_instance(p_items, interactive_state, this));
     } else if (interactive_state instanceof SelectedItemState state) {
       state
           .get_item_list()
@@ -1252,8 +1210,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     Collection<Item> item_list = curr_state.get_item_list();
     FloatPoint from_location = graphics_context.coordinate_transform.screen_to_board(p_from_location);
-    InteractiveState new_state = MoveItemState.get_instance(from_location, item_list, interactive_state, this,
-        activityReplayFile);
+    InteractiveState new_state = MoveItemState.get_instance(from_location, item_list, interactive_state, this);
     set_interactive_state(new_state);
     repaint();
   }
@@ -1269,7 +1226,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     Collection<Item> item_list = curr_state.get_item_list();
     FloatPoint from_location = graphics_context.coordinate_transform.screen_to_board(p_from_location);
     InteractiveState new_state = CopyItemState.get_instance(from_location, item_list, interactive_state.return_state,
-        this, activityReplayFile);
+        this);
     set_interactive_state(new_state);
   }
 
@@ -1403,7 +1360,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Zooms display to an interactive defined rectangle.
    */
   public void zoom_region() {
-    interactive_state = ZoomRegionState.get_instance(this.interactive_state, this, this.activityReplayFile);
+    interactive_state = ZoomRegionState.get_instance(this.interactive_state, this);
   }
 
   /**
@@ -1416,7 +1373,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
     set_interactive_state(
-        CircleConstructionState.get_instance(location, this.interactive_state, this, activityReplayFile));
+        CircleConstructionState.get_instance(location, this.interactive_state, this));
   }
 
   /**
@@ -1429,7 +1386,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
     set_interactive_state(
-        TileConstructionState.get_instance(location, this.interactive_state, this, activityReplayFile));
+        TileConstructionState.get_instance(location, this.interactive_state, this));
   }
 
   /**
@@ -1442,7 +1399,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
     set_interactive_state(
-        PolygonShapeConstructionState.get_instance(location, this.interactive_state, this, activityReplayFile));
+        PolygonShapeConstructionState.get_instance(location, this.interactive_state, this));
   }
 
   /**
@@ -1455,8 +1412,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState new_state = HoleConstructionState.get_instance(location, this.interactive_state, this,
-        activityReplayFile);
+    InteractiveState new_state = HoleConstructionState.get_instance(location, this.interactive_state, this);
     set_interactive_state(new_state);
   }
 

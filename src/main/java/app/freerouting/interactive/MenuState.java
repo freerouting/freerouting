@@ -18,8 +18,8 @@ public class MenuState extends InteractiveState {
   /**
    * Creates a new instance of MenuState
    */
-  MenuState(GuiBoardManager p_board_handle, ActivityReplayFile p_activityReplayFile) {
-    super(null, p_board_handle, p_activityReplayFile);
+  MenuState(GuiBoardManager p_board_handle) {
+    super(null, p_board_handle);
     this.return_state = this;
   }
 
@@ -29,7 +29,8 @@ public class MenuState extends InteractiveState {
   }
 
   /**
-   * Selects items at p_location. Returns a new instance of SelectedItemState with the selected items, if something was selected.
+   * Selects items at p_location. Returns a new instance of SelectedItemState with
+   * the selected items, if something was selected.
    */
   public InteractiveState select_items(FloatPoint p_location) {
     this.hdlg.display_layer_message();
@@ -37,11 +38,8 @@ public class MenuState extends InteractiveState {
     boolean something_found = !picked_items.isEmpty();
     InteractiveState result;
     if (something_found) {
-      result = SelectedItemState.get_instance(picked_items, this, hdlg, this.activityReplayFile);
+      result = SelectedItemState.get_instance(picked_items, this, hdlg);
       hdlg.screen_messages.set_status_message(tm.getText("in_select_mode"));
-      if (activityReplayFile != null) {
-        activityReplayFile.start_scope(ActivityReplayFileScope.START_SELECT, p_location);
-      }
     } else {
       result = this;
     }
@@ -59,7 +57,7 @@ public class MenuState extends InteractiveState {
         FRLogger.warn("MenuState.swap_pin: Pin expected");
         return this;
       }
-      result = PinSwapState.get_instance(selected_pin, this, hdlg, this.activityReplayFile);
+      result = PinSwapState.get_instance(selected_pin, this, hdlg);
     } else {
       hdlg.screen_messages.set_status_message(tm.getText("no_pin_selected"));
     }
@@ -75,7 +73,7 @@ public class MenuState extends InteractiveState {
     InteractiveState curr_return_state = this;
     switch (p_key_char) {
       case 'b' -> hdlg.redo();
-      case 'd' -> curr_return_state = DragMenuState.get_instance(hdlg, activityReplayFile);
+      case 'd' -> curr_return_state = DragMenuState.get_instance(hdlg);
       case 'e' -> curr_return_state = ExpandTestState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
       case 'g' -> hdlg.toggle_ratsnest();
       case 'i' -> curr_return_state = this.select_items(hdlg.get_current_mouse_position());
@@ -83,9 +81,9 @@ public class MenuState extends InteractiveState {
         hdlg.settings.set_push_enabled(!hdlg.settings.push_enabled);
         hdlg.get_panel().board_frame.refresh_windows();
       }
-      case 'r' -> curr_return_state = RouteMenuState.get_instance(hdlg, activityReplayFile);
-      case 's' -> curr_return_state = SelectMenuState.get_instance(hdlg, activityReplayFile);
-      case 't' -> curr_return_state = RouteState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
+      case 'r' -> curr_return_state = RouteMenuState.get_instance(hdlg);
+      case 's' -> curr_return_state = SelectMenuState.get_instance(hdlg);
+      case 't' -> curr_return_state = RouteState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
       case 'u' -> hdlg.undo();
       case 'v' -> hdlg.toggle_clearance_violations();
       case 'w' -> curr_return_state = swap_pin(hdlg.get_current_mouse_position());

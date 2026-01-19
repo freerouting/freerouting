@@ -25,15 +25,18 @@ public class HoleConstructionState extends CornerItemConstructionState {
   /**
    * Creates a new instance of HoleConstructionState
    */
-  private HoleConstructionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_parent_state, p_board_handling, p_activityReplayFile);
+  private HoleConstructionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+    super(p_parent_state, p_board_handling);
   }
 
   /**
-   * Returns a new instance of this class or null, if that was not possible with the input parameters. If p_logfile != null, the construction of this hole is stored in a logfile.
+   * Returns a new instance of this class or null, if that was not possible with
+   * the input parameters. If p_logfile != null, the construction of this hole is
+   * stored in a logfile.
    */
-  public static HoleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    HoleConstructionState new_instance = new HoleConstructionState(p_parent_state, p_board_handling, p_activityReplayFile);
+  public static HoleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
+    HoleConstructionState new_instance = new HoleConstructionState(p_parent_state, p_board_handling);
     if (!new_instance.start_ok(p_location)) {
       new_instance = null;
     }
@@ -51,7 +54,8 @@ public class HoleConstructionState extends CornerItemConstructionState {
         ItemSelectionFilter.SelectableChoices.CONDUCTION
     };
     ItemSelectionFilter selection_filter = new ItemSelectionFilter(selectable_choices);
-    Collection<Item> found_items = hdlg.get_routing_board().pick_items(pick_location, hdlg.settings.layer, selection_filter);
+    Collection<Item> found_items = hdlg.get_routing_board().pick_items(pick_location, hdlg.settings.layer,
+        selection_filter);
     if (found_items.size() != 1) {
       hdlg.screen_messages.set_status_message(tm.getText("no_item_found_for_adding_hole"));
       return false;
@@ -66,8 +70,9 @@ public class HoleConstructionState extends CornerItemConstructionState {
       hdlg.screen_messages.set_status_message(tm.getText("adding_hole_to_circle_not_yet_implemented"));
       return false;
     }
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.ADDING_HOLE);
+    if (item_to_modify.get_area() instanceof Circle) {
+      hdlg.screen_messages.set_status_message(tm.getText("adding_hole_to_circle_not_yet_implemented"));
+      return false;
     }
     this.add_corner(p_location);
     return true;
@@ -89,7 +94,8 @@ public class HoleConstructionState extends CornerItemConstructionState {
   }
 
   /**
-   * adds the just constructed hole to the item under modification, if that is possible without clearance violations
+   * adds the just constructed hole to the item under modification, if that is
+   * possible without clearance violations
    */
   @Override
   public InteractiveState complete() {
@@ -137,7 +143,8 @@ public class HoleConstructionState extends CornerItemConstructionState {
         }
         hdlg.get_routing_board().generate_snapshot();
         hdlg.get_routing_board().remove_item(item_to_modify);
-        hdlg.get_routing_board().insert_obstacle(new_obs_area, item_to_modify.get_layer(), item_to_modify.clearance_class_no(), FixedState.NOT_FIXED);
+        hdlg.get_routing_board().insert_obstacle(new_obs_area, item_to_modify.get_layer(),
+            item_to_modify.clearance_class_no(), FixedState.NOT_FIXED);
         if (this.observers_activated) {
           hdlg.get_routing_board().end_notify_observers();
           this.observers_activated = false;
@@ -148,9 +155,6 @@ public class HoleConstructionState extends CornerItemConstructionState {
       hdlg.screen_messages.set_status_message(tm.getText("adding_hole_completed"));
     } else {
       hdlg.screen_messages.set_status_message(tm.getText("adding_hole_failed"));
-    }
-    if (activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
     }
     return this.return_state;
   }

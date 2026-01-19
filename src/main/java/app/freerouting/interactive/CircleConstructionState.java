@@ -24,27 +24,24 @@ public class CircleConstructionState extends InteractiveState {
   /**
    * Creates a new instance of CircleConstructionState
    */
-  private CircleConstructionState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_parent_state, p_board_handling, p_activityReplayFile);
+  private CircleConstructionState(FloatPoint p_location, InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
+    super(p_parent_state, p_board_handling);
     circle_center = p_location;
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.CREATING_CIRCLE, p_location);
-    }
   }
 
   /**
-   * Returns a new instance of this class. If p_logfile != null; the creation of this item is stored in a logfile
+   * Returns a new instance of this class. If p_logfile != null; the creation of
+   * this item is stored in a logfile
    */
-  public static CircleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
+  public static CircleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
     p_board_handling.remove_ratsnest(); // inserting a circle may change the connectivity.
-    return new CircleConstructionState(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
+    return new CircleConstructionState(p_location, p_parent_state, p_board_handling);
   }
 
   @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
-    if (activityReplayFile != null) {
-      activityReplayFile.add_corner(p_location);
-    }
     return this.complete();
   }
 
@@ -95,21 +92,14 @@ public class CircleConstructionState extends InteractiveState {
     } else {
       hdlg.screen_messages.set_status_message(tm.getText("keepout_cancelled_because_of_overlaps"));
     }
-    if (activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
-    }
     hdlg.repaint();
     return this.return_state;
   }
 
   /**
-   * Used when reading the next point from a logfile. Calls complete, because only 1 additional point is stored in the logfile.
+   * Used when reading the next point from a logfile. Calls complete, because only
+   * 1 additional point is stored in the logfile.
    */
-  @Override
-  public InteractiveState process_logfile_point(FloatPoint p_point) {
-    this.circle_radius = circle_center.distance(p_point);
-    return this;
-  }
 
   /**
    * draws the graphic construction aid for the circle

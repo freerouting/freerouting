@@ -26,7 +26,7 @@ public class BoardMenuBar extends JMenuBar {
    */
   public BoardMenuBar(BoardFrame boardFrame, FeatureFlagsSettings featureFlags) {
     this.boardFrame = boardFrame;
-    fileMenu = new BoardMenuFile(boardFrame, !featureFlags.macros);
+    fileMenu = new BoardMenuFile(boardFrame);
     add(fileMenu);
     appereanceMenu = BoardMenuDisplay.get_instance(boardFrame);
     add(appereanceMenu);

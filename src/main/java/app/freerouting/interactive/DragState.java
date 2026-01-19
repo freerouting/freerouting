@@ -20,15 +20,17 @@ public abstract class DragState extends InteractiveState {
   /**
    * Creates a new instance of DragState
    */
-  protected DragState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_parent_state, p_board_handling, p_activityReplayFile);
+  protected DragState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+    super(p_parent_state, p_board_handling);
     previous_location = p_location;
   }
 
   /**
-   * Returns a new instance of this state, if an item to drag was found at the input location; null otherwise.
+   * Returns a new instance of this state, if an item to drag was found at the
+   * input location; null otherwise.
    */
-  public static DragState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
+  public static DragState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
     p_board_handling.display_layer_message();
     Item item_to_move = null;
     int try_count = 1;
@@ -40,8 +42,10 @@ public abstract class DragState extends InteractiveState {
     boolean item_found = false;
 
     for (int i = 0; i < try_count; i++) {
-      if (i == 0 || pick_layer != curr_layer && (p_board_handling.graphics_context.get_layer_visibility(pick_layer)) > 0) {
-        Collection<Item> found_items = p_board_handling.get_routing_board().pick_items(p_location.round(), pick_layer, p_board_handling.settings.item_selection_filter);
+      if (i == 0
+          || pick_layer != curr_layer && (p_board_handling.graphics_context.get_layer_visibility(pick_layer)) > 0) {
+        Collection<Item> found_items = p_board_handling.get_routing_board().pick_items(p_location.round(), pick_layer,
+            p_board_handling.settings.item_selection_filter);
         for (Item curr_item : found_items) {
           item_found = true;
           if (curr_item instanceof Trace) {
@@ -64,9 +68,9 @@ public abstract class DragState extends InteractiveState {
     }
     DragState result;
     if (item_to_move != null) {
-      result = new DragItemState(item_to_move, p_location, p_parent_state, p_board_handling, p_activityReplayFile);
+      result = new DragItemState(item_to_move, p_location, p_parent_state, p_board_handling);
     } else if (!item_found) {
-      result = new MakeSpaceState(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
+      result = new MakeSpaceState(p_location, p_parent_state, p_board_handling);
     } else {
       result = null;
     }
@@ -90,9 +94,6 @@ public abstract class DragState extends InteractiveState {
       }
     }
     if (this.something_dragged) {
-      if (activityReplayFile != null) {
-        activityReplayFile.add_corner(p_point);
-      }
     }
     return result;
   }
@@ -102,8 +103,4 @@ public abstract class DragState extends InteractiveState {
     return this.button_released();
   }
 
-  @Override
-  public InteractiveState process_logfile_point(FloatPoint p_point) {
-    return move_to(p_point);
-  }
 }

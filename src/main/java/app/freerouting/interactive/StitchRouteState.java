@@ -15,8 +15,8 @@ public class StitchRouteState extends RouteState {
   /**
    * Creates a new instance of StitchRouteState
    */
-  protected StitchRouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_parent_state, p_board_handling, p_activityReplayFile);
+  protected StitchRouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+    super(p_parent_state, p_board_handling);
   }
 
   @Override
@@ -68,6 +68,7 @@ public class StitchRouteState extends RouteState {
     radius_with_clearance += hdlg.get_routing_board().clearance_value(cl_class, cl_class, hdlg.settings.layer);
     hdlg.graphics_context.draw(draw_points, display_width, draw_color, p_graphics, 0.5);
     // draw the clearance boundary around the end point
-    hdlg.graphics_context.draw_circle(draw_points[1], radius_with_clearance, clearance_draw_width, draw_color, p_graphics, 0.5);
+    hdlg.graphics_context.draw_circle(draw_points[1], radius_with_clearance, clearance_draw_width, draw_color,
+        p_graphics, 0.5);
   }
 }

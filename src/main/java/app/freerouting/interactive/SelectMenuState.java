@@ -3,22 +3,23 @@ package app.freerouting.interactive;
 import app.freerouting.geometry.planar.FloatPoint;
 
 /**
- * Class implementing the different functionality in the select menu, especially the different behaviour of the mouse button 1.
+ * Class implementing the different functionality in the select menu, especially
+ * the different behaviour of the mouse button 1.
  */
 public class SelectMenuState extends MenuState {
 
   /**
    * Creates a new instance of SelectMenuState
    */
-  private SelectMenuState(GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_board_handling, p_activityReplayFile);
+  private SelectMenuState(GuiBoardManager p_board_handling) {
+    super(p_board_handling);
   }
 
   /**
    * Returns a new instance of SelectMenuState
    */
-  public static SelectMenuState get_instance(GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    SelectMenuState new_state = new SelectMenuState(p_board_handling, p_activityReplayFile);
+  public static SelectMenuState get_instance(GuiBoardManager p_board_handling) {
+    SelectMenuState new_state = new SelectMenuState(p_board_handling);
     return new_state;
   }
 
@@ -29,7 +30,7 @@ public class SelectMenuState extends MenuState {
 
   @Override
   public InteractiveState mouse_dragged(FloatPoint p_point) {
-    return SelectItemsInRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
+    return SelectItemsInRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
   }
 
   @Override

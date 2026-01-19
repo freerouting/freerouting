@@ -42,9 +42,8 @@ public class SelectedItemState extends InteractiveState {
   /**
    * Creates a new instance of SelectedItemState
    */
-  private SelectedItemState(Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling,
-      ActivityReplayFile p_activityReplayFile) {
-    super(p_parent_state, p_board_handling, p_activityReplayFile);
+  private SelectedItemState(Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+    super(p_parent_state, p_board_handling);
     item_list = p_item_list;
   }
 
@@ -53,12 +52,11 @@ public class SelectedItemState extends InteractiveState {
    * Returns null, if p_item_list is empty.
    */
   public static SelectedItemState get_instance(Set<Item> p_item_list, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
+      GuiBoardManager p_board_handling) {
     if (p_item_list.isEmpty()) {
       return null;
     }
-    SelectedItemState new_state = new SelectedItemState(p_item_list, p_parent_state, p_board_handling,
-        p_activityReplayFile);
+    SelectedItemState new_state = new SelectedItemState(p_item_list, p_parent_state, p_board_handling);
     return new_state;
   }
 
@@ -76,7 +74,7 @@ public class SelectedItemState extends InteractiveState {
 
   @Override
   public InteractiveState mouse_dragged(FloatPoint p_point) {
-    return SelectItemsInRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
+    return SelectItemsInRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
   }
 
   /**
@@ -94,11 +92,11 @@ public class SelectedItemState extends InteractiveState {
       case 'f' -> this.fix_items();
       case 'i' -> result = this.info();
       case 'm' -> result = MoveItemState.get_instance(hdlg.get_current_mouse_position(), item_list, this.return_state,
-          hdlg, activityReplayFile);
+          hdlg);
       case 'n' -> this.extent_to_whole_nets();
       case 'p' -> this.hdlg.optimize_selected_items();
       case 'r' ->
-        result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
+        result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
       case 's' -> result = this.extent_to_whole_connected_sets();
       case 'u' -> this.unfix_items();
       case 'v' -> this.toggle_clearance_violations();
@@ -120,9 +118,6 @@ public class SelectedItemState extends InteractiveState {
         curr_ob.set_fixed_state(FixedState.USER_FIXED);
       }
     }
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.FIX_SELECTED_ITEMS);
-    }
   }
 
   /**
@@ -131,9 +126,6 @@ public class SelectedItemState extends InteractiveState {
   public void unfix_items() {
     for (Item curr_ob : item_list) {
       curr_ob.unfix();
-    }
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.UNFIX_SELECTED_ITEMS);
     }
   }
 
@@ -164,9 +156,6 @@ public class SelectedItemState extends InteractiveState {
           .set_status_message(tm.getText("some_items_are_not_changed_because_they_are_already_connected"));
     } else {
       hdlg.screen_messages.set_status_message(tm.getText("new_net_created_from_selected_items"));
-    }
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.ASSIGN_SELECTED_TO_NEW_NET);
     }
     hdlg.update_ratsnest();
     hdlg.repaint();
@@ -229,9 +218,6 @@ public class SelectedItemState extends InteractiveState {
       }
       board.insert_pin(new_component.no, i, net_no_arr, curr_via.clearance_class_no(), curr_via.get_fixed_state());
     }
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.ASSIGN_SELECTED_TO_NEW_GROUP);
-    }
     hdlg.repaint();
     return this.return_state;
   }
@@ -269,9 +255,6 @@ public class SelectedItemState extends InteractiveState {
     if (!all_items_removed) {
       hdlg.screen_messages.set_status_message(tm.getText("some_items_are_fixed_and_could_therefore_not_be_removed"));
     }
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.DELETE_SELECTED);
-    }
 
     for (Integer curr_net_no : changed_nets) {
       hdlg.update_ratsnest(curr_net_no);
@@ -284,7 +267,7 @@ public class SelectedItemState extends InteractiveState {
    * Deletes all unfixed items in this selected set inside a rectangle
    */
   public InteractiveState cutout_items() {
-    return CutoutRouteState.get_instance(this.item_list, this.return_state, hdlg, activityReplayFile);
+    return CutoutRouteState.get_instance(this.item_list, this.return_state, hdlg);
   }
 
   /**
@@ -373,9 +356,6 @@ public class SelectedItemState extends InteractiveState {
       hdlg.screen_messages.set_status_message(end_message);
     }
     hdlg.set_board_read_only(saved_board_read_only);
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.AUTOROUTE_SELECTED);
-    }
     hdlg.update_ratsnest();
     if (!ratsnest_hidden_before) {
       hdlg
@@ -439,9 +419,6 @@ public class SelectedItemState extends InteractiveState {
       hdlg.screen_messages.set_status_message(end_message);
     }
     hdlg.set_board_read_only(saved_board_read_only);
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.OPTIMIZE_SELECTED);
-    }
     hdlg.update_ratsnest();
     return this.return_state;
   }
@@ -453,10 +430,6 @@ public class SelectedItemState extends InteractiveState {
     BasicBoard routing_board = this.hdlg.get_routing_board();
     if (p_cl_class_index < 0 || p_cl_class_index >= routing_board.rules.clearance_matrix.get_class_count()) {
       return this.return_state;
-    }
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.ASSIGN_CLEARANCE_CLASS);
-      activityReplayFile.add_int(p_cl_class_index);
     }
     // make the situation restorable by undo
     routing_board.generate_snapshot();
@@ -493,9 +466,6 @@ public class SelectedItemState extends InteractiveState {
     if (new_selected_items.isEmpty()) {
       return this.return_state;
     }
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.EXTEND_TO_WHOLE_NETS);
-    }
     filter();
     hdlg.repaint();
     return this;
@@ -523,9 +493,6 @@ public class SelectedItemState extends InteractiveState {
       return this.return_state;
     }
     this.item_list = new_selected_items;
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.EXTEND_TO_WHOLE_COMPONENTS);
-    }
     hdlg.repaint();
     return this;
   }
@@ -545,9 +512,6 @@ public class SelectedItemState extends InteractiveState {
       return this.return_state;
     }
     this.item_list = new_selected_items;
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.EXTEND_TO_WHOLE_CONNECTED_SETS);
-    }
     filter();
     hdlg.repaint();
     return this;
@@ -568,9 +532,6 @@ public class SelectedItemState extends InteractiveState {
       return this.return_state;
     }
     this.item_list = new_selected_items;
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.EXTEND_TO_WHOLE_CONNECTIONS);
-    }
     filter();
     hdlg.repaint();
     return this;
@@ -603,9 +564,6 @@ public class SelectedItemState extends InteractiveState {
       result = this.return_state;
     } else {
       result = this;
-    }
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.TOGGLE_SELECT, p_point);
     }
     return result;
   }

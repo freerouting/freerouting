@@ -11,8 +11,7 @@ public class FeatureFlagsSettings implements Serializable {
   public boolean multiThreading = true;
   @SerializedName("select_mode")
   public boolean selectMode;
-  @SerializedName("macros")
-  public boolean macros;
+
   @SerializedName("other_menu")
   public boolean otherMenu;
 

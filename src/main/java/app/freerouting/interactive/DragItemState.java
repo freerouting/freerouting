@@ -21,8 +21,8 @@ public class DragItemState extends DragState {
    * Creates a new instance of MoveItemState
    */
   protected DragItemState(Item p_item_to_move, FloatPoint p_location, InteractiveState p_parent_state,
-      GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
+      GuiBoardManager p_board_handling) {
+    super(p_location, p_parent_state, p_board_handling);
     item_to_move = p_item_to_move;
   }
 
@@ -80,12 +80,6 @@ public class DragItemState extends DragState {
         }
         // make the situation restorable by undo
         hdlg.get_routing_board().generate_snapshot();
-        if (activityReplayFile != null) {
-          // Delayed till here because otherwise the mouse
-          // might have been only clicked for selecting
-          // and not pressed for moving.
-          activityReplayFile.start_scope(ActivityReplayFileScope.DRAGGING_ITEMS, this.previous_location);
-        }
         this.something_dragged = true;
       }
       if (!move_component.insert(hdlg.settings.trace_pull_tight_region_width,
@@ -104,9 +98,6 @@ public class DragItemState extends DragState {
     if (this.observers_activated) {
       hdlg.get_routing_board().end_notify_observers();
       this.observers_activated = false;
-    }
-    if (activityReplayFile != null && something_dragged) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
     }
     if (something_dragged) {
       // Update the incompletes for the nets of the moved items.

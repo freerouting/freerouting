@@ -15,23 +15,24 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState {
   /**
    * Creates a new instance of PolygonShapeConstructionState
    */
-  private PolygonShapeConstructionState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_parent_state, p_board_handling, p_activityReplayFile);
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.CREATING_POLYGONSHAPE);
-    }
+  private PolygonShapeConstructionState(FloatPoint p_location, InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
+    super(p_parent_state, p_board_handling);
     this.add_corner(p_location);
   }
 
   /**
-   * Returns a new instance of this class If p_logfile != null; the creation of this item is stored in a logfile
+   * Returns a new instance of this class If p_logfile != null; the creation of
+   * this item is stored in a logfile
    */
-  public static PolygonShapeConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    return new PolygonShapeConstructionState(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
+  public static PolygonShapeConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
+    return new PolygonShapeConstructionState(p_location, p_parent_state, p_board_handling);
   }
 
   /**
-   * Inserts the polygon shape item into the board, if possible and returns to the main state
+   * Inserts the polygon shape item into the board, if possible and returns to the
+   * main state
    */
   @Override
   public InteractiveState complete() {
@@ -50,7 +51,8 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState {
         // shape is invalid, maybe it has selfintersections
         construction_succeeded = false;
       } else {
-        construction_succeeded = hdlg.get_routing_board().check_shape(obstacle_shape, hdlg.settings.layer, new int[0], cl_class);
+        construction_succeeded = hdlg.get_routing_board().check_shape(obstacle_shape, hdlg.settings.layer, new int[0],
+            cl_class);
       }
       if (construction_succeeded) {
         this.observers_activated = !hdlg.get_routing_board().observers_active();
@@ -70,9 +72,6 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState {
       hdlg.screen_messages.set_status_message(tm.getText("keepout_successful_completed"));
     } else {
       hdlg.screen_messages.set_status_message(tm.getText("keepout_cancelled_because_of_overlaps"));
-    }
-    if (activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
     }
     return this.return_state;
   }

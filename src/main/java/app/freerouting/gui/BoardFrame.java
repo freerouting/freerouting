@@ -8,7 +8,7 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.datastructures.FileFilter;
+
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.interactive.GuiBoardManager;
@@ -67,10 +67,10 @@ public class BoardFrame extends WindowBase {
    * The windows above stored in an array
    */
   static final int SUBWINDOW_COUNT = 24;
-  static final String[] log_file_extensions = { "log" };
+
   static final String GUI_DEFAULTS_FILE_NAME = "gui_defaults.par";
   static final String GUI_DEFAULTS_FILE_BACKUP_NAME = "gui_defaults.par.bak";
-  static final FileFilter logfile_filter = new FileFilter(log_file_extensions);
+
   public final RoutingJob routingJob;
   /**
    * The menubar of this frame
@@ -364,13 +364,6 @@ public class BoardFrame extends WindowBase {
     } else {
       this.setTitle(routingJob.input.getFilename() + " - " + tm.getText("title", this.freerouting_version));
     }
-  }
-
-  /**
-   * Reads interactive actions from a logfile.
-   */
-  void read_logfile(InputStream p_input_stream) {
-    board_panel.board_handling.read_logfile(p_input_stream);
   }
 
   /**

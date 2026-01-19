@@ -17,10 +17,7 @@ public class InteractiveState {
    * board setting access handler for the derived classes
    */
   protected final GuiBoardManager hdlg;
-  /**
-   * if logfile != null, the interactive actions are stored in a logfile
-   */
-  protected final ActivityReplayFile activityReplayFile;
+
   /**
    * Contains the files with the language dependent messages
    */
@@ -33,11 +30,9 @@ public class InteractiveState {
   /**
    * Creates a new instance of InteractiveState
    */
-  protected InteractiveState(InteractiveState p_return_state, GuiBoardManager p_board_handling,
-      ActivityReplayFile p_activityReplayFile) {
+  protected InteractiveState(InteractiveState p_return_state, GuiBoardManager p_board_handling) {
     this.return_state = p_return_state;
     this.hdlg = p_board_handling;
-    this.activityReplayFile = p_activityReplayFile;
 
     this.tm = new TextManager(InteractiveState.class, p_board_handling.get_locale());
   }
@@ -123,7 +118,7 @@ public class InteractiveState {
       case 'a' -> hdlg.get_panel().board_frame.zoom_all();
       case 'c' -> hdlg.get_panel().center_display(screen_mouse_pos);
       case 'f' ->
-        result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
+        result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
 
       case 'o' -> hdlg.get_panel().zoom_out(screen_mouse_pos);
       case 'z' -> hdlg.get_panel().zoom_in(screen_mouse_pos);
@@ -153,9 +148,7 @@ public class InteractiveState {
    * to be overwritten in derived classes. Returns the return_state of this state.
    */
   public InteractiveState complete() {
-    if (this.return_state != this && activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
-    }
+
     return this.return_state;
   }
 
@@ -164,9 +157,7 @@ public class InteractiveState {
    * overwritten in derived classes. Returns the parent state of this state.
    */
   public InteractiveState cancel() {
-    if (this.return_state != this && activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.CANCEL_SCOPE);
-    }
+
     return this.return_state;
   }
 
@@ -178,14 +169,6 @@ public class InteractiveState {
   public boolean change_layer_action(int p_new_layer) {
     hdlg.set_layer(p_new_layer);
     return true;
-  }
-
-  /**
-   * Used when reading the next point from a logfile. Default function to be
-   * overwritten in derived classes.
-   */
-  public InteractiveState process_logfile_point(FloatPoint p_point) {
-    return this;
   }
 
   /**
