@@ -15,8 +15,6 @@ public class FeatureFlagsSettings implements Serializable {
   @SerializedName("other_menu")
   public boolean otherMenu;
 
-  @SerializedName("file_load_dialog_at_startup")
-  public boolean fileLoadDialogAtStartup;
   @SerializedName("save_jobs")
   public boolean saveJobs;
 }
