@@ -455,14 +455,15 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
    * priority sources override those from lower priority sources.
    * 
    * Priority order (lowest to highest):
-   * 1. Default settings
-   * 2. JSON file (freerouting.json)
-   * 3. DSN file settings
-   * 4. SES file settings
-   * 5. RULES file settings
-   * 6. GUI settings
-   * 7. CLI settings
-   * 8. API settings
+   * 1. Default settings (priority 0)
+   * 2. JSON file (freerouting.json) (priority 10)
+   * 3. DSN file settings (priority 20)
+   * 4. SES file settings (priority 30)
+   * 5. RULES file settings (priority 40)
+   * 6. GUI settings (priority 50)
+   * 7. Environment variables (priority 55)
+   * 8. CLI settings (priority 60)
+   * 9. API settings (priority 70)
    * 
    * @return Merged RouterSettings from all applicable sources
    */
@@ -492,10 +493,14 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     // 5. GUI settings would be added here if in GUI mode (priority 50)
     // This would typically be done by the GUI code before starting a job
 
-    // 6. CLI settings would be added here (priority 60)
-    // This would typically be extracted from GlobalSettings
+    // 6. Add environment variables (priority 55)
+    sources.add(new app.freerouting.settings.sources.EnvironmentVariablesSource());
 
-    // 7. API settings would be added here if provided (priority 70)
+    // 7. CLI settings would be added here (priority 60)
+    // This would typically be extracted from GlobalSettings
+    // sources.add(new CliSettings(args));
+
+    // 8. API settings would be added here if provided (priority 70)
     // This would be the highest priority override
 
     // Merge all sources and return the result

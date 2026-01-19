@@ -233,8 +233,12 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   /**
-   * Copy constructor
+   * Creates a deep copy of this RouterSettings object.
+   * All fields including nested objects and arrays are cloned.
+   * 
+   * @return A new RouterSettings instance with the same values
    */
+  @Override
   public RouterSettings clone() {
     RouterSettings result = new RouterSettings(this.isLayerActive.length);
     result.algorithm = this.algorithm;
@@ -443,12 +447,21 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   /**
-   * Apply the new values from the given settings to this settings object.
-   *
-   * @param settings The settings to copy the values from.
-   * @return The number of fields that were changed.
+   * Applies new values from the given settings to this settings object.
+   * Uses reflection to copy only non-null fields from the source settings.
+   * This is the core mechanism used by SettingsMerger to merge settings from
+   * multiple sources.
+   * 
+   * @param settings The settings to copy the values from (null values are
+   *                 skipped)
+   * @return The number of fields that were changed
    */
   public int applyNewValuesFrom(RouterSettings settings) {
+    if (settings == null) {
+      FRLogger.warn("Attempted to apply null settings, skipping");
+      return 0;
+    }
+
     int changedCount = ReflectionUtil.copyFields(settings, this);
 
     // Fire property change events for key properties to update GUI

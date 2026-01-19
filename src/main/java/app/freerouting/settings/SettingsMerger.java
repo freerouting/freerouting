@@ -15,8 +15,9 @@ import java.util.List;
  * 4. SES file settings (priority 30)
  * 5. RULES file settings (priority 40)
  * 6. GUI settings (priority 50)
- * 7. CLI settings (priority 60)
- * 8. API settings (priority 70) - highest priority, overrides all others
+ * 7. Environment variables (priority 55)
+ * 8. CLI settings (priority 60)
+ * 9. API settings (priority 70) - highest priority, overrides all others
  * 
  * The merger uses reflection to copy only non-null fields from each source,
  * allowing higher-priority sources to override lower-priority ones.

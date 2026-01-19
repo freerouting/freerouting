@@ -42,6 +42,7 @@ public interface SettingsSource {
      * 30 = SES file settings
      * 40 = RULES file settings
      * 50 = GUI settings
+     * 55 = Environment variables
      * 60 = CLI settings
      * 70 = API settings
      * 

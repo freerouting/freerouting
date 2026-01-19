@@ -4,7 +4,17 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.time.Instant;
 
-public class EnvironmentSettings implements Serializable {
+/**
+ * Stores runtime environment information about the application execution
+ * context.
+ * This is NOT for configuration from environment variables - use
+ * EnvironmentVariablesSource for that.
+ * 
+ * This class captures system information like Java version, CPU cores, RAM,
+ * etc.
+ * that are determined at runtime and cannot be configured.
+ */
+public class RuntimeEnvironment implements Serializable {
 
   @SerializedName("freerouting_version")
   public String freeroutingVersion;

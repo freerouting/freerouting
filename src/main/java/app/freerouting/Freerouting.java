@@ -364,38 +364,38 @@ public class Freerouting {
     }
 
     // get environment parameters and save them in the settings
-    globalSettings.environmentSettings.freeroutingVersion = Constants.FREEROUTING_VERSION + ","
+    globalSettings.runtimeEnvironment.freeroutingVersion = Constants.FREEROUTING_VERSION + ","
         + Constants.FREEROUTING_BUILD_DATE;
-    globalSettings.environmentSettings.appStartedAt = Instant.now();
-    globalSettings.environmentSettings.commandLineArguments = String.join(" ", args);
-    globalSettings.environmentSettings.architecture = System.getProperty("os.name") + ","
+    globalSettings.runtimeEnvironment.appStartedAt = Instant.now();
+    globalSettings.runtimeEnvironment.commandLineArguments = String.join(" ", args);
+    globalSettings.runtimeEnvironment.architecture = System.getProperty("os.name") + ","
         + System.getProperty("os.arch") + "," + System.getProperty("os.version");
-    globalSettings.environmentSettings.java = System.getProperty("java.version") + ","
+    globalSettings.runtimeEnvironment.java = System.getProperty("java.version") + ","
         + System.getProperty("java.vendor");
-    globalSettings.environmentSettings.systemLanguage = Locale
+    globalSettings.runtimeEnvironment.systemLanguage = Locale
         .getDefault()
         .getLanguage() + "," + Locale.getDefault();
-    globalSettings.environmentSettings.cpuCores = Runtime
+    globalSettings.runtimeEnvironment.cpuCores = Runtime
         .getRuntime()
         .availableProcessors();
-    globalSettings.environmentSettings.ram = (int) (Runtime
+    globalSettings.runtimeEnvironment.ram = (int) (Runtime
         .getRuntime()
         .maxMemory() / 1024 / 1024);
-    FRLogger.debug("Version: " + globalSettings.environmentSettings.freeroutingVersion);
-    FRLogger.debug("Command line arguments: '" + globalSettings.environmentSettings.commandLineArguments + "'");
-    FRLogger.debug("Architecture: " + globalSettings.environmentSettings.architecture);
-    FRLogger.debug("Java: " + globalSettings.environmentSettings.java);
-    FRLogger.debug("System Language: " + globalSettings.environmentSettings.systemLanguage);
-    FRLogger.debug("Hardware: " + globalSettings.environmentSettings.cpuCores + " CPU cores,"
-        + globalSettings.environmentSettings.ram + " MB RAM");
-    FRLogger.debug("UTC Time: " + globalSettings.environmentSettings.appStartedAt);
+    FRLogger.debug("Version: " + globalSettings.runtimeEnvironment.freeroutingVersion);
+    FRLogger.debug("Command line arguments: '" + globalSettings.runtimeEnvironment.commandLineArguments + "'");
+    FRLogger.debug("Architecture: " + globalSettings.runtimeEnvironment.architecture);
+    FRLogger.debug("Java: " + globalSettings.runtimeEnvironment.java);
+    FRLogger.debug("System Language: " + globalSettings.runtimeEnvironment.systemLanguage);
+    FRLogger.debug("Hardware: " + globalSettings.runtimeEnvironment.cpuCores + " CPU cores,"
+        + globalSettings.runtimeEnvironment.ram + " MB RAM");
+    FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
 
     // parse the command line arguments
     globalSettings.applyCommandLineArguments(args);
 
     FRLogger.debug("GUI Language: " + globalSettings.currentLocale);
 
-    FRLogger.debug("Host: " + globalSettings.environmentSettings.host);
+    FRLogger.debug("Host: " + globalSettings.runtimeEnvironment.host);
 
     // Get some useful information if we are running in a GUI
     int width = 0;
@@ -453,8 +453,8 @@ public class Freerouting {
         String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"),
         System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"),
         Locale.getDefault(), globalSettings.currentLocale,
-        globalSettings.environmentSettings.cpuCores, globalSettings.environmentSettings.ram,
-        globalSettings.environmentSettings.host, width, height, dpi);
+        globalSettings.runtimeEnvironment.cpuCores, globalSettings.runtimeEnvironment.ram,
+        globalSettings.runtimeEnvironment.host, width, height, dpi);
 
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);

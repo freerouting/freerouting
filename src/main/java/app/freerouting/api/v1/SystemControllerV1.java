@@ -75,7 +75,7 @@ public class SystemControllerV1 {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getEnvironment() {
     // Serialize the collected environment information to JSON and return it
-    var response = GsonProvider.GSON.toJson(Freerouting.globalSettings.environmentSettings);
+    var response = GsonProvider.GSON.toJson(Freerouting.globalSettings.runtimeEnvironment);
     FRAnalytics.apiEndpointCalled("GET v1/system/environment", "", response);
     return Response.ok(response).build();
   }
