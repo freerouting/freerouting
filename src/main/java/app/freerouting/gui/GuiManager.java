@@ -335,9 +335,7 @@ public class GuiManager {
                     .getGuiSession().id);
 
             // Apply CLI settings from GlobalSettings to the RoutingJob
-            if (globalSettings.routerSettings != null) {
-                routingJob.routerSettings.applyNewValuesFrom(globalSettings.routerSettings);
-            }
+            routingJob.routerSettings.applyNewValuesFrom(globalSettings.routerSettings);
 
             routingJob.setDummyInputFile("tutorial_board.dsn");
             // Load an empty template file from the resources
