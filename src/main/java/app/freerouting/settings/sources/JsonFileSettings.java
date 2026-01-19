@@ -31,7 +31,7 @@ public class JsonFileSettings implements SettingsSource {
 
     /**
      * Creates a JsonFileSettings source from a specific JSON file.
-     * 
+     *
      * @param jsonFilePath Path to the JSON configuration file
      */
     public JsonFileSettings(Path jsonFilePath) {

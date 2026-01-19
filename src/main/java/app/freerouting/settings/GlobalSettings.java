@@ -1,13 +1,13 @@
 package app.freerouting.settings;
 
+import static app.freerouting.constants.Constants.FREEROUTING_VERSION;
+
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
-import app.freerouting.constants.Constants;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.ReflectionUtil;
-import app.freerouting.management.TextManager;
 import app.freerouting.management.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
 import java.io.IOException;
@@ -60,7 +60,7 @@ public class GlobalSettings implements Serializable {
       "ko"
   };
   @SerializedName("version")
-  public String version = Constants.FREEROUTING_VERSION;
+  public String version;
   public transient boolean show_help_option;
   // DRC report file details that we got from the command line arguments.
   public transient BoardFileDetails drc_report_file;
@@ -134,11 +134,11 @@ public class GlobalSettings implements Serializable {
     if (loadedSettings != null) {
       // If the version numbers are different, we must save the file again to update
       // it
-      boolean isSaveNeeded = !loadedSettings.version.equals(defaultSettings.version);
+      boolean isSaveNeeded = !loadedSettings.version.equals(FREEROUTING_VERSION);
 
       // Apply all the loaded settings to the result if they are not null
-      loadedSettings.version = null;
       ReflectionUtil.copyFields(defaultSettings, loadedSettings);
+      loadedSettings.version = FREEROUTING_VERSION;
 
       if (isSaveNeeded) {
         saveAsJson(loadedSettings);

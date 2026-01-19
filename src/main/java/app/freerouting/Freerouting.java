@@ -339,7 +339,12 @@ public class Freerouting {
     }
 
     if ((globalSettings == null) || (globalSettings.version != Constants.FREEROUTING_VERSION)) {
+      // let's see if we can preserve the user ID
+      String userId = globalSettings == null ? UUID.randomUUID().toString() : globalSettings.userProfileSettings.userId;
+
       globalSettings = new GlobalSettings();
+      globalSettings.userProfileSettings.userId = userId;
+      globalSettings.version = Constants.FREEROUTING_VERSION;
 
       // save the default values
       try {
