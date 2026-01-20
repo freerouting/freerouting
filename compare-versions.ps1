@@ -74,7 +74,6 @@ $BaseArgs = @(
     "--router.job_timeout=`"$job_timeout`""
     "--router.max_passes=$max_passes"
     "--router.max_threads=$max_threads"
-    "--logging.file.location=$LoggingLocation"
     "--logging.file.level=$LoggingLevel"
     "--logging.console.level=INFO"
 )
@@ -95,16 +94,10 @@ function Invoke-Version {
     # Clean previous log if exists
     if (Test-Path $LogPath) { Remove-Item $LogPath -Force }
 
-    $DefaultLogName = "freerouting.log"
-    $DefaultLogPath = Join-Path $LogBaseDir $DefaultLogName
-
-    # Ensure fresh start
-    if (Test-Path $DefaultLogPath) { Remove-Item $DefaultLogPath -Force }
-
     $env:FREEROUTING_LOG_DIR = $LogBaseDir
 
-    # Construct flat argument list
-    $ProcessArgs = @("-jar", $JarPath) + $BaseArgs
+    # Construct flat argument list with specific log location
+    $ProcessArgs = @("-jar", $JarPath) + $BaseArgs + @("--logging.file.location=$LogPath")
 
     Write-Host "Command: java $ProcessArgs" -ForegroundColor Gray
     Write-Host "Log Target: $LogPath"       -ForegroundColor Gray
@@ -128,15 +121,14 @@ function Invoke-Version {
 
         Write-Host "  Duration: $($Duration.ToString('mm\:ss\.fff'))" -ForegroundColor White
 
-        # Rename the log file
-        if (Test-Path $DefaultLogPath) {
-            Move-Item -Path $DefaultLogPath -Destination $LogPath -Force
+        # Check if log file exists (Java should have written it directly)
+        if (Test-Path $LogPath) {
             $LogSize = (Get-Item $LogPath).Length
             $FormattedSize = [math]::Round($LogSize / 1KB, 2)
             Write-Host "  Log Saved: $LogPath ($FormattedSize)" -ForegroundColor White
         }
         else {
-            Write-Host "  WARNING: Log file not found at $DefaultLogPath" -ForegroundColor $WarningColor
+            Write-Host "  WARNING: Log file not found at $LogPath" -ForegroundColor $WarningColor
         }
 
         return @{
