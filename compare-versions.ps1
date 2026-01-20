@@ -35,6 +35,14 @@ if (-not (Test-Path $de)) {
 $InputFileAbs = Resolve-Path $de
 $OutputFileAbs = $do
 
+# Rebuild executables
+Write-Host "Building executables..." -ForegroundColor $InfoColor
+& .\gradlew.bat buildBothVersions
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: Gradle build failed." -ForegroundColor $ErrorColor
+    exit 1
+}
+
 # JAR files
 $CurrentJar = ".\build\libs\freerouting-current-executable.jar"
 $V19Jar = ".\build\libs\freerouting-1.9.0-executable.jar"
@@ -124,8 +132,8 @@ function Invoke-Version {
         # Check if log file exists (Java should have written it directly)
         if (Test-Path $LogPath) {
             $LogSize = (Get-Item $LogPath).Length
-            $FormattedSize = [math]::Round($LogSize / 1KB, 2)
-            Write-Host "  Log Saved: $LogPath ($FormattedSize)" -ForegroundColor White
+            $FormattedSize = [math]::Round($LogSize / 1MB, 2)
+            Write-Host "  Log Saved: $LogPath ($FormattedSize MB)" -ForegroundColor White
         }
         else {
             Write-Host "  WARNING: Log file not found at $LogPath" -ForegroundColor $WarningColor
