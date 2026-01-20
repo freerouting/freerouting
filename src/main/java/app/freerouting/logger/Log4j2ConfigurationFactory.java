@@ -52,7 +52,7 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
 
         // Set configuration name and status
         builder.setConfigurationName("FreeroutingConfiguration");
-        builder.setStatusLevel(Level.TRACE);
+        builder.setStatusLevel(Level.WARN);
 
         // Create Console appender if enabled
         if (consoleEnabled) {

@@ -134,7 +134,7 @@ Below is a comprehensive list of command-line options available in Freerouting, 
   Sets the file logging level. Default is `INFO`.
 
 - **`--logging.file.location=[directory]`**
-  Defines the directory where `freerouting.log` is stored. Overrides default user data path for logging.
+  Defines the directory where `freerouting.log` is stored.
 
 - **`-dl`** (Legacy)
   Disables **file** logging. Equivalent to `--logging.file.enabled=false`.

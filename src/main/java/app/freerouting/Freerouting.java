@@ -257,31 +257,28 @@ public class Freerouting {
       return defaultDir.resolve("freerouting.log").normalize().toAbsolutePath();
     }
 
-    Path path = Path.of(input);
-    File file = path.toFile();
-
-    // Case 1: Existing directory
-    if (file.isDirectory()) {
-      return path.resolve("freerouting.log").normalize().toAbsolutePath();
+    // In Windows the leading "." character means current directory
+    if (input.startsWith(".")) {
+      var currentDir = Path.of(System.getProperty("user.dir"));
+      input = currentDir + input.substring(1);
     }
 
-    // Case 2: Ends with separator (clearly intended as directory)
-    // Java's Path doesn't keep trailing separator easily, so check string input
-    if (input.endsWith(File.separator) || input.endsWith("/")) {
-      return path.resolve("freerouting.log").normalize().toAbsolutePath();
+    Path path = Path.of(input).normalize().toAbsolutePath();
+    boolean isFile = path.getFileName().toString().toLowerCase().endsWith(".log");
+    String filename = isFile ? path.getFileName().toString() : "freerouting.log";
+    Path folderPath = isFile ? path.getParent() : path;
+
+    // Check if the directory exists, and create it if needed
+    if (folderPath != null && !folderPath.toFile().exists()) {
+      try {
+        Files.createDirectories(folderPath);
+      } catch (IOException e) {
+        // Failed to create directory, fallback to default
+        return defaultDir.resolve(filename).normalize().toAbsolutePath();
+      }
     }
 
-    // Case 3: Has parent directory that exists, but file doesn't exist yet -> treat
-    // as file
-    // Case 4: No extension, parent doesn't exist? Ambiguous. We use heuristic:
-    // If it has an extension (contains .), treat as file. Else treat as directory.
-    String fileName = path.getFileName().toString();
-    if (fileName.contains(".")) {
-      return path.normalize().toAbsolutePath();
-    } else {
-      // Treat as directory
-      return path.resolve("freerouting.log").normalize().toAbsolutePath();
-    }
+    return folderPath.resolve(filename).normalize().toAbsolutePath();
   }
 
   /**
@@ -318,23 +315,6 @@ public class Freerouting {
         userdataPath = Path.of(userDataPathArg
             .get()
             .substring("--user_data_path=".length()));
-      }
-    }
-    // 3.1, check if we need to override it with the
-    // "--logging.file.location={directory}"
-    // command line argument
-    if (args.length > 0 && Arrays
-        .stream(args)
-        .anyMatch(s -> s.startsWith("--logging.file.location="))) {
-      var loggingLocationArg = Arrays
-          .stream(args)
-          .filter(s -> s.startsWith("--logging.file.location="))
-          .findFirst();
-
-      if (loggingLocationArg.isPresent()) {
-        userdataPath = Path.of(loggingLocationArg
-            .get()
-            .substring("--logging.file.location=".length()));
       }
     }
     // 4, create the directory if it doesn't exist
