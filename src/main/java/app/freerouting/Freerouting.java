@@ -250,6 +250,25 @@ public class Freerouting {
     return apiServer;
   }
 
+  private static void ApplyLoggingSettings(GlobalSettings settings) {
+    if (settings.logging.location != null && !settings.logging.location.isEmpty()) {
+      Path userPath = Path.of(settings.logging.location);
+      if (!userPath.toFile().exists()) {
+        userPath.toFile().mkdirs();
+      }
+      if (userPath.toFile().exists()) {
+        FRLogger.changeFileLogLocation(userPath);
+      }
+    }
+
+    if (!settings.logging.enabled) {
+      FRLogger.disableLogging();
+    } else {
+      FRLogger.setEnabled(true);
+      FRLogger.changeFileLogLevel(settings.logging.level);
+    }
+  }
+
   /**
    * The entry point of the Freerouting application
    *
@@ -266,6 +285,8 @@ public class Freerouting {
     // environment variable value
     if (System.getenv("FREEROUTING__USER_DATA_PATH") != null) {
       userdataPath = Path.of(System.getenv("FREEROUTING__USER_DATA_PATH"));
+    } else if (System.getenv("FREEROUTING__LOGGING__LOCATION") != null) {
+      userdataPath = Path.of(System.getenv("FREEROUTING__LOGGING__LOCATION"));
     }
     // 3, check if we need to override it with the "--user_data_path={directory}"
     // command line argument
@@ -281,6 +302,23 @@ public class Freerouting {
         userdataPath = Path.of(userDataPathArg
             .get()
             .substring("--user_data_path=".length()));
+      }
+    }
+    // 3.1, check if we need to override it with the
+    // "--logging.location={directory}"
+    // command line argument
+    if (args.length > 0 && Arrays
+        .stream(args)
+        .anyMatch(s -> s.startsWith("--logging.location="))) {
+      var loggingLocationArg = Arrays
+          .stream(args)
+          .filter(s -> s.startsWith("--logging.location="))
+          .findFirst();
+
+      if (loggingLocationArg.isPresent()) {
+        userdataPath = Path.of(loggingLocationArg
+            .get()
+            .substring("--logging.location=".length()));
       }
     }
     // 4, create the directory if it doesn't exist
@@ -303,21 +341,43 @@ public class Freerouting {
     // we have a special case if logging must be disabled before the general command
     // line arguments
     // are parsed
-    if (args.length > 0 && Arrays
-        .asList(args)
-        .contains("-dl")) {
-      // disable logging
-      FRLogger.disableLogging();
-    } else if (args.length > 0 && Arrays
-        .asList(args)
-        .contains("-ll")) {
-      // get the log level from the command line arguments
-      int logLevelIndex = Arrays
-          .asList(args)
-          .indexOf("-ll") + 1;
-      if (logLevelIndex < args.length) {
-        FRLogger.changeFileLogLevel(args[logLevelIndex]);
+    boolean loggingEnabled = true;
+    String loggingLevel = "INFO";
+
+    if (System.getenv("FREEROUTING__LOGGING__ENABLED") != null) {
+      loggingEnabled = Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__ENABLED"));
+    }
+    if (System.getenv("FREEROUTING__LOGGING__LEVEL") != null) {
+      loggingLevel = System.getenv("FREEROUTING__LOGGING__LEVEL");
+    }
+
+    if (args.length > 0) {
+      // Check for --logging.enabled
+      for (String arg : args) {
+        if (arg.startsWith("--logging.enabled=")) {
+          loggingEnabled = Boolean.parseBoolean(arg.substring("--logging.enabled=".length()));
+        } else if (arg.startsWith("--logging.level=")) {
+          loggingLevel = arg.substring("--logging.level=".length());
+        } else if ("-dl".equals(arg)) {
+          loggingEnabled = false;
+        } else if ("-ll".equals(arg)) {
+          // logic for -ll is bit more complex as it takes next arg, but we can skipping
+          // precise pre-parsing for -ll if --logging.level is used
+          // or just rely on global settings application later for strict correctness, but
+          // here we want early init.
+          // Let's implement simple peek for -ll
+          int index = Arrays.asList(args).indexOf("-ll");
+          if (index >= 0 && index < args.length - 1) {
+            loggingLevel = args[index + 1];
+          }
+        }
       }
+    }
+
+    if (!loggingEnabled) {
+      FRLogger.disableLogging();
+    } else {
+      FRLogger.changeFileLogLevel(loggingLevel);
     }
 
     try {
@@ -356,6 +416,8 @@ public class Freerouting {
 
     // apply environment variables to the settings
     globalSettings.applyNonRouterEnvironmentVariables();
+
+    ApplyLoggingSettings(globalSettings);
 
     // if we don't have a GUI enabled then we must use the console as our output
     if ((!globalSettings.guiSettings.isEnabled) && (System.console() == null)) {

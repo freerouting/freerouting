@@ -29,6 +29,8 @@ public class GlobalSettings implements Serializable {
   public final transient RuntimeEnvironment runtimeEnvironment = new RuntimeEnvironment();
   @SerializedName("profile")
   public final UserProfileSettings userProfileSettings = new UserProfileSettings();
+  @SerializedName("logging")
+  public final LoggingSettings logging = new LoggingSettings();
   @SerializedName("gui")
   public final GuiSettings guiSettings = new GuiSettings();
   @SerializedName("router")
@@ -414,7 +416,7 @@ public class GlobalSettings implements Serializable {
           }
 
         } else if (p_args[i].startsWith("-dl")) {
-          featureFlags.logging = false;
+          logging.enabled = false;
         } else if (p_args[i].startsWith("-da")) {
           usageAndDiagnosticData.disableAnalytics = true;
         } else if (p_args[i].startsWith("-host")) {
@@ -437,6 +439,13 @@ public class GlobalSettings implements Serializable {
             if (guiSettings.dialogConfirmationTimeout <= 0) {
               guiSettings.dialogConfirmationTimeout = 0;
             }
+            i++;
+          }
+        } else if (p_args[i].startsWith("-ll")) {
+          // get the log level from the command line arguments
+          // and save it to the settings
+          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+            logging.level = p_args[i + 1].toUpperCase();
             i++;
           }
         } else {

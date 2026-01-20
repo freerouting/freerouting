@@ -5,8 +5,6 @@ import java.io.Serializable;
 
 public class FeatureFlagsSettings implements Serializable {
 
-  @SerializedName("logging")
-  public boolean logging = true;
   @SerializedName("multi_threading")
   public boolean multiThreading = true;
   @SerializedName("inspection_mode")

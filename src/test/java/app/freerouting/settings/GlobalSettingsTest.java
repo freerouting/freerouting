@@ -31,7 +31,7 @@ class GlobalSettingsTest {
                 assertEquals(10, settings.routerSettings.maxPasses);
                 assertEquals("/tmp", settings.guiSettings.inputDirectory);
 
-                assertFalse(settings.featureFlags.logging);
+                assertFalse(settings.logging.enabled);
 
                 // Should be no warnings
                 assertEquals(0, FRLogger.getLogEntries().getWarningCount(), "Should have no warnings for valid args");

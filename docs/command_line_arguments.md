@@ -120,21 +120,21 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 - **`-da`**  
   Disables the collection of anonymous analytics data.
 
-- **`-dl`**  
-  Disables logging.
+- **`--logging.enabled=[true|false]`**
+  Enables or disables logging. Default is `true`.
 
-- **`-ll [level]`**  
+- **`--logging.level=[level]`**
   Sets the console logging level:
-  - Valid values:
-    - `OFF` (0)
-    - `FATAL` (1)
-    - `ERROR` (2)
-    - `WARN` (3)
-    - `INFO` (4) (default)
-    - `DEBUG` (5)
-    - `TRACE` (6)
-    - `ALL` (7)
-  - Accepts both string names and numerical values.
+  - Valid values: `OFF`, `FATAL`, `ERROR`, `WARN`, `INFO` (default), `DEBUG`, `TRACE`, `ALL`.
+
+- **`--logging.location=[directory]`**
+  Defines the directory where `freerouting.log` is stored. Overrides default user data path for logging.
+
+- **`-dl`** (Legacy)
+  Disables logging. Equivalent to `--logging.enabled=false`.
+
+- **`-ll [level]`** (Legacy)
+  Sets the console logging level. Equivalent to `--logging.level=[level]`.
 
 - **`--user_data_path=[directory]`**
   Defines the directory where configuration and log files are stored.

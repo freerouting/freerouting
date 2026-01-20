@@ -18,9 +18,7 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
-/// <summary>
-/// Provides logging functionality.
-/// </summary>
+/// <summary> Provides logging functionality. </summary>
 public class FRLogger {
 
   public static final DecimalFormat defaultFloatFormat = new DecimalFormat("0.00");
@@ -31,6 +29,10 @@ public class FRLogger {
   private static boolean enabled = true;
 
   private FRLogger() {
+  }
+
+  public static void setEnabled(boolean value) {
+    enabled = value;
   }
 
   public static String formatDuration(double totalSeconds) {
@@ -125,7 +127,8 @@ public class FRLogger {
       timeElapsed = 0;
     }
 
-    String logMessage = "Method '" + perfId.replace("{}", result != null ? result.toString() : "(null)") + "' was performed in " + FRLogger.formatDuration(timeElapsed / 1000.0) + ".";
+    String logMessage = "Method '" + perfId.replace("{}", result != null ? result.toString() : "(null)")
+        + "' was performed in " + FRLogger.formatDuration(timeElapsed / 1000.0) + ".";
 
     FRLogger.trace(logMessage);
 
@@ -227,9 +230,7 @@ public class FRLogger {
     return logEntry;
   }
 
-  /// <summary>
-  /// Disables the log4j logger.
-  /// </summary>
+  /// <summary> Disables the log4j logger. </summary>
   public static void disableLogging() {
     enabled = false;
   }
@@ -242,9 +243,11 @@ public class FRLogger {
     // Obtain the LoggerContext
     var contextObject = LogManager.getContext(false);
 
-    // Check if the contextObject is an instance of org.apache.logging.log4j.core.LoggerContext
+    // Check if the contextObject is an instance of
+    // org.apache.logging.log4j.core.LoggerContext
     if (!(contextObject instanceof LoggerContext context)) {
-      FRLogger.warn("Failed to change the log level. The context object is not an instance of org.apache.logging.log4j.core.LoggerContext.");
+      FRLogger.warn(
+          "Failed to change the log level. The context object is not an instance of org.apache.logging.log4j.core.LoggerContext.");
       return;
     }
 
@@ -313,9 +316,11 @@ public class FRLogger {
     // Obtain the LoggerContext
     LoggerContext context = (LoggerContext) LogManager.getContext(false);
 
-    // Check if the contextObject is an instance of org.apache.logging.log4j.core.LoggerContext
+    // Check if the contextObject is an instance of
+    // org.apache.logging.log4j.core.LoggerContext
     if (context == null) {
-      FRLogger.warn("Failed to change the log file location. The context object is not an instance of org.apache.logging.log4j.core.LoggerContext.");
+      FRLogger.warn(
+          "Failed to change the log file location. The context object is not an instance of org.apache.logging.log4j.core.LoggerContext.");
       return;
     }
 
