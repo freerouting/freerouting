@@ -1,22 +1,19 @@
 package app.freerouting.logger;
 
 import app.freerouting.Freerouting;
-import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.AppenderRef;
-import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.LoggerConfig;
 
 /// <summary> Provides logging functionality. </summary>
+/**
+ * Provides centralized logging functionality for the application.
+ * Wraps Log4j2 and maintains an internal list of log entries for UI display.
+ */
 public class FRLogger {
 
   public static final DecimalFormat defaultFloatFormat = new DecimalFormat("0.00");
@@ -29,10 +26,22 @@ public class FRLogger {
   private FRLogger() {
   }
 
+  /**
+   * Enables or disables logging globally.
+   *
+   * @param value true to enable logging, false to disable.
+   */
   public static void setEnabled(boolean value) {
     enabled = value;
   }
 
+  /**
+   * Formats a duration in seconds into a human-readable string (hours, minutes,
+   * seconds).
+   *
+   * @param totalSeconds The total duration in seconds.
+   * @return A formatted string representing the duration.
+   */
   public static String formatDuration(double totalSeconds) {
     double seconds = totalSeconds;
     double minutes = seconds / 60.0;
@@ -49,6 +58,14 @@ public class FRLogger {
     return hoursText + minutesText + defaultFloatFormat.format(seconds) + " seconds";
   }
 
+  /**
+   * Formats a score with details about incomplete items and violations.
+   *
+   * @param score      The routing score.
+   * @param incomplete The number of unrouted items.
+   * @param violations The number of design rule violations.
+   * @return A formatted string representing the score and any issues.
+   */
   public static String formatScore(float score, int incomplete, int violations) {
     StringBuilder sb = new StringBuilder(defaultFloatFormat.format(score));
 
@@ -81,6 +98,12 @@ public class FRLogger {
     return sb.toString();
   }
 
+  /**
+   * Records the start time for a performance trace.
+   *
+   * @param perfId A unique identifier for the operation being traced (often the
+   *               method name).
+   */
   public static void traceEntry(String perfId) {
     if (!enabled) {
       return;
@@ -92,6 +115,12 @@ public class FRLogger {
     perfData.put(perfId.hashCode(), Instant.now());
   }
 
+  /**
+   * Records the end of a performance trace and logs the duration.
+   *
+   * @param perfId A unique identifier for the operation being traced.
+   * @return The duration of the operation in seconds.
+   */
   public static double traceExit(String perfId) {
     if (!enabled) {
       return 0.0;
@@ -103,6 +132,14 @@ public class FRLogger {
     return traceExit(perfId, null);
   }
 
+  /**
+   * Records the end of a performance trace with an optional result object and
+   * logs the duration.
+   *
+   * @param perfId A unique identifier for the operation being traced.
+   * @param result An optional result object to include in the log message.
+   * @return The duration of the operation in seconds.
+   */
   public static double traceExit(String perfId, Object result) {
     if (!enabled) {
       return 0.0;
@@ -133,6 +170,13 @@ public class FRLogger {
     return timeElapsed / 1000.0;
   }
 
+  /**
+   * Logs an INFO message.
+   *
+   * @param msg   The message to log.
+   * @param topic An optional topic UUID associated with the message.
+   * @return The created LogEntry.
+   */
   public static LogEntry info(String msg, UUID topic) {
     LogEntry logEntry = logEntries.add(LogEntryType.Info, msg, topic);
 
@@ -148,10 +192,23 @@ public class FRLogger {
     return logEntry;
   }
 
+  /**
+   * Logs an INFO message without a topic.
+   *
+   * @param msg The message to log.
+   * @return The created LogEntry.
+   */
   public static LogEntry info(String msg) {
     return info(msg, null);
   }
 
+  /**
+   * Logs a WARNING message.
+   *
+   * @param msg   The message to log.
+   * @param topic An optional topic UUID associated with the message.
+   * @return The created LogEntry.
+   */
   public static LogEntry warn(String msg, UUID topic) {
     LogEntry logEntry = logEntries.add(LogEntryType.Warning, msg, topic);
 
@@ -167,10 +224,23 @@ public class FRLogger {
     return logEntry;
   }
 
+  /**
+   * Logs a WARNING message without a topic.
+   *
+   * @param msg The message to log.
+   * @return The created LogEntry.
+   */
   public static LogEntry warn(String msg) {
     return warn(msg, null);
   }
 
+  /**
+   * Logs a DEBUG message.
+   *
+   * @param msg   The message to log.
+   * @param topic An optional topic UUID associated with the message.
+   * @return The created LogEntry.
+   */
   public static LogEntry debug(String msg, UUID topic) {
     LogEntry logEntry = logEntries.add(LogEntryType.Debug, msg, topic);
 
@@ -186,10 +256,24 @@ public class FRLogger {
     return logEntry;
   }
 
+  /**
+   * Logs a DEBUG message without a topic.
+   *
+   * @param msg The message to log.
+   * @return The created LogEntry.
+   */
   public static LogEntry debug(String msg) {
     return debug(msg, null);
   }
 
+  /**
+   * Logs an ERROR message with an exception.
+   *
+   * @param msg       The message to log.
+   * @param topic     An optional topic UUID associated with the message.
+   * @param exception The exception to log.
+   * @return The created LogEntry.
+   */
   public static LogEntry error(String msg, UUID topic, Throwable exception) {
     LogEntry logEntry = logEntries.add(LogEntryType.Error, msg, topic, exception);
 
@@ -209,10 +293,23 @@ public class FRLogger {
     return logEntry;
   }
 
+  /**
+   * Logs an ERROR message with an exception, but without a topic.
+   *
+   * @param msg       The message to log.
+   * @param exception The exception to log.
+   * @return The created LogEntry.
+   */
   public static LogEntry error(String msg, Throwable exception) {
     return error(msg, null, exception);
   }
 
+  /**
+   * Logs a TRACE message.
+   *
+   * @param msg The message to log.
+   * @return The created LogEntry.
+   */
   public static LogEntry trace(String msg) {
     LogEntry logEntry = logEntries.add(LogEntryType.Trace, msg, null);
 
@@ -229,142 +326,31 @@ public class FRLogger {
   }
 
   /**
-   * @deprecated This method is no longer used. Logging configuration is now done
-   *             programmatically via system properties set before log4j2
-   *             initialization.
-   *             Runtime manipulation of log4j2 configuration causes threading
-   *             issues and exceptions.
-   *             This method is now a no-op.
+   * Disables logging.
    */
-  @Deprecated
-  public static void disableFileLogging() {
-    FRLogger.warn(
-        "disableFileLogging() is deprecated and does nothing. Configure logging via system properties before application start.");
-  }
-
-  /// <summary> Disables the log4j logger. </summary>
   public static void disableLogging() {
     enabled = false;
   }
 
+  /**
+   * Gets the collection of log entries recorded by this logger.
+   *
+   * @return The LogEntries collection.
+   */
   public static LogEntries getLogEntries() {
     return logEntries;
   }
 
-  public static void changeFileLogLevel(Level level) {
-    // Obtain the LoggerContext
-    var contextObject = LogManager.getContext(false);
-
-    // Check if the contextObject is an instance of
-    // org.apache.logging.log4j.core.LoggerContext
-    if (!(contextObject instanceof LoggerContext context)) {
-      FRLogger.warn(
-          "Failed to change the log level. The context object is not an instance of org.apache.logging.log4j.core.LoggerContext.");
-      return;
-    }
-
-    // Get the Configuration
-    Configuration config = context.getConfiguration();
-
-    // Get the Root LoggerConfig
-    LoggerConfig rootLoggerConfig = config.getRootLogger();
-
-    // Create a new AppenderRef with the desired level
-    List<AppenderRef> refList = rootLoggerConfig.getAppenderRefs();
-    var refs = refList.toArray(new AppenderRef[0]);
-    for (int i = 0; i < refs.length; i++) {
-      if ("Console"
-          .equals(refs[i]
-              .getRef())) {
-        refs[i] = AppenderRef.createAppenderRef("Console", level, null);
-      }
-    }
-
-    // Remove the existing AppenderRefs
-    rootLoggerConfig.removeAppender("Console");
-
-    // Add the modified AppenderRef back to the LoggerConfig
-    for (AppenderRef ref : refs) {
-      rootLoggerConfig.addAppender(config.getAppender(ref.getRef()), ref.getLevel(), ref.getFilter());
-    }
-
-    // Update the configuration
-    context.updateLoggers();
-  }
-
   /**
-   * @deprecated This method is no longer used. Logging configuration is now done
-   *             programmatically via system properties set before log4j2
-   *             initialization.
-   *             Runtime manipulation of log4j2 configuration causes threading
-   *             issues and exceptions.
-   *             This method is now a no-op.
+   * Gets the underlying Log4j2 Logger instance.
+   *
+   * @return The Logger instance.
    */
-  @Deprecated
-  public static void setConsoleLogLevel(String level) {
-    FRLogger.warn(
-        "setConsoleLogLevel() is deprecated and does nothing. Configure logging via system properties before application start.");
-  }
-
-  /**
-   * @deprecated This method is no longer used. Logging configuration is now done
-   *             programmatically via system properties set before log4j2
-   *             initialization.
-   *             Runtime manipulation of log4j2 configuration causes threading
-   *             issues and exceptions.
-   *             This method is now a no-op.
-   */
-  @Deprecated
-  public static void setFileLogLevel(String level) {
-    FRLogger.warn(
-        "setFileLogLevel() is deprecated and does nothing. Configure logging via system properties before application start.");
-  }
-
-  public static void changeFileLogLevel(String level) {
-    String logLevel = level.toUpperCase();
-
-    if ("OFF".equals(logLevel) || "0".equals(logLevel)) {
-      FRLogger.disableLogging();
-    } else if ("FATAL".equals(logLevel) || "1".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.FATAL);
-    } else if ("ERROR".equals(logLevel) || "2".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.ERROR);
-    } else if ("WARN".equals(logLevel) || "3".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.WARN);
-    } else if ("INFO".equals(logLevel) || "4".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.INFO);
-    } else if ("DEBUG".equals(logLevel) || "5".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.DEBUG);
-    } else if ("TRACE".equals(logLevel) || "6".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.TRACE);
-    } else if ("ALL".equals(logLevel) || "7".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.ALL);
-    }
-  }
-
   public static Logger getLogger() {
     if (logger == null) {
       logger = LogManager.getLogger(Freerouting.class);
     }
 
     return logger;
-  }
-
-  /**
-   * @deprecated This method is no longer used. Logging configuration is now done
-   *             programmatically via system properties set before log4j2
-   *             initialization.
-   *             Runtime manipulation of log4j2 configuration causes threading
-   *             issues and exceptions.
-   *             This method is now a no-op.
-   */
-  @Deprecated
-  public static void setLogFile(Path logFilePath) {
-    FRLogger.warn(
-        "setLogFile() is deprecated and does nothing. Configure logging via system properties before application start.");
-  }
-
-  public static void changeFileLogLocation(Path userDataPath) {
-    setLogFile(userDataPath.resolve("freerouting.log"));
   }
 }

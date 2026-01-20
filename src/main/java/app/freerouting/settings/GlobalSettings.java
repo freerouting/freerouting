@@ -109,8 +109,7 @@ public class GlobalSettings implements Serializable {
   public static void setUserDataPath(Path userDataPath) {
     if (!isUserDataPathLocked) {
       GlobalSettings.userDataPath = userDataPath;
-      configurationFilePath = userDataPath.resolve("freerouting.json");
-      FRLogger.changeFileLogLocation(userDataPath);
+      GlobalSettings.configurationFilePath = userDataPath.resolve("freerouting.json");
     }
   }
 
