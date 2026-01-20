@@ -416,7 +416,7 @@ public class GlobalSettings implements Serializable {
           }
 
         } else if (p_args[i].startsWith("-dl")) {
-          logging.enabled = false;
+          logging.file.enabled = false;
         } else if (p_args[i].startsWith("-da")) {
           usageAndDiagnosticData.disableAnalytics = true;
         } else if (p_args[i].startsWith("-host")) {
@@ -445,7 +445,7 @@ public class GlobalSettings implements Serializable {
           // get the log level from the command line arguments
           // and save it to the settings
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            logging.level = p_args[i + 1].toUpperCase();
+            logging.console.level = p_args[i + 1].toUpperCase();
             i++;
           }
         } else {

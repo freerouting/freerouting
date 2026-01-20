@@ -250,22 +250,35 @@ public class Freerouting {
     return apiServer;
   }
 
-  private static void ApplyLoggingSettings(GlobalSettings settings) {
-    if (settings.logging.location != null && !settings.logging.location.isEmpty()) {
-      Path userPath = Path.of(settings.logging.location);
-      if (!userPath.toFile().exists()) {
-        userPath.toFile().mkdirs();
-      }
-      if (userPath.toFile().exists()) {
-        FRLogger.changeFileLogLocation(userPath);
-      }
+  private static Path resolveLogPath(String input, Path defaultDir) {
+    if (input == null || input.isBlank()) {
+      return defaultDir.resolve("freerouting.log").normalize().toAbsolutePath();
     }
 
-    if (!settings.logging.enabled) {
-      FRLogger.disableLogging();
+    Path path = Path.of(input);
+    File file = path.toFile();
+
+    // Case 1: Existing directory
+    if (file.isDirectory()) {
+      return path.resolve("freerouting.log").normalize().toAbsolutePath();
+    }
+
+    // Case 2: Ends with separator (clearly intended as directory)
+    // Java's Path doesn't keep trailing separator easily, so check string input
+    if (input.endsWith(File.separator) || input.endsWith("/")) {
+      return path.resolve("freerouting.log").normalize().toAbsolutePath();
+    }
+
+    // Case 3: Has parent directory that exists, but file doesn't exist yet -> treat
+    // as file
+    // Case 4: No extension, parent doesn't exist? Ambiguous. We use heuristic:
+    // If it has an extension (contains .), treat as file. Else treat as directory.
+    String fileName = path.getFileName().toString();
+    if (fileName.contains(".")) {
+      return path.normalize().toAbsolutePath();
     } else {
-      FRLogger.setEnabled(true);
-      FRLogger.changeFileLogLevel(settings.logging.level);
+      // Treat as directory
+      return path.resolve("freerouting.log").normalize().toAbsolutePath();
     }
   }
 
@@ -275,7 +288,8 @@ public class Freerouting {
    * @param args
    */
   void main(String[] args) {
-    FRLogger.traceEntry("MainApplication.main()");
+    // CRITICAL: Set up logging configuration BEFORE any logging occurs
+    // This must happen before FRLogger.traceEntry() or any other logging call
 
     // the first thing we need to do is to determine the user directory, because all
     // settings and logs will be located there
@@ -285,8 +299,8 @@ public class Freerouting {
     // environment variable value
     if (System.getenv("FREEROUTING__USER_DATA_PATH") != null) {
       userdataPath = Path.of(System.getenv("FREEROUTING__USER_DATA_PATH"));
-    } else if (System.getenv("FREEROUTING__LOGGING__LOCATION") != null) {
-      userdataPath = Path.of(System.getenv("FREEROUTING__LOGGING__LOCATION"));
+    } else if (System.getenv("FREEROUTING__LOGGING__FILE__LOCATION") != null) {
+      userdataPath = Path.of(System.getenv("FREEROUTING__LOGGING__FILE__LOCATION"));
     }
     // 3, check if we need to override it with the "--user_data_path={directory}"
     // command line argument
@@ -305,20 +319,20 @@ public class Freerouting {
       }
     }
     // 3.1, check if we need to override it with the
-    // "--logging.location={directory}"
+    // "--logging.file.location={directory}"
     // command line argument
     if (args.length > 0 && Arrays
         .stream(args)
-        .anyMatch(s -> s.startsWith("--logging.location="))) {
+        .anyMatch(s -> s.startsWith("--logging.file.location="))) {
       var loggingLocationArg = Arrays
           .stream(args)
-          .filter(s -> s.startsWith("--logging.location="))
+          .filter(s -> s.startsWith("--logging.file.location="))
           .findFirst();
 
       if (loggingLocationArg.isPresent()) {
         userdataPath = Path.of(loggingLocationArg
             .get()
-            .substring("--logging.location=".length()));
+            .substring("--logging.file.location=".length()));
       }
     }
     // 4, create the directory if it doesn't exist
@@ -329,7 +343,7 @@ public class Freerouting {
           .toFile()
           .mkdirs();
     }
-    // 5, check if it exists now, and if it does, apply it to FRLogger
+    // 5, check if it exists now, and if it does, apply it to GlobalSettings
     if (userdataPath
         .toFile()
         .exists()) {
@@ -338,47 +352,71 @@ public class Freerouting {
     // 6, make sure that this settings can't be changed later on
     GlobalSettings.lockUserDataPath();
 
-    // we have a special case if logging must be disabled before the general command
-    // line arguments
-    // are parsed
-    boolean loggingEnabled = true;
-    String loggingLevel = "INFO";
+    // Parse logging settings from environment variables and command line arguments
+    // These will be used to configure log4j2 BEFORE it initializes
+    boolean fileLoggingEnabled = true;
+    boolean consoleLoggingEnabled = true;
+    String fileLoggingLevel = "DEBUG";
+    String consoleLoggingLevel = "INFO";
+    String fileLoggingLocation = null;
 
-    if (System.getenv("FREEROUTING__LOGGING__ENABLED") != null) {
-      loggingEnabled = Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__ENABLED"));
+    if (System.getenv("FREEROUTING__LOGGING__FILE__ENABLED") != null) {
+      fileLoggingEnabled = Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__FILE__ENABLED"));
     }
-    if (System.getenv("FREEROUTING__LOGGING__LEVEL") != null) {
-      loggingLevel = System.getenv("FREEROUTING__LOGGING__LEVEL");
+    if (System.getenv("FREEROUTING__LOGGING__CONSOLE__ENABLED") != null) {
+      consoleLoggingEnabled = Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__CONSOLE__ENABLED"));
+    }
+    if (System.getenv("FREEROUTING__LOGGING__FILE__LEVEL") != null) {
+      fileLoggingLevel = System.getenv("FREEROUTING__LOGGING__FILE__LEVEL");
+    }
+    if (System.getenv("FREEROUTING__LOGGING__CONSOLE__LEVEL") != null) {
+      consoleLoggingLevel = System.getenv("FREEROUTING__LOGGING__CONSOLE__LEVEL");
+    }
+    if (System.getenv("FREEROUTING__LOGGING__FILE__LOCATION") != null) {
+      fileLoggingLocation = System.getenv("FREEROUTING__LOGGING__FILE__LOCATION");
     }
 
     if (args.length > 0) {
-      // Check for --logging.enabled
       for (String arg : args) {
-        if (arg.startsWith("--logging.enabled=")) {
-          loggingEnabled = Boolean.parseBoolean(arg.substring("--logging.enabled=".length()));
-        } else if (arg.startsWith("--logging.level=")) {
-          loggingLevel = arg.substring("--logging.level=".length());
+        if (arg.startsWith("--logging.file.enabled=")) {
+          fileLoggingEnabled = Boolean.parseBoolean(arg.substring("--logging.file.enabled=".length()));
+        } else if (arg.startsWith("--logging.console.enabled=")) {
+          consoleLoggingEnabled = Boolean.parseBoolean(arg.substring("--logging.console.enabled=".length()));
+        } else if (arg.startsWith("--logging.file.level=")) {
+          fileLoggingLevel = arg.substring("--logging.file.level=".length());
+        } else if (arg.startsWith("--logging.console.level=")) {
+          consoleLoggingLevel = arg.substring("--logging.console.level=".length());
+        } else if (arg.startsWith("--logging.file.location=")) {
+          fileLoggingLocation = arg.substring("--logging.file.location=".length());
         } else if ("-dl".equals(arg)) {
-          loggingEnabled = false;
+          fileLoggingEnabled = false;
         } else if ("-ll".equals(arg)) {
-          // logic for -ll is bit more complex as it takes next arg, but we can skipping
-          // precise pre-parsing for -ll if --logging.level is used
-          // or just rely on global settings application later for strict correctness, but
-          // here we want early init.
-          // Let's implement simple peek for -ll
+          // simple peek for -ll
           int index = Arrays.asList(args).indexOf("-ll");
           if (index >= 0 && index < args.length - 1) {
-            loggingLevel = args[index + 1];
+            consoleLoggingLevel = args[index + 1];
           }
         }
       }
     }
 
-    if (!loggingEnabled) {
-      FRLogger.disableLogging();
+    // Resolve the log file location
+    if (fileLoggingLocation == null || fileLoggingLocation.isBlank()) {
+      fileLoggingLocation = resolveLogPath(null, userdataPath).toString();
     } else {
-      FRLogger.changeFileLogLevel(loggingLevel);
+      fileLoggingLocation = resolveLogPath(fileLoggingLocation, userdataPath).toString();
     }
+
+    // Set system properties for log4j2 ConfigurationFactory to read
+    // This MUST happen before any logging calls
+    System.setProperty("freerouting.log.console.enabled", String.valueOf(consoleLoggingEnabled));
+    System.setProperty("freerouting.log.console.level", consoleLoggingLevel);
+    System.setProperty("freerouting.log.file.enabled", String.valueOf(fileLoggingEnabled));
+    System.setProperty("freerouting.log.file.level", fileLoggingLevel);
+    System.setProperty("freerouting.log.file.location", fileLoggingLocation);
+
+    // NOW we can start logging - log4j2 will initialize with our configuration
+    FRLogger.traceEntry("MainApplication.main()");
 
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -417,7 +455,9 @@ public class Freerouting {
     // apply environment variables to the settings
     globalSettings.applyNonRouterEnvironmentVariables();
 
-    ApplyLoggingSettings(globalSettings);
+    // Note: Logging is already configured via system properties set earlier
+    // No need to call ApplyLoggingSettings() - it would cause runtime manipulation
+    // errors
 
     // if we don't have a GUI enabled then we must use the console as our output
     if ((!globalSettings.guiSettings.isEnabled) && (System.console() == null)) {

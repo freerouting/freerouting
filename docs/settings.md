@@ -14,9 +14,15 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     "email": "info@freerouting.app"
   },
   "logging": {
-    "enabled": true,
-    "level": "INFO",
-    "location": ""
+    "console": {
+      "enabled": true,
+      "level": "INFO"
+    },
+    "file": {
+      "enabled": true,
+      "level": "INFO",
+      "location": ""
+    }
   },
   "gui": {
     "enabled": true,
@@ -71,9 +77,13 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 
 #### **`logging` Section**
 
-- **`enabled`**: Enables or disables logging. Default is `true`.
-- **`level`**: Sets the log level (OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL). Default is `INFO`.
-- **`location`**: Directory path for the log file. If empty, defaults to the user data path.
+- **`console`**:
+    - **`enabled`**: Enables or disables console logging. Default is `true`.
+    - **`level`**: Sets the console log level (OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL). Default is `INFO`.
+- **`file`**:
+    - **`enabled`**: Enables or disables file logging. Default is `true`.
+    - **`level`**: Sets the file log level. Default is `INFO`.
+    - **`location`**: Directory path for the log file. If empty, defaults to the user data path.
 
 #### **`gui` Section**
 

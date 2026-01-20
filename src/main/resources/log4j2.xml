@@ -1,31 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This is a fallback configuration for log4j2.
+  The actual logging configuration is built programmatically by Log4j2ConfigurationFactory
+  based on system properties set in Freerouting.main() before logging initializes.
+  
+  This file is only used if the ConfigurationFactory fails to load.
+-->
 <Configuration status="WARN">
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-6level %msg%n"/>
     </Console>
-
-    <Console name="stderr" target="SYSTEM_ERR">
-      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-6level %msg%n"/>
-    </Console>
-
-    <File bufferSize="1" fileName="${filename}" name="File">
-      <PatternLayout>
-        <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-6level %msg%n</pattern>
-      </PatternLayout>
-    </File>
   </Appenders>
+  
   <Loggers>
-    <Root level="ALL">
-      <AppenderRef level="INFO" ref="Console"/>
-      <AppenderRef level="ERROR" ref="stderr"/>
-      <AppenderRef level="DEBUG" ref="File"/>
+    <Root level="INFO">
+      <AppenderRef ref="Console"/>
     </Root>
   </Loggers>
-
-  <Properties>
-    <Property name="filename">${sys:java.io.tmpdir}/freerouting/freerouting.log</Property>
-  </Properties>
-
-  <ThresholdFilter level="trace"/>
 </Configuration>
