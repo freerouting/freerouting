@@ -168,6 +168,7 @@ jar {
 }
 
 tasks.register('executableJar', Jar) {
+    archiveBaseName = 'freerouting-current'
     archiveClassifier = 'executable'
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -231,10 +232,109 @@ sourceSets.main.java.srcDirs += layout.buildDirectory.dir("generated-src")
 
 compileJava.dependsOn += 'writeVersionInfo'
 
+// ==================== V1.9 BUILD CONFIGURATION ====================
+
+// V1.9 Source Set
+sourceSets {
+    v19 {
+        java {
+            srcDirs = ['src_v19/main/java', layout.buildDirectory.dir("generated-src-v19")]
+        }
+        resources {
+            // Use v1.9 resources if they exist, otherwise fall back to current resources
+            srcDirs = fileTree('src_v19/main/resources').isEmpty() ? 
+                      ['src/main/resources'] : 
+                      ['src_v19/main/resources']
+        }
+        compileClasspath += sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
+}
+
+// V1.9 Version Info Generator
+tasks.register('writeVersionInfoV19') {
+    def outputDir = layout.buildDirectory.dir("generated-src-v19/app/freerouting/constants")
+    def versionId = "1.9.0"
+    def buildDateValue = buildDate
+    
+    outputs.dir(outputDir)
+    
+    doLast {
+        def buildInfoCode = outputDir.get().file("Constants.java").asFile
+        buildInfoCode.getParentFile().mkdirs()
+        buildInfoCode.write(
+                """
+            package app.freerouting.constants;
+            public final class Constants {
+              public static final String FREEROUTING_VERSION = \"${versionId}\";
+              public static final String FREEROUTING_BUILD_DATE = \"${buildDateValue}\";
+            }
+            """.stripIndent().trim()
+        )
+    }
+}
+
+compileV19Java.dependsOn 'writeVersionInfoV19'
+
+// V1.9 Executable JAR
+tasks.register('executableV19Jar', Jar) {
+    archiveBaseName = 'freerouting-1.9.0'
+    archiveClassifier = 'executable'
+    
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    
+    from {
+        configurations.runtimeClasspath.collect { zipTree(it) }
+    } {
+        exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+    }
+    
+    from files(sourceSets.v19.output)
+    
+    manifest {
+        attributes manifestAttributes + ['Main-Class': 'app.freerouting.gui.MainApplication']
+    }
+}
+
+executableV19Jar.dependsOn compileV19Java
+
+// Build both versions
+tasks.register('buildBothVersions') {
+    group = 'build'
+    description = 'Builds both current and v1.9 executable JARs'
+    dependsOn executableJar, executableV19Jar
+}
+
+// Run v1.9 version
+tasks.register('runV19', JavaExec) {
+    group = 'application'
+    description = 'Run v1.9 version'
+    classpath = sourceSets.v19.runtimeClasspath
+    mainClass = project.mainClassName
+}
+
+// ==================== END V1.9 CONFIGURATION ====================
+
 
 tasks.register('dist', Copy) {
     dependsOn assemble
-    from 'build/libs/freerouting-executable.jar'
+    from 'build/libs/freerouting-current-executable.jar'
+    into 'build/dist/'
+}
+
+tasks.register('distV19', Copy) {
+    group = 'distribution'
+    description = 'Copy v1.9 executable JAR to dist folder'
+    dependsOn executableV19Jar
+    from 'build/libs/freerouting-1.9.0-executable.jar'
+    into 'build/dist/'
+}
+
+tasks.register('distBoth', Copy) {
+    group = 'distribution'
+    description = 'Copy both current and v1.9 executable JARs to dist folder'
+    dependsOn executableJar, executableV19Jar
+    from 'build/libs/freerouting-current-executable.jar', 'build/libs/freerouting-1.9.0-executable.jar'
     into 'build/dist/'
 }
 
