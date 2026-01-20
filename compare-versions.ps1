@@ -8,7 +8,8 @@
 param(
     [string]$de = ".\tests\Issue508-DAC2020_bm01.dsn",
     [string]$do = ".\tests\Issue508-DAC2020_bm01.ses",
-    [string]$ll = "debug",
+    [string]$LoggingLocation = ".\logs\",
+    [string]$LoggingLevel = "DEBUG",
     [int]$max_passes = 5,
     [int]$max_threads = 1,
     [string]$job_timeout = "00:01:30"
@@ -55,14 +56,14 @@ New-Item -ItemType Directory -Force -Path $LogBaseDir | Out-Null
 Write-Host "`nConfiguration:" -ForegroundColor $InfoColor
 Write-Host "  Input File:  $de"         -ForegroundColor White
 Write-Host "  Output File: $do"         -ForegroundColor White
-Write-Host "  Log Level:   $ll"         -ForegroundColor White
+Write-Host "  Log Level:   $LoggingLevel" -ForegroundColor White
 Write-Host "  Max Passes:  $max_passes" -ForegroundColor White
 Write-Host "  Max Threads: $max_threads" -ForegroundColor White
 Write-Host "  Timeout:     $job_timeout" -ForegroundColor White
 
 # Log Files
-$CurrentLogFile = Join-Path $LogBaseDir "freerouting.log"
-$V19LogFile = Join-Path $LogBaseDir "freerouting-v19.log"
+$CurrentLogFile = Join-Path $LogBaseDir "freerouting-current.log"
+$V19LogFile = Join-Path $LogBaseDir "freerouting-v190.log"
 
 $BaseArgs = @(
     "-de", "`"$InputFileAbs`""
@@ -73,7 +74,9 @@ $BaseArgs = @(
     "--router.job_timeout=`"$job_timeout`""
     "--router.max_passes=$max_passes"
     "--router.max_threads=$max_threads"
-    "-ll", $ll
+    "--logging.file.location=$LoggingLocation"
+    "--logging.file.level=$LoggingLevel"
+    "--logging.console.level=INFO"
 )
 
 # Function to run version and capture results
@@ -84,14 +87,14 @@ function Invoke-Version {
         [string]$LogPath,
         [string]$Color
     )
-    
+
     Write-Host "`n--------------------------------------------------" -ForegroundColor $Color
     Write-Host "  Running $VersionName" -ForegroundColor $Color
     Write-Host "--------------------------------------------------" -ForegroundColor $Color
-    
+
     # Clean previous log if exists
     if (Test-Path $LogPath) { Remove-Item $LogPath -Force }
-    
+
     $DefaultLogName = "freerouting.log"
     $DefaultLogPath = Join-Path $LogBaseDir $DefaultLogName
 
@@ -99,32 +102,32 @@ function Invoke-Version {
     if (Test-Path $DefaultLogPath) { Remove-Item $DefaultLogPath -Force }
 
     $env:FREEROUTING_LOG_DIR = $LogBaseDir
-    
+
     # Construct flat argument list
     $ProcessArgs = @("-jar", $JarPath) + $BaseArgs
-    
+
     Write-Host "Command: java $ProcessArgs" -ForegroundColor Gray
     Write-Host "Log Target: $LogPath"       -ForegroundColor Gray
-    
+
     $StartTime = Get-Date
-    
+
     try {
         $Process = Start-Process -FilePath "java" `
             -ArgumentList $ProcessArgs `
             -Wait -PassThru -NoNewWindow
-        
+
         $EndTime = Get-Date
         $Duration = $EndTime - $StartTime
-        
+
         if ($Process.ExitCode -eq 0) {
             Write-Host "$VersionName completed successfully" -ForegroundColor $SuccessColor
         }
         else {
             Write-Host "✗ $VersionName exited with code $($Process.ExitCode)" -ForegroundColor $WarningColor
         }
-        
+
         Write-Host "  Duration: $($Duration.ToString('mm\:ss\.fff'))" -ForegroundColor White
-        
+
         # Rename the log file
         if (Test-Path $DefaultLogPath) {
             Move-Item -Path $DefaultLogPath -Destination $LogPath -Force
@@ -135,12 +138,12 @@ function Invoke-Version {
         else {
             Write-Host "  WARNING: Log file not found at $DefaultLogPath" -ForegroundColor $WarningColor
         }
-        
+
         return @{
             ExitCode = $Process.ExitCode
             Duration = $Duration
             LogFile  = $LogPath
-        }        
+        }
     }
     catch {
         Write-Host "✗ Error running $VersionName : $_" -ForegroundColor $ErrorColor
@@ -169,15 +172,15 @@ if ($CurrentResult -and $V19Result) {
     Write-Host "`nExecution Times:" -ForegroundColor White
     Write-Host "  Current: $($CurrentResult.Duration.ToString('mm\:ss\.fff'))" -ForegroundColor White
     Write-Host "  V1.9:    $($V19Result.Duration.ToString('mm\:ss\.fff'))"     -ForegroundColor White
-    
+
     $TimeDiff = $CurrentResult.Duration - $V19Result.Duration
     if ($TimeDiff.TotalMilliseconds -gt 0) {
-        Write-Host "  → V1.9 was $([math]::Abs($TimeDiff.TotalSeconds)) s faster" -ForegroundColor $SuccessColor
+        Write-Host "  V1.9 was $([math]::Abs($TimeDiff.TotalSeconds)) s faster" -ForegroundColor $SuccessColor
     }
     else {
-        Write-Host "  → Current was $([math]::Abs($TimeDiff.TotalSeconds)) s faster" -ForegroundColor $SuccessColor
+        Write-Host "  Current was $([math]::Abs($TimeDiff.TotalSeconds)) s faster" -ForegroundColor $SuccessColor
     }
-    
+
     Write-Host "`nCompare logs:" -ForegroundColor $InfoColor
     Write-Host "  code --diff `"$($CurrentResult.LogFile)`" `"$($V19Result.LogFile)`"" -ForegroundColor Yellow
 }
