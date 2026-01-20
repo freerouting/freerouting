@@ -4,7 +4,6 @@
 # Usage:
 #   .\compare-versions.ps1
 #   .\compare-versions.ps1 -de ".\tests\Issue508-DAC2020_bm01.dsn"
-#
 
 param(
     [string]$de = ".\tests\Issue508-DAC2020_bm01.dsn",
@@ -33,7 +32,7 @@ if (-not (Test-Path $de)) {
 
 # Get absolute paths
 $InputFileAbs = Resolve-Path $de
-$OutputFileAbs = $do 
+$OutputFileAbs = $do
 
 # JAR files
 $CurrentJar = ".\build\libs\freerouting-current-executable.jar"
@@ -54,9 +53,9 @@ $LogBaseDir = ".\logs"
 New-Item -ItemType Directory -Force -Path $LogBaseDir | Out-Null
 
 Write-Host "`nConfiguration:" -ForegroundColor $InfoColor
-Write-Host "  Input File:  $de" -ForegroundColor White
-Write-Host "  Output File: $do" -ForegroundColor White
-Write-Host "  Log Level:   $ll" -ForegroundColor White
+Write-Host "  Input File:  $de"         -ForegroundColor White
+Write-Host "  Output File: $do"         -ForegroundColor White
+Write-Host "  Log Level:   $ll"         -ForegroundColor White
 Write-Host "  Max Passes:  $max_passes" -ForegroundColor White
 Write-Host "  Max Threads: $max_threads" -ForegroundColor White
 Write-Host "  Timeout:     $job_timeout" -ForegroundColor White
@@ -78,7 +77,7 @@ $BaseArgs = @(
 )
 
 # Function to run version and capture results
-function Run-Version {
+function Invoke-Version {
     param(
         [string]$VersionName,
         [string]$JarPath,
@@ -91,22 +90,21 @@ function Run-Version {
     Write-Host "--------------------------------------------------" -ForegroundColor $Color
     
     # Clean previous log if exists
-    if (Test-Path $LogPath) { Remove-Item $LogPath }
+    if (Test-Path $LogPath) { Remove-Item $LogPath -Force }
     
-    $ProcessLogDir = $LogBaseDir 
     $DefaultLogName = "freerouting.log"
-    $DefaultLogPath = Join-Path $ProcessLogDir $DefaultLogName
-    
-    # Ensure fresh start
-    if (Test-Path $DefaultLogPath) { Remove-Item $DefaultLogPath }
+    $DefaultLogPath = Join-Path $LogBaseDir $DefaultLogName
 
-    $env:FREEROUTING_LOG_DIR = $ProcessLogDir
+    # Ensure fresh start
+    if (Test-Path $DefaultLogPath) { Remove-Item $DefaultLogPath -Force }
+
+    $env:FREEROUTING_LOG_DIR = $LogBaseDir
     
-    # Construct flat argument list properly
+    # Construct flat argument list
     $ProcessArgs = @("-jar", $JarPath) + $BaseArgs
     
     Write-Host "Command: java $ProcessArgs" -ForegroundColor Gray
-    Write-Host "Log Target: $LogPath" -ForegroundColor Gray
+    Write-Host "Log Target: $LogPath"       -ForegroundColor Gray
     
     $StartTime = Get-Date
     
@@ -119,7 +117,7 @@ function Run-Version {
         $Duration = $EndTime - $StartTime
         
         if ($Process.ExitCode -eq 0) {
-            Write-Host "✓ $VersionName completed successfully" -ForegroundColor $SuccessColor
+            Write-Host "$VersionName completed successfully" -ForegroundColor $SuccessColor
         }
         else {
             Write-Host "✗ $VersionName exited with code $($Process.ExitCode)" -ForegroundColor $WarningColor
@@ -127,11 +125,12 @@ function Run-Version {
         
         Write-Host "  Duration: $($Duration.ToString('mm\:ss\.fff'))" -ForegroundColor White
         
-        # Renaissance the log file
+        # Rename the log file
         if (Test-Path $DefaultLogPath) {
             Move-Item -Path $DefaultLogPath -Destination $LogPath -Force
             $LogSize = (Get-Item $LogPath).Length
-            Write-Host "  Log Saved: $LogPath ($([math]::Round($LogSize/1KB, 2)) KB)" -ForegroundColor White
+            $FormattedSize = [math]::Round($LogSize / 1KB, 2)
+            Write-Host "  Log Saved: $LogPath ($FormattedSize)" -ForegroundColor White
         }
         else {
             Write-Host "  WARNING: Log file not found at $DefaultLogPath" -ForegroundColor $WarningColor
@@ -141,22 +140,22 @@ function Run-Version {
             ExitCode = $Process.ExitCode
             Duration = $Duration
             LogFile  = $LogPath
-        }
+        }        
     }
     catch {
-        Write-Host "✗ Error running $VersionName`: $_" -ForegroundColor $ErrorColor
+        Write-Host "✗ Error running $VersionName : $_" -ForegroundColor $ErrorColor
         return $null
     }
 }
 
 # Run Current Version
-$CurrentResult = Run-Version -VersionName "Current Version" `
+$CurrentResult = Invoke-Version -VersionName "Current Version" `
     -JarPath $CurrentJar `
     -LogPath $CurrentLogFile `
     -Color $InfoColor
 
 # Run V1.9 Version
-$V19Result = Run-Version -VersionName "V1.9 Version" `
+$V19Result = Invoke-Version -VersionName "V1.9 Version" `
     -JarPath $V19Jar `
     -LogPath $V19LogFile `
     -Color $SuccessColor
@@ -169,14 +168,14 @@ Write-Host "==================================================" -ForegroundColor
 if ($CurrentResult -and $V19Result) {
     Write-Host "`nExecution Times:" -ForegroundColor White
     Write-Host "  Current: $($CurrentResult.Duration.ToString('mm\:ss\.fff'))" -ForegroundColor White
-    Write-Host "  V1.9:    $($V19Result.Duration.ToString('mm\:ss\.fff'))" -ForegroundColor White
+    Write-Host "  V1.9:    $($V19Result.Duration.ToString('mm\:ss\.fff'))"     -ForegroundColor White
     
     $TimeDiff = $CurrentResult.Duration - $V19Result.Duration
     if ($TimeDiff.TotalMilliseconds -gt 0) {
-        Write-Host "  → V1.9 was $([math]::Abs($TimeDiff.TotalSeconds)) seconds faster" -ForegroundColor $SuccessColor
+        Write-Host "  → V1.9 was $([math]::Abs($TimeDiff.TotalSeconds)) s faster" -ForegroundColor $SuccessColor
     }
     else {
-        Write-Host "  → Current was $([math]::Abs($TimeDiff.TotalSeconds)) seconds faster" -ForegroundColor $SuccessColor
+        Write-Host "  → Current was $([math]::Abs($TimeDiff.TotalSeconds)) s faster" -ForegroundColor $SuccessColor
     }
     
     Write-Host "`nCompare logs:" -ForegroundColor $InfoColor
