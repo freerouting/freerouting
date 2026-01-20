@@ -1,5 +1,7 @@
 package app.freerouting.logger;
 
+import java.io.File;
+import java.net.URI;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.ConsoleAppender;
@@ -13,17 +15,12 @@ import org.apache.logging.log4j.core.config.builder.api.RootLoggerComponentBuild
 import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 
-import java.io.File;
-import java.net.URI;
-
 /**
  * Custom Log4j2 ConfigurationFactory that programmatically builds the logging
- * configuration
- * based on system properties set early in the application startup.
- * 
+ * configuration based on system properties set early in the application startup.
+ *
  * This eliminates the need for runtime configuration manipulation which causes
- * threading
- * issues and exceptions.
+ * threading issues and exceptions.
  */
 @Plugin(name = "FreeroutingConfigurationFactory", category = ConfigurationFactory.CATEGORY)
 @Order(50)
@@ -46,16 +43,16 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
         ConfigurationBuilder<BuiltConfiguration> builder = newConfigurationBuilder();
 
         // Read configuration from system properties
-        boolean consoleEnabled = getBooleanProperty("freerouting.log.console.enabled", true);
-        String consoleLevel = getProperty("freerouting.log.console.level", "INFO");
+        boolean consoleEnabled = getBooleanProperty("freerouting.logging.console.enabled", true);
+        String consoleLevel = getProperty("freerouting.logging.console.level", "INFO");
 
-        boolean fileEnabled = getBooleanProperty("freerouting.log.file.enabled", true);
-        String fileLevel = getProperty("freerouting.log.file.level", "DEBUG");
-        String fileLocation = getProperty("freerouting.log.file.location", null);
+        boolean fileEnabled = getBooleanProperty("freerouting.logging.file.enabled", true);
+        String fileLevel = getProperty("freerouting.logging.file.level", "DEBUG");
+        String fileLocation = getProperty("freerouting.logging.file.location", null);
 
         // Set configuration name and status
         builder.setConfigurationName("FreeroutingConfiguration");
-        builder.setStatusLevel(Level.WARN);
+        builder.setStatusLevel(Level.TRACE);
 
         // Create Console appender if enabled
         if (consoleEnabled) {

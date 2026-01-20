@@ -29,11 +29,11 @@ class Log4j2ConfigurationFactoryTest {
     }
 
     private void clearSystemProperties() {
-        System.clearProperty("freerouting.log.console.enabled");
-        System.clearProperty("freerouting.log.console.level");
-        System.clearProperty("freerouting.log.file.enabled");
-        System.clearProperty("freerouting.log.file.level");
-        System.clearProperty("freerouting.log.file.location");
+        System.clearProperty("freerouting.logging.console.enabled");
+        System.clearProperty("freerouting.logging.console.level");
+        System.clearProperty("freerouting.logging.file.enabled");
+        System.clearProperty("freerouting.logging.file.level");
+        System.clearProperty("freerouting.logging.file.location");
     }
 
     @Test
@@ -70,10 +70,10 @@ class Log4j2ConfigurationFactoryTest {
         String logFile = tempDir + "/freerouting_test_" + System.currentTimeMillis() + ".log";
 
         try {
-            System.setProperty("freerouting.log.console.enabled", "false");
-            System.setProperty("freerouting.log.file.enabled", "true");
-            System.setProperty("freerouting.log.file.level", "TRACE");
-            System.setProperty("freerouting.log.file.location", logFile);
+            System.setProperty("freerouting.logging.console.enabled", "false");
+            System.setProperty("freerouting.logging.file.enabled", "true");
+            System.setProperty("freerouting.logging.file.level", "TRACE");
+            System.setProperty("freerouting.logging.file.location", logFile);
 
             Configuration config = factory.getConfiguration(null, "TestConfig", URI.create("test"));
 
@@ -104,9 +104,9 @@ class Log4j2ConfigurationFactoryTest {
 
     @Test
     void testConsoleOnlyConfiguration() {
-        System.setProperty("freerouting.log.console.enabled", "true");
-        System.setProperty("freerouting.log.console.level", "WARN");
-        System.setProperty("freerouting.log.file.enabled", "false");
+        System.setProperty("freerouting.logging.console.enabled", "true");
+        System.setProperty("freerouting.logging.console.level", "WARN");
+        System.setProperty("freerouting.logging.file.enabled", "false");
 
         Configuration config = factory.getConfiguration(null, "TestConfig", URI.create("test"));
 

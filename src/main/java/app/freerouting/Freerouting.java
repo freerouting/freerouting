@@ -28,6 +28,8 @@ import java.util.Locale;
 import java.util.UUID;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.eclipse.jetty.server.Server;
@@ -409,11 +411,18 @@ public class Freerouting {
 
     // Set system properties for log4j2 ConfigurationFactory to read
     // This MUST happen before any logging calls
-    System.setProperty("freerouting.log.console.enabled", String.valueOf(consoleLoggingEnabled));
-    System.setProperty("freerouting.log.console.level", consoleLoggingLevel);
-    System.setProperty("freerouting.log.file.enabled", String.valueOf(fileLoggingEnabled));
-    System.setProperty("freerouting.log.file.level", fileLoggingLevel);
-    System.setProperty("freerouting.log.file.location", fileLoggingLocation);
+    System.setProperty("log4j2.configurationFactory", "app.freerouting.logger.Log4j2ConfigurationFactory");
+    System.setProperty("freerouting.logging.console.enabled", String.valueOf(consoleLoggingEnabled));
+    System.setProperty("freerouting.logging.console.level", consoleLoggingLevel);
+    System.setProperty("freerouting.logging.file.enabled", String.valueOf(fileLoggingEnabled));
+    System.setProperty("freerouting.logging.file.level", fileLoggingLevel);
+    System.setProperty("freerouting.logging.file.location", fileLoggingLocation);
+
+    // FORCE RECONFIGURATION
+    // Log4j2 might have initialized early (before we set these properties).
+    // We force it to reload the configuration using our Factory, which will now see
+    // the correct properties.
+    ((LoggerContext) LogManager.getContext(false)).reconfigure();
 
     // NOW we can start logging - log4j2 will initialize with our configuration
     FRLogger.traceEntry("MainApplication.main()");
