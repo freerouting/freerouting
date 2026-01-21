@@ -14,9 +14,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * An expansion room, whose shape is completely calculated, so that it can be stored in a shape tree.
+ * An expansion room, whose shape is completely calculated, so that it can be
+ * stored in a shape tree.
  */
-public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom implements CompleteExpansionRoom, SearchTreeObject {
+public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
+    implements CompleteExpansionRoom, SearchTreeObject {
 
   // ** identification number for implementing the Comparable interface */
   private final int id_no;
@@ -95,7 +97,8 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
   }
 
   /**
-   * Returns, if the room overlaps with net dependent objects. In this case it cannot be retained, when the net number changes in autorouting.
+   * Returns, if the room overlaps with net dependent objects. In this case it
+   * cannot be retained, when the net number changes in autorouting.
    */
   public boolean is_net_dependent() {
     return this.room_is_net_dependent;
@@ -133,17 +136,21 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
   }
 
   /**
-   * Calculates the doors to the start and destination items of the autoroute algorithm.
+   * Calculates the doors to the start and destination items of the autoroute
+   * algorithm.
    */
-  public void calculate_target_doors(ShapeTree.TreeEntry p_own_net_object, int p_net_no, ShapeSearchTree p_autoroute_search_tree) {
+  public void calculate_target_doors(ShapeTree.TreeEntry p_own_net_object, int p_net_no,
+      ShapeSearchTree p_autoroute_search_tree) {
     this.set_net_dependent();
 
     if (p_own_net_object.object instanceof Connectable curr_object) {
       if (curr_object.contains_net(p_net_no)) {
-        TileShape curr_connection_shape = curr_object.get_trace_connection_shape(p_autoroute_search_tree, p_own_net_object.shape_index_in_object);
+        TileShape curr_connection_shape = curr_object.get_trace_connection_shape(p_autoroute_search_tree,
+            p_own_net_object.shape_index_in_object);
         if (curr_connection_shape != null && this.get_shape().intersects(curr_connection_shape)) {
           Item curr_item = (Item) curr_object;
-          TargetItemExpansionDoor new_target_door = new TargetItemExpansionDoor(curr_item, p_own_net_object.shape_index_in_object, this, p_autoroute_search_tree);
+          TargetItemExpansionDoor new_target_door = new TargetItemExpansionDoor(curr_item,
+              p_own_net_object.shape_index_in_object, this, p_autoroute_search_tree);
           this.add_target_door(new_target_door);
         }
       }
@@ -169,7 +176,8 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<>();
     int[] net_no_arr = new int[1];
     net_no_arr[0] = p_autoroute_engine.get_net_no();
-    p_autoroute_engine.autoroute_search_tree.overlapping_tree_entries(this.get_shape(), this.get_layer(), net_no_arr, overlapping_objects);
+    p_autoroute_engine.autoroute_search_tree.overlapping_tree_entries(this.get_shape(), this.get_layer(), net_no_arr,
+        overlapping_objects);
     for (ShapeTree.TreeEntry curr_entry : overlapping_objects) {
       if (curr_entry.object == this) {
         continue;
@@ -181,7 +189,8 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
       if (curr_object.shape_layer(curr_entry.shape_index_in_object) != get_layer()) {
         continue;
       }
-      TileShape curr_shape = curr_object.get_tree_shape(p_autoroute_engine.autoroute_search_tree, curr_entry.shape_index_in_object);
+      TileShape curr_shape = curr_object.get_tree_shape(p_autoroute_engine.autoroute_search_tree,
+          curr_entry.shape_index_in_object);
       TileShape intersection = this.get_shape().intersection(curr_shape);
       if (intersection.dimension() > 1) {
         FRLogger.warn("ExpansionRoom overlap conflict");
@@ -206,5 +215,11 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     for (ExpandableObject curr_door : this.target_doors) {
       curr_door.reset();
     }
+  }
+
+  @Override
+  public String toString() {
+    return String.format("CompleteFreeSpaceExpansionRoom(id=%d, layer=%d, netDependent=%b, doors=%d, target_doors=%d)",
+        id_no, get_layer(), room_is_net_dependent, get_doors().size(), target_doors.size());
   }
 }

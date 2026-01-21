@@ -548,11 +548,14 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public Collection<IncompleteFreeSpaceExpansionRoom> complete_shape(IncompleteFreeSpaceExpansionRoom p_room,
       int p_net_no, SearchTreeObject p_ignore_object, TileShape p_ignore_shape) {
+
+    FRLogger.debug("ShapeSearchTree.complete_shape entered");
     if (p_room.get_contained_shape() == null) {
       FRLogger.warn("ShapeSearchTree.complete_shape: p_shape_to_be_contained != null expected");
       return new ArrayList<>();
     }
     if (this.root == null) {
+      FRLogger.debug("ShapeSearchTree.complete_shape: root is null");
       return new ArrayList<>();
     }
     TileShape start_shape = board.get_bounding_box();
@@ -565,6 +568,8 @@ public class ShapeSearchTree extends MinAreaTree {
       IncompleteFreeSpaceExpansionRoom new_room = new IncompleteFreeSpaceExpansionRoom(start_shape, p_room.get_layer(),
           p_room.get_contained_shape());
       result.add(new_room);
+    } else {
+      FRLogger.debug("ShapeSearchTree.complete_shape: start_shape dimension < 2: " + start_shape.dimension());
     }
     this.node_stack.reset();
     this.node_stack.push(this.root);
@@ -782,6 +787,11 @@ public class ShapeSearchTree extends MinAreaTree {
       if (cut_line == null) {
         // cut line not found, parts or the whole of p_shape may be already
         // occupied from somewhere else.
+        // DEBUG: Log if cut line failure
+        String algo = (p_obstacle_shape instanceof IntOctagon) ? "IntOctagon" : "Simplex";
+        FRLogger.debug("ShapeSearchTree.restrain_shape: No cut line found using " + algo +
+            " algo. Obstacle: " + p_obstacle_shape.toString() +
+            ", Room: " + room_shape.toString());
         return result;
       }
       // Calculate the new shape to be contained in the result shape.
@@ -810,6 +820,9 @@ public class ShapeSearchTree extends MinAreaTree {
             rest_shape_to_be_contained);
         result.addAll(restrain_shape(rest_incomplete_room, p_obstacle_shape));
       }
+    }
+    if (result.isEmpty()) {
+      return result;
     }
     return result;
   }

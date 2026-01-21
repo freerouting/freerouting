@@ -403,7 +403,8 @@ public class AutorouteEngine {
       if (completed_shapes.isEmpty()) {
         FRLogger.debug("AutorouteEngine.complete_expansion_room: No shapes returned for net #" + this.net_no +
             " on layer " + p_room.get_layer() +
-            ", initial shape: " + (p_room.get_shape() != null ? "bounded" : "unbounded") +
+            ", initial shape: "
+            + (p_room.get_shape() != null ? p_room.get_shape().getClass().getSimpleName() : "unbounded") +
             ", contained shape: " + (p_room.get_contained_shape() != null ? "present" : "null"));
       }
 

@@ -40,7 +40,9 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
       FRLogger.warn("BoxShapeSearchTree.complete_shape: unexpected p_shape_to_be_contained");
       return new ArrayList<>();
     }
+    FRLogger.debug("ShapeSearchTree90Degree.complete_shape entered");
     if (this.root == null) {
+      FRLogger.debug("ShapeSearchTree90Degree.complete_shape: root is null");
       return new ArrayList<>();
     }
     IntBox start_shape = board.get_bounding_box();
@@ -85,12 +87,24 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
                     continue;
                   }
                 }
-                Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
-                    curr_object_shape);
-                new_result.addAll(new_restrained_shapes);
 
-                for (IncompleteFreeSpaceExpansionRoom tmp_shape : new_restrained_shapes) {
-                  new_bounding_shape = new_bounding_shape.union(tmp_shape.get_shape().bounding_box());
+                // FEATURE: Shove-aware room completion
+                boolean is_shoveable = false;
+                if (curr_object instanceof Item item) {
+                  is_shoveable = item.is_routable() && !item.is_user_fixed();
+                }
+
+                if (is_shoveable) {
+                  new_result.add(curr_room);
+                  new_bounding_shape = new_bounding_shape.union(curr_shape.bounding_box());
+                } else {
+                  Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
+                      curr_object_shape);
+                  new_result.addAll(new_restrained_shapes);
+
+                  for (IncompleteFreeSpaceExpansionRoom tmp_shape : new_restrained_shapes) {
+                    new_bounding_shape = new_bounding_shape.union(tmp_shape.get_shape().bounding_box());
+                  }
                 }
               } else {
                 new_result.add(curr_room);
