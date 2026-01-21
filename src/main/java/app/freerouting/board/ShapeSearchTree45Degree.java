@@ -181,36 +181,17 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                   }
                 }
 
-                // FEATURE: Shove-aware room completion
-                boolean is_shoveable = false;
-                if (curr_object instanceof Item item) {
-                  is_shoveable = item.is_routable() && !item.is_user_fixed();
-                  if (!is_shoveable && item.is_routable()) {
-                    // Log why a routable item is not shoveable (likely fixed)
-                    FRLogger.debug("Obstacle is fixed routable: " + item.toString());
-                  }
-                } else if (curr_object instanceof CompleteFreeSpaceExpansionRoom) {
-                  // Expansion rooms are not shoveable
-                } else {
-                  FRLogger.debug("Obstacle is NOT an Item: " + curr_object.getClass().getName());
+                Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
+                    curr_object_shape);
+                if (new_restrained_shapes.isEmpty()) {
+                  FRLogger.debug("Restrain returned empty for obstacle: " + curr_object.toString());
                 }
+                new_result.addAll(new_restrained_shapes);
 
-                if (is_shoveable) {
-                  new_result.add(curr_room);
-                  new_bounding_shape = new_bounding_shape.union(curr_shape.bounding_box());
-                } else {
-                  Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
-                      curr_object_shape);
-                  if (new_restrained_shapes.isEmpty()) {
-                    FRLogger.debug("Restrain returned empty for obstacle: " + curr_object.toString());
-                  }
-                  new_result.addAll(new_restrained_shapes);
-
-                  for (IncompleteFreeSpaceExpansionRoom tmp_shape : new_restrained_shapes) {
-                    new_bounding_shape = new_bounding_shape.union(tmp_shape
-                        .get_shape()
-                        .bounding_box());
-                  }
+                for (IncompleteFreeSpaceExpansionRoom tmp_shape : new_restrained_shapes) {
+                  new_bounding_shape = new_bounding_shape.union(tmp_shape
+                      .get_shape()
+                      .bounding_box());
                 }
               } else {
                 new_result.add(curr_room);
