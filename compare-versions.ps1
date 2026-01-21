@@ -86,6 +86,48 @@ $BaseArgs = @(
     "--logging.console.level=INFO"
 )
 
+# Function to parse log results
+function Parse-LogResults {
+    param (
+        [string]$LogPath
+    )
+    
+    $Result = @{
+        AutoRouterTime = "N/A"
+        Unrouted       = "0"
+        PeakHeap       = "N/A"
+        FoundSummary   = $false
+    }
+    
+    if (Test-Path $LogPath) {
+        $Content = Get-Content $LogPath
+        # Look for the session summary line
+        # Pattern: Auto-router session.*completed.*
+        $SummaryLine = $Content | Where-Object { $_ -match "Auto-router session.*completed" } | Select-Object -Last 1
+        
+        if ($SummaryLine) {
+            $Result.FoundSummary = $true
+            
+            # Extract Duration: completed in (.*?), final score
+            if ($SummaryLine -match "completed in (.*?), final score") {
+                $Result.AutoRouterTime = $matches[1]
+            }
+            
+            # Extract Unrouted: (\d+) unrouted
+            if ($SummaryLine -match "\((\d+) unrouted\)") {
+                $Result.Unrouted = $matches[1]
+            }
+            
+            # Extract Peak Heap: and (.*?) MB peak heap usage
+            if ($SummaryLine -match "and (.*?) MB peak heap usage") {
+                $Result.PeakHeap = $matches[1]
+            }
+        }
+    }
+    
+    return $Result
+}
+
 # Function to run version and capture results
 function Invoke-Version {
     param(
@@ -138,11 +180,16 @@ function Invoke-Version {
         else {
             Write-Host "  WARNING: Log file not found at $LogPath" -ForegroundColor $WarningColor
         }
+        
+        $LogResults = Parse-LogResults -LogPath $LogPath
 
         return @{
-            ExitCode = $Process.ExitCode
-            Duration = $Duration
-            LogFile  = $LogPath
+            ExitCode       = $Process.ExitCode
+            Duration       = $Duration
+            LogFile        = $LogPath
+            AutoRouterTime = $LogResults.AutoRouterTime
+            Unrouted       = $LogResults.Unrouted
+            PeakHeap       = $LogResults.PeakHeap
         }
     }
     catch {
@@ -169,17 +216,25 @@ Write-Host "  Comparison Summary" -ForegroundColor $InfoColor
 Write-Host "==================================================" -ForegroundColor $InfoColor
 
 if ($CurrentResult -and $V19Result) {
-    Write-Host "`nExecution Times:" -ForegroundColor White
-    Write-Host "  Current: $($CurrentResult.Duration.ToString('mm\:ss\.fff'))" -ForegroundColor White
-    Write-Host "  V1.9:    $($V19Result.Duration.ToString('mm\:ss\.fff'))"     -ForegroundColor White
-
-    $TimeDiff = $CurrentResult.Duration - $V19Result.Duration
-    if ($TimeDiff.TotalMilliseconds -gt 0) {
-        Write-Host "  V1.9 was $([math]::Abs($TimeDiff.TotalSeconds)) s faster" -ForegroundColor $SuccessColor
-    }
-    else {
-        Write-Host "  Current was $([math]::Abs($TimeDiff.TotalSeconds)) s faster" -ForegroundColor $SuccessColor
-    }
+    Write-Host ("`n{0,-20} {1,-20} {2,-20}" -f "Metric", "Current", "V1.9") -ForegroundColor Cyan
+    Write-Host ("{0,-20} {1,-20} {2,-20}" -f "------", "-------", "----") -ForegroundColor Cyan
+    
+    # Auto-Router Time
+    Write-Host ("{0,-20} {1,-20} {2,-20}" -f "Router Time", $CurrentResult.AutoRouterTime, $V19Result.AutoRouterTime) -ForegroundColor White
+    
+    # Process Duration
+    Write-Host ("{0,-20} {1,-20} {2,-20}" -f "Process Time", $CurrentResult.Duration.ToString('mm\:ss\.fff'), $V19Result.Duration.ToString('mm\:ss\.fff')) -ForegroundColor Gray
+    
+    # Unrouted
+    $ColorCurrent = if ($CurrentResult.Unrouted -eq "0") { $SuccessColor } else { $WarningColor }
+    $ColorV19 = if ($V19Result.Unrouted -eq "0") { $SuccessColor } else { $WarningColor }
+    
+    Write-Host "Unrouted Items       " -NoNewline -ForegroundColor White
+    Write-Host ("{0,-21}" -f $CurrentResult.Unrouted) -NoNewline -ForegroundColor $ColorCurrent
+    Write-Host ("{0,-21}" -f $V19Result.Unrouted) -ForegroundColor $ColorV19
+    
+    # Peak Heap
+    Write-Host ("{0,-20} {1,-20} {2,-20}" -f "Peak Heap (MB)", $CurrentResult.PeakHeap, $V19Result.PeakHeap) -ForegroundColor White
 
     Write-Host "`nCompare logs:" -ForegroundColor $InfoColor
     Write-Host "  code --diff `"$($CurrentResult.LogFile)`" `"$($V19Result.LogFile)`"" -ForegroundColor Yellow
