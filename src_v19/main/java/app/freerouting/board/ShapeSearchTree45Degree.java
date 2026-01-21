@@ -159,8 +159,20 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                     continue;
                   }
                 }
+                if (curr_object.toString().contains("id=56")) {
+                  FRLogger.debug("Restrain called for Obstacle 56.");
+                  FRLogger.debug("Room: " + curr_room.get_shape().bounding_octagon().toString());
+                  FRLogger.debug("Contained: " + curr_room.get_contained_shape().bounding_octagon().toString());
+                  FRLogger.debug("Obstacle: " + curr_object_shape.toString());
+                }
                 Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
                     curr_object_shape);
+                if (curr_object.toString().contains("id=56")) {
+                  FRLogger.debug("Restrain Result Count: " + new_restrained_shapes.size());
+                  for (IncompleteFreeSpaceExpansionRoom r : new_restrained_shapes) {
+                    FRLogger.debug("Res Room: " + r.get_shape().toString());
+                  }
+                }
                 if (new_restrained_shapes.isEmpty()) {
                   FRLogger.debug("Restrain returned empty for obstacle: " + curr_object.toString());
                 }

@@ -5,21 +5,21 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 
 /**
- * Implements functionality for convex shapes, whose borderline directions are multiples of 45
+ * Implements functionality for convex shapes, whose borderline directions are
+ * multiples of 45
  * degree and defined with integer coordinates.
  */
 public class IntOctagon extends RegularTileShape implements Serializable {
   /** Reusable instance of an empty octagon. */
-  public static final IntOctagon EMPTY =
-      new IntOctagon(
-          Limits.CRIT_INT,
-          Limits.CRIT_INT,
-          -Limits.CRIT_INT,
-          -Limits.CRIT_INT,
-          Limits.CRIT_INT,
-          -Limits.CRIT_INT,
-          Limits.CRIT_INT,
-          -Limits.CRIT_INT);
+  public static final IntOctagon EMPTY = new IntOctagon(
+      Limits.CRIT_INT,
+      Limits.CRIT_INT,
+      -Limits.CRIT_INT,
+      -Limits.CRIT_INT,
+      Limits.CRIT_INT,
+      -Limits.CRIT_INT,
+      Limits.CRIT_INT,
+      -Limits.CRIT_INT);
   /** x coordinate of the left border line */
   public final int lx;
   /** y coordinate of the lower border line */
@@ -40,12 +40,18 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   private Simplex precalculated_to_simplex;
 
   /**
-   * Creates an IntOctagon from 8 integer values. p_lx is the smallest x value of the shape. p_ly is
-   * the smallest y value of the shape. p_rx is the biggest x value af the shape. p_uy is the
-   * biggest y value of the shape. p_ulx is the intersection of the upper left diagonal boundary
-   * line with the x axis. p_lrx is the intersection of the lower right diagonal boundary line with
-   * the x axis. p_llx is the intersection of the lower left diagonal boundary line with the x axis.
-   * p_urx is the intersection of the upper right diagonal boundary line with the x axis.
+   * Creates an IntOctagon from 8 integer values. p_lx is the smallest x value of
+   * the shape. p_ly is
+   * the smallest y value of the shape. p_rx is the biggest x value af the shape.
+   * p_uy is the
+   * biggest y value of the shape. p_ulx is the intersection of the upper left
+   * diagonal boundary
+   * line with the x axis. p_lrx is the intersection of the lower right diagonal
+   * boundary line with
+   * the x axis. p_llx is the intersection of the lower left diagonal boundary
+   * line with the x axis.
+   * p_urx is the intersection of the upper right diagonal boundary line with the
+   * x axis.
    */
   public IntOctagon(
       int p_lx, int p_ly, int p_rx, int p_uy, int p_ulx, int p_lrx, int p_llx, int p_urx) {
@@ -150,40 +156,42 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         y = llx - lx;
       }
       default ->
-          throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
+        throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
     }
     return new IntPoint(x, y);
   }
 
   /**
-   * Additional to the function corner() for performance reasons to avoid allocation of an IntPoint.
+   * Additional to the function corner() for performance reasons to avoid
+   * allocation of an IntPoint.
    */
   public int corner_y(int p_no) {
     return switch (p_no) {
       case 0, 1 -> ly;
-      case 2    -> rx - lrx;
-      case 3    -> urx - rx;
+      case 2 -> rx - lrx;
+      case 3 -> urx - rx;
       case 4, 5 -> uy;
-      case 6    -> lx - ulx;
-      case 7    -> llx - lx;
+      case 6 -> lx - ulx;
+      case 7 -> llx - lx;
       default ->
-          throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
+        throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
     };
   }
 
   /**
-   * Additional to the function corner() for performance reasons to avoid allocation of an IntPoint.
+   * Additional to the function corner() for performance reasons to avoid
+   * allocation of an IntPoint.
    */
   public int corner_x(int p_no) {
     return switch (p_no) {
-      case 0    -> llx - ly;
-      case 1    -> lrx + ly;
+      case 0 -> llx - ly;
+      case 1 -> lrx + ly;
       case 2, 3 -> rx;
-      case 4    -> urx - uy;
-      case 5    -> ulx + uy;
+      case 4 -> urx - uy;
+      case 5 -> ulx + uy;
       case 6, 7 -> lx;
       default ->
-          throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
+        throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
     };
   }
 
@@ -276,7 +284,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         b_y = -1;
       }
       default ->
-          throw new IllegalArgumentException("IntOctagon.edge_line: p_no out of range");
+        throw new IllegalArgumentException("IntOctagon.edge_line: p_no out of range");
     }
     return new Line(a_x, a_y, b_x, b_y);
   }
@@ -323,16 +331,15 @@ public class IntOctagon extends RegularTileShape implements Serializable {
       return this;
     }
     int dia_width = (int) Math.round(Limits.sqrt2 * p_distance);
-    IntOctagon result =
-        new IntOctagon(
-            lx - width,
-            ly - width,
-            rx + width,
-            uy + width,
-            ulx - dia_width,
-            lrx + dia_width,
-            llx - dia_width,
-            urx + dia_width);
+    IntOctagon result = new IntOctagon(
+        lx - width,
+        ly - width,
+        rx + width,
+        uy + width,
+        ulx - dia_width,
+        lrx + dia_width,
+        llx - dia_width,
+        urx + dia_width);
     return result.normalize();
   }
 
@@ -477,7 +484,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
     if (new_uy > diag_upper_y)
     // the intersection of the upper right and the upper left border
-    // line is below new_uy.  Adjust new_uy to diag_upper_y.
+    // line is below new_uy. Adjust new_uy to diag_upper_y.
     {
       new_uy = diag_upper_y;
     }
@@ -486,7 +493,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
     if (new_ly < diag_lower_y)
     // the intersection of the lower right and the lower left border
-    // line is above new_ly.  Adjust new_ly to diag_lower_y.
+    // line is above new_ly. Adjust new_ly to diag_lower_y.
     {
       new_ly = diag_lower_y;
     }
@@ -495,7 +502,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
     if (new_rx > diag_right_x)
     // the intersection of the upper right and the lower right border
-    // line is to the left of  right x.  Adjust new_rx to diag_right_x.
+    // line is to the left of right x. Adjust new_rx to diag_right_x.
     {
       new_rx = diag_right_x;
     }
@@ -504,7 +511,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
     if (new_lx < diag_left_x)
     // the intersection of the lower left and the upper left border
-    // line is to the right of left x.  Ajust new_lx to diag_left_x.
+    // line is to the right of left x. Ajust new_lx to diag_left_x.
     {
       new_lx = diag_left_x;
     }
@@ -518,13 +525,13 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   public boolean is_normalized() {
     IntOctagon on = this.normalize();
     return lx == on.lx
-            && ly == on.ly
-            && rx == on.rx
-            && uy == on.uy
-            && llx == on.llx
-            && lrx == on.lrx
-            && ulx == on.ulx
-            && urx == on.urx;
+        && ly == on.ly
+        && rx == on.rx
+        && uy == on.uy
+        && llx == on.llx
+        && lrx == on.lrx
+        && ulx == on.ulx
+        && urx == on.urx;
   }
 
   @Override
@@ -554,7 +561,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns true, if p_point is contained in this octagon. Because of the parameter type
+   * Returns true, if p_point is contained in this octagon. Because of the
+   * parameter type
    * FloatPoint, the function may not be exact close to the border.
    */
   @Override
@@ -568,7 +576,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Calculates the side of the point (p_x, p_y) of the border line with index p_border_line_no. The
+   * Calculates the side of the point (p_x, p_y) of the border line with index
+   * p_border_line_no. The
    * border lines are located in counterclock sense around this octagon.
    */
   public Side side_of_border_line(int p_x, int p_y, int p_border_line_no) {
@@ -605,16 +614,15 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
   @Override
   public IntOctagon intersection(IntOctagon p_other) {
-    IntOctagon result =
-        new IntOctagon(
-            Math.max(lx, p_other.lx),
-            Math.max(ly, p_other.ly),
-            Math.min(rx, p_other.rx),
-            Math.min(uy, p_other.uy),
-            Math.max(ulx, p_other.ulx),
-            Math.min(lrx, p_other.lrx),
-            Math.max(llx, p_other.llx),
-            Math.min(urx, p_other.urx));
+    IntOctagon result = new IntOctagon(
+        Math.max(lx, p_other.lx),
+        Math.max(ly, p_other.ly),
+        Math.min(rx, p_other.rx),
+        Math.min(uy, p_other.uy),
+        Math.max(ulx, p_other.ulx),
+        Math.min(lrx, p_other.lrx),
+        Math.max(llx, p_other.llx),
+        Math.min(urx, p_other.urx));
     return result.normalize();
   }
 
@@ -632,26 +640,26 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   @Override
   public boolean is_contained_in(IntOctagon p_other) {
     return lx >= p_other.lx
-            && ly >= p_other.ly
-            && rx <= p_other.rx
-            && uy <= p_other.uy
-            && llx >= p_other.llx
-            && ulx >= p_other.ulx
-            && lrx <= p_other.lrx
-            && urx <= p_other.urx;
+        && ly >= p_other.ly
+        && rx <= p_other.rx
+        && uy <= p_other.uy
+        && llx >= p_other.llx
+        && ulx >= p_other.ulx
+        && lrx <= p_other.lrx
+        && urx <= p_other.urx;
   }
 
   @Override
   public IntOctagon union(IntOctagon p_other) {
     return new IntOctagon(
-            Math.min(lx, p_other.lx),
-            Math.min(ly, p_other.ly),
-            Math.max(rx, p_other.rx),
-            Math.max(uy, p_other.uy),
-            Math.min(ulx, p_other.ulx),
-            Math.max(lrx, p_other.lrx),
-            Math.min(llx, p_other.llx),
-            Math.max(urx, p_other.urx));
+        Math.min(lx, p_other.lx),
+        Math.min(ly, p_other.ly),
+        Math.max(rx, p_other.rx),
+        Math.max(uy, p_other.uy),
+        Math.min(ulx, p_other.ulx),
+        Math.max(lrx, p_other.lrx),
+        Math.min(llx, p_other.llx),
+        Math.max(urx, p_other.urx));
   }
 
   @Override
@@ -694,7 +702,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns true, if this octagon intersects with p_other and the intersection is 2-dimensional.
+   * Returns true, if this octagon intersects with p_other and the intersection is
+   * 2-dimensional.
    */
   public boolean overlaps(IntOctagon p_other) {
     int is_lx;
@@ -858,7 +867,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         }
       }
       default ->
-          throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
+        throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
     }
     return result;
   }
@@ -875,8 +884,10 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Calculates the border point of this octagon from p_point into the 45 degree direction p_dir. If
-   * this border point is not an IntPoint, the nearest outside IntPoint of the octagon is returned.
+   * Calculates the border point of this octagon from p_point into the 45 degree
+   * direction p_dir. If
+   * this border point is not an IntPoint, the nearest outside IntPoint of the
+   * octagon is returned.
    */
   public IntPoint border_point(IntPoint p_point, FortyfiveDegreeDirection p_dir) {
     int result_x;
@@ -936,8 +947,10 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Calculates the sorted p_max_result_points nearest points on the border of this octagon in the
-   * 45-degree directions. p_point is assumed to be located in the interior of this octagon.
+   * Calculates the sorted p_max_result_points nearest points on the border of
+   * this octagon in the
+   * 45-degree directions. p_point is assumed to be located in the interior of
+   * this octagon.
    */
   public IntPoint[] nearest_border_projections(IntPoint p_point, int p_max_result_points) {
     if (!this.contains(p_point) || p_max_result_points <= 0) {
@@ -1068,9 +1081,12 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   /** Checks, if this octagon can be converted to an IntBox. */
   @Override
   public boolean is_IntBox() {
-    if (llx != lx + ly) return false;
-    if (lrx != rx - ly) return false;
-    if (urx != rx + uy) return false;
+    if (llx != lx + ly)
+      return false;
+    if (lrx != rx - ly)
+      return false;
+    if (urx != rx + uy)
+      return false;
     return ulx == lx - uy;
   }
 
@@ -1087,7 +1103,10 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     return p_shape.cutout_from(this);
   }
 
-  /** Divide p_d minus this octagon into 8 convex pieces, from which 4 have cut off a corner. */
+  /**
+   * Divide p_d minus this octagon into 8 convex pieces, from which 4 have cut off
+   * a corner.
+   */
   @Override
   IntOctagon[] cutout_from(IntBox p_d) {
     IntOctagon c = this.intersection(p_d);
@@ -1121,58 +1140,54 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
     // construct upper left octagon
 
-    IntOctagon curr_oct =
-        new IntOctagon(
-            p_d.ll.x,
-            boxes[0].ur.y,
-            boxes[3].ll.x,
-            p_d.ur.y,
-            -Limits.CRIT_INT,
-            c.ulx,
-            -Limits.CRIT_INT,
-            Limits.CRIT_INT);
+    IntOctagon curr_oct = new IntOctagon(
+        p_d.ll.x,
+        boxes[0].ur.y,
+        boxes[3].ll.x,
+        p_d.ur.y,
+        -Limits.CRIT_INT,
+        c.ulx,
+        -Limits.CRIT_INT,
+        Limits.CRIT_INT);
     octagons[0] = curr_oct.normalize();
 
     // construct lower left octagon
 
-    curr_oct =
-        new IntOctagon(
-            p_d.ll.x,
-            p_d.ll.y,
-            boxes[2].ll.x,
-            boxes[0].ll.y,
-            -Limits.CRIT_INT,
-            Limits.CRIT_INT,
-            -Limits.CRIT_INT,
-            c.llx);
+    curr_oct = new IntOctagon(
+        p_d.ll.x,
+        p_d.ll.y,
+        boxes[2].ll.x,
+        boxes[0].ll.y,
+        -Limits.CRIT_INT,
+        Limits.CRIT_INT,
+        -Limits.CRIT_INT,
+        c.llx);
     octagons[1] = curr_oct.normalize();
 
     // construct lower right octagon
 
-    curr_oct =
-        new IntOctagon(
-            boxes[2].ur.x,
-            p_d.ll.y,
-            p_d.ur.x,
-            boxes[1].ll.y,
-            c.lrx,
-            Limits.CRIT_INT,
-            -Limits.CRIT_INT,
-            Limits.CRIT_INT);
+    curr_oct = new IntOctagon(
+        boxes[2].ur.x,
+        p_d.ll.y,
+        p_d.ur.x,
+        boxes[1].ll.y,
+        c.lrx,
+        Limits.CRIT_INT,
+        -Limits.CRIT_INT,
+        Limits.CRIT_INT);
     octagons[2] = curr_oct.normalize();
 
     // construct upper right octagon
 
-    curr_oct =
-        new IntOctagon(
-            boxes[3].ur.x,
-            boxes[1].ur.y,
-            p_d.ur.x,
-            p_d.ur.y,
-            -Limits.CRIT_INT,
-            Limits.CRIT_INT,
-            c.urx,
-            Limits.CRIT_INT);
+    curr_oct = new IntOctagon(
+        boxes[3].ur.x,
+        boxes[1].ur.y,
+        p_d.ur.x,
+        p_d.ur.y,
+        -Limits.CRIT_INT,
+        Limits.CRIT_INT,
+        c.urx,
+        Limits.CRIT_INT);
     octagons[3] = curr_oct.normalize();
 
     // optimise the result to minimum cumulative circumference
@@ -1235,7 +1250,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     b = boxes[2];
     o = octagons[1];
     if (b.ur.y - b.ll.y > o.rx - o.lx) {
-      // switch the vertical lower  left divide line to horizontal
+      // switch the vertical lower left divide line to horizontal
 
       boxes[2] = new IntBox(o.lx, b.ll.y, b.ur.x, b.ur.y);
       curr_oct = new IntOctagon(o.lx, b.ur.y, o.rx, o.uy, o.ulx, o.lrx, o.llx, o.urx);
@@ -1262,7 +1277,10 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     return result;
   }
 
-  /** Divide p_divide_octagon minus cut_octagon into 8 convex pieces without sharp angles. */
+  /**
+   * Divide p_divide_octagon minus cut_octagon into 8 convex pieces without sharp
+   * angles.
+   */
   @Override
   IntOctagon[] cutout_from(IntOctagon p_d) {
     IntOctagon c = this.intersection(p_d);
@@ -1316,30 +1334,27 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     IntOctagon curr_2 = result[7];
 
     if (!(curr_1.is_empty() || curr_2.is_empty())
-        && curr_1.rx - curr_1.left_x_value(curr_1.uy)
-            > curr_2.upper_y_value(curr_1.rx) - curr_2.ly) {
+        && curr_1.rx - curr_1.left_x_value(curr_1.uy) > curr_2.upper_y_value(curr_1.rx) - curr_2.ly) {
       // switch the horizontal upper left divide line to vertical
-      curr_1 =
-          new IntOctagon(
-              Math.min(curr_1.lx, curr_2.lx),
-              curr_1.ly,
-              curr_1.rx,
-              curr_2.uy,
-              curr_2.ulx,
-              curr_1.lrx,
-              curr_1.llx,
-              curr_2.urx);
+      curr_1 = new IntOctagon(
+          Math.min(curr_1.lx, curr_2.lx),
+          curr_1.ly,
+          curr_1.rx,
+          curr_2.uy,
+          curr_2.ulx,
+          curr_1.lrx,
+          curr_1.llx,
+          curr_2.urx);
 
-      curr_2 =
-          new IntOctagon(
-              curr_1.rx,
-              curr_2.ly,
-              curr_2.rx,
-              curr_2.uy,
-              curr_2.ulx,
-              curr_2.lrx,
-              curr_2.llx,
-              curr_2.urx);
+      curr_2 = new IntOctagon(
+          curr_1.rx,
+          curr_2.ly,
+          curr_2.rx,
+          curr_2.uy,
+          curr_2.ulx,
+          curr_2.lrx,
+          curr_2.llx,
+          curr_2.urx);
 
       result[0] = curr_1.normalize();
       result[7] = curr_2.normalize();
@@ -1347,31 +1362,28 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     curr_1 = result[7];
     curr_2 = result[6];
     if (!(curr_1.is_empty() || curr_2.is_empty())
-        && curr_2.upper_y_value(curr_1.rx) - curr_2.ly
-            > curr_1.rx - curr_1.left_x_value(curr_2.ly))
+        && curr_2.upper_y_value(curr_1.rx) - curr_2.ly > curr_1.rx - curr_1.left_x_value(curr_2.ly))
     // switch the vertical upper left divide line to horizontal
     {
-      curr_2 =
-          new IntOctagon(
-              curr_1.lx,
-              curr_2.ly,
-              curr_2.rx,
-              Math.max(curr_2.uy, curr_1.uy),
-              curr_1.ulx,
-              curr_2.lrx,
-              curr_1.llx,
-              curr_2.urx);
+      curr_2 = new IntOctagon(
+          curr_1.lx,
+          curr_2.ly,
+          curr_2.rx,
+          Math.max(curr_2.uy, curr_1.uy),
+          curr_1.ulx,
+          curr_2.lrx,
+          curr_1.llx,
+          curr_2.urx);
 
-      curr_1 =
-          new IntOctagon(
-              curr_1.lx,
-              curr_1.ly,
-              curr_1.rx,
-              curr_2.ly,
-              curr_1.ulx,
-              curr_1.lrx,
-              curr_1.llx,
-              curr_1.urx);
+      curr_1 = new IntOctagon(
+          curr_1.lx,
+          curr_1.ly,
+          curr_1.rx,
+          curr_2.ly,
+          curr_1.ulx,
+          curr_1.lrx,
+          curr_1.llx,
+          curr_1.urx);
 
       result[7] = curr_1.normalize();
       result[6] = curr_2.normalize();
@@ -1379,31 +1391,28 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     curr_1 = result[6];
     curr_2 = result[5];
     if (!(curr_1.is_empty() || curr_2.is_empty())
-        && curr_2.upper_y_value(curr_1.rx) - curr_1.ly
-            > curr_2.right_x_value(curr_1.ly) - curr_2.lx)
+        && curr_2.upper_y_value(curr_1.rx) - curr_1.ly > curr_2.right_x_value(curr_1.ly) - curr_2.lx)
     // switch the vertical upper right divide line to horizontal
     {
-      curr_1 =
-          new IntOctagon(
-              curr_1.lx,
-              curr_1.ly,
-              curr_2.rx,
-              Math.max(curr_2.uy, curr_1.uy),
-              curr_1.ulx,
-              curr_2.lrx,
-              curr_1.llx,
-              curr_2.urx);
+      curr_1 = new IntOctagon(
+          curr_1.lx,
+          curr_1.ly,
+          curr_2.rx,
+          Math.max(curr_2.uy, curr_1.uy),
+          curr_1.ulx,
+          curr_2.lrx,
+          curr_1.llx,
+          curr_2.urx);
 
-      curr_2 =
-          new IntOctagon(
-              curr_2.lx,
-              curr_2.ly,
-              curr_2.rx,
-              curr_1.ly,
-              curr_2.ulx,
-              curr_2.lrx,
-              curr_2.llx,
-              curr_2.urx);
+      curr_2 = new IntOctagon(
+          curr_2.lx,
+          curr_2.ly,
+          curr_2.rx,
+          curr_1.ly,
+          curr_2.ulx,
+          curr_2.lrx,
+          curr_2.llx,
+          curr_2.urx);
 
       result[6] = curr_1.normalize();
       result[5] = curr_2.normalize();
@@ -1411,31 +1420,28 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     curr_1 = result[5];
     curr_2 = result[4];
     if (!(curr_1.is_empty() || curr_2.is_empty())
-        && curr_2.right_x_value(curr_2.uy) - curr_2.lx
-            > curr_1.upper_y_value(curr_2.lx) - curr_2.uy)
+        && curr_2.right_x_value(curr_2.uy) - curr_2.lx > curr_1.upper_y_value(curr_2.lx) - curr_2.uy)
     // switch the horizontal upper right divide line to vertical
     {
-      curr_2 =
-          new IntOctagon(
-              curr_2.lx,
-              curr_2.ly,
-              Math.max(curr_2.rx, curr_1.rx),
-              curr_1.uy,
-              curr_1.ulx,
-              curr_2.lrx,
-              curr_2.llx,
-              curr_1.urx);
+      curr_2 = new IntOctagon(
+          curr_2.lx,
+          curr_2.ly,
+          Math.max(curr_2.rx, curr_1.rx),
+          curr_1.uy,
+          curr_1.ulx,
+          curr_2.lrx,
+          curr_2.llx,
+          curr_1.urx);
 
-      curr_1 =
-          new IntOctagon(
-              curr_1.lx,
-              curr_1.ly,
-              curr_2.lx,
-              curr_1.uy,
-              curr_1.ulx,
-              curr_1.lrx,
-              curr_1.llx,
-              curr_1.urx);
+      curr_1 = new IntOctagon(
+          curr_1.lx,
+          curr_1.ly,
+          curr_2.lx,
+          curr_1.uy,
+          curr_1.ulx,
+          curr_1.lrx,
+          curr_1.llx,
+          curr_1.urx);
 
       result[5] = curr_1.normalize();
       result[4] = curr_2.normalize();
@@ -1443,31 +1449,28 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     curr_1 = result[4];
     curr_2 = result[3];
     if (!(curr_1.is_empty() || curr_2.is_empty())
-        && curr_1.right_x_value(curr_1.ly) - curr_1.lx
-            > curr_1.ly - curr_2.lower_y_value(curr_1.lx))
+        && curr_1.right_x_value(curr_1.ly) - curr_1.lx > curr_1.ly - curr_2.lower_y_value(curr_1.lx))
     // switch the horizontal lower right divide line to vertical
     {
-      curr_1 =
-          new IntOctagon(
-              curr_1.lx,
-              curr_2.ly,
-              Math.max(curr_2.rx, curr_1.rx),
-              curr_1.uy,
-              curr_1.ulx,
-              curr_2.lrx,
-              curr_2.llx,
-              curr_1.urx);
+      curr_1 = new IntOctagon(
+          curr_1.lx,
+          curr_2.ly,
+          Math.max(curr_2.rx, curr_1.rx),
+          curr_1.uy,
+          curr_1.ulx,
+          curr_2.lrx,
+          curr_2.llx,
+          curr_1.urx);
 
-      curr_2 =
-          new IntOctagon(
-              curr_2.lx,
-              curr_2.ly,
-              curr_1.lx,
-              curr_2.uy,
-              curr_2.ulx,
-              curr_2.lrx,
-              curr_2.llx,
-              curr_2.urx);
+      curr_2 = new IntOctagon(
+          curr_2.lx,
+          curr_2.ly,
+          curr_1.lx,
+          curr_2.uy,
+          curr_2.ulx,
+          curr_2.lrx,
+          curr_2.llx,
+          curr_2.urx);
 
       result[4] = curr_1.normalize();
       result[3] = curr_2.normalize();
@@ -1477,31 +1480,28 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     curr_2 = result[2];
 
     if (!(curr_1.is_empty() || curr_2.is_empty())
-        && curr_2.uy - curr_2.lower_y_value(curr_2.rx)
-            > curr_1.right_x_value(curr_2.uy) - curr_2.rx)
+        && curr_2.uy - curr_2.lower_y_value(curr_2.rx) > curr_1.right_x_value(curr_2.uy) - curr_2.rx)
     // switch the vertical lower right divide line to horizontal
     {
-      curr_2 =
-          new IntOctagon(
-              curr_2.lx,
-              Math.min(curr_1.ly, curr_2.ly),
-              curr_1.rx,
-              curr_2.uy,
-              curr_2.ulx,
-              curr_1.lrx,
-              curr_2.llx,
-              curr_1.urx);
+      curr_2 = new IntOctagon(
+          curr_2.lx,
+          Math.min(curr_1.ly, curr_2.ly),
+          curr_1.rx,
+          curr_2.uy,
+          curr_2.ulx,
+          curr_1.lrx,
+          curr_2.llx,
+          curr_1.urx);
 
-      curr_1 =
-          new IntOctagon(
-              curr_1.lx,
-              curr_2.uy,
-              curr_1.rx,
-              curr_1.uy,
-              curr_1.ulx,
-              curr_1.lrx,
-              curr_1.llx,
-              curr_1.urx);
+      curr_1 = new IntOctagon(
+          curr_1.lx,
+          curr_2.uy,
+          curr_1.rx,
+          curr_1.uy,
+          curr_1.ulx,
+          curr_1.lrx,
+          curr_1.llx,
+          curr_1.urx);
 
       result[3] = curr_1.normalize();
       result[2] = curr_2.normalize();
@@ -1511,31 +1511,28 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     curr_2 = result[1];
 
     if (!(curr_1.is_empty() || curr_2.is_empty())
-        && curr_1.uy - curr_1.lower_y_value(curr_1.lx)
-            > curr_1.lx - curr_2.left_x_value(curr_1.uy))
+        && curr_1.uy - curr_1.lower_y_value(curr_1.lx) > curr_1.lx - curr_2.left_x_value(curr_1.uy))
     // switch the vertical lower left divide line to horizontal
     {
-      curr_1 =
-          new IntOctagon(
-              curr_2.lx,
-              Math.min(curr_1.ly, curr_2.ly),
-              curr_1.rx,
-              curr_1.uy,
-              curr_2.ulx,
-              curr_1.lrx,
-              curr_2.llx,
-              curr_1.urx);
+      curr_1 = new IntOctagon(
+          curr_2.lx,
+          Math.min(curr_1.ly, curr_2.ly),
+          curr_1.rx,
+          curr_1.uy,
+          curr_2.ulx,
+          curr_1.lrx,
+          curr_2.llx,
+          curr_1.urx);
 
-      curr_2 =
-          new IntOctagon(
-              curr_2.lx,
-              curr_1.uy,
-              curr_2.rx,
-              curr_2.uy,
-              curr_2.ulx,
-              curr_2.lrx,
-              curr_2.llx,
-              curr_2.urx);
+      curr_2 = new IntOctagon(
+          curr_2.lx,
+          curr_1.uy,
+          curr_2.rx,
+          curr_2.uy,
+          curr_2.ulx,
+          curr_2.lrx,
+          curr_2.llx,
+          curr_2.urx);
 
       result[2] = curr_1.normalize();
       result[1] = curr_2.normalize();
@@ -1545,31 +1542,28 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     curr_2 = result[0];
 
     if (!(curr_1.is_empty() || curr_2.is_empty())
-        && curr_2.rx - curr_2.left_x_value(curr_2.ly)
-            > curr_2.ly - curr_1.lower_y_value(curr_2.rx))
+        && curr_2.rx - curr_2.left_x_value(curr_2.ly) > curr_2.ly - curr_1.lower_y_value(curr_2.rx))
     // switch the horizontal lower left divide line to vertical
     {
-      curr_2 =
-          new IntOctagon(
-              Math.min(curr_2.lx, curr_1.lx),
-              curr_1.ly,
-              curr_2.rx,
-              curr_2.uy,
-              curr_2.ulx,
-              curr_1.lrx,
-              curr_1.llx,
-              curr_2.urx);
+      curr_2 = new IntOctagon(
+          Math.min(curr_2.lx, curr_1.lx),
+          curr_1.ly,
+          curr_2.rx,
+          curr_2.uy,
+          curr_2.ulx,
+          curr_1.lrx,
+          curr_1.llx,
+          curr_2.urx);
 
-      curr_1 =
-          new IntOctagon(
-              curr_2.rx,
-              curr_1.ly,
-              curr_1.rx,
-              curr_1.uy,
-              curr_1.ulx,
-              curr_1.lrx,
-              curr_1.llx,
-              curr_1.urx);
+      curr_1 = new IntOctagon(
+          curr_2.rx,
+          curr_1.ly,
+          curr_1.rx,
+          curr_1.uy,
+          curr_1.ulx,
+          curr_1.lrx,
+          curr_1.llx,
+          curr_1.urx);
 
       result[1] = curr_1.normalize();
       result[0] = curr_2.normalize();
@@ -1581,5 +1575,11 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   @Override
   Simplex[] cutout_from(Simplex p_simplex) {
     return this.to_Simplex().cutout_from(p_simplex);
+  }
+
+  @Override
+  public String toString() {
+    return "IntOctagon(lx=" + lx + ", ly=" + ly + ", rx=" + rx + ", uy=" + uy + ", ulx=" + ulx + ", lrx=" + lrx
+        + ", llx=" + llx + ", urx=" + urx + ")";
   }
 }

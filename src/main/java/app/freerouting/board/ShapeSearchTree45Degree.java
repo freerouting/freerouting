@@ -37,7 +37,6 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     int curr_obstacle_corner_x = p_obstacle_shape.corner_x(p_obstacle_border_line_no);
     int curr_obstacle_corner_y = p_obstacle_shape.corner_y(p_obstacle_border_line_no);
     for (int j = 0; j < 5; j++) {
-
       if (p_room_shape.side_of_border_line(curr_obstacle_corner_x, curr_obstacle_corner_y,
           curr_border_line_no) != Side.ON_THE_LEFT) {
         return false;
@@ -181,8 +180,17 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                   }
                 }
 
+                if (curr_object.toString().contains("id=56")) {
+                  FRLogger.debug("Restrain called for Obstacle 56.");
+                  FRLogger.debug("Room: " + curr_room.get_shape().toString());
+                  FRLogger.debug("Contained: " + curr_room.get_contained_shape().toString());
+                  FRLogger.debug("Obstacle: " + curr_object_shape.toString());
+                }
                 Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
                     curr_object_shape);
+                if (curr_object.toString().contains("id=56")) {
+                  FRLogger.debug("Restrain Result Count: " + new_restrained_shapes.size());
+                }
                 if (new_restrained_shapes.isEmpty()) {
                   FRLogger.debug("Restrain returned empty for obstacle: " + curr_object.toString());
                   FRLogger.debug("  Room Shape: " + curr_room.get_shape().toString());
