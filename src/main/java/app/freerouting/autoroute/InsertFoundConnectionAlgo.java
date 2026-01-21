@@ -47,14 +47,18 @@ public class InsertFoundConnectionAlgo {
     }
     int curr_layer = p_connection.target_layer;
     InsertFoundConnectionAlgo new_instance = new InsertFoundConnectionAlgo(p_board, p_ctrl);
+    String net_name = p_board.rules.nets.get(p_ctrl.net_no).name;
     for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
       if (!new_instance.insert_via(curr_new_item.corners[0], curr_layer, curr_new_item.layer)) {
-        FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
+        FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net '" + net_name + "' (#" + p_ctrl.net_no
+            + ") at " + curr_new_item.corners[0] + " from layer " + curr_layer + " to " + curr_new_item.layer);
         return null;
       }
       curr_layer = curr_new_item.layer;
       if (!new_instance.insert_trace(curr_new_item)) {
-        FRLogger.debug("InsertFoundConnectionAlgo: insert trace failed for net #" + p_ctrl.net_no);
+        FRLogger.debug("InsertFoundConnectionAlgo: insert trace failed for net '" + net_name + "' (#" + p_ctrl.net_no
+            + ") on layer " + curr_new_item.layer + " with " + curr_new_item.corners.length + " corners, from "
+            + curr_new_item.corners[0] + " to " + curr_new_item.corners[curr_new_item.corners.length - 1]);
         return null;
       }
     }
@@ -311,6 +315,7 @@ public class InsertFoundConnectionAlgo {
     int[] net_no_arr = new int[1];
     net_no_arr[0] = ctrl.net_no;
     ViaInfo via_info = null;
+    String net_name = board.rules.nets.get(ctrl.net_no).name;
     for (int i = 0; i < this.ctrl.via_rule.via_count(); i++) {
       ViaInfo curr_via_info = this.ctrl.via_rule.get_via(i);
       Padstack curr_via_padstack = curr_via_info.get_padstack();
@@ -324,14 +329,16 @@ public class InsertFoundConnectionAlgo {
       }
     }
     if (via_info == null) {
-      FRLogger.debug("InsertFoundConnectionAlgo: via mask not found for net #" + ctrl.net_no);
+      FRLogger.debug("InsertFoundConnectionAlgo: via mask not found for net '" + net_name + "' (#" + ctrl.net_no
+          + ") at " + p_location + " between layers " + from_layer + " and " + to_layer);
       return false;
     }
     // insert the via
     if (!ForcedViaAlgo.insert(via_info, p_location, net_no_arr, this.ctrl.trace_clearance_class_no,
         this.ctrl.trace_half_width, this.ctrl.max_shove_trace_recursion_depth,
         this.ctrl.max_shove_via_recursion_depth, this.board)) {
-      FRLogger.debug("InsertFoundConnectionAlgo: forced via failed for net #" + ctrl.net_no);
+      FRLogger.debug("InsertFoundConnectionAlgo: forced via failed for net '" + net_name + "' (#" + ctrl.net_no
+          + ") at " + p_location + " with via " + via_info.get_name());
       return false;
     }
     return true;

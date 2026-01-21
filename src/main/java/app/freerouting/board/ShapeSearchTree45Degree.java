@@ -111,7 +111,6 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       return new LinkedList<>();
     }
 
-    FRLogger.debug("ShapeSearchTree45Degree.complete_shape entered");
     if (this.root == null) {
       FRLogger.debug("ShapeSearchTree45Degree.complete_shape: root is null");
       return new LinkedList<>();
