@@ -18,7 +18,7 @@ public class RouterScoringSettings implements Serializable, Cloneable {
   // The cost of 1 mm of trace length if the trace is routed in the undesired
   // direction.
   @SerializedName("default_undesired_direction_trace_cost")
-  public double defaultUndesiredDirectionTraceCost = 2.5;
+  public double defaultUndesiredDirectionTraceCost = 1.0;
   // The cost of a via.
   @SerializedName("via_costs")
   public int via_costs = 50;
