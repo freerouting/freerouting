@@ -244,8 +244,6 @@ public class FRLogger {
    * @return The created LogEntry.
    */
   public static LogEntry debug(String msg, UUID topic) {
-    LogEntry logEntry = logEntries.add(LogEntryType.Debug, msg, topic);
-
     if (!enabled) {
       return null;
     }
@@ -255,7 +253,7 @@ public class FRLogger {
 
     logger.debug(msg);
 
-    return logEntry;
+    return null;
   }
 
   /**
@@ -313,8 +311,6 @@ public class FRLogger {
    * @return The created LogEntry.
    */
   public static LogEntry trace(String msg) {
-    LogEntry logEntry = logEntries.add(LogEntryType.Trace, msg, null);
-
     if (!enabled) {
       return null;
     }
@@ -324,7 +320,7 @@ public class FRLogger {
 
     logger.trace(msg);
 
-    return logEntry;
+    return null;
   }
 
   /**

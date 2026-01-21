@@ -17,7 +17,8 @@ import org.apache.logging.log4j.core.config.plugins.Plugin;
 
 /**
  * Custom Log4j2 ConfigurationFactory that programmatically builds the logging
- * configuration based on system properties set early in the application startup.
+ * configuration based on system properties set early in the application
+ * startup.
  *
  * This eliminates the need for runtime configuration manipulation which causes
  * threading issues and exceptions.
@@ -74,7 +75,9 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
 
             AppenderComponentBuilder fileAppender = builder.newAppender("File", "File")
                     .addAttribute("fileName", fileLocation)
-                    .addAttribute("immediateFlush", true)
+                    .addAttribute("immediateFlush", false)
+                    .addAttribute("bufferedIO", true)
+                    .addAttribute("bufferSize", 8192)
                     .add(builder.newLayout("PatternLayout")
                             .addAttribute("pattern", PATTERN));
             builder.add(fileAppender);
