@@ -158,10 +158,10 @@ public class AutorouteEngine {
     }
 
     if (autoroute_result.connection_items == null) {
-      if (this.board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal()) {
-        FRLogger.warn("AutorouteEngine.autoroute_connection: result_items != null expected");
+      if (autoroute_result.connection_items == null) {
+        FRLogger.debug("AutorouteEngine.autoroute_connection: result_items != null expected");
+        return AutorouteResult.ALREADY_CONNECTED;
       }
-      return AutorouteResult.ALREADY_CONNECTED;
     }
 
     // Delete the ripped connections.
