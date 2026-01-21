@@ -325,6 +325,10 @@ public class BatchAutorouter {
                 // auto-router's to-do list
                 if ((connected_set.size() < net_item_count) && (!curr_item.has_ignored_nets())) {
                   autoroute_item_list.add(curr_item);
+                  Net net = routing_board.rules.nets.get(curr_net_no);
+                  String netName = (net != null) ? net.name : "net#" + curr_net_no;
+                  FRLogger.debug("Queuing item for routing: " + curr_item.getClass().getSimpleName() + " on net '"
+                      + netName + "' (connected: " + connected_set.size() + "/" + net_item_count + ")");
                 }
               }
             }
@@ -369,13 +373,19 @@ public class BatchAutorouter {
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> ripped_item_list = new TreeSet<>();
           PerformanceProfiler.start("autoroute_item");
-          boolean isRouted = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no);
+          AutorouteEngine.AutorouteResult result = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list,
+              p_pass_no);
           PerformanceProfiler.end("autoroute_item");
-          if (isRouted) {
+          if (result == AutorouteEngine.AutorouteResult.ROUTED
+              || result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED) {
             ++routed;
             hdlg.repaint();
           } else {
             ++not_found;
+            Net net = routing_board.rules.nets.get(curr_item.get_net_no(i));
+            String netName = (net != null) ? net.name : "net#" + curr_item.get_net_no(i);
+            FRLogger.debug("Autorouter pass #" + p_pass_no + ": Failed to route " + curr_item.getClass().getSimpleName()
+                + " on net '" + netName + "'. Result: " + result);
           }
           --items_to_go_count;
           ripped_item_count += ripped_item_list.size();
@@ -489,9 +499,9 @@ public class BatchAutorouter {
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
   }
 
-  // Tries to route an item on a specific net. Returns true, if the item is
-  // routed.
-  private boolean autoroute_item(Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list,
+  // Tries to route an item on a specific net. Returns result status.
+  private AutorouteEngine.AutorouteResult autoroute_item(Item p_item, int p_route_net_no,
+      SortedSet<Item> p_ripped_item_list,
       int p_ripup_pass_no) {
     try {
       boolean contains_plane = false;
@@ -525,7 +535,7 @@ public class BatchAutorouter {
       // Check if the item is already routed
       Set<Item> unconnected_set = p_item.get_unconnected_set(p_route_net_no);
       if (unconnected_set.isEmpty()) {
-        return true; // p_item is already routed.
+        return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED; // p_item is already routed.
       }
 
       Set<Item> connected_set = p_item.get_connected_set(p_route_net_no);
@@ -534,7 +544,7 @@ public class BatchAutorouter {
       if (contains_plane) {
         for (Item curr_item : connected_set) {
           if (curr_item instanceof ConductionArea) {
-            return true; // already connected to plane
+            return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED; // already connected to plane
           }
         }
       }
@@ -577,11 +587,10 @@ public class BatchAutorouter {
             TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
       }
 
-      // Return true, if the item is routed
-      return autoroute_result == AutorouteEngine.AutorouteResult.ROUTED
-          || autoroute_result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;
+      // Return the result
+      return autoroute_result;
     } catch (Exception e) {
-      return false;
+      return AutorouteEngine.AutorouteResult.NOT_ROUTED;
     }
   }
 

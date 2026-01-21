@@ -5,7 +5,7 @@ out
 .idea/
 freerouting.iml
 tmp
-/logs/
+#/logs/
 bin/
 .project
 .settings
