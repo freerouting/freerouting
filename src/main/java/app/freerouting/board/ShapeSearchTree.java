@@ -616,7 +616,7 @@ public class ShapeSearchTree extends MinAreaTree {
                    * This allows rooms to complete even when surrounded by traces from other nets,
                    * relying on ShoveTraceAlgo to move them during trace insertion.
                    */
-                  boolean shoveAwareEnabled = true;
+                  boolean shoveAwareEnabled = false;
 
                   if (shoveAwareEnabled) {
                     if (curr_object instanceof Item item) {
