@@ -156,16 +156,15 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         }
 
         String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, completed in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f total CPU seconds, %.2f GB total allocated, and %.0f MB peak heap usage.",
+            "Auto-router session %s started with %d unrouted nets, completed in %s, final score: %s, using %s total CPU seconds, %s GB total allocated, and %s MB peak heap usage.",
             completionStatus,
             initialUnroutedCount,
-            totalTime,
-            finalStats.getNormalizedScore(job.routerSettings.scoring),
-            finalStats.connections.incompleteCount,
-            finalStats.clearanceViolations.totalCount,
-            job.resourceUsage.cpuTimeUsed,
-            job.resourceUsage.maxMemoryUsed / 1024.0f,
-            job.resourceUsage.peakMemoryUsed);
+            FRLogger.formatDuration(totalTime),
+            FRLogger.formatScore(finalStats.getNormalizedScore(job.routerSettings.scoring),
+                finalStats.connections.incompleteCount, finalStats.clearanceViolations.totalCount),
+            FRLogger.defaultFloatFormat.format(job.resourceUsage.cpuTimeUsed),
+            FRLogger.defaultFloatFormat.format(job.resourceUsage.maxMemoryUsed / 1024.0f),
+            FRLogger.defaultFloatFormat.format(job.resourceUsage.peakMemoryUsed));
 
         job.logInfo(sessionSummary);
       }

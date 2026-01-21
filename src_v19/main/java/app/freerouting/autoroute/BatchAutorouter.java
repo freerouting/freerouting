@@ -45,6 +45,16 @@ public class BatchAutorouter {
   /** Used to draw the airline of the current routed incomplete. */
   private FloatLine air_line;
 
+  private double totalCpuTime = 0;
+  private long totalAllocatedBytes = 0;
+  private int initialUnroutedCount = 0;
+  private long sessionStartTimeMillis = 0;
+  private float finalScore = 0;
+  private int finalViolations = 0;
+
+  private com.sun.management.ThreadMXBean threadMXBean = (com.sun.management.ThreadMXBean) java.lang.management.ManagementFactory
+      .getThreadMXBean();
+
   /** Creates a new batch autorouter. */
   public BatchAutorouter(
       InteractiveActionThread p_thread,
@@ -191,6 +201,13 @@ public class BatchAutorouter {
               + current_board_hash
               + "' making {} changes");
       already_checked_board_hashes.add(this.routing_board.get_hash());
+
+      // Initialize session stats on first pass
+      if (sessionStartTimeMillis == 0) {
+        sessionStartTimeMillis = System.currentTimeMillis();
+        initialUnroutedCount = new RatsNest(routing_board, hdlg.get_locale()).incomplete_count();
+      }
+
       still_unrouted_items = autoroute_pass(curr_pass_no, true);
 
       // let's check if there was enough change in the last pass, because if it was
@@ -243,6 +260,24 @@ public class BatchAutorouter {
       remove_tails(Item.StopConnectionOption.NONE);
     }
 
+    // Log session summary
+    long sessionDuration = System.currentTimeMillis() - sessionStartTimeMillis;
+    RatsNest finalRatsNest = new RatsNest(routing_board, hdlg.get_locale());
+    int finalUnrouted = finalRatsNest.incomplete_count();
+
+    // Calculate peak heap usage (approximate)
+    long peakHeap = java.lang.management.ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1024
+        / 1024;
+
+    FRLogger.info(String.format(
+        "Auto-router session completed: started with %d unrouted nets, completed in %s, final score: %s, using %s total CPU seconds, %s GB total allocated, and %d MB peak heap usage.",
+        initialUnroutedCount,
+        FRLogger.formatDuration(sessionDuration / 1000.0),
+        FRLogger.formatScore(finalScore, finalUnrouted, finalViolations),
+        FRLogger.DefaultFloatFormat.format(totalCpuTime),
+        FRLogger.DefaultFloatFormat.format(totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0),
+        peakHeap));
+
     PerformanceProfiler.printResults();
     PerformanceProfiler.reset();
 
@@ -258,6 +293,8 @@ public class BatchAutorouter {
    */
   private boolean autoroute_pass(int p_pass_no, boolean p_with_screen_message) {
     long passStartTime = System.currentTimeMillis();
+    long startCpuTime = threadMXBean.getThreadCpuTime(Thread.currentThread().threadId());
+    long startAllocatedBytes = threadMXBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
     try {
       Collection<Item> autoroute_item_list = new LinkedList<>();
       Set<Item> handled_items = new TreeSet<>();
@@ -365,12 +402,41 @@ public class BatchAutorouter {
       // We are done with this pass
       this.air_line = null;
 
+      // Capture end stats
+      long endCpuTime = threadMXBean.getThreadCpuTime(Thread.currentThread().threadId());
+      long endAllocatedBytes = threadMXBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+
+      double cpuSeconds = (endCpuTime - startCpuTime) / 1_000_000_000.0;
+      long allocatedBytes = endAllocatedBytes - startAllocatedBytes;
+
+      this.totalCpuTime += cpuSeconds;
+      this.totalAllocatedBytes += allocatedBytes;
+
       long passDuration = System.currentTimeMillis() - passStartTime;
       int currentRipupCost = this.start_ripup_costs * p_pass_no;
 
       // Calculate statistics
       RatsNest ratsNest = new RatsNest(routing_board, hdlg.get_locale());
       int incompleteCount = ratsNest.incomplete_count();
+
+      float score = 0.0f; // Score not easily available in v1.9 BatchAutorouter context yet
+      int violations = 0;
+      if (ratsNest.length_violation_count() > 0)
+        violations = ratsNest.length_violation_count();
+
+      this.finalScore = score;
+      this.finalViolations = violations;
+
+      String scoreStr = FRLogger.formatScore(score, incompleteCount, violations);
+
+      FRLogger.info(String.format(
+          "Auto-router pass #%d on board '%s' was completed in %s with the score of %s, using %s CPU seconds and the job allocated %s GB of memory so far.",
+          p_pass_no,
+          routing_board.get_hash(),
+          FRLogger.formatDuration(passDuration / 1000.0),
+          scoreStr,
+          FRLogger.DefaultFloatFormat.format(this.totalCpuTime),
+          FRLogger.DefaultFloatFormat.format(this.totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0)));
 
       PerformanceProfiler.recordPass(p_pass_no, incompleteCount, passDuration, currentRipupCost);
 

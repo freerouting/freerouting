@@ -8,11 +8,10 @@ import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/// <summary>
-/// Provides logging functionality.
-/// </summary>
+/// <summary> Provides logging functionality. </summary>
 public class FRLogger {
-  public static DecimalFormat DefaultFloatFormat = new DecimalFormat("0.00");
+  public static DecimalFormat DefaultFloatFormat = new DecimalFormat("0.00",
+      new java.text.DecimalFormatSymbols(java.util.Locale.US));
   private static Logger logger;
   private static final HashMap<Integer, Instant> perfData = new HashMap<>();
   private static boolean enabled = true;
@@ -33,26 +32,63 @@ public class FRLogger {
         + " seconds";
   }
 
+  public static String formatScore(float score, int incomplete, int violations) {
+    StringBuilder sb = new StringBuilder(DefaultFloatFormat.format(score));
+
+    // Only include unrouted and violations if they exist
+    if (incomplete > 0 || violations > 0) {
+      sb.append(" (");
+
+      // Add unrouted info only if there are any
+      if (incomplete > 0) {
+        sb
+            .append(incomplete)
+            .append(" unrouted");
+      }
+
+      // Add separator if both unrouted and violations exist
+      if (incomplete > 0 && violations > 0) {
+        sb.append(" and ");
+      }
+
+      // Add violations info only if there are any
+      if (violations > 0) {
+        sb
+            .append(violations)
+            .append(violations == 1 ? " violation" : " violations");
+      }
+
+      sb.append(")");
+    }
+
+    return sb.toString();
+  }
+
   public static void traceEntry(String perfId) {
-    if (!enabled) return;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
+    if (!enabled)
+      return;
+    if (logger == null)
+      logger = LogManager.getLogger(Freerouting.class);
 
     perfData.put(perfId.hashCode(), Instant.now());
   }
 
   public static double traceExit(String perfId) {
-    if (!enabled) return 0.0;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
+    if (!enabled)
+      return 0.0;
+    if (logger == null)
+      logger = LogManager.getLogger(Freerouting.class);
 
     return traceExit(perfId, null);
   }
 
   public static double traceExit(String perfId, Object result) {
-    if (!enabled) return 0.0;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
+    if (!enabled)
+      return 0.0;
+    if (logger == null)
+      logger = LogManager.getLogger(Freerouting.class);
 
-    long timeElapsed =
-        Duration.between(perfData.get(perfId.hashCode()), Instant.now()).toMillis();
+    long timeElapsed = Duration.between(perfData.get(perfId.hashCode()), Instant.now()).toMillis();
 
     perfData.remove(perfId.hashCode());
     if (timeElapsed < 0) {
@@ -73,8 +109,10 @@ public class FRLogger {
   public static void info(String msg) {
     logEntries.add(LogEntryType.Info, msg);
 
-    if (!enabled) return;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
+    if (!enabled)
+      return;
+    if (logger == null)
+      logger = LogManager.getLogger(Freerouting.class);
 
     logger.info(msg);
   }
@@ -82,8 +120,10 @@ public class FRLogger {
   public static void warn(String msg) {
     logEntries.add(LogEntryType.Warning, msg);
 
-    if (!enabled) return;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
+    if (!enabled)
+      return;
+    if (logger == null)
+      logger = LogManager.getLogger(Freerouting.class);
 
     logger.warn(msg);
   }
@@ -91,8 +131,10 @@ public class FRLogger {
   public static void debug(String msg) {
     logEntries.add(LogEntryType.Debug, msg);
 
-    if (!enabled) return;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
+    if (!enabled)
+      return;
+    if (logger == null)
+      logger = LogManager.getLogger(Freerouting.class);
 
     logger.debug(msg);
   }
@@ -100,9 +142,10 @@ public class FRLogger {
   public static void error(String msg, Throwable t) {
     logEntries.add(LogEntryType.Error, msg);
 
-    if (!enabled) return;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
-
+    if (!enabled)
+      return;
+    if (logger == null)
+      logger = LogManager.getLogger(Freerouting.class);
 
     if (t == null) {
       logger.error(msg);
@@ -114,21 +157,20 @@ public class FRLogger {
   public static void trace(String msg) {
     logEntries.add(LogEntryType.Trace, msg);
 
-    if (!enabled) return;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
+    if (!enabled)
+      return;
+    if (logger == null)
+      logger = LogManager.getLogger(Freerouting.class);
 
     logger.trace(msg);
   }
 
-  /// <summary>
-  /// Disables the log4j logger.
-  /// </summary>
+  /// <summary> Disables the log4j logger. </summary>
   public static void disableLogging() {
     enabled = false;
   }
 
-  public static LogEntries getLogEntries()
-  {
+  public static LogEntries getLogEntries() {
     return logEntries;
   }
 }

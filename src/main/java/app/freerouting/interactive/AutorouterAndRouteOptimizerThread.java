@@ -267,13 +267,12 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         }
 
         String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, completed in %.2f seconds, final score: %.2f (%d unrouted, %d violations).",
+            "Auto-router session %s started with %d unrouted nets, completed in %s, final score: %s.",
             completionStatus,
             initialUnroutedCount,
-            autoroutingSecondsToComplete,
-            scoreBeforeOptimization,
-            bs.connections.incompleteCount,
-            bs.clearanceViolations.totalCount);
+            FRLogger.formatDuration(autoroutingSecondsToComplete),
+            FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount,
+                bs.clearanceViolations.totalCount));
 
         routingJob.logInfo(sessionSummary);
       } else {

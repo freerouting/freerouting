@@ -145,25 +145,19 @@ public class StartupOptions {
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("zh")) {
             current_locale = Locale.SIMPLIFIED_CHINESE;
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("hi")) {
-            // current_locale = Locale.HINDI;
-            current_locale = new Locale("hi", "IN");
+            current_locale = Locale.of("hi", "IN");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("es")) {
-            // current_locale = Locale.SPANISH;
-            current_locale = new Locale("es", "ES");
+            current_locale = Locale.of("es", "ES");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("fr")) {
             current_locale = Locale.FRENCH;
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ar")) {
-            // current_locale = Locale.ARABIC;
-            current_locale = new Locale("ar", "EG");
+            current_locale = Locale.of("ar", "EG");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("bn")) {
-            // current_locale = Locale.BENGALI;
-            current_locale = new Locale("bn", "BD");
+            current_locale = Locale.of("bn", "BD");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ru")) {
-            // current_locale = Locale.RUSSIAN;
-            current_locale = new Locale("ru", "RU");
+            current_locale = Locale.of("ru", "RU");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("pt")) {
-            // current_locale = Locale.PORTUGUESE;
-            current_locale = new Locale("pt", "PT");
+            current_locale = Locale.of("pt", "PT");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ja")) {
             current_locale = Locale.JAPANESE;
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ko")) {

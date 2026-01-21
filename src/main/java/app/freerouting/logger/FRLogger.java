@@ -16,8 +16,10 @@ import org.apache.logging.log4j.Logger;
  */
 public class FRLogger {
 
-  public static final DecimalFormat defaultFloatFormat = new DecimalFormat("0.00");
-  public static final DecimalFormat defaultSignedFloatFormat = new DecimalFormat("+0.00;-0.00");
+  public static final DecimalFormat defaultFloatFormat = new DecimalFormat("0.00",
+      new java.text.DecimalFormatSymbols(java.util.Locale.US));
+  public static final DecimalFormat defaultSignedFloatFormat = new DecimalFormat("+0.00;-0.00",
+      new java.text.DecimalFormatSymbols(java.util.Locale.US));
   private static final HashMap<Integer, Instant> perfData = new HashMap<>();
   private static final LogEntries logEntries = new LogEntries();
   private static Logger logger;
