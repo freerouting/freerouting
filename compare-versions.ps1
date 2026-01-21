@@ -96,6 +96,7 @@ function Parse-LogResults {
         AutoRouterTime = "N/A"
         Unrouted       = "0"
         PeakHeap       = "N/A"
+        Passes         = "0"
         FoundSummary   = $false
     }
     
@@ -104,6 +105,16 @@ function Parse-LogResults {
         # Look for the session summary line
         # Pattern: Auto-router session.*completed.*
         $SummaryLine = $Content | Where-Object { $_ -match "Auto-router session.*completed" } | Select-Object -Last 1
+        
+        # Extract max pass number
+        # Look for lines like "Pass 1  :" or "Pass #2"
+        $PassLines = $Content | Where-Object { $_ -match "Pass (\d+)\s+:" }
+        if ($PassLines) {
+            $LastPassLine = $PassLines | Select-Object -Last 1
+            if ($LastPassLine -match "Pass (\d+)\s+:") {
+                $Result.Passes = $matches[1]
+            }
+        }
         
         if ($SummaryLine) {
             $Result.FoundSummary = $true
@@ -184,12 +195,14 @@ function Invoke-Version {
         $LogResults = Parse-LogResults -LogPath $LogPath
 
         return @{
+            VersionName    = $VersionName
             ExitCode       = $Process.ExitCode
             Duration       = $Duration
             LogFile        = $LogPath
             AutoRouterTime = $LogResults.AutoRouterTime
             Unrouted       = $LogResults.Unrouted
             PeakHeap       = $LogResults.PeakHeap
+            Passes         = $LogResults.Passes
         }
     }
     catch {
@@ -216,25 +229,18 @@ Write-Host "  Comparison Summary" -ForegroundColor $InfoColor
 Write-Host "==================================================" -ForegroundColor $InfoColor
 
 if ($CurrentResult -and $V19Result) {
-    Write-Host ("`n{0,-20} {1,-20} {2,-20}" -f "Metric", "Current", "V1.9") -ForegroundColor Cyan
-    Write-Host ("{0,-20} {1,-20} {2,-20}" -f "------", "-------", "----") -ForegroundColor Cyan
-    
-    # Auto-Router Time
-    Write-Host ("{0,-20} {1,-20} {2,-20}" -f "Router Time", $CurrentResult.AutoRouterTime, $V19Result.AutoRouterTime) -ForegroundColor White
-    
-    # Process Duration
-    Write-Host ("{0,-20} {1,-20} {2,-20}" -f "Process Time", $CurrentResult.Duration.ToString('mm\:ss\.fff'), $V19Result.Duration.ToString('mm\:ss\.fff')) -ForegroundColor Gray
-    
-    # Unrouted
-    $ColorCurrent = if ($CurrentResult.Unrouted -eq "0") { $SuccessColor } else { $WarningColor }
-    $ColorV19 = if ($V19Result.Unrouted -eq "0") { $SuccessColor } else { $WarningColor }
-    
-    Write-Host "Unrouted Items       " -NoNewline -ForegroundColor White
-    Write-Host ("{0,-21}" -f $CurrentResult.Unrouted) -NoNewline -ForegroundColor $ColorCurrent
-    Write-Host ("{0,-21}" -f $V19Result.Unrouted) -ForegroundColor $ColorV19
-    
-    # Peak Heap
-    Write-Host ("{0,-20} {1,-20} {2,-20}" -f "Peak Heap (MB)", $CurrentResult.PeakHeap, $V19Result.PeakHeap) -ForegroundColor White
+    $Results = @($CurrentResult, $V19Result)
+
+    foreach ($Res in $Results) {
+        if ($Res) {
+            Write-Host "`n$($Res.VersionName)" -ForegroundColor Cyan
+            Write-Host "  Router Time:    $($Res.AutoRouterTime)"
+            Write-Host "  Process Time:   $($Res.Duration.ToString('mm\:ss\.fff'))"
+            Write-Host "  Passes:         $($Res.Passes)"
+            Write-Host "  Unrouted:       $($Res.Unrouted)"
+            Write-Host "  Peak Heap:      $($Res.PeakHeap) MB"
+        }
+    }
 
     Write-Host "`nCompare logs:" -ForegroundColor $InfoColor
     Write-Host "  code --diff `"$($CurrentResult.LogFile)`" `"$($V19Result.LogFile)`"" -ForegroundColor Yellow
