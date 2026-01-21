@@ -676,74 +676,49 @@ public class ShapeSearchTree extends MinAreaTree {
     // furthest away from p_points_to_be_con.tained
     // Then intersect p_shape with the halfplane defined by the
     // opposite of this line.
-
-    Simplex obstacle_simplex = null;
-    if (!(p_obstacle_shape instanceof IntOctagon)) {
-      obstacle_simplex = p_obstacle_shape.to_Simplex(); // otherwise border_lines of length 0 for octagons may not
-      // be handled
-      // correctly
-    }
-
-    Collection<IncompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
+    Simplex obstacle_simplex = p_obstacle_shape
+        .to_Simplex(); // otherwise border_lines of length 0 for octagons may not be handled
+                       // correctly
+    Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
     TileShape room_shape = p_incomplete_room.get_shape();
     int layer = p_incomplete_room.get_layer();
 
     TileShape shape_to_be_contained = p_incomplete_room.get_contained_shape();
     if (shape_to_be_contained != null) {
-      shape_to_be_contained = shape_to_be_contained.to_Simplex(); // There may be a performance problem, if a point
-      // shape is represented
-      // as an octagon
+      shape_to_be_contained = shape_to_be_contained
+          .to_Simplex(); // There may be a performance problem, if a point shape is represented
+                         // as an octagon
     }
     if (shape_to_be_contained == null || shape_to_be_contained.is_empty()) {
-      FRLogger.trace("ShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
+      FRLogger.warn("ShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
       return result;
     }
     Line cut_line = null;
     double cut_line_distance = -1;
+    for (int i = 0; i < obstacle_simplex.border_line_count(); ++i) {
+      LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
+      if (room_shape.is_intersected_interior_by(curr_line_segment)) {
+        // otherwise curr_object may not touch the intersection
+        // of p_shape with the half_plane defined by the cut_line.
+        // That may lead to problems when creating the ExpansionRooms.
+        Line curr_line = obstacle_simplex.border_line(i);
 
-    if (p_obstacle_shape instanceof IntOctagon obstacle_octagon) {
-      for (int i = 0; i < 8; i++) {
-        IntPoint p1 = obstacle_octagon.corner(i);
-        IntPoint p2 = obstacle_octagon.corner((i + 1) % 8);
-        if (p1.equals(p2)) {
-          continue;
-        }
-        Line curr_line = obstacle_octagon.border_line(i);
-        if (room_shape.is_intersected_interior_by(p1, p2, curr_line)) {
-          double curr_min_distance = shape_to_be_contained.distance_to_the_left(curr_line);
+        double curr_min_distance = shape_to_be_contained.distance_to_the_left(curr_line);
 
-          if (curr_min_distance > cut_line_distance) {
-            cut_line_distance = curr_min_distance;
-            cut_line = curr_line.opposite();
-          }
-        }
-      }
-    } else {
-      for (int i = 0; i < obstacle_simplex.border_line_count(); i++) {
-        LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
-        if (room_shape.is_intersected_interior_by(curr_line_segment)) {
-          // otherwise curr_object may not touch the intersection
-          // of p_shape with the half_plane defined by the cut_line.
-          // That may lead to problems when creating the ExpansionRooms.
-          Line curr_line = obstacle_simplex.border_line(i);
-
-          double curr_min_distance = shape_to_be_contained.distance_to_the_left(curr_line);
-
-          if (curr_min_distance > cut_line_distance) {
-            cut_line_distance = curr_min_distance;
-            cut_line = curr_line.opposite();
-          }
+        if (curr_min_distance > cut_line_distance) {
+          cut_line_distance = curr_min_distance;
+          cut_line = curr_line.opposite();
         }
       }
     }
-
     if (cut_line != null) {
       TileShape result_piece = TileShape.get_instance(cut_line);
       if (room_shape != null) {
         result_piece = room_shape.intersection(result_piece);
       }
       if (result_piece.dimension() >= 2) {
-        result.add(new IncompleteFreeSpaceExpansionRoom(result_piece, layer, shape_to_be_contained));
+        result.add(
+            new IncompleteFreeSpaceExpansionRoom(result_piece, layer, shape_to_be_contained));
       }
     } else {
       // There is no cut line, so that all p_shape_to_be_contained is
@@ -754,32 +729,14 @@ public class ShapeSearchTree extends MinAreaTree {
         return result;
       }
 
-      if (p_obstacle_shape instanceof IntOctagon obstacle_octagon) {
-        for (int i = 0; i < 8; i++) {
-          IntPoint p1 = obstacle_octagon.corner(i);
-          IntPoint p2 = obstacle_octagon.corner((i + 1) % 8);
-          if (p1.equals(p2)) {
-            continue;
-          }
-          Line curr_line = obstacle_octagon.border_line(i);
-          if (room_shape.is_intersected_interior_by(p1, p2, curr_line)) {
-            if (shape_to_be_contained.side_of(curr_line) == Side.COLLINEAR) {
-              // curr_line intersects with the interior of p_shape_to_be_contained
-              cut_line = curr_line.opposite();
-              break;
-            }
-          }
-        }
-      } else {
-        for (int i = 0; i < obstacle_simplex.border_line_count(); i++) {
-          LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
-          if (room_shape.is_intersected_interior_by(curr_line_segment)) {
-            Line curr_line = obstacle_simplex.border_line(i);
-            if (shape_to_be_contained.side_of(curr_line) == Side.COLLINEAR) {
-              // curr_line intersects with the interior of p_shape_to_be_contained
-              cut_line = curr_line.opposite();
-              break;
-            }
+      for (int i = 0; i < obstacle_simplex.border_line_count(); ++i) {
+        LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
+        if (room_shape.is_intersected_interior_by(curr_line_segment)) {
+          Line curr_line = obstacle_simplex.border_line(i);
+          if (shape_to_be_contained.side_of(curr_line) == Side.COLLINEAR) {
+            // curr_line intersects with the interior of p_shape_to_be_contained
+            cut_line = curr_line.opposite();
+            break;
           }
         }
       }
@@ -788,9 +745,7 @@ public class ShapeSearchTree extends MinAreaTree {
         // cut line not found, parts or the whole of p_shape may be already
         // occupied from somewhere else.
         // DEBUG: Log if cut line failure
-        String algo = (p_obstacle_shape instanceof IntOctagon) ? "IntOctagon" : "Simplex";
-        FRLogger.debug("ShapeSearchTree.restrain_shape: No cut line found using " + algo +
-            " algo. Obstacle: " + p_obstacle_shape.toString() +
+        FRLogger.debug("ShapeSearchTree.restrain_shape: No cut line found. Obstacle: " + p_obstacle_shape.toString() +
             ", Room: " + room_shape.toString());
         return result;
       }
@@ -805,7 +760,8 @@ public class ShapeSearchTree extends MinAreaTree {
         result_piece = room_shape.intersection(cut_half_plane);
       }
       if (result_piece.dimension() >= 2) {
-        result.add(new IncompleteFreeSpaceExpansionRoom(result_piece, layer, new_shape_to_be_contained));
+        result.add(
+            new IncompleteFreeSpaceExpansionRoom(result_piece, layer, new_shape_to_be_contained));
       }
       TileShape opposite_half_plane = TileShape.get_instance(cut_line.opposite());
       TileShape rest_piece;
@@ -818,11 +774,8 @@ public class ShapeSearchTree extends MinAreaTree {
         TileShape rest_shape_to_be_contained = shape_to_be_contained.intersection(opposite_half_plane);
         IncompleteFreeSpaceExpansionRoom rest_incomplete_room = new IncompleteFreeSpaceExpansionRoom(rest_piece, layer,
             rest_shape_to_be_contained);
-        result.addAll(restrain_shape(rest_incomplete_room, p_obstacle_shape));
+        result.addAll(restrain_shape(rest_incomplete_room, obstacle_simplex));
       }
-    }
-    if (result.isEmpty()) {
-      return result;
     }
     return result;
   }
