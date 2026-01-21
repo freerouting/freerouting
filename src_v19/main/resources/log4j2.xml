@@ -9,7 +9,7 @@
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-6level %msg%n"/>
         </Console>
 
-        <File bufferSize="8192" bufferedIO="true" fileName="${filename}" immediateFlush="false" name="File">
+        <File bufferSize="8192" bufferedIO="true" fileName="${filename}" immediateFlush="true" name="File">
             <PatternLayout>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg%n</pattern>
             </PatternLayout>

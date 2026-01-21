@@ -75,7 +75,7 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
 
             AppenderComponentBuilder fileAppender = builder.newAppender("File", "File")
                     .addAttribute("fileName", fileLocation)
-                    .addAttribute("immediateFlush", false)
+                    .addAttribute("immediateFlush", true)
                     .addAttribute("bufferedIO", true)
                     .addAttribute("bufferSize", 8192)
                     .add(builder.newLayout("PatternLayout")

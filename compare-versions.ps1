@@ -112,13 +112,14 @@ function Parse-LogResults {
     }
     
     if (Test-Path $LogPath) {
-        $Content = Get-Content $LogPath
+        $Content = Get-Content $LogPath -Tail 1000
         # Look for the session summary line
         # Pattern: Auto-router session.*completed.*
         $SummaryLine = $Content | Where-Object { $_ -match "Auto-router session.*completed" } | Select-Object -Last 1
         
         # Extract max pass number
         # Look for lines like "Pass 1  :" or "Pass #2"
+        # Since we only read the last 1000 lines, we might miss early passes, but we should see the final ones.
         $PassLines = $Content | Where-Object { $_ -match "Pass (\d+)\s+:" }
         if ($PassLines) {
             $LastPassLine = $PassLines | Select-Object -Last 1
