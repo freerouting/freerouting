@@ -29,12 +29,14 @@ public class AutorouteEngine {
 
   static final int TRACE_WIDTH_TOLERANCE = 2;
   /**
-   * The current search tree used in autorouting. It depends on the trac clearance class used in the
+   * The current search tree used in autorouting. It depends on the trac clearance
+   * class used in the
    * autoroute algorithm.
    */
   public final ShapeSearchTree autoroute_search_tree;
   /**
-   * If maintain_database, the autorouter database is maintained after a connection is completed for
+   * If maintain_database, the autorouter database is maintained after a
+   * connection is completed for
    * performance reasons.
    */
   public final boolean maintain_database;
@@ -56,7 +58,8 @@ public class AutorouteEngine {
   private int expansion_room_instance_count = 0;
 
   /**
-   * Creates a new instance of BoardAutorouteEngine If p_maintain_database, the autorouter database
+   * Creates a new instance of BoardAutorouteEngine If p_maintain_database, the
+   * autorouter database
    * is maintained after a connection is completed for performance reasons.
    */
   public AutorouteEngine(
@@ -64,8 +67,7 @@ public class AutorouteEngine {
     this.board = p_board;
     this.maintain_database = p_maintain_database;
     this.net_no = -1;
-    this.autoroute_search_tree =
-        p_board.search_tree_manager.get_autoroute_tree(p_trace_clearance_class_no);
+    this.autoroute_search_tree = p_board.search_tree_manager.get_autoroute_tree(p_trace_clearance_class_no);
     int max_drill_page_width = (int) (5 * p_board.rules.get_default_via_diameter());
     max_drill_page_width = Math.max(max_drill_page_width, 10000);
     this.drill_page_array = new DrillPageArray(this.board, max_drill_page_width);
@@ -101,15 +103,15 @@ public class AutorouteEngine {
     this.time_limit = p_time_limit;
   }
 
-  /** Auto-routes a connection between p_start_set and p_dest_set.
+  /**
+   * Auto-routes a connection between p_start_set and p_dest_set.
    * Returns ALREADY_CONNECTED, ROUTED, NOT_ROUTED, or INSERT_ERROR.
    */
   public AutorouteResult autoroute_connection(
       Set<Item> p_start_set,
       Set<Item> p_dest_set,
       AutorouteControl p_ctrl,
-      SortedSet<Item> p_ripped_item_list)
-  {
+      SortedSet<Item> p_ripped_item_list) {
     MazeSearchAlgo maze_search_algo;
     try {
       maze_search_algo = MazeSearchAlgo.get_instance(p_start_set, p_dest_set, this, p_ctrl);
@@ -129,14 +131,13 @@ public class AutorouteEngine {
     LocateFoundConnectionAlgo autoroute_result = null;
     if (search_result != null) {
       try {
-        autoroute_result =
-            LocateFoundConnectionAlgo.get_instance(
-                search_result,
-                p_ctrl,
-                this.autoroute_search_tree,
-                board.rules.get_trace_angle_restriction(),
-                p_ripped_item_list,
-                board.get_test_level());
+        autoroute_result = LocateFoundConnectionAlgo.get_instance(
+            search_result,
+            p_ctrl,
+            this.autoroute_search_tree,
+            board.rules.get_trace_angle_restriction(),
+            p_ripped_item_list,
+            board.get_test_level());
       } catch (Exception e) {
         FRLogger.error("AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance", e);
       }
@@ -152,8 +153,7 @@ public class AutorouteEngine {
       return AutorouteResult.NOT_ROUTED;
     }
 
-    if (!p_ctrl.layer_active[autoroute_result.start_layer] || !p_ctrl.layer_active[autoroute_result.target_layer])
-    {
+    if (!p_ctrl.layer_active[autoroute_result.start_layer] || !p_ctrl.layer_active[autoroute_result.target_layer]) {
       return AutorouteResult.NOT_ROUTED;
     }
 
@@ -192,7 +192,8 @@ public class AutorouteEngine {
     for (int curr_net_no : changed_nets) {
       this.board.remove_trace_tails(curr_net_no, stop_connection_option);
     }
-    InsertFoundConnectionAlgo insert_found_connection_algo = InsertFoundConnectionAlgo.get_instance(autoroute_result, board, p_ctrl);
+    InsertFoundConnectionAlgo insert_found_connection_algo = InsertFoundConnectionAlgo.get_instance(autoroute_result,
+        board, p_ctrl);
 
     if (observers_activated) {
       this.board.end_notify_observers();
@@ -256,15 +257,18 @@ public class AutorouteEngine {
   }
 
   /**
-   * Creates a new FreeSpaceExpansionRoom and adds it to the room list. Its shape is normally
-   * unbounded at construction time of the room. The final (completed) shape will be a subshape of
-   * the start shape, which does not overlap with any obstacle, and it is as big as possible.
+   * Creates a new FreeSpaceExpansionRoom and adds it to the room list. Its shape
+   * is normally
+   * unbounded at construction time of the room. The final (completed) shape will
+   * be a subshape of
+   * the start shape, which does not overlap with any obstacle, and it is as big
+   * as possible.
    * p_contained_points will remain contained in the shape, after it is completed.
    */
   public IncompleteFreeSpaceExpansionRoom add_incomplete_expansion_room(
       TileShape p_shape, int p_layer, TileShape p_contained_shape) {
-    IncompleteFreeSpaceExpansionRoom new_room =
-        new IncompleteFreeSpaceExpansionRoom(p_shape, p_layer, p_contained_shape);
+    IncompleteFreeSpaceExpansionRoom new_room = new IncompleteFreeSpaceExpansionRoom(p_shape, p_layer,
+        p_contained_shape);
     if (this.incomplete_expansion_rooms == null) {
       this.incomplete_expansion_rooms = new LinkedList<>();
     }
@@ -273,7 +277,8 @@ public class AutorouteEngine {
   }
 
   /**
-   * Returns the first element in the list of incomplete expansion rooms or null, if the list is
+   * Returns the first element in the list of incomplete expansion rooms or null,
+   * if the list is
    * empty.
    */
   public IncompleteFreeSpaceExpansionRoom get_first_incomplete_expansion_room() {
@@ -294,11 +299,12 @@ public class AutorouteEngine {
   }
 
   /**
-   * Removes a complete expansion room from the database and creates new incomplete expansion rooms
+   * Removes a complete expansion room from the database and creates new
+   * incomplete expansion rooms
    * for the neighbours.
    */
   public void remove_complete_expansion_room(CompleteFreeSpaceExpansionRoom p_room) {
-    // create new incomplete expansion rooms for all  neighbours
+    // create new incomplete expansion rooms for all neighbours
     TileShape room_shape = p_room.get_shape();
     int room_layer = p_room.get_layer();
     Collection<ExpansionDoor> room_doors = p_room.get_doors();
@@ -316,8 +322,8 @@ public class AutorouteEngine {
         Line[] line_arr = new Line[1];
         line_arr[0] = neighbour_shape.border_line(touching_sides[1]).opposite();
         Simplex new_incomplete_room_shape = Simplex.get_instance(line_arr);
-        IncompleteFreeSpaceExpansionRoom new_incomplete_room =
-            add_incomplete_expansion_room(new_incomplete_room_shape, room_layer, intersection);
+        IncompleteFreeSpaceExpansionRoom new_incomplete_room = add_incomplete_expansion_room(new_incomplete_room_shape,
+            room_layer, intersection);
         ExpansionDoor new_door = new ExpansionDoor(curr_neighbour, new_incomplete_room, 1);
         curr_neighbour.add_door(new_door);
         new_incomplete_room.add_door(new_door);
@@ -335,7 +341,8 @@ public class AutorouteEngine {
   }
 
   /**
-   * Completes the shape of p_room. Returns the resulting rooms after completing the shape. p_room
+   * Completes the shape of p_room. Returns the resulting rooms after completing
+   * the shape. p_room
    * will no more exist after this function.
    */
   public Collection<CompleteFreeSpaceExpansionRoom> complete_expansion_room(
@@ -354,19 +361,27 @@ public class AutorouteEngine {
           break;
         }
       }
-      Collection<IncompleteFreeSpaceExpansionRoom> completed_shapes =
-          this.autoroute_search_tree.complete_shape(
-              p_room, this.net_no, ignore_object, from_door_shape);
+      Collection<IncompleteFreeSpaceExpansionRoom> completed_shapes = this.autoroute_search_tree.complete_shape(
+          p_room, this.net_no, ignore_object, from_door_shape);
+
+      // DEBUG: Log when room completion fails
+      if (completed_shapes.isEmpty()) {
+        FRLogger.debug("AutorouteEngine.complete_expansion_room: No shapes returned for net #" + this.net_no +
+            " on layer " + p_room.get_layer() +
+            ", initial shape: " + (p_room.get_shape() != null ? "bounded" : "unbounded") +
+            ", contained shape: " + (p_room.get_contained_shape() != null ? "present" : "null"));
+      }
+
       this.remove_incomplete_expansion_room(p_room);
       boolean is_first_completed_room = true;
+      int rooms_before_2d_filter = completed_shapes.size();
       for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : completed_shapes) {
         if (curr_incomplete_room.get_shape().dimension() != 2) {
           continue;
         }
         if (is_first_completed_room) {
           is_first_completed_room = false;
-          CompleteFreeSpaceExpansionRoom completed_room =
-              this.add_complete_room(curr_incomplete_room);
+          CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(curr_incomplete_room);
           if (completed_room != null) {
             result.add(completed_room);
           }
@@ -374,8 +389,8 @@ public class AutorouteEngine {
           // the shape of the first completed room may have changed and may
           // intersect now with the other shapes. Therefore, the completed shapes
           // have to be recalculated.
-          Collection<IncompleteFreeSpaceExpansionRoom> curr_completed_shapes =
-              this.autoroute_search_tree.complete_shape(
+          Collection<IncompleteFreeSpaceExpansionRoom> curr_completed_shapes = this.autoroute_search_tree
+              .complete_shape(
                   curr_incomplete_room, this.net_no, ignore_object, from_door_shape);
           for (IncompleteFreeSpaceExpansionRoom tmp_room : curr_completed_shapes) {
             CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(tmp_room);
@@ -385,6 +400,15 @@ public class AutorouteEngine {
           }
         }
       }
+
+      // DEBUG: Log if 2D filtering removed all rooms
+      if (result.isEmpty() && rooms_before_2d_filter > 0)
+
+      {
+        FRLogger.debug("AutorouteEngine.complete_expansion_room: All " + rooms_before_2d_filter +
+            " completed shapes were < 2D for net #" + this.net_no + " on layer " + p_room.get_layer());
+      }
+
       return result;
     } catch (Exception e) {
       FRLogger.error("AutorouteEngine.complete_expansion_room: ", e);
@@ -395,8 +419,7 @@ public class AutorouteEngine {
   /** Calculates the doors and adds the completed room to the room database. */
   private CompleteFreeSpaceExpansionRoom add_complete_room(
       IncompleteFreeSpaceExpansionRoom p_room) {
-    CompleteFreeSpaceExpansionRoom completed_room =
-        (CompleteFreeSpaceExpansionRoom) calculate_doors(p_room);
+    CompleteFreeSpaceExpansionRoom completed_room = (CompleteFreeSpaceExpansionRoom) calculate_doors(p_room);
     if (completed_room == null || completed_room.get_shape().dimension() != 2) {
       return null;
     }
@@ -409,7 +432,8 @@ public class AutorouteEngine {
   }
 
   /**
-   * Calculates the neighbours of p_room and inserts doors to the new created neighbour rooms. The
+   * Calculates the neighbours of p_room and inserts doors to the new created
+   * neighbour rooms. The
    * shape of the result room may be different to the shape of p_room
    */
   private CompleteExpansionRoom calculate_doors(ExpansionRoom p_room) {
@@ -425,7 +449,8 @@ public class AutorouteEngine {
   }
 
   /**
-   * Completes the shapes of the neighbour rooms of p_room, so that the doors of p_room will not
+   * Completes the shapes of the neighbour rooms of p_room, so that the doors of
+   * p_room will not
    * change later on.
    */
   public void complete_neighbour_rooms(CompleteExpansionRoom p_room) {
@@ -456,7 +481,8 @@ public class AutorouteEngine {
   }
 
   /**
-   * Invalidates all drill pages intersecting with p_shape, so they must be recalculated at the
+   * Invalidates all drill pages intersecting with p_shape, so they must be
+   * recalculated at the
    * next call of get_ddrills()
    */
   public void invalidate_drill_pages(TileShape p_shape) {
@@ -479,7 +505,8 @@ public class AutorouteEngine {
   }
 
   /**
-   * Returns all complete free space expansion rooms with a target door to an item in the set
+   * Returns all complete free space expansion rooms with a target door to an item
+   * in the set
    * p_items.
    */
   Set<CompleteFreeSpaceExpansionRoom> get_rooms_with_target_items(Set<Item> p_items) {
@@ -513,7 +540,8 @@ public class AutorouteEngine {
   }
 
   /**
-   * Reset all doors for autorouting the next connection, in case the autorouting database is
+   * Reset all doors for autorouting the next connection, in case the autorouting
+   * database is
    * retained.
    */
   private void reset_all_doors() {
