@@ -185,6 +185,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                     curr_object_shape);
                 if (new_restrained_shapes.isEmpty()) {
                   FRLogger.debug("Restrain returned empty for obstacle: " + curr_object.toString());
+                  FRLogger.debug("  Room Shape: " + curr_room.get_shape().toString());
+                  FRLogger.debug("  Contained Shape: " + curr_room.get_contained_shape().toString());
+                  FRLogger.debug("  Obstacle Shape: " + curr_object_shape.toString());
                 }
                 new_result.addAll(new_restrained_shapes);
 
