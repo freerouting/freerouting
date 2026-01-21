@@ -1,4 +1,5 @@
 package app.freerouting.gui;
+
 import com.google.gson.*;
 import java.nio.file.*;
 import java.nio.charset.StandardCharsets;
@@ -25,12 +26,18 @@ public class StartupOptions {
   transient String design_rules_filename;
   public String input_directory;
   public int max_passes = 99999;
-  //int num_threads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+  // int num_threads = Math.max(1, Runtime.getRuntime().availableProcessors() -
+  // 1);
   public int num_threads = 1;
+  public boolean optimizer_enabled = true;
+  public String job_timeout = null;
+  transient String logging_file_level;
+  transient String logging_console_level;
+  transient String logging_file_location;
   public BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY;
   public String hybrid_ratio = "1:1";
   public ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
-  transient String[] supported_languages = {"en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
+  transient String[] supported_languages = { "en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko" };
   transient Locale current_locale = Locale.getDefault();
   public boolean save_intermediate_stages = false;
   // this value is equivalent to the setting of "-oit 0.001"
@@ -110,22 +117,20 @@ public class StartupOptions {
         } else if (p_args[i].startsWith("-us")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             String op = p_args[i + 1].toLowerCase().trim();
-            board_update_strategy =
-                op.equals("global")
-                    ? BoardUpdateStrategy.GLOBAL_OPTIMAL
-                    : (op.equals("hybrid")
-                        ? BoardUpdateStrategy.HYBRID
-                        : BoardUpdateStrategy.GREEDY);
+            board_update_strategy = op.equals("global")
+                ? BoardUpdateStrategy.GLOBAL_OPTIMAL
+                : (op.equals("hybrid")
+                    ? BoardUpdateStrategy.HYBRID
+                    : BoardUpdateStrategy.GREEDY);
           }
         } else if (p_args[i].startsWith("-is")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             String op = p_args[i + 1].toLowerCase().trim();
-            item_selection_strategy =
-                op.indexOf("seq") == 0
-                    ? ItemSelectionStrategy.SEQUENTIAL
-                    : (op.indexOf("rand") == 0
-                        ? ItemSelectionStrategy.RANDOM
-                        : ItemSelectionStrategy.PRIORITIZED);
+            item_selection_strategy = op.indexOf("seq") == 0
+                ? ItemSelectionStrategy.SEQUENTIAL
+                : (op.indexOf("rand") == 0
+                    ? ItemSelectionStrategy.RANDOM
+                    : ItemSelectionStrategy.PRIORITIZED);
           }
         } else if (p_args[i].startsWith("-hr")) { // hybrid ratio
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
@@ -140,24 +145,24 @@ public class StartupOptions {
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("zh")) {
             current_locale = Locale.SIMPLIFIED_CHINESE;
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("hi")) {
-            //current_locale = Locale.HINDI;
+            // current_locale = Locale.HINDI;
             current_locale = new Locale("hi", "IN");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("es")) {
-            //current_locale = Locale.SPANISH;
+            // current_locale = Locale.SPANISH;
             current_locale = new Locale("es", "ES");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("fr")) {
             current_locale = Locale.FRENCH;
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ar")) {
-            //current_locale = Locale.ARABIC;
+            // current_locale = Locale.ARABIC;
             current_locale = new Locale("ar", "EG");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("bn")) {
-            //current_locale = Locale.BENGALI;
+            // current_locale = Locale.BENGALI;
             current_locale = new Locale("bn", "BD");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ru")) {
-            //current_locale = Locale.RUSSIAN;
+            // current_locale = Locale.RUSSIAN;
             current_locale = new Locale("ru", "RU");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("pt")) {
-            //current_locale = Locale.PORTUGUESE;
+            // current_locale = Locale.PORTUGUESE;
             current_locale = new Locale("pt", "PT");
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ja")) {
             current_locale = Locale.JAPANESE;
@@ -169,7 +174,7 @@ public class StartupOptions {
         } else if (p_args[i].startsWith("-im")) {
           save_intermediate_stages = true;
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            save_intermediate_stages = !(Objects.equals(p_args[i + 1],"0"));
+            save_intermediate_stages = !(Objects.equals(p_args[i + 1], "0"));
           }
         } else if (p_args[i].startsWith("-w")) {
           webstart_option = true;
@@ -196,11 +201,59 @@ public class StartupOptions {
               dialog_confirmation_timeout = 0;
             }
           }
+        } else if (p_args[i].startsWith("--router.optimizer.enabled")) {
+          String[] parts = p_args[i].split("=");
+          if (parts.length == 2) {
+            optimizer_enabled = Boolean.parseBoolean(parts[1]);
+          }
+        } else if (p_args[i].startsWith("--router.job_timeout")) {
+          String[] parts = p_args[i].split("=");
+          if (parts.length == 2) {
+            job_timeout = parts[1].replace("\"", "");
+          }
+        } else if (p_args[i].startsWith("--router.max_passes")) {
+          String[] parts = p_args[i].split("=");
+          if (parts.length == 2) {
+            max_passes = Integer.decode(parts[1]);
+            if (max_passes < 1) {
+              max_passes = 1;
+            }
+            if (max_passes > 99998) {
+              max_passes = 99998;
+            }
+          }
+        } else if (p_args[i].startsWith("--router.max_threads")) {
+          String[] parts = p_args[i].split("=");
+          if (parts.length == 2) {
+            num_threads = Integer.decode(parts[1]);
+            if (num_threads <= 0) {
+              num_threads = 0;
+            }
+            if (num_threads > 1024) {
+              num_threads = 1024;
+            }
+          }
+        } else if (p_args[i].startsWith("--logging.file.level")) {
+          String[] parts = p_args[i].split("=");
+          if (parts.length == 2) {
+            logging_file_level = parts[1];
+          }
+        } else if (p_args[i].startsWith("--logging.console.level")) {
+          String[] parts = p_args[i].split("=");
+          if (parts.length == 2) {
+            logging_console_level = parts[1];
+          }
+        } else if (p_args[i].startsWith("--logging.file.location")) {
+          String[] parts = p_args[i].split("=");
+          if (parts.length == 2) {
+            logging_file_location = parts[1];
+          }
         }
       } catch (Exception e) {
         FRLogger.error("There was a problem parsing the '" + p_args[i] + "' parameter", e);
       }
     }
+
   }
 
   public boolean getWebstartOption() {

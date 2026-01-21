@@ -49,12 +49,11 @@ import javax.swing.plaf.FontUIResource;
 /** Main application for creating frames with new or existing board designs. */
 public class MainApplication extends WindowBase {
   static final String WEB_FILE_BASE_NAME = "http://www.freerouting.app";
-  static final String VERSION_NUMBER_STRING =
-      "v"
-          + Constants.FREEROUTING_VERSION
-          + " (build-date: "
-          + Constants.FREEROUTING_BUILD_DATE
-          + ")";
+  static final String VERSION_NUMBER_STRING = "v"
+      + Constants.FREEROUTING_VERSION
+      + " (build-date: "
+      + Constants.FREEROUTING_BUILD_DATE
+      + ")";
   private static final TestLevel DEBUG_LEVEL = TestLevel.CRITICAL_DEBUGGING_OUTPUT;
   private final ResourceBundle resources;
   private final JButton demonstration_button;
@@ -77,16 +76,20 @@ public class MainApplication extends WindowBase {
   private String design_dir_name;
   private final int max_passes;
   private final BoardUpdateStrategy board_update_strategy;
-  // Issue: adding a new field into AutorouteSettings caused exception when loading
-  // an existing design: "Couldn't read design file", "InvalidClassException", incompatible with
+  // Issue: adding a new field into AutorouteSettings caused exception when
+  // loading
+  // an existing design: "Couldn't read design file", "InvalidClassException",
+  // incompatible with
   // serialized data
   // so choose to pass this parameter through BoardHandling
   private final String hybrid_ratio;
   private final ItemSelectionStrategy item_selection_strategy;
   private final int num_threads;
   private static StartupOptions startupOptions;
+
   /**
-   * Creates new form MainApplication It takes the directory of the board designs as optional
+   * Creates new form MainApplication It takes the directory of the board designs
+   * as optional
    * argument.
    *
    * @param startupOptions
@@ -105,8 +108,7 @@ public class MainApplication extends WindowBase {
     this.save_intermediate_stages = startupOptions.save_intermediate_stages;
     this.optimization_improvement_threshold = startupOptions.optimization_improvement_threshold;
     this.ignore_net_classes_by_autorouter = startupOptions.ignore_net_classes_by_autorouter;
-    this.resources =
-        ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
+    this.resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
 
     main_panel = new JPanel();
     getContentPane().add(main_panel);
@@ -141,7 +143,8 @@ public class MainApplication extends WindowBase {
         demonstration_button.setText(resources.getString("router_demonstrations"));
         demonstration_button.setToolTipText(resources.getString("router_demonstrations_tooltip"));
         demonstration_button.addActionListener(evt -> window_net_demonstrations.setVisible(true));
-        demonstration_button.addActionListener(evt -> FRAnalytics.buttonClicked("demonstration_button", demonstration_button.getText()));
+        demonstration_button.addActionListener(
+            evt -> FRAnalytics.buttonClicked("demonstration_button", demonstration_button.getText()));
 
         gridbag.setConstraints(demonstration_button, gridbag_constraints);
         main_panel.add(demonstration_button, gridbag_constraints);
@@ -149,7 +152,8 @@ public class MainApplication extends WindowBase {
         sample_board_button.setText(resources.getString("sample_designs"));
         sample_board_button.setToolTipText(resources.getString("sample_designs_tooltip"));
         sample_board_button.addActionListener(evt -> window_net_sample_designs.setVisible(true));
-        sample_board_button.addActionListener(evt -> FRAnalytics.buttonClicked("sample_board_button", sample_board_button.getText()));
+        sample_board_button
+            .addActionListener(evt -> FRAnalytics.buttonClicked("sample_board_button", sample_board_button.getText()));
 
         gridbag.setConstraints(sample_board_button, gridbag_constraints);
         main_panel.add(sample_board_button, gridbag_constraints);
@@ -159,7 +163,8 @@ public class MainApplication extends WindowBase {
     open_board_button.setText(resources.getString("open_own_design"));
     open_board_button.setToolTipText(resources.getString("open_own_design_tooltip"));
     open_board_button.addActionListener(this::open_board_design_action);
-    open_board_button.addActionListener(evt -> FRAnalytics.buttonClicked("open_board_button", open_board_button.getText()));
+    open_board_button
+        .addActionListener(evt -> FRAnalytics.buttonClicked("open_board_button", open_board_button.getText()));
 
     gridbag.setConstraints(open_board_button, gridbag_constraints);
     if (add_buttons) {
@@ -169,8 +174,10 @@ public class MainApplication extends WindowBase {
     if (startupOptions.getWebstartOption() && add_buttons) {
       restore_defaults_button.setText(resources.getString("restore_defaults"));
       restore_defaults_button.setToolTipText(resources.getString("restore_defaults_tooltip"));
-      restore_defaults_button.addActionListener(evt -> {});
-      restore_defaults_button.addActionListener(evt -> FRAnalytics.buttonClicked("restore_defaults_button", restore_defaults_button.getText()));
+      restore_defaults_button.addActionListener(evt -> {
+      });
+      restore_defaults_button.addActionListener(
+          evt -> FRAnalytics.buttonClicked("restore_defaults_button", restore_defaults_button.getText()));
       gridbag.setConstraints(restore_defaults_button, gridbag_constraints);
       main_panel.add(restore_defaults_button, gridbag_constraints);
     }
@@ -195,18 +202,30 @@ public class MainApplication extends WindowBase {
    * @param args
    */
   public static void main(String[] args) {
-    // we have a special case if logging must be disabled before the general command line arguments are parsed
+    // we have a special case if logging must be disabled before the general command
+    // line arguments are parsed
     if (args.length > 0 && Arrays.asList(args).contains("-dl")) {
       // disable logging
       FRLogger.disableLogging();
+    }
+
+    // Check for logging arguments to configure Log4j2 via system properties
+    for (String arg : args) {
+      if (arg.startsWith("--logging.file.location=")) {
+        System.setProperty("freerouting.log.file", arg.substring("--logging.file.location=".length()));
+      } else if (arg.startsWith("--logging.file.level=")) {
+        System.setProperty("freerouting.log.file.level", arg.substring("--logging.file.level=".length()));
+      } else if (arg.startsWith("--logging.console.level=")) {
+        System.setProperty("freerouting.log.console.level", arg.substring("--logging.console.level=".length()));
+      }
     }
 
     FRLogger.traceEntry("MainApplication.main()");
 
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException |
-             IllegalAccessException ex) {
+    } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException
+        | IllegalAccessException ex) {
       FRLogger.error(ex.getLocalizedMessage(), ex);
     }
 
@@ -242,15 +261,13 @@ public class MainApplication extends WindowBase {
       // we don't want to stop if the configuration file doesn't exist
     }
 
-    if (startupOptions == null)
-    {
+    if (startupOptions == null) {
       startupOptions = new StartupOptions();
 
       // save the default values
       try {
         StartupOptions.save(startupOptions);
-      } catch (Exception e)
-      {
+      } catch (Exception e) {
         // it's ok if we can't save the configuration file
       }
     }
@@ -274,16 +291,14 @@ public class MainApplication extends WindowBase {
     int dpi = toolkit.getScreenResolution();
     FRLogger.debug(" Screen: " + width + "x" + height + ", " + dpi + " DPI");
 
-
     // initialize analytics
-    FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION,"G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
+    FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION, "G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
     FRAnalytics.setEnabled(!startupOptions.disable_analytics);
     FRAnalytics.setUserId(startupOptions.user_id);
     FRAnalytics.identify();
     try {
       Thread.sleep(1000);
-    }
-    catch (Exception ignored) {
+    } catch (Exception ignored) {
     }
     FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
     FRAnalytics.appStarted(
@@ -300,8 +315,7 @@ public class MainApplication extends WindowBase {
         Runtime.getRuntime().availableProcessors(),
         (Runtime.getRuntime().maxMemory() / 1024 / 1024),
         startupOptions.host,
-        width, height, dpi
-    );
+        width, height, dpi);
 
     // Set default font for buttons and labels
     FontUIResource menuFont = (FontUIResource) UIManager.get("Menu.font");
@@ -327,7 +341,8 @@ public class MainApplication extends WindowBase {
     new Thread(checker).start();
 
     // get localization resources
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication", startupOptions.current_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication",
+        startupOptions.current_locale);
 
     // check if the user wants to see the help only
     if (startupOptions.show_help_option) {
@@ -355,20 +370,18 @@ public class MainApplication extends WindowBase {
                 + resources.getString("message_7"));
         return;
       }
-      String message =
-          resources.getString("loading_design") + " " + startupOptions.design_input_filename;
+      String message = resources.getString("loading_design") + " " + startupOptions.design_input_filename;
       WindowMessage welcome_window = WindowMessage.show(message);
-      final BoardFrame new_frame =
-          create_board_frame(
-              design_file,
-              null,
-              board_option,
-              startupOptions.test_version_option,
-              startupOptions.current_locale,
-              startupOptions.design_rules_filename,
-              startupOptions.save_intermediate_stages,
-              startupOptions.optimization_improvement_threshold,
-              startupOptions.ignore_net_classes_by_autorouter);
+      final BoardFrame new_frame = create_board_frame(
+          design_file,
+          null,
+          board_option,
+          startupOptions.test_version_option,
+          startupOptions.current_locale,
+          startupOptions.design_rules_filename,
+          startupOptions.save_intermediate_stages,
+          startupOptions.optimization_improvement_threshold,
+          startupOptions.ignore_net_classes_by_autorouter);
       welcome_window.dispose();
       if (new_frame == null) {
         FRLogger.warn("Couldn't create window frame");
@@ -386,13 +399,16 @@ public class MainApplication extends WindowBase {
       new_frame.board_panel.board_handling.set_hybrid_ratio(startupOptions.hybrid_ratio);
       new_frame.board_panel.board_handling.set_item_selection_strategy(
           startupOptions.item_selection_strategy);
+      new_frame.board_panel.board_handling.settings.autoroute_settings.set_with_postroute(
+          startupOptions.optimizer_enabled);
 
-      if (startupOptions.design_output_filename != null)
-      {
-        // we need to set up a listener to save the design file when the autorouter is running
+      if (startupOptions.design_output_filename != null) {
+        // we need to set up a listener to save the design file when the autorouter is
+        // running
         new_frame.board_panel.board_handling.autorouter_listener = new ThreadActionListener() {
           @Override
-          public void autorouterStarted() {}
+          public void autorouterStarted() {
+          }
 
           @Override
           public void autorouterAborted() {
@@ -411,8 +427,8 @@ public class MainApplication extends WindowBase {
             }
 
             if (!(filename.toLowerCase().endsWith(".dsn") ||
-                  filename.toLowerCase().endsWith(".ses") ||
-                  filename.toLowerCase().endsWith(".scr"))) {
+                filename.toLowerCase().endsWith(".ses") ||
+                filename.toLowerCase().endsWith(".scr"))) {
               FRLogger.warn("Couldn't export board to '" + filename + "', unsupported extension");
               return;
             }
@@ -431,12 +447,10 @@ public class MainApplication extends WindowBase {
                 case ".ses" -> new_frame.board_panel.board_handling.export_specctra_session_file(
                     design_name, output_stream);
                 case ".scr" -> {
-                  ByteArrayOutputStream session_output_stream =
-                      new ByteArrayOutputStream();
+                  ByteArrayOutputStream session_output_stream = new ByteArrayOutputStream();
                   new_frame.board_panel.board_handling.export_specctra_session_file(
                       filename, session_output_stream);
-                  InputStream input_stream =
-                      new ByteArrayInputStream(session_output_stream.toByteArray());
+                  InputStream input_stream = new ByteArrayInputStream(session_output_stream.toByteArray());
                   new_frame.board_panel.board_handling.export_eagle_session_file(
                       input_stream, output_stream);
                 }
@@ -450,28 +464,29 @@ public class MainApplication extends WindowBase {
         };
       }
 
-      if (new_frame.is_intermediate_stage_file_available())
-      {
+      if (new_frame.is_intermediate_stage_file_available()) {
         LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String load_snapshot_confirmation = String.format(resources.getString("load_snapshot_confirmation"), modification_time.format(formatter));
+        String load_snapshot_confirmation = String.format(resources.getString("load_snapshot_confirmation"),
+            modification_time.format(formatter));
 
-        if (WindowMessage.confirm(load_snapshot_confirmation))
-        {
+        if (WindowMessage.confirm(load_snapshot_confirmation)) {
           new_frame.load_intermediate_stage_file();
         }
       }
 
-      // start the auto-router automatically if both input and output files were passed as a parameter
+      // start the auto-router automatically if both input and output files were
+      // passed as a parameter
       if ((startupOptions.design_input_filename != null)
           && (startupOptions.design_output_filename != null)) {
 
-        // Add a model dialog with timeout to confirm the autorouter start with the default settings
+        // Add a model dialog with timeout to confirm the autorouter start with the
+        // default settings
         final String START_NOW_TEXT = resources.getString("auto_start_routing_startnow_button");
         JButton startNowButton = new JButton(START_NOW_TEXT + " (" + startupOptions.dialog_confirmation_timeout + ")");
 
         final String CANCEL_TEXT = resources.getString("auto_start_routing_cancel_button");
-        Object[] options = {startNowButton, CANCEL_TEXT};
+        Object[] options = { startNowButton, CANCEL_TEXT };
 
         final String AUTOSTART_MSG = resources.getString("auto_start_routing_message");
         JOptionPane auto_start_routing_dialog = new JOptionPane(
@@ -480,11 +495,11 @@ public class MainApplication extends WindowBase {
             JOptionPane.OK_CANCEL_OPTION,
             null,
             options,
-            options[0]
-        );
+            options[0]);
 
         startNowButton.addActionListener(event -> auto_start_routing_dialog.setValue(options[0]));
-        startNowButton.addActionListener(evt -> FRAnalytics.buttonClicked("auto_start_routing_dialog_start", startNowButton.getText()));
+        startNowButton.addActionListener(
+            evt -> FRAnalytics.buttonClicked("auto_start_routing_dialog_start", startNowButton.getText()));
 
         final String AUTOSTART_TITLE = resources.getString("auto_start_routing_title");
 
@@ -493,22 +508,21 @@ public class MainApplication extends WindowBase {
           JDialog autostartDialog = auto_start_routing_dialog.createDialog(AUTOSTART_TITLE);
 
           // Update startNowButton text every second
-          Timer autostartTimer =
-              new Timer(
-                  1000,
-                  new ActionListener() {
-                    private int secondsLeft = startupOptions.dialog_confirmation_timeout;
+          Timer autostartTimer = new Timer(
+              1000,
+              new ActionListener() {
+                private int secondsLeft = startupOptions.dialog_confirmation_timeout;
 
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                      if (--secondsLeft > 0) {
-                        startNowButton.setText(START_NOW_TEXT + " (" + secondsLeft + ")");
-                      } else {
-                        auto_start_routing_dialog.setValue(options[0]);
-                        FRAnalytics.buttonClicked("auto_start_routing_dialog_start_with_timeout", startNowButton.getText());
-                      }
-                    }
-                  });
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                  if (--secondsLeft > 0) {
+                    startNowButton.setText(START_NOW_TEXT + " (" + secondsLeft + ")");
+                  } else {
+                    auto_start_routing_dialog.setValue(options[0]);
+                    FRAnalytics.buttonClicked("auto_start_routing_dialog_start_with_timeout", startNowButton.getText());
+                  }
+                }
+              });
 
           autostartTimer.start();
           autostartDialog.setVisible(true); // blocks execution
@@ -519,14 +533,37 @@ public class MainApplication extends WindowBase {
 
         Object choice = auto_start_routing_dialog.getValue();
         // Start the auto-router if the user didn't cancel the dialog
-        if ((startupOptions.dialog_confirmation_timeout == 0) || (choice == options[0]))
-        {
+        if ((startupOptions.dialog_confirmation_timeout == 0) || (choice == options[0])) {
           // Start the auto-router
           InteractiveActionThread thread = new_frame.board_panel.board_handling.start_batch_autorouter();
 
           if (new_frame.board_panel.board_handling.autorouter_listener != null) {
-            // Add the auto-router listener to save the design file when the autorouter is running
+            // Add the auto-router listener to save the design file when the autorouter is
+            // running
             thread.addListener(new_frame.board_panel.board_handling.autorouter_listener);
+          }
+
+          if (startupOptions.job_timeout != null) {
+            try {
+              String[] parts = startupOptions.job_timeout.split(":");
+              long seconds = 0;
+              if (parts.length == 3) {
+                seconds = Integer.parseInt(parts[0]) * 3600 + Integer.parseInt(parts[1]) * 60
+                    + Integer.parseInt(parts[2]);
+              }
+              if (seconds > 0) {
+                final long timeoutMillis = seconds * 1000;
+                Timer timeoutTimer = new Timer((int) timeoutMillis, e -> {
+                  FRLogger.info("Job timeout reached. Stopping autorouter...");
+                  thread.request_stop_auto_router();
+                  ((Timer) e.getSource()).stop();
+                });
+                timeoutTimer.setRepeats(false);
+                timeoutTimer.start();
+              }
+            } catch (Exception e) {
+              FRLogger.warn("Invalid job timeout format: " + startupOptions.job_timeout);
+            }
           }
         }
 
@@ -550,7 +587,8 @@ public class MainApplication extends WindowBase {
   }
 
   /**
-   * Creates a new board frame containing the data of the input design file. Returns null, if an
+   * Creates a new board frame containing the data of the input design file.
+   * Returns null, if an
    * error occurred.
    */
   private static BoardFrame create_board_frame(
@@ -563,8 +601,7 @@ public class MainApplication extends WindowBase {
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
       String[] p_ignore_net_classes_by_autorouter) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.gui.MainApplication", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication", p_locale);
 
     InputStream input_stream = p_design_file.get_input_stream();
     if (input_stream == null) {
@@ -575,23 +612,21 @@ public class MainApplication extends WindowBase {
     }
 
     TestLevel test_level = p_is_test_version ? DEBUG_LEVEL : TestLevel.RELEASE_VERSION;
-    BoardFrame new_frame =
-        new BoardFrame(
-            p_design_file,
-            p_option,
-            test_level,
-            p_locale,
-            !p_is_test_version,
-            p_save_intermediate_stages,
-            p_optimization_improvement_threshold);
-    boolean read_ok =
-        new_frame.read(input_stream, p_design_file.is_created_from_text_file(), p_message_field);
+    BoardFrame new_frame = new BoardFrame(
+        p_design_file,
+        p_option,
+        test_level,
+        p_locale,
+        !p_is_test_version,
+        p_save_intermediate_stages,
+        p_optimization_improvement_threshold);
+    boolean read_ok = new_frame.read(input_stream, p_design_file.is_created_from_text_file(), p_message_field);
     if (!read_ok) {
       return null;
     }
     new_frame.menubar.add_design_dependent_items();
     if (p_design_file.is_created_from_text_file()) {
-      // Read the file  with the saved rules, if it is existing.
+      // Read the file with the saved rules, if it is existing.
 
       String file_name = p_design_file.get_name();
       String[] name_parts = file_name.split("\\.");
@@ -624,8 +659,7 @@ public class MainApplication extends WindowBase {
 
       // ignore net classes if they were defined by a command line argument
       for (String net_class_name : p_ignore_net_classes_by_autorouter) {
-        NetClasses netClasses =
-            new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
+        NetClasses netClasses = new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
 
         for (int i = 0; i < netClasses.count(); i++) {
           if (netClasses.get(i).get_name().equalsIgnoreCase(net_class_name)) {
@@ -670,17 +704,16 @@ public class MainApplication extends WindowBase {
     message_field.setText(message);
     WindowMessage welcome_window = WindowMessage.show(message);
     welcome_window.setTitle(message);
-    BoardFrame new_frame =
-        create_board_frame(
-            design_file,
-            message_field,
-            option,
-            this.is_test_version,
-            this.locale,
-            null,
-            this.save_intermediate_stages,
-            this.optimization_improvement_threshold,
-            this.ignore_net_classes_by_autorouter);
+    BoardFrame new_frame = create_board_frame(
+        design_file,
+        message_field,
+        option,
+        this.is_test_version,
+        this.locale,
+        null,
+        this.save_intermediate_stages,
+        this.optimization_improvement_threshold,
+        this.ignore_net_classes_by_autorouter);
     welcome_window.dispose();
     if (new_frame == null) {
       return;
@@ -694,15 +727,16 @@ public class MainApplication extends WindowBase {
     new_frame.board_panel.board_handling.set_board_update_strategy(this.board_update_strategy);
     new_frame.board_panel.board_handling.set_hybrid_ratio(this.hybrid_ratio);
     new_frame.board_panel.board_handling.set_item_selection_strategy(this.item_selection_strategy);
+    new_frame.board_panel.board_handling.settings.autoroute_settings.set_with_postroute(
+        startupOptions.optimizer_enabled);
 
-    if (new_frame.is_intermediate_stage_file_available())
-    {
+    if (new_frame.is_intermediate_stage_file_available()) {
       LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-      String load_snapshot_confirmation = String.format(resources.getString("load_snapshot_confirmation"), modification_time.format(formatter));
+      String load_snapshot_confirmation = String.format(resources.getString("load_snapshot_confirmation"),
+          modification_time.format(formatter));
 
-      if (WindowMessage.confirm(load_snapshot_confirmation))
-      {
+      if (WindowMessage.confirm(load_snapshot_confirmation)) {
         new_frame.load_intermediate_stage_file();
       }
     }
@@ -749,12 +783,11 @@ public class MainApplication extends WindowBase {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       boolean exit_program = true;
       if (!is_test_version && !board_frames.isEmpty()) {
-        int application_confirm_exit_dialog =
-            JOptionPane.showConfirmDialog(
-                null,
-                resources.getString("confirm_cancel"),
-                null,
-                JOptionPane.YES_NO_OPTION);
+        int application_confirm_exit_dialog = JOptionPane.showConfirmDialog(
+            null,
+            resources.getString("confirm_cancel"),
+            null,
+            JOptionPane.YES_NO_OPTION);
         if (application_confirm_exit_dialog == JOptionPane.NO_OPTION) {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
           FRAnalytics.buttonClicked("application_confirm_exit_dialog_no", resources.getString("confirm_cancel"));

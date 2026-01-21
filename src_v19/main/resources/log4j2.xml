@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
-    <Properties>
-        <Property name="filename">logs/freerouting.log</Property>
-    </Properties>
-    <ThresholdFilter level="trace"/>
-
     <Appenders>
-        <File name="File" fileName="${filename}" bufferSize="1">
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-6level %msg%n"/>
+        </Console>
+
+        <Console name="stderr" target="SYSTEM_ERR">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-6level %msg%n"/>
+        </Console>
+
+        <File bufferSize="1" fileName="${filename}" name="File">
             <PatternLayout>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg%n</pattern>
             </PatternLayout>
         </File>
-
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg%n"/>
-        </Console>
-
-        <Console name="stderr" target="SYSTEM_ERR">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg%n"/>
-        </Console>
     </Appenders>
-
     <Loggers>
         <Root level="ALL">
-            <AppenderRef ref="Console" level="INFO"/>
-            <AppenderRef ref="stderr" level="ERROR"/>
-            <AppenderRef ref="File" level="INFO"/>
+            <AppenderRef level="${sys:freerouting.log.console.level:-INFO}" ref="Console"/>
+            <AppenderRef level="ERROR" ref="stderr"/>
+            <AppenderRef level="${sys:freerouting.log.file.level:-DEBUG}" ref="File"/>
         </Root>
     </Loggers>
+
+    <Properties>
+        <Property name="filename">${sys:freerouting.log.file:-logs/freerouting-v190.log}</Property>
+    </Properties>
+
+    <ThresholdFilter level="trace"/>
 </Configuration>
