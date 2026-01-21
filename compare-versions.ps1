@@ -10,9 +10,9 @@ param(
     [string]$do = ".\tests\Issue508-DAC2020_bm01.ses",
     [string]$LoggingLocation = ".\logs\",
     [string]$LoggingLevel = "DEBUG",
-    [int]$max_passes = 5,
+    [int]$max_passes = 3,
     [int]$max_threads = 1,
-    [string]$job_timeout = "00:01:30"
+    [string]$job_timeout = "00:03:00"
 )
 
 # Colors for output
@@ -73,9 +73,20 @@ Write-Host "  Timeout:     $job_timeout" -ForegroundColor White
 $CurrentLogFile = Join-Path $LogBaseDir "freerouting-current.log"
 $V19LogFile = Join-Path $LogBaseDir "freerouting-v190.log"
 
+# Clean up old logs
+if (Test-Path $CurrentLogFile) { Remove-Item $CurrentLogFile -Force }
+if (Test-Path $V19LogFile) { Remove-Item $V19LogFile -Force }
+
+# Calculate Output Files
+$OutputDirectory = Split-Path $OutputFileAbs -Parent
+$OutputBaseName = [System.IO.Path]::GetFileNameWithoutExtension($OutputFileAbs)
+$OutputExtension = [System.IO.Path]::GetExtension($OutputFileAbs)
+
+$CurrentOutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-current$($OutputExtension)"
+$V19OutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-v190$($OutputExtension)"
+
 $BaseArgs = @(
     "-de", "`"$InputFileAbs`""
-    "-do", "`"$OutputFileAbs`""
     "--router.optimizer.enabled=false"
     "--gui.enabled=false"
     "--api_server.enabled=false"
@@ -145,6 +156,7 @@ function Invoke-Version {
         [string]$VersionName,
         [string]$JarPath,
         [string]$LogPath,
+        [string]$OutputFile,
         [string]$Color
     )
 
@@ -157,11 +169,12 @@ function Invoke-Version {
 
     $env:FREEROUTING_LOG_DIR = $LogBaseDir
 
-    # Construct flat argument list with specific log location
-    $ProcessArgs = @("-jar", $JarPath) + $BaseArgs + @("--logging.file.location=$LogPath")
+    # Construct flat argument list with specific log location and output file
+    $ProcessArgs = @("-jar", $JarPath) + $BaseArgs + @("--logging.file.location=$LogPath", "-do", "`"$OutputFile`"")
 
     Write-Host "Command: java $ProcessArgs" -ForegroundColor Gray
-    Write-Host "Log Target: $LogPath"       -ForegroundColor Gray
+    Write-Host "Log Target:    $LogPath"    -ForegroundColor Gray
+    Write-Host "Output Target: $OutputFile" -ForegroundColor Gray
 
     $StartTime = Get-Date
 
@@ -215,12 +228,14 @@ function Invoke-Version {
 $CurrentResult = Invoke-Version -VersionName "Current Version" `
     -JarPath $CurrentJar `
     -LogPath $CurrentLogFile `
+    -OutputFile $CurrentOutputFile `
     -Color $InfoColor
 
 # Run V1.9 Version
 $V19Result = Invoke-Version -VersionName "V1.9 Version" `
     -JarPath $V19Jar `
     -LogPath $V19LogFile `
+    -OutputFile $V19OutputFile `
     -Color $SuccessColor
 
 # Summary
