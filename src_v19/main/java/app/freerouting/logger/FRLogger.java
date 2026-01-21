@@ -129,8 +129,6 @@ public class FRLogger {
   }
 
   public static void debug(String msg) {
-    logEntries.add(LogEntryType.Debug, msg);
-
     if (!enabled)
       return;
     if (logger == null)
@@ -155,8 +153,6 @@ public class FRLogger {
   }
 
   public static void trace(String msg) {
-    logEntries.add(LogEntryType.Trace, msg);
-
     if (!enabled)
       return;
     if (logger == null)
