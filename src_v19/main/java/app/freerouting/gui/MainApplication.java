@@ -75,6 +75,7 @@ public class MainApplication extends WindowBase {
   private final String[] ignore_net_classes_by_autorouter;
   private String design_dir_name;
   private final int max_passes;
+  private final int max_items;
   private final BoardUpdateStrategy board_update_strategy;
   // Issue: adding a new field into AutorouteSettings caused exception when
   // loading
@@ -108,6 +109,7 @@ public class MainApplication extends WindowBase {
     this.save_intermediate_stages = startupOptions.save_intermediate_stages;
     this.optimization_improvement_threshold = startupOptions.optimization_improvement_threshold;
     this.ignore_net_classes_by_autorouter = startupOptions.ignore_net_classes_by_autorouter;
+    this.max_items = startupOptions.getMaxItems();
     this.resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
 
     main_panel = new JPanel();
@@ -401,6 +403,7 @@ public class MainApplication extends WindowBase {
           startupOptions.item_selection_strategy);
       new_frame.board_panel.board_handling.settings.autoroute_settings.set_with_postroute(
           startupOptions.optimizer_enabled);
+      new_frame.board_panel.board_handling.settings.autoroute_settings.setMaxItems(startupOptions.getMaxItems());
 
       if (startupOptions.design_output_filename != null) {
         // we need to set up a listener to save the design file when the autorouter is
@@ -729,6 +732,7 @@ public class MainApplication extends WindowBase {
     new_frame.board_panel.board_handling.set_item_selection_strategy(this.item_selection_strategy);
     new_frame.board_panel.board_handling.settings.autoroute_settings.set_with_postroute(
         startupOptions.optimizer_enabled);
+    new_frame.board_panel.board_handling.settings.autoroute_settings.setMaxItems(this.max_items);
 
     if (new_frame.is_intermediate_stage_file_available()) {
       LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();

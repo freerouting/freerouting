@@ -26,6 +26,7 @@ public class StartupOptions {
   transient String design_rules_filename;
   public String input_directory;
   public int max_passes = 99999;
+  public int max_items = Integer.MAX_VALUE;
   // int num_threads = Math.max(1, Runtime.getRuntime().availableProcessors() -
   // 1);
   public int num_threads = 1;
@@ -216,6 +217,14 @@ public class StartupOptions {
               max_passes = 99998;
             }
           }
+        } else if (p_args[i].startsWith("--router.max_items")) {
+          String[] parts = p_args[i].split("=");
+          if (parts.length == 2) {
+            max_items = Integer.decode(parts[1]);
+            if (max_items < 1) {
+              max_items = 1;
+            }
+          }
         } else if (p_args[i].startsWith("--router.max_threads")) {
           String[] parts = p_args[i].split("=");
           if (parts.length == 2) {
@@ -264,6 +273,10 @@ public class StartupOptions {
 
   public int getMaxPasses() {
     return max_passes;
+  }
+
+  public int getMaxItems() {
+    return max_items;
   }
 
   public int getNumThreads() {

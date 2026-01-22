@@ -83,6 +83,7 @@ public class BatchAutorouter extends NamedAlgorithm {
    */
   private Instant sessionStartTime;
   private long lastBoardUpdateTimestamp = 0;
+  private int totalItemsRouted = 0;
 
   public BatchAutorouter(RoutingJob job) {
     this(job.thread, job.board, job.routerSettings, true, true,
@@ -433,6 +434,14 @@ public class BatchAutorouter extends NamedAlgorithm {
               board.remove_item(curr_ripped_item);
             }
           }
+
+          if (this.totalItemsRouted >= job.routerSettings.maxItems) {
+            job.logInfo("Max items limit reached (" + job.routerSettings.maxItems + "). Stopping auto-router.");
+            this.thread.request_stop_auto_router();
+            break;
+          }
+          this.totalItemsRouted++;
+
           PerformanceProfiler.start("autoroute_item");
           var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no);
           PerformanceProfiler.end("autoroute_item");

@@ -3,7 +3,6 @@ package app.freerouting.interactive;
 import app.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
-
 import java.io.Serializable;
 
 /** Contains the interactive settings for the autorouter. */
@@ -22,6 +21,7 @@ public class AutorouteSettings implements Serializable {
   private int start_ripup_costs;
   private int start_pass_no;
   private int stop_pass_no;
+  private int maxItems;
 
   /** Creates a new instance of AutorouteSettings */
   public AutorouteSettings(int p_layer_count) {
@@ -40,6 +40,7 @@ public class AutorouteSettings implements Serializable {
     start_ripup_costs = 100;
     set_start_pass_no(1);
     set_stop_pass_no(Integer.MAX_VALUE);
+    setMaxItems(Integer.MAX_VALUE);
     vias_allowed = true;
     with_fanout = false;
     with_autoroute = true;
@@ -52,12 +53,11 @@ public class AutorouteSettings implements Serializable {
 
     int layer_count = p_board.get_layer_count();
 
-    // additional costs against  preferred direction with 1 digit behind the decimal point.
-    double horizontal_add_costs_against_preferred_dir =
-        0.1 * Math.round(10 * horizontal_width / vertical_width);
+    // additional costs against preferred direction with 1 digit behind the decimal
+    // point.
+    double horizontal_add_costs_against_preferred_dir = 0.1 * Math.round(10 * horizontal_width / vertical_width);
 
-    double vertical_add_costs_against_preferred_dir =
-        0.1 * Math.round(10 * vertical_width / horizontal_width);
+    double vertical_add_costs_against_preferred_dir = 0.1 * Math.round(10 * vertical_width / horizontal_width);
 
     // make more horizontal preferred direction, if the board is horizontal.
 
@@ -97,24 +97,21 @@ public class AutorouteSettings implements Serializable {
     layer_active_arr = new boolean[p_settings.layer_active_arr.length];
     System.arraycopy(
         p_settings.layer_active_arr, 0, this.layer_active_arr, 0, layer_active_arr.length);
-    preferred_direction_is_horizontal_arr =
-        new boolean[p_settings.preferred_direction_is_horizontal_arr.length];
+    preferred_direction_is_horizontal_arr = new boolean[p_settings.preferred_direction_is_horizontal_arr.length];
     System.arraycopy(
         p_settings.preferred_direction_is_horizontal_arr,
         0,
         this.preferred_direction_is_horizontal_arr,
         0,
         preferred_direction_is_horizontal_arr.length);
-    preferred_direction_trace_cost_arr =
-        new double[p_settings.preferred_direction_trace_cost_arr.length];
+    preferred_direction_trace_cost_arr = new double[p_settings.preferred_direction_trace_cost_arr.length];
     System.arraycopy(
         p_settings.preferred_direction_trace_cost_arr,
         0,
         preferred_direction_trace_cost_arr,
         0,
         preferred_direction_trace_cost_arr.length);
-    against_preferred_direction_trace_cost_arr =
-        new double[p_settings.against_preferred_direction_trace_cost_arr.length];
+    against_preferred_direction_trace_cost_arr = new double[p_settings.against_preferred_direction_trace_cost_arr.length];
     System.arraycopy(
         p_settings.against_preferred_direction_trace_cost_arr,
         0,
@@ -147,6 +144,14 @@ public class AutorouteSettings implements Serializable {
   public void set_stop_pass_no(int p_value) {
     stop_pass_no = Math.max(p_value, start_pass_no);
     stop_pass_no = Math.min(stop_pass_no, 99999);
+  }
+
+  public int getMaxItems() {
+    return maxItems;
+  }
+
+  public void setMaxItems(int p_value) {
+    maxItems = Math.max(p_value, 1);
   }
 
   public void increment_pass_no() {
@@ -299,11 +304,9 @@ public class AutorouteSettings implements Serializable {
   }
 
   public ExpansionCostFactor[] get_trace_cost_arr() {
-    ExpansionCostFactor[] result =
-        new ExpansionCostFactor[preferred_direction_trace_cost_arr.length];
+    ExpansionCostFactor[] result = new ExpansionCostFactor[preferred_direction_trace_cost_arr.length];
     for (int i = 0; i < result.length; ++i) {
-      result[i] =
-          new ExpansionCostFactor(get_horizontal_trace_costs(i), get_vertical_trace_costs(i));
+      result[i] = new ExpansionCostFactor(get_horizontal_trace_costs(i), get_vertical_trace_costs(i));
     }
     return result;
   }

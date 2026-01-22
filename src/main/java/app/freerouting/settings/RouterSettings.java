@@ -10,21 +10,19 @@ import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 
 public class RouterSettings implements Serializable, Cloneable {
-  // PropertyChangeSupport for bidirectional binding with GUI
-  private transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
-  @SerializedName("enabled")
-  public Boolean enabled;
   // Valid algorithm values
   public static final String ALGORITHM_CURRENT = "freerouting-router";
   public static final String ALGORITHM_V19 = "freerouting-router-v19";
-
+  @SerializedName("enabled")
+  public Boolean enabled;
   @SerializedName("algorithm")
   public String algorithm;
   @SerializedName("job_timeout")
   public String jobTimeoutString;
   @SerializedName("max_passes")
   public Integer maxPasses;
+  @SerializedName("max_items")
+  public transient Integer maxItems;
   public transient boolean[] isLayerActive;
   public transient boolean[] isPreferredDirectionHorizontalOnLayer;
   public transient Boolean save_intermediate_stages;
@@ -43,13 +41,14 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   @SerializedName("automatic_neckdown")
   public Boolean automatic_neckdown;
-
   @SerializedName("optimizer")
   public RouterOptimizerSettings optimizer;
   @SerializedName("scoring")
   public RouterScoringSettings scoring;
   @SerializedName("max_threads")
   public Integer maxThreads;
+  // PropertyChangeSupport for bidirectional binding with GUI
+  private transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
   /**
    * We need a parameterless constructor for the serialization.
@@ -69,6 +68,7 @@ public class RouterSettings implements Serializable, Cloneable {
     this.algorithm = ALGORITHM_CURRENT;
     this.jobTimeoutString = "12:00:00";
     this.maxPasses = 9999;
+    this.maxItems = Integer.MAX_VALUE;
     this.trace_pull_tight_accuracy = 500;
     this.vias_allowed = true;
     this.automatic_neckdown = true;
@@ -79,6 +79,14 @@ public class RouterSettings implements Serializable, Cloneable {
     this.scoring = new RouterScoringSettings();
 
     setLayerCount(p_layer_count);
+  }
+
+  /**
+   * Creates a new instance of AutorouteSettings
+   */
+  public RouterSettings(RoutingBoard p_board) {
+    this(p_board.get_layer_count());
+    applyBoardSpecificOptimizations(p_board);
   }
 
   // PropertyChangeListener support for bidirectional binding
@@ -159,20 +167,12 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   /**
-   * Creates a new instance of AutorouteSettings
-   */
-  public RouterSettings(RoutingBoard p_board) {
-    this(p_board.get_layer_count());
-    applyBoardSpecificOptimizations(p_board);
-  }
-
-  /**
    * Apply board-specific optimizations to RouterSettings based on board geometry
    * and layer structure.
    * This calculates layer costs based on board aspect ratio and adds penalties
    * for outer layers.
    * Should be called after loading a board to optimize routing performance.
-   * 
+   *
    * @param p_board The routing board to optimize settings for
    */
   public void applyBoardSpecificOptimizations(RoutingBoard p_board) {
@@ -235,7 +235,7 @@ public class RouterSettings implements Serializable, Cloneable {
   /**
    * Creates a deep copy of this RouterSettings object.
    * All fields including nested objects and arrays are cloned.
-   * 
+   *
    * @return A new RouterSettings instance with the same values
    */
   @Override
@@ -246,6 +246,7 @@ public class RouterSettings implements Serializable, Cloneable {
     result.isLayerActive = this.isLayerActive.clone();
     result.isPreferredDirectionHorizontalOnLayer = this.isPreferredDirectionHorizontalOnLayer.clone();
     result.maxPasses = this.maxPasses;
+    result.maxItems = this.maxItems;
     result.ignoreNetClasses = this.ignoreNetClasses.clone();
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     result.enabled = this.enabled;
@@ -435,7 +436,7 @@ public class RouterSettings implements Serializable, Cloneable {
    * Uses reflection to copy only non-null fields from the source settings.
    * This is the core mechanism used by SettingsMerger to merge settings from
    * multiple sources.
-   * 
+   *
    * @param settings The settings to copy the values from (null values are
    *                 skipped)
    * @return The number of fields that were changed

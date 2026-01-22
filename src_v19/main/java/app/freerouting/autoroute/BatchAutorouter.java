@@ -47,6 +47,7 @@ public class BatchAutorouter {
 
   private double totalCpuTime = 0;
   private long totalAllocatedBytes = 0;
+  private int totalItemsRouted = 0;
   private int initialUnroutedCount = 0;
   private long sessionStartTimeMillis = 0;
   private float finalScore = 0;
@@ -372,6 +373,16 @@ public class BatchAutorouter {
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> ripped_item_list = new TreeSet<>();
+
+          if (this.totalItemsRouted >= hdlg.get_settings().autoroute_settings.getMaxItems()) {
+            FRLogger.info("Max items limit reached (" + hdlg.get_settings().autoroute_settings.getMaxItems()
+                + "). Stopping auto-router.");
+            this.thread.request_stop_auto_router();
+            this.is_interrupted = true;
+            break;
+          }
+          this.totalItemsRouted++;
+
           PerformanceProfiler.start("autoroute_item");
           AutorouteEngine.AutorouteResult result = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list,
               p_pass_no);
