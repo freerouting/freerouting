@@ -51,7 +51,8 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     "http_allowed": true,
     "endpoints": [
       "http://0.0.0.0:37864"
-    ]
+    ],
+    "cors_origins": ""
   }
 }
 ```
@@ -109,6 +110,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`http_allowed`**: Allows or disallows HTTP connections to the API server.
 - **`endpoints`**: A list of endpoints that the API server will listen on. Each endpoint is specified as
   `[protocol]://[host]:[port]`.
+- *`cors_origins`*: A string of CORS header `Accress-Control-Allow-Origin`. Set `*` means accept all CORS.
 
 ### Command Line Arguments
 

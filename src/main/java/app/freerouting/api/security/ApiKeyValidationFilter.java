@@ -1,6 +1,7 @@
 package app.freerouting.api.security;
 
 import app.freerouting.Freerouting;
+import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.logger.FRLogger;
 import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
