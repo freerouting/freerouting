@@ -78,7 +78,6 @@ public class Freerouting {
     routingJob.tryToSetOutputFile(new File(globalSettings.initialOutputFile));
 
     routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
-    routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layers.totalCount);
     routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
 
