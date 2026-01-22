@@ -234,11 +234,10 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     FloatPoint fp1 = p1.to_float();
     FloatPoint fp2 = p2.to_float();
 
-    // Use Manhattan distance (|x1-x2| + |y1-y2|) which is faster than Euclidean
-    // and sufficient for connectivity detection
-    double dx = Math.abs(fp1.x - fp2.x);
-    double dy = Math.abs(fp1.y - fp2.y);
-    return (dx + dy) <= tolerance;
+    // Use Euclidean distance for correct any-angle handling
+    double dx = fp1.x - fp2.x;
+    double dy = fp1.y - fp2.y;
+    return (dx * dx + dy * dy) <= tolerance * tolerance;
   }
 
   @Override
