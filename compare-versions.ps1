@@ -10,7 +10,9 @@ param(
     [string]$do = ".\tests\Issue508-DAC2020_bm01.ses",
     [string]$LoggingLocation = ".\logs\",
     [string]$LoggingLevel = "DEBUG",
+    [string]$LoggingPattern = "%msg%n",
     [int]$max_passes = 3,
+    [int]$max_items = 15,
     [int]$max_threads = 1,
     [string]$job_timeout = "00:03:00"
 )
@@ -66,6 +68,7 @@ Write-Host "  Input File:  $de"         -ForegroundColor White
 Write-Host "  Output File: $do"         -ForegroundColor White
 Write-Host "  Log Level:   $LoggingLevel" -ForegroundColor White
 Write-Host "  Max Passes:  $max_passes" -ForegroundColor White
+Write-Host "  Max Items:   $max_items" -ForegroundColor White
 Write-Host "  Max Threads: $max_threads" -ForegroundColor White
 Write-Host "  Timeout:     $job_timeout" -ForegroundColor White
 
@@ -92,8 +95,10 @@ $BaseArgs = @(
     "--api_server.enabled=false"
     "--router.job_timeout=`"$job_timeout`""
     "--router.max_passes=$max_passes"
+    "--router.max_items=$max_items"
     "--router.max_threads=$max_threads"
     "--logging.file.level=$LoggingLevel"
+    "--logging.file.pattern=$LoggingPattern"
     "--logging.console.level=INFO"
 )
 

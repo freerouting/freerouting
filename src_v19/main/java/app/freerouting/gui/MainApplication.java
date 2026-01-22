@@ -219,6 +219,8 @@ public class MainApplication extends WindowBase {
         System.setProperty("freerouting.log.file.level", arg.substring("--logging.file.level=".length()));
       } else if (arg.startsWith("--logging.console.level=")) {
         System.setProperty("freerouting.log.console.level", arg.substring("--logging.console.level=".length()));
+      } else if (arg.startsWith("--logging.file.pattern=")) {
+        System.setProperty("freerouting.log.file.pattern", arg.substring("--logging.file.pattern=".length()));
       }
     }
 

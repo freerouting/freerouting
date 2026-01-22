@@ -181,10 +181,10 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 }
 
                 if (curr_object.toString().contains("id=56")) {
-                  FRLogger.debug("Restrain called for Obstacle 56.");
-                  FRLogger.debug("Room: " + curr_room.get_shape().toString());
-                  FRLogger.debug("Contained: " + curr_room.get_contained_shape().toString());
-                  FRLogger.debug("Obstacle: " + curr_object_shape.toString());
+                  FRLogger.debug("Restrain called for Obstacle 56."
+                      +", Room: " + curr_room.get_shape().toString()
+                      + ", Contained: " + curr_room.get_contained_shape().toString()
+                      + ", Obstacle: " + curr_object_shape.toString());
                 }
                 Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
                     curr_object_shape);
@@ -192,10 +192,10 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                   FRLogger.debug("Restrain Result Count: " + new_restrained_shapes.size());
                 }
                 if (new_restrained_shapes.isEmpty()) {
-                  FRLogger.debug("Restrain returned empty for obstacle: " + curr_object.toString());
-                  FRLogger.debug("  Room Shape: " + curr_room.get_shape().toString());
-                  FRLogger.debug("  Contained Shape: " + curr_room.get_contained_shape().toString());
-                  FRLogger.debug("  Obstacle Shape: " + curr_object_shape.toString());
+                  FRLogger.debug("Restrain returned empty for obstacle: " + curr_object.toString()
+                      + ", Room Shape: " + curr_room.get_shape().toString()
+                      + ", Contained Shape: " + curr_room.get_contained_shape().toString()
+                      + ", Obstacle Shape: " + curr_object_shape.toString());
                 }
                 new_result.addAll(new_restrained_shapes);
 
@@ -225,9 +225,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     result.removeIf(room -> {
       boolean remove = room.get_contained_shape().contains(room.get_shape());
       if (remove) {
-        FRLogger.debug("ShapeSearchTree45Degree: Room removed because contained_shape contains room_shape!");
-        FRLogger.debug("  Room: " + room.get_shape().toString());
-        FRLogger.debug("  Contained: " + room.get_contained_shape().toString());
+        FRLogger.debug("ShapeSearchTree45Degree: Room removed because contained_shape contains room_shape!"
+          + ", Room: " + room.get_shape().toString()
+          + ", Contained: " + room.get_contained_shape().toString());
       }
       return remove;
     });

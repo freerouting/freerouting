@@ -50,6 +50,7 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
         boolean fileEnabled = getBooleanProperty("freerouting.logging.file.enabled", true);
         String fileLevel = getProperty("freerouting.logging.file.level", "DEBUG");
         String fileLocation = getProperty("freerouting.logging.file.location", null);
+        String filePattern = getProperty("freerouting.logging.file.pattern", PATTERN);
 
         // Set configuration name and status
         builder.setConfigurationName("FreeroutingConfiguration");
@@ -60,7 +61,8 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
             AppenderComponentBuilder consoleAppender = builder.newAppender("Console", "Console")
                     .addAttribute("target", ConsoleAppender.Target.SYSTEM_OUT)
                     .add(builder.newLayout("PatternLayout")
-                            .addAttribute("pattern", PATTERN));
+                            .addAttribute("pattern", filePattern)); // Use the same pattern for console if it's
+                                                                    // customized
             builder.add(consoleAppender);
         }
 
@@ -79,7 +81,7 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
                     .addAttribute("bufferedIO", true)
                     .addAttribute("bufferSize", 8192)
                     .add(builder.newLayout("PatternLayout")
-                            .addAttribute("pattern", PATTERN));
+                            .addAttribute("pattern", filePattern));
             builder.add(fileAppender);
         }
 
@@ -87,7 +89,7 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
         AppenderComponentBuilder stderrAppender = builder.newAppender("stderr", "Console")
                 .addAttribute("target", ConsoleAppender.Target.SYSTEM_ERR)
                 .add(builder.newLayout("PatternLayout")
-                        .addAttribute("pattern", PATTERN));
+                        .addAttribute("pattern", filePattern)); // Use the same pattern for stderr
         builder.add(stderrAppender);
 
         // Configure root logger

@@ -6,7 +6,6 @@ import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.board.ShapeSearchTree45Degree;
 import app.freerouting.board.ShapeSearchTree90Degree;
-import app.freerouting.board.TestLevel;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
@@ -14,7 +13,6 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
-
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
@@ -368,7 +366,8 @@ public class AutorouteEngine {
       if (completed_shapes.isEmpty()) {
         FRLogger.debug("AutorouteEngine.complete_expansion_room: No shapes returned for net #" + this.net_no +
             " on layer " + p_room.get_layer() +
-            ", initial shape: " + (p_room.get_shape() != null ? "bounded" : "unbounded") +
+            ", initial shape: "
+            + (p_room.get_shape() != null ? p_room.get_shape().getClass().getSimpleName() : "unbounded") +
             ", contained shape: " + (p_room.get_contained_shape() != null ? "present" : "null"));
       }
 

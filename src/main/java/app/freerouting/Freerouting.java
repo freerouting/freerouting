@@ -340,6 +340,7 @@ public class Freerouting {
     String fileLoggingLevel = "DEBUG";
     String consoleLoggingLevel = "INFO";
     String fileLoggingLocation = null;
+    String fileLoggingPattern = null;
 
     if (System.getenv("FREEROUTING__LOGGING__FILE__ENABLED") != null) {
       fileLoggingEnabled = Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__FILE__ENABLED"));
@@ -356,6 +357,9 @@ public class Freerouting {
     if (System.getenv("FREEROUTING__LOGGING__FILE__LOCATION") != null) {
       fileLoggingLocation = System.getenv("FREEROUTING__LOGGING__FILE__LOCATION");
     }
+    if (System.getenv("FREEROUTING__LOGGING__FILE__PATTERN") != null) {
+      fileLoggingPattern = System.getenv("FREEROUTING__LOGGING__FILE__PATTERN");
+    }
 
     if (args.length > 0) {
       for (String arg : args) {
@@ -369,6 +373,8 @@ public class Freerouting {
           consoleLoggingLevel = arg.substring("--logging.console.level=".length());
         } else if (arg.startsWith("--logging.file.location=")) {
           fileLoggingLocation = arg.substring("--logging.file.location=".length());
+        } else if (arg.startsWith("--logging.file.pattern=")) {
+          fileLoggingPattern = arg.substring("--logging.file.pattern=".length());
         } else if ("-dl".equals(arg)) {
           fileLoggingEnabled = false;
         } else if ("-ll".equals(arg)) {
@@ -396,6 +402,10 @@ public class Freerouting {
     System.setProperty("freerouting.logging.file.enabled", String.valueOf(fileLoggingEnabled));
     System.setProperty("freerouting.logging.file.level", fileLoggingLevel);
     System.setProperty("freerouting.logging.file.location", fileLoggingLocation);
+
+    if (fileLoggingPattern != null) {
+      System.setProperty("freerouting.logging.file.pattern", fileLoggingPattern);
+    }
 
     // FORCE RECONFIGURATION
     // Log4j2 might have initialized early (before we set these properties).

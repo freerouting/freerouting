@@ -39,6 +39,7 @@ public abstract class Item
   private final int id_no;
   /** The board this Item is on */
   public transient BasicBoard board;
+  public double smallest_clearance;
   /** The nets, to which this item belongs */
   int[] net_no_arr;
   /** the index in the clearance matrix describing the required spacing to other items */
@@ -52,7 +53,6 @@ public abstract class Item
   private boolean on_the_board = false;
   /** Temporary data used in the autoroute algorithm. */
   private transient ItemAutorouteInfo autoroute_info;
-  public double smallest_clearance;
 
   Item(
       int[] p_net_no_arr,
@@ -1186,6 +1186,23 @@ public abstract class Item
     }
 
     return false;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder simpleName = new StringBuilder();
+
+    simpleName.append(this
+        .getClass()
+        .getSimpleName()
+        .toLowerCase());
+
+    if (component_no > 0) {
+      simpleName.append(" of component #");
+      simpleName.append(component_no);
+    }
+
+    return simpleName.toString();
   }
 
   /**

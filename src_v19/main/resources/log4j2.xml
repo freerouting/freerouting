@@ -2,17 +2,15 @@
 <Configuration status="WARN">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-6level %msg%n"/>
+            <PatternLayout pattern="${default_pattern}"/>
         </Console>
 
         <Console name="stderr" target="SYSTEM_ERR">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-6level %msg%n"/>
+            <PatternLayout pattern="${default_pattern}"/>
         </Console>
 
         <File bufferSize="8192" bufferedIO="true" fileName="${filename}" immediateFlush="true" name="File">
-            <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg%n</pattern>
-            </PatternLayout>
+            <PatternLayout pattern="${sys:freerouting.log.file.pattern:-${default_pattern}}"/>
         </File>
     </Appenders>
     <Loggers>
@@ -25,6 +23,7 @@
 
     <Properties>
         <Property name="filename">${sys:freerouting.log.file:-logs/freerouting-v190.log}</Property>
+        <Property name="default_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-6level %msg%n</Property>
     </Properties>
 
     <ThresholdFilter level="trace"/>

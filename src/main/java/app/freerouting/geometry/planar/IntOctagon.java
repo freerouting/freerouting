@@ -1381,6 +1381,6 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   }
   @Override
   public String toString() {
-    return "IntOctagon(lx=" + leftX + ", by=" + bottomY + ", rx=" + rightX + ", ty=" + topY + ", ulx=" + upperLeftDiagonalX + ", lrx=" + lowerRightDiagonalX + ", llx=" + lowerLeftDiagonalX + ", urx=" + upperRightDiagonalX + ")";
+    return "IntOctagon(lx=" + leftX + ", ly=" + bottomY + ", rx=" + rightX + ", uy=" + topY + ", ulx=" + upperLeftDiagonalX + ", lrx=" + lowerRightDiagonalX + ", llx=" + lowerLeftDiagonalX + ", urx=" + upperRightDiagonalX + ")";
   }
 }

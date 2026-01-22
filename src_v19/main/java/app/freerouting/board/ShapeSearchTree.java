@@ -20,8 +20,12 @@ import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ClearanceMatrix;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Elementary geometric search functions making direct use of the MinAreaTree in
@@ -987,11 +991,10 @@ public class ShapeSearchTree extends MinAreaTree {
     int offset_width = p_trace.get_half_width()
         + this.clearance_compensation_value(p_trace.clearance_class_no(), p_trace.get_layer());
     if (offset_width > 0 && p_trace.get_id_no() < 200) {
-      FRLogger.debug("ShapeSearchTree.calculate_tree_shapes (v19) for trace id=" + p_trace.get_id_no());
-      FRLogger.debug("  HalfWidth: " + p_trace.get_half_width());
-      FRLogger.debug(
-          "  ClearanceComp: " + this.clearance_compensation_value(p_trace.clearance_class_no(), p_trace.get_layer()));
-      FRLogger.debug("  OffsetWidth: " + offset_width);
+      FRLogger.debug("ShapeSearchTree.calculate_tree_shapes (v19) for trace id=" + p_trace.get_id_no()
+          + ", HalfWidth: " + p_trace.get_half_width()
+          + ", ClearanceComp: " + this.clearance_compensation_value(p_trace.clearance_class_no(), p_trace.get_layer())
+          + ", OffsetWidth: " + offset_width);
     }
     TileShape[] result = new TileShape[p_trace.tile_shape_count()];
     for (int i = 0; i < result.length; ++i) {
