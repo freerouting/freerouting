@@ -62,6 +62,20 @@
 
   5.  **Random Shuffle**: Baseline to check if a specific fixed order is preventing convergence (escaping local optima).
 
+### Theory 9: DSN Settings Loading
+- **Theory**: `AutorouteSettings` from DSN files might not be correctly read or applied, leading to the router using incorrect settings (e.g., failing to pick up board-specific costs or strategies).
+- **Investigation**:
+  - Traced `Structure.read_scope` -> `AutorouteSettings.read_scope`. Confirmed that settings are parsed and a `RouterSettings` object is created.
+  - Confirmed `HeadlessBoardManager` calls `applyNewValuesFrom` to merge these settings into the active `RoutingJob`.
+  - Confirmed `applyBoardSpecificOptimizations` is called *after* DSN loading, ensuring dynamic cost calculations (like the 2.5 undesired direction cost) are applied correctly.
+  - **Issue Identified**: `ReflectionUtil` merges DSN settings into the job settings. Since `RouterSettings` created from DSN contain class-defaults (e.g. `start_ripup_costs=100`), these defaults will overwrite any CLI-provided or previously set values, potentially resetting tuned parameters to defaults.
+  - **Relevance to Regression**: The benchmark DSN file (`Issue508-DAC2020_bm01.dsn`) **does not contain an `autoroute_settings` section**. Therefore, this entire loading path is skipped, and no overwriting occurs. The router uses default settings + `applyBoardSpecificOptimizations`.
+  - **Conclusion**: This is **NOT** the cause of the performance regression for the test case. The logic is working as intended (though the overwriting behavior is a potential bug for other scenarios).
+
+- **Observation**: Suspected that `AutorouteSettings` defined in the input DSN file might not be correctly read or applied in the current implementation (both GUI and CLI).
+- **Hypothesis**: If settings from DSN are ignored, the router might be running with defaults that are suboptimal for the specific board, leading to performance regression.
+- **Verification Plan**: Trace code from DSN parsing to router configuration for both execution modes.
+
 
 ## Proposed Fixes
 

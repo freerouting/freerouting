@@ -808,7 +808,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           autoroute_control.trace_clearance_class_no, this.thread, time_limit, this.retain_autoroute_database);
 
       // Do the auto-routing between the two sets of items
-      var autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
+      AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
           autoroute_control, p_ripped_item_list);
 
       // Update the changed area of the board
