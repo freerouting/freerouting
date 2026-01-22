@@ -90,3 +90,27 @@
 - **Reasoning**: Keeps the new feature but requires significant debugging time to understand the geometric failure mode.
 - **Pros**: Potentially better routing if fixed.
 - **Cons**: Time-consuming, high risk of not finding a quick solution.
+
+
+## Notes
+
+### "No shapes returned" Log Spam
+- **Symptom**: The log file is flooded with `Restrain returned empty for obstacle` messages from `ShapeSearchTree45Degree.java`.
+- **Frequency**: Measured ~118,655 occurrences in a single test run (v2.1.2).
+- **Context**: This occurs during `MazeSearchAlgo.find_connection` -> `ShapeSearchTree45Degree.complete_shape` -> `restrain_shape`.
+- **Finding**: When `restrain_shape` returns an empty collection, it effectively means a "room" was completely invalidated by an obstacle, or the logic failed to produce a valid sub-room that still contains the required "contained shape".
+- **Comparison with v1.9**: 
+    - `IntOctagon` fields were renamed (e.g., `lx` -> `leftX`, `ly` -> `bottomY`).
+    - The logic in `calc_outside_restrained_shape` and `calc_inside_restrained_shape` depends on these fields correctly mapping to the 8 boundary lines of the octagon.
+    - Any discrepancy here would cause incorrect room clipping, potentially leading to empty shapes and the "No shapes returned" warning in `MazeSearchAlgo`.
+
+### IntOctagon Refactoring
+- **Significant Changes**: Use of `switch` expressions and renamed fields.
+- **Potential Issue**: The mapping between `obstacle_line_no` (0-7) and the specific octagon fields (left, bottom, right, top, diagonals) must be perfectly consistent with the geometric definition. 
+
+## Theories
+
+### Theory 19: Clipping Logic Regression
+- **Description**: A bug in the refactored `ShapeSearchTree45Degree.restrain_shape` or the underlying `IntOctagon` methods causes valid expansion rooms to be incorrectly discarded as "empty".
+- **Impact**: The autorouter fails to find paths that should be available, or performs redundant searches, leading to the observed performance hit.
+- **Status**: Under investigation. Comparing line-by-line mapping of octagon boundaries.
