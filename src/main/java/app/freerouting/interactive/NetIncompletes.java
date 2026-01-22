@@ -31,19 +31,34 @@ public class NetIncompletes {
   /**
    * Collection of elements of class AirLine.
    */
+  /**
+   * Collection of elements of class AirLine representing the incomplete
+   * connections.
+   */
   final Collection<RatsNest.AirLine> incompletes;
+  /**
+   * The net for which the incompletes are calculated.
+   */
   private final Net net;
+  /**
+   * The radius of the markers drawn at the ends of airlines or layer changes.
+   */
   private final double draw_marker_radius;
   /**
-   * The length of the violation of the length restriction of the net, > 0, if the
-   * cumulative trace length is too big, < 0, if the trace length is too small, 0,
-   * if the trace length is ok or the net
-   * has no length restrictions
+   * The length of the violation of the length restriction of the net.
+   * > 0: cumulative trace length is too big.
+   * < 0: trace length is too small.
+   * 0: trace length is ok or the net has no length restrictions.
    */
   private double length_violation = 0;
 
   /**
-   * Creates a new instance of NetIncompletes
+   * Creates a new instance of NetIncompletes.
+   * Calculates the incomplete connections (ratsnest) for the given net items.
+   *
+   * @param p_net_no    The net number.
+   * @param p_net_items The collection of items belonging to this net.
+   * @param p_board     The board context.
    */
   public NetIncompletes(int p_net_no, Collection<Item> p_net_items, BasicBoard p_board) {
     this.draw_marker_radius = p_board.rules.get_min_trace_half_width() * 2;
@@ -127,6 +142,10 @@ public class NetIncompletes {
     calc_length_violation();
   }
 
+  /**
+   * Draws a marker indicating a layer change (via or trace segment end) in an
+   * airline.
+   */
   static void draw_layer_change_marker(FloatPoint p_location, double p_radius, Graphics p_graphics,
       GraphicsContext p_graphics_context) {
     final int draw_width = 1;
@@ -141,6 +160,9 @@ public class NetIncompletes {
     p_graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
   }
 
+  /**
+   * Draws a marker indicating a length violation on a pin.
+   */
   static void draw_length_violation_marker(FloatPoint p_location, double p_diameter, Graphics p_graphics,
       GraphicsContext p_graphics_context) {
     final int draw_width = 1;
@@ -196,15 +218,22 @@ public class NetIncompletes {
   }
 
   /**
-   * Returns the length of the violation of the length restriction of the net, >
-   * 0, if the cumulative trace length is too big, < 0, if the trace length is too
-   * small, 0, if the trace length is ok or
-   * the net has no length restrictions
+   * Returns the length of the violation of the length restriction of the net.
+   *
+   * @return > 0 if too long, < 0 if too short, 0 if valid.
    */
   double get_length_violation() {
     return this.length_violation;
   }
 
+  /**
+   * Draws the incomplete connections and optional length violations.
+   *
+   * @param p_graphics               The AWT graphics object.
+   * @param p_graphics_context       The board graphics context.
+   * @param p_length_violations_only If true, only draws length violation markers,
+   *                                 not airlines.
+   */
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, boolean p_length_violations_only) {
     if (!p_length_violations_only) {
       Color draw_color = p_graphics_context.get_incomplete_color();
@@ -239,7 +268,10 @@ public class NetIncompletes {
 
   /**
    * Calculates an array of Item-connected_set pairs for the items of this net.
-   * Pairs belonging to the same connected set are located next to each other.
+   * Groups items that are physically connected into the same connected set.
+   *
+   * @param p_item_list The list of items to group.
+   * @return An array of NetItem objects representing the grouped items.
    */
   private NetItem[] calculate_net_items(Collection<Item> p_item_list) {
     ArrayList<NetItem> result = new ArrayList<>();
@@ -274,7 +306,8 @@ public class NetIncompletes {
 
   /**
    * Joins p_from_connected_set to p_to_connected_set and updates the connected
-   * sets of the items in p_net_items.
+   * sets of the items in p_net_items. Used during Kruskal's algorithm to merge
+   * sets.
    */
   private void join_connected_sets(NetItem[] p_net_items, Collection<Item> p_from_connected_set,
       Collection<Item> p_to_connected_set) {
@@ -287,6 +320,12 @@ public class NetIncompletes {
     }
   }
 
+  /**
+   * Represents a potential edge (connection) between two NetItems in the Delaunay
+   * triangulation.
+   * Sortable by length to facilitate finding the shortest connections (Minimum
+   * Spanning Tree-like approach).
+   */
   private static class Edge implements Comparable<Edge> {
 
     public final NetItem from_item;
@@ -325,6 +364,10 @@ public class NetIncompletes {
     }
   }
 
+  /**
+   * Wrapper for an Item used in the Delaunay triangulation, including its
+   * connected set.
+   */
   private static class NetItem implements PlanarDelaunayTriangulation.Storable {
 
     final Item item;

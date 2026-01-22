@@ -275,10 +275,18 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       }
       if (curr_item != this && curr_item.shares_net(this) && curr_item.shares_layer(this)) {
         if (curr_item instanceof Trace curr_trace) {
-          // Check if points are within tolerance distance
-          if (isWithinTolerance(drill_center, curr_trace.first_corner(), tolerance) ||
-              isWithinTolerance(drill_center, curr_trace.last_corner(), tolerance)) {
-            result.add(curr_item);
+          // Check if points are within tolerance distance (geometric containment with
+          // tolerance)
+          // Enlarge by trace tolerance to account for snapping/trace width
+          app.freerouting.geometry.planar.Shape drill_shape = this.get_shape_on_layer(curr_trace.get_layer());
+          int trace_tolerance = curr_trace.get_half_width() + 1;
+
+          if (drill_shape != null) {
+            app.freerouting.geometry.planar.Shape expanded_shape = drill_shape.enlarge(trace_tolerance);
+            if (expanded_shape.contains(curr_trace.first_corner()) ||
+                expanded_shape.contains(curr_trace.last_corner())) {
+              result.add(curr_item);
+            }
           }
         } else if (curr_item instanceof DrillItem curr_drill_item) {
           if (isWithinTolerance(drill_center, curr_drill_item.get_center(), tolerance)) {

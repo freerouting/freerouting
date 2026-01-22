@@ -204,12 +204,13 @@ public abstract class Trace extends Item implements Connectable, Serializable {
             result.add(curr_item);
           }
         } else if (curr_item instanceof DrillItem curr_drill_item) {
-          double d = p_point.to_float().distance(curr_drill_item.get_center().to_float());
           if (this.contains_net(94)) {
-            FRLogger.debug("    Checking against drill id=" + curr_drill_item.get_id_no() + ": d=" + d + ", tolerance="
-                + tolerance);
+            FRLogger.debug("    Checking against drill id=" + curr_drill_item.get_id_no());
           }
-          if (isWithinTolerance(p_point, curr_drill_item.get_center(), tolerance)) {
+          app.freerouting.geometry.planar.Shape drill_shape = curr_drill_item.get_shape_on_layer(this.get_layer());
+          // Enlarge by trace tolerance to account for snapping/trace width and ensure
+          // robustness
+          if (drill_shape != null && drill_shape.enlarge(this.half_width + 1).contains(p_point)) {
             result.add(curr_item);
           }
         } else if (curr_item instanceof ConductionArea curr_area) {
