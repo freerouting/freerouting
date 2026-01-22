@@ -34,6 +34,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import app.freerouting.geometry.planar.IntBox;
+import java.util.Collections;
+import java.util.Comparator;
+
 /**
  * Handles the sequencing of the auto-router passes.
  */
@@ -374,6 +378,9 @@ public class BatchAutorouter extends NamedAlgorithm {
       // NOTE: Disabled in v2.3 because it negatively impacts convergence compared to
       // v1.9 (natural order)
       // autoroute_item_list.sort(Comparator.comparingDouble(this::calculateItemDistance));
+
+      // Strategy-based sorting to optionally improve convergence
+      sortItems(autoroute_item_list, p_pass_no);
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list) {
@@ -801,7 +808,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           autoroute_control.trace_clearance_class_no, this.thread, time_limit, this.retain_autoroute_database);
 
       // Do the auto-routing between the two sets of items
-      AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
+      var autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
           autoroute_control, p_ripped_item_list);
 
       // Update the changed area of the board
@@ -845,27 +852,31 @@ public class BatchAutorouter extends NamedAlgorithm {
             .to_float();
       } else if (curr_from_item instanceof PolylineTrace from_trace) {
         // Use trace endpoints as potential connection points
-        continue; // We'll handle traces in the second loop for better efficiency
+        if (from_trace.first_corner() != null)
+          curr_from_corner = from_trace.first_corner().to_float();
+        else
+          continue;
       } else {
         continue;
       }
 
       for (Item curr_to_item : p_to_items) {
         FloatPoint curr_to_corner;
-        if (curr_to_item instanceof DrillItem drillItem) {
-          curr_to_corner = drillItem
+        if (curr_to_item instanceof DrillItem item) {
+          curr_to_corner = item
               .get_center()
               .to_float();
         } else if (curr_to_item instanceof PolylineTrace to_trace) {
-          // Find nearest point on trace to the from item point
-          curr_to_corner = nearest_point_on_trace(to_trace, curr_from_corner);
+          if (to_trace.first_corner() != null)
+            curr_to_corner = to_trace.first_corner().to_float();
+          else
+            continue;
         } else {
           continue;
         }
-
-        double curr_distance = curr_from_corner.distance(curr_to_corner);
-        if (curr_distance < min_distance) {
-          min_distance = curr_distance;
+        double curr_dist = curr_from_corner.distance(curr_to_corner);
+        if (curr_dist < min_distance) {
+          min_distance = curr_dist;
           from_corner = curr_from_corner;
           to_corner = curr_to_corner;
         }
@@ -1159,5 +1170,99 @@ public class BatchAutorouter extends NamedAlgorithm {
       return new FloatPoint((first.x + last.x) / 2, (first.y + last.y) / 2);
     }
     return null;
+  }
+
+  /**
+   * Sorts the items to be routed based on the selected strategy.
+   * Defined strategies:
+   * 1. Shortest Manhattan Distance First
+   * 2. Longest Manhattan Distance First
+   * 3. Smallest Bounding Box Area First
+   * 4. Least Vias Potential First (same layer)
+   * 5. Random Shuffle
+   */
+  private void sortItems(List<Item> items, int passNo) {
+    // Select strategy based on pass number or randomization
+    // Pass 1: Shortest (Clean up easy stuff) - Overridden to always use this for
+    // Pass 1
+    // Pass 2: Longest (Difficult paths)
+    // Pass 3: Smallest Area (Dense areas)
+    // Pass 4: Random
+    // Pass 5+: Random (Cycle)
+
+    int strategy = (passNo - 1) % 6;
+
+    // Override: Use Natural Order (No Sort) for Pass 1 as it proved best in
+    // benchmarks (69 unrouted vs 73-90 with sorting)
+    if (passNo == 1)
+      strategy = 5;
+
+    switch (strategy) {
+      case 5: // Natural (No Sort)
+        FRLogger.info("Pass " + passNo + ": Sorted items by Natural Order (Insertion Order)");
+        break;
+      case 0: // Shortest Distance
+        // Sort by min distance
+        items.sort(Comparator.comparingDouble((Item item) -> this.calculateMinDistance(item)));
+        FRLogger.info("Pass " + passNo + ": Sorted items by Shortest Distance First");
+        break;
+      case 1: // Longest Distance
+        items.sort(Comparator.comparingDouble((Item item) -> this.calculateMinDistance(item)).reversed());
+        FRLogger.info("Pass " + passNo + ": Sorted items by Longest Distance First");
+        break;
+      case 2: // Smallest Box Area
+        items.sort(Comparator.comparingDouble(item -> item.bounding_box().area()));
+        FRLogger.info("Pass " + passNo + ": Sorted items by Smallest Area First");
+        break;
+      case 3: // Least Vias Potential (Same Layer preferred)
+        items.sort((item1, item2) -> {
+          boolean item1SameLayer = isSameLayerAsTarget(item1);
+          boolean item2SameLayer = isSameLayerAsTarget(item2);
+          if (item1SameLayer && !item2SameLayer)
+            return -1;
+          if (!item1SameLayer && item2SameLayer)
+            return 1;
+          return 0;
+        });
+        FRLogger.info("Pass " + passNo + ": Sorted items by Least Vias Potential");
+        break;
+      default: // Random
+        Collections.shuffle(items, this.random);
+        FRLogger.info("Pass " + passNo + ": Sorted items Randomly");
+        break;
+    }
+  }
+
+  private boolean isSameLayerAsTarget(Item item) {
+    if (item.net_count() == 0)
+      return false;
+    int netNo = item.get_net_no(0);
+    Set<Item> destSet = item.get_unconnected_set(netNo);
+    for (Item dest : destSet) {
+      if (item.shares_layer(dest))
+        return true;
+    }
+    return false;
+  }
+
+  private double calculateMinDistance(Item item) {
+    double minInfoDistance = Double.MAX_VALUE;
+    for (int i = 0; i < item.net_count(); i++) {
+      int netNo = item.get_net_no(i);
+      Set<Item> connected = item.get_connected_set(netNo);
+      Set<Item> unconnected = item.get_unconnected_set(netNo);
+
+      if (unconnected.isEmpty()) {
+        minInfoDistance = 0;
+        continue;
+      }
+
+      // Use existing calculateMinDistance(Collection, Collection)
+      double dist = calculateMinDistance(connected.isEmpty() ? Set.of(item) : connected, unconnected);
+      if (dist < minInfoDistance) {
+        minInfoDistance = dist;
+      }
+    }
+    return minInfoDistance;
   }
 }
