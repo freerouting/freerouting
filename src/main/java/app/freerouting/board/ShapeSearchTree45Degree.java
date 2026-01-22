@@ -222,9 +222,15 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     result = divide_large_room(result, board.get_bounding_box());
     // remove rooms with shapes equal to the contained shape to prevent endless
     // loop.
-    result.removeIf(room -> room
-        .get_contained_shape()
-        .contains(room.get_shape()));
+    result.removeIf(room -> {
+      boolean remove = room.get_contained_shape().contains(room.get_shape());
+      if (remove) {
+        FRLogger.debug("ShapeSearchTree45Degree: Room removed because contained_shape contains room_shape!");
+        FRLogger.debug("  Room: " + room.get_shape().toString());
+        FRLogger.debug("  Contained: " + room.get_contained_shape().toString());
+      }
+      return remove;
+    });
     return result;
   }
 

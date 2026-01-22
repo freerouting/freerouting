@@ -84,12 +84,24 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
                   if (p_ignore_shape.contains(intersection)) {
                     // ignore also all objects, whose intersection is contained in the
                     // 2-dim overlap-door with the from_room.
+                    if (!p_ignore_shape.contains(curr_shape)) {
+                      new_result.add(curr_room);
+                      new_bounding_shape = new_bounding_shape.union(curr_shape.bounding_box());
+                    }
                     continue;
                   }
                 }
 
                 Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
                     curr_object_shape);
+                if (new_restrained_shapes.isEmpty()) {
+                  FRLogger.debug(
+                      "ShapeSearchTree90Degree: Restrain returned empty for obstacle: " + curr_object.toString());
+                  FRLogger.debug("  Room Shape: " + curr_room.get_shape().toString());
+                  FRLogger.debug("  Contained Shape: " + curr_room.get_contained_shape().toString());
+                  FRLogger.debug("  Obstacle Shape: " + curr_object_shape.toString());
+                }
+
                 new_result.addAll(new_restrained_shapes);
 
                 for (IncompleteFreeSpaceExpansionRoom tmp_shape : new_restrained_shapes) {

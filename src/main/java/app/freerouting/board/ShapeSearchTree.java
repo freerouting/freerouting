@@ -615,6 +615,11 @@ public class ShapeSearchTree extends MinAreaTree {
                    * completion.
                    * This allows rooms to complete even when surrounded by traces from other nets,
                    * relying on ShoveTraceAlgo to move them during trace insertion.
+                   * 
+                   * PERFORMANCE NOTE: Disabled (false) to match v1.9 behavior.
+                   * Enabling this caused "No shapes returned" errors in complex scenarios,
+                   * leading to poor routing quality and high unrouted counts.
+                   * Investigation needed before re-enabling.
                    */
                   boolean shoveAwareEnabled = false;
 
@@ -631,6 +636,14 @@ public class ShapeSearchTree extends MinAreaTree {
                     something_changed = true;
                     Collection<IncompleteFreeSpaceExpansionRoom> new_rooms = restrain_shape(curr_incomplete_room,
                         curr_object_shape);
+                    if (new_rooms.isEmpty()) {
+                      FRLogger
+                          .debug("ShapeSearchTree: Restrain returned empty for obstacle: " + curr_object.toString());
+                      FRLogger.debug("  Room Shape: " + curr_incomplete_room.get_shape().toString());
+                      FRLogger.debug("  Contained Shape: " + curr_incomplete_room.get_contained_shape().toString());
+                      FRLogger.debug("  Obstacle Shape: " + curr_object_shape.toString());
+                    }
+
                     new_result.addAll(new_rooms);
                     for (IncompleteFreeSpaceExpansionRoom tmp_room : new_rooms) {
                       new_bounding_shape = new_bounding_shape.union(tmp_room
@@ -986,6 +999,13 @@ public class ShapeSearchTree extends MinAreaTree {
     }
     int offset_width = p_trace.get_half_width()
         + this.clearance_compensation_value(p_trace.clearance_class_no(), p_trace.get_layer());
+    if (p_trace.toString().contains("polylinetrace") || p_trace.get_id_no() == 56) {
+      FRLogger.debug("ShapeSearchTree.calculate_tree_shapes for trace id=" + p_trace.get_id_no());
+      FRLogger.debug("  HalfWidth: " + p_trace.get_half_width());
+      FRLogger.debug(
+          "  ClearanceComp: " + this.clearance_compensation_value(p_trace.clearance_class_no(), p_trace.get_layer()));
+      FRLogger.debug("  OffsetWidth: " + offset_width);
+    }
     TileShape[] result = new TileShape[p_trace.tile_shape_count()];
     for (int i = 0; i < result.length; i++) {
       result[i] = this.offset_shape(p_trace.polyline(), offset_width, i);
