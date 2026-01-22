@@ -96,7 +96,7 @@
 
 ### "No shapes returned" Log Spam
 - **Symptom**: The log file is flooded with `Restrain returned empty for obstacle` messages from `ShapeSearchTree45Degree.java`.
-- **Frequency**: Measured ~118,655 occurrences in a single test run (v2.1.2).
+- **Frequency**: Measured ~118,655 occurrences in a single test run.
 - **Context**: This occurs during `MazeSearchAlgo.find_connection` -> `ShapeSearchTree45Degree.complete_shape` -> `restrain_shape`.
 - **Finding**: When `restrain_shape` returns an empty collection, it effectively means a "room" was completely invalidated by an obstacle, or the logic failed to produce a valid sub-room that still contains the required "contained shape".
 - **Comparison with v1.9**: 
@@ -107,10 +107,17 @@
 ### IntOctagon Refactoring
 - **Significant Changes**: Use of `switch` expressions and renamed fields.
 - **Potential Issue**: The mapping between `obstacle_line_no` (0-7) and the specific octagon fields (left, bottom, right, top, diagonals) must be perfectly consistent with the geometric definition. 
-
-## Theories
-
-### Theory 19: Clipping Logic Regression
-- **Description**: A bug in the refactored `ShapeSearchTree45Degree.restrain_shape` or the underlying `IntOctagon` methods causes valid expansion rooms to be incorrectly discarded as "empty".
-- **Impact**: The autorouter fails to find paths that should be available, or performs redundant searches, leading to the observed performance hit.
 - **Status**: Under investigation. Comparing line-by-line mapping of octagon boundaries.
+
+### Net item count discrepancy (+5V)
+- **Finding**: Net `+5V` has **31 items** in the Current version vs **30 items** in v1.9.
+- **Context**: This count comes from `board.connectable_item_count(netNo)`.
+- **Incomplete Count**: Both versions report **25 incompletes** for `+5V`.
+- **Implication**: There is 1 extra `Connectable` item belonging to net `+5V` in the current version.
+
+### Item #15 (PL7) failing in Current
+- **Finding**: Net `PL7` is the 15th item to be routed in both versions.
+- **v1.9 Outcome**: Successfully routed (0 incompletes in summary).
+- **Current Outcome**: Remains unrouted (1 incomplete in summary) despite `BatchAutorouter` logging `Routed: 15`.
+- **Total Incompletes**: Current version has **184** (vs **183** in v1.9) after 15 items. Correcting for the +1 difference confirms `PL7` is the culprit.
+- **Theory**: `autoroute_item` may be returning `ROUTED` without successfully committing the connection.
