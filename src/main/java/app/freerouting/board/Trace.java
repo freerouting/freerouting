@@ -193,11 +193,22 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       if (curr_item != this && curr_item.shares_layer(this) && (p_ignore_net || curr_item.shares_net(this))) {
         if (curr_item instanceof Trace curr_trace) {
           // Check if points are within tolerance distance
+          double d1 = p_point.to_float().distance(curr_trace.first_corner().to_float());
+          double d2 = p_point.to_float().distance(curr_trace.last_corner().to_float());
+          if (this.contains_net(94)) {
+            FRLogger.debug("    Checking against trace id=" + curr_trace.get_id_no() + ": d1=" + d1 + ", d2=" + d2
+                + ", tolerance=" + tolerance);
+          }
           if (isWithinTolerance(p_point, curr_trace.first_corner(), tolerance) ||
               isWithinTolerance(p_point, curr_trace.last_corner(), tolerance)) {
             result.add(curr_item);
           }
         } else if (curr_item instanceof DrillItem curr_drill_item) {
+          double d = p_point.to_float().distance(curr_drill_item.get_center().to_float());
+          if (this.contains_net(94)) {
+            FRLogger.debug("    Checking against drill id=" + curr_drill_item.get_id_no() + ": d=" + d + ", tolerance="
+                + tolerance);
+          }
           if (isWithinTolerance(p_point, curr_drill_item.get_center(), tolerance)) {
             result.add(curr_item);
           }
