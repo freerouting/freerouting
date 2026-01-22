@@ -999,7 +999,9 @@ public class ShapeSearchTree extends MinAreaTree {
     int offset_width = p_trace.get_half_width()
         + this.clearance_compensation_value(p_trace.clearance_class_no(), p_trace.get_layer());
     if (p_trace.toString().contains("polylinetrace") || p_trace.get_id_no() == 56) {
-      FRLogger.debug("ShapeSearchTree.calculate_tree_shapes for trace id=" + p_trace.get_id_no()
+      int netNo = (p_trace.net_count() > 0) ? p_trace.get_net_no(0) : -1;
+      FRLogger.debug("ShapeSearchTree.calculate_tree_shapes for trace id=" + p_trace.get_id_no() + " (net #" + netNo
+          + ")"
           + ", HalfWidth: " + p_trace.get_half_width()
           + ", ClearanceComp: " + this.clearance_compensation_value(p_trace.clearance_class_no(), p_trace.get_layer())
           + ", OffsetWidth: " + offset_width);

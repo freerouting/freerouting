@@ -1372,6 +1372,8 @@ public class BasicBoard implements Serializable {
     if (!p_trace.is_cycle()) {
       return false;
     }
+    FRLogger.debug("BasicBoard.remove_if_cycle: removing cycle trace id=" + p_trace.get_id_no() + " (net #"
+        + (p_trace.net_count() > 0 ? p_trace.get_net_no(0) : -1) + ")");
     // Remove tails at the endpoints after removing the cycle,
     // if there was no tail before.
     boolean[] tail_at_endpoint_before;

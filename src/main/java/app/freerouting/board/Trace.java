@@ -177,10 +177,18 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     int tolerance = this.half_width + 1;
     TileShape search_shape = TileShape.get_instance(p_point);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
+    if (this.contains_net(94)) {
+      FRLogger.debug("Trace.get_normal_contacts for net #94 at " + p_point + " on layer " + this.layer + ": found "
+          + overlaps.size() + " overlaps");
+    }
     Set<Item> result = new TreeSet<>();
     for (SearchTreeObject curr_ob : overlaps) {
       if (!(curr_ob instanceof Item curr_item)) {
         continue;
+      }
+      if (this.contains_net(94)) {
+        FRLogger.debug("  Checking item id=" + curr_item.get_id_no() + " (net #"
+            + (curr_item.net_count() > 0 ? curr_item.get_net_no(0) : -1) + ") on layer " + curr_item.shape_layer(0));
       }
       if (curr_item != this && curr_item.shares_layer(this) && (p_ignore_net || curr_item.shares_net(this))) {
         if (curr_item instanceof Trace curr_trace) {
