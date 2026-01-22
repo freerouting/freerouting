@@ -56,7 +56,11 @@
     - v1.9: Base cost is `1.0` + small aspect ratio factor (~0.1). Total ~1.1.
     - Current: Base cost is `2.5` + small aspect ratio factor. Total ~2.6.
 - **Hypothesis**: The significantly higher penalty (2.5x) in the current version prevents the router from utilizing available paths that go against the preferred direction, leading to more unrouted items.
-- **Action**: Change `defaultUndesiredDirectionTraceCost` in `RouterScoringSettings.java` from `2.5` to `1.0`.
+- **Action**: Check `RouterScoringSettings.java`.
+- **Result**: `defaultUndesiredDirectionTraceCost` is initialized to `1.0` in the source code, contradicting the observation. However, dynamic calculation in `RouterSettings` might be different. Need to verify where `2.5` comes from.
+- **Action**: Change `defaultUndesiredDirectionTraceCost` in `RouterScoringSettings.java` from `2.5` to `1.0`. (Pending verification of actual runtime value).
+
+  5.  **Random Shuffle**: Baseline to check if a specific fixed order is preventing convergence (escaping local optima).
 
 
 ## Proposed Fixes
