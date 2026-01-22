@@ -188,7 +188,8 @@ public class BatchAutorouter extends NamedAlgorithm {
                 Net net = board.rules.nets.get(curr_net_no);
                 String netName = (net != null) ? net.name : "net#" + curr_net_no;
                 FRLogger.debug("Queuing item for routing: " + curr_item.getClass().getSimpleName() + " on net '"
-                    + netName + "' (connected: " + connected_set.size() + "/" + net_item_count + ")");
+                    + netName + "' (#" + curr_net_no + ") (connected: " + connected_set.size() + "/" + net_item_count
+                    + ")");
               }
             }
           }
@@ -442,12 +443,19 @@ public class BatchAutorouter extends NamedAlgorithm {
           }
           this.totalItemsRouted++;
 
+          int netNo = curr_item.get_net_no(i);
+          int incompletesBefore = ratsNest.incomplete_count(netNo);
           PerformanceProfiler.start("autoroute_item");
-          var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no);
+          var autorouterResult = autoroute_item(curr_item, netNo, ripped_item_list, p_pass_no);
           PerformanceProfiler.end("autoroute_item");
+          int incompletesAfter = (new RatsNest(board)).incomplete_count(netNo);
+
           if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
             // The item was successfully routed
             ++routed;
+            job.logDebug("Item " + routed + " routed for net #" + netNo + ": incompletes " + incompletesBefore + " -> "
+                + incompletesAfter);
+          } else if (autorouterResult.state == AutorouteAttemptState.FAILED) {
           } else if ((autorouterResult.state == AutorouteAttemptState.ALREADY_CONNECTED)
               || (autorouterResult.state == AutorouteAttemptState.NO_UNCONNECTED_NETS)
               || (autorouterResult.state == AutorouteAttemptState.CONNECTED_TO_PLANE)) {
@@ -530,7 +538,7 @@ public class BatchAutorouter extends NamedAlgorithm {
             Net net = board.rules.nets.get(netNo);
             String netName = (net != null) ? net.name : "net#" + netNo;
             int netItemCount = board.connectable_item_count(netNo);
-            job.logDebug("    Net '" + netName + "': " + netIncompletes + " incomplete(s), "
+            job.logDebug("    Net '" + netName + "' (#" + netNo + "): " + netIncompletes + " incomplete(s), "
                 + netItemCount + " total items");
           }
         }

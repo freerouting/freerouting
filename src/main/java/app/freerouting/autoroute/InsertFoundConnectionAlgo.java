@@ -48,6 +48,8 @@ public class InsertFoundConnectionAlgo {
     int curr_layer = p_connection.target_layer;
     InsertFoundConnectionAlgo new_instance = new InsertFoundConnectionAlgo(p_board, p_ctrl);
     String net_name = p_board.rules.nets.get(p_ctrl.net_no).name;
+    FRLogger.debug("InsertFoundConnectionAlgo: inserting connection for net '" + net_name + "' (#" + p_ctrl.net_no
+        + ") with " + p_connection.connection_items.size() + " items");
     for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
       if (!new_instance.insert_via(curr_new_item.corners[0], curr_layer, curr_new_item.layer)) {
         FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net '" + net_name + "' (#" + p_ctrl.net_no
@@ -134,6 +136,8 @@ public class InsertFoundConnectionAlgo {
     for (int i = 1; i < p_trace.corners.length; i++) {
       Point[] curr_corner_arr = Arrays.copyOfRange(p_trace.corners, from_corner_no, i + 1);
       Polyline insert_polyline = new Polyline(curr_corner_arr);
+      FRLogger.debug("InsertFoundConnectionAlgo: inserting trace segment from " + insert_polyline.first_corner()
+          + " to " + insert_polyline.last_corner() + " on layer " + p_trace.layer);
       Point ok_point = board.insert_forced_trace_polyline(insert_polyline, ctrl.trace_half_width[p_trace.layer],
           p_trace.layer, net_no_arr, ctrl.trace_clearance_class_no,
           ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth,
