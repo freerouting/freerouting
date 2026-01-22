@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.lang.management.ManagementFactory;
+import com.sun.management.ThreadMXBean;
 
 /**
  * Handles the sequencing of the auto-router passes.
@@ -42,20 +44,21 @@ public class BatchAutorouterThread extends StoppableThread {
   private final RouterSettings settings;
   private final List<Item> autorouteItemList;
   private final int passNo;
-  private final boolean useSlowAlgorithm;
 
   public FloatLine latest_air_line;
   private int routedCount = 0;
   private int failedCount = 0;
 
-  public BatchAutorouterThread(RoutingBoard board, List<Item> autorouteItemList, int passNo, boolean useSlowAlgorithm,
+  public float cpuTimeUsed = 0.0f;
+  public float maxMemoryUsed = 0.0f;
+
+  public BatchAutorouterThread(RoutingBoard board, List<Item> autorouteItemList, int passNo,
       RouterSettings routerSettings, int startRipupCosts, int tracePullTightAccuracy,
       boolean p_remove_unconnected_vias, boolean p_with_preferred_directions) {
     this.board = board;
     this.settings = routerSettings;
     this.autorouteItemList = autorouteItemList;
     this.passNo = passNo;
-    this.useSlowAlgorithm = useSlowAlgorithm;
 
     this.remove_unconnected_vias = p_remove_unconnected_vias;
     if (p_with_preferred_directions) {
@@ -357,8 +360,7 @@ public class BatchAutorouterThread extends StoppableThread {
         // Do the auto-routing step for this item (typically PolylineTrace or Pin)
         SortedSet<Item> ripped_item_list = new TreeSet<>();
 
-        var autorouterResult = autoroute_item(board, curr_item, curr_item.get_net_no(i), ripped_item_list, passNo,
-            useSlowAlgorithm);
+        var autorouterResult = autoroute_item(board, curr_item, curr_item.get_net_no(i), ripped_item_list, passNo);
         if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
           // The item was successfully routed
           ++routed;
@@ -389,6 +391,7 @@ public class BatchAutorouterThread extends StoppableThread {
         --items_to_go_count;
         ripped_item_count += ripped_item_list.size();
 
+        PerformanceProfiler.start("stats_update");
         BoardStatistics boardStatistics = board.get_statistics();
         routerCounters.passCount = passNo;
         routerCounters.queuedToBeRoutedCount = items_to_go_count;
@@ -398,6 +401,7 @@ public class BatchAutorouterThread extends StoppableThread {
         routerCounters.routedCount = routed;
         routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
         this.fireBoardUpdatedEvent(boardStatistics, routerCounters, board);
+        PerformanceProfiler.end("stats_update");
       }
     }
 
@@ -413,7 +417,7 @@ public class BatchAutorouterThread extends StoppableThread {
   // Tries to route an item on a specific net. Returns true, if the item is
   // routed.
   private AutorouteAttemptResult autoroute_item(RoutingBoard board, Item p_item, int p_route_net_no,
-      SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no, boolean useSlowAlgorithm) {
+      SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no) {
     try {
       boolean contains_plane = false;
 
@@ -473,8 +477,7 @@ public class BatchAutorouterThread extends StoppableThread {
 
       // Initialize the auto-router engine
       AutorouteEngine autoroute_engine = board.init_autoroute(p_route_net_no,
-          autoroute_control.trace_clearance_class_no, this, time_limit, this.retain_autoroute_database,
-          useSlowAlgorithm);
+          autoroute_control.trace_clearance_class_no, this, time_limit, this.retain_autoroute_database);
 
       // Do the auto-routing between the two sets of items
       AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
@@ -503,6 +506,14 @@ public class BatchAutorouterThread extends StoppableThread {
   @Override
   protected void thread_action() {
     autorouteItems();
+    captureStats();
+  }
+
+  private void captureStats() {
+    ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+    long id = this.threadId();
+    this.cpuTimeUsed = threadMXBean.getThreadCpuTime(id) / 1000.0f / 1000.0f / 1000.0f;
+    this.maxMemoryUsed = threadMXBean.getThreadAllocatedBytes(id) / (1024.0f * 1024.0f);
   }
 
   public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener) {

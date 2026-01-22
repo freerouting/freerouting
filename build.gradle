@@ -206,15 +206,21 @@ apply from: 'gradle/publishing.gradle'
 
 // write constants to code
 tasks.register('writeVersionInfo') {
+    def outputDir = layout.buildDirectory.dir("generated-src/app/freerouting/constants")
+    def versionId = publishing.versionId
+    def buildDateValue = buildDate
+    
+    outputs.dir(outputDir)
+    
     doLast {
-        def buildInfoCode = file("${project.buildDir}/generated-src/app/freerouting/constants/Constants.java")
+        def buildInfoCode = outputDir.get().file("Constants.java").asFile
         buildInfoCode.getParentFile().mkdirs()
         buildInfoCode.write(
                 """
             package app.freerouting.constants;
             public final class Constants {
-              public static final String FREEROUTING_VERSION = \"${publishing.versionId}\";
-              public static final String FREEROUTING_BUILD_DATE = \"${project.buildDate}\";
+              public static final String FREEROUTING_VERSION = \"${versionId}\";
+              public static final String FREEROUTING_BUILD_DATE = \"${buildDateValue}\";
             }
             """.stripIndent().trim()
         )
@@ -222,7 +228,7 @@ tasks.register('writeVersionInfo') {
 }
 
 // add the 'vmfconstants' src dir to the folders to compile (input to groovyc)
-sourceSets.main.java.srcDirs += "${project.buildDir}/generated-src/"
+sourceSets.main.java.srcDirs += layout.buildDirectory.dir("generated-src")
 
 compileJava.dependsOn += 'writeVersionInfo'
 
@@ -243,12 +249,11 @@ tasks.register('run', JavaExec) {
     // jvmArgs 'arg1'
 }
 
-tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xmaxerrs" << "1000"  // Increase maximum error messages
-    options.compilerArgs << "-Xmaxwarns" << "1000" // Increase maximum warning messages
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs.addAll(["-Xmaxerrs", "1000", "-Xmaxwarns", "1000"])
 }
 
-task buildDockerImage(type: Exec) {
+tasks.register('buildDockerImage', Exec) {
     group = 'docker'
     description = 'Builds the Docker image for the application.'
     commandLine 'docker', 'build', '-t', 'freerouting/freerouting:2.0.1', '.'

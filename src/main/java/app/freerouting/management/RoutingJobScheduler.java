@@ -76,6 +76,45 @@ public class RoutingJobScheduler {
                         new ItemIdentificationNumberGenerator());
                     job.board = boardManager.get_routing_board();
 
+                    // Only reinitialize RouterSettings with board-specific optimizations
+                    // if the settings were created with defaults (layer count = 0 or null).
+                    // If settings already have proper layer configuration (from test or DSN),
+                    // preserve them to avoid changing preferred directions which can break routing.
+
+                    boolean hasLayerConfiguration = (job.routerSettings.isLayerActive != null &&
+                        job.routerSettings.isLayerActive.length > 0);
+
+                    if (!hasLayerConfiguration) {
+                      // Save the current settings (which include command-line overrides)
+                      app.freerouting.settings.RouterSettings cliSettings = job.routerSettings;
+
+                      // Create new settings with board-specific optimizations
+                      job.routerSettings = new app.freerouting.settings.RouterSettings(job.board);
+
+                      // Manually copy critical command-line parameters that must be preserved
+                      // (reflection-based copying doesn't work reliably for all fields)
+                      job.routerSettings.enabled = cliSettings.enabled;
+                      job.routerSettings.algorithm = cliSettings.algorithm;
+                      job.routerSettings.jobTimeoutString = cliSettings.jobTimeoutString;
+                      job.routerSettings.maxPasses = cliSettings.maxPasses;
+                      job.routerSettings.trace_pull_tight_accuracy = cliSettings.trace_pull_tight_accuracy;
+                      job.routerSettings.vias_allowed = cliSettings.vias_allowed;
+                      job.routerSettings.automatic_neckdown = cliSettings.automatic_neckdown;
+                      job.routerSettings.maxThreads = cliSettings.maxThreads;
+                      job.routerSettings.ignoreNetClasses = cliSettings.ignoreNetClasses;
+                      // Copy nested settings objects using reflection
+                      job.setSettings(cliSettings);
+                    } else {
+                      // Settings already have proper layer configuration from test/DSN
+                      // Verify layer count matches the board
+                      if (job.routerSettings.isLayerActive.length != job.board.get_layer_count()) {
+                        FRLogger.warn("Layer count mismatch: settings=" + job.routerSettings.isLayerActive.length +
+                            ", board=" + job.board.get_layer_count() +
+                            " - This should not happen and may cause routing issues!");
+                        // DO NOT call setLayerCount() here as it would reset all layer preferences!
+                      }
+                    }
+
                     // Load SES file if specified
                     if (globalSettings.design_session_filename != null) {
                       try {
@@ -119,6 +158,7 @@ public class RoutingJobScheduler {
     });
 
     loopThread.start();
+
   }
 
   /**

@@ -14,7 +14,8 @@ import java.io.OutputStream;
 import java.util.Collection;
 
 /**
- * File for saving the board rules, so that they can be restored after the Board is creates anew from the host system.
+ * File for saving the board rules, so that they can be restored after the Board
+ * is creates anew from the host system.
  */
 public class RulesFile {
 
@@ -24,8 +25,9 @@ public class RulesFile {
   public static void write(GuiBoardManager p_board_handling, OutputStream p_output_stream, String p_design_name) {
     IndentFileWriter output_file = new IndentFileWriter(p_output_stream);
     BasicBoard routing_board = p_board_handling.get_routing_board();
-    WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, p_board_handling.settings.autoroute_settings, output_file,
-        routing_board.communication.specctra_parser_info.string_quote, routing_board.communication.coordinate_transform, false);
+    WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, null, output_file,
+        routing_board.communication.specctra_parser_info.string_quote, routing_board.communication.coordinate_transform,
+        false);
     try {
       write_rules(write_scope_parameter, p_design_name);
     } catch (IOException e) {
@@ -69,7 +71,7 @@ public class RulesFile {
     LayerStructure layer_structure = new LayerStructure(routing_board.layer_structure);
     CoordinateTransform coordinate_transform = routing_board.communication.coordinate_transform;
     Object next_token = null;
-    for (; ; ) {
+    for (;;) {
       Object prev_token = next_token;
       try {
         next_token = scanner.next_token();
@@ -104,11 +106,9 @@ public class RulesFile {
           if (snap_angle != null) {
             routing_board.rules.set_trace_angle_restriction(snap_angle);
           }
-        } else if (next_token == Keyword.AUTOROUTE_SETTINGS) {
-          RouterSettings autoroute_settings = AutorouteSettings.read_scope(scanner, layer_structure);
-          if (autoroute_settings != null) {
-            p_board_handling.settings.autoroute_settings = autoroute_settings;
-          }
+          // Note: RouterSettings are now managed by RoutingJob, not InteractiveSettings
+          // This section is kept for backwards compatibility when reading old rules files
+          // but the settings are not applied to InteractiveSettings anymore
         } else {
           ScopeKeyword.skip_scope(scanner);
         }
@@ -126,7 +126,8 @@ public class RulesFile {
     p_par.file.write(p_design_name);
     Structure.write_snap_angle(p_par.file, p_par.board.rules.get_trace_angle_restriction());
     if (p_par.autoroute_settings != null) {
-      AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings, p_par.board.layer_structure, p_par.identifier_type);
+      AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings, p_par.board.layer_structure,
+          p_par.identifier_type);
     }
     // write the default rule using 0 as default layer.
     Rule.write_default_rule(p_par, 0);

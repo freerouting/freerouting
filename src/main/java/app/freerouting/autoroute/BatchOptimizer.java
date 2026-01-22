@@ -18,7 +18,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Optimizes routes using a single thread on a board that has completed auto-routing.
+ * Optimizes routes using a single thread on a board that has completed
+ * auto-routing.
  */
 public class BatchOptimizer extends NamedAlgorithm {
 
@@ -59,25 +60,30 @@ public class BatchOptimizer extends NamedAlgorithm {
         .size() + ", trace length: " + Math.round(board.cumulative_trace_length()));
 
     double route_improved = -1;
-    int curr_pass_no = 0;
+    int currentPass = 0;
     use_increased_ripup_costs = true;
 
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
-    while (((route_improved >= this.settings.optimizer.optimizationImprovementThreshold) || (route_improved < 0)) && (!this.thread.isStopRequested())) {
-      ++curr_pass_no;
-      String current_board_hash = this.board.get_hash();
-      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
+    while (((route_improved >= this.settings.optimizer.optimizationImprovementThreshold) || (route_improved < 0))
+        && (!this.thread.isStopRequested())) {
+      ++currentPass;
+      String currentBoardHash = this.board.get_hash();
+      job.setCurrentPass(currentPass);
+      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, currentBoardHash));
 
-      boolean with_preferred_directions = curr_pass_no % 2 != 0; // to create more variations
-      route_improved = opt_route_pass(curr_pass_no, with_preferred_directions);
+      boolean with_preferred_directions = currentPass % 2 != 0; // to create more variations
+      route_improved = opt_route_pass(currentPass, with_preferred_directions);
     }
 
-    this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, curr_pass_no, this.board.get_hash()));
+    this.fireTaskStateChangedEvent(
+        new TaskStateChangedEvent(this, TaskState.FINISHED, currentPass, this.board.get_hash()));
   }
 
   /**
-   * Tries to reduce the number of vias and the trace length of a completely routed board. Returns the amount of improvements is made in percentage (expressed between 0.0 and 1.0). -1 if the routing
+   * Tries to reduce the number of vias and the trace length of a completely
+   * routed board. Returns the amount of improvements is made in percentage
+   * (expressed between 0.0 and 1.0). -1 if the routing
    * must go on no matter how much it improved.
    */
   protected float opt_route_pass(int p_pass_no, boolean p_with_preferred_directions) {
@@ -90,8 +96,9 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     this.sorted_route_items = new ReadSortedRouteItems();
     this.min_cumulative_trace_length = boardStatisticsBefore.traces.totalWeightedLength;
-    String optimizationPassId =
-        "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + boardStatisticsBefore.items.viaCount + " vias and " + "%(,.2f".formatted(boardStatisticsBefore.traces.totalLength) + " trace length.";
+    String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with "
+        + boardStatisticsBefore.items.viaCount + " vias and "
+        + "%(,.2f".formatted(boardStatisticsBefore.traces.totalLength) + " trace length.";
 
     FRLogger.traceEntry(optimizationPassId);
 
@@ -108,8 +115,11 @@ public class BatchOptimizer extends NamedAlgorithm {
         BoardStatistics boardStatisticsAfter = board.get_statistics();
         this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, board);
 
-        route_improved = (float) (boardStatisticsBefore.items.viaCount != 0 && boardStatisticsBefore.traces.totalLength != 0 ? 1.0 - (
-            (((float) boardStatisticsAfter.items.viaCount / boardStatisticsBefore.items.viaCount) + (boardStatisticsAfter.traces.totalLength / boardStatisticsBefore.traces.totalLength)) / 2) : 0);
+        route_improved = (float) (boardStatisticsBefore.items.viaCount != 0
+            && boardStatisticsBefore.traces.totalLength != 0
+                ? 1.0 - ((((float) boardStatisticsAfter.items.viaCount / boardStatisticsBefore.items.viaCount)
+                    + (boardStatisticsAfter.traces.totalLength / boardStatisticsBefore.traces.totalLength)) / 2)
+                : 0);
       }
     }
 
@@ -121,8 +131,11 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     double routeoptimizer_pass_duration = FRLogger.traceExit(optimizationPassId);
     BoardStatistics boardStatisticsAfter = new BoardStatistics(this.board);
-    job.logInfo("Optimizer pass #" + p_pass_no + " was completed in " + FRLogger.formatDuration(routeoptimizer_pass_duration) + " with the score of " + FRLogger.formatScore(
-        boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring), boardStatisticsAfter.connections.incompleteCount, boardStatisticsAfter.clearanceViolations.totalCount) + ".");
+    job.logInfo("Optimizer pass #" + p_pass_no + " was completed in "
+        + FRLogger.formatDuration(routeoptimizer_pass_duration) + " with the score of " + FRLogger.formatScore(
+            boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring),
+            boardStatisticsAfter.connections.incompleteCount, boardStatisticsAfter.clearanceViolations.totalCount)
+        + ".");
     return route_improved;
   }
 
@@ -130,8 +143,11 @@ public class BatchOptimizer extends NamedAlgorithm {
    * Try to improve the route by re-routing the connections containing p_item.
    *
    * @param p_item                      the item to be re-routed
-   * @param p_with_preferred_directions if true, the preferred directions are used for the traces
-   * @param disableSnapshots            if true, the snapshots are not used which means that the routing cannot be undone, but it's much more efficient
+   * @param p_with_preferred_directions if true, the preferred directions are used
+   *                                    for the traces
+   * @param disableSnapshots            if true, the snapshots are not used which
+   *                                    means that the routing cannot be undone,
+   *                                    but it's much more efficient
    */
   protected ItemRouteResult opt_route_item(Item p_item, boolean p_with_preferred_directions, boolean disableSnapshots) {
     // check if item.board is a RoutingBoard
@@ -169,7 +185,8 @@ public class BatchOptimizer extends NamedAlgorithm {
       ripped_connections.addAll(curr_item.get_connection_items(Item.StopConnectionOption.NONE));
     }
 
-    // check if the connections contain user fixed items, which should not be re-routed
+    // check if the connections contain user fixed items, which should not be
+    // re-routed
     for (Item curr_item : ripped_connections) {
       if (curr_item.is_user_fixed()) {
         return new ItemRouteResult(p_item.get_id_no());
@@ -190,7 +207,8 @@ public class BatchOptimizer extends NamedAlgorithm {
     // calculate the ripup costs
     int ripup_costs = this.settings.get_start_ripup_costs();
     if (this.use_increased_ripup_costs) {
-      // TODO: move this fixed parameter (ADDITIONAL_RIPUP_COST_FACTOR_AT_START=10) to the router optimizer settings
+      // TODO: move this fixed parameter (ADDITIONAL_RIPUP_COST_FACTOR_AT_START=10) to
+      // the router optimizer settings
       ripup_costs *= ADDITIONAL_RIPUP_COST_FACTOR_AT_START;
     }
 
@@ -202,22 +220,27 @@ public class BatchOptimizer extends NamedAlgorithm {
     }
 
     // route the connections
-    BatchAutorouter.autoroute_passes_for_optimizing_item(job, MAX_AUTOROUTE_PASSES, ripup_costs, settings.trace_pull_tight_accuracy, p_with_preferred_directions, routingBoard, settings);
+    BatchAutorouter.autoroute_passes_for_optimizing_item(job, MAX_AUTOROUTE_PASSES, ripup_costs,
+        settings.trace_pull_tight_accuracy, p_with_preferred_directions, routingBoard, settings);
 
-    // check the result by generating the statistics for the board again after the routing
+    // check the result by generating the statistics for the board again after the
+    // routing
     BoardStatistics boardStatisticsAfter = routingBoard.get_statistics();
     RouterCounters routerCountersAfter = new RouterCounters();
     routerCountersAfter.incompleteCount = new RatsNest(routingBoard).incomplete_count();
     this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCountersAfter, routingBoard);
 
     // check if the board was improved
-    ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), boardStatisticsBefore.items.viaCount, boardStatisticsAfter.items.viaCount, this.min_cumulative_trace_length,
-        boardStatisticsAfter.traces.totalLength, routerCountersBefore.incompleteCount, routerCountersAfter.incompleteCount);
+    ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), boardStatisticsBefore.items.viaCount,
+        boardStatisticsAfter.items.viaCount, this.min_cumulative_trace_length,
+        boardStatisticsAfter.traces.totalLength, routerCountersBefore.incompleteCount,
+        routerCountersAfter.incompleteCount);
     boolean route_improved = !this.thread.isStopRequested() && result.improved();
     result.update_improved(route_improved);
 
     if (route_improved) {
-      this.min_cumulative_trace_length = Math.min(this.min_cumulative_trace_length, boardStatisticsAfter.traces.totalWeightedLength);
+      this.min_cumulative_trace_length = Math.min(this.min_cumulative_trace_length,
+          boardStatisticsAfter.traces.totalWeightedLength);
 
       if (!disableSnapshots) {
         // this was a successful routing, so the snapshot can be removed
@@ -225,7 +248,8 @@ public class BatchOptimizer extends NamedAlgorithm {
       }
     } else {
       if (!disableSnapshots) {
-        // this was not a successful routing, so we can undo the routing using the snapshot
+        // this was not a successful routing, so we can undo the routing using the
+        // snapshot
         routingBoard.undo(null);
       }
     }
@@ -234,7 +258,8 @@ public class BatchOptimizer extends NamedAlgorithm {
   }
 
   /**
-   * Returns the current position of the item, which will be rerouted or null, if the optimizer is not active.
+   * Returns the current position of the item, which will be rerouted or null, if
+   * the optimizer is not active.
    */
   public FloatPoint get_current_position() {
     if (sorted_route_items == null) {
@@ -269,7 +294,9 @@ public class BatchOptimizer extends NamedAlgorithm {
   }
 
   /**
-   * Reads the vias and traces on the board in ascending x order. Because the vias and traces on the board change while optimizing the item list of the board is read from scratch each time the next
+   * Reads the vias and traces on the board in ascending x order. Because the vias
+   * and traces on the board change while optimizing the item list of the board is
+   * read from scratch each time the next
    * route item is returned.
    */
   protected class ReadSortedRouteItems {
@@ -287,7 +314,7 @@ public class BatchOptimizer extends NamedAlgorithm {
       FloatPoint curr_min_coor = new FloatPoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
       int curr_min_layer = Integer.MAX_VALUE;
       Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
-      for (; ; ) {
+      for (;;) {
         UndoableObjects.Storable curr_item = board.item_list.read_object(it);
         if (curr_item == null) {
           break;
@@ -298,10 +325,12 @@ public class BatchOptimizer extends NamedAlgorithm {
                 .get_center()
                 .to_float();
             int curr_via_min_layer = curr_via.first_layer();
-            if (curr_via_center.x > min_item_coor.x || curr_via_center.x == min_item_coor.x && (curr_via_center.y > min_item_coor.y
-                || curr_via_center.y == min_item_coor.y && curr_via_min_layer > min_item_layer)) {
-              if (curr_via_center.x < curr_min_coor.x || curr_via_center.x == curr_min_coor.x && (curr_via_center.y < curr_min_coor.y
-                  || curr_via_center.y == curr_min_coor.y && curr_via_min_layer < curr_min_layer)) {
+            if (curr_via_center.x > min_item_coor.x
+                || curr_via_center.x == min_item_coor.x && (curr_via_center.y > min_item_coor.y
+                    || curr_via_center.y == min_item_coor.y && curr_via_min_layer > min_item_layer)) {
+              if (curr_via_center.x < curr_min_coor.x
+                  || curr_via_center.x == curr_min_coor.x && (curr_via_center.y < curr_min_coor.y
+                      || curr_via_center.y == curr_min_coor.y && curr_via_min_layer < curr_min_layer)) {
                 curr_min_coor = curr_via_center;
                 curr_min_layer = curr_via_min_layer;
                 result = curr_via;
@@ -312,7 +341,7 @@ public class BatchOptimizer extends NamedAlgorithm {
       }
       // Read traces last to prefer vias to traces at the same location
       it = board.item_list.start_read_object();
-      for (; ; ) {
+      for (;;) {
         UndoableObjects.Storable curr_item = board.item_list.read_object(it);
         if (curr_item == null) {
           break;
@@ -332,10 +361,12 @@ public class BatchOptimizer extends NamedAlgorithm {
               compare_corner = first_corner;
             }
             int curr_trace_layer = curr_trace.get_layer();
-            if (compare_corner.x > min_item_coor.x || compare_corner.x == min_item_coor.x && (compare_corner.y > min_item_coor.y
-                || compare_corner.y == min_item_coor.y && curr_trace_layer > min_item_layer)) {
-              if (compare_corner.x < curr_min_coor.x || compare_corner.x == curr_min_coor.x && (compare_corner.y < curr_min_coor.y
-                  || compare_corner.y == curr_min_coor.y && curr_trace_layer < curr_min_layer)) {
+            if (compare_corner.x > min_item_coor.x
+                || compare_corner.x == min_item_coor.x && (compare_corner.y > min_item_coor.y
+                    || compare_corner.y == min_item_coor.y && curr_trace_layer > min_item_layer)) {
+              if (compare_corner.x < curr_min_coor.x
+                  || compare_corner.x == curr_min_coor.x && (compare_corner.y < curr_min_coor.y
+                      || compare_corner.y == curr_min_coor.y && curr_trace_layer < curr_min_layer)) {
                 boolean is_connected_to_via = false;
                 Set<Item> trace_contacts = curr_trace.get_normal_contacts();
                 for (Item curr_contact : trace_contacts) {

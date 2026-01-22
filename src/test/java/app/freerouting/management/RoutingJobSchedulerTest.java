@@ -162,6 +162,15 @@ public class RoutingJobSchedulerTest {
     return false;
   }
 
+  @Test
+  void testCurrentPass() {
+    RoutingJob job = new RoutingJob();
+    assertEquals(0, job.getCurrentPass(), "Default currentPass should be 0.");
+
+    job.setCurrentPass(5);
+    assertEquals(5, job.getCurrentPass(), "currentPass should be updateable.");
+  }
+
   // Helper method to check if a job list contains a specific job
   private boolean containsJob(LinkedList<RoutingJob> jobs, RoutingJob targetJob) {
     return jobs.contains(targetJob);

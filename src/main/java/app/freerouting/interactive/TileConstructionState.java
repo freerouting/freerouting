@@ -21,19 +21,19 @@ public class TileConstructionState extends CornerItemConstructionState {
   /**
    * Creates a new instance of TileConstructionState
    */
-  private TileConstructionState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_parent_state, p_board_handling, p_activityReplayFile);
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.CREATING_TILE);
-    }
+  private TileConstructionState(FloatPoint p_location, InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
+    super(p_parent_state, p_board_handling);
     this.add_corner(p_location);
   }
 
   /**
-   * Returns a new instance of this class If p_logfile != null; the creation of this item is stored in a logfile
+   * Returns a new instance of this class If p_logfile != null; the creation of
+   * this item is stored in a logfile
    */
-  public static TileConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    return new TileConstructionState(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
+  public static TileConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
+    return new TileConstructionState(p_location, p_parent_state, p_board_handling);
   }
 
   /**
@@ -45,11 +45,6 @@ public class TileConstructionState extends CornerItemConstructionState {
     remove_concave_corners();
     hdlg.repaint();
     return this;
-  }
-
-  @Override
-  public InteractiveState process_logfile_point(FloatPoint p_point) {
-    return left_button_clicked(p_point);
   }
 
   @Override
@@ -93,9 +88,6 @@ public class TileConstructionState extends CornerItemConstructionState {
       hdlg.screen_messages.set_status_message(tm.getText("keepout_successful_completed"));
     } else {
       hdlg.screen_messages.set_status_message(tm.getText("keepout_cancelled_because_of_overlaps"));
-    }
-    if (activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
     }
     return this.return_state;
   }
@@ -152,7 +144,8 @@ public class TileConstructionState extends CornerItemConstructionState {
   }
 
   /**
-   * removes as many corners at the end of the corner list, so that closing the polygon will not create a concave corner
+   * removes as many corners at the end of the corner list, so that closing the
+   * polygon will not create a concave corner
    */
   private void remove_concave_corners_at_close() {
     add_corner_for_snap_angle();

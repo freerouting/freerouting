@@ -10,7 +10,8 @@ public class ReflectionUtil {
   private ReflectionUtil() {
   }
 
-  public static void setFieldValue(Object obj, String propertyName, Object newValue) throws NoSuchFieldException, IllegalAccessException {
+  public static void setFieldValue(Object obj, String propertyName, Object newValue)
+      throws NoSuchFieldException, IllegalAccessException {
     String[] propertyPath = propertyName.split("[.:\\-]");
     Object currentObject = obj;
     Field field = null;
@@ -78,7 +79,8 @@ public class ReflectionUtil {
   }
 
   /**
-   * Copy all non-null, and non-default fields from one object to another recursively
+   * Copy all non-null, and non-default fields from one object to another
+   * recursively
    *
    * @param source The source object
    * @param target The target object
@@ -107,88 +109,97 @@ public class ReflectionUtil {
 
         // Only copy the field if the new value is not null, and not the default value
         if ((sourceValue != null) && !sourceValue.equals(getDefaultValue(field))) {
-          // Check if the field is a primitive or a string
-          if (field
-              .getType()
-              .isPrimitive() || field.getType() == String.class) {
+          // Check if the field is a primitive, wrapper type, or a string
+          if (field.getType().isPrimitive()
+              || field.getType() == String.class
+              || field.getType() == Integer.class
+              || field.getType() == Long.class
+              || field.getType() == Float.class
+              || field.getType() == Double.class
+              || field.getType() == Boolean.class
+              || field.getType() == Byte.class
+              || field.getType() == Short.class
+              || field.getType() == Character.class) {
             // check if the target field is null or its default value
             var targetValue = field.get(target);
 
-            //if ((targetValue == null) || targetValue.equals(getDefaultValue(field)))
+            // if ((targetValue == null) || targetValue.equals(getDefaultValue(field)))
             if (targetValue != sourceValue) {
               field.set(target, sourceValue);
               numberOfFieldsChanged++;
             }
           } else
-            // Check if the field is an enum
+          // Check if the field is an enum
+          if (field
+              .getType()
+              .isEnum()) {
+            var enumType = (Class<Enum>) field.getType();
+            var enumValue = Enum.valueOf(enumType, sourceValue.toString());
+
+            // Copy the enum value
+            field.set(target, enumValue);
+            numberOfFieldsChanged++;
+          } else
+          // Check if the field is an array
+          if (field
+              .getType()
+              .isArray()) {
+
+            // Is the array of primitive types or strings?
             if (field
                 .getType()
-                .isEnum()) {
-              var enumType = (Class<Enum>) field.getType();
-              var enumValue = Enum.valueOf(enumType, sourceValue.toString());
-
-              // Copy the enum value
-              field.set(target, enumValue);
-              numberOfFieldsChanged++;
-            } else
-              // Check if the field is an array
-              if (field
-                  .getType()
-                  .isArray()) {
-
-                // Is the array of primitive types or strings?
-                if (field
-                    .getType()
-                    .getComponentType()
-                    .isPrimitive() || field
+                .getComponentType()
+                .isPrimitive()
+                || field
                     .getType()
                     .getComponentType() == String.class) {
-                  // Only set the field if it is not null on the source object
-                  Object targetValue = field.get(target);
+              // Only set the field if it is not null on the source object
+              Object targetValue = field.get(target);
 
-                  int targetArrayLength = 0;
-                  if (targetValue != null && targetValue
-                      .getClass()
-                      .isArray()) {
-                    targetArrayLength = java.lang.reflect.Array.getLength(targetValue);
-                  }
-
-                  int sourceArrayLength = 0;
-                  if (sourceValue != null && sourceValue
-                      .getClass()
-                      .isArray()) {
-                    sourceArrayLength = java.lang.reflect.Array.getLength(sourceValue);
-                  }
-
-                  // Check if the target field is null or its length is 0
-                  if ((targetValue == null) || ((targetArrayLength == 0) && (sourceArrayLength > 0))) {
-                    // The field is an array of primitive types or strings, so we can copy it directly
-                    field.set(target, sourceValue);
-                    numberOfFieldsChanged++;
-                  }
-                } else {
-                  // The field is an array, so we need to copy its elements
-                  Object[] sourceArray = (Object[]) sourceValue;
-                  Object[] targetArray = (Object[]) field.get(target);
-                  if (targetArray == null) {
-                    targetArray = new Object[sourceArray.length];
-                    field.set(target, targetArray);
-                  }
-                  System.arraycopy(sourceArray, 0, targetArray, 0, sourceArray.length);
-                  numberOfFieldsChanged += sourceArray.length;
-                }
-              } else {
-                // The field is an object, so we need to copy its fields
-                Object targetField = field.get(target);
-                if (targetField == null) {
-                  targetField = field
-                      .getType()
-                      .getDeclaredConstructor()
-                      .newInstance();
-                  field.set(target, targetField);
-                }
-                numberOfFieldsChanged += copyFields(sourceValue, targetField);
+              int targetArrayLength = 0;
+              if (targetValue != null && targetValue
+                  .getClass()
+                  .isArray()) {
+                targetArrayLength = java.lang.reflect.Array.getLength(targetValue);
               }
+
+              int sourceArrayLength = 0;
+              if (sourceValue != null && sourceValue
+                  .getClass()
+                  .isArray()) {
+                sourceArrayLength = java.lang.reflect.Array.getLength(sourceValue);
+              }
+
+              // Check if the target field is null or its length is 0
+              if ((targetValue == null) || ((targetArrayLength == 0) && (sourceArrayLength > 0))) {
+                // The field is an array of primitive types or strings, so we can copy it
+                // directly
+                field.set(target, sourceValue);
+                numberOfFieldsChanged++;
+              }
+            } else {
+              // The field is an array, so we need to copy its elements
+              Object[] sourceArray = (Object[]) sourceValue;
+              Object[] targetArray = (Object[]) field.get(target);
+              if (targetArray == null) {
+                targetArray = new Object[sourceArray.length];
+                field.set(target, targetArray);
+              }
+              System.arraycopy(sourceArray, 0, targetArray, 0, sourceArray.length);
+              numberOfFieldsChanged += sourceArray.length;
+            }
+          } else {
+            // The field is an object, so we need to copy its fields
+            Object targetField = field.get(target);
+            if (targetField == null) {
+              targetField = field
+                  .getType()
+                  .getDeclaredConstructor()
+                  .newInstance();
+              field.set(target, targetField);
+            }
+            numberOfFieldsChanged += copyFields(sourceValue, targetField);
+          }
         }
       } catch (Exception e) {
         FRLogger.error("Error copying fields", e);
@@ -208,7 +219,8 @@ public class ReflectionUtil {
           .getConstructor()
           .newInstance();
     } catch (NoSuchMethodException _) {
-      // The field does not have a default constructor, this can usually the case if the type is a primitive type
+      // The field does not have a default constructor, this can usually the case if
+      // the type is a primitive type
       if (field.getType() == int.class || field.getType() == Integer.class) {
         result = 0;
       } else if (field.getType() == long.class || field.getType() == Long.class) {
@@ -232,6 +244,8 @@ public class ReflectionUtil {
         result = field
             .getType()
             .getEnumConstants()[0];
+      } else if (Modifier.isTransient(field.getModifiers())) {
+        result = null;
       } else {
         FRLogger.warn("No default constructor found for field: " + field.getName());
       }

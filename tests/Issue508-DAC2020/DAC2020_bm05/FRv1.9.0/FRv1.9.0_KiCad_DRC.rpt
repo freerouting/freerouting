@@ -1,0 +1,366 @@
+** Drc report for bm5.unrouted.kicad_pcb **
+** Created on 2026-01-11T17:35:23-0600 **
+
+** Found 43 DRC violations **
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.9011 mm, 105.2336 mm): Pad 1 [/SPOLP] of U27 on Top
+    @(150.9011 mm, 104.8336 mm): Pad 2 [/MICBIAS1] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.9011 mm, 104.8336 mm): Pad 2 [/MICBIAS1] of U27 on Top
+    @(150.9011 mm, 104.4336 mm): Pad 3 [Net-(C21-Pad2)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.9011 mm, 104.4336 mm): Pad 3 [Net-(C21-Pad2)] of U27 on Top
+    @(150.9011 mm, 104.0336 mm): Pad 4 [/IN1P] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.9011 mm, 104.0336 mm): Pad 4 [/IN1P] of U27 on Top
+    @(150.9011 mm, 103.6336 mm): Pad 5 [GND] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.9011 mm, 103.6336 mm): Pad 5 [GND] of U27 on Top
+    @(150.9011 mm, 103.2336 mm): Pad 6 [Net-(C6-Pad2)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.9011 mm, 103.2336 mm): Pad 6 [Net-(C6-Pad2)] of U27 on Top
+    @(150.9011 mm, 102.8336 mm): Pad 7 [/1.8VDD] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.9011 mm, 102.8336 mm): Pad 7 [/1.8VDD] of U27 on Top
+    @(150.9011 mm, 102.4336 mm): Pad 8 [Net-(C18-Pad2)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.9011 mm, 102.4336 mm): Pad 8 [Net-(C18-Pad2)] of U27 on Top
+    @(150.9011 mm, 102.0336 mm): Pad 9 [Net-(C19-Pad2)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.9011 mm, 102.0336 mm): Pad 9 [Net-(C19-Pad2)] of U27 on Top
+    @(150.9011 mm, 101.6336 mm): Pad 10 [Net-(C24-Pad2)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.9011 mm, 101.6336 mm): Pad 10 [Net-(C24-Pad2)] of U27 on Top
+    @(150.9011 mm, 101.2336 mm): Pad 11 [/LOUTL] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.9011 mm, 101.2336 mm): Pad 11 [/LOUTL] of U27 on Top
+    @(150.9011 mm, 100.8336 mm): Pad 12 [/LOUTR] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(150.1011 mm, 100.0336 mm): Pad 13 [/1.8VDD] of U27 on Top
+    @(149.7011 mm, 100.0336 mm): Pad 14 [Net-(C17-Pad2)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.7011 mm, 100.0336 mm): Pad 14 [Net-(C17-Pad2)] of U27 on Top
+    @(149.3011 mm, 100.0336 mm): Pad 15 [GND] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.9011 mm, 100.0336 mm): Pad 16 [GND] of U27 on Top
+    @(148.5011 mm, 100.0336 mm): Pad 17 [/CPVREF] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.5011 mm, 100.0336 mm): Pad 17 [/CPVREF] of U27 on Top
+    @(148.1011 mm, 100.0336 mm): Pad 18 [/HPOL] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.1011 mm, 100.0336 mm): Pad 18 [/HPOL] of U27 on Top
+    @(147.7011 mm, 100.0336 mm): Pad 19 [/HPOR] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.7011 mm, 100.0336 mm): Pad 19 [/HPOR] of U27 on Top
+    @(147.3011 mm, 100.0336 mm): Pad 20 [Net-(C2-Pad1)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.3011 mm, 100.0336 mm): Pad 20 [Net-(C2-Pad1)] of U27 on Top
+    @(146.9011 mm, 100.0336 mm): Pad 21 [/1.8VDD] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.9011 mm, 100.0336 mm): Pad 21 [/1.8VDD] of U27 on Top
+    @(146.5011 mm, 100.0336 mm): Pad 22 [GND] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.5011 mm, 100.0336 mm): Pad 22 [GND] of U27 on Top
+    @(146.1011 mm, 100.0336 mm): Pad 23 [Net-(C15-Pad2)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.1011 mm, 100.0336 mm): Pad 23 [Net-(C15-Pad2)] of U27 on Top
+    @(145.7011 mm, 100.0336 mm): Pad 24 [Net-(C15-Pad1)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.9011 mm, 100.8336 mm): Pad 25 [Net-(C16-Pad1)] of U27 on Top
+    @(144.9011 mm, 101.2336 mm): Pad 26 [Net-(C16-Pad2)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.9011 mm, 101.2336 mm): Pad 26 [Net-(C16-Pad2)] of U27 on Top
+    @(144.9011 mm, 101.6336 mm): Pad 27 [Net-(C14-Pad1)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.9011 mm, 101.6336 mm): Pad 27 [Net-(C14-Pad1)] of U27 on Top
+    @(144.9011 mm, 102.0336 mm): Pad 28 [Net-(C22-Pad2)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.9011 mm, 102.0336 mm): Pad 28 [Net-(C22-Pad2)] of U27 on Top
+    @(144.9011 mm, 102.4336 mm): Pad 29 [/3.3VDD] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.9011 mm, 102.4336 mm): Pad 29 [/3.3VDD] of U27 on Top
+    @(144.9011 mm, 102.8336 mm): Pad 30 [Net-(IC1-Pad30)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.9011 mm, 102.8336 mm): Pad 30 [Net-(IC1-Pad30)] of U27 on Top
+    @(144.9011 mm, 103.2336 mm): Pad 31 [Net-(IC1-Pad31)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.9011 mm, 103.2336 mm): Pad 31 [Net-(IC1-Pad31)] of U27 on Top
+    @(144.9011 mm, 103.6336 mm): Pad 32 [Net-(IC1-Pad32)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.9011 mm, 103.6336 mm): Pad 32 [Net-(IC1-Pad32)] of U27 on Top
+    @(144.9011 mm, 104.0336 mm): Pad 33 [Net-(IC1-Pad33)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.9011 mm, 104.0336 mm): Pad 33 [Net-(IC1-Pad33)] of U27 on Top
+    @(144.9011 mm, 104.4336 mm): Pad 34 [/XAUDIO_I2S0_DOUT] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.9011 mm, 104.4336 mm): Pad 34 [/XAUDIO_I2S0_DOUT] of U27 on Top
+    @(144.9011 mm, 104.8336 mm): Pad 35 [/XAUDIO_I2S0_DIN] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(144.9011 mm, 104.8336 mm): Pad 35 [/XAUDIO_I2S0_DIN] of U27 on Top
+    @(144.9011 mm, 105.2336 mm): Pad 36 [/XADUIO_I2S0_LRCKL] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(145.7011 mm, 106.0336 mm): Pad 37 [/XADUIO_I2S0_BCLK] of U27 on Top
+    @(146.1011 mm, 106.0336 mm): Pad 38 [/XAUDIO_I2S0_MCLK] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.1011 mm, 106.0336 mm): Pad 38 [/XAUDIO_I2S0_MCLK] of U27 on Top
+    @(146.5011 mm, 106.0336 mm): Pad 39 [/XADUIO_SCL] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.5011 mm, 106.0336 mm): Pad 39 [/XADUIO_SCL] of U27 on Top
+    @(146.9011 mm, 106.0336 mm): Pad 40 [/XAUDIO_SDA] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(146.9011 mm, 106.0336 mm): Pad 40 [/XAUDIO_SDA] of U27 on Top
+    @(147.3011 mm, 106.0336 mm): Pad 41 [/XAUDIO_IRQ] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.3011 mm, 106.0336 mm): Pad 41 [/XAUDIO_IRQ] of U27 on Top
+    @(147.7011 mm, 106.0336 mm): Pad 42 [Net-(IC1-Pad42)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(147.7011 mm, 106.0336 mm): Pad 42 [Net-(IC1-Pad42)] of U27 on Top
+    @(148.1011 mm, 106.0336 mm): Pad 43 [/SPORN] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.1011 mm, 106.0336 mm): Pad 43 [/SPORN] of U27 on Top
+    @(148.5011 mm, 106.0336 mm): Pad 44 [/SPKVDD] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.5011 mm, 106.0336 mm): Pad 44 [/SPKVDD] of U27 on Top
+    @(148.9011 mm, 106.0336 mm): Pad 45 [/SPORP] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(148.9011 mm, 106.0336 mm): Pad 45 [/SPORP] of U27 on Top
+    @(149.3011 mm, 106.0336 mm): Pad 46 [Net-(C20-Pad2)] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.3011 mm, 106.0336 mm): Pad 46 [Net-(C20-Pad2)] of U27 on Top
+    @(149.7011 mm, 106.0336 mm): Pad 47 [/SPOLN] of U27 on Top
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(149.7011 mm, 106.0336 mm): Pad 47 [/SPOLN] of U27 on Top
+    @(150.1011 mm, 106.0336 mm): Pad 48 [/SPKVDD] of U27 on Top
+
+** Found 46 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(147.9011 mm, 103.0336 mm): Pad 49 [GND] of U27 on Top
+    @(150.9011 mm, 103.6336 mm): Pad 5 [GND] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(147.9011 mm, 103.0336 mm): Pad 49 [GND] of U27 on Top
+    @(148.9011 mm, 100.0336 mm): Pad 16 [GND] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(148.9011 mm, 100.0336 mm): Pad 16 [GND] of U27 on Top
+    @(146.5011 mm, 100.0336 mm): Pad 22 [GND] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(149.3011 mm, 100.0336 mm): Pad 15 [GND] of U27 on Top
+    @(148.9011 mm, 100.0336 mm): Pad 16 [GND] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(154.4125 mm, 106.4297 mm): Track [GND] on Top, length 0.8159 mm
+    @(150.9011 mm, 103.6336 mm): Pad 5 [GND] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(155.1368 mm, 95.3019 mm): Track [GND] on Top, length 3.8843 mm
+    @(161.5927 mm, 94.6653 mm): Track [GND] on Top, length 2.3784 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(148.5011 mm, 106.0336 mm): Pad 44 [/SPKVDD] of U27 on Top
+    @(150.1011 mm, 106.0336 mm): Pad 48 [/SPKVDD] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.1011 mm, 106.0336 mm): Pad 48 [/SPKVDD] of U27 on Top
+    @(163.6011 mm, 101.8936 mm): Pad 1 [/SPKVDD] of U18 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(149.7011 mm, 106.0336 mm): Pad 47 [/SPOLN] of U27 on Top
+    @(149.8011 mm, 120.4936 mm): Pad 1 [/SPOLN] of U26 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(149.3011 mm, 106.0336 mm): Pad 46 [Net-(C20-Pad2)] of U27 on Top
+    @(150.1411 mm, 110.2036 mm): Pad 2 [Net-(C20-Pad2)] of U12 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(148.9011 mm, 106.0336 mm): Pad 45 [/SPORP] of U27 on Top
+    @(145.8111 mm, 120.4936 mm): Pad 1 [/SPORP] of U4 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(148.1011 mm, 106.0336 mm): Pad 43 [/SPORN] of U27 on Top
+    @(143.3511 mm, 120.4936 mm): Pad 1 [/SPORN] of U3 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(146.1311 mm, 87.2136 mm): PTH pad 10 [/XAUDIO_IRQ] of U32
+    @(147.3011 mm, 106.0336 mm): Pad 41 [/XAUDIO_IRQ] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(146.9011 mm, 106.0336 mm): Pad 40 [/XAUDIO_SDA] of U27 on Top
+    @(143.5911 mm, 87.2136 mm): PTH pad 8 [/XAUDIO_SDA] of U32
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(146.9411 mm, 110.2136 mm): Pad 2 [/XAUDIO_SDA] of U36 on Top
+    @(146.9011 mm, 106.0336 mm): Pad 40 [/XAUDIO_SDA] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(142.2611 mm, 107.4936 mm): Track [/XADUIO_SCL] on Top, length 3.8608 mm
+    @(146.5011 mm, 106.0336 mm): Pad 39 [/XADUIO_SCL] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.0511 mm, 87.2136 mm): PTH pad 6 [/XAUDIO_I2S0_MCLK] of U32
+    @(146.1011 mm, 106.0336 mm): Pad 38 [/XAUDIO_I2S0_MCLK] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141.0511 mm, 89.7536 mm): PTH pad 5 [/XADUIO_I2S0_BCLK] of U32
+    @(145.7011 mm, 106.0336 mm): Pad 37 [/XADUIO_I2S0_BCLK] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(135.9711 mm, 89.7536 mm): PTH pad 1 [/XADUIO_I2S0_LRCKL] of U32
+    @(144.9011 mm, 105.2336 mm): Pad 36 [/XADUIO_I2S0_LRCKL] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(138.5111 mm, 87.2136 mm): PTH pad 4 [/XAUDIO_I2S0_DIN] of U32
+    @(144.9011 mm, 104.8336 mm): Pad 35 [/XAUDIO_I2S0_DIN] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(138.5111 mm, 89.7536 mm): PTH pad 3 [/XAUDIO_I2S0_DOUT] of U32
+    @(144.9011 mm, 104.4336 mm): Pad 34 [/XAUDIO_I2S0_DOUT] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(144.9011 mm, 102.4336 mm): Pad 29 [/3.3VDD] of U27 on Top
+    @(146.1394 mm, 107.9572 mm): Track [/3.3VDD] on Top, length 2.9314 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(140.6011 mm, 102.6036 mm): Pad 2 [Net-(C22-Pad2)] of U14 on Top
+    @(144.9011 mm, 102.0336 mm): Pad 28 [Net-(C22-Pad2)] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(140.6111 mm, 100.2936 mm): Pad 1 [Net-(C14-Pad1)] of U5 on Top
+    @(144.9011 mm, 101.6336 mm): Pad 27 [Net-(C14-Pad1)] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(140.4811 mm, 97.9736 mm): Pad 2 [Net-(C16-Pad2)] of U7 on Top
+    @(144.9011 mm, 101.2336 mm): Pad 26 [Net-(C16-Pad2)] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(140.4811 mm, 96.2736 mm): Pad 1 [Net-(C16-Pad1)] of U7 on Top
+    @(144.9011 mm, 100.8336 mm): Pad 25 [Net-(C16-Pad1)] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(143.1211 mm, 96.2336 mm): Pad 1 [Net-(C15-Pad1)] of U6 on Top
+    @(145.7011 mm, 100.0336 mm): Pad 24 [Net-(C15-Pad1)] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(144.8211 mm, 96.2336 mm): Pad 2 [Net-(C15-Pad2)] of U6 on Top
+    @(146.1011 mm, 100.0336 mm): Pad 23 [Net-(C15-Pad2)] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(146.9011 mm, 100.0336 mm): Pad 21 [/1.8VDD] of U27 on Top
+    @(150.1011 mm, 100.0336 mm): Pad 13 [/1.8VDD] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.1011 mm, 100.0336 mm): Pad 13 [/1.8VDD] of U27 on Top
+    @(150.9011 mm, 102.8336 mm): Pad 7 [/1.8VDD] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.1011 mm, 100.0336 mm): Pad 13 [/1.8VDD] of U27 on Top
+    @(162.2711 mm, 93.8636 mm): Track [/1.8VDD] on Top, length 2.6900 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(147.0511 mm, 96.2136 mm): Pad 1 [Net-(C2-Pad1)] of U11 on Top
+    @(147.3011 mm, 100.0336 mm): Pad 20 [Net-(C2-Pad1)] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(131.0311 mm, 118.6536 mm): Pad 3 [/HPOR] of U45 on Top
+    @(147.7011 mm, 100.0336 mm): Pad 19 [/HPOR] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(148.1011 mm, 100.0336 mm): Pad 18 [/HPOL] of U27 on Top
+    @(138.8511 mm, 107.0044 mm): Track [/HPOL] on Top, length 0.4008 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(148.5011 mm, 100.0336 mm): Pad 17 [/CPVREF] of U27 on Top
+    @(149.2811 mm, 96.1836 mm): Pad 1 [/CPVREF] of U42 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(149.7011 mm, 100.0336 mm): Pad 14 [Net-(C17-Pad2)] of U27 on Top
+    @(151.5911 mm, 96.2136 mm): Pad 2 [Net-(C17-Pad2)] of U8 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.9011 mm, 100.8336 mm): Pad 12 [/LOUTR] of U27 on Top
+    @(158.8411 mm, 114.6736 mm): Pad 1 [/LOUTR] of U40 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.9011 mm, 101.2336 mm): Pad 11 [/LOUTL] of U27 on Top
+    @(156.1911 mm, 114.6836 mm): Pad 1 [/LOUTL] of U39 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.9011 mm, 101.6336 mm): Pad 10 [Net-(C24-Pad2)] of U27 on Top
+    @(155.8211 mm, 96.1036 mm): Pad 2 [Net-(C24-Pad2)] of U16 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.9011 mm, 102.0336 mm): Pad 9 [Net-(C19-Pad2)] of U27 on Top
+    @(155.8411 mm, 98.2636 mm): Pad 2 [Net-(C19-Pad2)] of U10 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.9011 mm, 102.4336 mm): Pad 8 [Net-(C18-Pad2)] of U27 on Top
+    @(155.8411 mm, 100.5036 mm): Pad 2 [Net-(C18-Pad2)] of U9 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.9011 mm, 103.2336 mm): Pad 6 [Net-(C6-Pad2)] of U27 on Top
+    @(155.8211 mm, 102.7336 mm): Pad 2 [Net-(C6-Pad2)] of U23 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(155.8211 mm, 104.4336 mm): Track [/IN1P] on Top, length 1.0296 mm
+    @(150.9011 mm, 104.0336 mm): Pad 4 [/IN1P] of U27 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.9011 mm, 104.4336 mm): Pad 3 [Net-(C21-Pad2)] of U27 on Top
+    @(155.8911 mm, 106.7036 mm): Pad 2 [Net-(C21-Pad2)] of U13 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(150.9011 mm, 104.8336 mm): Pad 2 [/MICBIAS1] of U27 on Top
+    @(155.9111 mm, 109.7036 mm): Pad 2 [/MICBIAS1] of U15 on Top
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(152.4611 mm, 123.4336 mm): Track [/SPOLP] on Top, length 2.9400 mm
+    @(150.9011 mm, 105.2336 mm): Pad 1 [/SPOLP] of U27 on Top
+
+** Found 0 Footprint errors **
+
+** End of Report **

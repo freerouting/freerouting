@@ -8,12 +8,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * Abstract class defining functionality for convex shapes, whose borders consists of straight lines.
+ * Abstract class defining functionality for convex shapes, whose borders
+ * consists of straight lines.
  */
 public abstract class TileShape extends PolylineShape implements ConvexShape, Serializable {
 
   /**
-   * creates a Simplex as intersection of the halfplanes defined by an array of directed lines
+   * creates a Simplex as intersection of the halfplanes defined by an array of
+   * directed lines
    */
   public static TileShape get_instance(Line[] p_line_arr) {
     Simplex result = Simplex.get_instance(p_line_arr);
@@ -21,7 +23,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Creates a TileShape from a Point array, who forms the corners of the shape of a convex polygon. May work only for IntPoints.
+   * Creates a TileShape from a Point array, who forms the corners of the shape of
+   * a convex polygon. May work only for IntPoints.
    */
   public static TileShape get_instance(Point[] p_convex_polygon) {
     Line[] line_arr = new Line[p_convex_polygon.length];
@@ -42,9 +45,11 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Creates a normalized IntOctagon from the input values. For the meaning of the parameter shortcuts see class IntOctagon.
+   * Creates a normalized IntOctagon from the input values. For the meaning of the
+   * parameter shortcuts see class IntOctagon.
    */
-  public static IntOctagon get_instance(int p_lx, int p_ly, int p_rx, int p_uy, int p_ulx, int p_lrx, int p_llx, int p_urx) {
+  public static IntOctagon get_instance(int p_lx, int p_ly, int p_rx, int p_uy, int p_ulx, int p_lrx, int p_llx,
+      int p_urx) {
     IntOctagon oct = new IntOctagon(p_lx, p_ly, p_rx, p_uy, p_ulx, p_lrx, p_llx, p_urx);
     return oct.normalize();
   }
@@ -52,7 +57,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   /**
    * creates a boxlike convex shape
    */
-  public static IntOctagon get_instance(int p_lower_left_x, int p_lower_left_y, int p_upper_right_x, int p_upper_right_y) {
+  public static IntOctagon get_instance(int p_lower_left_x, int p_lower_left_y, int p_upper_right_x,
+      int p_upper_right_y) {
     IntBox box = new IntBox(p_lower_left_x, p_lower_left_y, p_upper_right_x, p_upper_right_y);
     return box.to_IntOctagon();
   }
@@ -65,7 +71,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Tries to simplify the result shape to a simpler shape. Simplifying always in the intersection function may cause performance problems.
+   * Tries to simplify the result shape to a simpler shape. Simplifying always in
+   * the intersection function may cause performance problems.
    */
   public TileShape intersection_with_simplify(TileShape p_other) {
     TileShape result = this.intersection(p_other);
@@ -73,7 +80,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Converts the physical instance of this shape to a simpler physical instance, if possible.
+   * Converts the physical instance of this shape to a simpler physical instance,
+   * if possible.
    */
   public abstract TileShape simplify();
 
@@ -83,7 +91,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   public abstract boolean is_IntBox();
 
   /**
-   * checks if this TileShape is an IntOctagon or can be converted into an IntOctagon
+   * checks if this TileShape is an IntOctagon or can be converted into an
+   * IntOctagon
    */
   public abstract boolean is_IntOctagon();
 
@@ -93,14 +102,17 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   public abstract TileShape intersection(TileShape p_other);
 
   /**
-   * Returns the p_no-th edge line of this shape for p_no between 0 and edge_line_count() - 1. The edge lines are sorted in counterclock sense around the shape starting with the edge with the smallest
+   * Returns the p_no-th edge line of this shape for p_no between 0 and
+   * edge_line_count() - 1. The edge lines are sorted in counterclock sense around
+   * the shape starting with the edge with the smallest
    * direction.
    */
   @Override
   public abstract Line border_line(int p_no);
 
   /**
-   * if p_line is a borderline of this shape the number of that edge is returned, otherwise -1
+   * if p_line is a borderline of this shape the number of that edge is returned,
+   * otherwise -1
    */
   public abstract int border_line_index(Line p_line);
 
@@ -110,7 +122,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   public abstract Simplex to_Simplex();
 
   /**
-   * Returns the content of the area of the shape. If the shape is unbounded, Double.MAX_VALUE is returned.
+   * Returns the content of the area of the shape. If the shape is unbounded,
+   * Double.MAX_VALUE is returned.
    */
   @Override
   public double area() {
@@ -140,7 +153,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns true, if p_point is not contained in the inside or the edge of the shape
+   * Returns true, if p_point is not contained in the inside or the edge of the
+   * shape
    */
   @Override
   public boolean is_outside(Point p_point) {
@@ -187,7 +201,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns true, if p_point is contained in this shape with tolerance p_tolerance. p_tolerance is used when determing, if a point is on the left side of a border line. It is used there in
+   * Returns true, if p_point is contained in this shape with tolerance
+   * p_tolerance. p_tolerance is used when determing, if a point is on the left
+   * side of a border line. It is used there in
    * calculating a determinant and is not the distance of p_point to the border.
    */
   public boolean contains(FloatPoint p_point, double p_tolerance) {
@@ -204,8 +220,12 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns Side.COLLINEAR if p_point is on the border of this shape with tolerance p_tolerance. p_tolerance is used when determing, if a point is on the right side of a border line. It is used there
-   * in calculating a determinant and is not the distance of p_point to the border. Otherwise, the function returns Side.ON_THE_LEFT if p_point is outside of this shape, and Side.ON_THE_RIGHT if
+   * Returns Side.COLLINEAR if p_point is on the border of this shape with
+   * tolerance p_tolerance. p_tolerance is used when determing, if a point is on
+   * the right side of a border line. It is used there
+   * in calculating a determinant and is not the distance of p_point to the
+   * border. Otherwise, the function returns Side.ON_THE_LEFT if p_point is
+   * outside of this shape, and Side.ON_THE_RIGHT if
    * p_point is inside this shape.
    */
   public Side side_of_border(FloatPoint p_point, double p_tolerance) {
@@ -226,7 +246,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * If p_point lies on the border of this shape, the number of the edge line segment containing p_point is returned, otherwise -1 is returned.
+   * If p_point lies on the border of this shape, the number of the edge line
+   * segment containing p_point is returned, otherwise -1 is returned.
    */
   public int contains_on_border_line_no(Point p_point) {
     int line_count = border_line_count();
@@ -256,7 +277,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns true, if this shape contains p_other completely. THere may be some numerical inaccuracy.
+   * Returns true, if this shape contains p_other completely. THere may be some
+   * numerical inaccuracy.
    */
   public boolean contains_approx(TileShape p_other) {
     FloatPoint[] corners = p_other.corner_approx_arr();
@@ -281,7 +303,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns the distance between p_point and its nearest point on the shape. 0, if p_point is contained in this shape
+   * Returns the distance between p_point and its nearest point on the shape. 0,
+   * if p_point is contained in this shape
    */
   @Override
   public double distance(FloatPoint p_point) {
@@ -290,7 +313,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns the distance between p_point and its nearest point on the edge of the shape.
+   * Returns the distance between p_point and its nearest point on the edge of the
+   * shape.
    */
   @Override
   public double border_distance(FloatPoint p_point) {
@@ -304,7 +328,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns the point in this shape, which has the smallest distance to p_from_point. p_from_point, if that point is contained in this shape
+   * Returns the point in this shape, which has the smallest distance to
+   * p_from_point. p_from_point, if that point is contained in this shape
    */
   public Point nearest_point(Point p_from_point) {
     if (!is_outside(p_from_point)) {
@@ -353,8 +378,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
 
     for (int next_ind = 0; next_ind < line_count; next_ind++) {
       Point projection = border_line(curr_ind).perpendicular_projection(p_from_point);
-      if ((!corner_is_bounded(curr_ind) || border_line(prev_ind).side_of(projection) == Side.ON_THE_RIGHT) && (!corner_is_bounded(next_ind)
-          || border_line(next_ind).side_of(projection) == Side.ON_THE_RIGHT)) {
+      if ((!corner_is_bounded(curr_ind) || border_line(prev_ind).side_of(projection) == Side.ON_THE_RIGHT)
+          && (!corner_is_bounded(next_ind)
+              || border_line(next_ind).side_of(projection) == Side.ON_THE_RIGHT)) {
         FloatPoint projection_f = projection.to_float();
         double curr_dist = projection_f.distance_square(from_point_f);
         if (curr_dist < min_dist) {
@@ -369,7 +395,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns an approximation of the nearest point to p_from_point on the border of this shape
+   * Returns an approximation of the nearest point to p_from_point on the border
+   * of this shape
    */
   public FloatPoint nearest_border_point_approx(FloatPoint p_from_point) {
     FloatPoint[] nearest_points = nearest_border_points_approx(p_from_point, 1);
@@ -380,7 +407,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns an approximation of the p_count nearest points to p_from_point on the border of this shape. The result points must be located on different border lines and are sorted in ascending order
+   * Returns an approximation of the p_count nearest points to p_from_point on the
+   * border of this shape. The result points must be located on different border
+   * lines and are sorted in ascending order
    * (the nearest point comes first).
    */
   public FloatPoint[] nearest_border_points_approx(FloatPoint p_from_point, int p_count) {
@@ -430,8 +459,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
 
     for (int next_ind = 0; next_ind < line_count; next_ind++) {
       FloatPoint projection = p_from_point.projection_approx(border_line(curr_ind));
-      if ((!corner_is_bounded(curr_ind) || border_line(prev_ind).side_of(projection) == Side.ON_THE_RIGHT) && (!corner_is_bounded(next_ind)
-          || border_line(next_ind).side_of(projection) == Side.ON_THE_RIGHT)) {
+      if ((!corner_is_bounded(curr_ind) || border_line(prev_ind).side_of(projection) == Side.ON_THE_RIGHT)
+          && (!corner_is_bounded(next_ind)
+              || border_line(next_ind).side_of(projection) == Side.ON_THE_RIGHT)) {
         double curr_dist = projection.distance_square(p_from_point);
         for (int j = 0; j < result_count; j++) {
           if (curr_dist < min_dists[j]) {
@@ -470,7 +500,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns a line segment consisting of an approximations of the corners with index 0 and corner_count / 2.
+   * Returns a line segment consisting of an approximations of the corners with
+   * index 0 and corner_count / 2.
    */
   public FloatLine diagonal_corner_segment() {
     if (this.is_empty()) {
@@ -482,7 +513,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns an approximation of the p_count nearest relative outside locations of p_shape in the direction of different border lines of this shape. These relative locations are sorted in ascending
+   * Returns an approximation of the p_count nearest relative outside locations of
+   * p_shape in the direction of different border lines of this shape. These
+   * relative locations are sorted in ascending
    * order (the shortest comes first).
    */
   public FloatPoint[] nearest_relative_outside_locations(TileShape p_shape, int p_count) {
@@ -543,7 +576,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns the maximum of the edge widths of the shape. Only defined when the shape is bounded.
+   * Returns the maximum of the edge widths of the shape. Only defined when the
+   * shape is bounded.
    */
   public double length() {
     if (!this.is_bounded()) {
@@ -573,8 +607,11 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Calculates, if this Shape and p_other have a common border piece and returns an 2 dimensional array with the indices in this shape and p_other of the touching edge lines in this case. Otherwise,
-   * an array of dimension 0 is returned. Used if the intersection shape is 1-dimensional.
+   * Calculates, if this Shape and p_other have a common border piece and returns
+   * an 2 dimensional array with the indices in this shape and p_other of the
+   * touching edge lines in this case. Otherwise,
+   * an array of dimension 0 is returned. Used if the intersection shape is
+   * 1-dimensional.
    */
   public int[] touching_sides(TileShape p_other) {
     // search the first edge line of p_other with reverse direction >= right
@@ -621,7 +658,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Calculates the minimal distance of p_line to this shape, assuming, that p_line is on the left of this shape. Returns -1, if p_line is on the right of this shape or intersects with the interior of
+   * Calculates the minimal distance of p_line to this shape, assuming, that
+   * p_line is on the left of this shape. Returns -1, if p_line is on the right of
+   * this shape or intersects with the interior of
    * this shape.
    */
   public double distance_to_the_left(Line p_line) {
@@ -643,7 +682,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Returns Side.COLLINEAR, if p_line intersects with the interior of this shape, Side.ON_THE_LEFT, if this shape is completely on the left of p_line or Side.ON_THE_RIGHT, if this shape is completely
+   * Returns Side.COLLINEAR, if p_line intersects with the interior of this shape,
+   * Side.ON_THE_LEFT, if this shape is completely on the left of p_line or
+   * Side.ON_THE_RIGHT, if this shape is completely
    * on the right of p_line.
    */
   public Side side_of(Line p_line) {
@@ -724,7 +765,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Calculates the border line of this shape intersecting the ray from p_from_point into the direction p_direction. p_from_point is assumed to be inside this shape, otherwise -1 is returned.
+   * Calculates the border line of this shape intersecting the ray from
+   * p_from_point into the direction p_direction. p_from_point is assumed to be
+   * inside this shape, otherwise -1 is returned.
    */
   public int intersecting_border_line_no(Point p_from_point, Direction p_direction) {
     if (!this.contains(p_from_point)) {
@@ -743,7 +786,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       }
       double curr_distance = curr_intersection.distance_square(from_point);
       if (curr_distance < min_distance) {
-        boolean direction_ok = curr_border_line.side_of(second_line_point) == Side.ON_THE_LEFT || second_line_point.distance_square(curr_intersection) < curr_distance;
+        boolean direction_ok = curr_border_line.side_of(second_line_point) == Side.ON_THE_LEFT
+            || second_line_point.distance_square(curr_intersection) < curr_distance;
         if (direction_ok) {
           result = i;
           min_distance = curr_distance;
@@ -759,8 +803,12 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   public abstract TileShape[] cutout(TileShape p_shape);
 
   /**
-   * Returns an array of tuples of integers. The length of the array is the number of points, where p_polyline enters or leaves the interior of this shape. The first coordinate of the tuple is the
-   * number of the line segment of p_polyline, which enters the simplex and the second coordinate of the tuple is the number of the edge_line of the simplex, which is crossed there. That means that
+   * Returns an array of tuples of integers. The length of the array is the number
+   * of points, where p_polyline enters or leaves the interior of this shape. The
+   * first coordinate of the tuple is the
+   * number of the line segment of p_polyline, which enters the simplex and the
+   * second coordinate of the tuple is the number of the edge_line of the simplex,
+   * which is crossed there. That means that
    * the entrance point is the intersection of this 2 lines.
    */
   public int[][] entrance_points(Polyline p_polyline) {
@@ -786,7 +834,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Cuts out the parts of p_polyline in the interior of this shape and returns a list of the remaining pieces of p_polyline. Pieces completely contained in the border of this shape are not returned.
+   * Cuts out the parts of p_polyline in the interior of this shape and returns a
+   * list of the remaining pieces of p_polyline. Pieces completely contained in
+   * the border of this shape are not returned.
    */
   @Override
   public Polyline[] cutout(Polyline p_polyline) {
@@ -809,7 +859,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     Collection<Polyline> pieces = new LinkedList<>();
     int curr_intersection_no = 0;
     int[] curr_intersection_tuple = intersection_no[curr_intersection_no];
-    Point first_intersection = p_polyline.arr[curr_intersection_tuple[0]].intersection(this.border_line(curr_intersection_tuple[1]));
+    Point first_intersection = p_polyline.arr[curr_intersection_tuple[0]]
+        .intersection(this.border_line(curr_intersection_tuple[1]));
     if (!first_corner_is_inside)
     // calculate outside piece at start
     {
@@ -890,7 +941,8 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   }
 
   /**
-   * Divides this shape into sections with width and height at most p_max_section_width of about equal size.
+   * Divides this shape into sections with width and height at most
+   * p_max_section_width of about equal size.
    */
   public TileShape[] divide_into_sections(double p_max_section_width) {
     if (this.is_empty()) {
@@ -918,8 +970,18 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
    * Checks, if p_line_segment has a common point with the interior of this shape.
    */
   public boolean is_intersected_interior_by(LineSegment p_line_segment) {
-    FloatPoint float_start_point = p_line_segment.start_point_approx();
-    FloatPoint float_end_point = p_line_segment.end_point_approx();
+    return is_intersected_interior_by(p_line_segment.start_point(), p_line_segment.end_point(),
+        p_line_segment.get_line());
+  }
+
+  /**
+   * Checks if the line segment defined by p_start_point, p_end_point and p_line
+   * has a common point with the interior of
+   * this shape.
+   */
+  public boolean is_intersected_interior_by(Point p_start_point, Point p_end_point, Line p_line) {
+    FloatPoint float_start_point = p_start_point.to_float();
+    FloatPoint float_end_point = p_end_point.to_float();
 
     Side[] border_line_side_of_start_point_arr = new Side[this.border_line_count()];
     Side[] border_line_side_of_end_point_arr = new Side[border_line_side_of_start_point_arr.length];
@@ -927,11 +989,11 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       Line curr_border_line = this.border_line(i);
       Side border_line_side_of_start_point = curr_border_line.side_of(float_start_point, 1);
       if (border_line_side_of_start_point == Side.COLLINEAR) {
-        border_line_side_of_start_point = curr_border_line.side_of(p_line_segment.start_point());
+        border_line_side_of_start_point = curr_border_line.side_of(p_start_point);
       }
       Side border_line_side_of_end_point = curr_border_line.side_of(float_end_point, 1);
       if (border_line_side_of_end_point == Side.COLLINEAR) {
-        border_line_side_of_end_point = curr_border_line.side_of(p_line_segment.end_point());
+        border_line_side_of_end_point = curr_border_line.side_of(p_end_point);
       }
       if (border_line_side_of_start_point != Side.ON_THE_RIGHT && border_line_side_of_end_point != Side.ON_THE_RIGHT) {
         // both endpoints are outside the border_line,
@@ -961,7 +1023,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     if (end_point_is_inside) {
       return true;
     }
-    Line segment_line = p_line_segment.get_line();
+    Line segment_line = p_line;
     // Check, if this line segments intersect a border line of p_shape.
     for (int i = 0; i < border_line_side_of_start_point_arr.length; i++) {
       Side border_line_side_of_start_point = border_line_side_of_start_point_arr[i];
@@ -986,8 +1048,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
         if (next_corner_side == Side.COLLINEAR) {
           next_corner_side = segment_line.side_of(this.corner(next_corner_index));
         }
-        if (prev_corner_side == Side.ON_THE_LEFT && next_corner_side == Side.ON_THE_RIGHT || prev_corner_side == Side.ON_THE_RIGHT && next_corner_side == Side.ON_THE_LEFT) {
-          // this line segment crosses a border line of  p_shape
+        if (prev_corner_side == Side.ON_THE_LEFT && next_corner_side == Side.ON_THE_RIGHT
+            || prev_corner_side == Side.ON_THE_RIGHT && next_corner_side == Side.ON_THE_LEFT) {
+          // this line segment crosses a border line of p_shape
           return true;
         }
       }

@@ -11,27 +11,26 @@ public class ZoomRegionState extends SelectRegionState {
   /**
    * Creates a new instance of ZoomRegionState
    */
-  public ZoomRegionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_parent_state, p_board_handling, p_activityReplayFile);
-    if (this.activityReplayFile != null) {
-      activityReplayFile.start_scope(ActivityReplayFileScope.ZOOM_FRAME);
-    }
+  public ZoomRegionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+    super(p_parent_state, p_board_handling);
   }
 
   /**
    * Returns a new instance of this class.
    */
-  public static ZoomRegionState get_instance(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    return get_instance(null, p_parent_state, p_board_handling, p_activityReplayFile);
+  public static ZoomRegionState get_instance(InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
+    return get_instance(null, p_parent_state, p_board_handling);
   }
 
   /**
    * Returns a new instance of this class with first point p_location.
    */
-  public static ZoomRegionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    ZoomRegionState new_instance = new ZoomRegionState(p_parent_state, p_board_handling, p_activityReplayFile);
+  public static ZoomRegionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
+      GuiBoardManager p_board_handling) {
+    ZoomRegionState new_instance = new ZoomRegionState(p_parent_state, p_board_handling);
     new_instance.corner1 = p_location;
-    new_instance.hdlg.screen_messages.set_status_message(new_instance.tm.getText("drag_left_mouse_button_to_create_region_to_display"));
+    new_instance.hdlg.screen_messages
+        .set_status_message(new_instance.tm.getText("drag_left_mouse_button_to_create_region_to_display"));
     return new_instance;
   }
 
@@ -39,9 +38,8 @@ public class ZoomRegionState extends SelectRegionState {
   public InteractiveState complete() {
     corner2 = hdlg.get_current_mouse_position();
     zoom_region();
-    if (this.activityReplayFile != null) {
-      activityReplayFile.add_corner(corner2);
-    }
+    corner2 = hdlg.get_current_mouse_position();
+    zoom_region();
     return this.return_state;
   }
 

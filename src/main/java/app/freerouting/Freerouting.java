@@ -5,16 +5,14 @@ import app.freerouting.board.BoardLoader;
 import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
-import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.gui.DefaultExceptionHandler;
-import app.freerouting.gui.WindowWelcome;
+import app.freerouting.gui.GuiManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import java.awt.Dimension;
@@ -48,12 +46,12 @@ public class Freerouting {
   public static GlobalSettings globalSettings;
   private static Server apiServer; // API server instance
 
-  private static void InitializeCLI(GlobalSettings globalSettings) {
-    if ((globalSettings.design_input_filename == null) || (globalSettings.design_output_filename == null)) {
+  private static boolean InitializeCLI(GlobalSettings globalSettings) {
+    if ((globalSettings.initialInputFile == null) || (globalSettings.initialOutputFile == null)) {
       FRLogger.error(
           "Both an input file and an output file must be specified with command line arguments if you are running in CLI mode.",
           null);
-      System.exit(1);
+      return false;
     }
 
     // Start a new Freerouting session
@@ -65,24 +63,22 @@ public class Freerouting {
     // Create a new routing job
     RoutingJob routingJob = new RoutingJob(cliSession.id);
     try {
-      routingJob.setInput(globalSettings.design_input_filename);
+      routingJob.setInput(globalSettings.initialInputFile);
     } catch (Exception e) {
-      FRLogger.error("Couldn't load the input file '" + globalSettings.design_input_filename + "'", e);
+      FRLogger.error("Couldn't load the input file '" + globalSettings.initialInputFile + "'", e);
     }
     cliSession.addJob(routingJob);
 
-    var desiredOutputFile = new File(globalSettings.design_output_filename);
+    var desiredOutputFile = new File(globalSettings.initialOutputFile);
     if ((desiredOutputFile != null) && desiredOutputFile.exists()) {
       if (!desiredOutputFile.delete()) {
-        FRLogger.warn("Couldn't delete the file '" + globalSettings.design_output_filename + "'");
+        FRLogger.warn("Couldn't delete the file '" + globalSettings.initialOutputFile + "'");
       }
     }
 
-    routingJob.tryToSetOutputFile(new File(globalSettings.design_output_filename));
+    routingJob.tryToSetOutputFile(new File(globalSettings.initialOutputFile));
 
     routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
-    routingJob.routerSettings
-        .set_stop_pass_no(routingJob.routerSettings.get_start_pass_no() + routingJob.routerSettings.maxPasses - 1);
     routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layers.totalCount);
     routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
@@ -100,20 +96,22 @@ public class Freerouting {
     // Save the output file
     if (routingJob.state == RoutingJobState.COMPLETED) {
       try {
-        Path outputFilePath = Path.of(globalSettings.design_output_filename);
+        Path outputFilePath = Path.of(globalSettings.initialOutputFile);
         Files.write(outputFilePath, routingJob.output
             .getData()
             .readAllBytes());
       } catch (IOException e) {
-        FRLogger.error("Couldn't save the output file '" + globalSettings.design_output_filename + "'", e);
+        FRLogger.error("Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
       }
     }
+
+    return true;
   }
 
-  private static void InitializeDRC(GlobalSettings globalSettings) {
-    if (globalSettings.design_input_filename == null) {
+  private static boolean InitializeDRC(GlobalSettings globalSettings) {
+    if (globalSettings.initialInputFile == null) {
       FRLogger.error("An input file must be specified with -de argument in DRC mode.", null);
-      System.exit(1);
+      return false;
     }
 
     // Start a new Freerouting session
@@ -126,9 +124,9 @@ public class Freerouting {
     RoutingJob drcJob = new RoutingJob(drcSession.id);
     drcJob.drc = globalSettings.drc_report_file;
     try {
-      drcJob.setInput(globalSettings.design_input_filename);
+      drcJob.setInput(globalSettings.initialInputFile);
     } catch (Exception e) {
-      FRLogger.error("Couldn't load the input file '" + globalSettings.design_input_filename + "'", e);
+      FRLogger.error("Couldn't load the input file '" + globalSettings.initialInputFile + "'", e);
       System.exit(1);
     }
 
@@ -145,7 +143,7 @@ public class Freerouting {
     String coordinateUnit = "mm";
 
     // Generate DRC report
-    String sourceFileName = new File(globalSettings.design_input_filename).getName();
+    String sourceFileName = new File(globalSettings.initialInputFile).getName();
     String drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
 
     // Output the DRC report
@@ -164,6 +162,8 @@ public class Freerouting {
       // Print to console
       IO.println(drcReportJson);
     }
+
+    return true;
   }
 
   private static void ShutdownApplication() {
@@ -256,6 +256,9 @@ public class Freerouting {
         apiServer.join(); // This will now run in the new thread
       } catch (Exception e) {
         FRLogger.error("Error starting or joining API server", e);
+        if (globalSettings != null) {
+          globalSettings.apiServerSettings.isRunning = false;
+        }
       }
     }).start();
 
@@ -345,13 +348,18 @@ public class Freerouting {
 
     try {
       globalSettings = GlobalSettings.load();
-      FRLogger.info("Settings were loaded from freerouting.json");
+      FRLogger.debug("Settings were loaded from freerouting.json");
     } catch (Exception _) {
       // we don't want to stop if the configuration file doesn't exist
     }
 
     if ((globalSettings == null) || (globalSettings.version != Constants.FREEROUTING_VERSION)) {
+      // let's see if we can preserve the user ID
+      String userId = globalSettings == null ? UUID.randomUUID().toString() : globalSettings.userProfileSettings.userId;
+
       globalSettings = new GlobalSettings();
+      globalSettings.userProfileSettings.userId = userId;
+      globalSettings.version = Constants.FREEROUTING_VERSION;
 
       // save the default values
       try {
@@ -362,7 +370,7 @@ public class Freerouting {
     }
 
     // apply environment variables to the settings
-    globalSettings.applyEnvironmentVariables();
+    globalSettings.applyNonRouterEnvironmentVariables();
 
     // if we don't have a GUI enabled then we must use the console as our output
     if ((!globalSettings.guiSettings.isEnabled) && (System.console() == null)) {
@@ -371,38 +379,38 @@ public class Freerouting {
     }
 
     // get environment parameters and save them in the settings
-    globalSettings.environmentSettings.freeroutingVersion = Constants.FREEROUTING_VERSION + ","
+    globalSettings.runtimeEnvironment.freeroutingVersion = Constants.FREEROUTING_VERSION + ","
         + Constants.FREEROUTING_BUILD_DATE;
-    globalSettings.environmentSettings.appStartedAt = Instant.now();
-    globalSettings.environmentSettings.commandLineArguments = String.join(" ", args);
-    globalSettings.environmentSettings.architecture = System.getProperty("os.name") + ","
+    globalSettings.runtimeEnvironment.appStartedAt = Instant.now();
+    globalSettings.runtimeEnvironment.commandLineArguments = String.join(" ", args);
+    globalSettings.runtimeEnvironment.architecture = System.getProperty("os.name") + ","
         + System.getProperty("os.arch") + "," + System.getProperty("os.version");
-    globalSettings.environmentSettings.java = System.getProperty("java.version") + ","
+    globalSettings.runtimeEnvironment.java = System.getProperty("java.version") + ","
         + System.getProperty("java.vendor");
-    globalSettings.environmentSettings.systemLanguage = Locale
+    globalSettings.runtimeEnvironment.systemLanguage = Locale
         .getDefault()
         .getLanguage() + "," + Locale.getDefault();
-    globalSettings.environmentSettings.cpuCores = Runtime
+    globalSettings.runtimeEnvironment.cpuCores = Runtime
         .getRuntime()
         .availableProcessors();
-    globalSettings.environmentSettings.ram = (int) (Runtime
+    globalSettings.runtimeEnvironment.ram = (int) (Runtime
         .getRuntime()
         .maxMemory() / 1024 / 1024);
-    FRLogger.debug("Version: " + globalSettings.environmentSettings.freeroutingVersion);
-    FRLogger.debug("Command line arguments: '" + globalSettings.environmentSettings.commandLineArguments + "'");
-    FRLogger.debug("Architecture: " + globalSettings.environmentSettings.architecture);
-    FRLogger.debug("Java: " + globalSettings.environmentSettings.java);
-    FRLogger.debug("System Language: " + globalSettings.environmentSettings.systemLanguage);
-    FRLogger.debug("Hardware: " + globalSettings.environmentSettings.cpuCores + " CPU cores,"
-        + globalSettings.environmentSettings.ram + " MB RAM");
-    FRLogger.debug("UTC Time: " + globalSettings.environmentSettings.appStartedAt);
+    FRLogger.debug("Version: " + globalSettings.runtimeEnvironment.freeroutingVersion);
+    FRLogger.debug("Command line arguments: '" + globalSettings.runtimeEnvironment.commandLineArguments + "'");
+    FRLogger.debug("Architecture: " + globalSettings.runtimeEnvironment.architecture);
+    FRLogger.debug("Java: " + globalSettings.runtimeEnvironment.java);
+    FRLogger.debug("System Language: " + globalSettings.runtimeEnvironment.systemLanguage);
+    FRLogger.debug("Hardware: " + globalSettings.runtimeEnvironment.cpuCores + " CPU cores,"
+        + globalSettings.runtimeEnvironment.ram + " MB RAM");
+    FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
 
     // parse the command line arguments
     globalSettings.applyCommandLineArguments(args);
 
     FRLogger.debug("GUI Language: " + globalSettings.currentLocale);
 
-    FRLogger.debug("Host: " + globalSettings.environmentSettings.host);
+    FRLogger.debug("Host: " + globalSettings.runtimeEnvironment.host);
 
     // Get some useful information if we are running in a GUI
     int width = 0;
@@ -460,21 +468,18 @@ public class Freerouting {
         String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"),
         System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"),
         Locale.getDefault(), globalSettings.currentLocale,
-        globalSettings.environmentSettings.cpuCores, globalSettings.environmentSettings.ram,
-        globalSettings.environmentSettings.host, width, height, dpi);
+        globalSettings.runtimeEnvironment.cpuCores, globalSettings.runtimeEnvironment.ram,
+        globalSettings.runtimeEnvironment.host, width, height, dpi);
 
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
     new Thread(checker).start();
 
     // get localization resources
-    TextManager tm = new TextManager(Freerouting.class, globalSettings.currentLocale);
 
     // check if the user wants to see the help only
     if (globalSettings.show_help_option) {
-      // WindowsWelcome is used here because the command_line_help is in its resource
-      // file
-      TextManager ctm = new TextManager(WindowWelcome.class, globalSettings.currentLocale);
+      TextManager ctm = new TextManager(Freerouting.class, globalSettings.currentLocale);
       IO.print(ctm.getText("command_line_help"));
       System.exit(0);
     }
@@ -494,7 +499,7 @@ public class Freerouting {
 
     // Initialize the GUI
     if (globalSettings.guiSettings.isEnabled) {
-      if (!WindowWelcome.InitializeGUI(globalSettings)) {
+      if (!GuiManager.InitializeGUI(globalSettings)) {
         FRLogger.error("Couldn't initialize the GUI", null);
         globalSettings.guiSettings.isEnabled = false;
       } else {
@@ -502,13 +507,20 @@ public class Freerouting {
       }
     }
 
-    // We both GUI and API are disabled (or failed to start) we are in CLI mode
-    if (!globalSettings.guiSettings.isEnabled && !globalSettings.apiServerSettings.isEnabled) {
+    // If the GUI is disabled then we are in CLI mode
+    boolean cliResult = true;
+    if (!globalSettings.guiSettings.isEnabled) {
       if ((!globalSettings.routerSettings.enabled) && (globalSettings.drcSettings.enabled)) {
-        InitializeDRC(globalSettings);
+        cliResult = InitializeDRC(globalSettings);
       } else {
-        InitializeCLI(globalSettings);
+        cliResult = InitializeCLI(globalSettings);
       }
+    }
+
+    if ((!cliResult) && !globalSettings.apiServerSettings.isEnabled) {
+      ShutdownApplication();
+      FRLogger.traceExit("MainApplication.main()");
+      System.exit(1);
     }
 
     while (globalSettings.guiSettings.isRunning || globalSettings.apiServerSettings.isRunning) {

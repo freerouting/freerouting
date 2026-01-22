@@ -33,11 +33,12 @@ public class ExpandTestState extends InteractiveState {
    * Creates a new instance of ExpandTestState
    */
   private ExpandTestState(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
-    super(p_return_state, p_board_handling, null);
+    super(p_return_state, p_board_handling);
     init(p_location);
   }
 
-  public static ExpandTestState get_instance(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+  public static ExpandTestState get_instance(FloatPoint p_location, InteractiveState p_return_state,
+      GuiBoardManager p_board_handling) {
     return new ExpandTestState(p_location, p_return_state, p_board_handling);
   }
 
@@ -149,18 +150,21 @@ public class ExpandTestState extends InteractiveState {
         }
       }
     }
-    this.control_settings = new AutorouteControl(hdlg.get_routing_board(), route_net_no, hdlg.settings.autoroute_settings);
+    this.control_settings = new AutorouteControl(hdlg.get_routing_board(), route_net_no,
+        hdlg.getCurrentRoutingJob().routerSettings);
     // this.control_settings.ripup_allowed = true;
     // this.control_settings.is_fanout = true;
-    this.control_settings.ripup_pass_no = hdlg.settings.autoroute_settings.get_start_pass_no();
-    this.control_settings.ripup_costs = this.control_settings.ripup_pass_no * hdlg.settings.autoroute_settings.get_start_ripup_costs();
+    this.control_settings.ripup_pass_no = 1; // Expand test always starts from pass 1
+    this.control_settings.ripup_costs = this.control_settings.ripup_pass_no
+        * hdlg.getCurrentRoutingJob().routerSettings.get_start_ripup_costs();
     this.control_settings.vias_allowed = false;
-    this.autoroute_engine = new AutorouteEngine(board, this.control_settings.trace_clearance_class_no, false, false);
+    this.autoroute_engine = new AutorouteEngine(board, this.control_settings.trace_clearance_class_no, false);
     this.autoroute_engine.init_connection(route_net_no, null, null);
     if (route_item == null) {
       // create an expansion room in the empty space
       TileShape contained_shape = TileShape.get_instance(p_location.round());
-      IncompleteFreeSpaceExpansionRoom expansion_room = autoroute_engine.add_incomplete_expansion_room(null, layer, contained_shape);
+      IncompleteFreeSpaceExpansionRoom expansion_room = autoroute_engine.add_incomplete_expansion_room(null, layer,
+          contained_shape);
       hdlg.screen_messages.set_status_message("expansion test started");
       complete_expansion_room(expansion_room);
       return;
@@ -169,7 +173,8 @@ public class ExpandTestState extends InteractiveState {
     Set<Item> route_dest_set = route_item.get_unconnected_set(route_net_no);
     if (!route_dest_set.isEmpty()) {
       hdlg.screen_messages.set_status_message("app.freerouting.autoroute test started");
-      this.maze_search_algo = MazeSearchAlgo.get_instance(route_start_set, route_dest_set, autoroute_engine, control_settings);
+      this.maze_search_algo = MazeSearchAlgo.get_instance(route_start_set, route_dest_set, autoroute_engine,
+          control_settings);
       this.in_autoroute = this.maze_search_algo != null;
     }
   }
@@ -178,7 +183,8 @@ public class ExpandTestState extends InteractiveState {
     MazeSearchAlgo.Result search_result = this.maze_search_algo.find_connection();
     if (search_result != null) {
       SortedSet<Item> ripped_item_list = new TreeSet<>();
-      this.autoroute_result = LocateFoundConnectionAlgo.get_instance(search_result, control_settings, this.autoroute_engine.autoroute_search_tree,
+      this.autoroute_result = LocateFoundConnectionAlgo.get_instance(search_result, control_settings,
+          this.autoroute_engine.autoroute_search_tree,
           hdlg.get_routing_board().rules.get_trace_angle_restriction(), ripped_item_list);
       hdlg
           .get_routing_board()
@@ -198,7 +204,8 @@ public class ExpandTestState extends InteractiveState {
    * Returns true, if the completion succeeded.
    */
   private boolean complete_expansion_room(IncompleteFreeSpaceExpansionRoom p_incomplete_room) {
-    Collection<CompleteFreeSpaceExpansionRoom> completed_rooms = autoroute_engine.complete_expansion_room(p_incomplete_room);
+    Collection<CompleteFreeSpaceExpansionRoom> completed_rooms = autoroute_engine
+        .complete_expansion_room(p_incomplete_room);
     return !completed_rooms.isEmpty();
   }
 }

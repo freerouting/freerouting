@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -72,8 +73,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public BoardFileDetails input;
   @SerializedName("output")
   public BoardFileDetails output;
-  @SerializedName("snapshot")
-  public BoardFileDetails snapshot;
+
   @SerializedName("drc")
   public BoardFileDetails drc;
   @SerializedName("router_settings")
@@ -85,6 +85,27 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public transient StoppableThread thread;
   public transient RoutingBoard board;
   public transient Instant timeoutAt;
+
+  @SerializedName("current_pass")
+  private int currentPass = 0;
+
+  public int getCurrentPass() {
+    return currentPass;
+  }
+
+  public void setCurrentPass(int currentPass) {
+    this.currentPass = currentPass;
+  }
+
+  public Duration getDuration() {
+    if (startedAt == null) {
+      return null;
+    }
+    if (finishedAt != null) {
+      return Duration.between(startedAt, finishedAt);
+    }
+    return Duration.between(startedAt, Instant.now());
+  }
 
   /**
    * We need a parameterless constructor for the serialization.
@@ -101,7 +122,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   /**
-   * Creates a new instance of DesignFile and prepares the intermediate file handling.
+   * Creates a new instance of DesignFile and prepares the intermediate file
+   * handling.
    */
   public RoutingJob(UUID sessionId) {
     this();
@@ -109,10 +131,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     this.shortName = this.sessionId
         .toString()
         .substring(0, 6)
-        .toUpperCase() + "\\" + this.id
-        .toString()
-        .substring(0, 6)
-        .toUpperCase();
+        .toUpperCase() + "\\"
+        + this.id
+            .toString()
+            .substring(0, 6)
+            .toUpperCase();
 
   }
 
@@ -138,9 +161,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return fileChooser.getSelectedFile();
   }
 
-  public static boolean read_rules_file(String p_design_name, String p_parent_name, String rules_file_name, GuiBoardManager p_board_handling, String p_confirm_message) {
+  public static boolean read_rules_file(String p_design_name, String p_parent_name, String rules_file_name,
+      GuiBoardManager p_board_handling, String p_confirm_message) {
 
-    boolean dsn_file_generated_by_host = p_board_handling.get_routing_board().communication.specctra_parser_info.dsn_file_generated_by_host;
+    boolean dsn_file_generated_by_host = p_board_handling
+        .get_routing_board().communication.specctra_parser_info.dsn_file_generated_by_host;
 
     try {
       File rules_file = new File(p_parent_name, rules_file_name);
@@ -156,13 +181,15 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   public static FileFormat getFileFormat(byte[] content) {
-    // Open the file as a binary file and read the first 6 bytes to determine the file format
+    // Open the file as a binary file and read the first 6 bytes to determine the
+    // file format
     try (InputStream fileInputStream = new ByteArrayInputStream(content)) {
       byte[] buffer = new byte[6];
       int bytesRead = fileInputStream.read(buffer, 0, 6);
       if (bytesRead == 6) {
         // Check if the file is a binary file
-        if (buffer[0] == (byte) 0xAC && buffer[1] == (byte) 0xED && buffer[2] == (byte) 0x00 && buffer[3] == (byte) 0x05) {
+        if (buffer[0] == (byte) 0xAC && buffer[1] == (byte) 0xED && buffer[2] == (byte) 0x00
+            && buffer[3] == (byte) 0x05) {
           return FileFormat.FRB;
         }
 
@@ -176,19 +203,24 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         }
 
         // Check if the file is a DSN file (it starts with "(pcb" or "(PCB")
-        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x70 && buffer[2] == (byte) 0x63 && buffer[3] == (byte) 0x62) || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x50
-            && buffer[2] == (byte) 0x43 && buffer[3] == (byte) 0x42)) {
+        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x70 && buffer[2] == (byte) 0x63
+            && buffer[3] == (byte) 0x62)
+            || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x50
+                && buffer[2] == (byte) 0x43 && buffer[3] == (byte) 0x42)) {
           return FileFormat.DSN;
         }
 
         // Check if the file is a SES file (it starts with "(ses" or "(SES")
-        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x73 && buffer[2] == (byte) 0x65 && buffer[3] == (byte) 0x73) || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x53
-            && buffer[2] == (byte) 0x45 && buffer[3] == (byte) 0x53)) {
+        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x73 && buffer[2] == (byte) 0x65
+            && buffer[3] == (byte) 0x73)
+            || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x53
+                && buffer[2] == (byte) 0x45 && buffer[3] == (byte) 0x53)) {
           return FileFormat.SES;
         }
       }
     } catch (IOException _) {
-      // Ignore the exception, it can happen with the build-in template or if the user doesn't choose any file in the file dialog
+      // Ignore the exception, it can happen with the build-in template or if the user
+      // doesn't choose any file in the file dialog
     }
 
     return FileFormat.UNKNOWN;
@@ -219,39 +251,6 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return this.tryToSetInput(inputFileContent);
   }
 
-  private String getSnapshotFilename(File inputFile) {
-    // Calculate the CRC32 checksum of the input file
-    long crc32Checksum;
-    try (FileInputStream inputStream = new FileInputStream(inputFile.getAbsoluteFile())) {
-      crc32Checksum = BoardFileDetails
-          .calculateCrc32(inputStream)
-          .getValue();
-    } catch (IOException _) {
-      crc32Checksum = 0;
-    }
-
-    if (crc32Checksum == 0) {
-      // We don't have a valid checksum, we can't generate the intermediate snapshot file
-      return null;
-    }
-
-    // Get the temporary folder path
-    Path snapshotsFolderPath = GlobalSettings
-        .getUserDataPath()
-        .resolve("snapshots");
-
-    try {
-      // Make sure that we have the directory structure in place, and create it if it doesn't exist
-      Files.createDirectories(snapshotsFolderPath);
-    } catch (IOException e) {
-      FRLogger.error("Failed to create the snapshots directory.", e);
-    }
-
-    // Set the intermediate snapshot file name based on the checksum
-    String intermediate_snapshot_file_name = "snapshot-" + Long.toHexString(crc32Checksum) + "." + RoutingJob.BINARY_FILE_EXTENSION;
-    return snapshotsFolderPath + File.separator + intermediate_snapshot_file_name;
-  }
-
   public File getRulesFile() {
     return new File(changeFileExtension(this.output.getAbsolutePath(), RULES_FILE_EXTENSION));
   }
@@ -262,7 +261,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
   public void setDummyInputFile(String filename) {
     this.input = new BoardFileDetails();
-    this.snapshot = new BoardFileDetails();
+
     this.output = new BoardFileDetails();
 
     if ((filename != null) && (filename
@@ -270,7 +269,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         .endsWith(DSN_FILE_EXTENSION))) {
       this.input.format = FileFormat.DSN;
       this.input.setFilename(filename);
-      this.snapshot.setFilename(getSnapshotFilename(this.input.getFile()));
+
     }
   }
 
@@ -308,7 +307,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
       if (extension.equals(newFileExtension)) {
         return filePath.toString();
       }
-      String newFilename = originalFilename.substring(0, originalFilename.length() - extension.length() - 1) + "." + newFileExtension;
+      String newFilename = originalFilename.substring(0, originalFilename.length() - extension.length() - 1) + "."
+          + newFileExtension;
 
       return Path
           .of(originalFullPathWithoutFilename, newFilename)
@@ -366,7 +366,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   public void setInput(File inputFile) throws IOException {
-    // Read the file contents into a byte array and initialize the RoutingJob object with it
+    // Read the file contents into a byte array and initialize the RoutingJob object
+    // with it
     FileInputStream fileInputStream = new FileInputStream(inputFile);
     byte[] content = fileInputStream.readAllBytes();
 
@@ -393,19 +394,79 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
       this.input = new BoardFileDetails(inputFile);
       this.input.addUpdatedEventListener(_ -> this.fireInputUpdatedEvent());
       this.name = input.getFilenameWithoutExtension();
-      this.snapshot = new BoardFileDetails();
-      this.snapshot.setFilename(getSnapshotFilename(this.input.getFile()));
+
     }
 
     fireInputUpdatedEvent();
   }
 
   public boolean setSettings(RouterSettings settings) {
-    // Update the router settings that are defined in the settings parameter. All other settings should remain the same.
+    // Update the router settings that are defined in the settings parameter. All
+    // other settings should remain the same.
     boolean wereSettingsChanged = this.routerSettings.applyNewValuesFrom(settings) > 0;
     fireSettingsUpdatedEvent();
 
     return wereSettingsChanged;
+  }
+
+  /**
+   * Merges router settings from all applicable sources using the new settings
+   * architecture.
+   * This method demonstrates the priority-based merging system where settings
+   * from higher
+   * priority sources override those from lower priority sources.
+   * 
+   * Priority order (lowest to highest):
+   * 1. Default settings (priority 0)
+   * 2. JSON file (freerouting.json) (priority 10)
+   * 3. DSN file settings (priority 20)
+   * 4. SES file settings (priority 30)
+   * 5. RULES file settings (priority 40)
+   * 6. GUI settings (priority 50)
+   * 7. Environment variables (priority 55)
+   * 8. CLI settings (priority 60)
+   * 9. API settings (priority 70)
+   * 
+   * @return Merged RouterSettings from all applicable sources
+   */
+  public RouterSettings mergeSettingsFromSources() {
+    java.util.List<app.freerouting.settings.SettingsSource> sources = new java.util.ArrayList<>();
+
+    // 1. Always start with defaults (priority 0)
+    sources.add(new app.freerouting.settings.sources.DefaultSettings());
+
+    // 2. Add JSON file settings (priority 10)
+    sources.add(new app.freerouting.settings.sources.JsonFileSettings());
+
+    // 3. Add DSN file settings if available (priority 20)
+    if (this.input != null && this.input.format == FileFormat.DSN) {
+      // TODO: Parse DSN file and extract settings
+      // For now, we'll skip this until we integrate with the DSN parser
+      // sources.add(new DsnFileSettings(...));
+    }
+
+    // 4. Add RULES file settings if available (priority 40)
+    File rulesFile = getRulesFile();
+    if (rulesFile != null && rulesFile.exists()) {
+      // TODO: Parse RULES file and extract settings
+      // sources.add(new RulesFileSettings(...));
+    }
+
+    // 5. GUI settings would be added here if in GUI mode (priority 50)
+    // This would typically be done by the GUI code before starting a job
+
+    // 6. Add environment variables (priority 55)
+    sources.add(new app.freerouting.settings.sources.EnvironmentVariablesSource());
+
+    // 7. CLI settings would be added here (priority 60)
+    // This would typically be extracted from GlobalSettings
+    // sources.add(new CliSettings(args));
+
+    // 8. API settings would be added here if provided (priority 70)
+    // This would be the highest priority override
+
+    // Merge all sources and return the result
+    return app.freerouting.settings.SettingsMerger.merge(sources);
   }
 
   public void addSettingsUpdatedEventListener(RoutingJobUpdatedEventListener listener) {

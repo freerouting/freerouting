@@ -19,19 +19,21 @@ public class PinSwapState extends InteractiveState {
   /**
    * Creates a new instance of PinSwapState
    */
-  private PinSwapState(Pin p_pin_to_swap, InteractiveState p_return_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    super(p_return_state, p_board_handling, p_activityReplayFile);
+  private PinSwapState(Pin p_pin_to_swap, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+    super(p_return_state, p_board_handling);
     this.from_pin = p_pin_to_swap;
     this.swappable_pins = p_pin_to_swap.get_swappable_pins();
   }
 
-  public static InteractiveState get_instance(Pin p_pin_to_swap, InteractiveState p_return_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
-    PinSwapState new_state = new PinSwapState(p_pin_to_swap, p_return_state, p_board_handling, p_activityReplayFile);
+  public static InteractiveState get_instance(Pin p_pin_to_swap, InteractiveState p_return_state,
+      GuiBoardManager p_board_handling) {
+    PinSwapState new_state = new PinSwapState(p_pin_to_swap, p_return_state, p_board_handling);
     if (new_state.swappable_pins.isEmpty()) {
       new_state.hdlg.screen_messages.set_status_message(new_state.tm.getText("no_swappable_pin_found"));
       return p_return_state;
     }
-    new_state.hdlg.screen_messages.set_status_message(new_state.tm.getText("please_click_second_pin_with_the_left_mouse_button"));
+    new_state.hdlg.screen_messages
+        .set_status_message(new_state.tm.getText("please_click_second_pin_with_the_left_mouse_button"));
     return new_state;
   }
 

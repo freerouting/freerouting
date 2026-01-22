@@ -75,10 +75,6 @@ Below is a comprehensive list of command-line options available in Freerouting, 
   - Allows resuming interrupted optimizations from the last checkpoint.
   - Disabled by default.
 
-- **`-random_seed [seed]`**
-  Sets the random seed for the autorouter.
-  - If a seed is provided, the autorouter will behave deterministically. This affects both the shuffling of items to route and the randomization in the maze search algorithm during rip-up.
-  - If no seed is provided, the autorouter will use a different random seed for each run.
 
 ### Optimization Strategies
 
@@ -140,7 +136,14 @@ Below is a comprehensive list of command-line options available in Freerouting, 
     - `ALL` (7)
   - Accepts both string names and numerical values.
 
-- **`-help`**  
+- **`--user_data_path=[directory]`**
+  Defines the directory where configuration and log files are stored.
+  - Purpose:
+    - `freerouting.log` will be created in this directory.
+    - `freerouting.json` (settings) will be read from this directory if it exists, or created there if it doesn't.
+  - Format constraint: Must use the `--user_data_path=path` syntax with an equals sign.
+
+- **`-help`**
   Displays help information and exits.
 
 ## Adjusting Internal Settings

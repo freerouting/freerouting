@@ -13,7 +13,8 @@ public class ItemAutorouteInfo {
 
   private final Item item;
   /**
-   * Defines, if this item belongs to the start or destination set of the maze search algorithm
+   * Defines, if this item belongs to the start or destination set of the maze
+   * search algorithm
    */
   private boolean start_info;
   private Connection precalculated_connection;
@@ -27,21 +28,26 @@ public class ItemAutorouteInfo {
   }
 
   /**
-   * Looks, if the corresponding item belongs to the start or destination set of the autoroute algorithm. Only used, if the item belongs to the net, which will be currently routed.
+   * Looks, if the corresponding item belongs to the start or destination set of
+   * the autoroute algorithm. Only used, if the item belongs to the net, which
+   * will be currently routed.
    */
   public boolean is_start_info() {
     return start_info;
   }
 
   /**
-   * Sets, if the corresponding item belongs to the start or destination set of the autoroute algorithm. Only used, if the item belongs to the net, which will be currently routed.
+   * Sets, if the corresponding item belongs to the start or destination set of
+   * the autoroute algorithm. Only used, if the item belongs to the net, which
+   * will be currently routed.
    */
   public void set_start_info(boolean p_value) {
     start_info = p_value;
   }
 
   /**
-   * Returns the precalculated connection of this item or null, if it is not yet precalculated.
+   * Returns the precalculated connection of this item or null, if it is not yet
+   * precalculated.
    */
   public Connection get_precalculated_connection() {
     return this.precalculated_connection;
@@ -55,14 +61,26 @@ public class ItemAutorouteInfo {
   }
 
   /**
-   * Gets the ExpansionRoom of index p_index. Creates it, if it is not yet existing.
+   * Gets the ExpansionRoom of index p_index. Creates it, if it is not yet
+   * existing.
    */
   public ObstacleExpansionRoom get_expansion_room(int p_index, ShapeSearchTree p_autoroute_tree) {
+    int current_shape_count = this.item.tree_shape_count(p_autoroute_tree);
+
     if (expansion_room_arr == null) {
-      expansion_room_arr = new ObstacleExpansionRoom[this.item.tree_shape_count(p_autoroute_tree)];
+      expansion_room_arr = new ObstacleExpansionRoom[current_shape_count];
+    } else if (expansion_room_arr.length != current_shape_count) {
+      // Item's tree shape count has changed (e.g., trace modified during routing)
+      // Resize the array and preserve existing rooms
+      ObstacleExpansionRoom[] new_arr = new ObstacleExpansionRoom[current_shape_count];
+      int copy_length = Math.min(expansion_room_arr.length, current_shape_count);
+      System.arraycopy(expansion_room_arr, 0, new_arr, 0, copy_length);
+      expansion_room_arr = new_arr;
     }
+
     if (p_index < 0 || p_index >= expansion_room_arr.length) {
-      FRLogger.warn("ItemAutorouteInfo.get_expansion_room: p_index out of range");
+      FRLogger.warn("ItemAutorouteInfo.get_expansion_room: p_index " + p_index + " out of range [0, "
+          + expansion_room_arr.length + ")");
       return null;
     }
     if (expansion_room_arr[p_index] == null) {

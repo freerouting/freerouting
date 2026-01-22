@@ -1,8 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.core.RoutingJob;
-import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.ActivityReplayFileScope;
+
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
@@ -51,14 +50,16 @@ public class BoardPanel extends JPanel {
   private Robot robot;
   private Point middle_drag_position;
   /**
-   * Defines the appearance of the custom custom_cursor in the board panel. Null, if the standard custom_cursor is used.
+   * Defines the appearance of the custom custom_cursor in the board panel. Null,
+   * if the standard custom_cursor is used.
    */
   private Cursor custom_cursor;
 
   /**
    * Creates a new BoardPanel in an Application
    */
-  public BoardPanel(ScreenMessages p_screen_messages, BoardFrame p_board_frame, GlobalSettings globalSettings, RoutingJob routingJob) {
+  public BoardPanel(ScreenMessages p_screen_messages, BoardFrame p_board_frame, GlobalSettings globalSettings,
+      RoutingJob routingJob) {
     this.screen_messages = p_screen_messages;
     try {
       // used to be able to change the location of the mouse pointer
@@ -114,7 +115,7 @@ public class BoardPanel extends JPanel {
       }
     });
     addMouseWheelListener(evt -> board_handling.mouse_wheel_moved(evt.getWheelRotation()));
-    globalSettings.routerSettings.save_intermediate_stages = globalSettings.featureFlags.snapshots && globalSettings.routerSettings.save_intermediate_stages;
+
     board_handling = new GuiBoardManager(this, globalSettings, routingJob);
     setAutoscrolls(true);
     this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
@@ -129,7 +130,7 @@ public class BoardPanel extends JPanel {
     popup_menu_dynamic_route = new PopupMenuDynamicRoute(this.board_frame);
     popup_menu_stitch_route = new PopupMenuStitchRoute(this.board_frame);
     popup_menu_corneritem_construction = new PopupMenuCornerItemConstruction(this.board_frame);
-    popup_menu_select = new PopupMenuSelectedItems(this.board_frame);
+    popup_menu_select = new PopupMenuInspectedItems(this.board_frame);
     popup_menu_insert_cancel = new PopupMenuInsertCancel(this.board_frame);
     popup_menu_copy = new PopupMenuCopy(this.board_frame);
     popup_menu_move = new PopupMenuMove(this.board_frame);
@@ -264,12 +265,11 @@ public class BoardPanel extends JPanel {
   public void center_display(Point2D p_new_center) {
     Point delta = set_viewport_center(p_new_center);
     Point2D new_center = get_viewport_center();
-    Point new_mouse_location = new Point((int) (new_center.getX() - delta.getX()), (int) (new_center.getY() - delta.getY()));
+    Point new_mouse_location = new Point((int) (new_center.getX() - delta.getX()),
+        (int) (new_center.getY() - delta.getY()));
     move_mouse(new_mouse_location);
     repaint();
-    this.board_handling.activityReplayFile.start_scope(ActivityReplayFileScope.CENTER_DISPLAY);
-    FloatPoint curr_corner = new FloatPoint(p_new_center.getX(), p_new_center.getY());
-    this.board_handling.activityReplayFile.add_corner(curr_corner);
+
   }
 
   public Point2D get_viewport_center() {
@@ -279,7 +279,8 @@ public class BoardPanel extends JPanel {
   }
 
   /**
-   * zooms the content of the board by p_factor Returns the change of the cursor location
+   * zooms the content of the board by p_factor Returns the change of the cursor
+   * location
    */
   public Point2D zoom(double p_factor, Point2D p_location) {
     final int max_panel_size = 10000000;
@@ -304,7 +305,8 @@ public class BoardPanel extends JPanel {
     Point2D new_center = new Point2D.Double(old_center.getX() + dx, old_center.getY() + dy);
     Point2D adjustment_vector = set_viewport_center(new_center);
     repaint();
-    Point2D adjusted_new_cursor = new Point2D.Double(new_cursor.getX() + adjustment_vector.getX() + 0.5, new_cursor.getY() + adjustment_vector.getY() + 0.5);
+    Point2D adjusted_new_cursor = new Point2D.Double(new_cursor.getX() + adjustment_vector.getX() + 0.5,
+        new_cursor.getY() + adjustment_vector.getY() + 0.5);
     return adjusted_new_cursor;
   }
 
@@ -316,7 +318,8 @@ public class BoardPanel extends JPanel {
   }
 
   /**
-   * Sets the viewport center to p_point. Adjust the result, if p_point is near the border of the viewport. Returns the adjustment vector
+   * Sets the viewport center to p_point. Adjust the result, if p_point is near
+   * the border of the viewport. Returns the adjustment vector
    */
   Point set_viewport_center(Point2D p_point) {
     Rectangle display_rect = get_viewport_bounds();
@@ -353,7 +356,8 @@ public class BoardPanel extends JPanel {
 
   private void scroll_near_border(MouseEvent p_evt) {
     final int border_dist = 50;
-    Rectangle r = new Rectangle(p_evt.getX() - border_dist, p_evt.getY() - border_dist, 2 * border_dist, 2 * border_dist);
+    Rectangle r = new Rectangle(p_evt.getX() - border_dist, p_evt.getY() - border_dist, 2 * border_dist,
+        2 * border_dist);
     ((JPanel) p_evt.getSource()).scrollRectToVisible(r);
   }
 
@@ -389,7 +393,9 @@ public class BoardPanel extends JPanel {
   }
 
   /**
-   * If p_value is true, the custom crosshair cursor will be used in display. Otherwise, the standard Cursor will be used. Using the custom cursor may slow down the display performance a lot.
+   * If p_value is true, the custom crosshair cursor will be used in display.
+   * Otherwise, the standard Cursor will be used. Using the custom cursor may slow
+   * down the display performance a lot.
    */
   public void set_custom_crosshair_cursor(boolean p_value) {
     if (p_value) {
@@ -402,7 +408,9 @@ public class BoardPanel extends JPanel {
   }
 
   /**
-   * If the result is true, the custom crosshair cursor will be used in display. Otherwise, the standard Cursor will be used. Using the custom cursor may slow down the display performance a lot.
+   * If the result is true, the custom crosshair cursor will be used in display.
+   * Otherwise, the standard Cursor will be used. Using the custom cursor may slow
+   * down the display performance a lot.
    */
   public boolean is_custom_cross_hair_cursor() {
     return this.custom_cursor != null;

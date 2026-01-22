@@ -36,3 +36,6 @@ freerouting.ses
 
 # GitHub App credentials
 gha-creds-*.json
+
+# Agent files
+/.agent

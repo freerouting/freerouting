@@ -1,0 +1,34 @@
+2026-01-11 12:33:31.433 [main] INFO  Freerouting v1.9.0 (build-date: 2023-10-30)
+2026-01-11 12:33:31.508 [main] INFO  Settings were loaded from freerouting.json
+2026-01-11 12:33:32.537 [main] INFO  Opening 'DAC2020_bm01.unrouted.dsn'...
+2026-01-11 12:33:32.896 [ForkJoinPool.commonPool-worker-1] INFO  New version available: v2.1.0
+2026-01-11 12:33:37.621 [Thread-24] INFO  Starting auto-routing...
+2026-01-11 12:34:03.835 [Thread-24] WARN  There were only 12.95 changes in the last 20 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 12:34:05.492 [Thread-24] WARN  There were only 6.38 changes in the last 40 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 12:34:07.283 [Thread-24] WARN  There were only 6.00 changes in the last 60 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 12:34:09.068 [Thread-24] WARN  There were only 6.00 changes in the last 80 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 12:34:10.801 [Thread-24] WARN  There were only 6.00 changes in the last 100 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 12:34:12.487 [Thread-24] WARN  There were only 6.00 changes in the last 120 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 12:34:14.287 [Thread-24] WARN  There were only 6.00 changes in the last 140 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 12:34:15.971 [Thread-24] WARN  There were only 6.00 changes in the last 160 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 12:34:17.655 [Thread-24] WARN  There were only 6.00 changes in the last 180 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 12:34:19.361 [Thread-24] WARN  There were only 6.00 changes in the last 200 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-01-11 12:34:19.364 [Thread-24] WARN  There was so little change during the recent passes that autorouter will be stopped now.
+2026-01-11 12:34:19.365 [Thread-24] INFO  Auto-routing was completed in 41.74 seconds.
+2026-01-11 12:34:19.465 [Thread-24] INFO  Starting route optimization on 1 thread...
+2026-01-11 12:37:58.085 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:37:58.085 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:37:58.085 [Thread-24] WARN  ShapeSearchTree.overlaps_with_clearance: p_shape is not bounded
+2026-01-11 12:37:58.087 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:37:58.087 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:37:58.088 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:37:58.088 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:37:58.128 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:37:58.128 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:37:58.128 [Thread-24] WARN  ShapeSearchTree.overlaps_with_clearance: p_shape is not bounded
+2026-01-11 12:37:58.129 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:37:58.129 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:37:58.129 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:37:58.129 [Thread-24] WARN  IntPoint: p_x is out of range
+2026-01-11 12:46:35.724 [Thread-24] INFO  Route optimization was completed in 12 minute(s) 16.26 seconds and it improved the design by ~49.85%.
+2026-01-11 12:46:35.734 [Thread-24] INFO  Saving 'DAC2020_bm01.ses'...
