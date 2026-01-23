@@ -30,6 +30,18 @@ public class DebugControl {
     }
 
     /**
+     * Resets the execution state.
+     * Starts in PAUSED mode if single stepping is enabled.
+     */
+    public void reset() {
+        if (Freerouting.globalSettings.debugSettings.singleStepExecution) {
+            pause();
+        } else {
+            resume();
+        }
+    }
+
+    /**
      * Called by the logging framework at potential breakpoints.
      * Parses the impactedItems string to extract net numbers for filtering.
      * 

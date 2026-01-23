@@ -50,6 +50,12 @@ class BoardToolbar extends JPanel {
   private final JButton delete_all_tracks_button;
   private final BoardFrame board_frame;
 
+  // Debug controls
+  private JButton vars_play_button;
+  private JButton vars_pause_button;
+  private JButton vars_next_button;
+  private JButton vars_previous_button;
+
   /**
    * Creates a new instance of BoardToolbarPanel
    */
@@ -138,6 +144,21 @@ class BoardToolbar extends JPanel {
         // Add the auto-router listener to save the design file when the auto-router is
         // running
         thread.addListener(board_frame.board_panel.board_handling.autorouter_listener);
+      }
+
+      if (Freerouting.globalSettings.debugSettings.singleStepExecution) {
+        app.freerouting.debug.DebugControl.getInstance().reset();
+
+        // Since we reset(), it defaults to PAUSED if singleStep enabled.
+        // So Enable Play/Next/Prev, Disable Pause
+        if (vars_play_button != null)
+          vars_play_button.setEnabled(true);
+        if (vars_next_button != null)
+          vars_next_button.setEnabled(true);
+        if (vars_previous_button != null)
+          vars_previous_button.setEnabled(true);
+        if (vars_pause_button != null)
+          vars_pause_button.setEnabled(false);
       }
     });
     toolbar_autoroute_button.addActionListener(
@@ -256,21 +277,21 @@ class BoardToolbar extends JPanel {
 
     // Add Debug Controls if enabled
     if (Freerouting.globalSettings.debugSettings.singleStepExecution) {
-      final JButton vars_play_button = new JButton();
-      final JButton vars_pause_button = new JButton();
-      final JButton vars_next_button = new JButton();
-      final JButton vars_previous_button = new JButton();
+      vars_play_button = new JButton();
+      vars_pause_button = new JButton();
+      vars_next_button = new JButton();
+      vars_previous_button = new JButton();
 
       middle_toolbar.addSeparator();
 
-      // Next Button
+      // Previous Button
       tm.setText(vars_previous_button, "debug_previous");
       if (vars_previous_button.getText().startsWith("!"))
         vars_previous_button.setText("previous"); // Fallback
       vars_previous_button.addActionListener(_ -> {
-        //app.freerouting.debug.DebugControl.getInstance().previous();
+        // app.freerouting.debug.DebugControl.getInstance().previous();
       });
-      vars_previous_button.setEnabled(false); // Only valid when paused
+      vars_previous_button.setEnabled(false); // Initially disabled
       middle_toolbar.add(vars_previous_button);
 
       // Play Button
@@ -282,9 +303,9 @@ class BoardToolbar extends JPanel {
         vars_pause_button.setEnabled(true);
         vars_play_button.setEnabled(false);
         vars_next_button.setEnabled(false);
+        vars_previous_button.setEnabled(false);
       });
-      vars_play_button.setEnabled(false); // Initially running, so play disabled?
-      // Actually router starts running, so Pause is enabled, Play is disabled.
+      vars_play_button.setEnabled(false); // Initially disabled
       middle_toolbar.add(vars_play_button);
 
       // Pause Button
@@ -296,7 +317,9 @@ class BoardToolbar extends JPanel {
         vars_pause_button.setEnabled(false);
         vars_play_button.setEnabled(true);
         vars_next_button.setEnabled(true);
+        vars_previous_button.setEnabled(true);
       });
+      vars_pause_button.setEnabled(false); // Initially disabled
       middle_toolbar.add(vars_pause_button);
 
       // Next Button
@@ -306,7 +329,7 @@ class BoardToolbar extends JPanel {
       vars_next_button.addActionListener(_ -> {
         app.freerouting.debug.DebugControl.getInstance().next();
       });
-      vars_next_button.setEnabled(false); // Only valid when paused
+      vars_next_button.setEnabled(false); // Initially disabled
       middle_toolbar.add(vars_next_button);
 
       // Logic:
@@ -315,7 +338,6 @@ class BoardToolbar extends JPanel {
 
       middle_toolbar.addSeparator();
     }
-
 
     // create the right toolbar
 

@@ -674,12 +674,10 @@ public class PolylineTrace extends Trace implements Serializable {
     }
 
     if (this.is_tail()) {
-      FRLogger.trace("PolylineTrace", "remove_tail",
+      FRLogger.trace("PolylineTrace.normalize", "remove_tail",
           "removing tail trace id=" + this.get_id_no() + " (net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1)
               + ")",
           "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1) + ", Trace #" + this.get_id_no());
-      FRLogger.debug("PolylineTrace.normalize: removing tail trace id=" + this.get_id_no() + " (net #"
-          + (this.net_count() > 0 ? this.get_net_no(0) : -1) + ")");
       this.board.remove_item(this);
       return true;
     }
