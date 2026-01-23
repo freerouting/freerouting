@@ -8,7 +8,6 @@ import app.freerouting.board.Trace;
 import app.freerouting.board.Unit;
 import app.freerouting.board.Via;
 import app.freerouting.constants.Constants;
-import app.freerouting.interactive.RatsNest;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.DesignRulesCheckerSettings;
 import java.util.ArrayList;
@@ -451,6 +450,196 @@ public class DesignRulesChecker {
     }
 
     return dsnCoordinate;
+  }
+
+  // State for incomplete connections (ratsnest)
+  private NetIncompletes[] net_incompletes;
+  public int max_connections;
+
+  /**
+   * Initializes the incomplete connection calculations for all nets on the board.
+   * This is equivalent to what RatsNest constructor did.
+   */
+  public void calculateAllIncompletes() {
+    int max_net_no = board.rules.nets.max_net_no();
+    // Create the net item lists at once for performance reasons.
+    java.util.Vector<Collection<Item>> net_item_lists = new java.util.Vector<>(max_net_no);
+    for (int i = 0; i < max_net_no; i++) {
+      net_item_lists.add(new java.util.LinkedList<>());
+    }
+    java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it = board.item_list
+        .start_read_object();
+    for (;;) {
+      Item curr_item = (Item) board.item_list.read_object(it);
+      if (curr_item == null) {
+        break;
+      }
+      if (curr_item instanceof app.freerouting.board.Connectable) {
+        for (int i = 0; i < curr_item.net_count(); i++) {
+          net_item_lists
+              .get(curr_item.get_net_no(i) - 1)
+              .add(curr_item);
+        }
+      }
+    }
+    this.max_connections = net_item_lists
+        .stream()
+        .mapToInt(Collection::size)
+        .sum() - net_item_lists.size();
+
+    this.net_incompletes = new NetIncompletes[max_net_no];
+    for (int i = 0; i < net_incompletes.length; i++) {
+      // net_no is 1-based, index is 0-based
+      int net_no = i + 1;
+      net_incompletes[i] = new NetIncompletes(net_no, net_item_lists.get(i), board);
+    }
+  }
+
+  /**
+   * Recalculates the incomplete connections (airlines) for the specified net.
+   *
+   * @param netNo The number of the net to recalculate.
+   */
+  public void recalculateNetIncompletes(int netNo) {
+    if (net_incompletes == null) {
+      calculateAllIncompletes();
+      return;
+    }
+    if (netNo >= 1 && netNo <= net_incompletes.length) {
+      Collection<Item> item_list = board.get_connectable_items(netNo);
+      net_incompletes[netNo - 1] = new NetIncompletes(netNo, item_list, board);
+    }
+  }
+
+  /**
+   * Recalculates the incomplete connections for the specified net using a
+   * provided list of items.
+   *
+   * @param netNo    The number of the net to recalculate.
+   * @param itemList The collection of items belonging to the net.
+   */
+  public void recalculateNetIncompletes(int netNo, Collection<Item> itemList) {
+    if (net_incompletes == null) {
+      calculateAllIncompletes(); // Initialize if not already done, though this might be expensive if we only
+                                 // want one net. catch-22.
+      // But effectively we need the array initialized.
+    }
+    if (netNo >= 1 && netNo <= net_incompletes.length) {
+      // copy itemList, because it will be changed inside the constructor of
+      // NetIncompletes
+      Collection<Item> items = new java.util.LinkedList<>(itemList);
+      net_incompletes[netNo - 1] = new NetIncompletes(netNo, items, board);
+    }
+  }
+
+  /**
+   * Returns the total number of incomplete connections (airlines) across all
+   * nets.
+   */
+  public int getIncompleteCount() {
+    if (net_incompletes == null) {
+      calculateAllIncompletes();
+    }
+    int result = 0;
+    for (int i = 0; i < net_incompletes.length; i++) {
+      result += net_incompletes[i].count();
+    }
+    return result;
+  }
+
+  /**
+   * Returns the number of incomplete connections for a specific net.
+   */
+  public int getIncompleteCount(int netNo) {
+    if (net_incompletes == null) {
+      calculateAllIncompletes();
+    }
+    if (netNo <= 0 || netNo > net_incompletes.length) {
+      return 0;
+    }
+    return net_incompletes[netNo - 1].count();
+  }
+
+  /**
+   * Returns the total number of nets that violate length restrictions.
+   */
+  public int getLengthViolationCount() {
+    if (net_incompletes == null) {
+      calculateAllIncompletes();
+    }
+    int result = 0;
+    for (int i = 0; i < net_incompletes.length; i++) {
+      if (net_incompletes[i].get_length_violation() != 0) {
+        ++result;
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Returns the magnitude of the length violation for the specified net.
+   */
+  public double getLengthViolation(int netNo) {
+    if (net_incompletes == null) {
+      calculateAllIncompletes();
+    }
+    if (netNo <= 0 || netNo > net_incompletes.length) {
+      return 0;
+    }
+    return net_incompletes[netNo - 1].get_length_violation();
+  }
+
+  /**
+   * Recalculates length matching violations for all nets.
+   *
+   * @return true if the status of any length violation has changed.
+   */
+  public boolean recalculateLengthViolations() {
+    if (net_incompletes == null) {
+      calculateAllIncompletes();
+      return true; // Technically changed from nothing to something
+    }
+    boolean result = false;
+    for (int i = 0; i < net_incompletes.length; i++) {
+      if (net_incompletes[i].calc_length_violation()) {
+        result = true;
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Retrieves all airlines (incomplete connections) for the entire board.
+   */
+  public AirLine[] getAllAirlines() {
+    if (net_incompletes == null) {
+      calculateAllIncompletes();
+    }
+    int count = getIncompleteCount();
+    AirLine[] result = new AirLine[count];
+    int curr_index = 0;
+    for (int i = 0; i < net_incompletes.length; i++) {
+      Collection<AirLine> curr_list = net_incompletes[i].incompletes;
+      for (AirLine curr_line : curr_list) {
+        result[curr_index] = curr_line;
+        ++curr_index;
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Gets the NetIncompletes object for a specific net.
+   * Useful for drawing or detailed inspection.
+   */
+  public NetIncompletes getNetIncompletes(int netNo) {
+    if (net_incompletes == null) {
+      calculateAllIncompletes();
+    }
+    if (netNo <= 0 || netNo > net_incompletes.length) {
+      return null;
+    }
+    return net_incompletes[netNo - 1];
   }
 
   /**
