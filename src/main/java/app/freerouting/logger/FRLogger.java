@@ -22,6 +22,7 @@ public class FRLogger {
       new java.text.DecimalFormatSymbols(java.util.Locale.US));
   private static final HashMap<Integer, Instant> perfData = new HashMap<>();
   private static final LogEntries logEntries = new LogEntries();
+  public static boolean granularTraceEnabled = false;
   private static Logger logger;
   private static boolean enabled = true;
 
@@ -337,8 +338,13 @@ public class FRLogger {
       if (logger == null) {
         logger = LogManager.getLogger(Freerouting.class);
       }
-      String formattedMessage = String.format("[%s] [%s] %s: %s", method, operation, message, impactedItems);
-      logger.trace(formattedMessage);
+
+      // TODO: apply filtering based on impactedItems and app.freerouting.debug.DebugControl before logging
+
+      if (granularTraceEnabled) {
+        String formattedMessage = String.format("[%s] [%s] %s: %s", method, operation, message, impactedItems);
+        logger.trace(formattedMessage);
+      }
     }
 
     app.freerouting.debug.DebugControl.getInstance().check(impactedItems);

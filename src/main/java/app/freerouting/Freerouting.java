@@ -379,6 +379,7 @@ public class Freerouting {
           boolean detailed = Boolean.parseBoolean(arg.substring("--debug.enable_detailed_logging=".length()));
           if (detailed) {
             fileLoggingLevel = "TRACE";
+            FRLogger.granularTraceEnabled = true;
           }
         } else if ("-dl".equals(arg)) {
           fileLoggingEnabled = false;
