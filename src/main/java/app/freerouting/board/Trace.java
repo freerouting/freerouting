@@ -173,8 +173,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     if (p_point == null || !(p_point.equals(this.first_corner()) || p_point.equals(this.last_corner()))) {
       return new TreeSet<>();
     }
-    // Use tolerance for connectivity detection: half_width + 1
-    int tolerance = this.half_width + 1;
+    // Use tolerance for connectivity detection: max(half_width + 1, 3000) to ensure
+    // bidirectional visibility
+    int tolerance = Math.max(this.half_width + 1, 3000);
     TileShape search_shape = p_point.surrounding_octagon().enlarge(tolerance);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
     if (this.contains_net(94)) {
@@ -210,7 +211,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
           app.freerouting.geometry.planar.Shape drill_shape = curr_drill_item.get_shape_on_layer(this.get_layer());
           // Enlarge by trace tolerance to account for snapping/trace width and ensure
           // robustness
-          if (drill_shape != null && drill_shape.enlarge(this.half_width + 1).contains(p_point)) {
+          if (drill_shape != null && drill_shape.enlarge(tolerance).contains(p_point)) {
             result.add(curr_item);
           }
         } else if (curr_item instanceof ConductionArea curr_area) {
@@ -328,16 +329,28 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * Checks, if this trace can be reached by other items via more than one path
    */
   public boolean is_cycle() {
-    if (this.is_overlap()) {
-      return true;
+    // Check for direct overlaps (e.g. both ends touching the same item).
+    // Modified to allow "stubs" on DrillItems/ConductionAreas which are common with
+    // fuzzy tolerance.
+    Set<Item> start_contacts = this.get_start_contacts();
+    Set<Item> end_contacts = this.get_end_contacts();
+
+    for (Item contact : start_contacts) {
+      if (end_contacts.contains(contact)) {
+        if (contact instanceof Trace) {
+          return true; // Overlapping another trace is a redundant cycle
+        }
+        return false; // Stubs on Pins/Areas are allowed
+      }
     }
-    Collection<Item> start_contacts = this.get_start_contacts();
+
+    Collection<Item> expansion_contacts = start_contacts;
     // a cycle exists if through expanding the start contact we reach
     // this trace again via an end contact
     // make sure, that all direct neighbours are
     // expanded from here, to block coming back to
     // this trace via a start contact.
-    Set<Item> visited_items = new TreeSet<>(start_contacts);
+    Set<Item> visited_items = new TreeSet<>(expansion_contacts);
     boolean ignore_areas = false;
     if (this.net_no_arr.length > 0) {
       Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
@@ -345,7 +358,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
         ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
       }
     }
-    for (Item curr_contact : start_contacts) {
+    for (Item curr_contact : expansion_contacts) {
       if (curr_contact.is_cycle_recu(visited_items, this, this, ignore_areas)) {
         return true;
       }
