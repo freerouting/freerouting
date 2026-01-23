@@ -9,7 +9,7 @@ param(
     [string]$de = ".\tests\Issue508-DAC2020_bm01.dsn",
     [string]$do = ".\tests\Issue508-DAC2020_bm01.ses",
     [string]$LoggingLocation = ".\logs\",
-    [string]$LoggingLevel = "DEBUG",
+    [string]$LoggingLevel = "TRACE",
     [string]$LoggingPattern = "%msg%n",
     [int]$max_passes = 3,
     [int]$max_items = 3,
