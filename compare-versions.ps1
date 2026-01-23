@@ -12,7 +12,7 @@ param(
     [string]$LoggingLevel = "DEBUG",
     [string]$LoggingPattern = "%msg%n",
     [int]$max_passes = 3,
-    [int]$max_items = 15,
+    [int]$max_items = 3,
     [int]$max_threads = 1,
     [string]$job_timeout = "00:03:00"
 )
@@ -258,7 +258,7 @@ if ($CurrentResult -and $V19Result) {
             Write-Host "  Router Time:    $($Res.AutoRouterTime)"
             Write-Host "  Process Time:   $($Res.Duration.ToString('mm\:ss\.fff'))"
             Write-Host "  Passes:         $($Res.Passes)"
-            Write-Host "  Unrouted:       $($Res.Unrouted)"
+            Write-Host "  Unrouted Items: $($Res.Unrouted)"
             Write-Host "  Peak Heap:      $($Res.PeakHeap) MB"
         }
     }
