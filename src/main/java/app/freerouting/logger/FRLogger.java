@@ -339,9 +339,7 @@ public class FRLogger {
         logger = LogManager.getLogger(Freerouting.class);
       }
 
-      // TODO: apply filtering based on impactedItems and app.freerouting.debug.DebugControl before logging
-
-      if (granularTraceEnabled) {
+      if (granularTraceEnabled && (impactedItems.isEmpty() || app.freerouting.debug.DebugControl.getInstance().isInterested(impactedItems))) {
         String formattedMessage = String.format("[%s] [%s] %s: %s", method, operation, message, impactedItems);
         logger.trace(formattedMessage);
       }

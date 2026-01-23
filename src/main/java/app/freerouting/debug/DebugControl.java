@@ -35,12 +35,14 @@ public class DebugControl {
      * 
      * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
      */
-    public void check(String impactedItems) {
-        if (!Freerouting.globalSettings.debugSettings.singleStepExecution &&
-                Freerouting.globalSettings.debugSettings.traceInsertionDelay == 0) {
-            return;
-        }
-
+    /**
+     * Checks if the debug control is interested in the given items based on the
+     * filter.
+     * 
+     * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
+     * @return true if the items should be processed/logged, false otherwise.
+     */
+    public boolean isInterested(String impactedItems) {
         int netNo = -1;
         String netName = null;
 
@@ -56,7 +58,28 @@ public class DebugControl {
             }
         }
 
-        check(netNo, netName);
+        return Freerouting.globalSettings.debugSettings.isNetPermitted(netNo, netName);
+    }
+
+    /**
+     * Called by the logging framework at potential breakpoints.
+     * Parses the impactedItems string to extract net numbers for filtering.
+     * 
+     * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
+     */
+    public void check(String impactedItems) {
+        // We defer to check(int, String) for checking enablement flags (step/delay).
+        // BUT invalid optimization: we want to SKIP parsing if disabled.
+        if (!Freerouting.globalSettings.debugSettings.singleStepExecution &&
+                Freerouting.globalSettings.debugSettings.traceInsertionDelay == 0) {
+            return;
+        }
+
+        if (!isInterested(impactedItems)) {
+            return;
+        }
+
+        check(-1, null);
     }
 
     /**
