@@ -110,6 +110,25 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 - **`-host [host_name host_version]`**  
   Specifies the name and version of the host application if Freerouting is run as an external library or plugin.
 
+### Debugging Options
+
+- **`--debug.enable_detailed_logging=[true|false]`**
+  Enables detailed trace logging to the log file. Default is `false`.
+  - Effect: Sets the file logging level to TRACE. Note that this can generate very large log files.
+
+- **`--debug.single_step_execution=[true|false]`**
+  Enables single-step execution mode. Default is `false`.
+  - Effect: Shows "Play", "Pause", "Next", and "Previous" buttons in the toolbar. The autorouter will start valid pauses at breakpoints (e.g. trace insertion).
+
+- **`--debug.trace_insertion_delay=[milliseconds]`**
+  Adds a delay in milliseconds after each trace insertion or major routing step. Default is `0`.
+  - Effect: Slows down the routing process for visual debugging.
+
+- **`--debug.filter_by_net=[net1,net2,...]`**
+  Restricts debug actions (stepping, delays) to specific nets.
+  - Format: Comma-separated list of net names or numbers (e.g. `Net1,Net #2,3`).
+  - Effect: Other nets are routed at full speed.
+
 ### Miscellaneous Options
 
 - **`-dct [seconds]`**  
