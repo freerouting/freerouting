@@ -266,7 +266,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     // Use tolerance for connectivity detection: min_width/2 + 1
     // This matches the tolerance used in Trace (half_width + 1)
     int tolerance = (int) (this.min_width() / 2) + 1;
-    TileShape search_shape = TileShape.get_instance(drill_center);
+    TileShape search_shape = drill_center.surrounding_octagon().enlarge(tolerance);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, -1);
     Set<Item> result = new TreeSet<>();
     for (SearchTreeObject curr_ob : overlaps) {

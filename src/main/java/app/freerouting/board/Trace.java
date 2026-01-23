@@ -175,7 +175,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     }
     // Use tolerance for connectivity detection: half_width + 1
     int tolerance = this.half_width + 1;
-    TileShape search_shape = TileShape.get_instance(p_point);
+    TileShape search_shape = p_point.surrounding_octagon().enlarge(tolerance);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
     if (this.contains_net(94)) {
       FRLogger.debug("Trace.get_normal_contacts for net #94 at " + p_point + " on layer " + this.layer + ": found "
