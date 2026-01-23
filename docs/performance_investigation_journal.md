@@ -121,3 +121,9 @@
 - **Current Outcome**: Remains unrouted (1 incomplete in summary) despite `BatchAutorouter` logging `Routed: 15`.
 - **Total Incompletes**: Current version has **184** (vs **183** in v1.9) after 15 items. Correcting for the +1 difference confirms `PL7` is the culprit.
 - **Theory**: `autoroute_item` may be returning `ROUTED` without successfully committing the connection.
+
+### Theory 10: DRC Incomplete Item Counter Bug (User Suggested)
+- **Hypothesis**: The incomplete item counter in `DesignRulesChecker` might have a bug related to tolerance usage.
+- **Scenario**: The router might successfully route a connection within a certain tolerance (e.g., wire slightly off-center from via), but the DRC check might be stricter or ignore this tolerance, failing to count it as connected.
+- **Action**: Verify `DesignRulesChecker` and `NetIncompletes` logic. Check if tolerance is applied correctly when determining connectivity.
+
