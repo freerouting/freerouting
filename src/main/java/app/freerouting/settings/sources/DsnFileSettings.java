@@ -1,6 +1,5 @@
 package app.freerouting.settings.sources;
 
-import app.freerouting.designforms.specctra.LayerStructure;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
@@ -14,21 +13,20 @@ public class DsnFileSettings implements SettingsSource {
 
     private static final int PRIORITY = 20;
     private final RouterSettings settings;
-    private final String fileName;
+    private final String filename;
 
     /**
      * Creates a DsnFileSettings source from a DSN file input stream.
-     * 
+     *
      * @param inputStream    DSN file input stream
-     * @param fileName       Name of the DSN file (for logging)
-     * @param layerStructure Layer structure from the DSN file
+     * @param filename       Name of the DSN file (for logging)
      */
-    public DsnFileSettings(InputStream inputStream, String fileName, LayerStructure layerStructure) {
-        this.fileName = fileName;
-        this.settings = loadSettings(inputStream, layerStructure);
+    public DsnFileSettings(InputStream inputStream, String filename) {
+        this.filename = filename;
+        this.settings = loadSettings(inputStream);
     }
 
-    private RouterSettings loadSettings(InputStream inputStream, LayerStructure layerStructure) {
+    private RouterSettings loadSettings(InputStream inputStream) {
         try {
             // Use existing AutorouteSettings.read_scope to parse DSN autoroute settings
             // This will be refactored to return a RouterSettings object with nullable
@@ -37,13 +35,12 @@ public class DsnFileSettings implements SettingsSource {
             // TODO: Update AutorouteSettings.read_scope to work with new architecture
 
             RouterSettings settings = new RouterSettings();
-            // The actual parsing will be done by the existing DSN parser
-            // We'll integrate this properly when we refactor AutorouteSettings
+            settings.setLayerCount(2);
 
-            FRLogger.debug("Loaded router settings from DSN file: " + fileName);
+            FRLogger.debug("Loaded router settings from DSN file: " + filename);
             return settings;
         } catch (Exception e) {
-            FRLogger.warn("Failed to load settings from DSN file: " + fileName + ": " + e.getMessage());
+            FRLogger.warn("Failed to load settings from DSN file: " + filename + ": " + e.getMessage());
             return new RouterSettings();
         }
     }
@@ -55,7 +52,7 @@ public class DsnFileSettings implements SettingsSource {
 
     @Override
     public String getSourceName() {
-        return "DSN file: " + fileName;
+        return "DSN file: " + filename;
     }
 
     @Override

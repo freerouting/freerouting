@@ -12,6 +12,11 @@ import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.SettingsMerger;
+import app.freerouting.settings.sources.CliSettings;
+import app.freerouting.settings.sources.DefaultSettings;
+import app.freerouting.settings.sources.DsnFileSettings;
+import app.freerouting.settings.sources.EnvironmentVariablesSource;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -26,7 +31,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.util.Objects;
 import java.util.UUID;
 import javax.swing.JButton;
@@ -43,7 +47,7 @@ import javax.swing.plaf.FontUIResource;
  */
 public class GuiManager {
 
-    public static boolean InitializeGUI(GlobalSettings globalSettings) {
+    public static boolean InitializeGUI(GlobalSettings globalSettings, CliSettings cliSettings) {
         // Start a new Freerouting session
         var guiSession = SessionManager
                 .getInstance()
@@ -98,11 +102,11 @@ public class GuiManager {
             }
 
             if (routingJob.input.format == FileFormat.UNKNOWN) {
-                FRLogger
-                        .warn(tm.getText("message_6") + " " + globalSettings.initialInputFile + " "
+                FRLogger.warn(tm.getText("message_6") + " " + globalSettings.initialInputFile + " "
                                 + tm.getText("message_7"));
                 return false;
             }
+            routingJob.routerSettings = SettingsMerger.merge(new DefaultSettings(), cliSettings, new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()), new EnvironmentVariablesSource());
             guiSession.addJob(routingJob);
 
             String message = tm.getText("loading_design") + " " + globalSettings.initialInputFile;

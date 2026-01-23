@@ -13,6 +13,7 @@ public class RouterSettings implements Serializable, Cloneable {
   // Valid algorithm values
   public static final String ALGORITHM_CURRENT = "freerouting-router";
   public static final String ALGORITHM_V19 = "freerouting-router-v19";
+
   @SerializedName("enabled")
   public Boolean enabled;
   @SerializedName("algorithm")
@@ -55,37 +56,14 @@ public class RouterSettings implements Serializable, Cloneable {
    * Initializes all fields with default values.
    */
   public RouterSettings() {
-    this(0);
-  }
-
-  /**
-   * Creates a new instance of AutorouteSettings with default values
-   * and @p_layer_count layers.
-   */
-  public RouterSettings(int p_layer_count) {
-    // Initialize with default values
-    this.enabled = true;
-    this.algorithm = ALGORITHM_CURRENT;
-    this.jobTimeoutString = "12:00:00";
-    this.maxPasses = 9999;
-    this.maxItems = Integer.MAX_VALUE;
-    this.trace_pull_tight_accuracy = 500;
-    this.vias_allowed = true;
-    this.automatic_neckdown = true;
-    this.save_intermediate_stages = false;
-    this.ignoreNetClasses = new String[0];
-    this.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-    this.optimizer = new RouterOptimizerSettings();
-    this.scoring = new RouterScoringSettings();
-
-    setLayerCount(p_layer_count);
   }
 
   /**
    * Creates a new instance of AutorouteSettings
    */
   public RouterSettings(RoutingBoard p_board) {
-    this(p_board.get_layer_count());
+    this();
+    setLayerCount(p_board.get_layer_count());
     applyBoardSpecificOptimizations(p_board);
   }
 
@@ -240,7 +218,8 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   @Override
   public RouterSettings clone() {
-    RouterSettings result = new RouterSettings(this.isLayerActive.length);
+    RouterSettings result = new RouterSettings();
+    result.setLayerCount(this.isLayerActive.length);
     result.algorithm = this.algorithm;
     result.jobTimeoutString = this.jobTimeoutString;
     result.isLayerActive = this.isLayerActive.clone();

@@ -13,7 +13,8 @@ public class AutorouteSettings {
   }
 
   static RouterSettings read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
-    RouterSettings result = new RouterSettings(p_layer_structure.arr.length);
+    RouterSettings result = new RouterSettings();
+    result.setLayerCount(p_layer_structure.arr.length);
     boolean with_autoroute = true;
     boolean with_postroute = true;
     Object next_token = null;

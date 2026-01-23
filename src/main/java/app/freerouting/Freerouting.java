@@ -15,6 +15,8 @@ import app.freerouting.management.VersionChecker;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.SettingsMerger;
+import app.freerouting.settings.sources.CliSettings;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -77,7 +79,7 @@ public class Freerouting {
 
     routingJob.tryToSetOutputFile(new File(globalSettings.initialOutputFile));
 
-    routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
+    routingJob.routerSettings = SettingsMerger.merge();
     routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
 
@@ -497,6 +499,7 @@ public class Freerouting {
     FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
 
     // parse the command line arguments
+    var cliSettings = new CliSettings(args);
     globalSettings.applyCommandLineArguments(args);
 
     FRLogger.debug("GUI Language: " + globalSettings.currentLocale);
@@ -590,7 +593,7 @@ public class Freerouting {
 
     // Initialize the GUI
     if (globalSettings.guiSettings.isEnabled) {
-      if (!GuiManager.InitializeGUI(globalSettings)) {
+      if (!GuiManager.InitializeGUI(globalSettings, cliSettings)) {
         FRLogger.error("Couldn't initialize the GUI", null);
         globalSettings.guiSettings.isEnabled = false;
       } else {

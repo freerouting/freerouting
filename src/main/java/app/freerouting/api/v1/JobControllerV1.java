@@ -489,7 +489,9 @@ public class JobControllerV1 extends BaseController {
         job.input.setFilename(job.name);
       }
 
-      job.setSettings(new RouterSettings(job.input.statistics.layers.totalCount));
+      var routerSettings = new RouterSettings();
+      routerSettings.setLayerCount(job.input.statistics.layers.totalCount);
+      job.setSettings(routerSettings);
 
       var request = GSON
           .toJson(input)
