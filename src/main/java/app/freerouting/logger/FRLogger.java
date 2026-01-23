@@ -318,9 +318,30 @@ public class FRLogger {
       logger = LogManager.getLogger(Freerouting.class);
     }
 
-    logger.trace(msg);
-
     return null;
+  }
+
+  /**
+   * Logs a granular TRACE message and triggers a debug check.
+   *
+   * @param method        The method name where the log originates (e.g.
+   *                      "InsertFoundConnectionAlgo").
+   * @param operation     The operation type (e.g. "insertion", "removal").
+   * @param message       The details of the log message.
+   * @param impactedItems A string describing the impacted items (e.g. "Net #1,
+   *                      Trace #123").
+   *                      This string is used by DebugControl to filter execution.
+   */
+  public static void trace(String method, String operation, String message, String impactedItems) {
+    if (enabled) {
+      if (logger == null) {
+        logger = LogManager.getLogger(Freerouting.class);
+      }
+      String formattedMessage = String.format("[%s] [%s] %s: %s", method, operation, message, impactedItems);
+      logger.trace(formattedMessage);
+    }
+
+    app.freerouting.debug.DebugControl.getInstance().check(impactedItems);
   }
 
   /**

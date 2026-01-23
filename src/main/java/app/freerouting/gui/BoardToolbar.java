@@ -7,10 +7,10 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.interactive.DragMenuState;
+import app.freerouting.interactive.InspectMenuState;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.RouteMenuState;
-import app.freerouting.interactive.InspectMenuState;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
@@ -253,6 +253,69 @@ class BoardToolbar extends JPanel {
     middle_toolbar.add(toolbar_display_all_button);
 
     this.add(middle_toolbar, BorderLayout.CENTER);
+
+    // Add Debug Controls if enabled
+    if (Freerouting.globalSettings.debugSettings.singleStepExecution) {
+      final JButton vars_play_button = new JButton();
+      final JButton vars_pause_button = new JButton();
+      final JButton vars_next_button = new JButton();
+      final JButton vars_previous_button = new JButton();
+
+      middle_toolbar.addSeparator();
+
+      // Next Button
+      tm.setText(vars_previous_button, "debug_previous");
+      if (vars_previous_button.getText().startsWith("!"))
+        vars_previous_button.setText("previous"); // Fallback
+      vars_previous_button.addActionListener(_ -> {
+        //app.freerouting.debug.DebugControl.getInstance().previous();
+      });
+      vars_previous_button.setEnabled(false); // Only valid when paused
+      middle_toolbar.add(vars_previous_button);
+
+      // Play Button
+      tm.setText(vars_play_button, "debug_play");
+      if (vars_play_button.getText().startsWith("!"))
+        vars_play_button.setText("Play"); // Fallback
+      vars_play_button.addActionListener(_ -> {
+        app.freerouting.debug.DebugControl.getInstance().resume();
+        vars_pause_button.setEnabled(true);
+        vars_play_button.setEnabled(false);
+        vars_next_button.setEnabled(false);
+      });
+      vars_play_button.setEnabled(false); // Initially running, so play disabled?
+      // Actually router starts running, so Pause is enabled, Play is disabled.
+      middle_toolbar.add(vars_play_button);
+
+      // Pause Button
+      tm.setText(vars_pause_button, "debug_pause"); // Key needs to exist or fallback
+      if (vars_pause_button.getText().startsWith("!"))
+        vars_pause_button.setText("Pause"); // Fallback
+      vars_pause_button.addActionListener(_ -> {
+        app.freerouting.debug.DebugControl.getInstance().pause();
+        vars_pause_button.setEnabled(false);
+        vars_play_button.setEnabled(true);
+        vars_next_button.setEnabled(true);
+      });
+      middle_toolbar.add(vars_pause_button);
+
+      // Next Button
+      tm.setText(vars_next_button, "debug_next");
+      if (vars_next_button.getText().startsWith("!"))
+        vars_next_button.setText("Next"); // Fallback
+      vars_next_button.addActionListener(_ -> {
+        app.freerouting.debug.DebugControl.getInstance().next();
+      });
+      vars_next_button.setEnabled(false); // Only valid when paused
+      middle_toolbar.add(vars_next_button);
+
+      // Logic:
+      // Running: Pause Enabled, Play Disabled, Next Disabled.
+      // Paused: Pause Disabled, Play Enabled, Next Enabled.
+
+      middle_toolbar.addSeparator();
+    }
+
 
     // create the right toolbar
 

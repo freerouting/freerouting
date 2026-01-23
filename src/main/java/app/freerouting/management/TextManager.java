@@ -33,7 +33,7 @@ import javax.swing.JToggleButton;
  */
 public class TextManager {
 
-  // A key-value pair for icon names and their corresponding unicode characters
+  // A key-value pair for Material Design icon names and their corresponding Unicode characters
   private final Map<String, Integer> iconMap = new HashMap<>() {{
     put("cog", 0xF0493);
     put("auto-fix", 0xF0068);
@@ -47,6 +47,10 @@ public class TextManager {
     put("magnify-minus", 0xF034A);
     put("alert", 0xF0026);
     put("close-octagon", 0xF015C);
+    put("play", 0xF040A);
+    put("pause", 0xF03E4);
+    put("step-forward", 0xF04D7);
+    put("step-backward", 0xF04D5);
   }};
   private Locale currentLocale;
   private String currentBaseName;

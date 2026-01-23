@@ -444,6 +444,10 @@ public class BatchAutorouter extends NamedAlgorithm {
           this.totalItemsRouted++;
 
           int netNo = curr_item.get_net_no(i);
+
+          // Debugging Check
+          app.freerouting.debug.DebugControl.getInstance().check(netNo, null);
+
           int incompletesBefore = ratsNest.incomplete_count(netNo);
           PerformanceProfiler.start("autoroute_item");
           var autorouterResult = autoroute_item(curr_item, netNo, ripped_item_list, p_pass_no);

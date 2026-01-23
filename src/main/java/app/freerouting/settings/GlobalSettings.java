@@ -45,6 +45,8 @@ public class GlobalSettings implements Serializable {
   public final ApiServerSettings apiServerSettings = new ApiServerSettings();
   @SerializedName("statistics")
   public final StatisticsSettings statistics = new StatisticsSettings();
+  @SerializedName("debug")
+  public final DebugSettings debugSettings = new DebugSettings();
   private final transient String[] supportedLanguages = {
       "en",
       "de",
@@ -231,7 +233,23 @@ public class GlobalSettings implements Serializable {
               .substring(2)
               .split("=");
           if ((parts.length == 2) && (!Objects.equals(parts[0], "user_data_path"))) {
-            setValue(parts[0], parts[1]);
+            if (parts[0].startsWith("debug.")) {
+              // handle debug settings
+              if (parts[0].equals("debug.enable_detailed_logging")) {
+                debugSettings.enableDetailedLogging = Boolean.parseBoolean(parts[1]);
+              } else if (parts[0].equals("debug.single_step_execution")) {
+                debugSettings.singleStepExecution = Boolean.parseBoolean(parts[1]);
+              } else if (parts[0].equals("debug.trace_insertion_delay")) {
+                debugSettings.traceInsertionDelay = Integer.parseInt(parts[1]);
+              } else if (parts[0].equals("debug.filter_by_net")) {
+                String[] nets = parts[1].split(",");
+                for (String net : nets) {
+                  debugSettings.filterByNet.add(net.trim().toLowerCase());
+                }
+              }
+            } else {
+              setValue(parts[0], parts[1]);
+            }
           } else if (!Objects.equals(parts[0], "user_data_path")) {
             FRLogger.warn("Unknown command line argument: " + p_args[i]);
           }

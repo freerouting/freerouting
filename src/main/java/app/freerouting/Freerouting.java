@@ -375,6 +375,11 @@ public class Freerouting {
           fileLoggingLocation = arg.substring("--logging.file.location=".length());
         } else if (arg.startsWith("--logging.file.pattern=")) {
           fileLoggingPattern = arg.substring("--logging.file.pattern=".length());
+        } else if (arg.startsWith("--debug.enable_detailed_logging=")) {
+          boolean detailed = Boolean.parseBoolean(arg.substring("--debug.enable_detailed_logging=".length()));
+          if (detailed) {
+            fileLoggingLevel = "TRACE";
+          }
         } else if ("-dl".equals(arg)) {
           fileLoggingEnabled = false;
         } else if ("-ll".equals(arg)) {

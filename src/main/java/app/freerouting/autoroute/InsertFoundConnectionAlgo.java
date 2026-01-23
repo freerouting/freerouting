@@ -136,6 +136,10 @@ public class InsertFoundConnectionAlgo {
     for (int i = 1; i < p_trace.corners.length; i++) {
       Point[] curr_corner_arr = Arrays.copyOfRange(p_trace.corners, from_corner_no, i + 1);
       Polyline insert_polyline = new Polyline(curr_corner_arr);
+      FRLogger.trace("InsertFoundConnectionAlgo", "insert_segment",
+          "inserting trace segment from " + insert_polyline.first_corner() + " to " + insert_polyline.last_corner()
+              + " on layer " + p_trace.layer,
+          "Net #" + ctrl.net_no);
       FRLogger.debug("InsertFoundConnectionAlgo: inserting trace segment from " + insert_polyline.first_corner()
           + " to " + insert_polyline.last_corner() + " on layer " + p_trace.layer);
       Point ok_point = board.insert_forced_trace_polyline(insert_polyline, ctrl.trace_half_width[p_trace.layer],
