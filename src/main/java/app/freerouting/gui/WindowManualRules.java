@@ -94,7 +94,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     number_format.setMaximumFractionDigits(7);
     this.trace_width_field = new JFormattedTextField(number_format);
     this.trace_width_field.setColumns(7);
-    int curr_half_width = this.board_handling.settings.get_manual_trace_half_width(0);
+    int curr_half_width = this.board_handling.interactiveSettings.get_manual_trace_half_width(0);
     this.set_trace_width_field(curr_half_width);
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(trace_width_field, gridbag_constraints);
@@ -137,10 +137,10 @@ public class WindowManualRules extends BoardSavableSubWindow {
     if (this.settings_routing_manual_rule_selection_clearance_combo_box.get_class_count() != routing_board.rules.clearance_matrix.get_class_count()) {
       this.settings_routing_manual_rule_selection_clearance_combo_box.adjust(clearance_matrix);
     }
-    this.settings_routing_manual_rule_selection_clearance_combo_box.setSelectedIndex(board_handling.settings.get_manual_trace_clearance_class());
-    int via_rule_index = board_handling.settings.get_manual_via_rule_index();
+    this.settings_routing_manual_rule_selection_clearance_combo_box.setSelectedIndex(board_handling.interactiveSettings.get_manual_trace_clearance_class());
+    int via_rule_index = board_handling.interactiveSettings.get_manual_via_rule_index();
     if (via_rule_index < this.settings_routing_manual_rule_selection_via_rule_combo_box.getItemCount()) {
-      this.settings_routing_manual_rule_selection_via_rule_combo_box.setSelectedIndex(board_handling.settings.get_manual_via_rule_index());
+      this.settings_routing_manual_rule_selection_via_rule_combo_box.setSelectedIndex(board_handling.interactiveSettings.get_manual_via_rule_index());
     }
     this.set_selected_layer(this.settings_routing_manual_rule_selection_layer_combo_box.get_selected_layer());
     this.repaint();
@@ -163,9 +163,9 @@ public class WindowManualRules extends BoardSavableSubWindow {
     if (p_layer.index == ComboBoxLayer.ALL_LAYER_INDEX) {
       // check if the half width is layer_dependent.
       boolean trace_widths_layer_dependent = false;
-      int first_half_width = this.board_handling.settings.get_manual_trace_half_width(0);
+      int first_half_width = this.board_handling.interactiveSettings.get_manual_trace_half_width(0);
       for (int i = 1; i < this.board_handling.get_layer_count(); i++) {
-        if (this.board_handling.settings.get_manual_trace_half_width(i) != first_half_width) {
+        if (this.board_handling.interactiveSettings.get_manual_trace_half_width(i) != first_half_width) {
           trace_widths_layer_dependent = true;
           break;
         }
@@ -178,9 +178,9 @@ public class WindowManualRules extends BoardSavableSubWindow {
     } else if (p_layer.index == ComboBoxLayer.INNER_LAYER_INDEX) {
       // check if the half width is layer_dependent on the inner layers.
       boolean trace_widths_layer_dependent = false;
-      int first_half_width = this.board_handling.settings.get_manual_trace_half_width(1);
+      int first_half_width = this.board_handling.interactiveSettings.get_manual_trace_half_width(1);
       for (int i = 2; i < this.board_handling.get_layer_count() - 1; i++) {
-        if (this.board_handling.settings.get_manual_trace_half_width(i) != first_half_width) {
+        if (this.board_handling.interactiveSettings.get_manual_trace_half_width(i) != first_half_width) {
           trace_widths_layer_dependent = true;
           break;
         }
@@ -191,7 +191,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
         curr_half_width = first_half_width;
       }
     } else {
-      curr_half_width = this.board_handling.settings.get_manual_trace_half_width(p_layer.index);
+      curr_half_width = this.board_handling.interactiveSettings.get_manual_trace_half_width(p_layer.index);
     }
     set_trace_width_field(curr_half_width);
   }
@@ -210,7 +210,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent evt) {
       int new_index = settings_routing_manual_rule_selection_clearance_combo_box.get_selected_class_index();
-      board_handling.settings.set_manual_trace_clearance_class(new_index);
+      board_handling.interactiveSettings.set_manual_trace_clearance_class(new_index);
     }
   }
 
@@ -219,7 +219,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent evt) {
       int new_index = settings_routing_manual_rule_selection_via_rule_combo_box.getSelectedIndex();
-      board_handling.settings.set_manual_via_rule_index(new_index);
+      board_handling.interactiveSettings.set_manual_via_rule_index(new_index);
     }
   }
 

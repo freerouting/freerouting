@@ -248,7 +248,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
     // save the result to the output field as a Specctra SES file
     if (job.output.format == FileFormat.SES) {
-      HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+      HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
       boardManager.replaceRoutingBoard(job.board);
 
       // Save the SES file after the auto-router has finished

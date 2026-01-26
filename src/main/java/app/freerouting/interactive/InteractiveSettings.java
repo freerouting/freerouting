@@ -30,7 +30,7 @@ public class InteractiveSettings implements Serializable {
    */
   public boolean automatic_neckdown = true;
   /**
-   * the current layer
+   * the current layer index
    */
   int layer;
   /**

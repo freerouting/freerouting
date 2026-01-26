@@ -136,7 +136,7 @@ public class ExpandTestState extends InteractiveState {
   private void init(FloatPoint p_location) {
     // look if an autoroute can be started at the input location
     RoutingBoard board = hdlg.get_routing_board();
-    int layer = hdlg.settings.layer;
+    int layer = hdlg.interactiveSettings.layer;
     Collection<Item> found_items = board.pick_items(p_location.round(), layer, null);
     Item route_item = null;
     int route_net_no = 0;

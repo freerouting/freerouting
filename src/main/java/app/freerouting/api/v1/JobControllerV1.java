@@ -404,9 +404,7 @@ public class JobControllerV1 extends BaseController {
   }
 
   /**
-   * Upload the input of the job, typically in Specctra DSN format. Note: the
-   * input file limit depends on the server configuration, but it is at least 1MB
-   * and typically 30MBs if hosted by ASP.NET Core
+   * Upload the input of the job, typically in Specctra DSN format. Note: the input file limit depends on the server configuration, but it is at least 1MB and typically 30MBs if hosted by ASP.NET Core
    * web server.
    */
   @Operation(summary = "Upload job input file", description = "Uploads the input PCB design file for a routing job, typically in Specctra DSN format. The file must be Base64-encoded. Note: File size limit depends on server configuration (typically 1-30MB).")
@@ -825,7 +823,7 @@ public class JobControllerV1 extends BaseController {
       // Try to load the board if input is available
       if (job.input != null && job.input.format == FileFormat.DSN) {
         try {
-          HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+          HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
           boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
           job.board = boardManager.get_routing_board();
         } catch (Exception e) {

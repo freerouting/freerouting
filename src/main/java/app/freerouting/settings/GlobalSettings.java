@@ -88,7 +88,21 @@ public class GlobalSettings implements Serializable {
    * (.ses) path provided via the -de command line argument.
    */
   public transient String design_session_filename;
+  /**
+   * The current locale for the application.
+   * It is initialized based on the system default locale, but can be overridden
+   * via command line arguments.
+   */
   public transient Locale currentLocale = Locale.getDefault();
+  /**
+   * Prototype instance of SettingsMerger for merging settings from various
+   * sources. These sources are loaded at startup, and they are not going
+   * to change during runtime.
+   * The other settings sources (like settings from DNS, SES or RULES files,
+   * or set by the user on the GUI or via the API) are handled separately
+   * in combination with this.
+   */
+  public transient SettingsMerger settingsMergerProtype;
 
   public GlobalSettings() {
     // validate and set the current locale

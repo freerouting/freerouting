@@ -40,7 +40,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -78,7 +77,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   private final BoardPanel panel;
   private final TextManager tm;
   private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
-
   private final GlobalSettings globalSettings;
   /**
    * The graphical context for drawing the board.
@@ -96,6 +94,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * To repaint the board immediately for example when reading a logfile.
    */
   boolean paint_immediately;
+  private Locale locale;
   /**
    * thread pool size
    */
@@ -129,8 +128,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Creates a new BoardHandling
    */
   public GuiBoardManager(BoardPanel p_panel, GlobalSettings globalSettings, RoutingJob routingJob) {
-    super(globalSettings.currentLocale, routingJob);
+    super(routingJob);
     this.globalSettings = globalSettings;
+    this.locale = globalSettings.currentLocale;
     this.panel = p_panel;
     this.screen_messages = p_panel.screen_messages;
     this.set_interactive_state(RouteMenuState.get_instance(this));
@@ -174,7 +174,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void set_board_read_only(boolean p_value) {
     this.board_is_read_only = p_value;
-    this.settings.set_read_only(p_value);
+    this.interactiveSettings.set_read_only(p_value);
 
     // Raise an event to notify the observers that the board read only property
     // changed
@@ -184,7 +184,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Return the current language for the GUI messages.
    */
-  @Override
   public Locale get_locale() {
     return this.locale;
   }
@@ -248,7 +247,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public void set_layer_visibility(int p_layer, double p_value) {
     if (p_layer >= 0 && p_layer < graphics_context.layer_count()) {
       graphics_context.set_layer_visibility(p_layer, p_value);
-      if (p_value == 0 && settings.layer == p_layer) {
+      if (p_value == 0 && interactiveSettings.layer == p_layer) {
         // change the current layer to the best visible layer, if it becomes invisible;
         double best_visibility = 0;
         int best_visible_layer = 0;
@@ -258,7 +257,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
             best_visible_layer = i;
           }
         }
-        settings.layer = best_visible_layer;
+        interactiveSettings.layer = best_visible_layer;
       }
     }
   }
@@ -269,8 +268,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public int get_trace_halfwidth(int p_net_no, int p_layer) {
     int result;
-    if (settings.manual_rule_selection) {
-      result = settings.manual_trace_half_width_arr[p_layer];
+    if (interactiveSettings.manual_rule_selection) {
+      result = interactiveSettings.manual_trace_half_width_arr[p_layer];
     } else {
       result = board.rules.get_trace_half_width(p_net_no, p_layer);
     }
@@ -281,7 +280,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Returns if p_layer is active for interactive routing of traces.
    */
   public boolean is_active_routing_layer(int p_net_no, int p_layer) {
-    if (settings.manual_rule_selection) {
+    if (interactiveSettings.manual_rule_selection) {
       return true;
     }
     Net curr_net = this.board.rules.nets.get(p_net_no);
@@ -300,8 +299,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public int get_trace_clearance_class(int p_net_no) {
     int result;
-    if (settings.manual_rule_selection) {
-      result = settings.manual_trace_clearance_class;
+    if (interactiveSettings.manual_rule_selection) {
+      result = interactiveSettings.manual_trace_clearance_class;
     } else {
       result = board.rules.nets
           .get(p_net_no)
@@ -316,8 +315,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public ViaRule get_via_rule(int p_net_no) {
     ViaRule result = null;
-    if (settings.manual_rule_selection) {
-      result = board.rules.via_rules.get(this.settings.manual_via_rule_index);
+    if (interactiveSettings.manual_rule_selection) {
+      result = board.rules.via_rules.get(this.interactiveSettings.manual_via_rule_index);
     }
     if (result == null) {
       result = board.rules.nets
@@ -380,7 +379,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   void set_layer(int p_layer_no) {
     Layer curr_layer = board.layer_structure.arr[p_layer_no];
     screen_messages.set_layer(curr_layer.name);
-    settings.layer = p_layer_no;
+    interactiveSettings.layer = p_layer_no;
 
     // Change the selected layer in the select parameter window.
     if ((!this.board_is_read_only) && (curr_layer.is_signal)) {
@@ -402,7 +401,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void display_layer_message() {
     screen_messages.clear_add_field();
-    Layer curr_layer = board.layer_structure.arr[this.settings.layer];
+    Layer curr_layer = board.layer_structure.arr[this.interactiveSettings.layer];
     screen_messages.set_layer(curr_layer.name);
   }
 
@@ -412,15 +411,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void set_manual_trace_half_width(int p_layer_no, int p_value) {
     if (p_layer_no == ComboBoxLayer.ALL_LAYER_INDEX) {
-      for (int i = 0; i < settings.manual_trace_half_width_arr.length; i++) {
-        this.settings.set_manual_trace_half_width(i, p_value);
+      for (int i = 0; i < interactiveSettings.manual_trace_half_width_arr.length; i++) {
+        this.interactiveSettings.set_manual_trace_half_width(i, p_value);
       }
     } else if (p_layer_no == ComboBoxLayer.INNER_LAYER_INDEX) {
-      for (int i = 1; i < settings.manual_trace_half_width_arr.length - 1; i++) {
-        this.settings.set_manual_trace_half_width(i, p_value);
+      for (int i = 1; i < interactiveSettings.manual_trace_half_width_arr.length - 1; i++) {
+        this.interactiveSettings.set_manual_trace_half_width(i, p_value);
       }
     } else {
-      this.settings.set_manual_trace_half_width(p_layer_no, p_value);
+      this.interactiveSettings.set_manual_trace_half_width(p_layer_no, p_value);
     }
   }
 
@@ -428,7 +427,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Changes the interactive selectability of p_item_type.
    */
   public void set_selectable(ItemSelectionFilter.SelectableChoices p_item_type, boolean p_value) {
-    settings.set_selectable(p_item_type, p_value);
+    interactiveSettings.set_selectable(p_item_type, p_value);
     if (!p_value && this.interactive_state instanceof InspectedItemState) {
       set_interactive_state(((InspectedItemState) interactive_state).filter());
     }
@@ -932,7 +931,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public boolean loadFromBinary(ObjectInputStream p_design) {
     try {
       board = (RoutingBoard) p_design.readObject();
-      settings = (InteractiveSettings) p_design.readObject();
+      interactiveSettings = (InteractiveSettings) p_design.readObject();
       coordinate_transform = (CoordinateTransform) p_design.readObject();
       graphics_context = (GraphicsContext) p_design.readObject();
       originalBoardChecksum = calculateCrc32();
@@ -940,7 +939,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
       routingJob.logError("Couldn't read design file", e);
       return false;
     }
-    screen_messages.set_layer(board.layer_structure.arr[settings.layer].name);
+    screen_messages.set_layer(board.layer_structure.arr[interactiveSettings.layer].name);
     return true;
   }
 
@@ -1000,7 +999,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     boolean result = true;
     try {
       p_object_stream.writeObject(board);
-      p_object_stream.writeObject(settings);
+      p_object_stream.writeObject(interactiveSettings);
       p_object_stream.writeObject(coordinate_transform);
       p_object_stream.writeObject(graphics_context);
 
@@ -1387,7 +1386,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * selected.
    */
   Set<Item> pick_items(FloatPoint p_location) {
-    return pick_items(p_location, settings.item_selection_filter);
+    return pick_items(p_location, interactiveSettings.item_selection_filter);
   }
 
   /**
@@ -1397,10 +1396,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   Set<Item> pick_items(FloatPoint p_location, ItemSelectionFilter p_item_filter) {
     IntPoint location = p_location.round();
-    Set<Item> result = board.pick_items(location, settings.layer, p_item_filter);
-    if (result.isEmpty() && settings.select_on_all_visible_layers) {
+    Set<Item> result = board.pick_items(location, interactiveSettings.layer, p_item_filter);
+    if (result.isEmpty() && interactiveSettings.select_on_all_visible_layers) {
       for (int i = 0; i < graphics_context.layer_count(); i++) {
-        if (i == settings.layer || graphics_context.get_layer_visibility(i) <= 0) {
+        if (i == interactiveSettings.layer || graphics_context.get_layer_visibility(i) <= 0) {
           continue;
         }
         result.addAll(board.pick_items(location, i, p_item_filter));
@@ -1458,7 +1457,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     close_files();
     graphics_context = null;
     coordinate_transform = null;
-    settings = null;
+    interactiveSettings = null;
     interactive_state = null;
     ratsnest = null;
     clearance_violations = null;

@@ -22,7 +22,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Locale;
 
 /**
  * Manages the routing board operations in a headless mode, where no graphical
@@ -34,8 +33,9 @@ public class HeadlessBoardManager implements BoardManager {
 
   /**
    * The current settings for interactive actions on the board
+   * TODO: the headless manager should not have interactive settings
    */
-  public InteractiveSettings settings;
+  public InteractiveSettings interactiveSettings;
   /**
    * The listener for the autorouter thread
    */
@@ -46,13 +46,11 @@ public class HeadlessBoardManager implements BoardManager {
    * The board object that contains all the data for the board
    */
   protected RoutingBoard board;
-  protected Locale locale;
   protected RoutingJob routingJob;
   // The board checksum is used to detect changes in the board database
   protected long originalBoardChecksum;
 
-  public HeadlessBoardManager(Locale p_locale, RoutingJob routingJob) {
-    this.locale = p_locale;
+  public HeadlessBoardManager(RoutingJob routingJob) {
     this.routingJob = routingJob;
   }
 
@@ -70,7 +68,7 @@ public class HeadlessBoardManager implements BoardManager {
 
   @Override
   public InteractiveSettings get_settings() {
-    return settings;
+    return interactiveSettings;
   }
 
   /**
@@ -79,8 +77,8 @@ public class HeadlessBoardManager implements BoardManager {
    */
   @Override
   public void initialize_manual_trace_half_widths() {
-    for (int i = 0; i < settings.manual_trace_half_width_arr.length; i++) {
-      settings.manual_trace_half_width_arr[i] = this.board.rules
+    for (int i = 0; i < interactiveSettings.manual_trace_half_width_arr.length; i++) {
+      interactiveSettings.manual_trace_half_width_arr[i] = this.board.rules
           .get_default_net_class()
           .get_trace_half_width(i);
     }
@@ -107,17 +105,12 @@ public class HeadlessBoardManager implements BoardManager {
     this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules,
         p_board_communication);
 
-    this.settings = new InteractiveSettings(this.board);
-  }
-
-  @Override
-  public Locale get_locale() {
-    return this.locale;
+    this.interactiveSettings = new InteractiveSettings(this.board);
   }
 
   /**
    * Gets the current routing job associated with this board manager.
-   * 
+   *
    * @return the current routing job, or null if no job is set
    */
   @Override

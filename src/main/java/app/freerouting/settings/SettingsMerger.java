@@ -22,7 +22,7 @@ import java.util.List;
  * The merger uses reflection to copy only non-null fields from each source,
  * allowing higher-priority sources to override lower-priority ones.
  */
-public class SettingsMerger {
+public class SettingsMerger implements Cloneable {
 
     private final List<SettingsSource> sources = new ArrayList<>();
 
@@ -130,5 +130,10 @@ public class SettingsMerger {
 
         FRLogger.info("Settings merged successfully from " + sortedSources.size() + " sources");
         return mergedSettings;
+    }
+
+    @Override
+    public SettingsMerger clone() {
+        return new SettingsMerger(this.sources);
     }
 }

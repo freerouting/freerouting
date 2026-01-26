@@ -7,11 +7,8 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.rules.BoardRules;
-import java.util.Locale;
 
 public interface BoardManager {
-
-  Locale get_locale();
 
   RoutingBoard get_routing_board();
 
@@ -25,7 +22,7 @@ public interface BoardManager {
 
   /**
    * Gets the current routing job associated with this board manager.
-   * 
+   *
    * @return the current routing job, or null if no job is set
    */
   RoutingJob getCurrentRoutingJob();

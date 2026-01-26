@@ -49,7 +49,7 @@ public class WindowLayerVisibility extends WindowVisibility {
   protected void set_all_minimum() {
     int layer_count = this.get_board_handling().graphics_context.layer_count();
     for (int i = 0; i < layer_count; i++) {
-      if (i != this.get_board_handling().settings.get_layer()) {
+      if (i != this.get_board_handling().interactiveSettings.get_layer()) {
         set_slider_value(i, 0);
         set_changed_value(i, 0);
       }

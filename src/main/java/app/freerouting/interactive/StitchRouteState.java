@@ -60,12 +60,12 @@ public class StitchRouteState extends RouteState {
     draw_points[0] = route.get_last_corner().to_float();
     draw_points[1] = hdlg.get_current_mouse_position();
     Color draw_color = hdlg.graphics_context.get_hilight_color();
-    double display_width = hdlg.get_trace_halfwidth(route.net_no_arr[0], hdlg.settings.layer);
+    double display_width = hdlg.get_trace_halfwidth(route.net_no_arr[0], hdlg.interactiveSettings.layer);
     int clearance_draw_width = 50;
     double radius_with_clearance = display_width;
     NetClass default_net_class = hdlg.get_routing_board().rules.get_default_net_class();
     int cl_class = default_net_class.default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.TRACE);
-    radius_with_clearance += hdlg.get_routing_board().clearance_value(cl_class, cl_class, hdlg.settings.layer);
+    radius_with_clearance += hdlg.get_routing_board().clearance_value(cl_class, cl_class, hdlg.interactiveSettings.layer);
     hdlg.graphics_context.draw(draw_points, display_width, draw_color, p_graphics, 0.5);
     // draw the clearance boundary around the end point
     hdlg.graphics_context.draw_circle(draw_points[1], radius_with_clearance, clearance_draw_width, draw_color,

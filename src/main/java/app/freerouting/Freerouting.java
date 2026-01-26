@@ -20,7 +20,7 @@ import app.freerouting.settings.sources.CliSettings;
 import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.EnvironmentVariablesSource;
-import app.freerouting.settings.sources.GuiSettings;
+import app.freerouting.settings.sources.JsonFileSettings;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -67,8 +67,12 @@ public class Freerouting {
 
     // Create a new routing job
     RoutingJob routingJob = new RoutingJob(cliSession.id);
+
+    // Load the input file
+    DsnFileSettings inputFileSettings = null;
     try {
       routingJob.setInput(globalSettings.initialInputFile);
+      inputFileSettings = new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename());
     } catch (Exception e) {
       FRLogger.error("Couldn't load the input file '" + globalSettings.initialInputFile + "'", e);
     }
@@ -83,12 +87,9 @@ public class Freerouting {
 
     routingJob.tryToSetOutputFile(new File(globalSettings.initialOutputFile));
 
-    var settingsMerger = new SettingsMerger(
-        new DefaultSettings(),
-        new CliSettings(args),
-        new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()),
-        new EnvironmentVariablesSource(),
-        new GuiSettings(routingJob.routerSettings));
+    var settingsMerger = globalSettings.settingsMergerProtype.clone();
+    settingsMerger.addOrReplaceSources(
+        new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()));
 
     routingJob.routerSettings = settingsMerger.merge();
     routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
@@ -509,8 +510,7 @@ public class Freerouting {
         + globalSettings.runtimeEnvironment.ram + " MB RAM");
     FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
 
-    // parse the command line arguments
-    var cliSettings = new CliSettings(args);
+    // parse the command line arguments (for the non-router settings)
     globalSettings.applyCommandLineArguments(args);
 
     FRLogger.debug("GUI Language: " + globalSettings.currentLocale);
@@ -555,8 +555,7 @@ public class Freerouting {
     int userIdValue = Integer.parseInt(userIdString, 16);
 
     // if the user has disabled analytics, we don't need to check the modulo
-    allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (userIdValue % analyticsModulo == 0)
-        && (globalSettings.userProfileSettings.isTelemetryAllowed);
+    allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (globalSettings.userProfileSettings.isTelemetryAllowed);
 
     if (!allowAnalytics) {
       FRLogger.debug("Analytics are disabled");
@@ -580,9 +579,7 @@ public class Freerouting {
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
     new Thread(checker).start();
 
-    // get localization resources
-
-    // check if the user wants to see the help only
+    // Check if the user requested help
     if (globalSettings.show_help_option) {
       TextManager ctm = new TextManager(Freerouting.class, globalSettings.currentLocale);
       IO.print(ctm.getText("command_line_help"));
@@ -595,6 +592,13 @@ public class Freerouting {
       globalSettings.apiServerSettings.isEnabled = false;
     }
 
+    // Create the settings merger prototype based on the sources that will not change at runtime
+    globalSettings.settingsMergerProtype = new SettingsMerger(
+        new DefaultSettings(),
+        new JsonFileSettings(),
+        new CliSettings(args),
+        new EnvironmentVariablesSource());
+
     // Initialize the API server
     if (globalSettings.apiServerSettings.isEnabled) {
       apiServer = InitializeAPI(globalSettings.apiServerSettings);
@@ -604,7 +608,7 @@ public class Freerouting {
 
     // Initialize the GUI
     if (globalSettings.guiSettings.isEnabled) {
-      if (!GuiManager.InitializeGUI(globalSettings, cliSettings)) {
+      if (!GuiManager.InitializeGUI(globalSettings)) {
         FRLogger.error("Couldn't initialize the GUI", null);
         globalSettings.guiSettings.isEnabled = false;
       } else {
