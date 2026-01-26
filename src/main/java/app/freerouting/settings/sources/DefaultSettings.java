@@ -1,5 +1,7 @@
 package app.freerouting.settings.sources;
 
+import app.freerouting.autoroute.BoardUpdateStrategy;
+import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
 
@@ -30,6 +32,26 @@ public class DefaultSettings implements SettingsSource {
         settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
 
         settings.setLayerCount(2);
+
+        // Optimizer defaults
+        settings.optimizer.enabled = false;
+        settings.optimizer.algorithm = "freerouting-optimizer";
+        settings.optimizer.maxPasses = 100;
+        settings.optimizer.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+        settings.optimizer.optimizationImprovementThreshold = 0.01f;
+        settings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GREEDY;
+        settings.optimizer.hybridRatio = "1:1";
+        settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.PRIORITIZED;
+
+        // Scoring defaults
+        settings.scoring.defaultPreferredDirectionTraceCost = 1.0;
+        settings.scoring.defaultUndesiredDirectionTraceCost = 1.0;
+        settings.scoring.via_costs = 50;
+        settings.scoring.plane_via_costs = 5;
+        settings.scoring.start_ripup_costs = 100;
+        settings.scoring.unroutedNetPenalty = 4000.0f;
+        settings.scoring.clearanceViolationPenalty = 1000.0f;
+        settings.scoring.bendPenalty = 10.0f;
 
         return settings;
     }

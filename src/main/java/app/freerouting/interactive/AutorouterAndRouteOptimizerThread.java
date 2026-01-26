@@ -32,6 +32,7 @@ import java.util.Objects;
 
 /**
  * GUI interactive thread for the batch auto-router + route optimizer.
+ * TODO: Remove this class in favor of @RoutingJobScheduler
  */
 public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
 

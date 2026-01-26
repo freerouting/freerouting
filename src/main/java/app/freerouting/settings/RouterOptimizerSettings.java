@@ -22,21 +22,12 @@ public class RouterOptimizerSettings implements Serializable, Cloneable {
   public transient ItemSelectionStrategy itemSelectionStrategy;
 
   public RouterOptimizerSettings() {
-    // Initialize with default values
-    this.enabled = false;
-    this.algorithm = "freerouting-optimizer";
-    this.maxPasses = 100;
-    this.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-    this.optimizationImprovementThreshold = 0.01f;
-    this.boardUpdateStrategy = BoardUpdateStrategy.GREEDY;
-    this.hybridRatio = "1:1";
-    this.itemSelectionStrategy = ItemSelectionStrategy.PRIORITIZED;
   }
 
   /**
    * Creates a deep copy of this RouterOptimizerSettings object.
    * All fields including transient ones are cloned.
-   * 
+   *
    * @return A new RouterOptimizerSettings instance with the same values
    */
   @Override
