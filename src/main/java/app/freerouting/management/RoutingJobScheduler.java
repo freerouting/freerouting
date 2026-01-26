@@ -12,7 +12,6 @@ import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
-import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
 import java.io.IOException;
 import java.io.Writer;
@@ -84,15 +83,9 @@ public class RoutingJobScheduler {
                         new DsnFileSettings(job.input.getData(), job.input.getFilename())
                     );
 
-                    // Create board-specific base settings
-                    RouterSettings boardSettings = new RouterSettings(job.board);
-
-                    // Merge all sources into the board settings
-                    RouterSettings mergedSettings = settingsMerger.merge();
-                    boardSettings.applyNewValuesFrom(mergedSettings);
-
-                    // Apply the final merged settings to the job
-                    job.routerSettings = boardSettings;
+                    // Apply the final merged settings to the job and optimize them for the board
+                    job.routerSettings = settingsMerger.merge();
+                    job.routerSettings.applyBoardSpecificOptimizations(job.board);
 
                     // Load SES file if specified
                     if (globalSettings.design_session_filename != null) {
