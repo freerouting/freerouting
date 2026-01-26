@@ -10,6 +10,9 @@ import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
+import app.freerouting.settings.SettingsMerger;
+import app.freerouting.settings.sources.DefaultSettings;
+import app.freerouting.settings.sources.DsnFileSettings;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -19,12 +22,10 @@ import org.junit.jupiter.api.BeforeEach;
 public class TestBasedOnAnIssue {
 
   protected RoutingJobScheduler scheduler;
-  protected RouterSettings settings;
 
   @BeforeEach
   protected void setUp() {
     Freerouting.globalSettings = new GlobalSettings();
-    settings = Freerouting.globalSettings.routerSettings;
     scheduler = RoutingJobScheduler.getInstance();
   }
 
@@ -66,8 +67,7 @@ public class TestBasedOnAnIssue {
       var statsBefore = new BoardStatistics(job.input
           .getData()
           .readAllBytes(), job.input.format);
-      var jobSettings = new RouterSettings(statsBefore.layers.totalCount);
-      job.routerSettings.applyNewValuesFrom(jobSettings);
+      job.routerSettings = new SettingsMerger(new DefaultSettings(), new DsnFileSettings(job.input.getData(), job.input.getFilename())).merge();
     } catch (IOException e) {
       throw new RuntimeException(testFile + " not found.", e);
     }

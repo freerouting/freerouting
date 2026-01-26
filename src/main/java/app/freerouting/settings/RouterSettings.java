@@ -241,6 +241,7 @@ public class RouterSettings implements Serializable, Cloneable {
     result.enabled = this.enabled;
     result.vias_allowed = this.vias_allowed;
     result.automatic_neckdown = this.automatic_neckdown;
+    result.maxThreads = this.maxThreads;
 
     // Use proper clone() methods for nested objects
     result.optimizer = this.optimizer.clone();

@@ -9,6 +9,7 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.ReflectionUtil;
 import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.settings.sources.DefaultSettings;
 import com.google.gson.annotations.SerializedName;
 import java.io.IOException;
 import java.io.Reader;
@@ -112,6 +113,8 @@ public class GlobalSettings implements Serializable {
       // the fallback language is English
       currentLocale = Locale.ENGLISH;
     }
+
+    settingsMergerProtype = new SettingsMerger(new DefaultSettings());
   }
 
   public static void lockUserDataPath() {

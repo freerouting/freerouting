@@ -25,7 +25,6 @@ public class RoutingJobSchedulerTest {
   void setUp() {
     Freerouting.globalSettings = new GlobalSettings();
     scheduler = RoutingJobScheduler.getInstance();
-
   }
 
   @AfterEach

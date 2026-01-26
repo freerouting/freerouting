@@ -1,9 +1,9 @@
 package app.freerouting.settings;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -11,29 +11,6 @@ import org.junit.jupiter.api.Test;
  * it correctly skips router settings.
  */
 class GlobalSettingsEnvironmentTest {
-
-    @Test
-    void testApplyEnvironmentVariablesSkipsRouterSettings() {
-        // Create a GlobalSettings instance
-        GlobalSettings settings = new GlobalSettings();
-
-        // Store original router settings
-        int originalMaxPasses = settings.routerSettings.maxPasses;
-
-        // Set environment variables (simulated by calling setValue directly)
-        // In real scenario, these would be system environment variables
-        // but we can't easily test that without modifying system env
-
-        // This test verifies the logic by checking that router.* properties
-        // are skipped in the applyEnvironmentVariables method
-
-        // The method should skip properties starting with "router."
-        // We can verify this by checking the code logic
-
-        // For now, this is a placeholder test
-        // The actual verification happens through integration testing
-        assertTrue(true, "applyEnvironmentVariables() should skip router settings");
-    }
 
     @Test
     void testRouterPropertyNameDetection() {
