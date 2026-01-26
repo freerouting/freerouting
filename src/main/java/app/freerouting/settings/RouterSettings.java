@@ -439,4 +439,27 @@ public class RouterSettings implements Serializable, Cloneable {
 
     return changedCount;
   }
+
+  public void validate() {
+    // Validate maxPasses
+    if (this.maxPasses < 1 || this.maxPasses > 9999) {
+      FRLogger.warn("Invalid maxPasses value: " + this.maxPasses + ", using default 9999");
+      this.maxPasses = 9999;
+    }
+
+    // Validate maxThreads
+    int availableProcessors = Runtime.getRuntime().availableProcessors();
+    if (this.maxThreads < 1 || this.maxThreads > availableProcessors) {
+      FRLogger.warn("Invalid maxThreads value: " + this.maxThreads + ", using "
+          + Math.max(1, availableProcessors - 1));
+      this.maxThreads = Math.max(1, availableProcessors - 1);
+    }
+
+    // Validate trace_pull_tight_accuracy
+    if (this.trace_pull_tight_accuracy < 1) {
+      FRLogger.warn("Invalid trace_pull_tight_accuracy value: " + this.trace_pull_tight_accuracy
+          + ", using default 500");
+      this.trace_pull_tight_accuracy = 500;
+    }
+  }
 }

@@ -17,6 +17,10 @@ import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.CliSettings;
+import app.freerouting.settings.sources.DefaultSettings;
+import app.freerouting.settings.sources.DsnFileSettings;
+import app.freerouting.settings.sources.EnvironmentVariablesSource;
+import app.freerouting.settings.sources.GuiSettings;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -79,7 +83,14 @@ public class Freerouting {
 
     routingJob.tryToSetOutputFile(new File(globalSettings.initialOutputFile));
 
-    routingJob.routerSettings = SettingsMerger.merge();
+    var settingsMerger = new SettingsMerger(
+        new DefaultSettings(),
+        new CliSettings(args),
+        new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()),
+        new EnvironmentVariablesSource(),
+        new GuiSettings(routingJob.routerSettings));
+
+    routingJob.routerSettings = settingsMerger.merge();
     routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
 

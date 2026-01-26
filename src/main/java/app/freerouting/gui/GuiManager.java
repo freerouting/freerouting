@@ -17,6 +17,7 @@ import app.freerouting.settings.sources.CliSettings;
 import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.EnvironmentVariablesSource;
+import app.freerouting.settings.sources.GuiSettings;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -106,12 +107,17 @@ public class GuiManager {
                                 + tm.getText("message_7"));
                 return false;
             }
-            routingJob.routerSettings = SettingsMerger.merge(new DefaultSettings(), cliSettings, new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()), new EnvironmentVariablesSource());
+            var settingsMerger = new SettingsMerger(
+                new DefaultSettings(),
+                cliSettings,
+                new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()),
+                new EnvironmentVariablesSource(),
+                new GuiSettings(routingJob.routerSettings));
             guiSession.addJob(routingJob);
 
             String message = tm.getText("loading_design") + " " + globalSettings.initialInputFile;
             WindowMessage welcome_window = WindowMessage.show(message);
-            final BoardFrame new_frame = create_board_frame(routingJob, null, globalSettings);
+            final BoardFrame new_frame = create_board_frame(routingJob, null, globalSettings, settingsMerger);
             welcome_window.dispose();
             if (new_frame == null) {
                 FRLogger.warn("Couldn't create window frame");
