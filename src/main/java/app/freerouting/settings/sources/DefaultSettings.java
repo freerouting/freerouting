@@ -1,7 +1,5 @@
 package app.freerouting.settings.sources;
 
-import app.freerouting.settings.RouterOptimizerSettings;
-import app.freerouting.settings.RouterScoringSettings;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
 
@@ -30,8 +28,6 @@ public class DefaultSettings implements SettingsSource {
         settings.save_intermediate_stages = false;
         settings.ignoreNetClasses = new String[0];
         settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-        settings.optimizer = new RouterOptimizerSettings();
-        settings.scoring = new RouterScoringSettings();
 
         settings.setLayerCount(2);
 

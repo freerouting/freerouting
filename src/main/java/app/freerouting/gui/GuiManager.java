@@ -12,6 +12,7 @@ import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.GuiSettings;
 import java.awt.Color;
@@ -111,7 +112,7 @@ public class GuiManager {
 
             String message = tm.getText("loading_design") + " " + globalSettings.initialInputFile;
             WindowMessage welcome_window = WindowMessage.show(message);
-            final BoardFrame new_frame = create_board_frame(routingJob, null, globalSettings);
+            final BoardFrame new_frame = create_board_frame(routingJob, null, globalSettings, settingsMerger);
             welcome_window.dispose();
             if (new_frame == null) {
                 FRLogger.warn("Couldn't create window frame");
@@ -294,7 +295,11 @@ public class GuiManager {
         } else {
             // we didn't have any input file passed as a parameter
             // we load a blank board
-            final BoardFrame new_frame = create_board_frame(null, null, globalSettings);
+            var settingsMerger = globalSettings.settingsMergerProtype.clone();
+            settingsMerger.addOrReplaceSources(
+                new GuiSettings(routingJob.routerSettings));
+
+            final BoardFrame new_frame = create_board_frame(null, null, globalSettings, settingsMerger);
             if (new_frame == null) {
                 FRLogger.warn("Couldn't create window frame");
                 System.exit(1);
@@ -309,7 +314,7 @@ public class GuiManager {
      * Returns null, if an error occurred.
      */
     private static BoardFrame create_board_frame(RoutingJob routingJob, JTextField p_message_field,
-            GlobalSettings globalSettings) {
+            GlobalSettings globalSettings, SettingsMerger settingsMerger) {
         TextManager tm = new TextManager(GuiManager.class, globalSettings.currentLocale);
 
         InputStream input_stream = null;
@@ -335,7 +340,7 @@ public class GuiManager {
             }
         }
 
-        BoardFrame new_frame = new BoardFrame(routingJob, globalSettings);
+        BoardFrame new_frame = new BoardFrame(routingJob, globalSettings, settingsMerger);
 
         boolean read_ok = new_frame.load(input_stream, routingJob.input.format.equals(FileFormat.DSN), p_message_field,
                 routingJob);
@@ -409,15 +414,17 @@ public class GuiManager {
             }
 
             // ignore net classes if they were defined by a command line argument
-            for (String net_class_name : globalSettings.routerSettings.ignoreNetClasses) {
-                NetClasses netClasses = new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
+            if (routingJob.routerSettings.ignoreNetClasses != null) {
+                for (String net_class_name : routingJob.routerSettings.ignoreNetClasses) {
+                    NetClasses netClasses = new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
 
-                for (int i = 0; i < netClasses.count(); i++) {
-                    if (netClasses
+                    for (int i = 0; i < netClasses.count(); i++) {
+                        if (netClasses
                             .get(i)
                             .get_name()
                             .equalsIgnoreCase(net_class_name)) {
-                        netClasses.get(i).is_ignored_by_autorouter = true;
+                            netClasses.get(i).is_ignored_by_autorouter = true;
+                        }
                     }
                 }
             }

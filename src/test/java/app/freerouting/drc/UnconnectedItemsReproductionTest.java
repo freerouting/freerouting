@@ -8,11 +8,11 @@ import app.freerouting.Freerouting;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.Session;
-import app.freerouting.board.SearchTreeObject;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.gui.FileFormat;
@@ -193,7 +193,7 @@ public class UnconnectedItemsReproductionTest {
         try {
             job.setInput(testFile);
             if (job.input.format == FileFormat.DSN) {
-                HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+                HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
                 boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
                 job.board = boardManager.get_routing_board();
             }

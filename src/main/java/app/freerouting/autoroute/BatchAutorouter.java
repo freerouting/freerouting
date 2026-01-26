@@ -27,16 +27,14 @@ import app.freerouting.settings.RouterSettings;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import app.freerouting.geometry.planar.IntBox;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Handles the sequencing of the auto-router passes.
@@ -630,7 +628,7 @@ public class BatchAutorouter extends NamedAlgorithm {
 
     // Record configuration for profiler
     if (this.settings.isLayerActive != null) {
-      int layerCount = this.settings.isLayerActive.length;
+      int layerCount = this.settings.getLayerCount();
       double[] prefCosts = new double[layerCount];
       double[] againstCosts = new double[layerCount];
       for (int i = 0; i < layerCount; i++) {

@@ -36,6 +36,7 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.SettingsMerger;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -71,6 +72,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * The text message fields displayed on the screen
    */
   public final ScreenMessages screen_messages;
+  /**
+   * The settings merger used to get the router settings from different sources
+   */
+  public final SettingsMerger settingsMerger;
   /**
    * The graphical panel used for displaying the board.
    */
@@ -127,9 +132,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Creates a new BoardHandling
    */
-  public GuiBoardManager(BoardPanel p_panel, GlobalSettings globalSettings, RoutingJob routingJob) {
+  public GuiBoardManager(BoardPanel p_panel, GlobalSettings globalSettings, RoutingJob routingJob, SettingsMerger settingsMerger) {
     super(routingJob);
     this.globalSettings = globalSettings;
+    this.settingsMerger = settingsMerger;
     this.locale = globalSettings.currentLocale;
     this.panel = p_panel;
     this.screen_messages = p_panel.screen_messages;

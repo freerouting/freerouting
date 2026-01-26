@@ -156,8 +156,7 @@ public class HeadlessBoardManager implements BoardManager {
       // Apply board-specific optimizations to RouterSettings after board is loaded
       if (read_result == DsnFile.ReadResult.OK && this.board != null && this.routingJob != null) {
         int boardLayerCount = this.board.get_layer_count();
-        if (this.routingJob.routerSettings.isLayerActive == null ||
-            this.routingJob.routerSettings.isLayerActive.length != boardLayerCount) {
+        if (this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
           this.routingJob.routerSettings.setLayerCount(boardLayerCount);
         }
         // Apply board-specific optimizations for better routing performance

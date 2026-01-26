@@ -1,11 +1,11 @@
 package app.freerouting.gui;
 
 import app.freerouting.core.RoutingJob;
-
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.SettingsMerger;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -59,7 +59,7 @@ public class BoardPanel extends JPanel {
    * Creates a new BoardPanel in an Application
    */
   public BoardPanel(ScreenMessages p_screen_messages, BoardFrame p_board_frame, GlobalSettings globalSettings,
-      RoutingJob routingJob) {
+      RoutingJob routingJob, SettingsMerger settingsMerger) {
     this.screen_messages = p_screen_messages;
     try {
       // used to be able to change the location of the mouse pointer
@@ -70,10 +70,10 @@ public class BoardPanel extends JPanel {
     this.board_frame = p_board_frame;
     this.globalSettings = globalSettings;
     this.scroll_pane = board_frame.scroll_pane;
-    default_init(globalSettings, routingJob);
+    default_init(globalSettings, routingJob, settingsMerger);
   }
 
-  private void default_init(GlobalSettings globalSettings, RoutingJob routingJob) {
+  private void default_init(GlobalSettings globalSettings, RoutingJob routingJob, SettingsMerger settingMerger) {
     setLayout(new BorderLayout());
 
     setBackground(new Color(0, 0, 0));
@@ -116,13 +116,13 @@ public class BoardPanel extends JPanel {
     });
     addMouseWheelListener(evt -> board_handling.mouse_wheel_moved(evt.getWheelRotation()));
 
-    board_handling = new GuiBoardManager(this, globalSettings, routingJob);
+    board_handling = new GuiBoardManager(this, globalSettings, routingJob, settingMerger);
     setAutoscrolls(true);
     this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
   }
 
   public void reset_board_handling(RoutingJob routingJob) {
-    board_handling = new GuiBoardManager(this, globalSettings, routingJob);
+    board_handling = new GuiBoardManager(this, globalSettings, routingJob, this.board_handling.settingsMerger);
   }
 
   void create_popup_menus() {

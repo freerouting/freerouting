@@ -56,6 +56,8 @@ public class RouterSettings implements Serializable, Cloneable {
    * Initializes all fields with default values.
    */
   public RouterSettings() {
+    this.optimizer = new RouterOptimizerSettings();
+    this.scoring = new RouterScoringSettings();
   }
 
   /**
@@ -194,6 +196,18 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   /**
+   * Get the number of layers configured in the router settings.
+   * @return The layer count
+   */
+  public int getLayerCount() {
+    if (isLayerActive == null) {
+      return 0;
+    }
+
+    return isLayerActive.length;
+  }
+
+  /**
    * Set the layer count and initialize the layer specific settings.
    */
   public void setLayerCount(int layerCount) {
@@ -219,7 +233,7 @@ public class RouterSettings implements Serializable, Cloneable {
   @Override
   public RouterSettings clone() {
     RouterSettings result = new RouterSettings();
-    result.setLayerCount(this.isLayerActive.length);
+    result.setLayerCount(this.getLayerCount());
     result.algorithm = this.algorithm;
     result.jobTimeoutString = this.jobTimeoutString;
     result.isLayerActive = this.isLayerActive.clone();
@@ -291,43 +305,43 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public void set_layer_active(int p_layer, boolean p_value) {
-    if (p_layer < 0 || p_layer >= isLayerActive.length) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.set_layer_active: p_layer=" + p_layer + " out of range [0.."
-          + (isLayerActive.length - 1) + "]");
+          + (this.getLayerCount() - 1) + "]");
       return;
     }
     isLayerActive[p_layer] = p_value;
   }
 
   public boolean get_layer_active(int p_layer) {
-    if (p_layer < 0 || p_layer >= isLayerActive.length) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_layer_active: p_layer=" + p_layer + " out of range [0.."
-          + (isLayerActive.length - 1) + "]");
+          + (this.getLayerCount() - 1) + "]");
       return false;
     }
     return isLayerActive[p_layer];
   }
 
   public void set_preferred_direction_is_horizontal(int p_layer, boolean p_value) {
-    if (p_layer < 0 || p_layer >= isLayerActive.length) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.set_preferred_direction_is_horizontal: p_layer=" + p_layer + " out of range [0.."
-          + (isLayerActive.length - 1) + "]");
+          + (this.getLayerCount() - 1) + "]");
       return;
     }
     isPreferredDirectionHorizontalOnLayer[p_layer] = p_value;
   }
 
   public boolean get_preferred_direction_is_horizontal(int p_layer) {
-    if (p_layer < 0 || p_layer >= isLayerActive.length) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_preferred_direction_is_horizontal: p_layer=" + p_layer + " out of range [0.."
-          + (isLayerActive.length - 1) + "]");
+          + (this.getLayerCount() - 1) + "]");
       return false;
     }
     return isPreferredDirectionHorizontalOnLayer[p_layer];
   }
 
   public void set_preferred_direction_trace_costs(int p_layer, double p_value) {
-    if (p_layer < 0 || p_layer >= isLayerActive.length) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.set_preferred_direction_trace_costs: p_layer out of range");
       return;
     }
@@ -335,7 +349,7 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public double get_preferred_direction_trace_costs(int p_layer) {
-    if (p_layer < 0 || p_layer >= isLayerActive.length) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
@@ -343,7 +357,7 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public double get_against_preferred_direction_trace_costs(int p_layer) {
-    if (p_layer < 0 || p_layer >= isLayerActive.length) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
@@ -351,7 +365,7 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public double get_horizontal_trace_costs(int p_layer) {
-    if (p_layer < 0 || p_layer >= isLayerActive.length) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
@@ -365,7 +379,7 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public void set_against_preferred_direction_trace_costs(int p_layer, double p_value) {
-    if (p_layer < 0 || p_layer >= isLayerActive.length) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.set_against_preferred_direction_trace_costs: p_layer out of range");
       return;
     }
@@ -373,7 +387,7 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public double get_vertical_trace_costs(int p_layer) {
-    if (p_layer < 0 || p_layer >= isLayerActive.length) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }

@@ -136,7 +136,7 @@ class BoardToolbar extends JPanel {
           .stream(routingJobs)
           .findFirst()
           .get();
-      guiRoutingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
+      guiRoutingJob.routerSettings = board_frame.board_panel.board_handling.settingsMerger.merge();
       InteractiveActionThread thread = board_frame.board_panel.board_handling
           .start_autorouter_and_route_optimizer(guiRoutingJob);
 
