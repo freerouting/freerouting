@@ -1,6 +1,7 @@
 package app.freerouting.logger;
 
 import app.freerouting.Freerouting;
+import app.freerouting.debug.DebugControl;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
@@ -319,6 +320,8 @@ public class FRLogger {
       logger = LogManager.getLogger(Freerouting.class);
     }
 
+    logger.trace(msg);
+
     return null;
   }
 
@@ -333,19 +336,21 @@ public class FRLogger {
    *                      Trace #123").
    *                      This string is used by DebugControl to filter execution.
    */
-  public static void trace(String method, String operation, String message, String impactedItems) {
+  public static boolean trace(String method, String operation, String message, String impactedItems) {
     if (enabled) {
       if (logger == null) {
         logger = LogManager.getLogger(Freerouting.class);
       }
 
-      if (granularTraceEnabled && (impactedItems.isEmpty() || app.freerouting.debug.DebugControl.getInstance().isInterested(impactedItems))) {
+      if (granularTraceEnabled && (impactedItems.isEmpty() || DebugControl.getInstance().isInterested(impactedItems))) {
         String formattedMessage = String.format("[%s] [%s] %s: %s", method, operation, message, impactedItems);
         logger.trace(formattedMessage);
       }
     }
 
-    app.freerouting.debug.DebugControl.getInstance().check(operation, impactedItems);
+    boolean wasInterestingTraceEvent = DebugControl.getInstance().check(operation, impactedItems);
+
+    return wasInterestingTraceEvent;
   }
 
   /**

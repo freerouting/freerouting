@@ -79,40 +79,43 @@ public class DebugControl {
      *
      * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
      */
-    public void check(String operation, String impactedItems) {
+    public boolean check(String operation, String impactedItems) {
         // We defer to check(int, String) for checking enablement flags (step/delay).
         // BUT invalid optimization: we want to SKIP parsing if disabled.
         if (!Freerouting.globalSettings.debugSettings.singleStepExecution &&
                 Freerouting.globalSettings.debugSettings.traceInsertionDelay == 0) {
-            return;
+            return false;
         }
 
         if (!isInterested(impactedItems)) {
-            return;
+            return false;
         }
 
-        check(operation, -1, null);
+        return check(operation, -1, null);
     }
 
     /**
      * Called by the engine at potential breakpoints.
      * Handles filtering, delays, and pausing.
      *
+     * @param operation The operation being performed (e.g. "insert_trace_segment")
      * @param netNo   The net number currently being processed
      * @param netName The net name currently being processed (optional, can be null)
+     *
+     * @return true if the operation should be processed/logged, false otherwise.
      */
-    public void check(String operation, int netNo, String netName) {
+    public boolean check(String operation, int netNo, String netName) {
         if (!Freerouting.globalSettings.debugSettings.singleStepExecution &&
                 Freerouting.globalSettings.debugSettings.traceInsertionDelay == 0) {
-            return;
+            return false;
         }
 
         if (netNo >= 0 && !Freerouting.globalSettings.debugSettings.isNetPermitted(netNo, netName)) {
-            return;
+            return false;
         }
 
         if (operation == null || !isInterestedInOperation(operation)) {
-            return;
+            return false;
         }
 
         // Handle Delay
@@ -152,6 +155,9 @@ public class DebugControl {
                 }
             }
         }
+
+        // Let's indicate that we had an event that we were interested in.
+        return true;
     }
 
   private boolean isInterestedInOperation(String operation) {
