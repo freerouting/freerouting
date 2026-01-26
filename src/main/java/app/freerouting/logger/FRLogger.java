@@ -345,7 +345,7 @@ public class FRLogger {
       }
     }
 
-    app.freerouting.debug.DebugControl.getInstance().check(impactedItems);
+    app.freerouting.debug.DebugControl.getInstance().check(operation, impactedItems);
   }
 
   /**

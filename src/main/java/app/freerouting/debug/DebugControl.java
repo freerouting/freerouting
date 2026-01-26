@@ -44,13 +44,13 @@ public class DebugControl {
     /**
      * Called by the logging framework at potential breakpoints.
      * Parses the impactedItems string to extract net numbers for filtering.
-     * 
+     *
      * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
      */
     /**
      * Checks if the debug control is interested in the given items based on the
      * filter.
-     * 
+     *
      * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
      * @return true if the items should be processed/logged, false otherwise.
      */
@@ -76,10 +76,10 @@ public class DebugControl {
     /**
      * Called by the logging framework at potential breakpoints.
      * Parses the impactedItems string to extract net numbers for filtering.
-     * 
+     *
      * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
      */
-    public void check(String impactedItems) {
+    public void check(String operation, String impactedItems) {
         // We defer to check(int, String) for checking enablement flags (step/delay).
         // BUT invalid optimization: we want to SKIP parsing if disabled.
         if (!Freerouting.globalSettings.debugSettings.singleStepExecution &&
@@ -91,23 +91,27 @@ public class DebugControl {
             return;
         }
 
-        check(-1, null);
+        check(operation, -1, null);
     }
 
     /**
      * Called by the engine at potential breakpoints.
      * Handles filtering, delays, and pausing.
-     * 
+     *
      * @param netNo   The net number currently being processed
      * @param netName The net name currently being processed (optional, can be null)
      */
-    public void check(int netNo, String netName) {
+    public void check(String operation, int netNo, String netName) {
         if (!Freerouting.globalSettings.debugSettings.singleStepExecution &&
                 Freerouting.globalSettings.debugSettings.traceInsertionDelay == 0) {
             return;
         }
 
         if (netNo >= 0 && !Freerouting.globalSettings.debugSettings.isNetPermitted(netNo, netName)) {
+            return;
+        }
+
+        if (operation == null || !isInterestedInOperation(operation)) {
             return;
         }
 
@@ -149,6 +153,20 @@ public class DebugControl {
             }
         }
     }
+
+  private boolean isInterestedInOperation(String operation) {
+    if (operation == null || operation.isEmpty()) {
+      return false;
+    }
+
+    for (String filterOp : Freerouting.globalSettings.debugSettings.operationFilters) {
+      if (operation.equalsIgnoreCase(filterOp)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
     // GUI Control Methods
 

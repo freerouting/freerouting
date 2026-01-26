@@ -27,6 +27,6 @@ public class LoggingSettings implements Serializable {
         public String level = "INFO";
 
         @SerializedName("location")
-        public String location = "";
+        public String location;
     }
 }

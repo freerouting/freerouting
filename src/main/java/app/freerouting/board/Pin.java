@@ -698,6 +698,12 @@ public class Pin extends DrillItem implements Serializable {
     if (component_no > 0) {
       simpleName.append(" of component #");
       simpleName.append(component_no);
+
+      Component component = board.components.get(this.get_component_no());
+      if (component != null) {
+        simpleName.append(" (" + component.name + ")");
+      }
+
     }
 
     return simpleName.toString();

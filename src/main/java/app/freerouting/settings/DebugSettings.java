@@ -2,7 +2,6 @@ package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +21,9 @@ public class DebugSettings implements Serializable {
 
     @SerializedName("filter_by_net")
     public Set<String> filterByNet = new HashSet<>();
+
+    @SerializedName("operation_filters")
+    public String[] operationFilters = new String[] { "insert_trace_segment", "remove_trace_segment", "insert_trace_failure" };
 
     public DebugSettings() {
     }

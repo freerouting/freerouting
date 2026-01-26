@@ -30,8 +30,6 @@ public class GlobalSettings implements Serializable {
   public final transient RuntimeEnvironment runtimeEnvironment = new RuntimeEnvironment();
   @SerializedName("profile")
   public final UserProfileSettings userProfileSettings = new UserProfileSettings();
-  @SerializedName("logging")
-  public final LoggingSettings logging = new LoggingSettings();
   @SerializedName("gui")
   public final GuiSettings guiSettings = new GuiSettings();
   @SerializedName("router")
@@ -46,8 +44,10 @@ public class GlobalSettings implements Serializable {
   public final ApiServerSettings apiServerSettings = new ApiServerSettings();
   @SerializedName("statistics")
   public final StatisticsSettings statistics = new StatisticsSettings();
+  @SerializedName("logging")
+  public final LoggingSettings logging = new LoggingSettings();
   @SerializedName("debug")
-  public final DebugSettings debugSettings = new DebugSettings();
+  public final transient DebugSettings debugSettings = new DebugSettings();
   private final transient String[] supportedLanguages = {
       "en",
       "de",

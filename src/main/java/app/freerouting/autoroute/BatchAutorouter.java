@@ -185,9 +185,10 @@ public class BatchAutorouter extends NamedAlgorithm {
                 autoroute_item_list.add(curr_item);
                 Net net = board.rules.nets.get(curr_net_no);
                 String netName = (net != null) ? net.name : "net#" + curr_net_no;
-                FRLogger.debug("Queuing item for routing: " + curr_item.getClass().getSimpleName() + " on net '"
-                    + netName + "' (#" + curr_net_no + ") (connected: " + connected_set.size() + "/" + net_item_count
-                    + ")");
+                FRLogger.trace("BatchAutorouter.getAutorouteItem","queue_item",
+                    "Queuing item for routing: " + curr_item.getClass().getSimpleName() + " on net '"
+                    + netName + "' (#" + curr_net_no + ") (connected: " + connected_set.size() + "/" + net_item_count + ")",
+                    curr_item.toString());
               }
             }
           }
@@ -444,7 +445,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           int netNo = curr_item.get_net_no(i);
 
           // Debugging Check
-          app.freerouting.debug.DebugControl.getInstance().check(netNo, null);
+          app.freerouting.debug.DebugControl.getInstance().check("autoroute_item", netNo, null);
 
           int incompletesBefore = ratsNest.incomplete_count(netNo);
           PerformanceProfiler.start("autoroute_item");
@@ -765,6 +766,11 @@ public class BatchAutorouter extends NamedAlgorithm {
   // routed.
   private AutorouteAttemptResult autoroute_item(Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list,
       int p_ripup_pass_no) {
+
+    FRLogger.trace("BatchAutorouter.autoroute_item", "autoroute_item",
+        "Routing item of class " + p_item.getClass().getSimpleName() + " on net #" + p_route_net_no + " at ripup pass #" + p_ripup_pass_no,
+        p_item.toString());
+
     try {
       boolean contains_plane = false;
 
@@ -1202,8 +1208,7 @@ public class BatchAutorouter extends NamedAlgorithm {
    */
   private void sortItems(List<Item> items, int passNo) {
     // Select strategy based on pass number or randomization
-    // Pass 1: Shortest (Clean up easy stuff) - Overridden to always use this for
-    // Pass 1
+    // Pass 1: Shortest (Clean up easy stuff)
     // Pass 2: Longest (Difficult paths)
     // Pass 3: Smallest Area (Dense areas)
     // Pass 4: Random
