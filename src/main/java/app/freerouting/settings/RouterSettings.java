@@ -26,7 +26,7 @@ public class RouterSettings implements Serializable, Cloneable {
   public transient Integer maxItems;
   public transient boolean[] isLayerActive;
   public transient boolean[] isPreferredDirectionHorizontalOnLayer;
-  public transient Boolean save_intermediate_stages;
+  public transient Boolean save_intermediate_stages = false;
   @SerializedName("ignore_net_classes")
   public transient String[] ignoreNetClasses;
   /**
@@ -213,14 +213,10 @@ public class RouterSettings implements Serializable, Cloneable {
   public void setLayerCount(int layerCount) {
     isLayerActive = new boolean[layerCount];
     isPreferredDirectionHorizontalOnLayer = new boolean[layerCount];
-    scoring.preferredDirectionTraceCost = new double[layerCount];
-    scoring.undesiredDirectionTraceCost = new double[layerCount];
 
     for (int i = 0; i < layerCount; i++) {
       isLayerActive[i] = true;
       isPreferredDirectionHorizontalOnLayer[i] = i % 2 == 1;
-      scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost;
-      scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
     }
   }
 

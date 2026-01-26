@@ -108,6 +108,7 @@ public class GuiManager {
             settingsMerger.addOrReplaceSources(
                 new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()),
                 new GuiSettings(routingJob.routerSettings));
+            routingJob.routerSettings = settingsMerger.merge();
             guiSession.addJob(routingJob);
 
             String message = tm.getText("loading_design") + " " + globalSettings.initialInputFile;
