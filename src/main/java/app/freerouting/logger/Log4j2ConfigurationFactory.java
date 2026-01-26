@@ -61,8 +61,7 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
             AppenderComponentBuilder consoleAppender = builder.newAppender("Console", "Console")
                     .addAttribute("target", ConsoleAppender.Target.SYSTEM_OUT)
                     .add(builder.newLayout("PatternLayout")
-                            .addAttribute("pattern", filePattern)); // Use the same pattern for console if it's
-                                                                    // customized
+                            .addAttribute("pattern", "%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-6level %msg%n"));
             builder.add(consoleAppender);
         }
 
