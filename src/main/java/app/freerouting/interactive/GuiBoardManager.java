@@ -30,6 +30,8 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
+import app.freerouting.logger.TraceEvent;
+import app.freerouting.logger.TraceEventListener;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
@@ -53,6 +55,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
 /**
  * Manages the routing board operations with a graphical user interface. This
@@ -83,6 +86,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
   private final TextManager tm;
   private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
   private final GlobalSettings globalSettings;
+  private final LogEntries.LogEntryAddedListener logEntryAddedListener;
+  private final TraceEventListener traceEventListener;
   /**
    * The graphical context for drawing the board.
    */
@@ -143,10 +148,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
 
     this.tm = new TextManager(this.getClass(), globalSettings.currentLocale);
 
-    LogEntries.LogEntryAddedListener listener = this::logEntryAdded;
+    this.logEntryAddedListener = this::logEntryAdded;
     FRLogger
         .getLogEntries()
-        .addLogEntryAddedListener(listener);
+        .addLogEntryAddedListener(this.logEntryAddedListener);
+
+    this.traceEventListener = this::handleTraceEvent;
+    FRLogger.addTraceEventListener(this.traceEventListener);
   }
 
   private void logEntryAdded(LogEntry logEntry) {
@@ -156,8 +164,18 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
   }
 
-  /**
-   * Gets the current routing job. Interactive states use this to access
+  private void handleTraceEvent(TraceEvent event) {
+    if (event == null) {
+      return;
+    }
+    SwingUtilities.invokeLater(() -> {
+      screen_messages.set_trace_message(event.getOperation(), event.getMessage(), event.getImpactedItems());
+      panel.repaint();
+    });
+  }
+
+   /**
+    * Gets the current routing job. Interactive states use this to access
    * job-specific RouterSettings.
    *
    * @return the current routing job, or null if no job is set
@@ -613,8 +631,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void repaint() {
     if (this.paint_immediately) {
-      final Rectangle MAX_RECTAMGLE = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
-      panel.paintImmediately(MAX_RECTAMGLE);
+      final Rectangle MAX_RECTAMLE = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+      panel.paintImmediately(MAX_RECTAMLE);
     } else {
       if (last_repainted_time < System.currentTimeMillis() - repaint_interval) {
         last_repainted_time = System.currentTimeMillis();
@@ -1460,6 +1478,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * the garbage collector.
    */
   public void dispose() {
+    FRLogger
+        .getLogEntries()
+        .removeLogEntryAddedListener(this.logEntryAddedListener);
+    FRLogger.removeTraceEventListener(this.traceEventListener);
     close_files();
     graphics_context = null;
     coordinate_transform = null;

@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,6 +24,7 @@ public class FRLogger {
       new java.text.DecimalFormatSymbols(java.util.Locale.US));
   private static final HashMap<Integer, Instant> perfData = new HashMap<>();
   private static final LogEntries logEntries = new LogEntries();
+  private static final CopyOnWriteArrayList<TraceEventListener> traceEventListeners = new CopyOnWriteArrayList<>();
   public static boolean granularTraceEnabled = false;
   private static Logger logger;
   private static boolean enabled = true;
@@ -349,6 +351,9 @@ public class FRLogger {
     }
 
     boolean wasInterestingTraceEvent = DebugControl.getInstance().check(operation, impactedItems);
+    if (wasInterestingTraceEvent) {
+      publishTraceEvent(new TraceEvent(method, operation, message, impactedItems, Instant.now()));
+    }
 
     return wasInterestingTraceEvent;
   }
@@ -380,5 +385,21 @@ public class FRLogger {
     }
 
     return logger;
+  }
+
+  /** Adds a listener that will be notified of interesting trace events. */
+  public static void addTraceEventListener(TraceEventListener listener) {
+    traceEventListeners.add(listener);
+  }
+
+  /** Removes a listener from the list of trace event listeners. */
+  public static void removeTraceEventListener(TraceEventListener listener) {
+    traceEventListeners.remove(listener);
+  }
+
+  private static void publishTraceEvent(TraceEvent event) {
+    for (TraceEventListener listener : traceEventListeners) {
+      listener.onTraceEvent(event);
+    }
   }
 }
