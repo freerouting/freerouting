@@ -218,24 +218,28 @@ public class PolylineTrace extends Trace implements Serializable {
     if (!this.is_on_the_board()) {
       return false;
     }
-    boolean something_changed;
+    Point combined_at;
     if (this.combine_at_start(true)) {
-      something_changed = true;
+      combined_at = this.first_corner();
       this.combine();
     } else if (this.combine_at_end(true)) {
-      something_changed = true;
+      combined_at = this.last_corner();
       this.combine();
     } else {
-      something_changed = false;
+      combined_at = null;
     }
-    if (something_changed) {
+    if (combined_at != null) {
+      FRLogger.trace("PolylineTrace.combine()", "combine_traces",
+          "Combined traces at " + combined_at + " into trace id=" + this.get_id_no(),
+          this.toString());
+
       // let the observers synchronize the changes
       if ((board.communication != null) && (board.communication.observers != null)) {
         board.communication.observers.notify_changed(this);
       }
       board.additional_update_after_change(this);
     }
-    return something_changed;
+    return (combined_at != null);
   }
 
   /**
@@ -833,6 +837,10 @@ public class PolylineTrace extends Trace implements Serializable {
             .first_corner()
             .equals(curr_split_trace.last_corner())) {
           // remove trace with only 1 corner
+          FRLogger.trace("PolylineTrace.normalize", "remove_one_corner",
+              "removing one-corner trace id=" + curr_split_trace.get_id_no() + " (net #" + (curr_split_trace.net_count() > 0 ? curr_split_trace.get_net_no(0) : -1)
+                  + ")",
+              "Net #" + (curr_split_trace.net_count() > 0 ? curr_split_trace.get_net_no(0) : -1) + ", Trace #" + curr_split_trace.get_id_no());
           board.remove_item(curr_split_trace);
           result = true;
         } else if (trace_combined) {

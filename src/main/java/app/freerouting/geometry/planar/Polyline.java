@@ -74,7 +74,8 @@ public class Polyline implements Serializable {
   public Polyline(Line[] p_line_arr) {
     Line[] lines = remove_consecutive_parallel_lines(p_line_arr);
     lines = remove_overlaps(lines);
-    if (lines.length < 3) {
+    lines = remove_artifacts(lines);
+    if (lines.length < 2) {
       arr = new Line[0];
       return;
     }
@@ -166,6 +167,28 @@ public class Polyline implements Serializable {
     if (new_length < 3) {
       return new Line[0];
     }
+    Line[] result = new Line[new_length];
+    System.arraycopy(tmp_arr, 0, result, 0, new_length);
+    return result;
+  }
+
+  /*
+   * removes small artifacts like spikes from the polyline
+   */
+  private Line[] remove_artifacts(Line[] lines) {
+    Line[] tmp_arr = new Line[lines.length];
+    int new_length = 0;
+    for (int i = 0; i < lines.length; i++) {
+      // skip small lines
+      if (lines[i].length() > 1900) {
+        tmp_arr[new_length] = lines[i];
+        new_length++;
+      } else
+      {
+        FRLogger.trace("Polyline.remove_artifacts", "remove_artifact", "A line with length of " + lines[i].length() + " was skipped in a polyline", this.toString());
+      }
+    }
+
     Line[] result = new Line[new_length];
     System.arraycopy(tmp_arr, 0, result, 0, new_length);
     return result;

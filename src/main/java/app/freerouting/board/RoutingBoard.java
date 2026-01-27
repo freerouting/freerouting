@@ -48,6 +48,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    */
   private static final int PULL_TIGHT_TIME_LIMIT = 2000;
   /**
+   * Tracks routing failures for items on this board.
+   * Kept persistent to track failures across passes and threads.
+   */
+  public final app.freerouting.autoroute.RoutingFailureLog failureLog;
+  /**
    * the area marked for optimizing the route
    */
   transient ChangedArea changed_area;
@@ -57,12 +62,6 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   private transient AutorouteEngine autoroute_engine;
   private transient Item shove_failing_obstacle;
   private transient int shove_failing_layer = -1;
-
-  /**
-   * Tracks routing failures for items on this board.
-   * Kept persistent to track failures across passes and threads.
-   */
-  public final app.freerouting.autoroute.RoutingFailureLog failureLog;
 
   /**
    * Creates a new instance of a routing Board with surrounding box p_bounding_box
@@ -754,7 +753,6 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       // Remove evtl. generated cycles because otherwise pull_tight may not work
       // correctly.
       if (new_trace.normalize(changed_area.get_area(p_layer))) {
-
         pull_tight_algo.split_traces_at_keep_point();
         // otherwise the new corner may no more be contained in the new trace after
         // optimizing

@@ -599,6 +599,13 @@ public class Line implements Comparable<Line>, Serializable {
     IntPoint ipa = (IntPoint) a;
     IntPoint ipb = (IntPoint) b;
 
-    return (float) Math.sqrt((ipb.x - ipa.x) * (ipb.x - ipa.x) + (ipb.y - ipa.y) * (ipb.y - ipa.y));
+    Float length = (float)Math.sqrt(((double)ipb.x - (double)ipa.x) * ((double)ipb.x - (double)ipa.x) + ((double)ipb.y - (double)ipa.y) * ((double)ipb.y - (double)ipa.y));
+
+    if ((length == null) || (length < 0) || (Float.isNaN(length))) {
+      FRLogger.warn("Line.length(): length calculation failed, returning 0");
+      return 0;
+    }
+
+    return length;
   }
 }
