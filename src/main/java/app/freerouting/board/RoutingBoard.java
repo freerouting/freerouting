@@ -772,7 +772,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       FRLogger.error("RoutingBoard.insert_forced_trace_polyline: Couldn't remove generated circles from the board.", e);
     }
 
-    // To avoid, that a separate handling for moving backwards in the own trace line
+
+    // To avoid that a separate handling for moving backwards in the own trace line
     // becomes necessary, pull tight is called here.
     if (p_tidy_width > 0 && new_trace != null) {
       new_trace.pull_tight(pull_tight_algo);

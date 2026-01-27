@@ -152,15 +152,11 @@ public class InsertFoundConnectionAlgo {
       if (ok_point == insert_polyline.last_corner() || neckdown_inserted) {
         from_corner_no = i;
       } else if (ok_point == insert_polyline.first_corner() && i != p_trace.corners.length - 1) {
-        // if ok_point == insert_polyline.first_corner() the spring over may have
-        // failed.
+        // if ok_point == insert_polyline.first_corner() the spring over may have failed.
         // Spring over may correct the situation because an insertion, which is ok with
-        // clearance
-        // compensation
-        // may cause violations without clearance compensation.
+        // clearance compensation may cause violations without clearance compensation.
         // In this case repeating the insertion with more distant corners may allow the
-        // spring_over
-        // to correct the situation.
+        // spring_over to correct the situation.
         if (from_corner_no > 0) {
           // p_trace.corners[i] may be inside the offset for the substitute trace around
           // a spring_over obstacle (if clearance compensation is off).

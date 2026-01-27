@@ -27,7 +27,6 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Random;
@@ -346,8 +345,7 @@ public class MazeSearchAlgo {
       if (next_room_shape.min_width() < 2 * half_width) {
         next_room_is_thick = false; // to prevent problems with the opposite side
       } else if (!p_list_element.already_checked && p_list_element.door.get_dimension() == 1 && !curr_door_is_small) {
-        // The algorithm below works only, if p_location is on the border of
-        // p_room_shape.
+        // The algorithm below works only, if p_location is on the border of p_room_shape.
         // That is only the case for 1 dimensional doors.
         // For small doors the check is done in check_leaving_via below.
 
