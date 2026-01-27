@@ -404,7 +404,10 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
           }
 
           // Calculate the expected minimum clearance between these two shapes
-          double minimum_clearance = board.rules.clearance_matrix.get_value(curr_item.clearance_class, this.clearance_class, shape_layer(i), false);
+          // For SMD-to-SMD pin clearances, use special smd_smd class if it exists
+          int clearance_class_1 = get_effective_clearance_class_for_collision(curr_item);
+          int clearance_class_2 = curr_item.get_effective_clearance_class_for_collision(this);
+          double minimum_clearance = board.rules.clearance_matrix.get_value(clearance_class_1, clearance_class_2, shape_layer(i), false);
 
           double actual_clearance = 0;
 
@@ -1283,6 +1286,47 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     }
 
     return simpleName.toString();
+  }
+
+  /**
+   * Returns the effective clearance class to use when checking clearance with p_other_item.
+   * For SMD pin to SMD pin clearances, returns the smd_smd clearance class if it exists,
+   * otherwise returns the item's normal clearance class.
+   * This ensures SMD pins use appropriate spacing even when tightly packed.
+   */
+  protected int get_effective_clearance_class_for_collision(Item p_other_item) {
+    // Check if both items are SMD pins (single layer pins)
+    if (this instanceof Pin && p_other_item instanceof Pin) {
+      Pin this_pin = (Pin) this;
+      Pin other_pin = (Pin) p_other_item;
+
+      // SMD pins have first_layer == last_layer
+      if (this_pin.first_layer() == this_pin.last_layer()
+          && other_pin.first_layer() == other_pin.last_layer()) {
+
+        // Try to find the smd_smd clearance class
+        int smd_smd_class = board.rules.clearance_matrix.get_no("smd");
+        if (smd_smd_class >= 0) {
+          // Use the special smd_smd clearance class
+          return smd_smd_class;
+        }
+
+        // Fall back to looking for the SMD clearance class from net class
+        if (this.net_no_arr.length > 0) {
+          app.freerouting.rules.Net net = board.rules.nets.get(this.net_no_arr[0]);
+          if (net != null) {
+            int smd_class = net.get_class().default_item_clearance_classes.get(
+                app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.SMD);
+            if (smd_class > 0) {
+              return smd_class;
+            }
+          }
+        }
+      }
+    }
+
+    // For all other cases (including traces), use the normal clearance class
+    return this.clearance_class;
   }
 
   /**
