@@ -138,8 +138,9 @@ public class InsertFoundConnectionAlgo {
       Polyline insert_polyline = new Polyline(curr_corner_arr);
       FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "insert_trace_segment",
           "inserting trace segment from " + insert_polyline.first_corner() + " to " + insert_polyline.last_corner()
-              + " on layer " + p_trace.layer,
-          "Net #" + ctrl.net_no);
+          + " on layer " + p_trace.layer,
+          "Net #" + ctrl.net_no,
+          new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
       Point ok_point = board.insert_forced_trace_polyline(insert_polyline, ctrl.trace_half_width[p_trace.layer],
           p_trace.layer, net_no_arr, ctrl.trace_clearance_class_no,
           ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth,
@@ -175,7 +176,8 @@ public class InsertFoundConnectionAlgo {
             ", from corner: " + from_corner_no +
             ", ok_point: " + (ok_point != null ? ok_point.toString() : "null") +
             ", target: " + insert_polyline.last_corner(),
-            "Net #" + ctrl.net_no);
+            "Net #" + ctrl.net_no,
+            new Point[] { insert_polyline.corner(from_corner_no), insert_polyline.last_corner() });
         result = false;
         break;
       }

@@ -23,6 +23,7 @@ import app.freerouting.designforms.specctra.SessionToEagle;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
@@ -39,6 +40,7 @@ import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -133,6 +135,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * The current position of the mouse pointer.
    */
   private FloatPoint current_mouse_position;
+  /**
+   * Points to draw as indicators on the board for the current trace event.
+   */
+  private Point[] impactedPoints;
 
   /**
    * Creates a new BoardHandling
@@ -170,6 +176,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     SwingUtilities.invokeLater(() -> {
       screen_messages.set_trace_message(event.getOperation(), event.getMessage(), event.getImpactedItems());
+      // Store the impacted points for drawing
+      impactedPoints = event.getImpactedPoints();
       panel.repaint();
     });
   }
@@ -695,6 +703,44 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     if (interactive_action_thread != null) {
       interactive_action_thread.draw(p_graphics);
+    }
+
+    // Draw indicators for impacted points from trace events
+    if (impactedPoints != null && impactedPoints.length > 0) {
+      drawImpactedPointsIndicators(p_graphics);
+    }
+  }
+
+  /**
+   * Draws indicators (crosshairs) at the impacted points on the board.
+   */
+  private void drawImpactedPointsIndicators(Graphics p_graphics) {
+    Color draw_color = graphics_context.get_hilight_color();
+    double draw_intensity = graphics_context.get_hilight_color_intensity();
+    int default_trace_half_width = board.rules.get_default_trace_half_width(0);
+    double radius = Math.max(5 * default_trace_half_width / 10, 500); // Minimum radius of 500
+    final double draw_width = 50.0;
+
+    for (Point point : impactedPoints) {
+      if (point != null) {
+        FloatPoint center = point.to_float();
+
+        // Draw an X marker (crosshair)
+        FloatPoint[] draw_points = new FloatPoint[2];
+
+        // Draw first diagonal line (top-left to bottom-right)
+        draw_points[0] = new FloatPoint(center.x - radius, center.y - radius);
+        draw_points[1] = new FloatPoint(center.x + radius, center.y + radius);
+        graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
+
+        // Draw second diagonal line (top-right to bottom-left)
+        draw_points[0] = new FloatPoint(center.x + radius, center.y - radius);
+        draw_points[1] = new FloatPoint(center.x - radius, center.y + radius);
+        graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
+
+        // Draw a circle around the point
+        graphics_context.draw_circle(center, radius, draw_width, draw_color, p_graphics, draw_intensity);
+      }
     }
   }
 

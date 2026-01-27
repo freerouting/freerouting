@@ -2,6 +2,7 @@ package app.freerouting.logger;
 
 import app.freerouting.Freerouting;
 import app.freerouting.debug.DebugControl;
+import app.freerouting.geometry.planar.Point;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
@@ -327,6 +328,10 @@ public class FRLogger {
     return null;
   }
 
+  public static boolean trace(String method, String operation, String message, String impactedItems) {
+    return trace(method, operation, message, impactedItems, null);
+  }
+
   /**
    * Logs a granular TRACE message and triggers a debug check.
    *
@@ -338,7 +343,7 @@ public class FRLogger {
    *                      Trace #123").
    *                      This string is used by DebugControl to filter execution.
    */
-  public static boolean trace(String method, String operation, String message, String impactedItems) {
+  public static boolean trace(String method, String operation, String message, String impactedItems, Point[] impactedPoints) {
     if (enabled) {
       if (logger == null) {
         logger = LogManager.getLogger(Freerouting.class);
@@ -352,7 +357,7 @@ public class FRLogger {
 
     boolean wasInterestingTraceEvent = DebugControl.getInstance().check(operation, impactedItems);
     if (wasInterestingTraceEvent) {
-      publishTraceEvent(new TraceEvent(method, operation, message, impactedItems, Instant.now()));
+      publishTraceEvent(new TraceEvent(method, operation, message, impactedItems, impactedPoints, Instant.now()));
     }
 
     return wasInterestingTraceEvent;
