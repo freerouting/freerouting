@@ -774,12 +774,18 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * has moved.
    */
   public void mouse_moved(Point2D p_point) {
-    if (board_is_read_only) {
-      // no interactive action when logfile is running
-      return;
-    }
     if (interactive_state != null && graphics_context != null) {
       this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
+
+      // Always update the mouse position display, even when board is read-only
+      FloatPoint mouse_position = coordinate_transform.board_to_user(this.current_mouse_position);
+      screen_messages.set_mouse_position(mouse_position);
+
+      if (board_is_read_only) {
+        // no interactive action when logfile is running, but mouse position is still updated
+        return;
+      }
+
       InteractiveState return_state = interactive_state.mouse_moved();
       Set<Item> hover_item = pick_items(this.current_mouse_position);
       if (hover_item.size() == 1) {

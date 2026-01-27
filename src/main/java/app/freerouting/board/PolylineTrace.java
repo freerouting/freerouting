@@ -711,9 +711,9 @@ public class PolylineTrace extends Trace implements Serializable {
    * It creates two new traces: one ending at the split line, and one starting at the split line.
    *
    * @param p_line_no the index of the line where the split should occur
-   * @param p_new_end_line the line that will become the endpoint of the first piece and as the start line
-   * of the second split piece. Returns the 2
-   * pieces of the splitted trace, or null, if nothing was splitted.
+   * @param p_new_end_line the line that will become the endpoint of the first piece and as
+   * the start line of the second split piece. Returns the 2 pieces of the split trace,
+   * or null, if nothing was split.
    */
   private PolylineTrace[] split(int p_line_no, Line p_new_end_line) {
     if (!this.is_on_the_board()) {
