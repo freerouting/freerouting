@@ -97,6 +97,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public CoordinateTransform coordinate_transform;
   /**
+   * To display all clearance violations between items on the screen.
+   */
+  public ClearanceViolations clearance_violations;
+  /**
    * The currently active interactive state.
    */
   InteractiveState interactive_state;
@@ -120,10 +124,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * To display all incomplete connections on the screen.
    */
   private RatsNest ratsnest;
-  /**
-   * To display all clearance violations between items on the screen.
-   */
-  private ClearanceViolations clearance_violations;
   /**
    * True if currently a logfile is being processed. Used to prevent interactive
    * changes of the board database in this case.
