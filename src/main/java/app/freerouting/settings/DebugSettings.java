@@ -23,7 +23,7 @@ public class DebugSettings implements Serializable {
     public Set<String> filterByNet = new HashSet<>();
 
     @SerializedName("operation_filters")
-    public String[] operationFilters = new String[] { "insert_trace_segment", "remove_trace_segment", "insert_trace_failure" };
+    public String[] operationFilters = new String[] { "insert_trace_segment", "remove_trace_segment", "insert_trace_failure", "remove_tail" };
 
     public DebugSettings() {
     }
