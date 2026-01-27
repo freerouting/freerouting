@@ -34,7 +34,6 @@ import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaRule;
-
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -58,11 +57,12 @@ import javax.swing.JTextArea;
 /** Central connection class between the graphical user interface and the board database. */
 public class BoardHandling extends BoardHandlingHeadless {
 
+  private static long last_repainted_time = 0;
+  private static long repaint_interval = 1000;
   /** The text message fields displayed on the screen */
   public final ScreenMessages screen_messages;
   /** The graphical panel used for displaying the board. */
   private final BoardPanel panel;
-
   private final ResourceBundle resources;
   /** The graphical context for drawing the board. */
   public GraphicsContext graphics_context;
@@ -74,7 +74,6 @@ public class BoardHandling extends BoardHandlingHeadless {
   boolean paint_immediately = false;
   /** thread pool size */
   private int num_threads;
-
   private BoardUpdateStrategy board_update_strategy;
   private String hybrid_ratio;
   private ItemSelectionStrategy item_selection_strategy;
@@ -91,9 +90,6 @@ public class BoardHandling extends BoardHandlingHeadless {
   private boolean board_is_read_only = false;
   /** The current position of the mouse pointer. */
   private FloatPoint current_mouse_position;
-
-  private static long last_repainted_time = 0;
-  private static long repaint_interval = 1000;
 
   /** Creates a new BoardHandling */
   public BoardHandling(
@@ -716,8 +712,9 @@ public class BoardHandling extends BoardHandlingHeadless {
   }
 
   /** Actions to be taken in the current interactive state when the mouse wheel is moved */
-  public void mouse_wheel_moved(int p_rotation) {
-    if (interactive_state != null) {
+  public void mouse_wheel_moved(Point2D p_point, int p_rotation) {
+    if (interactive_state != null && graphics_context != null) {
+      this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
       InteractiveState return_state = interactive_state.mouse_wheel_moved(p_rotation);
       if (return_state != interactive_state) {
         set_interactive_state(return_state);

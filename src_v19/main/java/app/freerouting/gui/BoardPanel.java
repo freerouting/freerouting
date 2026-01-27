@@ -5,7 +5,6 @@ import app.freerouting.interactive.ActivityReplayFileScope;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
-
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -120,7 +119,7 @@ public class BoardPanel extends JPanel {
           }
         });
     addMouseWheelListener(
-        evt -> board_handling.mouse_wheel_moved(evt.getWheelRotation()));
+        evt -> board_handling.mouse_wheel_moved(evt.getPoint(), evt.getWheelRotation()));
     board_handling =
         new BoardHandling(
             this, p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold);

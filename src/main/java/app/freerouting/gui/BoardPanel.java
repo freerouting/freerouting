@@ -114,7 +114,7 @@ public class BoardPanel extends JPanel {
         middle_drag_position = null;
       }
     });
-    addMouseWheelListener(evt -> board_handling.mouse_wheel_moved(evt.getWheelRotation()));
+    addMouseWheelListener(evt -> board_handling.mouse_wheel_moved(evt.getPoint(), evt.getWheelRotation()));
 
     board_handling = new GuiBoardManager(this, globalSettings, routingJob, settingMerger);
     setAutoscrolls(true);

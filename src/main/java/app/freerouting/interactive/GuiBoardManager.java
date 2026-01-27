@@ -845,8 +845,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Actions to be taken in the current interactive state when the mouse wheel is
    * moved
    */
-  public void mouse_wheel_moved(int p_rotation) {
-    if (interactive_state != null) {
+  public void mouse_wheel_moved(Point2D p_point, int p_rotation) {
+    if (interactive_state != null && graphics_context != null) {
+      this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
       InteractiveState return_state = interactive_state.mouse_wheel_moved(p_rotation);
       if (return_state != interactive_state) {
         set_interactive_state(return_state);
