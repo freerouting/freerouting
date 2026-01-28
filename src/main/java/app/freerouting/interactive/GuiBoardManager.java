@@ -1585,5 +1585,4 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public void addReadOnlyEventListener(Consumer<Boolean> listener) {
     readOnlyEventListeners.add(listener);
   }
-
 }

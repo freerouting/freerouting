@@ -122,7 +122,15 @@ public class BoardPanel extends JPanel {
   }
 
   public void reset_board_handling(RoutingJob routingJob) {
-    board_handling = new GuiBoardManager(this, globalSettings, routingJob, this.board_handling.settingsMerger);
+    // Save the settingsMerger reference before disposing the old instance
+    SettingsMerger settingsMerger = (board_handling != null) ? board_handling.settingsMerger : null;
+
+    // Dispose the old board_handling instance before creating a new one
+    if (board_handling != null) {
+      board_handling.dispose();
+    }
+
+    board_handling = new GuiBoardManager(this, globalSettings, routingJob, settingsMerger);
   }
 
   void create_popup_menus() {
