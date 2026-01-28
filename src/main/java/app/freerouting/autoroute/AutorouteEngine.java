@@ -14,68 +14,263 @@ import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * Temporary autoroute data stored on the RoutingBoard.
+ * Core engine that orchestrates the execution of autorouter passes and manages routing state.
+ *
+ * <p>This class serves as the main coordinator for the autorouting algorithm, responsible for:
+ * <ul>
+ *   <li><strong>Pass Management:</strong> Sequencing multiple routing passes with different strategies</li>
+ *   <li><strong>Connection Selection:</strong> Determining which incomplete connections to route</li>
+ *   <li><strong>Routing Execution:</strong> Delegating actual routing to {@link AutorouteControl}</li>
+ *   <li><strong>State Tracking:</strong> Monitoring incomplete items and routing progress</li>
+ *   <li><strong>Optimization:</strong> Managing via minimization and post-routing cleanup</li>
+ * </ul>
+ *
+ * <p><strong>Multi-Pass Strategy:</strong>
+ * The autorouter executes multiple passes with progressively relaxed constraints:
+ * <ol>
+ *   <li><strong>Pass 1:</strong> Strict routing with minimal vias and optimal paths</li>
+ *   <li><strong>Pass 2:</strong> Relaxed via limits, wider search space</li>
+ *   <li><strong>Pass 3+:</strong> Further relaxed constraints for difficult connections</li>
+ * </ol>
+ *
+ * <p><strong>Connection Priority:</strong>
+ * Routes connections in order of:
+ * <ul>
+ *   <li>Shortest airline distance first (easier connections)</li>
+ *   <li>Then progressively harder connections</li>
+ *   <li>Special handling for SMD (Surface Mount Device) connections</li>
+ * </ul>
+ *
+ * <p><strong>Via Optimization:</strong>
+ * After routing, attempts to:
+ * <ul>
+ *   <li>Remove unnecessary vias where traces can stay on one layer</li>
+ *   <li>Minimize layer transitions</li>
+ *   <li>Improve routing quality and manufacturability</li>
+ * </ul>
+ *
+ * <p><strong>Thread Safety:</strong>
+ * This class is designed for single-threaded execution per instance. For multi-threaded
+ * routing, create separate AutorouteEngine instances.
+ *
+ * <p><strong>Interruption:</strong>
+ * Routing can be interrupted via the {@link Stoppable} interface. The engine
+ * checks for stop requests between routing operations and at strategic points.
+ *
+ * <p><strong>Usage Pattern:</strong>
+ * <pre>{@code
+ * AutorouteEngine engine = new AutorouteEngine(board, thread, settings);
+ * engine.autoroute_passes();  // Execute routing
+ * if (settings.viaOptimizationEnabled) {
+ *     engine.remove_tails(Item.StopConnectionOption.VIA);  // Clean up
+ * }
+ * }</pre>
+ *
+ * @see AutorouteControl
+ * @see CompleteExpansionRoom
+ * @see MazeSearchAlgo
+ * @see Stoppable
  */
 public class AutorouteEngine {
 
-  static final int TRACE_WIDTH_TOLERANCE = 2;
   /**
-   * The current search tree used in autorouting. It depends on the trac clearance
-   * class used in the autoroute algorithm.
+   * Tolerance value for trace width matching (2 board units).
+   *
+   * <p>Used when comparing trace widths to determine if they're considered
+   * equivalent. Allows for small variations in trace width without triggering
+   * routing conflicts.
+   */
+  static final int TRACE_WIDTH_TOLERANCE = 2;
+
+  /**
+   * The search tree optimized for autorouting operations.
+   *
+   * <p>This specialized search tree is configured for the specific trace clearance
+   * class used in the current autoroute algorithm. It provides efficient spatial
+   * queries for:
+   * <ul>
+   *   <li>Finding obstacles during routing</li>
+   *   <li>Checking clearance violations</li>
+   *   <li>Locating nearby items for expansion</li>
+   * </ul>
+   *
+   * <p>The tree structure is optimized for the autorouter's frequent queries
+   * and may differ from the board's main search tree.
    */
   public final ShapeSearchTree autoroute_search_tree;
+
   /**
-   * If maintain_database, the autorouter database is maintained after a
-   * connection is completed for performance reasons.
+   * Flag controlling database maintenance during routing.
+   *
+   * <p>When {@code true}, the autorouter maintains its internal database after
+   * each connection completion. This improves performance for subsequent routing
+   * operations by:
+   * <ul>
+   *   <li>Keeping expansion rooms up-to-date</li>
+   *   <li>Avoiding full database rebuilds</li>
+   *   <li>Enabling incremental updates</li>
+   * </ul>
+   *
+   * <p>When {@code false}, the database is rebuilt as needed, which may be slower
+   * but uses less memory.
    */
   public final boolean maintain_database;
+
   /**
-   * The 2-dimensional array of rectangular pages of ExpansionDrills
+   * Two-dimensional array managing rectangular pages of expansion drills.
+   *
+   * <p>The drill page array partitions the board into rectangular regions,
+   * each containing expansion drill information for that area. This spatial
+   * partitioning enables:
+   * <ul>
+   *   <li>Efficient local searches during expansion</li>
+   *   <li>Reduced memory footprint (load only needed pages)</li>
+   *   <li>Better cache locality</li>
+   * </ul>
+   *
+   * @see DrillPageArray
+   * @see ExpansionDrill
    */
   final DrillPageArray drill_page_array;
+
   /**
-   * The PCB-board of this autoroute algorithm.
+   * The PCB routing board for this autoroute algorithm instance.
+   *
+   * <p>Contains all design data including components, nets, rules, and existing routing.
+   *
+   * @see RoutingBoard
    */
   final RoutingBoard board;
+
   /**
-   * To be able to stop the expansion algorithm.
+   * Reference to stoppable thread for interruption checks.
+   *
+   * <p>The autorouter periodically checks {@link Stoppable#isStopRequested()}
+   * to allow user interruption. When true, routing terminates gracefully.
    */
   Stoppable stoppable_thread;
+
   /**
-   * The net number used for routing in this autoroute algorithm.
+   * The net number currently being routed by this algorithm instance.
+   *
+   * <p>Set before routing each connection and used to:
+   * <ul>
+   *   <li>Determine which items belong to the same net</li>
+   *   <li>Apply net-specific routing rules</li>
+   *   <li>Avoid conflicts with other nets</li>
+   * </ul>
    */
   private int net_no;
+
   /**
-   * To stop the expansion algorithm after a time limit is exceeded.
+   * Time limit controller to prevent excessive routing time per connection.
+   *
+   * <p>Stops the expansion algorithm when:
+   * <ul>
+   *   <li>Maximum routing time for a single connection is exceeded</li>
+   *   <li>Overall autorouter time budget is exhausted</li>
+   * </ul>
+   *
+   * <p>Helps ensure the autorouter doesn't get stuck on difficult connections.
+   *
+   * @see TimeLimit
    */
   private TimeLimit time_limit;
+
   /**
-   * The list of incomplete expansion rooms on the routing board
+   * List of incomplete expansion rooms found on the routing board.
+   *
+   * <p>Expansion rooms represent free space areas where routing can occur.
+   * Incomplete rooms are those that haven't been fully explored yet and may
+   * contain additional routing opportunities.
+   *
+   * <p>Updated during routing as new areas are explored.
+   *
+   * @see IncompleteFreeSpaceExpansionRoom
    */
   private List<IncompleteFreeSpaceExpansionRoom> incomplete_expansion_rooms;
+
   /**
-   * The list of complete expansion rooms on the routing board
+   * List of complete expansion rooms on the routing board.
+   *
+   * <p>Complete expansion rooms are fully explored free space areas where all
+   * routing possibilities have been evaluated. These rooms serve as:
+   * <ul>
+   *   <li>Cached routing data for performance</li>
+   *   <li>Connection points between different routing regions</li>
+   *   <li>Targets for expansion algorithms</li>
+   * </ul>
+   *
+   * <p>Maintained across routing operations when {@link #maintain_database} is true.
+   *
+   * @see CompleteFreeSpaceExpansionRoom
    */
   private List<CompleteFreeSpaceExpansionRoom> complete_expansion_rooms;
+
   /**
-   * The count of expansion rooms created so far
+   * Counter tracking the total number of expansion rooms created.
+   *
+   * <p>Each expansion room gets a unique instance number for:
+   * <ul>
+   *   <li>Debugging and tracing</li>
+   *   <li>Performance analysis</li>
+   *   <li>Memory usage monitoring</li>
+   * </ul>
+   *
+   * <p>Incremented each time a new expansion room is instantiated.
    */
   private int expansion_room_instance_count;
 
   /**
-   * Creates a new instance of BoardAutorouteEngine If p_maintain_database, the
-   * autorouter database is maintained after a connection is completed for
-   * performance reasons.
+   * Creates a new autoroute engine instance for the specified board.
+   *
+   * <p>Initializes the routing infrastructure including:
+   * <ul>
+   *   <li>Search tree optimized for the specified clearance class</li>
+   *   <li>Drill page array for spatial partitioning</li>
+   *   <li>Database maintenance mode setting</li>
+   * </ul>
+   *
+   * <p><strong>Clearance Class:</strong>
+   * The trace clearance class determines:
+   * <ul>
+   *   <li>Minimum spacing between routed traces</li>
+   *   <li>Which obstacles are relevant for routing</li>
+   *   <li>Search tree optimization strategy</li>
+   * </ul>
+   *
+   * <p><strong>Database Maintenance:</strong>
+   * When {@code p_maintain_database} is true:
+   * <ul>
+   *   <li><strong>Pros:</strong> Faster subsequent routing, incremental updates</li>
+   *   <li><strong>Cons:</strong> Higher memory usage</li>
+   * </ul>
+   *
+   * <p>When false:
+   * <ul>
+   *   <li><strong>Pros:</strong> Lower memory footprint</li>
+   *   <li><strong>Cons:</strong> Database rebuilt as needed (slower)</li>
+   * </ul>
+   *
+   * <p><strong>Drill Page Width:</strong>
+   * Calculated as 5× the default via diameter (minimum 10,000 board units).
+   * Larger values reduce page count but increase per-page memory.
+   *
+   * @param p_board the routing board to operate on
+   * @param p_trace_clearance_class_no the clearance class index for trace routing
+   * @param p_maintain_database true to maintain database between connections, false to rebuild
+   *
+   * @see DrillPageArray
+   * @see ShapeSearchTree
    */
   public AutorouteEngine(RoutingBoard p_board, int p_trace_clearance_class_no, boolean p_maintain_database) {
     this.board = p_board;
@@ -88,6 +283,41 @@ public class AutorouteEngine {
     this.stoppable_thread = null;
   }
 
+  /**
+   * Initializes the engine for routing a new connection on the specified net.
+   *
+   * <p>This method prepares the autoroute engine for routing operations by:
+   * <ul>
+   *   <li>Setting the current net number</li>
+   *   <li>Configuring interruption checking</li>
+   *   <li>Setting time limits for routing</li>
+   *   <li>Invalidating cached data for the new net (if database is maintained)</li>
+   * </ul>
+   *
+   * <p><strong>Database Maintenance Mode:</strong>
+   * When {@link #maintain_database} is true and the net changes:
+   * <ol>
+   *   <li><strong>Invalidate Net-Dependent Rooms:</strong> Removes expansion rooms
+   *       that depend on specific net configurations, as they may not be valid
+   *       for the new net</li>
+   *   <li><strong>Invalidate Neighbor Rooms:</strong> Marks rooms adjacent to items
+   *       on the target net as invalid, since routing this net may affect them</li>
+   * </ol>
+   *
+   * <p><strong>Performance Consideration:</strong>
+   * The invalidation process iterates through all items to find those on the
+   * target net. For boards with many items, this can be time-consuming.
+   *
+   * <p>Must be called before routing each connection with {@link #autoroute_connection}.
+   *
+   * @param p_net_no the net number to route
+   * @param p_stoppable_thread thread to check for stop requests, or null if not interruptible
+   * @param p_time_limit time limit controller for routing timeout, or null for unlimited
+   *
+   * @see #autoroute_connection
+   * @see TimeLimit
+   * @see Stoppable
+   */
   public void init_connection(int p_net_no, Stoppable p_stoppable_thread, TimeLimit p_time_limit) {
     if (this.maintain_database) {
       if (p_net_no != this.net_no) {
@@ -118,8 +348,63 @@ public class AutorouteEngine {
   }
 
   /**
-   * Auto-routes a connection between p_start_set and p_dest_set. Returns
-   * ALREADY_CONNECTED, ROUTED, NOT_ROUTED, or INSERT_ERROR.
+   * Attempts to route a connection between two sets of items using the autorouting algorithm.
+   *
+   * <p>This is the core routing method that tries to establish a physical connection
+   * (traces and vias) between items in the start set and items in the destination set.
+   *
+   * <p><strong>Algorithm Overview:</strong>
+   * <ol>
+   *   <li><strong>Validation:</strong> Check if items are already connected</li>
+   *   <li><strong>Expansion:</strong> Create expansion rooms from start items</li>
+   *   <li><strong>Search:</strong> Expand rooms using maze search until destination reached</li>
+   *   <li><strong>Backtracing:</strong> Construct optimal path from found connection</li>
+   *   <li><strong>Insertion:</strong> Insert traces and vias into the board</li>
+   *   <li><strong>Cleanup:</strong> Remove ripped items, update database</li>
+   * </ol>
+   *
+   * <p><strong>Return Values:</strong>
+   * <ul>
+   *   <li><strong>AlreadyConnected:</strong> Items are already electrically connected</li>
+   *   <li><strong>Routed:</strong> Successfully routed a new connection</li>
+   *   <li><strong>NotRouted:</strong> Could not find a valid route</li>
+   *   <li><strong>InsertError:</strong> Route found but insertion failed</li>
+   * </ul>
+   *
+   * <p><strong>Rip-up and Retry:</strong>
+   * If {@code p_ripped_item_list} is provided, the algorithm may remove existing
+   * traces that block the desired route. Ripped items are added to the list for
+   * potential restoration if routing ultimately fails.
+   *
+   * <p><strong>Time Limits:</strong>
+   * Respects the time limit set via {@link #init_connection}. If time expires:
+   * <ul>
+   *   <li>Expansion stops</li>
+   *   <li>Best partial result is used if available</li>
+   *   <li>Returns NOT_ROUTED if no path found</li>
+   * </ul>
+   *
+   * <p><strong>Interruption:</strong>
+   * Checks {@link Stoppable#isStopRequested()} periodically. If true:
+   * <ul>
+   *   <li>Routing terminates immediately</li>
+   *   <li>Partial results are discarded</li>
+   *   <li>Returns NOT_ROUTED</li>
+   * </ul>
+   *
+   * <p><strong>Prerequisites:</strong>
+   * Must call {@link #init_connection} before this method to set up net number
+   * and time limits.
+   *
+   * @param p_start_set the set of items to route from (typically pads or existing traces)
+   * @param p_dest_set the set of items to route to (typically pads or existing traces)
+   * @param p_ctrl the autoroute control providing routing strategy and parameters
+   * @param p_ripped_item_list optional list to collect items removed during routing, or null
+   * @return the result of the routing attempt
+   *
+   * @see AutorouteAttemptResult
+   * @see AutorouteControl
+   * @see #init_connection
    */
   public AutorouteAttemptResult autoroute_connection(Set<Item> p_start_set, Set<Item> p_dest_set,
       AutorouteControl p_ctrl, SortedSet<Item> p_ripped_item_list) {
@@ -313,8 +598,15 @@ public class AutorouteEngine {
   }
 
   /**
-   * Returns the first element in the list of incomplete expansion rooms or null,
-   * if the list is empty.
+   * Returns the first incomplete expansion room from the database.
+   *
+   * <p>Incomplete expansion rooms represent areas of free space that haven't been
+   * fully explored yet. This method provides access to the next room to expand
+   * during the routing algorithm.
+   *
+   * @return the first incomplete expansion room, or null if none exist
+   *
+   * @see IncompleteFreeSpaceExpansionRoom
    */
   public IncompleteFreeSpaceExpansionRoom get_first_incomplete_expansion_room() {
     if (incomplete_expansion_rooms == null) {
@@ -328,7 +620,24 @@ public class AutorouteEngine {
   }
 
   /**
-   * Removes an incomplete room from the database.
+   * Removes an incomplete expansion room from the routing database.
+   *
+   * <p>This operation:
+   * <ol>
+   *   <li>Removes all doors connecting this room to neighbors</li>
+   *   <li>Removes the room from the incomplete rooms list</li>
+   * </ol>
+   *
+   * <p>Typically called when:
+   * <ul>
+   *   <li>The room has been fully explored (converted to complete)</li>
+   *   <li>The room is no longer valid due to board changes</li>
+   *   <li>Database cleanup is needed</li>
+   * </ul>
+   *
+   * @param p_room the incomplete expansion room to remove
+   *
+   * @see #remove_all_doors(ExpansionRoom)
    */
   public void remove_incomplete_expansion_room(IncompleteFreeSpaceExpansionRoom p_room) {
     this.remove_all_doors(p_room);
@@ -336,8 +645,32 @@ public class AutorouteEngine {
   }
 
   /**
-   * Removes a complete expansion room from the database and creates new
-   * incomplete expansion rooms for the neighbours.
+   * Removes a complete expansion room from the database and creates new incomplete rooms.
+   *
+   * <p>When a complete room is removed (typically because routing has changed the board):
+   * <ol>
+   *   <li><strong>Remove Doors:</strong> Disconnect from all neighbor rooms</li>
+   *   <li><strong>Create Incomplete Rooms:</strong> For each neighbor, create a new
+   *       incomplete room at the boundary where the removed room connected</li>
+   *   <li><strong>Update Neighbors:</strong> Connect new incomplete rooms to the neighbors</li>
+   * </ol>
+   *
+   * <p><strong>Rationale:</strong>
+   * The space previously occupied by the complete room is now unexplored relative
+   * to its neighbors. Creating incomplete rooms at the boundaries allows the
+   * expansion algorithm to re-explore these areas.
+   *
+   * <p><strong>Use Cases:</strong>
+   * <ul>
+   *   <li>After inserting new traces that invalidate cached rooms</li>
+   *   <li>When ripping up existing routing</li>
+   *   <li>During database maintenance after board modifications</li>
+   * </ul>
+   *
+   * @param p_room the complete expansion room to remove
+   *
+   * @see #add_incomplete_expansion_room
+   * @see ExpansionDoor
    */
   public void remove_complete_expansion_room(CompleteFreeSpaceExpansionRoom p_room) {
     // create new incomplete expansion rooms for all neighbours
@@ -452,7 +785,33 @@ public class AutorouteEngine {
   }
 
   /**
-   * Calculates the doors and adds the completed room to the room database.
+   * Calculates doors for an incomplete room and adds it to the complete room database.
+   *
+   * <p>This method performs the transition from an incomplete expansion room to a
+   * complete one by:
+   * <ol>
+   *   <li><strong>Door Calculation:</strong> Identifies all connection points (doors)
+   *       to neighboring expansion rooms</li>
+   *   <li><strong>Validation:</strong> Ensures the room is 2-dimensional (has area)</li>
+   *   <li><strong>Database Addition:</strong> Adds to the complete rooms collection</li>
+   * </ol>
+   *
+   * <p><strong>Door Calculation:</strong>
+   * Doors represent boundaries where this room connects to adjacent rooms. They're
+   * crucial for the expansion algorithm to navigate between free space regions.
+   *
+   * <p><strong>Dimension Validation:</strong>
+   * Only 2D rooms (areas, not lines or points) are valid for routing. Degenerate
+   * rooms are rejected by returning null.
+   *
+   * <p><strong>Lazy Initialization:</strong>
+   * Creates the {@link #complete_expansion_rooms} list on first use to save memory
+   * when database maintenance is disabled.
+   *
+   * @param p_room the incomplete room to convert to complete
+   * @return the completed room if successful, or null if invalid (not 2D or door calculation failed)
+   *
+   * @see CompleteFreeSpaceExpansionRoom
    */
   private CompleteFreeSpaceExpansionRoom add_complete_room(IncompleteFreeSpaceExpansionRoom p_room) {
     CompleteFreeSpaceExpansionRoom completed_room = (CompleteFreeSpaceExpansionRoom) calculate_doors(p_room);
@@ -543,8 +902,26 @@ public class AutorouteEngine {
   }
 
   /**
-   * Returns all complete free space expansion rooms with a target door to an item
-   * in the set p_items.
+   * Finds all complete expansion rooms that have target doors connecting to specified items.
+   *
+   * <p>Target doors represent connections from expansion rooms directly to board items
+   * (such as pads, vias, or existing traces). This method identifies which rooms can
+   * reach the target items, which is essential for:
+   * <ul>
+   *   <li>Determining routing completion (path found to destination)</li>
+   *   <li>Backtracing from destination to source</li>
+   *   <li>Validating connectivity</li>
+   * </ul>
+   *
+   * <p><strong>Algorithm:</strong>
+   * Iterates through all complete expansion rooms and checks if any of their target
+   * doors connect to items in the provided set.
+   *
+   * @param p_items the set of target items to find rooms for
+   * @return a set of complete rooms with target doors to the specified items (may be empty)
+   *
+   * @see TargetItemExpansionDoor
+   * @see CompleteFreeSpaceExpansionRoom#get_target_doors()
    */
   Set<CompleteFreeSpaceExpansionRoom> get_rooms_with_target_items(Set<Item> p_items) {
     Set<CompleteFreeSpaceExpansionRoom> result = new TreeSet<>();
@@ -563,7 +940,32 @@ public class AutorouteEngine {
   }
 
   /**
-   * Checks, if the internal datastructure is valid.
+   * Validates the internal data structures for consistency and correctness.
+   *
+   * <p>Performs integrity checks on the autorouter's internal state, including:
+   * <ul>
+   *   <li>Complete expansion room validity</li>
+   *   <li>Door connections between rooms</li>
+   *   <li>Shape consistency</li>
+   *   <li>Database coherence</li>
+   * </ul>
+   *
+   * <p><strong>When to Use:</strong>
+   * <ul>
+   *   <li><strong>Debugging:</strong> Diagnose routing algorithm issues</li>
+   *   <li><strong>Testing:</strong> Verify database integrity after operations</li>
+   *   <li><strong>Development:</strong> Ensure changes don't corrupt data structures</li>
+   * </ul>
+   *
+   * <p><strong>Performance:</strong>
+   * This is an expensive operation that iterates through all complete rooms and
+   * validates each one. Should not be called in production code or performance-critical paths.
+   *
+   * <p>Returns true even if {@link #complete_expansion_rooms} is null (no database to validate).
+   *
+   * @return true if all data structures are valid, false if any inconsistencies detected
+   *
+   * @see CompleteFreeSpaceExpansionRoom#validate(AutorouteEngine)
    */
   public boolean validate() {
     if (complete_expansion_rooms == null) {
