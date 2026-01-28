@@ -7,24 +7,157 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * A Polyline is a sequence of lines, where no 2 consecutive lines may be parallel. A Polyline of n lines defines a Polygon of n-1 intersection points of consecutive lines. The lines of the objects of
- * class Polyline are normally defined by points with integer coordinates, whereas the intersections of Lines can be represented in general only by infinite precision rational points. We use polylines
- * with integer coordinates instead of polygons with infinite precision rational coordinates because of its better performance in geometric calculations.
+ * Represents a sequence of connected line segments forming a path on a PCB.
+ *
+ * <p>A Polyline is a fundamental geometric primitive used to represent traces, board outlines,
+ * and other linear features in PCB routing. It consists of a sequence of lines where no two
+ * consecutive lines may be parallel.
+ *
+ * <p><strong>Mathematical Model:</strong>
+ * <ul>
+ *   <li>A polyline of <em>n</em> lines defines <em>n-1</em> corner points</li>
+ *   <li>Each corner is the intersection of two consecutive lines</li>
+ *   <li>Lines are defined by points with integer coordinates</li>
+ *   <li>Intersections may require infinite precision rational coordinates</li>
+ * </ul>
+ *
+ * <p><strong>Design Rationale:</strong>
+ * We use polylines with integer-coordinate lines instead of polygons with rational-coordinate
+ * corners because:
+ * <ul>
+ *   <li><strong>Performance:</strong> Integer arithmetic is faster than rational arithmetic</li>
+ *   <li><strong>Robustness:</strong> Avoids floating-point precision errors</li>
+ *   <li><strong>Simplicity:</strong> Line-based representation is easier to manipulate</li>
+ *   <li><strong>Efficiency:</strong> Better performance in geometric calculations</li>
+ * </ul>
+ *
+ * <p><strong>Key Features:</strong>
+ * <ul>
+ *   <li><strong>No Parallel Lines:</strong> Consecutive lines must not be parallel</li>
+ *   <li><strong>Corner Caching:</strong> Intersection points are lazily calculated and cached</li>
+ *   <li><strong>Transformations:</strong> Support for translation, rotation, mirroring</li>
+ *   <li><strong>Offset Shapes:</strong> Generate parallel offset curves for trace width</li>
+ *   <li><strong>Bounding Shapes:</strong> Compute bounding boxes and octagons</li>
+ * </ul>
+ *
+ * <p><strong>Common Use Cases:</strong>
+ * <ul>
+ *   <li>Representing PCB trace centerlines</li>
+ *   <li>Defining board outlines and keepout areas</li>
+ *   <li>Calculating trace shapes with width (offset shapes)</li>
+ *   <li>Route optimization and smoothing</li>
+ *   <li>Collision detection with other board features</li>
+ * </ul>
+ *
+ * <p><strong>Constraints:</strong>
+ * <ul>
+ *   <li>Minimum 3 lines required for a valid polyline</li>
+ *   <li>First and last lines are perpendicular end caps</li>
+ *   <li>No consecutive parallel lines allowed</li>
+ *   <li>Overlapping segments are automatically removed</li>
+ * </ul>
+ *
+ * <p><strong>Performance Considerations:</strong>
+ * <ul>
+ *   <li>Corner points are lazily computed and cached</li>
+ *   <li>Bounding boxes are cached for repeated queries</li>
+ *   <li>Approximations using FloatPoint for performance-critical operations</li>
+ * </ul>
+ *
+ * <p><strong>Typical Usage:</strong>
+ * <pre>{@code
+ * // Create from polygon
+ * Polygon polygon = new Polygon(cornerPoints);
+ * Polyline polyline = new Polyline(polygon);
+ *
+ * // Access corners
+ * Point firstCorner = polyline.first_corner();
+ * Point lastCorner = polyline.last_corner();
+ *
+ * // Generate offset shape for trace width
+ * TileShape[] offsetShapes = polyline.offset_shapes(traceHalfWidth);
+ * }</pre>
+ *
+ * @see Line
+ * @see Polygon
+ * @see Point
+ * @see TileShape
  */
 public class Polyline implements Serializable {
 
-  private static final boolean USE_BOUNDING_OCTAGON_FOR_OFFSET_SHAPES = true;
   /**
-   * the array of lines of this Polyline.
+   * Flag controlling whether to use bounding octagons or boxes for offset shape optimization.
+   *
+   * <p>Bounding octagons provide tighter bounds than boxes for diagonal traces,
+   * improving performance in offset shape calculations.
+   */
+  private static final boolean USE_BOUNDING_OCTAGON_FOR_OFFSET_SHAPES = true;
+
+  /**
+   * The array of lines forming this polyline.
+   *
+   * <p><strong>Structure:</strong>
+   * <ul>
+   *   <li><strong>Index 0:</strong> Perpendicular end cap at start</li>
+   *   <li><strong>Indices 1 to n-2:</strong> Actual line segments</li>
+   *   <li><strong>Index n-1:</strong> Perpendicular end cap at end</li>
+   * </ul>
+   *
+   * <p>The intersection of line[i] and line[i+1] defines corner point i.
+   *
+   * <p><strong>Invariant:</strong> No two consecutive lines may be parallel.
    */
   public final Line[] arr;
+
+  /**
+   * Cached floating-point approximations of corner points.
+   *
+   * <p>Lazily computed and cached for performance. Used when exact
+   * rational coordinates are not required.
+   */
   private transient FloatPoint[] precalculated_float_corners;
+
+  /**
+   * Cached exact corner points.
+   *
+   * <p>Lazily computed and cached. Computed using exact rational arithmetic
+   * to avoid precision errors.
+   */
   private transient Point[] precalculated_corners;
+
+  /**
+   * Cached bounding box containing all corners of this polyline.
+   *
+   * <p>Lazily computed on first access via {@link #bounding_box()}.
+   */
   private transient IntBox precalculated_bounding_box;
 
   /**
-   * creates a polyline of length p_polygon.corner_count + 1 from p_polygon, so that the i-th corner of p_polygon will be the intersection of the i-th and the i+1-th lines of the new created
-   * p_polyline for 0 {@literal <}= i {@literal <} p_point_arr.length. p_polygon must have at least 2 corners
+   * Creates a polyline from a polygon by converting corners to line intersections.
+   *
+   * <p>Constructs a polyline with n+1 lines from a polygon with n corners, where each
+   * corner of the polygon becomes the intersection point of two consecutive lines.
+   *
+   * <p><strong>Algorithm:</strong>
+   * <ol>
+   *   <li>Create perpendicular end cap at start (line 0)</li>
+   *   <li>Create lines connecting consecutive corners (lines 1 to n-1)</li>
+   *   <li>Create perpendicular end cap at end (line n)</li>
+   * </ol>
+   *
+   * <p><strong>End Caps:</strong>
+   * The first and last lines are perpendicular to the polyline direction at the
+   * endpoints, allowing the first and last polygon corners to be represented as
+   * line intersections.
+   *
+   * <p><strong>Requirements:</strong>
+   * The polygon must have at least 2 corners. If fewer corners are provided,
+   * an empty polyline (zero lines) is created and a warning is logged.
+   *
+   * @param p_polygon the polygon to convert (must have at least 2 corners)
+   *
+   * @see Polygon#corner_array()
+   * @see Direction#turn_45_degree(int)
    */
   public Polyline(Polygon p_polygon) {
     Point[] point_arr = p_polygon.corner_array();
@@ -47,12 +180,36 @@ public class Polyline implements Serializable {
     arr[point_arr.length] = Line.get_instance(point_arr[point_arr.length - 1], dir.turn_45_degree(2));
   }
 
+  /**
+   * Creates a polyline from an array of corner points.
+   *
+   * <p>Convenience constructor that first creates a polygon from the points,
+   * then converts it to a polyline.
+   *
+   * @param p_points array of corner points (at least 2 required)
+   *
+   * @see #Polyline(Polygon)
+   */
   public Polyline(Point[] p_points) {
     this(new Polygon(p_points));
   }
 
   /**
-   * creates a polyline consisting of 3 lines
+   * Creates a simple polyline connecting two corner points.
+   *
+   * <p>Constructs a minimal polyline consisting of exactly 3 lines:
+   * <ol>
+   *   <li>Perpendicular end cap at start corner</li>
+   *   <li>Line connecting the two corners</li>
+   *   <li>Perpendicular end cap at end corner</li>
+   * </ol>
+   *
+   * <p><strong>Degenerate Case:</strong>
+   * If the two corners are equal (same point), creates an empty polyline
+   * with zero lines.
+   *
+   * @param p_from_corner the starting corner point
+   * @param p_to_corner the ending corner point
    */
   public Polyline(Point p_from_corner, Point p_to_corner) {
     if (p_from_corner.equals(p_to_corner)) {
@@ -68,8 +225,31 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Creates a polyline from an array of lines. Lines, which are parallel to the previous line are skipped. The directed lines are normalized, so that they intersect the previous line before the next
-   * line
+   * Creates a polyline from an array of lines with automatic cleanup and normalization.
+   *
+   * <p>This constructor processes the input lines to ensure a valid polyline:
+   * <ol>
+   *   <li><strong>Remove Parallel Lines:</strong> Consecutive parallel lines are merged</li>
+   *   <li><strong>Remove Overlaps:</strong> Overlapping line segments are eliminated</li>
+   *   <li><strong>Remove Artifacts:</strong> Very short segments are removed</li>
+   *   <li><strong>Normalize Directions:</strong> Lines are oriented to intersect correctly</li>
+   * </ol>
+   *
+   * <p><strong>Line Orientation:</strong>
+   * Line directions are adjusted so that line[i] points from corner[i-1] to corner[i].
+   * This ensures proper intersection calculation and corner ordering.
+   *
+   * <p><strong>Minimum Length:</strong>
+   * If after cleanup fewer than 2 lines remain, creates an empty polyline (zero lines).
+   *
+   * <p><strong>Corner Caching:</strong>
+   * Float corner approximations are pre-calculated during construction for performance.
+   *
+   * @param p_line_arr array of lines to form the polyline (may contain parallel or overlapping lines)
+   *
+   * @see #remove_consecutive_parallel_lines
+   * @see #remove_overlaps
+   * @see #remove_artifacts
    */
   public Polyline(Line[] p_line_arr) {
     Line[] lines = remove_consecutive_parallel_lines(p_line_arr);
@@ -128,7 +308,30 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * checks if previous and next line are equal or opposite and removes the resulting overlap
+   * Removes overlapping line segments from a polyline.
+   *
+   * <p>Detects and removes situations where a line backtracks over a previous line,
+   * creating an overlap. For example, if line[i] and line[i+2] are equal or opposite,
+   * the intermediate segment creates an overlap that should be removed.
+   *
+   * <p><strong>Algorithm:</strong>
+   * <ol>
+   *   <li>Compare each line with the line two positions ahead</li>
+   *   <li>If they are equal or opposite, skip both intermediate lines</li>
+   *   <li>Special handling for first and last lines</li>
+   * </ol>
+   *
+   * <p><strong>Example:</strong>
+   * <pre>
+   * Before: --→ ↓ ←-- (backtrack)
+   * After:  --→ (overlap removed)
+   * </pre>
+   *
+   * <p><strong>Minimum Length:</strong>
+   * Returns empty array if fewer than 3 lines remain after cleanup.
+   *
+   * @param p_line_arr input line array (must have at least 4 lines to detect overlaps)
+   * @return cleaned line array with overlaps removed
    */
   private static Line[] remove_overlaps(Line[] p_line_arr) {
     if (p_line_arr.length < 4) {
@@ -172,8 +375,22 @@ public class Polyline implements Serializable {
     return result;
   }
 
-  /*
-   * removes small artifacts like spikes from the polyline
+  /**
+   * Removes small artifacts like spikes and very short segments from the polyline.
+   *
+   * <p>Filters out line segments shorter than a threshold (1900 units), which typically
+   * represent rounding errors, spikes, or other geometric artifacts that can cause
+   * problems in routing algorithms.
+   *
+   * <p><strong>Threshold:</strong>
+   * Lines with length ≤ 1900 units are considered artifacts and removed.
+   *
+   * <p><strong>Logging:</strong>
+   * Each removed artifact is logged at TRACE level for debugging purposes,
+   * including the polyline endpoints and the artifact length.
+   *
+   * @param lines input line array
+   * @return cleaned line array with short segments removed
    */
   private Line[] remove_artifacts(Line[] lines) {
     Line[] tmp_arr = new Line[lines.length];
@@ -198,18 +415,40 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Returns the number of lines minus 1
+   * Returns the number of corner points in this polyline.
+   *
+   * <p>A polyline with n lines has n-1 corner points (intersections of consecutive lines).
+   *
+   * @return the number of corners (line count minus 1)
    */
   public int corner_count() {
     return arr.length - 1;
   }
 
+  /**
+   * Checks if this polyline is empty (has insufficient lines to form corners).
+   *
+   * <p>A valid polyline requires at least 3 lines (forming 2 corners plus end caps).
+   *
+   * @return true if the polyline has fewer than 3 lines
+   */
   public boolean is_empty() {
     return arr.length < 3;
   }
 
   /**
-   * Checks, if this polyline is empty or if all corner points are equal.
+   * Checks if this polyline degenerates to a single point.
+   *
+   * <p>A polyline is considered a point if:
+   * <ul>
+   *   <li>It's empty (fewer than 3 lines), OR</li>
+   *   <li>All corner points are equal (same position)</li>
+   * </ul>
+   *
+   * <p><strong>Use Case:</strong>
+   * Useful for detecting degenerate traces or validating geometric operations.
+   *
+   * @return true if all corners are at the same point or polyline is empty
    */
   public boolean is_point() {
     if (arr.length < 3) {
@@ -225,7 +464,16 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * checks, if all lines of this polyline are orthogonal
+   * Checks if all lines in this polyline are orthogonal (horizontal or vertical).
+   *
+   * <p>Returns true only if every line is aligned with the X or Y axis.
+   *
+   * <p><strong>Use Case:</strong>
+   * Important for Manhattan routing where only orthogonal traces are allowed.
+   *
+   * @return true if all lines are orthogonal
+   *
+   * @see Line#is_orthogonal()
    */
   public boolean is_orthogonal() {
     for (int i = 0; i < arr.length; i++) {
@@ -237,7 +485,16 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * checks, if all lines of this polyline are multiples of 45 degree
+   * Checks if all lines in this polyline are multiples of 45 degrees.
+   *
+   * <p>Returns true if every line is aligned at 0°, 45°, 90°, 135°, etc.
+   *
+   * <p><strong>Use Case:</strong>
+   * Important for octilinear routing where only 45-degree angles are allowed.
+   *
+   * @return true if all lines are at 45-degree intervals
+   *
+   * @see Line#is_multiple_of_45_degree()
    */
   public boolean is_multiple_of_45_degree() {
     for (int i = 0; i < arr.length; i++) {
@@ -249,21 +506,53 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * returns the intersection of the first line with the second line
+   * Returns the first corner point of this polyline.
+   *
+   * <p>This is the intersection of the first and second lines (line[0] and line[1]).
+   * Equivalent to {@code corner(0)}.
+   *
+   * @return the first corner point with exact coordinates
+   *
+   * @see #corner(int)
+   * @see #last_corner()
    */
   public Point first_corner() {
     return corner(0);
   }
 
   /**
-   * returns the intersection of the last line with the line before the last line
+   * Returns the last corner point of this polyline.
+   *
+   * <p>This is the intersection of the last two lines (line[n-2] and line[n-1]).
+   * Equivalent to {@code corner(arr.length - 2)}.
+   *
+   * @return the last corner point with exact coordinates
+   *
+   * @see #corner(int)
+   * @see #first_corner()
    */
   public Point last_corner() {
     return corner(arr.length - 2);
   }
 
   /**
-   * returns the array of the intersection of two consecutive lines approximated by FloatPoint's.
+   * Returns all corner points of this polyline with exact rational coordinates.
+   *
+   * <p>Corners are lazily computed and cached. Each corner is the exact intersection
+   * of two consecutive lines, calculated using rational arithmetic to avoid
+   * floating-point precision errors.
+   *
+   * <p><strong>Caching:</strong>
+   * Corner points are computed on first access and stored in {@link #precalculated_corners}.
+   * Subsequent calls return the cached values.
+   *
+   * <p><strong>Array Size:</strong>
+   * For a polyline with n lines, returns an array of n-1 corner points.
+   *
+   * @return array of exact corner points (empty array if polyline has fewer than 2 lines)
+   *
+   * @see #corner_approx_arr()
+   * @see Line#intersection(Line)
    */
   public Point[] corner_arr() {
     if (arr.length < 2) {
@@ -283,7 +572,28 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * returns the array of the intersection of two consecutive lines approximated by FloatPoint's.
+   * Returns all corner points approximated as floating-point coordinates.
+   *
+   * <p>Provides faster access than {@link #corner_arr()} by using floating-point
+   * approximations instead of exact rational arithmetic. Suitable for visualization
+   * and performance-critical operations where exact precision is not required.
+   *
+   * <p><strong>Precision Trade-off:</strong>
+   * Float approximations may introduce small rounding errors but are significantly
+   * faster to compute and use less memory than exact rational coordinates.
+   *
+   * <p><strong>Caching:</strong>
+   * Approximations are computed on first access and stored in
+   * {@link #precalculated_float_corners}. Subsequent calls return cached values.
+   *
+   * <p><strong>Array Size:</strong>
+   * For a polyline with n lines, returns an array of n-1 corner points.
+   *
+   * @return array of approximate corner points (empty array if polyline has fewer than 2 lines)
+   *
+   * @see #corner_arr()
+   * @see #corner_approx(int)
+   * @see Line#intersection_approx(Line)
    */
   public FloatPoint[] corner_approx_arr() {
     if (arr.length < 2) {
@@ -361,7 +671,22 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * return the polyline with the reversed order of lines
+   * Returns a new polyline with lines in reversed order.
+   *
+   * <p>Creates a polyline that represents the same path but traversed in the
+   * opposite direction. Each line is replaced with its opposite (same position
+   * but opposite direction).
+   *
+   * <p><strong>Use Cases:</strong>
+   * <ul>
+   *   <li>Reversing trace direction for routing algorithms</li>
+   *   <li>Creating return paths</li>
+   *   <li>Path optimization that requires bidirectional analysis</li>
+   * </ul>
+   *
+   * @return a new polyline with reversed line order
+   *
+   * @see Line#opposite()
    */
   public Polyline reverse() {
     Line[] reversed_lines = new Line[arr.length];
@@ -372,7 +697,25 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Calculates the length of this polyline from p_from_corner to p_to_corner.
+   * Calculates the approximate length of a polyline segment between two corners.
+   *
+   * <p>Computes the cumulative Euclidean distance between consecutive corners
+   * from the starting corner to the ending corner using floating-point approximations.
+   *
+   * <p><strong>Corner Bounds:</strong>
+   * Corner indices are automatically clamped to valid range [0, corner_count-1].
+   *
+   * <p><strong>Precision:</strong>
+   * Uses {@link #corner_approx(int)} for fast floating-point calculations.
+   * For exact measurements, consider using exact corner coordinates, though
+   * this will be significantly slower.
+   *
+   * @param p_from_corner starting corner index (inclusive)
+   * @param p_to_corner ending corner index (exclusive)
+   * @return approximate length in board units
+   *
+   * @see #length_approx()
+   * @see #corner_approx(int)
    */
   public double length_approx(int p_from_corner, int p_to_corner) {
     int from_corner = Math.max(p_from_corner, 0);
@@ -385,22 +728,127 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Calculates the cumulative distance between consecutive corners of this polyline.
+   * Calculates the total approximate length of this entire polyline.
+   *
+   * <p>Convenience method that computes the cumulative distance between all
+   * consecutive corners from start to end.
+   *
+   * @return total approximate length in board units
+   *
+   * @see #length_approx(int, int)
    */
   public double length_approx() {
     return length_approx(0, arr.length - 2);
   }
 
   /**
-   * calculates for each line a shape around this line where the right and left edge lines have the distance p_half_width from the center line Returns an array of convex shapes of length line_count -
-   * 2
+   * Generates offset shapes representing this polyline with a specified width.
+   *
+   * <p>Creates an array of tile shapes that represent the area covered by this
+   * polyline when given a half-width (trace width divided by 2). This is the
+   * fundamental operation for converting centerline polylines into actual trace
+   * shapes on the PCB.
+   *
+   * <p><strong>Algorithm:</strong>
+   * For each line segment in the polyline:
+   * <ol>
+   *   <li>Create parallel offset lines at distance p_half_width on each side</li>
+   *   <li>Handle corners by computing proper intersections or miters</li>
+   *   <li>Cut "dog ears" (sharp protrusions) at acute corners</li>
+   *   <li>Generate bounding shapes and intersect with offset region</li>
+   * </ol>
+   *
+   * <p><strong>Corner Handling:</strong>
+   * <ul>
+   *   <li><strong>Convex corners:</strong> Simple miter join</li>
+   *   <li><strong>Concave corners:</strong> May create dog ears that need cutting</li>
+   *   <li><strong>Acute angles:</strong> Limited miter length to avoid excessive protrusions</li>
+   * </ul>
+   *
+   * <p><strong>Return Value:</strong>
+   * Array of {@link TileShape} objects, one for each internal line segment
+   * (excluding end caps). For n lines, returns n-2 shapes.
+   *
+   * <p><strong>Use Cases:</strong>
+   * <ul>
+   *   <li>Converting trace centerlines to physical copper shapes</li>
+   *   <li>Calculating actual board area used by traces</li>
+   *   <li>Checking clearances and overlaps</li>
+   *   <li>Generating manufacturing output</li>
+   * </ul>
+   *
+   * @param p_half_width half the desired trace width (radius from centerline)
+   * @return array of tile shapes representing the offset polyline
+   *
+   * @see #offset_shapes(int, int, int)
+   * @see TileShape
    */
   public TileShape[] offset_shapes(int p_half_width) {
     return offset_shapes(p_half_width, 0, arr.length - 1);
   }
 
   /**
-   * calculates for each line between p_from_no and p_to_no a shape around this line, where the right and left edge lines have the distance p_half_width from the center line
+   * Generates offset shapes for a specified range of line segments.
+   *
+   * <p>Creates tile shapes representing the area covered by a portion of this polyline
+   * with the specified half-width. This is the workhorse method called by
+   * {@link #offset_shapes(int)}.
+   *
+   * <p><strong>Algorithm Overview:</strong>
+   * For each line segment in the range [from_no+1, to_no-1]:
+   * <ol>
+   *   <li><strong>Create offset lines:</strong>
+   *     <ul>
+   *       <li>Translate current line right and left by half_width</li>
+   *       <li>Handle corner transitions based on turn direction</li>
+   *       <li>Use opposite lines for concave corners</li>
+   *     </ul>
+   *   </li>
+   *   <li><strong>Handle corners:</strong>
+   *     <ul>
+   *       <li>Left turns: Use next right line</li>
+   *       <li>Right turns: Use next left line in opposite direction</li>
+   *       <li>Miters formed by line intersections</li>
+   *     </ul>
+   *   </li>
+   *   <li><strong>Cut dog ears:</strong>
+   *     <ul>
+   *       <li>Detect sharp corners that create protrusions</li>
+   *       <li>Add cutting lines to trim excessive miters</li>
+   *       <li>Check distance threshold (2 × half_width²)</li>
+   *     </ul>
+   *   </li>
+   *   <li><strong>Generate final shape:</strong>
+   *     <ul>
+   *       <li>Create bounding octagon or box</li>
+   *       <li>Offset by half_width</li>
+   *       <li>Intersect with offset shape and cutting lines</li>
+   *     </ul>
+   *   </li>
+   * </ol>
+   *
+   * <p><strong>Dog Ear Cutting:</strong>
+   * When consecutive turns create acute angles, the miter can extend far beyond
+   * the trace width. The algorithm detects these "dog ears" and adds cutting lines
+   * to limit the protrusion to a reasonable distance.
+   *
+   * <p><strong>Bounding Shape Selection:</strong>
+   * Uses bounding octagons if {@link #USE_BOUNDING_OCTAGON_FOR_OFFSET_SHAPES} is true,
+   * otherwise uses bounding boxes. Octagons provide tighter bounds for diagonal traces.
+   *
+   * <p><strong>Range Parameters:</strong>
+   * The from_no and to_no parameters are automatically clamped to valid ranges.
+   * The method returns one shape for each interior line segment.
+   *
+   * @param p_half_width half the desired trace width (radius from centerline)
+   * @param p_from_no starting line index (clamped to [0, arr.length-1])
+   * @param p_to_no ending line index (clamped to [0, arr.length-1])
+   * @return array of tile shapes, one per interior line segment
+   *
+   * @see #offset_shapes(int)
+   * @see TileShape#intersection_with_simplify
+   * @see IntOctagon
+   * @see IntBox
    */
   public TileShape[] offset_shapes(int p_half_width, int p_from_no, int p_to_no) {
     int from_no = Math.max(p_from_no, 0);
@@ -560,8 +1008,19 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Calculates for the p_no-th line segment a shape around this line where the right and left edge lines have the distance p_half_width from the center line. 0 {@literal <}= p_no {@literal <}=
-   * arr.length - 3
+   * Calculates the offset shape for a single line segment.
+   *
+   * <p>Convenience method that computes the offset shape for one specific line
+   * segment by calling {@link #offset_shapes(int, int, int)} with a range of one.
+   *
+   * <p><strong>Valid Range:</strong>
+   * The segment index p_no must satisfy: 0 ≤ p_no ≤ arr.length - 3
+   *
+   * @param p_half_width half the desired trace width (radius from centerline)
+   * @param p_no the line segment index (0-based, excluding end caps)
+   * @return the offset shape for the specified segment, or null if index is invalid
+   *
+   * @see #offset_shapes(int, int, int)
    */
   public TileShape offset_shape(int p_half_width, int p_no) {
     if (p_no < 0 || p_no > arr.length - 3) {
@@ -573,7 +1032,25 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Calculates for the p_no-th line segment a box shape around this line where the border lines have the distance p_half_width from the center line. 0 {@literal <}= p_no {@literal <}= arr.length - 3
+   * Calculates a simple rectangular bounding box around a line segment with offset.
+   *
+   * <p>Provides a faster but less accurate alternative to {@link #offset_shape(int, int)}
+   * by using a simple axis-aligned bounding box instead of computing the exact
+   * offset shape. Useful for quick collision detection or area estimation.
+   *
+   * <p><strong>Note:</strong>
+   * The box will be larger than the actual trace shape, especially for diagonal
+   * segments. For exact shapes, use {@link #offset_shape(int, int)}.
+   *
+   * <p><strong>Valid Range:</strong>
+   * The segment index p_no must satisfy: 0 ≤ p_no ≤ arr.length - 3
+   *
+   * @param p_half_width half the desired trace width (radius from centerline)
+   * @param p_no the line segment index (0-based, excluding end caps)
+   * @return axis-aligned bounding box with offset
+   *
+   * @see #offset_shape(int, int)
+   * @see LineSegment#bounding_box()
    */
   public IntBox offset_box(int p_half_width, int p_no) {
     LineSegment curr_line_segment = new LineSegment(this, p_no + 1);
@@ -581,7 +1058,22 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Returns the by p_vector translated polyline
+   * Returns a new polyline translated by the specified vector.
+   *
+   * <p>Creates a copy of this polyline shifted by the given vector. If the
+   * vector is zero, returns this polyline unchanged (optimization).
+   *
+   * <p><strong>Use Cases:</strong>
+   * <ul>
+   *   <li>Moving traces during interactive editing</li>
+   *   <li>Board transformations (moving components)</li>
+   *   <li>Generating parallel traces</li>
+   * </ul>
+   *
+   * @param p_vector the translation vector
+   * @return translated polyline, or this if vector is zero
+   *
+   * @see Line#translate_by(Vector)
    */
   public Polyline translate_by(Vector p_vector) {
     if (p_vector.equals(Vector.ZERO)) {
@@ -595,7 +1087,23 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Returns the polyline turned by p_factor times 90 degree around p_pole.
+   * Returns a new polyline rotated by multiples of 90 degrees around a pole point.
+   *
+   * <p>Performs exact rotation using integer arithmetic (no rounding errors).
+   *
+   * <p><strong>Rotation Angles:</strong>
+   * <ul>
+   *   <li>p_factor = 1: 90° counter-clockwise</li>
+   *   <li>p_factor = 2: 180° rotation</li>
+   *   <li>p_factor = 3: 270° counter-clockwise (90° clockwise)</li>
+   *   <li>p_factor = 4: 360° (full rotation, returns to original)</li>
+   * </ul>
+   *
+   * @param p_factor number of 90-degree rotations (can be negative)
+   * @param p_pole the center point of rotation
+   * @return rotated polyline
+   *
+   * @see Line#turn_90_degree(int, IntPoint)
    */
   public Polyline turn_90_degree(int p_factor, IntPoint p_pole) {
     Line[] new_arr = new Line[arr.length];
@@ -605,6 +1113,27 @@ public class Polyline implements Serializable {
     return new Polyline(new_arr);
   }
 
+  /**
+   * Returns a new polyline rotated by an arbitrary angle around a pole point.
+   *
+   * <p>Performs approximate rotation using floating-point arithmetic. Corner
+   * coordinates are rounded to nearest integers after rotation.
+   *
+   * <p><strong>Note:</strong>
+   * Due to rounding, small precision errors may accumulate. For 90-degree
+   * rotations, prefer {@link #turn_90_degree(int, IntPoint)} which uses exact
+   * integer arithmetic.
+   *
+   * <p><strong>Optimization:</strong>
+   * If angle is zero, returns this polyline unchanged.
+   *
+   * @param p_angle rotation angle in radians
+   * @param p_pole the center point of rotation
+   * @return rotated polyline with rounded corners
+   *
+   * @see #turn_90_degree(int, IntPoint)
+   * @see FloatPoint#rotate(double, FloatPoint)
+   */
   public Polyline rotate_approx(double p_angle, FloatPoint p_pole) {
     if (p_angle == 0) {
       return this;
@@ -618,7 +1147,19 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Mirrors this polyline at the vertical line through p_pole
+   * Returns a new polyline mirrored at the vertical line through the pole point.
+   *
+   * <p>Performs vertical mirror transformation (flip left-right). The vertical
+   * line passes through p_pole with infinite extent.
+   *
+   * <p><strong>Transformation:</strong>
+   * Each point (x, y) is mirrored to (2×pole.x - x, y)
+   *
+   * @param p_pole point defining the vertical mirror axis
+   * @return vertically mirrored polyline
+   *
+   * @see #mirror_horizontal(IntPoint)
+   * @see Line#mirror_vertical(IntPoint)
    */
   public Polyline mirror_vertical(IntPoint p_pole) {
     Line[] new_arr = new Line[arr.length];
@@ -629,7 +1170,19 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Mirrors this polyline at the horizontal line through p_pole
+   * Returns a new polyline mirrored at the horizontal line through the pole point.
+   *
+   * <p>Performs horizontal mirror transformation (flip top-bottom). The horizontal
+   * line passes through p_pole with infinite extent.
+   *
+   * <p><strong>Transformation:</strong>
+   * Each point (x, y) is mirrored to (x, 2×pole.y - y)
+   *
+   * @param p_pole point defining the horizontal mirror axis
+   * @return horizontally mirrored polyline
+   *
+   * @see #mirror_vertical(IntPoint)
+   * @see Line#mirror_horizontal(IntPoint)
    */
   public Polyline mirror_horizontal(IntPoint p_pole) {
     Line[] new_arr = new Line[arr.length];
@@ -640,7 +1193,36 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Returns the smallest box containing the intersection points from index p_from_corner_no to index p_to_corner_no of the lines of this polyline
+   * Returns the smallest axis-aligned box containing a range of corners.
+   *
+   * <p>Computes the minimal bounding box that contains all corner points
+   * from index p_from_corner_no to p_to_corner_no (inclusive).
+   *
+   * <p><strong>Algorithm:</strong>
+   * <ol>
+   *   <li>Find minimum and maximum x, y coordinates across all corners</li>
+   *   <li>Floor the minimum coordinates (lower-left)</li>
+   *   <li>Ceil the maximum coordinates (upper-right)</li>
+   *   <li>Create box from these two points</li>
+   * </ol>
+   *
+   * <p><strong>Corner Indices:</strong>
+   * Indices are automatically clamped to valid range [0, corner_count-1].
+   *
+   * <p><strong>Use Cases:</strong>
+   * <ul>
+   *   <li>Quick collision detection</li>
+   *   <li>Spatial indexing</li>
+   *   <li>Area estimation</li>
+   *   <li>Canvas clipping</li>
+   * </ul>
+   *
+   * @param p_from_corner_no starting corner index (inclusive, clamped to valid range)
+   * @param p_to_corner_no ending corner index (inclusive, clamped to valid range)
+   * @return minimal axis-aligned box containing specified corners
+   *
+   * @see #bounding_box()
+   * @see #bounding_octagon(int, int)
    */
   public IntBox bounding_box(int p_from_corner_no, int p_to_corner_no) {
     int from_corner_no = Math.max(p_from_corner_no, 0);
@@ -662,7 +1244,18 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Returns the smallest box containing the intersection points of the lines of this polyline
+   * Returns the smallest axis-aligned box containing all corners of this polyline.
+   *
+   * <p>Convenience method that computes the bounding box for the entire polyline
+   * by calling {@link #bounding_box(int, int)} with the full corner range.
+   *
+   * <p><strong>Caching:</strong>
+   * The result is cached in {@link #precalculated_bounding_box} for performance.
+   * Subsequent calls return the cached value.
+   *
+   * @return minimal axis-aligned box containing all corners
+   *
+   * @see #bounding_box(int, int)
    */
   public IntBox bounding_box() {
     if (precalculated_bounding_box == null) {
@@ -672,7 +1265,48 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Returns the smallest octagon containing the intersection points from index p_from_corner_no to index p_to_corner_no of the lines of this polyline
+   * Returns the smallest bounding octagon containing a range of corners.
+   *
+   * <p>Computes a minimal octagon-shaped bounding region that contains all corner
+   * points from index p_from_corner_no to p_to_corner_no (inclusive). Octagons
+   * provide tighter bounds than axis-aligned boxes, especially for diagonal traces.
+   *
+   * <p><strong>Octagon Definition:</strong>
+   * An octagon is defined by 8 bounding lines:
+   * <ul>
+   *   <li><strong>Axis-aligned:</strong> left (lx), right (rx), bottom (ly), top (uy)</li>
+   *   <li><strong>Diagonal:</strong> upper-left (ulx), lower-right (lrx), lower-left (llx), upper-right (urx)</li>
+   * </ul>
+   *
+   * <p><strong>Algorithm:</strong>
+   * For each corner point (x, y):
+   * <ol>
+   *   <li>Update axis-aligned bounds: lx, ly, rx, uy</li>
+   *   <li>Update diagonal bounds using:
+   *     <ul>
+   *       <li>ulx, lrx from x - y</li>
+   *       <li>llx, urx from x + y</li>
+   *     </ul>
+   *   </li>
+   *   <li>Floor minimums, ceil maximums for integer coordinates</li>
+   * </ol>
+   *
+   * <p><strong>Advantages over Boxes:</strong>
+   * <ul>
+   *   <li>~30% tighter bounds for 45° traces</li>
+   *   <li>Better performance in offset shape calculations</li>
+   *   <li>More accurate collision detection</li>
+   * </ul>
+   *
+   * <p><strong>Corner Indices:</strong>
+   * Indices are automatically clamped to valid range [0, corner_count-1].
+   *
+   * @param p_from_corner_no starting corner index (inclusive, clamped to valid range)
+   * @param p_to_corner_no ending corner index (inclusive, clamped to valid range)
+   * @return minimal octagon containing specified corners
+   *
+   * @see #bounding_box(int, int)
+   * @see IntOctagon
    */
   public IntOctagon bounding_octagon(int p_from_corner_no, int p_to_corner_no) {
     int from_corner_no = Math.max(p_from_corner_no, 0);
@@ -704,7 +1338,52 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Calculates an approximation of the nearest point on this polyline to p_from_point.
+   * Calculates an approximation of the nearest point on this polyline to a reference point.
+   *
+   * <p>Finds the point on this polyline that is closest to the given reference point,
+   * checking both corner points and interior points along line segments.
+   *
+   * <p><strong>Algorithm:</strong>
+   * <ol>
+   *   <li><strong>Check all corners:</strong>
+   *     <ul>
+   *       <li>Calculate distance from p_from_point to each corner</li>
+   *       <li>Track minimum distance and corresponding corner</li>
+   *     </ul>
+   *   </li>
+   *   <li><strong>Check segment projections:</strong>
+   *     <ul>
+   *       <li>For each line segment, project p_from_point onto the line</li>
+   *       <li>Verify projection falls within segment bounds (with tolerance)</li>
+   *       <li>Update nearest point if projection is closer</li>
+   *     </ul>
+   *   </li>
+   * </ol>
+   *
+   * <p><strong>Projection Validation:</strong>
+   * A projection is considered valid if:
+   * <pre>
+   * distance(proj, corner[i]) + distance(proj, corner[i-1]) ≤ segment_length + tolerance
+   * </pre>
+   * This ensures the projection lies between the two segment endpoints.
+   *
+   * <p><strong>Tolerance:</strong>
+   * Uses a tolerance of 1.0 units to handle floating-point rounding errors
+   * when checking if projections fall within segments.
+   *
+   * <p><strong>Use Cases:</strong>
+   * <ul>
+   *   <li>Snapping points to traces during interactive editing</li>
+   *   <li>Finding closest connection points</li>
+   *   <li>Proximity detection for selection</li>
+   *   <li>Distance calculations</li>
+   * </ul>
+   *
+   * @param p_from_point the reference point to measure from
+   * @return the nearest point on this polyline (corner or interior point)
+   *
+   * @see #distance(FloatPoint)
+   * @see FloatPoint#projection_approx(Line)
    */
   public FloatPoint nearest_point_approx(FloatPoint p_from_point) {
     double min_distance = Double.MAX_VALUE;
@@ -735,16 +1414,62 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Calculates the distance of p_from_point to the nearest point on this polyline
+   * Calculates the minimum distance from a point to this polyline.
+   *
+   * <p>Convenience method that finds the nearest point on the polyline and
+   * returns the distance to that point.
+   *
+   * @param p_from_point the reference point to measure from
+   * @return minimum distance to any point on this polyline
+   *
+   * @see #nearest_point_approx(FloatPoint)
    */
   public double distance(FloatPoint p_from_point) {
     return p_from_point.distance(nearest_point_approx(p_from_point));
   }
 
   /**
-   * Combines the two polylines, if they have a common end corner. The order of lines in this polyline will be preserved. Returns the combined polyline or this polyline, if this polyline and p_other
-   * have no common end corner. If there is something to combine at the start of this polyline, p_other is inserted in front of this polyline. If there is something to combine at the end of this
-   * polyline, this polyline is inserted in front of p_other.
+   * Combines two polylines that share a common endpoint into a single polyline.
+   *
+   * <p>Attempts to merge this polyline with another polyline if they have a
+   * common end corner (first or last corner). The line order of this polyline
+   * is always preserved.
+   *
+   * <p><strong>Combination Rules:</strong>
+   * <ul>
+   *   <li><strong>Start of this → Start of other:</strong> p_other is reversed and prepended</li>
+   *   <li><strong>Start of this → End of other:</strong> p_other is prepended</li>
+   *   <li><strong>End of this → Start of other:</strong> p_other is appended</li>
+   *   <li><strong>End of this → End of other:</strong> p_other is reversed and appended</li>
+   *   <li><strong>No common endpoint:</strong> Returns this polyline unchanged</li>
+   * </ul>
+   *
+   * <p><strong>Algorithm:</strong>
+   * <ol>
+   *   <li>Check if first or last corners match</li>
+   *   <li>Determine which ends to combine (4 possible combinations)</li>
+   *   <li>Create merged line array (omitting duplicate end caps)</li>
+   *   <li>Reverse lines if needed to maintain proper direction</li>
+   *   <li>Construct new polyline from combined lines</li>
+   * </ol>
+   *
+   * <p><strong>Line Array Handling:</strong>
+   * When combining, the overlapping end cap lines are removed to avoid
+   * duplicate corners at the join point. The result has
+   * {@code this.arr.length + p_other.arr.length - 2} lines.
+   *
+   * <p><strong>Use Cases:</strong>
+   * <ul>
+   *   <li>Merging trace segments during routing</li>
+   *   <li>Combining paths for optimization</li>
+   *   <li>Connecting partial routes</li>
+   * </ul>
+   *
+   * @param p_other the polyline to combine with this one
+   * @return combined polyline if endpoints match, otherwise this polyline
+   *
+   * @see #reverse()
+   * @see #split(int, Line)
    */
   public Polyline combine(Polyline p_other) {
     if (p_other == null || arr.length < 3 || p_other.arr.length < 3) {
@@ -798,9 +1523,52 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Splits this polyline at the line with number p_line_no into two by inserting p_endline as concluding line of the first split piece and as the start line of the second split piece. p_endline and
-   * the line with number p_line_no must not be parallel. The order of the lines ins the two result pieces is preserved. p_line_no must be bigger than 0 and less than arr.length - 1. Returns null, if
-   * nothing was split.
+   * Splits this polyline into two pieces at a specified line by inserting an end line.
+   *
+   * <p>Divides the polyline at line p_line_no by inserting p_end_line as:
+   * <ul>
+   *   <li>The concluding line of the first split piece</li>
+   *   <li>The start line of the second split piece</li>
+   * </ul>
+   *
+   * <p><strong>Algorithm:</strong>
+   * <ol>
+   *   <li>Calculate new corner at intersection of arr[p_line_no] and p_end_line</li>
+   *   <li>Create first piece: lines [0..p_line_no-1] + p_end_line</li>
+   *   <li>Create second piece: p_end_line + lines [p_line_no+1..end]</li>
+   *   <li>Construct polylines from both pieces</li>
+   * </ol>
+   *
+   * <p><strong>Requirements:</strong>
+   * <ul>
+   *   <li>1 ≤ p_line_no ≤ arr.length - 2 (cannot split at end caps)</li>
+   *   <li>p_end_line must not be parallel to arr[p_line_no]</li>
+   *   <li>p_end_line must intersect arr[p_line_no], not just touch endpoints</li>
+   * </ul>
+   *
+   * <p><strong>No-Split Conditions:</strong>
+   * Returns null if:
+   * <ul>
+   *   <li>p_line_no is out of valid range</li>
+   *   <li>p_end_line is parallel to arr[p_line_no]</li>
+   *   <li>Intersection point equals an existing endpoint (touching, not crossing)</li>
+   * </ul>
+   *
+   * <p><strong>Result Array:</strong>
+   * Returns array of 2 polylines: [first_piece, second_piece], or null if no split occurred.
+   *
+   * <p><strong>Use Cases:</strong>
+   * <ul>
+   *   <li>Dividing traces at intersection points</li>
+   *   <li>Creating branch connections</li>
+   *   <li>Trace editing and modification</li>
+   * </ul>
+   *
+   * @param p_line_no the line index where splitting occurs (1 ≤ p_line_no ≤ arr.length-2)
+   * @param p_end_line the line to insert at the split point (must not be parallel to arr[p_line_no])
+   * @return array of two split polylines, or null if splitting is not possible
+   *
+   * @see #combine(Polyline)
    */
   public Polyline[] split(int p_line_no, Line p_end_line) {
     if (p_line_no < 1 || p_line_no > arr.length - 2) {
@@ -848,7 +1616,35 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * create a new Polyline by skipping the lines of this Polyline from p_from_no to p_to_no
+   * Creates a new polyline by removing a range of lines from this polyline.
+   *
+   * <p>Removes lines from index p_from_no to p_to_no (inclusive) and returns
+   * a new polyline with the remaining lines. The original polyline is unchanged.
+   *
+   * <p><strong>Algorithm:</strong>
+   * <ol>
+   *   <li>Copy lines [0..p_from_no-1] to new array</li>
+   *   <li>Skip lines [p_from_no..p_to_no]</li>
+   *   <li>Copy lines [p_to_no+1..end] to new array</li>
+   *   <li>Construct new polyline from array</li>
+   * </ol>
+   *
+   * <p><strong>Requirements:</strong>
+   * <ul>
+   *   <li>0 ≤ p_from_no ≤ p_to_no ≤ arr.length - 1</li>
+   *   <li>Returns this polyline unchanged if indices are invalid</li>
+   * </ul>
+   *
+   * <p><strong>Use Cases:</strong>
+   * <ul>
+   *   <li>Removing problematic segments from traces</li>
+   *   <li>Simplifying complex polylines</li>
+   *   <li>Trace editing and cleanup</li>
+   * </ul>
+   *
+   * @param p_from_no starting index of lines to skip (inclusive)
+   * @param p_to_no ending index of lines to skip (inclusive)
+   * @return new polyline with specified lines removed, or this if indices invalid
    */
   public Polyline skip_lines(int p_from_no, int p_to_no) {
     if (p_from_no < 0 || p_to_no > arr.length - 1 || p_from_no > p_to_no) {
@@ -860,6 +1656,31 @@ public class Polyline implements Serializable {
     return new Polyline(new_lines);
   }
 
+  /**
+   * Checks if a point lies exactly on any line segment of this polyline.
+   *
+   * <p>Tests whether the given point is contained within any of the line segments
+   * (excluding end caps). A point is considered contained if it lies on the
+   * line defined by a segment.
+   *
+   * <p><strong>Algorithm:</strong>
+   * For each interior line segment (lines 1 to arr.length-2):
+   * <ol>
+   *   <li>Create a LineSegment from the polyline</li>
+   *   <li>Check if point is contained in the segment</li>
+   *   <li>Return true on first match</li>
+   * </ol>
+   *
+   * <p><strong>Note:</strong>
+   * This performs exact geometric containment testing, not approximate
+   * distance checking. For proximity testing, use {@link #nearest_point_approx(FloatPoint)}.
+   *
+   * @param p_point the point to test for containment
+   * @return true if the point lies on any line segment of this polyline
+   *
+   * @see LineSegment#contains(Point)
+   * @see #nearest_point_approx(FloatPoint)
+   */
   public boolean contains(Point p_point) {
     for (int i = 1; i < arr.length - 1; i++) {
       LineSegment curr_segment = new LineSegment(this, i);
@@ -871,8 +1692,39 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Creates a perpendicular line segment from p_from_point onto the nearest line segment of this polyline to p_from_side. Returns null, if the perpendicular line does not intersect the nearest line
-   * segment inside its segment bounds or if p_from_point is contained in this polyline.
+   * Creates a perpendicular line segment from a point to the nearest line segment of this polyline.
+   *
+   * <p>Constructs a line segment that is perpendicular to the polyline and connects
+   * p_from_point to the nearest intersection point on the polyline.
+   *
+   * <p><strong>Algorithm:</strong>
+   * <ol>
+   *   <li>Find the line segment with minimum perpendicular distance</li>
+   *   <li>Calculate perpendicular direction from point to line</li>
+   *   <li>Verify projection falls within segment bounds</li>
+   *   <li>Create line segment from point to projection</li>
+   * </ol>
+   *
+   * <p><strong>Validation:</strong>
+   * Returns null if:
+   * <ul>
+   *   <li>Perpendicular does not intersect the nearest segment within bounds</li>
+   *   <li>The point is already contained in the polyline</li>
+   *   <li>Projection point falls outside the segment</li>
+   * </ul>
+   *
+   * <p><strong>Use Cases:</strong>
+   * <ul>
+   *   <li>Creating branch connections to traces</li>
+   *   <li>Finding optimal connection points</li>
+   *   <li>Measuring clearance violations</li>
+   * </ul>
+   *
+   * @param p_from_point the point to project from
+   * @return perpendicular line segment to nearest polyline segment, or null if invalid
+   *
+   * @see #nearest_point_approx(FloatPoint)
+   * @see #contains(Point)
    */
   public LineSegment projection_line(Point p_from_point) {
     FloatPoint from_point = p_from_point.to_float();
@@ -909,7 +1761,47 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Shortens this polyline to p_new_line_count lines. Additionally, the last line segment will be approximately shortened to p_new_length. The last corner of the new polyline will be an IntPoint.
+   * Shortens this polyline to a specified number of lines with adjusted last segment length.
+   *
+   * <p>Reduces the polyline to p_new_line_count lines and adjusts the length of the
+   * final segment to approximately p_last_segment_length. The last corner of the result
+   * will be an IntPoint (rounded from floating-point calculation).
+   *
+   * <p><strong>Algorithm:</strong>
+   * <ol>
+   *   <li>Get the last two corners at the shortened length</li>
+   *   <li>Calculate new last corner by adjusting segment length</li>
+   *   <li>If new corner equals existing corner, skip last line instead</li>
+   *   <li>Copy first (p_new_line_count - 2) lines</li>
+   *   <li>Create new second-to-last line to new corner</li>
+   *   <li>Create new perpendicular end cap</li>
+   * </ol>
+   *
+   * <p><strong>Last Segment Adjustment:</strong>
+   * The final segment length is approximate because:
+   * <ul>
+   *   <li>Calculations use floating-point corner approximations</li>
+   *   <li>Result is rounded to nearest integer point</li>
+   *   <li>Actual length may differ slightly from p_last_segment_length</li>
+   * </ul>
+   *
+   * <p><strong>End Cap:</strong>
+   * The last line is a perpendicular end cap, created by turning the
+   * second-to-last line's direction by 270° (6 × 45°).
+   *
+   * <p><strong>Use Cases:</strong>
+   * <ul>
+   *   <li>Trimming traces to specific lengths</li>
+   *   <li>Shortening routes during optimization</li>
+   *   <li>Adjusting trace endpoints during editing</li>
+   * </ul>
+   *
+   * @param p_new_line_count the desired number of lines in the shortened polyline
+   * @param p_last_segment_length the approximate desired length of the final segment
+   * @return shortened polyline with adjusted last segment
+   *
+   * @see #skip_lines(int, int)
+   * @see FloatPoint#change_length(FloatPoint, double)
    */
   public Polyline shorten(int p_new_line_count, double p_last_segment_length) {
     FloatPoint last_corner = this.corner_approx(p_new_line_count - 2);
