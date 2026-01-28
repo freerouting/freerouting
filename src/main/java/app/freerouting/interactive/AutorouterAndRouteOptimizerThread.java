@@ -31,16 +31,167 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * GUI interactive thread for the batch auto-router + route optimizer.
- * TODO: Remove this class in favor of @RoutingJobScheduler
+ * Interactive thread managing the combined execution of batch autorouting and route optimization.
+ *
+ * <p>This thread orchestrates a complete automated routing workflow in GUI mode, consisting of:
+ * <ol>
+ *   <li><strong>Batch Autorouting:</strong> Automatically routes all incomplete connections</li>
+ *   <li><strong>Route Optimization:</strong> Post-processes routes to improve quality (if enabled)</li>
+ * </ol>
+ *
+ * <p><strong>Key Features:</strong>
+ * <ul>
+ *   <li><strong>Algorithm Selection:</strong> Supports both current and v1.9 router algorithms</li>
+ *   <li><strong>Multi-threading:</strong> Can leverage multiple CPU cores for faster routing</li>
+ *   <li><strong>Real-time Feedback:</strong> Updates GUI with progress, statistics, and visual indicators</li>
+ *   <li><strong>Event-driven Updates:</strong> Responds to routing events to update display and job state</li>
+ *   <li><strong>Optimization Variants:</strong> Single-threaded or multi-threaded optimization modes</li>
+ *   <li><strong>Interruptible:</strong> User can stop the process at any time</li>
+ * </ul>
+ *
+ * <p><strong>Workflow:</strong>
+ * <pre>
+ * 1. Initialize autorouter (BatchAutorouter or BatchAutorouterV19)
+ * 2. Set up event listeners for GUI updates
+ * 3. Initialize optimizer if enabled (BatchOptimizer or BatchOptimizerMultiThreaded)
+ * 4. Run autorouting passes until completion or interruption
+ * 5. Run optimization passes if enabled and not interrupted
+ * 6. Update job output with SES file data
+ * 7. Display completion statistics and restore board state
+ * </pre>
+ *
+ * <p><strong>GUI Integration:</strong>
+ * <ul>
+ *   <li>Updates status messages showing current operation</li>
+ *   <li>Displays routing statistics (via count, incomplete count, violations)</li>
+ *   <li>Shows board score in real-time</li>
+ *   <li>Draws current airline being routed and optimization position</li>
+ *   <li>Maintains board read-only state during routing</li>
+ * </ul>
+ *
+ * <p><strong>Algorithm Selection:</strong>
+ * <ul>
+ *   <li><strong>Current Algorithm:</strong> Default modern routing algorithm with latest improvements</li>
+ *   <li><strong>v1.9 Algorithm:</strong> Legacy algorithm for compatibility with older designs</li>
+ * </ul>
+ *
+ * <p><strong>Optimization Modes:</strong>
+ * <ul>
+ *   <li><strong>Single-threaded:</strong> Safe, reliable optimization using {@link BatchOptimizer}</li>
+ *   <li><strong>Multi-threaded:</strong> Faster but may generate violations ({@link BatchOptimizerMultiThreaded})</li>
+ * </ul>
+ *
+ * <p><strong>Event Handling:</strong>
+ * The thread registers listeners for:
+ * <ul>
+ *   <li>{@link BoardUpdatedEvent}: Triggered after each routing/optimization iteration</li>
+ *   <li>{@link TaskStateChangedEvent}: Triggered when routing phases start/stop</li>
+ * </ul>
+ *
+ * <p><strong>Output:</strong>
+ * Upon completion, generates:
+ * <ul>
+ *   <li>Specctra SES file with routing results</li>
+ *   <li>Routing statistics and performance metrics</li>
+ *   <li>Board score and quality indicators</li>
+ * </ul>
+ *
+ * <p><strong>Performance Tracking:</strong>
+ * <ul>
+ *   <li>Records start/finish timestamps</li>
+ *   <li>Measures autorouting and optimization durations separately</li>
+ *   <li>Calculates score improvement percentage</li>
+ *   <li>Logs detailed session summaries</li>
+ * </ul>
+ *
+ * <p><strong>Known Issues:</strong>
+ * <ul>
+ *   <li>Multi-threaded optimization may generate clearance violations</li>
+ *   <li>Single-threaded optimization recommended for production use</li>
+ * </ul>
+ *
+ * <p><strong>TODO:</strong> This class should be deprecated in favor of a more modern
+ * job scheduler architecture for better job management.
+ *
+ * @see InteractiveActionThread
+ * @see BatchAutorouter
+ * @see BatchAutorouterV19
+ * @see BatchOptimizer
+ * @see BatchOptimizerMultiThreaded
+ * @see RoutingJob
  */
 public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
 
+  /**
+   * The batch autorouter instance executing the routing algorithm.
+   *
+   * <p>Can be either:
+   * <ul>
+   *   <li>{@link BatchAutorouter}: Current/modern routing algorithm</li>
+   *   <li>{@link BatchAutorouterV19}: Legacy v1.9 algorithm for compatibility</li>
+   * </ul>
+   *
+   * <p>Both implement {@link NamedAlgorithm} interface for consistent access.
+   */
   private final NamedAlgorithm batchAutorouter;
+
+  /**
+   * The batch optimizer instance for post-routing optimization, or null if disabled.
+   *
+   * <p>Can be either:
+   * <ul>
+   *   <li>{@link BatchOptimizer}: Single-threaded, safe optimization</li>
+   *   <li>{@link BatchOptimizerMultiThreaded}: Multi-threaded, faster but may create violations</li>
+   * </ul>
+   *
+   * <p>Set to null if optimization is disabled in router settings.
+   */
   private BatchOptimizer batchOptimizer;
 
   /**
-   * Creates a new instance of AutorouterAndRouteOptimizerThread
+   * Creates a new autorouter and optimizer thread for GUI-based routing.
+   *
+   * <p>Initialization process:
+   * <ol>
+   *   <li>Selects appropriate router algorithm based on settings</li>
+   *   <li>Configures board references in routing job</li>
+   *   <li>Registers event listeners for GUI updates</li>
+   *   <li>Sets up SES file generation on routing updates</li>
+   *   <li>Initializes optimizer if enabled (single or multi-threaded)</li>
+   * </ol>
+   *
+   * <p><strong>Algorithm Selection:</strong>
+   * <ul>
+   *   <li>If algorithm is "v1.9": Uses {@link BatchAutorouterV19}</li>
+   *   <li>Otherwise: Uses {@link BatchAutorouter} (current algorithm)</li>
+   *   <li>Invalid algorithm names fall back to current with warning</li>
+   * </ul>
+   *
+   * <p><strong>Event Listeners:</strong>
+   * Sets up listeners for:
+   * <ul>
+   *   <li>Board updates: Updates GUI statistics, score, and display</li>
+   *   <li>SES generation: Saves routing results to job output</li>
+   *   <li>Task state changes: Updates status messages for phase transitions</li>
+   * </ul>
+   *
+   * <p><strong>Optimizer Setup:</strong>
+   * If optimization is enabled:
+   * <ul>
+   *   <li>Single thread or multi-threading disabled: Uses {@link BatchOptimizer}</li>
+   *   <li>Multiple threads enabled: Uses {@link BatchOptimizerMultiThreaded}</li>
+   * </ul>
+   *
+   * <p><strong>Warning:</strong> Multi-threaded optimization is known to potentially
+   * generate clearance violations. Single-threaded mode is recommended for production.
+   *
+   * @param p_board_handling the GUI board manager for display updates
+   * @param routingJob the routing job containing configuration and board data
+   *
+   * @see BatchAutorouter
+   * @see BatchAutorouterV19
+   * @see BatchOptimizer
+   * @see BatchOptimizerMultiThreaded
    */
   protected AutorouterAndRouteOptimizerThread(GuiBoardManager p_board_handling, RoutingJob routingJob) {
     super(p_board_handling, routingJob);
@@ -187,6 +338,107 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
     }
   }
 
+  /**
+   * Executes the complete autorouting and optimization workflow.
+   *
+   * <p><strong>Execution Flow:</strong>
+   * <ol>
+   *   <li><strong>Initialization:</strong>
+   *     <ul>
+   *       <li>Set job start time and state to RUNNING</li>
+   *       <li>Configure thread count</li>
+   *       <li>Notify listeners that autorouting started</li>
+   *       <li>Set board to read-only mode</li>
+   *       <li>Hide rats nest during routing</li>
+   *     </ul>
+   *   </li>
+   *   <li><strong>Autorouting Phase:</strong>
+   *     <ul>
+   *       <li>Display status message</li>
+   *       <li>Execute batch autorouting passes</li>
+   *       <li>Track routing time and statistics</li>
+   *       <li>Log session summary with initial/final counts</li>
+   *       <li>Send analytics event</li>
+   *     </ul>
+   *   </li>
+   *   <li><strong>Optimization Phase (if enabled):</strong>
+   *     <ul>
+   *       <li>Check if optimization is enabled and not interrupted</li>
+   *       <li>Display optimization status message</li>
+   *       <li>Execute optimization passes</li>
+   *       <li>Calculate improvement percentage</li>
+   *       <li>Log optimization results</li>
+   *       <li>Send analytics event</li>
+   *     </ul>
+   *   </li>
+   *   <li><strong>Finalization:</strong>
+   *     <ul>
+   *       <li>Generate SES output file if required</li>
+   *       <li>Update rats nest display</li>
+   *       <li>Restore board read-only state</li>
+   *       <li>Display completion message with statistics</li>
+   *       <li>Refresh GUI windows</li>
+   *       <li>Check for non-45-degree traces if applicable</li>
+   *       <li>Set job completion time and state</li>
+   *       <li>Notify listeners of completion or abortion</li>
+   *     </ul>
+   *   </li>
+   * </ol>
+   *
+   * <p><strong>Performance Tracking:</strong>
+   * <ul>
+   *   <li>Measures autorouting duration separately from optimization</li>
+   *   <li>Logs detailed session summaries with routing statistics</li>
+   *   <li>Calculates score improvement from optimization</li>
+   *   <li>Tracks completion status (completed, interrupted, or pass limit hit)</li>
+   * </ul>
+   *
+   * <p><strong>GUI Updates:</strong>
+   * Throughout execution:
+   * <ul>
+   *   <li>Status messages show current phase (autorouting/optimizing)</li>
+   *   <li>Board statistics display via count, incomplete count, violations</li>
+   *   <li>Board score updates in real-time</li>
+   *   <li>Progress indicators through event listeners</li>
+   * </ul>
+   *
+   * <p><strong>Interruption Handling:</strong>
+   * <ul>
+   *   <li>Checks {@link #isStopRequested()} at key points</li>
+   *   <li>Allows clean exit from autorouting phase</li>
+   *   <li>Allows clean exit from optimization phase</li>
+   *   <li>Sets job state to CANCELLED if interrupted</li>
+   *   <li>Logs interruption status in messages</li>
+   * </ul>
+   *
+   * <p><strong>Output Generation:</strong>
+   * <ul>
+   *   <li>Generates Specctra SES file with routing results</li>
+   *   <li>Stores SES data in job output object</li>
+   *   <li>Updates output after autorouting (via events)</li>
+   *   <li>Final output update after optimization completes</li>
+   * </ul>
+   *
+   * <p><strong>Analytics:</strong>
+   * Sends the following analytics events:
+   * <ul>
+   *   <li>autorouterStarted: When autorouting begins</li>
+   *   <li>autorouterFinished: When autorouting completes</li>
+   *   <li>routeOptimizerStarted: When optimization begins</li>
+   *   <li>routeOptimizerFinished: When optimization completes</li>
+   * </ul>
+   *
+   * <p><strong>Error Handling:</strong>
+   * <ul>
+   *   <li>Catches all exceptions and logs them</li>
+   *   <li>Ensures job state is updated even on errors</li>
+   *   <li>Guarantees listeners are notified of completion</li>
+   * </ul>
+   *
+   * @see BatchAutorouter#runBatchLoop()
+   * @see BatchOptimizer#runBatchLoop()
+   * @see RoutingJobState
+   */
   @Override
   protected void thread_action() {
     routingJob.startedAt = Instant.now();
@@ -401,6 +653,50 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
     FRLogger.traceExit("BatchAutorouterThread.thread_action()");
   }
 
+  /**
+   * Draws visual indicators showing current autorouting and optimization progress.
+   *
+   * <p>This method provides real-time visual feedback during routing operations by
+   * drawing overlay graphics on the board display.
+   *
+   * <p><strong>Autorouting Indicator:</strong>
+   * If autorouting is active, draws the current airline being processed:
+   * <ul>
+   *   <li><strong>Appearance:</strong> Line connecting two unconnected points</li>
+   *   <li><strong>Color:</strong> Incomplete connection color from graphics context</li>
+   *   <li><strong>Width:</strong> 3 mil or 300 board units (whichever is smaller)</li>
+   *   <li><strong>Purpose:</strong> Shows which connection is currently being routed</li>
+   * </ul>
+   *
+   * <p><strong>Optimization Indicator:</strong>
+   * If optimization is active, draws crosshair and circle at current position:
+   * <ul>
+   *   <li><strong>Crosshair:</strong> Two diagonal lines (X pattern)</li>
+   *   <li><strong>Circle:</strong> Surrounds the optimization point</li>
+   *   <li><strong>Radius:</strong> 10× the default trace half-width</li>
+   *   <li><strong>Color:</strong> Incomplete connection color</li>
+   *   <li><strong>Width:</strong> 1 pixel lines</li>
+   *   <li><strong>Purpose:</strong> Shows which area is being optimized</li>
+   * </ul>
+   *
+   * <p><strong>Performance Note:</strong>
+   * This method is called frequently during routing to update the display.
+   * Drawing operations are kept lightweight to maintain responsive GUI.
+   *
+   * <p><strong>Implementation Details:</strong>
+   * <ul>
+   *   <li>Uses instanceof checks to access algorithm-specific methods</li>
+   *   <li>Handles null cases when no airline or position is available</li>
+   *   <li>Delegates actual drawing to graphics context methods</li>
+   *   <li>Scales indicators based on board resolution and trace widths</li>
+   * </ul>
+   *
+   * @param p_graphics the graphics context for rendering overlay indicators
+   *
+   * @see BatchAutorouter#get_air_line()
+   * @see BatchAutorouterV19#get_air_line()
+   * @see BatchOptimizer#get_current_position()
+   */
   @Override
   public void draw(Graphics p_graphics) {
     // Cast to access get_air_line() which exists on both BatchAutorouter and
