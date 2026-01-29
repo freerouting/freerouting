@@ -393,17 +393,38 @@ public class Polyline implements Serializable {
    * @return cleaned line array with short segments removed
    */
   private Line[] remove_artifacts(Line[] lines) {
+    // Log the state before artifact removal
+    StringBuilder beforeLog = new StringBuilder("Before remove_artifacts: ");
+    beforeLog.append("line_count=").append(lines.length);
+    for (int i = 0; i < lines.length; i++) {
+      beforeLog.append(", L").append(i).append("=").append(String.format("%.2f", lines[i].length()));
+    }
+    FRLogger.trace("Polyline.remove_artifacts", "before_removal",
+        beforeLog.toString(),
+        this.toString(),
+        null);
+
     Line[] tmp_arr = new Line[lines.length];
     int new_length = 0;
+    int removed_count = 0;
     for (int i = 0; i < lines.length; i++) {
-      // skip small lines
-      if (lines[i].length() > 1900) {
+      // NEVER remove the first or last line - these are structural end caps
+      // Only skip small lines in the middle of the polyline
+      boolean isEndCap = (i == 0 || i == lines.length - 1);
+      if (lines[i].length() > 1900 || isEndCap) {
         tmp_arr[new_length] = lines[i];
         new_length++;
-      } else
-      {
+        if (isEndCap && lines[i].length() <= 1900) {
+          FRLogger.trace("Polyline.remove_artifacts", "preserved_end_cap",
+              "Preserved end cap line at index " + i + " with length " + lines[i].length()
+                  + " (first=" + (i == 0) + ", last=" + (i == lines.length - 1) + ")",
+              this.toString(),
+              new Point[] { lines[i].a, lines[i].b });
+        }
+      } else {
+        removed_count++;
         FRLogger.trace("Polyline.remove_artifacts", "remove_artifact",
-            "A line with length of " + lines[i].length() + " was skipped in a polyline",
+            "A line with length of " + lines[i].length() + " was skipped in a polyline (removed #" + removed_count + ")",
             this.toString(),
             new Point[] { lines[i].a, lines[i].b });
       }
@@ -411,6 +432,22 @@ public class Polyline implements Serializable {
 
     Line[] result = new Line[new_length];
     System.arraycopy(tmp_arr, 0, result, 0, new_length);
+
+    // Log the state after artifact removal
+    if (removed_count > 0 || new_length != lines.length) {
+      StringBuilder afterLog = new StringBuilder("After remove_artifacts: ");
+      afterLog.append("removed=").append(removed_count)
+          .append(", remaining=").append(new_length)
+          .append(", original=").append(lines.length);
+      if (new_length < 3) {
+        afterLog.append(" WARNING: polyline now degenerate (< 3 lines)!");
+      }
+      FRLogger.trace("Polyline.remove_artifacts", "after_removal",
+          afterLog.toString(),
+          this.toString(),
+          null);
+    }
+
     return result;
   }
 

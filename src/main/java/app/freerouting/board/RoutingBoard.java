@@ -934,6 +934,14 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     Polyline new_polyline = shove_trace_algo.spring_over_obstacles(p_polyline, compensated_half_width, p_layer,
         p_net_no_arr, p_clearance_class_no, null);
     if (new_polyline == null) {
+      FRLogger.trace("RoutingBoard.insert_forced_trace_polyline", "spring_over_failed",
+          "spring_over_obstacles returned null, cannot insert segment from "
+              + from_corner + " to " + to_corner
+              + ", layer=" + p_layer
+              + ", half_width=" + p_half_width
+              + ", compensated_half_width=" + compensated_half_width,
+          "Net #" + (p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
+          new Point[] { from_corner, to_corner });
       return from_corner;
     }
     Polyline combined_polyline;
@@ -944,6 +952,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       combined_polyline = new_polyline.combine(combine_trace.polyline());
     }
     if (combined_polyline.arr.length < 3) {
+      FRLogger.trace("RoutingBoard.insert_forced_trace_polyline", "polyline_too_short",
+          "combined_polyline has insufficient lines (arr.length=" + combined_polyline.arr.length + " < 3)"
+              + ", new_polyline.arr.length=" + new_polyline.arr.length
+              + ", from " + from_corner + " to " + to_corner
+              + ", layer=" + p_layer,
+          "Net #" + (p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
+          new Point[] { from_corner, to_corner });
       return from_corner;
     }
     int start_shape_no = combined_polyline.arr.length - new_polyline.arr.length;
@@ -964,6 +979,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             p_clearance_class_no, p_max_recursion_depth, p_max_via_recursion_depth,
             p_max_spring_over_recursion_depth, p_time_limit);
         if (!check_shove_ok) {
+          FRLogger.trace("RoutingBoard.insert_forced_trace_polyline", "shove_check_failed",
+              "shove check failed at shape " + i + "/" + trace_shapes.length
+                  + ", from " + from_corner + " to " + to_corner
+                  + ", layer=" + p_layer
+                  + ", half_width=" + p_half_width,
+              "Net #" + (p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
+              new Point[] { from_corner, to_corner });
           last_shape_no = i;
           break;
         }
@@ -972,6 +994,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           p_clearance_class_no, null, p_max_recursion_depth, p_max_via_recursion_depth,
           p_max_spring_over_recursion_depth);
       if (!insert_ok) {
+        FRLogger.trace("RoutingBoard.insert_forced_trace_polyline", "shove_insert_failed",
+            "shove insert failed at shape " + i + "/" + trace_shapes.length
+                + ", from " + from_corner + " to " + to_corner
+                + ", layer=" + p_layer
+                + ", half_width=" + p_half_width,
+            "Net #" + (p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
+            new Point[] { from_corner, to_corner });
         return null;
       }
     }
@@ -989,6 +1018,14 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       double last_segment_length = last_corner.distance(prev_last_corner);
       if (last_segment_length > 100 * sample_width) {
         // to many cycles to sample
+        FRLogger.trace("RoutingBoard.insert_forced_trace_polyline", "segment_too_long",
+            "last segment too long to sample: length=" + last_segment_length
+                + ", sample_width=" + sample_width
+                + ", max_allowed=" + (100 * sample_width)
+                + ", from " + from_corner + " to " + to_corner
+                + ", layer=" + p_layer,
+            "Net #" + (p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
+            new Point[] { from_corner, to_corner });
         return from_corner;
       }
       int shape_index = combined_polyline.corner_count() - trace_shapes.length - 1 + last_shape_no;
@@ -1008,6 +1045,14 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           combined_polyline = new_polyline.combine(combine_trace.polyline());
         }
         if (combined_polyline.arr.length < 3) {
+          FRLogger.trace("RoutingBoard.insert_forced_trace_polyline", "shortened_polyline_too_short",
+              "combined_polyline after shortening has insufficient lines (arr.length=" + combined_polyline.arr.length + " < 3)"
+                  + ", new_corner=" + new_corner
+                  + ", sample_width=" + sample_width
+                  + ", from " + from_corner + " to " + to_corner
+                  + ", layer=" + p_layer,
+              "Net #" + (p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
+              new Point[] { from_corner, to_corner });
           return new_corner;
         }
         shape_index = combined_polyline.arr.length - 3;
@@ -1021,6 +1066,15 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           p_clearance_class_no, p_max_recursion_depth, p_max_via_recursion_depth,
           p_max_spring_over_recursion_depth, p_time_limit);
       if (!check_shove_ok) {
+        FRLogger.trace("RoutingBoard.insert_forced_trace_polyline", "final_shove_check_failed",
+            "final shove check failed after shortening"
+                + ", shape_index=" + shape_index
+                + ", new_corner=" + new_corner
+                + ", from " + from_corner + " to " + to_corner
+                + ", layer=" + p_layer
+                + ", half_width=" + p_half_width,
+            "Net #" + (p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
+            new Point[] { from_corner, to_corner });
         return from_corner;
       }
       boolean insert_ok = shove_trace_algo.insert(last_trace_shape, from_side, p_layer, p_net_no_arr,
