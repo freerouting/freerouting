@@ -24,6 +24,13 @@ public class DebugControl {
     // Lock for synchronization
     private final Object lock = new Object();
 
+    // Listeners
+    private final java.util.List<DebugStateListener> listeners = new java.util.ArrayList<>();
+
+    public interface DebugStateListener {
+        void onDebugStateChanged(boolean isPaused);
+    }
+
     private DebugControl() {
         // Initialize state based on settings if needed, but usually settings are loaded
         // later.
@@ -32,6 +39,21 @@ public class DebugControl {
 
     public static DebugControl getInstance() {
         return INSTANCE;
+    }
+
+    public void addDebugStateListener(DebugStateListener listener) {
+        synchronized (listeners) {
+            listeners.add(listener);
+        }
+    }
+
+    private void notifyListeners() {
+        boolean paused = isPaused.get();
+        synchronized (listeners) {
+            for (DebugStateListener listener : listeners) {
+                listener.onDebugStateChanged(paused);
+            }
+        }
     }
 
     /**
@@ -270,6 +292,9 @@ public class DebugControl {
     /**
      * Pauses the execution.
      */
+    /**
+     * Pauses the execution.
+     */
     public void pause() {
         synchronized (lock) {
             isPaused.set(true);
@@ -277,6 +302,7 @@ public class DebugControl {
             lock.notifyAll(); // Notify to check state (though logic is "wait while paused")
         }
         FRLogger.debug("DebugControl: Execution Paused");
+        notifyListeners();
     }
 
     /**
@@ -289,6 +315,7 @@ public class DebugControl {
             lock.notifyAll(); // Wake up waiting threads
         }
         FRLogger.debug("DebugControl: Execution Resumed");
+        notifyListeners();
     }
 
     /**

@@ -94,6 +94,11 @@ class BoardToolbar extends JPanel {
     // Setup Global Keyboard Shortcuts for Arrows
     setupKeyboardShortcuts();
 
+    // Register listener for debug state changes
+    app.freerouting.debug.DebugControl.getInstance().addDebugStateListener(isPaused -> {
+      SwingUtilities.invokeLater(this::updateDebugButtonsState);
+    });
+
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
     this.setLayout(new BorderLayout());
