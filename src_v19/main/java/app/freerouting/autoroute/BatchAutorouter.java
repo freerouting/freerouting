@@ -11,14 +11,12 @@ import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.interactive.AutorouteSettings;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.InteractiveActionThread;
+import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
-
-import app.freerouting.interactive.RatsNest;
-import app.freerouting.interactive.AutorouteSettings;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -374,9 +372,10 @@ public class BatchAutorouter {
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> ripped_item_list = new TreeSet<>();
 
-          if (this.totalItemsRouted >= hdlg.get_settings().autoroute_settings.getMaxItems()) {
-            FRLogger.info("Max items limit reached (" + hdlg.get_settings().autoroute_settings.getMaxItems()
-                + "). Stopping auto-router.");
+          // Check maxItems limit (Integer.MAX_VALUE means no limit)
+          int maxItems = hdlg.get_settings().autoroute_settings.getMaxItems();
+          if (maxItems < Integer.MAX_VALUE && this.totalItemsRouted >= maxItems) {
+            FRLogger.info("Max items limit reached (" + maxItems + "). Stopping auto-router.");
             this.thread.request_stop_auto_router();
             this.is_interrupted = true;
             break;

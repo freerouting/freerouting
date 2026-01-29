@@ -11,8 +11,8 @@ param(
     [string]$LoggingLocation = ".\logs\",
     [string]$LoggingLevel = "TRACE",
     [string]$LoggingPattern = "%msg%n",
-    [int]$max_passes = 3,
-    [int]$max_items = 3,
+    [int]$max_passes = 5,
+    [int]$max_items = 0,
     [int]$max_threads = 1,
     [string]$job_timeout = "00:03:00"
 )

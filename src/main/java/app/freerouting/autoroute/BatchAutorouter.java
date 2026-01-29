@@ -769,7 +769,8 @@ public class BatchAutorouter extends NamedAlgorithm {
             }
           }
 
-          if (this.totalItemsRouted >= job.routerSettings.maxItems) {
+          // Check maxItems limit (0 means no limit)
+          if (job.routerSettings.maxItems > 0 && this.totalItemsRouted >= job.routerSettings.maxItems) {
             job.logInfo("Max items limit reached (" + job.routerSettings.maxItems + "). Stopping auto-router.");
             this.thread.request_stop_auto_router();
             break;
@@ -1095,7 +1096,8 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       String currentBoardHash = this.board.get_hash();
 
-      if (currentPass > this.settings.maxPasses) {
+      // Check maxPasses limit (0 means no limit, which gets converted to Integer.MAX_VALUE in validation)
+      if (this.settings.maxPasses > 0 && this.settings.maxPasses < Integer.MAX_VALUE && currentPass > this.settings.maxPasses) {
         thread.request_stop_auto_router();
         break;
       }

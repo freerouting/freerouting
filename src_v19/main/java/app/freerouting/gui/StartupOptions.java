@@ -1,13 +1,17 @@
 package app.freerouting.gui;
 
-import com.google.gson.*;
-import java.nio.file.*;
-import java.nio.charset.StandardCharsets;
-import java.io.*;
-
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.logger.FRLogger;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
@@ -16,14 +20,7 @@ import java.util.UUID;
 public class StartupOptions {
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting.json");
-  transient boolean single_design_option = false;
-  transient boolean test_version_option = false;
-  transient boolean show_help_option = false;
-  transient boolean session_file_option = false;
-  transient boolean webstart_option = false;
-  transient String design_input_filename;
-  transient String design_output_filename;
-  transient String design_rules_filename;
+  public final String user_id;
   public String input_directory;
   public int max_passes = 99999;
   public int max_items = Integer.MAX_VALUE;
@@ -32,23 +29,30 @@ public class StartupOptions {
   public int num_threads = 1;
   public boolean optimizer_enabled = true;
   public String job_timeout = null;
-  transient String logging_file_level;
-  transient String logging_console_level;
-  transient String logging_file_location;
   public BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY;
   public String hybrid_ratio = "1:1";
   public ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
-  transient String[] supported_languages = { "en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko" };
-  transient Locale current_locale = Locale.getDefault();
   public boolean save_intermediate_stages = false;
   // this value is equivalent to the setting of "-oit 0.001"
   public float optimization_improvement_threshold = 0.00001f;
-  transient String[] ignore_net_classes_by_autorouter = new String[0];
   public boolean disable_logging = false;
   public boolean disable_analytics = false;
-  public final String user_id;
   public int dialog_confirmation_timeout = 20;
   public String host = "N/A";
+  transient boolean single_design_option = false;
+  transient boolean test_version_option = false;
+  transient boolean show_help_option = false;
+  transient boolean session_file_option = false;
+  transient boolean webstart_option = false;
+  transient String design_input_filename;
+  transient String design_output_filename;
+  transient String design_rules_filename;
+  transient String logging_file_level;
+  transient String logging_console_level;
+  transient String logging_file_location;
+  transient String[] supported_languages = { "en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko" };
+  transient Locale current_locale = Locale.getDefault();
+  transient String[] ignore_net_classes_by_autorouter = new String[0];
 
   public StartupOptions() {
     if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals)) {
@@ -57,6 +61,18 @@ public class StartupOptions {
     }
 
     user_id = UUID.randomUUID().toString();
+  }
+
+  public static void save(StartupOptions options) throws IOException {
+    try (Writer writer = Files.newBufferedWriter(PATH, StandardCharsets.UTF_8)) {
+      GSON.toJson(options, writer);
+    }
+  }
+
+  public static StartupOptions load() throws IOException {
+    try (Reader reader = Files.newBufferedReader(PATH, StandardCharsets.UTF_8)) {
+      return GSON.fromJson(reader, StartupOptions.class);
+    }
   }
 
   public Locale getCurrentLocale() {
@@ -86,15 +102,16 @@ public class StartupOptions {
             design_rules_filename = p_args[i + 1];
           }
         } else if (p_args[i].startsWith("-mp")) {
+        } else if (p_args[i].startsWith("-mp")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             max_passes = Integer.decode(p_args[i + 1]);
-
-            if (max_passes < 1) {
+            if (max_passes < 0) {
               max_passes = 1;
             }
             if (max_passes > 99998) {
               max_passes = 99998;
             }
+            // Note: 0 is allowed and means no limit
           }
         } else if (p_args[i].startsWith("-mt")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
@@ -210,26 +227,28 @@ public class StartupOptions {
           String[] parts = p_args[i].split("=");
           if (parts.length == 2) {
             max_passes = Integer.decode(parts[1]);
-            if (max_passes < 1) {
+            if (max_passes < 0) {
               max_passes = 1;
             }
             if (max_passes > 99998) {
               max_passes = 99998;
             }
+            // Note: 0 is allowed and means no limit
           }
         } else if (p_args[i].startsWith("--router.max_items")) {
           String[] parts = p_args[i].split("=");
           if (parts.length == 2) {
             max_items = Integer.decode(parts[1]);
-            if (max_items < 1) {
+            if (max_items < 0) {
               max_items = 1;
             }
+            // Note: 0 is allowed and means no limit
           }
         } else if (p_args[i].startsWith("--router.max_threads")) {
           String[] parts = p_args[i].split("=");
           if (parts.length == 2) {
             num_threads = Integer.decode(parts[1]);
-            if (num_threads <= 0) {
+            if (num_threads < 0) {
               num_threads = 0;
             }
             if (num_threads > 1024) {
@@ -293,17 +312,5 @@ public class StartupOptions {
 
   public ItemSelectionStrategy getItemSelectionStrategy() {
     return item_selection_strategy;
-  }
-
-  public static void save(StartupOptions options) throws IOException {
-    try (Writer writer = Files.newBufferedWriter(PATH, StandardCharsets.UTF_8)) {
-      GSON.toJson(options, writer);
-    }
-  }
-
-  public static StartupOptions load() throws IOException {
-    try (Reader reader = Files.newBufferedReader(PATH, StandardCharsets.UTF_8)) {
-      return GSON.fromJson(reader, StartupOptions.class);
-    }
   }
 }

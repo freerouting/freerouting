@@ -357,19 +357,20 @@ public class GlobalSettings implements Serializable {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             routerSettings.maxPasses = Integer.decode(p_args[i + 1]);
 
-            if (routerSettings.maxPasses < 1) {
+            if (routerSettings.maxPasses < 0) {
               routerSettings.maxPasses = 1;
             }
             if (routerSettings.maxPasses > 99998) {
               routerSettings.maxPasses = 99998;
             }
+            // Note: 0 is allowed and means no limit
             i++;
           }
         } else if (p_args[i].startsWith("-mt")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             routerSettings.optimizer.maxThreads = Integer.decode(p_args[i + 1]);
 
-            if (routerSettings.optimizer.maxThreads <= 0) {
+            if (routerSettings.optimizer.maxThreads < 0) {
               routerSettings.optimizer.maxThreads = 0;
             }
             if (routerSettings.optimizer.maxThreads > 1024) {
