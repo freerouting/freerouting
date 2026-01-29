@@ -1111,7 +1111,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     try {
       // Remove evtl. generated cycles because otherwise pull_tight may not work
       // correctly.
-      if (new_trace.normalize(changed_area.get_area(p_layer))) {
+      // NOTE: Use normalize_without_tail_removal during incremental routing to prevent
+      // premature removal of traces that are still being built and don't have all connections yet.
+      if (new_trace.normalize_without_tail_removal(changed_area.get_area(p_layer))) {
         pull_tight_algo.split_traces_at_keep_point();
         // otherwise the new corner may no more be contained in the new trace after
         // optimizing

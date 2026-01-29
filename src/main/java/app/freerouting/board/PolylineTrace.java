@@ -238,7 +238,6 @@ public class PolylineTrace extends Trace implements Serializable {
       if ((board.communication != null) && (board.communication.observers != null)) {
         board.communication.observers.notify_changed(this);
       }
-      board.additional_update_after_change(this);
     }
     return (combined_at != null);
   }

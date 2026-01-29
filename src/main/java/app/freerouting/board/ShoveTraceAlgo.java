@@ -350,7 +350,10 @@ public class ShoveTraceAlgo {
       board.insert_item(curr_substitute_trace);
 
       try {
-        curr_substitute_trace.normalize(board.changed_area.get_area(p_layer));
+        // NOTE: Use normalize_without_tail_removal during shove operations to prevent
+        // premature tail removal. Tail cleanup is handled explicitly after this based on
+        // the tails_exist_before flag.
+        curr_substitute_trace.normalize_without_tail_removal(board.changed_area.get_area(p_layer));
       } catch (Exception e) {
         FRLogger.error("Couldn't normalize trace.", e);
       }
