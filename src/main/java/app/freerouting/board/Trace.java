@@ -140,12 +140,22 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    */
   @Override
   public boolean is_tail() {
-    Collection<Item> contact_list = this.get_start_contacts();
-    if (contact_list.isEmpty()) {
-      return true;
+    Collection<Item> start_contacts = this.get_start_contacts();
+    Collection<Item> end_contacts = this.get_end_contacts();
+    boolean is_tail = start_contacts.isEmpty() || end_contacts.isEmpty();
+
+    if (is_tail) {
+      FRLogger.trace("Trace.is_tail", "tail_detected",
+          "Trace id=" + this.get_id_no() + " detected as tail"
+              + ", start_contacts=" + start_contacts.size()
+              + ", end_contacts=" + end_contacts.size()
+              + ", from " + this.first_corner() + " to " + this.last_corner()
+              + ", layer=" + this.get_layer(),
+          "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1) + ", Trace #" + this.get_id_no(),
+          new Point[] { this.first_corner(), this.last_corner() });
     }
-    contact_list = this.get_end_contacts();
-    return contact_list.isEmpty();
+
+    return is_tail;
   }
 
   @Override

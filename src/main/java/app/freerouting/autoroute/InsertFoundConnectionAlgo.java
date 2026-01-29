@@ -166,11 +166,14 @@ public class InsertFoundConnectionAlgo {
           p_ctrl.trace_clearance_class_no);
     }
 
-    try {
-      p_board.normalize_traces(p_ctrl.net_no);
-    } catch (Exception _) {
-      FRLogger.warn("The normalization of net '" + p_board.rules.nets.get(p_ctrl.net_no).name + "' failed.");
-    }
+    // NOTE: Normalize is commented out here to prevent premature tail removal during incremental routing
+    // Normalization (including tail removal) will happen at the end of the routing operation
+    // See: https://github.com/freerouting/freerouting/issues/XXX
+    // try {
+    //   p_board.normalize_traces(p_ctrl.net_no);
+    // } catch (Exception _) {
+    //   FRLogger.warn("The normalization of net '" + p_board.rules.nets.get(p_ctrl.net_no).name + "' failed.");
+    // }
 
     return new_instance;
   }

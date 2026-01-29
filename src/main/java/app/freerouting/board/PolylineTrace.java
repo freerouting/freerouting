@@ -777,31 +777,22 @@ public class PolylineTrace extends Trace implements Serializable {
    * @throws Exception if maximum normalization depth is exceeded, indicating a potential infinite loop
    */
   public boolean normalize(IntOctagon p_clip_shape) throws Exception {
-    return normalize(p_clip_shape, 0);
+    return normalize(p_clip_shape, 0, true);
   }
 
   /**
-   * Internal recursive implementation of trace normalization with depth tracking.
-   * <p>
-   * This method performs the actual normalization work and tracks recursion depth to prevent
-   * infinite loops. It should not be called directly; use {@link #normalize(IntOctagon)} instead.
-   * <p>
-   * The method handles several special cases:
-   * <ul>
-   *   <li>Very simple traces (2 corners or less) are left unchanged</li>
-   *   <li>Tail traces (connected at only one end) are removed</li>
-   *   <li>Degenerate traces (where first and last corners are identical) are removed</li>
-   * </ul>
-   * <p>
-   * After splitting and combining, if any traces were modified, the method recursively calls
-   * itself on the new trace segments to continue the normalization process.
-   *
-   * @param p_clip_shape optional shape to restrict normalization to a specific area
-   * @param normalization_depth current recursion depth (0 for initial call)
-   * @return true if any modifications were made to the trace, false otherwise
-   * @throws Exception if normalization_depth exceeds MAX_NORMALIZATION_DEPTH
+   * Normalizes this trace without removing tails.
+   * Used during incremental routing to prevent premature removal of traces that don't have
+   * all connections yet.
    */
-  private boolean normalize(IntOctagon p_clip_shape, int normalization_depth) throws Exception {
+  public boolean normalize_without_tail_removal(IntOctagon p_clip_shape) throws Exception {
+    return normalize(p_clip_shape, 0, false);
+  }
+
+  /**
+   * Normalizes this trace, optionally removing tails.
+   */
+  private boolean normalize(IntOctagon p_clip_shape, int normalization_depth, boolean remove_tails) throws Exception {
     if (normalization_depth > MAX_NORMALIZATION_DEPTH) {
       throw new Exception("Max normalization depth reached with trace '" + this.get_id_no() + "'");
     }
@@ -811,7 +802,7 @@ public class PolylineTrace extends Trace implements Serializable {
       return false;
     }
 
-    if (this.is_tail()) {
+    if (remove_tails && this.is_tail()) {
       FRLogger.trace("PolylineTrace.normalize", "remove_tail",
           "removing tail trace id=" + this.get_id_no() + " (net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1)
               + ")",
@@ -834,7 +825,13 @@ public class PolylineTrace extends Trace implements Serializable {
     boolean result = split_pieces.size() != 1;
     for (PolylineTrace curr_split_trace : split_pieces) {
       if (curr_split_trace.is_on_the_board()) {
+        // Save state before combine to detect if anything actually changed
+        int corner_count_before = curr_split_trace.corner_count();
+        Point first_corner_before = curr_split_trace.first_corner();
+        Point last_corner_before = curr_split_trace.last_corner();
+
         boolean trace_combined = curr_split_trace.combine();
+
         if (curr_split_trace.corner_count() == 2 && curr_split_trace
             .first_corner()
             .equals(curr_split_trace.last_corner())) {
@@ -847,7 +844,22 @@ public class PolylineTrace extends Trace implements Serializable {
           board.remove_item(curr_split_trace);
           result = true;
         } else if (trace_combined) {
-          curr_split_trace.normalize(p_clip_shape, normalization_depth + 1);
+          // Check if the trace actually changed after combine
+          // If it's the same (same corners), don't recurse - prevents endless loops
+          boolean actually_changed = (curr_split_trace.corner_count() != corner_count_before)
+              || !curr_split_trace.first_corner().equals(first_corner_before)
+              || !curr_split_trace.last_corner().equals(last_corner_before);
+
+          if (actually_changed) {
+            curr_split_trace.normalize(p_clip_shape, normalization_depth + 1, remove_tails);
+          } else {
+            FRLogger.trace("PolylineTrace.normalize", "skip_recursive_normalize",
+                "Skipping recursive normalize because trace didn't actually change after combine()"
+                    + " (corners=" + curr_split_trace.corner_count()
+                    + ", from " + curr_split_trace.first_corner() + " to " + curr_split_trace.last_corner() + ")",
+                "Net #" + (curr_split_trace.net_count() > 0 ? curr_split_trace.get_net_no(0) : -1) + ", Trace #" + curr_split_trace.get_id_no(),
+                new Point[] { curr_split_trace.first_corner(), curr_split_trace.last_corner() });
+          }
           result = true;
         }
       }
@@ -1069,8 +1081,11 @@ public class PolylineTrace extends Trace implements Serializable {
       }
     }
 
+    // NOTE: Skip tail removal during intermediate normalize() from change()
+    // Tail removal will happen later during the final normalize_traces() call
+    // This prevents premature removal of traces during incremental routing
     try {
-      this.normalize(clip_shape);
+      this.normalize_without_tail_removal(clip_shape);
     } catch (Exception e) {
       FRLogger.error("Couldn't change the trace, because its normalization failed.", e);
     }
