@@ -105,10 +105,20 @@ public class DebugControl {
      * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
      * @return true if the items should be processed/logged, false otherwise.
      */
+    /**
+     * Checks if the debug control is interested in the given items based on the
+     * filter.
+     *
+     * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
+     * @return true if the items should be processed/logged, false otherwise.
+     */
     public boolean isInterested(String impactedItems) {
-        int netNo = -1;
-        String netName = null;
+        int netNo = getNetNo(impactedItems);
+        return Freerouting.globalSettings.debugSettings.isNetPermitted(netNo, null);
+    }
 
+    private int getNetNo(String impactedItems) {
+        int netNo = -1;
         // Try to parse Net #<No>
         if (impactedItems != null) {
             java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("Net #(\\d+)").matcher(impactedItems);
@@ -120,8 +130,7 @@ public class DebugControl {
                 }
             }
         }
-
-        return Freerouting.globalSettings.debugSettings.isNetPermitted(netNo, netName);
+        return netNo;
     }
 
     /**
@@ -138,11 +147,13 @@ public class DebugControl {
             return false;
         }
 
-        if (!isInterested(impactedItems)) {
+        int netNo = getNetNo(impactedItems);
+
+        if (!Freerouting.globalSettings.debugSettings.isNetPermitted(netNo, null)) {
             return false;
         }
 
-        return check(operation, -1, null);
+        return check(operation, netNo, null);
     }
 
     /**
@@ -188,8 +199,8 @@ public class DebugControl {
                 // If the net changed, pause!
                 if (currentNetNo != -1 && netNo != -1 && currentNetNo != netNo) {
                     FRLogger.debug("FastForward Stopping: Net changed from " + currentNetNo + " to " + netNo);
-                    isFastForwarding.set(false);
-                    // Pause will happen below naturally if we don't set shouldStep
+                    pause(); // Explicitly pause execution
+                    // Pause will happen below in the synchronized block logic
                 } else {
                     if (netNo != -1) {
                         currentNetNo = netNo;
