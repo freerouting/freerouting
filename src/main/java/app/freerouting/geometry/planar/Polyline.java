@@ -405,7 +405,7 @@ public class Polyline implements Serializable {
         FRLogger.trace("Polyline.remove_artifacts", "remove_artifact",
             "A line with length of " + lines[i].length() + " was skipped in a polyline",
             this.toString(),
-            new Point[] { this.first_corner(), this.last_corner() });
+            new Point[] { lines[i].a, lines[i].b });
       }
     }
 

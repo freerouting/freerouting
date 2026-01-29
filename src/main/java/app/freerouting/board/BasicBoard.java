@@ -1003,6 +1003,60 @@ public class BasicBoard implements Serializable {
     if (p_item == null) {
       return;
     }
+
+    if (p_item instanceof PolylineTrace trace) {
+      String netInfo = "";
+      if (trace.net_count() > 0) {
+        StringBuilder netBuilder = new StringBuilder();
+        for (int i = 0; i < trace.net_count(); i++)
+        {
+          if (i > 0)
+          {
+            netBuilder.append(",");
+          }
+          int netNo = trace.get_net_no(i);
+          netBuilder.append("#").append(netNo);
+          if (rules != null && rules.nets != null && netNo <= rules.nets.max_net_no()) {
+            netBuilder.append(" (").append(rules.nets.get(netNo).name).append(")");
+          }
+        }
+        netInfo = netBuilder.toString();
+      }
+      FRLogger.trace("BasicBoard.remove_item", "remove_trace",
+          "removing trace from " + trace.first_corner() + " to " + trace.last_corner()
+              + " on layer " + trace.get_layer()
+              + ", id=" + trace.get_id_no()
+              + ", corners=" + trace.corner_count()
+              + (netInfo.isEmpty() ? "" : ", net=" + netInfo),
+          netInfo.isEmpty() ? "No net" : "Net " + netInfo,
+          new Point[]{trace.first_corner(), trace.last_corner()});
+    } else if (p_item instanceof Via via) {
+      String netInfo = "";
+      if (via.net_count() > 0) {
+        StringBuilder netBuilder = new StringBuilder();
+        for (int i = 0; i < via.net_count(); i++)
+        {
+          if (i > 0)
+          {
+            netBuilder.append(",");
+          }
+          int netNo = via.get_net_no(i);
+          netBuilder.append("#").append(netNo);
+          if (rules != null && rules.nets != null && netNo <= rules.nets.max_net_no()) {
+            netBuilder.append(" (").append(rules.nets.get(netNo).name).append(")");
+          }
+        }
+        netInfo = netBuilder.toString();
+      }
+      FRLogger.trace("BasicBoard.remove_item", "remove_via",
+          "removing via at " + via.get_center()
+              + ", id=" + via.get_id_no()
+              + ", layers=" + via.first_layer() + "-" + via.last_layer()
+              + (netInfo.isEmpty() ? "" : ", net=" + netInfo),
+          netInfo.isEmpty() ? "No net" : "Net " + netInfo,
+          new Point[]{via.get_center()});
+    }
+
     additional_update_after_change(p_item); // must be called before p_item is deleted.
     search_tree_manager.remove(p_item);
     item_list.delete(p_item);
@@ -2120,6 +2174,60 @@ public class BasicBoard implements Serializable {
     p_item.board = this;
     item_list.insert(p_item);
     search_tree_manager.insert(p_item);
+
+    if (p_item instanceof PolylineTrace trace) {
+      String netInfo = "";
+      if (trace.net_count() > 0) {
+        StringBuilder netBuilder = new StringBuilder();
+        for (int i = 0; i < trace.net_count(); i++)
+        {
+          if (i > 0)
+          {
+            netBuilder.append(",");
+          }
+          int netNo = trace.get_net_no(i);
+          netBuilder.append("#").append(netNo);
+          if (rules != null && rules.nets != null && netNo <= rules.nets.max_net_no()) {
+            netBuilder.append(" (").append(rules.nets.get(netNo).name).append(")");
+          }
+        }
+        netInfo = netBuilder.toString();
+      }
+      FRLogger.trace("BasicBoard.insert_item", "insert_trace",
+          "inserting trace from " + trace.first_corner() + " to " + trace.last_corner()
+              + " on layer " + trace.get_layer()
+              + ", id=" + trace.get_id_no()
+              + ", corners=" + trace.corner_count()
+              + (netInfo.isEmpty() ? "" : ", net=" + netInfo),
+          netInfo.isEmpty() ? "No net" : "Net " + netInfo,
+          new Point[]{trace.first_corner(), trace.last_corner()});
+    } else if (p_item instanceof Via via) {
+      String netInfo = "";
+      if (via.net_count() > 0) {
+        StringBuilder netBuilder = new StringBuilder();
+        for (int i = 0; i < via.net_count(); i++)
+        {
+          if (i > 0)
+          {
+            netBuilder.append(",");
+          }
+          int netNo = via.get_net_no(i);
+          netBuilder.append("#").append(netNo);
+          if (rules != null && rules.nets != null && netNo <= rules.nets.max_net_no()) {
+            netBuilder.append(" (").append(rules.nets.get(netNo).name).append(")");
+          }
+        }
+        netInfo = netBuilder.toString();
+      }
+      FRLogger.trace("BasicBoard.insert_item", "insert_via",
+          "inserting via at " + via.get_center()
+              + ", id=" + via.get_id_no()
+              + ", layers=" + via.first_layer() + "-" + via.last_layer()
+              + (netInfo.isEmpty() ? "" : ", net=" + netInfo),
+          netInfo.isEmpty() ? "No net" : "Net " + netInfo,
+          new Point[]{via.get_center()});
+    }
+
     if ((communication != null) && (communication.observers != null)) {
       communication.observers.notify_new(p_item);
     }
