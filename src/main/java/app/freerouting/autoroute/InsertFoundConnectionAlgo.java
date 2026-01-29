@@ -278,7 +278,14 @@ public class InsertFoundConnectionAlgo {
         neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_trace.layer, start_pin, end_pin);
       }
       if (ok_point == insert_polyline.last_corner() || neckdown_inserted) {
+        int previous_from_corner_no = from_corner_no;
         from_corner_no = i;
+        FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "segment_committed",
+            "segment committed, from_corner=" + previous_from_corner_no + " -> " + from_corner_no
+                + ", ok_point=" + ok_point
+                + ", neckdown=" + neckdown_inserted,
+            "Net #" + ctrl.net_no,
+            new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
       } else if (ok_point == insert_polyline.first_corner() && i != p_trace.corners.length - 1) {
         // if ok_point == insert_polyline.first_corner() the spring over may have failed.
         // Spring over may correct the situation because an insertion, which is ok with
@@ -293,6 +300,7 @@ public class InsertFoundConnectionAlgo {
                 + ", attempted segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
             "Net #" + ctrl.net_no,
             new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
+        int previous_from_corner_no = from_corner_no;
         if (from_corner_no > 0) {
           // p_trace.corners[i] may be inside the offset for the substitute trace around
           // a spring_over obstacle (if clearance compensation is off).
@@ -300,6 +308,14 @@ public class InsertFoundConnectionAlgo {
             // first correction
             --from_corner_no;
           }
+        }
+        if (from_corner_no != previous_from_corner_no) {
+          FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "spring_over_backtrack",
+              "spring-over backtrack, from_corner=" + previous_from_corner_no + " -> " + from_corner_no
+                  + ", i=" + i + "/" + (p_trace.corners.length - 1)
+                  + ", segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
+              "Net #" + ctrl.net_no,
+              new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
         }
         FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "spring_over_retry",
             "spring-over retry from_corner=" + from_corner_no
@@ -327,6 +343,15 @@ public class InsertFoundConnectionAlgo {
     for (int i = 0; i < p_trace.corners.length - 1; i++) {
       Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
       if (trace_stub != null) {
+        FRLogger.trace("InsertFoundConnectionAlgo.insert_trace", "remove_trace_tail",
+            "removing trace tail id=" + trace_stub.get_id_no()
+                + ", layer=" + trace_stub.get_layer()
+                + ", from=" + trace_stub.first_corner()
+                + ", to=" + trace_stub.last_corner()
+                + ", corner_index=" + i
+                + ", insertion_result=" + result,
+            "Net #" + ctrl.net_no,
+            new Point[] { trace_stub.first_corner(), trace_stub.last_corner() });
         board.remove_item(trace_stub);
       }
     }
