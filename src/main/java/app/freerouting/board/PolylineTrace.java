@@ -1,5 +1,7 @@
 package app.freerouting.board;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.datastructures.Stoppable;
@@ -286,6 +288,18 @@ public class PolylineTrace extends Trace implements Serializable {
       return false;
     }
 
+    if (globalSettings.debugSettings.enableDetailedLogging) {
+      FRLogger.trace("PolylineTrace.combine()", "combine_at_start",
+          "combining traces at start: this_id=" + this.get_id_no()
+              + ", other_id=" + other_trace.get_id_no()
+              + ", start=" + start_corner
+              + ", other_first=" + other_trace.first_corner()
+              + ", other_last=" + other_trace.last_corner()
+              + ", reverse_order=" + reverse_order,
+          "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
+          new Point[] { start_corner, other_trace.first_corner(), other_trace.last_corner() });
+    }
+
     board.item_list.save_for_undo(this);
     // create the lines of the joined polyline
     Line[] this_lines = lines.arr;
@@ -382,6 +396,18 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     if (!trace_found) {
       return false;
+    }
+
+    if (globalSettings.debugSettings.enableDetailedLogging) {
+      FRLogger.trace("PolylineTrace.combine()", "combine_at_end",
+          "combining traces at end: this_id=" + this.get_id_no()
+              + ", other_id=" + other_trace.get_id_no()
+              + ", end=" + end_corner
+              + ", other_first=" + other_trace.first_corner()
+              + ", other_last=" + other_trace.last_corner()
+              + ", reverse_order=" + reverse_order,
+          "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
+          new Point[] { end_corner, other_trace.first_corner(), other_trace.last_corner() });
     }
 
     board.item_list.save_for_undo(this);
@@ -523,7 +549,44 @@ public class PolylineTrace extends Trace implements Serializable {
         if (found_item instanceof PolylineTrace found_trace) {
           LineSegment found_line_segment = new LineSegment(found_trace.lines, found_entry.shape_index_in_object + 1);
           Line[] intersecting_lines = found_line_segment.intersection(curr_line_segment);
+
+          // Skip if trace overlaps with itself
+          if (found_trace == this) {
+            if (globalSettings.debugSettings.enableDetailedLogging && intersecting_lines.length > 0) {
+              FRLogger.trace("PolylineTrace.split", "split_overlap",
+                  "skipping self-overlap: trace id=" + this.get_id_no()
+                      + ", line_index=" + (found_entry.shape_index_in_object + 1)
+                      + ", intersections=" + intersecting_lines.length,
+                  "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
+                  new Point[] { curr_line_segment.start_point(), curr_line_segment.end_point() });
+            }
+            continue;
+          }
+
+          // Skip if there are no intersections
+          if (intersecting_lines.length == 0) {
+            if (globalSettings.debugSettings.enableDetailedLogging) {
+              FRLogger.trace("PolylineTrace.split", "split_overlap",
+                  "skipping non-intersecting overlap with trace id=" + found_trace.get_id_no()
+                      + ", this_id=" + this.get_id_no()
+                      + ", line_index=" + (found_entry.shape_index_in_object + 1),
+                  "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
+                  new Point[] { curr_line_segment.start_point(), curr_line_segment.end_point() });
+            }
+            continue;
+          }
+
           Collection<PolylineTrace> split_pieces = new LinkedList<>();
+
+          if (globalSettings.debugSettings.enableDetailedLogging) {
+            FRLogger.trace("PolylineTrace.split", "split_overlap",
+                "overlap with trace id=" + found_trace.get_id_no()
+                    + ", this_id=" + this.get_id_no()
+                    + ", line_index=" + (found_entry.shape_index_in_object + 1)
+                    + ", intersections=" + intersecting_lines.length,
+                "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
+                new Point[] { curr_line_segment.start_point(), curr_line_segment.end_point() });
+          }
 
           // try splitting the found trace first
           boolean found_trace_split = false;
@@ -538,6 +601,14 @@ public class PolylineTrace extends Trace implements Serializable {
                   if (curr_split_pieces[k] != null) {
                     found_trace_split = true;
                     split_pieces.add(curr_split_pieces[k]);
+                    if (globalSettings.debugSettings.enableDetailedLogging) {
+                      FRLogger.trace("PolylineTrace.split", "split_piece",
+                          "found trace split piece id=" + curr_split_pieces[k].get_id_no()
+                              + ", from=" + curr_split_pieces[k].first_corner()
+                              + ", to=" + curr_split_pieces[k].last_corner(),
+                          "Net #" + (curr_split_pieces[k].net_count() > 0 ? curr_split_pieces[k].get_net_no(0) : -1),
+                          new Point[] { curr_split_pieces[k].first_corner(), curr_split_pieces[k].last_corner() });
+                    }
                   }
                 }
                 if (found_trace_split) {
@@ -560,6 +631,18 @@ public class PolylineTrace extends Trace implements Serializable {
             PolylineTrace[] curr_split_pieces = split(i + 1, intersecting_lines[j]);
             if (curr_split_pieces != null) {
               own_trace_split = true;
+              if (globalSettings.debugSettings.enableDetailedLogging) {
+                for (int k = 0; k < 2; k++) {
+                  if (curr_split_pieces[k] != null) {
+                    FRLogger.trace("PolylineTrace.split", "split_piece",
+                        "own trace split piece id=" + curr_split_pieces[k].get_id_no()
+                            + ", from=" + curr_split_pieces[k].first_corner()
+                            + ", to=" + curr_split_pieces[k].last_corner(),
+                        "Net #" + (curr_split_pieces[k].net_count() > 0 ? curr_split_pieces[k].get_net_no(0) : -1),
+                        new Point[] { curr_split_pieces[k].first_corner(), curr_split_pieces[k].last_corner() });
+                  }
+                }
+              }
               // this trace was split itself into 2.
               if (curr_split_pieces[0] != null) {
                 result.addAll(curr_split_pieces[0].split(p_clip_shape));
@@ -577,6 +660,14 @@ public class PolylineTrace extends Trace implements Serializable {
             for (int j = 0; j < 2; j++) {
               while (it2.hasNext()) {
                 PolylineTrace curr_piece = it2.next();
+                if (globalSettings.debugSettings.enableDetailedLogging) {
+                  FRLogger.trace("PolylineTrace.split", "remove_cycle_candidate",
+                      "remove_if_cycle on trace id=" + curr_piece.get_id_no()
+                          + ", from=" + curr_piece.first_corner()
+                          + ", to=" + curr_piece.last_corner(),
+                      "Net #" + (curr_piece.net_count() > 0 ? curr_piece.get_net_no(0) : -1),
+                      new Point[] { curr_piece.first_corner(), curr_piece.last_corner() });
+                }
                 board.remove_if_cycle(curr_piece);
               }
 
