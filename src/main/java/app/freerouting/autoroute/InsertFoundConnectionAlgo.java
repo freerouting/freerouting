@@ -253,13 +253,22 @@ public class InsertFoundConnectionAlgo {
       Polyline insert_polyline = new Polyline(curr_corner_arr);
       FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "insert_trace_segment",
           "inserting trace segment from " + insert_polyline.first_corner() + " to " + insert_polyline.last_corner()
-          + " on layer " + p_trace.layer,
+              + " on layer " + p_trace.layer,
           "Net #" + ctrl.net_no,
           new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
       Point ok_point = board.insert_forced_trace_polyline(insert_polyline, ctrl.trace_half_width[p_trace.layer],
           p_trace.layer, net_no_arr, ctrl.trace_clearance_class_no,
           ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth,
           ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+      FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "insert_trace_segment_result",
+          "insert result ok_point=" + (ok_point != null ? ok_point.toString() : "null")
+              + ", first=" + insert_polyline.first_corner()
+              + ", last=" + insert_polyline.last_corner()
+              + ", corners=" + insert_polyline.corner_count()
+              + ", from_corner=" + from_corner_no
+              + ", i=" + i + "/" + (p_trace.corners.length - 1),
+          "Net #" + ctrl.net_no,
+          new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
       boolean neckdown_inserted = false;
       if (ok_point != null && ok_point != insert_polyline.last_corner() && ctrl.with_neckdown
           && curr_corner_arr.length == 2) {
@@ -273,6 +282,14 @@ public class InsertFoundConnectionAlgo {
         // clearance compensation may cause violations without clearance compensation.
         // In this case repeating the insertion with more distant corners may allow the
         // spring_over to correct the situation.
+        FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "insertion_failed_at_start",
+            "Insertion returned at start point (ok_point == first_corner)"
+                + ", from_corner=" + from_corner_no
+                + ", curr_corner_arr.length=" + curr_corner_arr.length
+                + ", i=" + i + "/" + (p_trace.corners.length - 1)
+                + ", attempted segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
+            "Net #" + ctrl.net_no,
+            new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
         if (from_corner_no > 0) {
           // p_trace.corners[i] may be inside the offset for the substitute trace around
           // a spring_over obstacle (if clearance compensation is off).
@@ -281,6 +298,12 @@ public class InsertFoundConnectionAlgo {
             --from_corner_no;
           }
         }
+        FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "spring_over_retry",
+            "spring-over retry from_corner=" + from_corner_no
+                + ", i=" + i + "/" + (p_trace.corners.length - 1)
+                + ", segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
+            "Net #" + ctrl.net_no,
+            new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
         FRLogger.trace("InsertFoundConnectionAlgo: violation corrected");
       } else {
         // Log detailed information about where insertion failed
