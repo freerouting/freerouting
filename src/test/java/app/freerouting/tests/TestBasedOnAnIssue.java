@@ -9,7 +9,6 @@ import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.settings.GlobalSettings;
-import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
@@ -84,6 +83,9 @@ public class TestBasedOnAnIssue {
       testingSettings.setMaxPasses(100);
       merger.addOrReplaceSources(testingSettings);
 
+      // Inject into global prototype so it survives Scheduler re-initialization
+      Freerouting.globalSettings.settingsMergerProtype.addOrReplaceSources(testingSettings);
+
       job.routerSettings = merger.merge();
 
     } catch (IOException e) {
@@ -93,17 +95,16 @@ public class TestBasedOnAnIssue {
     return job;
   }
 
-  protected RoutingJob RunRoutingJob(RoutingJob job, RouterSettings settings) {
+  protected RoutingJob RunRoutingJob(RoutingJob job) {
     if (job == null) {
       throw new IllegalArgumentException("The job cannot be null.");
     }
 
-    job.routerSettings = settings;
     scheduler.enqueueJob(job);
     job.state = RoutingJobState.READY_TO_START;
 
     long startTime = System.currentTimeMillis();
-    long timeoutInMillis = TextManager.parseTimespanString(settings.jobTimeoutString) * 1000;
+    long timeoutInMillis = TextManager.parseTimespanString(job.routerSettings.jobTimeoutString) * 1000;
 
     while ((job.state != RoutingJobState.COMPLETED) && (job.state != RoutingJobState.CANCELLED)
         && (job.state != RoutingJobState.TERMINATED)) {

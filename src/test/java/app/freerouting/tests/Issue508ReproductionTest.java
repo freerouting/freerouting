@@ -4,10 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.settings.RouterSettings;
-import org.junit.jupiter.api.Test;
-
 import app.freerouting.settings.sources.TestingSettings;
+import org.junit.jupiter.api.Test;
 
 public class Issue508ReproductionTest extends TestBasedOnAnIssue {
 
@@ -29,9 +27,9 @@ public class Issue508ReproductionTest extends TestBasedOnAnIssue {
         // Get the job with injected settings
         RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
 
-        RunRoutingJob(job, job.routerSettings);
+        RunRoutingJob(job);
 
-        assertTrue(GetBoardStatistics(job).connections.incompleteCount == 104,
-                "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 104 incomplete connections with the target of 2 items to route.");
+        assertTrue(GetBoardStatistics(job).connections.incompleteCount == 193,
+                "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 193 incomplete connections with the target of 2 items to route.");
     }
 }

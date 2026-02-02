@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.sources.TestingSettings;
 import java.time.Duration;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -17,9 +18,12 @@ public class Issue555Test extends TestBasedOnAnIssue {
     IO.println(
         "The benchmark times for Freerouting v1.8, v1.9 and v2.0 were 29.5 minutes, 27 minutes with failure and 9 minutes with partial failure.");
     IO.println("The benchmark score for Freerouting v2.1 is 976.35, completed in 3.6 minutes.");
-    var job = GetRoutingJob("Issue555-BBD_Mars-64.dsn");
-    job.routerSettings.jobTimeoutString = "00:15:00";
-    job = RunRoutingJob(job, job.routerSettings);
+
+    TestingSettings testingSettings = new TestingSettings();
+    testingSettings.setJobTimeoutString("00:15:00");
+
+    var job = GetRoutingJob("Issue555-BBD_Mars-64.dsn", testingSettings);
+    job = RunRoutingJob(job);
 
     if (job.output == null) {
       fail("Routing job failed.");
@@ -50,10 +54,13 @@ public class Issue555Test extends TestBasedOnAnIssue {
         "The benchmark times for Freerouting v1.8, v1.9 and v2.0 were 12 seconds (4 unrouted), 10 seconds (4 unrouted) and 11 seconds (4 unrouted) in 6 passes.");
     IO.println(
         "The benchmark score for Freerouting v2.1 is 962.18 (6 unrouted), completed in 54 seconds, hitting the 40 pass limit.");
-    var job = GetRoutingJob("Issue555-CNH_Functional_Tester_1.dsn");
-    job.routerSettings.jobTimeoutString = "00:03:00";
-    job.routerSettings.maxPasses = 40;
-    job = RunRoutingJob(job, job.routerSettings);
+
+    TestingSettings testingSettings = new TestingSettings();
+    testingSettings.setJobTimeoutString("00:03:00");
+    testingSettings.setMaxPasses(40);
+
+    var job = GetRoutingJob("Issue555-CNH_Functional_Tester_1.dsn", testingSettings);
+    job = RunRoutingJob(job);
 
     if (job.output == null) {
       fail("Routing job failed.");

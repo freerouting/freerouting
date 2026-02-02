@@ -51,4 +51,10 @@ public class TestingSettings implements SettingsSource {
         // High priority to override other sources (API is 70)
         return 80;
     }
+
+    public void setEnabled(boolean enabled) {
+        if (this.settings.enabled == null) {
+            this.settings.enabled = enabled;
+        }
+    }
 }

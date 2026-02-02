@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.core.RoutingJob;
 import app.freerouting.management.RoutingJobScheduler;
-import app.freerouting.settings.RouterSettings;
+import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,16 +15,15 @@ public class Issue508Test extends TestBasedOnAnIssue {
 
   @Test
   public void test_Issue_508_BM01_first_pass_only() {
-    // Get a routing job
-    job = GetRoutingJob("Issue508-DAC2020_bm01.dsn");
+    TestingSettings testingSettings = new TestingSettings();
+    testingSettings.setJobTimeoutString("00:00:30");
+    testingSettings.setMaxPasses(1);
 
-    // Configure the router settings
-    RouterSettings testSettings = job.routerSettings;
-    testSettings.maxPasses = 1;
-    testSettings.jobTimeoutString = "00:00:30";
+    // Get a routing job
+    job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testingSettings);
 
     // Run the job
-    RunRoutingJob(job, testSettings);
+    RunRoutingJob(job);
 
     assertTrue(job.board.get_statistics().connections.incompleteCount <= 86,
         "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should complete no more than 86 unrouted connections after the first pass.");

@@ -1,6 +1,7 @@
 package app.freerouting.tests;
 
 import app.freerouting.core.RoutingJob;
+import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -8,18 +9,15 @@ public class MaxItemsTest extends TestBasedOnAnIssue {
 
     @Test
     public void testMaxItemsLimit() {
-        // Load a small board (randomly selected from available tests)
-        RoutingJob job = GetRoutingJob("Issue026-J2_reference.dsn");
+        TestingSettings testingSettings = new TestingSettings();
+        testingSettings.setMaxItems(20);
+        testingSettings.setMaxPasses(100);
 
-        // Set a very small item limit
-        int maxItems = 20;
-        job.routerSettings.maxItems = maxItems;
-        // Also ensure max passes doesn't limit us first (though 20 items is very small
-        // so it will likely hit item limit first)
-        job.routerSettings.maxPasses = 100;
+        // Load a small board (randomly selected from available tests)
+        RoutingJob job = GetRoutingJob("Issue026-J2_reference.dsn", testingSettings);
 
         // Run the job
-        job = RunRoutingJob(job, job.routerSettings);
+        job = RunRoutingJob(job);
 
         // Assert that the job finished (or cancelled/stopped)
         // AND that the number of items routed (or we can assert state)
