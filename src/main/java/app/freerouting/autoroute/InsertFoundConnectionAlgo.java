@@ -18,29 +18,35 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
- * Inserts the physical traces and vias on the board for connections found by the autoroute algorithm.
+ * Inserts the physical traces and vias on the board for connections found by
+ * the autoroute algorithm.
  *
- * <p>This class is responsible for converting the abstract routing path found by
- * {@link LocateFoundConnectionAlgo} into actual board items (traces and vias). It handles:
+ * <p>
+ * This class is responsible for converting the abstract routing path found by
+ * {@link LocateFoundConnectionAlgo} into actual board items (traces and vias).
+ * It handles:
  * <ul>
- *   <li>Push-and-shove insertion of trace segments</li>
- *   <li>Via insertion for layer transitions</li>
- *   <li>Neckdown routing near pins for optimal connections</li>
- *   <li>Connection to existing traces at endpoints</li>
- *   <li>Trace normalization after insertion</li>
+ * <li>Push-and-shove insertion of trace segments</li>
+ * <li>Via insertion for layer transitions</li>
+ * <li>Neckdown routing near pins for optimal connections</li>
+ * <li>Connection to existing traces at endpoints</li>
+ * <li>Trace normalization after insertion</li>
  * </ul>
  *
- * <p>The insertion process uses forced routing algorithms that push aside existing
- * traces and vias to make room for the new connection. If insertion fails at any
+ * <p>
+ * The insertion process uses forced routing algorithms that push aside existing
+ * traces and vias to make room for the new connection. If insertion fails at
+ * any
  * point, the entire operation is aborted and null is returned.
  *
- * <p><strong>Algorithm Flow:</strong>
+ * <p>
+ * <strong>Algorithm Flow:</strong>
  * <ol>
- *   <li>Insert via at start of each segment (if layer change needed)</li>
- *   <li>Insert trace segment using push-and-shove</li>
- *   <li>Apply neckdown routing near pins when beneficial</li>
- *   <li>Connect to existing traces at endpoints</li>
- *   <li>Normalize trace topology to clean up redundant corners</li>
+ * <li>Insert via at start of each segment (if layer change needed)</li>
+ * <li>Insert trace segment using push-and-shove</li>
+ * <li>Apply neckdown routing near pins when beneficial</li>
+ * <li>Connect to existing traces at endpoints</li>
+ * <li>Normalize trace topology to clean up redundant corners</li>
  * </ol>
  *
  * @see LocateFoundConnectionAlgo
@@ -52,7 +58,8 @@ public class InsertFoundConnectionAlgo {
   /**
    * The routing board where traces and vias will be inserted.
    *
-   * <p>Provides access to board operations like forced trace insertion,
+   * <p>
+   * Provides access to board operations like forced trace insertion,
    * via insertion, and trace normalization.
    */
   private final RoutingBoard board;
@@ -60,7 +67,8 @@ public class InsertFoundConnectionAlgo {
   /**
    * The autoroute control settings defining routing parameters and constraints.
    *
-   * <p>Contains trace widths, clearance classes, net numbers, recursion limits,
+   * <p>
+   * Contains trace widths, clearance classes, net numbers, recursion limits,
    * and other routing configuration used during insertion.
    */
   private final AutorouteControl ctrl;
@@ -68,7 +76,8 @@ public class InsertFoundConnectionAlgo {
   /**
    * The last corner point of the inserted connection path.
    *
-   * <p>Used to track the endpoint of the connection for connecting to
+   * <p>
+   * Used to track the endpoint of the connection for connecting to
    * existing traces after insertion completes.
    */
   private IntPoint last_corner;
@@ -76,19 +85,23 @@ public class InsertFoundConnectionAlgo {
   /**
    * The first corner point of the inserted connection path.
    *
-   * <p>Used to track the startpoint of the connection for connecting to
+   * <p>
+   * Used to track the startpoint of the connection for connecting to
    * existing traces after insertion completes.
    */
   private IntPoint first_corner;
 
   /**
-   * Creates a new instance of InsertFoundConnectionAlgo with the specified board and control settings.
+   * Creates a new instance of InsertFoundConnectionAlgo with the specified board
+   * and control settings.
    *
-   * <p>This private constructor is called internally by {@link #get_instance}. Direct instantiation
+   * <p>
+   * This private constructor is called internally by {@link #get_instance}.
+   * Direct instantiation
    * is not allowed - use the factory method instead.
    *
    * @param p_board the routing board where items will be inserted
-   * @param p_ctrl the autoroute control settings defining routing parameters
+   * @param p_ctrl  the autoroute control settings defining routing parameters
    */
   private InsertFoundConnectionAlgo(RoutingBoard p_board, AutorouteControl p_ctrl) {
     this.board = p_board;
@@ -96,35 +109,44 @@ public class InsertFoundConnectionAlgo {
   }
 
   /**
-   * Creates and executes a connection insertion algorithm for the found routing path.
+   * Creates and executes a connection insertion algorithm for the found routing
+   * path.
    *
-   * <p>This factory method creates an instance and immediately attempts to insert all
-   * traces and vias from the connection found by the autoroute algorithm. The insertion
+   * <p>
+   * This factory method creates an instance and immediately attempts to insert
+   * all
+   * traces and vias from the connection found by the autoroute algorithm. The
+   * insertion
    * process includes:
    * <ol>
-   *   <li>Iterating through all connection items (trace segments)</li>
-   *   <li>Inserting vias where layer transitions occur</li>
-   *   <li>Inserting trace segments using push-and-shove</li>
-   *   <li>Connecting to existing traces at the start and end points</li>
-   *   <li>Normalizing the traces to optimize topology</li>
+   * <li>Iterating through all connection items (trace segments)</li>
+   * <li>Inserting vias where layer transitions occur</li>
+   * <li>Inserting trace segments using push-and-shove</li>
+   * <li>Connecting to existing traces at the start and end points</li>
+   * <li>Normalizing the traces to optimize topology</li>
    * </ol>
    *
-   * <p>If any step fails (via insertion failure, trace insertion failure, etc.), the
+   * <p>
+   * If any step fails (via insertion failure, trace insertion failure, etc.), the
    * method returns null and logs debug information about the failure point.
    *
-   * <p><strong>Connection Process:</strong>
+   * <p>
+   * <strong>Connection Process:</strong>
    * <ul>
-   *   <li>Start at target layer and item</li>
-   *   <li>For each connection segment: insert via (if needed) then insert trace</li>
-   *   <li>End at start layer and item</li>
-   *   <li>Make perpendicular connections to PolylineTrace endpoints</li>
-   *   <li>Normalize traces to clean up the topology</li>
+   * <li>Start at target layer and item</li>
+   * <li>For each connection segment: insert via (if needed) then insert
+   * trace</li>
+   * <li>End at start layer and item</li>
+   * <li>Make perpendicular connections to PolylineTrace endpoints</li>
+   * <li>Normalize traces to clean up the topology</li>
    * </ul>
    *
-   * @param p_connection the located connection path to insert, containing the route geometry
-   * @param p_board the routing board where traces and vias will be inserted
-   * @param p_ctrl the autoroute control settings with routing parameters
-   * @return a new InsertFoundConnectionAlgo instance if insertion succeeded, null if it failed
+   * @param p_connection the located connection path to insert, containing the
+   *                     route geometry
+   * @param p_board      the routing board where traces and vias will be inserted
+   * @param p_ctrl       the autoroute control settings with routing parameters
+   * @return a new InsertFoundConnectionAlgo instance if insertion succeeded, null
+   *         if it failed
    *
    * @see LocateFoundConnectionAlgo
    * @see #insert_trace(LocateFoundConnectionAlgoAnyAngle.ResultItem)
@@ -166,43 +188,61 @@ public class InsertFoundConnectionAlgo {
           p_ctrl.trace_clearance_class_no);
     }
 
-    // NOTE: Normalize is commented out here to prevent premature tail removal during incremental routing
-    // Normalization (including tail removal) will happen at the end of the routing operation
+    // NOTE: Normalize is commented out here to prevent premature tail removal
+    // during incremental routing
+    // Normalization (including tail removal) will happen at the end of the routing
+    // operation
     // See: https://github.com/freerouting/freerouting/issues/XXX
     // try {
-    //   p_board.normalize_traces(p_ctrl.net_no);
+    // p_board.normalize_traces(p_ctrl.net_no);
     // } catch (Exception _) {
-    //   FRLogger.warn("The normalization of net '" + p_board.rules.nets.get(p_ctrl.net_no).name + "' failed.");
+    // FRLogger.warn("The normalization of net '" +
+    // p_board.rules.nets.get(p_ctrl.net_no).name + "' failed.");
     // }
 
     return new_instance;
   }
 
   /**
-   * Inserts a trace segment by using push-and-shove to move aside obstacle traces and vias.
+   * Inserts a trace segment by using push-and-shove to move aside obstacle traces
+   * and vias.
    *
-   * <p>This method processes a single routing segment, inserting it corner by corner using
+   * <p>
+   * This method processes a single routing segment, inserting it corner by corner
+   * using
    * forced trace insertion. The algorithm:
    * <ul>
-   *   <li>Temporarily disables pin edge-to-turn distance correction to prevent interference</li>
-   *   <li>Identifies pins at start and end for potential neckdown routing</li>
-   *   <li>Inserts trace segments progressively, handling spring-over when needed</li>
-   *   <li>Applies neckdown routing near pins when beneficial and enabled</li>
-   *   <li>Removes trace tails (stubs with no connections) after insertion</li>
+   * <li>Temporarily disables pin edge-to-turn distance correction to prevent
+   * interference</li>
+   * <li>Identifies pins at start and end for potential neckdown routing</li>
+   * <li>Inserts trace segments progressively, handling spring-over when
+   * needed</li>
+   * <li>Applies neckdown routing near pins when beneficial and enabled</li>
+   * <li>Removes trace tails (stubs with no connections) after insertion</li>
    * </ul>
    *
-   * <p><strong>Neckdown Routing:</strong> When enabled (ctrl.with_neckdown), the algorithm
-   * attempts to use thinner traces near pins to improve routing density and reduce
+   * <p>
+   * <strong>Neckdown Routing:</strong> When enabled (ctrl.with_neckdown), the
+   * algorithm
+   * attempts to use thinner traces near pins to improve routing density and
+   * reduce
    * manufacturing constraints near pad areas.
    *
-   * <p><strong>Spring-Over Handling:</strong> If insertion fails at a point but succeeds
-   * at the start, the algorithm may retry with more distant corners to allow the spring-over
+   * <p>
+   * <strong>Spring-Over Handling:</strong> If insertion fails at a point but
+   * succeeds
+   * at the start, the algorithm may retry with more distant corners to allow the
+   * spring-over
    * mechanism to route around obstacles.
    *
-   * <p>The method maintains first_corner and last_corner tracking for endpoint connections.
+   * <p>
+   * The method maintains first_corner and last_corner tracking for endpoint
+   * connections.
    *
-   * @param p_trace the result item containing the trace geometry (array of corner points)
-   * @return true if the entire trace was successfully inserted, false if insertion failed
+   * @param p_trace the result item containing the trace geometry (array of corner
+   *                points)
+   * @return true if the entire trace was successfully inserted, false if
+   *         insertion failed
    *
    * @see #insert_neckdown(Point, Point, int, Pin, Pin)
    * @see RoutingBoard#insert_forced_trace_polyline
@@ -287,7 +327,8 @@ public class InsertFoundConnectionAlgo {
             "Net #" + ctrl.net_no,
             new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
       } else if (ok_point == insert_polyline.first_corner() && i != p_trace.corners.length - 1) {
-        // if ok_point == insert_polyline.first_corner() the spring over may have failed.
+        // if ok_point == insert_polyline.first_corner() the spring over may have
+        // failed.
         // Spring over may correct the situation because an insertion, which is ok with
         // clearance compensation may cause violations without clearance compensation.
         // In this case repeating the insertion with more distant corners may allow the
@@ -326,18 +367,20 @@ public class InsertFoundConnectionAlgo {
         FRLogger.trace("InsertFoundConnectionAlgo: violation corrected");
       } else {
         // Log detailed information about where insertion failed
-        FRLogger.trace("InsertFoundConnectionAlgo.insert_trace", "insert_trace_failure", "InsertFoundConnectionAlgo: insert trace failed for net #" + ctrl.net_no +
-            " at corner " + i + "/" + (p_trace.corners.length - 1) +
-            " on layer " + p_trace.layer +
-            ", trace width: " + ctrl.trace_half_width[p_trace.layer] +
-            ", from corner: " + from_corner_no +
-            ", ok_point: " + (ok_point != null ? ok_point.toString() : "null") +
-            ", target: " + insert_polyline.last_corner(),
+        FRLogger.trace("InsertFoundConnectionAlgo.insert_trace", "insert_trace_failure",
+            "InsertFoundConnectionAlgo: insert trace failed for net #" + ctrl.net_no +
+                " at corner " + i + "/" + (p_trace.corners.length - 1) +
+                " on layer " + p_trace.layer +
+                ", trace width: " + ctrl.trace_half_width[p_trace.layer] +
+                ", from corner: " + from_corner_no +
+                ", ok_point: " + (ok_point != null ? ok_point.toString() : "null") +
+                ", target: " + insert_polyline.last_corner(),
             "Net #" + ctrl.net_no,
             new Point[] { insert_polyline.corner(from_corner_no), insert_polyline.last_corner() });
         result = false;
         break;
       }
+
     }
 
     for (int i = 0; i < p_trace.corners.length - 1; i++) {
@@ -367,23 +410,25 @@ public class InsertFoundConnectionAlgo {
   /**
    * Attempts to insert a neckdown trace segment connecting between two points.
    *
-   * <p>Neckdown routing uses a thinner trace width near pins to:
+   * <p>
+   * Neckdown routing uses a thinner trace width near pins to:
    * <ul>
-   *   <li>Reduce manufacturing constraints around pads</li>
-   *   <li>Improve routing density in congested areas</li>
-   *   <li>Provide smoother transitions from pin to trace</li>
-   *   <li>Comply with pin-specific neckdown requirements</li>
+   * <li>Reduce manufacturing constraints around pads</li>
+   * <li>Improve routing density in congested areas</li>
+   * <li>Provide smoother transitions from pin to trace</li>
+   * <li>Comply with pin-specific neckdown requirements</li>
    * </ul>
    *
-   * <p>This method checks both the start and end pins (if present) and attempts
+   * <p>
+   * This method checks both the start and end pins (if present) and attempts
    * neckdown insertion from whichever pin is appropriate. Only one neckdown is
    * performed per segment.
    *
    * @param p_from_corner the starting point of the segment
-   * @param p_to_corner the ending point of the segment
-   * @param p_layer the layer where the neckdown will be inserted
-   * @param p_start_pin the pin at the start of the segment, may be null
-   * @param p_end_pin the pin at the end of the segment, may be null
+   * @param p_to_corner   the ending point of the segment
+   * @param p_layer       the layer where the neckdown will be inserted
+   * @param p_start_pin   the pin at the start of the segment, may be null
+   * @param p_end_pin     the pin at the end of the segment, may be null
    * @return true if neckdown insertion succeeded, false otherwise
    *
    * @see #try_neck_down(Point, Point, int, Pin, boolean)
@@ -405,35 +450,43 @@ public class InsertFoundConnectionAlgo {
   /**
    * Attempts to insert a neckdown trace segment from a point toward a pin.
    *
-   * <p>This method implements the detailed neckdown insertion algorithm:
+   * <p>
+   * This method implements the detailed neckdown insertion algorithm:
    * <ol>
-   *   <li>Validates that the pin is on the specified layer</li>
-   *   <li>Calculates the neckdown distance based on pin size and clearance</li>
-   *   <li>Checks if the endpoint is within neckdown range of the pin</li>
-   *   <li>Determines the neckdown trace width from pin specifications</li>
-   *   <li>Finds the transition point where neckdown should begin</li>
-   *   <li>Inserts normal-width trace up to the transition point</li>
-   *   <li>Inserts narrower neckdown trace from transition to endpoint</li>
+   * <li>Validates that the pin is on the specified layer</li>
+   * <li>Calculates the neckdown distance based on pin size and clearance</li>
+   * <li>Checks if the endpoint is within neckdown range of the pin</li>
+   * <li>Determines the neckdown trace width from pin specifications</li>
+   * <li>Finds the transition point where neckdown should begin</li>
+   * <li>Inserts normal-width trace up to the transition point</li>
+   * <li>Inserts narrower neckdown trace from transition to endpoint</li>
    * </ol>
    *
-   * <p>The algorithm uses a tolerance to ensure clean connections and may insert
+   * <p>
+   * The algorithm uses a tolerance to ensure clean connections and may insert
    * additional corners to maintain angle restrictions while transitioning between
    * different trace widths.
    *
-   * <p><strong>Neckdown Distance Calculation:</strong>
+   * <p>
+   * <strong>Neckdown Distance Calculation:</strong>
    * The neckdown region extends from the pin by a distance of:
    * {@code 2 * (0.5 * pin_width + clearance)}
    *
-   * <p>If the neckdown cannot improve the routing (e.g., neckdown width >= normal width,
-   * or endpoint too far from pin), the method returns null to indicate no neckdown
+   * <p>
+   * If the neckdown cannot improve the routing (e.g., neckdown width >= normal
+   * width,
+   * or endpoint too far from pin), the method returns null to indicate no
+   * neckdown
    * should be applied.
    *
    * @param p_from_corner the starting point of the neckdown segment
-   * @param p_to_corner the ending point (typically at or near the pin)
-   * @param p_layer the layer where neckdown will be inserted
-   * @param p_pin the pin that requires or benefits from neckdown
-   * @param p_at_start true if the pin is at the start of the overall trace, false if at the end
-   * @return the point where neckdown insertion succeeded, or null if neckdown failed or is not beneficial
+   * @param p_to_corner   the ending point (typically at or near the pin)
+   * @param p_layer       the layer where neckdown will be inserted
+   * @param p_pin         the pin that requires or benefits from neckdown
+   * @param p_at_start    true if the pin is at the start of the overall trace,
+   *                      false if at the end
+   * @return the point where neckdown insertion succeeded, or null if neckdown
+   *         failed or is not beneficial
    *
    * @see Pin#get_trace_neckdown_halfwidth(int)
    * @see RoutingBoard#insert_forced_trace_segment
@@ -524,31 +577,39 @@ public class InsertFoundConnectionAlgo {
   }
 
   /**
-   * Finds and inserts the most cost-effective via to connect two layers at the specified location.
+   * Finds and inserts the most cost-effective via to connect two layers at the
+   * specified location.
    *
-   * <p>This method searches through available via types (from the via rule) to find one that:
+   * <p>
+   * This method searches through available via types (from the via rule) to find
+   * one that:
    * <ul>
-   *   <li>Spans between the required layers (from_layer to to_layer)</li>
-   *   <li>Can be inserted at the location without clearance violations</li>
-   *   <li>Is the cheapest option (vias are checked in order of increasing cost)</li>
+   * <li>Spans between the required layers (from_layer to to_layer)</li>
+   * <li>Can be inserted at the location without clearance violations</li>
+   * <li>Is the cheapest option (vias are checked in order of increasing
+   * cost)</li>
    * </ul>
    *
-   * <p>The algorithm:
+   * <p>
+   * The algorithm:
    * <ol>
-   *   <li>Returns immediately if both layers are the same (no via needed)</li>
-   *   <li>Normalizes layer order (always from lower to higher layer number)</li>
-   *   <li>Iterates through via types in the via rule</li>
-   *   <li>Checks each via's layer span and clearance feasibility</li>
-   *   <li>Inserts the first suitable via found</li>
+   * <li>Returns immediately if both layers are the same (no via needed)</li>
+   * <li>Normalizes layer order (always from lower to higher layer number)</li>
+   * <li>Iterates through via types in the via rule</li>
+   * <li>Checks each via's layer span and clearance feasibility</li>
+   * <li>Inserts the first suitable via found</li>
    * </ol>
    *
-   * <p>If no suitable via is found (due to layer span limitations or clearance
-   * violations), the method returns false and logs debug information about the failure.
+   * <p>
+   * If no suitable via is found (due to layer span limitations or clearance
+   * violations), the method returns false and logs debug information about the
+   * failure.
    *
-   * @param p_location the board position where the via should be inserted
+   * @param p_location   the board position where the via should be inserted
    * @param p_from_layer the starting layer index
-   * @param p_to_layer the ending layer index
-   * @return true if a via was successfully inserted (or none was needed), false if insertion failed
+   * @param p_to_layer   the ending layer index
+   * @return true if a via was successfully inserted (or none was needed), false
+   *         if insertion failed
    *
    * @see ForcedViaAlgo#check
    * @see ForcedViaAlgo#insert

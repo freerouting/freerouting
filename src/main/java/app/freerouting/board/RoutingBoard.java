@@ -40,19 +40,26 @@ import java.util.TreeSet;
 /**
  * Represents the main routing board for PCB design and manufacturing.
  *
- * <p>This class extends {@link BasicBoard} and provides comprehensive functionality for:
+ * <p>
+ * This class extends {@link BasicBoard} and provides comprehensive
+ * functionality for:
  * <ul>
- *   <li>Automatic and manual routing of traces between components</li>
- *   <li>Managing routing database and optimization algorithms</li>
- *   <li>Handling trace insertion, modification, and removal with collision detection</li>
- *   <li>Push-and-shove routing capabilities to automatically resolve conflicts</li>
- *   <li>Via placement and fanout routing from pins</li>
- *   <li>Route optimization and pull-tight operations</li>
- *   <li>Tracking routing failures and maintaining board statistics</li>
+ * <li>Automatic and manual routing of traces between components</li>
+ * <li>Managing routing database and optimization algorithms</li>
+ * <li>Handling trace insertion, modification, and removal with collision
+ * detection</li>
+ * <li>Push-and-shove routing capabilities to automatically resolve
+ * conflicts</li>
+ * <li>Via placement and fanout routing from pins</li>
+ * <li>Route optimization and pull-tight operations</li>
+ * <li>Tracking routing failures and maintaining board statistics</li>
  * </ul>
  *
- * <p>The board maintains its own autoroute engine and changed area tracking for efficient
- * incremental updates. It supports both fixed and user-modified routing with sophisticated
+ * <p>
+ * The board maintains its own autoroute engine and changed area tracking for
+ * efficient
+ * incremental updates. It supports both fixed and user-modified routing with
+ * sophisticated
  * clearance checking and net management.
  *
  * @see BasicBoard
@@ -64,7 +71,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * The maximum time limit in milliseconds for the pull tight algorithm.
    *
-   * <p>Pull tight operations optimize trace routes by removing unnecessary segments
+   * <p>
+   * Pull tight operations optimize trace routes by removing unnecessary segments
    * and tightening connections. This timeout prevents the algorithm from running
    * indefinitely on complex routing scenarios.
    */
@@ -72,19 +80,25 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Tracks routing failures for items on this board.
    *
-   * <p>This log is kept persistent to maintain a history of failures across multiple
-   * routing passes and threads. It helps identify problematic connections and areas
-   * that consistently fail during auto-routing attempts. The failure information can
+   * <p>
+   * This log is kept persistent to maintain a history of failures across multiple
+   * routing passes and threads. It helps identify problematic connections and
+   * areas
+   * that consistently fail during auto-routing attempts. The failure information
+   * can
    * be used to adjust routing strategies or identify design issues.
    */
   public final app.freerouting.autoroute.RoutingFailureLog failureLog;
   /**
    * The area marked for optimizing the route.
    *
-   * <p>This transient field tracks regions of the board that have been modified and
-   * need route optimization. When traces are added, moved, or removed, the affected
+   * <p>
+   * This transient field tracks regions of the board that have been modified and
+   * need route optimization. When traces are added, moved, or removed, the
+   * affected
    * areas are recorded here. The pull-tight algorithm uses this information to
-   * efficiently optimize only the changed portions of the board rather than reprocessing
+   * efficiently optimize only the changed portions of the board rather than
+   * reprocessing
    * the entire board.
    *
    * @see #start_marking_changed_area()
@@ -94,9 +108,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Contains the database for the auto-route algorithm.
    *
-   * <p>The autoroute engine maintains a specialized search tree and expansion rooms
-   * for efficient pathfinding during automatic routing. It can be retained between
-   * routing operations for performance reasons, or cleared to save memory. When retained,
+   * <p>
+   * The autoroute engine maintains a specialized search tree and expansion rooms
+   * for efficient pathfinding during automatic routing. It can be retained
+   * between
+   * routing operations for performance reasons, or cleared to save memory. When
+   * retained,
    * the engine database is incrementally updated as board items change.
    *
    * @see AutorouteEngine
@@ -108,8 +125,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * The item that caused the most recent push-and-shove operation to fail.
    *
-   * <p>This transient field stores a reference to the obstacle that could not be pushed
-   * aside during the last shove attempt. It provides diagnostic information for routing
+   * <p>
+   * This transient field stores a reference to the obstacle that could not be
+   * pushed
+   * aside during the last shove attempt. It provides diagnostic information for
+   * routing
    * failures and user feedback.
    *
    * @see #get_shove_failing_obstacle()
@@ -120,8 +140,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * The layer index where the most recent push-and-shove operation failed.
    *
-   * <p>This transient field stores the layer where the obstacle was encountered. A value
-   * of -1 indicates no recent failure or that the failure information has been cleared.
+   * <p>
+   * This transient field stores the layer where the obstacle was encountered. A
+   * value
+   * of -1 indicates no recent failure or that the failure information has been
+   * cleared.
    *
    * @see #get_shove_failing_layer()
    * @see #set_shove_failing_layer(int)
@@ -131,16 +154,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Creates a new instance of a routing board with the specified parameters.
    *
-   * <p>This constructor initializes the board with geometric constraints, layer information,
-   * and routing rules. The board outline shapes define the physical boundaries where routing
+   * <p>
+   * This constructor initializes the board with geometric constraints, layer
+   * information,
+   * and routing rules. The board outline shapes define the physical boundaries
+   * where routing
    * can occur.
    *
-   * @param p_bounding_box the rectangular boundary that contains all board elements
-   * @param p_layer_structure the layer stack-up defining signal, power, and ground layers
-   * @param p_outline_shapes the physical board outlines as polyline shapes
+   * @param p_bounding_box        the rectangular boundary that contains all board
+   *                              elements
+   * @param p_layer_structure     the layer stack-up defining signal, power, and
+   *                              ground layers
+   * @param p_outline_shapes      the physical board outlines as polyline shapes
    * @param p_outline_cl_class_no the clearance class number for the board outline
-   * @param p_rules the board rules containing clearance matrices, net definitions, and design rules
-   * @param p_board_communication the communication interface for user interaction and logging
+   * @param p_rules               the board rules containing clearance matrices,
+   *                              net definitions, and design rules
+   * @param p_board_communication the communication interface for user interaction
+   *                              and logging
    */
   public RoutingBoard(IntBox p_bounding_box, LayerStructure p_layer_structure, PolylineShape[] p_outline_shapes,
       int p_outline_cl_class_no, BoardRules p_rules, Communication p_board_communication) {
@@ -149,21 +179,28 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Maintains the auto-router database after an item is inserted, changed, or deleted.
+   * Maintains the auto-router database after an item is inserted, changed, or
+   * deleted.
    *
-   * <p>This method is called automatically after any item modification to keep the autoroute
-   * search tree synchronized with the current board state. It invalidates expansion rooms
-   * that overlap with the modified item's shapes, ensuring that subsequent routing operations
+   * <p>
+   * This method is called automatically after any item modification to keep the
+   * autoroute
+   * search tree synchronized with the current board state. It invalidates
+   * expansion rooms
+   * that overlap with the modified item's shapes, ensuring that subsequent
+   * routing operations
    * use accurate free space information.
    *
-   * <p>The method performs the following updates:
+   * <p>
+   * The method performs the following updates:
    * <ul>
-   *   <li>Invalidates drill pages affected by the item's shapes</li>
-   *   <li>Removes expansion rooms that overlap with the item</li>
-   *   <li>Clears autoroute information cached in the item</li>
+   * <li>Invalidates drill pages affected by the item's shapes</li>
+   * <li>Removes expansion rooms that overlap with the item</li>
+   * <li>Clears autoroute information cached in the item</li>
    * </ul>
    *
-   * @param p_item the item that was inserted, modified, or deleted; if null, no action is taken
+   * @param p_item the item that was inserted, modified, or deleted; if null, no
+   *               action is taken
    */
   @Override
   public void additional_update_after_change(Item p_item) {
@@ -191,24 +228,31 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Removes the specified items from the board and optimizes nearby rubber traces.
+   * Removes the specified items from the board and optimizes nearby rubber
+   * traces.
    *
-   * <p>This method performs a coordinated removal and optimization operation:
+   * <p>
+   * This method performs a coordinated removal and optimization operation:
    * <ol>
-   *   <li>Attempts to remove each item in the collection</li>
-   *   <li>Marks the affected areas for optimization</li>
-   *   <li>Combines traces that may have been split by the removed items</li>
-   *   <li>Pulls nearby traces tight to optimize routing in the affected region</li>
+   * <li>Attempts to remove each item in the collection</li>
+   * <li>Marks the affected areas for optimization</li>
+   * <li>Combines traces that may have been split by the removed items</li>
+   * <li>Pulls nearby traces tight to optimize routing in the affected region</li>
    * </ol>
    *
-   * <p>Items that are fixed or have deletion forbidden will not be removed, and the
+   * <p>
+   * Items that are fixed or have deletion forbidden will not be removed, and the
    * method will return false to indicate partial failure.
    *
-   * @param p_item_list the collection of items to remove from the board
-   * @param p_tidy_width the radius around removed items where optimization occurs; use
-   *                     {@link Integer#MAX_VALUE} to disable region limiting
-   * @param p_pull_tight_accuracy the accuracy level for the pull-tight optimization algorithm
-   * @return true if all items were successfully removed, false if any items could not be
+   * @param p_item_list           the collection of items to remove from the board
+   * @param p_tidy_width          the radius around removed items where
+   *                              optimization occurs; use
+   *                              {@link Integer#MAX_VALUE} to disable region
+   *                              limiting
+   * @param p_pull_tight_accuracy the accuracy level for the pull-tight
+   *                              optimization algorithm
+   * @return true if all items were successfully removed, false if any items could
+   *         not be
    *         removed because they were fixed or deletion was forbidden
    */
   public boolean remove_items_and_pull_tight(Collection<Item> p_item_list, int p_tidy_width,
@@ -256,14 +300,18 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Starts marking changed areas for optimizing traces.
    *
-   * <p>Initializes the changed area tracking system if it hasn't been created yet.
-   * After calling this method, subsequent modifications to the board will automatically
-   * record affected areas. The accumulated changed area is later used by optimization
+   * <p>
+   * Initializes the changed area tracking system if it hasn't been created yet.
+   * After calling this method, subsequent modifications to the board will
+   * automatically
+   * record affected areas. The accumulated changed area is later used by
+   * optimization
    * algorithms to focus processing on modified regions only.
    *
    * @see #join_changed_area(FloatPoint, int)
    * @see #mark_all_changed_area()
-   * @see #opt_changed_area(int[], IntOctagon, int, ExpansionCostFactor[], Stoppable, int)
+   * @see #opt_changed_area(int[], IntOctagon, int, ExpansionCostFactor[],
+   *      Stoppable, int)
    */
   public void start_marking_changed_area() {
     if (changed_area == null) {
@@ -274,9 +322,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Enlarges the changed area on the specified layer to include the given point.
    *
-   * <p>This method expands the tracked changed region to encompass the specified point.
-   * It should be called whenever a point on the board is modified (e.g., when traces are
-   * added, moved, or removed). The accumulated changed area determines which portions of
+   * <p>
+   * This method expands the tracked changed region to encompass the specified
+   * point.
+   * It should be called whenever a point on the board is modified (e.g., when
+   * traces are
+   * added, moved, or removed). The accumulated changed area determines which
+   * portions of
    * the board need optimization during pull-tight operations.
    *
    * @param p_point the point to include in the changed area
@@ -291,10 +343,15 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Marks the entire board as changed on all layers.
    *
-   * <p>This method initializes the changed area tracker and marks all four corners of
-   * the board's bounding box on every layer. Use this when you want subsequent optimization
-   * operations to process the entire board rather than just specific modified regions.
-   * This is useful after major board changes or when performing global optimization.
+   * <p>
+   * This method initializes the changed area tracker and marks all four corners
+   * of
+   * the board's bounding box on every layer. Use this when you want subsequent
+   * optimization
+   * operations to process the entire board rather than just specific modified
+   * regions.
+   * This is useful after major board changes or when performing global
+   * optimization.
    *
    * @see #start_marking_changed_area()
    * @see #join_changed_area(FloatPoint, int)
@@ -316,19 +373,28 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Optimizes routes in the internally marked changed area.
    *
-   * <p>This is a convenience method that calls the full version of opt_changed_area
-   * without keep-point parameters. It performs pull-tight optimization on traces within
+   * <p>
+   * This is a convenience method that calls the full version of opt_changed_area
+   * without keep-point parameters. It performs pull-tight optimization on traces
+   * within
    * the previously marked changed area.
    *
-   * @param p_only_net_no_arr array of net numbers to optimize; if empty, all nets are optimized
-   * @param p_clip_shape optional shape to restrict optimization region; pass {@link IntOctagon#EMPTY}
-   *                     to use only the marked changed area, or null for no clipping
-   * @param p_accuracy the accuracy level for pull-tight optimization (higher values = more precise)
-   * @param p_trace_cost_arr cost factors for via optimization; may be null
-   * @param p_stoppable_thread thread that can request algorithm termination; may be null
-   * @param p_time_limit maximum time in milliseconds for optimization; 0 or negative means no limit
+   * @param p_only_net_no_arr  array of net numbers to optimize; if empty, all
+   *                           nets are optimized
+   * @param p_clip_shape       optional shape to restrict optimization region;
+   *                           pass {@link IntOctagon#EMPTY}
+   *                           to use only the marked changed area, or null for no
+   *                           clipping
+   * @param p_accuracy         the accuracy level for pull-tight optimization
+   *                           (higher values = more precise)
+   * @param p_trace_cost_arr   cost factors for via optimization; may be null
+   * @param p_stoppable_thread thread that can request algorithm termination; may
+   *                           be null
+   * @param p_time_limit       maximum time in milliseconds for optimization; 0 or
+   *                           negative means no limit
    *
-   * @see #opt_changed_area(int[], IntOctagon, int, ExpansionCostFactor[], Stoppable, int, Point, int)
+   * @see #opt_changed_area(int[], IntOctagon, int, ExpansionCostFactor[],
+   *      Stoppable, int, Point, int)
    */
   public void opt_changed_area(int[] p_only_net_no_arr, IntOctagon p_clip_shape, int p_accuracy,
       ExpansionCostFactor[] p_trace_cost_arr, Stoppable p_stoppable_thread, int p_time_limit) {
@@ -337,24 +403,40 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Optimizes routes in the internally marked changed area with optional point preservation.
+   * Optimizes routes in the internally marked changed area with optional point
+   * preservation.
    *
-   * <p>This method runs the pull-tight algorithm on the previously marked changed area,
-   * optimizing trace routes to remove unnecessary segments and improve routing efficiency.
+   * <p>
+   * This method runs the pull-tight algorithm on the previously marked changed
+   * area,
+   * optimizing trace routes to remove unnecessary segments and improve routing
+   * efficiency.
    * The optimization can be constrained by net, clipping shape, and time limits.
    *
-   * <p>If a keep-point is specified, traces on the keep-point layer that originally contained
-   * that point will still contain it after optimization, preventing unwanted topology changes.
+   * <p>
+   * If a keep-point is specified, traces on the keep-point layer that originally
+   * contained
+   * that point will still contain it after optimization, preventing unwanted
+   * topology changes.
    *
-   * @param p_only_net_no_arr array of net numbers to optimize; if empty, all nets are optimized
-   * @param p_clip_shape optional shape to restrict optimization region; pass {@link IntOctagon#EMPTY}
-   *                     to use only the marked changed area, or null for no clipping
-   * @param p_accuracy the accuracy level for pull-tight optimization (higher values = more precise)
-   * @param p_trace_cost_arr cost factors for via optimization; may be null to use defaults
-   * @param p_stoppable_thread thread that can request algorithm termination; may be null
-   * @param p_time_limit maximum time in milliseconds for optimization; 0 or negative means no limit
-   * @param p_keep_point specific point to preserve during optimization; may be null
-   * @param p_keep_point_layer layer of the keep-point; only used if p_keep_point is not null
+   * @param p_only_net_no_arr  array of net numbers to optimize; if empty, all
+   *                           nets are optimized
+   * @param p_clip_shape       optional shape to restrict optimization region;
+   *                           pass {@link IntOctagon#EMPTY}
+   *                           to use only the marked changed area, or null for no
+   *                           clipping
+   * @param p_accuracy         the accuracy level for pull-tight optimization
+   *                           (higher values = more precise)
+   * @param p_trace_cost_arr   cost factors for via optimization; may be null to
+   *                           use defaults
+   * @param p_stoppable_thread thread that can request algorithm termination; may
+   *                           be null
+   * @param p_time_limit       maximum time in milliseconds for optimization; 0 or
+   *                           negative means no limit
+   * @param p_keep_point       specific point to preserve during optimization; may
+   *                           be null
+   * @param p_keep_point_layer layer of the keep-point; only used if p_keep_point
+   *                           is not null
    */
   public void opt_changed_area(int[] p_only_net_no_arr, IntOctagon p_clip_shape, int p_accuracy,
       ExpansionCostFactor[] p_trace_cost_arr, Stoppable p_stoppable_thread, int p_time_limit,
@@ -374,20 +456,31 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Checks if a rectangular trace segment can be inserted without conflicts.
    *
-   * <p>This method determines the maximum distance from the start point toward the end point
-   * where a trace with the specified width can be placed without violating clearance rules.
-   * It converts the two points into a line segment and delegates to the main checking method.
+   * <p>
+   * This method determines the maximum distance from the start point toward the
+   * end point
+   * where a trace with the specified width can be placed without violating
+   * clearance rules.
+   * It converts the two points into a line segment and delegates to the main
+   * checking method.
    *
-   * @param p_from_point the starting point of the trace segment
-   * @param p_to_point the ending point of the trace segment
-   * @param p_layer the layer index where the trace would be placed
-   * @param p_net_no_arr array of net numbers for the trace
-   * @param p_trace_half_width half-width of the trace (radius of the trace)
-   * @param p_cl_class_no clearance class number for checking violations
-   * @param p_only_not_shovable_obstacles if true, only check against fixed obstacles;
-   *                                       if false, check against all items including unfixed traces
-   * @return the maximum distance that can be routed from start toward end without conflict;
-   *         returns {@link Integer#MAX_VALUE} if no conflict exists, or 0 if routing cannot start
+   * @param p_from_point                  the starting point of the trace segment
+   * @param p_to_point                    the ending point of the trace segment
+   * @param p_layer                       the layer index where the trace would be
+   *                                      placed
+   * @param p_net_no_arr                  array of net numbers for the trace
+   * @param p_trace_half_width            half-width of the trace (radius of the
+   *                                      trace)
+   * @param p_cl_class_no                 clearance class number for checking
+   *                                      violations
+   * @param p_only_not_shovable_obstacles if true, only check against fixed
+   *                                      obstacles;
+   *                                      if false, check against all items
+   *                                      including unfixed traces
+   * @return the maximum distance that can be routed from start toward end without
+   *         conflict;
+   *         returns {@link Integer#MAX_VALUE} if no conflict exists, or 0 if
+   *         routing cannot start
    *
    * @see #check_trace_segment(LineSegment, int, int[], int, int, boolean)
    */
@@ -403,29 +496,43 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Checks if a trace shape around the given line segment can be inserted without conflicts.
+   * Checks if a trace shape around the given line segment can be inserted without
+   * conflicts.
    *
-   * <p>This method creates a rectangular shape around the line segment using the specified
-   * half-width and checks for clearance violations with existing board items. It returns the
-   * maximum distance from the line's start point that can be routed without conflicts.
+   * <p>
+   * This method creates a rectangular shape around the line segment using the
+   * specified
+   * half-width and checks for clearance violations with existing board items. It
+   * returns the
+   * maximum distance from the line's start point that can be routed without
+   * conflicts.
    *
-   * <p>The algorithm:
+   * <p>
+   * The algorithm:
    * <ol>
-   *   <li>Creates an offset shape around the line segment</li>
-   *   <li>Queries for overlapping items with required clearance</li>
-   *   <li>For each obstacle, calculates the projection distance where conflict occurs</li>
-   *   <li>Returns the minimum conflict-free distance</li>
+   * <li>Creates an offset shape around the line segment</li>
+   * <li>Queries for overlapping items with required clearance</li>
+   * <li>For each obstacle, calculates the projection distance where conflict
+   * occurs</li>
+   * <li>Returns the minimum conflict-free distance</li>
    * </ol>
    *
-   * @param p_line_segment the line segment defining the trace path
-   * @param p_layer the layer index where the trace would be placed
-   * @param p_net_no_arr array of net numbers for the trace
-   * @param p_trace_half_width half-width of the trace (radius of the trace)
-   * @param p_cl_class_no clearance class number for checking violations
-   * @param p_only_not_shovable_obstacles if true, only check against fixed obstacles (shove-fixed items);
-   *                                       if false, check against all items including routable/unfixed traces
-   * @return the maximum distance from line start that can be routed without conflict;
-   *         returns {@link Integer#MAX_VALUE} if the entire segment is clear, or 0 if routing cannot start
+   * @param p_line_segment                the line segment defining the trace path
+   * @param p_layer                       the layer index where the trace would be
+   *                                      placed
+   * @param p_net_no_arr                  array of net numbers for the trace
+   * @param p_trace_half_width            half-width of the trace (radius of the
+   *                                      trace)
+   * @param p_cl_class_no                 clearance class number for checking
+   *                                      violations
+   * @param p_only_not_shovable_obstacles if true, only check against fixed
+   *                                      obstacles (shove-fixed items);
+   *                                      if false, check against all items
+   *                                      including routable/unfixed traces
+   * @return the maximum distance from line start that can be routed without
+   *         conflict;
+   *         returns {@link Integer#MAX_VALUE} if the entire segment is clear, or
+   *         0 if routing cannot start
    */
   public double check_trace_segment(LineSegment p_line_segment, int p_layer, int[] p_net_no_arr, int p_trace_half_width,
       int p_cl_class_no, boolean p_only_not_shovable_obstacles) {
@@ -487,23 +594,29 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Checks if an item can be translated by a vector without producing overlaps or clearance violations.
+   * Checks if an item can be translated by a vector without producing overlaps or
+   * clearance violations.
    *
-   * <p>This method validates whether moving an item by the specified vector would result in a legal
+   * <p>
+   * This method validates whether moving an item by the specified vector would
+   * result in a legal
    * board state. It performs comprehensive checking including:
    * <ul>
-   *   <li>Verifying the moved item stays within board boundaries</li>
-   *   <li>Checking for clearance violations with other items</li>
-   *   <li>Ensuring traces maintain their connectivity after movement</li>
+   * <li>Verifying the moved item stays within board boundaries</li>
+   * <li>Checking for clearance violations with other items</li>
+   * <li>Ensuring traces maintain their connectivity after movement</li>
    * </ul>
    *
-   * <p>Limitations: This method does not yet support items with multiple nets.
+   * <p>
+   * Limitations: This method does not yet support items with multiple nets.
    *
-   * @param p_item the item to be moved
-   * @param p_vector the translation vector defining the movement
-   * @param p_ignore_items collection of items to ignore during checking (typically includes the item
+   * @param p_item         the item to be moved
+   * @param p_vector       the translation vector defining the movement
+   * @param p_ignore_items collection of items to ignore during checking
+   *                       (typically includes the item
    *                       being moved and its connected components); may be null
-   * @return true if the item can be safely moved by the vector, false if conflicts would occur
+   * @return true if the item can be safely moved by the vector, false if
+   *         conflicts would occur
    *         or if the operation is not supported for this item type
    */
   public boolean check_move_item(Item p_item, Vector p_vector, Collection<Item> p_ignore_items) {
@@ -551,13 +664,18 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Checks if the net number of an item can be changed without producing clearance violations.
+   * Checks if the net number of an item can be changed without producing
+   * clearance violations.
    *
-   * <p>This method verifies whether reassigning an item to a different net would violate
-   * clearance rules with existing board items. It examines all shapes of the item and ensures
-   * that changing to the new net would not create conflicts with items on other nets.
+   * <p>
+   * This method verifies whether reassigning an item to a different net would
+   * violate
+   * clearance rules with existing board items. It examines all shapes of the item
+   * and ensures
+   * that changing to the new net would not create conflicts with items on other
+   * nets.
    *
-   * @param p_item the item whose net assignment is being checked
+   * @param p_item       the item whose net assignment is being checked
    * @param p_new_net_no the proposed new net number for the item
    * @return true if the net can be changed without clearance violations,
    *         false if conflicts would occur
@@ -580,27 +698,38 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Translates a drill item (pin or via) by a vector and shoves obstacle traces aside.
+   * Translates a drill item (pin or via) by a vector and shoves obstacle traces
+   * aside.
    *
-   * <p>This method attempts to move a drill item using push-and-shove routing. It will
-   * try to push aside any traces that obstruct the new position. The operation includes:
+   * <p>
+   * This method attempts to move a drill item using push-and-shove routing. It
+   * will
+   * try to push aside any traces that obstruct the new position. The operation
+   * includes:
    * <ul>
-   *   <li>Unfixing shove-fixed traces connected to the drill item</li>
-   *   <li>Performing the move with recursive shoving of obstacles</li>
-   *   <li>Optimizing the affected area with pull-tight operations</li>
+   * <li>Unfixing shove-fixed traces connected to the drill item</li>
+   * <li>Performing the move with recursive shoving of obstacles</li>
+   * <li>Optimizing the affected area with pull-tight operations</li>
    * </ul>
    *
-   * <p><strong>Warning:</strong> If this method returns false, the database may be in an
-   * inconsistent state and an undo operation should be performed to restore integrity.
+   * <p>
+   * <strong>Warning:</strong> If this method returns false, the database may be
+   * in an
+   * inconsistent state and an undo operation should be performed to restore
+   * integrity.
    *
-   * @param p_drill_item the drill item (pin or via) to move
-   * @param p_vector the translation vector defining the movement
-   * @param p_max_recursion_depth maximum depth for recursive shoving of traces
+   * @param p_drill_item              the drill item (pin or via) to move
+   * @param p_vector                  the translation vector defining the movement
+   * @param p_max_recursion_depth     maximum depth for recursive shoving of
+   *                                  traces
    * @param p_max_via_recursion_depth maximum depth for recursive shoving of vias
-   * @param p_tidy_width radius around the moved item where optimization occurs
-   * @param p_pull_tight_accuracy accuracy level for pull-tight optimization
-   * @param p_pull_tight_time_limit maximum time in milliseconds for pull-tight operations
-   * @return true if the move succeeded, false if clearance violations could not be resolved
+   * @param p_tidy_width              radius around the moved item where
+   *                                  optimization occurs
+   * @param p_pull_tight_accuracy     accuracy level for pull-tight optimization
+   * @param p_pull_tight_time_limit   maximum time in milliseconds for pull-tight
+   *                                  operations
+   * @return true if the move succeeded, false if clearance violations could not
+   *         be resolved
    *         (database may be damaged if false is returned)
    */
   public boolean move_drill_item(DrillItem p_drill_item, Vector p_vector, int p_max_recursion_depth,
@@ -644,19 +773,28 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Finds the nearest routable item at a given location that can start or end a route.
+   * Finds the nearest routable item at a given location that can start or end a
+   * route.
    *
-   * <p>This method searches for connectable items (traces, drill items, or conduction areas)
-   * near the specified point. It's used to identify where routing can begin or where it can
-   * connect to existing routes. The method prioritizes drill items over traces, and traces
+   * <p>
+   * This method searches for connectable items (traces, drill items, or
+   * conduction areas)
+   * near the specified point. It's used to identify where routing can begin or
+   * where it can
+   * connect to existing routes. The method prioritizes drill items over traces,
+   * and traces
    * over conduction areas.
    *
-   * <p>Items that are already connected to p_from_item (if provided) are excluded from the
+   * <p>
+   * Items that are already connected to p_from_item (if provided) are excluded
+   * from the
    * search to avoid selecting the same connected set.
    *
-   * @param p_location the point to search near
-   * @param p_layer the layer to search on; use negative value to search all layers
-   * @param p_from_item if not null, items connected to this item are ignored in the search
+   * @param p_location  the point to search near
+   * @param p_layer     the layer to search on; use negative value to search all
+   *                    layers
+   * @param p_from_item if not null, items connected to this item are ignored in
+   *                    the search
    * @return the nearest routable item found, or null if no suitable item exists
    */
   public Item pick_nearest_routing_item(Point p_location, int p_layer, Item p_from_item) {
@@ -719,25 +857,37 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Inserts a via at the specified location, shoving aside traces to avoid clearance violations.
+   * Inserts a via at the specified location, shoving aside traces to avoid
+   * clearance violations.
    *
-   * <p>This method uses push-and-shove routing to insert a via even when obstacles are present.
-   * It will attempt to push aside existing traces and vias to make room for the new via.
+   * <p>
+   * This method uses push-and-shove routing to insert a via even when obstacles
+   * are present.
+   * It will attempt to push aside existing traces and vias to make room for the
+   * new via.
    * After insertion, the affected area is optimized with pull-tight operations.
    *
-   * <p><strong>Warning:</strong> If this method returns false, the database may be in an
-   * inconsistent state and an undo operation should be performed to restore integrity.
+   * <p>
+   * <strong>Warning:</strong> If this method returns false, the database may be
+   * in an
+   * inconsistent state and an undo operation should be performed to restore
+   * integrity.
    *
-   * @param p_via_info the via definition including padstack and geometry information
-   * @param p_location the center point where the via should be placed
-   * @param p_net_no_arr array of net numbers for the via
+   * @param p_via_info                 the via definition including padstack and
+   *                                   geometry information
+   * @param p_location                 the center point where the via should be
+   *                                   placed
+   * @param p_net_no_arr               array of net numbers for the via
    * @param p_trace_clearance_class_no clearance class for connected traces
-   * @param p_trace_pen_halfwidth_arr half-widths of traces on each layer
-   * @param p_max_recursion_depth maximum depth for recursive shoving of traces
-   * @param p_max_via_recursion_depth maximum depth for recursive shoving of vias
-   * @param p_tidy_width radius around the via where optimization occurs
-   * @param p_pull_tight_accuracy accuracy level for pull-tight optimization
-   * @param p_pull_tight_time_limit maximum time in milliseconds for pull-tight operations
+   * @param p_trace_pen_halfwidth_arr  half-widths of traces on each layer
+   * @param p_max_recursion_depth      maximum depth for recursive shoving of
+   *                                   traces
+   * @param p_max_via_recursion_depth  maximum depth for recursive shoving of vias
+   * @param p_tidy_width               radius around the via where optimization
+   *                                   occurs
+   * @param p_pull_tight_accuracy      accuracy level for pull-tight optimization
+   * @param p_pull_tight_time_limit    maximum time in milliseconds for pull-tight
+   *                                   operations
    * @return true if the via was successfully inserted, false if shoving failed
    *         (database may be damaged if false is returned)
    */
@@ -770,34 +920,53 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Inserts a trace line segment using push-and-shove routing from start to end point.
+   * Inserts a trace line segment using push-and-shove routing from start to end
+   * point.
    *
-   * <p>This method attempts to insert a straight trace segment while shoving aside obstacle
-   * traces and vias. It returns the last point between start and end where the insertion
-   * succeeded. The method converts the segment to a polyline and delegates to the polyline
+   * <p>
+   * This method attempts to insert a straight trace segment while shoving aside
+   * obstacle
+   * traces and vias. It returns the last point between start and end where the
+   * insertion
+   * succeeded. The method converts the segment to a polyline and delegates to the
+   * polyline
    * insertion method.
    *
-   * <p><strong>Warning:</strong> If the check was inaccurate and an error occurs during insertion,
-   * this method may return null, indicating the database is in an inconsistent state and requires
+   * <p>
+   * <strong>Warning:</strong> If the check was inaccurate and an error occurs
+   * during insertion,
+   * this method may return null, indicating the database is in an inconsistent
+   * state and requires
    * an undo operation.
    *
-   * @param p_from_corner the starting point of the trace segment
-   * @param p_to_corner the ending point of the trace segment
-   * @param p_half_width half-width of the trace (radius)
-   * @param p_layer the layer index where the trace is placed
-   * @param p_net_no_arr array of net numbers for the trace
-   * @param p_clearance_class_no clearance class number for the trace
-   * @param p_max_recursion_depth maximum depth for recursive shoving of traces
-   * @param p_max_via_recursion_depth maximum depth for recursive shoving of vias
-   * @param p_max_spring_over_recursion_depth maximum depth for spring-over obstacle avoidance
-   * @param p_tidy_width radius around the trace where optimization occurs
-   * @param p_pull_tight_accuracy accuracy level for pull-tight optimization
-   * @param p_with_check if true, performs checking before insertion to avoid database damage
-   * @param p_time_limit time limit for the operation
-   * @return the last point where insertion succeeded (may be anywhere between start and end),
+   * @param p_from_corner                     the starting point of the trace
+   *                                          segment
+   * @param p_to_corner                       the ending point of the trace
+   *                                          segment
+   * @param p_half_width                      half-width of the trace (radius)
+   * @param p_layer                           the layer index where the trace is
+   *                                          placed
+   * @param p_net_no_arr                      array of net numbers for the trace
+   * @param p_clearance_class_no              clearance class number for the trace
+   * @param p_max_recursion_depth             maximum depth for recursive shoving
+   *                                          of traces
+   * @param p_max_via_recursion_depth         maximum depth for recursive shoving
+   *                                          of vias
+   * @param p_max_spring_over_recursion_depth maximum depth for spring-over
+   *                                          obstacle avoidance
+   * @param p_tidy_width                      radius around the trace where
+   *                                          optimization occurs
+   * @param p_pull_tight_accuracy             accuracy level for pull-tight
+   *                                          optimization
+   * @param p_with_check                      if true, performs checking before
+   *                                          insertion to avoid database damage
+   * @param p_time_limit                      time limit for the operation
+   * @return the last point where insertion succeeded (may be anywhere between
+   *         start and end),
    *         or null if database was damaged during insertion
    *
-   * @see #insert_forced_trace_polyline(Polyline, int, int, int[], int, int, int, int, int, int, boolean, TimeLimit)
+   * @see #insert_forced_trace_polyline(Polyline, int, int, int[], int, int, int,
+   *      int, int, int, boolean, TimeLimit)
    */
   public Point insert_forced_trace_segment(Point p_from_corner, Point p_to_corner, int p_half_width, int p_layer,
       int[] p_net_no_arr, int p_clearance_class_no, int p_max_recursion_depth,
@@ -824,19 +993,27 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Checks if a trace polyline can be inserted using push-and-shove routing.
    *
-   * <p>This method validates whether a multi-segment trace defined by a polyline can be
-   * inserted while shoving aside obstacles. It does not actually insert the trace, only
+   * <p>
+   * This method validates whether a multi-segment trace defined by a polyline can
+   * be
+   * inserted while shoving aside obstacles. It does not actually insert the
+   * trace, only
    * checks feasibility. Each segment of the polyline is checked sequentially.
    *
-   * @param p_polyline the polyline defining the trace path
-   * @param p_half_width half-width of the trace (radius)
-   * @param p_layer the layer index where the trace would be placed
-   * @param p_net_no_arr array of net numbers for the trace
-   * @param p_clearance_class_no clearance class number for the trace
-   * @param p_max_recursion_depth maximum depth for recursive shoving of traces
-   * @param p_max_via_recursion_depth maximum depth for recursive shoving of vias
-   * @param p_max_spring_over_recursion_depth maximum depth for spring-over obstacle avoidance
-   * @return true if the entire polyline can be inserted with shoving, false if any segment fails
+   * @param p_polyline                        the polyline defining the trace path
+   * @param p_half_width                      half-width of the trace (radius)
+   * @param p_layer                           the layer index where the trace
+   *                                          would be placed
+   * @param p_net_no_arr                      array of net numbers for the trace
+   * @param p_clearance_class_no              clearance class number for the trace
+   * @param p_max_recursion_depth             maximum depth for recursive shoving
+   *                                          of traces
+   * @param p_max_via_recursion_depth         maximum depth for recursive shoving
+   *                                          of vias
+   * @param p_max_spring_over_recursion_depth maximum depth for spring-over
+   *                                          obstacle avoidance
+   * @return true if the entire polyline can be inserted with shoving, false if
+   *         any segment fails
    */
   public boolean check_forced_trace_polyline(Polyline p_polyline, int p_half_width, int p_layer, int[] p_net_no_arr,
       int p_clearance_class_no, int p_max_recursion_depth, int p_max_via_recursion_depth,
@@ -864,36 +1041,51 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Inserts a trace polyline using push-and-shove routing while shoving obstacles aside.
+   * Inserts a trace polyline using push-and-shove routing while shoving obstacles
+   * aside.
    *
-   * <p>This is the main workhorse method for interactive trace routing. It attempts to insert
-   * a multi-segment trace defined by a polyline, pushing aside obstacles as needed. The method
+   * <p>
+   * This is the main workhorse method for interactive trace routing. It attempts
+   * to insert
+   * a multi-segment trace defined by a polyline, pushing aside obstacles as
+   * needed. The method
    * performs several sophisticated operations:
    * <ul>
-   *   <li>Springs over obstacles to find better routing paths</li>
-   *   <li>Combines with existing traces at connection points to avoid dog-ears</li>
-   *   <li>Checks and inserts each segment with push-and-shove logic</li>
-   *   <li>Handles partial insertion by shortening the polyline if conflicts occur</li>
-   *   <li>Removes generated routing cycles</li>
-   *   <li>Optimizes the inserted trace with pull-tight operations</li>
+   * <li>Springs over obstacles to find better routing paths</li>
+   * <li>Combines with existing traces at connection points to avoid dog-ears</li>
+   * <li>Checks and inserts each segment with push-and-shove logic</li>
+   * <li>Handles partial insertion by shortening the polyline if conflicts
+   * occur</li>
+   * <li>Removes generated routing cycles</li>
+   * <li>Optimizes the inserted trace with pull-tight operations</li>
    * </ul>
    *
-   * <p><strong>Warning:</strong> If the check was inaccurate and an error occurs during insertion,
-   * this method may return null, indicating the database is in an inconsistent state and requires
+   * <p>
+   * <strong>Warning:</strong> If the check was inaccurate and an error occurs
+   * during insertion,
+   * this method may return null, indicating the database is in an inconsistent
+   * state and requires
    * an undo operation.
    *
-   * @param p_polyline the polyline defining the trace path
-   * @param p_half_width half-width of the trace (radius)
-   * @param p_layer the layer index where the trace is placed
-   * @param p_net_no_arr array of net numbers for the trace
-   * @param p_clearance_class_no clearance class number for the trace
-   * @param p_max_recursion_depth maximum depth for recursive shoving of traces
-   * @param p_max_via_recursion_depth maximum depth for recursive shoving of vias
-   * @param p_max_spring_over_recursion_depth maximum depth for spring-over obstacle avoidance
-   * @param p_tidy_width radius around the trace where optimization occurs
-   * @param p_pull_tight_accuracy accuracy level for pull-tight optimization
-   * @param p_with_check if true, performs checking before insertion to avoid database damage
-   * @param p_time_limit time limit for the operation
+   * @param p_polyline                        the polyline defining the trace path
+   * @param p_half_width                      half-width of the trace (radius)
+   * @param p_layer                           the layer index where the trace is
+   *                                          placed
+   * @param p_net_no_arr                      array of net numbers for the trace
+   * @param p_clearance_class_no              clearance class number for the trace
+   * @param p_max_recursion_depth             maximum depth for recursive shoving
+   *                                          of traces
+   * @param p_max_via_recursion_depth         maximum depth for recursive shoving
+   *                                          of vias
+   * @param p_max_spring_over_recursion_depth maximum depth for spring-over
+   *                                          obstacle avoidance
+   * @param p_tidy_width                      radius around the trace where
+   *                                          optimization occurs
+   * @param p_pull_tight_accuracy             accuracy level for pull-tight
+   *                                          optimization
+   * @param p_with_check                      if true, performs checking before
+   *                                          insertion to avoid database damage
+   * @param p_time_limit                      time limit for the operation
    * @return the last corner of the polyline where insertion succeeded,
    *         or null if database was damaged during insertion
    */
@@ -1046,7 +1238,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         }
         if (combined_polyline.arr.length < 3) {
           FRLogger.trace("RoutingBoard.insert_forced_trace_polyline", "shortened_polyline_too_short",
-              "combined_polyline after shortening has insufficient lines (arr.length=" + combined_polyline.arr.length + " < 3)"
+              "combined_polyline after shortening has insufficient lines (arr.length=" + combined_polyline.arr.length
+                  + " < 3)"
                   + ", new_corner=" + new_corner
                   + ", sample_width=" + sample_width
                   + ", from " + from_corner + " to " + to_corner
@@ -1111,8 +1304,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     try {
       // Remove evtl. generated cycles because otherwise pull_tight may not work
       // correctly.
-      // NOTE: Use normalize_without_tail_removal during incremental routing to prevent
-      // premature removal of traces that are still being built and don't have all connections yet.
+      // NOTE: Use normalize_without_tail_removal during incremental routing to
+      // prevent
+      // premature removal of traces that are still being built and don't have all
+      // connections yet.
       if (new_trace.normalize_without_tail_removal(changed_area.get_area(p_layer))) {
         pull_tight_algo.split_traces_at_keep_point();
         // otherwise the new corner may no more be contained in the new trace after
@@ -1133,7 +1328,6 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       FRLogger.error("RoutingBoard.insert_forced_trace_polyline: Couldn't remove generated circles from the board.", e);
     }
 
-
     // To avoid that a separate handling for moving backwards in the own trace line
     // becomes necessary, pull tight is called here.
     if (p_tidy_width > 0 && new_trace != null) {
@@ -1145,20 +1339,32 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Initializes the auto-route database for routing a connection.
    *
-   * <p>This method sets up or reuses the autoroute engine for a specific net and clearance class.
-   * The engine maintains a specialized search tree and expansion rooms for efficient pathfinding.
+   * <p>
+   * This method sets up or reuses the autoroute engine for a specific net and
+   * clearance class.
+   * The engine maintains a specialized search tree and expansion rooms for
+   * efficient pathfinding.
    *
-   * <p>If p_retain_autoroute_database is true, the engine is kept active after routing completes,
-   * allowing it to be maintained incrementally as the board changes. This improves performance for
-   * subsequent routing operations but uses more memory. If false or if clearance class changes,
+   * <p>
+   * If p_retain_autoroute_database is true, the engine is kept active after
+   * routing completes,
+   * allowing it to be maintained incrementally as the board changes. This
+   * improves performance for
+   * subsequent routing operations but uses more memory. If false or if clearance
+   * class changes,
    * a new engine is created.
    *
-   * @param p_net_no the net number to route
-   * @param p_trace_clearance_class_no the clearance class for the traces being routed
-   * @param p_stoppable_thread thread that can request algorithm termination; may be null
-   * @param p_time_limit time limit for routing operations; may be null for no limit
-   * @param p_retain_autoroute_database if true, keeps the engine active for incremental updates;
-   *                                     if false, engine will be cleared after routing
+   * @param p_net_no                    the net number to route
+   * @param p_trace_clearance_class_no  the clearance class for the traces being
+   *                                    routed
+   * @param p_stoppable_thread          thread that can request algorithm
+   *                                    termination; may be null
+   * @param p_time_limit                time limit for routing operations; may be
+   *                                    null for no limit
+   * @param p_retain_autoroute_database if true, keeps the engine active for
+   *                                    incremental updates;
+   *                                    if false, engine will be cleared after
+   *                                    routing
    * @return the initialized autoroute engine ready for routing operations
    *
    * @see #finish_autoroute()
@@ -1175,10 +1381,14 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Clears the auto-route database if it was retained after previous routing operations.
+   * Clears the auto-route database if it was retained after previous routing
+   * operations.
    *
-   * <p>Call this method to free memory used by the autoroute engine when routing is complete
-   * and no further routing operations are immediately planned. The engine can be recreated
+   * <p>
+   * Call this method to free memory used by the autoroute engine when routing is
+   * complete
+   * and no further routing operations are immediately planned. The engine can be
+   * recreated
    * later if needed by calling init_autoroute again.
    *
    * @see #init_autoroute(int, int, Stoppable, TimeLimit, boolean)
@@ -1191,27 +1401,38 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Automatically routes an item to another item of the same net not yet electrically connected.
+   * Automatically routes an item to another item of the same net not yet
+   * electrically connected.
    *
-   * <p>This method performs automatic routing from the given item to any unconnected item on
-   * the same net. It uses the autoroute engine to find an optimal path while respecting design
-   * rules and clearances. The method handles various termination conditions and optimizes the
+   * <p>
+   * This method performs automatic routing from the given item to any unconnected
+   * item on
+   * the same net. It uses the autoroute engine to find an optimal path while
+   * respecting design
+   * rules and clearances. The method handles various termination conditions and
+   * optimizes the
    * result if routing succeeds.
    *
-   * <p>The method will not route items that:
+   * <p>
+   * The method will not route items that:
    * <ul>
-   *   <li>Are not connectable (non-routing items)</li>
-   *   <li>Have no nets assigned</li>
-   *   <li>Are already fully connected</li>
-   *   <li>Are connected to a plane (conduction area)</li>
+   * <li>Are not connectable (non-routing items)</li>
+   * <li>Have no nets assigned</li>
+   * <li>Are already fully connected</li>
+   * <li>Are connected to a plane (conduction area)</li>
    * </ul>
    *
-   * @param p_item the starting item for routing (must be connectable and have at least one net)
-   * @param routerSettings the router configuration including trace costs and pull-tight settings
-   * @param p_via_costs the cost factor for via insertion during routing
-   * @param p_stoppable_thread thread that can request algorithm termination; may be null
-   * @param p_time_limit time limit for the routing operation; may be null for no limit
-   * @return an AutorouteAttemptResult indicating the outcome (ROUTED, ALREADY_CONNECTED,
+   * @param p_item             the starting item for routing (must be connectable
+   *                           and have at least one net)
+   * @param routerSettings     the router configuration including trace costs and
+   *                           pull-tight settings
+   * @param p_via_costs        the cost factor for via insertion during routing
+   * @param p_stoppable_thread thread that can request algorithm termination; may
+   *                           be null
+   * @param p_time_limit       time limit for the routing operation; may be null
+   *                           for no limit
+   * @return an AutorouteAttemptResult indicating the outcome (ROUTED,
+   *         ALREADY_CONNECTED,
    *         NO_CONNECTIONS, CONNECTED_TO_PLANE, etc.) with explanatory message
    *
    * @see AutorouteAttemptResult
@@ -1435,9 +1656,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Clears temporary autoroute information from all items on the board.
    *
-   * <p>During autorouting, items may cache temporary data such as expansion room references
-   * and routing state. This method iterates through all items and clears this cached information.
-   * Call this method when autorouting is complete or when preparing for a fresh routing attempt.
+   * <p>
+   * During autorouting, items may cache temporary data such as expansion room
+   * references
+   * and routing state. This method iterates through all items and clears this
+   * cached information.
+   * Call this method when autorouting is complete or when preparing for a fresh
+   * routing attempt.
    *
    * @see Item#clear_autoroute_info()
    */
@@ -1483,20 +1708,28 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Reduces the net assignments of traces and vias to be a subset of their contact items' nets.
+   * Reduces the net assignments of traces and vias to be a subset of their
+   * contact items' nets.
    *
-   * <p>This method is particularly important for routing at tie pins, where multiple nets may
-   * converge. It ensures that traces and vias with multiple nets only retain nets that are
+   * <p>
+   * This method is particularly important for routing at tie pins, where multiple
+   * nets may
+   * converge. It ensures that traces and vias with multiple nets only retain nets
+   * that are
    * actually present in their connecting items (pins, other traces, etc.).
    *
-   * <p>The algorithm iteratively processes all routable items with multiple nets:
+   * <p>
+   * The algorithm iteratively processes all routable items with multiple nets:
    * <ul>
-   *   <li>For vias: removes any net not present in all connected items</li>
-   *   <li>For traces: removes nets not present in connected pins or other contacts</li>
-   *   <li>Repeats until no further reductions are possible</li>
+   * <li>For vias: removes any net not present in all connected items</li>
+   * <li>For traces: removes nets not present in connected pins or other
+   * contacts</li>
+   * <li>Repeats until no further reductions are possible</li>
    * </ul>
    *
-   * <p>System-fixed items are not modified as their nets are considered authoritative.
+   * <p>
+   * System-fixed items are not modified as their nets are considered
+   * authoritative.
    *
    * @return true if any item's nets were reduced, false if no changes were needed
    */
@@ -1576,11 +1809,15 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Returns the obstacle item responsible for the most recent shove failure.
    *
-   * <p>When a push-and-shove operation fails, this method provides access to the item that
-   * caused the failure. This information is useful for debugging routing issues and providing
+   * <p>
+   * When a push-and-shove operation fails, this method provides access to the
+   * item that
+   * caused the failure. This information is useful for debugging routing issues
+   * and providing
    * user feedback about why a routing operation could not complete.
    *
-   * @return the item that blocked the last shove attempt, or null if no recent failure or
+   * @return the item that blocked the last shove attempt, or null if no recent
+   *         failure or
    *         if the failure information has been cleared
    *
    * @see #get_shove_failing_layer()
@@ -1593,8 +1830,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Records the obstacle item responsible for a shove failure.
    *
-   * <p>This method is called internally by shove algorithms when they encounter an item that
-   * cannot be pushed aside. The recorded information can be retrieved later for debugging or
+   * <p>
+   * This method is called internally by shove algorithms when they encounter an
+   * item that
+   * cannot be pushed aside. The recorded information can be retrieved later for
+   * debugging or
    * user feedback.
    *
    * @param p_item the item that caused the shove to fail
@@ -1609,11 +1849,15 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Returns the layer index where the most recent shove failure occurred.
    *
-   * <p>When a push-and-shove operation fails, this provides the layer where the obstacle
-   * was encountered. Used in conjunction with get_shove_failing_obstacle() to provide complete
+   * <p>
+   * When a push-and-shove operation fails, this provides the layer where the
+   * obstacle
+   * was encountered. Used in conjunction with get_shove_failing_obstacle() to
+   * provide complete
    * failure information.
    *
-   * @return the layer index where shove failed, or -1 if no recent failure or if the failure
+   * @return the layer index where shove failed, or -1 if no recent failure or if
+   *         the failure
    *         information has been cleared
    *
    * @see #get_shove_failing_obstacle()
@@ -1626,8 +1870,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Records the layer index where a shove failure occurred.
    *
-   * <p>This method is called internally by shove algorithms when they fail at a specific layer.
-   * The recorded layer index can be retrieved later for debugging or user feedback.
+   * <p>
+   * This method is called internally by shove algorithms when they fail at a
+   * specific layer.
+   * The recorded layer index can be retrieved later for debugging or user
+   * feedback.
    *
    * @param p_layer the layer index where the shove failed
    *
@@ -1641,8 +1888,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Clears the recorded shove failure information.
    *
-   * <p>This method resets both the failing obstacle item and layer to their default values
-   * (null and -1 respectively). It should be called before starting a new shove operation to
+   * <p>
+   * This method resets both the failing obstacle item and layer to their default
+   * values
+   * (null and -1 respectively). It should be called before starting a new shove
+   * operation to
    * ensure old failure information doesn't persist.
    *
    * @see #get_shove_failing_obstacle()
@@ -1654,10 +1904,14 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Checks if the auto-route database is being maintained outside the auto-route algorithm.
+   * Checks if the auto-route database is being maintained outside the auto-route
+   * algorithm.
    *
-   * <p>When the autoroute database is maintained, it is kept synchronized with board changes
-   * even when routing is not actively occurring. This allows faster routing operations at the
+   * <p>
+   * When the autoroute database is maintained, it is kept synchronized with board
+   * changes
+   * even when routing is not actively occurring. This allows faster routing
+   * operations at the
    * cost of memory and update overhead.
    *
    * @return true if the autoroute engine exists and is maintaining its database,
@@ -1670,16 +1924,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Sets whether the auto-route database should be maintained outside the auto-route algorithm.
+   * Sets whether the auto-route database should be maintained outside the
+   * auto-route algorithm.
    *
-   * <p>When set to true, this method enables database maintenance, though the actual engine
-   * creation happens during init_autoroute. When set to false, the autoroute engine is
+   * <p>
+   * When set to true, this method enables database maintenance, though the actual
+   * engine
+   * creation happens during init_autoroute. When set to false, the autoroute
+   * engine is
    * immediately cleared to free memory.
    *
-   * <p>Maintaining the database improves routing performance but increases memory usage and
+   * <p>
+   * Maintaining the database improves routing performance but increases memory
+   * usage and
    * adds overhead to board modification operations.
    *
-   * @param p_value true to enable database maintenance, false to disable and clear the engine
+   * @param p_value true to enable database maintenance, false to disable and
+   *                clear the engine
    *
    * @see #is_maintaining_autoroute_database()
    * @see #init_autoroute(int, int, Stoppable, TimeLimit, boolean)
@@ -1695,8 +1956,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /**
    * Generates comprehensive statistics about the current board state.
    *
-   * <p>This method creates a BoardStatistics object that contains detailed information about
-   * the board including counts of components, traces, vias, unrouted connections, violations,
+   * <p>
+   * This method creates a BoardStatistics object that contains detailed
+   * information about
+   * the board including counts of components, traces, vias, unrouted connections,
+   * violations,
    * and other metrics useful for evaluating board quality and routing progress.
    *
    * @return a new BoardStatistics object containing current board metrics
@@ -1708,24 +1972,33 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Creates a deep copy of the routing board including all items and routing state.
+   * Creates a deep copy of the routing board including all items and routing
+   * state.
    *
-   * <p>This method uses Java serialization to create a complete independent copy of the board.
-   * The copy includes all items, nets, rules, and board geometry. The autoroute engine and
-   * temporary autoroute data are explicitly cleared in the copy to ensure a clean state.
+   * <p>
+   * This method uses Java serialization to create a complete independent copy of
+   * the board.
+   * The copy includes all items, nets, rules, and board geometry. The autoroute
+   * engine and
+   * temporary autoroute data are explicitly cleared in the copy to ensure a clean
+   * state.
    *
-   * <p>This is particularly useful for:
+   * <p>
+   * This is particularly useful for:
    * <ul>
-   *   <li>Implementing undo/redo functionality</li>
-   *   <li>Comparing different routing solutions</li>
-   *   <li>Preserving board state before experimental operations</li>
-   *   <li>Testing routing algorithms without affecting the original board</li>
+   * <li>Implementing undo/redo functionality</li>
+   * <li>Comparing different routing solutions</li>
+   * <li>Preserving board state before experimental operations</li>
+   * <li>Testing routing algorithms without affecting the original board</li>
    * </ul>
    *
-   * <p>Note: This operation can be memory and CPU intensive for large boards due to the
+   * <p>
+   * Note: This operation can be memory and CPU intensive for large boards due to
+   * the
    * serialization overhead.
    *
-   * @return a complete independent copy of this routing board, or null if the copy operation fails
+   * @return a complete independent copy of this routing board, or null if the
+   *         copy operation fails
    */
   public synchronized RoutingBoard deepCopy() {
     ObjectOutputStream oos = null;
