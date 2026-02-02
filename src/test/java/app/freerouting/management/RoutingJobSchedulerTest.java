@@ -170,6 +170,72 @@ public class RoutingJobSchedulerTest {
     assertEquals(5, job.getCurrentPass(), "currentPass should be updateable.");
   }
 
+  @Test
+  void testCancelJob() {
+    // 1. Test with null job
+    scheduler.cancelJob(null);
+    // Should not throw exception
+
+    // 2. Test with QUEUED job
+    RoutingJob queuedJob = createTestJob();
+    scheduler.enqueueJob(queuedJob);
+    // enqueueJob sets state to QUEUED, which is what we want here.
+
+    scheduler.cancelJob(queuedJob);
+    assertEquals(RoutingJobState.CANCELLED, queuedJob.state, "QUEUED job should be CANCELLED.");
+    assertTrue(queuedJob.isCancelledByUser(), "isCancelledByUser should be true.");
+
+    // 3. Test with READY_TO_START job
+    RoutingJob readyJob = createTestJob();
+    scheduler.enqueueJob(readyJob);
+    readyJob.state = RoutingJobState.READY_TO_START; // Set state AFTER enqueue
+
+    scheduler.cancelJob(readyJob);
+    assertEquals(RoutingJobState.CANCELLED, readyJob.state, "READY_TO_START job should be CANCELLED.");
+    assertTrue(readyJob.isCancelledByUser(), "isCancelledByUser should be true.");
+
+    // 4. Test with RUNNING job
+    RoutingJob runningJob = createTestJob();
+    scheduler.enqueueJob(runningJob);
+    runningJob.state = RoutingJobState.RUNNING; // Set state AFTER enqueue
+    // We don't set a thread, so thread.requestStop() won't be called, avoiding NPE
+    // or mock requirement if checks are in place.
+
+    scheduler.cancelJob(runningJob);
+    assertEquals(RoutingJobState.STOPPING, runningJob.state, "RUNNING job should be set to STOPPING.");
+    assertTrue(runningJob.isCancelledByUser(), "isCancelledByUser should be true.");
+
+    // 5. Test with blocked/other state (e.g. PAUSED or INVALID if broadly
+    // cancellable)
+    RoutingJob pausedJob = createTestJob();
+    scheduler.enqueueJob(pausedJob);
+    pausedJob.state = RoutingJobState.PAUSED; // Set state AFTER enqueue
+
+    scheduler.cancelJob(pausedJob);
+    assertEquals(RoutingJobState.CANCELLED, pausedJob.state, "PAUSED job should be CANCELLED.");
+    assertTrue(pausedJob.isCancelledByUser(), "isCancelledByUser should be true.");
+
+    // 6. Test with already CANCELLED job
+    RoutingJob cancelledJob = createTestJob();
+    scheduler.enqueueJob(cancelledJob);
+    cancelledJob.state = RoutingJobState.CANCELLED; // Set state AFTER enqueue
+    cancelledJob.setCancelledByUser(true);
+
+    scheduler.cancelJob(cancelledJob);
+    // Should remain cancelled and not change state (code checks
+    // !job.isCancelledByUser())
+    assertEquals(RoutingJobState.CANCELLED, cancelledJob.state, "Already CANCELLED job should remain CANCELLED.");
+
+    // 7. Test with COMPLETED job
+    RoutingJob completedJob = createTestJob();
+    scheduler.enqueueJob(completedJob);
+    completedJob.state = RoutingJobState.COMPLETED; // Set state AFTER enqueue
+
+    scheduler.cancelJob(completedJob);
+    assertEquals(RoutingJobState.COMPLETED, completedJob.state, "COMPLETED job should not be cancelled.");
+    assertFalse(completedJob.isCancelledByUser(), "isCancelledByUser should remain false for COMPLETED job.");
+  }
+
   // Helper method to check if a job list contains a specific job
   private boolean containsJob(LinkedList<RoutingJob> jobs, RoutingJob targetJob) {
     return jobs.contains(targetJob);
