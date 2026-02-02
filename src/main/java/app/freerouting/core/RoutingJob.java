@@ -83,6 +83,15 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public transient StoppableThread thread;
   public transient RoutingBoard board;
   public transient Instant timeoutAt;
+  private boolean isCancelledByUser = false;
+
+  public boolean isCancelledByUser() {
+    return isCancelledByUser;
+  }
+
+  public void setCancelledByUser(boolean cancelledByUser) {
+    isCancelledByUser = cancelledByUser;
+  }
 
   @SerializedName("current_pass")
   private int currentPass = 0;

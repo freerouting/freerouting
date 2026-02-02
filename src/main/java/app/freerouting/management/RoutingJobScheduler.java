@@ -80,8 +80,7 @@ public class RoutingJobScheduler {
                     var settingsMerger = globalSettings.settingsMergerProtype.clone();
 
                     settingsMerger.addOrReplaceSources(
-                        new DsnFileSettings(job.input.getData(), job.input.getFilename())
-                    );
+                        new DsnFileSettings(job.input.getData(), job.input.getFilename()));
 
                     // Apply the final merged settings to the job and optimize them for the board
                     job.routerSettings = settingsMerger.merge();
@@ -363,6 +362,38 @@ public class RoutingJobScheduler {
       this.jobs.removeIf(j -> j.sessionId
           .toString()
           .equals(sessionId));
+    }
+  }
+
+  /**
+   * Cancels a job.
+   *
+   * @param job The job to cancel.
+   */
+  public void cancelJob(RoutingJob job) {
+    if (job == null) {
+      return;
+    }
+
+    synchronized (jobs) {
+      if (job.state == RoutingJobState.QUEUED || job.state == RoutingJobState.READY_TO_START) {
+        job.state = RoutingJobState.CANCELLED;
+        job.setCancelledByUser(true);
+        saveJob(job);
+      } else if (job.state == RoutingJobState.RUNNING) {
+        job.state = RoutingJobState.STOPPING;
+        job.setCancelledByUser(true);
+        if (job.thread != null) {
+          job.thread.requestStop();
+        }
+        saveJob(job);
+      } else if (!job.isCancelledByUser() && (job.state != RoutingJobState.COMPLETED)
+          && (job.state != RoutingJobState.TIMED_OUT) && (job.state != RoutingJobState.TERMINATED)) {
+        // If the job is in another state (e.g. PAUSED), we can still cancel it
+        job.state = RoutingJobState.CANCELLED;
+        job.setCancelledByUser(true);
+        saveJob(job);
+      }
     }
   }
 }

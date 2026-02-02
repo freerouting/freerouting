@@ -170,6 +170,17 @@ public class RouterSettings implements Serializable, Cloneable {
     // make more horizontal preferred direction, if the board is horizontal.
 
     boolean curr_preferred_direction_is_horizontal = horizontal_width < vertical_width;
+
+    // initialize the layer specific settings.
+    if (scoring.preferredDirectionTraceCost == null || scoring.preferredDirectionTraceCost.length != layer_count)
+    {
+      scoring.preferredDirectionTraceCost = new double[layer_count];
+    }
+    if (scoring.undesiredDirectionTraceCost == null || scoring.undesiredDirectionTraceCost.length != layer_count)
+    {
+      scoring.undesiredDirectionTraceCost = new double[layer_count];
+    }
+
     for (int i = 0; i < layer_count; i++) {
       isLayerActive[i] = p_board.layer_structure.arr[i].is_signal;
       if (p_board.layer_structure.arr[i].is_signal) {

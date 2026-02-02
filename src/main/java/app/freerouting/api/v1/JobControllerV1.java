@@ -318,19 +318,15 @@ public class JobControllerV1 extends BaseController {
           .build();
     }
 
-    // TODO: cancel the job
-    job.state = RoutingJobState.CANCELLED;
     RoutingJobScheduler
         .getInstance()
-        .saveJob(job);
+        .cancelJob(job);
 
     var response = GsonProvider.GSON.toJson(job);
     FRAnalytics.apiEndpointCalled("PUT v1/jobs/" + jobId + "/cancel", "", response);
 
-    // Return an error that this method is not implemented yet
     return Response
-        .status(Response.Status.NOT_IMPLEMENTED)
-        .entity("{\"error\":\"This method is not implemented yet.\"}")
+        .ok(response)
         .build();
   }
 

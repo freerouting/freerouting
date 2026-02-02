@@ -298,7 +298,7 @@ public class GuiManager {
             // we load a blank board
             var settingsMerger = globalSettings.settingsMergerProtype.clone();
             settingsMerger.addOrReplaceSources(
-                new GuiSettings(routingJob.routerSettings));
+                new GuiSettings(null));
 
             final BoardFrame new_frame = create_board_frame(null, null, globalSettings, settingsMerger);
             if (new_frame == null) {
