@@ -11,6 +11,9 @@ public class Issue508ReproductionTest extends TestBasedOnAnIssue {
 
     @Test
     public void testIssue508_BM01_first_2_nets() {
+        // Set console logging level to TRACE for detailed output
+        System.setProperty("freerouting.logging.console.level", "TRACE");
+
         // Enable detailed logging and filter to Net #98
         Freerouting.globalSettings.debugSettings.enableDetailedLogging = true;
         Freerouting.globalSettings.debugSettings.filterByNet.add("98");
@@ -27,6 +30,6 @@ public class Issue508ReproductionTest extends TestBasedOnAnIssue {
         RunRoutingJob(job, testSettings);
 
         assertTrue(job.board.get_statistics().connections.incompleteCount == 104,
-            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 104 incomplete connections with the target of 2 items to route.");
+                "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 104 incomplete connections with the target of 2 items to route.");
     }
 }
