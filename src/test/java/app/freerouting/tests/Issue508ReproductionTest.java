@@ -7,6 +7,8 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.settings.RouterSettings;
 import org.junit.jupiter.api.Test;
 
+import app.freerouting.settings.sources.TestingSettings;
+
 public class Issue508ReproductionTest extends TestBasedOnAnIssue {
 
     @Test
@@ -18,18 +20,18 @@ public class Issue508ReproductionTest extends TestBasedOnAnIssue {
         Freerouting.globalSettings.debugSettings.enableDetailedLogging = true;
         Freerouting.globalSettings.debugSettings.filterByNet.add("98");
 
-        // Get the job
-        RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn");
+        // Create testing settings
+        TestingSettings testSettingsSource = new TestingSettings();
+        testSettingsSource.setMaxPasses(1);
+        testSettingsSource.setMaxItems(2);
+        testSettingsSource.setJobTimeoutString("00:00:15"); // 15 seconds timeout
 
-        // Configure settings
-        RouterSettings testSettings = job.routerSettings;
-        testSettings.maxPasses = 1;
-        testSettings.maxItems = 2;
-        testSettings.jobTimeoutString = "00:00:15"; // 15 seconds timeout
+        // Get the job with injected settings
+        RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
 
-        RunRoutingJob(job, testSettings);
+        RunRoutingJob(job, job.routerSettings);
 
-        assertTrue(job.board.get_statistics().connections.incompleteCount == 104,
+        assertTrue(GetBoardStatistics(job).connections.incompleteCount == 104,
                 "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 104 incomplete connections with the target of 2 items to route.");
     }
 }

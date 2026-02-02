@@ -13,6 +13,7 @@ import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
+import app.freerouting.settings.sources.TestingSettings;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -30,6 +31,10 @@ public class TestBasedOnAnIssue {
   }
 
   protected RoutingJob GetRoutingJob(String filename) {
+    return GetRoutingJob(filename, null);
+  }
+
+  protected RoutingJob GetRoutingJob(String filename, TestingSettings testingSettings) {
     // Create a new session
     UUID sessionId = UUID.randomUUID();
     Session session = SessionManager
@@ -67,13 +72,23 @@ public class TestBasedOnAnIssue {
       var statsBefore = new BoardStatistics(job.input
           .getData()
           .readAllBytes(), job.input.format);
-      job.routerSettings = new SettingsMerger(new DefaultSettings(), new DsnFileSettings(job.input.getData(), job.input.getFilename())).merge();
+
+      SettingsMerger merger = new SettingsMerger(new DefaultSettings(),
+          new DsnFileSettings(job.input.getData(), job.input.getFilename()));
+
+      if (testingSettings == null) {
+        testingSettings = new TestingSettings();
+      }
+
+      testingSettings.setJobTimeoutString("00:01:00");
+      testingSettings.setMaxPasses(100);
+      merger.addOrReplaceSources(testingSettings);
+
+      job.routerSettings = merger.merge();
+
     } catch (IOException e) {
       throw new RuntimeException(testFile + " not found.", e);
     }
-
-    job.routerSettings.jobTimeoutString = "00:01:00";
-    job.routerSettings.maxPasses = 100;
 
     return job;
   }

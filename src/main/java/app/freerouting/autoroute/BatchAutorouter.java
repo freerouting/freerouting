@@ -37,81 +37,108 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * Orchestrates batch autorouting passes for automatically routing all incomplete connections on a board.
+ * Orchestrates batch autorouting passes for automatically routing all
+ * incomplete connections on a board.
  *
- * <p>This class manages the complete autorouting workflow in a separate thread, executing multiple
- * passes with progressively relaxed constraints until all connections are routed or pass limits
+ * <p>
+ * This class manages the complete autorouting workflow in a separate thread,
+ * executing multiple
+ * passes with progressively relaxed constraints until all connections are
+ * routed or pass limits
  * are reached.
  *
- * <p><strong>Key Responsibilities:</strong>
+ * <p>
+ * <strong>Key Responsibilities:</strong>
  * <ul>
- *   <li><strong>Multi-Pass Routing:</strong> Execute successive routing passes with different strategies</li>
- *   <li><strong>Connection Selection:</strong> Choose which incomplete connections to route each pass</li>
- *   <li><strong>Progress Tracking:</strong> Monitor routing statistics and completion status</li>
- *   <li><strong>Event Notification:</strong> Notify listeners about routing progress and state changes</li>
- *   <li><strong>Thread Management:</strong> Support interruption and time limits for responsive UI</li>
+ * <li><strong>Multi-Pass Routing:</strong> Execute successive routing passes
+ * with different strategies</li>
+ * <li><strong>Connection Selection:</strong> Choose which incomplete
+ * connections to route each pass</li>
+ * <li><strong>Progress Tracking:</strong> Monitor routing statistics and
+ * completion status</li>
+ * <li><strong>Event Notification:</strong> Notify listeners about routing
+ * progress and state changes</li>
+ * <li><strong>Thread Management:</strong> Support interruption and time limits
+ * for responsive UI</li>
  * </ul>
  *
- * <p><strong>Routing Strategy:</strong>
+ * <p>
+ * <strong>Routing Strategy:</strong>
  * <ol>
- *   <li><strong>Pass 1:</strong> Route shortest connections first with strict constraints
- *     <ul>
- *       <li>Minimal via usage</li>
- *       <li>Tight clearances</li>
- *       <li>Prefer simpler paths</li>
- *     </ul>
- *   </li>
- *   <li><strong>Pass 2+:</strong> Progressively relax constraints for remaining connections
- *     <ul>
- *       <li>Allow more vias</li>
- *       <li>Wider search space</li>
- *       <li>Accept longer paths</li>
- *     </ul>
- *   </li>
- *   <li><strong>Completion:</strong> Stop when all routed, pass limit reached, or interrupted</li>
+ * <li><strong>Pass 1:</strong> Route shortest connections first with strict
+ * constraints
+ * <ul>
+ * <li>Minimal via usage</li>
+ * <li>Tight clearances</li>
+ * <li>Prefer simpler paths</li>
+ * </ul>
+ * </li>
+ * <li><strong>Pass 2+:</strong> Progressively relax constraints for remaining
+ * connections
+ * <ul>
+ * <li>Allow more vias</li>
+ * <li>Wider search space</li>
+ * <li>Accept longer paths</li>
+ * </ul>
+ * </li>
+ * <li><strong>Completion:</strong> Stop when all routed, pass limit reached, or
+ * interrupted</li>
  * </ol>
  *
- * <p><strong>Connection Prioritization:</strong>
+ * <p>
+ * <strong>Connection Prioritization:</strong>
  * <ul>
- *   <li><strong>Airline Distance:</strong> Route shortest connections first (easier to route)</li>
- *   <li><strong>Net Grouping:</strong> Route connections of the same net together</li>
- *   <li><strong>Component Fanout:</strong> Special handling for SMD component connections</li>
+ * <li><strong>Airline Distance:</strong> Route shortest connections first
+ * (easier to route)</li>
+ * <li><strong>Net Grouping:</strong> Route connections of the same net
+ * together</li>
+ * <li><strong>Component Fanout:</strong> Special handling for SMD component
+ * connections</li>
  * </ul>
  *
- * <p><strong>Progress Monitoring:</strong>
+ * <p>
+ * <strong>Progress Monitoring:</strong>
  * The autorouter provides real-time feedback through:
  * <ul>
- *   <li>{@link BoardUpdatedEvent}: Fired after each routing iteration with statistics</li>
- *   <li>{@link TaskStateChangedEvent}: Fired when passes start/stop</li>
- *   <li>Current airline being routed (via {@link #get_air_line()})</li>
- *   <li>Incomplete connection count tracking</li>
+ * <li>{@link BoardUpdatedEvent}: Fired after each routing iteration with
+ * statistics</li>
+ * <li>{@link TaskStateChangedEvent}: Fired when passes start/stop</li>
+ * <li>Current airline being routed (via {@link #get_air_line()})</li>
+ * <li>Incomplete connection count tracking</li>
  * </ul>
  *
- * <p><strong>Interruption:</strong>
- * The autorouter checks {@link StoppableThread#isStopRequested()} at strategic points:
+ * <p>
+ * <strong>Interruption:</strong>
+ * The autorouter checks {@link StoppableThread#isStopRequested()} at strategic
+ * points:
  * <ul>
- *   <li>Between routing passes</li>
- *   <li>Between individual connections</li>
- *   <li>During long-running maze searches</li>
+ * <li>Between routing passes</li>
+ * <li>Between individual connections</li>
+ * <li>During long-running maze searches</li>
  * </ul>
  *
- * <p><strong>Integration with UI:</strong>
+ * <p>
+ * <strong>Integration with UI:</strong>
  * <ul>
- *   <li>Runs in {@link app.freerouting.interactive.AutorouterAndRouteOptimizerThread}</li>
- *   <li>Updates GUI through event listeners</li>
- *   <li>Provides visual feedback (current airline, progress)</li>
- *   <li>Allows user interruption at any time</li>
+ * <li>Runs in
+ * {@link app.freerouting.interactive.AutorouterAndRouteOptimizerThread}</li>
+ * <li>Updates GUI through event listeners</li>
+ * <li>Provides visual feedback (current airline, progress)</li>
+ * <li>Allows user interruption at any time</li>
  * </ul>
  *
- * <p><strong>Performance Considerations:</strong>
+ * <p>
+ * <strong>Performance Considerations:</strong>
  * <ul>
- *   <li>Database maintenance mode improves multi-pass performance</li>
- *   <li>Connection sorting minimizes routing conflicts</li>
- *   <li>Time limits prevent hanging on difficult connections</li>
- *   <li>Via minimization reduces subsequent routing difficulty</li>
+ * <li>Database maintenance mode improves multi-pass performance</li>
+ * <li>Connection sorting minimizes routing conflicts</li>
+ * <li>Time limits prevent hanging on difficult connections</li>
+ * <li>Via minimization reduces subsequent routing difficulty</li>
  * </ul>
  *
- * <p><strong>Typical Usage:</strong>
+ * <p>
+ * <strong>Typical Usage:</strong>
+ * 
  * <pre>{@code
  * RoutingJob job = ...; // routing job with settings
  * BatchAutorouter autorouter = new BatchAutorouter(board, true, job, thread);
@@ -133,15 +160,18 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Minimum board ranking threshold to consider for backtracking strategies.
    *
-   * <p>Boards with ranking below this limit are not considered for reverting
-   * when routing becomes difficult. Helps limit memory and prevents excessive backtracking.
+   * <p>
+   * Boards with ranking below this limit are not considered for reverting
+   * when routing becomes difficult. Helps limit memory and prevents excessive
+   * backtracking.
    */
   private static final int BOARD_RANK_LIMIT = 50;
 
   /**
    * Maximum attempts to route the same board configuration before giving up.
    *
-   * <p>Prevents infinite loops when a particular board state cannot be improved.
+   * <p>
+   * Prevents infinite loops when a particular board state cannot be improved.
    * After this many tries, the autorouter moves on or terminates.
    */
   private static final int MAXIMUM_TRIES_ON_THE_SAME_BOARD = 3;
@@ -149,7 +179,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Time limit in milliseconds to prevent endless routing loops.
    *
-   * <p>If a single routing operation exceeds this limit, it's terminated to
+   * <p>
+   * If a single routing operation exceeds this limit, it's terminated to
    * prevent the autorouter from hanging indefinitely on difficult connections.
    */
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
@@ -157,7 +188,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Minimum number of passes before checking for completion criteria.
    *
-   * <p>The autorouter must complete at least this many passes before it can
+   * <p>
+   * The autorouter must complete at least this many passes before it can
    * stop based on insufficient progress. Ensures reasonable routing attempts
    * even if early progress is slow.
    */
@@ -166,7 +198,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Pass number interval for checking if progress is insufficient to continue.
    *
-   * <p>Every STOP_AT_PASS_MODULO passes, the autorouter checks if improvements
+   * <p>
+   * Every STOP_AT_PASS_MODULO passes, the autorouter checks if improvements
    * are too small to justify continuing. Helps terminate on diminishing returns.
    */
   private static final int STOP_AT_PASS_MODULO = 4;
@@ -174,7 +207,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Flag indicating whether to remove unconnected vias after routing.
    *
-   * <p>When true, vias that aren't part of any complete connection are removed
+   * <p>
+   * When true, vias that aren't part of any complete connection are removed
    * during cleanup. This reduces clutter and potential DRC violations.
    */
   private final boolean remove_unconnected_vias;
@@ -182,13 +216,15 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Array of trace cost factors per layer for routing strategy.
    *
-   * <p>Each layer has minimum and maximum cost factors that influence routing
+   * <p>
+   * Each layer has minimum and maximum cost factors that influence routing
    * preferences. Higher costs discourage routing on that layer.
    *
-   * <p><strong>Includes:</strong>
+   * <p>
+   * <strong>Includes:</strong>
    * <ul>
-   *   <li>Preferred direction costs (if enabled)</li>
-   *   <li>Per-layer routing difficulty penalties</li>
+   * <li>Preferred direction costs (if enabled)</li>
+   * <li>Per-layer routing difficulty penalties</li>
    * </ul>
    *
    * @see AutorouteControl.ExpansionCostFactor
@@ -198,18 +234,20 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Flag controlling whether to maintain the autoroute database between passes.
    *
-   * <p>When true:
+   * <p>
+   * When true:
    * <ul>
-   *   <li>Expansion rooms are preserved between connections</li>
-   *   <li>Performance improved for subsequent routing</li>
-   *   <li>Memory usage increases</li>
+   * <li>Expansion rooms are preserved between connections</li>
+   * <li>Performance improved for subsequent routing</li>
+   * <li>Memory usage increases</li>
    * </ul>
    *
-   * <p>When false:
+   * <p>
+   * When false:
    * <ul>
-   *   <li>Database rebuilt for each connection</li>
-   *   <li>Lower memory footprint</li>
-   *   <li>Slower multi-pass routing</li>
+   * <li>Database rebuilt for each connection</li>
+   * <li>Lower memory footprint</li>
+   * <li>Slower multi-pass routing</li>
    * </ul>
    */
   private final boolean retain_autoroute_database;
@@ -217,22 +255,25 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Initial ripup cost value for the routing algorithm.
    *
-   * <p>Ripup costs determine how aggressively the autorouter removes existing
+   * <p>
+   * Ripup costs determine how aggressively the autorouter removes existing
    * traces to make new connections. Higher values make ripup less likely.
    *
-   * <p>Typical values: 10-100 (lower = more aggressive ripup)
+   * <p>
+   * Typical values: 10-100 (lower = more aggressive ripup)
    */
   private final int start_ripup_costs;
 
   /**
    * Accuracy level for trace pull-tight optimization (1-4).
    *
-   * <p>Higher values produce tighter, more optimized traces but take longer:
+   * <p>
+   * Higher values produce tighter, more optimized traces but take longer:
    * <ul>
-   *   <li>1: Fast, minimal optimization</li>
-   *   <li>2: Moderate optimization</li>
-   *   <li>3: Good optimization (recommended)</li>
-   *   <li>4: Maximum optimization (slow)</li>
+   * <li>1: Fast, minimal optimization</li>
+   * <li>2: Moderate optimization</li>
+   * <li>3: Good optimization (recommended)</li>
+   * <li>4: Maximum optimization (slow)</li>
    * </ul>
    */
   private final int trace_pull_tight_accuracy;
@@ -240,7 +281,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Reusable collection for items that were ripped up during routing.
    *
-   * <p>Thread-safe reuse reduces memory allocation overhead. Cleared and
+   * <p>
+   * Thread-safe reuse reduces memory allocation overhead. Cleared and
    * reused for each connection attempt.
    */
   private final SortedSet<Item> reusable_ripped_item_list = new TreeSet<>();
@@ -248,7 +290,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Reusable collection for items being auto-routed.
    *
-   * <p>Thread-safe reuse reduces memory allocation overhead. Cleared and
+   * <p>
+   * Thread-safe reuse reduces memory allocation overhead. Cleared and
    * reused for each routing iteration.
    */
   private final List<Item> reusable_autoroute_item_list = new ArrayList<>();
@@ -256,7 +299,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Reusable set tracking which items have already been processed.
    *
-   * <p>Thread-safe reuse reduces memory allocation overhead. Prevents
+   * <p>
+   * Thread-safe reuse reduces memory allocation overhead. Prevents
    * duplicate routing attempts on the same items.
    */
   private final Set<Item> reusable_handled_items = new TreeSet<>();
@@ -271,19 +315,22 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Random number generator for routing decisions requiring randomness.
    *
-   * <p>Used for:
+   * <p>
+   * Used for:
    * <ul>
-   *   <li>Tie-breaking between equivalent routing options</li>
-   *   <li>Shuffling connection order to avoid biases</li>
-   *   <li>Introducing controlled randomness in heuristics</li>
+   * <li>Tie-breaking between equivalent routing options</li>
+   * <li>Shuffling connection order to avoid biases</li>
+   * <li>Introducing controlled randomness in heuristics</li>
    * </ul>
    */
   private Random random;
 
   /**
-   * The airline (straight-line connection) of the current incomplete being routed.
+   * The airline (straight-line connection) of the current incomplete being
+   * routed.
    *
-   * <p>Used for visual feedback in GUI mode to show which connection is currently
+   * <p>
+   * Used for visual feedback in GUI mode to show which connection is currently
    * being processed. Updated before routing each connection.
    *
    * @see #get_air_line()
@@ -293,7 +340,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Count of incomplete connections at the start of the routing session.
    *
-   * <p>Used to calculate progress percentage and determine if routing is making
+   * <p>
+   * Used to calculate progress percentage and determine if routing is making
    * forward progress.
    */
   private int initialUnroutedCount;
@@ -301,11 +349,12 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Timestamp when the routing session began.
    *
-   * <p>Used for:
+   * <p>
+   * Used for:
    * <ul>
-   *   <li>Calculating total routing duration</li>
-   *   <li>Performance metrics and logging</li>
-   *   <li>Session analytics</li>
+   * <li>Calculating total routing duration</li>
+   * <li>Performance metrics and logging</li>
+   * <li>Session analytics</li>
    * </ul>
    */
   private Instant sessionStartTime;
@@ -313,7 +362,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Timestamp of the last board update event in milliseconds.
    *
-   * <p>Used to throttle board update event frequency and prevent overwhelming
+   * <p>
+   * Used to throttle board update event frequency and prevent overwhelming
    * the UI with too many updates.
    */
   private long lastBoardUpdateTimestamp = 0;
@@ -321,23 +371,26 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Total count of items successfully routed during this session.
    *
-   * <p>Tracks cumulative routing progress across all passes.
+   * <p>
+   * Tracks cumulative routing progress across all passes.
    */
   private int totalItemsRouted = 0;
 
   /**
    * Creates a batch autorouter from a routing job configuration.
    *
-   * <p>Convenience constructor that extracts all necessary parameters from the
+   * <p>
+   * Convenience constructor that extracts all necessary parameters from the
    * routing job. This is the primary constructor used in production code.
    *
-   * <p><strong>Extracted Parameters:</strong>
+   * <p>
+   * <strong>Extracted Parameters:</strong>
    * <ul>
-   *   <li>Thread: For interruption checks</li>
-   *   <li>Board: The routing board to operate on</li>
-   *   <li>Settings: Router configuration and preferences</li>
-   *   <li>Ripup costs: Initial aggressiveness for removing existing traces</li>
-   *   <li>Pull-tight accuracy: Trace optimization level</li>
+   * <li>Thread: For interruption checks</li>
+   * <li>Board: The routing board to operate on</li>
+   * <li>Settings: Router configuration and preferences</li>
+   * <li>Ripup costs: Initial aggressiveness for removing existing traces</li>
+   * <li>Pull-tight accuracy: Trace optimization level</li>
    * </ul>
    *
    * @param job the routing job containing all configuration
@@ -353,32 +406,44 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Creates a batch autorouter with explicit configuration parameters.
    *
-   * <p>Provides full control over autorouter behavior. This constructor is used
+   * <p>
+   * Provides full control over autorouter behavior. This constructor is used
    * for testing or when custom configurations are needed.
    *
-   * <p><strong>Configuration Details:</strong>
+   * <p>
+   * <strong>Configuration Details:</strong>
    * <ul>
-   *   <li><strong>Unconnected Vias:</strong> When true, orphaned vias are removed after routing</li>
-   *   <li><strong>Preferred Directions:</strong> When true, respects layer-specific routing preferences</li>
-   *   <li><strong>Ripup Costs:</strong> Initial threshold for removing existing traces (10-100 typical)</li>
-   *   <li><strong>Pull-tight Accuracy:</strong> Trace optimization level (1-4, higher = better/slower)</li>
+   * <li><strong>Unconnected Vias:</strong> When true, orphaned vias are removed
+   * after routing</li>
+   * <li><strong>Preferred Directions:</strong> When true, respects layer-specific
+   * routing preferences</li>
+   * <li><strong>Ripup Costs:</strong> Initial threshold for removing existing
+   * traces (10-100 typical)</li>
+   * <li><strong>Pull-tight Accuracy:</strong> Trace optimization level (1-4,
+   * higher = better/slower)</li>
    * </ul>
    *
-   * <p><strong>Trace Cost Calculation:</strong>
+   * <p>
+   * <strong>Trace Cost Calculation:</strong>
    * If preferred directions are enabled, uses the full cost array from settings.
-   * Otherwise, creates uniform costs across all layers (no directional preference).
+   * Otherwise, creates uniform costs across all layers (no directional
+   * preference).
    *
-   * <p><strong>Database Retention:</strong>
+   * <p>
+   * <strong>Database Retention:</strong>
    * Automatically determines whether to retain the autoroute database based on
    * board complexity and routing requirements.
    *
-   * @param p_thread the stoppable thread for interruption checks
-   * @param board the routing board to operate on
-   * @param settings router configuration and preferences
-   * @param p_remove_unconnected_vias true to remove orphaned vias after routing
-   * @param p_with_preferred_directions true to respect layer-specific routing directions
-   * @param p_start_ripup_costs initial ripup cost threshold (10-100 typical)
-   * @param p_pull_tight_accuracy trace optimization level (1-4)
+   * @param p_thread                    the stoppable thread for interruption
+   *                                    checks
+   * @param board                       the routing board to operate on
+   * @param settings                    router configuration and preferences
+   * @param p_remove_unconnected_vias   true to remove orphaned vias after routing
+   * @param p_with_preferred_directions true to respect layer-specific routing
+   *                                    directions
+   * @param p_start_ripup_costs         initial ripup cost threshold (10-100
+   *                                    typical)
+   * @param p_pull_tight_accuracy       trace optimization level (1-4)
    *
    * @see RouterSettings#get_trace_cost_arr()
    */
@@ -478,9 +543,10 @@ public class BatchAutorouter extends NamedAlgorithm {
                 autoroute_item_list.add(curr_item);
                 Net net = board.rules.nets.get(curr_net_no);
                 String netName = (net != null) ? net.name : "net#" + curr_net_no;
-                FRLogger.trace("BatchAutorouter.getAutorouteItem","queue_item",
+                FRLogger.trace("BatchAutorouter.getAutorouteItem", "queue_item",
                     "Queuing item for routing: " + curr_item.getClass().getSimpleName() + " on net '"
-                    + netName + "' (#" + curr_net_no + ") (connected: " + connected_set.size() + "/" + net_item_count + ")",
+                        + netName + "' (#" + curr_net_no + ") (connected: " + connected_set.size() + "/"
+                        + net_item_count + ")",
                     curr_item.toString());
               }
             }
@@ -614,49 +680,59 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Executes one autorouting pass, attempting to route all incomplete connections.
+   * Executes one autorouting pass, attempting to route all incomplete
+   * connections.
    *
-   * <p>A single pass processes all incomplete connections on the board in priority order,
-   * attempting to route each one using the maze search algorithm with the current pass
+   * <p>
+   * A single pass processes all incomplete connections on the board in priority
+   * order,
+   * attempting to route each one using the maze search algorithm with the current
+   * pass
    * number's constraints.
    *
-   * <p><strong>Pass Execution:</strong>
+   * <p>
+   * <strong>Pass Execution:</strong>
    * <ol>
-   *   <li>Collect all items requiring routing (incomplete connections)</li>
-   *   <li>Sort by priority (airline distance, net grouping)</li>
-   *   <li>For each item:
-   *     <ul>
-   *       <li>Check for interruption</li>
-   *       <li>Set up autoroute engine and control</li>
-   *       <li>Attempt routing with rip-up if needed</li>
-   *       <li>Update statistics and notify listeners</li>
-   *     </ul>
-   *   </li>
-   *   <li>Clean up and prepare for next pass</li>
+   * <li>Collect all items requiring routing (incomplete connections)</li>
+   * <li>Sort by priority (airline distance, net grouping)</li>
+   * <li>For each item:
+   * <ul>
+   * <li>Check for interruption</li>
+   * <li>Set up autoroute engine and control</li>
+   * <li>Attempt routing with rip-up if needed</li>
+   * <li>Update statistics and notify listeners</li>
+   * </ul>
+   * </li>
+   * <li>Clean up and prepare for next pass</li>
    * </ol>
    *
-   * <p><strong>Progress Tracking:</strong>
+   * <p>
+   * <strong>Progress Tracking:</strong>
    * Updates the following counters during execution:
    * <ul>
-   *   <li><strong>routed:</strong> Successfully routed connections</li>
-   *   <li><strong>not_routed:</strong> Failed routing attempts</li>
-   *   <li><strong>ripped_item_count:</strong> Items removed to make room</li>
-   *   <li><strong>skipped:</strong> Items skipped (already routed or invalid)</li>
+   * <li><strong>routed:</strong> Successfully routed connections</li>
+   * <li><strong>not_routed:</strong> Failed routing attempts</li>
+   * <li><strong>ripped_item_count:</strong> Items removed to make room</li>
+   * <li><strong>skipped:</strong> Items skipped (already routed or invalid)</li>
    * </ul>
    *
-   * <p><strong>Event Notifications:</strong>
-   * Fires {@link BoardUpdatedEvent} periodically (throttled to prevent UI flooding)
+   * <p>
+   * <strong>Event Notifications:</strong>
+   * Fires {@link BoardUpdatedEvent} periodically (throttled to prevent UI
+   * flooding)
    * with current routing statistics.
    *
-   * <p><strong>Return Value:</strong>
+   * <p>
+   * <strong>Return Value:</strong>
    * Returns false if:
    * <ul>
-   *   <li>No items need routing (board complete)</li>
-   *   <li>User requested interruption</li>
+   * <li>No items need routing (board complete)</li>
+   * <li>User requested interruption</li>
    * </ul>
    * Returns true if routing was attempted (regardless of success).
    *
-   * @param p_pass_no the current pass number (1-based, affects routing constraints)
+   * @param p_pass_no the current pass number (1-based, affects routing
+   *                  constraints)
    * @return false if no routing needed or interrupted, true if routing attempted
    *
    * @see #getAutorouteItems
@@ -770,6 +846,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           }
 
           // Check maxItems limit (0 means no limit)
+          job.logInfo("DEBUG: maxItems=" + job.routerSettings.maxItems + ", totalItemsRouted=" + this.totalItemsRouted);
           if (job.routerSettings.maxItems > 0 && this.totalItemsRouted >= job.routerSettings.maxItems) {
             job.logInfo("Max items limit reached (" + job.routerSettings.maxItems + "). Stopping auto-router.");
             this.thread.request_stop_auto_router();
@@ -949,7 +1026,9 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Returns the initial count of incomplete connections at session start.
    *
-   * <p>Used to calculate routing progress as a percentage:
+   * <p>
+   * Used to calculate routing progress as a percentage:
+   * 
    * <pre>
    * progress = (initialUnroutedCount - currentIncomplete) / initialUnroutedCount
    * </pre>
@@ -963,11 +1042,12 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Returns the timestamp when the routing session started.
    *
-   * <p>Used for:
+   * <p>
+   * Used for:
    * <ul>
-   *   <li>Calculating total routing duration</li>
-   *   <li>Performance metrics and analytics</li>
-   *   <li>Session logging and debugging</li>
+   * <li>Calculating total routing duration</li>
+   * <li>Performance metrics and analytics</li>
+   * <li>Session logging and debugging</li>
    * </ul>
    *
    * @return the session start time, or null if not started yet
@@ -977,70 +1057,82 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Executes the complete batch autorouting workflow until completion or interruption.
+   * Executes the complete batch autorouting workflow until completion or
+   * interruption.
    *
-   * <p>This is the main entry point for batch autorouting. It orchestrates the entire
+   * <p>
+   * This is the main entry point for batch autorouting. It orchestrates the
+   * entire
    * routing process from initialization through multiple passes to completion.
    *
-   * <p><strong>Execution Flow:</strong>
+   * <p>
+   * <strong>Execution Flow:</strong>
    * <ol>
-   *   <li><strong>Initialization:</strong>
-   *     <ul>
-   *       <li>Validate routing settings (clearances, trace widths, etc.)</li>
-   *       <li>Count initial incomplete connections</li>
-   *       <li>Initialize statistics and timing</li>
-   *       <li>Fire STARTED event</li>
-   *     </ul>
-   *   </li>
-   *   <li><strong>Routing Passes:</strong>
-   *     <ul>
-   *       <li>Execute autoroute_pass() repeatedly with increasing pass numbers</li>
-   *       <li>Pass number affects ripup costs: cost = start_ripup_costs × pass_no</li>
-   *       <li>Higher pass numbers = more aggressive rip-up and rerouting</li>
-   *       <li>Continue until all routed, pass limit reached, or interrupted</li>
-   *     </ul>
-   *   </li>
-   *   <li><strong>Completion Checks:</strong>
-   *     <ul>
-   *       <li>After minimum passes, check if progress is insufficient</li>
-   *       <li>Stop if no items routed in recent passes (diminishing returns)</li>
-   *       <li>Stop if user requested interruption</li>
-   *     </ul>
-   *   </li>
-   *   <li><strong>Finalization:</strong>
-   *     <ul>
-   *       <li>Fire FINISHED or ABORTED event</li>
-   *       <li>Log final statistics and session summary</li>
-   *       <li>Clean up resources</li>
-   *     </ul>
-   *   </li>
+   * <li><strong>Initialization:</strong>
+   * <ul>
+   * <li>Validate routing settings (clearances, trace widths, etc.)</li>
+   * <li>Count initial incomplete connections</li>
+   * <li>Initialize statistics and timing</li>
+   * <li>Fire STARTED event</li>
+   * </ul>
+   * </li>
+   * <li><strong>Routing Passes:</strong>
+   * <ul>
+   * <li>Execute autoroute_pass() repeatedly with increasing pass numbers</li>
+   * <li>Pass number affects ripup costs: cost = start_ripup_costs × pass_no</li>
+   * <li>Higher pass numbers = more aggressive rip-up and rerouting</li>
+   * <li>Continue until all routed, pass limit reached, or interrupted</li>
+   * </ul>
+   * </li>
+   * <li><strong>Completion Checks:</strong>
+   * <ul>
+   * <li>After minimum passes, check if progress is insufficient</li>
+   * <li>Stop if no items routed in recent passes (diminishing returns)</li>
+   * <li>Stop if user requested interruption</li>
+   * </ul>
+   * </li>
+   * <li><strong>Finalization:</strong>
+   * <ul>
+   * <li>Fire FINISHED or ABORTED event</li>
+   * <li>Log final statistics and session summary</li>
+   * <li>Clean up resources</li>
+   * </ul>
+   * </li>
    * </ol>
    *
-   * <p><strong>Validation:</strong>
+   * <p>
+   * <strong>Validation:</strong>
    * Before routing, validates:
    * <ul>
-   *   <li>Clearance settings are sane (not too tight)</li>
-   *   <li>Trace widths are appropriate for board resolution</li>
-   *   <li>Component pin spacing allows routing</li>
+   * <li>Clearance settings are sane (not too tight)</li>
+   * <li>Trace widths are appropriate for board resolution</li>
+   * <li>Component pin spacing allows routing</li>
    * </ul>
    * Logs warnings for potential issues but continues routing.
    *
-   * <p><strong>Stopping Criteria:</strong>
+   * <p>
+   * <strong>Stopping Criteria:</strong>
    * Routing stops when:
    * <ul>
-   *   <li><strong>Complete:</strong> All connections successfully routed</li>
-   *   <li><strong>Pass Limit:</strong> Maximum passes reached without completion</li>
-   *   <li><strong>No Progress:</strong> Recent passes made insufficient improvements</li>
-   *   <li><strong>Interrupted:</strong> User requested stop via {@link StoppableThread}</li>
+   * <li><strong>Complete:</strong> All connections successfully routed</li>
+   * <li><strong>Pass Limit:</strong> Maximum passes reached without
+   * completion</li>
+   * <li><strong>No Progress:</strong> Recent passes made insufficient
+   * improvements</li>
+   * <li><strong>Interrupted:</strong> User requested stop via
+   * {@link StoppableThread}</li>
    * </ul>
    *
-   * <p><strong>Return Value:</strong>
+   * <p>
+   * <strong>Return Value:</strong>
    * <ul>
-   *   <li><strong>true:</strong> Board completely routed (all connections successful)</li>
-   *   <li><strong>false:</strong> Routing incomplete (stopped early or failed)</li>
+   * <li><strong>true:</strong> Board completely routed (all connections
+   * successful)</li>
+   * <li><strong>false:</strong> Routing incomplete (stopped early or failed)</li>
    * </ul>
    *
-   * <p><strong>Thread Safety:</strong>
+   * <p>
+   * <strong>Thread Safety:</strong>
    * This method should only be called from a single thread (the routing thread).
    * Event listeners may be called from this thread.
    *
@@ -1096,8 +1188,10 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       String currentBoardHash = this.board.get_hash();
 
-      // Check maxPasses limit (0 means no limit, which gets converted to Integer.MAX_VALUE in validation)
-      if (this.settings.maxPasses > 0 && this.settings.maxPasses < Integer.MAX_VALUE && currentPass > this.settings.maxPasses) {
+      // Check maxPasses limit (0 means no limit, which gets converted to
+      // Integer.MAX_VALUE in validation)
+      if (this.settings.maxPasses > 0 && this.settings.maxPasses < Integer.MAX_VALUE
+          && currentPass > this.settings.maxPasses) {
         thread.request_stop_auto_router();
         break;
       }
@@ -1204,25 +1298,29 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Removes unnecessary trace tails (stubs) and optimizes the changed area.
    *
-   * <p>Trace tails are trace segments that don't contribute to connectivity:
+   * <p>
+   * Trace tails are trace segments that don't contribute to connectivity:
    * <ul>
-   *   <li>Dead-end traces that lead nowhere</li>
-   *   <li>Redundant vias at trace endpoints</li>
-   *   <li>Stubs created during rip-up and reroute</li>
+   * <li>Dead-end traces that lead nowhere</li>
+   * <li>Redundant vias at trace endpoints</li>
+   * <li>Stubs created during rip-up and reroute</li>
    * </ul>
    *
-   * <p><strong>Process:</strong>
+   * <p>
+   * <strong>Process:</strong>
    * <ol>
-   *   <li>Mark the changed area for tracking</li>
-   *   <li>Remove trace tails based on stop connection option</li>
-   *   <li>Optimize the changed area (pull-tight, smooth corners)</li>
+   * <li>Mark the changed area for tracking</li>
+   * <li>Remove trace tails based on stop connection option</li>
+   * <li>Optimize the changed area (pull-tight, smooth corners)</li>
    * </ol>
    *
-   * <p>Uses the configured trace pull-tight accuracy and time limit to prevent
+   * <p>
+   * Uses the configured trace pull-tight accuracy and time limit to prevent
    * excessive optimization time.
    *
-   * @param p_stop_connection_option determines what type of connection endpoints to stop at
-   *        (e.g., stop at vias, stop at pads, etc.)
+   * @param p_stop_connection_option determines what type of connection endpoints
+   *                                 to stop at
+   *                                 (e.g., stop at vias, stop at pads, etc.)
    *
    * @see RoutingBoard#remove_trace_tails
    * @see RoutingBoard#opt_changed_area
@@ -1237,60 +1335,74 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Attempts to route a single item on a specific net using the autorouter.
    *
-   * <p>This is the core method that performs autorouting for one incomplete connection.
-   * It sets up the autoroute engine, calculates the connection endpoints, and attempts
+   * <p>
+   * This is the core method that performs autorouting for one incomplete
+   * connection.
+   * It sets up the autoroute engine, calculates the connection endpoints, and
+   * attempts
    * to find and insert a routing path.
    *
-   * <p><strong>Algorithm Steps:</strong>
+   * <p>
+   * <strong>Algorithm Steps:</strong>
    * <ol>
-   *   <li><strong>Setup:</strong>
-   *     <ul>
-   *       <li>Determine via costs (plane vs. signal net)</li>
-   *       <li>Configure autoroute control with ripup costs</li>
-   *       <li>Calculate time limit based on pass number</li>
-   *     </ul>
-   *   </li>
-   *   <li><strong>Connection Analysis:</strong>
-   *     <ul>
-   *       <li>Get unconnected items on the net</li>
-   *       <li>Get connected items (already routed)</li>
-   *       <li>Determine start and destination sets</li>
-   *       <li>Calculate and display airline (for GUI feedback)</li>
-   *     </ul>
-   *   </li>
-   *   <li><strong>Routing:</strong>
-   *     <ul>
-   *       <li>Initialize autoroute engine for the net</li>
-   *       <li>Attempt connection with rip-up enabled</li>
-   *       <li>Handle routing result (success, failure, error)</li>
-   *     </ul>
-   *   </li>
+   * <li><strong>Setup:</strong>
+   * <ul>
+   * <li>Determine via costs (plane vs. signal net)</li>
+   * <li>Configure autoroute control with ripup costs</li>
+   * <li>Calculate time limit based on pass number</li>
+   * </ul>
+   * </li>
+   * <li><strong>Connection Analysis:</strong>
+   * <ul>
+   * <li>Get unconnected items on the net</li>
+   * <li>Get connected items (already routed)</li>
+   * <li>Determine start and destination sets</li>
+   * <li>Calculate and display airline (for GUI feedback)</li>
+   * </ul>
+   * </li>
+   * <li><strong>Routing:</strong>
+   * <ul>
+   * <li>Initialize autoroute engine for the net</li>
+   * <li>Attempt connection with rip-up enabled</li>
+   * <li>Handle routing result (success, failure, error)</li>
+   * </ul>
+   * </li>
    * </ol>
    *
-   * <p><strong>Via Costs:</strong>
+   * <p>
+   * <strong>Via Costs:</strong>
    * Plane nets (power/ground) use higher via costs to discourage vias that
    * would disrupt the plane. Signal nets use standard via costs.
    *
-   * <p><strong>Ripup Costs:</strong>
+   * <p>
+   * <strong>Ripup Costs:</strong>
    * Calculated as: {@code start_ripup_costs + (pass_no × start_ripup_costs / 5)}
-   * <br>Higher pass numbers allow more aggressive rip-up of existing traces.
+   * <br>
+   * Higher pass numbers allow more aggressive rip-up of existing traces.
    *
-   * <p><strong>Time Limits:</strong>
+   * <p>
+   * <strong>Time Limits:</strong>
    * Exponentially increases with pass number: {@code 100000 × 2^(pass_no - 1)} ms
-   * <br>Prevents hanging on difficult connections in later passes.
+   * <br>
+   * Prevents hanging on difficult connections in later passes.
    *
-   * <p><strong>Return States:</strong>
+   * <p>
+   * <strong>Return States:</strong>
    * <ul>
-   *   <li><strong>NO_UNCONNECTED_NETS:</strong> Item already fully connected</li>
-   *   <li><strong>ROUTED:</strong> Successfully routed the connection</li>
-   *   <li><strong>FAILED:</strong> Could not find a valid route</li>
-   *   <li><strong>ALREADY_CONNECTED:</strong> Connection exists (should not happen)</li>
+   * <li><strong>NO_UNCONNECTED_NETS:</strong> Item already fully connected</li>
+   * <li><strong>ROUTED:</strong> Successfully routed the connection</li>
+   * <li><strong>FAILED:</strong> Could not find a valid route</li>
+   * <li><strong>ALREADY_CONNECTED:</strong> Connection exists (should not
+   * happen)</li>
    * </ul>
    *
-   * @param p_item the board item to route (pad, via, or trace endpoint)
-   * @param p_route_net_no the net number to route on
-   * @param p_ripped_item_list collection to accumulate items ripped up during routing
-   * @param p_ripup_pass_no the current ripup pass number (affects aggressiveness)
+   * @param p_item             the board item to route (pad, via, or trace
+   *                           endpoint)
+   * @param p_route_net_no     the net number to route on
+   * @param p_ripped_item_list collection to accumulate items ripped up during
+   *                           routing
+   * @param p_ripup_pass_no    the current ripup pass number (affects
+   *                           aggressiveness)
    * @return the routing attempt result indicating success or failure reason
    *
    * @see AutorouteEngine#autoroute_connection
@@ -1301,7 +1413,8 @@ public class BatchAutorouter extends NamedAlgorithm {
       int p_ripup_pass_no) {
 
     FRLogger.trace("BatchAutorouter.autoroute_item", "autoroute_item",
-        "Routing item of class " + p_item.getClass().getSimpleName() + " on net #" + p_route_net_no + " at ripup pass #" + p_ripup_pass_no,
+        "Routing item of class " + p_item.getClass().getSimpleName() + " on net #" + p_route_net_no + " at ripup pass #"
+            + p_ripup_pass_no,
         p_item.toString());
 
     try {
@@ -1383,22 +1496,26 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Returns the airline of the current connection being routed, or null if none exists.
+   * Returns the airline of the current connection being routed, or null if none
+   * exists.
    *
-   * <p>The airline is a straight line connecting the two items being routed,
+   * <p>
+   * The airline is a straight line connecting the two items being routed,
    * used for visual feedback in GUI mode to show which connection the autorouter
    * is currently working on.
    *
-   * <p><strong>Usage:</strong>
+   * <p>
+   * <strong>Usage:</strong>
    * The GUI periodically calls this method to draw a line showing the current
    * routing target, helping users understand routing progress.
    *
-   * <p><strong>Null Conditions:</strong>
+   * <p>
+   * <strong>Null Conditions:</strong>
    * Returns null when:
    * <ul>
-   *   <li>No routing is currently in progress</li>
-   *   <li>The airline hasn't been calculated yet</li>
-   *   <li>Either endpoint is invalid</li>
+   * <li>No routing is currently in progress</li>
+   * <li>The airline hasn't been calculated yet</li>
+   * <li>Either endpoint is invalid</li>
    * </ul>
    *
    * @return the current airline as a line between two points, or null
@@ -1417,43 +1534,57 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Calculates the shortest airline distance between two sets of items for visual feedback.
+   * Calculates the shortest airline distance between two sets of items for visual
+   * feedback.
    *
-   * <p>Computes the straight-line connection between items in the "from" set (already
-   * connected) and items in the "to" set (unconnected targets). The result is stored
+   * <p>
+   * Computes the straight-line connection between items in the "from" set
+   * (already
+   * connected) and items in the "to" set (unconnected targets). The result is
+   * stored
    * in {@link #air_line} for GUI display.
    *
-   * <p><strong>Algorithm:</strong>
+   * <p>
+   * <strong>Algorithm:</strong>
    * <ol>
-   *   <li><strong>DrillItem to DrillItem:</strong> Simple center-to-center distance</li>
-   *   <li><strong>DrillItem to Trace:</strong> Drill center to nearest trace endpoint</li>
-   *   <li><strong>Trace to Trace:</strong> Find closest points between trace endpoints/segments</li>
+   * <li><strong>DrillItem to DrillItem:</strong> Simple center-to-center
+   * distance</li>
+   * <li><strong>DrillItem to Trace:</strong> Drill center to nearest trace
+   * endpoint</li>
+   * <li><strong>Trace to Trace:</strong> Find closest points between trace
+   * endpoints/segments</li>
    * </ol>
    *
-   * <p><strong>Item Types Handled:</strong>
+   * <p>
+   * <strong>Item Types Handled:</strong>
    * <ul>
-   *   <li><strong>DrillItem:</strong> Pads and vias (uses center point)</li>
-   *   <li><strong>PolylineTrace:</strong> Existing traces (uses endpoints or segments)</li>
+   * <li><strong>DrillItem:</strong> Pads and vias (uses center point)</li>
+   * <li><strong>PolylineTrace:</strong> Existing traces (uses endpoints or
+   * segments)</li>
    * </ul>
    *
-   * <p><strong>Distance Calculation:</strong>
+   * <p>
+   * <strong>Distance Calculation:</strong>
    * For each pair of items across the two sets:
    * <ul>
-   *   <li>Calculate representative points (centers, endpoints, or segment points)</li>
-   *   <li>Compute Euclidean distance</li>
-   *   <li>Track minimum distance and corresponding points</li>
+   * <li>Calculate representative points (centers, endpoints, or segment
+   * points)</li>
+   * <li>Compute Euclidean distance</li>
+   * <li>Track minimum distance and corresponding points</li>
    * </ul>
    *
-   * <p><strong>Result:</strong>
+   * <p>
+   * <strong>Result:</strong>
    * Sets {@link #air_line} to a line connecting the two closest points found,
    * or null if no valid connection points exist.
    *
-   * <p><strong>Performance Note:</strong>
+   * <p>
+   * <strong>Performance Note:</strong>
    * This is O(n×m) where n and m are the sizes of the item sets. For large
    * sets, this could be slow, but typically connection sets are small.
    *
    * @param p_from_items the set of already-connected items (source)
-   * @param p_to_items the set of unconnected items (destination)
+   * @param p_to_items   the set of unconnected items (destination)
    *
    * @see #nearest_point_on_trace
    * @see #find_closest_points_between_traces
@@ -1545,25 +1676,30 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Finds the nearest point on a trace to a given reference point.
    *
-   * <p>Searches through all segments of the trace polyline to find the point
+   * <p>
+   * Searches through all segments of the trace polyline to find the point
    * on the trace that is closest to the reference point.
    *
-   * <p><strong>Algorithm:</strong>
+   * <p>
+   * <strong>Algorithm:</strong>
    * <ol>
-   *   <li>Check distance to trace endpoints (first and last corners)</li>
-   *   <li>For each segment, project the point onto the segment line</li>
-   *   <li>Check if projection falls within segment bounds</li>
-   *   <li>Track minimum distance and corresponding point</li>
+   * <li>Check distance to trace endpoints (first and last corners)</li>
+   * <li>For each segment, project the point onto the segment line</li>
+   * <li>Check if projection falls within segment bounds</li>
+   * <li>Track minimum distance and corresponding point</li>
    * </ol>
    *
-   * <p><strong>Segment Projection:</strong>
+   * <p>
+   * <strong>Segment Projection:</strong>
    * Uses perpendicular projection to find the closest point on each segment.
-   * If the projection falls outside the segment, uses the nearest endpoint instead.
+   * If the projection falls outside the segment, uses the nearest endpoint
+   * instead.
    *
-   * <p><strong>Edge Cases:</strong>
+   * <p>
+   * <strong>Edge Cases:</strong>
    * <ul>
-   *   <li>Returns first corner if trace has fewer than 2 corners</li>
-   *   <li>Returns endpoint if it's closer than any segment point</li>
+   * <li>Returns first corner if trace has fewer than 2 corners</li>
+   * <li>Returns endpoint if it's closer than any segment point</li>
    * </ul>
    *
    * @param p_trace the trace to find the nearest point on
@@ -1624,42 +1760,47 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Finds the pair of closest points between two trace polylines.
    *
-   * <p>Computes the minimum distance between any two points on the two traces,
+   * <p>
+   * Computes the minimum distance between any two points on the two traces,
    * considering both endpoints and interior points along trace segments.
    *
-   * <p><strong>Algorithm:</strong>
+   * <p>
+   * <strong>Algorithm:</strong>
    * <ol>
-   *   <li><strong>Endpoint Comparison:</strong>
-   *     <ul>
-   *       <li>Check all 4 combinations of trace endpoints</li>
-   *       <li>Track minimum distance and point pair</li>
-   *     </ul>
-   *   </li>
-   *   <li><strong>Segment-to-Segment:</strong>
-   *     <ul>
-   *       <li>For each segment pair, find closest approach points</li>
-   *       <li>Use perpendicular projection for accurate distances</li>
-   *       <li>Validate projections fall within segment bounds</li>
-   *       <li>Fall back to endpoints if projection is out of bounds</li>
-   *     </ul>
-   *   </li>
-   *   <li><strong>Result:</strong> Return the pair with minimum distance</li>
+   * <li><strong>Endpoint Comparison:</strong>
+   * <ul>
+   * <li>Check all 4 combinations of trace endpoints</li>
+   * <li>Track minimum distance and point pair</li>
+   * </ul>
+   * </li>
+   * <li><strong>Segment-to-Segment:</strong>
+   * <ul>
+   * <li>For each segment pair, find closest approach points</li>
+   * <li>Use perpendicular projection for accurate distances</li>
+   * <li>Validate projections fall within segment bounds</li>
+   * <li>Fall back to endpoints if projection is out of bounds</li>
+   * </ul>
+   * </li>
+   * <li><strong>Result:</strong> Return the pair with minimum distance</li>
    * </ol>
    *
-   * <p><strong>Complexity:</strong>
+   * <p>
+   * <strong>Complexity:</strong>
    * O(n×m) where n and m are the number of segments in each trace.
    * For typical traces with few corners, this is acceptable.
    *
-   * <p><strong>Use Cases:</strong>
+   * <p>
+   * <strong>Use Cases:</strong>
    * <ul>
-   *   <li>Calculating airline distance for GUI feedback</li>
-   *   <li>Determining optimal connection points between existing traces</li>
-   *   <li>Analyzing trace proximity</li>
+   * <li>Calculating airline distance for GUI feedback</li>
+   * <li>Determining optimal connection points between existing traces</li>
+   * <li>Analyzing trace proximity</li>
    * </ul>
    *
-   * @param p_first_trace the first trace polyline
+   * @param p_first_trace  the first trace polyline
    * @param p_second_trace the second trace polyline
-   * @return array of 2 points: [0] = point on first trace, [1] = point on second trace
+   * @return array of 2 points: [0] = point on first trace, [1] = point on second
+   *         trace
    *
    * @see FloatLine#nearest_segment_point
    * @see FloatLine#perpendicular_projection
@@ -1758,27 +1899,32 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Converts a thread index to an alphabetic identifier for logging and debugging.
+   * Converts a thread index to an alphabetic identifier for logging and
+   * debugging.
    *
-   * <p>Generates compact thread labels using uppercase letters in Excel-style column notation:
+   * <p>
+   * Generates compact thread labels using uppercase letters in Excel-style column
+   * notation:
    * <ul>
-   *   <li>0-25: A-Z (single letter)</li>
-   *   <li>26-701: AA-ZZ (two letters)</li>
-   *   <li>702+: AAA-ZZZ (three letters)</li>
+   * <li>0-25: A-Z (single letter)</li>
+   * <li>26-701: AA-ZZ (two letters)</li>
+   * <li>702+: AAA-ZZZ (three letters)</li>
    * </ul>
    *
-   * <p><strong>Examples:</strong>
+   * <p>
+   * <strong>Examples:</strong>
    * <ul>
-   *   <li>0 → "A"</li>
-   *   <li>1 → "B"</li>
-   *   <li>25 → "Z"</li>
-   *   <li>26 → "AA"</li>
-   *   <li>27 → "AB"</li>
-   *   <li>701 → "ZZ"</li>
-   *   <li>702 → "AAA"</li>
+   * <li>0 → "A"</li>
+   * <li>1 → "B"</li>
+   * <li>25 → "Z"</li>
+   * <li>26 → "AA"</li>
+   * <li>27 → "AB"</li>
+   * <li>701 → "ZZ"</li>
+   * <li>702 → "AAA"</li>
    * </ul>
    *
-   * <p><strong>Use Case:</strong>
+   * <p>
+   * <strong>Use Case:</strong>
    * In multi-threaded routing scenarios, provides readable thread identifiers
    * for log messages and debugging output.
    *
@@ -1836,31 +1982,37 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Calculates the minimum airline distance between two sets of items.
    *
-   * <p>Computes the shortest straight-line distance between any item in the
+   * <p>
+   * Computes the shortest straight-line distance between any item in the
    * "from" set and any item in the "to" set. Uses representative points for
    * each item (centers for drills, midpoints for traces).
    *
-   * <p><strong>Algorithm:</strong>
+   * <p>
+   * <strong>Algorithm:</strong>
    * <ol>
-   *   <li>For each item in the from set, get its reference point</li>
-   *   <li>For each item in the to set, get its reference point</li>
-   *   <li>Calculate Euclidean distance between each pair</li>
-   *   <li>Track and return the minimum distance found</li>
+   * <li>For each item in the from set, get its reference point</li>
+   * <li>For each item in the to set, get its reference point</li>
+   * <li>Calculate Euclidean distance between each pair</li>
+   * <li>Track and return the minimum distance found</li>
    * </ol>
    *
-   * <p><strong>Null Handling:</strong>
-   * Skips items that don't have valid reference points (e.g., unsupported item types).
+   * <p>
+   * <strong>Null Handling:</strong>
+   * Skips items that don't have valid reference points (e.g., unsupported item
+   * types).
    *
-   * <p><strong>Use Cases:</strong>
+   * <p>
+   * <strong>Use Cases:</strong>
    * <ul>
-   *   <li>Item sorting by connection distance</li>
-   *   <li>Prioritization of short connections</li>
-   *   <li>Airline distance calculation for GUI</li>
+   * <li>Item sorting by connection distance</li>
+   * <li>Prioritization of short connections</li>
+   * <li>Airline distance calculation for GUI</li>
    * </ul>
    *
    * @param p_from_items the source item set
-   * @param p_to_items the destination item set
-   * @return the minimum distance found, or Double.MAX_VALUE if no valid pairs exist
+   * @param p_to_items   the destination item set
+   * @return the minimum distance found, or Double.MAX_VALUE if no valid pairs
+   *         exist
    *
    * @see #getItemReferencePoint
    */
@@ -1888,23 +2040,29 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Gets a representative reference point for a board item for distance calculations.
+   * Gets a representative reference point for a board item for distance
+   * calculations.
    *
-   * <p>Returns a single point that represents the item's position, used for:
+   * <p>
+   * Returns a single point that represents the item's position, used for:
    * <ul>
-   *   <li>Calculating airline distances between items</li>
-   *   <li>Sorting items by connection distance</li>
-   *   <li>Determining routing priority</li>
+   * <li>Calculating airline distances between items</li>
+   * <li>Sorting items by connection distance</li>
+   * <li>Determining routing priority</li>
    * </ul>
    *
-   * <p><strong>Item Type Handling:</strong>
+   * <p>
+   * <strong>Item Type Handling:</strong>
    * <ul>
-   *   <li><strong>DrillItem (pads/vias):</strong> Returns the drill center point</li>
-   *   <li><strong>PolylineTrace:</strong> Returns the midpoint between first and last corners</li>
-   *   <li><strong>Other types:</strong> Returns null (not supported)</li>
+   * <li><strong>DrillItem (pads/vias):</strong> Returns the drill center
+   * point</li>
+   * <li><strong>PolylineTrace:</strong> Returns the midpoint between first and
+   * last corners</li>
+   * <li><strong>Other types:</strong> Returns null (not supported)</li>
    * </ul>
    *
-   * <p><strong>Trace Midpoint Rationale:</strong>
+   * <p>
+   * <strong>Trace Midpoint Rationale:</strong>
    * Using the midpoint provides a reasonable approximation of the trace's
    * position for distance comparisons. More sophisticated approaches (e.g.,
    * center of mass) would be more accurate but significantly slower.
@@ -1929,40 +2087,57 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Sorts items to be routed using pass-specific strategies for optimal routing order.
+   * Sorts items to be routed using pass-specific strategies for optimal routing
+   * order.
    *
-   * <p>Different passes use different sorting strategies to maximize routing success:
+   * <p>
+   * Different passes use different sorting strategies to maximize routing
+   * success:
    * <ul>
-   *   <li><strong>Pass 1:</strong> Natural order (insertion order) - benchmarked as optimal</li>
-   *   <li><strong>Pass 2:</strong> Shortest distance first - route easy connections</li>
-   *   <li><strong>Pass 3:</strong> Longest distance first - tackle difficult connections</li>
-   *   <li><strong>Pass 4:</strong> Same-layer priority - minimize via usage</li>
-   *   <li><strong>Pass 5:</strong> Random shuffle - escape local optima</li>
-   *   <li><strong>Pass 6+:</strong> Natural order - cycle back to stable strategy</li>
+   * <li><strong>Pass 1:</strong> Natural order (insertion order) - benchmarked as
+   * optimal</li>
+   * <li><strong>Pass 2:</strong> Shortest distance first - route easy
+   * connections</li>
+   * <li><strong>Pass 3:</strong> Longest distance first - tackle difficult
+   * connections</li>
+   * <li><strong>Pass 4:</strong> Same-layer priority - minimize via usage</li>
+   * <li><strong>Pass 5:</strong> Random shuffle - escape local optima</li>
+   * <li><strong>Pass 6+:</strong> Natural order - cycle back to stable
+   * strategy</li>
    * </ul>
    *
-   * <p><strong>Strategy Rationale:</strong>
+   * <p>
+   * <strong>Strategy Rationale:</strong>
    * <ul>
-   *   <li><strong>Natural Order (Pass 1):</strong> Respects design structure, proved best
-   *       in benchmarks (69 unrouted vs 73-90 with other strategies)</li>
-   *   <li><strong>Shortest First (Pass 2):</strong> Quick wins on easy connections, builds
-   *       momentum and reduces remaining work</li>
-   *   <li><strong>Longest First (Pass 3):</strong> Difficult long connections may need
-   *       specific paths; route before board gets too congested</li>
-   *   <li><strong>Same Layer (Pass 4):</strong> Connections on same layer don't need vias,
-   *       potentially simpler routing</li>
-   *   <li><strong>Random (Pass 5):</strong> Break patterns that might be causing failures,
-   *       explore different routing sequences</li>
+   * <li><strong>Natural Order (Pass 1):</strong> Respects design structure,
+   * proved best
+   * in benchmarks (69 unrouted vs 73-90 with other strategies)</li>
+   * <li><strong>Shortest First (Pass 2):</strong> Quick wins on easy connections,
+   * builds
+   * momentum and reduces remaining work</li>
+   * <li><strong>Longest First (Pass 3):</strong> Difficult long connections may
+   * need
+   * specific paths; route before board gets too congested</li>
+   * <li><strong>Same Layer (Pass 4):</strong> Connections on same layer don't
+   * need vias,
+   * potentially simpler routing</li>
+   * <li><strong>Random (Pass 5):</strong> Break patterns that might be causing
+   * failures,
+   * explore different routing sequences</li>
    * </ul>
    *
-   * <p><strong>Distance Calculation:</strong>
-   * Uses airline (straight-line) distance from connected items to unconnected items
+   * <p>
+   * <strong>Distance Calculation:</strong>
+   * Uses airline (straight-line) distance from connected items to unconnected
+   * items
    * via {@link #calculateMinDistance(Item)}.
    *
-   * <p><strong>Logging:</strong>
-   * Logs the selected strategy for each pass to aid in debugging routing behavior.
+   * <p>
+   * <strong>Logging:</strong>
+   * Logs the selected strategy for each pass to aid in debugging routing
+   * behavior.
    *
-   * @param items the list of items to sort (modified in-place)
+   * @param items  the list of items to sort (modified in-place)
    * @param passNo the current pass number (1-based)
    *
    * @see #calculateMinDistance(Item)
@@ -2020,24 +2195,29 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Checks if an item shares at least one layer with any of its unconnected targets.
+   * Checks if an item shares at least one layer with any of its unconnected
+   * targets.
    *
-   * <p>Used for sorting strategy to prioritize same-layer connections, which don't
+   * <p>
+   * Used for sorting strategy to prioritize same-layer connections, which don't
    * require vias and are generally easier to route.
    *
-   * <p><strong>Algorithm:</strong>
+   * <p>
+   * <strong>Algorithm:</strong>
    * <ol>
-   *   <li>Get the item's first net number</li>
-   *   <li>Get all unconnected items on that net</li>
-   *   <li>Check if item shares any layer with any unconnected item</li>
+   * <li>Get the item's first net number</li>
+   * <li>Get all unconnected items on that net</li>
+   * <li>Check if item shares any layer with any unconnected item</li>
    * </ol>
    *
-   * <p><strong>Use Case:</strong>
+   * <p>
+   * <strong>Use Case:</strong>
    * In "Least Vias Potential" sorting strategy (Pass 4), items that can connect
    * on the same layer are prioritized, potentially reducing via count.
    *
    * @param item the item to check
-   * @return true if item shares a layer with at least one unconnected target, false otherwise
+   * @return true if item shares a layer with at least one unconnected target,
+   *         false otherwise
    *
    * @see Item#shares_layer
    * @see #sortItems
@@ -2055,34 +2235,41 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Calculates the minimum airline distance for a single item to any of its targets.
+   * Calculates the minimum airline distance for a single item to any of its
+   * targets.
    *
-   * <p>Overloaded version that handles multi-net items by finding the shortest
+   * <p>
+   * Overloaded version that handles multi-net items by finding the shortest
    * connection across all nets the item belongs to.
    *
-   * <p><strong>Algorithm:</strong>
+   * <p>
+   * <strong>Algorithm:</strong>
    * <ol>
-   *   <li>For each net the item belongs to:
-   *     <ul>
-   *       <li>Get connected items (already routed on this net)</li>
-   *       <li>Get unconnected items (routing targets)</li>
-   *       <li>Calculate minimum distance between the two sets</li>
-   *     </ul>
-   *   </li>
-   *   <li>Return the shortest distance across all nets</li>
+   * <li>For each net the item belongs to:
+   * <ul>
+   * <li>Get connected items (already routed on this net)</li>
+   * <li>Get unconnected items (routing targets)</li>
+   * <li>Calculate minimum distance between the two sets</li>
+   * </ul>
+   * </li>
+   * <li>Return the shortest distance across all nets</li>
    * </ol>
    *
-   * <p><strong>Special Cases:</strong>
+   * <p>
+   * <strong>Special Cases:</strong>
    * <ul>
-   *   <li>If unconnected set is empty: returns 0 (already connected, highest priority)</li>
-   *   <li>If connected set is empty: uses the item itself as the starting point</li>
+   * <li>If unconnected set is empty: returns 0 (already connected, highest
+   * priority)</li>
+   * <li>If connected set is empty: uses the item itself as the starting
+   * point</li>
    * </ul>
    *
-   * <p><strong>Use Cases:</strong>
+   * <p>
+   * <strong>Use Cases:</strong>
    * <ul>
-   *   <li>Sorting items by routing difficulty</li>
-   *   <li>Prioritizing short connections in early passes</li>
-   *   <li>Determining optimal routing order</li>
+   * <li>Sorting items by routing difficulty</li>
+   * <li>Prioritizing short connections in early passes</li>
+   * <li>Determining optimal routing order</li>
    * </ul>
    *
    * @param item the item to calculate distance for

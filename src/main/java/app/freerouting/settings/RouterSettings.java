@@ -172,12 +172,10 @@ public class RouterSettings implements Serializable, Cloneable {
     boolean curr_preferred_direction_is_horizontal = horizontal_width < vertical_width;
 
     // initialize the layer specific settings.
-    if (scoring.preferredDirectionTraceCost == null || scoring.preferredDirectionTraceCost.length != layer_count)
-    {
+    if (scoring.preferredDirectionTraceCost == null || scoring.preferredDirectionTraceCost.length != layer_count) {
       scoring.preferredDirectionTraceCost = new double[layer_count];
     }
-    if (scoring.undesiredDirectionTraceCost == null || scoring.undesiredDirectionTraceCost.length != layer_count)
-    {
+    if (scoring.undesiredDirectionTraceCost == null || scoring.undesiredDirectionTraceCost.length != layer_count) {
       scoring.undesiredDirectionTraceCost = new double[layer_count];
     }
 
@@ -208,6 +206,7 @@ public class RouterSettings implements Serializable, Cloneable {
 
   /**
    * Get the number of layers configured in the router settings.
+   * 
    * @return The layer count
    */
   public int getLayerCount() {
