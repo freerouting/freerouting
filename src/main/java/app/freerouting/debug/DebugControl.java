@@ -18,18 +18,12 @@ public class DebugControl {
 
     // Fast Forward / Rewind State
     private final AtomicBoolean isFastForwarding = new AtomicBoolean(false);
-    private int currentNetNo = -1;
     private final java.util.Stack<Integer> stepNetHistory = new java.util.Stack<>();
-
     // Lock for synchronization
     private final Object lock = new Object();
-
     // Listeners
     private final java.util.List<DebugStateListener> listeners = new java.util.ArrayList<>();
-
-    public interface DebugStateListener {
-        void onDebugStateChanged(boolean isPaused);
-    }
+    private int currentNetNo = -1;
 
     private DebugControl() {
         // Initialize state based on settings if needed, but usually settings are loaded
@@ -90,7 +84,7 @@ public class DebugControl {
 
     /**
      * Checks if we should continue rewinding based on the history.
-     * 
+     *
      * @param targetNetNo The net number we want to rewind back to the beginning of.
      */
     public boolean shouldContinueRewind(int targetNetNo) {
@@ -115,6 +109,18 @@ public class DebugControl {
     }
 
     /**
+     * Checks if the debug control is interested in the given items based on the
+     * filter.
+     *
+     * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
+     * @return true if the items should be processed/logged, false otherwise.
+     */
+    public boolean isInterested(String impactedItems) {
+        int netNo = getNetNo(impactedItems);
+        return Freerouting.globalSettings.debugSettings.isNetPermitted(netNo, null);
+    }
+
+    /**
      * Called by the logging framework at potential breakpoints.
      * Parses the impactedItems string to extract net numbers for filtering.
      *
@@ -127,17 +133,6 @@ public class DebugControl {
      * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
      * @return true if the items should be processed/logged, false otherwise.
      */
-    /**
-     * Checks if the debug control is interested in the given items based on the
-     * filter.
-     *
-     * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
-     * @return true if the items should be processed/logged, false otherwise.
-     */
-    public boolean isInterested(String impactedItems) {
-        int netNo = getNetNo(impactedItems);
-        return Freerouting.globalSettings.debugSettings.isNetPermitted(netNo, null);
-    }
 
     private int getNetNo(String impactedItems) {
         int netNo = -1;
@@ -162,6 +157,13 @@ public class DebugControl {
      * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
      */
     public boolean check(String operation, String impactedItems) {
+
+        if (Freerouting.globalSettings == null ||
+            Freerouting.globalSettings.debugSettings == null)
+        {
+            return false;
+        }
+
         // We defer to check(int, String) for checking enablement flags (step/delay).
         // BUT invalid optimization: we want to SKIP parsing if disabled.
         if (!Freerouting.globalSettings.debugSettings.singleStepExecution &&
@@ -287,11 +289,6 @@ public class DebugControl {
         return false;
     }
 
-    // GUI Control Methods
-
-    /**
-     * Pauses the execution.
-     */
     /**
      * Pauses the execution.
      */
@@ -304,6 +301,12 @@ public class DebugControl {
         FRLogger.debug("DebugControl: Execution Paused");
         notifyListeners();
     }
+
+    // GUI Control Methods
+
+    /**
+     * Pauses the execution.
+     */
 
     /**
      * Resumes execution (Play).
@@ -334,5 +337,9 @@ public class DebugControl {
 
     public boolean isPaused() {
         return isPaused.get();
+    }
+
+    public interface DebugStateListener {
+        void onDebugStateChanged(boolean isPaused);
     }
 }

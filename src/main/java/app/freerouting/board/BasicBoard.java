@@ -1006,7 +1006,7 @@ public class BasicBoard implements Serializable {
       return;
     }
 
-    if (globalSettings.debugSettings.enableDetailedLogging) {
+    if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
       if (p_item instanceof PolylineTrace trace) {
         String netInfo = "";
         if (trace.net_count() > 0) {
@@ -2175,7 +2175,7 @@ public class BasicBoard implements Serializable {
     item_list.insert(p_item);
     search_tree_manager.insert(p_item);
 
-    if (globalSettings.debugSettings.enableDetailedLogging) {
+    if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
       if (p_item instanceof PolylineTrace trace) {
         String netInfo = "";
         if (trace.net_count() > 0) {

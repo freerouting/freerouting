@@ -304,7 +304,7 @@ public class PolylineTrace extends Trace implements Serializable {
       return false;
     }
 
-    if (globalSettings.debugSettings.enableDetailedLogging) {
+    if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
       FRLogger.trace("PolylineTrace.combine()", "combine_at_start",
           "combining traces at start: this_id=" + this.get_id_no()
               + ", other_id=" + other_trace.get_id_no()
@@ -417,7 +417,7 @@ public class PolylineTrace extends Trace implements Serializable {
       return false;
     }
 
-    if (globalSettings.debugSettings.enableDetailedLogging) {
+    if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
       FRLogger.trace("PolylineTrace.combine()", "combine_at_end",
           "combining traces at end: this_id=" + this.get_id_no()
               + ", other_id=" + other_trace.get_id_no()
@@ -588,7 +588,7 @@ public class PolylineTrace extends Trace implements Serializable {
 
           // Skip if there are no intersections
           if (intersecting_lines.length == 0) {
-            if (globalSettings.debugSettings.enableDetailedLogging) {
+            if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
               FRLogger.trace("PolylineTrace.split", "split_overlap",
                   "skipping non-intersecting overlap with trace id=" + found_trace.get_id_no()
                       + ", this_id=" + this.get_id_no()
@@ -601,7 +601,7 @@ public class PolylineTrace extends Trace implements Serializable {
 
           Collection<PolylineTrace> split_pieces = new LinkedList<>();
 
-          if (globalSettings.debugSettings.enableDetailedLogging) {
+          if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
             FRLogger.trace("PolylineTrace.split", "split_overlap",
                 "overlap with trace id=" + found_trace.get_id_no()
                     + ", this_id=" + this.get_id_no()
@@ -624,7 +624,7 @@ public class PolylineTrace extends Trace implements Serializable {
                   if (curr_split_pieces[k] != null) {
                     found_trace_split = true;
                     split_pieces.add(curr_split_pieces[k]);
-                    if (globalSettings.debugSettings.enableDetailedLogging) {
+                    if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
                       FRLogger.trace("PolylineTrace.split", "split_piece",
                           "found trace split piece id=" + curr_split_pieces[k].get_id_no()
                               + ", from=" + curr_split_pieces[k].first_corner()
@@ -654,7 +654,7 @@ public class PolylineTrace extends Trace implements Serializable {
             PolylineTrace[] curr_split_pieces = split(i + 1, intersecting_lines[j]);
             if (curr_split_pieces != null) {
               own_trace_split = true;
-              if (globalSettings.debugSettings.enableDetailedLogging) {
+              if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
                 for (int k = 0; k < 2; k++) {
                   if (curr_split_pieces[k] != null) {
                     FRLogger.trace("PolylineTrace.split", "split_piece",
@@ -681,7 +681,7 @@ public class PolylineTrace extends Trace implements Serializable {
             // remove cycles containing a split piece
 
             // Log detailed information about split pieces before cycle removal
-            if (globalSettings.debugSettings.enableDetailedLogging) {
+            if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
               FRLogger.trace("PolylineTrace.split", "split_pieces_summary",
                   "Split operation completed: found_trace_split=" + found_trace_split
                       + ", own_trace_split=" + own_trace_split
@@ -724,7 +724,7 @@ public class PolylineTrace extends Trace implements Serializable {
             for (int j = 0; j < 2; j++) {
               while (it2.hasNext()) {
                 PolylineTrace curr_piece = it2.next();
-                if (globalSettings.debugSettings.enableDetailedLogging) {
+                if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
                   FRLogger.trace("PolylineTrace.split", "remove_cycle_candidate",
                       "remove_if_cycle on trace id=" + curr_piece.get_id_no()
                           + ", from=" + curr_piece.first_corner()
