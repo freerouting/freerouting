@@ -204,21 +204,6 @@ public class InsertFoundConnectionAlgo {
   }
 
   /**
-   * Finds the index of a point in the corners array.
-   */
-  private int findCornerIndex(Point p_point, Point[] p_corners) {
-    if (p_corners == null) {
-      return -1;
-    }
-    for (int i = 0; i < p_corners.length; i++) {
-      if (p_corners[i].equals(p_point)) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  /**
    * Inserts a trace segment by using push-and-shove to move aside obstacle traces
    * and vias.
    *
@@ -311,12 +296,20 @@ public class InsertFoundConnectionAlgo {
 
     for (int i = 1; i < p_trace.corners.length; i++) {
       // Find the current index of from_corner_point in the corners array
-      int from_corner_no = findCornerIndex(from_corner_point, p_trace.corners);
-      if (from_corner_no < 0 || from_corner_no >= i) {
-        // Point not found or invalid - this shouldn't happen but log and abort if it
-        // does
+      // Search backwards from i-1 to find the closest preceding instance (handles
+      // duplicate points)
+      int from_corner_no = -1;
+      for (int k = i - 1; k >= 0; k--) {
+        if (p_trace.corners[k].equals(from_corner_point)) {
+          from_corner_no = k;
+          break;
+        }
+      }
+
+      if (from_corner_no < 0) {
+        // Point not found - this shouldn't happen but log and abort if it does
         FRLogger.warn("InsertFoundConnectionAlgo: from_corner_point " + from_corner_point
-            + " not found in corners array or invalid index (" + from_corner_no + " >= " + i + ")");
+            + " not found in corners array preceding index " + i);
         result = false;
         break;
       }
@@ -386,6 +379,58 @@ public class InsertFoundConnectionAlgo {
                   + ", segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
               "Net #" + ctrl.net_no,
               new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
+
+          // Remove the trace stub that led to the dead end
+          // We must be careful not to remove the whole trace if it's merged.
+          // We pick the trace at the split point (from_corner_point which we just
+          // retreated TO).
+          // And we try to split it to isolate the stub going to
+          // previous_from_corner_point.
+
+          ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
+          Set<Item> picked_items = board.pick_items(from_corner_point, p_trace.layer, filter);
+          for (Item item : picked_items) {
+            if (item instanceof PolylineTrace trace && trace.contains_net(ctrl.net_no)) {
+              Trace[] pieces = trace.split(from_corner_point);
+
+              if (pieces != null) {
+                // Trace split successfully. Find the piece connected to the dead end.
+                for (Trace piece : pieces) {
+                  // Check if this piece contains the dead end point
+                  if (piece.first_corner().equals(previous_from_corner_point)
+                      || piece.last_corner().equals(previous_from_corner_point)) {
+                    FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "remove_backtrack_stub",
+                        "removing trace stub after split id=" + piece.get_id_no()
+                            + ", from=" + piece.first_corner() + " -> " + piece.last_corner(),
+                        "Net #" + ctrl.net_no, new Point[0]);
+                    board.remove_item(piece);
+                  }
+                }
+              } else {
+                // Split returned null, possibly because from_corner_point is an endpoint.
+                // If it is the start/end, and the trace connects to the dead end, remove it.
+                if (trace.first_corner().equals(from_corner_point)) {
+                  if (trace.last_corner().equals(previous_from_corner_point)
+                      || trace.polyline().contains(previous_from_corner_point)) {
+                    FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "remove_backtrack_endpoint_stub",
+                        "removing trace stub (endpoint match) id=" + trace.get_id_no()
+                            + ", from=" + trace.first_corner() + " -> " + trace.last_corner(),
+                        "Net #" + ctrl.net_no, new Point[0]);
+                    board.remove_item(trace);
+                  }
+                } else if (trace.last_corner().equals(from_corner_point)) {
+                  if (trace.first_corner().equals(previous_from_corner_point)
+                      || trace.polyline().contains(previous_from_corner_point)) {
+                    FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "remove_backtrack_endpoint_stub_rev",
+                        "removing trace stub (reverse match) id=" + trace.get_id_no()
+                            + ", from=" + trace.first_corner() + " -> " + trace.last_corner(),
+                        "Net #" + ctrl.net_no, new Point[0]);
+                    board.remove_item(trace);
+                  }
+                }
+              }
+            }
+          }
         }
         FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "spring_over_retry",
             "spring-over retry from_corner_point=" + from_corner_point
