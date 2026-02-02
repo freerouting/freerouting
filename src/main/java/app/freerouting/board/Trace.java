@@ -10,6 +10,8 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
+
+import static app.freerouting.Freerouting.globalSettings;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.Collection;
@@ -345,10 +347,49 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     Set<Item> start_contacts = this.get_start_contacts();
     Set<Item> end_contacts = this.get_end_contacts();
 
+    if (globalSettings.debugSettings.enableDetailedLogging) {
+      StringBuilder start_info = new StringBuilder();
+      StringBuilder end_info = new StringBuilder();
+
+      for (Item contact : start_contacts) {
+        start_info.append(contact.getClass().getSimpleName())
+            .append("#").append(contact.get_id_no()).append(" ");
+      }
+      for (Item contact : end_contacts) {
+        end_info.append(contact.getClass().getSimpleName())
+            .append("#").append(contact.get_id_no()).append(" ");
+      }
+
+      FRLogger.trace("Trace.is_cycle", "cycle_check_start",
+          "Checking cycle for trace id=" + this.get_id_no()
+              + ", from=" + this.first_corner()
+              + ", to=" + this.last_corner()
+              + ", start_contacts=[" + start_info.toString().trim() + "]"
+              + ", end_contacts=[" + end_info.toString().trim() + "]",
+          "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1) + ", Trace #" + this.get_id_no(),
+          new Point[] { this.first_corner(), this.last_corner() });
+    }
+
     for (Item contact : start_contacts) {
       if (end_contacts.contains(contact)) {
         if (contact instanceof Trace) {
+          if (globalSettings.debugSettings.enableDetailedLogging) {
+            FRLogger.trace("Trace.is_cycle", "cycle_detected_direct",
+                "CYCLE DETECTED: Both ends touch same trace id=" + contact.get_id_no()
+                    + ", this_id=" + this.get_id_no()
+                    + ", from=" + this.first_corner()
+                    + ", to=" + this.last_corner(),
+                "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1) + ", Trace #" + this.get_id_no(),
+                new Point[] { this.first_corner(), this.last_corner() });
+          }
           return true; // Overlapping another trace is a redundant cycle
+        }
+        if (globalSettings.debugSettings.enableDetailedLogging) {
+          FRLogger.trace("Trace.is_cycle", "stub_allowed",
+              "Stub allowed on " + contact.getClass().getSimpleName() + " id=" + contact.get_id_no()
+                  + ", this_id=" + this.get_id_no(),
+              "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1) + ", Trace #" + this.get_id_no(),
+              new Point[] { this.first_corner(), this.last_corner() });
         }
         return false; // Stubs on Pins/Areas are allowed
       }
@@ -370,8 +411,24 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     }
     for (Item curr_contact : expansion_contacts) {
       if (curr_contact.is_cycle_recu(visited_items, this, this, ignore_areas)) {
+        if (globalSettings.debugSettings.enableDetailedLogging) {
+          FRLogger.trace("Trace.is_cycle", "cycle_detected_recursive",
+              "CYCLE DETECTED via recursive search: trace id=" + this.get_id_no()
+                  + ", from=" + this.first_corner()
+                  + ", to=" + this.last_corner()
+                  + ", via contact " + curr_contact.getClass().getSimpleName() + "#" + curr_contact.get_id_no(),
+              "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1) + ", Trace #" + this.get_id_no(),
+              new Point[] { this.first_corner(), this.last_corner() });
+        }
         return true;
       }
+    }
+
+    if (globalSettings.debugSettings.enableDetailedLogging) {
+      FRLogger.trace("Trace.is_cycle", "no_cycle",
+          "No cycle detected for trace id=" + this.get_id_no(),
+          "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1) + ", Trace #" + this.get_id_no(),
+          new Point[] { this.first_corner(), this.last_corner() });
     }
     return false;
   }

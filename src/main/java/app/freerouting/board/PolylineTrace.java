@@ -27,19 +27,23 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 
 /**
- * A trace object whose geometry is described by a polyline (a sequence of connected line segments).
+ * A trace object whose geometry is described by a polyline (a sequence of
+ * connected line segments).
  * <p>
- * This class represents electrical traces on a PCB board. Each trace has a width, belongs to one or more
- * electrical nets, and consists of a series of connected straight line segments forming a path.
+ * This class represents electrical traces on a PCB board. Each trace has a
+ * width, belongs to one or more
+ * electrical nets, and consists of a series of connected straight line segments
+ * forming a path.
  * <p>
  * Key operations include:
  * <ul>
- *   <li>Splitting traces at intersection points</li>
- *   <li>Combining adjacent traces that share endpoints</li>
- *   <li>Normalizing trace geometry to remove redundancies</li>
- *   <li>Optimizing trace paths (pull tight operations)</li>
+ * <li>Splitting traces at intersection points</li>
+ * <li>Combining adjacent traces that share endpoints</li>
+ * <li>Normalizing trace geometry to remove redundancies</li>
+ * <li>Optimizing trace paths (pull tight operations)</li>
  * </ul>
  */
 public class PolylineTrace extends Trace implements Serializable {
@@ -51,17 +55,20 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Creates a new polyline trace with the specified parameters.
    * <p>
-   * A polyline must have at least 3 lines to form a valid trace segment with at least 2 corners.
+   * A polyline must have at least 3 lines to form a valid trace segment with at
+   * least 2 corners.
    *
-   * @param p_polyline the geometric path of the trace as a sequence of connected lines
-   * @param p_layer the board layer number where this trace is located
-   * @param p_half_width half of the trace width (radius from centerline)
-   * @param p_net_no_arr array of net numbers this trace belongs to
+   * @param p_polyline       the geometric path of the trace as a sequence of
+   *                         connected lines
+   * @param p_layer          the board layer number where this trace is located
+   * @param p_half_width     half of the trace width (radius from centerline)
+   * @param p_net_no_arr     array of net numbers this trace belongs to
    * @param p_clearance_type the clearance class that defines spacing rules
-   * @param p_id_no unique identifier for this trace
-   * @param p_group_no component group number (0 if not part of a component)
-   * @param p_fixed_state whether the trace can be moved (USER_FIXED, SHOVE_FIXED, or not fixed)
-   * @param p_board reference to the board containing this trace
+   * @param p_id_no          unique identifier for this trace
+   * @param p_group_no       component group number (0 if not part of a component)
+   * @param p_fixed_state    whether the trace can be moved (USER_FIXED,
+   *                         SHOVE_FIXED, or not fixed)
+   * @param p_board          reference to the board containing this trace
    */
   public PolylineTrace(Polyline p_polyline, int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_type,
       int p_id_no, int p_group_no, FixedState p_fixed_state, BasicBoard p_board) {
@@ -117,7 +124,8 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Returns the number of corner points in this trace.
    * <p>
-   * The corner count equals the number of lines minus one, since corners are formed
+   * The corner count equals the number of lines minus one, since corners are
+   * formed
    * where consecutive lines meet.
    *
    * @return the number of corners (turning points) in the trace
@@ -199,19 +207,23 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Attempts to combine this trace with adjacent traces that share endpoints.
    * <p>
-   * This method looks at both ends of the trace and tries to merge with other traces that:
+   * This method looks at both ends of the trace and tries to merge with other
+   * traces that:
    * <ul>
-   *   <li>Share the same endpoint</li>
-   *   <li>Are on the same layer</li>
-   *   <li>Have the same width</li>
-   *   <li>Belong to the same nets</li>
-   *   <li>Have the same fixed state</li>
+   * <li>Share the same endpoint</li>
+   * <li>Are on the same layer</li>
+   * <li>Have the same width</li>
+   * <li>Belong to the same nets</li>
+   * <li>Have the same fixed state</li>
    * </ul>
    * <p>
-   * After combining, the method calls itself recursively to continue combining if possible.
-   * This process helps reduce the number of separate trace objects and simplifies the board.
+   * After combining, the method calls itself recursively to continue combining if
+   * possible.
+   * This process helps reduce the number of separate trace objects and simplifies
+   * the board.
    * <p>
-   * <b>Note:</b> This method triggers {@link #normalize(IntOctagon)} after successful combinations.
+   * <b>Note:</b> This method triggers {@link #normalize(IntOctagon)} after
+   * successful combinations.
    *
    * @return true if any traces were combined, false otherwise
    */
@@ -247,11 +259,15 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Looks for a trace to combine at the start point of this trace.
    * <p>
-   * This is an internal helper method that checks if another trace connects to the first corner
-   * of this trace and can be merged with it. If found, the other trace's corners are added
-   * to the beginning of this trace, and the other trace is removed from the board.
+   * This is an internal helper method that checks if another trace connects to
+   * the first corner
+   * of this trace and can be merged with it. If found, the other trace's corners
+   * are added
+   * to the beginning of this trace, and the other trace is removed from the
+   * board.
    *
-   * @param p_ignore_areas if true, conduction areas are not considered as blocking the combination
+   * @param p_ignore_areas if true, conduction areas are not considered as
+   *                       blocking the combination
    * @return true if a trace was combined at the start, false otherwise
    */
   private boolean combine_at_start(boolean p_ignore_areas) {
@@ -357,11 +373,14 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Looks for a trace to combine at the end point of this trace.
    * <p>
-   * This is an internal helper method that checks if another trace connects to the last corner
-   * of this trace and can be merged with it. If found, the other trace's corners are added
+   * This is an internal helper method that checks if another trace connects to
+   * the last corner
+   * of this trace and can be merged with it. If found, the other trace's corners
+   * are added
    * to the end of this trace, and the other trace is removed from the board.
    *
-   * @param p_ignore_areas if true, conduction areas are not considered as blocking the combination
+   * @param p_ignore_areas if true, conduction areas are not considered as
+   *                       blocking the combination
    * @return true if a trace was combined at the end, false otherwise
    */
   private boolean combine_at_end(boolean p_ignore_areas) {
@@ -465,30 +484,34 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Splits this trace and any overlapping traces, then combines adjacent segments.
+   * Splits this trace and any overlapping traces, then combines adjacent
+   * segments.
    * <p>
    * This is a comprehensive cleanup operation that:
    * <ol>
-   *   <li>Finds traces that intersect or overlap with this trace</li>
-   *   <li>Splits both traces at intersection points</li>
-   *   <li>Removes any circular connections (cycles) that were created</li>
-   *   <li>Combines adjacent trace segments that can be merged</li>
-   *   <li>Removes degenerate traces (traces with only one corner point)</li>
+   * <li>Finds traces that intersect or overlap with this trace</li>
+   * <li>Splits both traces at intersection points</li>
+   * <li>Removes any circular connections (cycles) that were created</li>
+   * <li>Combines adjacent trace segments that can be merged</li>
+   * <li>Removes degenerate traces (traces with only one corner point)</li>
    * </ol>
    * <p>
-   * The splitting process ensures that traces only touch at their endpoints, not along their length.
+   * The splitting process ensures that traces only touch at their endpoints, not
+   * along their length.
    * This makes it easier to route, optimize, and analyze the board.
    * <p>
    * <b>When called:</b>
    * <ul>
-   *   <li>After inserting a new trace to clean up intersections</li>
-   *   <li>After pulling a trace tight (optimization)</li>
-   *   <li>After changing trace geometry</li>
-   *   <li>After combining traces</li>
+   * <li>After inserting a new trace to clean up intersections</li>
+   * <li>After pulling a trace tight (optimization)</li>
+   * <li>After changing trace geometry</li>
+   * <li>After combining traces</li>
    * </ul>
    *
-   * @param p_clip_shape optional shape to restrict splitting to a specific area; if null, the entire trace is processed
-   * @return true if the trace was modified (split, combined, or removed), false if no changes were made
+   * @param p_clip_shape optional shape to restrict splitting to a specific area;
+   *                     if null, the entire trace is processed
+   * @return true if the trace was modified (split, combined, or removed), false
+   *         if no changes were made
    */
   @Override
   public Collection<PolylineTrace> split(IntOctagon p_clip_shape) {
@@ -656,6 +679,47 @@ public class PolylineTrace extends Trace implements Serializable {
           if (found_trace_split || own_trace_split) {
             // something was split,
             // remove cycles containing a split piece
+
+            // Log detailed information about split pieces before cycle removal
+            if (globalSettings.debugSettings.enableDetailedLogging) {
+              FRLogger.trace("PolylineTrace.split", "split_pieces_summary",
+                  "Split operation completed: found_trace_split=" + found_trace_split
+                      + ", own_trace_split=" + own_trace_split
+                      + ", split_pieces.size=" + split_pieces.size()
+                      + ", found_trace_id=" + (found_trace != null ? found_trace.get_id_no() : "null")
+                      + ", this_id=" + this.get_id_no(),
+                  "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
+                  new Point[] {});
+
+              for (PolylineTrace piece : split_pieces) {
+                if (piece.is_on_the_board()) {
+                  Set<Item> start_contacts = piece.get_start_contacts();
+                  Set<Item> end_contacts = piece.get_end_contacts();
+                  StringBuilder start_contact_info = new StringBuilder();
+                  StringBuilder end_contact_info = new StringBuilder();
+
+                  for (Item contact : start_contacts) {
+                    start_contact_info.append(contact.getClass().getSimpleName())
+                        .append("#").append(contact.get_id_no()).append(" ");
+                  }
+                  for (Item contact : end_contacts) {
+                    end_contact_info.append(contact.getClass().getSimpleName())
+                        .append("#").append(contact.get_id_no()).append(" ");
+                  }
+
+                  FRLogger.trace("PolylineTrace.split", "split_piece_details",
+                      "Split piece id=" + piece.get_id_no()
+                          + ", from=" + piece.first_corner()
+                          + ", to=" + piece.last_corner()
+                          + ", corners=" + piece.corner_count()
+                          + ", start_contacts=[" + start_contact_info.toString().trim() + "]"
+                          + ", end_contacts=[" + end_contact_info.toString().trim() + "]",
+                      "Net #" + (piece.net_count() > 0 ? piece.get_net_no(0) : -1),
+                      new Point[] { piece.first_corner(), piece.last_corner() });
+                }
+              }
+            }
+
             Iterator<PolylineTrace> it2 = split_pieces.iterator();
             for (int j = 0; j < 2; j++) {
               while (it2.hasNext()) {
@@ -727,14 +791,18 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Checks if splitting at a specific line intersection would cut through a drill pad.
+   * Checks if splitting at a specific line intersection would cut through a drill
+   * pad.
    * <p>
-   * Splitting inside a pin's pad area is generally prohibited because it can create
-   * connection problems. However, splitting is allowed at the exact center of a pin.
+   * Splitting inside a pin's pad area is generally prohibited because it can
+   * create
+   * connection problems. However, splitting is allowed at the exact center of a
+   * pin.
    *
    * @param p_line_no the index of the line in this trace's polyline
-   * @param p_line the line to check for intersection
-   * @return true if splitting at this intersection is prohibited, false if it's allowed
+   * @param p_line    the line to check for intersection
+   * @return true if splitting at this intersection is prohibited, false if it's
+   *         allowed
    */
   private boolean split_inside_drill_pad_prohibited(int p_line_no, Line p_line) {
     if (this.board == null) {
@@ -770,11 +838,13 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Splits this trace into two pieces at a specific point.
    * <p>
-   * The point must lie on one of the line segments of this trace. The trace is divided
+   * The point must lie on one of the line segments of this trace. The trace is
+   * divided
    * into two new traces that meet at the split point.
    *
    * @param p_point the point where the trace should be split
-   * @return an array containing the two resulting trace pieces, or null if the point doesn't lie on the trace
+   * @return an array containing the two resulting trace pieces, or null if the
+   *         point doesn't lie on the trace
    */
   @Override
   public Trace[] split(Point p_point) {
@@ -798,13 +868,17 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Splits this trace at a specific line by inserting a new endpoint line.
    * <p>
-   * This is an internal helper method that performs the actual splitting operation.
-   * It creates two new traces: one ending at the split line, and one starting at the split line.
+   * This is an internal helper method that performs the actual splitting
+   * operation.
+   * It creates two new traces: one ending at the split line, and one starting at
+   * the split line.
    *
-   * @param p_line_no the index of the line where the split should occur
-   * @param p_new_end_line the line that will become the endpoint of the first piece and as
-   * the start line of the second split piece. Returns the 2 pieces of the split trace,
-   * or null, if nothing was split.
+   * @param p_line_no      the index of the line where the split should occur
+   * @param p_new_end_line the line that will become the endpoint of the first
+   *                       piece and as
+   *                       the start line of the second split piece. Returns the 2
+   *                       pieces of the split trace,
+   *                       or null, if nothing was split.
    */
   private PolylineTrace[] split(int p_line_no, Line p_new_end_line) {
     if (!this.is_on_the_board()) {
@@ -833,38 +907,48 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Normalizes this trace by splitting overlaps and combining adjacent segments.
    * <p>
-   * This is the main entry point for trace normalization. It performs a complete cleanup
+   * This is the main entry point for trace normalization. It performs a complete
+   * cleanup
    * of the trace geometry to ensure optimal routing. The normalization process:
    * <ol>
-   *   <li>Removes tail traces (traces with only one connection)</li>
-   *   <li>Splits this trace at intersections with other traces of the same net</li>
-   *   <li>Combines adjacent trace segments that can be merged</li>
-   *   <li>Removes degenerate traces (single-point traces)</li>
-   *   <li>Recursively normalizes any resulting traces</li>
+   * <li>Removes tail traces (traces with only one connection)</li>
+   * <li>Splits this trace at intersections with other traces of the same net</li>
+   * <li>Combines adjacent trace segments that can be merged</li>
+   * <li>Removes degenerate traces (single-point traces)</li>
+   * <li>Recursively normalizes any resulting traces</li>
    * </ol>
    * <p>
    * <b>Why normalization is important:</b><br>
-   * During routing and optimization, traces can overlap, create redundant segments, or form
-   * unnecessary branches. Normalization cleans up these issues to maintain a clean, efficient
-   * routing pattern. It ensures that traces only connect at endpoints and that there are no
+   * During routing and optimization, traces can overlap, create redundant
+   * segments, or form
+   * unnecessary branches. Normalization cleans up these issues to maintain a
+   * clean, efficient
+   * routing pattern. It ensures that traces only connect at endpoints and that
+   * there are no
    * unnecessary segments.
    * <p>
    * <b>When this method is called:</b>
    * <ul>
-   *   <li>After {@link #change(Polyline)} - when trace geometry is modified</li>
-   *   <li>After {@link #combine()} - when traces are merged together</li>
-   *   <li>During {@link #split(IntOctagon)} - after splitting traces at intersections</li>
-   *   <li>After {@link #pull_tight(PullTightAlgo)} - when traces are optimized</li>
+   * <li>After {@link #change(Polyline)} - when trace geometry is modified</li>
+   * <li>After {@link #combine()} - when traces are merged together</li>
+   * <li>During {@link #split(IntOctagon)} - after splitting traces at
+   * intersections</li>
+   * <li>After {@link #pull_tight(PullTightAlgo)} - when traces are optimized</li>
    * </ul>
    * <p>
    * <b>Recursion depth:</b><br>
-   * The method includes protection against infinite recursion by limiting the depth to
-   * {@link #MAX_NORMALIZATION_DEPTH}. This prevents stack overflow in pathological cases
+   * The method includes protection against infinite recursion by limiting the
+   * depth to
+   * {@link #MAX_NORMALIZATION_DEPTH}. This prevents stack overflow in
+   * pathological cases
    * where traces form complex overlapping patterns.
    *
-   * @param p_clip_shape optional shape to restrict normalization to a specific area; null means process entire trace
-   * @return true if the trace was modified during normalization, false if no changes were needed
-   * @throws Exception if maximum normalization depth is exceeded, indicating a potential infinite loop
+   * @param p_clip_shape optional shape to restrict normalization to a specific
+   *                     area; null means process entire trace
+   * @return true if the trace was modified during normalization, false if no
+   *         changes were needed
+   * @throws Exception if maximum normalization depth is exceeded, indicating a
+   *                   potential infinite loop
    */
   public boolean normalize(IntOctagon p_clip_shape) throws Exception {
     return normalize(p_clip_shape, 0, true);
@@ -872,7 +956,8 @@ public class PolylineTrace extends Trace implements Serializable {
 
   /**
    * Normalizes this trace without removing tails.
-   * Used during incremental routing to prevent premature removal of traces that don't have
+   * Used during incremental routing to prevent premature removal of traces that
+   * don't have
    * all connections yet.
    */
   public boolean normalize_without_tail_removal(IntOctagon p_clip_shape) throws Exception {
@@ -927,9 +1012,11 @@ public class PolylineTrace extends Trace implements Serializable {
             .equals(curr_split_trace.last_corner())) {
           // remove trace with only 1 corner
           FRLogger.trace("PolylineTrace.normalize", "remove_one_corner",
-              "removing one-corner trace id=" + curr_split_trace.get_id_no() + " (net #" + (curr_split_trace.net_count() > 0 ? curr_split_trace.get_net_no(0) : -1)
+              "removing one-corner trace id=" + curr_split_trace.get_id_no() + " (net #"
+                  + (curr_split_trace.net_count() > 0 ? curr_split_trace.get_net_no(0) : -1)
                   + ")",
-              "Net #" + (curr_split_trace.net_count() > 0 ? curr_split_trace.get_net_no(0) : -1) + ", Trace #" + curr_split_trace.get_id_no(),
+              "Net #" + (curr_split_trace.net_count() > 0 ? curr_split_trace.get_net_no(0) : -1) + ", Trace #"
+                  + curr_split_trace.get_id_no(),
               new Point[] { curr_split_trace.first_corner() });
           board.remove_item(curr_split_trace);
           result = true;
@@ -947,7 +1034,8 @@ public class PolylineTrace extends Trace implements Serializable {
                 "Skipping recursive normalize because trace didn't actually change after combine()"
                     + " (corners=" + curr_split_trace.corner_count()
                     + ", from " + curr_split_trace.first_corner() + " to " + curr_split_trace.last_corner() + ")",
-                "Net #" + (curr_split_trace.net_count() > 0 ? curr_split_trace.get_net_no(0) : -1) + ", Trace #" + curr_split_trace.get_id_no(),
+                "Net #" + (curr_split_trace.net_count() > 0 ? curr_split_trace.get_net_no(0) : -1) + ", Trace #"
+                    + curr_split_trace.get_id_no(),
                 new Point[] { curr_split_trace.first_corner(), curr_split_trace.last_corner() });
           }
           result = true;
@@ -963,20 +1051,24 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Attempts to shorten this trace without creating clearance violations.
    * <p>
-   * This optimization operation tries to find a shorter path for the trace while maintaining
-   * all design rules. It can remove unnecessary corners and straighten the trace path.
+   * This optimization operation tries to find a shorter path for the trace while
+   * maintaining
+   * all design rules. It can remove unnecessary corners and straighten the trace
+   * path.
    * The operation is constrained by:
    * <ul>
-   *   <li>Clearance rules with other objects</li>
-   *   <li>Net class settings (some net classes disable pull tight)</li>
-   *   <li>Fixed state (fixed traces won't be modified)</li>
-   *   <li>Angle restrictions (45-degree, 90-degree routing rules)</li>
+   * <li>Clearance rules with other objects</li>
+   * <li>Net class settings (some net classes disable pull tight)</li>
+   * <li>Fixed state (fixed traces won't be modified)</li>
+   * <li>Angle restrictions (45-degree, 90-degree routing rules)</li>
    * </ul>
    * <p>
-   * <b>Note:</b> After pull tight operations, {@link #normalize(IntOctagon)} is typically called
+   * <b>Note:</b> After pull tight operations, {@link #normalize(IntOctagon)} is
+   * typically called
    * to clean up any resulting trace intersections or combinations.
    *
-   * @param p_pull_tight_algo the algorithm instance that performs the optimization
+   * @param p_pull_tight_algo the algorithm instance that performs the
+   *                          optimization
    * @return true if the trace was modified, false otherwise
    */
   @Override
@@ -1034,12 +1126,16 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Attempts to optimize this trace using the pull-tight algorithm.
    * <p>
-   * This is a convenience method that creates a pull-tight algorithm instance with the
+   * This is a convenience method that creates a pull-tight algorithm instance
+   * with the
    * specified parameters and applies it to this trace.
    *
-   * @param p_own_net_only if true, only considers objects on the same net for clearance
-   * @param p_pull_tight_accuracy the accuracy level for the optimization (higher = more thorough)
-   * @param p_stoppable_thread thread control object to allow cancellation of long operations
+   * @param p_own_net_only        if true, only considers objects on the same net
+   *                              for clearance
+   * @param p_pull_tight_accuracy the accuracy level for the optimization (higher
+   *                              = more thorough)
+   * @param p_stoppable_thread    thread control object to allow cancellation of
+   *                              long operations
    * @return true if the trace was modified, false otherwise
    */
   public boolean pull_tight(boolean p_own_net_only, int p_pull_tight_accuracy, Stoppable p_stoppable_thread) {
@@ -1058,14 +1154,16 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Attempts to smooth the corner points at the ends of this trace where it forks with other traces.
+   * Attempts to smooth the corner points at the ends of this trace where it forks
+   * with other traces.
    * <p>
-   * This operation tries to create more gradual angles at fork points to improve signal quality
+   * This operation tries to create more gradual angles at fork points to improve
+   * signal quality
    * and make the routing look more professional.
    *
-   * @param p_own_net_only if true, only considers objects on the same net
+   * @param p_own_net_only        if true, only considers objects on the same net
    * @param p_pull_tight_accuracy the accuracy level for the smoothing operation
-   * @param p_stoppable_thread thread control object to allow cancellation
+   * @param p_stoppable_thread    thread control object to allow cancellation
    * @return true if any smoothing was performed, false otherwise
    */
   public boolean smoothen_end_corners_fork(boolean p_own_net_only, int p_pull_tight_accuracy,
@@ -1182,14 +1280,19 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Verifies that this trace connects properly to a pin according to the pin's connection restrictions.
+   * Verifies that this trace connects properly to a pin according to the pin's
+   * connection restrictions.
    * <p>
-   * Some pins have restrictions on how traces can connect (e.g., traces must exit in specific
-   * directions or maintain minimum distances before turning). This method checks if those
+   * Some pins have restrictions on how traces can connect (e.g., traces must exit
+   * in specific
+   * directions or maintain minimum distances before turning). This method checks
+   * if those
    * restrictions are satisfied.
    *
-   * @param p_at_start if true, checks the start of this trace; if false, checks the end
-   * @return true if the connection is valid or no pin is present; false if a pin is present
+   * @param p_at_start if true, checks the start of this trace; if false, checks
+   *                   the end
+   * @return true if the connection is valid or no pin is present; false if a pin
+   *         is present
    *         and the connection violates its restrictions
    */
   @Override
@@ -1261,13 +1364,18 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Attempts to fix an invalid connection to a pin by rerouting the trace.
    * <p>
-   * If {@link #check_connection_to_pin(boolean)} returns false, this method can be called
-   * to automatically correct the connection by adding segments that satisfy the pin's
+   * If {@link #check_connection_to_pin(boolean)} returns false, this method can
+   * be called
+   * to automatically correct the connection by adding segments that satisfy the
+   * pin's
    * connection restrictions. It may add a fixed stub trace at the pin exit point.
    *
-   * @param p_at_start if true, corrects the start of this trace; if false, corrects the end
-   * @param p_angle_restriction the routing angle restrictions (45-degree, 90-degree, etc.)
-   * @return true if the connection was corrected, false if no correction was possible or needed
+   * @param p_at_start          if true, corrects the start of this trace; if
+   *                            false, corrects the end
+   * @param p_angle_restriction the routing angle restrictions (45-degree,
+   *                            90-degree, etc.)
+   * @return true if the connection was corrected, false if no correction was
+   *         possible or needed
    */
   public boolean correct_connection_to_pin(boolean p_at_start, AngleRestriction p_angle_restriction) {
     if (this.check_connection_to_pin(p_at_start)) {
