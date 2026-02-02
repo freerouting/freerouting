@@ -204,6 +204,21 @@ public class InsertFoundConnectionAlgo {
   }
 
   /**
+   * Finds the index of a point in the corners array.
+   */
+  private int findCornerIndex(Point p_point, Point[] p_corners) {
+    if (p_corners == null) {
+      return -1;
+    }
+    for (int i = 0; i < p_corners.length; i++) {
+      if (p_corners[i].equals(p_point)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  /**
    * Inserts a trace segment by using push-and-shove to move aside obstacle traces
    * and vias.
    *
@@ -290,8 +305,22 @@ public class InsertFoundConnectionAlgo {
     int[] net_no_arr = new int[1];
     net_no_arr[0] = ctrl.net_no;
 
-    int from_corner_no = 0;
+    // Track the point we've successfully inserted up to, not the index
+    // This is immune to board geometry changes from trace combines
+    Point from_corner_point = p_trace.corners[0];
+
     for (int i = 1; i < p_trace.corners.length; i++) {
+      // Find the current index of from_corner_point in the corners array
+      int from_corner_no = findCornerIndex(from_corner_point, p_trace.corners);
+      if (from_corner_no < 0 || from_corner_no >= i) {
+        // Point not found or invalid - this shouldn't happen but log and abort if it
+        // does
+        FRLogger.warn("InsertFoundConnectionAlgo: from_corner_point " + from_corner_point
+            + " not found in corners array or invalid index (" + from_corner_no + " >= " + i + ")");
+        result = false;
+        break;
+      }
+
       Point[] curr_corner_arr = Arrays.copyOfRange(p_trace.corners, from_corner_no, i + 1);
       Polyline insert_polyline = new Polyline(curr_corner_arr);
       FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "insert_trace_segment",
@@ -308,7 +337,7 @@ public class InsertFoundConnectionAlgo {
               + ", first=" + insert_polyline.first_corner()
               + ", last=" + insert_polyline.last_corner()
               + ", corners=" + insert_polyline.corner_count()
-              + ", from_corner=" + from_corner_no
+              + ", from_corner_point=" + from_corner_point
               + ", i=" + i + "/" + (p_trace.corners.length - 1),
           "Net #" + ctrl.net_no,
           new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
@@ -318,10 +347,10 @@ public class InsertFoundConnectionAlgo {
         neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_trace.layer, start_pin, end_pin);
       }
       if (ok_point == insert_polyline.last_corner() || neckdown_inserted) {
-        int previous_from_corner_no = from_corner_no;
-        from_corner_no = i;
+        Point previous_from_corner_point = from_corner_point;
+        from_corner_point = p_trace.corners[i]; // Update to the point at index i
         FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "segment_committed",
-            "segment committed, from_corner=" + previous_from_corner_no + " -> " + from_corner_no
+            "segment committed, from_corner_point=" + previous_from_corner_point + " -> " + from_corner_point
                 + ", ok_point=" + ok_point
                 + ", neckdown=" + neckdown_inserted,
             "Net #" + ctrl.net_no,
@@ -335,31 +364,31 @@ public class InsertFoundConnectionAlgo {
         // spring_over to correct the situation.
         FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "insertion_failed_at_start",
             "Insertion returned at start point (ok_point == first_corner)"
-                + ", from_corner=" + from_corner_no
+                + ", from_corner_point=" + from_corner_point
                 + ", curr_corner_arr.length=" + curr_corner_arr.length
                 + ", i=" + i + "/" + (p_trace.corners.length - 1)
                 + ", attempted segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
             "Net #" + ctrl.net_no,
             new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
-        int previous_from_corner_no = from_corner_no;
+        Point previous_from_corner_point = from_corner_point;
         if (from_corner_no > 0) {
           // p_trace.corners[i] may be inside the offset for the substitute trace around
           // a spring_over obstacle (if clearance compensation is off).
           if (curr_corner_arr.length < 3) {
-            // first correction
-            --from_corner_no;
+            // first correction - move back to the previous corner point
+            from_corner_point = p_trace.corners[from_corner_no - 1];
           }
         }
-        if (from_corner_no != previous_from_corner_no) {
+        if (!from_corner_point.equals(previous_from_corner_point)) {
           FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "spring_over_backtrack",
-              "spring-over backtrack, from_corner=" + previous_from_corner_no + " -> " + from_corner_no
+              "spring-over backtrack, from_corner_point=" + previous_from_corner_point + " -> " + from_corner_point
                   + ", i=" + i + "/" + (p_trace.corners.length - 1)
                   + ", segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
               "Net #" + ctrl.net_no,
               new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
         }
         FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "spring_over_retry",
-            "spring-over retry from_corner=" + from_corner_no
+            "spring-over retry from_corner_point=" + from_corner_point
                 + ", i=" + i + "/" + (p_trace.corners.length - 1)
                 + ", segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
             "Net #" + ctrl.net_no,
@@ -372,11 +401,11 @@ public class InsertFoundConnectionAlgo {
                 " at corner " + i + "/" + (p_trace.corners.length - 1) +
                 " on layer " + p_trace.layer +
                 ", trace width: " + ctrl.trace_half_width[p_trace.layer] +
-                ", from corner: " + from_corner_no +
+                ", from corner point: " + from_corner_point +
                 ", ok_point: " + (ok_point != null ? ok_point.toString() : "null") +
                 ", target: " + insert_polyline.last_corner(),
             "Net #" + ctrl.net_no,
-            new Point[] { insert_polyline.corner(from_corner_no), insert_polyline.last_corner() });
+            new Point[] { from_corner_point, insert_polyline.last_corner() });
         result = false;
         break;
       }
