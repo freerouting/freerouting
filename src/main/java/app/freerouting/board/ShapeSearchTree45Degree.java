@@ -306,10 +306,36 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     // loop.
     result.removeIf(room -> {
       boolean remove = room.get_contained_shape().contains(room.get_shape());
-      if (remove) {
-        FRLogger.debug("ShapeSearchTree45Degree: Room removed because contained_shape contains room_shape!"
-          + ", Room: " + room.get_shape().toString()
-          + ", Contained: " + room.get_contained_shape().toString());
+      if (remove && (globalSettings != null) && (globalSettings.debugSettings != null)
+          && (globalSettings.debugSettings.enableDetailedLogging)) {
+        StringBuilder netInfo = new StringBuilder("Net #");
+        netInfo.append(p_net_no);
+        if (this.board.rules != null && this.board.rules.nets != null
+            && p_net_no <= this.board.rules.nets.max_net_no()) {
+          netInfo.append(" (").append(this.board.rules.nets.get(p_net_no).name).append(")");
+        } else {
+          netInfo.append(" (Unknown)");
+        }
+
+        List<Point> points = new ArrayList<>();
+        TileShape roomShape = room.get_shape();
+        TileShape containedShape = room.get_contained_shape();
+        if (roomShape != null && roomShape.centre_of_gravity() != null) {
+          points.add(roomShape.centre_of_gravity().round());
+        }
+        if (containedShape != null && containedShape.centre_of_gravity() != null) {
+          points.add(containedShape.centre_of_gravity().round());
+        }
+
+        FRLogger.trace("ShapeSearchTree45Degree.complete_shape", "room_removed_contained_overlap",
+            "Room removed because contained_shape contains room_shape"
+                + ", layer=" + room.get_layer()
+                + ", room_shape=" + (roomShape != null ? roomShape.toString() : "null")
+                + ", room_dimension=" + (roomShape != null ? roomShape.dimension() : -1)
+                + ", contained_shape=" + (containedShape != null ? containedShape.toString() : "null")
+                + ", contained_dimension=" + (containedShape != null ? containedShape.dimension() : -1),
+            netInfo.toString(),
+            points.toArray(new Point[0]));
       }
       return remove;
     });
