@@ -219,7 +219,6 @@ public class DebugControl {
 
             // Logic for Fast Forwarding
             if (isFastForwarding.get()) {
-                FRLogger.debug("FastForward Check: currentNet=" + currentNetNo + ", newNet=" + netNo);
                 // If the net changed, pause!
                 if (currentNetNo != -1 && netNo != -1 && currentNetNo != netNo) {
                     FRLogger.debug("FastForward Stopping: Net changed from " + currentNetNo + " to " + netNo);
