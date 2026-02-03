@@ -31,6 +31,26 @@ public class ShoveTraceAlgo {
   }
 
   /**
+   * Format net label for logging
+   */
+  private static String formatNetLabel(RoutingBoard board, int[] net_no_arr) {
+    if (net_no_arr == null || net_no_arr.length == 0) {
+      return "No net";
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < net_no_arr.length; i++) {
+      if (i > 0) sb.append(", ");
+      int netNo = net_no_arr[i];
+      if (board.rules != null && board.rules.nets != null && netNo <= board.rules.nets.max_net_no()) {
+        sb.append(board.rules.nets.get(netNo).toString());
+      } else {
+        sb.append("Net #").append(netNo).append(" (Unknown)");
+      }
+    }
+    return sb.toString();
+  }
+
+  /**
    * Checks if a shove with the input parameters is possible without clearance violations The result is the maximum length of a trace from the start of the line segment to the end of the line segment,
    * for which the algorithm succeeds. If the algorithm succeeds completely, the result will be equal to Integer.MAX_VALUE.
    */
@@ -52,13 +72,35 @@ public class ShoveTraceAlgo {
       return 0;
     }
     if (!trace_shape.is_contained_in(p_board.get_bounding_box())) {
+      FRLogger.trace("ShoveTraceAlgo.check", "trace_outside_bounds",
+          "Trace shape not contained in board bounds: layer=" + p_layer
+              + ", half_width=" + p_trace_half_width
+              + ", segment=" + p_line_segment.start_point_approx() + " -> " + p_line_segment.end_point_approx(),
+          formatNetLabel(p_board, p_net_no_arr),
+          new Point[] { p_line_segment.start_point_approx().round(), p_line_segment.end_point_approx().round() });
       return 0;
     }
     CalcFromSide from_side = new CalcFromSide(p_line_segment, trace_shape, p_shove_to_the_left);
     ShapeTraceEntries shape_entries = new ShapeTraceEntries(trace_shape, p_layer, p_net_no_arr, p_cl_type, from_side, p_board);
     Collection<Item> obstacles = search_tree.overlapping_items_with_clearance(trace_shape, p_layer, new int[0], p_cl_type);
+
+    FRLogger.trace("ShoveTraceAlgo.check", "checking_obstacles",
+        "Checking " + obstacles.size() + " obstacles for shove: layer=" + p_layer
+            + ", clearance_class=" + p_cl_type
+            + ", half_width=" + p_trace_half_width
+            + ", recursion_depth=" + p_max_recursion_depth
+            + ", segment=" + p_line_segment.start_point_approx() + " -> " + p_line_segment.end_point_approx(),
+        formatNetLabel(p_board, p_net_no_arr),
+        new Point[] { p_line_segment.start_point_approx().round(), p_line_segment.end_point_approx().round() });
+
     boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
     if (!obstacles_shovable || shape_entries.trace_tails_in_shape()) {
+      FRLogger.trace("ShoveTraceAlgo.check", "obstacles_not_shovable",
+          "Obstacles cannot be shoved: obstacles_shovable=" + obstacles_shovable
+              + ", trace_tails_in_shape=" + shape_entries.trace_tails_in_shape()
+              + ", layer=" + p_layer,
+          formatNetLabel(p_board, p_net_no_arr),
+          new Point[] { p_line_segment.start_point_approx().round(), p_line_segment.end_point_approx().round() });
       return 0;
     }
     int trace_piece_count = shape_entries.substitute_trace_count();
@@ -87,11 +129,26 @@ public class ShoveTraceAlgo {
         IntPoint[] new_via_center = MoveDrillItemAlgo.try_shove_via_points(trace_shape, p_layer, curr_shove_via, p_cl_type, false, p_board);
 
         if (new_via_center.length == 0) {
+          FRLogger.trace("ShoveTraceAlgo.check", "via_cannot_be_shoved",
+              "Via cannot be shoved, no valid position found: via=" + curr_shove_via
+                  + ", layer=" + p_layer
+                  + ", clearance_class=" + p_cl_type,
+              formatNetLabel(p_board, p_net_no_arr),
+              new Point[] { curr_shove_via.get_center() });
           return 0;
         }
         Vector delta = new_via_center[0].difference_by(curr_shove_via.get_center());
         Collection<Item> ignore_items = new LinkedList<>();
         shove_via_ok = MoveDrillItemAlgo.check(curr_shove_via, delta, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items, p_board, null);
+
+        if (!shove_via_ok) {
+          FRLogger.trace("ShoveTraceAlgo.check", "via_shove_check_failed",
+              "Via shove check failed: via=" + curr_shove_via
+                  + ", delta=" + delta
+                  + ", layer=" + p_layer,
+              formatNetLabel(p_board, p_net_no_arr),
+              new Point[] { curr_shove_via.get_center() });
+        }
       }
 
       if (!shove_via_ok) {
@@ -102,9 +159,28 @@ public class ShoveTraceAlgo {
         double via_radius = 0.5 * via_box.max_width();
         double curr_ok_length = projection - via_radius - p_trace_half_width;
         if (!search_tree.is_clearance_compensation_used()) {
-          curr_ok_length -= cl_matrix.get_value(p_cl_type, curr_shove_via.clearance_class_no(), p_layer, true);
+          double clearance = cl_matrix.get_value(p_cl_type, curr_shove_via.clearance_class_no(), p_layer, true);
+          curr_ok_length -= clearance;
+
+          FRLogger.trace("ShoveTraceAlgo.check", "via_blocking_calculation",
+              "Via blocking trace: via=" + curr_shove_via
+                  + ", via_radius=" + via_radius
+                  + ", trace_half_width=" + p_trace_half_width
+                  + ", required_clearance=" + clearance
+                  + ", projection=" + projection
+                  + ", ok_length=" + curr_ok_length
+                  + ", layer=" + p_layer,
+              formatNetLabel(p_board, p_net_no_arr),
+              new Point[] { curr_shove_via.get_center() });
         }
         if (curr_ok_length <= 0) {
+          FRLogger.trace("ShoveTraceAlgo.check", "via_blocks_trace",
+              "Via blocks trace insertion: via=" + curr_shove_via
+                  + ", ok_length=" + curr_ok_length
+                  + " (must be > 0)"
+                  + ", layer=" + p_layer,
+              formatNetLabel(p_board, p_net_no_arr),
+              new Point[] { curr_shove_via.get_center() });
           return 0;
         }
         result = Math.min(result, curr_ok_length);
@@ -460,8 +536,37 @@ public class ShoveTraceAlgo {
       return p_polyline;
     }
 
+    FRLogger.trace("ShoveTraceAlgo.insert", "obstacle_found",
+        "Obstacle blocking trace insertion: obstacle=" + found_obstacle.toString()
+            + ", obstacle_type=" + found_obstacle.getClass().getSimpleName()
+            + ", obstacle_fixed=" + (found_obstacle instanceof Trace && found_obstacle.is_shove_fixed())
+            + ", obstacle_routable=" + found_obstacle.is_routable()
+            + ", layer=" + p_layer
+            + ", recursion_depth=" + p_recursion_depth
+            + ", trace_half_width=" + p_half_width
+            + ", clearance_class=" + p_cl_type,
+        formatNetLabel(this.board, p_net_no_arr),
+        new Point[] { found_obstacle.bounding_box().centre_of_gravity().round() });
+
     if (p_recursion_depth <= 0 || found_obstacle instanceof BoardOutline || (found_obstacle instanceof Trace && !found_obstacle.is_shove_fixed())) {
       this.board.set_shove_failing_obstacle(found_obstacle);
+
+      String failureReason;
+      if (p_recursion_depth <= 0) {
+        failureReason = "recursion depth exhausted";
+      } else if (found_obstacle instanceof BoardOutline) {
+        failureReason = "obstacle is board outline";
+      } else {
+        failureReason = "obstacle is unfixed trace";
+      }
+
+      FRLogger.trace("ShoveTraceAlgo.insert", "insertion_failed",
+          "Trace insertion failed: " + failureReason
+              + ", obstacle=" + found_obstacle.toString()
+              + ", layer=" + p_layer,
+          formatNetLabel(this.board, p_net_no_arr),
+          new Point[] { found_obstacle.bounding_box().centre_of_gravity().round() });
+
       return null;
     }
     boolean try_spring_over = true;

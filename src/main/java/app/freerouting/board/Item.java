@@ -429,11 +429,41 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
           if (intersection.dimension() == 2) {
             ClearanceViolation curr_violation = new ClearanceViolation(this, curr_item, intersection, shape_layer(i), minimum_clearance, actual_clearance);
             result.add(curr_violation);
+
+            FRLogger.trace("Item.clearance_violations", "violation_detected",
+                "Clearance violation detected: item1=" + this.toString()
+                    + ", item2=" + curr_item.toString()
+                    + ", layer=" + shape_layer(i)
+                    + ", expected_clearance=" + (minimum_clearance / 10000.0) + "mm"
+                    + ", actual_clearance=" + (actual_clearance / 10000.0) + "mm"
+                    + ", delta=" + ((minimum_clearance - actual_clearance) / 10000.0) + "mm"
+                    + ", clearance_class_1=" + clearance_class_1
+                    + ", clearance_class_2=" + clearance_class_2
+                    + ", intersection_center=" + intersection.centre_of_gravity(),
+                formatNetLabel(),
+                new Point[] { intersection.centre_of_gravity().round() });
           }
         }
       }
     }
     return result;
+  }
+
+  private String formatNetLabel() {
+    if (net_count() == 0) {
+      return "No net";
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < net_count(); i++) {
+      if (i > 0) sb.append(", ");
+      int netNo = get_net_no(i);
+      if (board.rules != null && board.rules.nets != null && netNo <= board.rules.nets.max_net_no()) {
+        sb.append(board.rules.nets.get(netNo).toString());
+      } else {
+        sb.append("Net #").append(netNo).append(" (Unknown)");
+      }
+    }
+    return sb.toString();
   }
 
   private double calculate_clearance_between_two_shapes(TileShape shape_1, TileShape shape_2, double minimum_clearance) {

@@ -8,6 +8,8 @@ import app.freerouting.board.Trace;
 import app.freerouting.board.Unit;
 import app.freerouting.board.Via;
 import app.freerouting.constants.Constants;
+import app.freerouting.geometry.planar.Point;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.DesignRulesCheckerSettings;
 import java.util.ArrayList;
@@ -22,6 +24,9 @@ public class DesignRulesChecker {
 
   private final BasicBoard board;
   private final DesignRulesCheckerSettings drcSettings;
+  public int max_connections;
+  // State for incomplete connections (ratsnest)
+  private NetIncompletes[] net_incompletes;
 
   public DesignRulesChecker(BasicBoard board, DesignRulesCheckerSettings drcSettings) {
     this.board = board;
@@ -196,14 +201,37 @@ public class DesignRulesChecker {
     // Get all clearance violations
     Collection<ClearanceViolation> violations = getAllClearanceViolations();
 
+    FRLogger.trace("DesignRulesChecker.generateReport", "drc_check_started",
+        "DRC check started: total_clearance_violations=" + violations.size()
+            + ", coordinate_unit=" + coordinateUnit
+            + ", source_file=" + sourceFile,
+        "DRC Check",
+        new Point[0]);
+
     // Convert internal violations to DRC report format
     for (ClearanceViolation violation : violations) {
       DrcViolation drcViolation = convertToDrcViolation(violation, coordinateUnit);
       report.addViolation(drcViolation);
+
+      FRLogger.trace("DesignRulesChecker.generateReport", "drc_violation",
+          "DRC violation: type=clearance"
+              + ", item1=" + violation.first_item.toString()
+              + ", item2=" + violation.second_item.toString()
+              + ", layer=" + violation.layer
+              + ", expected=" + (violation.expected_clearance / 10000.0) + "mm"
+              + ", actual=" + (violation.actual_clearance / 10000.0) + "mm"
+              + ", delta=" + ((violation.expected_clearance - violation.actual_clearance) / 10000.0) + "mm",
+          "DRC Check",
+          new Point[] { violation.shape.centre_of_gravity().round() });
     }
 
     // Get all unconnected items
     Collection<UnconnectedItems> unconnectedItems = getAllUnconnectedItems();
+
+    FRLogger.trace("DesignRulesChecker.generateReport", "unconnected_items",
+        "Unconnected items found: count=" + unconnectedItems.size(),
+        "DRC Check",
+        new Point[0]);
 
     // Convert unconnected items to DRC report format
     for (UnconnectedItems unconnectedItem : unconnectedItems) {
@@ -214,6 +242,12 @@ public class DesignRulesChecker {
         report.addUnconnectedItem(drcViolation);
       }
     }
+
+    FRLogger.trace("DesignRulesChecker.generateReport", "drc_check_completed",
+        "DRC check completed: total_violations=" + report.violations.size()
+            + ", total_unconnected=" + report.unconnected_items.size(),
+        "DRC Check",
+        new Point[0]);
 
     return report;
   }
@@ -451,10 +485,6 @@ public class DesignRulesChecker {
 
     return dsnCoordinate;
   }
-
-  // State for incomplete connections (ratsnest)
-  private NetIncompletes[] net_incompletes;
-  public int max_connections;
 
   /**
    * Initializes the incomplete connection calculations for all nets on the board.
