@@ -185,17 +185,54 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                   }
                 }
 
-                if (curr_object.toString().contains("id=56")) {
-                  FRLogger.debug("Restrain called for Obstacle 56."
-                      +", Room: " + curr_room.get_shape().toString()
-                      + ", Contained: " + curr_room.get_contained_shape().toString()
-                      + ", Obstacle: " + curr_object_shape.toString());
-                }
                 Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
                     curr_object_shape);
-                if (curr_object.toString().contains("id=56")) {
-                  FRLogger.debug("Restrain Result Count: " + new_restrained_shapes.size());
+
+                if ((globalSettings != null) && (globalSettings.debugSettings != null)
+                    && (globalSettings.debugSettings.enableDetailedLogging)) {
+                  StringBuilder netInfo = new StringBuilder();
+                  List<Point> points = new ArrayList<>();
+
+                  if (curr_object instanceof Item obstacleItem && obstacleItem.net_count() > 0) {
+                    for (int netIdx = 0; netIdx < obstacleItem.net_count(); netIdx++) {
+                      if (netIdx > 0) {
+                        netInfo.append(", ");
+                      }
+                      int netNo = obstacleItem.get_net_no(netIdx);
+                      if (this.board.rules != null && this.board.rules.nets != null
+                          && netNo <= this.board.rules.nets.max_net_no()) {
+                        netInfo.append(this.board.rules.nets.get(netNo).toString());
+                      } else {
+                        netInfo.append("Net #").append(netNo).append(" (Unknown)");
+                      }
+                    }
+                  }
+
+                  TileShape roomShape = curr_room.get_shape();
+                  TileShape containedShape = curr_room.get_contained_shape();
+                  if (roomShape != null && roomShape.centre_of_gravity() != null) {
+                    points.add(roomShape.centre_of_gravity().round());
+                  }
+                  if (containedShape != null && containedShape.centre_of_gravity() != null) {
+                    points.add(containedShape.centre_of_gravity().round());
+                  }
+                  if (curr_object_shape != null && curr_object_shape.centre_of_gravity() != null) {
+                    points.add(curr_object_shape.centre_of_gravity().round());
+                  }
+
+                  FRLogger.trace("ShapeSearchTree45Degree.complete_shape", "restrain_shape_result",
+                      "Restrain shape result: obstacle=" + curr_object.toString()
+                          + ", room_shape=" + (roomShape != null ? roomShape.toString() : "null")
+                          + ", room_dimension=" + (roomShape != null ? roomShape.dimension() : -1)
+                          + ", contained_shape=" + (containedShape != null ? containedShape.toString() : "null")
+                          + ", contained_dimension=" + (containedShape != null ? containedShape.dimension() : -1)
+                          + ", obstacle_shape=" + (curr_object_shape != null ? curr_object_shape.toString() : "null")
+                          + ", obstacle_dimension=" + (curr_object_shape != null ? curr_object_shape.dimension() : -1)
+                          + ", result_count=" + new_restrained_shapes.size(),
+                      netInfo.length() > 0 ? netInfo.toString() : "No net",
+                      points.toArray(new Point[0]));
                 }
+
                 if (new_restrained_shapes.isEmpty()) {
                   if ((globalSettings != null) && (globalSettings.debugSettings != null)
                       && (globalSettings.debugSettings.enableDetailedLogging)) {

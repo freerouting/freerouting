@@ -1066,13 +1066,45 @@ public class ShapeSearchTree extends MinAreaTree {
     }
     int offset_width = p_trace.get_half_width()
         + this.clearance_compensation_value(p_trace.clearance_class_no(), p_trace.get_layer());
-    if (p_trace.toString().contains("polylinetrace") || p_trace.get_id_no() == 56) {
-      int netNo = (p_trace.net_count() > 0) ? p_trace.get_net_no(0) : -1;
-      FRLogger.debug("ShapeSearchTree.calculate_tree_shapes for trace id=" + p_trace.get_id_no() + " (net #" + netNo
-          + ")"
-          + ", HalfWidth: " + p_trace.get_half_width()
-          + ", ClearanceComp: " + this.clearance_compensation_value(p_trace.clearance_class_no(), p_trace.get_layer())
-          + ", OffsetWidth: " + offset_width);
+
+    if ((globalSettings != null) && (globalSettings.debugSettings != null)
+        && (globalSettings.debugSettings.enableDetailedLogging)) {
+      StringBuilder netInfo = new StringBuilder();
+      List<Point> points = new ArrayList<>();
+
+      if (p_trace.net_count() > 0) {
+        for (int netIdx = 0; netIdx < p_trace.net_count(); netIdx++) {
+          if (netIdx > 0) {
+            netInfo.append(", ");
+          }
+          int netNo = p_trace.get_net_no(netIdx);
+          if (this.board.rules != null && this.board.rules.nets != null
+              && netNo <= this.board.rules.nets.max_net_no()) {
+            netInfo.append(this.board.rules.nets.get(netNo).toString());
+          } else {
+            netInfo.append("Net #").append(netNo).append(" (Unknown)");
+          }
+        }
+      }
+
+      // Add trace endpoints as points of interest
+      if (p_trace.first_corner() != null) {
+        points.add(p_trace.first_corner());
+      }
+      if (p_trace.last_corner() != null) {
+        points.add(p_trace.last_corner());
+      }
+
+      FRLogger.trace("ShapeSearchTree.calculate_tree_shapes", "trace_shape_calculation",
+          "Calculating tree shapes for trace id=" + p_trace.get_id_no()
+              + ", layer=" + p_trace.get_layer()
+              + ", half_width=" + p_trace.get_half_width()
+              + ", clearance_comp=" + this.clearance_compensation_value(p_trace.clearance_class_no(), p_trace.get_layer())
+              + ", offset_width=" + offset_width
+              + ", tile_shape_count=" + p_trace.tile_shape_count()
+              + ", polyline_corners=" + (p_trace.polyline() != null ? p_trace.polyline().arr.length : 0),
+          netInfo.length() > 0 ? netInfo.toString() : "No net",
+          points.toArray(new Point[0]));
     }
     TileShape[] result = new TileShape[p_trace.tile_shape_count()];
     for (int i = 0; i < result.length; i++) {
