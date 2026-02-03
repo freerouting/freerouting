@@ -138,7 +138,7 @@ import java.util.TreeSet;
  *
  * <p>
  * <strong>Typical Usage:</strong>
- * 
+ *
  * <pre>{@code
  * RoutingJob job = ...; // routing job with settings
  * BatchAutorouter autorouter = new BatchAutorouter(board, true, job, thread);
@@ -846,7 +846,6 @@ public class BatchAutorouter extends NamedAlgorithm {
           }
 
           // Check maxItems limit (0 means no limit)
-          job.logInfo("DEBUG: maxItems=" + job.routerSettings.maxItems + ", totalItemsRouted=" + this.totalItemsRouted);
           if (job.routerSettings.maxItems > 0 && this.totalItemsRouted >= job.routerSettings.maxItems) {
             job.logInfo("Max items limit reached (" + job.routerSettings.maxItems + "). Stopping auto-router.");
             this.thread.request_stop_auto_router();
@@ -1028,7 +1027,7 @@ public class BatchAutorouter extends NamedAlgorithm {
    *
    * <p>
    * Used to calculate routing progress as a percentage:
-   * 
+   *
    * <pre>
    * progress = (initialUnroutedCount - currentIncomplete) / initialUnroutedCount
    * </pre>
