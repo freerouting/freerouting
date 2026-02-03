@@ -178,6 +178,16 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     this.failureLog = new app.freerouting.autoroute.RoutingFailureLog();
   }
 
+  private static String formatNetLabel(RoutingBoard board, int netNo) {
+    String netName = "Unknown";
+    if (board != null && board.rules != null && board.rules.nets != null
+        && netNo >= 0 && netNo <= board.rules.nets.max_net_no()
+        && board.rules.nets.get(netNo) != null) {
+      netName = board.rules.nets.get(netNo).name;
+    }
+    return "Net #" + netNo + " (" + netName + ")";
+  }
+
   /**
    * Maintains the auto-router database after an item is inserted, changed, or
    * deleted.
@@ -1132,7 +1142,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               + ", layer=" + p_layer
               + ", half_width=" + p_half_width
               + ", compensated_half_width=" + compensated_half_width,
-          "Net #" + (p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
+          formatNetLabel(this, p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
           new Point[] { from_corner, to_corner });
       return from_corner;
     }
@@ -1149,7 +1159,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               + ", new_polyline.arr.length=" + new_polyline.arr.length
               + ", from " + from_corner + " to " + to_corner
               + ", layer=" + p_layer,
-          "Net #" + (p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
+          formatNetLabel(this, p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
           new Point[] { from_corner, to_corner });
       return from_corner;
     }

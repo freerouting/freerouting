@@ -1,15 +1,19 @@
 package app.freerouting.board;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.OrthogonalBoundingDirections;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A special simple ShapeSearchtree, where the shapes are of class IntBox. It is
@@ -95,11 +99,50 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
                 Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
                     curr_object_shape);
                 if (new_restrained_shapes.isEmpty()) {
-                  FRLogger.debug(
-                      "ShapeSearchTree90Degree: Restrain returned empty for obstacle: " + curr_object.toString());
-                  FRLogger.debug("  Room Shape: " + curr_room.get_shape().toString());
-                  FRLogger.debug("  Contained Shape: " + curr_room.get_contained_shape().toString());
-                  FRLogger.debug("  Obstacle Shape: " + curr_object_shape.toString());
+                  if ((globalSettings != null) && (globalSettings.debugSettings != null)
+                      && (globalSettings.debugSettings.enableDetailedLogging)) {
+                    StringBuilder netInfo = new StringBuilder();
+                    List<Point> points = new ArrayList<>();
+
+                    if (curr_object instanceof Item obstacleItem && obstacleItem.net_count() > 0) {
+                      for (int netIdx = 0; netIdx < obstacleItem.net_count(); netIdx++) {
+                        if (netIdx > 0) {
+                          netInfo.append(", ");
+                        }
+                        int netNo = obstacleItem.get_net_no(netIdx);
+                        if (this.board.rules != null && this.board.rules.nets != null
+                            && netNo <= this.board.rules.nets.max_net_no()) {
+                          netInfo.append(this.board.rules.nets.get(netNo).toString());
+                        } else {
+                          netInfo.append("Net #").append(netNo).append(" (Unknown)");
+                        }
+                      }
+                    }
+
+                    TileShape roomShape = curr_room.get_shape();
+                    TileShape containedShape = curr_room.get_contained_shape();
+                    if (roomShape != null && roomShape.centre_of_gravity() != null) {
+                      points.add(roomShape.centre_of_gravity().round());
+                    }
+                    if (containedShape != null && containedShape.centre_of_gravity() != null) {
+                      points.add(containedShape.centre_of_gravity().round());
+                    }
+                    if (curr_object_shape != null && curr_object_shape.centre_of_gravity() != null) {
+                      points.add(curr_object_shape.centre_of_gravity().round());
+                    }
+
+                    FRLogger.trace("ShapeSearchTree90Degree.complete_shape", "restrain_returned_empty",
+                        "Restrain returned empty for obstacle: " + curr_object.toString()
+                            + ", room_shape=" + (roomShape != null ? roomShape.toString() : "null")
+                            + ", room_dimension=" + (roomShape != null ? roomShape.dimension() : -1)
+                            + ", contained_shape=" + (containedShape != null ? containedShape.toString() : "null")
+                            + ", contained_dimension=" + (containedShape != null ? containedShape.dimension() : -1)
+                            + ", obstacle_shape=" + (curr_object_shape != null ? curr_object_shape.toString() : "null")
+                            + ", obstacle_dimension=" + (curr_object_shape != null ? curr_object_shape.dimension() : -1)
+                            + ", obstacle_type=" + (curr_object != null ? curr_object.getClass().getSimpleName() : "null"),
+                        netInfo.length() > 0 ? netInfo.toString() : "No net",
+                        points.toArray(new Point[0]));
+                  }
                 }
 
                 new_result.addAll(new_restrained_shapes);

@@ -39,6 +39,16 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     layer = p_layer;
   }
 
+  private static String formatNetLabel(BasicBoard board, int netNo) {
+    String netName = "Unknown";
+    if (board != null && board.rules != null && board.rules.nets != null
+        && netNo >= 0 && netNo <= board.rules.nets.max_net_no()
+        && board.rules.nets.get(netNo) != null) {
+      netName = board.rules.nets.get(netNo).name;
+    }
+    return "Net #" + netNo + " (" + netName + ")";
+  }
+
   /**
    * returns the first corner of the trace
    */
@@ -147,13 +157,14 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     boolean is_tail = start_contacts.isEmpty() || end_contacts.isEmpty();
 
     if (is_tail) {
+      int netNo = this.net_count() > 0 ? this.get_net_no(0) : -1;
       FRLogger.trace("Trace.is_tail", "tail_detected",
           "Trace id=" + this.get_id_no() + " detected as tail"
               + ", start_contacts=" + start_contacts.size()
               + ", end_contacts=" + end_contacts.size()
               + ", from " + this.first_corner() + " to " + this.last_corner()
               + ", layer=" + this.get_layer(),
-          "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1) + ", Trace #" + this.get_id_no(),
+          formatNetLabel(this.board, netNo) + ", Trace #" + this.get_id_no(),
           new Point[] { this.first_corner(), this.last_corner() });
     }
 
@@ -582,4 +593,272 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * geometry of the trace was changed.
    */
   public abstract boolean pull_tight(PullTightAlgo p_pull_tight_algo);
+
+  /**
+   * Looks up all items (traces, vias, pads) connected to this trace at a specific
+   * point (start or end). This is used for the push and shove algorithms to find
+   * all impacted items when moving this trace.
+   */
+  public Set<Item> get_impacted_items() {
+    Set<Item> result = new TreeSet<>();
+
+    // Add start and end contacts as impacted items for traces
+    Point start_corner = this.first_corner();
+    Point end_corner = this.last_corner();
+    if (start_corner != null) {
+      result.addAll(get_normal_contacts(start_corner, false));
+    }
+    if (end_corner != null) {
+      result.addAll(get_normal_contacts(end_corner, false));
+    }
+
+    // Log the impacted items for debugging
+    if (this.contains_net(94)) {
+      FRLogger.debug("Trace.get_impacted_items for net #94, trace id=" + this.get_id_no() + ":");
+      for (Item item : result) {
+        FRLogger.debug("  Impacted item id=" + item.get_id_no() + " (net #"
+            + (item.net_count() > 0 ? item.get_net_no(0) : -1) + ")");
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Looks up all items (traces, vias, pads) connected to this trace at a specific
+   * point (start or end). This is used for the push and shove algorithms to find
+   * all impacted items when moving this trace.
+   */
+  Set<Item> get_impacted_items_at(Point p_point) {
+    Set<Item> result = new TreeSet<>();
+
+    // Use tolerance for connectivity detection: max(half_width + 1, 3000) to ensure
+    // bidirectional visibility
+    int tolerance = Math.max(this.half_width + 1, 3000);
+    TileShape search_shape = p_point.surrounding_octagon().enlarge(tolerance);
+    Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
+    if (this.contains_net(94)) {
+      FRLogger.debug("Trace.get_impacted_items_at for net #94 at " + p_point + " on layer " + this.layer + ": found "
+          + overlaps.size() + " overlaps");
+    }
+    for (SearchTreeObject curr_ob : overlaps) {
+      if (!(curr_ob instanceof Item curr_item)) {
+        continue;
+      }
+      if (this.contains_net(94)) {
+        FRLogger.debug("  Checking item id=" + curr_item.get_id_no() + " (net #"
+            + (curr_item.net_count() > 0 ? curr_item.get_net_no(0) : -1) + ") on layer " + curr_item.shape_layer(0));
+      }
+      if (curr_item != this && curr_item.shares_layer(this) && curr_item.shares_net(this)) {
+        if (curr_item instanceof Trace curr_trace) {
+          // Check if points are within tolerance distance
+          double d1 = p_point.to_float().distance(curr_trace.first_corner().to_float());
+          double d2 = p_point.to_float().distance(curr_trace.last_corner().to_float());
+          if (this.contains_net(94)) {
+            FRLogger.debug("    Checking against trace id=" + curr_trace.get_id_no() + ": d1=" + d1 + ", d2=" + d2
+                + ", tolerance=" + tolerance);
+          }
+          if (isWithinTolerance(p_point, curr_trace.first_corner(), tolerance) ||
+              isWithinTolerance(p_point, curr_trace.last_corner(), tolerance)) {
+            result.add(curr_item);
+          }
+        } else if (curr_item instanceof DrillItem curr_drill_item) {
+          if (this.contains_net(94)) {
+            FRLogger.debug("    Checking against drill id=" + curr_drill_item.get_id_no());
+          }
+          app.freerouting.geometry.planar.Shape drill_shape = curr_drill_item.get_shape_on_layer(this.get_layer());
+          // Enlarge by trace tolerance to account for snapping/trace width and ensure
+          // robustness
+          if (drill_shape != null && drill_shape.enlarge(tolerance).contains(p_point)) {
+            result.add(curr_item);
+          }
+        } else if (curr_item instanceof ConductionArea curr_area) {
+          if (curr_area.get_area().contains(p_point)) {
+            result.add(curr_item);
+          }
+        }
+      }
+    }
+
+    // Log the impacted items for debugging
+    if (this.contains_net(94)) {
+      FRLogger.debug("Trace.get_impacted_items_at for net #94, trace id=" + this.get_id_no() + ", point=" + p_point + ":");
+      for (Item item : result) {
+        FRLogger.debug("  Impacted item id=" + item.get_id_no() + " (net #"
+            + (item.net_count() > 0 ? item.get_net_no(0) : -1) + ")");
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Adds or updates a contact for this trace at the specified point. This is used
+   * when traces are moved or reshaped, and their contacts need to be updated.
+   */
+  void add_or_update_contact(Point p_point) {
+    if (p_point == null) {
+      return;
+    }
+    // Use tolerance for connectivity detection: max(half_width + 1, 3000) to ensure
+    // bidirectional visibility
+    int tolerance = Math.max(this.half_width + 1, 3000);
+    TileShape search_shape = p_point.surrounding_octagon().enlarge(tolerance);
+    Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
+    if (this.contains_net(94)) {
+      FRLogger.debug("Trace.add_or_update_contact for net #94 at " + p_point + " on layer " + this.layer + ": found "
+          + overlaps.size() + " overlaps");
+    }
+    boolean contact_found = false;
+    for (SearchTreeObject curr_ob : overlaps) {
+      if (!(curr_ob instanceof Item curr_item)) {
+        continue;
+      }
+      if (this.contains_net(94)) {
+        FRLogger.debug("  Checking item id=" + curr_item.get_id_no() + " (net #"
+            + (curr_item.net_count() > 0 ? curr_item.get_net_no(0) : -1) + ") on layer " + curr_item.shape_layer(0));
+      }
+      if (curr_item != this && curr_item.shares_layer(this) && curr_item.shares_net(this)) {
+        if (curr_item instanceof Trace curr_trace) {
+          // Check if points are within tolerance distance
+          double d1 = p_point.to_float().distance(curr_trace.first_corner().to_float());
+          double d2 = p_point.to_float().distance(curr_trace.last_corner().to_float());
+          if (this.contains_net(94)) {
+            FRLogger.debug("    Checking against trace id=" + curr_trace.get_id_no() + ": d1=" + d1 + ", d2=" + d2
+                + ", tolerance=" + tolerance);
+          }
+          if (isWithinTolerance(p_point, curr_trace.first_corner(), tolerance) ||
+              isWithinTolerance(p_point, curr_trace.last_corner(), tolerance)) {
+            contact_found = true;
+            FRLogger.trace("Trace.add_or_update_contact", "trace_contact",
+                "Found trace contact at " + p_point + ", layer=" + this.get_layer()
+                    + ", id=" + this.get_id_no(),
+                formatNetLabel(this.board, curr_item.get_net_no(0)) + ", Trace #" + this.get_id_no(),
+                new Point[] { p_point });
+            break;
+          }
+        } else if (curr_item instanceof DrillItem curr_drill_item) {
+          if (this.contains_net(94)) {
+            FRLogger.debug("    Checking against drill id=" + curr_drill_item.get_id_no());
+          }
+          app.freerouting.geometry.planar.Shape drill_shape = curr_drill_item.get_shape_on_layer(this.get_layer());
+          // Enlarge by trace tolerance to account for snapping/trace width and ensure
+          // robustness
+          if (drill_shape != null && drill_shape.enlarge(tolerance).contains(p_point)) {
+            contact_found = true;
+            FRLogger.trace("Trace.add_or_update_contact", "drill_contact",
+                "Found drill contact at " + p_point + ", layer=" + this.get_layer()
+                    + ", id=" + this.get_id_no(),
+                formatNetLabel(this.board, curr_item.get_net_no(0)) + ", Trace #" + this.get_id_no(),
+                new Point[] { p_point });
+            break;
+          }
+        } else if (curr_item instanceof ConductionArea curr_area) {
+          if (curr_area.get_area().contains(p_point)) {
+            contact_found = true;
+            FRLogger.trace("Trace.add_or_update_contact", "area_contact",
+                "Found area contact at " + p_point + ", layer=" + this.get_layer()
+                    + ", id=" + this.get_id_no(),
+                formatNetLabel(this.board, curr_item.get_net_no(0)) + ", Trace #" + this.get_id_no(),
+                new Point[] { p_point });
+            break;
+          }
+        }
+      }
+    }
+    if (!contact_found) {
+      int netNo = this.net_count() > 0 ? this.get_net_no(0) : -1;
+      FRLogger.trace("Trace.add_or_update_contact", "add_contact",
+          "Adding contact at " + p_point + ", id=" + this.get_id_no(),
+          formatNetLabel(this.board, netNo) + ", Trace #" + this.get_id_no(),
+          new Point[] { p_point });
+    }
+  }
+
+  /**
+   * Removes a contact for this trace at the specified point. This is used when
+   * traces are moved or reshaped, and their contacts need to be updated.
+   */
+  void remove_contact(Point p_point) {
+    if (p_point == null) {
+      return;
+    }
+    // Use tolerance for connectivity detection: max(half_width + 1, 3000) to ensure
+    // bidirectional visibility
+    int tolerance = Math.max(this.half_width + 1, 3000);
+    TileShape search_shape = p_point.surrounding_octagon().enlarge(tolerance);
+    Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
+    if (this.contains_net(94)) {
+      FRLogger.debug("Trace.remove_contact for net #94 at " + p_point + " on layer " + this.layer + ": found "
+          + overlaps.size() + " overlaps");
+    }
+    boolean contact_found = false;
+    for (SearchTreeObject curr_ob : overlaps) {
+      if (!(curr_ob instanceof Item curr_item)) {
+        continue;
+      }
+      if (this.contains_net(94)) {
+        FRLogger.debug("  Checking item id=" + curr_item.get_id_no() + " (net #"
+            + (curr_item.net_count() > 0 ? curr_item.get_net_no(0) : -1) + ") on layer " + curr_item.shape_layer(0));
+      }
+      if (curr_item != this && curr_item.shares_layer(this) && curr_item.shares_net(this)) {
+        if (curr_item instanceof Trace curr_trace) {
+          // Check if points are within tolerance distance
+          double d1 = p_point.to_float().distance(curr_trace.first_corner().to_float());
+          double d2 = p_point.to_float().distance(curr_trace.last_corner().to_float());
+          if (this.contains_net(94)) {
+            FRLogger.debug("    Checking against trace id=" + curr_trace.get_id_no() + ": d1=" + d1 + ", d2=" + d2
+                + ", tolerance=" + tolerance);
+          }
+          if (isWithinTolerance(p_point, curr_trace.first_corner(), tolerance) ||
+              isWithinTolerance(p_point, curr_trace.last_corner(), tolerance)) {
+            contact_found = true;
+            int netNo = this.net_count() > 0 ? this.get_net_no(0) : -1;
+            FRLogger.trace("Trace.remove_contact", "remove_trace_contact",
+                "Trace contact removed at " + p_point + ", id=" + this.get_id_no()
+                    + ", from=" + this.first_corner() + " to " + this.last_corner(),
+                formatNetLabel(this.board, netNo) + ", Trace #" + this.get_id_no(),
+                new Point[] { p_point });
+            break;
+          }
+        } else if (curr_item instanceof DrillItem curr_drill_item) {
+          if (this.contains_net(94)) {
+            FRLogger.debug("    Checking against drill id=" + curr_drill_item.get_id_no());
+          }
+          app.freerouting.geometry.planar.Shape drill_shape = curr_drill_item.get_shape_on_layer(this.get_layer());
+          // Enlarge by trace tolerance to account for snapping/trace width and ensure
+          // robustness
+          if (drill_shape != null && drill_shape.enlarge(tolerance).contains(p_point)) {
+            contact_found = true;
+            int netNo = this.net_count() > 0 ? this.get_net_no(0) : -1;
+            FRLogger.trace("Trace.remove_contact", "remove_trace_contact",
+                "Trace contact removed at " + p_point + ", id=" + this.get_id_no()
+                    + ", from=" + this.first_corner() + " to " + this.last_corner(),
+                formatNetLabel(this.board, netNo) + ", Trace #" + this.get_id_no(),
+                new Point[] { p_point });
+            break;
+          }
+        } else if (curr_item instanceof ConductionArea curr_area) {
+          if (curr_area.get_area().contains(p_point)) {
+            contact_found = true;
+            int netNo = this.net_count() > 0 ? this.get_net_no(0) : -1;
+            FRLogger.trace("Trace.remove_contact", "remove_trace_contact",
+                "Trace contact removed at " + p_point + ", id=" + this.get_id_no()
+                    + ", from=" + this.first_corner() + " to " + this.last_corner(),
+                formatNetLabel(this.board, netNo) + ", Trace #" + this.get_id_no(),
+                new Point[] { p_point });
+            break;
+          }
+        }
+      }
+    }
+    if (!contact_found) {
+      int netNo = this.net_count() > 0 ? this.get_net_no(0) : -1;
+      FRLogger.trace("Trace.remove_contact", "remove_trace_contact_missing",
+          "Trace contact removed at " + p_point + ", but no contact found, id=" + this.get_id_no()
+              + ", from=" + this.first_corner() + " to " + this.last_corner(),
+          formatNetLabel(this.board, netNo) + ", Trace #" + this.get_id_no(),
+          new Point[] { p_point });
+    }
+  }
 }

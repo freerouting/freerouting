@@ -1,5 +1,7 @@
 package app.freerouting.autoroute;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.board.ForcedViaAlgo;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
@@ -14,7 +16,9 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -108,6 +112,16 @@ public class InsertFoundConnectionAlgo {
     this.ctrl = p_ctrl;
   }
 
+  private static String formatNetLabel(RoutingBoard board, int netNo) {
+    String netName = "Unknown";
+    if (board != null && board.rules != null && board.rules.nets != null
+        && netNo >= 0 && netNo <= board.rules.nets.max_net_no()
+        && board.rules.nets.get(netNo) != null) {
+      netName = board.rules.nets.get(netNo).name;
+    }
+    return "Net #" + netNo + " (" + netName + ")";
+  }
+
   /**
    * Creates and executes a connection insertion algorithm for the found routing
    * path.
@@ -159,20 +173,65 @@ public class InsertFoundConnectionAlgo {
     }
     int curr_layer = p_connection.target_layer;
     InsertFoundConnectionAlgo new_instance = new InsertFoundConnectionAlgo(p_board, p_ctrl);
-    String net_name = p_board.rules.nets.get(p_ctrl.net_no).name;
-    FRLogger.debug("InsertFoundConnectionAlgo: inserting connection for net '" + net_name + "' (#" + p_ctrl.net_no
-        + ") with " + p_connection.connection_items.size() + " items");
+
+    // Build detailed trace message with performance check
+    if ((globalSettings != null) && (globalSettings.debugSettings != null)
+        && (globalSettings.debugSettings.enableDetailedLogging)) {
+      String netLabel = formatNetLabel(p_board, p_ctrl.net_no);
+      StringBuilder detailsBuilder = new StringBuilder();
+      detailsBuilder.append("Inserting connection with ").append(p_connection.connection_items.size()).append(" items: ");
+
+      List<Point> allPoints = new ArrayList<>();
+      int itemIndex = 0;
+      for (LocateFoundConnectionAlgoAnyAngle.ResultItem item : p_connection.connection_items) {
+        if (itemIndex > 0) {
+          detailsBuilder.append(", ");
+        }
+        detailsBuilder.append("item[").append(itemIndex).append("]: layer=").append(item.layer)
+            .append(", corners=").append(item.corners.length)
+            .append(", from=").append(item.corners[0])
+            .append(", to=").append(item.corners[item.corners.length - 1]);
+        allPoints.add(item.corners[0]);
+        allPoints.add(item.corners[item.corners.length - 1]);
+        itemIndex++;
+      }
+      detailsBuilder.append(", target_layer=").append(p_connection.target_layer)
+          .append(", start_layer=").append(p_connection.start_layer)
+          .append(", target_item=").append(p_connection.target_item != null ? p_connection.target_item.toString() : "null")
+          .append(", start_item=").append(p_connection.start_item != null ? p_connection.start_item.toString() : "null");
+
+      FRLogger.trace("InsertFoundConnectionAlgo", "inserting_connection",
+          detailsBuilder.toString(),
+          netLabel,
+          allPoints.toArray(new Point[0]));
+    }
+
     for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
       if (!new_instance.insert_via(curr_new_item.corners[0], curr_layer, curr_new_item.layer)) {
-        FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net '" + net_name + "' (#" + p_ctrl.net_no
-            + ") at " + curr_new_item.corners[0] + " from layer " + curr_layer + " to " + curr_new_item.layer);
+        if ((globalSettings != null) && (globalSettings.debugSettings != null)
+            && (globalSettings.debugSettings.enableDetailedLogging)) {
+          String netLabel = formatNetLabel(p_board, p_ctrl.net_no);
+          FRLogger.trace("InsertFoundConnectionAlgo", "insert_via_failed",
+              "Via insertion failed at " + curr_new_item.corners[0] + " from layer " + curr_layer
+                  + " to " + curr_new_item.layer,
+              netLabel,
+              new Point[] { curr_new_item.corners[0] });
+        }
         return null;
       }
       curr_layer = curr_new_item.layer;
       if (!new_instance.insert_trace(curr_new_item)) {
-        FRLogger.debug("InsertFoundConnectionAlgo: insert trace failed for net '" + net_name + "' (#" + p_ctrl.net_no
-            + ") on layer " + curr_new_item.layer + " with " + curr_new_item.corners.length + " corners, from "
-            + curr_new_item.corners[0] + " to " + curr_new_item.corners[curr_new_item.corners.length - 1]);
+        if ((globalSettings != null) && (globalSettings.debugSettings != null)
+            && (globalSettings.debugSettings.enableDetailedLogging)) {
+          String netLabel = formatNetLabel(p_board, p_ctrl.net_no);
+          FRLogger.trace("InsertFoundConnectionAlgo", "insert_trace_failed",
+              "Trace insertion failed on layer " + curr_new_item.layer + " with "
+                  + curr_new_item.corners.length + " corners, from " + curr_new_item.corners[0]
+                  + " to " + curr_new_item.corners[curr_new_item.corners.length - 1],
+              netLabel,
+              new Point[] { curr_new_item.corners[0],
+                  curr_new_item.corners[curr_new_item.corners.length - 1] });
+        }
         return null;
       }
     }
@@ -319,7 +378,7 @@ public class InsertFoundConnectionAlgo {
       FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "insert_trace_segment",
           "inserting trace segment from " + insert_polyline.first_corner() + " to " + insert_polyline.last_corner()
               + " on layer " + p_trace.layer,
-          "Net #" + ctrl.net_no,
+          formatNetLabel(this.board, ctrl.net_no),
           new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
       Point ok_point = board.insert_forced_trace_polyline(insert_polyline, ctrl.trace_half_width[p_trace.layer],
           p_trace.layer, net_no_arr, ctrl.trace_clearance_class_no,
@@ -332,7 +391,7 @@ public class InsertFoundConnectionAlgo {
               + ", corners=" + insert_polyline.corner_count()
               + ", from_corner_point=" + from_corner_point
               + ", i=" + i + "/" + (p_trace.corners.length - 1),
-          "Net #" + ctrl.net_no,
+          formatNetLabel(this.board, ctrl.net_no),
           new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
       boolean neckdown_inserted = false;
       if (ok_point != null && ok_point != insert_polyline.last_corner() && ctrl.with_neckdown
@@ -346,7 +405,7 @@ public class InsertFoundConnectionAlgo {
             "segment committed, from_corner_point=" + previous_from_corner_point + " -> " + from_corner_point
                 + ", ok_point=" + ok_point
                 + ", neckdown=" + neckdown_inserted,
-            "Net #" + ctrl.net_no,
+            formatNetLabel(this.board, ctrl.net_no),
             new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
       } else if (ok_point == insert_polyline.first_corner() && i != p_trace.corners.length - 1) {
         // if ok_point == insert_polyline.first_corner() the spring over may have
@@ -361,7 +420,7 @@ public class InsertFoundConnectionAlgo {
                 + ", curr_corner_arr.length=" + curr_corner_arr.length
                 + ", i=" + i + "/" + (p_trace.corners.length - 1)
                 + ", attempted segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
-            "Net #" + ctrl.net_no,
+            formatNetLabel(this.board, ctrl.net_no),
             new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
         Point previous_from_corner_point = from_corner_point;
         if (from_corner_no > 0) {
@@ -377,7 +436,7 @@ public class InsertFoundConnectionAlgo {
               "spring-over backtrack, from_corner_point=" + previous_from_corner_point + " -> " + from_corner_point
                   + ", i=" + i + "/" + (p_trace.corners.length - 1)
                   + ", segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
-              "Net #" + ctrl.net_no,
+              formatNetLabel(this.board, ctrl.net_no),
               new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
 
           // Remove the trace stub that led to the dead end
@@ -402,7 +461,7 @@ public class InsertFoundConnectionAlgo {
                     FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "remove_backtrack_stub",
                         "removing trace stub after split id=" + piece.get_id_no()
                             + ", from=" + piece.first_corner() + " -> " + piece.last_corner(),
-                        "Net #" + ctrl.net_no, new Point[0]);
+                        formatNetLabel(this.board, ctrl.net_no), new Point[0]);
                     board.remove_item(piece);
                   }
                 }
@@ -415,7 +474,7 @@ public class InsertFoundConnectionAlgo {
                     FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "remove_backtrack_endpoint_stub",
                         "removing trace stub (endpoint match) id=" + trace.get_id_no()
                             + ", from=" + trace.first_corner() + " -> " + trace.last_corner(),
-                        "Net #" + ctrl.net_no, new Point[0]);
+                        formatNetLabel(this.board, ctrl.net_no), new Point[0]);
                     board.remove_item(trace);
                   }
                 } else if (trace.last_corner().equals(from_corner_point)) {
@@ -424,7 +483,7 @@ public class InsertFoundConnectionAlgo {
                     FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "remove_backtrack_endpoint_stub_rev",
                         "removing trace stub (reverse match) id=" + trace.get_id_no()
                             + ", from=" + trace.first_corner() + " -> " + trace.last_corner(),
-                        "Net #" + ctrl.net_no, new Point[0]);
+                        formatNetLabel(this.board, ctrl.net_no), new Point[0]);
                     board.remove_item(trace);
                   }
                 }
@@ -436,7 +495,7 @@ public class InsertFoundConnectionAlgo {
             "spring-over retry from_corner_point=" + from_corner_point
                 + ", i=" + i + "/" + (p_trace.corners.length - 1)
                 + ", segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
-            "Net #" + ctrl.net_no,
+            formatNetLabel(this.board, ctrl.net_no),
             new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
         FRLogger.trace("InsertFoundConnectionAlgo: violation corrected");
       } else {
@@ -449,7 +508,7 @@ public class InsertFoundConnectionAlgo {
                 ", from corner point: " + from_corner_point +
                 ", ok_point: " + (ok_point != null ? ok_point.toString() : "null") +
                 ", target: " + insert_polyline.last_corner(),
-            "Net #" + ctrl.net_no,
+            formatNetLabel(this.board, ctrl.net_no),
             new Point[] { from_corner_point, insert_polyline.last_corner() });
         result = false;
         break;
@@ -467,7 +526,7 @@ public class InsertFoundConnectionAlgo {
                 + ", to=" + trace_stub.last_corner()
                 + ", corner_index=" + i
                 + ", insertion_result=" + result,
-            "Net #" + ctrl.net_no,
+            formatNetLabel(this.board, ctrl.net_no),
             new Point[] { trace_stub.first_corner(), trace_stub.last_corner() });
         board.remove_item(trace_stub);
       }
@@ -706,7 +765,7 @@ public class InsertFoundConnectionAlgo {
     int[] net_no_arr = new int[1];
     net_no_arr[0] = ctrl.net_no;
     ViaInfo via_info = null;
-    String net_name = board.rules.nets.get(ctrl.net_no).name;
+    String netLabel = formatNetLabel(this.board, ctrl.net_no);
     for (int i = 0; i < this.ctrl.via_rule.via_count(); i++) {
       ViaInfo curr_via_info = this.ctrl.via_rule.get_via(i);
       Padstack curr_via_padstack = curr_via_info.get_padstack();
@@ -720,16 +779,16 @@ public class InsertFoundConnectionAlgo {
       }
     }
     if (via_info == null) {
-      FRLogger.debug("InsertFoundConnectionAlgo: via mask not found for net '" + net_name + "' (#" + ctrl.net_no
-          + ") at " + p_location + " between layers " + from_layer + " and " + to_layer);
+      FRLogger.debug("InsertFoundConnectionAlgo: via mask not found for " + netLabel
+          + " at " + p_location + " between layers " + from_layer + " and " + to_layer);
       return false;
     }
     // insert the via
     if (!ForcedViaAlgo.insert(via_info, p_location, net_no_arr, this.ctrl.trace_clearance_class_no,
         this.ctrl.trace_half_width, this.ctrl.max_shove_trace_recursion_depth,
         this.ctrl.max_shove_via_recursion_depth, this.board)) {
-      FRLogger.debug("InsertFoundConnectionAlgo: forced via failed for net '" + net_name + "' (#" + ctrl.net_no
-          + ") at " + p_location + " with via " + via_info.get_name());
+      FRLogger.debug("InsertFoundConnectionAlgo: forced via failed for " + netLabel
+          + " at " + p_location + " with via " + via_info.get_name());
       return false;
     }
     return true;

@@ -1,5 +1,7 @@
 package app.freerouting.board;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
 import app.freerouting.datastructures.MinAreaTree;
@@ -10,6 +12,7 @@ import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.LineSegment;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.RegularTileShape;
@@ -25,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -636,11 +640,50 @@ public class ShapeSearchTree extends MinAreaTree {
                     Collection<IncompleteFreeSpaceExpansionRoom> new_rooms = restrain_shape(curr_incomplete_room,
                         curr_object_shape);
                     if (new_rooms.isEmpty()) {
-                      FRLogger
-                          .debug("ShapeSearchTree: Restrain returned empty for obstacle: " + curr_object.toString());
-                      FRLogger.debug("  Room Shape: " + curr_incomplete_room.get_shape().toString());
-                      FRLogger.debug("  Contained Shape: " + curr_incomplete_room.get_contained_shape().toString());
-                      FRLogger.debug("  Obstacle Shape: " + curr_object_shape.toString());
+                      if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
+                        StringBuilder netInfo = new StringBuilder();
+                        List<Point> points = new ArrayList<>();
+
+                        // Extract net information from obstacle if it's an Item
+                        if (curr_object instanceof Item obstacleItem) {
+                          if (obstacleItem.net_count() > 0) {
+                            for (int netIdx = 0; netIdx < obstacleItem.net_count(); netIdx++) {
+                              if (netIdx > 0) netInfo.append(", ");
+                              int netNo = obstacleItem.get_net_no(netIdx);
+                              if (this.board.rules != null && this.board.rules.nets != null && netNo <= this.board.rules.nets.max_net_no()) {
+                                netInfo.append(this.board.rules.nets.get(netNo).toString());
+                              } else {
+                                netInfo.append("Net #").append(netNo).append(" (Unknown)");
+                              }
+                            }
+                          }
+                        }
+
+                        // Add geometric centers as points of interest
+                        TileShape roomShape = curr_incomplete_room.get_shape();
+                        TileShape containedShape = curr_incomplete_room.get_contained_shape();
+                        if (roomShape != null && roomShape.centre_of_gravity() != null) {
+                          points.add(roomShape.centre_of_gravity().round());
+                        }
+                        if (containedShape != null && containedShape.centre_of_gravity() != null) {
+                          points.add(containedShape.centre_of_gravity().round());
+                        }
+                        if (curr_object_shape != null && curr_object_shape.centre_of_gravity() != null) {
+                          points.add(curr_object_shape.centre_of_gravity().round());
+                        }
+
+                        FRLogger.trace("ShapeSearchTree.complete_shape", "restrain_returned_empty",
+                            "Restrain returned empty for obstacle: " + curr_object.toString()
+                                + ", room_shape=" + (roomShape != null ? roomShape.toString() : "null")
+                                + ", room_dimension=" + (roomShape != null ? roomShape.dimension() : -1)
+                                + ", contained_shape=" + (containedShape != null ? containedShape.toString() : "null")
+                                + ", contained_dimension=" + (containedShape != null ? containedShape.dimension() : -1)
+                                + ", obstacle_shape=" + (curr_object_shape != null ? curr_object_shape.toString() : "null")
+                                + ", obstacle_dimension=" + (curr_object_shape != null ? curr_object_shape.dimension() : -1)
+                                + ", obstacle_type=" + (curr_object != null ? curr_object.getClass().getSimpleName() : "null"),
+                            netInfo.length() > 0 ? netInfo.toString() : "No net",
+                            points.toArray(new Point[0]));
+                      }
                     }
 
                     new_result.addAll(new_rooms);
@@ -879,7 +922,32 @@ public class ShapeSearchTree extends MinAreaTree {
         int offset_width = this.clearance_compensation_value(p_drill_item.clearance_class_no(),
             p_drill_item.shape_layer(i));
         if (curr_tile_shape == null) {
-          FRLogger.warn("ShapeSearchTree.calculate_tree_shapes: shape is null");
+          if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
+            StringBuilder netInfo = new StringBuilder();
+            Point[] points = new Point[0];
+            if (p_drill_item.net_count() > 0) {
+              for (int netIdx = 0; netIdx < p_drill_item.net_count(); netIdx++) {
+                if (netIdx > 0) netInfo.append(", ");
+                int netNo = p_drill_item.get_net_no(netIdx);
+                if (this.board.rules != null && this.board.rules.nets != null && netNo <= this.board.rules.nets.max_net_no()) {
+                  netInfo.append(this.board.rules.nets.get(netNo).toString());
+                } else {
+                  netInfo.append("Net #").append(netNo).append(" (Unknown)");
+                }
+              }
+              if (p_drill_item.get_center() != null) {
+                points = new Point[] { p_drill_item.get_center() };
+              }
+            }
+            FRLogger.trace("ShapeSearchTree.calculate_tree_shapes", "shape_null_warning",
+                "Shape is null for drill item id=" + p_drill_item.get_id_no()
+                    + ", layer=" + p_drill_item.shape_layer(i)
+                    + ", clearance_class=" + p_drill_item.clearance_class_no()
+                    + ", offset_width=" + offset_width
+                    + ", shape_index=" + i + "/" + result.length,
+                netInfo.length() > 0 ? netInfo.toString() : "No net",
+                points);
+          }
         } else {
           curr_tile_shape = (TileShape) curr_tile_shape.enlarge(offset_width);
         }

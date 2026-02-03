@@ -1,5 +1,7 @@
 package app.freerouting.autoroute;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.SearchTreeObject;
@@ -10,6 +12,7 @@ import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.Line;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
@@ -734,11 +737,39 @@ public class AutorouteEngine {
 
       // DEBUG: Log when room completion fails
       if (completed_shapes.isEmpty()) {
-        FRLogger.debug("AutorouteEngine.complete_expansion_room: No shapes returned for net #" + this.net_no +
-            " on layer " + p_room.get_layer() +
-            ", initial shape: "
-            + (p_room.get_shape() != null ? p_room.get_shape().getClass().getSimpleName() : "unbounded") +
-            ", contained shape: " + (p_room.get_contained_shape() != null ? "present" : "null"));
+        if ((globalSettings != null) && (globalSettings.debugSettings != null)
+            && (globalSettings.debugSettings.enableDetailedLogging)) {
+          String netInfo;
+          if (this.board != null && this.board.rules != null && this.board.rules.nets != null
+              && this.net_no >= 0 && this.net_no <= this.board.rules.nets.max_net_no()) {
+            netInfo = this.board.rules.nets.get(this.net_no).toString();
+          } else {
+            netInfo = "Net #" + this.net_no + " (Unknown)";
+          }
+          List<Point> points = new ArrayList<>();
+          TileShape roomShape = p_room.get_shape();
+          TileShape containedShape = p_room.get_contained_shape();
+          if (roomShape != null && roomShape.centre_of_gravity() != null) {
+            points.add(roomShape.centre_of_gravity().round());
+          }
+          if (containedShape != null && containedShape.centre_of_gravity() != null) {
+            points.add(containedShape.centre_of_gravity().round());
+          }
+          if (from_door_shape != null && from_door_shape.centre_of_gravity() != null) {
+            points.add(from_door_shape.centre_of_gravity().round());
+          }
+
+          FRLogger.trace("AutorouteEngine.complete_expansion_room", "no_shapes_returned",
+              "No shapes returned on layer " + p_room.get_layer()
+                  + ", initial shape: "
+                  + (roomShape != null ? roomShape.getClass().getSimpleName() : "unbounded")
+                  + ", contained shape: " + (containedShape != null ? "present" : "null")
+                  + ", doors=" + (room_doors != null ? room_doors.size() : 0)
+                  + ", ignore_object=" + (ignore_object != null ? ignore_object.toString() : "null")
+                  + ", from_door_shape=" + (from_door_shape != null ? from_door_shape.toString() : "null"),
+              netInfo,
+              points.toArray(new Point[0]));
+        }
       }
 
       this.remove_incomplete_expansion_room(p_room);
@@ -773,8 +804,31 @@ public class AutorouteEngine {
 
       // DEBUG: Log if 2D filtering removed all rooms
       if (result.isEmpty() && rooms_before_2d_filter > 0) {
-        FRLogger.debug("AutorouteEngine.complete_expansion_room: All " + rooms_before_2d_filter +
-            " completed shapes were < 2D for net #" + this.net_no + " on layer " + p_room.get_layer());
+        if ((globalSettings != null) && (globalSettings.debugSettings != null)
+            && (globalSettings.debugSettings.enableDetailedLogging)) {
+          String netInfo;
+          if (this.board != null && this.board.rules != null && this.board.rules.nets != null
+              && this.net_no >= 0 && this.net_no <= this.board.rules.nets.max_net_no()) {
+            netInfo = this.board.rules.nets.get(this.net_no).toString();
+          } else {
+            netInfo = "Net #" + this.net_no + " (Unknown)";
+          }
+          List<Point> points = new ArrayList<>();
+          TileShape roomShape = p_room.get_shape();
+          if (roomShape != null && roomShape.centre_of_gravity() != null) {
+            points.add(roomShape.centre_of_gravity().round());
+          }
+          if (from_door_shape != null && from_door_shape.centre_of_gravity() != null) {
+            points.add(from_door_shape.centre_of_gravity().round());
+          }
+
+          FRLogger.trace("AutorouteEngine.complete_expansion_room", "all_shapes_filtered",
+              "All " + rooms_before_2d_filter + " completed shapes were < 2D on layer " + p_room.get_layer()
+                  + ", ignore_object=" + (ignore_object != null ? ignore_object.toString() : "null")
+                  + ", from_door_shape=" + (from_door_shape != null ? from_door_shape.toString() : "null"),
+              netInfo,
+              points.toArray(new Point[0]));
+        }
       }
 
       return result;
