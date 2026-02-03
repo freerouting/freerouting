@@ -7,6 +7,7 @@ import app.freerouting.boardgraphics.NetIncompletesGraphics;
 import app.freerouting.drc.AirLine;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.drc.NetIncompletes;
+import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 import java.util.Collection;
 
@@ -178,7 +179,12 @@ public class RatsNest {
    * @see DesignRulesChecker#getIncompleteCount()
    */
   public int incomplete_count() {
-    return drc.getIncompleteCount();
+    int result = drc.getIncompleteCount();
+    FRLogger.trace("RatsNest.incomplete_count", "total_incomplete_count",
+        "RatsNest total incomplete count=" + result,
+        "RatsNest",
+        new app.freerouting.geometry.planar.Point[0]);
+    return result;
   }
 
   /**
@@ -202,7 +208,12 @@ public class RatsNest {
    * @see DesignRulesChecker#getIncompleteCount(int)
    */
   public int incomplete_count(int p_net_no) {
-    return drc.getIncompleteCount(p_net_no);
+    int result = drc.getIncompleteCount(p_net_no);
+    FRLogger.trace("RatsNest.incomplete_count", "net_incomplete_count",
+        "RatsNest net=" + p_net_no + " incomplete_count=" + result,
+        "Net #" + p_net_no,
+        new app.freerouting.geometry.planar.Point[0]);
+    return result;
   }
 
   /**

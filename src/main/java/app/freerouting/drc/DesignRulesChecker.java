@@ -11,6 +11,7 @@ import app.freerouting.constants.Constants;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.rules.Net;
 import app.freerouting.settings.DesignRulesCheckerSettings;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -488,7 +489,13 @@ public class DesignRulesChecker {
 
   /**
    * Initializes the incomplete connection calculations for all nets on the board.
-   * This is equivalent to what RatsNest constructor did.
+   * Incomplete connections (airlines) are determined based on the items associated
+   * with each net.
+   * This is not equivalent to the total number of connections, as some nets
+   * may have multiple items already connected together.
+   * This is also not equivalent to the number of not-completed nets, as a net may
+   * have multiple connections with some connections completed while others remain
+   * incomplete.
    */
   public void calculateAllIncompletes() {
     int max_net_no = board.rules.nets.max_net_no();
@@ -516,6 +523,31 @@ public class DesignRulesChecker {
         .stream()
         .mapToInt(Collection::size)
         .sum() - net_item_lists.size();
+
+    int totalItems = net_item_lists
+        .stream()
+        .mapToInt(Collection::size)
+        .sum();
+    FRLogger.trace("DesignRulesChecker.calculateAllIncompletes", "max_connections",
+        "Calculated max_connections=" + this.max_connections
+            + ", total_items=" + totalItems
+            + ", net_count=" + net_item_lists.size()
+            + " (formula: total_items - net_count)",
+        "Incomplete Count",
+        new Point[0]);
+
+    int[] focusNets = new int[] {98, 99};
+    for (int netNo : focusNets) {
+      if (netNo >= 1 && netNo <= net_item_lists.size()) {
+        int netItems = net_item_lists.get(netNo - 1).size();
+        Net net = board.rules.nets.get(netNo);
+        String netName = net != null ? net.name : "unknown";
+        FRLogger.trace("DesignRulesChecker.calculateAllIncompletes", "net_item_count",
+            "Net item count: net=" + netNo + ", name=" + netName + ", items=" + netItems,
+            "Net #" + netNo + " (" + netName + ")",
+            new Point[0]);
+      }
+    }
 
     this.net_incompletes = new NetIncompletes[max_net_no];
     for (int i = 0; i < net_incompletes.length; i++) {
@@ -570,10 +602,32 @@ public class DesignRulesChecker {
     if (net_incompletes == null) {
       calculateAllIncompletes();
     }
+
     int result = 0;
+    StringBuilder detailsBuilder = new StringBuilder();
+    int netsWithIncompletes = 0;
+
     for (int i = 0; i < net_incompletes.length; i++) {
-      result += net_incompletes[i].count();
+      int netIncompletes = net_incompletes[i].count();
+      if (netIncompletes > 0) {
+        result += netIncompletes;
+        netsWithIncompletes++;
+        if (netsWithIncompletes <= 10) { // Log first 10 nets with incompletes
+          Net net = board.rules.nets.get(i + 1);
+          String netName = net != null ? net.name : "unknown";
+          detailsBuilder.append("Net #").append(i + 1).append(" (").append(netName).append("): ")
+              .append(netIncompletes).append(" incomplete(s); ");
+        }
+      }
     }
+
+    FRLogger.trace("DesignRulesChecker.getIncompleteCount", "total_incompletes_calculated",
+        "Total incomplete count: " + result
+            + ", nets_with_incompletes=" + netsWithIncompletes
+            + ", first_few_nets=" + detailsBuilder.toString(),
+        "Incomplete Count",
+        new Point[0]);
+
     return result;
   }
 
@@ -587,7 +641,19 @@ public class DesignRulesChecker {
     if (netNo <= 0 || netNo > net_incompletes.length) {
       return 0;
     }
-    return net_incompletes[netNo - 1].count();
+
+    int result = net_incompletes[netNo - 1].count();
+    Net net = board.rules.nets.get(netNo);
+    String netName = net != null ? net.name : "unknown";
+
+    FRLogger.trace("DesignRulesChecker.getIncompleteCount", "net_incomplete_count",
+        "Net incomplete count: net=" + netNo
+            + ", name=" + netName
+            + ", incomplete_count=" + result,
+        "Net #" + netNo + " (" + netName + ")",
+        new Point[0]);
+
+    return result;
   }
 
   /**

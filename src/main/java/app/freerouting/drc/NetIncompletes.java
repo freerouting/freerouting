@@ -50,6 +50,11 @@ public class NetIncompletes {
     private double length_violation = 0;
 
     /**
+     * Number of connected groups in this net at calculation time.
+     */
+    private int connected_group_count = 0;
+
+    /**
      * Creates a new instance of NetIncompletes.
      * Calculates the incomplete connections (ratsnest) for the given net items.
      *
@@ -61,6 +66,15 @@ public class NetIncompletes {
         this.draw_marker_radius = p_board.rules.get_min_trace_half_width() * 2;
         this.incompletes = new LinkedList<>();
         this.net = p_board.rules.nets.get(p_net_no);
+
+        String netLabel = "Net #" + p_net_no + (net != null ? " (" + net.name + ")" : "");
+
+        FRLogger.trace("NetIncompletes.<init>", "start_calculation",
+            "Starting incomplete calculation: net=" + p_net_no
+                + ", name=" + (net != null ? net.name : "null")
+                + ", total_items_in_collection=" + p_net_items.size(),
+            netLabel,
+            new Point[0]);
 
         // Filter out dangling items (vias and tracks with is_tail() == true)
         // AND items with zero contacts (unconnected pins/pads)
@@ -103,10 +117,38 @@ public class NetIncompletes {
             filtered_items.add(item);
         }
 
+        FRLogger.trace("NetIncompletes.<init>", "filtering_complete",
+            "Filtering complete: filtered_items=" + filtered_items.size()
+                + ", dangling=" + dangling_count
+                + ", unconnected=" + unconnected_count
+                + ", conduction_areas_total=" + conduction_area_count
+                + ", conduction_areas_kept=" + conduction_area_filtered_count,
+            netLabel,
+            new Point[0]);
+
         // Create an array of Item-connected_set pairs.
         NetItem[] net_items = calculate_net_items(filtered_items);
+
+        Set<Collection<Item>> unique_connected_sets = new HashSet<>();
+        for (NetItem net_item : net_items) {
+          unique_connected_sets.add(net_item.connected_set);
+        }
+        this.connected_group_count = unique_connected_sets.size();
+
+        FRLogger.trace("NetIncompletes.<init>", "connected_sets_calculated",
+            "Connected sets calculated: net_items_count=" + net_items.length
+                + ", unique_connected_sets=" + unique_connected_sets.size()
+                + " (for N groups, expect N-1 airlines)",
+            netLabel,
+            new Point[0]);
+
         if (net_items.length <= 1) {
-            return;
+          this.connected_group_count = net_items.length;
+          FRLogger.trace("NetIncompletes.<init>", "fully_connected",
+              "Net is fully connected or has no routable items: net_items=" + net_items.length,
+              netLabel,
+              new Point[0]);
+          return;
         }
 
         // create a Delaunay Triangulation for the net_items
@@ -138,6 +180,17 @@ public class NetIncompletes {
                     curr_edge.to_item.item, curr_edge.to_corner));
             join_connected_sets(net_items, curr_edge.from_item.connected_set, curr_edge.to_item.connected_set);
         }
+
+        FRLogger.trace("NetIncompletes.<init>", "airlines_created",
+            "Airlines created: incomplete_count=" + this.incompletes.size()
+                + ", total_items=" + p_net_items.size()
+                + ", filtered_items=" + filtered_items.size()
+                + ", net_items=" + net_items.length
+                + ", connected_groups=" + unique_connected_sets.size()
+                + " => Formula: total_items - incomplete_count = " + (p_net_items.size() - this.incompletes.size()),
+            netLabel,
+            new Point[0]);
+
         calc_length_violation();
     }
 
@@ -168,6 +221,13 @@ public class NetIncompletes {
      */
     public int count() {
         return incompletes.size();
+    }
+
+    /**
+     * Returns the number of connected groups used to compute airlines.
+     */
+    public int get_connected_group_count() {
+      return this.connected_group_count;
     }
 
     /**

@@ -18,6 +18,7 @@ import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.drc.NetIncompletes;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.RatsNest;
@@ -767,14 +768,21 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       // Log incomplete details for debugging
       if (routerCounters.incompleteCount > 0) {
-        job.logDebug("Pass #" + p_pass_no + ": " + routerCounters.incompleteCount + " incompletes across "
-            + items_to_go_count + " items to route");
+        job.logDebug("=== Before Pass #" + p_pass_no + " Summary ===");
+
+        job.logDebug("  Total incomplete connections: " + routerCounters.incompleteCount
+            + " (" + items_to_go_count + " items to route)");
+        job.logDebug("  Unrouted items breakdown by net:");
         for (int netNo = 1; netNo <= board.rules.nets.max_net_no(); netNo++) {
           int netIncompletes = ratsNest.incomplete_count(netNo);
           if (netIncompletes > 0) {
             Net net = board.rules.nets.get(netNo);
             String netName = (net != null) ? net.name : "net#" + netNo;
-            job.logDebug("  Net '" + netName + "' has " + netIncompletes + " incomplete(s)");
+            int netItemCount = board.connectable_item_count(netNo);
+            NetIncompletes netIncompletesObj = ratsNest.drc.getNetIncompletes(netNo);
+            int connectedGroups = (netIncompletesObj != null) ? netIncompletesObj.get_connected_group_count() : -1;
+            job.logDebug("    Net '" + netName + "' (#" + netNo + "): " + netIncompletes + " incomplete(s), "
+                + netItemCount + " total item(s), " + connectedGroups + " connected group(s)");
           }
         }
       }
@@ -934,7 +942,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       // This helps diagnose performance regressions by showing exactly which nets are
       // problematic
       if (routerCounters.incompleteCount > 0) {
-        job.logDebug("=== Pass #" + p_pass_no + " Summary ===");
+        job.logDebug("=== After Pass #" + p_pass_no + " Summary ===");
         job.logDebug("  Duration: " + (passDuration / 1000.0) + " seconds");
         job.logDebug("  Ripup cost: " + currentRipupCost);
         job.logDebug("  Routed: " + routed + ", Failed: " + not_routed + ", Skipped: " + skipped);
@@ -952,8 +960,10 @@ public class BatchAutorouter extends NamedAlgorithm {
             Net net = board.rules.nets.get(netNo);
             String netName = (net != null) ? net.name : "net#" + netNo;
             int netItemCount = board.connectable_item_count(netNo);
+            NetIncompletes netIncompletesObj = finalRatsNest.drc.getNetIncompletes(netNo);
+            int connectedGroups = (netIncompletesObj != null) ? netIncompletesObj.get_connected_group_count() : -1;
             job.logDebug("    Net '" + netName + "' (#" + netNo + "): " + netIncompletes + " incomplete(s), "
-                + netItemCount + " total items");
+                + netItemCount + " total item(s), " + connectedGroups + " connected group(s)");
           }
         }
         job.logDebug("  Total nets with incomplete connections: " + netsWithIncompletes);
