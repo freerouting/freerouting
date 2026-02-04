@@ -1627,6 +1627,30 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       if (p_net_no > 0 && curr_item.get_net_no(0) != p_net_no) {
         continue;
       }
+
+      // Log tail detection for debug nets
+      boolean isDebugNet = false;
+      for (int i = 0; i < curr_item.net_count(); i++) {
+        if (curr_item.get_net_no(i) == 99 || curr_item.get_net_no(i) == 98) {
+          isDebugNet = true;
+          break;
+        }
+      }
+
+      if (isDebugNet && curr_item instanceof Trace trace) {
+        Collection<Item> startContacts = trace.get_start_contacts();
+        Collection<Item> endContacts = trace.get_end_contacts();
+        FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_check",
+            "Checking if trace is tail: trace_id=" + curr_item.get_id_no()
+                + ", start_contacts=" + startContacts.size()
+                + ", end_contacts=" + endContacts.size()
+                + ", from=" + trace.first_corner()
+                + ", to=" + trace.last_corner()
+                + ", stop_option=" + p_stop_connection_option,
+            "Net #" + curr_item.get_net_no(0),
+            null);
+      }
+
       if (curr_item.is_tail()) {
         if (curr_item instanceof Via) {
           if (p_stop_connection_option == Item.StopConnectionOption.VIA) {
@@ -1646,12 +1670,41 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       int item_contact_count = curr_item
           .get_normal_contacts()
           .size();
+
+      // Log connection gathering for debug nets
+      boolean isDebugNet = false;
+      for (int i = 0; i < curr_item.net_count(); i++) {
+        if (curr_item.get_net_no(i) == 99 || curr_item.get_net_no(i) == 98) {
+          isDebugNet = true;
+          break;
+        }
+      }
+
       if (item_contact_count == 1) {
-        stub_connections.addAll(curr_item.get_connection_items(p_stop_connection_option));
+        Set<Item> connections = curr_item.get_connection_items(p_stop_connection_option);
+        if (isDebugNet) {
+          FRLogger.trace("RoutingBoard.remove_trace_tails", "gathering_connections",
+              "Gathering connections for tail item: item_id=" + curr_item.get_id_no()
+                  + ", item_type=" + curr_item.getClass().getSimpleName()
+                  + ", contact_count=" + item_contact_count
+                  + ", connection_items_count=" + connections.size()
+                  + ", stop_option=" + p_stop_connection_option,
+              "Net #" + curr_item.get_net_no(0),
+              null);
+        }
+        stub_connections.addAll(connections);
       } else {
         // the connected items are no stubs for example if a via is only connected on 1
         // layer,
         // but to several traces.
+        if (isDebugNet) {
+          FRLogger.trace("RoutingBoard.remove_trace_tails", "adding_single_item",
+              "Adding single item (not gathering connections): item_id=" + curr_item.get_id_no()
+                  + ", item_type=" + curr_item.getClass().getSimpleName()
+                  + ", contact_count=" + item_contact_count,
+              "Net #" + curr_item.get_net_no(0),
+              null);
+        }
         stub_connections.add(curr_item);
       }
     }
