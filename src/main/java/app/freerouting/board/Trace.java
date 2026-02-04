@@ -49,6 +49,26 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return "Net #" + netNo + " (" + netName + ")";
   }
 
+  private static String formatContactItems(Collection<Item> contacts) {
+    if (contacts == null || contacts.isEmpty()) {
+      return "[]";
+    }
+    StringBuilder sb = new StringBuilder("[");
+    boolean first = true;
+    for (Item item : contacts) {
+      if (!first) {
+        sb.append(", ");
+      }
+      first = false;
+      sb.append(item.getClass().getSimpleName())
+          .append("#")
+          .append(item.get_id_no())
+          .append("@").append(item.first_layer()).append("-").append(item.last_layer());
+    }
+    sb.append("]");
+    return sb.toString();
+  }
+
   /**
    * returns the first corner of the trace
    */
@@ -152,14 +172,22 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    */
   @Override
   public boolean is_tail() {
+    Point start_point = this.first_corner();
+    Point end_point = this.last_corner();
     Collection<Item> start_contacts = this.get_start_contacts();
     Collection<Item> end_contacts = this.get_end_contacts();
     boolean is_tail = start_contacts.isEmpty() || end_contacts.isEmpty();
 
     if (is_tail) {
       int netNo = this.net_count() > 0 ? this.get_net_no(0) : -1;
-      String reason = "";
-      if (start_contacts.isEmpty() && end_contacts.isEmpty()) {
+      String reason;
+      if (start_point == null && end_point == null) {
+        reason = "both endpoints missing";
+      } else if (start_point == null) {
+        reason = "start endpoint missing";
+      } else if (end_point == null) {
+        reason = "end endpoint missing";
+      } else if (start_contacts.isEmpty() && end_contacts.isEmpty()) {
         reason = "both endpoints have no contacts";
       } else if (start_contacts.isEmpty()) {
         reason = "start endpoint has no contacts (end has " + end_contacts.size() + ")";
@@ -170,13 +198,15 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       FRLogger.trace("Trace.is_tail", "tail_detected",
           "Trace detected as tail: trace_id=" + this.get_id_no()
               + ", reason=" + reason
+              + ", start_point=" + start_point
+              + ", end_point=" + end_point
               + ", start_contacts=" + start_contacts.size()
               + ", end_contacts=" + end_contacts.size()
-              + ", from=" + this.first_corner()
-              + ", to=" + this.last_corner()
+              + ", start_contact_items=" + formatContactItems(start_contacts)
+              + ", end_contact_items=" + formatContactItems(end_contacts)
               + ", layer=" + this.get_layer(),
           formatNetLabel(this.board, netNo) + ", Trace #" + this.get_id_no(),
-          new Point[] { this.first_corner(), this.last_corner() });
+          new Point[] { start_point, end_point });
     }
 
     return is_tail;

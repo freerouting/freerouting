@@ -44,6 +44,26 @@ public class Via extends DrillItem implements Serializable {
     this.attach_allowed = p_attach_allowed;
   }
 
+  private static String formatContactItems(Collection<Item> contacts) {
+    if (contacts == null || contacts.isEmpty()) {
+      return "[]";
+    }
+    StringBuilder sb = new StringBuilder("[");
+    boolean first = true;
+    for (Item item : contacts) {
+      if (!first) {
+        sb.append(", ");
+      }
+      first = false;
+      sb.append(item.getClass().getSimpleName())
+          .append("#")
+          .append(item.get_id_no())
+          .append("@").append(item.first_layer()).append("-").append(item.last_layer());
+    }
+    sb.append("]");
+    return sb.toString();
+  }
+
   @Override
   public Item copy(int p_id_no) {
     return new Via(padstack, get_center(), net_no_arr, clearance_class_no(), p_id_no, get_component_no(), get_fixed_state(), attach_allowed, board);
@@ -110,10 +130,17 @@ public class Via extends DrillItem implements Serializable {
   public boolean is_tail() {
     Collection<Item> contact_list = this.get_normal_contacts();
     if (contact_list.size() <= 1) {
+      String contact_layer_range = "n/a";
+      if (contact_list.size() == 1) {
+        Item contact = contact_list.iterator().next();
+        contact_layer_range = contact.first_layer() + "-" + contact.last_layer();
+      }
       FRLogger.trace("Via.is_tail", "tail_detected",
           "Via detected as tail: via_id=" + this.get_id_no()
               + ", reason=" + (contact_list.isEmpty() ? "no contacts" : "single contact")
               + ", contact_count=" + contact_list.size()
+              + ", contact_layer_range=" + contact_layer_range
+              + ", contact_items=" + formatContactItems(contact_list)
               + ", center=" + this.get_center()
               + ", layer_range=" + this.first_layer() + "-" + this.last_layer(),
           "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
@@ -135,6 +162,7 @@ public class Via extends DrillItem implements Serializable {
             + ", reason=all contacts on same layer range"
             + ", contact_count=" + contact_list.size()
             + ", contact_layer_range=" + first_contact_first_layer + "-" + first_contact_last_layer
+            + ", contact_items=" + formatContactItems(contact_list)
             + ", center=" + this.get_center()
             + ", layer_range=" + this.first_layer() + "-" + this.last_layer(),
         "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
