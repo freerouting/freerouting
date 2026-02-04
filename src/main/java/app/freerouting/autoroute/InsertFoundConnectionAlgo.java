@@ -415,17 +415,15 @@ public class InsertFoundConnectionAlgo {
         // In this case repeating the insertion with more distant corners may allow the
         // spring_over to correct the situation.
 
-        boolean isDebugNet = (ctrl.net_no == 99 || ctrl.net_no == 98 || ctrl.net_no == 94);
-        if (isDebugNet) {
-          FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "insertion_failed_at_start",
-              "Insertion returned at start point (ok_point == first_corner)"
-                  + ", from_corner_point=" + from_corner_point
-                  + ", curr_corner_arr.length=" + curr_corner_arr.length
-                  + ", i=" + i + "/" + (p_trace.corners.length - 1)
-                  + ", attempted segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
-              formatNetLabel(this.board, ctrl.net_no),
-              new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
-        }
+        FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "insertion_failed_at_start",
+            "Insertion returned at start point (ok_point == first_corner)"
+                + ", from_corner_point=" + from_corner_point
+                + ", curr_corner_arr.length=" + curr_corner_arr.length
+                + ", i=" + i + "/" + (p_trace.corners.length - 1)
+                + ", attempted segment=" + insert_polyline.first_corner() + " -> " + insert_polyline.last_corner(),
+            formatNetLabel(this.board, ctrl.net_no),
+            new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
+
         Point previous_from_corner_point = from_corner_point;
         if (from_corner_no > 0) {
           // p_trace.corners[i] may be inside the offset for the substitute trace around

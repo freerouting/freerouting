@@ -1006,46 +1006,37 @@ public class BasicBoard implements Serializable {
       return;
     }
 
-    boolean hasDebugNet = false;
-    for (int i = 0; i < p_item.net_count(); i++) {
-      if (p_item.get_net_no(i) == 99 || p_item.get_net_no(i) == 98 || p_item.get_net_no(i) == 94) {
-        hasDebugNet = true;
-        break;
+    // Get stack trace to identify where removal is coming from
+    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+    StringBuilder callerInfo = new StringBuilder();
+    // Skip first 3 elements (getStackTrace, remove_item, and the caller we want to see)
+    for (int i = 2; i < Math.min(6, stackTrace.length); i++) {
+      if (i > 2) {
+        callerInfo.append(" <- ");
       }
+      callerInfo.append(stackTrace[i].getClassName())
+          .append(".")
+          .append(stackTrace[i].getMethodName())
+          .append(":")
+          .append(stackTrace[i].getLineNumber());
     }
-    if (hasDebugNet) {
-      // Get stack trace to identify where removal is coming from
-      StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-      StringBuilder callerInfo = new StringBuilder();
-      // Skip first 3 elements (getStackTrace, remove_item, and the caller we want to see)
-      for (int i = 2; i < Math.min(6, stackTrace.length); i++) {
-        if (i > 2) {
-          callerInfo.append(" <- ");
-        }
-        callerInfo.append(stackTrace[i].getClassName())
-            .append(".")
-            .append(stackTrace[i].getMethodName())
-            .append(":")
-            .append(stackTrace[i].getLineNumber());
-      }
 
-      String itemDetails = "item_type=" + p_item.getClass().getSimpleName() + ", item_id=" + p_item.get_id_no();
-      if (p_item instanceof PolylineTrace trace) {
-        itemDetails += ", from=" + trace.first_corner() + ", to=" + trace.last_corner()
-            + ", layer=" + trace.get_layer() + ", corners=" + trace.corner_count();
-      }
-
-      int netNo = p_item.get_net_no(0);
-      String netLabel = "Net #" + netNo;
-      if (rules != null && rules.nets != null && netNo <= rules.nets.max_net_no()) {
-        netLabel += " (" + rules.nets.get(netNo).name + ")";
-      }
-
-      FRLogger.trace("BasicBoard.remove_item", "remove_item_with_stack",
-          "Removing item: " + itemDetails + ", called_from=" + callerInfo.toString(),
-          netLabel,
-          null);
+    String itemDetails = "item_type=" + p_item.getClass().getSimpleName() + ", item_id=" + p_item.get_id_no();
+    if (p_item instanceof PolylineTrace trace) {
+      itemDetails += ", from=" + trace.first_corner() + ", to=" + trace.last_corner()
+          + ", layer=" + trace.get_layer() + ", corners=" + trace.corner_count();
     }
+
+    int netNo = p_item.net_count() > 0 ? p_item.get_net_no(0) : -1;
+    String netLabel = "Net #" + netNo;
+    if (rules != null && rules.nets != null && netNo >= 0 && netNo <= rules.nets.max_net_no()) {
+      netLabel += " (" + rules.nets.get(netNo).name + ")";
+    }
+
+    FRLogger.trace("BasicBoard.remove_item", "remove_item_with_stack",
+        "Removing item: " + itemDetails + ", called_from=" + callerInfo.toString(),
+        netLabel,
+        null);
 
     if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
       if (p_item instanceof PolylineTrace trace) {
@@ -1056,10 +1047,10 @@ public class BasicBoard implements Serializable {
             if (i > 0) {
               netBuilder.append(",");
             }
-            int netNo = trace.get_net_no(i);
-            netBuilder.append("#").append(netNo);
-            if (rules != null && rules.nets != null && netNo <= rules.nets.max_net_no()) {
-              netBuilder.append(" (").append(rules.nets.get(netNo).name).append(")");
+            int netNumber = trace.get_net_no(i);
+            netBuilder.append("#").append(netNumber);
+            if (rules != null && rules.nets != null && netNumber <= rules.nets.max_net_no()) {
+              netBuilder.append(" (").append(rules.nets.get(netNumber).name).append(")");
             }
           }
           netInfo = netBuilder.toString();
@@ -1080,10 +1071,10 @@ public class BasicBoard implements Serializable {
             if (i > 0) {
               netBuilder.append(",");
             }
-            int netNo = via.get_net_no(i);
-            netBuilder.append("#").append(netNo);
-            if (rules != null && rules.nets != null && netNo <= rules.nets.max_net_no()) {
-              netBuilder.append(" (").append(rules.nets.get(netNo).name).append(")");
+            int netNumber = via.get_net_no(i);
+            netBuilder.append("#").append(netNumber);
+            if (rules != null && rules.nets != null && netNumber <= rules.nets.max_net_no()) {
+              netBuilder.append(" (").append(rules.nets.get(netNumber).name).append(")");
             }
           }
           netInfo = netBuilder.toString();
@@ -1330,20 +1321,16 @@ public class BasicBoard implements Serializable {
         // We are not allowed to delete this item
         result = false;
       } else {
-        boolean hasDebugNet = false;
-        for (int i = 0; i < curr_item.net_count(); i++) {
-          if (curr_item.get_net_no(i) == 99) {
-            hasDebugNet = true;
-            break;
-          }
+        int netNo = curr_item.net_count() > 0 ? curr_item.get_net_no(0) : -1;
+        String netLabel = "Net #" + netNo;
+        if (rules != null && rules.nets != null && netNo >= 0 && netNo <= rules.nets.max_net_no()) {
+          netLabel += " (" + rules.nets.get(netNo).name + ")";
         }
-        if (hasDebugNet) {
-          FRLogger.trace("BasicBoard.remove_items", "remove_item",
-              "Removing item with net #99: item_type=" + curr_item.getClass().getSimpleName()
-                  + ", item=" + curr_item,
-              "Net #99",
-              null);
-        }
+        FRLogger.trace("BasicBoard.remove_items", "remove_item",
+            "Removing item: item_type=" + curr_item.getClass().getSimpleName()
+                + ", item=" + curr_item,
+            netLabel,
+            null);
         remove_item(curr_item);
       }
     }
@@ -2260,10 +2247,10 @@ public class BasicBoard implements Serializable {
             if (i > 0) {
               netBuilder.append(",");
             }
-            int netNo = trace.get_net_no(i);
-            netBuilder.append("#").append(netNo);
-            if (rules != null && rules.nets != null && netNo <= rules.nets.max_net_no()) {
-              netBuilder.append(" (").append(rules.nets.get(netNo).name).append(")");
+            int netNumber = trace.get_net_no(i);
+            netBuilder.append("#").append(netNumber);
+            if (rules != null && rules.nets != null && netNumber <= rules.nets.max_net_no()) {
+              netBuilder.append(" (").append(rules.nets.get(netNumber).name).append(")");
             }
           }
           netInfo = netBuilder.toString();
@@ -2284,10 +2271,10 @@ public class BasicBoard implements Serializable {
             if (i > 0) {
               netBuilder.append(",");
             }
-            int netNo = via.get_net_no(i);
-            netBuilder.append("#").append(netNo);
-            if (rules != null && rules.nets != null && netNo <= rules.nets.max_net_no()) {
-              netBuilder.append(" (").append(rules.nets.get(netNo).name).append(")");
+            int netNumber = via.get_net_no(i);
+            netBuilder.append("#").append(netNumber);
+            if (rules != null && rules.nets != null && netNumber <= rules.nets.max_net_no()) {
+              netBuilder.append(" (").append(rules.nets.get(netNumber).name).append(")");
             }
           }
           netInfo = netBuilder.toString();

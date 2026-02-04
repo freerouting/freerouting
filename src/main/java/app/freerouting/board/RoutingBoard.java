@@ -1666,15 +1666,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
 
       // Log tail detection for debug nets
-      boolean isDebugNet = false;
-      for (int i = 0; i < curr_item.net_count(); i++) {
-        if (curr_item.get_net_no(i) == 99 || curr_item.get_net_no(i) == 98) {
-          isDebugNet = true;
-          break;
-        }
-      }
-
-      if (isDebugNet && curr_item instanceof Trace trace) {
+      if (curr_item instanceof Trace trace) {
         Collection<Item> startContacts = trace.get_start_contacts();
         Collection<Item> endContacts = trace.get_end_contacts();
         FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_check",
@@ -1709,39 +1701,28 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           .size();
 
       // Log connection gathering for debug nets
-      boolean isDebugNet = false;
-      for (int i = 0; i < curr_item.net_count(); i++) {
-        if (curr_item.get_net_no(i) == 99 || curr_item.get_net_no(i) == 98) {
-          isDebugNet = true;
-          break;
-        }
-      }
 
       if (item_contact_count == 1) {
         Set<Item> connections = curr_item.get_connection_items(p_stop_connection_option);
-        if (isDebugNet) {
-          FRLogger.trace("RoutingBoard.remove_trace_tails", "gathering_connections",
-              "Gathering connections for tail item: item_id=" + curr_item.get_id_no()
-                  + ", item_type=" + curr_item.getClass().getSimpleName()
-                  + ", contact_count=" + item_contact_count
-                  + ", connection_items_count=" + connections.size()
-                  + ", stop_option=" + p_stop_connection_option,
-              "Net #" + curr_item.get_net_no(0),
-              null);
-        }
+        FRLogger.trace("RoutingBoard.remove_trace_tails", "gathering_connections",
+            "Gathering connections for tail item: item_id=" + curr_item.get_id_no()
+                + ", item_type=" + curr_item.getClass().getSimpleName()
+                + ", contact_count=" + item_contact_count
+                + ", connection_items_count=" + connections.size()
+                + ", stop_option=" + p_stop_connection_option,
+            "Net #" + curr_item.get_net_no(0),
+            null);
         stub_connections.addAll(connections);
       } else {
         // the connected items are no stubs for example if a via is only connected on 1
         // layer,
         // but to several traces.
-        if (isDebugNet) {
-          FRLogger.trace("RoutingBoard.remove_trace_tails", "adding_single_item",
-              "Adding single item (not gathering connections): item_id=" + curr_item.get_id_no()
-                  + ", item_type=" + curr_item.getClass().getSimpleName()
-                  + ", contact_count=" + item_contact_count,
-              "Net #" + curr_item.get_net_no(0),
-              null);
-        }
+        FRLogger.trace("RoutingBoard.remove_trace_tails", "adding_single_item",
+            "Adding single item (not gathering connections): item_id=" + curr_item.get_id_no()
+                + ", item_type=" + curr_item.getClass().getSimpleName()
+                + ", contact_count=" + item_contact_count,
+            "Net #" + curr_item.get_net_no(0),
+            null);
         stub_connections.add(curr_item);
       }
     }
@@ -1750,21 +1731,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
 
     for (Item curr_item : stub_connections) {
-      boolean hasDebugNet = false;
-      for (int i = 0; i < curr_item.net_count(); i++) {
-        if (curr_item.get_net_no(i) == 99) {
-          hasDebugNet = true;
-          break;
-        }
-      }
-      if (hasDebugNet) {
-        FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_removal",
-            "Removing tail item during cleanup: stop_option=" + p_stop_connection_option
-                + ", item_type=" + curr_item.getClass().getSimpleName()
-                + ", item=" + curr_item,
-            "Net #99",
-            null);
-      }
+      FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_removal",
+          "Removing tail item during cleanup: stop_option=" + p_stop_connection_option
+              + ", item_type=" + curr_item.getClass().getSimpleName()
+              + ", item=" + curr_item,
+          "Net #" + curr_item.get_net_no(0),
+          null);
     }
 
     this.remove_items(stub_connections);

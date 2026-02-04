@@ -95,20 +95,13 @@ public class UndoableObjects implements Serializable {
     }
 
     if (p_object instanceof app.freerouting.board.Item item) {
-      boolean hasDebugNet = false;
-      for (int i = 0; i < item.net_count(); i++) {
-        if (item.get_net_no(i) == 99) {
-          hasDebugNet = true;
-          break;
-        }
-      }
-      if (hasDebugNet) {
-        FRLogger.trace("UndoableObjects.delete", "delete",
-            "Deleting item with net #99: item_type=" + item.getClass().getSimpleName()
-                + ", item=" + item,
-            "Net #99",
-            null);
-      }
+      String itemNetNames = item.getAllNetNames();
+      FRLogger.trace("UndoableObjects.delete", "delete",
+          "Deleting item with "+ itemNetNames + ": "
+              + "item_type=" + item.getClass().getSimpleName()
+              + ", item=" + item,
+          itemNetNames,
+          null);
     }
     // if (object_node.object != p_object)
     { // p_object can be cloned from the object pointed by object_node.object
