@@ -918,6 +918,12 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     if (found_index < 0) {
       return false;
     }
+    if (p_net_no == 99) {
+      FRLogger.trace("Item.remove_from_net", "remove_net",
+          "Removing net #99 from item: item_type=" + getClass().getSimpleName() + ", item=" + this,
+          "Net #99",
+          null);
+    }
     int[] new_net_no_arr = new int[this.net_no_arr.length - 1];
     System.arraycopy(this.net_no_arr, 0, new_net_no_arr, 0, found_index);
     if (found_index < new_net_no_arr.length) {
@@ -981,6 +987,13 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
       FRLogger.warn("Item.assign_net_no: p_net_no to big");
       return;
     }
+    boolean hadNet99 = false;
+    for (int i = 0; i < net_no_arr.length; i++) {
+      if (net_no_arr[i] == 99) {
+        hadNet99 = true;
+        break;
+      }
+    }
     board.item_list.save_for_undo(this);
     if (p_net_no <= 0) {
       net_no_arr = new int[0];
@@ -991,6 +1004,18 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         FRLogger.warn("Item.assign_net_no: unexpected net_count > 1");
       }
       net_no_arr[0] = p_net_no;
+    }
+    if (hadNet99 && p_net_no != 99) {
+      FRLogger.trace("Item.assign_net_no", "remove_net",
+          "assign_net_no removed net #99: new_net=" + p_net_no + ", item_type="
+              + getClass().getSimpleName() + ", item=" + this,
+          "Net #99",
+          null);
+    } else if (!hadNet99 && p_net_no == 99) {
+      FRLogger.trace("Item.assign_net_no", "add_net",
+          "assign_net_no added net #99: item_type=" + getClass().getSimpleName() + ", item=" + this,
+          "Net #99",
+          null);
     }
   }
 

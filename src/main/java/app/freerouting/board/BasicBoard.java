@@ -1006,6 +1006,21 @@ public class BasicBoard implements Serializable {
       return;
     }
 
+    boolean hasDebugNet = false;
+    for (int i = 0; i < p_item.net_count(); i++) {
+      if (p_item.get_net_no(i) == 99) {
+        hasDebugNet = true;
+        break;
+      }
+    }
+    if (hasDebugNet) {
+      FRLogger.trace("BasicBoard.remove_item", "remove_item",
+          "Removing item with net #99: item_type=" + p_item.getClass().getSimpleName()
+              + ", item=" + p_item,
+          "Net #99",
+          null);
+    }
+
     if ((globalSettings != null) && (globalSettings.debugSettings != null) && (globalSettings.debugSettings.enableDetailedLogging)) {
       if (p_item instanceof PolylineTrace trace) {
         String netInfo = "";
@@ -1139,6 +1154,21 @@ public class BasicBoard implements Serializable {
       if (curr_item instanceof Connectable && curr_item.contains_net(p_net_no)) {
         result.add(curr_item);
       }
+    }
+    if (p_net_no == 99) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("connectable_items=").append(result.size());
+      for (Item item : result) {
+        sb.append(", ")
+            .append(item.getClass().getSimpleName())
+            .append("(id=")
+            .append(item.get_id_no())
+            .append(")");
+      }
+      FRLogger.trace("BasicBoard.get_connectable_items", "net_items",
+          sb.toString(),
+          "Net #99",
+          null);
     }
     return result;
   }
@@ -1274,6 +1304,20 @@ public class BasicBoard implements Serializable {
         // We are not allowed to delete this item
         result = false;
       } else {
+        boolean hasDebugNet = false;
+        for (int i = 0; i < curr_item.net_count(); i++) {
+          if (curr_item.get_net_no(i) == 99) {
+            hasDebugNet = true;
+            break;
+          }
+        }
+        if (hasDebugNet) {
+          FRLogger.trace("BasicBoard.remove_items", "remove_item",
+              "Removing item with net #99: item_type=" + curr_item.getClass().getSimpleName()
+                  + ", item=" + curr_item,
+              "Net #99",
+              null);
+        }
         remove_item(curr_item);
       }
     }
@@ -1473,6 +1517,12 @@ public class BasicBoard implements Serializable {
         if ((p_net_no < 0 || curr_item.contains_net(p_net_no)) && curr_item instanceof Trace trace
             && curr_item.is_on_the_board()) {
           if (trace.combine()) {
+            if (p_net_no == 99 || curr_item.contains_net(99)) {
+              FRLogger.trace("BasicBoard.combine_traces", "combine",
+                  "Combined trace on net #99: requested_net=" + p_net_no + ", trace=" + trace,
+                  "Net #99",
+                  null);
+            }
             something_changed = true;
             result = true;
             break;

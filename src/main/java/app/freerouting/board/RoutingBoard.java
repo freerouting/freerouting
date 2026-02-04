@@ -1658,8 +1658,26 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (stub_connections.isEmpty()) {
       return false;
     }
+
+    for (Item curr_item : stub_connections) {
+      boolean hasDebugNet = false;
+      for (int i = 0; i < curr_item.net_count(); i++) {
+        if (curr_item.get_net_no(i) == 99) {
+          hasDebugNet = true;
+          break;
+        }
+      }
+      if (hasDebugNet) {
+        FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_removal",
+            "Removing tail item during cleanup: stop_option=" + p_stop_connection_option
+                + ", item_type=" + curr_item.getClass().getSimpleName()
+                + ", item=" + curr_item,
+            "Net #99",
+            null);
+      }
+    }
+
     this.remove_items(stub_connections);
-    this.combine_traces(p_net_no);
     return true;
   }
 
@@ -1763,6 +1781,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           for (int curr_net_no : curr_item.net_no_arr) {
             for (Item curr_contact : contacts) {
               if (!curr_contact.contains_net(curr_net_no)) {
+                if (curr_net_no == 99) {
+                  FRLogger.trace("RoutingBoard.reduce_nets_of_route_items", "remove_net",
+                      "Removing net #99 from via: via=" + curr_item,
+                      "Net #99",
+                      null);
+                }
                 curr_item.remove_from_net(curr_net_no);
                 something_changed = true;
                 break;
@@ -1782,6 +1806,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
                 if (curr_contact instanceof Pin) {
                   pin_found = true;
                   if (!curr_contact.contains_net(curr_net_no)) {
+                    if (curr_net_no == 99) {
+                      FRLogger.trace("RoutingBoard.reduce_nets_of_route_items", "remove_net",
+                          "Removing net #99 from trace (pin contact): trace=" + curr_item,
+                          "Net #99",
+                          null);
+                    }
                     curr_item.remove_from_net(curr_net_no);
                     something_changed = true;
                     break;
@@ -1792,6 +1822,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               {
                 for (Item curr_contact : contacts) {
                   if (!(curr_contact instanceof Pin) && !curr_contact.contains_net(curr_net_no)) {
+                    if (curr_net_no == 99) {
+                      FRLogger.trace("RoutingBoard.reduce_nets_of_route_items", "remove_net",
+                          "Removing net #99 from trace (non-pin contact): trace=" + curr_item,
+                          "Net #99",
+                          null);
+                    }
                     curr_item.remove_from_net(curr_net_no);
                     something_changed = true;
                     break;
@@ -1871,7 +1907,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    *         information has been cleared
    *
    * @see #get_shove_failing_obstacle()
-   * @see #set_shove_failing_layer(int)
+   * @see #set_shove_failing_obstacle(Item)
    */
   public int get_shove_failing_layer() {
     return shove_failing_layer;

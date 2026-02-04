@@ -862,21 +862,37 @@ public class BatchAutorouter extends NamedAlgorithm {
           this.totalItemsRouted++;
 
           int netNo = curr_item.get_net_no(i);
+          Net netForLog = board.rules.nets.get(netNo);
+          String netNameForLog = (netForLog != null) ? netForLog.name : "net#" + netNo;
 
           // Debugging Check
           app.freerouting.debug.DebugControl.getInstance().check("autoroute_item", netNo, null);
 
           int incompletesBefore = ratsNest.incomplete_count(netNo);
+          NetIncompletes beforeNetIncompletes = ratsNest.drc.getNetIncompletes(netNo);
+          int connectedGroupsBefore = (beforeNetIncompletes != null) ? beforeNetIncompletes.get_connected_group_count() : -1;
+          int netItemCountBefore = board.connectable_item_count(netNo);
+          int currItemConnectedBefore = curr_item.get_connected_set(netNo).size();
+          int currItemUnconnectedBefore = unconnected_set.size();
           PerformanceProfiler.start("autoroute_item");
           var autorouterResult = autoroute_item(curr_item, netNo, ripped_item_list, p_pass_no);
           PerformanceProfiler.end("autoroute_item");
-          int incompletesAfter = (new RatsNest(board)).incomplete_count(netNo);
+          RatsNest postRatsNest = new RatsNest(board);
+          int incompletesAfter = postRatsNest.incomplete_count(netNo);
+          NetIncompletes afterNetIncompletes = postRatsNest.drc.getNetIncompletes(netNo);
+          int connectedGroupsAfter = (afterNetIncompletes != null) ? afterNetIncompletes.get_connected_group_count() : -1;
+          int netItemCountAfter = board.connectable_item_count(netNo);
+          int currItemConnectedAfter = curr_item.get_connected_set(netNo).size();
+          int currItemUnconnectedAfter = curr_item.get_unconnected_set(netNo).size();
 
           if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
             // The item was successfully routed
             ++routed;
-            job.logDebug("Item " + routed + " routed for net #" + netNo + ": incompletes " + incompletesBefore + " -> "
-                + incompletesAfter);
+            job.logDebug("Item " + routed + " routed for net #" + netNo + " (" + netNameForLog + "): incompletes "
+                + incompletesBefore + " -> " + incompletesAfter + ", connected_groups " + connectedGroupsBefore + " -> "
+                + connectedGroupsAfter + ", net_items " + netItemCountBefore + " -> " + netItemCountAfter
+                + ", curr_item connected " + currItemConnectedBefore + " -> " + currItemConnectedAfter
+                + ", curr_item unconnected " + currItemUnconnectedBefore + " -> " + currItemUnconnectedAfter);
           } else if (autorouterResult.state == AutorouteAttemptState.FAILED) {
           } else if ((autorouterResult.state == AutorouteAttemptState.ALREADY_CONNECTED)
               || (autorouterResult.state == AutorouteAttemptState.NO_UNCONNECTED_NETS)
@@ -922,6 +938,21 @@ public class BatchAutorouter extends NamedAlgorithm {
       } else {
         remove_tails(Item.StopConnectionOption.FANOUT_VIA);
       }
+
+      // Snapshot net #99 after cleanup to detect tail-removal effects on connectivity.
+      int debugNetNo = 99;
+      Net debugNet = board.rules.nets.get(debugNetNo);
+      String debugNetName = (debugNet != null) ? debugNet.name : "net#" + debugNetNo;
+      RatsNest postCleanupRatsNest = new RatsNest(board);
+      NetIncompletes postCleanupIncompletes = postCleanupRatsNest.drc.getNetIncompletes(debugNetNo);
+      int postCleanupGroups = (postCleanupIncompletes != null)
+          ? postCleanupIncompletes.get_connected_group_count()
+          : -1;
+      int postCleanupItems = board.connectable_item_count(debugNetNo);
+      int postCleanupIncompleteCount = postCleanupRatsNest.incomplete_count(debugNetNo);
+      job.logDebug("Post-cleanup net #" + debugNetNo + " (" + debugNetName + "): incompletes="
+          + postCleanupIncompleteCount + ", connected_groups=" + postCleanupGroups
+          + ", net_items=" + postCleanupItems);
 
       // Fire final update for this pass
       BoardStatistics boardStatistics = board.get_statistics();

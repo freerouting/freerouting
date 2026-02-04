@@ -24,6 +24,7 @@ public class Issue508Test extends TestBasedOnAnIssue {
     // Enable detailed logging and filter to Net #98
     Freerouting.globalSettings.debugSettings.enableDetailedLogging = true;
     Freerouting.globalSettings.debugSettings.filterByNet.add("98");
+    Freerouting.globalSettings.debugSettings.filterByNet.add("99");
 
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
