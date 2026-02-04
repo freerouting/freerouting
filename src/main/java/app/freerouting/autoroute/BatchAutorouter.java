@@ -11,6 +11,7 @@ import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.Trace;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -933,6 +934,53 @@ public class BatchAutorouter extends NamedAlgorithm {
         }
       }
 
+      // Snapshot net #99 BEFORE cleanup to track tail-removal effects
+      int debugNetNo = 99;
+      Net debugNet = board.rules.nets.get(debugNetNo);
+      String debugNetName = (debugNet != null) ? debugNet.name : "net#" + debugNetNo;
+      RatsNest preCleanupRatsNest = new RatsNest(board);
+      NetIncompletes preCleanupIncompletes = preCleanupRatsNest.drc.getNetIncompletes(debugNetNo);
+      int preCleanupGroups = (preCleanupIncompletes != null)
+          ? preCleanupIncompletes.get_connected_group_count()
+          : -1;
+      int preCleanupItems = board.connectable_item_count(debugNetNo);
+      int preCleanupIncompleteCount = preCleanupRatsNest.incomplete_count(debugNetNo);
+
+      job.logDebug("PRE-cleanup net #" + debugNetNo + " (" + debugNetName + "): incompletes="
+          + preCleanupIncompleteCount + ", connected_groups=" + preCleanupGroups
+          + ", net_items=" + preCleanupItems);
+      FRLogger.debug("PRE-cleanup net #" + debugNetNo + " (" + debugNetName + "): incompletes="
+          + preCleanupIncompleteCount + ", connected_groups=" + preCleanupGroups
+          + ", net_items=" + preCleanupItems);
+
+      // Log all items on net #99 before cleanup
+      Collection<Item> net99Items = board.get_items();
+      int net99TraceCount = 0;
+      for (Item item : net99Items) {
+        if (item.contains_net(debugNetNo)) {
+          if (item instanceof Trace trace) {
+            net99TraceCount++;
+            Collection<Item> startContacts = trace.get_start_contacts();
+            Collection<Item> endContacts = trace.get_end_contacts();
+            boolean isTail = trace.is_tail();
+            job.logDebug("  PRE-cleanup trace #" + trace.get_id_no()
+                + " on net #99: start_contacts=" + startContacts.size()
+                + ", end_contacts=" + endContacts.size()
+                + ", is_tail=" + isTail
+                + ", from=" + trace.first_corner()
+                + ", to=" + trace.last_corner());
+            FRLogger.debug("  PRE-cleanup trace #" + trace.get_id_no()
+                + " on net #99: start_contacts=" + startContacts.size()
+                + ", end_contacts=" + endContacts.size()
+                + ", is_tail=" + isTail
+                + ", from=" + trace.first_corner()
+                + ", to=" + trace.last_corner());
+          }
+        }
+      }
+      job.logDebug("  PRE-cleanup: Total " + net99TraceCount + " traces on net #99");
+      FRLogger.debug("  PRE-cleanup: Total " + net99TraceCount + " traces on net #99");
+
       if (this.remove_unconnected_vias) {
         remove_tails(Item.StopConnectionOption.NONE);
       } else {
@@ -940,9 +988,6 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
 
       // Snapshot net #99 after cleanup to detect tail-removal effects on connectivity.
-      int debugNetNo = 99;
-      Net debugNet = board.rules.nets.get(debugNetNo);
-      String debugNetName = (debugNet != null) ? debugNet.name : "net#" + debugNetNo;
       RatsNest postCleanupRatsNest = new RatsNest(board);
       NetIncompletes postCleanupIncompletes = postCleanupRatsNest.drc.getNetIncompletes(debugNetNo);
       int postCleanupGroups = (postCleanupIncompletes != null)
@@ -953,6 +998,37 @@ public class BatchAutorouter extends NamedAlgorithm {
       job.logDebug("Post-cleanup net #" + debugNetNo + " (" + debugNetName + "): incompletes="
           + postCleanupIncompleteCount + ", connected_groups=" + postCleanupGroups
           + ", net_items=" + postCleanupItems);
+      FRLogger.debug("POST-cleanup net #" + debugNetNo + " (" + debugNetName + "): incompletes="
+          + postCleanupIncompleteCount + ", connected_groups=" + postCleanupGroups
+          + ", net_items=" + postCleanupItems);
+
+      // Log all items on net #99 after cleanup
+      net99Items = board.get_items();
+      net99TraceCount = 0;
+      for (Item item : net99Items) {
+        if (item.contains_net(debugNetNo)) {
+          if (item instanceof Trace trace) {
+            net99TraceCount++;
+            Collection<Item> startContacts = trace.get_start_contacts();
+            Collection<Item> endContacts = trace.get_end_contacts();
+            boolean isTail = trace.is_tail();
+            job.logDebug("  POST-cleanup trace #" + trace.get_id_no()
+                + " on net #99: start_contacts=" + startContacts.size()
+                + ", end_contacts=" + endContacts.size()
+                + ", is_tail=" + isTail
+                + ", from=" + trace.first_corner()
+                + ", to=" + trace.last_corner());
+            FRLogger.debug("  POST-cleanup trace #" + trace.get_id_no()
+                + " on net #99: start_contacts=" + startContacts.size()
+                + ", end_contacts=" + endContacts.size()
+                + ", is_tail=" + isTail
+                + ", from=" + trace.first_corner()
+                + ", to=" + trace.last_corner());
+          }
+        }
+      }
+      job.logDebug("  POST-cleanup: Total " + net99TraceCount + " traces on net #99");
+      FRLogger.debug("  POST-cleanup: Total " + net99TraceCount + " traces on net #99");
 
       // Fire final update for this pass
       BoardStatistics boardStatistics = board.get_statistics();

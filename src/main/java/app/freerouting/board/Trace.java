@@ -158,11 +158,22 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
     if (is_tail) {
       int netNo = this.net_count() > 0 ? this.get_net_no(0) : -1;
+      String reason = "";
+      if (start_contacts.isEmpty() && end_contacts.isEmpty()) {
+        reason = "both endpoints have no contacts";
+      } else if (start_contacts.isEmpty()) {
+        reason = "start endpoint has no contacts (end has " + end_contacts.size() + ")";
+      } else {
+        reason = "end endpoint has no contacts (start has " + start_contacts.size() + ")";
+      }
+
       FRLogger.trace("Trace.is_tail", "tail_detected",
-          "Trace id=" + this.get_id_no() + " detected as tail"
+          "Trace detected as tail: trace_id=" + this.get_id_no()
+              + ", reason=" + reason
               + ", start_contacts=" + start_contacts.size()
               + ", end_contacts=" + end_contacts.size()
-              + ", from " + this.first_corner() + " to " + this.last_corner()
+              + ", from=" + this.first_corner()
+              + ", to=" + this.last_corner()
               + ", layer=" + this.get_layer(),
           formatNetLabel(this.board, netNo) + ", Trace #" + this.get_id_no(),
           new Point[] { this.first_corner(), this.last_corner() });
