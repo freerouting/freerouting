@@ -371,6 +371,13 @@ public class ShoveTraceAlgo {
       return false;
     }
     boolean tails_exist_before = board.contains_trace_tails(obstacles, p_net_no_arr);
+    FRLogger.trace("ShoveTraceAlgo.shove_trace_shapes", "tail_state_before",
+        FRLogger.buildTracePayload("tail_detection", "shove", "state_before",
+            "tails_exist_before=" + tails_exist_before
+                + " obstacle_count=" + obstacles.size()
+                + " layer=" + p_layer),
+        p_net_no_arr.length > 0 ? FRLogger.formatNetLabel(board, p_net_no_arr[0]) : "",
+        null);
     shape_entries.cutout_traces(obstacles);
     boolean is_orthogonal_mode = p_trace_shape instanceof IntBox;
     for (; ; ) {
@@ -427,10 +434,29 @@ public class ShoveTraceAlgo {
         for (int i = 0; i < 2; i++) {
           Trace tail = board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
           if (tail != null) {
+            FRLogger.trace("ShoveTraceAlgo.shove_trace_shapes", "tail_removal_after_shove",
+                FRLogger.buildTracePayload("tail_detection", "shove", "remove_tail",
+                    "endpoint_index=" + i
+                        + " endpoint=" + end_corners[i]
+                        + " tail_id=" + tail.get_id_no()
+                        + " tail_start=" + tail.first_corner()
+                        + " tail_end=" + tail.last_corner()
+                        + " layer=" + p_layer),
+                curr_net_no_arr.length > 0 ? FRLogger.formatNetLabel(board, curr_net_no_arr[0]) : "",
+                new Point[] { tail.first_corner(), tail.last_corner() });
             board.remove_items(tail.get_connection_items(Item.StopConnectionOption.VIA));
             for (int curr_net_no : curr_net_no_arr) {
               board.combine_traces(curr_net_no);
             }
+          } else {
+            FRLogger.trace("ShoveTraceAlgo.shove_trace_shapes", "no_tail_at_endpoint",
+                FRLogger.buildTracePayload("tail_detection", "shove", "check_result",
+                    "endpoint_index=" + i
+                        + " endpoint=" + end_corners[i]
+                        + " layer=" + p_layer
+                        + " no_tail_found=true"),
+                curr_net_no_arr.length > 0 ? FRLogger.formatNetLabel(board, curr_net_no_arr[0]) : "",
+                new Point[] { end_corners[i] });
           }
         }
       }

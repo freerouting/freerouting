@@ -514,15 +514,29 @@ public class InsertFoundConnectionAlgo {
       Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
       if (trace_stub != null) {
         FRLogger.trace("InsertFoundConnectionAlgo.insert_trace", "remove_trace_tail",
-            "removing trace tail id=" + trace_stub.get_id_no()
-                + ", layer=" + trace_stub.get_layer()
-                + ", from=" + trace_stub.first_corner()
-                + ", to=" + trace_stub.last_corner()
-                + ", corner_index=" + i
-                + ", insertion_result=" + result,
+            FRLogger.buildTracePayload("insert_trace", "tail_cleanup", "remove",
+                "tail_id=" + trace_stub.get_id_no()
+                    + " layer=" + trace_stub.get_layer()
+                    + " start=" + trace_stub.first_corner()
+                    + " end=" + trace_stub.last_corner()
+                    + " corner_index=" + i
+                    + " check_location=" + p_trace.corners[i]
+                    + " insertion_result=" + result
+                    + " start_contacts=" + trace_stub.get_start_contacts().size()
+                    + " end_contacts=" + trace_stub.get_end_contacts().size()),
             FRLogger.formatNetLabel(this.board, ctrl.net_no),
             new Point[] { trace_stub.first_corner(), trace_stub.last_corner() });
         board.remove_item(trace_stub);
+      } else {
+        FRLogger.trace("InsertFoundConnectionAlgo.insert_trace", "no_tail_at_corner",
+            FRLogger.buildTracePayload("insert_trace", "tail_cleanup", "check",
+                "corner_index=" + i
+                    + " check_location=" + p_trace.corners[i]
+                    + " layer=" + p_trace.layer
+                    + " no_tail_found=true"
+                    + " insertion_result=" + result),
+            FRLogger.formatNetLabel(this.board, ctrl.net_no),
+            new Point[] { p_trace.corners[i] });
       }
     }
 
