@@ -110,6 +110,14 @@ public class Via extends DrillItem implements Serializable {
   public boolean is_tail() {
     Collection<Item> contact_list = this.get_normal_contacts();
     if (contact_list.size() <= 1) {
+      FRLogger.trace("Via.is_tail", "tail_detected",
+          "Via detected as tail: via_id=" + this.get_id_no()
+              + ", reason=" + (contact_list.isEmpty() ? "no contacts" : "single contact")
+              + ", contact_count=" + contact_list.size()
+              + ", center=" + this.get_center()
+              + ", layer_range=" + this.first_layer() + "-" + this.last_layer(),
+          "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
+          new Point[] { this.get_center() });
       return true;
     }
     Iterator<Item> it = contact_list.iterator();
@@ -122,6 +130,15 @@ public class Via extends DrillItem implements Serializable {
         return false;
       }
     }
+    FRLogger.trace("Via.is_tail", "tail_detected",
+        "Via detected as tail: via_id=" + this.get_id_no()
+            + ", reason=all contacts on same layer range"
+            + ", contact_count=" + contact_list.size()
+            + ", contact_layer_range=" + first_contact_first_layer + "-" + first_contact_last_layer
+            + ", center=" + this.get_center()
+            + ", layer_range=" + this.first_layer() + "-" + this.last_layer(),
+        "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
+        new Point[] { this.get_center() });
     return true;
   }
 

@@ -2491,21 +2491,59 @@ public class BasicBoard implements Serializable {
         if (!curr_trace.nets_equal(p_net_no_arr)) {
           continue;
         }
-        if (curr_trace
-            .first_corner()
-            .equals(p_location)) {
+        if (curr_trace.first_corner().equals(p_location)) {
           Collection<Item> contacts = curr_trace.get_start_contacts();
           if (contacts.isEmpty()) {
+            FRLogger.trace("BasicBoard.get_trace_tail", "tail_found",
+                "Trace tail detected at start endpoint: trace_id=" + curr_trace.get_id_no()
+                    + ", location=" + p_location
+                    + ", layer=" + p_layer
+                    + ", reason=no contacts at start"
+                    + ", start_contacts=0"
+                    + ", end_contacts=" + curr_trace.get_end_contacts().size()
+                    + ", from=" + curr_trace.first_corner()
+                    + ", to=" + curr_trace.last_corner(),
+                "Net #" + (curr_trace.net_count() > 0 ? curr_trace.get_net_no(0) : -1),
+                new Point[] { curr_trace.first_corner(), curr_trace.last_corner() });
             return curr_trace;
           }
+          FRLogger.trace("BasicBoard.get_trace_tail", "tail_check",
+              "Trace endpoint has contacts; not a tail at start: trace_id=" + curr_trace.get_id_no()
+                  + ", location=" + p_location
+                  + ", layer=" + p_layer
+                  + ", start_contacts=" + contacts.size()
+                  + ", end_contacts=" + curr_trace.get_end_contacts().size()
+                  + ", from=" + curr_trace.first_corner()
+                  + ", to=" + curr_trace.last_corner(),
+              "Net #" + (curr_trace.net_count() > 0 ? curr_trace.get_net_no(0) : -1),
+              new Point[] { curr_trace.first_corner(), curr_trace.last_corner() });
         }
-        if (curr_trace
-            .last_corner()
-            .equals(p_location)) {
+        if (curr_trace.last_corner().equals(p_location)) {
           Collection<Item> contacts = curr_trace.get_end_contacts();
           if (contacts.isEmpty()) {
+            FRLogger.trace("BasicBoard.get_trace_tail", "tail_found",
+                "Trace tail detected at end endpoint: trace_id=" + curr_trace.get_id_no()
+                    + ", location=" + p_location
+                    + ", layer=" + p_layer
+                    + ", reason=no contacts at end"
+                    + ", start_contacts=" + curr_trace.get_start_contacts().size()
+                    + ", end_contacts=0"
+                    + ", from=" + curr_trace.first_corner()
+                    + ", to=" + curr_trace.last_corner(),
+                "Net #" + (curr_trace.net_count() > 0 ? curr_trace.get_net_no(0) : -1),
+                new Point[] { curr_trace.first_corner(), curr_trace.last_corner() });
             return curr_trace;
           }
+          FRLogger.trace("BasicBoard.get_trace_tail", "tail_check",
+              "Trace endpoint has contacts; not a tail at end: trace_id=" + curr_trace.get_id_no()
+                  + ", location=" + p_location
+                  + ", layer=" + p_layer
+                  + ", start_contacts=" + curr_trace.get_start_contacts().size()
+                  + ", end_contacts=" + contacts.size()
+                  + ", from=" + curr_trace.first_corner()
+                  + ", to=" + curr_trace.last_corner(),
+              "Net #" + (curr_trace.net_count() > 0 ? curr_trace.get_net_no(0) : -1),
+              new Point[] { curr_trace.first_corner(), curr_trace.last_corner() });
         }
       }
     }
