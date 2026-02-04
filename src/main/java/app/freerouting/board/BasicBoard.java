@@ -1008,16 +1008,42 @@ public class BasicBoard implements Serializable {
 
     boolean hasDebugNet = false;
     for (int i = 0; i < p_item.net_count(); i++) {
-      if (p_item.get_net_no(i) == 99) {
+      if (p_item.get_net_no(i) == 99 || p_item.get_net_no(i) == 98 || p_item.get_net_no(i) == 94) {
         hasDebugNet = true;
         break;
       }
     }
     if (hasDebugNet) {
-      FRLogger.trace("BasicBoard.remove_item", "remove_item",
-          "Removing item with net #99: item_type=" + p_item.getClass().getSimpleName()
-              + ", item=" + p_item,
-          "Net #99",
+      // Get stack trace to identify where removal is coming from
+      StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+      StringBuilder callerInfo = new StringBuilder();
+      // Skip first 3 elements (getStackTrace, remove_item, and the caller we want to see)
+      for (int i = 2; i < Math.min(6, stackTrace.length); i++) {
+        if (i > 2) {
+          callerInfo.append(" <- ");
+        }
+        callerInfo.append(stackTrace[i].getClassName())
+            .append(".")
+            .append(stackTrace[i].getMethodName())
+            .append(":")
+            .append(stackTrace[i].getLineNumber());
+      }
+
+      String itemDetails = "item_type=" + p_item.getClass().getSimpleName() + ", item_id=" + p_item.get_id_no();
+      if (p_item instanceof PolylineTrace trace) {
+        itemDetails += ", from=" + trace.first_corner() + ", to=" + trace.last_corner()
+            + ", layer=" + trace.get_layer() + ", corners=" + trace.corner_count();
+      }
+
+      int netNo = p_item.get_net_no(0);
+      String netLabel = "Net #" + netNo;
+      if (rules != null && rules.nets != null && netNo <= rules.nets.max_net_no()) {
+        netLabel += " (" + rules.nets.get(netNo).name + ")";
+      }
+
+      FRLogger.trace("BasicBoard.remove_item", "remove_item_with_stack",
+          "Removing item: " + itemDetails + ", called_from=" + callerInfo.toString(),
+          netLabel,
           null);
     }
 

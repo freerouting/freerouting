@@ -1294,7 +1294,44 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     PolylineTrace new_trace = insert_trace_without_cleaning(new_polyline, p_layer, p_half_width, p_net_no_arr,
         p_clearance_class_no, FixedState.NOT_FIXED);
+
     new_trace.combine();
+
+    // Log trace state after combine for debug nets
+    if (p_net_no_arr != null && p_net_no_arr.length > 0) {
+      int netNo = p_net_no_arr[0];
+      if (netNo == 99 || netNo == 98 || netNo == 94) {
+        String netLabel = "Net #" + netNo;
+        if (rules != null && rules.nets != null && netNo <= rules.nets.max_net_no()) {
+          netLabel += " (" + rules.nets.get(netNo).name + ")";
+        }
+
+        // Check if the trace still exists (might have been merged)
+        boolean traceStillExists = false;
+        try {
+          traceStillExists = (new_trace.board != null && new_trace.get_id_no() > 0);
+        } catch (Exception e) {
+          // Trace was removed
+        }
+
+        if (traceStillExists) {
+          FRLogger.trace("RoutingBoard.insert_forced_trace_polyline", "trace_after_combine",
+              "Trace after combine: trace_id=" + new_trace.get_id_no()
+                  + ", from=" + new_trace.first_corner()
+                  + ", to=" + new_trace.last_corner()
+                  + ", layer=" + p_layer
+                  + ", corners=" + new_trace.corner_count()
+                  + ", still_exists=true",
+              netLabel,
+              new Point[] { new_trace.first_corner(), new_trace.last_corner() });
+        } else {
+          FRLogger.trace("RoutingBoard.insert_forced_trace_polyline", "trace_merged_away",
+              "Trace was merged during combine (no longer exists as separate trace)",
+              netLabel,
+              null);
+        }
+      }
+    }
 
     IntOctagon tidy_region = null;
     if (p_tidy_width < Integer.MAX_VALUE) {
