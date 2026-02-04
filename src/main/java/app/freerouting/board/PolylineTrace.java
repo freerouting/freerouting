@@ -79,15 +79,7 @@ public class PolylineTrace extends Trace implements Serializable {
     lines = p_polyline;
   }
 
-  private static String formatNetLabel(BasicBoard board, int netNo) {
-    String netName = "Unknown";
-    if (board != null && board.rules != null && board.rules.nets != null
-        && netNo >= 0 && netNo <= board.rules.nets.max_net_no()
-        && board.rules.nets.get(netNo) != null) {
-      netName = board.rules.nets.get(netNo).name;
-    }
-    return "Net #" + netNo + " (" + netName + ")";
-  }
+
 
   @Override
   public Item copy(int p_id_no) {
@@ -323,7 +315,7 @@ public class PolylineTrace extends Trace implements Serializable {
               + ", other_first=" + other_trace.first_corner()
               + ", other_last=" + other_trace.last_corner()
               + ", reverse_order=" + reverse_order,
-          formatNetLabel(this.board, this.net_count() > 0 ? this.get_net_no(0) : -1),
+          FRLogger.formatNetLabel(this.board, this.net_count() > 0 ? this.get_net_no(0) : -1),
           new Point[] { start_corner, other_trace.first_corner(), other_trace.last_corner() });
     }
 
@@ -437,7 +429,7 @@ public class PolylineTrace extends Trace implements Serializable {
               + ", other_first=" + other_trace.first_corner()
               + ", other_last=" + other_trace.last_corner()
               + ", reverse_order=" + reverse_order,
-          formatNetLabel(this.board, this.net_count() > 0 ? this.get_net_no(0) : -1),
+          FRLogger.formatNetLabel(this.board, this.net_count() > 0 ? this.get_net_no(0) : -1),
           new Point[] { end_corner, other_trace.first_corner(), other_trace.last_corner() });
     }
 

@@ -1,6 +1,7 @@
 package app.freerouting.logger;
 
 import app.freerouting.Freerouting;
+import app.freerouting.board.BasicBoard;
 import app.freerouting.debug.DebugControl;
 import app.freerouting.geometry.planar.Point;
 import java.text.DecimalFormat;
@@ -103,6 +104,45 @@ public class FRLogger {
     }
 
     return sb.toString();
+  }
+
+  public static String buildTracePayload(String event, String phase, String action, String kvPairs) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("event=").append(event);
+    if (phase != null && !phase.isEmpty()) {
+      sb.append(" phase=").append(phase);
+    }
+    if (action != null && !action.isEmpty()) {
+      sb.append(" action=").append(action);
+    }
+    if (kvPairs != null && !kvPairs.isEmpty()) {
+      sb.append(" ").append(kvPairs);
+    }
+    return sb.toString();
+  }
+
+  public static String formatNetLabel(BasicBoard board, int[] netNoArr) {
+    if (netNoArr == null || netNoArr.length == 0) {
+      return "No net";
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < netNoArr.length; i++) {
+      if (i > 0) {
+        sb.append(", ");
+      }
+      sb.append(formatNetLabel(board, netNoArr[i]));
+    }
+    return sb.toString();
+  }
+
+  public static String formatNetLabel(BasicBoard board, int netNo) {
+    if (board == null || board.rules == null || board.rules.nets == null) {
+      return "Net #" + netNo + " (Unknown)";
+    }
+    if (netNo <= board.rules.nets.max_net_no()) {
+      return board.rules.nets.get(netNo).toString();
+    }
+    return "Net #" + netNo + " (Unknown)";
   }
 
   /**

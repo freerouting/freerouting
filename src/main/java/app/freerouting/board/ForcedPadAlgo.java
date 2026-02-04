@@ -29,6 +29,8 @@ public class ForcedPadAlgo {
     board = p_board;
   }
 
+
+
   private static TileShape calc_check_shape_for_from_side(TileShape p_shape, Point p_shape_center, Line p_border_line) {
     FloatPoint shape_center = p_shape_center.to_float();
     FloatPoint offset_projection = shape_center.projection_approx(p_border_line);
@@ -133,6 +135,8 @@ public class ForcedPadAlgo {
     return result;
   }
 
+
+
   /**
    * Checks, if possible obstacle traces can be shoved aside, so that a pad with the input parameters can be inserted without clearance violations. Returns false, if the check failed. If
    * p_ignore_items != null, items in this list are not checked, If p_check_only_front only trace obstacles in the direction from p_from_side are checked for performance reasons. This is the cave when
@@ -140,8 +144,26 @@ public class ForcedPadAlgo {
    */
   public CheckDrillResult check_forced_pad(TileShape p_pad_shape, CalcFromSide p_from_side, int p_layer, int[] p_net_no_arr, int p_cl_type, boolean p_copper_sharing_allowed,
       Collection<Item> p_ignore_items, int p_max_recursion_depth, int p_max_via_recursion_depth, boolean p_check_only_front, TimeLimit p_time_limit) {
+    FRLogger.trace("ForcedPadAlgo.check_forced_pad", "start",
+        FRLogger.buildTracePayload("forced_pad_check", "start", "begin",
+            "layer=" + p_layer
+                + " clearance_class=" + p_cl_type
+                + " copper_sharing_allowed=" + p_copper_sharing_allowed
+                + " check_only_front=" + p_check_only_front
+                + " max_recursion_depth=" + p_max_recursion_depth
+                + " max_via_recursion_depth=" + p_max_via_recursion_depth
+                + " ignore_count=" + (p_ignore_items == null ? 0 : p_ignore_items.size())),
+        FRLogger.formatNetLabel(board, p_net_no_arr),
+        null);
+
     if (!p_pad_shape.is_contained_in(board.get_bounding_box())) {
       this.board.set_shove_failing_obstacle(board.get_outline());
+      FRLogger.trace("ForcedPadAlgo.check_forced_pad", "outside_bounds",
+          FRLogger.buildTracePayload("forced_pad_check", "validate", "outside_bounds",
+              "layer=" + p_layer
+                  + " clearance_class=" + p_cl_type),
+          FRLogger.formatNetLabel(board, p_net_no_arr),
+          null);
       return CheckDrillResult.NOT_DRILLABLE;
     }
     ShapeSearchTree search_tree = this.board.search_tree_manager.get_default_tree();
@@ -151,9 +173,25 @@ public class ForcedPadAlgo {
     if (p_ignore_items != null) {
       obstacles.removeAll(p_ignore_items);
     }
+
+    FRLogger.trace("ForcedPadAlgo.check_forced_pad", "obstacles",
+        FRLogger.buildTracePayload("forced_pad_check", "scan", "obstacles",
+            "obstacle_count=" + obstacles.size()
+                + " layer=" + p_layer
+                + " clearance_class=" + p_cl_type),
+        FRLogger.formatNetLabel(board, p_net_no_arr),
+        null);
+
     boolean obstacles_shovable = shape_entries.store_items(obstacles, true, p_copper_sharing_allowed);
     if (!obstacles_shovable) {
       this.board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+      FRLogger.trace("ForcedPadAlgo.check_forced_pad", "obstacles_not_shovable",
+          FRLogger.buildTracePayload("forced_pad_check", "verify", "obstacles_not_shovable",
+              "layer=" + p_layer
+                  + " clearance_class=" + p_cl_type
+                  + " obstacle=" + shape_entries.get_found_obstacle()),
+          FRLogger.formatNetLabel(board, p_net_no_arr),
+          null);
       return CheckDrillResult.NOT_DRILLABLE;
     }
 
@@ -162,17 +200,36 @@ public class ForcedPadAlgo {
     for (Via curr_shove_via : shape_entries.shove_via_list) {
       if (p_max_via_recursion_depth <= 0) {
         this.board.set_shove_failing_obstacle(curr_shove_via);
+        FRLogger.trace("ForcedPadAlgo.check_forced_pad", "via_recursion_exhausted",
+            FRLogger.buildTracePayload("forced_pad_check", "via_check", "recursion_exhausted",
+                "via=" + curr_shove_via
+                    + " layer=" + p_layer),
+            FRLogger.formatNetLabel(board, p_net_no_arr),
+            new Point[] { curr_shove_via.get_center() });
         return CheckDrillResult.NOT_DRILLABLE;
       }
       IntPoint[] new_via_center = MoveDrillItemAlgo.try_shove_via_points(p_pad_shape, p_layer, curr_shove_via, p_cl_type, false, board);
 
       if (new_via_center.length == 0) {
         this.board.set_shove_failing_obstacle(curr_shove_via);
+        FRLogger.trace("ForcedPadAlgo.check_forced_pad", "via_no_position",
+            FRLogger.buildTracePayload("forced_pad_check", "via_check", "no_position",
+                "via=" + curr_shove_via
+                    + " layer=" + p_layer),
+            FRLogger.formatNetLabel(board, p_net_no_arr),
+            new Point[] { curr_shove_via.get_center() });
         return CheckDrillResult.NOT_DRILLABLE;
       }
       Vector delta = new_via_center[0].difference_by(curr_shove_via.get_center());
       Collection<Item> ignore_items = new LinkedList<>();
       if (!MoveDrillItemAlgo.check(curr_shove_via, delta, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items, this.board, p_time_limit)) {
+        FRLogger.trace("ForcedPadAlgo.check_forced_pad", "via_move_failed",
+            FRLogger.buildTracePayload("forced_pad_check", "via_check", "move_failed",
+                "via=" + curr_shove_via
+                    + " delta=" + delta
+                    + " layer=" + p_layer),
+            FRLogger.formatNetLabel(board, p_net_no_arr),
+            new Point[] { curr_shove_via.get_center() });
         return CheckDrillResult.NOT_DRILLABLE;
       }
     }
@@ -191,10 +248,23 @@ public class ForcedPadAlgo {
     }
     if (p_max_recursion_depth <= 0) {
       this.board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+      FRLogger.trace("ForcedPadAlgo.check_forced_pad", "recursion_exhausted",
+          FRLogger.buildTracePayload("forced_pad_check", "trace_check", "recursion_exhausted",
+              "layer=" + p_layer
+                  + " clearance_class=" + p_cl_type),
+          FRLogger.formatNetLabel(board, p_net_no_arr),
+          null);
       return CheckDrillResult.NOT_DRILLABLE;
     }
     if (shape_entries.stack_depth() > 1) {
       this.board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+      FRLogger.trace("ForcedPadAlgo.check_forced_pad", "stack_depth",
+          FRLogger.buildTracePayload("forced_pad_check", "trace_check", "stack_depth",
+              "layer=" + p_layer
+                  + " clearance_class=" + p_cl_type
+                  + " stack_depth=" + shape_entries.stack_depth()),
+          FRLogger.formatNetLabel(board, p_net_no_arr),
+          null);
       return CheckDrillResult.NOT_DRILLABLE;
     }
     ShoveTraceAlgo shove_trace_algo = new ShoveTraceAlgo(board);
@@ -217,6 +287,13 @@ public class ForcedPadAlgo {
           CalcShapeAndFromSide curr = new CalcShapeAndFromSide(curr_substitute_trace, i, is_orthogonal_mode, true);
           if (!shove_trace_algo.check(curr.shape, curr.from_side, curr_dir, p_layer, curr_substitute_trace.net_no_arr, curr_substitute_trace.clearance_class_no(), p_max_recursion_depth - 1,
               p_max_via_recursion_depth, 0, p_time_limit)) {
+            FRLogger.trace("ForcedPadAlgo.check_forced_pad", "trace_shove_check_failed",
+                FRLogger.buildTracePayload("forced_pad_check", "trace_check", "shove_check_failed",
+                    "layer=" + p_layer
+                        + " trace_id=" + curr_substitute_trace.get_id_no()
+                        + " clearance_class=" + curr_substitute_trace.clearance_class_no()),
+                FRLogger.formatNetLabel(board, p_net_no_arr),
+                null);
             return CheckDrillResult.NOT_DRILLABLE;
           }
         }
@@ -237,6 +314,12 @@ public class ForcedPadAlgo {
     }
     if (!p_pad_shape.is_contained_in(board.get_bounding_box())) {
       this.board.set_shove_failing_obstacle(board.get_outline());
+      FRLogger.trace("ForcedPadAlgo.forced_pad", "outside_bounds",
+          FRLogger.buildTracePayload("forced_pad_insert", "validate", "outside_bounds",
+              "layer=" + p_layer
+                  + " clearance_class=" + p_cl_type),
+          FRLogger.formatNetLabel(board, p_net_no_arr),
+          null);
       return false;
     }
     if (!MoveDrillItemAlgo.shove_vias(p_pad_shape, p_from_side, p_layer, p_net_no_arr, p_cl_type, p_ignore_items, p_max_recursion_depth, p_max_via_recursion_depth, false, this.board)) {
@@ -262,6 +345,13 @@ public class ForcedPadAlgo {
       return false;
     }
     boolean tails_exist_before = board.contains_trace_tails(obstacles, p_net_no_arr);
+    FRLogger.trace("ForcedPadAlgo.forced_pad", "tail_scan",
+        FRLogger.buildTracePayload("forced_pad_insert", "tail_cleanup", "tail_scan",
+            "tails_exist_before=" + tails_exist_before
+                + " obstacle_count=" + obstacles.size()
+                + " layer=" + p_layer),
+        FRLogger.formatNetLabel(board, p_net_no_arr),
+        null);
     shape_entries.cutout_traces(obstacles);
     boolean is_orthogonal_mode = p_pad_shape instanceof IntBox;
     ShoveTraceAlgo shove_trace_algo = new ShoveTraceAlgo(this.board);
@@ -312,6 +402,13 @@ public class ForcedPadAlgo {
         for (int i = 0; i < 2; i++) {
           Trace tail = board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
           if (tail != null) {
+            FRLogger.trace("ForcedPadAlgo.forced_pad", "tail_removed",
+                FRLogger.buildTracePayload("forced_pad_insert", "tail_cleanup", "tail_removed",
+                    "layer=" + p_layer
+                        + " tail_id=" + tail.get_id_no()
+                        + " endpoint=" + end_corners[i]),
+                FRLogger.formatNetLabel(board, curr_net_no_arr),
+                new Point[] { tail.first_corner(), tail.last_corner() });
             board.remove_items(tail.get_connection_items(Item.StopConnectionOption.VIA));
             for (int curr_net_no : curr_net_no_arr) {
               board.combine_traces(curr_net_no);

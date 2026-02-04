@@ -442,7 +442,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
                     + ", clearance_class_1=" + clearance_class_1
                     + ", clearance_class_2=" + clearance_class_2
                     + ", intersection_center=" + intersection.centre_of_gravity(),
-                formatNetLabel(),
+                FRLogger.formatNetLabel(board, net_count() > 0 ? get_net_no(0) : -1),
                 new Point[] { intersection.centre_of_gravity().round() });
           }
         }
@@ -451,22 +451,6 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     return result;
   }
 
-  private String formatNetLabel() {
-    if (net_count() == 0) {
-      return "No net";
-    }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < net_count(); i++) {
-      if (i > 0) sb.append(", ");
-      int netNo = get_net_no(i);
-      if (board.rules != null && board.rules.nets != null && netNo <= board.rules.nets.max_net_no()) {
-        sb.append(board.rules.nets.get(netNo).toString());
-      } else {
-        sb.append("Net #").append(netNo).append(" (Unknown)");
-      }
-    }
-    return sb.toString();
-  }
 
   private double calculate_clearance_between_two_shapes(TileShape shape_1, TileShape shape_2, double minimum_clearance) {
     for (double clearance = minimum_clearance; clearance > 0; clearance--) {

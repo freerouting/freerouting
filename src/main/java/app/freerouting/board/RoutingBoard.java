@@ -178,16 +178,6 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     this.failureLog = new app.freerouting.autoroute.RoutingFailureLog();
   }
 
-  private static String formatNetLabel(RoutingBoard board, int netNo) {
-    String netName = "Unknown";
-    if (board != null && board.rules != null && board.rules.nets != null
-        && netNo >= 0 && netNo <= board.rules.nets.max_net_no()
-        && board.rules.nets.get(netNo) != null) {
-      netName = board.rules.nets.get(netNo).name;
-    }
-    return "Net #" + netNo + " (" + netName + ")";
-  }
-
   /**
    * Maintains the auto-router database after an item is inserted, changed, or
    * deleted.
@@ -1142,7 +1132,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               + ", layer=" + p_layer
               + ", half_width=" + p_half_width
               + ", compensated_half_width=" + compensated_half_width,
-          formatNetLabel(this, p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
+          FRLogger.formatNetLabel(this, p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
           new Point[] { from_corner, to_corner });
       return from_corner;
     }
@@ -1159,7 +1149,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               + ", new_polyline.arr.length=" + new_polyline.arr.length
               + ", from " + from_corner + " to " + to_corner
               + ", layer=" + p_layer,
-          formatNetLabel(this, p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
+          FRLogger.formatNetLabel(this, p_net_no_arr.length > 0 ? p_net_no_arr[0] : -1),
           new Point[] { from_corner, to_corner });
       return from_corner;
     }
@@ -1176,6 +1166,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
       CalcFromSide from_side = new CalcFromSide(combined_polyline,
           combined_polyline.corner_count() - trace_shapes.length - 1 + i, curr_trace_shape);
+
       if (p_with_check) {
         boolean check_shove_ok = shove_trace_algo.check(curr_trace_shape, from_side, null, p_layer, p_net_no_arr,
             p_clearance_class_no, p_max_recursion_depth, p_max_via_recursion_depth,
@@ -1686,16 +1677,17 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           reasonDetail = "both endpoints have contacts";
         }
         FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_check",
-            "event=tail_check item_type=Trace"
-                + " item_id=" + curr_item.get_id_no()
-                + " reason_code=" + reasonCode
-                + " reason_detail=" + reasonDetail
-                + " start_contacts=" + startContacts.size()
-                + " end_contacts=" + endContacts.size()
-                + " start=" + trace.first_corner()
-                + " end=" + trace.last_corner()
-                + " stop_option=" + p_stop_connection_option,
-            "Net #" + curr_item.get_net_no(0),
+            FRLogger.buildTracePayload("tail_detection", "scan", "check",
+                "item_type=Trace"
+                    + " item_id=" + curr_item.get_id_no()
+                    + " reason_code=" + reasonCode
+                    + " reason_detail=" + reasonDetail
+                    + " start_contacts=" + startContacts.size()
+                    + " end_contacts=" + endContacts.size()
+                    + " start=" + trace.first_corner()
+                    + " end=" + trace.last_corner()
+                    + " stop_option=" + p_stop_connection_option),
+            FRLogger.formatNetLabel(this, curr_item.get_net_no(0)),
             new Point[] { trace.first_corner(), trace.last_corner() });
       }
 
@@ -1728,23 +1720,25 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             reasonDetail = "end endpoint has no contacts";
           }
           FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_candidate",
-              "event=tail_candidate item_type=Trace"
-                  + " item_id=" + curr_item.get_id_no()
-                  + " reason_code=" + reasonCode
-                  + " reason_detail=" + reasonDetail
-                  + " start_contacts=" + startContacts.size()
-                  + " end_contacts=" + endContacts.size()
-                  + " start=" + trace.first_corner()
-                  + " end=" + trace.last_corner()
-                  + " stop_option=" + p_stop_connection_option,
-              "Net #" + curr_item.get_net_no(0),
+              FRLogger.buildTracePayload("tail_detection", "scan", "candidate",
+                  "item_type=Trace"
+                      + " item_id=" + curr_item.get_id_no()
+                      + " reason_code=" + reasonCode
+                      + " reason_detail=" + reasonDetail
+                      + " start_contacts=" + startContacts.size()
+                      + " end_contacts=" + endContacts.size()
+                      + " start=" + trace.first_corner()
+                      + " end=" + trace.last_corner()
+                      + " stop_option=" + p_stop_connection_option),
+              FRLogger.formatNetLabel(this, curr_item.get_net_no(0)),
               new Point[] { trace.first_corner(), trace.last_corner() });
         } else {
           FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_candidate",
-              "event=tail_candidate item_type=" + curr_item.getClass().getSimpleName()
-                  + " item_id=" + curr_item.get_id_no()
-                  + " stop_option=" + p_stop_connection_option,
-              "Net #" + curr_item.get_net_no(0),
+              FRLogger.buildTracePayload("tail_detection", "scan", "candidate",
+                  "item_type=" + curr_item.getClass().getSimpleName()
+                      + " item_id=" + curr_item.get_id_no()
+                      + " stop_option=" + p_stop_connection_option),
+              FRLogger.formatNetLabel(this, curr_item.get_net_no(0)),
               null);
         }
         stub_set.add(curr_item);
@@ -1759,12 +1753,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       if (item_contact_count == 1) {
         Set<Item> connections = curr_item.get_connection_items(p_stop_connection_option);
         FRLogger.trace("RoutingBoard.remove_trace_tails", "gathering_connections",
-            "Gathering connections for tail item: item_id=" + curr_item.get_id_no()
-                + ", item_type=" + curr_item.getClass().getSimpleName()
-                + ", contact_count=" + item_contact_count
-                + ", connection_items_count=" + connections.size()
-                + ", stop_option=" + p_stop_connection_option,
-            "Net #" + curr_item.get_net_no(0),
+            FRLogger.buildTracePayload("tail_detection", "collect", "connections",
+                "item_id=" + curr_item.get_id_no()
+                    + " item_type=" + curr_item.getClass().getSimpleName()
+                    + " contact_count=" + item_contact_count
+                    + " connection_items_count=" + connections.size()
+                    + " stop_option=" + p_stop_connection_option),
+            FRLogger.formatNetLabel(this, curr_item.get_net_no(0)),
             null);
         stub_connections.addAll(connections);
       } else {
@@ -1772,10 +1767,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         // layer,
         // but to several traces.
         FRLogger.trace("RoutingBoard.remove_trace_tails", "adding_single_item",
-            "Adding single item (not gathering connections): item_id=" + curr_item.get_id_no()
-                + ", item_type=" + curr_item.getClass().getSimpleName()
-                + ", contact_count=" + item_contact_count,
-            "Net #" + curr_item.get_net_no(0),
+            FRLogger.buildTracePayload("tail_detection", "collect", "single_item",
+                "item_id=" + curr_item.get_id_no()
+                    + " item_type=" + curr_item.getClass().getSimpleName()
+                    + " contact_count=" + item_contact_count),
+            FRLogger.formatNetLabel(this, curr_item.get_net_no(0)),
             null);
         stub_connections.add(curr_item);
       }
@@ -1786,10 +1782,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
     for (Item curr_item : stub_connections) {
       FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_removal",
-          "Removing tail item during cleanup: stop_option=" + p_stop_connection_option
-              + ", item_type=" + curr_item.getClass().getSimpleName()
-              + ", item=" + curr_item,
-          "Net #" + curr_item.get_net_no(0),
+          FRLogger.buildTracePayload("tail_detection", "remove", "item",
+              "stop_option=" + p_stop_connection_option
+                  + " item_type=" + curr_item.getClass().getSimpleName()
+                  + " item=" + curr_item),
+          FRLogger.formatNetLabel(this, curr_item.get_net_no(0)),
           null);
     }
 
