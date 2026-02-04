@@ -130,19 +130,23 @@ public class Via extends DrillItem implements Serializable {
   public boolean is_tail() {
     Collection<Item> contact_list = this.get_normal_contacts();
     if (contact_list.size() <= 1) {
-      String contact_layer_range = "n/a";
+      String contactLayerRange = "n/a";
       if (contact_list.size() == 1) {
         Item contact = contact_list.iterator().next();
-        contact_layer_range = contact.first_layer() + "-" + contact.last_layer();
+        contactLayerRange = contact.first_layer() + "-" + contact.last_layer();
       }
+      String reasonCode = contact_list.isEmpty() ? "no_contacts" : "single_contact";
+      String reasonDetail = contact_list.isEmpty() ? "no contacts" : "single contact";
       FRLogger.trace("Via.is_tail", "tail_detected",
-          "Via detected as tail: via_id=" + this.get_id_no()
-              + ", reason=" + (contact_list.isEmpty() ? "no contacts" : "single contact")
-              + ", contact_count=" + contact_list.size()
-              + ", contact_layer_range=" + contact_layer_range
-              + ", contact_items=" + formatContactItems(contact_list)
-              + ", center=" + this.get_center()
-              + ", layer_range=" + this.first_layer() + "-" + this.last_layer(),
+          "event=tail_detected item_type=Via"
+              + " item_id=" + this.get_id_no()
+              + " reason_code=" + reasonCode
+              + " reason_detail=" + reasonDetail
+              + " contact_count=" + contact_list.size()
+              + " contact_layer_range=" + contactLayerRange
+              + " contact_items=" + formatContactItems(contact_list)
+              + " center=" + this.get_center()
+              + " layer_range=" + this.first_layer() + "-" + this.last_layer(),
           "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
           new Point[] { this.get_center() });
       return true;
@@ -158,13 +162,15 @@ public class Via extends DrillItem implements Serializable {
       }
     }
     FRLogger.trace("Via.is_tail", "tail_detected",
-        "Via detected as tail: via_id=" + this.get_id_no()
-            + ", reason=all contacts on same layer range"
-            + ", contact_count=" + contact_list.size()
-            + ", contact_layer_range=" + first_contact_first_layer + "-" + first_contact_last_layer
-            + ", contact_items=" + formatContactItems(contact_list)
-            + ", center=" + this.get_center()
-            + ", layer_range=" + this.first_layer() + "-" + this.last_layer(),
+        "event=tail_detected item_type=Via"
+            + " item_id=" + this.get_id_no()
+            + " reason_code=contacts_same_layer_range"
+            + " reason_detail=all contacts on same layer range"
+            + " contact_count=" + contact_list.size()
+            + " contact_layer_range=" + first_contact_first_layer + "-" + first_contact_last_layer
+            + " contact_items=" + formatContactItems(contact_list)
+            + " center=" + this.get_center()
+            + " layer_range=" + this.first_layer() + "-" + this.last_layer(),
         "Net #" + (this.net_count() > 0 ? this.get_net_no(0) : -1),
         new Point[] { this.get_center() });
     return true;

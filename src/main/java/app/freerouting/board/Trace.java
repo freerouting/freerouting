@@ -180,31 +180,40 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
     if (is_tail) {
       int netNo = this.net_count() > 0 ? this.get_net_no(0) : -1;
-      String reason;
+      String reasonCode;
+      String reasonDetail;
       if (start_point == null && end_point == null) {
-        reason = "both endpoints missing";
+        reasonCode = "endpoints_missing_both";
+        reasonDetail = "both endpoints missing";
       } else if (start_point == null) {
-        reason = "start endpoint missing";
+        reasonCode = "endpoint_missing_start";
+        reasonDetail = "start endpoint missing";
       } else if (end_point == null) {
-        reason = "end endpoint missing";
+        reasonCode = "endpoint_missing_end";
+        reasonDetail = "end endpoint missing";
       } else if (start_contacts.isEmpty() && end_contacts.isEmpty()) {
-        reason = "both endpoints have no contacts";
+        reasonCode = "no_contacts_both";
+        reasonDetail = "both endpoints have no contacts";
       } else if (start_contacts.isEmpty()) {
-        reason = "start endpoint has no contacts (end has " + end_contacts.size() + ")";
+        reasonCode = "no_contacts_start";
+        reasonDetail = "start endpoint has no contacts";
       } else {
-        reason = "end endpoint has no contacts (start has " + start_contacts.size() + ")";
+        reasonCode = "no_contacts_end";
+        reasonDetail = "end endpoint has no contacts";
       }
 
       FRLogger.trace("Trace.is_tail", "tail_detected",
-          "Trace detected as tail: trace_id=" + this.get_id_no()
-              + ", reason=" + reason
-              + ", start_point=" + start_point
-              + ", end_point=" + end_point
-              + ", start_contacts=" + start_contacts.size()
-              + ", end_contacts=" + end_contacts.size()
-              + ", start_contact_items=" + formatContactItems(start_contacts)
-              + ", end_contact_items=" + formatContactItems(end_contacts)
-              + ", layer=" + this.get_layer(),
+          "event=tail_detected item_type=Trace"
+              + " item_id=" + this.get_id_no()
+              + " reason_code=" + reasonCode
+              + " reason_detail=" + reasonDetail
+              + " start_point=" + start_point
+              + " end_point=" + end_point
+              + " start_contacts=" + start_contacts.size()
+              + " end_contacts=" + end_contacts.size()
+              + " start_contact_items=" + formatContactItems(start_contacts)
+              + " end_contact_items=" + formatContactItems(end_contacts)
+              + " layer=" + this.get_layer(),
           formatNetLabel(this.board, netNo) + ", Trace #" + this.get_id_no(),
           new Point[] { start_point, end_point });
     }

@@ -1034,7 +1034,10 @@ public class BasicBoard implements Serializable {
     }
 
     FRLogger.trace("BasicBoard.remove_item", "remove_item_with_stack",
-        "Removing item: " + itemDetails + ", called_from=" + callerInfo.toString(),
+        "event=remove_item item_type=" + p_item.getClass().getSimpleName()
+            + " item_id=" + p_item.get_id_no()
+            + " details=" + itemDetails
+            + " called_from=" + callerInfo,
         netLabel,
         null);
 
@@ -1050,17 +1053,19 @@ public class BasicBoard implements Serializable {
             int netNumber = trace.get_net_no(i);
             netBuilder.append("#").append(netNumber);
             if (rules != null && rules.nets != null && netNumber <= rules.nets.max_net_no()) {
-              netBuilder.append(" (").append(rules.nets.get(netNumber).name).append(")");
+              netBuilder.append("(").append(rules.nets.get(netNumber).name).append(")");
             }
           }
           netInfo = netBuilder.toString();
         }
         FRLogger.trace("BasicBoard.remove_item", "remove_trace",
-            "removing trace from " + trace.first_corner() + " to " + trace.last_corner()
-                + " on layer " + trace.get_layer()
-                + ", id=" + trace.get_id_no()
-                + ", corners=" + trace.corner_count()
-                + (netInfo.isEmpty() ? "" : ", net=" + netInfo),
+            "event=remove_trace item_type=PolylineTrace"
+                + " item_id=" + trace.get_id_no()
+                + " layer=" + trace.get_layer()
+                + " corners=" + trace.corner_count()
+                + " from=" + trace.first_corner()
+                + " to=" + trace.last_corner()
+                + " net=" + (netInfo.isEmpty() ? "none" : netInfo),
             netInfo.isEmpty() ? "No net" : "Net " + netInfo,
             new Point[]{trace.first_corner(), trace.last_corner()});
       } else if (p_item instanceof Via via) {
@@ -1074,16 +1079,17 @@ public class BasicBoard implements Serializable {
             int netNumber = via.get_net_no(i);
             netBuilder.append("#").append(netNumber);
             if (rules != null && rules.nets != null && netNumber <= rules.nets.max_net_no()) {
-              netBuilder.append(" (").append(rules.nets.get(netNumber).name).append(")");
+              netBuilder.append("(").append(rules.nets.get(netNumber).name).append(")");
             }
           }
           netInfo = netBuilder.toString();
         }
         FRLogger.trace("BasicBoard.remove_item", "remove_via",
-            "removing via at " + via.get_center()
-                + ", id=" + via.get_id_no()
-                + ", layers=" + via.first_layer() + "-" + via.last_layer()
-                + (netInfo.isEmpty() ? "" : ", net=" + netInfo),
+            "event=remove_via item_type=Via"
+                + " item_id=" + via.get_id_no()
+                + " center=" + via.get_center()
+                + " layers=" + via.first_layer() + "-" + via.last_layer()
+                + " net=" + (netInfo.isEmpty() ? "none" : netInfo),
             netInfo.isEmpty() ? "No net" : "Net " + netInfo,
             new Point[]{via.get_center()});
       }
@@ -1327,8 +1333,9 @@ public class BasicBoard implements Serializable {
           netLabel += " (" + rules.nets.get(netNo).name + ")";
         }
         FRLogger.trace("BasicBoard.remove_items", "remove_item",
-            "Removing item: item_type=" + curr_item.getClass().getSimpleName()
-                + ", item=" + curr_item,
+            "event=remove_item item_type=" + curr_item.getClass().getSimpleName()
+                + " item_id=" + curr_item.get_id_no()
+                + " item=" + curr_item,
             netLabel,
             null);
         remove_item(curr_item);
@@ -2250,17 +2257,19 @@ public class BasicBoard implements Serializable {
             int netNumber = trace.get_net_no(i);
             netBuilder.append("#").append(netNumber);
             if (rules != null && rules.nets != null && netNumber <= rules.nets.max_net_no()) {
-              netBuilder.append(" (").append(rules.nets.get(netNumber).name).append(")");
+              netBuilder.append("(").append(rules.nets.get(netNumber).name).append(")");
             }
           }
           netInfo = netBuilder.toString();
         }
         FRLogger.trace("BasicBoard.insert_item", "insert_trace",
-            "inserting trace from " + trace.first_corner() + " to " + trace.last_corner()
-                + " on layer " + trace.get_layer()
-                + ", id=" + trace.get_id_no()
-                + ", corners=" + trace.corner_count()
-                + (netInfo.isEmpty() ? "" : ", net=" + netInfo),
+            "event=insert_trace item_type=PolylineTrace"
+                + " item_id=" + trace.get_id_no()
+                + " layer=" + trace.get_layer()
+                + " corners=" + trace.corner_count()
+                + " from=" + trace.first_corner()
+                + " to=" + trace.last_corner()
+                + " net=" + (netInfo.isEmpty() ? "none" : netInfo),
             netInfo.isEmpty() ? "No net" : "Net " + netInfo,
             new Point[]{trace.first_corner(), trace.last_corner()});
       } else if (p_item instanceof Via via) {
@@ -2274,16 +2283,17 @@ public class BasicBoard implements Serializable {
             int netNumber = via.get_net_no(i);
             netBuilder.append("#").append(netNumber);
             if (rules != null && rules.nets != null && netNumber <= rules.nets.max_net_no()) {
-              netBuilder.append(" (").append(rules.nets.get(netNumber).name).append(")");
+              netBuilder.append("(").append(rules.nets.get(netNumber).name).append(")");
             }
           }
           netInfo = netBuilder.toString();
         }
         FRLogger.trace("BasicBoard.insert_item", "insert_via",
-            "inserting via at " + via.get_center()
-                + ", id=" + via.get_id_no()
-                + ", layers=" + via.first_layer() + "-" + via.last_layer()
-                + (netInfo.isEmpty() ? "" : ", net=" + netInfo),
+            "event=insert_via item_type=Via"
+                + " item_id=" + via.get_id_no()
+                + " center=" + via.get_center()
+                + " layers=" + via.first_layer() + "-" + via.last_layer()
+                + " net=" + (netInfo.isEmpty() ? "none" : netInfo),
             netInfo.isEmpty() ? "No net" : "Net " + netInfo,
             new Point[]{via.get_center()});
       }
@@ -2495,26 +2505,33 @@ public class BasicBoard implements Serializable {
           Collection<Item> contacts = curr_trace.get_start_contacts();
           if (contacts.isEmpty()) {
             FRLogger.trace("BasicBoard.get_trace_tail", "tail_found",
-                "Trace tail detected at start endpoint: trace_id=" + curr_trace.get_id_no()
-                    + ", location=" + p_location
-                    + ", layer=" + p_layer
-                    + ", reason=no contacts at start"
-                    + ", start_contacts=0"
-                    + ", end_contacts=" + curr_trace.get_end_contacts().size()
-                    + ", from=" + curr_trace.first_corner()
-                    + ", to=" + curr_trace.last_corner(),
+                "event=tail_found item_type=Trace"
+                    + " item_id=" + curr_trace.get_id_no()
+                    + " endpoint=start"
+                    + " reason_code=no_contacts_start"
+                    + " reason_detail=start endpoint has no contacts"
+                    + " location=" + p_location
+                    + " layer=" + p_layer
+                    + " start_contacts=0"
+                    + " end_contacts=" + curr_trace.get_end_contacts().size()
+                    + " start=" + curr_trace.first_corner()
+                    + " end=" + curr_trace.last_corner(),
                 "Net #" + (curr_trace.net_count() > 0 ? curr_trace.get_net_no(0) : -1),
                 new Point[] { curr_trace.first_corner(), curr_trace.last_corner() });
             return curr_trace;
           }
           FRLogger.trace("BasicBoard.get_trace_tail", "tail_check",
-              "Trace endpoint has contacts; not a tail at start: trace_id=" + curr_trace.get_id_no()
-                  + ", location=" + p_location
-                  + ", layer=" + p_layer
-                  + ", start_contacts=" + contacts.size()
-                  + ", end_contacts=" + curr_trace.get_end_contacts().size()
-                  + ", from=" + curr_trace.first_corner()
-                  + ", to=" + curr_trace.last_corner(),
+              "event=tail_check item_type=Trace"
+                  + " item_id=" + curr_trace.get_id_no()
+                  + " endpoint=start"
+                  + " reason_code=contacts_start"
+                  + " reason_detail=start endpoint has contacts"
+                  + " location=" + p_location
+                  + " layer=" + p_layer
+                  + " start_contacts=" + contacts.size()
+                  + " end_contacts=" + curr_trace.get_end_contacts().size()
+                  + " start=" + curr_trace.first_corner()
+                  + " end=" + curr_trace.last_corner(),
               "Net #" + (curr_trace.net_count() > 0 ? curr_trace.get_net_no(0) : -1),
               new Point[] { curr_trace.first_corner(), curr_trace.last_corner() });
         }
@@ -2522,26 +2539,33 @@ public class BasicBoard implements Serializable {
           Collection<Item> contacts = curr_trace.get_end_contacts();
           if (contacts.isEmpty()) {
             FRLogger.trace("BasicBoard.get_trace_tail", "tail_found",
-                "Trace tail detected at end endpoint: trace_id=" + curr_trace.get_id_no()
-                    + ", location=" + p_location
-                    + ", layer=" + p_layer
-                    + ", reason=no contacts at end"
-                    + ", start_contacts=" + curr_trace.get_start_contacts().size()
-                    + ", end_contacts=0"
-                    + ", from=" + curr_trace.first_corner()
-                    + ", to=" + curr_trace.last_corner(),
+                "event=tail_found item_type=Trace"
+                    + " item_id=" + curr_trace.get_id_no()
+                    + " endpoint=end"
+                    + " reason_code=no_contacts_end"
+                    + " reason_detail=end endpoint has no contacts"
+                    + " location=" + p_location
+                    + " layer=" + p_layer
+                    + " start_contacts=" + curr_trace.get_start_contacts().size()
+                    + " end_contacts=0"
+                    + " start=" + curr_trace.first_corner()
+                    + " end=" + curr_trace.last_corner(),
                 "Net #" + (curr_trace.net_count() > 0 ? curr_trace.get_net_no(0) : -1),
                 new Point[] { curr_trace.first_corner(), curr_trace.last_corner() });
             return curr_trace;
           }
           FRLogger.trace("BasicBoard.get_trace_tail", "tail_check",
-              "Trace endpoint has contacts; not a tail at end: trace_id=" + curr_trace.get_id_no()
-                  + ", location=" + p_location
-                  + ", layer=" + p_layer
-                  + ", start_contacts=" + curr_trace.get_start_contacts().size()
-                  + ", end_contacts=" + contacts.size()
-                  + ", from=" + curr_trace.first_corner()
-                  + ", to=" + curr_trace.last_corner(),
+              "event=tail_check item_type=Trace"
+                  + " item_id=" + curr_trace.get_id_no()
+                  + " endpoint=end"
+                  + " reason_code=contacts_end"
+                  + " reason_detail=end endpoint has contacts"
+                  + " location=" + p_location
+                  + " layer=" + p_layer
+                  + " start_contacts=" + curr_trace.get_start_contacts().size()
+                  + " end_contacts=" + contacts.size()
+                  + " start=" + curr_trace.first_corner()
+                  + " end=" + curr_trace.last_corner(),
               "Net #" + (curr_trace.net_count() > 0 ? curr_trace.get_net_no(0) : -1),
               new Point[] { curr_trace.first_corner(), curr_trace.last_corner() });
         }

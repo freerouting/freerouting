@@ -73,9 +73,11 @@ public class ShoveTraceAlgo {
     }
     if (!trace_shape.is_contained_in(p_board.get_bounding_box())) {
       FRLogger.trace("ShoveTraceAlgo.check", "trace_outside_bounds",
-          "Trace shape not contained in board bounds: layer=" + p_layer
-              + ", half_width=" + p_trace_half_width
-              + ", segment=" + p_line_segment.start_point_approx() + " -> " + p_line_segment.end_point_approx(),
+          "event=shove_check_outside_bounds"
+              + " layer=" + p_layer
+              + " half_width=" + p_trace_half_width
+              + " segment_start=" + p_line_segment.start_point_approx()
+              + " segment_end=" + p_line_segment.end_point_approx(),
           formatNetLabel(p_board, p_net_no_arr),
           new Point[] { p_line_segment.start_point_approx().round(), p_line_segment.end_point_approx().round() });
       return 0;
@@ -85,20 +87,24 @@ public class ShoveTraceAlgo {
     Collection<Item> obstacles = search_tree.overlapping_items_with_clearance(trace_shape, p_layer, new int[0], p_cl_type);
 
     FRLogger.trace("ShoveTraceAlgo.check", "checking_obstacles",
-        "Checking " + obstacles.size() + " obstacles for shove: layer=" + p_layer
-            + ", clearance_class=" + p_cl_type
-            + ", half_width=" + p_trace_half_width
-            + ", recursion_depth=" + p_max_recursion_depth
-            + ", segment=" + p_line_segment.start_point_approx() + " -> " + p_line_segment.end_point_approx(),
+        "event=shove_check_obstacles"
+            + " obstacle_count=" + obstacles.size()
+            + " layer=" + p_layer
+            + " clearance_class=" + p_cl_type
+            + " half_width=" + p_trace_half_width
+            + " recursion_depth=" + p_max_recursion_depth
+            + " segment_start=" + p_line_segment.start_point_approx()
+            + " segment_end=" + p_line_segment.end_point_approx(),
         formatNetLabel(p_board, p_net_no_arr),
         new Point[] { p_line_segment.start_point_approx().round(), p_line_segment.end_point_approx().round() });
 
     boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
     if (!obstacles_shovable || shape_entries.trace_tails_in_shape()) {
       FRLogger.trace("ShoveTraceAlgo.check", "obstacles_not_shovable",
-          "Obstacles cannot be shoved: obstacles_shovable=" + obstacles_shovable
-              + ", trace_tails_in_shape=" + shape_entries.trace_tails_in_shape()
-              + ", layer=" + p_layer,
+          "event=shove_check_obstacles_not_shovable"
+              + " obstacles_shovable=" + obstacles_shovable
+              + " trace_tails_in_shape=" + shape_entries.trace_tails_in_shape()
+              + " layer=" + p_layer,
           formatNetLabel(p_board, p_net_no_arr),
           new Point[] { p_line_segment.start_point_approx().round(), p_line_segment.end_point_approx().round() });
       return 0;
@@ -130,9 +136,10 @@ public class ShoveTraceAlgo {
 
         if (new_via_center.length == 0) {
           FRLogger.trace("ShoveTraceAlgo.check", "via_cannot_be_shoved",
-              "Via cannot be shoved, no valid position found: via=" + curr_shove_via
-                  + ", layer=" + p_layer
-                  + ", clearance_class=" + p_cl_type,
+              "event=shove_check_via_no_position"
+                  + " via=" + curr_shove_via
+                  + " layer=" + p_layer
+                  + " clearance_class=" + p_cl_type,
               formatNetLabel(p_board, p_net_no_arr),
               new Point[] { curr_shove_via.get_center() });
           return 0;
@@ -143,9 +150,10 @@ public class ShoveTraceAlgo {
 
         if (!shove_via_ok) {
           FRLogger.trace("ShoveTraceAlgo.check", "via_shove_check_failed",
-              "Via shove check failed: via=" + curr_shove_via
-                  + ", delta=" + delta
-                  + ", layer=" + p_layer,
+              "event=shove_check_via_failed"
+                  + " via=" + curr_shove_via
+                  + " delta=" + delta
+                  + " layer=" + p_layer,
               formatNetLabel(p_board, p_net_no_arr),
               new Point[] { curr_shove_via.get_center() });
         }
@@ -163,22 +171,23 @@ public class ShoveTraceAlgo {
           curr_ok_length -= clearance;
 
           FRLogger.trace("ShoveTraceAlgo.check", "via_blocking_calculation",
-              "Via blocking trace: via=" + curr_shove_via
-                  + ", via_radius=" + via_radius
-                  + ", trace_half_width=" + p_trace_half_width
-                  + ", required_clearance=" + clearance
-                  + ", projection=" + projection
-                  + ", ok_length=" + curr_ok_length
-                  + ", layer=" + p_layer,
+              "event=shove_check_via_blocking_calculation"
+                  + " via=" + curr_shove_via
+                  + " via_radius=" + via_radius
+                  + " trace_half_width=" + p_trace_half_width
+                  + " required_clearance=" + clearance
+                  + " projection=" + projection
+                  + " ok_length=" + curr_ok_length
+                  + " layer=" + p_layer,
               formatNetLabel(p_board, p_net_no_arr),
               new Point[] { curr_shove_via.get_center() });
         }
         if (curr_ok_length <= 0) {
           FRLogger.trace("ShoveTraceAlgo.check", "via_blocks_trace",
-              "Via blocks trace insertion: via=" + curr_shove_via
-                  + ", ok_length=" + curr_ok_length
-                  + " (must be > 0)"
-                  + ", layer=" + p_layer,
+              "event=shove_check_via_blocks_trace"
+                  + " via=" + curr_shove_via
+                  + " ok_length=" + curr_ok_length
+                  + " layer=" + p_layer,
               formatNetLabel(p_board, p_net_no_arr),
               new Point[] { curr_shove_via.get_center() });
           return 0;
@@ -476,6 +485,8 @@ public class ShoveTraceAlgo {
     } else {
       check_net_no_arr = new int[0];
     }
+
+    Collection<Item> allObstacles = new LinkedList<>();
     for (int i = 0; i < p_polyline.arr.length - 2; i++) {
       TileShape curr_shape = p_polyline.offset_shape(p_half_width, i);
       Collection<Item> obstacles = search_tree.overlapping_items_with_clearance(curr_shape, p_layer, check_net_no_arr, p_cl_type);
@@ -528,25 +539,24 @@ public class ShoveTraceAlgo {
         }
       }
       if (found_obstacle != null) {
-        break;
+        allObstacles.add(found_obstacle);
       }
     }
+
+    found_obstacle = allObstacles.isEmpty() ? null : allObstacles.iterator().next();
+
     if (found_obstacle == null) {
       // no obstacle in the way, nothing to do
       return p_polyline;
     }
 
     FRLogger.trace("ShoveTraceAlgo.insert", "obstacle_found",
-        "Obstacle blocking trace insertion: obstacle=" + found_obstacle.toString()
-            + ", obstacle_type=" + found_obstacle.getClass().getSimpleName()
-            + ", obstacle_fixed=" + (found_obstacle instanceof Trace && found_obstacle.is_shove_fixed())
-            + ", obstacle_routable=" + found_obstacle.is_routable()
-            + ", layer=" + p_layer
-            + ", recursion_depth=" + p_recursion_depth
-            + ", trace_half_width=" + p_half_width
-            + ", clearance_class=" + p_cl_type,
-        formatNetLabel(this.board, p_net_no_arr),
-        new Point[] { found_obstacle.bounding_box().centre_of_gravity().round() });
+        "event=shove_insert_obstacle_found"
+            + " layer=" + p_layer
+            + " obstacle_count=" + allObstacles.size()
+            + " clearance_class=" + p_cl_type,
+        formatNetLabel(board, p_net_no_arr),
+        null);
 
     if (p_recursion_depth <= 0 || found_obstacle instanceof BoardOutline || (found_obstacle instanceof Trace && !found_obstacle.is_shove_fixed())) {
       this.board.set_shove_failing_obstacle(found_obstacle);
@@ -561,14 +571,18 @@ public class ShoveTraceAlgo {
       }
 
       FRLogger.trace("ShoveTraceAlgo.insert", "insertion_failed",
-          "Trace insertion failed: " + failureReason
-              + ", obstacle=" + found_obstacle.toString()
-              + ", layer=" + p_layer,
-          formatNetLabel(this.board, p_net_no_arr),
-          new Point[] { found_obstacle.bounding_box().centre_of_gravity().round() });
+          "event=shove_insert_failed"
+              + " layer=" + p_layer
+              + " obstacle_count=" + allObstacles.size()
+              + " clearance_class=" + p_cl_type
+              + " reason=" + failureReason,
+          formatNetLabel(board, p_net_no_arr),
+          null);
 
       return null;
     }
+
+    // Check if we can spring over the obstacle
     boolean try_spring_over = true;
     if (!p_over_connected_pins) {
       // Check if the obstacle has a trace contact on p_layer
@@ -601,7 +615,7 @@ public class ShoveTraceAlgo {
       int offset = p_half_width + 1;
       offset_shape = (TileShape) obstacle_shape.enlarge(offset);
     } else {
-      // enlarge the shape in 2 steps  for symmetry reasons
+      // enlarge the shape in 2 steps for symmetry reasons
       int offset = p_half_width + 1;
       double half_cl_offset = 0.5 * board.clearance_value(found_obstacle.clearance_class_no(), p_cl_type, p_layer);
       offset_shape = (TileShape) obstacle_shape.enlarge(offset + half_cl_offset);
@@ -628,7 +642,7 @@ public class ShoveTraceAlgo {
       this.board.set_shove_failing_obstacle(found_obstacle);
       return null;
     }
-    Polyline[] pieces = offset_shape.cutout(p_polyline); // build a circuit around the offset_shape in counter clock sense
+    Polyline[] pieces = offset_shape.cutout(p_polyline); // build a circuit around the offset_shape in counter-clockwise direction
     // from the first intersection point to the second intersection point
     int first_intersection_side_no = entries[0][1];
     int last_intersection_side_no = entries[entries.length - 1][1];

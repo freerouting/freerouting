@@ -1670,24 +1670,31 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         Collection<Item> endContacts = trace.get_end_contacts();
         boolean startEmpty = startContacts.isEmpty();
         boolean endEmpty = endContacts.isEmpty();
-        String reason;
+        String reasonCode;
+        String reasonDetail;
         if (startEmpty && endEmpty) {
-          reason = "both endpoints have no contacts";
+          reasonCode = "no_contacts_both";
+          reasonDetail = "both endpoints have no contacts";
         } else if (startEmpty) {
-          reason = "start endpoint has no contacts";
+          reasonCode = "no_contacts_start";
+          reasonDetail = "start endpoint has no contacts";
         } else if (endEmpty) {
-          reason = "end endpoint has no contacts";
+          reasonCode = "no_contacts_end";
+          reasonDetail = "end endpoint has no contacts";
         } else {
-          reason = "both endpoints have contacts";
+          reasonCode = "contacts_both";
+          reasonDetail = "both endpoints have contacts";
         }
         FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_check",
-            "Checking if trace is tail: trace_id=" + curr_item.get_id_no()
-                + ", reason=" + reason
-                + ", start_contacts=" + startContacts.size()
-                + ", end_contacts=" + endContacts.size()
-                + ", from=" + trace.first_corner()
-                + ", to=" + trace.last_corner()
-                + ", stop_option=" + p_stop_connection_option,
+            "event=tail_check item_type=Trace"
+                + " item_id=" + curr_item.get_id_no()
+                + " reason_code=" + reasonCode
+                + " reason_detail=" + reasonDetail
+                + " start_contacts=" + startContacts.size()
+                + " end_contacts=" + endContacts.size()
+                + " start=" + trace.first_corner()
+                + " end=" + trace.last_corner()
+                + " stop_option=" + p_stop_connection_option,
             "Net #" + curr_item.get_net_no(0),
             new Point[] { trace.first_corner(), trace.last_corner() });
       }
@@ -1708,30 +1715,35 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           Collection<Item> endContacts = trace.get_end_contacts();
           boolean startEmpty = startContacts.isEmpty();
           boolean endEmpty = endContacts.isEmpty();
-          String reason;
+          String reasonCode;
+          String reasonDetail;
           if (startEmpty && endEmpty) {
-            reason = "both endpoints have no contacts";
+            reasonCode = "no_contacts_both";
+            reasonDetail = "both endpoints have no contacts";
           } else if (startEmpty) {
-            reason = "start endpoint has no contacts";
+            reasonCode = "no_contacts_start";
+            reasonDetail = "start endpoint has no contacts";
           } else {
-            reason = "end endpoint has no contacts";
+            reasonCode = "no_contacts_end";
+            reasonDetail = "end endpoint has no contacts";
           }
           FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_candidate",
-              "Adding tail candidate: item_id=" + curr_item.get_id_no()
-                  + ", item_type=" + curr_item.getClass().getSimpleName()
-                  + ", reason=" + reason
-                  + ", start_contacts=" + startContacts.size()
-                  + ", end_contacts=" + endContacts.size()
-                  + ", from=" + trace.first_corner()
-                  + ", to=" + trace.last_corner()
-                  + ", stop_option=" + p_stop_connection_option,
+              "event=tail_candidate item_type=Trace"
+                  + " item_id=" + curr_item.get_id_no()
+                  + " reason_code=" + reasonCode
+                  + " reason_detail=" + reasonDetail
+                  + " start_contacts=" + startContacts.size()
+                  + " end_contacts=" + endContacts.size()
+                  + " start=" + trace.first_corner()
+                  + " end=" + trace.last_corner()
+                  + " stop_option=" + p_stop_connection_option,
               "Net #" + curr_item.get_net_no(0),
               new Point[] { trace.first_corner(), trace.last_corner() });
         } else {
           FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_candidate",
-              "Adding tail candidate: item_id=" + curr_item.get_id_no()
-                  + ", item_type=" + curr_item.getClass().getSimpleName()
-                  + ", stop_option=" + p_stop_connection_option,
+              "event=tail_candidate item_type=" + curr_item.getClass().getSimpleName()
+                  + " item_id=" + curr_item.get_id_no()
+                  + " stop_option=" + p_stop_connection_option,
               "Net #" + curr_item.get_net_no(0),
               null);
         }
