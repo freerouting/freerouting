@@ -350,6 +350,21 @@ public class FRLogger {
   }
 
   /**
+   * Checks if TRACE level logging is enabled.
+   *
+   * @return true if TRACE logging is enabled, false otherwise.
+   */
+  public static boolean isTraceEnabled() {
+    if (!enabled) {
+      return false;
+    }
+    if (logger == null) {
+      logger = LogManager.getLogger(Freerouting.class);
+    }
+    return logger.isTraceEnabled();
+  }
+
+  /**
    * Logs a TRACE message.
    *
    * @param msg The message to log.

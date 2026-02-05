@@ -372,16 +372,59 @@ public class InsertFoundConnectionAlgo {
               + " on layer " + p_trace.layer,
           FRLogger.formatNetLabel(this.board, ctrl.net_no),
           new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
+      // Log pre-insertion state
+      if ((globalSettings != null) && (globalSettings.debugSettings != null)
+          && (globalSettings.debugSettings.enableDetailedLogging)) {
+        FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "pre_insertion",
+            FRLogger.buildTracePayload("insert_segment", "pre_insertion", "state",
+                "event=pre_insertion phase=before action=insert"
+                    + " corner_index=" + i
+                    + " corner_count=" + p_trace.corners.length
+                    + " from_corner=" + insert_polyline.first_corner()
+                    + " to_corner=" + insert_polyline.last_corner()
+                    + " layer=" + p_trace.layer
+                    + " half_width=" + ctrl.trace_half_width[p_trace.layer]),
+            FRLogger.formatNetLabel(this.board, ctrl.net_no),
+            new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
+      }
+
       Point ok_point = board.insert_forced_trace_polyline(insert_polyline, ctrl.trace_half_width[p_trace.layer],
           p_trace.layer, net_no_arr, ctrl.trace_clearance_class_no,
           ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth,
           ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+
+      // Log post-insertion result
+      if ((globalSettings != null) && (globalSettings.debugSettings != null)
+          && (globalSettings.debugSettings.enableDetailedLogging)) {
+        String resultType;
+        if (ok_point == null) {
+          resultType = "failed_null";
+        } else if (ok_point.equals(insert_polyline.last_corner())) {
+          resultType = "success_full";
+        } else if (ok_point.equals(insert_polyline.first_corner())) {
+          resultType = "failed_at_start";
+        } else {
+          resultType = "partial_" + ok_point;
+        }
+
+        FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "post_insertion",
+            FRLogger.buildTracePayload("insert_segment", "post_insertion", resultType,
+                "event=post_insertion phase=after action=result"
+                    + " corner_index=" + i
+                    + " ok_point=" + (ok_point != null ? ok_point.toString() : "null")
+                    + " expected_end=" + insert_polyline.last_corner()
+                    + " from_corner=" + insert_polyline.first_corner()
+                    + " result_type=" + resultType),
+            FRLogger.formatNetLabel(this.board, ctrl.net_no),
+            new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });
+      }
+
       FRLogger.trace("InsertFoundConnectionAlgo.insert_segment", "insert_trace_segment_result",
           "insert result ok_point=" + (ok_point != null ? ok_point.toString() : "null")
               + ", first=" + insert_polyline.first_corner()
               + ", last=" + insert_polyline.last_corner()
               + ", corners=" + insert_polyline.corner_count()
-              + ", from_corner_point=" + from_corner_point
+              + " from_corner_point=" + from_corner_point
               + ", i=" + i + "/" + (p_trace.corners.length - 1),
           FRLogger.formatNetLabel(this.board, ctrl.net_no),
           new Point[] { insert_polyline.first_corner(), insert_polyline.last_corner() });

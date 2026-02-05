@@ -1068,6 +1068,21 @@ public class BasicBoard implements Serializable {
             netInfo.append("(").append(rules.nets.get(netNumber).name).append(")");
           }
         }
+
+        // Get contact information before removal
+        Set<Item> startContacts = trace.get_start_contacts();
+        Set<Item> endContacts = trace.get_end_contacts();
+        StringBuilder startContactIds = new StringBuilder();
+        StringBuilder endContactIds = new StringBuilder();
+        for (Item contact : startContacts) {
+          if (startContactIds.length() > 0) startContactIds.append(",");
+          startContactIds.append(contact.getClass().getSimpleName()).append("#").append(contact.get_id_no());
+        }
+        for (Item contact : endContacts) {
+          if (endContactIds.length() > 0) endContactIds.append(",");
+          endContactIds.append(contact.getClass().getSimpleName()).append("#").append(contact.get_id_no());
+        }
+
         FRLogger.trace("BasicBoard.remove_item", "remove_trace",
             buildTracePayload("board_item", "remove", "trace",
                 "item_id=" + trace.get_id_no()
@@ -1075,7 +1090,12 @@ public class BasicBoard implements Serializable {
                     + " corners=" + trace.corner_count()
                     + " from=" + trace.first_corner()
                     + " to=" + trace.last_corner()
-                    + " net=" + (netInfo.isEmpty() ? "none" : netInfo)),
+                    + " net=" + (netInfo.isEmpty() ? "none" : netInfo)
+                    + " start_contacts=" + startContacts.size()
+                    + " end_contacts=" + endContacts.size()
+                    + " start_contact_ids=[" + startContactIds + "]"
+                    + " end_contact_ids=[" + endContactIds + "]"
+                    + " is_tail=" + trace.is_tail()),
             netInfo.isEmpty() ? "No net" : "Net " + netInfo,
             new Point[]{trace.first_corner(), trace.last_corner()});
       } else if (p_item instanceof Via via) {
@@ -2264,6 +2284,21 @@ public class BasicBoard implements Serializable {
             netInfo.append("(").append(rules.nets.get(netNumber).name).append(")");
           }
         }
+
+        // Get contact information
+        Set<Item> startContacts = trace.get_start_contacts();
+        Set<Item> endContacts = trace.get_end_contacts();
+        StringBuilder startContactIds = new StringBuilder();
+        StringBuilder endContactIds = new StringBuilder();
+        for (Item contact : startContacts) {
+          if (startContactIds.length() > 0) startContactIds.append(",");
+          startContactIds.append(contact.getClass().getSimpleName()).append("#").append(contact.get_id_no());
+        }
+        for (Item contact : endContacts) {
+          if (endContactIds.length() > 0) endContactIds.append(",");
+          endContactIds.append(contact.getClass().getSimpleName()).append("#").append(contact.get_id_no());
+        }
+
         FRLogger.trace("BasicBoard.insert_item", "insert_trace",
             buildTracePayload("board_item", "insert", "trace",
                 "item_id=" + trace.get_id_no()
@@ -2271,7 +2306,11 @@ public class BasicBoard implements Serializable {
                     + " corners=" + trace.corner_count()
                     + " from=" + trace.first_corner()
                     + " to=" + trace.last_corner()
-                    + " net=" + (netInfo.isEmpty() ? "none" : netInfo)),
+                    + " net=" + (netInfo.isEmpty() ? "none" : netInfo)
+                    + " start_contacts=" + startContacts.size()
+                    + " end_contacts=" + endContacts.size()
+                    + " start_contact_ids=[" + startContactIds + "]"
+                    + " end_contact_ids=[" + endContactIds + "]"),
             netInfo.isEmpty() ? "No net" : "Net " + netInfo,
             new Point[]{trace.first_corner(), trace.last_corner()});
       } else if (p_item instanceof Via via) {
