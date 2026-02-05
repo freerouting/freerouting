@@ -4,6 +4,7 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Item;
 import app.freerouting.board.Pin;
+import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Unit;
 import app.freerouting.board.Via;
@@ -546,6 +547,14 @@ public class DesignRulesChecker {
             "Net item count: net=" + netNo + ", name=" + netName + ", items=" + netItems,
             "Net #" + netNo + " (" + netName + ")",
             new Point[0]);
+
+        // Let's validate all the polyline traces for this net
+        var net_items = net_item_lists.get(netNo - 1);
+        for (Item item : net_items) {
+          if (item instanceof PolylineTrace trace) {
+            trace.validateAndLogPolylineIntegrity();
+          }
+        }
       }
     }
 

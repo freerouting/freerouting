@@ -77,6 +77,8 @@ public class PolylineTrace extends Trace implements Serializable {
       FRLogger.warn("PolylineTrace: p_polyline.arr.length >= 3 expected");
     }
     lines = p_polyline;
+    // Validate polyline integrity in constructor
+    this.validateAndLogPolylineIntegrity();
   }
 
 
@@ -363,6 +365,8 @@ public class PolylineTrace extends Trace implements Serializable {
       other_trace.clear_search_tree_entries();
       this.lines = joined_polyline;
     }
+    // Validate polyline integrity after combine at start
+    this.validateAndLogPolylineIntegrity();
     if (this.lines.arr.length < 3) {
       board.remove_item(this);
     }
@@ -477,6 +481,8 @@ public class PolylineTrace extends Trace implements Serializable {
       other_trace.clear_search_tree_entries();
       this.lines = joined_polyline;
     }
+    // Validate polyline integrity after combine at end
+    this.validateAndLogPolylineIntegrity();
     if (this.lines.arr.length < 3) {
       board.remove_item(this);
     }
@@ -917,6 +923,15 @@ public class PolylineTrace extends Trace implements Serializable {
         clearance_class_no(), get_fixed_state());
     result[1] = board.insert_trace_without_cleaning(split_polylines[1], get_layer(), get_half_width(), net_no_arr,
         clearance_class_no(), get_fixed_state());
+
+    // Validate polyline integrity for both split pieces
+    if (result[0] != null) {
+      result[0].validateAndLogPolylineIntegrity();
+    }
+    if (result[1] != null) {
+      result[1].validateAndLogPolylineIntegrity();
+    }
+
     return result;
   }
 
@@ -1016,6 +1031,9 @@ public class PolylineTrace extends Trace implements Serializable {
     boolean result = split_pieces.size() != 1;
     for (PolylineTrace curr_split_trace : split_pieces) {
       if (curr_split_trace.is_on_the_board()) {
+        // Validate integrity of split piece
+        curr_split_trace.validateAndLogPolylineIntegrity();
+
         // Save state before combine to detect if anything actually changed
         int corner_count_before = curr_split_trace.corner_count();
         Point first_corner_before = curr_split_trace.first_corner();
@@ -1037,6 +1055,9 @@ public class PolylineTrace extends Trace implements Serializable {
           board.remove_item(curr_split_trace);
           result = true;
         } else if (trace_combined) {
+          // Validate integrity after combine
+          curr_split_trace.validateAndLogPolylineIntegrity();
+
           // Check if the trace actually changed after combine
           // If it's the same (same corners), don't recurse - prevents endless loops
           boolean actually_changed = (curr_split_trace.corner_count() != corner_count_before)
@@ -1271,6 +1292,9 @@ public class PolylineTrace extends Trace implements Serializable {
     int keep_at_end_count = Math.max(p_new_polyline.arr.length - index_of_last_different_line - 3, 0);
     board.search_tree_manager.change_entries(this, p_new_polyline, keep_at_start_count, keep_at_end_count);
     lines = p_new_polyline;
+
+    // Validate polyline integrity after changing geometry
+    this.validateAndLogPolylineIntegrity();
 
     // let the observers synchronize the changes
     if ((board.communication != null) && (board.communication.observers != null)) {
@@ -1618,6 +1642,117 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     contact_trace.set_fixed_state(this.get_fixed_state());
     this.combine();
+    return true;
+  }
+
+  /**
+   * Validates that all lines in this polyline are properly connected.
+   * <p>
+   * A polyline is valid when each consecutive pair of lines shares an endpoint.
+   * This method checks that the end point of line[i] equals the start point of
+   * line[i+1] for all valid indices.
+   * <p>
+   * This validation is critical because invalid polylines (with disconnected
+   * lines) can cause routing issues and incomplete connections.
+   *
+   * @return true if all lines in the polyline are connected, false otherwise
+   */
+  public boolean validatePolylineConnectivity() {
+    if (lines == null || lines.arr == null || lines.arr.length < 3) {
+      return true; // Empty or minimal polylines are considered valid
+    }
+
+    for (int i = 0; i < lines.arr.length - 1; i++) {
+      Line currentLine = lines.arr[i];
+      Line nextLine = lines.arr[i + 1];
+
+      Point currentEnd = currentLine.b;
+      Point nextStart = nextLine.a;
+
+      if (!currentEnd.equals(nextStart)) {
+        // Invalid polyline detected - lines are not connected
+        Point[] polylinePoints = extractPolylinePoints();
+        String impactedItems = this.toString() + "," + this.getAllNetNames();
+
+        FRLogger.trace("PolylineTrace", "polyline_validation",
+            "Invalid polyline detected: disconnected lines at index " + i + " to " + (i + 1) +
+            ". Line[" + i + "].end=" + currentEnd + " != Line[" + (i + 1) + "].start=" + nextStart,
+            impactedItems,
+            polylinePoints);
+
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Extracts all point coordinates from the polyline into an array.
+   * <p>
+   * This includes all corner points plus the intermediate line endpoints,
+   * providing a complete picture of the trace geometry.
+   *
+   * @return array of all points in the polyline
+   */
+  private Point[] extractPolylinePoints() {
+    if (lines == null || lines.arr == null) {
+      return new Point[0];
+    }
+
+    // Collect all unique points from all lines
+    java.util.Set<Point> pointSet = new java.util.LinkedHashSet<>();
+    for (Line line : lines.arr) {
+      pointSet.add(line.a);
+      pointSet.add(line.b);
+    }
+
+    return pointSet.toArray(new Point[0]);
+  }
+
+  /**
+   * Validates this polyline and logs any issues at TRACE level.
+   * <p>
+   * This method should be called after any significant modification to the
+   * polyline to ensure integrity. It checks:
+   * <ul>
+   * <li>Line connectivity (consecutive lines share endpoints)</li>
+   * <li>Polyline length (minimum 3 lines)</li>
+   * </ul>
+   *
+   * @return true if polyline is valid, false if any issues are found
+   */
+  public boolean validateAndLogPolylineIntegrity() {
+    // Check minimum length
+    if (lines == null || lines.arr == null || lines.arr.length < 3) {
+      if (lines != null && lines.arr != null && lines.arr.length > 0) {
+        Point[] points = extractPolylinePoints();
+        FRLogger.trace("PolylineTrace", "polyline_integrity",
+            "Polyline has insufficient lines: " + (lines.arr != null ? lines.arr.length : 0) +
+            " (minimum 3 required)",
+            this.toString() + "," + this.getAllNetNames(),
+            points);
+        return false;
+      }
+      return true;
+    }
+
+    // Check connectivity
+    boolean isConnected = validatePolylineConnectivity();
+
+    if (!isConnected) {
+      return false;
+    }
+
+    // Log successful validation for problematic traces (optional, verbose)
+    if (FRLogger.isTraceEnabled() && FRLogger.granularTraceEnabled) {
+      Point[] points = extractPolylinePoints();
+      FRLogger.trace("PolylineTrace", "polyline_integrity",
+          "Polyline is valid: " + lines.arr.length + " lines, " + points.length + " unique points",
+          this.toString() + "," + this.getAllNetNames(),
+          points);
+    }
+
     return true;
   }
 }
