@@ -545,6 +545,35 @@ public class InsertFoundConnectionAlgo {
       this.first_corner = p_trace.corners[0];
     }
     this.last_corner = p_trace.corners[p_trace.corners.length - 1];
+
+    // Log final state of all traces on this net after insertion
+    if ((globalSettings != null) && (globalSettings.debugSettings != null)
+        && (globalSettings.debugSettings.enableDetailedLogging) && net_no_arr.length > 0) {
+      int netNo = net_no_arr[0];
+      java.util.Collection<Item> netItems = board.get_connectable_items(netNo);
+      int traceCount = 0;
+      StringBuilder traceDetails = new StringBuilder();
+      for (Item item : netItems) {
+        if (item instanceof Trace trace) {
+          traceCount++;
+          if (!traceDetails.isEmpty()) {
+            traceDetails.append("; ");
+          }
+          Set<Item> startContacts = trace.get_start_contacts();
+          Set<Item> endContacts = trace.get_end_contacts();
+          traceDetails.append(String.format("Trace#%d[%s->%s,start_contacts=%d,end_contacts=%d]",
+              trace.get_id_no(), trace.first_corner(), trace.last_corner(),
+              startContacts.size(), endContacts.size()));
+        }
+      }
+      FRLogger.trace("InsertFoundConnectionAlgo.insert_trace", "post_insertion_state",
+          "event=insertion_complete action=state_check result=" + result
+              + " net=" + netNo + " total_net_items=" + netItems.size()
+              + " trace_count=" + traceCount + " traces=[" + traceDetails + "]",
+          FRLogger.formatNetLabel(this.board, netNo),
+          new Point[] { p_trace.corners[0], p_trace.corners[p_trace.corners.length - 1] });
+    }
+
     return result;
   }
 

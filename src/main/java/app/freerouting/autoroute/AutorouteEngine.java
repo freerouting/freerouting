@@ -498,6 +498,8 @@ public class AutorouteEngine {
       }
     }
 
+    FRLogger.info("AutorouteEngine.complete_connection: ripped_items=" + p_ripped_item_list.size() + ", changed_nets=" + changed_nets.size() + ", ripped_connections=" + ripped_connections.size());
+
     // let the observers know the changes in the board database.
     boolean observers_activated = !this.board.observers_active();
     if (observers_activated) {

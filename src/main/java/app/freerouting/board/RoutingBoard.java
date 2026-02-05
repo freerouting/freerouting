@@ -1643,6 +1643,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * tails of all nets are removed. Returns true, if something was removed.
    */
   public boolean remove_trace_tails(int p_net_no, Item.StopConnectionOption p_stop_connection_option) {
+    FRLogger.info("RoutingBoard.remove_trace_tails called: net=" + p_net_no + ", stop_option=" + p_stop_connection_option + ", total_items=" + this.get_items().size());
     SortedSet<Item> stub_set = new TreeSet<>();
     Collection<Item> board_items = this.get_items();
     for (Item curr_item : board_items) {

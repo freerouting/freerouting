@@ -131,7 +131,24 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * equal to its first corner.
    */
   public Set<Item> get_start_contacts() {
-    return get_normal_contacts(first_corner(), false);
+    Set<Item> contacts = get_normal_contacts(first_corner(), false);
+    if ((globalSettings != null) && (globalSettings.debugSettings != null)
+        && (globalSettings.debugSettings.enableDetailedLogging)) {
+      StringBuilder contactIds = new StringBuilder();
+      for (Item contact : contacts) {
+        if (contactIds.length() > 0) contactIds.append(",");
+        contactIds.append(contact.getClass().getSimpleName()).append("#").append(contact.get_id_no());
+      }
+      FRLogger.trace("Trace.get_start_contacts", "contact_query",
+          "event=contact_detection action=query_start item_type=Trace"
+              + " item_id=" + this.get_id_no()
+              + " point=" + first_corner()
+              + " contact_count=" + contacts.size()
+              + " contact_items=[" + contactIds + "]",
+          FRLogger.formatNetLabel(this.board, this.net_count() > 0 ? this.get_net_no(0) : -1),
+          new Point[] { first_corner() });
+    }
+    return contacts;
   }
 
   /**
@@ -139,7 +156,24 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * equal to its last corner.
    */
   public Set<Item> get_end_contacts() {
-    return get_normal_contacts(last_corner(), false);
+    Set<Item> contacts = get_normal_contacts(last_corner(), false);
+    if ((globalSettings != null) && (globalSettings.debugSettings != null)
+        && (globalSettings.debugSettings.enableDetailedLogging)) {
+      StringBuilder contactIds = new StringBuilder();
+      for (Item contact : contacts) {
+        if (contactIds.length() > 0) contactIds.append(",");
+        contactIds.append(contact.getClass().getSimpleName()).append("#").append(contact.get_id_no());
+      }
+      FRLogger.trace("Trace.get_end_contacts", "contact_query",
+          "event=contact_detection action=query_end item_type=Trace"
+              + " item_id=" + this.get_id_no()
+              + " point=" + last_corner()
+              + " contact_count=" + contacts.size()
+              + " contact_items=[" + contactIds + "]",
+          FRLogger.formatNetLabel(this.board, this.net_count() > 0 ? this.get_net_no(0) : -1),
+          new Point[] { last_corner() });
+    }
+    return contacts;
   }
 
   @Override
@@ -251,19 +285,70 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     int tolerance = Math.max(this.half_width + 1, 3000);
     TileShape search_shape = p_point.surrounding_octagon().enlarge(tolerance);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
+
+    // Add detailed logging for net #99
+    if (this.contains_net(99)) {
+      FRLogger.trace("Trace.get_normal_contacts", "contact_search_start",
+          "event=contact_search phase=start"
+              + " trace_id=" + this.get_id_no()
+              + " point=" + p_point
+              + " layer=" + this.layer
+              + " tolerance=" + tolerance
+              + " overlaps_found=" + overlaps.size()
+              + " ignore_net=" + p_ignore_net,
+          FRLogger.formatNetLabel(this.board, 99) + ", Trace #" + this.get_id_no(),
+          new Point[] { p_point });
+    }
+
     if (this.contains_net(94)) {
       FRLogger.debug("Trace.get_normal_contacts for net #94 at " + p_point + " on layer " + this.layer + ": found "
           + overlaps.size() + " overlaps");
     }
     Set<Item> result = new TreeSet<>();
+    int itemsChecked = 0;
+    int pinsFound = 0;
+    int tracesFound = 0;
     for (SearchTreeObject curr_ob : overlaps) {
       if (!(curr_ob instanceof Item curr_item)) {
         continue;
       }
+      itemsChecked++;
+
       if (this.contains_net(94)) {
         FRLogger.debug("  Checking item id=" + curr_item.get_id_no() + " (net #"
             + (curr_item.net_count() > 0 ? curr_item.get_net_no(0) : -1) + ") on layer " + curr_item.shape_layer(0));
       }
+
+      // Log details for net #99
+      if (this.contains_net(99)) {
+        String itemType = curr_item.getClass().getSimpleName();
+        int itemNet = curr_item.net_count() > 0 ? curr_item.get_net_no(0) : -1;
+        boolean sharesLayer = curr_item.shares_layer(this);
+        boolean sharesNet = curr_item.shares_net(this);
+        boolean passesFilter = curr_item != this && sharesLayer && (p_ignore_net || sharesNet);
+
+        if (curr_item instanceof DrillItem drill) {
+          Point drillCenter = drill.get_center();
+          app.freerouting.geometry.planar.Shape drillShape = drill.get_shape_on_layer(this.get_layer());
+          double distanceToPoint = drillCenter.to_float().distance(p_point.to_float());
+          boolean shapeContains = drillShape != null && drillShape.enlarge(tolerance).contains(p_point);
+
+          FRLogger.trace("Trace.get_normal_contacts", "contact_check_pin",
+              "event=contact_check phase=check item_type=" + itemType
+                  + " item_id=" + curr_item.get_id_no()
+                  + " item_net=" + itemNet
+                  + " shares_layer=" + sharesLayer
+                  + " shares_net=" + sharesNet
+                  + " passes_filter=" + passesFilter
+                  + " drill_center=" + drillCenter
+                  + " distance=" + String.format("%.2f", distanceToPoint)
+                  + " tolerance=" + tolerance
+                  + " shape_contains=" + shapeContains,
+              FRLogger.formatNetLabel(this.board, 99) + ", Trace #" + this.get_id_no(),
+              new Point[] { p_point, drillCenter });
+        }
+      }
+
       if (curr_item != this && curr_item.shares_layer(this) && (p_ignore_net || curr_item.shares_net(this))) {
         if (curr_item instanceof Trace curr_trace) {
           // Check if points are within tolerance distance
@@ -276,6 +361,16 @@ public abstract class Trace extends Item implements Connectable, Serializable {
           if (isWithinTolerance(p_point, curr_trace.first_corner(), tolerance) ||
               isWithinTolerance(p_point, curr_trace.last_corner(), tolerance)) {
             result.add(curr_item);
+            if (this.contains_net(99)) {
+              tracesFound++;
+              FRLogger.trace("Trace.get_normal_contacts", "contact_found_trace",
+                  "event=contact_found phase=check item_type=Trace"
+                      + " item_id=" + curr_item.get_id_no()
+                      + " distance_to_start=" + String.format("%.2f", d1)
+                      + " distance_to_end=" + String.format("%.2f", d2),
+                  FRLogger.formatNetLabel(this.board, 99) + ", Trace #" + this.get_id_no(),
+                  new Point[] { p_point });
+            }
           }
         } else if (curr_item instanceof DrillItem curr_drill_item) {
           if (this.contains_net(94)) {
@@ -286,6 +381,15 @@ public abstract class Trace extends Item implements Connectable, Serializable {
           // robustness
           if (drill_shape != null && drill_shape.enlarge(tolerance).contains(p_point)) {
             result.add(curr_item);
+            if (this.contains_net(99)) {
+              pinsFound++;
+              FRLogger.trace("Trace.get_normal_contacts", "contact_found_pin",
+                  "event=contact_found phase=check item_type=DrillItem"
+                      + " item_id=" + curr_item.get_id_no()
+                      + " drill_center=" + curr_drill_item.get_center(),
+                  FRLogger.formatNetLabel(this.board, 99) + ", Trace #" + this.get_id_no(),
+                  new Point[] { p_point, curr_drill_item.get_center() });
+            }
           }
         } else if (curr_item instanceof ConductionArea curr_area) {
           if (curr_area.get_area().contains(p_point)) {
@@ -294,6 +398,21 @@ public abstract class Trace extends Item implements Connectable, Serializable {
         }
       }
     }
+
+    // Summary log for net #99
+    if (this.contains_net(99)) {
+      FRLogger.trace("Trace.get_normal_contacts", "contact_search_complete",
+          "event=contact_search phase=complete"
+              + " trace_id=" + this.get_id_no()
+              + " point=" + p_point
+              + " items_checked=" + itemsChecked
+              + " contacts_found=" + result.size()
+              + " pins_found=" + pinsFound
+              + " traces_found=" + tracesFound,
+          FRLogger.formatNetLabel(this.board, 99) + ", Trace #" + this.get_id_no(),
+          new Point[] { p_point });
+    }
+
     return result;
   }
 
