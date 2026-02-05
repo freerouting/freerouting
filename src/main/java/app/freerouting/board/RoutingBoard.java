@@ -1676,6 +1676,19 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           reasonCode = "contacts_both";
           reasonDetail = "both endpoints have contacts";
         }
+
+        // Build contact details strings
+        StringBuilder startContactStr = new StringBuilder();
+        for (Item contact : startContacts) {
+          if (startContactStr.length() > 0) startContactStr.append(",");
+          startContactStr.append(contact.getClass().getSimpleName()).append("#").append(contact.get_id_no());
+        }
+        StringBuilder endContactStr = new StringBuilder();
+        for (Item contact : endContacts) {
+          if (endContactStr.length() > 0) endContactStr.append(",");
+          endContactStr.append(contact.getClass().getSimpleName()).append("#").append(contact.get_id_no());
+        }
+
         FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_check",
             FRLogger.buildTracePayload("tail_detection", "scan", "check",
                 "item_type=Trace"
@@ -1683,7 +1696,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
                     + " reason_code=" + reasonCode
                     + " reason_detail=" + reasonDetail
                     + " start_contacts=" + startContacts.size()
+                    + " start_contact_items=[" + startContactStr + "]"
                     + " end_contacts=" + endContacts.size()
+                    + " end_contact_items=[" + endContactStr + "]"
                     + " start=" + trace.first_corner()
                     + " end=" + trace.last_corner()
                     + " stop_option=" + p_stop_connection_option),
@@ -1719,6 +1734,19 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             reasonCode = "no_contacts_end";
             reasonDetail = "end endpoint has no contacts";
           }
+
+          // Build contact details strings
+          StringBuilder startContactStr = new StringBuilder();
+          for (Item contact : startContacts) {
+            if (startContactStr.length() > 0) startContactStr.append(",");
+            startContactStr.append(contact.getClass().getSimpleName()).append("#").append(contact.get_id_no());
+          }
+          StringBuilder endContactStr = new StringBuilder();
+          for (Item contact : endContacts) {
+            if (endContactStr.length() > 0) endContactStr.append(",");
+            endContactStr.append(contact.getClass().getSimpleName()).append("#").append(contact.get_id_no());
+          }
+
           FRLogger.trace("RoutingBoard.remove_trace_tails", "tail_candidate",
               FRLogger.buildTracePayload("tail_detection", "scan", "candidate",
                   "item_type=Trace"
@@ -1726,7 +1754,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
                       + " reason_code=" + reasonCode
                       + " reason_detail=" + reasonDetail
                       + " start_contacts=" + startContacts.size()
+                      + " start_contact_items=[" + startContactStr + "]"
                       + " end_contacts=" + endContacts.size()
+                      + " end_contact_items=[" + endContactStr + "]"
                       + " start=" + trace.first_corner()
                       + " end=" + trace.last_corner()
                       + " stop_option=" + p_stop_connection_option),
