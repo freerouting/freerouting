@@ -21,6 +21,7 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
@@ -1644,6 +1645,39 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    */
   public boolean remove_trace_tails(int p_net_no, Item.StopConnectionOption p_stop_connection_option) {
     FRLogger.info("RoutingBoard.remove_trace_tails called: net=" + p_net_no + ", stop_option=" + p_stop_connection_option + ", total_items=" + this.get_items().size());
+
+    // Log PRE-cleanup state for the target net
+    if (p_net_no > 0) {
+      int traceCount = 0;
+      int incompleteCount = new RatsNest(this).incomplete_count(p_net_no);
+      for (Item item : this.get_items()) {
+        if (item instanceof Trace && item.contains_net(p_net_no)) {
+          traceCount++;
+          Trace trace = (Trace) item;
+          Collection<Item> startContacts = trace.get_start_contacts();
+          Collection<Item> endContacts = trace.get_end_contacts();
+          FRLogger.trace("RoutingBoard.remove_trace_tails", "pre_cleanup_state",
+              FRLogger.buildTracePayload("tail_removal", "before", "state",
+                  "event=pre_cleanup phase=before action=state"
+                      + " trace_id=" + trace.get_id_no()
+                      + " start=" + trace.first_corner()
+                      + " end=" + trace.last_corner()
+                      + " start_contacts=" + startContacts.size()
+                      + " end_contacts=" + endContacts.size()
+                      + " is_tail=" + trace.is_tail())
+                      + " incomplete_count=" + incompleteCount,
+              FRLogger.formatNetLabel(this, p_net_no),
+              new Point[] { trace.first_corner(), trace.last_corner() });
+        }
+      }
+      FRLogger.trace("RoutingBoard.remove_trace_tails", "pre_cleanup_summary",
+          FRLogger.buildTracePayload("tail_removal", "before", "summary",
+              "event=pre_cleanup phase=before action=summary"
+                  + " trace_count=" + traceCount),
+          FRLogger.formatNetLabel(this, p_net_no),
+          null);
+    }
+
     SortedSet<Item> stub_set = new TreeSet<>();
     Collection<Item> board_items = this.get_items();
     for (Item curr_item : board_items) {
@@ -1822,6 +1856,41 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
 
     this.remove_items(stub_connections);
+
+    // Log POST-cleanup state for the target net
+    if (p_net_no > 0) {
+      int traceCount = 0;
+      // Note: Creating RatsNest is expensive, skip for now
+      int incompleteCount = new RatsNest(this).incomplete_count(p_net_no);
+      for (Item item : this.get_items()) {
+        if (item instanceof Trace && item.contains_net(p_net_no)) {
+          traceCount++;
+          Trace trace = (Trace) item;
+          Collection<Item> startContacts = trace.get_start_contacts();
+          Collection<Item> endContacts = trace.get_end_contacts();
+          FRLogger.trace("RoutingBoard.remove_trace_tails", "post_cleanup_state",
+              FRLogger.buildTracePayload("tail_removal", "after", "state",
+                  "event=post_cleanup phase=after action=state"
+                      + " trace_id=" + trace.get_id_no()
+                      + " start=" + trace.first_corner()
+                      + " end=" + trace.last_corner()
+                      + " start_contacts=" + startContacts.size()
+                      + " end_contacts=" + endContacts.size()
+                      + " is_tail=" + trace.is_tail())
+                      + " incomplete_count=" + incompleteCount,
+              FRLogger.formatNetLabel(this, p_net_no),
+              new Point[] { trace.first_corner(), trace.last_corner() });
+        }
+      }
+      FRLogger.trace("RoutingBoard.remove_trace_tails", "post_cleanup_summary",
+          FRLogger.buildTracePayload("tail_removal", "after", "summary",
+              "event=post_cleanup phase=after action=summary"
+                  + " trace_count=" + traceCount
+                  + " items_removed=" + stub_connections.size()),
+          FRLogger.formatNetLabel(this, p_net_no),
+          null);
+    }
+
     return true;
   }
 
