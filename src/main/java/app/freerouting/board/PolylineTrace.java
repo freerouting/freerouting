@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
@@ -34,9 +35,27 @@ import java.util.Set;
  * connected line segments).
  * <p>
  * This class represents electrical traces on a PCB board. Each trace has a
- * width, belongs to one or more
- * electrical nets, and consists of a series of connected straight line segments
- * forming a path.
+ * width, belongs to one or more electrical nets, and consists of a series of
+ * connected straight line segments forming a path.
+ * <p>
+ * <b>Polyline Structure Requirements:</b><br>
+ * A valid polyline must follow specific structural rules to ensure proper
+ * routing and connectivity:
+ * <ul>
+ * <li><b>Stub lines at boundaries:</b> The polyline must always start and end
+ * with stub lines (short connector lines). Stub lines have length 1.0 for
+ * orthogonal directions (horizontal/vertical) or length √2 (≈1.414) for
+ * diagonal directions.</li>
+ * <li><b>Stubs between non-stub lines:</b> If multiple non-stub lines (longer
+ * connector lines) are present, they must be separated by stub lines to
+ * maintain proper spacing and connectivity.</li>
+ * <li><b>Non-stub line connectivity:</b> Consecutive non-stub lines must be
+ * connected to each other at their endpoints, with stub lines providing the
+ * connection points.</li>
+ * <li><b>Multi-line branching:</b> In traces belonging to nets with 2 or more
+ * items, multiple lines can originate from the same point, allowing for
+ * branching connections to multiple pins.</li>
+ * </ul>
  * <p>
  * Key operations include:
  * <ul>
@@ -56,7 +75,13 @@ public class PolylineTrace extends Trace implements Serializable {
    * Creates a new polyline trace with the specified parameters.
    * <p>
    * A polyline must have at least 3 lines to form a valid trace segment with at
-   * least 2 corners.
+   * least 2 corners. The polyline will be validated against the structural
+   * requirements defined in the class JavaDoc (stub lines at boundaries, stubs
+   * between non-stub lines, non-stub line connectivity, and multi-line
+   * branching rules).
+   * <p>
+   * The validation is performed automatically via
+   * {@link #validateAndLogPolylineIntegrity()} during construction.
    *
    * @param p_polyline       the geometric path of the trace as a sequence of
    *                         connected lines
@@ -1646,37 +1671,98 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
+   * Checks if a line has a valid stub length based on its direction.
+   * <p>
+   * Stub lines must have specific lengths depending on their direction:
+   * <ul>
+   * <li><b>Orthogonal lines (horizontal/vertical):</b> Must have length 1.0
+   * (±0.05 tolerance for floating-point precision)</li>
+   * <li><b>Diagonal lines (45-degree angles):</b> Must have length √2 (≈1.414,
+   * ±0.05 tolerance for floating-point precision)</li>
+   * </ul>
+   * <p>
+   * This validation ensures that stub lines maintain the proper spacing and
+   * connectivity between non-stub lines and trace endpoints.
+   *
+   * @param line the line to validate
+   * @return true if the line has a valid stub length for its direction, false
+   *         otherwise
+   */
+  private boolean isValidStubLength(Line line) {
+    if (line == null) {
+      return false;
+    }
+
+    double lineLength = line.length();
+    Direction lineDirection = line.direction();
+
+    // Allow ±0.05 tolerance for floating-point precision
+    final double TOLERANCE = 0.05;
+
+    if (lineDirection == null) {
+      return false;
+    }
+
+    if (lineDirection.is_orthogonal()) {
+      // Orthogonal (horizontal or vertical) stub lines must have length 1.0
+      return lineLength >= (1.0 - TOLERANCE) && lineLength <= (1.0 + TOLERANCE);
+    } else if (lineDirection.is_diagonal()) {
+      // Diagonal (45-degree) stub lines must have length √2 (≈1.414)
+      double sqrtTwo = Math.sqrt(2);
+      return lineLength >= (sqrtTwo - TOLERANCE) && lineLength <= (sqrtTwo + TOLERANCE);
+    }
+
+    // Invalid direction
+    return false;
+  }
+
+  /**
    * Validates that all lines in this polyline are properly connected.
    * <p>
-   * A polyline is valid when each consecutive pair of lines shares an endpoint.
-   * This method checks that the end point of line[i] equals the start point of
-   * line[i+1] for all valid indices.
+   * This method validates the complete polyline structure according to the
+   * requirements defined in the class JavaDoc:
+   * <ul>
+   * <li><b>Stub line validation:</b> Every even-indexed line (0, 2, 4, ...) must
+   * be a stub line with direction-dependent length (1.0 for orthogonal, √2 for
+   * diagonal)</li>
+   * <li><b>Non-stub line connectivity:</b> Consecutive non-stub lines must
+   * connect at their endpoints via stub lines</li>
+   * <li><b>Multi-line branching:</b> For traces with 2 or more items in nets,
+   * multiple lines can originate from the same point, allowing branching
+   * connections</li>
+   * </ul>
    * <p>
    * This validation is critical because invalid polylines (with disconnected
-   * lines) can cause routing issues and incomplete connections.
+   * lines or incorrect stub lengths) can cause routing issues and incomplete
+   * connections.
    *
-   * @return true if all lines in the polyline are connected, false otherwise
+   * @return true if all polyline structural requirements are met, false if any
+   *         violations are detected
    */
   public boolean validatePolylineConnectivity() {
     if (lines == null || lines.arr == null || lines.arr.length < 3) {
       return true; // Empty or minimal polylines are considered valid
     }
 
-    for (int i = 0; i < lines.arr.length - 1; i++) {
+    // 1. Check if every even-indexed line (0, 2, 4, ...) is a valid stub line
+    // Stub lines must have direction-specific lengths:
+    // - Orthogonal (horizontal/vertical): length = 1.0
+    // - Diagonal (45-degree angles): length = √2 (≈1.414)
+    for (int i = 0; i < lines.arr.length; i += 2) {
       Line currentLine = lines.arr[i];
-      Line nextLine = lines.arr[i + 1];
 
-      Point currentEnd = currentLine.b;
-      Point nextStart = nextLine.a;
-
-      if (!currentEnd.equals(nextStart)) {
-        // Invalid polyline detected - lines are not connected
+      if (!isValidStubLength(currentLine)) {
         Point[] polylinePoints = extractPolylinePoints();
         String impactedItems = this.toString() + "," + this.getAllNetNames();
+        Direction lineDir = currentLine.direction();
+        String expectedLength = (lineDir != null && lineDir.is_diagonal())
+            ? "√2 (≈1.414)"
+            : "1.0";
 
         FRLogger.trace("PolylineTrace", "polyline_validation",
-            "Invalid polyline detected: disconnected lines at index " + i + " to " + (i + 1) +
-            ". Line[" + i + "].end=" + currentEnd + " != Line[" + (i + 1) + "].start=" + nextStart,
+            "Invalid polyline detected: expected stub line with length " + expectedLength
+                + " at index " + i + " but found line with length " + currentLine.length()
+                + " and direction " + (lineDir != null ? lineDir.toString() : "NULL"),
             impactedItems,
             polylinePoints);
 
@@ -1684,25 +1770,62 @@ public class PolylineTrace extends Trace implements Serializable {
       }
     }
 
+    // 2. Check that non-stub lines are connected to each other at their endpoints
+    // Non-stub lines are at odd indices (1, 3, 5, ...)
+
+    // The first non-stub line (index 1) has valid points by definition
+    Set<Point> validConnectionPoints = new HashSet<>();
+    validConnectionPoints.add(lines.arr[1].a);
+    validConnectionPoints.add(lines.arr[1].b);
+
+    for (int i = 3; 2 * i < lines.arr.length - 1; i++) {
+      int lineIndex = 2 * i - 1;
+      Line currentLine = lines.arr[lineIndex];
+
+      if (validConnectionPoints.contains(currentLine.a) || validConnectionPoints.contains(currentLine.b)) {
+        // Current non-stub line is connected to a previous non-stub line
+        validConnectionPoints.add(currentLine.a);
+        validConnectionPoints.add(currentLine.b);
+      } else {
+        // Current non-stub line is not connected to the previous non-stub line
+        Point[] polylinePoints = extractPolylinePoints();
+        String impactedItems = this.toString() + "," + this.getAllNetNames();
+
+        FRLogger.trace("PolylineTrace", "polyline_validation",
+            "Invalid polyline detected: non-stub lines not connected at index " + lineIndex
+                + " (line from " + currentLine.a + " to " + currentLine.b + ") is not connected to previous non-stub lines",
+            impactedItems,
+            polylinePoints);
+
+        return false;
+      }
+    }
+
+    // Note: Multi-line branching (multiple lines originating from the same point)
+    // is allowed for traces with 2+ items in nets. This validation does not
+    // restrict branching; it only enforces the stub-line and connectivity rules.
+
     return true;
   }
 
   /**
-   * Extracts all point coordinates from the polyline into an array.
+   * Extracts all point coordinates from the non-stub lines of the polyline into an array.
    * <p>
-   * This includes all corner points plus the intermediate line endpoints,
-   * providing a complete picture of the trace geometry.
+   * This method only includes points from non-stub lines (odd-indexed lines: 1, 3, 5, ...),
+   * ensuring each point is listed only once as a set. Stub lines (even-indexed lines: 0, 2, 4, ...)
+   * are excluded from the extraction.
    *
-   * @return array of all points in the polyline
+   * @return array of unique points from non-stub lines only
    */
   private Point[] extractPolylinePoints() {
     if (lines == null || lines.arr == null) {
       return new Point[0];
     }
 
-    // Collect all unique points from all lines
+    // Collect all unique points from non-stub lines only (odd indices: 1, 3, 5, ...)
     java.util.Set<Point> pointSet = new java.util.LinkedHashSet<>();
-    for (Line line : lines.arr) {
+    for (int i = 1; i < lines.arr.length; i += 2) {
+      Line line = lines.arr[i];
       pointSet.add(line.a);
       pointSet.add(line.b);
     }
@@ -1714,13 +1837,27 @@ public class PolylineTrace extends Trace implements Serializable {
    * Validates this polyline and logs any issues at TRACE level.
    * <p>
    * This method should be called after any significant modification to the
-   * polyline to ensure integrity. It checks:
+   * polyline to ensure integrity. It performs comprehensive validation including:
    * <ul>
-   * <li>Line connectivity (consecutive lines share endpoints)</li>
-   * <li>Polyline length (minimum 3 lines)</li>
+   * <li><b>Polyline length:</b> Minimum 3 lines required for a valid trace</li>
+   * <li><b>Stub line validation:</b> Even-indexed lines (0, 2, 4, ...) must be
+   * valid stub lines with direction-dependent lengths:
+   *   <ul>
+   *   <li>Orthogonal lines (horizontal/vertical): length = 1.0 ± 0.05</li>
+   *   <li>Diagonal lines (45-degree): length = √2 (≈1.414) ± 0.05</li>
+   *   </ul>
+   * </li>
+   * <li><b>Non-stub line connectivity:</b> Consecutive non-stub lines must
+   * connect at their endpoints</li>
+   * <li><b>Structural integrity:</b> Polyline must follow all rules defined in
+   * the class documentation</li>
    * </ul>
+   * <p>
+   * Successful validation results are logged at TRACE level only if granular
+   * trace logging is enabled. Validation failures are always logged.
    *
-   * @return true if polyline is valid, false if any issues are found
+   * @return true if polyline is valid and meets all structural requirements,
+   *         false if any issues are found
    */
   public boolean validateAndLogPolylineIntegrity() {
     // Check minimum length
