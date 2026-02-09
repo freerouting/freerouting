@@ -53,16 +53,16 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Converts a polyline to follow the stub/non-stub alternation pattern by
+   * Converts a polyline to follow the corner chamfer/line alternation pattern by
    * inserting
-   * stub lines where needed. This ensures that even-indexed lines are always
-   * stubs.
+   * chamfer lines where needed. This ensures that even-indexed lines are always
+   * chamfers (short bevel segments).
    * 
    * @param p_polyline the polyline to convert
-   * @return a new polyline with proper stub/non-stub alternation, or the original
+   * @return a new polyline with proper chamfer/line alternation, or the original
    *         if already valid
    */
-  public static Polyline ensureStubNonStubPattern(Polyline p_polyline) {
+  public static Polyline ensureCornerChamferPattern(Polyline p_polyline) {
     if (p_polyline == null || p_polyline.arr == null || p_polyline.arr.length < 3) {
       return p_polyline;
     }
@@ -71,8 +71,8 @@ public class ShapeTraceEntries {
     boolean needsConversion = false;
     for (int i = 0; i < p_polyline.arr.length && !needsConversion; i++) {
       if (i % 2 == 0) {
-        // Even indices must be stub lines
-        if (!isValidStubLength(p_polyline.arr[i])) {
+        // Even indices must be chamfer lines
+        if (!isValidChamferLength(p_polyline.arr[i])) {
           needsConversion = true;
         }
       }
@@ -82,26 +82,41 @@ public class ShapeTraceEntries {
       return p_polyline; // Already valid
     }
 
-    // Convert by inserting stub lines where needed
-    java.util.List<Line> newLines = new java.util.ArrayList<>();
+    // Convert by inserting corner chamfers where needed
+    java.util.List<Line> newLines = new java.util.LinkedList<>();
+    // Keep the start cap
+    newLines.add(p_polyline.arr[0]);
 
-    for (int i = 0; i < p_polyline.arr.length; i++) {
+    for (int i = 1; i < p_polyline.arr.length; i++) {
       Line currentLine = p_polyline.arr[i];
 
-      if (i % 2 == 0) {
-        // Even index: must be a stub
-        if (!isValidStubLength(currentLine)) {
-          // Insert a stub at the start
-          newLines.add(createStubLine(currentLine.a, currentLine.direction()));
-          // Add the original line as non-stub
+      // Check what we expect for the next slot
+      // newLines.size() is the index where the next line will be placed
+      boolean expectChamfer = (newLines.size() % 2 == 0);
+
+      if (expectChamfer) {
+        if (isValidChamferLength(currentLine)) {
+          // It's a valid chamfer, so add it
           newLines.add(currentLine);
-          // Insert a stub at the end (will be at even index for next iteration)
-          newLines.add(createStubLine(currentLine.b, currentLine.direction()));
         } else {
-          newLines.add(currentLine);
+          // Expected a chamfer but found a long line.
+          // Insert a chamfer between the previous line and this one.
+          Line lastAdded = newLines.get(newLines.size() - 1);
+          Line chamfer = createCornerChamfer(lastAdded, currentLine);
+
+          if (chamfer != null) {
+            newLines.add(chamfer);
+            // After adding chamfer, we expect a Line (non-chamfer), which currentLine is.
+            newLines.add(currentLine);
+          } else {
+            // Falls back to adding the line directly if chamfer creation failed (e.g., 180
+            // turn)
+            // This maintains connectivity even if validation might fail
+            newLines.add(currentLine);
+          }
         }
       } else {
-        // Odd index: can be any length, just add it
+        // Expecting Line (odd index) - anything is allowed
         newLines.add(currentLine);
       }
     }
@@ -110,41 +125,45 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Creates a stub line from a point in a given direction.
-   * Stub length is 1.0 for orthogonal directions, √2 for diagonal.
+   * Creates a chamfer line that cuts the corner between two lines.
+   * Assumes k=1 unit cut which results in length 1.0 (Ortho) or sqrt(2)
+   * (Diagonal).
    */
-  private static Line createStubLine(Point p_point, Direction p_direction) {
-    if (p_direction == null) {
-      // Fallback: create minimal orthogonal stub
-      return new Line(p_point, p_point.translate_by(new IntVector(1, 0)));
+  private static Line createCornerChamfer(Line prev, Line next) {
+    if (prev == null || next == null)
+      return null;
+
+    // Calculate intersection corner
+    Point corner = prev.intersection(next);
+    if (corner == null) {
+      return null;
     }
 
-    double stubLength;
-    if (p_direction.is_orthogonal()) {
-      stubLength = 1.0;
-    } else if (p_direction.is_diagonal()) {
-      stubLength = Math.sqrt(2);
-    } else {
-      stubLength = 1.0; // Fallback
+    Direction d1 = prev.direction();
+    Direction d2 = next.direction();
+
+    if (d1.equals(d2) || d1.equals(d2.opposite())) {
+      return null;
     }
 
-    // Create a line in the given direction with the appropriate stub length
-    IntVector direction_vector = (IntVector) p_direction.get_vector();
-    double vector_length = Math.sqrt(direction_vector.x * direction_vector.x + direction_vector.y * direction_vector.y);
-    double scale = stubLength / vector_length;
+    // For standard routing turns, shifting back by 1 unit along input vector
+    // and forward by 1 unit along output vector creates the correct chamfer.
+    // P' = Corner - d1
+    // N' = Corner + d2
+    Vector v1 = d1.get_vector();
+    Vector v2 = d2.get_vector();
 
-    int dx = (int) Math.round(direction_vector.x * scale);
-    int dy = (int) Math.round(direction_vector.y * scale);
+    Point pPrime = corner.translate_by(v1.negate());
+    Point nPrime = corner.translate_by(v2);
 
-    Point endPoint = p_point.translate_by(new IntVector(dx, dy));
-    return new Line(p_point, endPoint);
+    return new Line(pPrime, nPrime);
   }
 
   /**
-   * Checks if a line has a valid stub length (√2 for diagonal, 1.0 for
+   * Checks if a line has a valid chamfer length (√2 for diagonal, 1.0 for
    * orthogonal).
    */
-  public static boolean isValidStubLength(Line line) {
+  public static boolean isValidChamferLength(Line line) {
     if (line == null) {
       return false;
     }
@@ -164,14 +183,14 @@ public class ShapeTraceEntries {
     }
 
     if (lineDirection.is_orthogonal()) {
-      // Orthogonal (horizontal or vertical) stub lines must have length 1.0
+      // Orthogonal (horizontal or vertical) chamfer lines must have length 1.0
       return lineLength >= (1.0 - TOLERANCE) && lineLength <= (1.0 + TOLERANCE);
     } else if (lineDirection.is_diagonal()) {
-      // Diagonal (45-degree) stub lines must have length √2 (≈1.414)
+      // Diagonal (45-degree) chamfer lines must have length √2 (≈1.414)
       double sqrtTwo = Math.sqrt(2);
       return lineLength >= (sqrtTwo - TOLERANCE) && lineLength <= (sqrtTwo + TOLERANCE);
     } else {
-      // Other directions (e.g., arbitrary angles) are not valid for stub lines
+      // Other directions (e.g., arbitrary angles) are not valid for chamfer lines
       return false;
     }
   }
@@ -358,11 +377,11 @@ public class ShapeTraceEntries {
       return next_substitute_trace_piece();
     }
 
-    // Validate and fix the constructed polyline to follow stub/non-stub alternation
+    // Validate and fix the constructed polyline to follow chamfer/line alternation
     // pattern
-    // This ensures that even-indexed lines are always stubs, avoiding validation
+    // This ensures that even-indexed lines are always chamfers, avoiding validation
     // errors
-    Polyline fixed_polyline = ensureStubNonStubPattern(piece_polyline);
+    Polyline fixed_polyline = ensureCornerChamferPattern(piece_polyline);
 
     return new PolylineTrace(fixed_polyline, this.layer, curr_trace.get_half_width(),
         curr_trace.net_no_arr, curr_trace.clearance_class_no(), 0, 0, FixedState.NOT_FIXED, this.board);

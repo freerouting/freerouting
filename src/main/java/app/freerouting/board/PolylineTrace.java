@@ -42,15 +42,16 @@ import java.util.Set;
  * A valid polyline must follow specific structural rules to ensure proper
  * routing and connectivity:
  * <ul>
- * <li><b>Stub lines at boundaries:</b> The polyline must always start and end
- * with stub lines (short connector lines). Stub lines have length 1.0 for
+ * <li><b>Chamfer lines at boundaries:</b> The polyline must always start and
+ * end
+ * with chamfer lines (short connector lines). Chamfer lines have length 1.0 for
  * orthogonal directions (horizontal/vertical) or length √2 (≈1.414) for
  * diagonal directions.</li>
- * <li><b>Stubs between non-stub lines:</b> If multiple non-stub lines (longer
- * connector lines) are present, they must be separated by stub lines to
+ * <li><b>Chamfers between trace lines:</b> If multiple trace lines (longer
+ * connector lines) are present, they must be separated by chamfer lines to
  * maintain proper spacing and connectivity.</li>
- * <li><b>Non-stub line connectivity:</b> Consecutive non-stub lines must be
- * connected to each other at their endpoints, with stub lines providing the
+ * <li><b>Trace line connectivity:</b> Consecutive trace lines must be
+ * connected to each other at their endpoints, with chamfer lines providing the
  * connection points.</li>
  * <li><b>Multi-line branching:</b> In traces belonging to nets with 2 or more
  * items, multiple lines can originate from the same point, allowing for
@@ -361,43 +362,43 @@ public class PolylineTrace extends Trace implements Serializable {
       other_lines = other_trace.lines.arr;
     }
 
-    // Check if the last non-stub line of other_trace equals the first non-stub line
+    // Check if the last trace line of other_trace equals the first trace line
     // of this trace
     boolean skip_line = other_lines[other_lines.length - 2].is_equal_or_opposite(this_lines[1]);
 
     if (skip_line && (globalSettings != null) && (globalSettings.debugSettings != null)
         && (globalSettings.debugSettings.enableDetailedLogging)) {
       FRLogger.trace("PolylineTrace.combine_at_start()", "combine_traces",
-          "Skipping duplicate line: other_trace last_non_stub_line matches this_trace first_non_stub_line"
+          "Skipping duplicate line: other_trace last_trace_line matches this_trace first_trace_line"
               + ", other_trace_id=" + other_trace.get_id_no()
               + ", this_trace_id=" + this.get_id_no(),
           this.getAllNetNames(),
           new Point[] { start_corner });
     }
 
-    // CRITICAL: Maintain stub/non-stub alternation (even indices=stubs, odd
-    // indices=non-stubs)
-    // The join point needs a stub line to separate the non-stub lines from both
+    // CRITICAL: Maintain chamfer/line alternation (even indices=chamfers, odd
+    // indices=lines)
+    // The join point needs a chamfer line to separate the trace lines from both
     // traces
-    // After copying other_lines[0...k], if k is odd (non-stub), we need a stub
+    // After copying other_lines[0...k], if k is odd (line), we need a chamfer
     // before this_lines[1]
     // Therefore, when other_lines.length is odd, we must keep other_lines[length-1]
-    // (the last stub)
+    // (the last chamfer)
 
     int other_copy_length;
     int this_skip_count;
 
     if (other_lines.length % 2 == 1) {
-      // Odd length: last line is at even index (stub)
-      // Keep it to maintain alternation: [..., non-stub(N-2), stub(N-1)] +
-      // [non-stub(1), ...]
-      other_copy_length = other_lines.length; // Keep all lines including the last stub
-      this_skip_count = 1; // Skip this_lines[0] (duplicate stub at connection point)
+      // Odd length: last line is at even index (chamfer)
+      // Keep it to maintain alternation: [..., line(N-2), chamfer(N-1)] +
+      // [line(1), ...]
+      other_copy_length = other_lines.length; // Keep all lines including the last chamfer
+      this_skip_count = 1; // Skip this_lines[0] (duplicate chamfer at connection point)
     } else {
-      // Even length: last line is at odd index (non-stub)
-      // Remove it and the next stub: [..., stub(N-2)] + [non-stub(1), ...]
-      other_copy_length = other_lines.length - 1; // Remove last non-stub
-      this_skip_count = 1; // Skip this_lines[0] (stub)
+      // Even length: last line is at odd index (line)
+      // Remove it and the next chamfer: [..., chamfer(N-2)] + [line(1), ...]
+      other_copy_length = other_lines.length - 1; // Remove last trace line
+      this_skip_count = 1; // Skip this_lines[0] (chamfer)
     }
 
     int new_line_count = other_copy_length + this_lines.length - this_skip_count;
@@ -538,43 +539,43 @@ public class PolylineTrace extends Trace implements Serializable {
       other_lines = other_trace.lines.arr;
     }
 
-    // Check if the last non-stub line of this trace equals the first non-stub line
+    // Check if the last trace line of this trace equals the first trace line
     // of other_trace
     boolean skip_line = this_lines[this_lines.length - 2].is_equal_or_opposite(other_lines[1]);
 
     if (skip_line && (globalSettings != null) && (globalSettings.debugSettings != null)
         && (globalSettings.debugSettings.enableDetailedLogging)) {
       FRLogger.trace("PolylineTrace.combine_at_end()", "combine_traces",
-          "Skipping duplicate line: this_trace last_non_stub_line matches other_trace first_non_stub_line"
+          "Skipping duplicate line: this_trace last_trace_line matches other_trace first_trace_line"
               + ", other_trace_id=" + other_trace.get_id_no()
               + ", this_trace_id=" + this.get_id_no(),
           this.getAllNetNames(),
           new Point[] { end_corner });
     }
 
-    // CRITICAL: Maintain stub/non-stub alternation (even indices=stubs, odd
-    // indices=non-stubs)
-    // The join point needs a stub line to separate the non-stub lines from both
+    // CRITICAL: Maintain chamfer/line alternation (even indices=chamfers, odd
+    // indices=lines)
+    // The join point needs a chamfer line to separate the trace lines from both
     // traces
-    // After copying this_lines[0...k], if k is odd (non-stub), we need a stub
+    // After copying this_lines[0...k], if k is odd (line), we need a chamfer
     // before other_lines[1]
     // Therefore, when this_lines.length is odd, we must keep this_lines[length-1]
-    // (the last stub)
+    // (the last chamfer)
 
     int this_copy_length;
     int other_skip_count;
 
     if (this_lines.length % 2 == 1) {
-      // Odd length: last line is at even index (stub)
-      // Keep it to maintain alternation: [..., non-stub(N-2), stub(N-1)] +
-      // [non-stub(1), ...]
-      this_copy_length = this_lines.length; // Keep all lines including the last stub
-      other_skip_count = 1; // Skip other_lines[0] (duplicate stub at connection point)
+      // Odd length: last line is at even index (chamfer)
+      // Keep it to maintain alternation: [..., line(N-2), chamfer(N-1)] +
+      // [line(1), ...]
+      this_copy_length = this_lines.length; // Keep all lines including the last chamfer
+      other_skip_count = 1; // Skip other_lines[0] (duplicate chamfer at connection point)
     } else {
-      // Even length: last line is at odd index (non-stub)
-      // Remove it and the next stub: [..., stub(N-2)] + [non-stub(1), ...]
-      this_copy_length = this_lines.length - 1; // Remove last non-stub
-      other_skip_count = 1; // Skip other_lines[0] (stub)
+      // Even length: last line is at odd index (line)
+      // Remove it and the next chamfer: [..., chamfer(N-2)] + [line(1), ...]
+      this_copy_length = this_lines.length - 1; // Remove last trace line
+      other_skip_count = 1; // Skip other_lines[0] (chamfer)
     }
 
     int new_line_count = this_copy_length + other_lines.length - other_skip_count;
@@ -1287,9 +1288,9 @@ public class PolylineTrace extends Trace implements Serializable {
     Polyline new_lines = p_pull_tight_algo.pull_tight(lines, get_layer(), get_half_width(), net_no_arr,
         clearance_class_no(), this.touching_pins_at_end_corners());
     if (new_lines != lines) {
-      // Ensure the generated polyline follows the stub/non-stub alternation pattern.
+      // Ensure the generated polyline follows the chamfer/line alternation pattern.
       // Instead of skipping validation, fix the structure if needed.
-      new_lines = ShapeTraceEntries.ensureStubNonStubPattern(new_lines);
+      new_lines = ShapeTraceEntries.ensureCornerChamferPattern(new_lines);
       change(new_lines);
       return true;
     }
@@ -1803,9 +1804,9 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Checks if a line has a valid stub length based on its direction.
+   * Checks if a line has a valid chamfer length based on its direction.
    * <p>
-   * Stub lines must have specific lengths depending on their direction:
+   * Chamfer lines must have specific lengths depending on their direction:
    * <ul>
    * <li><b>Orthogonal lines (horizontal/vertical):</b> Must have length 1.0
    * (±0.05 tolerance for floating-point precision)</li>
@@ -1813,14 +1814,14 @@ public class PolylineTrace extends Trace implements Serializable {
    * ±0.05 tolerance for floating-point precision)</li>
    * </ul>
    * <p>
-   * This validation ensures that stub lines maintain the proper spacing and
-   * connectivity between non-stub lines and trace endpoints.
+   * This validation ensures that chamfer lines maintain the proper spacing and
+   * connectivity between trace lines and trace endpoints.
    *
    * @param line the line to validate
-   * @return true if the line has a valid stub length for its direction, false
+   * @return true if the line has a valid chamfer length for its direction, false
    *         otherwise
    */
-  private boolean isValidStubLength(Line line) {
+  private boolean isValidChamferLength(Line line) {
     if (line == null) {
       return false;
     }
@@ -1836,14 +1837,14 @@ public class PolylineTrace extends Trace implements Serializable {
     }
 
     if (lineDirection.is_orthogonal()) {
-      // Orthogonal (horizontal or vertical) stub lines must have length 1.0
+      // Orthogonal (horizontal or vertical) chamfer lines must have length 1.0
       return lineLength >= (1.0 - TOLERANCE) && lineLength <= (1.0 + TOLERANCE);
     } else if (lineDirection.is_diagonal()) {
-      // Diagonal (45-degree) stub lines must have length √2 (≈1.414)
+      // Diagonal (45-degree) chamfer lines must have length √2 (≈1.414)
       double sqrtTwo = Math.sqrt(2);
       return lineLength >= (sqrtTwo - TOLERANCE) && lineLength <= (sqrtTwo + TOLERANCE);
     } else {
-      // Other directions (e.g., arbitrary angles) are not valid for stub lines
+      // Other directions (e.g., arbitrary angles) are not valid for chamfer lines
       return false;
     }
   }
@@ -1876,14 +1877,14 @@ public class PolylineTrace extends Trace implements Serializable {
       return true; // Empty or minimal polylines are considered valid
     }
 
-    // 1. Check if every even-indexed line (0, 2, 4, ...) is a valid stub line
-    // Stub lines must have direction-specific lengths:
+    // 1. Check if every even-indexed line (0, 2, 4, ...) is a valid chamfer line
+    // Chamfer lines must have direction-specific lengths:
     // - Orthogonal (horizontal/vertical): length = 1.0
     // - Diagonal (45-degree angles): length = √2 (≈1.414)
     for (int i = 0; i < lines.arr.length; i += 2) {
       Line currentLine = lines.arr[i];
 
-      if (!isValidStubLength(currentLine)) {
+      if (!isValidChamferLength(currentLine)) {
         Point[] polylinePoints = extractPolylinePoints();
         String impactedItems = this.toString() + "," + this.getAllNetNames();
         Direction lineDir = currentLine.direction();
@@ -1892,7 +1893,7 @@ public class PolylineTrace extends Trace implements Serializable {
             : "1.0";
 
         FRLogger.trace("PolylineTrace", "polyline_validation",
-            "Invalid polyline detected: expected stub line with length " + expectedLength
+            "Invalid polyline detected: expected chamfer line with length " + expectedLength
                 + " at index " + i + " but found line with length " + currentLine.length()
                 + " and direction " + (lineDir != null ? lineDir.toString() : "NULL"),
             impactedItems,
@@ -1902,10 +1903,10 @@ public class PolylineTrace extends Trace implements Serializable {
       }
     }
 
-    // 2. Check that non-stub lines are connected to each other at their endpoints
-    // Non-stub lines are at odd indices (1, 3, 5, ...)
+    // 2. Check that trace lines are connected to each other at their endpoints
+    // Trace lines are at odd indices (1, 3, 5, ...)
 
-    // The first non-stub line (index 1) has valid points by definition
+    // The first trace line (index 1) has valid points by definition
     Set<Point> validConnectionPoints = new HashSet<>();
     validConnectionPoints.add(lines.arr[1].a);
     validConnectionPoints.add(lines.arr[1].b);
@@ -1915,18 +1916,18 @@ public class PolylineTrace extends Trace implements Serializable {
       Line currentLine = lines.arr[lineIndex];
 
       if (validConnectionPoints.contains(currentLine.a) || validConnectionPoints.contains(currentLine.b)) {
-        // Current non-stub line is connected to a previous non-stub line
+        // Current trace line is connected to a previous trace line
         validConnectionPoints.add(currentLine.a);
         validConnectionPoints.add(currentLine.b);
       } else {
-        // Current non-stub line is not connected to the previous non-stub line
+        // Current trace line is not connected to the previous trace line
         Point[] polylinePoints = extractPolylinePoints();
         String impactedItems = this.toString() + "," + this.getAllNetNames();
 
         FRLogger.trace("PolylineTrace", "polyline_validation",
-            "Invalid polyline detected: non-stub lines not connected at index " + lineIndex
+            "Invalid polyline detected: trace lines not connected at index " + lineIndex
                 + " (line from " + currentLine.a + " to " + currentLine.b
-                + ") is not connected to previous non-stub lines",
+                + ") is not connected to previous trace lines",
             impactedItems,
             polylinePoints);
 
@@ -1936,29 +1937,29 @@ public class PolylineTrace extends Trace implements Serializable {
 
     // Note: Multi-line branching (multiple lines originating from the same point)
     // is allowed for traces with 2+ items in nets. This validation does not
-    // restrict branching; it only enforces the stub-line and connectivity rules.
+    // restrict branching; it only enforces the chamfer-line and connectivity rules.
 
     return true;
   }
 
   /**
-   * Extracts all point coordinates from the non-stub lines of the polyline into
+   * Extracts all point coordinates from the trace lines of the polyline into
    * an array.
    * <p>
-   * This method only includes points from non-stub lines (odd-indexed lines: 1,
+   * This method only includes points from trace lines (odd-indexed lines: 1,
    * 3, 5, ...),
-   * ensuring each point is listed only once as a set. Stub lines (even-indexed
+   * ensuring each point is listed only once as a set. Chamfer lines (even-indexed
    * lines: 0, 2, 4, ...)
    * are excluded from the extraction.
    *
-   * @return array of unique points from non-stub lines only
+   * @return array of unique points from trace lines only
    */
   private Point[] extractPolylinePoints() {
     if (lines == null || lines.arr == null) {
       return new Point[0];
     }
 
-    // Collect all unique points from non-stub lines only (odd indices: 1, 3, 5,
+    // Collect all unique points from trace lines only (odd indices: 1, 3, 5,
     // ...)
     java.util.Set<Point> pointSet = new java.util.LinkedHashSet<>();
     for (int i = 1; i < lines.arr.length; i += 2) {
@@ -1977,14 +1978,14 @@ public class PolylineTrace extends Trace implements Serializable {
    * polyline to ensure integrity. It performs comprehensive validation including:
    * <ul>
    * <li><b>Polyline length:</b> Minimum 3 lines required for a valid trace</li>
-   * <li><b>Stub line validation:</b> Even-indexed lines (0, 2, 4, ...) must be
-   * valid stub lines with direction-dependent lengths:
+   * <li><b>Chamfer line validation:</b> Even-indexed lines (0, 2, 4, ...) must be
+   * valid chamfer lines with direction-dependent lengths:
    * <ul>
    * <li>Orthogonal lines (horizontal/vertical): length = 1.0 ± 0.05</li>
    * <li>Diagonal lines (45-degree): length = √2 (≈1.414) ± 0.05</li>
    * </ul>
    * </li>
-   * <li><b>Non-stub line connectivity:</b> Consecutive non-stub lines must
+   * <li><b>Trace line connectivity:</b> Consecutive trace lines must
    * connect at their endpoints</li>
    * <li><b>Structural integrity:</b> Polyline must follow all rules defined in
    * the class documentation</li>
