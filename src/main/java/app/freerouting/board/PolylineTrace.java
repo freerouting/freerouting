@@ -1287,6 +1287,9 @@ public class PolylineTrace extends Trace implements Serializable {
     Polyline new_lines = p_pull_tight_algo.pull_tight(lines, get_layer(), get_half_width(), net_no_arr,
         clearance_class_no(), this.touching_pins_at_end_corners());
     if (new_lines != lines) {
+      // Ensure the generated polyline follows the stub/non-stub alternation pattern.
+      // Instead of skipping validation, fix the structure if needed.
+      new_lines = ShapeTraceEntries.ensureStubNonStubPattern(new_lines);
       change(new_lines);
       return true;
     }
@@ -1395,6 +1398,8 @@ public class PolylineTrace extends Trace implements Serializable {
 
   /**
    * changes the geometry of this trace to p_new_polyline
+   * 
+   * @param p_new_polyline the new polyline geometry
    */
   void change(Polyline p_new_polyline) {
     if (!this.is_on_the_board()) {
@@ -1712,7 +1717,7 @@ public class PolylineTrace extends Trace implements Serializable {
     if (!p_at_start) {
       changed_polyline = changed_polyline.reverse();
     }
-    this.change(changed_polyline);
+    this.change(changed_polyline); // Validate normally
 
     // create a shove_fixed exit line.
     curr_lines = new Line[3];
@@ -1837,10 +1842,10 @@ public class PolylineTrace extends Trace implements Serializable {
       // Diagonal (45-degree) stub lines must have length √2 (≈1.414)
       double sqrtTwo = Math.sqrt(2);
       return lineLength >= (sqrtTwo - TOLERANCE) && lineLength <= (sqrtTwo + TOLERANCE);
+    } else {
+      // Other directions (e.g., arbitrary angles) are not valid for stub lines
+      return false;
     }
-
-    // Invalid direction
-    return false;
   }
 
   /**

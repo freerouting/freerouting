@@ -1,11 +1,15 @@
 package app.freerouting.board;
 
 import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.IntVector;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -30,9 +34,12 @@ public class ShapeTraceEntries {
   private Item found_obstacle;
 
   /**
-   * Used for shoving traces and vias out of the input shape. p_from_side.no is the side of p_shape, from where the shove comes. if p_from_side.no < 0, it will be calculated internally.
+   * Used for shoving traces and vias out of the input shape. p_from_side.no is
+   * the side of p_shape, from where the shove comes. if p_from_side.no < 0, it
+   * will be calculated internally.
    */
-  ShapeTraceEntries(TileShape p_shape, int p_layer, int[] p_own_net_nos, int p_cl_type, CalcFromSide p_from_side, RoutingBoard p_board) {
+  ShapeTraceEntries(TileShape p_shape, int p_layer, int[] p_own_net_nos, int p_cl_type, CalcFromSide p_from_side,
+      RoutingBoard p_board) {
     shape = p_shape;
     layer = p_layer;
     own_net_nos = p_own_net_nos;
@@ -43,6 +50,130 @@ public class ShapeTraceEntries {
     trace_piece_count = 0;
     max_stack_level = 0;
     shove_via_list = new LinkedList<>();
+  }
+
+  /**
+   * Converts a polyline to follow the stub/non-stub alternation pattern by
+   * inserting
+   * stub lines where needed. This ensures that even-indexed lines are always
+   * stubs.
+   * 
+   * @param p_polyline the polyline to convert
+   * @return a new polyline with proper stub/non-stub alternation, or the original
+   *         if already valid
+   */
+  public static Polyline ensureStubNonStubPattern(Polyline p_polyline) {
+    if (p_polyline == null || p_polyline.arr == null || p_polyline.arr.length < 3) {
+      return p_polyline;
+    }
+
+    // Check if already valid
+    boolean needsConversion = false;
+    for (int i = 0; i < p_polyline.arr.length && !needsConversion; i++) {
+      if (i % 2 == 0) {
+        // Even indices must be stub lines
+        if (!isValidStubLength(p_polyline.arr[i])) {
+          needsConversion = true;
+        }
+      }
+    }
+
+    if (!needsConversion) {
+      return p_polyline; // Already valid
+    }
+
+    // Convert by inserting stub lines where needed
+    java.util.List<Line> newLines = new java.util.ArrayList<>();
+
+    for (int i = 0; i < p_polyline.arr.length; i++) {
+      Line currentLine = p_polyline.arr[i];
+
+      if (i % 2 == 0) {
+        // Even index: must be a stub
+        if (!isValidStubLength(currentLine)) {
+          // Insert a stub at the start
+          newLines.add(createStubLine(currentLine.a, currentLine.direction()));
+          // Add the original line as non-stub
+          newLines.add(currentLine);
+          // Insert a stub at the end (will be at even index for next iteration)
+          newLines.add(createStubLine(currentLine.b, currentLine.direction()));
+        } else {
+          newLines.add(currentLine);
+        }
+      } else {
+        // Odd index: can be any length, just add it
+        newLines.add(currentLine);
+      }
+    }
+
+    return new Polyline(newLines.toArray(new Line[0]));
+  }
+
+  /**
+   * Creates a stub line from a point in a given direction.
+   * Stub length is 1.0 for orthogonal directions, √2 for diagonal.
+   */
+  private static Line createStubLine(Point p_point, Direction p_direction) {
+    if (p_direction == null) {
+      // Fallback: create minimal orthogonal stub
+      return new Line(p_point, p_point.translate_by(new IntVector(1, 0)));
+    }
+
+    double stubLength;
+    if (p_direction.is_orthogonal()) {
+      stubLength = 1.0;
+    } else if (p_direction.is_diagonal()) {
+      stubLength = Math.sqrt(2);
+    } else {
+      stubLength = 1.0; // Fallback
+    }
+
+    // Create a line in the given direction with the appropriate stub length
+    IntVector direction_vector = (IntVector) p_direction.get_vector();
+    double vector_length = Math.sqrt(direction_vector.x * direction_vector.x + direction_vector.y * direction_vector.y);
+    double scale = stubLength / vector_length;
+
+    int dx = (int) Math.round(direction_vector.x * scale);
+    int dy = (int) Math.round(direction_vector.y * scale);
+
+    Point endPoint = p_point.translate_by(new IntVector(dx, dy));
+    return new Line(p_point, endPoint);
+  }
+
+  /**
+   * Checks if a line has a valid stub length (√2 for diagonal, 1.0 for
+   * orthogonal).
+   */
+  public static boolean isValidStubLength(Line line) {
+    if (line == null) {
+      return false;
+    }
+
+    // Calculate line length from points
+    double dx = ((IntPoint) line.b).x - ((IntPoint) line.a).x;
+    double dy = ((IntPoint) line.b).y - ((IntPoint) line.a).y;
+    double lineLength = Math.sqrt(dx * dx + dy * dy);
+
+    Direction lineDirection = line.direction();
+
+    // Allow ±0.05 tolerance for floating-point precision
+    final double TOLERANCE = 0.05;
+
+    if (lineDirection == null) {
+      return false;
+    }
+
+    if (lineDirection.is_orthogonal()) {
+      // Orthogonal (horizontal or vertical) stub lines must have length 1.0
+      return lineLength >= (1.0 - TOLERANCE) && lineLength <= (1.0 + TOLERANCE);
+    } else if (lineDirection.is_diagonal()) {
+      // Diagonal (45-degree) stub lines must have length √2 (≈1.414)
+      double sqrtTwo = Math.sqrt(2);
+      return lineLength >= (sqrtTwo - TOLERANCE) && lineLength <= (sqrtTwo + TOLERANCE);
+    } else {
+      // Other directions (e.g., arbitrary angles) are not valid for stub lines
+      return false;
+    }
   }
 
   public static void cutout_trace(PolylineTrace p_trace, ConvexShape p_shape, int p_cl_class) {
@@ -57,8 +188,9 @@ public class ShapeTraceEntries {
       double curr_offset = p_trace.get_compensated_half_width(search_tree) + c_offset_add;
       offset_shape = p_shape.offset(curr_offset);
     } else {
-      // enlarge the shape in 2 steps  for symmetry reasons
-      double cl_offset = board.clearance_value(p_trace.clearance_class_no(), p_cl_class, p_trace.get_layer()) + c_offset_add;
+      // enlarge the shape in 2 steps for symmetry reasons
+      double cl_offset = board.clearance_value(p_trace.clearance_class_no(), p_cl_class, p_trace.get_layer())
+          + c_offset_add;
       offset_shape = p_shape.offset(p_trace.get_half_width());
       offset_shape = offset_shape.offset(cl_offset);
     }
@@ -68,12 +200,14 @@ public class ShapeTraceEntries {
       // nothing cut off
       return;
     }
-    if (pieces.length == 2 && offset_shape.is_outside(pieces[0].first_corner()) && offset_shape.is_outside(pieces[1].last_corner())) {
+    if (pieces.length == 2 && offset_shape.is_outside(pieces[0].first_corner())
+        && offset_shape.is_outside(pieces[1].last_corner())) {
       fast_cutout_trace(p_trace, pieces[0], pieces[1]);
     } else {
       board.remove_item(p_trace);
       for (int i = 0; i < pieces.length; i++) {
-        board.insert_trace_without_cleaning(pieces[i], p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), FixedState.NOT_FIXED);
+        board.insert_trace_without_cleaning(pieces[i], p_trace.get_layer(), p_trace.get_half_width(),
+            p_trace.net_no_arr, p_trace.clearance_class_no(), FixedState.NOT_FIXED);
       }
     }
   }
@@ -85,12 +219,14 @@ public class ShapeTraceEntries {
     BasicBoard board = p_trace.board;
     board.additional_update_after_change(p_trace);
     board.item_list.save_for_undo(p_trace);
-    PolylineTrace start_piece = new PolylineTrace(p_start_piece, p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), 0, 0, FixedState.NOT_FIXED, board);
+    PolylineTrace start_piece = new PolylineTrace(p_start_piece, p_trace.get_layer(), p_trace.get_half_width(),
+        p_trace.net_no_arr, p_trace.clearance_class_no(), 0, 0, FixedState.NOT_FIXED, board);
     start_piece.board = board;
     board.item_list.insert(start_piece);
     start_piece.set_on_the_board(true);
 
-    PolylineTrace end_piece = new PolylineTrace(p_end_piece, p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), 0, 0, FixedState.NOT_FIXED, board);
+    PolylineTrace end_piece = new PolylineTrace(p_end_piece, p_trace.get_layer(), p_trace.get_half_width(),
+        p_trace.net_no_arr, p_trace.clearance_class_no(), 0, 0, FixedState.NOT_FIXED, board);
     end_piece.board = board;
     board.item_list.insert(end_piece);
     end_piece.set_on_the_board(true);
@@ -124,8 +260,11 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Stores traces and vias in p_item_list. Returns false, if p_item_list contains obstacles, which cannot be shoved aside. If p_is_pad_check. the check is for vias, otherwise it is for traces. If
-   * p_copper_sharing_allowed, overlaps with traces or pads of the own net are allowed.
+   * Stores traces and vias in p_item_list. Returns false, if p_item_list contains
+   * obstacles, which cannot be shoved aside. If p_is_pad_check. the check is for
+   * vias, otherwise it is for traces. If
+   * p_copper_sharing_allowed, overlaps with traces or pads of the own net are
+   * allowed.
    */
   boolean store_items(Collection<Item> p_item_list, boolean p_is_pad_check, boolean p_copper_sharing_allowed) {
     for (Item curr_item : p_item_list) {
@@ -171,7 +310,8 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * calculates the next substitute trace piece. Returns null at the end of the substitute trace list.
+   * calculates the next substitute trace piece. Returns null at the end of the
+   * substitute trace list.
    */
   PolylineTrace next_substitute_trace_piece() {
 
@@ -186,7 +326,7 @@ public class ShapeTraceEntries {
       double curr_offset = curr_trace.get_compensated_half_width(search_tree) + c_offset_add;
       offset_shape = (TileShape) shape.offset(curr_offset);
     } else {
-      // enlarge the shape in 2 steps  for symmetry reasons
+      // enlarge the shape in 2 steps for symmetry reasons
       offset_shape = (TileShape) shape.offset(curr_trace.get_half_width());
       double cl_offset = board.clearance_value(curr_trace.clearance_class_no(), cl_class, layer) + c_offset_add;
       offset_shape = (TileShape) offset_shape.offset(cl_offset);
@@ -217,7 +357,15 @@ public class ShapeTraceEntries {
       // no valid trace piece, return the next one
       return next_substitute_trace_piece();
     }
-    return new PolylineTrace(piece_polyline, this.layer, curr_trace.get_half_width(), curr_trace.net_no_arr, curr_trace.clearance_class_no(), 0, 0, FixedState.NOT_FIXED, this.board);
+
+    // Validate and fix the constructed polyline to follow stub/non-stub alternation
+    // pattern
+    // This ensures that even-indexed lines are always stubs, avoiding validation
+    // errors
+    Polyline fixed_polyline = ensureStubNonStubPattern(piece_polyline);
+
+    return new PolylineTrace(fixed_polyline, this.layer, curr_trace.get_half_width(),
+        curr_trace.net_no_arr, curr_trace.clearance_class_no(), 0, 0, FixedState.NOT_FIXED, this.board);
   }
 
   /**
@@ -235,14 +383,16 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Looks if an unconnected endpoint of a trace of a foreign net is contained in the interior of the shape.
+   * Looks if an unconnected endpoint of a trace of a foreign net is contained in
+   * the interior of the shape.
    */
   public boolean trace_tails_in_shape() {
     return this.shape_contains_trace_tails;
   }
 
   /**
-   * Cuts out all traces in p_item_list out of the stored shape. Traces with net number p_except_net_no are ignored
+   * Cuts out all traces in p_item_list out of the stored shape. Traces with net
+   * number p_except_net_no are ignored
    */
   void cutout_traces(Collection<Item> p_item_list) {
     for (Item curr_item : p_item_list) {
@@ -260,7 +410,9 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Stores all intersection points of p_trace with the border of the internal shape enlarged by the half width and the clearance of the corresponding trace pen.
+   * Stores all intersection points of p_trace with the border of the internal
+   * shape enlarged by the half width and the clearance of the corresponding trace
+   * pen.
    */
   private boolean store_trace(PolylineTrace p_trace) {
     ShapeSearchTree search_tree = this.board.search_tree_manager.get_default_tree();
@@ -269,8 +421,9 @@ public class ShapeTraceEntries {
       double curr_offset = p_trace.get_compensated_half_width(search_tree) + c_offset_add;
       offset_shape = (TileShape) shape.offset(curr_offset);
     } else {
-      // enlarge the shape in 2 steps  for symmetry reasons
-      double cl_offset = board.clearance_value(p_trace.clearance_class_no(), this.cl_class, p_trace.get_layer()) + c_offset_add;
+      // enlarge the shape in 2 steps for symmetry reasons
+      double cl_offset = board.clearance_value(p_trace.clearance_class_no(), this.cl_class, p_trace.get_layer())
+          + c_offset_add;
       offset_shape = (TileShape) shape.offset(p_trace.get_half_width());
       offset_shape = (TileShape) offset_shape.offset(cl_offset);
     }
@@ -280,7 +433,8 @@ public class ShapeTraceEntries {
     int[][] entries = offset_shape.entrance_points(p_trace.polyline());
     for (int i = 0; i < entries.length; i++) {
       int[] entry_tuple = entries[i];
-      FloatPoint entry_approx = p_trace.polyline().arr[entry_tuple[0]].intersection_approx(offset_shape.border_line(entry_tuple[1]));
+      FloatPoint entry_approx = p_trace.polyline().arr[entry_tuple[0]]
+          .intersection_approx(offset_shape.border_line(entry_tuple[1]));
       insert_entry_point(p_trace, entry_tuple[0], entry_tuple[1], entry_approx);
     }
 
@@ -311,7 +465,8 @@ public class ShapeTraceEntries {
             }
             if (contact_item instanceof Trace trace) {
 
-              if (contact_item.is_shove_fixed() || trace.get_half_width() != p_trace.get_half_width() || contact_item.clearance_class_no() != p_trace.clearance_class_no()) {
+              if (contact_item.is_shove_fixed() || trace.get_half_width() != p_trace.get_half_width()
+                  || contact_item.clearance_class_no() != p_trace.clearance_class_no()) {
                 if (offset_shape.contains_inside(end_corner)) {
                   this.found_obstacle = contact_item;
                   return false;
@@ -388,7 +543,8 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * resorts the intersection points according to from_side_no and removes redundant points
+   * resorts the intersection points according to from_side_no and removes
+   * redundant points
    */
   private void resort() {
     int edge_count = this.shape.border_line_count();
@@ -426,11 +582,13 @@ public class ShapeTraceEntries {
       if (curr.edge_no == from_side.no) {
         if (from_side.border_intersection != null) {
           FloatPoint curr_projection = curr.entry_approx.projection_approx(shape.border_line(from_side.no));
-          if (curr_projection.distance_square(compare_corner_1) >= from_point_dist && curr_projection.distance_square(from_point_projection) <= curr_projection.distance_square(compare_corner_1)) {
+          if (curr_projection.distance_square(compare_corner_1) >= from_point_dist && curr_projection
+              .distance_square(from_point_projection) <= curr_projection.distance_square(compare_corner_1)) {
             break;
           }
         } else {
-          if (curr.entry_approx.distance_square(compare_corner_2) <= curr.entry_approx.distance_square(compare_corner_1)) {
+          if (curr.entry_approx.distance_square(compare_corner_2) <= curr.entry_approx
+              .distance_square(compare_corner_1)) {
             break;
           }
         }
@@ -609,7 +767,9 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Pops the next piece with minimal level from the intersection list Returns null, if the stack is empty. The returned array has 2 elements. The first is the first entry point, and the second is the
+   * Pops the next piece with minimal level from the intersection list Returns
+   * null, if the stack is empty. The returned array has 2 elements. The first is
+   * the first entry point, and the second is the
    * last entry point of the minimal level.
    */
   private EntryPoint[] pop_piece() {
@@ -635,7 +795,8 @@ public class ShapeTraceEntries {
     EntryPoint last = first;
     EntryPoint after_last = first.next;
 
-    while (after_last != null && after_last.stack_level == max_stack_level && after_last.trace.nets_equal(first.trace)) {
+    while (after_last != null && after_last.stack_level == max_stack_level
+        && after_last.trace.nets_equal(first.trace)) {
       last = after_last;
       after_last = last.next;
     }
@@ -666,7 +827,8 @@ public class ShapeTraceEntries {
     return result;
   }
 
-  private void insert_entry_point(PolylineTrace p_trace, int p_trace_line_no, int p_edge_no, FloatPoint p_entry_approx) {
+  private void insert_entry_point(PolylineTrace p_trace, int p_trace_line_no, int p_edge_no,
+      FloatPoint p_entry_approx) {
     EntryPoint new_entry = new EntryPoint(p_trace, p_trace_line_no, p_edge_no, p_entry_approx);
     EntryPoint curr_prev = null;
     EntryPoint curr_next = list_anchor;
@@ -683,7 +845,8 @@ public class ShapeTraceEntries {
         } else {
           next_corner = shape.corner_approx(new_entry.edge_no + 1);
         }
-        if (prev_corner.scalar_product(p_entry_approx, next_corner) <= prev_corner.scalar_product(curr_next.entry_approx, next_corner))
+        if (prev_corner.scalar_product(p_entry_approx, next_corner) <= prev_corner
+            .scalar_product(curr_next.entry_approx, next_corner))
         // the projection of the line from prev_corner to p_entry_approx
         // onto the line from prev_corner to next_corner is smaller
         // than the projection of the line from prev_corner to
@@ -704,7 +867,8 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Information about an entry point of p_trace into the shape. The entry points are sorted around the border of the shape
+   * Information about an entry point of p_trace into the shape. The entry points
+   * are sorted around the border of the shape
    */
   private static class EntryPoint {
 
