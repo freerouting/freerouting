@@ -439,6 +439,9 @@ public class PolylineTrace extends Trace implements Serializable {
       other_trace.clear_search_tree_entries();
       this.lines = joined_polyline;
     }
+    // Make sure the combined polyline still meets the integrity requirements
+    this.lines = ShapeTraceEntries.ensureCornerChamferPattern(this.lines);
+
     // Validate polyline integrity after combine at start
     this.validateAndLogPolylineIntegrity();
     if (this.lines.arr.length < 3) {
@@ -616,6 +619,9 @@ public class PolylineTrace extends Trace implements Serializable {
       other_trace.clear_search_tree_entries();
       this.lines = joined_polyline;
     }
+    // Make sure the combined polyline still meets the integrity requirements
+    this.lines = ShapeTraceEntries.ensureCornerChamferPattern(this.lines);
+
     // Validate polyline integrity after combine at end
     this.validateAndLogPolylineIntegrity();
     if (this.lines.arr.length < 3) {
@@ -1399,7 +1405,7 @@ public class PolylineTrace extends Trace implements Serializable {
 
   /**
    * changes the geometry of this trace to p_new_polyline
-   * 
+   *
    * @param p_new_polyline the new polyline geometry
    */
   void change(Polyline p_new_polyline) {

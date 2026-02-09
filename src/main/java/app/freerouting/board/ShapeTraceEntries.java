@@ -146,7 +146,28 @@ public class ShapeTraceEntries {
       return null;
     }
 
-    // For standard routing turns, shifting back by 1 unit along input vector
+    // Check for 45-degree turns (acute angle, projection > 0)
+    if (d1.projection(d2) == app.freerouting.datastructures.Signum.POSITIVE) {
+      // For 45-degree turns, we cannot create a standard bevel chamfer of length 1 or
+      // sqrt(2)
+      // that bridges the corner symmetrically (would require length sqrt(5)).
+      // Instead, we create a collinear chamfer of length 1.0 along the orthogonal
+      // leg.
+      // This satisfies the "Chamfer-Line-Chamfer" pattern requirements.
+
+      if (d1.is_orthogonal()) {
+        // Retract 1 unit on the previous (orthogonal) line
+        Point pPrime = corner.translate_by(d1.get_vector().negate());
+        return new Line(pPrime, corner);
+      } else if (d2.is_orthogonal()) {
+        // Extend 1 unit on the next (orthogonal) line
+        Point nPrime = corner.translate_by(d2.get_vector());
+        return new Line(corner, nPrime);
+      }
+    }
+
+    // For 90-degree and 135-degree turns, shifting back by 1 unit along input
+    // vector
     // and forward by 1 unit along output vector creates the correct chamfer.
     // P' = Corner - d1
     // N' = Corner + d2
