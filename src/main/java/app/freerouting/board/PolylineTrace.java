@@ -1457,6 +1457,9 @@ public class PolylineTrace extends Trace implements Serializable {
     board.search_tree_manager.change_entries(this, p_new_polyline, keep_at_start_count, keep_at_end_count);
     lines = p_new_polyline;
 
+    // Make sure the combined polyline still meets the integrity requirements
+    this.lines = ShapeTraceEntries.ensureCornerChamferPattern(this.lines);
+
     // Validate polyline integrity after changing geometry
     this.validateAndLogPolylineIntegrity();
 

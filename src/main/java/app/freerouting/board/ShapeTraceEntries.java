@@ -4,7 +4,6 @@ import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
-import app.freerouting.geometry.planar.IntVector;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
@@ -57,7 +56,7 @@ public class ShapeTraceEntries {
    * inserting
    * chamfer lines where needed. This ensures that even-indexed lines are always
    * chamfers (short bevel segments).
-   * 
+   *
    * @param p_polyline the polyline to convert
    * @return a new polyline with proper chamfer/line alternation, or the original
    *         if already valid
@@ -84,6 +83,14 @@ public class ShapeTraceEntries {
 
     // Convert by inserting corner chamfers where needed
     java.util.List<Line> newLines = new java.util.LinkedList<>();
+
+    // Check if the first line and the last line are valid chamfers,
+    // if not we insert them now
+
+    // Look for instances where chamfer lines are following each other
+    // without an intervening line, and remove all those chamfer lines
+
+
     // Keep the start cap
     newLines.add(p_polyline.arr[0]);
 
