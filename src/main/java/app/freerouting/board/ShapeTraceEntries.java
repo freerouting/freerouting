@@ -66,36 +66,82 @@ public class ShapeTraceEntries {
       return p_polyline;
     }
 
-    // Check if already valid
-    boolean needsConversion = false;
-    for (int i = 0; i < p_polyline.arr.length && !needsConversion; i++) {
-      if (i % 2 == 0) {
-        // Even indices must be chamfer lines
-        if (!isValidChamferLength(p_polyline.arr[i])) {
-          needsConversion = true;
+    // Use a working list to perform pre-processing (Start/End checks and
+    // Consecutive removal)
+    java.util.LinkedList<Line> workingList = new java.util.LinkedList<>();
+    for (Line l : p_polyline.arr) {
+      workingList.add(l);
+    }
+
+    // 1. Look for instances where chamfer lines are following each other
+    // without an intervening line, and remove all those chamfer lines
+    // (The main loop will re-chamfer it correctly later)
+
+    // We iterate using an index-based approach on the list to handle lookahead and
+    // modification
+    for (int i = 0; i < workingList.size() - 1; i++) {
+      Line current = workingList.get(i);
+      Line next = workingList.get(i + 1);
+
+      if (isValidChamferLength(current) && isValidChamferLength(next)) {
+        // Found consecutive chamfers at i and i+1, so it's certain that we need to delete at least two of them.
+        // We will delete all consecutive chamfers in this block, we need to find the length of the block first.
+        int startIndex = i;
+        int endIndex = i + 1;
+
+        while (endIndex < workingList.size() && isValidChamferLength(workingList.get(endIndex))) {
+          endIndex++;
+        }
+
+        // Now we have a block of chamfers from startIndex to endIndex-1 (inclusive)
+        for (int j = startIndex; j < endIndex; j++) {
+          workingList.remove(startIndex); // We always remove at startIndex because the list shifts left after each removal
         }
       }
     }
 
-    if (!needsConversion) {
-      return p_polyline; // Already valid
+    // 2. Check if the first line and the last line are valid chamfers,
+    // if not we insert them now (by splitting the long line)
+
+    // Check Start
+    if (!workingList.isEmpty()) {
+      Line first = workingList.getFirst();
+      if (!isValidChamferLength(first)) {
+        Direction dir = first.direction();
+        Vector v = dir.get_vector().negate();
+
+        Line newChamfer = new Line(first.a, first.a.translate_by(v));
+
+        workingList.addFirst(newChamfer);
+      }
     }
 
-    // Convert by inserting corner chamfers where needed
+    // Check End
+    if (!workingList.isEmpty()) {
+      Line last = workingList.getLast();
+      if (!isValidChamferLength(last)) {
+        Direction dir = last.direction();
+        Vector v = dir.get_vector().negate();
+
+        Line newChamfer = new Line(last.b, last.b.translate_by(v));
+
+        workingList.addLast(newChamfer);
+      }
+    }
+
+    // 3. Main Reconstruction Loop
+    // Convert by inserting corner chamfers where needed based on the
+    // Chamfer-Line-Chamfer pattern
     java.util.List<Line> newLines = new java.util.LinkedList<>();
 
-    // Check if the first line and the last line are valid chamfers,
-    // if not we insert them now
+    // With Part 1, we guaranteed arr[0] is a chamfer (or we handled it).
+    // So we can assume the pattern starts with C.
+    if (!workingList.isEmpty()) {
+      newLines.add(workingList.get(0));
+    }
 
-    // Look for instances where chamfer lines are following each other
-    // without an intervening line, and remove all those chamfer lines
-
-
-    // Keep the start cap
-    newLines.add(p_polyline.arr[0]);
-
-    for (int i = 1; i < p_polyline.arr.length; i++) {
-      Line currentLine = p_polyline.arr[i];
+    for (int i = 1; i < workingList.size(); i++) {
+      Line currentLine = workingList.get(i);
 
       // Check what we expect for the next slot
       // newLines.size() is the index where the next line will be placed
@@ -116,9 +162,7 @@ public class ShapeTraceEntries {
             // After adding chamfer, we expect a Line (non-chamfer), which currentLine is.
             newLines.add(currentLine);
           } else {
-            // Falls back to adding the line directly if chamfer creation failed (e.g., 180
-            // turn)
-            // This maintains connectivity even if validation might fail
+            // Falls back to adding the line directly if chamfer creation failed
             newLines.add(currentLine);
           }
         }
