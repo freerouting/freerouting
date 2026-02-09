@@ -106,8 +106,6 @@ public class PolylineTrace extends Trace implements Serializable {
     this.validateAndLogPolylineIntegrity();
   }
 
-
-
   @Override
   public Item copy(int p_id_no) {
     int[] curr_net_no_arr = new int[this.net_count()];
@@ -262,18 +260,23 @@ public class PolylineTrace extends Trace implements Serializable {
       return false;
     }
     Point combined_at;
+    String location;
     if (this.combine_at_start(true)) {
       combined_at = this.first_corner();
+      location = "at start";
       this.combine();
     } else if (this.combine_at_end(true)) {
       combined_at = this.last_corner();
+      location = "at end";
       this.combine();
     } else {
       combined_at = null;
+      location = null;
     }
     if (combined_at != null) {
       FRLogger.trace("PolylineTrace.combine()", "combine_traces",
-          "Combined traces at " + combined_at + " into trace id=" + this.get_id_no(),
+          "Successfully combined traces " + location + ": resulting_trace_id=" + this.get_id_no()
+              + ", combined_at=" + combined_at,
           this.toString(),
           new Point[] { combined_at });
 
@@ -289,11 +292,9 @@ public class PolylineTrace extends Trace implements Serializable {
    * Looks for a trace to combine at the start point of this trace.
    * <p>
    * This is an internal helper method that checks if another trace connects to
-   * the first corner
-   * of this trace and can be merged with it. If found, the other trace's corners
-   * are added
-   * to the beginning of this trace, and the other trace is removed from the
-   * board.
+   * the first corner of this trace and can be merged with it. If found,
+   * the other trace's corners are added to the beginning of this trace,
+   * and the other trace is removed from the board.
    *
    * @param p_ignore_areas if true, conduction areas are not considered as
    *                       blocking the combination
@@ -335,9 +336,10 @@ public class PolylineTrace extends Trace implements Serializable {
 
     if ((globalSettings != null) && (globalSettings.debugSettings != null)
         && (globalSettings.debugSettings.enableDetailedLogging)) {
-      FRLogger.trace("PolylineTrace.combine()", "combine_at_start",
-          "combining traces at start: this_id=" + this.get_id_no()
-              + ", other_id=" + other_trace.get_id_no()
+      FRLogger.trace("PolylineTrace.combine()", "combine_traces",
+          "combining traces at start: combining_trace_id=" + other_trace.get_id_no()
+              + " into this_trace_id=" + this.get_id_no()
+              + " (result_id=" + this.get_id_no() + ")"
               + ", start=" + start_corner
               + ", other_first=" + other_trace.first_corner()
               + ", other_last=" + other_trace.last_corner()
@@ -358,18 +360,64 @@ public class PolylineTrace extends Trace implements Serializable {
     } else {
       other_lines = other_trace.lines.arr;
     }
+
+    // Check if the last non-stub line of other_trace equals the first non-stub line
+    // of this trace
     boolean skip_line = other_lines[other_lines.length - 2].is_equal_or_opposite(this_lines[1]);
-    int new_line_count = this_lines.length + other_lines.length - 2;
+
+    if (skip_line && (globalSettings != null) && (globalSettings.debugSettings != null)
+        && (globalSettings.debugSettings.enableDetailedLogging)) {
+      FRLogger.trace("PolylineTrace.combine_at_start()", "combine_traces",
+          "Skipping duplicate line: other_trace last_non_stub_line matches this_trace first_non_stub_line"
+              + ", other_trace_id=" + other_trace.get_id_no()
+              + ", this_trace_id=" + this.get_id_no(),
+          this.getAllNetNames(),
+          new Point[] { start_corner });
+    }
+
+    // CRITICAL: Maintain stub/non-stub alternation (even indices=stubs, odd
+    // indices=non-stubs)
+    // The join point needs a stub line to separate the non-stub lines from both
+    // traces
+    // After copying other_lines[0...k], if k is odd (non-stub), we need a stub
+    // before this_lines[1]
+    // Therefore, when other_lines.length is odd, we must keep other_lines[length-1]
+    // (the last stub)
+
+    int other_copy_length;
+    int this_skip_count;
+
+    if (other_lines.length % 2 == 1) {
+      // Odd length: last line is at even index (stub)
+      // Keep it to maintain alternation: [..., non-stub(N-2), stub(N-1)] +
+      // [non-stub(1), ...]
+      other_copy_length = other_lines.length; // Keep all lines including the last stub
+      this_skip_count = 1; // Skip this_lines[0] (duplicate stub at connection point)
+    } else {
+      // Even length: last line is at odd index (non-stub)
+      // Remove it and the next stub: [..., stub(N-2)] + [non-stub(1), ...]
+      other_copy_length = other_lines.length - 1; // Remove last non-stub
+      this_skip_count = 1; // Skip this_lines[0] (stub)
+    }
+
+    int new_line_count = other_copy_length + this_lines.length - this_skip_count;
     if (skip_line) {
       --new_line_count;
     }
+
     Line[] new_lines = new Line[new_line_count];
-    System.arraycopy(other_lines, 0, new_lines, 0, other_lines.length - 1);
-    int join_pos = other_lines.length - 1;
+
+    // Copy from other_lines
+    System.arraycopy(other_lines, 0, new_lines, 0, other_copy_length);
+    int join_pos = other_copy_length;
+
+    // If we're skipping a duplicate non-stub line, decrease the join position
     if (skip_line) {
       --join_pos;
     }
-    System.arraycopy(this_lines, 1, new_lines, join_pos, this_lines.length - 1);
+
+    // Copy from this_lines, skipping the first stub
+    System.arraycopy(this_lines, this_skip_count, new_lines, join_pos, this_lines.length - this_skip_count);
     Polyline joined_polyline = new Polyline(new_lines);
     if (joined_polyline.arr.length != new_line_count) {
       // consecutive parallel lines where skipped at the join location
@@ -393,9 +441,23 @@ public class PolylineTrace extends Trace implements Serializable {
     // Validate polyline integrity after combine at start
     this.validateAndLogPolylineIntegrity();
     if (this.lines.arr.length < 3) {
+      FRLogger.trace("PolylineTrace.combine_at_start()", "combine_traces",
+          "The trace became invalid, so we remove it from the board:"
+              + " this_trace_id=" + this.get_id_no(),
+          this.getAllNetNames(),
+          new Point[] { start_corner });
+
       board.remove_item(this);
     }
+
+    FRLogger.trace("PolylineTrace.combine_at_start()", "combine_traces",
+        "The other trace got combined with this trace at its start, so we remove it from the board:"
+            + " this_trace_id=" + this.get_id_no()
+            + ", other_trace_id=" + other_trace.get_id_no(),
+        this.getAllNetNames(),
+        new Point[] { start_corner });
     board.remove_item(other_trace);
+
     if (board instanceof RoutingBoard routingBoard) {
       routingBoard.join_changed_area(start_corner.to_float(), get_layer());
     }
@@ -451,9 +513,10 @@ public class PolylineTrace extends Trace implements Serializable {
 
     if ((globalSettings != null) && (globalSettings.debugSettings != null)
         && (globalSettings.debugSettings.enableDetailedLogging)) {
-      FRLogger.trace("PolylineTrace.combine()", "combine_at_end",
-          "combining traces at end: this_id=" + this.get_id_no()
-              + ", other_id=" + other_trace.get_id_no()
+      FRLogger.trace("PolylineTrace.combine()", "combine_traces",
+          "combining traces at end: combining_trace_id=" + other_trace.get_id_no()
+              + " into this_trace_id=" + this.get_id_no()
+              + " (result_id=" + this.get_id_no() + ")"
               + ", end=" + end_corner
               + ", other_first=" + other_trace.first_corner()
               + ", other_last=" + other_trace.last_corner()
@@ -474,18 +537,64 @@ public class PolylineTrace extends Trace implements Serializable {
     } else {
       other_lines = other_trace.lines.arr;
     }
+
+    // Check if the last non-stub line of this trace equals the first non-stub line
+    // of other_trace
     boolean skip_line = this_lines[this_lines.length - 2].is_equal_or_opposite(other_lines[1]);
-    int new_line_count = this_lines.length + other_lines.length - 2;
+
+    if (skip_line && (globalSettings != null) && (globalSettings.debugSettings != null)
+        && (globalSettings.debugSettings.enableDetailedLogging)) {
+      FRLogger.trace("PolylineTrace.combine_at_end()", "combine_traces",
+          "Skipping duplicate line: this_trace last_non_stub_line matches other_trace first_non_stub_line"
+              + ", other_trace_id=" + other_trace.get_id_no()
+              + ", this_trace_id=" + this.get_id_no(),
+          this.getAllNetNames(),
+          new Point[] { end_corner });
+    }
+
+    // CRITICAL: Maintain stub/non-stub alternation (even indices=stubs, odd
+    // indices=non-stubs)
+    // The join point needs a stub line to separate the non-stub lines from both
+    // traces
+    // After copying this_lines[0...k], if k is odd (non-stub), we need a stub
+    // before other_lines[1]
+    // Therefore, when this_lines.length is odd, we must keep this_lines[length-1]
+    // (the last stub)
+
+    int this_copy_length;
+    int other_skip_count;
+
+    if (this_lines.length % 2 == 1) {
+      // Odd length: last line is at even index (stub)
+      // Keep it to maintain alternation: [..., non-stub(N-2), stub(N-1)] +
+      // [non-stub(1), ...]
+      this_copy_length = this_lines.length; // Keep all lines including the last stub
+      other_skip_count = 1; // Skip other_lines[0] (duplicate stub at connection point)
+    } else {
+      // Even length: last line is at odd index (non-stub)
+      // Remove it and the next stub: [..., stub(N-2)] + [non-stub(1), ...]
+      this_copy_length = this_lines.length - 1; // Remove last non-stub
+      other_skip_count = 1; // Skip other_lines[0] (stub)
+    }
+
+    int new_line_count = this_copy_length + other_lines.length - other_skip_count;
     if (skip_line) {
       --new_line_count;
     }
+
     Line[] new_lines = new Line[new_line_count];
-    System.arraycopy(this_lines, 0, new_lines, 0, this_lines.length - 1);
-    int join_pos = this_lines.length - 1;
+
+    // Copy from this_lines
+    System.arraycopy(this_lines, 0, new_lines, 0, this_copy_length);
+    int join_pos = this_copy_length;
+
+    // If we're skipping a duplicate non-stub line, decrease the join position
     if (skip_line) {
       --join_pos;
     }
-    System.arraycopy(other_lines, 1, new_lines, join_pos, other_lines.length - 1);
+
+    // Copy from other_lines, skipping the first stub
+    System.arraycopy(other_lines, other_skip_count, new_lines, join_pos, other_lines.length - other_skip_count);
     Polyline joined_polyline = new Polyline(new_lines);
     if (joined_polyline.arr.length != new_line_count) {
       // consecutive parallel lines where skipped at the join location
@@ -509,9 +618,23 @@ public class PolylineTrace extends Trace implements Serializable {
     // Validate polyline integrity after combine at end
     this.validateAndLogPolylineIntegrity();
     if (this.lines.arr.length < 3) {
+      FRLogger.trace("PolylineTrace.combine_at_start()", "combine_traces",
+          "The trace became invalid, so we remove it from the board:"
+              + " this_trace_id=" + this.get_id_no(),
+          this.getAllNetNames(),
+          new Point[] { end_corner });
+
       board.remove_item(this);
     }
+
+    FRLogger.trace("PolylineTrace.combine_at_start()", "combine_traces",
+        "The other trace got combined with this trace at its end, so we remove it from the board:"
+            + " this_trace_id=" + this.get_id_no()
+            + ", other_trace_id=" + other_trace.get_id_no(),
+        this.getAllNetNames(),
+        new Point[] { end_corner });
     board.remove_item(other_trace);
+
     if (board instanceof RoutingBoard routingBoard) {
       routingBoard.join_changed_area(end_corner.to_float(), get_layer());
     }
@@ -566,6 +689,11 @@ public class PolylineTrace extends Trace implements Serializable {
         }
       }
       TileShape curr_shape = this.get_tree_shape(default_tree, i);
+      // Skip if tree shape is not available (can happen after combine() creates short
+      // traces)
+      if (curr_shape == null) {
+        continue;
+      }
       LineSegment curr_line_segment = new LineSegment(this.lines, i + 1);
       Collection<ShapeSearchTree.TreeEntry> overlapping_tree_entries = new LinkedList<>();
       // look for intersecting traces with the i-th line segment
@@ -1220,8 +1348,7 @@ public class PolylineTrace extends Trace implements Serializable {
    * with other traces.
    * <p>
    * This operation tries to create more gradual angles at fork points to improve
-   * signal quality
-   * and make the routing look more professional.
+   * signal quality and make the routing look more professional.
    *
    * @param p_own_net_only        if true, only considers objects on the same net
    * @param p_pull_tight_accuracy the accuracy level for the smoothing operation
@@ -1793,7 +1920,8 @@ public class PolylineTrace extends Trace implements Serializable {
 
         FRLogger.trace("PolylineTrace", "polyline_validation",
             "Invalid polyline detected: non-stub lines not connected at index " + lineIndex
-                + " (line from " + currentLine.a + " to " + currentLine.b + ") is not connected to previous non-stub lines",
+                + " (line from " + currentLine.a + " to " + currentLine.b
+                + ") is not connected to previous non-stub lines",
             impactedItems,
             polylinePoints);
 
@@ -1809,10 +1937,13 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Extracts all point coordinates from the non-stub lines of the polyline into an array.
+   * Extracts all point coordinates from the non-stub lines of the polyline into
+   * an array.
    * <p>
-   * This method only includes points from non-stub lines (odd-indexed lines: 1, 3, 5, ...),
-   * ensuring each point is listed only once as a set. Stub lines (even-indexed lines: 0, 2, 4, ...)
+   * This method only includes points from non-stub lines (odd-indexed lines: 1,
+   * 3, 5, ...),
+   * ensuring each point is listed only once as a set. Stub lines (even-indexed
+   * lines: 0, 2, 4, ...)
    * are excluded from the extraction.
    *
    * @return array of unique points from non-stub lines only
@@ -1822,7 +1953,8 @@ public class PolylineTrace extends Trace implements Serializable {
       return new Point[0];
     }
 
-    // Collect all unique points from non-stub lines only (odd indices: 1, 3, 5, ...)
+    // Collect all unique points from non-stub lines only (odd indices: 1, 3, 5,
+    // ...)
     java.util.Set<Point> pointSet = new java.util.LinkedHashSet<>();
     for (int i = 1; i < lines.arr.length; i += 2) {
       Line line = lines.arr[i];
@@ -1842,10 +1974,10 @@ public class PolylineTrace extends Trace implements Serializable {
    * <li><b>Polyline length:</b> Minimum 3 lines required for a valid trace</li>
    * <li><b>Stub line validation:</b> Even-indexed lines (0, 2, 4, ...) must be
    * valid stub lines with direction-dependent lengths:
-   *   <ul>
-   *   <li>Orthogonal lines (horizontal/vertical): length = 1.0 ± 0.05</li>
-   *   <li>Diagonal lines (45-degree): length = √2 (≈1.414) ± 0.05</li>
-   *   </ul>
+   * <ul>
+   * <li>Orthogonal lines (horizontal/vertical): length = 1.0 ± 0.05</li>
+   * <li>Diagonal lines (45-degree): length = √2 (≈1.414) ± 0.05</li>
+   * </ul>
    * </li>
    * <li><b>Non-stub line connectivity:</b> Consecutive non-stub lines must
    * connect at their endpoints</li>
@@ -1866,7 +1998,7 @@ public class PolylineTrace extends Trace implements Serializable {
         Point[] points = extractPolylinePoints();
         FRLogger.trace("PolylineTrace", "polyline_integrity",
             "Polyline has insufficient lines: " + (lines.arr != null ? lines.arr.length : 0) +
-            " (minimum 3 required)",
+                " (minimum 3 required)",
             this.toString() + "," + this.getAllNetNames(),
             points);
         return false;
