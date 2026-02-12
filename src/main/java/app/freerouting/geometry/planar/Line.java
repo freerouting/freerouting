@@ -56,6 +56,108 @@ public class Line implements Comparable<Line>, Serializable {
   }
 
   /**
+   * Checks if a line has a valid chamfer length based on its direction.
+   * <p>
+   * Chamfer lines must have specific lengths depending on their direction:
+   * <ul>
+   * <li><b>Orthogonal lines (horizontal/vertical):</b> Must have length 1.0
+   * (±0.05 tolerance for floating-point precision)</li>
+   * <li><b>Diagonal lines (45-degree angles):</b> Must have length √2 (≈1.414,
+   * ±0.05 tolerance for floating-point precision)</li>
+   * </ul>
+   * <p>
+   * This validation ensures that chamfer lines maintain the proper spacing and
+   * connectivity between trace lines and trace endpoints.
+   *
+   * @param line the line to validate
+   * @return true if the line has a valid chamfer length for its direction, false
+   *         otherwise
+   */
+  public static boolean isValidChamferLength(Line line) {
+    if (line == null) {
+      return false;
+    }
+
+    double lineLength = line.length();
+    Direction lineDirection = line.direction();
+
+    // Allow ±0.05 tolerance for floating-point precision
+    final double TOLERANCE = 0.05;
+
+    if (lineDirection == null) {
+      return false;
+    }
+
+    if (lineDirection.is_orthogonal()) {
+      // Orthogonal (horizontal or vertical) chamfer lines must have length 1.0
+      return lineLength >= (1.0 - TOLERANCE) && lineLength <= (1.0 + TOLERANCE);
+    } else if (lineDirection.is_diagonal()) {
+      // Diagonal (45-degree) chamfer lines must have length √2 (≈1.414)
+      double sqrtTwo = Math.sqrt(2);
+      return lineLength >= (sqrtTwo - TOLERANCE) && lineLength <= (sqrtTwo + TOLERANCE);
+    } else {
+      // Other directions (e.g., arbitrary angles) are not valid for chamfer lines
+      return false;
+    }
+  }
+
+  /**
+   * Creates a chamfer line that cuts the corner between two lines.
+   * Assumes k=1 unit cut which results in length 1.0 (Ortho) or sqrt(2)
+   * (Diagonal).
+   */
+  public static Line createCornerChamfer(Line prev, Line next) {
+    if (prev == null || next == null)
+      return null;
+
+    // Calculate intersection corner
+    Point corner = prev.intersection(next);
+    if (corner == null) {
+      return null;
+    }
+
+    Direction d1 = prev.direction();
+    Direction d2 = next.direction();
+
+    if (d1.equals(d2) || d1.equals(d2.opposite())) {
+      return null;
+    }
+
+    // Check for 45-degree turns (acute angle, projection > 0)
+    if (d1.projection(d2) == app.freerouting.datastructures.Signum.POSITIVE) {
+      // For 45-degree turns, we cannot create a standard bevel chamfer of length 1 or
+      // sqrt(2)
+      // that bridges the corner symmetrically (would require length sqrt(5)).
+      // Instead, we create a collinear chamfer of length 1.0 along the orthogonal
+      // leg.
+      // This satisfies the "Chamfer-Line-Chamfer" pattern requirements.
+
+      if (d1.is_orthogonal()) {
+        // Retract 1 unit on the previous (orthogonal) line
+        Point pPrime = corner.translate_by(d1.get_vector().negate());
+        return new Line(pPrime, corner);
+      } else if (d2.is_orthogonal()) {
+        // Extend 1 unit on the next (orthogonal) line
+        Point nPrime = corner.translate_by(d2.get_vector());
+        return new Line(corner, nPrime);
+      }
+    }
+
+    // For 90-degree and 135-degree turns, shifting back by 1 unit along input
+    // vector
+    // and forward by 1 unit along output vector creates the correct chamfer.
+    // P' = Corner - d1
+    // N' = Corner + d2
+    Vector v1 = d1.get_vector();
+    Vector v2 = d2.get_vector();
+
+    Point pPrime = corner.translate_by(v1.negate());
+    Point nPrime = corner.translate_by(v2);
+
+    return new Line(pPrime, nPrime);
+  }
+
+  /**
    * returns true, if this and p_ob define the same line
    */
   @Override

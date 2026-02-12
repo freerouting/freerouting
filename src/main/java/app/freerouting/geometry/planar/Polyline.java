@@ -1781,4 +1781,138 @@ public class Polyline implements Serializable {
     new_lines[p_new_line_count - 1] = Line.get_instance(new_last_corner, new_prev_last_line.direction().turn_45_degree(6));
     return new Polyline(new_lines);
   }
+
+  /**
+   * Converts a polyline to follow the corner chamfer/line alternation pattern by
+   * inserting
+   * chamfer lines where needed. This ensures that even-indexed lines are always
+   * chamfers (short bevel segments).
+   *
+   * @param p_polyline the polyline to convert
+   * @return a new polyline with proper chamfer/line alternation, or the original
+   *         if already valid
+   */
+  public Polyline ensureCornerChamferPattern() {
+    if (this.arr == null || this.arr.length < 3) {
+      return this;
+    }
+
+    boolean already_valid = true;
+
+    // Use a working list to perform pre-processing (Start/End checks and
+    // Consecutive removal)
+    java.util.LinkedList<Line> workingList = new java.util.LinkedList<>();
+    for (Line l : this.arr) {
+      workingList.add(l);
+    }
+
+    // 1. Look for instances where chamfer lines are following each other
+    // without an intervening line, and remove all those chamfer lines
+    // (The main loop will re-chamfer it correctly later)
+
+    // We iterate using an index-based approach on the list to handle lookahead and
+    // modification
+    for (int i = 0; i < workingList.size() - 1; i++) {
+      Line current = workingList.get(i);
+      Line next = workingList.get(i + 1);
+
+      if (Line.isValidChamferLength(current) && Line.isValidChamferLength(next)) {
+        // Found consecutive chamfers at i and i+1, so it's certain that we need to delete at least two of them.
+        // We will delete all consecutive chamfers in this block, we need to find the length of the block first.
+        int startIndex = i;
+        int endIndex = i + 1;
+
+        while (endIndex < workingList.size() && Line.isValidChamferLength(workingList.get(endIndex))) {
+          endIndex++;
+        }
+
+        // Now we have a block of chamfers from startIndex to endIndex-1 (inclusive)
+        for (int j = startIndex; j < endIndex; j++) {
+          workingList.remove(startIndex); // We always remove at startIndex because the list shifts left after each removal
+          already_valid = false;
+        }
+      }
+    }
+
+    // 2. Check if the first line and the last line are valid chamfers,
+    // if not we insert them now (by splitting the long line)
+
+    // Check Start
+    if (!workingList.isEmpty()) {
+      Line first = workingList.getFirst();
+      if (!Line.isValidChamferLength(first)) {
+        Direction dir = first.direction();
+        Vector v = dir.get_vector().negate();
+
+        Line newChamfer = new Line(first.a, first.a.translate_by(v));
+
+        workingList.addFirst(newChamfer);
+        already_valid = false;
+      }
+    }
+
+    // Check End
+    if (!workingList.isEmpty()) {
+      Line last = workingList.getLast();
+      if (!Line.isValidChamferLength(last)) {
+        Direction dir = last.direction();
+        Vector v = dir.get_vector().negate();
+
+        Line newChamfer = new Line(last.b, last.b.translate_by(v));
+
+        workingList.addLast(newChamfer);
+        already_valid = false;
+      }
+    }
+
+    // 3. Main Reconstruction Loop
+    // Convert by inserting corner chamfers where needed based on the
+    // Chamfer-Line-Chamfer pattern
+    java.util.List<Line> newLines = new java.util.LinkedList<>();
+
+    // With Part 1, we guaranteed arr[0] is a chamfer (or we handled it).
+    // So we can assume the pattern starts with C.
+    if (!workingList.isEmpty()) {
+      newLines.add(workingList.get(0));
+    }
+
+    for (int i = 1; i < workingList.size(); i++) {
+      Line currentLine = workingList.get(i);
+
+      // Check what we expect for the next slot
+      // newLines.size() is the index where the next line will be placed
+      boolean expectChamfer = (newLines.size() % 2 == 0);
+
+      if (expectChamfer) {
+        if (Line.isValidChamferLength(currentLine)) {
+          // It's a valid chamfer, so add it
+          newLines.add(currentLine);
+        } else {
+          // Expected a chamfer but found a long line.
+          // Insert a chamfer between the previous line and this one.
+          Line lastAdded = newLines.get(newLines.size() - 1);
+          Line chamfer = Line.createCornerChamfer(lastAdded, currentLine);
+
+          if (chamfer != null) {
+            newLines.add(chamfer);
+            already_valid = false;
+            // After adding chamfer, we expect a Line (non-chamfer), which currentLine is.
+            newLines.add(currentLine);
+          } else {
+            // Falls back to adding the line directly if chamfer creation failed
+            newLines.add(currentLine);
+          }
+        }
+      } else {
+        // Expecting Line (odd index) - anything is allowed
+        newLines.add(currentLine);
+      }
+    }
+
+    if (already_valid) {
+      return this;
+    }
+
+    return new Polyline(newLines.toArray(new Line[0]));
+  }
 }
