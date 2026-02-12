@@ -3,6 +3,7 @@ package app.freerouting.board;
 import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.boardgraphics.GraphicsContext;
+import app.freerouting.datastructures.ShapeTree.Leaf;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.geometry.planar.Direction;
@@ -522,6 +523,7 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     // Make sure the combined polyline still meets the integrity requirements
     this.ensureCornerChamferPattern();
+    this.rebuild_search_tree_entries_if_out_of_sync("combine_at_start");
 
     // Validate polyline integrity after combine at start
     this.validateAndLogPolylineIntegrity();
@@ -702,6 +704,7 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     // Make sure the combined polyline still meets the integrity requirements
     this.ensureCornerChamferPattern();
+    this.rebuild_search_tree_entries_if_out_of_sync("combine_at_end");
 
     // Validate polyline integrity after combine at end
     this.validateAndLogPolylineIntegrity();
@@ -1577,6 +1580,16 @@ public class PolylineTrace extends Trace implements Serializable {
 
     // Make sure the combined polyline still meets the integrity requirements
     this.ensureCornerChamferPattern();
+    this.rebuild_search_tree_entries_if_out_of_sync("change");
+
+    if (this.lines == null || this.lines.arr == null || this.lines.arr.length < 3) {
+      FRLogger.trace("PolylineTrace.change", "remove_degenerate",
+          "Removing degenerate trace after change: trace_id=" + this.get_id_no(),
+          this.getAllNetNames(),
+          new Point[] {});
+      board.remove_item(this);
+      return;
+    }
 
     // Validate polyline integrity after changing geometry
     this.validateAndLogPolylineIntegrity();
@@ -2180,8 +2193,55 @@ public class PolylineTrace extends Trace implements Serializable {
     if (this.lines != newLines) {
       this.lines = newLines;
       this.clear_derived_data();
+      if (this.is_on_the_board() && this.lines != null && this.lines.arr != null && this.lines.arr.length >= 3) {
+        this.rebuild_search_tree_entries_if_out_of_sync("ensureCornerChamferPattern");
+      }
+    }
+
+    if (this.is_on_the_board() && this.lines != null && this.lines.arr != null && this.lines.arr.length < 3) {
+      FRLogger.trace("PolylineTrace.ensureCornerChamferPattern", "remove_degenerate",
+          "Removing degenerate trace after chamfer normalization: trace_id=" + this.get_id_no(),
+          this.getAllNetNames(),
+          new Point[] {});
+      board.remove_item(this);
+      return true;
     }
 
     return (this.lines != newLines);
+  }
+
+  private void rebuild_search_tree_entries_if_out_of_sync(String reason) {
+    if (this.board == null || !this.is_on_the_board()) {
+      return;
+    }
+    ShapeSearchTree default_tree = board.search_tree_manager.get_default_tree();
+    int expected_shape_count = this.tile_shape_count();
+    int cached_shape_count = this.tree_shape_count(default_tree);
+    Leaf[] entries = this.get_search_tree_entries(default_tree);
+    int entry_count = entries == null ? 0 : entries.length;
+    if (expected_shape_count == cached_shape_count && entry_count == expected_shape_count) {
+      return;
+    }
+
+    Point[] log_points;
+    if (this.lines != null && this.lines.arr != null && this.lines.arr.length >= 3) {
+      log_points = new Point[] { this.first_corner(), this.last_corner() };
+    } else {
+      log_points = new Point[] {};
+    }
+
+    FRLogger.trace("PolylineTrace.rebuild_search_tree_entries_if_out_of_sync", "search_tree_rebuild",
+        "Rebuilding search tree entries: reason=" + reason
+            + ", trace_id=" + this.get_id_no()
+            + ", expected_shapes=" + expected_shape_count
+            + ", cached_shapes=" + cached_shape_count
+            + ", entry_count=" + entry_count,
+        this.getAllNetNames(),
+        log_points);
+
+    board.search_tree_manager.remove(this);
+    this.clear_search_tree_entries();
+    this.clear_derived_data();
+    board.search_tree_manager.insert(this);
   }
 }

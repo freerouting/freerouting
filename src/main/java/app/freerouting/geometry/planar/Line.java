@@ -4,6 +4,7 @@ import app.freerouting.datastructures.Signum;
 import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.HashSet;
 
 /**
  * Implements functionality for lines in the plane.
@@ -155,6 +156,31 @@ public class Line implements Comparable<Line>, Serializable {
     Point nPrime = corner.translate_by(v2);
 
     return new Line(pPrime, nPrime);
+  }
+
+  public static Line combine(Line firstLine, Line secondLine) {
+    HashSet<Point> points = new HashSet<Point>();
+    points.add(firstLine.a);
+    points.add(firstLine.b);
+    if (points.contains(secondLine.a)) {
+      points.remove(secondLine.a);
+    } else {
+      points.add(secondLine.a);
+    }
+
+    if (points.contains(secondLine.b))
+    {
+      points.remove(secondLine.b);
+    } else {
+      points.add(secondLine.b);
+    }
+
+    if (points.size() == 2 && firstLine.direction().equals(secondLine.direction()) || firstLine.direction().equals(secondLine.direction().opposite())) {
+      Point[] pointsArray = points.toArray(new Point[points.size()]);
+      return new Line(pointsArray[0], pointsArray[1]);
+    } else {
+      return null;
+    }
   }
 
   /**

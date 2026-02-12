@@ -280,12 +280,23 @@ public class Polyline implements Serializable {
       // polyline must have at least 3 lines
       return p_line_arr;
     }
+
+    // CRITICAL: Never collapse a valid 3-line polyline (chamfer, trace, chamfer) to empty.
+    // Chamfers (even-indexed lines: 0, 2, 4, ...) are intentional short end-caps, not mistakes.
+    // Only remove parallel lines between trace lines (odd-indexed lines: 1, 3, 5, ...).
+    // Chamfer-to-trace parallelism is expected at corners and should NOT trigger removal.
+
     Line[] tmp_arr = new Line[p_line_arr.length];
     int new_length = 0;
     tmp_arr[0] = p_line_arr[0];
     for (int i = 1; i < p_line_arr.length; i++) {
-      // skip multiple lines
-      if (!tmp_arr[new_length].is_parallel(p_line_arr[i])) {
+      // skip multiple lines ONLY if they are both trace lines (odd indices)
+      // or both chamfer lines (even indices), but NOT when comparing chamfer to trace
+      boolean is_curr_trace_line = (i % 2 == 1);
+      boolean is_prev_trace_line = (new_length % 2 == 1);
+      boolean both_same_type = (is_curr_trace_line == is_prev_trace_line);
+
+      if (!both_same_type || !tmp_arr[new_length].is_parallel(p_line_arr[i])) {
         ++new_length;
         tmp_arr[new_length] = p_line_arr[i];
       }
@@ -296,8 +307,10 @@ public class Polyline implements Serializable {
       return p_line_arr;
     }
     // at least 1 line is skipped, adjust the array
+    // NEVER return an empty array if we started with 3+ lines,
+    // because that destroys valid polylines. Return original instead.
     if (new_length < 3) {
-      return new Line[0];
+      return p_line_arr;
     }
     Line[] result = new Line[new_length];
     System.arraycopy(tmp_arr, 0, result, 0, new_length);
@@ -602,7 +615,7 @@ public class Polyline implements Serializable {
    */
   public Point corner(int p_no) {
     if (arr.length < 2) {
-      FRLogger.warn("Polyline.corner: arr.length is < 2");
+      FRLogger.warn("Polyline.corner: arr.length (" + arr.length + ") is < 2");
       return null;
     }
     int no;
@@ -1892,15 +1905,23 @@ public class Polyline implements Serializable {
           // Insert a chamfer between the previous line and this one.
           Line lastAdded = newLines.get(newLines.size() - 1);
           Line chamfer = Line.createCornerChamfer(lastAdded, currentLine);
-
           if (chamfer != null) {
             newLines.add(chamfer);
             already_valid = false;
             // After adding chamfer, we expect a Line (non-chamfer), which currentLine is.
             newLines.add(currentLine);
           } else {
-            // Falls back to adding the line directly if chamfer creation failed
-            newLines.add(currentLine);
+            // This can happen if the two lines are parallel and they are a continuation of each other,
+            // so we cannot create a chamfer. In this case, we just add the line that is the combination
+            // of the two.
+            Line combinedLine = Line.combine(lastAdded, currentLine);
+            if (combinedLine != null)
+            {
+              newLines.set(newLines.size() - 1, combinedLine); // Replace the last added line with the combined line already_valid = false; } else {
+            } else {
+              // Falls back to adding the line directly if chamfer creation failed
+              newLines.add(currentLine);
+            }
           }
         }
       } else {
