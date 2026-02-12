@@ -352,14 +352,19 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       if (curr_item != this && curr_item.shares_layer(this) && (p_ignore_net || curr_item.shares_net(this))) {
         if (curr_item instanceof Trace curr_trace) {
           // Check if points are within tolerance distance
-          double d1 = p_point.to_float().distance(curr_trace.first_corner().to_float());
-          double d2 = p_point.to_float().distance(curr_trace.last_corner().to_float());
+          Point firstCorner = curr_trace.first_corner();
+          Point lastCorner = curr_trace.last_corner();
+          if (firstCorner == null || lastCorner == null) {
+            continue;
+          }
+          double d1 = p_point.to_float().distance(firstCorner.to_float());
+          double d2 = p_point.to_float().distance(lastCorner.to_float());
           if (this.contains_net(94)) {
             FRLogger.debug("    Checking against trace id=" + curr_trace.get_id_no() + ": d1=" + d1 + ", d2=" + d2
                 + ", tolerance=" + tolerance);
           }
-          if (isWithinTolerance(p_point, curr_trace.first_corner(), tolerance) ||
-              isWithinTolerance(p_point, curr_trace.last_corner(), tolerance)) {
+          if (isWithinTolerance(p_point, firstCorner, tolerance) ||
+              isWithinTolerance(p_point, lastCorner, tolerance)) {
             result.add(curr_item);
             if (this.contains_net(99)) {
               tracesFound++;

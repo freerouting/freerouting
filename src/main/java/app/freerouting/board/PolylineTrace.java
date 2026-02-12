@@ -118,7 +118,20 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * checks, if this trace is on layer p_layer
+   * Checks if this trace is located on the specified board layer.
+   * <p>
+   * Polyline traces exist on a single layer (unlike vias which span multiple layers).
+   * This method verifies if the trace's layer matches the queried layer.
+   * <p>
+   * <b>Usage:</b>
+   * <ul>
+   * <li>Layer-specific searches in the routing algorithm</li>
+   * <li>Filtering traces during display/rendering</li>
+   * <li>Clearance calculations between items on different layers</li>
+   * </ul>
+   *
+   * @param p_layer the layer number to check (0-based layer index)
+   * @return true if this trace is on the specified layer, false otherwise
    */
   @Override
   public boolean is_on_layer(int p_layer) {
@@ -153,8 +166,20 @@ public class PolylineTrace extends Trace implements Serializable {
    * Returns the number of corner points in this trace.
    * <p>
    * The corner count equals the number of lines minus one, since corners are
-   * formed
-   * where consecutive lines meet.
+   * formed where consecutive lines meet. For example, a trace with 3 lines has 2
+   * corners (one at each end).
+   * <p>
+   * <b>Relationship to polyline structure:</b><br>
+   * In a polyline with N lines, there are N-1 corners. The first corner is where
+   * lines[0] and lines[1] meet, and the last corner is where lines[N-2] and
+   * lines[N-1] meet.
+   * <p>
+   * <b>Usage:</b>
+   * <ul>
+   * <li>Determining trace complexity (more corners = more complex path)</li>
+   * <li>Validating minimum trace length (must have at least 2 corners)</li>
+   * <li>Iterating through trace segments</li>
+   * </ul>
    *
    * @return the number of corners (turning points) in the trace
    */
@@ -186,7 +211,28 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Returns the polyline of this trace.
+   * Returns the geometric polyline that defines the centerline path of this trace.
+   * <p>
+   * The polyline is a sequence of connected line segments that form the skeleton
+   * of the trace. Each line segment is represented as an infinite line (not just
+   * a segment), and consecutive lines intersect to form corner points.
+   * <p>
+   * <b>Polyline Structure:</b><br>
+   * The returned polyline must follow specific structural rules:
+   * <ul>
+   * <li><b>Chamfer lines:</b> Even-indexed lines (0, 2, 4, ...) are chamfer lines
+   * with length 1.0 for orthogonal directions or √2 for diagonal directions</li>
+   * <li><b>Trace lines:</b> Odd-indexed lines (1, 3, 5, ...) are the main routing
+   * segments that define the actual electrical path</li>
+   * <li><b>Minimum length:</b> At least 3 lines are required (start chamfer,
+   * trace line, end chamfer)</li>
+   * </ul>
+   * <p>
+   * <b>Important:</b> The polyline should not be modified directly. Use
+   * {@link #change(Polyline)} to update the trace geometry safely, as it will
+   * update the search tree and trigger necessary validations.
+   *
+   * @return the polyline defining this trace's centerline path
    */
   public Polyline polyline() {
     return lines;
@@ -198,7 +244,32 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * returns the count of tile shapes of this polyline
+   * Returns the count of tile shapes used to represent this trace in the spatial search tree.
+   * <p>
+   * Each tile shape corresponds to a trace line segment (the actual routing segments,
+   * not the chamfer lines). Tile shapes are used by the board's spatial indexing
+   * structure to efficiently find overlapping objects and check clearances.
+   * <p>
+   * <b>Calculation:</b><br>
+   * The tile shape count equals the number of trace lines, which is
+   * {@code (lines.arr.length - 2)} since:
+   * <ul>
+   * <li>The first and last lines are chamfer lines (connection stubs)</li>
+   * <li>The middle lines are the actual trace lines that need tile shapes</li>
+   * <li>A minimum trace has 3 lines: start chamfer, trace line, end chamfer = 1 tile shape</li>
+   * </ul>
+   * <p>
+   * <b>Edge case:</b><br>
+   * Returns 0 for traces with fewer than 3 lines (invalid/degenerate traces).
+   * <p>
+   * <b>Usage:</b>
+   * <ul>
+   * <li>Allocating space in the search tree for trace segments</li>
+   * <li>Iterating through trace segments during overlap detection</li>
+   * <li>Validating trace structure</li>
+   * </ul>
+   *
+   * @return the number of tile shapes for this trace (number of trace line segments)
    */
   @Override
   public int tile_shape_count() {
@@ -262,21 +333,31 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     Point combined_at;
     String location;
-    if (this.combine_at_start(true)) {
+    PolylineTrace otherTrace;
+    otherTrace = this.combine_at_start(true);
+    if (otherTrace != null) {
+      // the other trace got combined with this trace at its start
       combined_at = this.first_corner();
       location = "at start";
       this.combine();
-    } else if (this.combine_at_end(true)) {
-      combined_at = this.last_corner();
-      location = "at end";
-      this.combine();
     } else {
-      combined_at = null;
-      location = null;
+      otherTrace = this.combine_at_end(true);
+      if (otherTrace != null) {
+        // the other trace got combined with this trace at its end
+        combined_at = this.last_corner();
+        location = "at end";
+        this.combine();
+      } else {
+        // no combination was possible at either end
+        combined_at = null;
+        location = null;
+      }
     }
+
     if (combined_at != null) {
       FRLogger.trace("PolylineTrace.combine()", "combine_traces",
           "Successfully combined traces " + location + ": resulting_trace_id=" + this.get_id_no()
+              + ", removed_trace_id=" + otherTrace.get_id_no()
               + ", combined_at=" + combined_at,
           this.toString(),
           new Point[] { combined_at });
@@ -301,7 +382,7 @@ public class PolylineTrace extends Trace implements Serializable {
    *                       blocking the combination
    * @return true if a trace was combined at the start, false otherwise
    */
-  private boolean combine_at_start(boolean p_ignore_areas) {
+  private PolylineTrace combine_at_start(boolean p_ignore_areas) {
     Point start_corner = first_corner();
     Collection<Item> contacts = get_normal_contacts(start_corner, false);
     if (p_ignore_areas) {
@@ -309,7 +390,7 @@ public class PolylineTrace extends Trace implements Serializable {
       contacts.removeIf(c -> c instanceof ConductionArea);
     }
     if (contacts.size() != 1) {
-      return false;
+      return null;
     }
     PolylineTrace other_trace = null;
     boolean trace_found = false;
@@ -332,7 +413,7 @@ public class PolylineTrace extends Trace implements Serializable {
       }
     }
     if (!trace_found) {
-      return false;
+      return null;
     }
 
     if ((globalSettings != null) && (globalSettings.debugSettings != null)
@@ -440,7 +521,7 @@ public class PolylineTrace extends Trace implements Serializable {
       this.lines = joined_polyline;
     }
     // Make sure the combined polyline still meets the integrity requirements
-    this.lines = ShapeTraceEntries.ensureCornerChamferPattern(this.lines);
+    this.ensureCornerChamferPattern();
 
     // Validate polyline integrity after combine at start
     this.validateAndLogPolylineIntegrity();
@@ -465,7 +546,7 @@ public class PolylineTrace extends Trace implements Serializable {
     if (board instanceof RoutingBoard routingBoard) {
       routingBoard.join_changed_area(start_corner.to_float(), get_layer());
     }
-    return true;
+    return other_trace;
   }
 
   /**
@@ -481,7 +562,7 @@ public class PolylineTrace extends Trace implements Serializable {
    *                       blocking the combination
    * @return true if a trace was combined at the end, false otherwise
    */
-  private boolean combine_at_end(boolean p_ignore_areas) {
+  private PolylineTrace combine_at_end(boolean p_ignore_areas) {
     Point end_corner = last_corner();
     Collection<Item> contacts = get_normal_contacts(end_corner, false);
     if (p_ignore_areas) {
@@ -489,7 +570,7 @@ public class PolylineTrace extends Trace implements Serializable {
       contacts.removeIf(c -> c instanceof ConductionArea);
     }
     if (contacts.size() != 1) {
-      return false;
+      return null;
     }
     PolylineTrace other_trace = null;
     boolean trace_found = false;
@@ -512,7 +593,7 @@ public class PolylineTrace extends Trace implements Serializable {
       }
     }
     if (!trace_found) {
-      return false;
+      return null;
     }
 
     if ((globalSettings != null) && (globalSettings.debugSettings != null)
@@ -620,7 +701,7 @@ public class PolylineTrace extends Trace implements Serializable {
       this.lines = joined_polyline;
     }
     // Make sure the combined polyline still meets the integrity requirements
-    this.lines = ShapeTraceEntries.ensureCornerChamferPattern(this.lines);
+    this.ensureCornerChamferPattern();
 
     // Validate polyline integrity after combine at end
     this.validateAndLogPolylineIntegrity();
@@ -645,7 +726,7 @@ public class PolylineTrace extends Trace implements Serializable {
     if (board instanceof RoutingBoard routingBoard) {
       routingBoard.join_changed_area(end_corner.to_float(), get_layer());
     }
-    return true;
+    return other_trace;
   }
 
   /**
@@ -1099,8 +1180,8 @@ public class PolylineTrace extends Trace implements Serializable {
    * Normalizes this trace by splitting overlaps and combining adjacent segments.
    * <p>
    * This is the main entry point for trace normalization. It performs a complete
-   * cleanup
-   * of the trace geometry to ensure optimal routing. The normalization process:
+   * cleanup of the trace geometry to ensure optimal routing. The normalization
+   * process:
    * <ol>
    * <li>Removes tail traces (traces with only one connection)</li>
    * <li>Splits this trace at intersections with other traces of the same net</li>
@@ -1111,12 +1192,9 @@ public class PolylineTrace extends Trace implements Serializable {
    * <p>
    * <b>Why normalization is important:</b><br>
    * During routing and optimization, traces can overlap, create redundant
-   * segments, or form
-   * unnecessary branches. Normalization cleans up these issues to maintain a
-   * clean, efficient
-   * routing pattern. It ensures that traces only connect at endpoints and that
-   * there are no
-   * unnecessary segments.
+   * segments, or form unnecessary branches. Normalization cleans up these issues
+   * to maintain a clean, efficient routing pattern. It ensures that traces only
+   * connect at endpoints and that there are no unnecessary segments.
    * <p>
    * <b>When this method is called:</b>
    * <ul>
@@ -1129,10 +1207,8 @@ public class PolylineTrace extends Trace implements Serializable {
    * <p>
    * <b>Recursion depth:</b><br>
    * The method includes protection against infinite recursion by limiting the
-   * depth to
-   * {@link #MAX_NORMALIZATION_DEPTH}. This prevents stack overflow in
-   * pathological cases
-   * where traces form complex overlapping patterns.
+   * depth to {@link #MAX_NORMALIZATION_DEPTH}. This prevents stack overflow in
+   * pathological cases where traces form complex overlapping patterns.
    *
    * @param p_clip_shape optional shape to restrict normalization to a specific
    *                     area; null means process entire trace
@@ -1296,7 +1372,6 @@ public class PolylineTrace extends Trace implements Serializable {
     if (new_lines != lines) {
       // Ensure the generated polyline follows the chamfer/line alternation pattern.
       // Instead of skipping validation, fix the structure if needed.
-      new_lines = ShapeTraceEntries.ensureCornerChamferPattern(new_lines);
       change(new_lines);
       return true;
     }
@@ -1404,9 +1479,52 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * changes the geometry of this trace to p_new_polyline
+   * Changes the geometry of this trace to a new polyline path.
+   * <p>
+   * This method safely updates the trace's shape while maintaining consistency
+   * with the board's spatial index (search tree) and triggering necessary cleanup
+   * operations. It intelligently reuses search tree entries for unchanged portions
+   * of the trace to optimize performance.
+   * <p>
+   * <b>What happens during a change:</b>
+   * <ol>
+   * <li><b>Early exit check:</b> If the trace is not on the board, only the
+   * polyline geometry is updated without any side effects</li>
+   * <li><b>Equality check:</b> If the new polyline is identical to the current
+   * one, no changes are made</li>
+   * <li><b>Undo support:</b> Current state is saved for undo/redo functionality</li>
+   * <li><b>Tree optimization:</b> Unchanged portions of the polyline reuse
+   * existing search tree entries; only changed segments are updated</li>
+   * <li><b>Validation:</b> The new polyline is validated for structural integrity
+   * (chamfer pattern, connectivity)</li>
+   * <li><b>Normalization:</b> {@link #normalize_without_tail_removal(IntOctagon)}
+   * is called to clean up any resulting overlaps or combinations, but tail removal
+   * is skipped to prevent premature deletion during incremental routing</li>
+   * <li><b>Observer notification:</b> All observers are notified of the change</li>
+   * </ol>
+   * <p>
+   * <b>Performance optimization:</b><br>
+   * The method identifies the first and last lines that differ between the old
+   * and new polylines. Only the changed segments are updated in the search tree,
+   * which significantly improves performance for partial changes (e.g., moving
+   * one corner).
+   * <p>
+   * <b>When to use:</b>
+   * <ul>
+   * <li>After pull-tight optimization to apply the new geometry</li>
+   * <li>When moving or reshaping traces interactively</li>
+   * <li>After fixing pin connections</li>
+   * <li>During any operation that modifies trace geometry</li>
+   * </ul>
+   * <p>
+   * <b>Important notes:</b>
+   * <ul>
+   * <li>This method may trigger normalization, which can split or combine traces</li>
+   * <li>The trace instance remains the same, but its geometry is updated</li>
+   * <li>Search tree entries are efficiently reused where possible</li>
+   * </ul>
    *
-   * @param p_new_polyline the new polyline geometry
+   * @param p_new_polyline the new polyline geometry to apply to this trace
    */
   void change(Polyline p_new_polyline) {
     if (!this.is_on_the_board()) {
@@ -1458,7 +1576,7 @@ public class PolylineTrace extends Trace implements Serializable {
     lines = p_new_polyline;
 
     // Make sure the combined polyline still meets the integrity requirements
-    this.lines = ShapeTraceEntries.ensureCornerChamferPattern(this.lines);
+    this.ensureCornerChamferPattern();
 
     // Validate polyline integrity after changing geometry
     this.validateAndLogPolylineIntegrity();
@@ -1741,10 +1859,47 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Looks, if another pin connection restriction fits better than the current
-   * connection restriction and changes this trace in this case. If p_at_start,
-   * the start of the trace polygon is changed,
-   * else the end. Returns true, if this trace was changed.
+   * Attempts to find a better pin exit direction and changes this trace accordingly.
+   * <p>
+   * This optimization method looks for cases where the trace makes a sharp angle
+   * with a fixed connection stub at a pin, and tries to find an alternative exit
+   * direction from the pin that would result in a smoother connection.
+   * <p>
+   * <b>When this applies:</b><br>
+   * This method is useful when a trace connects to a pin via a shove-fixed stub
+   * (a short fixed trace segment that defines the exit direction from the pin).
+   * If the trace makes a sharp angle with this stub, it may be possible to use
+   * a different exit direction that aligns better with the trace's path.
+   * <p>
+   * <b>Algorithm:</b>
+   * <ol>
+   * <li>Checks if the endpoint connects to exactly one item (the connection stub)</li>
+   * <li>Verifies the contact is a shove-fixed PolylineTrace (exit restriction stub)</li>
+   * <li>Detects if there's a sharp angle between the stub and this trace</li>
+   * <li>Finds the pin at the other end of the stub</li>
+   * <li>Calculates the nearest exit direction from the pin that better aligns
+   * with the trace path</li>
+   * <li>If a better direction is found, unfixes the stub and combines the traces,
+   * allowing them to be re-routed with the new exit direction</li>
+   * </ol>
+   * <p>
+   * <b>Sharp angle detection:</b><br>
+   * A sharp angle is detected when the projection of the trace's first line onto
+   * the stub's last line is negative (pointing in opposite directions), indicating
+   * the trace needs to make a sharp turn immediately after leaving the pin.
+   * <p>
+   * <b>Side effects:</b>
+   * <ul>
+   * <li>The connection stub's fixed state is changed to match this trace</li>
+   * <li>{@link #combine()} is called, which may merge this trace with the stub
+   * and trigger normalization</li>
+   * <li>The stub may be rerouted with a different exit direction</li>
+   * </ul>
+   *
+   * @param p_at_start if true, checks and modifies the start of this trace;
+   *                   if false, checks and modifies the end
+   * @return true if a better pin exit direction was found and the trace was
+   *         changed, false if no improvement was possible
    */
   public boolean swap_connection_to_pin(boolean p_at_start) {
     Polyline trace_polyline;
@@ -1813,52 +1968,6 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Checks if a line has a valid chamfer length based on its direction.
-   * <p>
-   * Chamfer lines must have specific lengths depending on their direction:
-   * <ul>
-   * <li><b>Orthogonal lines (horizontal/vertical):</b> Must have length 1.0
-   * (±0.05 tolerance for floating-point precision)</li>
-   * <li><b>Diagonal lines (45-degree angles):</b> Must have length √2 (≈1.414,
-   * ±0.05 tolerance for floating-point precision)</li>
-   * </ul>
-   * <p>
-   * This validation ensures that chamfer lines maintain the proper spacing and
-   * connectivity between trace lines and trace endpoints.
-   *
-   * @param line the line to validate
-   * @return true if the line has a valid chamfer length for its direction, false
-   *         otherwise
-   */
-  private boolean isValidChamferLength(Line line) {
-    if (line == null) {
-      return false;
-    }
-
-    double lineLength = line.length();
-    Direction lineDirection = line.direction();
-
-    // Allow ±0.05 tolerance for floating-point precision
-    final double TOLERANCE = 0.05;
-
-    if (lineDirection == null) {
-      return false;
-    }
-
-    if (lineDirection.is_orthogonal()) {
-      // Orthogonal (horizontal or vertical) chamfer lines must have length 1.0
-      return lineLength >= (1.0 - TOLERANCE) && lineLength <= (1.0 + TOLERANCE);
-    } else if (lineDirection.is_diagonal()) {
-      // Diagonal (45-degree) chamfer lines must have length √2 (≈1.414)
-      double sqrtTwo = Math.sqrt(2);
-      return lineLength >= (sqrtTwo - TOLERANCE) && lineLength <= (sqrtTwo + TOLERANCE);
-    } else {
-      // Other directions (e.g., arbitrary angles) are not valid for chamfer lines
-      return false;
-    }
-  }
-
-  /**
    * Validates that all lines in this polyline are properly connected.
    * <p>
    * This method validates the complete polyline structure according to the
@@ -1893,7 +2002,7 @@ public class PolylineTrace extends Trace implements Serializable {
     for (int i = 0; i < lines.arr.length; i += 2) {
       Line currentLine = lines.arr[i];
 
-      if (!isValidChamferLength(currentLine)) {
+      if (!Line.isValidChamferLength(currentLine)) {
         Point[] polylinePoints = extractPolylinePoints();
         String impactedItems = this.toString() + "," + this.getAllNetNames();
         Direction lineDir = currentLine.direction();
@@ -2038,5 +2147,41 @@ public class PolylineTrace extends Trace implements Serializable {
     }
 
     return true;
+  }
+
+  /**
+   * Ensures this trace's polyline follows the corner chamfer/line alternation pattern.
+   * <p>
+   * This method validates and corrects the polyline structure by inserting chamfer lines
+   * where needed. The chamfer/line alternation pattern requires that even-indexed lines
+   * (0, 2, 4, ...) are always chamfer lines (short bevel segments with length 1.0 for
+   * orthogonal directions or √2 for diagonal directions).
+   * <p>
+   * <b>When this is called:</b>
+   * <ul>
+   * <li>After combining traces to ensure the resulting polyline is valid</li>
+   * <li>After any operation that modifies the polyline structure</li>
+   * <li>During validation to correct structural issues</li>
+   * </ul>
+   * <p>
+   * If corrections are made, the internal polyline is updated and derived data is cleared
+   * to ensure consistency with the board's spatial index.
+   *
+   * @return true if the polyline was modified to correct the pattern, false if it was
+   *         already valid
+   */
+  public boolean ensureCornerChamferPattern() {
+    if (this.lines == null || this.lines.arr == null || this.lines.arr.length < 3) {
+      return false;
+    }
+
+    Polyline newLines = this.lines.ensureCornerChamferPattern();
+
+    if (this.lines != newLines) {
+      this.lines = newLines;
+      this.clear_derived_data();
+    }
+
+    return (this.lines != newLines);
   }
 }

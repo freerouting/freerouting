@@ -1,14 +1,11 @@
 package app.freerouting.board;
 
 import app.freerouting.geometry.planar.ConvexShape;
-import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
-import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -49,222 +46,6 @@ public class ShapeTraceEntries {
     trace_piece_count = 0;
     max_stack_level = 0;
     shove_via_list = new LinkedList<>();
-  }
-
-  /**
-   * Converts a polyline to follow the corner chamfer/line alternation pattern by
-   * inserting
-   * chamfer lines where needed. This ensures that even-indexed lines are always
-   * chamfers (short bevel segments).
-   *
-   * @param p_polyline the polyline to convert
-   * @return a new polyline with proper chamfer/line alternation, or the original
-   *         if already valid
-   */
-  public static Polyline ensureCornerChamferPattern(Polyline p_polyline) {
-    if (p_polyline == null || p_polyline.arr == null || p_polyline.arr.length < 3) {
-      return p_polyline;
-    }
-
-    // Use a working list to perform pre-processing (Start/End checks and
-    // Consecutive removal)
-    java.util.LinkedList<Line> workingList = new java.util.LinkedList<>();
-    for (Line l : p_polyline.arr) {
-      workingList.add(l);
-    }
-
-    // 1. Look for instances where chamfer lines are following each other
-    // without an intervening line, and remove all those chamfer lines
-    // (The main loop will re-chamfer it correctly later)
-
-    // We iterate using an index-based approach on the list to handle lookahead and
-    // modification
-    for (int i = 0; i < workingList.size() - 1; i++) {
-      Line current = workingList.get(i);
-      Line next = workingList.get(i + 1);
-
-      if (isValidChamferLength(current) && isValidChamferLength(next)) {
-        // Found consecutive chamfers at i and i+1, so it's certain that we need to delete at least two of them.
-        // We will delete all consecutive chamfers in this block, we need to find the length of the block first.
-        int startIndex = i;
-        int endIndex = i + 1;
-
-        while (endIndex < workingList.size() && isValidChamferLength(workingList.get(endIndex))) {
-          endIndex++;
-        }
-
-        // Now we have a block of chamfers from startIndex to endIndex-1 (inclusive)
-        for (int j = startIndex; j < endIndex; j++) {
-          workingList.remove(startIndex); // We always remove at startIndex because the list shifts left after each removal
-        }
-      }
-    }
-
-    // 2. Check if the first line and the last line are valid chamfers,
-    // if not we insert them now (by splitting the long line)
-
-    // Check Start
-    if (!workingList.isEmpty()) {
-      Line first = workingList.getFirst();
-      if (!isValidChamferLength(first)) {
-        Direction dir = first.direction();
-        Vector v = dir.get_vector().negate();
-
-        Line newChamfer = new Line(first.a, first.a.translate_by(v));
-
-        workingList.addFirst(newChamfer);
-      }
-    }
-
-    // Check End
-    if (!workingList.isEmpty()) {
-      Line last = workingList.getLast();
-      if (!isValidChamferLength(last)) {
-        Direction dir = last.direction();
-        Vector v = dir.get_vector().negate();
-
-        Line newChamfer = new Line(last.b, last.b.translate_by(v));
-
-        workingList.addLast(newChamfer);
-      }
-    }
-
-    // 3. Main Reconstruction Loop
-    // Convert by inserting corner chamfers where needed based on the
-    // Chamfer-Line-Chamfer pattern
-    java.util.List<Line> newLines = new java.util.LinkedList<>();
-
-    // With Part 1, we guaranteed arr[0] is a chamfer (or we handled it).
-    // So we can assume the pattern starts with C.
-    if (!workingList.isEmpty()) {
-      newLines.add(workingList.get(0));
-    }
-
-    for (int i = 1; i < workingList.size(); i++) {
-      Line currentLine = workingList.get(i);
-
-      // Check what we expect for the next slot
-      // newLines.size() is the index where the next line will be placed
-      boolean expectChamfer = (newLines.size() % 2 == 0);
-
-      if (expectChamfer) {
-        if (isValidChamferLength(currentLine)) {
-          // It's a valid chamfer, so add it
-          newLines.add(currentLine);
-        } else {
-          // Expected a chamfer but found a long line.
-          // Insert a chamfer between the previous line and this one.
-          Line lastAdded = newLines.get(newLines.size() - 1);
-          Line chamfer = createCornerChamfer(lastAdded, currentLine);
-
-          if (chamfer != null) {
-            newLines.add(chamfer);
-            // After adding chamfer, we expect a Line (non-chamfer), which currentLine is.
-            newLines.add(currentLine);
-          } else {
-            // Falls back to adding the line directly if chamfer creation failed
-            newLines.add(currentLine);
-          }
-        }
-      } else {
-        // Expecting Line (odd index) - anything is allowed
-        newLines.add(currentLine);
-      }
-    }
-
-    return new Polyline(newLines.toArray(new Line[0]));
-  }
-
-  /**
-   * Creates a chamfer line that cuts the corner between two lines.
-   * Assumes k=1 unit cut which results in length 1.0 (Ortho) or sqrt(2)
-   * (Diagonal).
-   */
-  private static Line createCornerChamfer(Line prev, Line next) {
-    if (prev == null || next == null)
-      return null;
-
-    // Calculate intersection corner
-    Point corner = prev.intersection(next);
-    if (corner == null) {
-      return null;
-    }
-
-    Direction d1 = prev.direction();
-    Direction d2 = next.direction();
-
-    if (d1.equals(d2) || d1.equals(d2.opposite())) {
-      return null;
-    }
-
-    // Check for 45-degree turns (acute angle, projection > 0)
-    if (d1.projection(d2) == app.freerouting.datastructures.Signum.POSITIVE) {
-      // For 45-degree turns, we cannot create a standard bevel chamfer of length 1 or
-      // sqrt(2)
-      // that bridges the corner symmetrically (would require length sqrt(5)).
-      // Instead, we create a collinear chamfer of length 1.0 along the orthogonal
-      // leg.
-      // This satisfies the "Chamfer-Line-Chamfer" pattern requirements.
-
-      if (d1.is_orthogonal()) {
-        // Retract 1 unit on the previous (orthogonal) line
-        Point pPrime = corner.translate_by(d1.get_vector().negate());
-        return new Line(pPrime, corner);
-      } else if (d2.is_orthogonal()) {
-        // Extend 1 unit on the next (orthogonal) line
-        Point nPrime = corner.translate_by(d2.get_vector());
-        return new Line(corner, nPrime);
-      }
-    }
-
-    // For 90-degree and 135-degree turns, shifting back by 1 unit along input
-    // vector
-    // and forward by 1 unit along output vector creates the correct chamfer.
-    // P' = Corner - d1
-    // N' = Corner + d2
-    Vector v1 = d1.get_vector();
-    Vector v2 = d2.get_vector();
-
-    Point pPrime = corner.translate_by(v1.negate());
-    Point nPrime = corner.translate_by(v2);
-
-    return new Line(pPrime, nPrime);
-  }
-
-  /**
-   * Checks if a line has a valid chamfer length (√2 for diagonal, 1.0 for
-   * orthogonal).
-   */
-  public static boolean isValidChamferLength(Line line) {
-    if (line == null) {
-      return false;
-    }
-
-    // Calculate line length from points
-    double dx = ((IntPoint) line.b).x - ((IntPoint) line.a).x;
-    double dy = ((IntPoint) line.b).y - ((IntPoint) line.a).y;
-    double lineLength = Math.sqrt(dx * dx + dy * dy);
-
-    Direction lineDirection = line.direction();
-
-    // Allow ±0.05 tolerance for floating-point precision
-    final double TOLERANCE = 0.05;
-
-    if (lineDirection == null) {
-      return false;
-    }
-
-    if (lineDirection.is_orthogonal()) {
-      // Orthogonal (horizontal or vertical) chamfer lines must have length 1.0
-      return lineLength >= (1.0 - TOLERANCE) && lineLength <= (1.0 + TOLERANCE);
-    } else if (lineDirection.is_diagonal()) {
-      // Diagonal (45-degree) chamfer lines must have length √2 (≈1.414)
-      double sqrtTwo = Math.sqrt(2);
-      return lineLength >= (sqrtTwo - TOLERANCE) && lineLength <= (sqrtTwo + TOLERANCE);
-    } else {
-      // Other directions (e.g., arbitrary angles) are not valid for chamfer lines
-      return false;
-    }
   }
 
   public static void cutout_trace(PolylineTrace p_trace, ConvexShape p_shape, int p_cl_class) {
@@ -453,9 +234,9 @@ public class ShapeTraceEntries {
     // pattern
     // This ensures that even-indexed lines are always chamfers, avoiding validation
     // errors
-    Polyline fixed_polyline = ensureCornerChamferPattern(piece_polyline);
+    piece_polyline.ensureCornerChamferPattern();
 
-    return new PolylineTrace(fixed_polyline, this.layer, curr_trace.get_half_width(),
+    return new PolylineTrace(piece_polyline, this.layer, curr_trace.get_half_width(),
         curr_trace.net_no_arr, curr_trace.clearance_class_no(), 0, 0, FixedState.NOT_FIXED, this.board);
   }
 
