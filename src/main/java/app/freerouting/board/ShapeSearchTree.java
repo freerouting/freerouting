@@ -1057,6 +1057,7 @@ public class ShapeSearchTree extends MinAreaTree {
    * in derived classes.
    */
   public TileShape[] offset_shapes(Polyline p_polyline, int p_half_width, int p_from_no, int p_to_no) {
+    p_polyline = p_polyline.ensureCornerChamferPattern();
     return p_polyline.offset_shapes(p_half_width, p_from_no, p_to_no);
   }
 

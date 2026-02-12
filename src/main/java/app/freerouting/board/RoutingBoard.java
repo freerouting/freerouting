@@ -1144,6 +1144,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       PolylineTrace combine_trace = (PolylineTrace) picked_trace;
       combined_polyline = new_polyline.combine(combine_trace.polyline());
     }
+    combined_polyline = combined_polyline.ensureCornerChamferPattern();
+
     if (combined_polyline.arr.length < 3) {
       FRLogger.trace("RoutingBoard.insert_forced_trace_polyline", "polyline_too_short",
           "combined_polyline has insufficient lines (arr.length=" + combined_polyline.arr.length + " < 3)"
@@ -1154,6 +1156,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           new Point[] { from_corner, to_corner });
       return from_corner;
     }
+
     int start_shape_no = combined_polyline.arr.length - new_polyline.arr.length;
     // calculate the last shapes of combined_polyline for checking
     TileShape[] trace_shapes = combined_polyline.offset_shapes(compensated_half_width, start_shape_no,

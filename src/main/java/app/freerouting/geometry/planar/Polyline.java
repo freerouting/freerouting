@@ -1917,7 +1917,11 @@ public class Polyline implements Serializable {
             Line combinedLine = Line.combine(lastAdded, currentLine);
             if (combinedLine != null)
             {
-              newLines.set(newLines.size() - 1, combinedLine); // Replace the last added line with the combined line already_valid = false; } else {
+              FRLogger.trace("ensureCornerChamferPattern: Could not create chamfer between lines "
+                  + lastAdded + " and " + currentLine
+                  + ", combining them into " + combinedLine);
+              newLines.set(newLines.size() - 1, combinedLine); // Replace the last added line with the combined line
+              already_valid = false;
             } else {
               // Falls back to adding the line directly if chamfer creation failed
               newLines.add(currentLine);
