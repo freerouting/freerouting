@@ -40,7 +40,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -78,7 +77,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
   private final BoardPanel panel;
   private final TextManager tm;
   private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
-
   private final GlobalSettings globalSettings;
   /**
    * The graphical context for drawing the board.
@@ -583,6 +581,18 @@ public class GuiBoardManager extends HeadlessBoardManager {
     super.create_board(p_bounding_box, p_layer_structure, p_outline_shapes, p_outline_clearance_class_name, p_rules,
         p_board_communication);
 
+    // Apply CLI settings from GlobalSettings to the board's autoroute_settings
+    // This ensures that command-line arguments are respected in GUI mode
+    // NOTE: This is critical because
+    // InteractiveActionThread.get_autorouter_and_route_optimizer_instance()
+    // clones boardManager.settings.autoroute_settings to job.routerSettings, so we
+    // need to ensure
+    // the board's settings have the CLI arguments applied
+    if (globalSettings != null && globalSettings.routerSettings != null) {
+      FRLogger.info("[CLI Settings] Applying CLI settings to board's autoroute_settings...");
+      this.settings.autoroute_settings.applyNewValuesFrom(globalSettings.routerSettings);
+    }
+
     // create the interactive/GUI settings with default values
     double unit_factor = p_board_communication.coordinate_transform.board_to_dsn(1);
     this.coordinate_transform = new CoordinateTransform(1, p_board_communication.unit, unit_factor,
@@ -932,7 +942,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public boolean loadFromBinary(ObjectInputStream p_design) {
     try {
       board = (RoutingBoard) p_design.readObject();
-      settings = (InteractiveSettings) p_design.readObject();
+      settings = (Settings) p_design.readObject();
       coordinate_transform = (CoordinateTransform) p_design.readObject();
       graphics_context = (GraphicsContext) p_design.readObject();
       originalBoardChecksum = calculateCrc32();

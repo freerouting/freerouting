@@ -32,8 +32,7 @@ public class DragItemState extends DragState {
   }
 
   /**
-   * Moves the items of the group to p_to_location. Return this.return_state, if
-   * an error occurred while moving, so that an undo may be necessary.
+   * Moves the items of the group to p_to_location. Return this.return_state, if an error occurred while moving, so that an undo may be necessary.
    */
   @Override
   public InteractiveState move_to(FloatPoint p_to_location) {
@@ -82,8 +81,7 @@ public class DragItemState extends DragState {
         hdlg.get_routing_board().generate_snapshot();
         this.something_dragged = true;
       }
-      if (!move_component.insert(hdlg.settings.trace_pull_tight_region_width,
-          hdlg.settings.trace_pull_tight_accuracy)) {
+      if (!move_component.insert(hdlg.settings.trace_pull_tight_region_width, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy)) {
         // an insert error occurred, end the drag state
         return this.return_state;
       }
