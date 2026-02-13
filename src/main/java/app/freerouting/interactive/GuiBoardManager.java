@@ -1350,7 +1350,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     // the board's settings have the CLI arguments applied
     if (globalSettings != null && globalSettings.routerSettings != null) {
       FRLogger.info("[CLI Settings] Applying CLI settings to board's autoroute_settings...");
-      this.settings.autoroute_settings.applyNewValuesFrom(globalSettings.routerSettings);
+      this.get_settings().autoroute_settings.applyNewValuesFrom(globalSettings.routerSettings);
     }
 
     // create the interactive/GUI settings with default values
@@ -2020,7 +2020,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public boolean loadFromBinary(ObjectInputStream p_design) {
     try {
       board = (RoutingBoard) p_design.readObject();
-      interactiveSettings = (InteractiveSettings) p_design.readObject();
+      p_design.readObject();
       coordinate_transform = (CoordinateTransform) p_design.readObject();
       graphics_context = (GraphicsContext) p_design.readObject();
       originalBoardChecksum = calculateCrc32();

@@ -24,7 +24,7 @@ public class RulesFile {
   public static void write(GuiBoardManager p_board_handling, OutputStream p_output_stream, String p_design_name) {
     IndentFileWriter output_file = new IndentFileWriter(p_output_stream);
     BasicBoard routing_board = p_board_handling.get_routing_board();
-    WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, p_board_handling.settings.autoroute_settings, output_file,
+    WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, p_board_handling.get_settings().autoroute_settings, output_file,
         routing_board.communication.specctra_parser_info.string_quote, routing_board.communication.coordinate_transform, false);
     try {
       write_rules(write_scope_parameter, p_design_name);
@@ -107,7 +107,7 @@ public class RulesFile {
         } else if (next_token == Keyword.AUTOROUTE_SETTINGS) {
           RouterSettings autoroute_settings = AutorouteSettings.read_scope(scanner, layer_structure);
           if (autoroute_settings != null) {
-            p_board_handling.settings.autoroute_settings = autoroute_settings;
+            p_board_handling.get_settings().autoroute_settings = autoroute_settings;
           }
         } else {
           ScopeKeyword.skip_scope(scanner);

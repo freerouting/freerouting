@@ -171,7 +171,7 @@ public interface BoardManager {
    *
    * @see InteractiveSettings
    */
-  InteractiveSettings get_settings();
+  Settings get_settings();
 
   /**
    * Returns the current routing job context associated with this board manager.

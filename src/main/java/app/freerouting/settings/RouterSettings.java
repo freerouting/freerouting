@@ -66,6 +66,8 @@ public class RouterSettings implements Serializable, Cloneable {
   public RouterSettings(RoutingBoard p_board) {
     this();
     setLayerCount(p_board.get_layer_count());
+    scoring.defaultPreferredDirectionTraceCost = 1.0;
+    scoring.defaultUndesiredDirectionTraceCost = 1.0;
     applyBoardSpecificOptimizations(p_board);
   }
 
@@ -206,7 +208,7 @@ public class RouterSettings implements Serializable, Cloneable {
 
   /**
    * Get the number of layers configured in the router settings.
-   * 
+   *
    * @return The layer count
    */
   public int getLayerCount() {

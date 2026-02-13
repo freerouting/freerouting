@@ -87,7 +87,7 @@ public class HeadlessBoardManager implements BoardManager {
    *
    * @see InteractiveSettings
    */
-  public InteractiveSettings interactiveSettings;
+  public Settings interactiveSettings;
 
   /**
    * Listener for autorouter thread events during automated routing operations.
@@ -223,7 +223,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @see InteractiveSettings
    */
   @Override
-  public InteractiveSettings get_settings() {
+  public Settings get_settings() {
     return interactiveSettings;
   }
 
@@ -296,7 +296,7 @@ public class HeadlessBoardManager implements BoardManager {
     }
     this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules, p_board_communication);
 
-    this.interactiveSettings = new InteractiveSettings(this.board);
+    this.interactiveSettings = new Settings(this.board);
   }
 
   /**

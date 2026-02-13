@@ -197,7 +197,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
     // Both should be kept in sync properly instead of cloning here, because now the
     // command line argument is ignored if it wasn't loaded to the GUI first.
     // Some arguments are never loaded to the GUI, so they are lost now.
-    job.routerSettings = boardManager.settings.autoroute_settings.clone();
+    job.routerSettings = boardManager.settingsMerger.merge();
 
     var routerThread = new AutorouterAndRouteOptimizerThread(boardManager, job);
     routerThread.addListener(new ThreadActionListener() {

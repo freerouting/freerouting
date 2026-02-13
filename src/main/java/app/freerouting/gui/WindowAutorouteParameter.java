@@ -125,7 +125,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       settings_autorouter_layer_active_arr[i].addActionListener(new LayerActiveListener(i));
       settings_autorouter_layer_active_arr[i]
           .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_layer_active_arr", null));
-      board_handling.settings.autoroute_settings.set_layer_active(i, curr_layer.is_signal);
+      board_handling.get_settings().autoroute_settings.set_layer_active(i, curr_layer.is_signal);
       settings_autorouter_layer_active_arr[i].setEnabled(curr_layer.is_signal);
       gridbag.setConstraints(settings_autorouter_layer_active_arr[i], gridbag_constraints);
       main_panel.add(settings_autorouter_layer_active_arr[i]);
@@ -386,7 +386,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.setResizable(false);
 
     // Register as listener for settings changes (bidirectional binding)
-    this.board_handling.settings.autoroute_settings.addPropertyChangeListener(this::onSettingsChanged);
+    this.board_handling.get_settings().autoroute_settings.addPropertyChangeListener(this::onSettingsChanged);
   }
 
   /**
@@ -455,7 +455,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
    */
   @Override
   public void refresh() {
-    RouterSettings settings = this.board_handling.settings.autoroute_settings;
+    RouterSettings settings = this.board_handling.get_settings().autoroute_settings;
     LayerStructure layer_structure = this.board_handling.get_routing_board().layer_structure;
 
     this.settings_autorouter_vias_allowed.setSelected(settings.get_vias_allowed());
@@ -527,7 +527,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       int curr_layer_no = this.signal_layer_no;
-      board_handling.settings.autoroute_settings.set_layer_active(curr_layer_no,
+      board_handling.get_settings().autoroute_settings.set_layer_active(curr_layer_no,
           settings_autorouter_layer_active_arr[this.signal_layer_no].isSelected());
     }
   }
@@ -543,7 +543,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-      board_handling.settings.autoroute_settings.set_preferred_direction_is_horizontal(curr_layer_no,
+      board_handling.get_settings().autoroute_settings.set_preferred_direction_is_horizontal(curr_layer_no,
           settings_autorouter_combo_box_arr
               .get(signal_layer_no)
               .getSelectedItem() == horizontal);
@@ -556,7 +556,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       isUpdatingFromSettings = true;
       try {
-        board_handling.settings.autoroute_settings.setViasAllowed(settings_autorouter_vias_allowed.isSelected());
+        board_handling.get_settings().autoroute_settings.setViasAllowed(settings_autorouter_vias_allowed.isSelected());
       } finally {
         isUpdatingFromSettings = false;
       }
@@ -567,7 +567,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      RouterSettings autoroute_settings = board_handling.settings.autoroute_settings;
+      RouterSettings autoroute_settings = board_handling.get_settings().autoroute_settings;
       isUpdatingFromSettings = true;
       try {
         autoroute_settings.setEnabled(settings_autorouter_autoroute_pass_button.isSelected());
@@ -581,7 +581,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      RouterSettings autoroute_settings = board_handling.settings.autoroute_settings;
+      RouterSettings autoroute_settings = board_handling.get_settings().autoroute_settings;
       isUpdatingFromSettings = true;
       try {
         autoroute_settings.setOptimizerEnabled(settings_autorouter_postroute_pass_button.isSelected());
@@ -596,7 +596,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        int old_value = board_handling.settings.autoroute_settings.get_via_costs();
+        int old_value = board_handling.get_settings().autoroute_settings.get_via_costs();
         Object input = via_cost_field.getValue();
         int input_value;
         if (input instanceof Number number) {
@@ -609,7 +609,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           input_value = old_value;
           via_cost_field.setValue(old_value);
         }
-        board_handling.settings.autoroute_settings.set_via_costs(input_value);
+        board_handling.get_settings().autoroute_settings.set_via_costs(input_value);
         via_cost_field.setValue(input_value);
         via_cost_input_completed = true;
 
@@ -625,7 +625,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!via_cost_input_completed) {
         // Save the value when focus is lost
-        int old_value = board_handling.settings.autoroute_settings.get_via_costs();
+        int old_value = board_handling.get_settings().autoroute_settings.get_via_costs();
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -647,7 +647,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           input_value = old_value;
           via_cost_field.setValue(old_value);
         }
-        board_handling.settings.autoroute_settings.set_via_costs(input_value);
+        board_handling.get_settings().autoroute_settings.set_via_costs(input_value);
         via_cost_field.setValue(input_value);
         via_cost_input_completed = true;
       }
@@ -663,7 +663,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        int old_value = board_handling.settings.autoroute_settings.get_plane_via_costs();
+        int old_value = board_handling.get_settings().autoroute_settings.get_plane_via_costs();
         Object input = plane_via_cost_field.getValue();
         int input_value;
         if (input instanceof Number number) {
@@ -676,7 +676,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           input_value = old_value;
           plane_via_cost_field.setValue(old_value);
         }
-        board_handling.settings.autoroute_settings.set_plane_via_costs(input_value);
+        board_handling.get_settings().autoroute_settings.set_plane_via_costs(input_value);
         plane_via_cost_field.setValue(input_value);
         plane_via_cost_input_completed = true;
 
@@ -692,7 +692,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!plane_via_cost_input_completed) {
         // Save the value when focus is lost
-        int old_value = board_handling.settings.autoroute_settings.get_plane_via_costs();
+        int old_value = board_handling.get_settings().autoroute_settings.get_plane_via_costs();
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -714,7 +714,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           input_value = old_value;
           plane_via_cost_field.setValue(old_value);
         }
-        board_handling.settings.autoroute_settings.set_plane_via_costs(input_value);
+        board_handling.get_settings().autoroute_settings.set_plane_via_costs(input_value);
         plane_via_cost_field.setValue(input_value);
         plane_via_cost_input_completed = true;
       }
@@ -730,7 +730,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        int old_value = board_handling.settings.autoroute_settings.get_start_ripup_costs();
+        int old_value = board_handling.get_settings().autoroute_settings.get_start_ripup_costs();
         Object input = start_ripup_costs.getValue();
         int input_value;
         if (input instanceof Number number) {
@@ -741,7 +741,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           input_value = old_value;
         }
-        board_handling.settings.autoroute_settings.set_start_ripup_costs(input_value);
+        board_handling.get_settings().autoroute_settings.set_start_ripup_costs(input_value);
         start_ripup_costs.setValue(input_value);
         start_ripup_cost_input_completed = true;
       } else {
@@ -756,7 +756,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!start_ripup_cost_input_completed) {
         // Save the value when focus is lost
-        int old_value = board_handling.settings.autoroute_settings.get_start_ripup_costs();
+        int old_value = board_handling.get_settings().autoroute_settings.get_start_ripup_costs();
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -776,7 +776,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           input_value = old_value;
         }
-        board_handling.settings.autoroute_settings.set_start_ripup_costs(input_value);
+        board_handling.get_settings().autoroute_settings.set_start_ripup_costs(input_value);
         start_ripup_costs.setValue(input_value);
         start_ripup_cost_input_completed = true;
       }
@@ -792,7 +792,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        int old_value = board_handling.settings.autoroute_settings.maxPasses;
+        int old_value = board_handling.get_settings().autoroute_settings.maxPasses;
         Object input = max_passes_field.getValue();
         int input_value;
         if (input instanceof Number number) {
@@ -809,7 +809,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         // Use setter to fire property change event
         isUpdatingFromSettings = true;
         try {
-          board_handling.settings.autoroute_settings.setMaxPasses(input_value);
+          board_handling.get_settings().autoroute_settings.setMaxPasses(input_value);
         } finally {
           isUpdatingFromSettings = false;
         }
@@ -827,7 +827,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!max_passes_input_completed) {
         // Save the value when focus is lost
-        int old_value = board_handling.settings.autoroute_settings.maxPasses;
+        int old_value = board_handling.get_settings().autoroute_settings.maxPasses;
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -852,7 +852,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         }
         isUpdatingFromSettings = true;
         try {
-          board_handling.settings.autoroute_settings.setMaxPasses(input_value);
+          board_handling.get_settings().autoroute_settings.setMaxPasses(input_value);
         } finally {
           isUpdatingFromSettings = false;
         }
@@ -871,7 +871,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        String old_value = board_handling.settings.autoroute_settings.jobTimeoutString;
+        String old_value = board_handling.get_settings().autoroute_settings.jobTimeoutString;
         Object input = job_timeout_field.getValue();
         String input_value;
         if (input instanceof String str) {
@@ -887,7 +887,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         // Use setter to fire property change event
         isUpdatingFromSettings = true;
         try {
-          board_handling.settings.autoroute_settings.setJobTimeoutString(input_value);
+          board_handling.get_settings().autoroute_settings.setJobTimeoutString(input_value);
         } finally {
           isUpdatingFromSettings = false;
         }
@@ -905,7 +905,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!job_timeout_input_completed) {
         // Save the value when focus is lost
-        String old_value = board_handling.settings.autoroute_settings.jobTimeoutString;
+        String old_value = board_handling.get_settings().autoroute_settings.jobTimeoutString;
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -927,7 +927,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         }
         isUpdatingFromSettings = true;
         try {
-          board_handling.settings.autoroute_settings.setJobTimeoutString(input_value);
+          board_handling.get_settings().autoroute_settings.setJobTimeoutString(input_value);
         } finally {
           isUpdatingFromSettings = false;
         }
@@ -946,7 +946,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        int old_value = board_handling.settings.autoroute_settings.maxThreads;
+        int old_value = board_handling.get_settings().autoroute_settings.maxThreads;
         Object input = max_threads_field.getValue();
         int input_value;
         int max_available = Runtime.getRuntime().availableProcessors();
@@ -964,7 +964,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         // Use setter to fire property change event
         isUpdatingFromSettings = true;
         try {
-          board_handling.settings.autoroute_settings.setMaxThreads(input_value);
+          board_handling.get_settings().autoroute_settings.setMaxThreads(input_value);
         } finally {
           isUpdatingFromSettings = false;
         }
@@ -982,7 +982,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!max_threads_input_completed) {
         // Save the value when focus is lost
-        int old_value = board_handling.settings.autoroute_settings.maxThreads;
+        int old_value = board_handling.get_settings().autoroute_settings.maxThreads;
 
         // Commit the edit to ensure getValue() returns the typed value
         try {
@@ -1008,7 +1008,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         }
         isUpdatingFromSettings = true;
         try {
-          board_handling.settings.autoroute_settings.setMaxThreads(input_value);
+          board_handling.get_settings().autoroute_settings.setMaxThreads(input_value);
         } finally {
           isUpdatingFromSettings = false;
         }
@@ -1026,7 +1026,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      String oldAlgorithm = board_handling.settings.autoroute_settings.algorithm;
+      String oldAlgorithm = board_handling.get_settings().autoroute_settings.algorithm;
       String newAlgorithm;
       if (settings_autorouter_algorithm_combo_box.getSelectedItem() == algorithm_v19) {
         newAlgorithm = RouterSettings.ALGORITHM_V19;
@@ -1036,7 +1036,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       if (!oldAlgorithm.equals(newAlgorithm)) {
         isUpdatingFromSettings = true;
         try {
-          board_handling.settings.autoroute_settings.setAlgorithm(newAlgorithm);
+          board_handling.get_settings().autoroute_settings.setAlgorithm(newAlgorithm);
         } finally {
           isUpdatingFromSettings = false;
         }
@@ -1056,7 +1056,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-        double old_value = board_handling.settings.autoroute_settings
+        double old_value = board_handling.get_settings().autoroute_settings
             .get_preferred_direction_trace_costs(curr_layer_no);
         Object input = preferred_direction_trace_cost_arr[this.signal_layer_no].getValue();
         double input_value;
@@ -1068,7 +1068,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           input_value = old_value;
         }
-        board_handling.settings.autoroute_settings.set_preferred_direction_trace_costs(curr_layer_no, input_value);
+        board_handling.get_settings().autoroute_settings.set_preferred_direction_trace_costs(curr_layer_no, input_value);
         preferred_direction_trace_cost_arr[this.signal_layer_no].setValue(input_value);
         preferred_direction_trace_costs_input_completed[this.signal_layer_no] = true;
 
@@ -1111,7 +1111,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-        double old_value = board_handling.settings.autoroute_settings
+        double old_value = board_handling.get_settings().autoroute_settings
             .get_against_preferred_direction_trace_costs(curr_layer_no);
         Object input = against_preferred_direction_trace_cost_arr[this.signal_layer_no].getValue();
         double input_value;
@@ -1123,7 +1123,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         } else {
           input_value = old_value;
         }
-        board_handling.settings.autoroute_settings.set_against_preferred_direction_trace_costs(curr_layer_no,
+        board_handling.get_settings().autoroute_settings.set_against_preferred_direction_trace_costs(curr_layer_no,
             input_value);
         against_preferred_direction_trace_cost_arr[this.signal_layer_no].setValue(input_value);
         against_preferred_direction_trace_costs_input_completed[this.signal_layer_no] = true;
