@@ -32,8 +32,7 @@ public class DragItemState extends DragState {
   }
 
   /**
-   * Moves the items of the group to p_to_location. Return this.return_state, if
-   * an error occurred while moving, so that an undo may be necessary.
+   * Moves the items of the group to p_to_location. Return this.return_state, if an error occurred while moving, so that an undo may be necessary.
    */
   @Override
   public InteractiveState move_to(FloatPoint p_to_location) {

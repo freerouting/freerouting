@@ -66,6 +66,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private final JCheckBox route_detail_outline_keepout_check_box;
   private boolean key_input_completed = true;
 
+
   /**
    * Creates a new instance of RouteParameterWindow
    */
@@ -104,14 +105,11 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     settings_routing_snap_angle_none_button = new JRadioButton(tm.getText("none"));
 
     settings_routing_snap_angle_90_button.addActionListener(new SnapAngle90Listener());
-    settings_routing_snap_angle_90_button.addActionListener(_ -> FRAnalytics
-        .buttonClicked("settings_routing_snap_angle_90_button", settings_routing_snap_angle_90_button.getText()));
+    settings_routing_snap_angle_90_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_snap_angle_90_button", settings_routing_snap_angle_90_button.getText()));
     settings_routing_snap_angle_45_button.addActionListener(new SnapAngle45Listener());
-    settings_routing_snap_angle_45_button.addActionListener(_ -> FRAnalytics
-        .buttonClicked("settings_routing_snap_angle_45_button", settings_routing_snap_angle_45_button.getText()));
+    settings_routing_snap_angle_45_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_snap_angle_45_button", settings_routing_snap_angle_45_button.getText()));
     settings_routing_snap_angle_none_button.addActionListener(new SnapAngleNoneListener());
-    settings_routing_snap_angle_none_button.addActionListener(_ -> FRAnalytics
-        .buttonClicked("settings_routing_snap_angle_none_button", settings_routing_snap_angle_none_button.getText()));
+    settings_routing_snap_angle_none_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_snap_angle_none_button", settings_routing_snap_angle_none_button.getText()));
 
     ButtonGroup snap_angle_button_group = new ButtonGroup();
     snap_angle_button_group.add(settings_routing_snap_angle_90_button);
@@ -146,11 +144,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.settings_routing_stitch_button = new JRadioButton(tm.getText("stitching"));
 
     settings_routing_dynamic_button.addActionListener(new DynamicRouteListener());
-    settings_routing_dynamic_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_dynamic_button", settings_routing_dynamic_button.getText()));
+    settings_routing_dynamic_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_dynamic_button", settings_routing_dynamic_button.getText()));
     settings_routing_stitch_button.addActionListener(new StitchRouteListener());
-    settings_routing_stitch_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_stitch_button", settings_routing_stitch_button.getText()));
+    settings_routing_stitch_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_stitch_button", settings_routing_stitch_button.getText()));
 
     ButtonGroup route_mode_button_group = new ButtonGroup();
     route_mode_button_group.add(settings_routing_dynamic_button);
@@ -181,12 +177,10 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     settings_routing_manual_button = new JRadioButton(tm.getText("manual"));
 
     settings_routing_automatic_button.addActionListener(new AutomaticTraceWidthListener());
-    settings_routing_automatic_button.addActionListener(_ -> FRAnalytics
-        .buttonClicked("settings_routing_automatic_button", settings_routing_automatic_button.getText()));
+    settings_routing_automatic_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_automatic_button", settings_routing_automatic_button.getText()));
     manual_trace_width_listener = new ManualTraceWidthListener();
     settings_routing_manual_button.addActionListener(manual_trace_width_listener);
-    settings_routing_manual_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_manual_button", settings_routing_manual_button.getText()));
+    settings_routing_manual_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_manual_button", settings_routing_manual_button.getText()));
 
     ButtonGroup trace_widths_button_group = new ButtonGroup();
     trace_widths_button_group.add(settings_routing_automatic_button);
@@ -207,8 +201,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     settings_routing_shove_check_box = new JCheckBox(tm.getText("push&shove_enabled"));
     settings_routing_shove_check_box.addActionListener(new ShoveListener());
-    settings_routing_shove_check_box.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_shove_check_box", settings_routing_shove_check_box.getText()));
+    settings_routing_shove_check_box.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_shove_check_box", settings_routing_shove_check_box.getText()));
     gridbag.setConstraints(settings_routing_shove_check_box, gridbag_constraints);
     settings_routing_shove_check_box.setToolTipText(tm.getText("push&shove_enabled_tooltip"));
     main_panel.add(settings_routing_shove_check_box, gridbag_constraints);
@@ -217,9 +210,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     settings_routing_drag_component_check_box = new JCheckBox(tm.getText("drag_components_enabled"));
     settings_routing_drag_component_check_box.addActionListener(new DragComponentListener());
-    settings_routing_drag_component_check_box
-        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_drag_component_check_box",
-            settings_routing_drag_component_check_box.getText()));
+    settings_routing_drag_component_check_box.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_drag_component_check_box", settings_routing_drag_component_check_box.getText()));
     gridbag.setConstraints(settings_routing_drag_component_check_box, gridbag_constraints);
     settings_routing_drag_component_check_box.setToolTipText(tm.getText("drag_components_enabled_tooltip"));
     main_panel.add(settings_routing_drag_component_check_box, gridbag_constraints);
@@ -229,8 +220,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     settings_routing_via_snap_to_smd_center_check_box = new JCheckBox(tm.getText("via_snap_to_smd_center"));
     settings_routing_via_snap_to_smd_center_check_box.addActionListener(new ViaSnapToSMDCenterListener());
     settings_routing_via_snap_to_smd_center_check_box.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_via_snap_to_smd_center_check_box",
-            settings_routing_via_snap_to_smd_center_check_box.getText()));
+        _ -> FRAnalytics.buttonClicked("settings_routing_via_snap_to_smd_center_check_box", settings_routing_via_snap_to_smd_center_check_box.getText()));
     gridbag.setConstraints(settings_routing_via_snap_to_smd_center_check_box, gridbag_constraints);
     settings_routing_via_snap_to_smd_center_check_box.setToolTipText(tm.getText("via_snap_to_smd_center_tooltip"));
     main_panel.add(settings_routing_via_snap_to_smd_center_check_box, gridbag_constraints);
@@ -240,8 +230,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     settings_routing_hilight_routing_obstacle_check_box = new JCheckBox(tm.getText("hilight_routing_obstacle"));
     settings_routing_hilight_routing_obstacle_check_box.addActionListener(new HilightObstacleListener());
     settings_routing_hilight_routing_obstacle_check_box.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_hilight_routing_obstacle_check_box",
-            settings_routing_hilight_routing_obstacle_check_box.getText()));
+        _ -> FRAnalytics.buttonClicked("settings_routing_hilight_routing_obstacle_check_box", settings_routing_hilight_routing_obstacle_check_box.getText()));
     gridbag.setConstraints(settings_routing_hilight_routing_obstacle_check_box, gridbag_constraints);
     settings_routing_hilight_routing_obstacle_check_box.setToolTipText(tm.getText("hilight_routing_obstacle_tooltip"));
     main_panel.add(settings_routing_hilight_routing_obstacle_check_box, gridbag_constraints);
@@ -251,8 +240,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     settings_routing_ignore_conduction_check_box = new JCheckBox(tm.getText("ignore_conduction_areas"));
     settings_routing_ignore_conduction_check_box.addActionListener(new IgnoreConductionListener());
     settings_routing_ignore_conduction_check_box.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_ignore_conduction_check_box",
-            settings_routing_ignore_conduction_check_box.getText()));
+        _ -> FRAnalytics.buttonClicked("settings_routing_ignore_conduction_check_box", settings_routing_ignore_conduction_check_box.getText()));
     gridbag.setConstraints(settings_routing_ignore_conduction_check_box, gridbag_constraints);
     settings_routing_ignore_conduction_check_box.setToolTipText(tm.getText("ignore_conduction_areas_tooltip"));
     main_panel.add(settings_routing_ignore_conduction_check_box, gridbag_constraints);
@@ -261,8 +249,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     settings_routing_neckdown_check_box = new JCheckBox(tm.getText("automatic_neckdown"));
     settings_routing_neckdown_check_box.addActionListener(new NeckDownListener());
-    settings_routing_neckdown_check_box.addActionListener(_ -> FRAnalytics
-        .buttonClicked("settings_routing_neckdown_check_box", settings_routing_neckdown_check_box.getText()));
+    settings_routing_neckdown_check_box.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_neckdown_check_box", settings_routing_neckdown_check_box.getText()));
     gridbag.setConstraints(settings_routing_neckdown_check_box, gridbag_constraints);
     settings_routing_neckdown_check_box.setToolTipText(tm.getText("automatic_neckdown_tooltip"));
     main_panel.add(settings_routing_neckdown_check_box, gridbag_constraints);
@@ -275,11 +262,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     settings_routing_restrict_pin_exit_directions_check_box = new JCheckBox(tm.getText("restrict_pin_exit_directions"));
     settings_routing_restrict_pin_exit_directions_check_box.addActionListener(new RestrictPinExitDirectionsListener());
     settings_routing_restrict_pin_exit_directions_check_box.addActionListener(
-        _ -> FRAnalytics.buttonClicked("settings_routing_restrict_pin_exit_directions_check_box",
-            settings_routing_restrict_pin_exit_directions_check_box.getText()));
+        _ -> FRAnalytics.buttonClicked("settings_routing_restrict_pin_exit_directions_check_box", settings_routing_restrict_pin_exit_directions_check_box.getText()));
     gridbag.setConstraints(settings_routing_restrict_pin_exit_directions_check_box, gridbag_constraints);
-    settings_routing_restrict_pin_exit_directions_check_box
-        .setToolTipText(tm.getText("restrict_pin_exit_directions_tooltip"));
+    settings_routing_restrict_pin_exit_directions_check_box.setToolTipText(tm.getText("restrict_pin_exit_directions_tooltip"));
     main_panel.add(settings_routing_restrict_pin_exit_directions_check_box, gridbag_constraints);
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
@@ -342,11 +327,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     route_detail_off_button = new JRadioButton(tm.getText("off"));
 
     route_detail_on_button.addActionListener(new WindowRouteParameter.CompensationOnListener());
-    route_detail_on_button
-        .addActionListener(_ -> FRAnalytics.buttonClicked("route_detail_on_button", route_detail_on_button.getText()));
+    route_detail_on_button.addActionListener(_ -> FRAnalytics.buttonClicked("route_detail_on_button", route_detail_on_button.getText()));
     route_detail_off_button.addActionListener(new WindowRouteParameter.CompensationOffListener());
-    route_detail_off_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("route_detail_off_button", route_detail_off_button.getText()));
+    route_detail_off_button.addActionListener(_ -> FRAnalytics.buttonClicked("route_detail_off_button", route_detail_off_button.getText()));
 
     ButtonGroup clearance_compensation_button_group = new ButtonGroup();
     clearance_compensation_button_group.add(route_detail_on_button);
@@ -387,8 +370,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     route_detail_outline_keepout_check_box = new JCheckBox(tm.getText("keepout_outside_outline"));
     route_detail_outline_keepout_check_box.setSelected(false);
     route_detail_outline_keepout_check_box.addActionListener(new WindowRouteParameter.OutLineKeepoutListener());
-    route_detail_outline_keepout_check_box.addActionListener(_ -> FRAnalytics
-        .buttonClicked("route_detail_outline_keepout_check_box", route_detail_outline_keepout_check_box.getText()));
+    route_detail_outline_keepout_check_box.addActionListener(_ -> FRAnalytics.buttonClicked("route_detail_outline_keepout_check_box", route_detail_outline_keepout_check_box.getText()));
     gridbag.setConstraints(route_detail_outline_keepout_check_box, gridbag_constraints);
     route_detail_outline_keepout_check_box.setToolTipText(tm.getText("keepout_outside_outline_tooltip"));
     main_panel.add(route_detail_outline_keepout_check_box, gridbag_constraints);

@@ -9,9 +9,7 @@ import app.freerouting.rules.ViaRule;
 import java.awt.Graphics;
 
 /**
- * Class for shoving items out of a region to make space to insert something
- * else. For that purpose traces of an invisible net are created temporary for
- * shoving.
+ * Class for shoving items out of a region to make space to insert something else. For that purpose traces of an invisible net are created temporary for shoving.
  */
 public class MakeSpaceState extends DragState {
 
@@ -53,8 +51,7 @@ public class MakeSpaceState extends DragState {
     route.next_corner(p_to_location);
 
     Point route_end = route.get_last_corner();
-    if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NONE
-        && !route_end.equals(p_to_location.round())) {
+    if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NONE && !route_end.equals(p_to_location.round())) {
       hdlg.move_mouse(route_end.to_float());
     }
     hdlg.recalculate_length_violations();

@@ -105,7 +105,6 @@ public class HeadlessBoardManager implements BoardManager {
    * @see InteractiveActionThread
    */
   public ThreadActionListener autorouter_listener;
-
   /**
    * The routing board containing all PCB design data and routing state.
    *
@@ -280,8 +279,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @see InteractiveSettings
    */
   @Override
-  public void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure, PolylineShape[] p_outline_shapes,
-      String p_outline_clearance_class_name, BoardRules p_rules,
+  public void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure, PolylineShape[] p_outline_shapes, String p_outline_clearance_class_name, BoardRules p_rules,
       Communication p_board_communication) {
     if (this.board != null) {
       routingJob.logWarning(" BoardHandling.create_board: board already created");
@@ -293,12 +291,10 @@ public class HeadlessBoardManager implements BoardManager {
         outline_cl_class_no = p_rules.clearance_matrix.get_no(p_outline_clearance_class_name);
         outline_cl_class_no = Math.max(outline_cl_class_no, 0);
       } else {
-        outline_cl_class_no = p_rules.get_default_net_class().default_item_clearance_classes
-            .get(DefaultItemClearanceClasses.ItemClass.AREA);
+        outline_cl_class_no = p_rules.get_default_net_class().default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.AREA);
       }
     }
-    this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules,
-        p_board_communication);
+    this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules, p_board_communication);
 
     this.interactiveSettings = new InteractiveSettings(this.board);
   }
@@ -415,18 +411,15 @@ public class HeadlessBoardManager implements BoardManager {
    * @see DsnFile.ReadResult
    * @see BoardObservers
    */
-  public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
-      IdentificationNumberGenerator identificationNumberGenerator) {
+  public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers, IdentificationNumberGenerator identificationNumberGenerator) {
     if (inputStream == null) {
       return DsnFile.ReadResult.ERROR;
     }
 
     DsnFile.ReadResult read_result;
     try {
-      // TODO: we should have a returned object that represent the DSN file, and we
-      // should create a RoutingBoard/BasicBoard based on that as a next step
-      // we create the board inside the DSN file reader instead at the moment, and
-      // save it in the board field of the BoardHandling class
+      // TODO: we should have a returned object that represent the DSN file, and we should create a RoutingBoard/BasicBoard based on that as a next step
+      // we create the board inside the DSN file reader instead at the moment, and save it in the board field of the BoardHandling class
       read_result = DsnFile.read(inputStream, this, boardObservers, identificationNumberGenerator);
 
       // Apply board-specific optimizations to RouterSettings after board is loaded
@@ -447,8 +440,7 @@ public class HeadlessBoardManager implements BoardManager {
       FRAnalytics.fileLoaded("DSN", GSON.toJson(boardStats));
       this.board.reduce_nets_of_route_items();
       originalBoardChecksum = calculateCrc32();
-      FRAnalytics.boardLoaded(this.board.communication.specctra_parser_info.host_cad,
-          this.board.communication.specctra_parser_info.host_version, this.board.get_layer_count(),
+      FRAnalytics.boardLoaded(this.board.communication.specctra_parser_info.host_cad, this.board.communication.specctra_parser_info.host_version, this.board.get_layer_count(),
           this.board.components.count(), this.board.rules.nets.max_net_no());
     }
 

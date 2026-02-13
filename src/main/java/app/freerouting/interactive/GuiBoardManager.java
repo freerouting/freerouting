@@ -187,7 +187,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * when the board becomes read-only (e.g., during autorouting or logfile playback).
    */
   private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
-
   /**
    * Global application settings container.
    *
@@ -1341,6 +1340,18 @@ public class GuiBoardManager extends HeadlessBoardManager {
       Communication p_board_communication) {
     super.create_board(p_bounding_box, p_layer_structure, p_outline_shapes, p_outline_clearance_class_name, p_rules,
         p_board_communication);
+
+    // Apply CLI settings from GlobalSettings to the board's autoroute_settings
+    // This ensures that command-line arguments are respected in GUI mode
+    // NOTE: This is critical because
+    // InteractiveActionThread.get_autorouter_and_route_optimizer_instance()
+    // clones boardManager.settings.autoroute_settings to job.routerSettings, so we
+    // need to ensure
+    // the board's settings have the CLI arguments applied
+    if (globalSettings != null && globalSettings.routerSettings != null) {
+      FRLogger.info("[CLI Settings] Applying CLI settings to board's autoroute_settings...");
+      this.settings.autoroute_settings.applyNewValuesFrom(globalSettings.routerSettings);
+    }
 
     // create the interactive/GUI settings with default values
     double unit_factor = p_board_communication.coordinate_transform.board_to_dsn(1);

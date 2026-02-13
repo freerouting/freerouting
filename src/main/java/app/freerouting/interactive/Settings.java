@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.RouterSettings;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -11,11 +12,10 @@ import java.util.Arrays;
 /**
  * Contains the values of the interactive/GUI settings of the board handling.
  */
-public class InteractiveSettings implements Serializable {
+public class Settings implements Serializable {
 
   /**
-   * The array of manual trace half widths, initially equal to the automatic trace
-   * half widths.
+   * The array of manual trace half widths, initially equal to the automatic trace half widths.
    */
   final int[] manual_trace_half_width_arr;
   /**
@@ -29,6 +29,7 @@ public class InteractiveSettings implements Serializable {
    * When true, traces automatically narrow down when approaching pads.
    */
   public boolean automatic_neckdown = true;
+  public RouterSettings autoroute_settings;
   /**
    * the current layer index
    */
@@ -42,8 +43,7 @@ public class InteractiveSettings implements Serializable {
    */
   boolean drag_components_enabled;
   /**
-   * indicates if interactive selections are made on all visible layers or only on
-   * the current layer
+   * indicates if interactive selections are made on all visible layers or only on the current layer
    */
   boolean select_on_all_visible_layers;
   /**
@@ -67,8 +67,7 @@ public class InteractiveSettings implements Serializable {
    */
   int vertical_component_grid;
   /**
-   * Indicates if the routing rule selection is manual by the user or automatic by
-   * the net rules.
+   * Indicates if the routing rule selection is manual by the user or automatic by the net rules.
    */
   boolean manual_rule_selection;
   /**
@@ -76,13 +75,11 @@ public class InteractiveSettings implements Serializable {
    */
   boolean hilight_routing_obstacle;
   /**
-   * The index of the clearance class used for traces in interactive routing in
-   * the clearance matrix, if manual_route_selection is on.
+   * The index of the clearance class used for traces in interactive routing in the clearance matrix, if manual_route_selection is on.
    */
   int manual_trace_clearance_class;
   /**
-   * The index of the via rule used in routing in the board via rules if
-   * manual_route_selection is on.
+   * The index of the via rule used in routing in the board via rules if manual_route_selection is on.
    */
   int manual_via_rule_index;
   /**
@@ -93,7 +90,6 @@ public class InteractiveSettings implements Serializable {
    * The filter used in interactive selection of board items.
    */
   ItemSelectionFilter item_selection_filter;
-
   /**
    * Indicates, if the data of this class are not allowed to be changed in
    * interactive board editing.
@@ -103,7 +99,7 @@ public class InteractiveSettings implements Serializable {
   /**
    * Creates a new interactive settings variable.
    */
-  public InteractiveSettings(RoutingBoard p_board) {
+  public Settings(RoutingBoard p_board) {
     // Initialise with default values.
     layer = 0;
     push_enabled = true;
@@ -119,10 +115,9 @@ public class InteractiveSettings implements Serializable {
     manual_trace_clearance_class = 1;
     manual_via_rule_index = 0;
     zoom_with_wheel = true;
-    trace_pull_tight_accuracy = 500;
-    automatic_neckdown = true;
     manual_trace_half_width_arr = new int[p_board.get_layer_count()];
     Arrays.fill(manual_trace_half_width_arr, 1000);
+    autoroute_settings = new RouterSettings(p_board);
     item_selection_filter = new ItemSelectionFilter();
 
   }
@@ -130,7 +125,7 @@ public class InteractiveSettings implements Serializable {
   /**
    * Copy constructor
    */
-  public InteractiveSettings(InteractiveSettings p_settings) {
+  public Settings(Settings p_settings) {
     this.read_only = p_settings.read_only;
     this.layer = p_settings.layer;
     this.push_enabled = p_settings.push_enabled;
@@ -146,11 +141,9 @@ public class InteractiveSettings implements Serializable {
     this.zoom_with_wheel = p_settings.zoom_with_wheel;
     this.manual_trace_clearance_class = p_settings.manual_trace_clearance_class;
     this.manual_via_rule_index = p_settings.manual_via_rule_index;
-    this.trace_pull_tight_accuracy = p_settings.trace_pull_tight_accuracy;
-    this.automatic_neckdown = p_settings.automatic_neckdown;
     this.manual_trace_half_width_arr = new int[p_settings.manual_trace_half_width_arr.length];
-    System.arraycopy(p_settings.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr, 0,
-        this.manual_trace_half_width_arr.length);
+    System.arraycopy(p_settings.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr.length);
+    this.autoroute_settings = p_settings.autoroute_settings.clone();
     this.item_selection_filter = new ItemSelectionFilter(p_settings.item_selection_filter);
 
   }
@@ -201,8 +194,7 @@ public class InteractiveSettings implements Serializable {
   }
 
   /**
-   * indicates if interactive selections are made on all visible layers or only on
-   * the current layer.
+   * indicates if interactive selections are made on all visible layers or only on the current layer.
    */
   public boolean get_select_on_all_visible_layers() {
     return this.select_on_all_visible_layers;
@@ -219,8 +211,7 @@ public class InteractiveSettings implements Serializable {
   }
 
   /**
-   * Indicates if the routing rule selection is manual by the user or automatic by
-   * the net rules.
+   * Indicates if the routing rule selection is manual by the user or automatic by the net rules.
    */
   public boolean get_manual_rule_selection() {
     return this.manual_rule_selection;
@@ -338,16 +329,14 @@ public class InteractiveSettings implements Serializable {
   }
 
   /**
-   * The index of the clearance class used for traces in interactive routing in
-   * the clearance matrix, if manual_route_selection is on.
+   * The index of the clearance class used for traces in interactive routing in the clearance matrix, if manual_route_selection is on.
    */
   public int get_manual_trace_clearance_class() {
     return this.manual_trace_clearance_class;
   }
 
   /**
-   * The index of the clearance class used for traces in interactive routing in
-   * the clearance matrix, if manual_route_selection is on.
+   * The index of the clearance class used for traces in interactive routing in the clearance matrix, if manual_route_selection is on.
    */
   public void set_manual_trace_clearance_class(int p_index) {
     if (read_only) {
@@ -357,16 +346,14 @@ public class InteractiveSettings implements Serializable {
   }
 
   /**
-   * The index of the via rule used in routing in the board via rules if
-   * manual_route_selection is on.
+   * The index of the via rule used in routing in the board via rules if manual_route_selection is on.
    */
   public int get_manual_via_rule_index() {
     return this.manual_via_rule_index;
   }
 
   /**
-   * The index of the via rule used in routing in the board via rules if
-   * manual_route_selection is on.
+   * The index of the via rule used in routing in the board via rules if manual_route_selection is on.
    */
   public void set_manual_via_rule_index(int p_value) {
     if (read_only) {
@@ -380,7 +367,7 @@ public class InteractiveSettings implements Serializable {
    */
   public int get_manual_trace_half_width(int p_layer_no) {
     if (p_layer_no < 0 || p_layer_no >= this.manual_trace_half_width_arr.length) {
-      FRLogger.warn("InteractiveSettings.get_manual_trace_half_width p_layer_no out of range");
+      FRLogger.warn("Settings.get_manual_trace_half_width p_layer_no out of range");
       return 0;
     }
     return this.manual_trace_half_width_arr[p_layer_no];
@@ -437,8 +424,7 @@ public class InteractiveSettings implements Serializable {
   }
 
   /**
-   * Defines, if the setting attributes are allowed to be changed interactively or
-   * not.
+   * Defines, if the setting attributes are allowed to be changed interactively or not.
    */
   public void set_read_only(Boolean p_value) {
     this.read_only = p_value;
@@ -450,10 +436,9 @@ public class InteractiveSettings implements Serializable {
   private void readObject(ObjectInputStream p_stream) throws IOException, ClassNotFoundException {
     p_stream.defaultReadObject();
     if (this.item_selection_filter == null) {
-      FRLogger.warn("InteractiveSettings.readObject: item_selection_filter is null");
+      FRLogger.warn("Settings.readObject: item_selection_filter is null");
       this.item_selection_filter = new ItemSelectionFilter();
     }
-
     this.read_only = false;
   }
 }
