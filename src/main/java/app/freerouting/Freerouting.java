@@ -25,17 +25,20 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
-import org.eclipse.jetty.ee10.servlets.CrossOriginFilter;
+import org.eclipse.jetty.http.pathmap.ServletPathSpec;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.CrossOriginHandler;
+import org.eclipse.jetty.server.handler.PathMappingsHandler;
 import org.glassfish.jersey.servlet.ServletContainer;
-import java.util.EnumSet;
-import jakarta.servlet.DispatcherType;
 
 /* Entry point class of the application */
 public class Freerouting {
@@ -227,21 +230,31 @@ public class Freerouting {
     // Set up the Servlet Context Handler
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
     context.setContextPath("/");
-    apiServer.setHandler(context);
+
+    Handler apiHandler = context;
 
     // Configure CORS if origins are provided
     if (apiServerSettings.cors_origins != null && !apiServerSettings.cors_origins.equals("")) {
       String allowedOrigins = apiServerSettings.cors_origins;
-      var corsHolder = context.addFilter(CrossOriginFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
-      corsHolder.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, allowedOrigins);
-      corsHolder.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "HEAD,GET,POST,PUT,DELETE,OPTIONS");
-      corsHolder.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM,
-          "X-Requested-With,Content-Type,Accept,Origin,Authorization");
-      corsHolder.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_CREDENTIALS_HEADER, "true");
+
+      CrossOriginHandler corsHandler = new CrossOriginHandler();
+      corsHandler.setAllowCredentials(true);
+      corsHandler.setAllowedOriginPatterns(splitCommaSeparated(allowedOrigins));
+      corsHandler.setAllowedMethods(Set.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
+      corsHandler.setAllowedHeaders(Set.of("X-Requested-With", "Content-Type", "Accept", "Origin", "Authorization"));
+      corsHandler.setHandler(context);
+
+      PathMappingsHandler pathMappingsHandler = new PathMappingsHandler();
+      pathMappingsHandler.addMapping(new ServletPathSpec("/v1/*"), corsHandler);
+      pathMappingsHandler.addMapping(new ServletPathSpec("/*"), context);
+      apiHandler = pathMappingsHandler;
+
       FRLogger.info("CORS configured for origins: " + allowedOrigins);
     }
 
-    // Set up Jersey Servlet that handles the API
+    apiServer.setHandler(apiHandler);
+
+    // Set up the Jersey Servlet that handles the API
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
@@ -263,6 +276,13 @@ public class Freerouting {
     }).start();
 
     return apiServer;
+  }
+
+  private static Set<String> splitCommaSeparated(String value) {
+    return Arrays.stream(value.split(","))
+        .map(String::trim)
+        .filter(token -> !token.isEmpty())
+        .collect(Collectors.toSet());
   }
 
   /**

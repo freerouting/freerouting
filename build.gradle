@@ -109,7 +109,6 @@ dependencies {
 
     // Add Jetty dependencies
     implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.4'
-    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlets:12.1.4'
     implementation 'org.eclipse.jetty:jetty-server:12.1.4'
     implementation 'org.eclipse.jetty:jetty-util:12.1.4'
     implementation 'org.eclipse.jetty:jetty-security:12.1.4'
@@ -209,9 +208,9 @@ tasks.register('writeVersionInfo') {
     def outputDir = layout.buildDirectory.dir("generated-src/app/freerouting/constants")
     def versionId = publishing.versionId
     def buildDateValue = buildDate
-    
+
     outputs.dir(outputDir)
-    
+
     doLast {
         def buildInfoCode = outputDir.get().file("Constants.java").asFile
         buildInfoCode.getParentFile().mkdirs()
