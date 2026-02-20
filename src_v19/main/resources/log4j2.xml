@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${default_pattern}"/>
+        </Console>
+
+        <Console name="stderr" target="SYSTEM_ERR">
+            <PatternLayout pattern="${default_pattern}"/>
+        </Console>
+
+        <File bufferSize="8192" bufferedIO="true" fileName="${filename}" immediateFlush="true" name="File">
+            <PatternLayout pattern="${sys:freerouting.log.file.pattern:-${default_pattern}}"/>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="ALL">
+            <AppenderRef level="${sys:freerouting.log.console.level:-INFO}" ref="Console"/>
+            <AppenderRef level="ERROR" ref="stderr"/>
+            <AppenderRef level="${sys:freerouting.log.file.level:-DEBUG}" ref="File"/>
+        </Root>
+    </Loggers>
+
+    <Properties>
+        <Property name="filename">${sys:freerouting.log.file:-logs/freerouting-v190.log}</Property>
+        <Property name="default_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-6level %msg%n</Property>
+    </Properties>
+
+    <ThresholdFilter level="trace"/>
+</Configuration>
