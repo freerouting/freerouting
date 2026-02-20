@@ -49,7 +49,9 @@ public class RoutingJobScheduler {
             RoutingJob[] jobsArray;
             synchronized (jobs) {
               // sort the jobs by priority
-              Collections.sort(jobs);
+              if (jobs.size() > 1) {
+                Collections.sort(jobs);
+              }
 
               jobsArray = jobs.toArray(RoutingJob[]::new);
             }
