@@ -14,32 +14,35 @@ public class RouterScoringSettings implements Serializable, Cloneable {
   // The cost of 1 mm of trace length if the trace is routed in the preferred
   // direction.
   @SerializedName("default_preferred_direction_trace_cost")
-  public double defaultPreferredDirectionTraceCost = 1.0;
+  public Double defaultPreferredDirectionTraceCost;
   // The cost of 1 mm of trace length if the trace is routed in the undesired
   // direction.
   @SerializedName("default_undesired_direction_trace_cost")
-  public double defaultUndesiredDirectionTraceCost = 2.5;
+  public Double defaultUndesiredDirectionTraceCost;
   // The cost of a via.
   @SerializedName("via_costs")
-  public int via_costs = 50;
+  public Integer via_costs;
   // The cost of a via if the via is placed on a plane.
   @SerializedName("plane_via_costs")
-  public int plane_via_costs = 5;
+  public Integer plane_via_costs;
   // The starting cost of a ripup operation. It might be increased during the
   // auto-routing process.
   @SerializedName("start_ripup_costs")
-  public int start_ripup_costs = 100;
+  public Integer start_ripup_costs;
   // The penalty for an unrouted net.
-  public float unroutedNetPenalty = 4000;
+  @SerializedName("unrouted_net_penalty")
+  public Float unroutedNetPenalty;
   // The penalty for a clearance violation.
-  public float clearanceViolationPenalty = 1000;
+  @SerializedName("clearance_violation_penalty")
+  public Float clearanceViolationPenalty;
   // The penalty for a bend.
-  public float bendPenalty = 10;
+  @SerializedName("bend_penalty")
+  public Float bendPenalty;
 
   /**
    * Creates a deep copy of this RouterScoringSettings object.
    * All fields including arrays are cloned.
-   * 
+   *
    * @return A new RouterScoringSettings instance with the same values
    */
   @Override

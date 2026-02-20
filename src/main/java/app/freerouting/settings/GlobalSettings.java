@@ -9,6 +9,7 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.ReflectionUtil;
 import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.settings.sources.DefaultSettings;
 import com.google.gson.annotations.SerializedName;
 import java.io.IOException;
 import java.io.Reader;
@@ -43,6 +44,10 @@ public class GlobalSettings implements Serializable {
   public final ApiServerSettings apiServerSettings = new ApiServerSettings();
   @SerializedName("statistics")
   public final StatisticsSettings statistics = new StatisticsSettings();
+  @SerializedName("logging")
+  public final LoggingSettings logging = new LoggingSettings();
+  @SerializedName("debug")
+  public final transient DebugSettings debugSettings = new DebugSettings();
   private final transient String[] supportedLanguages = {
       "en",
       "de",
@@ -84,7 +89,21 @@ public class GlobalSettings implements Serializable {
    * (.ses) path provided via the -de command line argument.
    */
   public transient String design_session_filename;
+  /**
+   * The current locale for the application.
+   * It is initialized based on the system default locale, but can be overridden
+   * via command line arguments.
+   */
   public transient Locale currentLocale = Locale.getDefault();
+  /**
+   * Prototype instance of SettingsMerger for merging settings from various
+   * sources. These sources are loaded at startup, and they are not going
+   * to change during runtime.
+   * The other settings sources (like settings from DNS, SES or RULES files,
+   * or set by the user on the GUI or via the API) are handled separately
+   * in combination with this.
+   */
+  public transient SettingsMerger settingsMergerProtype;
 
   public GlobalSettings() {
     // validate and set the current locale
@@ -94,6 +113,8 @@ public class GlobalSettings implements Serializable {
       // the fallback language is English
       currentLocale = Locale.ENGLISH;
     }
+
+    settingsMergerProtype = new SettingsMerger(new DefaultSettings());
   }
 
   public static void lockUserDataPath() {
@@ -107,8 +128,7 @@ public class GlobalSettings implements Serializable {
   public static void setUserDataPath(Path userDataPath) {
     if (!isUserDataPathLocked) {
       GlobalSettings.userDataPath = userDataPath;
-      configurationFilePath = userDataPath.resolve("freerouting.json");
-      FRLogger.changeFileLogLocation(userDataPath);
+      GlobalSettings.configurationFilePath = userDataPath.resolve("freerouting.json");
     }
   }
 
@@ -230,7 +250,23 @@ public class GlobalSettings implements Serializable {
               .substring(2)
               .split("=");
           if ((parts.length == 2) && (!Objects.equals(parts[0], "user_data_path"))) {
-            setValue(parts[0], parts[1]);
+            if (parts[0].startsWith("debug.")) {
+              // handle debug settings
+              if (parts[0].equals("debug.enable_detailed_logging")) {
+                debugSettings.enableDetailedLogging = Boolean.parseBoolean(parts[1]);
+              } else if (parts[0].equals("debug.single_step_execution")) {
+                debugSettings.singleStepExecution = Boolean.parseBoolean(parts[1]);
+              } else if (parts[0].equals("debug.trace_insertion_delay")) {
+                debugSettings.traceInsertionDelay = Integer.parseInt(parts[1]);
+              } else if (parts[0].equals("debug.filter_by_net")) {
+                String[] nets = parts[1].split(",");
+                for (String net : nets) {
+                  debugSettings.filterByNet.add(net.trim().toLowerCase());
+                }
+              }
+            } else {
+              setValue(parts[0], parts[1]);
+            }
           } else if (!Objects.equals(parts[0], "user_data_path")) {
             FRLogger.warn("Unknown command line argument: " + p_args[i]);
           }
@@ -321,19 +357,20 @@ public class GlobalSettings implements Serializable {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             routerSettings.maxPasses = Integer.decode(p_args[i + 1]);
 
-            if (routerSettings.maxPasses < 1) {
+            if (routerSettings.maxPasses < 0) {
               routerSettings.maxPasses = 1;
             }
             if (routerSettings.maxPasses > 99998) {
               routerSettings.maxPasses = 99998;
             }
+            // Note: 0 is allowed and means no limit
             i++;
           }
         } else if (p_args[i].startsWith("-mt")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             routerSettings.optimizer.maxThreads = Integer.decode(p_args[i + 1]);
 
-            if (routerSettings.optimizer.maxThreads <= 0) {
+            if (routerSettings.optimizer.maxThreads < 0) {
               routerSettings.optimizer.maxThreads = 0;
             }
             if (routerSettings.optimizer.maxThreads > 1024) {
@@ -414,7 +451,7 @@ public class GlobalSettings implements Serializable {
           }
 
         } else if (p_args[i].startsWith("-dl")) {
-          featureFlags.logging = false;
+          logging.file.enabled = false;
         } else if (p_args[i].startsWith("-da")) {
           usageAndDiagnosticData.disableAnalytics = true;
         } else if (p_args[i].startsWith("-host")) {
@@ -437,6 +474,13 @@ public class GlobalSettings implements Serializable {
             if (guiSettings.dialogConfirmationTimeout <= 0) {
               guiSettings.dialogConfirmationTimeout = 0;
             }
+            i++;
+          }
+        } else if (p_args[i].startsWith("-ll")) {
+          // get the log level from the command line arguments
+          // and save it to the settings
+          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+            logging.console.level = p_args[i + 1].toUpperCase();
             i++;
           }
         } else {
