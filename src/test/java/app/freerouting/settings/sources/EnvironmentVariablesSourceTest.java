@@ -120,7 +120,7 @@ class EnvironmentVariablesSourceTest {
         RouterSettings settings = source.getSettings();
 
         assertNotNull(settings);
-        // Default value should remain since no valid env vars were found
+        // Null value should remain since no valid env vars were found
         assertEquals(null, settings.maxPasses);
         assertEquals(0, source.getParsedCount());
     }
@@ -149,7 +149,7 @@ class EnvironmentVariablesSourceTest {
         RouterSettings settings = source.getSettings();
 
         assertNotNull(settings);
-        // Should keep default value since parsing failed
+        // Should keep null value since parsing failed
         assertEquals(null, settings.maxPasses);
         assertEquals(0, source.getParsedCount());
     }
