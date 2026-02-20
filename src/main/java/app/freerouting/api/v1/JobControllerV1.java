@@ -318,19 +318,15 @@ public class JobControllerV1 extends BaseController {
           .build();
     }
 
-    // TODO: cancel the job
-    job.state = RoutingJobState.CANCELLED;
     RoutingJobScheduler
         .getInstance()
-        .saveJob(job);
+        .cancelJob(job);
 
     var response = GsonProvider.GSON.toJson(job);
     FRAnalytics.apiEndpointCalled("PUT v1/jobs/" + jobId + "/cancel", "", response);
 
-    // Return an error that this method is not implemented yet
     return Response
-        .status(Response.Status.NOT_IMPLEMENTED)
-        .entity("{\"error\":\"This method is not implemented yet.\"}")
+        .ok(response)
         .build();
   }
 
@@ -404,9 +400,7 @@ public class JobControllerV1 extends BaseController {
   }
 
   /**
-   * Upload the input of the job, typically in Specctra DSN format. Note: the
-   * input file limit depends on the server configuration, but it is at least 1MB
-   * and typically 30MBs if hosted by ASP.NET Core
+   * Upload the input of the job, typically in Specctra DSN format. Note: the input file limit depends on the server configuration, but it is at least 1MB and typically 30MBs if hosted by ASP.NET Core
    * web server.
    */
   @Operation(summary = "Upload job input file", description = "Uploads the input PCB design file for a routing job, typically in Specctra DSN format. The file must be Base64-encoded. Note: File size limit depends on server configuration (typically 1-30MB).")
@@ -489,7 +483,9 @@ public class JobControllerV1 extends BaseController {
         job.input.setFilename(job.name);
       }
 
-      job.setSettings(new RouterSettings(job.input.statistics.layers.totalCount));
+      var routerSettings = new RouterSettings();
+      routerSettings.setLayerCount(job.input.statistics.layers.totalCount);
+      job.setSettings(routerSettings);
 
       var request = GSON
           .toJson(input)
@@ -823,7 +819,7 @@ public class JobControllerV1 extends BaseController {
       // Try to load the board if input is available
       if (job.input != null && job.input.format == FileFormat.DSN) {
         try {
-          HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+          HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
           boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
           job.board = boardManager.get_routing_board();
         } catch (Exception e) {

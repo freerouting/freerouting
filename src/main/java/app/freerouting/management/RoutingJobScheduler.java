@@ -12,6 +12,7 @@ import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.sources.DsnFileSettings;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -71,49 +72,19 @@ public class RoutingJobScheduler {
 
                   // load the board from the input into a RoutingBoard object
                   if (job.input.format == FileFormat.DSN) {
-                    HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+                    HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
                     boardManager.loadFromSpecctraDsn(job.input.getData(), null,
                         new ItemIdentificationNumberGenerator());
                     job.board = boardManager.get_routing_board();
 
-                    // Only reinitialize RouterSettings with board-specific optimizations
-                    // if the settings were created with defaults (layer count = 0 or null).
-                    // If settings already have proper layer configuration (from test or DSN),
-                    // preserve them to avoid changing preferred directions which can break routing.
+                    var settingsMerger = globalSettings.settingsMergerProtype.clone();
 
-                    boolean hasLayerConfiguration = (job.routerSettings.isLayerActive != null &&
-                        job.routerSettings.isLayerActive.length > 0);
+                    settingsMerger.addOrReplaceSources(
+                        new DsnFileSettings(job.input.getData(), job.input.getFilename()));
 
-                    if (!hasLayerConfiguration) {
-                      // Save the current settings (which include command-line overrides)
-                      app.freerouting.settings.RouterSettings cliSettings = job.routerSettings;
-
-                      // Create new settings with board-specific optimizations
-                      job.routerSettings = new app.freerouting.settings.RouterSettings(job.board);
-
-                      // Manually copy critical command-line parameters that must be preserved
-                      // (reflection-based copying doesn't work reliably for all fields)
-                      job.routerSettings.enabled = cliSettings.enabled;
-                      job.routerSettings.algorithm = cliSettings.algorithm;
-                      job.routerSettings.jobTimeoutString = cliSettings.jobTimeoutString;
-                      job.routerSettings.maxPasses = cliSettings.maxPasses;
-                      job.routerSettings.trace_pull_tight_accuracy = cliSettings.trace_pull_tight_accuracy;
-                      job.routerSettings.vias_allowed = cliSettings.vias_allowed;
-                      job.routerSettings.automatic_neckdown = cliSettings.automatic_neckdown;
-                      job.routerSettings.maxThreads = cliSettings.maxThreads;
-                      job.routerSettings.ignoreNetClasses = cliSettings.ignoreNetClasses;
-                      // Copy nested settings objects using reflection
-                      job.setSettings(cliSettings);
-                    } else {
-                      // Settings already have proper layer configuration from test/DSN
-                      // Verify layer count matches the board
-                      if (job.routerSettings.isLayerActive.length != job.board.get_layer_count()) {
-                        FRLogger.warn("Layer count mismatch: settings=" + job.routerSettings.isLayerActive.length +
-                            ", board=" + job.board.get_layer_count() +
-                            " - This should not happen and may cause routing issues!");
-                        // DO NOT call setLayerCount() here as it would reset all layer preferences!
-                      }
-                    }
+                    // Apply the final merged settings to the job and optimize them for the board
+                    job.routerSettings = settingsMerger.merge();
+                    job.routerSettings.applyBoardSpecificOptimizations(job.board);
 
                     // Load SES file if specified
                     if (globalSettings.design_session_filename != null) {
@@ -391,6 +362,38 @@ public class RoutingJobScheduler {
       this.jobs.removeIf(j -> j.sessionId
           .toString()
           .equals(sessionId));
+    }
+  }
+
+  /**
+   * Cancels a job.
+   *
+   * @param job The job to cancel.
+   */
+  public void cancelJob(RoutingJob job) {
+    if (job == null) {
+      return;
+    }
+
+    synchronized (jobs) {
+      if (job.state == RoutingJobState.QUEUED || job.state == RoutingJobState.READY_TO_START) {
+        job.state = RoutingJobState.CANCELLED;
+        job.setCancelledByUser(true);
+        saveJob(job);
+      } else if (job.state == RoutingJobState.RUNNING) {
+        job.state = RoutingJobState.STOPPING;
+        job.setCancelledByUser(true);
+        if (job.thread != null) {
+          job.thread.requestStop();
+        }
+        saveJob(job);
+      } else if (!job.isCancelledByUser() && (job.state != RoutingJobState.COMPLETED)
+          && (job.state != RoutingJobState.TIMED_OUT) && (job.state != RoutingJobState.TERMINATED)) {
+        // If the job is in another state (e.g. PAUSED), we can still cancel it
+        job.state = RoutingJobState.CANCELLED;
+        job.setCancelledByUser(true);
+        saveJob(job);
+      }
     }
   }
 }
