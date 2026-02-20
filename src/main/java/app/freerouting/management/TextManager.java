@@ -33,21 +33,30 @@ import javax.swing.JToggleButton;
  */
 public class TextManager {
 
-  // A key-value pair for icon names and their corresponding unicode characters
-  private final Map<String, Integer> iconMap = new HashMap<>() {{
-    put("cog", 0xF0493);
-    put("auto-fix", 0xF0068);
-    put("cancel", 0xF073A);
-    put("delete-sweep", 0xF05E9);
-    put("undo", 0xF054C);
-    put("redo", 0xF044E);
-    put("spider-web", 0xF0BCA);
-    put("order-bool-ascending-variant", 0xF098F);
-    put("magnify-plus-cursor", 0xF0A63);
-    put("magnify-minus", 0xF034A);
-    put("alert", 0xF0026);
-    put("close-octagon", 0xF015C);
-  }};
+  // A key-value pair for Material Design icon names and their corresponding
+  // Unicode characters
+  private final Map<String, Integer> iconMap = new HashMap<>() {
+    {
+      put("cog", 0xF0493);
+      put("auto-fix", 0xF0068);
+      put("cancel", 0xF073A);
+      put("delete-sweep", 0xF05E9);
+      put("undo", 0xF054C);
+      put("redo", 0xF044E);
+      put("spider-web", 0xF0BCA);
+      put("order-bool-ascending-variant", 0xF098F);
+      put("magnify-plus-cursor", 0xF0A63);
+      put("magnify-minus", 0xF034A);
+      put("alert", 0xF0026);
+      put("close-octagon", 0xF015C);
+      put("play", 0xF040A);
+      put("pause", 0xF03E4);
+      put("step-forward", 0xF04D7);
+      put("step-backward", 0xF04D5);
+      put("fast-forward", 0xF0211);
+      put("rewind", 0xF045F);
+    }
+  };
   private Locale currentLocale;
   private String currentBaseName;
   private ResourceBundle defaultMessages;
@@ -61,7 +70,8 @@ public class TextManager {
 
     try {
       // Load the font
-      materialDesignIcons = Font.createFont(Font.TRUETYPE_FONT, GlobalSettings.class.getResourceAsStream("/materialdesignicons-webfont.ttf"));
+      materialDesignIcons = Font.createFont(Font.TRUETYPE_FONT,
+          GlobalSettings.class.getResourceAsStream("/materialdesignicons-webfont.ttf"));
 
       // Register the font
       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -93,7 +103,8 @@ public class TextManager {
 
   public static Long parseTimespanString(String timespanString) {
     try {
-      // convert the string from "HH:mm:ss" or "mm:ss" or "ss" format to "PnDTnHnMn.nS" format
+      // convert the string from "HH:mm:ss" or "mm:ss" or "ss" format to
+      // "PnDTnHnMn.nS" format
       var durationString = convertFromTimespanToDurationFormat(timespanString);
       // parse the duration
       Duration duration = Duration.parse(durationString);
@@ -131,17 +142,23 @@ public class TextManager {
   }
 
   /**
-   * Shortens a string to a specified number of characters by replacing the middle part with dots
+   * Shortens a string to a specified number of characters by replacing the middle
+   * part with dots
    *
    * @param text               The text to shorten
-   * @param peakCharacterCount The number of characters to keep at the beginning and end of the text Example: shortenString("This is a long text", 3) -> "Thi...ext" shortenString("This is a long
-   *                           text", 5) -> "This ... text" shortenString("This is a long text", 10) -> "This is a long text"
+   * @param peakCharacterCount The number of characters to keep at the beginning
+   *                           and end of the text Example: shortenString("This is
+   *                           a long text", 3) -> "Thi...ext" shortenString("This
+   *                           is a long
+   *                           text", 5) -> "This ... text" shortenString("This is
+   *                           a long text", 10) -> "This is a long text"
    * @return The shortened text
    */
   public static String shortenString(String text, int peakCharacterCount) {
     String shortenedText = text;
     if (text.length() > peakCharacterCount * 2) {
-      shortenedText = shortenedText.substring(0, peakCharacterCount) + "..." + text.substring(text.length() - peakCharacterCount);
+      shortenedText = shortenedText.substring(0, peakCharacterCount) + "..."
+          + text.substring(text.length() - peakCharacterCount);
     }
     return shortenedText;
   }
@@ -191,7 +208,8 @@ public class TextManager {
   /**
    * Unescapes unicode characters in a string
    *
-   * @param text The text to unescape Example: unescapeUnicode("This is a \\u0063haracter") -> "This is a character"
+   * @param text The text to unescape Example: unescapeUnicode("This is a
+   *             \\u0063haracter") -> "This is a character"
    */
   public static String unescapeUnicode(String text) {
     Pattern pattern = Pattern.compile("\\\\u(\\p{XDigit}{4})");
@@ -228,12 +246,14 @@ public class TextManager {
     try {
       defaultMessages = ResourceBundle.getBundle("app.freerouting.Common", currentLocale);
     } catch (Exception _) {
-      FRLogger.warn("There was a problem loading the resource bundle 'app.freerouting.Common' of locale '" + currentLocale + "'");
+      FRLogger.warn(
+          "There was a problem loading the resource bundle 'app.freerouting.Common' of locale '" + currentLocale + "'");
       try {
         defaultMessages = ResourceBundle.getBundle("app.freerouting.Common", Locale.forLanguageTag("en-US"));
       } catch (Exception _) {
         defaultMessages = null;
-        FRLogger.error("There was a problem loading the resource bundle 'app.freerouting.Common' of locale 'en-US'", null);
+        FRLogger.error("There was a problem loading the resource bundle 'app.freerouting.Common' of locale 'en-US'",
+            null);
       }
     }
 
@@ -241,12 +261,14 @@ public class TextManager {
     try {
       classMessages = ResourceBundle.getBundle(currentBaseName, currentLocale);
     } catch (Exception _) {
-      //FRLogger.warn("There was a problem loading the resource bundle '" + currentBaseName + "' of locale '" + currentLocale + "'");
+      // FRLogger.warn("There was a problem loading the resource bundle '" +
+      // currentBaseName + "' of locale '" + currentLocale + "'");
       try {
         classMessages = ResourceBundle.getBundle(currentBaseName, Locale.forLanguageTag("en-US"));
       } catch (Exception _) {
         classMessages = null;
-        //FRLogger.error("There was a problem loading the resource bundle '" + currentBaseName + "' of locale 'en-US'",null);
+        // FRLogger.error("There was a problem loading the resource bundle '" +
+        // currentBaseName + "' of locale 'en-US'",null);
       }
     }
 
@@ -254,7 +276,8 @@ public class TextManager {
     try {
       englishClassMessages = ResourceBundle.getBundle(currentBaseName, Locale.forLanguageTag("en"));
     } catch (Exception _) {
-      //FRLogger.warn("There was a problem loading the resource bundle '" + currentBaseName + "' of locale 'en'");
+      // FRLogger.warn("There was a problem loading the resource bundle '" +
+      // currentBaseName + "' of locale 'en'");
     }
   }
 
