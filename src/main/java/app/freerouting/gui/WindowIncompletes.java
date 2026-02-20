@@ -1,7 +1,9 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.Item;
+import app.freerouting.drc.AirLine;
 import app.freerouting.interactive.RatsNest;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -26,11 +28,11 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
   @Override
   protected void fill_list() {
     RatsNest ratsnest = board_frame.board_panel.board_handling.get_ratsnest();
-    RatsNest.AirLine[] sorted_arr = ratsnest.get_airlines();
+    AirLine[] sorted_arr = ratsnest.get_airlines();
 
     Arrays.sort(sorted_arr);
     for (int i = 0; i < sorted_arr.length; i++) {
-      this.add_to_list(sorted_arr[i]);
+      this.add_to_list(new AirLineInfo(sorted_arr[i]));
     }
     this.list.setVisibleRowCount(Math.min(sorted_arr.length, DEFAULT_TABLE_SIZE));
   }
@@ -43,7 +45,8 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
     }
     Set<Item> selected_items = new TreeSet<>();
     for (int i = 0; i < selected_incompletes.size(); i++) {
-      RatsNest.AirLine curr_airline = (RatsNest.AirLine) selected_incompletes.get(i);
+      AirLineInfo curr_info = (AirLineInfo) selected_incompletes.get(i);
+      AirLine curr_airline = curr_info.airline;
       selected_items.add(curr_airline.from_item);
       selected_items.add(curr_airline.to_item);
     }

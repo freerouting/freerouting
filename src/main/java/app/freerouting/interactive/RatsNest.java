@@ -1,177 +1,395 @@
 package app.freerouting.interactive;
 
 import app.freerouting.board.BasicBoard;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
-import app.freerouting.board.ObjectInfoPanel;
-import app.freerouting.board.Pin;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
 import app.freerouting.boardgraphics.GraphicsContext;
-import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.management.TextManager;
-import app.freerouting.rules.Net;
+import app.freerouting.boardgraphics.NetIncompletesGraphics;
+import app.freerouting.drc.AirLine;
+import app.freerouting.drc.DesignRulesChecker;
+import app.freerouting.drc.NetIncompletes;
+import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Locale;
-import java.util.Vector;
 
 /**
- * Creates all incompletes (ratsnest) to display them on the screen
+ * Manages the visual representation of incomplete connections (rats nest) on the PCB board.
+ *
+ * <p>A "rats nest" or "air wires" refers to the display of unrouted connections between pins
+ * that need to be connected. These are shown as straight lines (airlines) connecting the
+ * nearest points of items that should be electrically connected but aren't yet routed.
+ *
+ * <p><strong>Key Responsibilities:</strong>
+ * <ul>
+ *   <li><strong>Connection Analysis:</strong> Calculates which pins need to be connected</li>
+ *   <li><strong>Airline Generation:</strong> Creates visual lines showing unrouted connections</li>
+ *   <li><strong>Length Validation:</strong> Checks if routed traces meet length requirements</li>
+ *   <li><strong>Visibility Control:</strong> Manages display filtering per net or globally</li>
+ *   <li><strong>Graphics Rendering:</strong> Draws the rats nest on screen</li>
+ * </ul>
+ *
+ * <p><strong>Use Cases:</strong>
+ * <ul>
+ *   <li>Visual feedback showing what connections remain to be routed</li>
+ *   <li>Identifying the shortest path between unconnected items</li>
+ *   <li>Monitoring routing progress (number of incomplete connections)</li>
+ *   <li>Detecting length matching violations for critical nets</li>
+ * </ul>
+ *
+ * <p><strong>Technical Details:</strong>
+ * Airlines connect the nearest points between items that should be on the same net but
+ * are not physically connected. When multiple disconnected groups exist on a net,
+ * multiple airlines will be shown. The rats nest is recalculated automatically when
+ * items are added, moved, or removed from the board.
+ *
+ * @see DesignRulesChecker
+ * @see AirLine
+ * @see NetIncompletes
  */
 public class RatsNest {
 
-  public final int max_connections;
-  private final NetIncompletes[] net_incompletes;
+  /**
+   * Design rules checker that performs incomplete connection calculations.
+   *
+   * <p>The DRC maintains the current state of all incomplete connections and provides
+   * methods to recalculate them when the board changes. It analyzes connectivity between
+   * items and generates airlines representing unrouted connections.
+   *
+   * @see DesignRulesChecker
+   */
+  public final DesignRulesChecker drc;
+
+  /**
+   * Per-net visibility filter array for selective rats nest display.
+   *
+   * <p>Array indexing: {@code is_filtered[i]} controls visibility for net number {@code (i+1)}.
+   * <ul>
+   *   <li>{@code true}: Airlines for this net are hidden</li>
+   *   <li>{@code false}: Airlines for this net are visible (unless globally hidden)</li>
+   * </ul>
+   *
+   * <p>This allows users to focus on specific nets by hiding the rats nest clutter
+   * from other nets.
+   */
   private final boolean[] is_filtered;
+
+  /**
+   * Global visibility flag for the entire rats nest display.
+   *
+   * <p>When {@code true}, all rats nest airlines are hidden regardless of individual
+   * net filters. When {@code false}, airlines are shown according to per-net filters.
+   *
+   * <p>Typically set to {@code true} during interactive routing to reduce visual
+   * clutter while actively routing traces.
+   */
   public boolean hidden;
 
   /**
-   * Creates a new instance of RatsNest
+   * Creates a new RatsNest instance and performs initial incomplete connection analysis.
+   *
+   * <p>Initialization process:
+   * <ol>
+   *   <li>Creates a DesignRulesChecker for the board</li>
+   *   <li>Calculates all incomplete connections across all nets</li>
+   *   <li>Initializes per-net visibility filters (all visible by default)</li>
+   * </ol>
+   *
+   * <p>The initial calculation analyzes the entire board to determine which items
+   * need connections but aren't physically connected yet. This can be time-consuming
+   * on large boards with many nets.
+   *
+   * @param p_board the board containing nets and items to analyze for incomplete connections
+   *
+   * @see DesignRulesChecker#calculateAllIncompletes()
    */
   public RatsNest(BasicBoard p_board) {
+    this.drc = new DesignRulesChecker(p_board, null);
+    this.drc.calculateAllIncompletes();
+
     int max_net_no = p_board.rules.nets.max_net_no();
-    // Create the net item lists at once for performance reasons.
-    Vector<Collection<Item>> net_item_lists = new Vector<>(max_net_no);
-    for (int i = 0; i < max_net_no; i++) {
-      net_item_lists.add(new LinkedList<>());
-    }
-    Iterator<UndoableObjects.UndoableObjectNode> it = p_board.item_list.start_read_object();
-    for (; ; ) {
-      Item curr_item = (Item) p_board.item_list.read_object(it);
-      if (curr_item == null) {
-        break;
-      }
-      if (curr_item instanceof Connectable) {
-        for (int i = 0; i < curr_item.net_count(); i++) {
-          net_item_lists
-              .get(curr_item.get_net_no(i) - 1)
-              .add(curr_item);
-        }
-      }
-    }
-    this.max_connections = net_item_lists
-        .stream()
-        .mapToInt(Collection::size)
-        .sum() - net_item_lists.size();
-    this.net_incompletes = new NetIncompletes[max_net_no];
     this.is_filtered = new boolean[max_net_no];
-    for (int i = 0; i < net_incompletes.length; i++) {
-      net_incompletes[i] = new NetIncompletes(i + 1, net_item_lists.get(i), p_board);
+    for (int i = 0; i < max_net_no; i++) {
       is_filtered[i] = false;
     }
   }
 
   /**
-   * Recalculates the incomplete connections for the input net
+   * Recalculates incomplete connections (airlines) for the specified net.
+   *
+   * <p>Called after board modifications that affect connectivity, such as:
+   * <ul>
+   *   <li>Adding or removing traces</li>
+   *   <li>Adding or removing vias</li>
+   *   <li>Moving components</li>
+   *   <li>Deleting items</li>
+   * </ul>
+   *
+   * <p>The recalculation determines which items on the net are electrically connected
+   * and which require routing, updating the airline display accordingly.
+   *
+   * @param p_net_no the net number to recalculate (must be valid)
+   * @param p_board the board containing the items (provided for context)
+   *
+   * @see DesignRulesChecker#recalculateNetIncompletes(int)
    */
   public void recalculate(int p_net_no, BasicBoard p_board) {
-    if (p_net_no >= 1 && p_net_no <= net_incompletes.length) {
-      Collection<Item> item_list = p_board.get_connectable_items(p_net_no);
-      net_incompletes[p_net_no - 1] = new NetIncompletes(p_net_no, item_list, p_board);
-    }
+    drc.recalculateNetIncompletes(p_net_no);
   }
 
   /**
-   * Recalculates the incomplete connections for the input net with the input item list.
+   * Recalculates incomplete connections for the specified net using a provided item collection.
+   *
+   * <p>This optimized variant only analyzes the provided items instead of searching the
+   * entire board. More efficient when the affected items are already known, such as:
+   * <ul>
+   *   <li>After moving or modifying specific components</li>
+   *   <li>During partial board updates</li>
+   *   <li>When working with a pre-filtered item set</li>
+   * </ul>
+   *
+   * <p>The item collection should include all items on the net that may have changed
+   * connectivity status.
+   *
+   * @param p_net_no the net number to recalculate
+   * @param p_item_list the collection of items to analyze for this net
+   * @param p_board the board context (provided for completeness)
+   *
+   * @see DesignRulesChecker#recalculateNetIncompletes(int, Collection)
    */
   public void recalculate(int p_net_no, Collection<Item> p_item_list, BasicBoard p_board) {
-    if (p_net_no >= 1 && p_net_no <= net_incompletes.length) {
-      // copy p_item_list, because it will be changed inside the constructor of NetIncompletes
-      Collection<Item> item_list = new LinkedList<>(p_item_list);
-      net_incompletes[p_net_no - 1] = new NetIncompletes(p_net_no, item_list, p_board);
-    }
+    drc.recalculateNetIncompletes(p_net_no, p_item_list);
   }
 
   /**
-   * Returns the number of incomplete connections (airlines) of the ratsnest. This values might be higher than the number of nets, if the nets have multiple unrouted connections.
+   * Returns the total number of incomplete connections (airlines) across all nets on the board.
+   *
+   * <p>Important notes:
+   * <ul>
+   *   <li>Each airline represents one disconnected segment requiring routing</li>
+   *   <li>A single net with multiple isolated groups generates multiple airlines</li>
+   *   <li>The count can exceed the number of nets with incomplete connections</li>
+   *   <li>A count of 0 indicates a fully routed board</li>
+   * </ul>
+   *
+   * <p><strong>Example:</strong> A net with 4 pins split into 2 groups (A-B and C-D)
+   * will have 1 airline connecting the groups, even though 2 connections need to be routed.
+   *
+   * @return the total count of airlines across all nets
+   *
+   * @see #incomplete_count(int)
+   * @see DesignRulesChecker#getIncompleteCount()
    */
   public int incomplete_count() {
-    int result = 0;
-    for (int i = 0; i < net_incompletes.length; i++) {
-      result += net_incompletes[i].count();
-    }
-    return result;
-  }
-
-  public int incomplete_count(int p_net_no) {
-    if (p_net_no <= 0 || p_net_no > net_incompletes.length) {
-      return 0;
-    }
-    return net_incompletes[p_net_no - 1].count();
-  }
-
-  public int length_violation_count() {
-    int result = 0;
-    for (int i = 0; i < net_incompletes.length; i++) {
-      if (net_incompletes[i].get_length_violation() != 0) {
-        ++result;
-      }
-    }
+    int result = drc.getIncompleteCount();
+    FRLogger.trace("RatsNest.incomplete_count", "total_incomplete_count",
+        "RatsNest total incomplete count=" + result,
+        "RatsNest",
+        new app.freerouting.geometry.planar.Point[0]);
     return result;
   }
 
   /**
-   * Returns the length of the violation of the length restriction of the net with number p_net_no, {@literal >} 0, if the cumulative trace length is too big, {@literal <} 0, if the trace length is
-   * too small, 0, if the trace length is ok or the net has no length restrictions
+   * Returns the number of incomplete connections for a specific net.
+   *
+   * <p>This count represents how many disconnected groups exist on the net.
+   * A fully connected net returns 0. A net with n disconnected groups typically
+   * has (n-1) airlines connecting them.
+   *
+   * <p>Useful for:
+   * <ul>
+   *   <li>Monitoring routing progress on a specific net</li>
+   *   <li>Identifying nets requiring attention</li>
+   *   <li>Validating that critical nets are fully routed</li>
+   * </ul>
+   *
+   * @param p_net_no the net number to check
+   * @return the count of airlines for this net, or 0 if fully connected
+   *
+   * @see #incomplete_count()
+   * @see DesignRulesChecker#getIncompleteCount(int)
+   */
+  public int incomplete_count(int p_net_no) {
+    int result = drc.getIncompleteCount(p_net_no);
+    FRLogger.trace("RatsNest.incomplete_count", "net_incomplete_count",
+        "RatsNest net=" + p_net_no + " incomplete_count=" + result,
+        "Net #" + p_net_no,
+        new app.freerouting.geometry.planar.Point[0]);
+    return result;
+  }
+
+  /**
+   * Returns the total number of nets with length matching violations.
+   *
+   * <p>Length violations occur when routed traces don't meet specified requirements:
+   * <ul>
+   *   <li><strong>Too short:</strong> Trace length is below minimum requirement</li>
+   *   <li><strong>Too long:</strong> Trace length exceeds maximum limit</li>
+   * </ul>
+   *
+   * <p>Common use cases for length constraints:
+   * <ul>
+   *   <li>High-speed differential pairs (matched lengths required)</li>
+   *   <li>DDR memory signals (strict length matching)</li>
+   *   <li>Clock distribution (controlled delays)</li>
+   *   <li>Impedance-controlled traces</li>
+   * </ul>
+   *
+   * <p>A count of 0 indicates all length-constrained nets are within tolerance.
+   *
+   * @return the number of nets violating length restrictions
+   *
+   * @see #get_length_violation(int)
+   * @see DesignRulesChecker#getLengthViolationCount()
+   */
+  public int length_violation_count() {
+    return drc.getLengthViolationCount();
+  }
+
+  /**
+   * Returns the magnitude of the length violation for the specified net.
+   *
+   * <p>Return value interpretation:
+   * <ul>
+   *   <li><strong>Positive value:</strong> Trace is too long by this amount</li>
+   *   <li><strong>Negative value:</strong> Trace is too short by this amount (absolute value)</li>
+   *   <li><strong>Zero:</strong> Net is within acceptable length range or has no restrictions</li>
+   * </ul>
+   *
+   * <p>The violation magnitude is in board units and represents how far the actual
+   * trace length deviates from the acceptable range.
+   *
+   * <p><strong>Example:</strong> A return value of +50 means the trace is 50 units
+   * longer than the maximum allowed length.
+   *
+   * @param p_net_no the net number to check
+   * @return positive if too long, negative if too short, 0 if valid or unrestricted
+   *
+   * @see #length_violation_count()
+   * @see DesignRulesChecker#getLengthViolation(int)
    */
   public double get_length_violation(int p_net_no) {
-    if (p_net_no <= 0 || p_net_no > net_incompletes.length) {
-      return 0;
-    }
-    return net_incompletes[p_net_no - 1].get_length_violation();
+    return drc.getLengthViolation(p_net_no);
   }
 
   /**
-   * Returns all airlines of the ratsnest.
+   * Retrieves all airlines (incomplete connections) for the entire board.
+   *
+   * <p>Returns an array containing all AirLine objects representing unrouted connections
+   * across all nets. Each AirLine contains:
+   * <ul>
+   *   <li>Start and end points of the connection</li>
+   *   <li>Net number the connection belongs to</li>
+   *   <li>Layer information</li>
+   * </ul>
+   *
+   * <p>Useful for:
+   * <ul>
+   *   <li>Custom visualization or analysis of incomplete connections</li>
+   *   <li>Exporting rats nest information</li>
+   *   <li>Algorithmic processing of routing requirements</li>
+   * </ul>
+   *
+   * @return an array containing all AirLine objects, or empty array if fully routed
+   *
+   * @see AirLine
+   * @see DesignRulesChecker#getAllAirlines()
    */
   public AirLine[] get_airlines() {
-    AirLine[] result = new AirLine[incomplete_count()];
-    int curr_index = 0;
-    for (int i = 0; i < net_incompletes.length; i++) {
-      Collection<AirLine> curr_list = net_incompletes[i].incompletes;
-      for (AirLine curr_line : curr_list) {
-        result[curr_index] = curr_line;
-        ++curr_index;
-      }
-    }
-    return result;
+    return drc.getAllAirlines();
   }
 
+  /**
+   * Hides the rats nest globally, suppressing all airline displays.
+   *
+   * <p>When hidden, no airlines are drawn regardless of per-net filter settings.
+   * This is typically used during interactive routing to reduce visual clutter,
+   * allowing the user to focus on the trace being routed.
+   *
+   * <p>Length violation indicators may still be displayed depending on
+   * implementation settings.
+   *
+   * @see #show()
+   * @see #is_hidden()
+   */
   public void hide() {
     hidden = true;
   }
 
+  /**
+   * Shows the rats nest, making airlines visible according to per-net filters.
+   *
+   * <p>Clears the global hidden flag, allowing airlines to be displayed for nets
+   * that are not individually filtered. Airlines for filtered nets remain hidden.
+   *
+   * @see #hide()
+   * @see #set_filter(int, boolean)
+   */
   public void show() {
     hidden = false;
   }
 
   /**
-   * Recalculate the length matching violations. Return false, if the length violations have not changed.
+   * Recalculates length matching violations for all nets with length constraints.
+   *
+   * <p>This method:
+   * <ul>
+   *   <li>Recomputes actual trace lengths for all nets</li>
+   *   <li>Compares them against minimum/maximum length requirements</li>
+   *   <li>Updates the violation status for each net</li>
+   * </ul>
+   *
+   * <p>Should be called after routing changes that might affect trace lengths,
+   * such as optimization, pull-tight, or manual trace adjustments.
+   *
+   * @return true if any net's violation status changed (new violations or fixes), false otherwise
+   *
+   * @see #length_violation_count()
+   * @see #get_length_violation(int)
+   * @see DesignRulesChecker#recalculateLengthViolations()
    */
   public boolean recalculate_length_violations() {
-    boolean result = false;
-    for (int i = 0; i < net_incompletes.length; i++) {
-      if (net_incompletes[i].calc_length_violation()) {
-        result = true;
-      }
-    }
-    return result;
+    return drc.recalculateLengthViolations();
   }
 
   /**
-   * Used for example to hide the incompletes during interactive routing.
+   * Checks if the rats nest is globally hidden.
+   *
+   * <p>Returns the state of the global visibility flag. When true, all airlines
+   * are suppressed regardless of per-net filter settings. Commonly used to:
+   * <ul>
+   *   <li>Reduce visual clutter during interactive routing</li>
+   *   <li>Conditionally disable rats nest updates for performance</li>
+   *   <li>Determine whether to draw length violations only</li>
+   * </ul>
+   *
+   * @return true if the rats nest is globally hidden, false if visible (subject to filters)
+   *
+   * @see #hide()
+   * @see #show()
    */
   public boolean is_hidden() {
     return hidden;
   }
 
   /**
-   * Sets the visibility filter for the incompletes of the input net.
+   * Sets the visibility filter for a specific net's rats nest airlines.
+   *
+   * <p>Filter behavior:
+   * <ul>
+   *   <li><strong>p_value = true:</strong> Hide airlines for this net</li>
+   *   <li><strong>p_value = false:</strong> Show airlines for this net (if not globally hidden)</li>
+   * </ul>
+   *
+   * <p>Per-net filtering allows users to focus on specific routing tasks by hiding
+   * irrelevant airlines. The filter is ignored if the rats nest is globally hidden.
+   *
+   * <p>If the net number is out of valid range (less than 1 or greater than the
+   * maximum net number), the operation is silently ignored.
+   *
+   * @param p_net_no the net number to filter (1-based indexing)
+   * @param p_value true to hide the net's airlines, false to show them
+   *
+   * @see #is_hidden()
+   * @see #draw(Graphics, GraphicsContext)
    */
   public void set_filter(int p_net_no, boolean p_value) {
     if (p_net_no < 1 || p_net_no > is_filtered.length) {
@@ -180,83 +398,39 @@ public class RatsNest {
     is_filtered[p_net_no - 1] = p_value;
   }
 
+  /**
+   * Draws the rats nest airlines to the graphics context.
+   *
+   * <p>Drawing behavior:
+   * <ul>
+   *   <li><strong>If globally hidden:</strong> Only length violations are drawn (if any)</li>
+   *   <li><strong>If visible:</strong> Airlines are drawn for non-filtered nets</li>
+   * </ul>
+   *
+   * <p>The method iterates through all nets, checking their filter status and
+   * delegating the actual rendering to NetIncompletesGraphics. Airlines are drawn
+   * as straight lines from the nearest points between disconnected item groups.
+   *
+   * <p>Color and style are determined by the graphics context settings, typically
+   * using distinctive colors for different net classes or violation types.
+   *
+   * @param p_graphics the AWT Graphics object for rendering
+   * @param p_graphics_context the context managing board graphics (colors, transforms, layers)
+   *
+   * @see NetIncompletesGraphics#draw
+   * @see GraphicsContext
+   */
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
     boolean draw_length_violations_only = this.hidden;
 
-    for (int i = 0; i < net_incompletes.length; i++) {
+    for (int i = 0; i < is_filtered.length; i++) {
+      // net index to net number: i -> i+1
       if (!is_filtered[i]) {
-        net_incompletes[i].draw(p_graphics, p_graphics_context, draw_length_violations_only);
+        NetIncompletes ni = drc.getNetIncompletes(i + 1);
+        if (ni != null) {
+          NetIncompletesGraphics.draw(ni, p_graphics, p_graphics_context, draw_length_violations_only);
+        }
       }
-    }
-  }
-
-  /**
-   * Describes a single incomplete connection of the ratsnest.
-   */
-  public static class AirLine implements Comparable<AirLine>, ObjectInfoPanel.Printable {
-
-    public final Net net;
-    public final Item from_item;
-    public final FloatPoint from_corner;
-    public final Item to_item;
-    public final FloatPoint to_corner;
-
-    AirLine(Net p_net, Item p_from_item, FloatPoint p_from_corner, Item p_to_item, FloatPoint p_to_corner) {
-      net = p_net;
-      from_item = p_from_item;
-      from_corner = p_from_corner;
-      to_item = p_to_item;
-      to_corner = p_to_corner;
-    }
-
-    @Override
-    public int compareTo(AirLine p_other) {
-      return this.net.name.compareTo(p_other.net.name);
-    }
-
-    @Override
-    public String toString() {
-      return this.net.name + ": " + getItemInfo(from_item).text + " - " + getItemInfo(to_item).text;
-    }
-
-    private RatsNestItemInfo getItemInfo(Item p_item) {
-      RatsNestItemInfo result = new RatsNestItemInfo();
-      if (p_item instanceof Pin pin) {
-        result.type = RatsNestItemType.PIN;
-        result.componentName = pin.component_name();
-        result.name = pin.name();
-        result.text = pin.component_name() + ", " + pin.name();
-      } else if (p_item instanceof Via via) {
-        result.type = RatsNestItemType.VIA;
-        result.componentName = via.component_name();
-        result.text = "Via";
-      } else if (p_item instanceof Trace trace) {
-        result.type = RatsNestItemType.TRACE;
-        result.componentName = trace.component_name();
-        result.text = "Trace";
-      } else if (p_item instanceof ConductionArea conductionArea) {
-        result.type = RatsNestItemType.CONDUCTION_AREA;
-        result.componentName = conductionArea.component_name();
-        result.text = "Conduction Area";
-      } else {
-        result.type = RatsNestItemType.UNKNOWN;
-        result.text = "Unknown";
-      }
-      return result;
-    }
-
-    @Override
-    public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-      TextManager tm = new TextManager(this.getClass(), p_locale);
-
-      p_window.append_bold(tm.getText("incomplete"));
-      p_window.append(" " + tm.getText("net") + " ");
-      p_window.append(net.name);
-      p_window.append(" " + tm.getText("from") + " ", "Incomplete Start Item", from_item);
-      p_window.append(from_corner);
-      p_window.append(" " + tm.getText("to") + " ", "Incomplete End Item", to_item);
-      p_window.append(to_corner);
-      p_window.newline();
     }
   }
 }

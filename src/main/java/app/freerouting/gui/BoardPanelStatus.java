@@ -46,7 +46,7 @@ class BoardPanelStatus extends JPanel {
     setLayout(new BorderLayout());
 
     // Left panel with warnings, errors, and status messages
-    errorsWarningsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    errorsWarningsPanel = new JPanel(new BorderLayout());
 
     // Load the Material Icons for warnings and errors
     warningIcon = new JLabel();
@@ -58,11 +58,13 @@ class BoardPanelStatus extends JPanel {
     warningLabel = new JLabel("0", SwingConstants.LEADING);
     errorLabel = new JLabel("0", SwingConstants.LEADING);
 
-    // Add error and warning labels
-    errorsWarningsPanel.add(errorIcon, BorderLayout.WEST);
-    errorsWarningsPanel.add(errorLabel, BorderLayout.WEST);
-    errorsWarningsPanel.add(warningIcon, BorderLayout.WEST);
-    errorsWarningsPanel.add(warningLabel, BorderLayout.WEST);
+    // Left-aligned panel for icons and counts
+    JPanel countsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    countsPanel.add(errorIcon);
+    countsPanel.add(errorLabel);
+    countsPanel.add(warningIcon);
+    countsPanel.add(warningLabel);
+    errorsWarningsPanel.add(countsPanel, BorderLayout.WEST);
 
     // Add mouse listeners for error and warning labels
     addErrorOrWarningLabelClickedListener();
@@ -75,14 +77,14 @@ class BoardPanelStatus extends JPanel {
     warningLabel.setBorder(new EmptyBorder(top, left, bottom, right));
     errorLabel.setBorder(new EmptyBorder(top, left, bottom, right));
 
-    // Initialize status message label
-    statusMessage = new JLabel();
+    // Initialize status message label with SmartLabel for auto-truncation
+    statusMessage = new SmartLabel();
     statusMessage.setHorizontalAlignment(SwingConstants.CENTER);
     tm.setText(statusMessage, "status_line");
     errorsWarningsPanel.add(statusMessage, BorderLayout.CENTER);
 
-    // Initialize additional message label
-    additionalMessage = new JLabel();
+    // Initialize additional message label with SmartLabel for auto-truncation
+    additionalMessage = new SmartLabel();
     tm.setText(additionalMessage, "additional_text_field");
     additionalMessage.setMaximumSize(new Dimension(300, 14));
     additionalMessage.setMinimumSize(new Dimension(140, 14));

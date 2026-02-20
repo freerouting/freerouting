@@ -13,6 +13,17 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     "id": "09730e5f-4886-49f0-afba-76f459408907",
     "email": "info@freerouting.app"
   },
+  "logging": {
+    "console": {
+      "enabled": true,
+      "level": "INFO"
+    },
+    "file": {
+      "enabled": true,
+      "level": "INFO",
+      "location": ""
+    }
+  },
   "gui": {
     "enabled": true,
     "input_directory": "C:\\Work\\freerouting\\tests",
@@ -37,7 +48,6 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     "analytics_modulo": 16
   },
   "feature_flags": {
-    "logging": true,
     "multi_threading": false,
     "select_mode": false,
     "macros": false,
@@ -64,6 +74,16 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 
 - **`id`**: A unique identifier for the user's profile. This is typically a UUID (Universally Unique Identifier).
 - **`email`**: The user's email address (optional).
+
+#### **`logging` Section**
+
+- **`console`**:
+    - **`enabled`**: Enables or disables console logging. Default is `true`.
+    - **`level`**: Sets the console log level (OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL). Default is `INFO`.
+- **`file`**:
+    - **`enabled`**: Enables or disables file logging. Default is `true`.
+    - **`level`**: Sets the file log level. Default is `INFO`.
+    - **`location`**: Directory path for the log file. If empty, defaults to the user data path.
 
 #### **`gui` Section**
 
@@ -94,13 +114,9 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 
 #### **`feature_flags` Section**
 
-- **`logging`**: Enables or disables logging.
 - **`multi_threading`**: Enables or disables multi-threaded routing.
-- **`select_mode`**: Enables or disables select mode in the GUI.
-- **`macros`**: Enables or disables macro functionality.
+- **`inspection_mode`**: Enables or disables inspection mode in the GUI.
 - **`other_menu`**: Enables or disables the "Other" menu in the GUI.
-- **`snapshots`**: Enables or disables snapshot functionality.
-- **`file_load_dialog_at_startup`**: Shows or hides the file load dialog at startup.
 - **`save_jobs`**: Enables or disables saving routing jobs to disk.
 
 #### **`api_server` Section**

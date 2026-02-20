@@ -22,9 +22,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
@@ -1283,6 +1285,24 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     }
 
     return simpleName.toString();
+  }
+
+  public List<Net> getAllNets() {
+    List<Net> nets = new ArrayList<>();
+    for (int netNo : this.net_no_arr) {
+      Net net = board.rules.nets.get(netNo);
+      if (net != null) {
+        nets.add(net);
+      }
+    }
+    return nets;
+  }
+
+  public String getAllNetNames() {
+    return this.getAllNets().stream()
+        .map(net -> net.toString())
+        .reduce((a, b) -> a + "," + b)
+        .orElse("no nets");
   }
 
   /**

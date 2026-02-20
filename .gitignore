@@ -39,3 +39,4 @@ gha-creds-*.json
 
 # Agent files
 /.agent
+/.secrets
