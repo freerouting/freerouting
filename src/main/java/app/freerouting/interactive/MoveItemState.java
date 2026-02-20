@@ -101,8 +101,8 @@ public class MoveItemState extends InteractiveState {
           FRLogger.warn("MoveComponentState.get_instance inconsistent component number");
           return null;
         }
-        if (grid_snap_component == null && (p_board_handling.settings.horizontal_component_grid > 0
-            || p_board_handling.settings.horizontal_component_grid > 0)) {
+        if (grid_snap_component == null && (p_board_handling.interactiveSettings.horizontal_component_grid > 0
+            || p_board_handling.interactiveSettings.horizontal_component_grid > 0)) {
           grid_snap_component = curr_component;
         }
         if (!component_list.contains(curr_component)) {
@@ -250,7 +250,7 @@ public class MoveItemState extends InteractiveState {
 
   @Override
   public InteractiveState mouse_wheel_moved(int p_rotation) {
-    if (hdlg.settings.zoom_with_wheel) {
+    if (hdlg.interactiveSettings.zoom_with_wheel) {
       super.mouse_wheel_moved(p_rotation);
     } else {
       this.rotate(-p_rotation);
@@ -291,7 +291,7 @@ public class MoveItemState extends InteractiveState {
         .translate_by(p_vector);
     IntPoint rounded_component_location = new_component_location
         .to_float()
-        .round_to_grid(hdlg.settings.horizontal_component_grid, hdlg.settings.vertical_component_grid);
+        .round_to_grid(hdlg.interactiveSettings.horizontal_component_grid, hdlg.interactiveSettings.vertical_component_grid);
     Vector adjustment = rounded_component_location.difference_by(new_component_location);
     Vector result = p_vector.add(adjustment);
     this.current_position = this.previous_position
@@ -429,8 +429,8 @@ public class MoveItemState extends InteractiveState {
       case '*' -> turn_90_degree(2);
       case '-' -> turn_90_degree(3);
       case '/' -> change_placement_side();
-      case 'r' -> hdlg.settings.set_zoom_with_wheel(false);
-      case 'z' -> hdlg.settings.set_zoom_with_wheel(true);
+      case 'r' -> hdlg.interactiveSettings.set_zoom_with_wheel(false);
+      case 'z' -> hdlg.interactiveSettings.set_zoom_with_wheel(true);
       default -> curr_return_state = super.key_typed(p_key_char);
     }
     return curr_return_state;

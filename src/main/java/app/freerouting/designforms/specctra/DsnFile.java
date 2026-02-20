@@ -31,13 +31,17 @@ public class DsnFile {
   }
 
   /**
-   * Creates a routing board from a Specctra DSN file. The parameters p_item_observers and idNoGenerator are used, in case the board is embedded into a host system. Returns false, if an error
+   * Creates a routing board from a Specctra DSN file. The parameters
+   * p_item_observers and idNoGenerator are used, in case the board is embedded
+   * into a host system. Returns false, if an error
    * occurred.
    */
-  public static ReadResult read(InputStream inputStream, BoardManager boardManager, BoardObservers boardObservers, IdentificationNumberGenerator identificationNumberGenerator) {
+  public static ReadResult read(InputStream inputStream, BoardManager boardManager, BoardObservers boardObservers,
+      IdentificationNumberGenerator identificationNumberGenerator) {
     IJFlexScanner dsnFlexScanner = new SpecctraDsnStreamReader(inputStream);
 
-    // first, check if the file is a Specctra DSN file by looking for the first keywords "(pcb "
+    // first, check if the file is a Specctra DSN file by looking for the first
+    // keywords "(pcb "
     Object curr_token;
     for (int i = 0; i < 3; i++) {
       try {
@@ -54,13 +58,15 @@ public class DsnFile {
         dsnFlexScanner.yybegin(SpecctraDsnStreamReader.NAME); // to overread the name of the pcb for i = 2
       }
       if (!keyword_ok) {
-        FRLogger.warn("DsnFile.read: the input file is not in a Specctra DSN file format. It must be a text file starting with the '(pcb' character array.");
+        FRLogger.warn(
+            "DsnFile.read: the input file is not in a Specctra DSN file format. It must be a text file starting with the '(pcb' character array.");
         return ReadResult.ERROR;
       }
     }
 
     // create a helper class for the DSN reader
-    ReadScopeParameter read_scope_par = new ReadScopeParameter(dsnFlexScanner, boardManager, boardObservers, identificationNumberGenerator);
+    ReadScopeParameter read_scope_par = new ReadScopeParameter(dsnFlexScanner, boardManager, boardObservers,
+        identificationNumberGenerator);
 
     // read the rest of the file after the "(pcb" part
     boolean read_ok = Keyword.PCB_SCOPE.read_scope(read_scope_par);
@@ -69,7 +75,8 @@ public class DsnFile {
       // the board object is now available in the board manager
       result = ReadResult.OK;
       if (read_scope_par.autoroute_settings == null) {
-        // look for power planes with incorrect layer type and adjust autoroute parameters
+        // look for power planes with incorrect layer type and adjust autoroute
+        // parameters
         adjust_plane_autoroute_settings(boardManager);
       }
     } else if (!read_scope_par.board_outline_ok) {
@@ -81,7 +88,9 @@ public class DsnFile {
   }
 
   /**
-   * Sets contains_plane to true for nets with a conduction_area covering a large part of a signal layer, if that layer does not contain any traces This is useful in case the layer type was not set
+   * Sets contains_plane to true for nets with a conduction_area covering a large
+   * part of a signal layer, if that layer does not contain any traces This is
+   * useful in case the layer type was not set
    * correctly to plane in the dsn-file. Returns true, if something was changed.
    */
   private static boolean adjust_plane_autoroute_settings(BoardManager p_board_handling) {
@@ -162,27 +171,20 @@ public class DsnFile {
     if (nothing_changed) {
       return false;
     }
-    // Adjust the layer preferred directions in the autoroute settings.
-    // and deactivate the changed layers.
-    RouterSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
-    int layer_count = routing_board.get_layer_count();
-    boolean curr_preferred_direction_is_horizontal = autoroute_settings.get_preferred_direction_is_horizontal(0);
-    for (int i = 0; i < layer_count; i++) {
-      if (changed_layer_arr[i]) {
-        autoroute_settings.set_layer_active(i, false);
-      } else if (autoroute_settings.get_layer_active(i)) {
-        autoroute_settings.set_preferred_direction_is_horizontal(i, curr_preferred_direction_is_horizontal);
-        curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
-      }
-    }
+    // Note: Layer preferred direction adjustments are now handled by
+    // RoutingJob.routerSettings
+    // This code has been removed as part of the RouterSettings consolidation
     return true;
   }
 
   /**
-   * Writes p_board to a text file in the Specctra dsn format. Returns false, if the write failed. If p_compat_mode is true, only standard specctra dsn scopes are written, so that any host system with
+   * Writes p_board to a text file in the Specctra dsn format. Returns false, if
+   * the write failed. If p_compat_mode is true, only standard specctra dsn scopes
+   * are written, so that any host system with
    * a specctra interface can read them.
    */
-  public static boolean write(BoardManager boardManager, OutputStream outputStream, String p_design_name, boolean p_compat_mode) {
+  public static boolean write(BoardManager boardManager, OutputStream outputStream, String p_design_name,
+      boolean p_compat_mode) {
     IndentFileWriter output_file = new IndentFileWriter(outputStream);
 
     try {
@@ -200,15 +202,18 @@ public class DsnFile {
     return true;
   }
 
-  private static void write_pcb_scope(BoardManager boardManager, IndentFileWriter indentFileWriter, String p_design_name, boolean p_compat_mode) throws IOException {
+  private static void write_pcb_scope(BoardManager boardManager, IndentFileWriter indentFileWriter,
+      String p_design_name, boolean p_compat_mode) throws IOException {
     BasicBoard routing_board = boardManager.get_routing_board();
-    WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, null, indentFileWriter, routing_board.communication.specctra_parser_info.string_quote,
+    WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, null, indentFileWriter,
+        routing_board.communication.specctra_parser_info.string_quote,
         routing_board.communication.coordinate_transform, p_compat_mode);
 
     indentFileWriter.start_scope(false);
     indentFileWriter.write("pcb ");
     write_scope_parameter.identifier_type.write(p_design_name, indentFileWriter);
-    Parser.write_scope(write_scope_parameter.file, write_scope_parameter.board.communication.specctra_parser_info, write_scope_parameter.identifier_type, false);
+    Parser.write_scope(write_scope_parameter.file, write_scope_parameter.board.communication.specctra_parser_info,
+        write_scope_parameter.identifier_type, false);
     Resolution.write_scope(indentFileWriter, routing_board.communication);
     Unit.write_scope(indentFileWriter, routing_board.communication.unit);
     Structure.write_scope(write_scope_parameter);
@@ -249,7 +254,8 @@ public class DsnFile {
       }
       next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_integer_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger
+            .warn("DsnFile.read_integer_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
         return 0;
       }
       return value;
@@ -273,7 +279,8 @@ public class DsnFile {
       }
       next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_float_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger
+            .warn("DsnFile.read_float_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
         return 0;
       }
       return value;
@@ -289,7 +296,8 @@ public class DsnFile {
       String result = p_scanner.next_string();
       Object next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_string_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger
+            .warn("DsnFile.read_string_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
       }
       return result;
     } catch (IOException e) {

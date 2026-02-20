@@ -34,10 +34,10 @@ public abstract class DragState extends InteractiveState {
     p_board_handling.display_layer_message();
     Item item_to_move = null;
     int try_count = 1;
-    if (p_board_handling.settings.select_on_all_visible_layers) {
+    if (p_board_handling.interactiveSettings.select_on_all_visible_layers) {
       try_count += p_board_handling.get_layer_count();
     }
-    int curr_layer = p_board_handling.settings.layer;
+    int curr_layer = p_board_handling.interactiveSettings.layer;
     int pick_layer = curr_layer;
     boolean item_found = false;
 
@@ -45,13 +45,13 @@ public abstract class DragState extends InteractiveState {
       if (i == 0
           || pick_layer != curr_layer && (p_board_handling.graphics_context.get_layer_visibility(pick_layer)) > 0) {
         Collection<Item> found_items = p_board_handling.get_routing_board().pick_items(p_location.round(), pick_layer,
-            p_board_handling.settings.item_selection_filter);
+            p_board_handling.interactiveSettings.item_selection_filter);
         for (Item curr_item : found_items) {
           item_found = true;
           if (curr_item instanceof Trace) {
             continue; // traces are not moved
           }
-          if (!p_board_handling.settings.drag_components_enabled && curr_item.get_component_no() != 0) {
+          if (!p_board_handling.interactiveSettings.drag_components_enabled && curr_item.get_component_no() != 0) {
             continue;
           }
           item_to_move = curr_item;

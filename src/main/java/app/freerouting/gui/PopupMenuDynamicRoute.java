@@ -46,7 +46,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
       this.change_layer_menu = null;
     }
 
-    Layer curr_layer = layer_structure.arr[board_panel.board_handling.settings.get_layer()];
+    Layer curr_layer = layer_structure.arr[board_panel.board_handling.interactiveSettings.get_layer()];
     disable_layer_item(layer_structure.get_signal_layer_no(curr_layer));
   }
 

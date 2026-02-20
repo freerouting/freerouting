@@ -78,7 +78,7 @@ public class MenuState extends InteractiveState {
       case 'g' -> hdlg.toggle_ratsnest();
       case 'i' -> curr_return_state = this.select_items(hdlg.get_current_mouse_position());
       case 'p' -> {
-        hdlg.settings.set_push_enabled(!hdlg.settings.push_enabled);
+        hdlg.interactiveSettings.set_push_enabled(!hdlg.interactiveSettings.push_enabled);
         hdlg.get_panel().board_frame.refresh_windows();
       }
       case 'r' -> curr_return_state = RouteMenuState.get_instance(hdlg);
@@ -90,7 +90,7 @@ public class MenuState extends InteractiveState {
       case '+' -> {
         // increase the current layer to the next signal layer
         LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
-        int current_layer_no = hdlg.settings.layer;
+        int current_layer_no = hdlg.interactiveSettings.layer;
         do {
           ++current_layer_no;
         } while (current_layer_no < layer_structure.arr.length && !layer_structure.arr[current_layer_no].is_signal);
@@ -102,7 +102,7 @@ public class MenuState extends InteractiveState {
       case '-' -> {
         // decrease the current layer to the previous signal layer
         LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
-        int current_layer_no = hdlg.settings.layer;
+        int current_layer_no = hdlg.interactiveSettings.layer;
         do {
           --current_layer_no;
         } while (current_layer_no >= 0 && !layer_structure.arr[current_layer_no].is_signal);

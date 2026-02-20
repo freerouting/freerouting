@@ -1,9 +1,7 @@
 package app.freerouting.rules;
 
 import app.freerouting.board.LayerStructure;
-import app.freerouting.management.TextManager;
 import java.io.Serializable;
-import java.util.Locale;
 import java.util.Vector;
 
 /**
@@ -52,16 +50,12 @@ public class NetClasses implements Serializable {
   /**
    * Appends a new empty class to the class array. A name for the class is created internally
    */
-  NetClass append(LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, Locale p_locale) {
-
-    TextManager tm = new TextManager(NetClasses.class, p_locale);
-
-    String name_front = tm.getText("class");
+  NetClass append(LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix) {
     String new_name;
     int index = 0;
     do {
       ++index;
-      new_name = name_front + index;
+      new_name = "class" + index;
     } while (this.get(new_name) != null);
     return append(new_name, p_layer_structure, p_clearance_matrix, false);
   }

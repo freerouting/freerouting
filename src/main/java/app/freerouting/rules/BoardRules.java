@@ -11,7 +11,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Vector;
 
 /**
@@ -163,8 +162,8 @@ public class BoardRules implements Serializable {
   /**
    * Returns an empty new net rule with an internally created name.
    */
-  public NetClass get_new_net_class(Locale p_locale) {
-    NetClass result = this.net_classes.append(this.layer_structure, this.clearance_matrix, p_locale);
+  public NetClass get_new_net_class() {
+    NetClass result = this.net_classes.append(this.layer_structure, this.clearance_matrix);
     result.set_trace_clearance_class(this
         .get_default_net_class()
         .get_trace_clearance_class());
@@ -237,8 +236,8 @@ public class BoardRules implements Serializable {
   /**
    * Appends a new net class initialized with default data and a default name.
    */
-  public NetClass append_net_class(Locale p_locale) {
-    NetClass new_class = this.net_classes.append(this.layer_structure, this.clearance_matrix, p_locale);
+  public NetClass append_net_class() {
+    NetClass new_class = this.net_classes.append(this.layer_structure, this.clearance_matrix);
     NetClass default_class = this.net_classes.get(0);
     new_class.set_via_rule(default_class.get_via_rule());
     new_class.set_trace_half_width(default_class.get_trace_half_width(0));
