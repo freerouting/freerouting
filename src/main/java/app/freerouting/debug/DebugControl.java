@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DebugControl {
 
     private static final DebugControl INSTANCE = new DebugControl();
+    private static final java.util.regex.Pattern NET_NUMBER_PATTERN = java.util.regex.Pattern.compile("Net #(\\d+)");
 
     // Execution state
     private final AtomicBoolean isPaused = new AtomicBoolean(false);
@@ -23,7 +24,7 @@ public class DebugControl {
     private final Object lock = new Object();
     // Listeners
     private final java.util.List<DebugStateListener> listeners = new java.util.ArrayList<>();
-    private int currentNetNo = -1;
+    private volatile int currentNetNo = -1;
 
     private DebugControl() {
         // Initialize state based on settings if needed, but usually settings are loaded
@@ -138,7 +139,7 @@ public class DebugControl {
         int netNo = -1;
         // Try to parse Net #<No>
         if (impactedItems != null) {
-            java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("Net #(\\d+)").matcher(impactedItems);
+            java.util.regex.Matcher matcher = NET_NUMBER_PATTERN.matcher(impactedItems);
             if (matcher.find()) {
                 try {
                     netNo = Integer.parseInt(matcher.group(1));
