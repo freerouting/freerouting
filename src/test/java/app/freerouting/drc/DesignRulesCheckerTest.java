@@ -121,7 +121,7 @@ public class DesignRulesCheckerTest {
 
       // Load the board
       if (job.input.format == FileFormat.DSN) {
-        HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+        HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
         boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
         job.board = boardManager.get_routing_board();
       }

@@ -1,6 +1,8 @@
 package app.freerouting.settings;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.EnvironmentVariablesSource;
@@ -17,8 +19,7 @@ class SettingsMergerTest {
     @Test
     void testDefaultSettingsOnly() {
         // Test that default settings work correctly
-        DefaultSettings defaultSettings = new DefaultSettings();
-        RouterSettings merged = SettingsMerger.merge(defaultSettings);
+        RouterSettings merged = new SettingsMerger(new DefaultSettings()).merge();
 
         assertNotNull(merged);
         // Verify default values
@@ -30,12 +31,11 @@ class SettingsMergerTest {
     @Test
     void testEmptySourcesList() {
         // Test that empty sources list returns default settings
-        RouterSettings merged = SettingsMerger.merge();
+        RouterSettings merged = new SettingsMerger().merge();
 
         assertNotNull(merged);
-        // Should have default values (empty RouterSettings constructor provides
-        // defaults)
-        assertEquals(9999, merged.maxPasses);
+        // Should have null values
+        assertEquals(null, merged.maxPasses);
     }
 
     @Test
@@ -57,7 +57,7 @@ class SettingsMergerTest {
         DefaultSettings defaults = new DefaultSettings();
         EnvironmentVariablesSource envSource = new EnvironmentVariablesSource(env);
 
-        RouterSettings merged = SettingsMerger.merge(defaults, envSource);
+        RouterSettings merged = new SettingsMerger(defaults, envSource).merge();
 
         assertNotNull(merged);
         // Environment variable should override default
@@ -77,7 +77,7 @@ class SettingsMergerTest {
         JsonFileSettings jsonSettings = new JsonFileSettings();
         EnvironmentVariablesSource envSource = new EnvironmentVariablesSource(env);
 
-        RouterSettings merged = SettingsMerger.merge(defaults, jsonSettings, envSource);
+        RouterSettings merged = new SettingsMerger(defaults, jsonSettings, envSource).merge();
 
         assertNotNull(merged);
         // Environment variables (priority 55) should override JSON (priority 10)
@@ -108,7 +108,7 @@ class SettingsMergerTest {
             }
         };
 
-        RouterSettings merged = SettingsMerger.merge(defaults, nullSource);
+        RouterSettings merged = new SettingsMerger(defaults, nullSource).merge();
 
         assertNotNull(merged);
         // Should still have default values
@@ -125,7 +125,7 @@ class SettingsMergerTest {
         DefaultSettings defaults = new DefaultSettings();
         EnvironmentVariablesSource envSource = new EnvironmentVariablesSource(env);
 
-        RouterSettings merged = SettingsMerger.merge(defaults, envSource);
+        RouterSettings merged = new SettingsMerger(defaults, envSource).merge();
 
         assertNotNull(merged);
         assertEquals(200, merged.maxPasses); // Overridden
@@ -156,7 +156,7 @@ class SettingsMergerTest {
         DefaultSettings defaults = new DefaultSettings();
         EnvironmentVariablesSource envSource = new EnvironmentVariablesSource(env);
 
-        RouterSettings merged = SettingsMerger.merge(defaults, envSource);
+        RouterSettings merged = new SettingsMerger(defaults, envSource).merge();
 
         assertNotNull(merged);
         assertEquals(150, merged.maxPasses);

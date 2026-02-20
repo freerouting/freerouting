@@ -1,6 +1,9 @@
 package app.freerouting.settings.sources;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.settings.RouterSettings;
 import java.util.HashMap;
@@ -118,7 +121,7 @@ class EnvironmentVariablesSourceTest {
 
         assertNotNull(settings);
         // Default value should remain since no valid env vars were found
-        assertEquals(9999, settings.maxPasses);
+        assertEquals(null, settings.maxPasses);
         assertEquals(0, source.getParsedCount());
     }
 
@@ -147,7 +150,7 @@ class EnvironmentVariablesSourceTest {
 
         assertNotNull(settings);
         // Should keep default value since parsing failed
-        assertEquals(9999, settings.maxPasses);
+        assertEquals(null, settings.maxPasses);
         assertEquals(0, source.getParsedCount());
     }
 
