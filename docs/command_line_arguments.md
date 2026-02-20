@@ -110,6 +110,25 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 - **`-host [host_name host_version]`**  
   Specifies the name and version of the host application if Freerouting is run as an external library or plugin.
 
+### Debugging Options
+
+- **`--debug.enable_detailed_logging=[true|false]`**
+  Enables detailed trace logging to the log file. Default is `false`.
+  - Effect: Sets the file logging level to TRACE. Note that this can generate very large log files.
+
+- **`--debug.single_step_execution=[true|false]`**
+  Enables single-step execution mode. Default is `false`.
+  - Effect: Shows "Play", "Pause", "Next", and "Previous" buttons in the toolbar. The autorouter will start valid pauses at breakpoints (e.g. trace insertion).
+
+- **`--debug.trace_insertion_delay=[milliseconds]`**
+  Adds a delay in milliseconds after each trace insertion or major routing step. Default is `0`.
+  - Effect: Slows down the routing process for visual debugging.
+
+- **`--debug.filter_by_net=[net1,net2,...]`**
+  Restricts debug actions (stepping, delays) to specific nets.
+  - Format: Comma-separated list of net names or numbers (e.g. `Net1,Net #2,3`).
+  - Effect: Other nets are routed at full speed.
+
 ### Miscellaneous Options
 
 - **`-dct [seconds]`**  
@@ -120,21 +139,27 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 - **`-da`**  
   Disables the collection of anonymous analytics data.
 
-- **`-dl`**  
-  Disables logging.
+- **`--logging.console.enabled=[true|false]`**
+  Enables or disables console logging. Default is `true`.
 
-- **`-ll [level]`**  
-  Sets the console logging level:
-  - Valid values:
-    - `OFF` (0)
-    - `FATAL` (1)
-    - `ERROR` (2)
-    - `WARN` (3)
-    - `INFO` (4) (default)
-    - `DEBUG` (5)
-    - `TRACE` (6)
-    - `ALL` (7)
-  - Accepts both string names and numerical values.
+- **`--logging.console.level=[level]`**
+  Sets the console logging level.
+  - Valid values: `OFF`, `FATAL`, `ERROR`, `WARN`, `INFO` (default), `DEBUG`, `TRACE`, `ALL`.
+
+- **`--logging.file.enabled=[true|false]`**
+  Enables or disables file logging. Default is `true`.
+
+- **`--logging.file.level=[level]`**
+  Sets the file logging level. Default is `INFO`.
+
+- **`--logging.file.location=[directory]`**
+  Defines the directory where `freerouting.log` is stored.
+
+- **`-dl`** (Legacy)
+  Disables **file** logging. Equivalent to `--logging.file.enabled=false`.
+
+- **`-ll [level]`** (Legacy)
+  Sets the **console** logging level. Equivalent to `--logging.console.level=[level]`.
 
 - **`--user_data_path=[directory]`**
   Defines the directory where configuration and log files are stored.
