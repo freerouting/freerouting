@@ -8,7 +8,6 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
-
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.interactive.GuiBoardManager;
@@ -22,6 +21,7 @@ import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.SettingsMerger;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -42,7 +42,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -150,14 +149,14 @@ public class BoardFrame extends WindowBase {
    * Creates a new BoardFrame that is the GUI element containing the Menu,
    * Toolbar, Canvas and Status bar.
    */
-  public BoardFrame(RoutingJob p_design, GlobalSettings globalSettings) {
-    this(p_design, new BoardObserverAdaptor(), globalSettings);
+  public BoardFrame(RoutingJob p_design, GlobalSettings globalSettings, SettingsMerger settingsMerger) {
+    this(p_design, new BoardObserverAdaptor(), globalSettings, settingsMerger);
   }
 
   /**
    * Creates new form BoardFrame.
    */
-  BoardFrame(RoutingJob routingJob, BoardObservers boardObservers, GlobalSettings globalSettings) {
+  BoardFrame(RoutingJob routingJob, BoardObservers boardObservers, GlobalSettings globalSettings, SettingsMerger settingsMerger) {
     super(800, 150);
 
     this.routingJob = routingJob;
@@ -353,7 +352,7 @@ public class BoardFrame extends WindowBase {
     this.scroll_pane.setVerifyInputWhenFocusTarget(false);
     this.add(scroll_pane, BorderLayout.CENTER);
 
-    this.board_panel = new BoardPanel(screen_messages, this, globalSettings, routingJob);
+    this.board_panel = new BoardPanel(screen_messages, this, globalSettings, routingJob, settingsMerger);
     this.scroll_pane.setViewportView(board_panel);
 
     this.addWindowListener(new WindowStateListener());

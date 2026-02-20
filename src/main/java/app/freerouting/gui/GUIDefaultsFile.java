@@ -901,7 +901,7 @@ public class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_selection_layer_scop: closing bracket expected");
       return false;
     }
-    this.board_handling.settings.set_select_on_all_visible_layers(select_on_all_layers);
+    this.board_handling.interactiveSettings.set_select_on_all_visible_layers(select_on_all_layers);
     return true;
   }
 
@@ -921,7 +921,7 @@ public class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_shove_enabled_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.settings.set_push_enabled(shove_enabled);
+    this.board_handling.interactiveSettings.set_push_enabled(shove_enabled);
     return true;
   }
 
@@ -941,7 +941,7 @@ public class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_drag_components_enabled_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.settings.set_drag_components_enabled(drag_components_enabled);
+    this.board_handling.interactiveSettings.set_drag_components_enabled(drag_components_enabled);
     return true;
   }
 
@@ -969,7 +969,7 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("shove_enabled ");
     out_file.new_line();
-    if (this.board_handling.settings.get_push_enabled()) {
+    if (this.board_handling.interactiveSettings.get_push_enabled()) {
       out_file.write("on");
     } else {
       out_file.write("off");
@@ -981,7 +981,7 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("drag_components_enabled ");
     out_file.new_line();
-    if (this.board_handling.settings.get_drag_components_enabled()) {
+    if (this.board_handling.interactiveSettings.get_drag_components_enabled()) {
       out_file.write("on");
     } else {
       out_file.write("off");
@@ -1005,7 +1005,7 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("selection_layers ");
     out_file.new_line();
-    if (this.board_handling.settings.get_select_on_all_visible_layers()) {
+    if (this.board_handling.interactiveSettings.get_select_on_all_visible_layers()) {
       out_file.write("all_visible");
     } else {
       out_file.write("current_only");
@@ -1029,7 +1029,7 @@ public class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_selection_layer_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.settings.set_stitch_route(is_stitch_mode);
+    this.board_handling.interactiveSettings.set_stitch_route(is_stitch_mode);
     return true;
   }
 
@@ -1037,7 +1037,7 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("route_mode ");
     out_file.new_line();
-    if (this.board_handling.settings.get_is_stitch_route()) {
+    if (this.board_handling.interactiveSettings.get_is_stitch_route()) {
       out_file.write("stitching");
     } else {
       out_file.write("dynamic");
@@ -1057,7 +1057,7 @@ public class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_region_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.settings.set_current_pull_tight_region_width(pull_tight_region);
+    this.board_handling.interactiveSettings.set_current_pull_tight_region_width(pull_tight_region);
     return true;
   }
 
@@ -1065,7 +1065,7 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("pull_tight_region ");
     out_file.new_line();
-    int pull_tight_region = this.board_handling.settings.get_trace_pull_tight_region_width();
+    int pull_tight_region = this.board_handling.interactiveSettings.get_trace_pull_tight_region_width();
     out_file.write(String.valueOf(pull_tight_region));
     out_file.end_scope();
   }
@@ -1082,7 +1082,7 @@ public class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_accuracy_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.settings.trace_pull_tight_accuracy = pull_tight_accuracy;
+    this.board_handling.interactiveSettings.trace_pull_tight_accuracy = pull_tight_accuracy;
     return true;
   }
 
@@ -1090,7 +1090,7 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("pull_tight_accuracy ");
     out_file.new_line();
-    int pull_tight_accuracy = this.board_handling.settings.trace_pull_tight_accuracy;
+    int pull_tight_accuracy = this.board_handling.interactiveSettings.trace_pull_tight_accuracy;
     out_file.write(String.valueOf(pull_tight_accuracy));
     out_file.end_scope();
   }
@@ -1140,7 +1140,7 @@ public class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_hilight_routing_obstacle_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.settings.set_hilight_routing_obstacle(hilight_obstacle);
+    this.board_handling.interactiveSettings.set_hilight_routing_obstacle(hilight_obstacle);
     return true;
   }
 
@@ -1148,7 +1148,7 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("hilight_routing_obstacle ");
     out_file.new_line();
-    if (this.board_handling.settings.get_hilight_routing_obstacle()) {
+    if (this.board_handling.interactiveSettings.get_hilight_routing_obstacle()) {
       out_file.write("on");
     } else {
       out_file.write("off");
@@ -1204,7 +1204,7 @@ public class GUIDefaultsFile {
       FRLogger.warn("GUIDefaultsFile.read_via_snap_to_smd_center_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.settings.set_via_snap_to_smd_center(snap);
+    this.board_handling.interactiveSettings.set_via_snap_to_smd_center(snap);
     return true;
   }
 
@@ -1212,7 +1212,7 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("via_snap_to_smd_center ");
     out_file.new_line();
-    if (this.board_handling.settings.get_via_snap_to_smd_center()) {
+    if (this.board_handling.interactiveSettings.get_via_snap_to_smd_center()) {
       out_file.write("on");
     } else {
       out_file.write("off");
@@ -1221,7 +1221,7 @@ public class GUIDefaultsFile {
   }
 
   private boolean read_selectable_item_scope() throws IOException {
-    ItemSelectionFilter item_selection_filter = this.board_handling.settings.get_item_selection_filter();
+    ItemSelectionFilter item_selection_filter = this.board_handling.interactiveSettings.get_item_selection_filter();
     item_selection_filter.deselect_all();
     for (;;) {
       Object next_token = this.scanner.next_token();
@@ -1256,7 +1256,7 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("selectable_items ");
     out_file.new_line();
-    ItemSelectionFilter item_selection_filter = this.board_handling.settings.get_item_selection_filter();
+    ItemSelectionFilter item_selection_filter = this.board_handling.interactiveSettings.get_item_selection_filter();
     ItemSelectionFilter.SelectableChoices[] selectable_choices = ItemSelectionFilter.SelectableChoices.values();
     for (int i = 0; i < selectable_choices.length; i++) {
       if (item_selection_filter.is_selected(selectable_choices[i])) {

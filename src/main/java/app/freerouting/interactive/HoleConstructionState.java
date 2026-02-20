@@ -54,7 +54,7 @@ public class HoleConstructionState extends CornerItemConstructionState {
         ItemSelectionFilter.SelectableChoices.CONDUCTION
     };
     ItemSelectionFilter selection_filter = new ItemSelectionFilter(selectable_choices);
-    Collection<Item> found_items = hdlg.get_routing_board().pick_items(pick_location, hdlg.settings.layer,
+    Collection<Item> found_items = hdlg.get_routing_board().pick_items(pick_location, hdlg.interactiveSettings.layer,
         selection_filter);
     if (found_items.size() != 1) {
       hdlg.screen_messages.set_status_message(tm.getText("no_item_found_for_adding_hole"));

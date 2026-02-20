@@ -1379,4 +1379,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         .to_Simplex()
         .cutout_from(p_simplex);
   }
+  @Override
+  public String toString() {
+    return "IntOctagon(lx=" + leftX + ", ly=" + bottomY + ", rx=" + rightX + ", uy=" + topY + ", ulx=" + upperLeftDiagonalX + ", lrx=" + lowerRightDiagonalX + ", llx=" + lowerLeftDiagonalX + ", urx=" + upperRightDiagonalX + ")";
+  }
 }

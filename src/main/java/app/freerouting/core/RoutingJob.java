@@ -12,7 +12,6 @@ import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.settings.DesignRulesCheckerSettings;
-import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
 import com.google.gson.annotations.SerializedName;
 import java.awt.Component;
@@ -23,10 +22,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Instant;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -85,27 +83,18 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public transient StoppableThread thread;
   public transient RoutingBoard board;
   public transient Instant timeoutAt;
+  private boolean isCancelledByUser = false;
+
+  public boolean isCancelledByUser() {
+    return isCancelledByUser;
+  }
+
+  public void setCancelledByUser(boolean cancelledByUser) {
+    isCancelledByUser = cancelledByUser;
+  }
 
   @SerializedName("current_pass")
   private int currentPass = 0;
-
-  public int getCurrentPass() {
-    return currentPass;
-  }
-
-  public void setCurrentPass(int currentPass) {
-    this.currentPass = currentPass;
-  }
-
-  public Duration getDuration() {
-    if (startedAt == null) {
-      return null;
-    }
-    if (finishedAt != null) {
-      return Duration.between(startedAt, finishedAt);
-    }
-    return Duration.between(startedAt, Instant.now());
-  }
 
   /**
    * We need a parameterless constructor for the serialization.
@@ -243,6 +232,24 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     }
 
     return FileFormat.UNKNOWN;
+  }
+
+  public int getCurrentPass() {
+    return currentPass;
+  }
+
+  public void setCurrentPass(int currentPass) {
+    this.currentPass = currentPass;
+  }
+
+  public Duration getDuration() {
+    if (startedAt == null) {
+      return null;
+    }
+    if (finishedAt != null) {
+      return Duration.between(startedAt, finishedAt);
+    }
+    return Duration.between(startedAt, Instant.now());
   }
 
   public boolean setInput(byte[] inputFileContent) {
@@ -407,66 +414,6 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     fireSettingsUpdatedEvent();
 
     return wereSettingsChanged;
-  }
-
-  /**
-   * Merges router settings from all applicable sources using the new settings
-   * architecture.
-   * This method demonstrates the priority-based merging system where settings
-   * from higher
-   * priority sources override those from lower priority sources.
-   * 
-   * Priority order (lowest to highest):
-   * 1. Default settings (priority 0)
-   * 2. JSON file (freerouting.json) (priority 10)
-   * 3. DSN file settings (priority 20)
-   * 4. SES file settings (priority 30)
-   * 5. RULES file settings (priority 40)
-   * 6. GUI settings (priority 50)
-   * 7. Environment variables (priority 55)
-   * 8. CLI settings (priority 60)
-   * 9. API settings (priority 70)
-   * 
-   * @return Merged RouterSettings from all applicable sources
-   */
-  public RouterSettings mergeSettingsFromSources() {
-    java.util.List<app.freerouting.settings.SettingsSource> sources = new java.util.ArrayList<>();
-
-    // 1. Always start with defaults (priority 0)
-    sources.add(new app.freerouting.settings.sources.DefaultSettings());
-
-    // 2. Add JSON file settings (priority 10)
-    sources.add(new app.freerouting.settings.sources.JsonFileSettings());
-
-    // 3. Add DSN file settings if available (priority 20)
-    if (this.input != null && this.input.format == FileFormat.DSN) {
-      // TODO: Parse DSN file and extract settings
-      // For now, we'll skip this until we integrate with the DSN parser
-      // sources.add(new DsnFileSettings(...));
-    }
-
-    // 4. Add RULES file settings if available (priority 40)
-    File rulesFile = getRulesFile();
-    if (rulesFile != null && rulesFile.exists()) {
-      // TODO: Parse RULES file and extract settings
-      // sources.add(new RulesFileSettings(...));
-    }
-
-    // 5. GUI settings would be added here if in GUI mode (priority 50)
-    // This would typically be done by the GUI code before starting a job
-
-    // 6. Add environment variables (priority 55)
-    sources.add(new app.freerouting.settings.sources.EnvironmentVariablesSource());
-
-    // 7. CLI settings would be added here (priority 60)
-    // This would typically be extracted from GlobalSettings
-    // sources.add(new CliSettings(args));
-
-    // 8. API settings would be added here if provided (priority 70)
-    // This would be the highest priority override
-
-    // Merge all sources and return the result
-    return app.freerouting.settings.SettingsMerger.merge(sources);
   }
 
   public void addSettingsUpdatedEventListener(RoutingJobUpdatedEventListener listener) {

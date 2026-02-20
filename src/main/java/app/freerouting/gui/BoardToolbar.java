@@ -7,10 +7,10 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.interactive.DragMenuState;
+import app.freerouting.interactive.InspectMenuState;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.RouteMenuState;
-import app.freerouting.interactive.InspectMenuState;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
@@ -23,11 +23,19 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.Arrays;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 
 /**
@@ -50,11 +58,46 @@ class BoardToolbar extends JPanel {
   private final JButton delete_all_tracks_button;
   private final BoardFrame board_frame;
 
+  // Debug controls
+  private JButton vars_play_button;
+  private JButton vars_pause_button;
+  private JButton vars_next_button;
+  private JButton vars_previous_button;
+
+  private boolean isShiftDown = false;
+
   /**
    * Creates a new instance of BoardToolbarPanel
    */
   BoardToolbar(BoardFrame p_board_frame, boolean p_disable_select_mode) {
     this.board_frame = p_board_frame;
+
+    // Listen for Shift key globally to update icons
+    KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+      @Override
+      public boolean dispatchKeyEvent(KeyEvent e) {
+        if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_SHIFT) {
+          if (!isShiftDown) {
+            isShiftDown = true;
+            updateDebugIcons();
+          }
+        } else if (e.getID() == KeyEvent.KEY_RELEASED && e.getKeyCode() == KeyEvent.VK_SHIFT) {
+          if (isShiftDown) {
+            isShiftDown = false;
+            updateDebugIcons();
+          }
+        }
+        return false;
+      }
+    });
+
+    // Setup Global Keyboard Shortcuts for Arrows
+    setupKeyboardShortcuts();
+
+    // Register listener for debug state changes
+    app.freerouting.debug.DebugControl.getInstance().addDebugStateListener(isPaused -> {
+      SwingUtilities.invokeLater(this::updateDebugButtonsState);
+    });
 
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
@@ -130,7 +173,7 @@ class BoardToolbar extends JPanel {
           .stream(routingJobs)
           .findFirst()
           .get();
-      guiRoutingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
+      guiRoutingJob.routerSettings = board_frame.board_panel.board_handling.settingsMerger.merge();
       InteractiveActionThread thread = board_frame.board_panel.board_handling
           .start_autorouter_and_route_optimizer(guiRoutingJob);
 
@@ -138,6 +181,22 @@ class BoardToolbar extends JPanel {
         // Add the auto-router listener to save the design file when the auto-router is
         // running
         thread.addListener(board_frame.board_panel.board_handling.autorouter_listener);
+      }
+
+      if (Freerouting.globalSettings.debugSettings.singleStepExecution) {
+        app.freerouting.debug.DebugControl.getInstance().reset();
+        app.freerouting.debug.DebugControl.getInstance().resetDebugState();
+
+        // Since we reset(), it defaults to PAUSED if singleStep enabled.
+        // So Enable Play/Next/Prev, Disable Pause
+        if (vars_play_button != null)
+          vars_play_button.setEnabled(true);
+        if (vars_next_button != null)
+          vars_next_button.setEnabled(true);
+        if (vars_previous_button != null)
+          vars_previous_button.setEnabled(true);
+        if (vars_pause_button != null)
+          vars_pause_button.setEnabled(false);
       }
     });
     toolbar_autoroute_button.addActionListener(
@@ -176,7 +235,7 @@ class BoardToolbar extends JPanel {
       // update the board frame
       BoardStatistics boardStatistics = board.get_statistics();
       board_frame.screen_messages.set_board_score(
-          boardStatistics.getNormalizedScore(globalSettings.routerSettings.scoring),
+          boardStatistics.getNormalizedScore(board_frame.routingJob.routerSettings.scoring),
           boardStatistics.connections.incompleteCount,
           boardStatistics.clearanceViolations.totalCount);
     });
@@ -253,6 +312,67 @@ class BoardToolbar extends JPanel {
     middle_toolbar.add(toolbar_display_all_button);
 
     this.add(middle_toolbar, BorderLayout.CENTER);
+
+    // Add Debug Controls if enabled
+    if (Freerouting.globalSettings.debugSettings.singleStepExecution) {
+      vars_play_button = new JButton();
+      vars_pause_button = new JButton();
+      vars_next_button = new JButton();
+      vars_previous_button = new JButton();
+
+      middle_toolbar.addSeparator();
+
+      // Previous Button
+      tm.setText(vars_previous_button, "debug_previous");
+      if (vars_previous_button.getText().startsWith("!"))
+        vars_previous_button.setText("previous"); // Fallback
+      vars_previous_button.addActionListener(_ -> {
+        handlePreviousStep();
+      });
+      vars_previous_button.setEnabled(false); // Initially disabled
+      middle_toolbar.add(vars_previous_button);
+
+      // Play Button
+      tm.setText(vars_play_button, "debug_play");
+      if (vars_play_button.getText().startsWith("!"))
+        vars_play_button.setText("Play"); // Fallback
+      vars_play_button.addActionListener(_ -> {
+        app.freerouting.debug.DebugControl.getInstance().resume();
+        vars_pause_button.setEnabled(true);
+        vars_play_button.setEnabled(false);
+        vars_next_button.setEnabled(false);
+        vars_previous_button.setEnabled(false);
+      });
+      vars_play_button.setEnabled(false); // Initially disabled
+      middle_toolbar.add(vars_play_button);
+
+      // Pause Button
+      tm.setText(vars_pause_button, "debug_pause"); // Key needs to exist or fallback
+      if (vars_pause_button.getText().startsWith("!"))
+        vars_pause_button.setText("Pause"); // Fallback
+      vars_pause_button.addActionListener(_ -> {
+        app.freerouting.debug.DebugControl.getInstance().pause();
+        updateDebugButtonsState();
+      });
+      vars_pause_button.setEnabled(false); // Initially disabled
+      middle_toolbar.add(vars_pause_button);
+
+      // Next Button
+      tm.setText(vars_next_button, "debug_next");
+      if (vars_next_button.getText().startsWith("!"))
+        vars_next_button.setText("Next"); // Fallback
+      vars_next_button.addActionListener(_ -> {
+        handleNextStep();
+      });
+      vars_next_button.setEnabled(false); // Initially disabled
+      middle_toolbar.add(vars_next_button);
+
+      // Logic:
+      // Running: Pause Enabled, Play Disabled, Next Disabled.
+      // Paused: Pause Disabled, Play Enabled, Next Enabled.
+
+      middle_toolbar.addSeparator();
+    }
 
     // create the right toolbar
 
@@ -366,5 +486,130 @@ class BoardToolbar extends JPanel {
         this.unitSelectionPanel.setSelectedValue("unit_um");
         break;
     }
+  }
+
+  private void setupKeyboardShortcuts() {
+    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "debugNext");
+    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0),
+        "debugPrevious");
+    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+        .put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), "debugFastForward");
+    this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+        .put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), "debugRewind");
+
+    this.getActionMap().put("debugNext", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (vars_next_button != null && vars_next_button.isEnabled())
+          handleNextStep();
+      }
+    });
+    this.getActionMap().put("debugPrevious", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (vars_previous_button != null && vars_previous_button.isEnabled())
+          handlePreviousStep();
+      }
+    });
+    // Map Shift+Arrow to same handlers, the handlers check the Shift state or we
+    // can pass a flag.
+    // Actually the handler checks isShiftDown global flag or we can just call the
+    // shifted logic directly.
+    this.getActionMap().put("debugFastForward", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (vars_next_button != null && vars_next_button.isEnabled()) {
+          // Ensure we force "shift" behavior even if key dispatcher missed something
+          // (redundancy)
+          isShiftDown = true;
+          try {
+            handleNextStep();
+          } finally {
+            // We don't want to permanently set it true if the user actually held it,
+            // but if this action triggered, Shift IS down.
+            // The KeyDispatcher handles synchronization, but for the action context let's
+            // be safe.
+          }
+        }
+      }
+    });
+    this.getActionMap().put("debugRewind", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (vars_previous_button != null && vars_previous_button.isEnabled()) {
+          isShiftDown = true;
+          handlePreviousStep();
+        }
+      }
+    });
+  }
+
+  private void handleNextStep() {
+    if (isShiftDown) {
+      app.freerouting.debug.DebugControl.getInstance().convertToFastForward();
+      updateDebugButtonsState();
+    } else {
+      app.freerouting.debug.DebugControl.getInstance().next();
+    }
+  }
+
+  private void handlePreviousStep() {
+    var debugControl = app.freerouting.debug.DebugControl.getInstance();
+    if (isShiftDown) {
+      int targetNet = debugControl.peekLastStepNet();
+      // Rewind while the net is the same
+      while (debugControl.shouldContinueRewind(targetNet)) {
+        board_frame.board_panel.board_handling.cancel_state();
+        board_frame.board_panel.board_handling.undo();
+        debugControl.popLastStepNet();
+        // Update stats
+      }
+      board_frame.refresh_windows();
+    } else {
+      // Single Step Back
+      board_frame.board_panel.board_handling.cancel_state();
+      board_frame.board_panel.board_handling.undo();
+      debugControl.popLastStepNet();
+      board_frame.refresh_windows();
+    }
+  }
+
+  private void updateDebugButtonsState() {
+    boolean isPaused = app.freerouting.debug.DebugControl.getInstance().isPaused();
+    if (vars_pause_button != null)
+      vars_pause_button.setEnabled(!isPaused);
+    if (vars_play_button != null)
+      vars_play_button.setEnabled(isPaused);
+    if (vars_next_button != null)
+      vars_next_button.setEnabled(isPaused);
+    if (vars_previous_button != null)
+      vars_previous_button.setEnabled(isPaused);
+  }
+
+  private void updateDebugIcons() {
+    if (vars_next_button == null || vars_previous_button == null)
+      return;
+
+    TextManager tm = new TextManager(this.getClass(), board_frame.get_locale());
+    if (isShiftDown) {
+      tm.setText(vars_next_button, "debug_fast_forward");
+      tm.setText(vars_previous_button, "debug_rewind");
+    } else {
+      tm.setText(vars_next_button, "debug_next");
+      if (vars_next_button.getText().startsWith("!"))
+        vars_next_button.setText("Next");
+
+      tm.setText(vars_previous_button, "debug_previous");
+      if (vars_previous_button.getText().startsWith("!"))
+        vars_previous_button.setText("Previous");
+    }
+
+    // Reset fonts to the icon size AFTER TextManager (which scales them)
+    // to avoid them being larger than the rest of the toolbar
+    Font nextFont = vars_next_button.getFont().deriveFont(ICON_FONT_SIZE);
+    vars_next_button.setFont(nextFont);
+
+    Font prevFont = vars_previous_button.getFont().deriveFont(ICON_FONT_SIZE);
+    vars_previous_button.setFont(prevFont);
   }
 }

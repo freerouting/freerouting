@@ -9,6 +9,7 @@ public enum RoutingJobState {
   PAUSED, // The job is paused and can be resumed
   COMPLETED, // The job has been completed successfully
   TIMED_OUT, // The job has been timed out
+  STOPPING, // The job is in the process of being stopped
   CANCELLED, // The job has been cancelled by the user
   TERMINATED // The job has been terminated due to an error
 }

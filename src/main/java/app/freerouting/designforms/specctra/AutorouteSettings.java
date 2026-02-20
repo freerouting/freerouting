@@ -13,8 +13,8 @@ public class AutorouteSettings {
   }
 
   static RouterSettings read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
-    RouterSettings result = new RouterSettings(p_layer_structure.arr.length);
-    boolean with_fanout = false;
+    RouterSettings result = new RouterSettings();
+    result.setLayerCount(p_layer_structure.arr.length);
     boolean with_autoroute = true;
     boolean with_postroute = true;
     Object next_token = null;
@@ -37,7 +37,7 @@ public class AutorouteSettings {
       }
       if (prev_token == Keyword.OPEN_BRACKET) {
         if (next_token == Keyword.FANOUT) {
-          with_fanout = DsnFile.read_on_off_scope(p_scanner);
+          DsnFile.read_on_off_scope(p_scanner);
         } else if (next_token == Keyword.AUTOROUTE) {
           with_autoroute = DsnFile.read_on_off_scope(p_scanner);
         } else if (next_token == Keyword.POSTROUTE) {

@@ -17,14 +17,14 @@ import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
+import com.sun.management.ThreadMXBean;
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.lang.management.ManagementFactory;
-import com.sun.management.ThreadMXBean;
 
 /**
  * Handles the sequencing of the auto-router passes.
@@ -46,11 +46,10 @@ public class BatchAutorouterThread extends StoppableThread {
   private final int passNo;
 
   public FloatLine latest_air_line;
-  private int routedCount = 0;
-  private int failedCount = 0;
-
   public float cpuTimeUsed = 0.0f;
   public float maxMemoryUsed = 0.0f;
+  private int routedCount = 0;
+  private int failedCount = 0;
 
   public BatchAutorouterThread(RoutingBoard board, List<Item> autorouteItemList, int passNo,
       RouterSettings routerSettings, int startRipupCosts, int tracePullTightAccuracy,
@@ -497,8 +496,19 @@ public class BatchAutorouterThread extends StoppableThread {
   }
 
   private void remove_tails(Item.StopConnectionOption p_stop_connection_option) {
+    FRLogger.trace("BatchAutorouterThread.remove_tails", "starting_tail_removal",
+        FRLogger.buildTracePayload("autoroute", "cleanup", "start",
+            "stop_option=" + p_stop_connection_option),
+        "",
+        null);
     board.start_marking_changed_area();
-    board.remove_trace_tails(-1, p_stop_connection_option);
+    boolean tails_removed = board.remove_trace_tails(-1, p_stop_connection_option);
+    FRLogger.trace("BatchAutorouterThread.remove_tails", "tail_removal_complete",
+        FRLogger.buildTracePayload("autoroute", "cleanup", "complete",
+            "tails_removed=" + tails_removed
+                + " stop_option=" + p_stop_connection_option),
+        "",
+        null);
     board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, this.trace_cost_arr, this,
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
   }

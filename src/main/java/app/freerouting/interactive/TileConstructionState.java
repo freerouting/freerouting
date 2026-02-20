@@ -66,7 +66,7 @@ public class TileConstructionState extends CornerItemConstructionState {
       edge_lines[corner_count - 1] = new Line(prev_corner, first_corner);
       TileShape obstacle_shape = TileShape.get_instance(edge_lines);
       RoutingBoard board = hdlg.get_routing_board();
-      int layer = hdlg.settings.layer;
+      int layer = hdlg.interactiveSettings.layer;
       int cl_class = BoardRules.clearance_class_none();
 
       construction_succeeded = board.check_shape(obstacle_shape, layer, new int[0], cl_class);

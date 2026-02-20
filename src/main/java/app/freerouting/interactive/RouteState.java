@@ -62,7 +62,7 @@ public class RouteState extends InteractiveState {
     if (picked_item instanceof Pin pin && net_count > 1) {
       // tie pin, remove nets, which are already connected to this pin on the current
       // layer.
-      route_net_no_arr = get_route_net_numbers_at_tie_pin(pin, p_board_handling.settings.layer);
+      route_net_no_arr = get_route_net_numbers_at_tie_pin(pin, p_board_handling.interactiveSettings.layer);
     } else {
       route_net_no_arr = new int[net_count];
       for (int i = 0; i < net_count; i++) {
@@ -102,7 +102,7 @@ public class RouteState extends InteractiveState {
           start_ok = false;
         }
       }
-      if (start_ok && !p_board_handling.settings.manual_rule_selection) {
+      if (start_ok && !p_board_handling.interactiveSettings.manual_rule_selection) {
         // Pick up the half with and the clearance class of the found trace.
         int[] new_trace_half_widths = new int[trace_half_widths.length];
         System.arraycopy(trace_half_widths, 0, new_trace_half_widths, 0, trace_half_widths.length);
@@ -125,7 +125,7 @@ public class RouteState extends InteractiveState {
       return null;
     }
     // Switch to stitch mode for nets, which are shove fixed.
-    boolean is_stitch_route = p_board_handling.settings.is_stitch_route || curr_net.get_class().is_shove_fixed()
+    boolean is_stitch_route = p_board_handling.interactiveSettings.is_stitch_route || curr_net.get_class().is_shove_fixed()
         || !curr_net.get_class().get_pull_tight();
     routing_board.generate_snapshot();
     RouteState new_instance;
@@ -136,14 +136,14 @@ public class RouteState extends InteractiveState {
     }
     new_instance.routing_target_set = picked_item.get_unconnected_set(-1);
 
-    new_instance.route = new Route(location, p_board_handling.settings.layer, trace_half_widths, layer_active_arr,
+    new_instance.route = new Route(location, p_board_handling.interactiveSettings.layer, trace_half_widths, layer_active_arr,
         route_net_no_arr, trace_clearance_class,
-        p_board_handling.get_via_rule(route_net_no_arr[0]), p_board_handling.settings.push_enabled,
-        p_board_handling.settings.trace_pull_tight_region_width,
-        p_board_handling.settings.trace_pull_tight_accuracy, picked_item, new_instance.routing_target_set,
+        p_board_handling.get_via_rule(route_net_no_arr[0]), p_board_handling.interactiveSettings.push_enabled,
+        p_board_handling.interactiveSettings.trace_pull_tight_region_width,
+        p_board_handling.interactiveSettings.trace_pull_tight_accuracy, picked_item, new_instance.routing_target_set,
         routing_board, is_stitch_route,
-        p_board_handling.settings.automatic_neckdown, p_board_handling.settings.via_snap_to_smd_center,
-        p_board_handling.settings.hilight_routing_obstacle);
+        p_board_handling.interactiveSettings.automatic_neckdown, p_board_handling.interactiveSettings.via_snap_to_smd_center,
+        p_board_handling.interactiveSettings.hilight_routing_obstacle);
     new_instance.observers_activated = !routing_board.observers_active();
     if (new_instance.observers_activated) {
       routing_board.start_notify_observers();
@@ -164,9 +164,9 @@ public class RouteState extends InteractiveState {
      * look if an already existing trace ends at p_start_corner
      * and pick it up in this case.
      */
-    Item picked_item = routing_board.pick_nearest_routing_item(p_location, p_hdlg.settings.layer, null);
+    Item picked_item = routing_board.pick_nearest_routing_item(p_location, p_hdlg.interactiveSettings.layer, null);
     int layer_count = routing_board.get_layer_count();
-    if (picked_item == null && p_hdlg.settings.select_on_all_visible_layers) {
+    if (picked_item == null && p_hdlg.interactiveSettings.select_on_all_visible_layers) {
       // Nothing found on preferred layer, try the other visible layers.
       // Prefer the outer layers.
       picked_item = pick_routing_item(p_location, 0, p_hdlg);
@@ -200,7 +200,7 @@ public class RouteState extends InteractiveState {
 
   private static Item pick_routing_item(IntPoint p_location, int p_layer_no, GuiBoardManager p_hdlg) {
 
-    if (p_layer_no == p_hdlg.settings.layer || (p_hdlg.graphics_context.get_layer_visibility(p_layer_no) <= 0)) {
+    if (p_layer_no == p_hdlg.interactiveSettings.layer || (p_hdlg.graphics_context.get_layer_visibility(p_layer_no) <= 0)) {
       return null;
     }
     Item picked_item = p_hdlg.get_routing_board().pick_nearest_routing_item(p_location, p_layer_no, null);
@@ -258,7 +258,7 @@ public class RouteState extends InteractiveState {
     } else if (p_key_char == '+') {
       // change to the next signal layer
       LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
-      int current_layer_no = hdlg.settings.layer;
+      int current_layer_no = hdlg.interactiveSettings.layer;
       do {
         ++current_layer_no;
       } while (current_layer_no < layer_structure.arr.length && !layer_structure.arr[current_layer_no].is_signal);
@@ -268,7 +268,7 @@ public class RouteState extends InteractiveState {
     } else if (p_key_char == '-') {
       // change to the previous signal layer
       LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
-      int current_layer_no = hdlg.settings.layer;
+      int current_layer_no = hdlg.interactiveSettings.layer;
       do {
         --current_layer_no;
       } while (current_layer_no >= 0 && !layer_structure.arr[current_layer_no].is_signal);
@@ -313,13 +313,13 @@ public class RouteState extends InteractiveState {
 
   @Override
   public InteractiveState cancel() {
-    Trace tail = hdlg.get_routing_board().get_trace_tail(route.get_last_corner(), hdlg.settings.layer,
+    Trace tail = hdlg.get_routing_board().get_trace_tail(route.get_last_corner(), hdlg.interactiveSettings.layer,
         route.net_no_arr);
     if (tail != null) {
       Collection<Item> remove_items = tail.get_connection_items(Item.StopConnectionOption.VIA);
-      if (hdlg.settings.push_enabled) {
-        hdlg.get_routing_board().remove_items_and_pull_tight(remove_items, hdlg.settings.trace_pull_tight_region_width,
-            hdlg.settings.trace_pull_tight_accuracy);
+      if (hdlg.interactiveSettings.push_enabled) {
+        hdlg.get_routing_board().remove_items_and_pull_tight(remove_items, hdlg.interactiveSettings.trace_pull_tight_region_width,
+            hdlg.interactiveSettings.trace_pull_tight_accuracy);
       } else {
         hdlg.get_routing_board().remove_items(remove_items);
       }
@@ -348,7 +348,7 @@ public class RouteState extends InteractiveState {
       if (change_layer_succeeded) {
         boolean connected_to_plane = false;
         // check, if the layer change resulted in a connection to a power plane.
-        int old_layer = hdlg.settings.get_layer();
+        int old_layer = hdlg.interactiveSettings.get_layer();
         ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.VIAS);
         Collection<Item> picked_items = hdlg.get_routing_board().pick_items(route.get_last_corner(), old_layer,
             selection_filter);

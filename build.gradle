@@ -11,6 +11,7 @@ plugins {
     id 'net.nemerosa.versioning' version '3.1.0'
     id 'com.github.ben-manes.versions' version '0.52.0'
     id 'org.openrewrite.rewrite' version '7.22.0'
+    id "com.diffplug.spotless" version "8.2.1"
 }
 
 java {
@@ -138,6 +139,8 @@ dependencies {
     rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.23.0'
     rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.23.0'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
+    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:2.3.0'
+    rewrite 'org.openrewrite.recipe:rewrite-gradle:2.3.0'
 }
 
 ext {
@@ -168,6 +171,7 @@ jar {
 }
 
 tasks.register('executableJar', Jar) {
+    archiveBaseName = 'freerouting-current'
     archiveClassifier = 'executable'
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -231,10 +235,109 @@ sourceSets.main.java.srcDirs += layout.buildDirectory.dir("generated-src")
 
 compileJava.dependsOn += 'writeVersionInfo'
 
+// ==================== V1.9 BUILD CONFIGURATION ====================
+
+// V1.9 Source Set
+sourceSets {
+    v19 {
+        java {
+            srcDirs = ['src_v19/main/java', layout.buildDirectory.dir("generated-src-v19")]
+        }
+        resources {
+            // Use v1.9 resources if they exist, otherwise fall back to current resources
+            srcDirs = fileTree('src_v19/main/resources').isEmpty() ?
+                      ['src/main/resources'] :
+                      ['src_v19/main/resources']
+        }
+        compileClasspath += sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
+}
+
+// V1.9 Version Info Generator
+tasks.register('writeVersionInfoV19') {
+    def outputDir = layout.buildDirectory.dir("generated-src-v19/app/freerouting/constants")
+    def versionId = "1.9.0"
+    def buildDateValue = buildDate
+
+    outputs.dir(outputDir)
+
+    doLast {
+        def buildInfoCode = outputDir.get().file("Constants.java").asFile
+        buildInfoCode.getParentFile().mkdirs()
+        buildInfoCode.write(
+                """
+            package app.freerouting.constants;
+            public final class Constants {
+              public static final String FREEROUTING_VERSION = \"${versionId}\";
+              public static final String FREEROUTING_BUILD_DATE = \"${buildDateValue}\";
+            }
+            """.stripIndent().trim()
+        )
+    }
+}
+
+compileV19Java.dependsOn 'writeVersionInfoV19'
+
+// V1.9 Executable JAR
+tasks.register('executableV19Jar', Jar) {
+    archiveBaseName = 'freerouting-1.9.0'
+    archiveClassifier = 'executable'
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from {
+        configurations.runtimeClasspath.collect { zipTree(it) }
+    } {
+        exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+    }
+
+    from files(sourceSets.v19.output)
+
+    manifest {
+        attributes manifestAttributes + ['Main-Class': 'app.freerouting.gui.MainApplication']
+    }
+}
+
+executableV19Jar.dependsOn compileV19Java
+
+// Build both versions
+tasks.register('buildBothVersions') {
+    group = 'build'
+    description = 'Builds both current and v1.9 executable JARs'
+    dependsOn executableJar, executableV19Jar
+}
+
+// Run v1.9 version
+tasks.register('runV19', JavaExec) {
+    group = 'application'
+    description = 'Run v1.9 version'
+    classpath = sourceSets.v19.runtimeClasspath
+    mainClass = project.mainClassName
+}
+
+// ==================== END V1.9 CONFIGURATION ====================
+
 
 tasks.register('dist', Copy) {
     dependsOn assemble
-    from 'build/libs/freerouting-executable.jar'
+    from 'build/libs/freerouting-current-executable.jar'
+    into 'build/dist/'
+}
+
+tasks.register('distV19', Copy) {
+    group = 'distribution'
+    description = 'Copy v1.9 executable JAR to dist folder'
+    dependsOn executableV19Jar
+    from 'build/libs/freerouting-1.9.0-executable.jar'
+    into 'build/dist/'
+}
+
+tasks.register('distBoth', Copy) {
+    group = 'distribution'
+    description = 'Copy both current and v1.9 executable JARs to dist folder'
+    dependsOn executableJar, executableV19Jar
+    from 'build/libs/freerouting-current-executable.jar', 'build/libs/freerouting-1.9.0-executable.jar'
     into 'build/dist/'
 }
 
@@ -258,6 +361,12 @@ tasks.register('buildDockerImage', Exec) {
     commandLine 'docker', 'build', '-t', 'freerouting/freerouting:2.0.1', '.'
 }
 
+tasks.register('installLocalGitHook', Copy) {
+    from new File(rootProject.rootDir, 'scripts/pre-commit')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    fileMode 0775
+}
+
 test {
     testLogging {
         showExceptions = true
@@ -268,11 +377,29 @@ test {
 }
 
 rewrite {
-    activeRecipe("org.openrewrite.staticanalysis.CodeCleanup")
+    // --- PHASE 1: Hygiene (Run first to reduce noise) ---
+    // activeRecipe("org.openrewrite.java.cleanup.RemoveUnusedImports")
+    // activeRecipe("org.openrewrite.java.cleanup.CommonStaticAnalysis")
+    // activeRecipe("org.openrewrite.java.format.AutoFormat")
+
+    // --- PHASE 2: Naming Convention (Your specific snake_case fix) ---
+    // activeRecipe("org.openrewrite.staticanalysis.RenameLocalVariablesToCamelCase")
+    // activeRecipe("org.openrewrite.staticanalysis.RenamePrivateFieldsToCamelCase")
+
+    // --- PHASE 3: Testing Modernization (JUnit 5 / Jupiter) ---
+    // activeRecipe("org.openrewrite.java.testing.junit5.JUnit5BestPractices")
+
+    // --- PHASE 4: Build System (Gradle 9) ---
+    // activeRecipe("org.openrewrite.gradle.MigrateToGradle9")
+
+    // --- PHASE 5: The Big Upgrade (Java 25) ---
+    // Note: This includes the logic from 17 and 21 automatically.
+    // activeRecipe("org.openrewrite.java.migrate.UpgradeToJava25")
+
+    // --- PHASE 6: Modern Java Features (Optional Polish) ---
+    // activeRecipe("org.openrewrite.java.cleanup.UsePrimitivePatterns")
+
+    // --- Configuration ---
     checkstyleConfigFile = file("google_checks.xml")
-    //activeRecipe("org.openrewrite.java.format.AutoFormat")
-    //activeRecipe("org.openrewrite.java.migrate.UpgradeToJava17")
-    //activeRecipe("org.openrewrite.java.migrate.UpgradeToJava21")
-    //activeRecipe("org.openrewrite.java.migrate.UpgradeToJava25")
     setExportDatatables(true)
 }

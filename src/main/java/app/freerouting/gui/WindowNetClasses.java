@@ -228,7 +228,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_frame.board_panel.board_handling.get_routing_board().rules.append_net_class(board_frame.get_locale());
+      board_frame.board_panel.board_handling.get_routing_board().rules.append_net_class();
       adjust_table();
     }
   }

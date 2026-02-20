@@ -9,7 +9,10 @@ import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.settings.GlobalSettings;
-import app.freerouting.settings.RouterSettings;
+import app.freerouting.settings.SettingsMerger;
+import app.freerouting.settings.sources.DefaultSettings;
+import app.freerouting.settings.sources.DsnFileSettings;
+import app.freerouting.settings.sources.TestingSettings;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -19,16 +22,18 @@ import org.junit.jupiter.api.BeforeEach;
 public class TestBasedOnAnIssue {
 
   protected RoutingJobScheduler scheduler;
-  protected RouterSettings settings;
 
   @BeforeEach
   protected void setUp() {
     Freerouting.globalSettings = new GlobalSettings();
-    settings = Freerouting.globalSettings.routerSettings;
     scheduler = RoutingJobScheduler.getInstance();
   }
 
   protected RoutingJob GetRoutingJob(String filename) {
+    return GetRoutingJob(filename, null);
+  }
+
+  protected RoutingJob GetRoutingJob(String filename, TestingSettings testingSettings) {
     // Create a new session
     UUID sessionId = UUID.randomUUID();
     Session session = SessionManager
@@ -66,29 +71,40 @@ public class TestBasedOnAnIssue {
       var statsBefore = new BoardStatistics(job.input
           .getData()
           .readAllBytes(), job.input.format);
-      var jobSettings = new RouterSettings(statsBefore.layers.totalCount);
-      job.routerSettings.applyNewValuesFrom(jobSettings);
+
+      SettingsMerger merger = new SettingsMerger(new DefaultSettings(),
+          new DsnFileSettings(job.input.getData(), job.input.getFilename()));
+
+      if (testingSettings == null) {
+        testingSettings = new TestingSettings();
+      }
+
+      testingSettings.setJobTimeoutString("00:01:00");
+      testingSettings.setMaxPasses(100);
+      merger.addOrReplaceSources(testingSettings);
+
+      // Inject into global prototype so it survives Scheduler re-initialization
+      Freerouting.globalSettings.settingsMergerProtype.addOrReplaceSources(testingSettings);
+
+      job.routerSettings = merger.merge();
+
     } catch (IOException e) {
       throw new RuntimeException(testFile + " not found.", e);
     }
 
-    job.routerSettings.jobTimeoutString = "00:01:00";
-    job.routerSettings.maxPasses = 100;
-
     return job;
   }
 
-  protected RoutingJob RunRoutingJob(RoutingJob job, RouterSettings settings) {
+  protected RoutingJob RunRoutingJob(RoutingJob job) {
     if (job == null) {
       throw new IllegalArgumentException("The job cannot be null.");
     }
 
-    job.routerSettings = settings;
     scheduler.enqueueJob(job);
     job.state = RoutingJobState.READY_TO_START;
 
     long startTime = System.currentTimeMillis();
-    long timeoutInMillis = TextManager.parseTimespanString(settings.jobTimeoutString) * 1000;
+    long timeoutInMillis = TextManager.parseTimespanString(job.routerSettings.jobTimeoutString) * 1000;
 
     while ((job.state != RoutingJobState.COMPLETED) && (job.state != RoutingJobState.CANCELLED)
         && (job.state != RoutingJobState.TERMINATED)) {

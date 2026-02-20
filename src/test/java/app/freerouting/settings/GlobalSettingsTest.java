@@ -31,10 +31,22 @@ class GlobalSettingsTest {
                 assertEquals(10, settings.routerSettings.maxPasses);
                 assertEquals("/tmp", settings.guiSettings.inputDirectory);
 
-                assertFalse(settings.featureFlags.logging);
+                assertFalse(settings.logging.file.enabled);
 
                 // Should be no warnings
                 assertEquals(0, FRLogger.getLogEntries().getWarningCount(), "Should have no warnings for valid args");
+        }
+
+        @Test
+        void testApplyCommandLineArguments_LogLevel() {
+                GlobalSettings settings = new GlobalSettings();
+                String[] args = new String[] {
+                                "-ll", "DEBUG"
+                };
+
+                settings.applyCommandLineArguments(args);
+
+                assertEquals("DEBUG", settings.logging.console.level);
         }
 
         @Test

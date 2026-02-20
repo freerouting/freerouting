@@ -1,9 +1,9 @@
 package app.freerouting.settings;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -18,7 +18,7 @@ class GlobalSettingsEnvironmentTest {
         GlobalSettings settings = new GlobalSettings();
 
         // Store original router settings
-        int originalMaxPasses = settings.routerSettings.maxPasses;
+        Integer originalMaxPasses = settings.routerSettings.maxPasses;
 
         // Set environment variables (simulated by calling setValue directly)
         // In real scenario, these would be system environment variables

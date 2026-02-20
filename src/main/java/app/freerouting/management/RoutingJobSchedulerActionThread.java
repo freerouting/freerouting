@@ -1,9 +1,7 @@
 package app.freerouting.management;
 
-import static app.freerouting.Freerouting.globalSettings;
-
+import app.freerouting.Freerouting;
 import app.freerouting.autoroute.BatchAutorouter;
-import app.freerouting.autoroute.BatchAutorouterV19;
 import app.freerouting.autoroute.BatchOptimizer;
 import app.freerouting.autoroute.NamedAlgorithm;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
@@ -63,7 +61,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           e.printStackTrace();
         }
 
-        if (job.state == RoutingJobState.RUNNING) {
+        if (job.state == RoutingJobState.RUNNING || job.state == RoutingJobState.STOPPING) {
           // Get the CPU time and memory usage of the job thread
           this.monitorCpuAndMemoryUsage(job);
 
@@ -98,16 +96,12 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       NamedAlgorithm router;
       String algorithm = job.routerSettings.algorithm;
 
-      if (RouterSettings.ALGORITHM_V19.equals(algorithm)) {
-        job.logInfo("Using V1.9 router algorithm (freerouting-router-v19)");
-        router = new BatchAutorouterV19(job);
-      } else {
-        // Default to current router
-        if (!RouterSettings.ALGORITHM_CURRENT.equals(algorithm)) {
-          job.logInfo("Unknown router algorithm '" + algorithm + "', using default (freerouting-router)");
-        }
-        router = new BatchAutorouter(job);
+      if (!RouterSettings.ALGORITHM_CURRENT.equals(algorithm)) {
+        job.logInfo("Unknown router algorithm '" + algorithm + "', using default (freerouting-router)");
       }
+      // Always use standard BatchAutorouter
+      router = new BatchAutorouter(job);
+      BatchAutorouter batchRouter = (BatchAutorouter) router;
 
       router.addBoardUpdatedEventListener(new BoardUpdatedEventListener() {
         @Override
@@ -116,24 +110,12 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         }
       });
 
-      // Call runBatchLoop - both router types have this method
-      if (router instanceof BatchAutorouterV19) {
-        ((BatchAutorouterV19) router).runBatchLoop();
-      } else {
-        ((BatchAutorouter) router).runBatchLoop();
-      }
+      // Call runBatchLoop
+      batchRouter.runBatchLoop();
 
       // Log session summary
-      Instant sessionStartTime = null;
-      int initialUnroutedCount = 0;
-
-      if (router instanceof BatchAutorouterV19) {
-        sessionStartTime = ((BatchAutorouterV19) router).getSessionStartTime();
-        initialUnroutedCount = ((BatchAutorouterV19) router).getInitialUnroutedCount();
-      } else if (router instanceof BatchAutorouter) {
-        sessionStartTime = ((BatchAutorouter) router).getSessionStartTime();
-        initialUnroutedCount = ((BatchAutorouter) router).getInitialUnroutedCount();
-      }
+      Instant sessionStartTime = batchRouter.getSessionStartTime();
+      int initialUnroutedCount = batchRouter.getInitialUnroutedCount();
 
       if (sessionStartTime != null) {
         Instant sessionEndTime = Instant.now();
@@ -153,19 +135,21 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           completionStatus = "completed with timeout:";
         } else if (job.thread.isStopRequested()) {
           completionStatus = "interrupted:";
+          if (job.isCancelledByUser()) {
+            completionStatus = "cancelled:";
+          }
         }
 
         String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, completed in %.2f seconds, final score: %.2f (%d unrouted, %d violations), using %.2f total CPU seconds, %.2f GB total allocated, and %.0f MB peak heap usage.",
+            "Auto-router session %s started with %d unrouted nets, completed in %s, final score: %s, using %s total CPU seconds, %s GB total allocated, and %s MB peak heap usage.",
             completionStatus,
             initialUnroutedCount,
-            totalTime,
-            finalStats.getNormalizedScore(job.routerSettings.scoring),
-            finalStats.connections.incompleteCount,
-            finalStats.clearanceViolations.totalCount,
-            job.resourceUsage.cpuTimeUsed,
-            job.resourceUsage.maxMemoryUsed / 1024.0f,
-            job.resourceUsage.peakMemoryUsed);
+            FRLogger.formatDuration(totalTime),
+            FRLogger.formatScore(finalStats.getNormalizedScore(job.routerSettings.scoring),
+                finalStats.connections.incompleteCount, finalStats.clearanceViolations.totalCount),
+            FRLogger.defaultFloatFormat.format(job.resourceUsage.cpuTimeUsed),
+            FRLogger.defaultFloatFormat.format(job.resourceUsage.maxMemoryUsed / 1024.0f),
+            FRLogger.defaultFloatFormat.format(job.resourceUsage.peakMemoryUsed));
 
         job.logInfo(sessionSummary);
       }
@@ -190,7 +174,13 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     job.finishedAt = Instant.now();
     if (job.state == RoutingJobState.RUNNING) {
       job.state = RoutingJobState.COMPLETED;
-      globalSettings.statistics.incrementJobsCompleted();
+      Freerouting.globalSettings.statistics.incrementJobsCompleted();
+    } else if (job.state == RoutingJobState.STOPPING) {
+      if (job.isCancelledByUser()) {
+        job.state = RoutingJobState.CANCELLED;
+      } else {
+        job.state = RoutingJobState.COMPLETED;
+      }
     }
   }
 
@@ -249,7 +239,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
     // save the result to the output field as a Specctra SES file
     if (job.output.format == FileFormat.SES) {
-      HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+      HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
       boardManager.replaceRoutingBoard(job.board);
 
       // Save the SES file after the auto-router has finished

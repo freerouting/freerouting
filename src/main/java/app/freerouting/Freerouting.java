@@ -15,6 +15,12 @@ import app.freerouting.management.VersionChecker;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.SettingsMerger;
+import app.freerouting.settings.sources.CliSettings;
+import app.freerouting.settings.sources.DefaultSettings;
+import app.freerouting.settings.sources.DsnFileSettings;
+import app.freerouting.settings.sources.EnvironmentVariablesSource;
+import app.freerouting.settings.sources.JsonFileSettings;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -30,6 +36,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.eclipse.jetty.http.pathmap.ServletPathSpec;
@@ -65,8 +73,12 @@ public class Freerouting {
 
     // Create a new routing job
     RoutingJob routingJob = new RoutingJob(cliSession.id);
+
+    // Load the input file
+    DsnFileSettings inputFileSettings = null;
     try {
       routingJob.setInput(globalSettings.initialInputFile);
+      inputFileSettings = new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename());
     } catch (Exception e) {
       FRLogger.error("Couldn't load the input file '" + globalSettings.initialInputFile + "'", e);
     }
@@ -81,8 +93,11 @@ public class Freerouting {
 
     routingJob.tryToSetOutputFile(new File(globalSettings.initialOutputFile));
 
-    routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
-    routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layers.totalCount);
+    var settingsMerger = globalSettings.settingsMergerProtype.clone();
+    settingsMerger.addOrReplaceSources(
+        new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()));
+
+    routingJob.routerSettings = settingsMerger.merge();
     routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
 
@@ -291,7 +306,8 @@ public class Freerouting {
    * @param args
    */
   void main(String[] args) {
-    FRLogger.traceEntry("MainApplication.main()");
+    // CRITICAL: Set up logging configuration BEFORE any logging occurs
+    // This must happen before FRLogger.traceEntry() or any other logging call
 
     // the first thing we need to do is to determine the user directory, because all
     // settings and logs will be located there
@@ -301,6 +317,8 @@ public class Freerouting {
     // environment variable value
     if (System.getenv("FREEROUTING__USER_DATA_PATH") != null) {
       userdataPath = Path.of(System.getenv("FREEROUTING__USER_DATA_PATH"));
+    } else if (System.getenv("FREEROUTING__LOGGING__FILE__LOCATION") != null) {
+      userdataPath = Path.of(System.getenv("FREEROUTING__LOGGING__FILE__LOCATION"));
     }
     // 3, check if we need to override it with the "--user_data_path={directory}"
     // command line argument
@@ -326,7 +344,7 @@ public class Freerouting {
           .toFile()
           .mkdirs();
     }
-    // 5, check if it exists now, and if it does, apply it to FRLogger
+    // 5, check if it exists now, and if it does, apply it to GlobalSettings
     if (userdataPath
         .toFile()
         .exists()) {
@@ -335,25 +353,94 @@ public class Freerouting {
     // 6, make sure that this settings can't be changed later on
     GlobalSettings.lockUserDataPath();
 
-    // we have a special case if logging must be disabled before the general command
-    // line arguments
-    // are parsed
-    if (args.length > 0 && Arrays
-        .asList(args)
-        .contains("-dl")) {
-      // disable logging
-      FRLogger.disableLogging();
-    } else if (args.length > 0 && Arrays
-        .asList(args)
-        .contains("-ll")) {
-      // get the log level from the command line arguments
-      int logLevelIndex = Arrays
-          .asList(args)
-          .indexOf("-ll") + 1;
-      if (logLevelIndex < args.length) {
-        FRLogger.changeFileLogLevel(args[logLevelIndex]);
+    // Parse logging settings from environment variables and command line arguments
+    // These will be used to configure log4j2 BEFORE it initializes
+    boolean fileLoggingEnabled = true;
+    boolean consoleLoggingEnabled = true;
+    String fileLoggingLevel = "DEBUG";
+    String consoleLoggingLevel = "INFO";
+    String fileLoggingLocation = null;
+    String fileLoggingPattern = null;
+
+    if (System.getenv("FREEROUTING__LOGGING__FILE__ENABLED") != null) {
+      fileLoggingEnabled = Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__FILE__ENABLED"));
+    }
+    if (System.getenv("FREEROUTING__LOGGING__CONSOLE__ENABLED") != null) {
+      consoleLoggingEnabled = Boolean.parseBoolean(System.getenv("FREEROUTING__LOGGING__CONSOLE__ENABLED"));
+    }
+    if (System.getenv("FREEROUTING__LOGGING__FILE__LEVEL") != null) {
+      fileLoggingLevel = System.getenv("FREEROUTING__LOGGING__FILE__LEVEL");
+    }
+    if (System.getenv("FREEROUTING__LOGGING__CONSOLE__LEVEL") != null) {
+      consoleLoggingLevel = System.getenv("FREEROUTING__LOGGING__CONSOLE__LEVEL");
+    }
+    if (System.getenv("FREEROUTING__LOGGING__FILE__LOCATION") != null) {
+      fileLoggingLocation = System.getenv("FREEROUTING__LOGGING__FILE__LOCATION");
+    }
+    if (System.getenv("FREEROUTING__LOGGING__FILE__PATTERN") != null) {
+      fileLoggingPattern = System.getenv("FREEROUTING__LOGGING__FILE__PATTERN");
+    }
+
+    if (args.length > 0) {
+      for (String arg : args) {
+        if (arg.startsWith("--logging.file.enabled=")) {
+          fileLoggingEnabled = Boolean.parseBoolean(arg.substring("--logging.file.enabled=".length()));
+        } else if (arg.startsWith("--logging.console.enabled=")) {
+          consoleLoggingEnabled = Boolean.parseBoolean(arg.substring("--logging.console.enabled=".length()));
+        } else if (arg.startsWith("--logging.file.level=")) {
+          fileLoggingLevel = arg.substring("--logging.file.level=".length());
+        } else if (arg.startsWith("--logging.console.level=")) {
+          consoleLoggingLevel = arg.substring("--logging.console.level=".length());
+        } else if (arg.startsWith("--logging.file.location=")) {
+          fileLoggingLocation = arg.substring("--logging.file.location=".length());
+        } else if (arg.startsWith("--logging.file.pattern=")) {
+          fileLoggingPattern = arg.substring("--logging.file.pattern=".length());
+        } else if (arg.startsWith("--debug.enable_detailed_logging=")) {
+          boolean detailed = Boolean.parseBoolean(arg.substring("--debug.enable_detailed_logging=".length()));
+          if (detailed) {
+            fileLoggingLevel = "TRACE";
+            FRLogger.granularTraceEnabled = true;
+          }
+        } else if ("-dl".equals(arg)) {
+          fileLoggingEnabled = false;
+        } else if ("-ll".equals(arg)) {
+          // simple peek for -ll
+          int index = Arrays.asList(args).indexOf("-ll");
+          if (index >= 0 && index < args.length - 1) {
+            consoleLoggingLevel = args[index + 1];
+          }
+        }
       }
     }
+
+    // Resolve the log file location
+    if (fileLoggingLocation == null || fileLoggingLocation.isBlank()) {
+      fileLoggingLocation = resolveLogPath(null, userdataPath).toString();
+    } else {
+      fileLoggingLocation = resolveLogPath(fileLoggingLocation, userdataPath).toString();
+    }
+
+    // Set system properties for log4j2 ConfigurationFactory to read
+    // This MUST happen before any logging calls
+    System.setProperty("log4j2.configurationFactory", "app.freerouting.logger.Log4j2ConfigurationFactory");
+    System.setProperty("freerouting.logging.console.enabled", String.valueOf(consoleLoggingEnabled));
+    System.setProperty("freerouting.logging.console.level", consoleLoggingLevel);
+    System.setProperty("freerouting.logging.file.enabled", String.valueOf(fileLoggingEnabled));
+    System.setProperty("freerouting.logging.file.level", fileLoggingLevel);
+    System.setProperty("freerouting.logging.file.location", fileLoggingLocation);
+
+    if (fileLoggingPattern != null) {
+      System.setProperty("freerouting.logging.file.pattern", fileLoggingPattern);
+    }
+
+    // FORCE RECONFIGURATION
+    // Log4j2 might have initialized early (before we set these properties).
+    // We force it to reload the configuration using our Factory, which will now see
+    // the correct properties.
+    ((LoggerContext) LogManager.getContext(false)).reconfigure();
+
+    // NOW we can start logging - log4j2 will initialize with our configuration
+    FRLogger.traceEntry("MainApplication.main()");
 
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -392,6 +479,10 @@ public class Freerouting {
     // apply environment variables to the settings
     globalSettings.applyNonRouterEnvironmentVariables();
 
+    // Note: Logging is already configured via system properties set earlier
+    // No need to call ApplyLoggingSettings() - it would cause runtime manipulation
+    // errors
+
     // if we don't have a GUI enabled then we must use the console as our output
     if ((!globalSettings.guiSettings.isEnabled) && (System.console() == null)) {
       FRLogger.warn(
@@ -425,7 +516,7 @@ public class Freerouting {
         + globalSettings.runtimeEnvironment.ram + " MB RAM");
     FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
 
-    // parse the command line arguments
+    // parse the command line arguments (for the non-router settings)
     globalSettings.applyCommandLineArguments(args);
 
     FRLogger.debug("GUI Language: " + globalSettings.currentLocale);
@@ -470,8 +561,7 @@ public class Freerouting {
     int userIdValue = Integer.parseInt(userIdString, 16);
 
     // if the user has disabled analytics, we don't need to check the modulo
-    allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (userIdValue % analyticsModulo == 0)
-        && (globalSettings.userProfileSettings.isTelemetryAllowed);
+    allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (globalSettings.userProfileSettings.isTelemetryAllowed);
 
     if (!allowAnalytics) {
       FRLogger.debug("Analytics are disabled");
@@ -495,9 +585,7 @@ public class Freerouting {
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
     new Thread(checker).start();
 
-    // get localization resources
-
-    // check if the user wants to see the help only
+    // Check if the user requested help
     if (globalSettings.show_help_option) {
       TextManager ctm = new TextManager(Freerouting.class, globalSettings.currentLocale);
       IO.print(ctm.getText("command_line_help"));
@@ -509,6 +597,13 @@ public class Freerouting {
       globalSettings.guiSettings.isEnabled = false;
       globalSettings.apiServerSettings.isEnabled = false;
     }
+
+    // Create the settings merger prototype based on the sources that will not change at runtime
+    globalSettings.settingsMergerProtype = new SettingsMerger(
+        new DefaultSettings(),
+        new JsonFileSettings(),
+        new CliSettings(args),
+        new EnvironmentVariablesSource());
 
     // Initialize the API server
     if (globalSettings.apiServerSettings.isEnabled) {
