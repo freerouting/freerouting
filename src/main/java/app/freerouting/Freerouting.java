@@ -31,15 +31,21 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.http.pathmap.ServletPathSpec;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.CrossOriginHandler;
+import org.eclipse.jetty.server.handler.PathMappingsHandler;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 /* Entry point class of the application */
@@ -239,9 +245,31 @@ public class Freerouting {
     // Set up the Servlet Context Handler
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
     context.setContextPath("/");
-    apiServer.setHandler(context);
 
-    // Set up Jersey Servlet that handles the API
+    Handler apiHandler = context;
+
+    // Configure CORS if origins are provided
+    if (apiServerSettings.cors_origins != null && !apiServerSettings.cors_origins.equals("")) {
+      String allowedOrigins = apiServerSettings.cors_origins;
+
+      CrossOriginHandler corsHandler = new CrossOriginHandler();
+      corsHandler.setAllowCredentials(true);
+      corsHandler.setAllowedOriginPatterns(splitCommaSeparated(allowedOrigins));
+      corsHandler.setAllowedMethods(Set.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
+      corsHandler.setAllowedHeaders(Set.of("X-Requested-With", "Content-Type", "Accept", "Origin", "Authorization"));
+      corsHandler.setHandler(context);
+
+      PathMappingsHandler pathMappingsHandler = new PathMappingsHandler();
+      pathMappingsHandler.addMapping(new ServletPathSpec("/v1/*"), corsHandler);
+      pathMappingsHandler.addMapping(new ServletPathSpec("/*"), context);
+      apiHandler = pathMappingsHandler;
+
+      FRLogger.info("CORS configured for origins: " + allowedOrigins);
+    }
+
+    apiServer.setHandler(apiHandler);
+
+    // Set up the Jersey Servlet that handles the API
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
@@ -265,33 +293,11 @@ public class Freerouting {
     return apiServer;
   }
 
-  private static Path resolveLogPath(String input, Path defaultDir) {
-    if (input == null || input.isBlank()) {
-      return defaultDir.resolve("freerouting.log").normalize().toAbsolutePath();
-    }
-
-    // In Windows the leading "." character means current directory
-    if (input.startsWith(".")) {
-      var currentDir = Path.of(System.getProperty("user.dir"));
-      input = currentDir + input.substring(1);
-    }
-
-    Path path = Path.of(input).normalize().toAbsolutePath();
-    boolean isFile = path.getFileName().toString().toLowerCase().endsWith(".log");
-    String filename = isFile ? path.getFileName().toString() : "freerouting.log";
-    Path folderPath = isFile ? path.getParent() : path;
-
-    // Check if the directory exists, and create it if needed
-    if (folderPath != null && !folderPath.toFile().exists()) {
-      try {
-        Files.createDirectories(folderPath);
-      } catch (IOException e) {
-        // Failed to create directory, fallback to default
-        return defaultDir.resolve(filename).normalize().toAbsolutePath();
-      }
-    }
-
-    return folderPath.resolve(filename).normalize().toAbsolutePath();
+  private static Set<String> splitCommaSeparated(String value) {
+    return Arrays.stream(value.split(","))
+        .map(String::trim)
+        .filter(token -> !token.isEmpty())
+        .collect(Collectors.toSet());
   }
 
   /**

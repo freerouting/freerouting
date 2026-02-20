@@ -403,24 +403,3 @@ rewrite {
     checkstyleConfigFile = file("google_checks.xml")
     setExportDatatables(true)
 }
-
-spotless {
-    java {
-        // 1. Clean up imports (removes unused, sorts them)
-        importOrder()
-        removeUnusedImports()
-
-        // 2. Apply Google Java Format (this handles indentation, braces, etc.)
-        // You can pin a specific version to ensure all devs/CI use the same logic
-        googleJavaFormat('1.25.0').aosp() // '.aosp()' is optional: use it if you prefer 4 spaces instead of 2
-
-        // 3. (Optional) formatting for license headers, if you need them
-        // licenseHeader '/* (C) $YEAR */'
-    }
-
-    // You can also enforce formatting for your Gradle scripts
-    groovyGradle {
-        target '*.gradle'
-        greclipse()
-    }
-}
