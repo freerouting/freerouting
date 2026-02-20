@@ -60,7 +60,7 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
 
   @Override
   public String toString() {
-    return this.name;
+    return "Net #" + this.net_number + " (" + this.name + ")";
   }
 
   /**

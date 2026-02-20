@@ -4,6 +4,7 @@ import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.interactive.GuiBoardManager;
+
 import app.freerouting.logger.FRLogger;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -16,7 +17,8 @@ import java.util.LinkedList;
 import javax.swing.JFrame;
 
 /**
- * Description of a text file, where the board independent interactive settings are stored.
+ * Description of a text file, where the board independent interactive settings
+ * are stored.
  */
 public class GUIDefaultsFile {
 
@@ -31,7 +33,8 @@ public class GUIDefaultsFile {
    */
   private final IndentFileWriter out_file;
 
-  private GUIDefaultsFile(BoardFrame p_board_frame, GuiBoardManager p_board_handling, GUIDefaultsScanner p_scanner, IndentFileWriter p_output_file) {
+  private GUIDefaultsFile(BoardFrame p_board_frame, GuiBoardManager p_board_handling, GUIDefaultsScanner p_scanner,
+      IndentFileWriter p_output_file) {
     board_frame = p_board_frame;
     board_handling = p_board_handling;
     scanner = p_scanner;
@@ -39,9 +42,11 @@ public class GUIDefaultsFile {
   }
 
   /**
-   * Writes the GUI setting of p_board_frame as default to p_file. Returns false, if an error occurred.
+   * Writes the GUI setting of p_board_frame as default to p_file. Returns false,
+   * if an error occurred.
    */
-  public static boolean write(BoardFrame p_board_frame, GuiBoardManager p_board_handling, OutputStream p_output_stream) {
+  public static boolean write(BoardFrame p_board_frame, GuiBoardManager p_board_handling,
+      OutputStream p_output_stream) {
     if (p_output_stream == null) {
       return false;
     }
@@ -66,7 +71,8 @@ public class GUIDefaultsFile {
   }
 
   /**
-   * Reads the GUI setting of p_board_frame from file. Returns false, if an error occurred while reading the file.
+   * Reads the GUI setting of p_board_frame from file. Returns false, if an error
+   * occurred while reading the file.
    */
   public static boolean read(BoardFrame p_board_frame, GuiBoardManager p_board_handling, InputStream p_input_stream) {
     if (p_input_stream == null) {
@@ -131,7 +137,7 @@ public class GUIDefaultsFile {
     }
 
     // read the direct subscopes of the gui_defaults scope
-    for (; ; ) {
+    for (;;) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -169,7 +175,7 @@ public class GUIDefaultsFile {
   private boolean read_windows_scope() throws IOException {
     // read the direct subscopes of the windows scope
     Object next_token = null;
-    for (; ; ) {
+    for (;;) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -340,7 +346,7 @@ public class GUIDefaultsFile {
   private boolean read_colors_scope() throws IOException {
     // read the direct subscopes of the colors scope
     Object next_token = null;
-    for (; ; ) {
+    for (;;) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -640,7 +646,8 @@ public class GUIDefaultsFile {
   }
 
   /**
-   * reads a java.awt.Color from the defaults file. Returns null, if no valid color was found.
+   * reads a java.awt.Color from the defaults file. Returns null, if no valid
+   * color was found.
    */
   private Color read_color() throws IOException {
     int[] rgb_color_arr = new int[3];
@@ -658,11 +665,12 @@ public class GUIDefaultsFile {
   }
 
   /**
-   * reads an array java.awt.Color from the defaults file. Returns null, if no valid colors were found.
+   * reads an array java.awt.Color from the defaults file. Returns null, if no
+   * valid colors were found.
    */
   private Color[] read_color_array() throws IOException {
     Collection<Color> color_list = new LinkedList<>();
-    for (; ; ) {
+    for (;;) {
       Color curr_color = read_color();
       if (curr_color == null) {
         break;
@@ -786,7 +794,7 @@ public class GUIDefaultsFile {
   private boolean read_parameter_scope() throws IOException {
     // read the subscopes of the parameter scope
     Object next_token = null;
-    for (; ; ) {
+    for (;;) {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
@@ -1215,7 +1223,7 @@ public class GUIDefaultsFile {
   private boolean read_selectable_item_scope() throws IOException {
     ItemSelectionFilter item_selection_filter = this.board_handling.interactiveSettings.get_item_selection_filter();
     item_selection_filter.deselect_all();
-    for (; ; ) {
+    for (;;) {
       Object next_token = this.scanner.next_token();
       if (next_token == Keyword.CLOSED_BRACKET) {
         break;
