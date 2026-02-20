@@ -5,7 +5,6 @@ import static app.freerouting.Freerouting.globalSettings;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.logger.FRLogger;
-
 import app.freerouting.settings.GlobalSettings;
 import java.awt.Graphics;
 import java.io.IOException;
@@ -37,17 +36,6 @@ public abstract class InteractiveActionThread extends StoppableThread {
 
   public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(GuiBoardManager boardManager,
       RoutingJob job) {
-    // TODO: we need to clone the settings here for now, because the GUI modifies
-    // the settings of the boardmanager (but this should be eliminated in the
-    // future)
-    // The main issue here is that the job.routerSettings is modified by the command
-    // line argument, but the boardManager.settings.autoroute_settings is modified
-    // by the GUI
-    // Both should be kept in sync properly instead of cloning here, because now the
-    // command line argument is ignored if it wasn't loaded to the GUI first.
-    // Some arguments are never loaded to the GUI, so they are lost now.
-    job.routerSettings = boardManager.settings.autoroute_settings.clone();
-
     var routerThread = new AutorouterAndRouteOptimizerThread(boardManager, job);
     routerThread.addListener(new ThreadActionListener() {
       @Override

@@ -30,8 +30,8 @@ public class MakeSpaceState extends DragState {
     }
     int[] route_net_no_arr = new int[1];
     route_net_no_arr[0] = Nets.hidden_net_no;
-    route = new Route(p_location.round(), hdlg.settings.layer, shove_trace_width_arr, layer_active_arr, route_net_no_arr, 0, ViaRule.EMPTY, true, hdlg.settings.trace_pull_tight_region_width,
-        hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, null, null, hdlg.get_routing_board(), false, false, false, hdlg.settings.hilight_routing_obstacle);
+    route = new Route(p_location.round(), hdlg.interactiveSettings.layer, shove_trace_width_arr, layer_active_arr, route_net_no_arr, 0, ViaRule.EMPTY, true, hdlg.interactiveSettings.trace_pull_tight_region_width,
+        hdlg.interactiveSettings.trace_pull_tight_accuracy, null, null, hdlg.get_routing_board(), false, false, false, hdlg.interactiveSettings.hilight_routing_obstacle);
   }
 
   @Override

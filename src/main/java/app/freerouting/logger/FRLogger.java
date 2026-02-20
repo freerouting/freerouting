@@ -1,38 +1,55 @@
 package app.freerouting.logger;
 
 import app.freerouting.Freerouting;
-import java.nio.file.Path;
+import app.freerouting.board.BasicBoard;
+import app.freerouting.debug.DebugControl;
+import app.freerouting.geometry.planar.Point;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
-import org.apache.logging.log4j.Level;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.appender.FileAppender;
-import org.apache.logging.log4j.core.config.AppenderRef;
-import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.LoggerConfig;
-import org.apache.logging.log4j.core.layout.PatternLayout;
 
-/// <summary>
-/// Provides logging functionality.
-/// </summary>
+/// <summary> Provides logging functionality. </summary>
+/**
+ * Provides centralized logging functionality for the application.
+ * Wraps Log4j2 and maintains an internal list of log entries for UI display.
+ */
 public class FRLogger {
 
-  public static final DecimalFormat defaultFloatFormat = new DecimalFormat("0.00");
-  public static final DecimalFormat defaultSignedFloatFormat = new DecimalFormat("+0.00;-0.00");
+  public static final DecimalFormat defaultFloatFormat = new DecimalFormat("0.00",
+      new java.text.DecimalFormatSymbols(java.util.Locale.US));
+  public static final DecimalFormat defaultSignedFloatFormat = new DecimalFormat("+0.00;-0.00",
+      new java.text.DecimalFormatSymbols(java.util.Locale.US));
   private static final HashMap<Integer, Instant> perfData = new HashMap<>();
   private static final LogEntries logEntries = new LogEntries();
+  private static final CopyOnWriteArrayList<TraceEventListener> traceEventListeners = new CopyOnWriteArrayList<>();
+  public static boolean granularTraceEnabled = false;
   private static Logger logger;
   private static boolean enabled = true;
 
   private FRLogger() {
   }
 
+  /**
+   * Enables or disables logging globally.
+   *
+   * @param value true to enable logging, false to disable.
+   */
+  public static void setEnabled(boolean value) {
+    enabled = value;
+  }
+
+  /**
+   * Formats a duration in seconds into a human-readable string (hours, minutes,
+   * seconds).
+   *
+   * @param totalSeconds The total duration in seconds.
+   * @return A formatted string representing the duration.
+   */
   public static String formatDuration(double totalSeconds) {
     double seconds = totalSeconds;
     double minutes = seconds / 60.0;
@@ -49,6 +66,14 @@ public class FRLogger {
     return hoursText + minutesText + defaultFloatFormat.format(seconds) + " seconds";
   }
 
+  /**
+   * Formats a score with details about incomplete items and violations.
+   *
+   * @param score      The routing score.
+   * @param incomplete The number of unrouted items.
+   * @param violations The number of design rule violations.
+   * @return A formatted string representing the score and any issues.
+   */
   public static String formatScore(float score, int incomplete, int violations) {
     StringBuilder sb = new StringBuilder(defaultFloatFormat.format(score));
 
@@ -81,6 +106,51 @@ public class FRLogger {
     return sb.toString();
   }
 
+  public static String buildTracePayload(String event, String phase, String action, String kvPairs) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("event=").append(event);
+    if (phase != null && !phase.isEmpty()) {
+      sb.append(" phase=").append(phase);
+    }
+    if (action != null && !action.isEmpty()) {
+      sb.append(" action=").append(action);
+    }
+    if (kvPairs != null && !kvPairs.isEmpty()) {
+      sb.append(" ").append(kvPairs);
+    }
+    return sb.toString();
+  }
+
+  public static String formatNetLabel(BasicBoard board, int[] netNoArr) {
+    if (netNoArr == null || netNoArr.length == 0) {
+      return "No net";
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < netNoArr.length; i++) {
+      if (i > 0) {
+        sb.append(", ");
+      }
+      sb.append(formatNetLabel(board, netNoArr[i]));
+    }
+    return sb.toString();
+  }
+
+  public static String formatNetLabel(BasicBoard board, int netNo) {
+    if (board == null || board.rules == null || board.rules.nets == null) {
+      return "Net #" + netNo + " (Unknown)";
+    }
+    if (netNo <= board.rules.nets.max_net_no()) {
+      return board.rules.nets.get(netNo).toString();
+    }
+    return "Net #" + netNo + " (Unknown)";
+  }
+
+  /**
+   * Records the start time for a performance trace.
+   *
+   * @param perfId A unique identifier for the operation being traced (often the
+   *               method name).
+   */
   public static void traceEntry(String perfId) {
     if (!enabled) {
       return;
@@ -92,6 +162,12 @@ public class FRLogger {
     perfData.put(perfId.hashCode(), Instant.now());
   }
 
+  /**
+   * Records the end of a performance trace and logs the duration.
+   *
+   * @param perfId A unique identifier for the operation being traced.
+   * @return The duration of the operation in seconds.
+   */
   public static double traceExit(String perfId) {
     if (!enabled) {
       return 0.0;
@@ -103,6 +179,14 @@ public class FRLogger {
     return traceExit(perfId, null);
   }
 
+  /**
+   * Records the end of a performance trace with an optional result object and
+   * logs the duration.
+   *
+   * @param perfId A unique identifier for the operation being traced.
+   * @param result An optional result object to include in the log message.
+   * @return The duration of the operation in seconds.
+   */
   public static double traceExit(String perfId, Object result) {
     if (!enabled) {
       return 0.0;
@@ -125,13 +209,21 @@ public class FRLogger {
       timeElapsed = 0;
     }
 
-    String logMessage = "Method '" + perfId.replace("{}", result != null ? result.toString() : "(null)") + "' was performed in " + FRLogger.formatDuration(timeElapsed / 1000.0) + ".";
+    String logMessage = "Method '" + perfId.replace("{}", result != null ? result.toString() : "(null)")
+        + "' was performed in " + FRLogger.formatDuration(timeElapsed / 1000.0) + ".";
 
     FRLogger.trace(logMessage);
 
     return timeElapsed / 1000.0;
   }
 
+  /**
+   * Logs an INFO message.
+   *
+   * @param msg   The message to log.
+   * @param topic An optional topic UUID associated with the message.
+   * @return The created LogEntry.
+   */
   public static LogEntry info(String msg, UUID topic) {
     LogEntry logEntry = logEntries.add(LogEntryType.Info, msg, topic);
 
@@ -147,10 +239,23 @@ public class FRLogger {
     return logEntry;
   }
 
+  /**
+   * Logs an INFO message without a topic.
+   *
+   * @param msg The message to log.
+   * @return The created LogEntry.
+   */
   public static LogEntry info(String msg) {
     return info(msg, null);
   }
 
+  /**
+   * Logs a WARNING message.
+   *
+   * @param msg   The message to log.
+   * @param topic An optional topic UUID associated with the message.
+   * @return The created LogEntry.
+   */
   public static LogEntry warn(String msg, UUID topic) {
     LogEntry logEntry = logEntries.add(LogEntryType.Warning, msg, topic);
 
@@ -166,13 +271,24 @@ public class FRLogger {
     return logEntry;
   }
 
+  /**
+   * Logs a WARNING message without a topic.
+   *
+   * @param msg The message to log.
+   * @return The created LogEntry.
+   */
   public static LogEntry warn(String msg) {
     return warn(msg, null);
   }
 
+  /**
+   * Logs a DEBUG message.
+   *
+   * @param msg   The message to log.
+   * @param topic An optional topic UUID associated with the message.
+   * @return The created LogEntry.
+   */
   public static LogEntry debug(String msg, UUID topic) {
-    LogEntry logEntry = logEntries.add(LogEntryType.Debug, msg, topic);
-
     if (!enabled) {
       return null;
     }
@@ -182,13 +298,27 @@ public class FRLogger {
 
     logger.debug(msg);
 
-    return logEntry;
+    return null;
   }
 
+  /**
+   * Logs a DEBUG message without a topic.
+   *
+   * @param msg The message to log.
+   * @return The created LogEntry.
+   */
   public static LogEntry debug(String msg) {
     return debug(msg, null);
   }
 
+  /**
+   * Logs an ERROR message with an exception.
+   *
+   * @param msg       The message to log.
+   * @param topic     An optional topic UUID associated with the message.
+   * @param exception The exception to log.
+   * @return The created LogEntry.
+   */
   public static LogEntry error(String msg, UUID topic, Throwable exception) {
     LogEntry logEntry = logEntries.add(LogEntryType.Error, msg, topic, exception);
 
@@ -208,13 +338,39 @@ public class FRLogger {
     return logEntry;
   }
 
+  /**
+   * Logs an ERROR message with an exception, but without a topic.
+   *
+   * @param msg       The message to log.
+   * @param exception The exception to log.
+   * @return The created LogEntry.
+   */
   public static LogEntry error(String msg, Throwable exception) {
     return error(msg, null, exception);
   }
 
-  public static LogEntry trace(String msg) {
-    LogEntry logEntry = logEntries.add(LogEntryType.Trace, msg, null);
+  /**
+   * Checks if TRACE level logging is enabled.
+   *
+   * @return true if TRACE logging is enabled, false otherwise.
+   */
+  public static boolean isTraceEnabled() {
+    if (!enabled) {
+      return false;
+    }
+    if (logger == null) {
+      logger = LogManager.getLogger(Freerouting.class);
+    }
+    return logger.isTraceEnabled();
+  }
 
+  /**
+   * Logs a TRACE message.
+   *
+   * @param msg The message to log.
+   * @return The created LogEntry.
+   */
+  public static LogEntry trace(String msg) {
     if (!enabled) {
       return null;
     }
@@ -224,81 +380,65 @@ public class FRLogger {
 
     logger.trace(msg);
 
-    return logEntry;
+    return null;
   }
 
-  /// <summary>
-  /// Disables the log4j logger.
-  /// </summary>
+  public static boolean trace(String method, String operation, String message, String impactedItems) {
+    return trace(method, operation, message, impactedItems, null);
+  }
+
+  /**
+   * Logs a granular TRACE message and triggers a debug check.
+   *
+   * @param method        The method name where the log originates (e.g.
+   *                      "InsertFoundConnectionAlgo").
+   * @param operation     The operation type (e.g. "insertion", "removal").
+   * @param message       The details of the log message.
+   * @param impactedItems A string describing the impacted items (e.g. "Net #1,
+   *                      Trace #123").
+   *                      This string is used by DebugControl to filter execution.
+   */
+  public static boolean trace(String method, String operation, String message, String impactedItems, Point[] impactedPoints) {
+    if (enabled) {
+      if (logger == null) {
+        logger = LogManager.getLogger(Freerouting.class);
+      }
+
+      if (granularTraceEnabled && (impactedItems.isEmpty() || DebugControl.getInstance().isInterested(impactedItems))) {
+        String formattedMessage = String.format("[%s] [%s] %s: %s", method, operation, message, impactedItems);
+        logger.trace(formattedMessage);
+      }
+    }
+
+    boolean wasInterestingTraceEvent = DebugControl.getInstance().check(operation, impactedItems);
+    if (wasInterestingTraceEvent) {
+      publishTraceEvent(new TraceEvent(method, operation, message, impactedItems, impactedPoints, Instant.now()));
+    }
+
+    return wasInterestingTraceEvent;
+  }
+
+  /**
+   * Disables logging.
+   */
   public static void disableLogging() {
     enabled = false;
   }
 
+  /**
+   * Gets the collection of log entries recorded by this logger.
+   *
+   * @return The LogEntries collection.
+   */
   public static LogEntries getLogEntries() {
     return logEntries;
   }
 
-  public static void changeFileLogLevel(Level level) {
-    // Obtain the LoggerContext
-    var contextObject = LogManager.getContext(false);
-
-    // Check if the contextObject is an instance of org.apache.logging.log4j.core.LoggerContext
-    if (!(contextObject instanceof LoggerContext context)) {
-      FRLogger.warn("Failed to change the log level. The context object is not an instance of org.apache.logging.log4j.core.LoggerContext.");
-      return;
-    }
-
-    // Get the Configuration
-    Configuration config = context.getConfiguration();
-
-    // Get the Root LoggerConfig
-    LoggerConfig rootLoggerConfig = config.getRootLogger();
-
-    // Create a new AppenderRef with the desired level
-    List<AppenderRef> refList = rootLoggerConfig.getAppenderRefs();
-    var refs = refList.toArray(new AppenderRef[0]);
-    for (int i = 0; i < refs.length; i++) {
-      if ("Console"
-          .equals(refs[i]
-              .getRef())) {
-        refs[i] = AppenderRef.createAppenderRef("Console", level, null);
-      }
-    }
-
-    // Remove the existing AppenderRefs
-    rootLoggerConfig.removeAppender("Console");
-
-    // Add the modified AppenderRef back to the LoggerConfig
-    for (AppenderRef ref : refs) {
-      rootLoggerConfig.addAppender(config.getAppender(ref.getRef()), ref.getLevel(), ref.getFilter());
-    }
-
-    // Update the configuration
-    context.updateLoggers();
-  }
-
-  public static void changeFileLogLevel(String level) {
-    String logLevel = level.toUpperCase();
-
-    if ("OFF".equals(logLevel) || "0".equals(logLevel)) {
-      FRLogger.disableLogging();
-    } else if ("FATAL".equals(logLevel) || "1".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.FATAL);
-    } else if ("ERROR".equals(logLevel) || "2".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.ERROR);
-    } else if ("WARN".equals(logLevel) || "3".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.WARN);
-    } else if ("INFO".equals(logLevel) || "4".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.INFO);
-    } else if ("DEBUG".equals(logLevel) || "5".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.DEBUG);
-    } else if ("TRACE".equals(logLevel) || "6".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.TRACE);
-    } else if ("ALL".equals(logLevel) || "7".equals(logLevel)) {
-      FRLogger.changeFileLogLevel(Level.ALL);
-    }
-  }
-
+  /**
+   * Gets the underlying Log4j2 Logger instance.
+   *
+   * @return The Logger instance.
+   */
   public static Logger getLogger() {
     if (logger == null) {
       logger = LogManager.getLogger(Freerouting.class);
@@ -307,52 +447,19 @@ public class FRLogger {
     return logger;
   }
 
-  public static void changeFileLogLocation(Path userDataPath) {
-    Path logFilePath = userDataPath.resolve("freerouting.log");
+  /** Adds a listener that will be notified of interesting trace events. */
+  public static void addTraceEventListener(TraceEventListener listener) {
+    traceEventListeners.add(listener);
+  }
 
-    // Obtain the LoggerContext
-    LoggerContext context = (LoggerContext) LogManager.getContext(false);
+  /** Removes a listener from the list of trace event listeners. */
+  public static void removeTraceEventListener(TraceEventListener listener) {
+    traceEventListeners.remove(listener);
+  }
 
-    // Check if the contextObject is an instance of org.apache.logging.log4j.core.LoggerContext
-    if (context == null) {
-      FRLogger.warn("Failed to change the log file location. The context object is not an instance of org.apache.logging.log4j.core.LoggerContext.");
-      return;
+  private static void publishTraceEvent(TraceEvent event) {
+    for (TraceEventListener listener : traceEventListeners) {
+      listener.onTraceEvent(event);
     }
-
-    // Get the Configuration
-    Configuration config = context.getConfiguration();
-
-    // Get the Root LoggerConfig
-    LoggerConfig rootLoggerConfig = config.getRootLogger();
-
-    // Remove the existing File appender
-    if (config.getAppender("File") != null) {
-      config
-          .getAppender("File")
-          .stop();
-      rootLoggerConfig.removeAppender("File");
-    }
-
-    // Create a new FileAppender with the new log file path
-    FileAppender newFileAppender = FileAppender
-        .newBuilder()
-        .setName("File")
-        .withFileName(logFilePath.toString())
-        .setLayout(PatternLayout
-            .newBuilder()
-            .withPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} %-6level %msg%n")
-            .build())
-        .setImmediateFlush(true)
-        .setConfiguration(config)
-        .build();
-
-    // Start the new appender
-    newFileAppender.start();
-
-    // Add the new FileAppender to the root logger
-    rootLoggerConfig.addAppender(newFileAppender, rootLoggerConfig.getLevel(), null);
-
-    // Update the loggers with the new configuration
-    context.updateLoggers();
   }
 }

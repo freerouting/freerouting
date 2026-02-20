@@ -59,7 +59,7 @@ public class CircleConstructionState extends InteractiveState {
   public InteractiveState complete() {
     IntPoint center = this.circle_center.round();
     int radius = (int) Math.round(this.circle_radius);
-    int layer = hdlg.settings.layer;
+    int layer = hdlg.interactiveSettings.layer;
     int cl_class;
     RoutingBoard board = hdlg.get_routing_board();
     cl_class = BoardRules.clearance_class_none();

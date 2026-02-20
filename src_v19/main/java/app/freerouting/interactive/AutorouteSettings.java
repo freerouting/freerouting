@@ -134,7 +134,7 @@ public class AutorouteSettings implements Serializable {
 
   public void set_start_pass_no(int p_value) {
     start_pass_no = Math.max(p_value, 1);
-    start_pass_no = Math.min(start_pass_no, 99999);
+    start_pass_no = Math.min(start_pass_no, 9999);
   }
 
   public int get_stop_pass_no() {
@@ -147,7 +147,7 @@ public class AutorouteSettings implements Serializable {
       stop_pass_no = Integer.MAX_VALUE;
     } else {
       stop_pass_no = Math.max(p_value, start_pass_no);
-      stop_pass_no = Math.min(stop_pass_no, 99999);
+      stop_pass_no = Math.min(stop_pass_no, 9999);
     }
   }
 

@@ -136,7 +136,7 @@ public class ExpandTestState extends InteractiveState {
   private void init(FloatPoint p_location) {
     // look if an autoroute can be started at the input location
     RoutingBoard board = hdlg.get_routing_board();
-    int layer = hdlg.settings.layer;
+    int layer = hdlg.interactiveSettings.layer;
     Collection<Item> found_items = board.pick_items(p_location.round(), layer, null);
     Item route_item = null;
     int route_net_no = 0;
@@ -151,12 +151,12 @@ public class ExpandTestState extends InteractiveState {
       }
     }
     this.control_settings = new AutorouteControl(hdlg.get_routing_board(), route_net_no,
-        hdlg.settings.autoroute_settings);
+        hdlg.getCurrentRoutingJob().routerSettings);
     // this.control_settings.ripup_allowed = true;
     // this.control_settings.is_fanout = true;
     this.control_settings.ripup_pass_no = 1; // Expand test always starts from pass 1
     this.control_settings.ripup_costs = this.control_settings.ripup_pass_no
-        * hdlg.settings.autoroute_settings.get_start_ripup_costs();
+        * hdlg.getCurrentRoutingJob().routerSettings.get_start_ripup_costs();
     this.control_settings.vias_allowed = false;
     this.autoroute_engine = new AutorouteEngine(board, this.control_settings.trace_clearance_class_no, false);
     this.autoroute_engine.init_connection(route_net_no, null, null);

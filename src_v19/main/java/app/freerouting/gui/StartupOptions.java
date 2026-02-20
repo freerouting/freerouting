@@ -22,7 +22,7 @@ public class StartupOptions {
   private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting.json");
   public final String user_id;
   public String input_directory;
-  public int max_passes = 99999;
+  public int max_passes = 9999;
   public int max_items = Integer.MAX_VALUE;
   // int num_threads = Math.max(1, Runtime.getRuntime().availableProcessors() -
   // 1);
@@ -108,8 +108,8 @@ public class StartupOptions {
             if (max_passes < 0) {
               max_passes = 1;
             }
-            if (max_passes > 99998) {
-              max_passes = 99998;
+            if (max_passes > 9999) {
+              max_passes = 9999;
             }
             // Note: 0 is allowed and means no limit
           }
@@ -230,8 +230,8 @@ public class StartupOptions {
             if (max_passes < 0) {
               max_passes = 1;
             }
-            if (max_passes > 99998) {
-              max_passes = 99998;
+            if (max_passes > 9999) {
+              max_passes = 9999;
             }
             // Note: 0 is allowed and means no limit
           }

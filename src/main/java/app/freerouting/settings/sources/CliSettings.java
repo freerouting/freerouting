@@ -19,7 +19,7 @@ public class CliSettings implements SettingsSource {
 
     /**
      * Creates a CliSettings source by parsing command-line arguments.
-     * 
+     *
      * @param args Command-line arguments array
      */
     public CliSettings(String[] args) {
@@ -106,7 +106,7 @@ public class CliSettings implements SettingsSource {
 
     /**
      * Gets the parsed arguments for debugging/logging.
-     * 
+     *
      * @return Map of property names to values
      */
     public Map<String, String> getParsedArguments() {

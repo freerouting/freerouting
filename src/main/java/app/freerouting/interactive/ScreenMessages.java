@@ -74,6 +74,19 @@ public class ScreenMessages {
   }
 
   /**
+   * Displays the latest traced operation in the footer.
+   */
+  public void set_trace_message(String operation, String message, String impactedItems) {
+    if (this.write_protected) {
+      return;
+    }
+    String statusText = (operation == null || operation.isEmpty()) ? message : operation + ": " + message;
+    status_field.setText(statusText == null ? empty_string : statusText);
+    String impactedText = (impactedItems == null || impactedItems.isEmpty()) ? empty_string : impactedItems;
+    add_field.setText(impactedText);
+  }
+
+  /**
    * Sets the displayed layer number on the screen.
    */
   public void set_layer(String p_layer_name) {

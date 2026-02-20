@@ -144,12 +144,12 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
    */
   @Override
   public void refresh() {
-    if (this.board_handling.settings.get_select_on_all_visible_layers()) {
+    if (this.board_handling.interactiveSettings.get_select_on_all_visible_layers()) {
       settings_select_all_visible_button.setSelected(true);
     } else {
       settings_select_current_only_button.setSelected(true);
     }
-    ItemSelectionFilter item_selection_filter = this.board_handling.settings.get_item_selection_filter();
+    ItemSelectionFilter item_selection_filter = this.board_handling.interactiveSettings.get_item_selection_filter();
     if (item_selection_filter == null) {
       FRLogger.warn("SelectParameterWindow.refresh: item_selection_filter is null");
     } else {
@@ -158,7 +158,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
         this.settings_select_item_selection_choices[i].setSelected(item_selection_filter.is_selected(filter_values[i]));
       }
     }
-    settings_select_layer_name_arr[this.board_handling.settings.get_layer()].setSelected(true);
+    settings_select_layer_name_arr[this.board_handling.interactiveSettings.get_layer()].setSelected(true);
   }
 
   /**
@@ -188,7 +188,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_handling.settings.set_select_on_all_visible_layers(true);
+      board_handling.interactiveSettings.set_select_on_all_visible_layers(true);
     }
   }
 
@@ -196,7 +196,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_handling.settings.set_select_on_all_visible_layers(false);
+      board_handling.interactiveSettings.set_select_on_all_visible_layers(false);
     }
   }
 

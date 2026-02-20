@@ -41,7 +41,7 @@ public class CopyItemState extends InteractiveState {
     item_list = new LinkedList<>();
 
     start_position = p_location.round();
-    current_layer = p_board_handling.settings.layer;
+    current_layer = p_board_handling.interactiveSettings.layer;
     layer_changed = false;
     current_position = start_position;
     previous_position = current_position;

@@ -59,14 +59,14 @@ public class InspectItemsInRegionState extends SelectRegionState {
 
     IntBox b = new IntBox(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
     int select_layer;
-    if (hdlg.settings.select_on_all_visible_layers) {
+    if (hdlg.interactiveSettings.select_on_all_visible_layers) {
       select_layer = -1;
     } else {
-      select_layer = hdlg.settings.layer;
+      select_layer = hdlg.interactiveSettings.layer;
     }
-    Set<Item> found_items = hdlg.settings.item_selection_filter
+    Set<Item> found_items = hdlg.interactiveSettings.item_selection_filter
         .filter(hdlg.get_routing_board().overlapping_items(b, select_layer));
-    if (hdlg.settings.select_on_all_visible_layers) {
+    if (hdlg.interactiveSettings.select_on_all_visible_layers) {
       // remove items, which are not visible
       Set<Item> visible_items = new TreeSet<>();
       for (Item curr_item : found_items) {

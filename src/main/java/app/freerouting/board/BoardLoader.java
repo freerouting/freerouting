@@ -39,7 +39,7 @@ public class BoardLoader {
 
     // Load the board
     try {
-      HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+      HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
       boardManager.loadFromSpecctraDsn(
           job.input.getData(),
           null,

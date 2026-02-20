@@ -224,7 +224,7 @@ public class InspectedItemState extends InteractiveState {
    * selected item list.
    */
   public InteractiveState filter() {
-    item_list = hdlg.settings.item_selection_filter.filter(item_list);
+    item_list = hdlg.interactiveSettings.item_selection_filter.filter(item_list);
     InteractiveState result = this;
     if (item_list.isEmpty()) {
       result = this.return_state;

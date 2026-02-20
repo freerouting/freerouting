@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -971,7 +970,7 @@ public class Network extends ScopeKeyword {
       }
       if (prev_token == OPEN_BRACKET) {
         if (next_token == Keyword.NET) {
-          read_net_scope(p_par.scanner, p_par.netlist, p_par.board_handling.get_routing_board(), p_par.coordinate_transform, p_par.layer_structure, p_par.board_handling.get_locale());
+          read_net_scope(p_par.scanner, p_par.netlist, p_par.board_handling.get_routing_board(), p_par.coordinate_transform, p_par.layer_structure);
         } else if (next_token == Keyword.VIA) {
           ViaInfo curr_via_info = read_via_info(p_par.scanner, p_par.board_handling.get_routing_board());
           if (curr_via_info == null) {
@@ -1047,7 +1046,7 @@ public class Network extends ScopeKeyword {
     return true;
   }
 
-  private boolean read_net_scope(IJFlexScanner p_scanner, NetList p_net_list, RoutingBoard p_board, CoordinateTransform p_coordinate_transform, LayerStructure p_layer_structure, Locale p_locale) {
+  private boolean read_net_scope(IJFlexScanner p_scanner, NetList p_net_list, RoutingBoard p_board, CoordinateTransform p_coordinate_transform, LayerStructure p_layer_structure) {
     // read the net name
     String net_name = p_scanner.next_string();
 
@@ -1148,7 +1147,7 @@ public class Network extends ScopeKeyword {
             app.freerouting.rules.NetClass net_rule = p_board.rules.net_classes.find(trace_halfwidth, default_net_rule.get_trace_clearance_class(), default_net_rule.get_via_rule());
             if (net_rule == null) {
               // create a new net rule
-              net_rule = p_board.rules.get_new_net_class(p_locale);
+              net_rule = p_board.rules.get_new_net_class();
             }
             net_rule.set_trace_half_width(trace_halfwidth);
             board_net.set_class(net_rule);
