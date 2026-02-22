@@ -300,6 +300,35 @@ public class Freerouting {
         .collect(Collectors.toSet());
   }
 
+  private static Path resolveLogPath(String input, Path defaultDir) {
+    if (input == null || input.isBlank()) {
+      return defaultDir.resolve("freerouting.log").normalize().toAbsolutePath();
+    }
+
+    // In Windows the leading "." character means current directory
+    if (input.startsWith(".")) {
+      var currentDir = Path.of(System.getProperty("user.dir"));
+      input = currentDir + input.substring(1);
+    }
+
+    Path path = Path.of(input).normalize().toAbsolutePath();
+    boolean isFile = path.getFileName().toString().toLowerCase().endsWith(".log");
+    String filename = isFile ? path.getFileName().toString() : "freerouting.log";
+    Path folderPath = isFile ? path.getParent() : path;
+
+    // Check if the directory exists, and create it if needed
+    if (folderPath != null && !folderPath.toFile().exists()) {
+      try {
+        Files.createDirectories(folderPath);
+      } catch (IOException e) {
+        // Failed to create directory, fallback to default
+        return defaultDir.resolve(filename).normalize().toAbsolutePath();
+      }
+    }
+
+    return folderPath.resolve(filename).normalize().toAbsolutePath();
+  }
+
   /**
    * The entry point of the Freerouting application
    *
