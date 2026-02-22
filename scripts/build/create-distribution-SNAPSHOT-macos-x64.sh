@@ -27,11 +27,10 @@ $JAVA_HOME/bin/jlink -p "$JAVA_HOME/jmods" \
 		--output $JAVA_HOME/runtime
 
 echo "> Creating the package"
-$JAVA_HOME/bin/jpackage --input ../build/dist/ \
+$JAVA_HOME/bin/jpackage --input ../../build/dist/ \
  --name freerouting \
  --main-jar freerouting-executable.jar \
- --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version $APP_VERSION --license-file ../LICENSE \
- --icon ../design/icon/freerouting_icon_256x256_v3.icns
+ --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version 1.0.0 --license-file ../../LICENSE \
+ --icon ../../assets/icon/freerouting_icon_256x256_v3.icns
 
-mv freerouting-$APP_VERSION.dmg freerouting-$APP_VERSION-macos-x64.dmg
-
+mv freerouting-1.0.0.dmg freerouting-$APP_VERSION-macos-x64.dmg

@@ -52,7 +52,7 @@ jobs:
         run: distribution\create-distribution-jar.bat ${{ steps.tagName.outputs.tag }}
       - uses: AButler/upload-release-assets@v3.0
         with:
-          files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}.jar'
+          files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}.jar'
           release-tag: v${{ steps.tagName.outputs.tag }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -81,10 +81,10 @@ jobs:
           tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
           tagRegexGroup: 1   # Optional. Default is 1.
       - name: Create Distribution
-        run: distribution/create-distribution-linux-x64.sh ${{ steps.tagName.outputs.tag }}
+        run: scripts/build/create-distribution-linux-x64.sh ${{ steps.tagName.outputs.tag }}
       - uses: AButler/upload-release-assets@v3.0
         with:
-          files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip'
+          files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip'
           release-tag: v${{ steps.tagName.outputs.tag }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -116,7 +116,7 @@ jobs:
         run: distribution\create-distribution-windows-x64.bat ${{ steps.tagName.outputs.tag }}
       - uses: AButler/upload-release-assets@v3.0
         with:
-          files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}-windows-x64.msi'
+          files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-windows-x64.msi'
           release-tag: v${{ steps.tagName.outputs.tag }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -145,9 +145,9 @@ jobs:
           tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
           tagRegexGroup: 1   # Optional. Default is 1.
       - name: Create Distribution
-        run: distribution/create-distribution-macos-x64.sh ${{ steps.tagName.outputs.tag }}
+        run: scripts/build/create-distribution-macos-x64.sh ${{ steps.tagName.outputs.tag }}
       - uses: AButler/upload-release-assets@v3.0
         with:
-          files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg'
+          files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg'
           release-tag: v${{ steps.tagName.outputs.tag }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}

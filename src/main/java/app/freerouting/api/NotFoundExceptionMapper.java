@@ -18,7 +18,7 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
   public Response toResponse(NotFoundException exception) {
     JsonObject errorMessage = new JsonObject();
     errorMessage.addProperty("error", "The requested resource was not found.");
-    errorMessage.addProperty("documentation", "https://github.com/freerouting/freerouting/blob/master/docs/API_v1.md");
+    errorMessage.addProperty("documentation", "https://github.com/freerouting/freerouting/blob/master/docs/api/API_v1.md");
 
     String prettyErrorMessage = GSON.toJson(errorMessage);
 

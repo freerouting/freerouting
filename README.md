@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/design/social_preview/freerouting_social_preview_1280x960_v2.png" alt="Freerouting" title="Freerouting" align="center">
+<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/social_preview/freerouting_social_preview_1280x960_v2.png" alt="Freerouting" title="Freerouting" align="center">
 </p>
 <h1 align="center">Freerouting</h1>
 <h5 align="center">Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.</h5>
@@ -82,7 +82,7 @@ Freerouting offers public API endpoints for PCB routing. The API root is `https:
 
 To access full functionality, request access on the [Freerouting website](https://www.freerouting.app/).
 
-Please note that the Freerouting API and [its documentation](docs/API_v1.md) are in beta and may change.
+Please note that the Freerouting API and [its documentation](docs/api/API_v1.md) are in beta and may change.
 
 ## Running Freerouting using Java JRE
 

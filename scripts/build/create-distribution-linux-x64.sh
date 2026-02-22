@@ -16,7 +16,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 echo "> Distribution directory="$DIR
 cd $DIR
 
-cp ../LICENSE ../build/dist/LICENSE
+cp ../../LICENSE ../../build/dist/LICENSE
 
 echo "> Building the Java runtime"
 $JAVA_HOME/bin/jlink -p "$JAVA_HOME/jmods" \
@@ -29,16 +29,16 @@ $JAVA_HOME/bin/jlink -p "$JAVA_HOME/jmods" \
         --output $JAVA_HOME/runtime
 
 echo "> Creating the package"
-$JAVA_HOME/bin/jpackage --input ../build/dist/ \
+$JAVA_HOME/bin/jpackage --input ../../build/dist/ \
  --name freerouting \
  --main-jar freerouting-executable.jar \
  --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version $APP_VERSION \
- --icon ../design/icon/freerouting_icon_256x256_v3.ico
+ --icon ../../assets/icon/freerouting_icon_256x256_v3.ico
 
 echo "> Composing the distribution file"
 mv freerouting freerouting-$APP_VERSION-linux-x64
-cp ../build/dist/LICENSE freerouting-$APP_VERSION-linux-x64/LICENSE
-mv ../build/dist/freerouting-executable.jar freerouting-$APP_VERSION-executable.jar 
+cp ../../build/dist/LICENSE freerouting-$APP_VERSION-linux-x64/LICENSE
+mv ../../build/dist/freerouting-executable.jar freerouting-$APP_VERSION-executable.jar 
  
 zip -r freerouting-$APP_VERSION-linux-x64.zip freerouting-$APP_VERSION-linux-x64
 

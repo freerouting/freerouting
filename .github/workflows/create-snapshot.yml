@@ -62,7 +62,7 @@ jobs:
         run: distribution\create-distribution-jar.bat SNAPSHOT-$(date +"%Y%m%d_%H%M00")
       - uses: AButler/upload-release-assets@v3.0
         with:
-          files: './distribution/freerouting-SNAPSHOT-*.jar'
+          files: './scripts/build/freerouting-SNAPSHOT-*.jar'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -85,10 +85,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew dist
       - name: Create Distribution
-        run: distribution/create-distribution-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")
+        run: scripts/build/create-distribution-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")
       - uses: AButler/upload-release-assets@v3.0
         with:
-          files: './distribution/freerouting-SNAPSHOT-*-linux-x64.zip'
+          files: './scripts/build/freerouting-SNAPSHOT-*-linux-x64.zip'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -112,7 +112,7 @@ jobs:
         run: distribution\create-distribution-SNAPSHOT-windows-x64.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"
       - uses: AButler/upload-release-assets@v3.0
         with:
-          files: './distribution/freerouting-SNAPSHOT-*-windows-x64.msi'
+          files: './scripts/build/freerouting-SNAPSHOT-*-windows-x64.msi'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -135,9 +135,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew dist
       - name: Create Distribution
-        run: distribution/create-distribution-SNAPSHOT-macos-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
+        run: scripts/build/create-distribution-SNAPSHOT-macos-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
       - uses: AButler/upload-release-assets@v3.0
         with:
-          files: './distribution/freerouting-SNAPSHOT-*-macos-x64.dmg'
+          files: './scripts/build/freerouting-SNAPSHOT-*-macos-x64.dmg'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}

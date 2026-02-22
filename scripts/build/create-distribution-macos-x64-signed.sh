@@ -43,11 +43,11 @@ export JPKG_HOME=$(pwd)"/.jdk14/jdk-14.jdk/Contents/Home"
 export JPKG_EXECUTABLE=$JPKG_HOME/bin/jpackage
 
 echo "> creating application image"
-$JPKG_EXECUTABLE --input ../build/dist/ \
+$JPKG_EXECUTABLE --input ../../build/dist/ \
  --name freerouting \
  --main-jar freerouting-executable.jar \
- --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version $APP_VERSION --license-file ../LICENSE \
- --icon ../design/icon/freerouting_icon_256x256_v3.icns
+ --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version $APP_VERSION --license-file ../../LICENSE \
+ --icon ../../assets/icon/freerouting_icon_256x256_v3.icns
 
 echo "> signing the application image"
 /usr/bin/codesign --force --sign $APPLE_DEVELOPER_ID --deep freerouting-$APP_VERSION.app

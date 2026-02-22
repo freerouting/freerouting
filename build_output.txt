@@ -1,0 +1,48 @@
+Reusing configuration cache.
+> Task :spotlessCheck UP-TO-DATE
+> Task :processTestResources NO-SOURCE
+> Task :processIntegrationTestResources NO-SOURCE
+> Task :writeVersionInfo UP-TO-DATE
+> Task :processResources UP-TO-DATE
+
+> Task :compileJava
+C:\Work\freerouting\src\main\java\app\freerouting\Freerouting.java:418: error: cannot find symbol
+      fileLoggingLocation = resolveLogPath(null, userdataPath).toString();
+                            ^
+  symbol:   method resolveLogPath(<null>,Path)
+  location: class Freerouting
+C:\Work\freerouting\src\main\java\app\freerouting\Freerouting.java:420: error: cannot find symbol
+      fileLoggingLocation = resolveLogPath(fileLoggingLocation, userdataPath).toString();
+                            ^
+  symbol:   method resolveLogPath(String,Path)
+  location: class Freerouting
+2 errors
+
+> Task :compileJava FAILED
+
+[Incubating] Problems report is available at: file:///C:/Work/freerouting/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler output below.
+  C:\Work\freerouting\src\main\java\app\freerouting\Freerouting.java:418: error: cannot find symbol
+        fileLoggingLocation = resolveLogPath(null, userdataPath).toString();
+                              ^
+    symbol:   method resolveLogPath(<null>,Path)
+    location: class Freerouting
+  C:\Work\freerouting\src\main\java\app\freerouting\Freerouting.java:420: error: cannot find symbol
+        fileLoggingLocation = resolveLogPath(fileLoggingLocation, userdataPath).toString();
+                              ^
+    symbol:   method resolveLogPath(String,Path)
+    location: class Freerouting
+  2 errors
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to generate a Build Scan (powered by Develocity).
+
+BUILD FAILED in 6s
+3 actionable tasks: 1 executed, 2 up-to-date
+Configuration cache entry reused.

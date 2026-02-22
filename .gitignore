@@ -12,9 +12,9 @@ bin/
 .vscode
 .classpath
 
-/distribution/.jdk14
-/distribution/runtime
-/distribution/Freerouting*
+/scripts/build/.jdk14
+/scripts/build/runtime
+/scripts/build/Freerouting*
 
 #/tests/*.ses
 /tests/*.bin
@@ -25,7 +25,7 @@ bin/
 # Visual Studio 2015/2017 cache/options directory
 /.vs/
 /integrations/KiCad/installjava/.vs
-/stats/.vs/
+/scripts/stats/.vs/
 
 freerouting.dsn
 temp-freerouting.dsn
