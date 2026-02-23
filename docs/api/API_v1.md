@@ -24,8 +24,8 @@ https://api.freerouting.app/v1
 
 ## Typical User Workflow
 
-1. (optional) Register at [www.freerouting.app](https://www.freerouting.app) and get an API key.
-2. (optional) [Include](#authentication) the API key in your requests under the `Authorization` header.
+1. Register at [www.freerouting.app](https://www.freerouting.app) and get an API key.
+2. [Include](#authentication) the API key in your requests under the `Authorization` header.
 3. Check if you can reach the API by calling the [service status endpoint](#service-status).
 4. Create a [session](#sessions) to start a new routing job.
 5. [Enqueue](#routing-jobs) a new routing job with the desired settings.
@@ -37,13 +37,19 @@ https://api.freerouting.app/v1
 
 ## Authentication
 
-Some endpoints require authentication via a **API Key**. To get a API key, register
-at [www.freerouting.app](https://www.freerouting.app) and include it in your requests under the `Authorization`
-header:
+The Freerouting API allows administrators to optionally enable endpoint protection through different validation providers (e.g., Google Sheets). 
+
+By default, or if disabled, **the API does not require authentication**, which is the typical configuration when running Freerouting locally as a plugin for a PCB editor (like KiCad or Altium). 
+
+However, for the public endpoint (**https://api.freerouting.app**), authentication is **always enabled**. Users of the public API must register at [www.freerouting.app](https://www.freerouting.app) to get an API key.
+
+If authentication is enabled, requests to protected endpoints must include a valid API key under the `Authorization` header:
 
 ```http
 Authorization: Bearer <API_KEY>
 ```
+
+For complete details on how to configure and enable authentication on your own server, please see the [API Authentication System Documentation](API_authentication.md).
 
 ---
 

@@ -1,20 +1,20 @@
-# API Key Validation System Documentation
+# API Authentication System Documentation
 
 ## Overview
 
-The Freerouting API implements a modular API key validation system to protect sensitive endpoints
-from unauthorized access. The system uses a provider-based architecture that allows for multiple API
-key storage backends while maintaining a consistent validation interface.
+The Freerouting API implements a modular API authentication system to optionally protect sensitive endpoints from unauthorized access. The system uses a **provider-based architecture** that allows for multiple API key validation storage backends. Providers are evaluated in a priority fallback sequence.
+
+By default, authentication is disabled, meaning all endpoints are publicly available. This is ideal for running Freerouting locally as a plugin for PCB editors.
 
 ### Key Features
 
-- **Modular Provider Architecture**: Extensible design supports multiple API key storage mechanisms
-- **Google Sheets Integration**: Initial provider reads API keys from a publicly accessible Google
-  Sheet
-- **Intelligent Caching**: 5-minute cache refresh interval minimizes API calls
-- **GUID Validation**: Ensures API keys follow the RFC 4122 GUID format
-- **Selective Endpoint Protection**: Public endpoints remain accessible without authentication
-- **Graceful Degradation**: Maintains cached data during temporary outages
+- **Global Enable/Disable Toggle**: easily switch authentication on or off depending on the environment.
+- **Priority-based Fallback**: Configure multiple providers (e.g. `"GoogleSheets, MySQL"`). The system checks them in sequence until one explicitly grants or denies access.
+- **Modular Provider Architecture**: Extensible design supports implementing multiple API authentication mechanisms.
+- **Tri-State Validation**: Providers return `ACCESS_GRANTED`, `ACCESS_DENIED`, or `UNDECIDED`.
+- **Google Sheets Integration**: A built-in provider reads API keys from a publicly accessible Google Sheet.
+- **Intelligent Caching**: 5-minute cache refresh interval minimizes API calls to Google Sheets.
+- **Selective Endpoint Protection**: Even when enabled, public endpoints remain accessible without authentication.
 
 ---
 
@@ -22,20 +22,26 @@ key storage backends while maintaining a consistent validation interface.
 
 ### Components
 
-1. **ApiKeyProvider Interface** (`app.freerouting.api.security.ApiKeyProvider`)
-    - Defines the contract for API key validation
-    - Supports multiple implementations (Google Sheets, database, file-based, etc.)
-    - Includes health check and refresh capabilities
+1. **ApiKeyValidationService** (`app.freerouting.api.security.ApiKeyValidationService`)
+    - The central service for authentication.
+    - Reads the configured provider list, initializes them, and orchestrates the fallback sequence.
+    - Resolves access grants based on provider Priority.
 
-2. **GoogleSheetsApiKeyProvider** (`app.freerouting.api.security.GoogleSheetsApiKeyProvider`)
-    - Reads API keys from a Google Sheet
-    - Implements caching with automatic refresh
-    - Validates GUID format and access permissions
+2. **ApiKeyProvider Interface** (`app.freerouting.api.security.ApiKeyProvider`)
+    - Defines the contract for API key validation.
+    - Supports multiple implementations (Google Sheets, database, file-based, etc.).
+    - Returns an `ApiKeyValidationResult`.
 
-3. **ApiKeyValidationFilter** (`app.freerouting.api.security.ApiKeyValidationFilter`)
-    - JAX-RS request filter that intercepts all API requests
-    - Validates API keys from the `Authorization: Bearer` header
-    - Excludes specific public endpoints from validation
+3. **GoogleSheetsApiKeyProvider** (`app.freerouting.api.security.GoogleSheetsApiKeyProvider`)
+    - Reads API keys from a Google Sheet.
+    - Implements caching with automatic refresh.
+    - Validates GUID format and access permissions.
+    - Returns `PROVIDER_FAILED` during severe outages or `UNDECIDED` if keys are missing.
+
+4. **ApiKeyValidationFilter** (`app.freerouting.api.security.ApiKeyValidationFilter`)
+    - JAX-RS request filter that intercepts all API requests.
+    - Uses the `ApiKeyValidationService` to determine access rights.
+    - Excludes specific public endpoints from validation.
 
 ---
 
@@ -51,12 +57,12 @@ package app.freerouting.api.security;
 public class MyCustomApiKeyProvider implements ApiKeyProvider {
 
   @Override
-  public boolean validateApiKey(String apiKey) {
+  public ApiKeyValidationResult validateApiKey(String apiKey) {
     // Implement your validation logic
     // 1. Validate key format
     // 2. Check against your data source
     // 3. Verify access permissions
-    return false;
+    return ApiKeyValidationResult.UNDECIDED;
   }
 
   @Override
@@ -80,29 +86,21 @@ public class MyCustomApiKeyProvider implements ApiKeyProvider {
 
 ### Integration Points
 
-To use your custom provider, modify `ApiKeyValidationFilter.initializeProvider()`:
+To use your custom provider, you need to append your provider's name to the string list of `providers` inside your `apiServerSettings.authentication` configuration, and instantiate your module inside `ApiKeyValidationService`:
 
 ```java
-private static synchronized void initializeProvider() {
-  if (isInitialized) {
-    return;
-  }
+// Inside ApiKeyValidationService.java
 
-  // Add your provider initialization logic
-  String customConfig = Freerouting.globalSettings.apiServerSettings.myCustomConfig;
-
-  if (customConfig != null && !customConfig.trim().isEmpty()) {
-    try {
-      apiKeyProvider = new MyCustomApiKeyProvider(customConfig);
-      FRLogger.info("API key validation enabled with Custom provider");
-    } catch (Exception e) {
-      FRLogger.error("Failed to initialize Custom API key provider", null, e);
-      apiKeyProvider = null;
+    if (this.isEnabled && authSettings != null && authSettings.providers != null) {
+      String[] providerNames = authSettings.providers.split(",");
+      for (String providerName : providerNames) {
+        providerName = providerName.trim();
+        if ("MyCustomProvider".equalsIgnoreCase(providerName)) {
+           providers.add(new MyCustomApiKeyProvider());
+           FRLogger.info("Added Custom API Key Provider");
+        }
+      }
     }
-  }
-
-  isInitialized = true;
-}
 ```
 
 ---
@@ -150,22 +148,44 @@ To access the Google Sheets API, you need a Google API key:
     - Search for "Google Sheets API"
     - Click "Enable" if not already enabled
 
+### JSON Configuration Example
+
+A representative JSON configuration snippet showing the `authentication` block to enable the Google Sheets provider:
+
+```json
+  "api_server": {
+    "endpoints": ["https://0.0.0.0:37864"],
+    "authentication": {
+      "enabled": true,
+      "providers": "GoogleSheets",
+      "google_sheets": {
+        "google_api_key": "YOUR_GOOGLE_API_KEY",
+        "sheet_url": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+      }
+    }
+  }
+```
+
 ### Environment Variables
 
-Set both required environment variables:
+Alternatively, you can supply these configuration values via environment variables:
 
 **Linux/Mac:**
 
 ```bash
-export FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
-export FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY"
+export FREEROUTING__API_SERVER__AUTHENTICATION__ENABLED=true
+export FREEROUTING__API_SERVER__AUTHENTICATION__PROVIDERS="GoogleSheets"
+export FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+export FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY"
 ```
 
 **Windows PowerShell:**
 
 ```powershell
-$env:FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
-$env:FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY"
+$env:FREEROUTING__API_SERVER__AUTHENTICATION__ENABLED="true"
+$env:FREEROUTING__API_SERVER__AUTHENTICATION__PROVIDERS="GoogleSheets"
+$env:FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+$env:FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY"
 ```
 
 ### Deployment Steps
@@ -182,8 +202,7 @@ $env:FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY
     - Copy the sheet URL
 
 3. **Configure Freerouting**:
-    - Set the `FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS` environment variable
-    - Set the `FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY` environment variable
+    - Build your `ApiServerSettings` configuration using the new JSON schema or use the environment variables explicitly mentioned above to configure the `authentication` block.
     - Restart the Freerouting API server
 
 4. **Verify**:
@@ -289,9 +308,9 @@ Response:
 
 **Solutions**:
 
-1. Check both environment variables are set:
-    - `echo $FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS`
-    - `echo $FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY`
+1. Check both environment variables (or corresponding JSON tokens) are configured when `providers` includes Google Sheets:
+    - `"sheet_url"` / `FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL`
+    - `"google_api_key"` / `FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY`
 2. Verify Google Sheet URL is correct and
    accessible ([sample](https://docs.google.com/spreadsheets/d/1kQ-U2Aw8yEHcbXccLLdyAtzJvTBm9CG_1DecIsd1JiE))
 3. Verify Google API key is valid and has Sheets API enabled
@@ -347,8 +366,10 @@ Response:
 
 ```dockerfile
 FROM freerouting:latest
-ENV FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
-ENV FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY"
+ENV FREEROUTING__API_SERVER__AUTHENTICATION__ENABLED="true"
+ENV FREEROUTING__API_SERVER__AUTHENTICATION__PROVIDERS="GoogleSheets"
+ENV FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+ENV FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY"
 ```
 
 ### Kubernetes Deployment
@@ -359,8 +380,10 @@ kind: ConfigMap
 metadata:
   name: freerouting-config
 data:
-  FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS: "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
-  FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY: "YOUR_GOOGLE_API_KEY"
+  FREEROUTING__API_SERVER__AUTHENTICATION__ENABLED: "true"
+  FREEROUTING__API_SERVER__AUTHENTICATION__PROVIDERS: "GoogleSheets"
+  FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL: "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+  FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY: "YOUR_GOOGLE_API_KEY"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -385,8 +408,10 @@ After=network.target
 
 [Service]
 Type=simple
-Environment="FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS=https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
-Environment="FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY=YOUR_GOOGLE_API_KEY"
+Environment="FREEROUTING__API_SERVER__AUTHENTICATION__ENABLED=true"
+Environment="FREEROUTING__API_SERVER__AUTHENTICATION__PROVIDERS=GoogleSheets"
+Environment="FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL=https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+Environment="FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY=YOUR_GOOGLE_API_KEY"
 ExecStart=/usr/local/bin/freerouting
 Restart=on-failure
 
