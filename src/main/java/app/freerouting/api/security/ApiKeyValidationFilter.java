@@ -1,7 +1,5 @@
 package app.freerouting.api.security;
 
-import app.freerouting.Freerouting;
-import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.logger.FRLogger;
 import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
@@ -14,7 +12,9 @@ import java.io.IOException;
 /**
  * JAX-RS request filter that validates API keys for protected endpoints.
  * <p>
- * This filter intercepts all incoming requests and validates the API key provided in the {@code Authorization: Bearer} header. Certain endpoints are excluded from validation and remain publicly
+ * This filter intercepts all incoming requests and validates the API key
+ * provided in the {@code Authorization: Bearer} header. Certain endpoints are
+ * excluded from validation and remain publicly
  * accessible.
  * </p>
  *
@@ -52,55 +52,19 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
 
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String BEARER_PREFIX = "Bearer ";
-  private static ApiKeyProvider apiKeyProvider;
-  private static boolean isInitialized = false;
 
   /**
-   * Initializes the API key provider. This is called lazily on the first request to avoid initialization issues.
+   * Gets the current API key service (for testing purposes).
    */
-  private static synchronized void initializeProvider() {
-    if (isInitialized) {
-      return;
-    }
-
-    String googleSheetsUrl = Freerouting.globalSettings.apiServerSettings.keysLocation.googleSheets;
-    String googleApiKey = Freerouting.globalSettings.apiServerSettings.keysLocation.googleApiKey;
-
-    if (googleSheetsUrl != null && !googleSheetsUrl.trim().isEmpty()
-        && googleApiKey != null && !googleApiKey.trim().isEmpty()) {
-      try {
-        apiKeyProvider = new GoogleSheetsApiKeyProvider(googleSheetsUrl, googleApiKey);
-        FRLogger.info("API key validation enabled with Google Sheets provider");
-      } catch (Exception e) {
-        FRLogger.error(
-            "Failed to initialize Google Sheets API key provider. API key validation will deny all requests.",
-            null, e);
-        apiKeyProvider = null;
-      }
-    } else {
-      FRLogger.warn(
-          "Google Sheets URL or API key not configured (FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS and FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY). API key validation will deny all requests to protected endpoints.");
-      apiKeyProvider = null;
-    }
-
-    isInitialized = true;
-  }
-
-  /**
-   * Gets the current API key provider (for testing purposes).
-   *
-   * @return The API key provider, or {@code null} if not initialized
-   */
-  static ApiKeyProvider getApiKeyProvider() {
-    return apiKeyProvider;
+  static ApiKeyValidationService getApiKeyService() {
+    return ApiKeyValidationService.getInstance();
   }
 
   /**
    * Resets the provider initialization state (for testing purposes).
    */
   static void resetForTesting() {
-    isInitialized = false;
-    apiKeyProvider = null;
+    ApiKeyValidationService.resetForTesting();
   }
 
   /**
@@ -136,10 +100,8 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
       return;
     }
 
-    // Initialize provider on first request
-    if (!isInitialized) {
-      initializeProvider();
-    }
+    // Service initializes lazily and fetches providers internally.
+    ApiKeyValidationService validationService = ApiKeyValidationService.getInstance();
 
     // Get API key from Authorization header
     String authHeader = requestContext.getHeaderString(AUTHORIZATION_HEADER);
@@ -157,15 +119,8 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
       return;
     }
 
-    // Check if provider is available
-    if (apiKeyProvider == null) {
-      FRLogger.error("API key validation failed: provider not initialized for path " + path, null, null);
-      abortWithUnauthorized(requestContext, "API key validation is not properly configured.");
-      return;
-    }
-
-    // Validate the API key
-    if (!apiKeyProvider.validateApiKey(apiKey)) {
+    // Validate the API key using the service
+    if (!validationService.validateApiKey(apiKey)) {
       FRLogger.warn("API key validation failed: invalid or unauthorized API key for path " + path);
       abortWithUnauthorized(requestContext, "Invalid or unauthorized API key.");
       return;
