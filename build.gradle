@@ -400,6 +400,6 @@ rewrite {
     // activeRecipe("org.openrewrite.java.cleanup.UsePrimitivePatterns")
 
     // --- Configuration ---
-    checkstyleConfigFile = file("google_checks.xml")
+    checkstyleConfigFile = file("config/checkstyle/google_checks.xml")
     setExportDatatables(true)
 }
