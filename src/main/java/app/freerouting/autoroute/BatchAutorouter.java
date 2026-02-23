@@ -62,6 +62,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   private final List<Item> reusable_autoroute_item_list = new ArrayList<>();
   private final Set<Item> reusable_handled_items = new TreeSet<>();
   protected RoutingJob job;
+  private int totalItemsRouted = 0;
   /**
    * Time when the routing session started.
    */
@@ -204,10 +205,6 @@ public class BatchAutorouter extends NamedAlgorithm {
     try {
       List<Item> autoroute_item_list = getAutorouteItems(this.board);
 
-      if (this.settings.maxItems != null && autoroute_item_list.size() > this.settings.maxItems) {
-        autoroute_item_list = new ArrayList<>(autoroute_item_list.subList(0, this.settings.maxItems));
-      }
-
       // If there are no items to route, we're done
       if (autoroute_item_list.isEmpty()) {
         this.air_line = null;
@@ -332,10 +329,6 @@ public class BatchAutorouter extends NamedAlgorithm {
     try {
       List<Item> autoroute_item_list = getAutorouteItems(this.board);
 
-      if (this.settings.maxItems != null && autoroute_item_list.size() > this.settings.maxItems) {
-        autoroute_item_list = new ArrayList<>(autoroute_item_list.subList(0, this.settings.maxItems));
-      }
-
       // If there are no items to route, we're done
       if (autoroute_item_list.isEmpty()) {
         this.air_line = null;
@@ -406,6 +399,13 @@ public class BatchAutorouter extends NamedAlgorithm {
           if (this.thread.is_stop_auto_router_requested()) {
             break;
           }
+
+          if (this.settings.maxItems != null && this.totalItemsRouted >= this.settings.maxItems) {
+            job.logInfo("Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
+            this.thread.request_stop_auto_router();
+            break;
+          }
+          this.totalItemsRouted++;
 
           // OPTIMIZATION: Check if the item is already connected before doing expensive
           // setup

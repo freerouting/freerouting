@@ -56,11 +56,7 @@ public class BatchAutorouterThread extends StoppableThread {
       boolean p_remove_unconnected_vias, boolean p_with_preferred_directions) {
     this.board = board;
     this.settings = routerSettings;
-    if (this.settings.maxItems != null && autorouteItemList.size() > this.settings.maxItems) {
-      this.autorouteItemList = new ArrayList<>(autorouteItemList.subList(0, this.settings.maxItems));
-    } else {
-      this.autorouteItemList = autorouteItemList;
-    }
+    this.autorouteItemList = autorouteItemList;
     this.passNo = passNo;
 
     this.remove_unconnected_vias = p_remove_unconnected_vias;
@@ -354,6 +350,12 @@ public class BatchAutorouterThread extends StoppableThread {
       for (int i = 0; i < curr_item.net_count(); i++) {
         // If the user requested to stop the auto-router, we stop it
         if (this.is_stop_auto_router_requested()) {
+          break;
+        }
+
+        if (this.settings.maxItems != null && (this.routedCount + this.failedCount) >= this.settings.maxItems) {
+          FRLogger.info("Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
+          this.request_stop_auto_router();
           break;
         }
 
