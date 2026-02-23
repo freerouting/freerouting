@@ -18,7 +18,6 @@ public class ApiKeyValidationServiceTest {
     void setUp() {
         ApiKeyValidationService.resetForTesting();
         Freerouting.globalSettings = new GlobalSettings();
-        Freerouting.globalSettings.apiServerSettings = new ApiServerSettings();
     }
 
     @AfterEach
