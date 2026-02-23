@@ -204,6 +204,10 @@ public class BatchAutorouter extends NamedAlgorithm {
     try {
       List<Item> autoroute_item_list = getAutorouteItems(this.board);
 
+      if (this.settings.maxItems != null && autoroute_item_list.size() > this.settings.maxItems) {
+        autoroute_item_list = new ArrayList<>(autoroute_item_list.subList(0, this.settings.maxItems));
+      }
+
       // If there are no items to route, we're done
       if (autoroute_item_list.isEmpty()) {
         this.air_line = null;
@@ -327,6 +331,10 @@ public class BatchAutorouter extends NamedAlgorithm {
     long passStartTime = System.currentTimeMillis();
     try {
       List<Item> autoroute_item_list = getAutorouteItems(this.board);
+
+      if (this.settings.maxItems != null && autoroute_item_list.size() > this.settings.maxItems) {
+        autoroute_item_list = new ArrayList<>(autoroute_item_list.subList(0, this.settings.maxItems));
+      }
 
       // If there are no items to route, we're done
       if (autoroute_item_list.isEmpty()) {

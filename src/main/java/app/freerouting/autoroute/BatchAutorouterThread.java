@@ -56,7 +56,11 @@ public class BatchAutorouterThread extends StoppableThread {
       boolean p_remove_unconnected_vias, boolean p_with_preferred_directions) {
     this.board = board;
     this.settings = routerSettings;
-    this.autorouteItemList = autorouteItemList;
+    if (this.settings.maxItems != null && autorouteItemList.size() > this.settings.maxItems) {
+      this.autorouteItemList = new ArrayList<>(autorouteItemList.subList(0, this.settings.maxItems));
+    } else {
+      this.autorouteItemList = autorouteItemList;
+    }
     this.passNo = passNo;
 
     this.remove_unconnected_vias = p_remove_unconnected_vias;
