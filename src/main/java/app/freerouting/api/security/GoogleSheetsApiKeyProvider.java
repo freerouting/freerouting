@@ -151,26 +151,35 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
   }
 
   @Override
-  public boolean validateApiKey(String apiKey) {
+  public ApiKeyValidationResult validateApiKey(String apiKey) {
+    if (!isHealthy) {
+      return ApiKeyValidationResult.PROVIDER_FAILED;
+    }
+
     if (apiKey == null || apiKey.trim().isEmpty()) {
-      return false;
+      return ApiKeyValidationResult.UNDECIDED;
     }
 
     // Validate GUID format
     if (!GUID_PATTERN.matcher(apiKey.trim()).matches()) {
       FRLogger.debug("API key validation failed: invalid GUID format - " + apiKey);
-      return false;
+      return ApiKeyValidationResult.UNDECIDED;
     }
 
     // Check cache
     Boolean isValid = apiKeyCache.get(apiKey.trim());
-    if (isValid != null && isValid) {
-      FRLogger.debug("API key validation successful: " + apiKey);
-      return true;
+    if (isValid != null) {
+      if (isValid) {
+        FRLogger.debug("API key validation successful: " + apiKey);
+        return ApiKeyValidationResult.ACCESS_GRANTED;
+      } else {
+        FRLogger.debug("API key validation failed: access denied for - " + apiKey);
+        return ApiKeyValidationResult.ACCESS_DENIED;
+      }
     }
 
-    FRLogger.debug("API key validation failed: key not found or access not granted - " + apiKey);
-    return false;
+    FRLogger.debug("API key validation undecided: key not found - " + apiKey);
+    return ApiKeyValidationResult.UNDECIDED;
   }
 
   @Override
