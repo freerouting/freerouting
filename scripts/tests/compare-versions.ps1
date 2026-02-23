@@ -3,12 +3,12 @@
 #
 # Usage:
 #   .\compare-versions.ps1
-#   .\compare-versions.ps1 -de ".\tests\Issue508-DAC2020_bm01.dsn"
+#   .\compare-versions.ps1 -de "$PSScriptRoot\..\..\tests\Issue508-DAC2020_bm01.dsn"
 
 param(
-    [string]$de = ".\tests\Issue508-DAC2020_bm01.dsn",
-    [string]$do = ".\tests\Issue508-DAC2020_bm01.ses",
-    [string]$LoggingLocation = ".\logs\",
+    [string]$de = "$PSScriptRoot\..\..\tests\Issue508-DAC2020_bm01.dsn",
+    [string]$do = "$PSScriptRoot\..\..\tests\Issue508-DAC2020_bm01.ses",
+    [string]$LoggingLocation = "$PSScriptRoot\..\..\logs\",
     [string]$LoggingLevel = "TRACE",
     [string]$LoggingPattern = "%msg%n",
     [int]$max_passes = 5,
@@ -39,15 +39,18 @@ $OutputFileAbs = $do
 
 # Rebuild executables
 Write-Host "Building executables..." -ForegroundColor $InfoColor
+Push-Location "$PSScriptRoot\..\.."
 & .\gradlew.bat buildBothVersions
-if ($LASTEXITCODE -ne 0) {
+$GradleExitCode = $LASTEXITCODE
+Pop-Location
+if ($GradleExitCode -ne 0) {
     Write-Host "ERROR: Gradle build failed." -ForegroundColor $ErrorColor
     exit 1
 }
 
 # JAR files
-$CurrentJar = ".\build\libs\freerouting-current-executable.jar"
-$V19Jar = ".\build\libs\freerouting-1.9.0-executable.jar"
+$CurrentJar = "$PSScriptRoot\..\..\build\libs\freerouting-current-executable.jar"
+$V19Jar = "$PSScriptRoot\..\..\build\libs\freerouting-1.9.0-executable.jar"
 
 # Check if JARs exist
 if (-not (Test-Path $CurrentJar)) {
@@ -60,7 +63,7 @@ if (-not (Test-Path $V19Jar)) {
 }
 
 # Create log directory
-$LogBaseDir = ".\logs"
+$LogBaseDir = "$PSScriptRoot\..\..\logs"
 New-Item -ItemType Directory -Force -Path $LogBaseDir | Out-Null
 
 Write-Host "`nConfiguration:" -ForegroundColor $InfoColor
