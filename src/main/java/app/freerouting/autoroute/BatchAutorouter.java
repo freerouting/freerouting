@@ -9,8 +9,11 @@ import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
+import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.Trace;
+import app.freerouting.board.Via;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -434,9 +437,35 @@ public class BatchAutorouter extends NamedAlgorithm {
               board.remove_item(curr_ripped_item);
             }
           }
+          int netItemsBefore = board.get_connectable_items(curr_item.get_net_no(i)).size();
           PerformanceProfiler.start("autoroute_item");
           var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no);
           PerformanceProfiler.end("autoroute_item");
+          int tempIncomp = new RatsNest(board).incomplete_count();
+          int netItemsAfter = board.get_connectable_items(curr_item.get_net_no(i)).size();
+          FRLogger.info("COMPARE_TRACE: Routing " + curr_item.getClass().getSimpleName() + " on net "
+              + curr_item.get_net_no(i) + " -> Result: " + autorouterResult.state + " - Incompletes: " + tempIncomp
+              + " - Ripped: " + ripped_item_list.size() + " - netItems: " + netItemsBefore + "->" + netItemsAfter);
+
+          if (curr_item.get_net_no(i) == 94) {
+            FRLogger.info("COMPARE_TRACE: Dump net 94 items:");
+            for (Item nItem : board.get_connectable_items(94)) {
+              if (nItem instanceof Trace) {
+                Trace t = (Trace) nItem;
+                FRLogger.info(
+                    "  Trace: layer=" + t.get_layer() + " corners=" + t.first_corner() + " to " + t.last_corner());
+              } else if (nItem instanceof Via) {
+                Via v = (Via) nItem;
+                FRLogger.info("  Via: center=" + v.get_center());
+              } else if (nItem instanceof Pin) {
+                Pin p = (Pin) nItem;
+                FRLogger.info("  Pin: center=" + p.get_center() + " name=" + p.name() + " comp=" + p.component_name());
+              } else {
+                FRLogger.info("  Item: " + nItem.getClass().getSimpleName());
+              }
+            }
+          }
+
           if (autorouterResult.state == AutorouteAttemptState.ROUTED) {
             // The item was successfully routed
             ++routed;
@@ -479,11 +508,17 @@ public class BatchAutorouter extends NamedAlgorithm {
         }
       }
 
+      int incompletesBefore = new RatsNest(board).incomplete_count();
+      FRLogger.info("COMPARE_TRACE: Incompletes before remove_tails = " + incompletesBefore);
+
       if (this.remove_unconnected_vias) {
         remove_tails(Item.StopConnectionOption.NONE);
       } else {
         remove_tails(Item.StopConnectionOption.FANOUT_VIA);
       }
+
+      int incompletesAfter = new RatsNest(board).incomplete_count();
+      FRLogger.info("COMPARE_TRACE: Incompletes after remove_tails = " + incompletesAfter);
 
       // Fire final update for this pass
       BoardStatistics boardStatistics = board.get_statistics();

@@ -386,6 +386,9 @@ public class BatchAutorouter {
           AutorouteEngine.AutorouteResult result = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list,
               p_pass_no);
           PerformanceProfiler.end("autoroute_item");
+          int tempIncomp = new RatsNest(routing_board, hdlg.get_locale()).incomplete_count();
+          FRLogger.info("COMPARE_TRACE: Routing " + curr_item.getClass().getSimpleName() + " on net "
+              + curr_item.get_net_no(i) + " -> Result: " + result + " - Incompletes: " + tempIncomp);
           if (result == AutorouteEngine.AutorouteResult.ROUTED
               || result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED) {
             ++routed;

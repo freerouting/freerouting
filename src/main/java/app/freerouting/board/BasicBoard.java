@@ -470,6 +470,23 @@ public class BasicBoard implements Serializable {
     if (p_item == null) {
       return;
     }
+    if (p_item instanceof Trace t && t.net_no_arr.length > 0 && t.net_no_arr[0] == 94) {
+      if (t instanceof PolylineTrace pt && pt.corner_count() == 2
+          && t.first_corner().equals(new app.freerouting.geometry.planar.IntPoint(1885928, -1097274))
+          && t.last_corner().equals(new app.freerouting.geometry.planar.IntPoint(1885928, -1098024))) {
+        app.freerouting.logger.FRLogger.info("  COMPARE_TRACE: net 94 REMOVE_ITEM called on trace [7,8]!");
+        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+          app.freerouting.logger.FRLogger.info("    " + ste.toString());
+        }
+      } else {
+        app.freerouting.logger.FRLogger
+            .info("  COMPARE_TRACE: net 94 REMOVE_ITEM called on trace layer=" + t.get_layer() + " corners="
+                + t.first_corner() + " to " + t.last_corner() + " by " + Thread.currentThread().getStackTrace()[3]);
+      }
+    }
+    if (p_item.isDeletionForbidden()) {
+      return;
+    }
     additional_update_after_change(p_item); // must be called before p_item is deleted.
     search_tree_manager.remove(p_item);
     item_list.delete(p_item);

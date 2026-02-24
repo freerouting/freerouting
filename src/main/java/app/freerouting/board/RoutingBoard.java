@@ -630,6 +630,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     Polyline new_polyline = shove_trace_algo.spring_over_obstacles(p_polyline, compensated_half_width, p_layer,
         p_net_no_arr, p_clearance_class_no, null);
     if (new_polyline == null) {
+      if (p_net_no_arr != null && p_net_no_arr.length > 0 && p_net_no_arr[0] == 94) {
+        app.freerouting.logger.FRLogger
+            .info("  COMPARE_TRACE: net 94 insert_forced_trace_polyline fails early at spring_over_obstacles null");
+      }
       return from_corner;
     }
     Polyline combined_polyline;
@@ -640,6 +644,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       combined_polyline = new_polyline.combine(combine_trace.polyline());
     }
     if (combined_polyline.arr.length < 3) {
+      if (p_net_no_arr != null && p_net_no_arr.length > 0 && p_net_no_arr[0] == 94) {
+        app.freerouting.logger.FRLogger.info(
+            "  COMPARE_TRACE: net 94 insert_forced_trace_polyline fails early at combined_polyline.arr.length < 3");
+      }
       return from_corner;
     }
     int start_shape_no = combined_polyline.arr.length - new_polyline.arr.length;
@@ -685,6 +693,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       double last_segment_length = last_corner.distance(prev_last_corner);
       if (last_segment_length > 100 * sample_width) {
         // to many cycles to sample
+        if (p_net_no_arr != null && p_net_no_arr.length > 0 && p_net_no_arr[0] == 94) {
+          app.freerouting.logger.FRLogger
+              .info("  COMPARE_TRACE: net 94 insert_forced_trace_polyline fails early at to many cycles to sample");
+        }
         return from_corner;
       }
       int shape_index = combined_polyline.corner_count() - trace_shapes.length - 1 + last_shape_no;
@@ -694,6 +706,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         Point curr_last_corner = new_polyline.last_corner();
         if (!(curr_last_corner instanceof IntPoint)) {
           FRLogger.warn("RoutingBoard.insert_forced_trace_polyline: IntPoint expected");
+          if (p_net_no_arr != null && p_net_no_arr.length > 0 && p_net_no_arr[0] == 94) {
+            app.freerouting.logger.FRLogger.info(
+                "  COMPARE_TRACE: net 94 insert_forced_trace_polyline fails early at curr_last_corner instanceof IntPoint");
+          }
           return from_corner;
         }
         new_corner = curr_last_corner;
@@ -717,6 +733,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           p_clearance_class_no, p_max_recursion_depth, p_max_via_recursion_depth,
           p_max_spring_over_recursion_depth, p_time_limit);
       if (!check_shove_ok) {
+        if (p_net_no_arr != null && p_net_no_arr.length > 0 && p_net_no_arr[0] == 94) {
+          app.freerouting.logger.FRLogger.info("  COMPARE_TRACE: net 94 check_shove_ok returned FALSE! from_corner="
+              + from_corner + ", to_corner=" + to_corner);
+          app.freerouting.logger.FRLogger.info("  COMPARE_TRACE: Object=" + this.get_shove_failing_obstacle());
+        }
         return from_corner;
       }
       boolean insert_ok = shove_trace_algo.insert(last_trace_shape, from_side, p_layer, p_net_no_arr,
