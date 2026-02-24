@@ -122,8 +122,8 @@ dependencies {
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.40.0'
     implementation 'com.google.api:gax:2.72.1'
     implementation 'com.google.api-client:google-api-client-appengine:2.8.1'
-    implementation 'com.google.cloud:google-cloud-core:2.62.1'
-    implementation 'com.google.cloud:google-cloud-core-http:2.62.1'
+    implementation 'com.google.cloud:google-cloud-core:2.62.2'
+    implementation 'com.google.cloud:google-cloud-core-http:2.62.2'
     implementation 'com.google.cloud:google-cloud-bigquery:2.55.3'
 
     // Add Google Sheets API dependencies for API key validation
