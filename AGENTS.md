@@ -29,7 +29,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 - **Regressions Prevention:** Before refactoring any core routing logic, you **must** verify your changes against the existing test suite to prevent trace regressions. Always run reproduction tests on actual PCB design files (`.dsn`) if an issue is reported (see `src/test/java/app/freerouting/tests/TestBasedOnAnIssue.java` and fixtures in `tests/`).
 - **Baseline Performance:** The original v1.9 implementation serves as a performance and correctness baseline. Any new implementation should aim to match or exceed the routing quality and efficiency of the v1.9 version. 
   - To compare performance, use the script `scripts/tests/compare-versions.ps1` which runs both versions on a PCB design and outputs key metrics.
-  - TRACE level logs are written to `logs/` folder with `freerouting-v19.log` and `freerouting-current.log` filenames for easy comparison.
+  - TRACE level logs are written to `logs/` folder with `freerouting-v190.log` and `freerouting-current.log` filenames for easy comparison.
 - **Algorithm Performance Metrics:** When optimizing routing algorithms, focus on key performance metrics such as:
   - **Clearance Violations:** (Critical priority) Ensure that no routing changes introduce new clearance violations.
   - **Routing Completion Rate:** (High priority) The percentage of successfully routed nets.
