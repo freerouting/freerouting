@@ -5,7 +5,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 # Tech Stack & Environment
 
 - **Language:** Java 25
-- **Build System:** Gradle
+- **Build System:** Gradle 9
 - **Key Dependencies:** 
   - Jetty (embedded server)
   - Jersey (JAX-RS for API)
@@ -20,11 +20,22 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 - **Separation of Concerns:** The **UI/Visualizer** and the **Routing Engine** are distinct domains. Always maintain a strict boundary between visual representation and core algorithmic logic. UI concerns should not bleed into the geometric models.
 - **Repository Package Boundaries:** Keep routing/data logic in `src/main/java/app/freerouting/{autoroute,board,geometry,drc,core,rules}`; keep UI/editor flow in `src/main/java/app/freerouting/{gui,interactive,boardgraphics}`; keep REST/API server concerns in `src/main/java/app/freerouting/{api,management}`.
 - **Coding Standards:** Adhere strictly to Clean Code principles and standard Java naming conventions (e.g., CamelCase for classes/methods). Prioritize readability and maintainability without sacrificing the algorithmic performance. 
+- **Legacy Reference Implementation:** The source code of the original v1.9 implementation is available in the `src_v19/` directory. It serves as a reference and benchmark baseline that we can comare against when refactoring or optimizing routing logic. Use it to understand the original algorithmic decisions and to ensure that any new implementation maintains or improves upon the original performance and correctness. The source code should be modified only when more gradual trace logging is needed to understand the original algorithm's behavior in specific scenarios. Do not refactor or optimize the v1.9 code directly; instead, use it as a reference for the current development branch.
+- **Logging & Debugging:** Use the `FRLogger` class for logging. The method `trace(String method, String operation, String message, String impactedItems, Point[] impactedPoints)` should be used for detailed algorithmic steps, especially in routing logic, to facilitate debugging and performance analysis. Logs should be structured and informative, including impacted nets and impacted points in the routing process. These logs should be maintained in both the current implementation and the v1.9 reference to allow for side-by-side comparisons when analyzing routing behavior and performance. You can leave the trace log method calls in place in the v1.9 code and in the current code as well to help future developers understand the routing process and identify any regressions or improvements in the new implementation.
 
 # Specific Constraints & Logic
 
 - **Safety First:** Be *extremely careful* when modifying the routing algorithms. Even minor changes can lead to severe regressions in trace optimization, clearance violations, or routing completion rates.
 - **Regressions Prevention:** Before refactoring any core routing logic, you **must** verify your changes against the existing test suite to prevent trace regressions. Always run reproduction tests on actual PCB design files (`.dsn`) if an issue is reported (see `src/test/java/app/freerouting/tests/TestBasedOnAnIssue.java` and fixtures in `tests/`).
+- **Baseline Performance:** The original v1.9 implementation serves as a performance and correctness baseline. Any new implementation should aim to match or exceed the routing quality and efficiency of the v1.9 version. 
+  - To compare performance, use the script `scripts/tests/compare-versions.ps1` which runs both versions on a PCB design and outputs key metrics.
+  - TRACE level logs are written to `logs/` folder with `freerouting-v19.log` and `freerouting-current.log` filenames for easy comparison.
+- **Algorithm Performance Metrics:** When optimizing routing algorithms, focus on key performance metrics such as:
+  - **Clearance Violations:** (Critical priority) Ensure that no routing changes introduce new clearance violations.
+  - **Routing Completion Rate:** (High priority) The percentage of successfully routed nets.
+  - **Execution Time:** (Medium priority) Aim to reduce the time taken for routing without compromising the above metrics.
+  - **Memory Usage:** (Medium priority) Ensure that any optimizations do not lead to excessive memory consumption, especially for large PCB designs.
+  - **Trace Length Optimization:** (Low priority) The total length of traces should be minimized while respecting design rules.
 - **Licensing:** This project is open-source under the **GPLv3** license. Ensure all dependencies and contributions respect this license.
 
 # Workflow Commands
