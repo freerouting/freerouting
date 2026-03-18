@@ -4,6 +4,7 @@
 # Usage:
 #   .\compare-versions.ps1
 #   .\compare-versions.ps1 -de "$PSScriptRoot\..\..\tests\Issue508-DAC2020_bm01.dsn"
+#   .\compare-versions.ps1 -DebugFilterByNet "Net-(C7-Pad2)"
 
 param(
     [string]$de = "$PSScriptRoot\..\..\tests\Issue508-DAC2020_bm01.dsn",
@@ -14,7 +15,9 @@ param(
     [int]$max_passes = 1,
     [int]$max_items = 41,
     [int]$max_threads = 1,
-    [string]$job_timeout = "00:03:00"
+    [string]$job_timeout = "00:03:00",
+    [Alias("debug.filter_by_net")]
+    [string]$DebugFilterByNet = ""
 )
 
 # Colors for output
@@ -74,6 +77,9 @@ Write-Host "  Max Passes:  $max_passes" -ForegroundColor White
 Write-Host "  Max Items:   $max_items" -ForegroundColor White
 Write-Host "  Max Threads: $max_threads" -ForegroundColor White
 Write-Host "  Timeout:     $job_timeout" -ForegroundColor White
+if (-not [string]::IsNullOrWhiteSpace($DebugFilterByNet)) {
+    Write-Host "  Net Filter:  $DebugFilterByNet" -ForegroundColor White
+}
 
 # Log Files
 $CurrentLogFile = Join-Path $LogBaseDir "freerouting-current.log"
@@ -96,6 +102,7 @@ $BaseArgs = @(
     "--router.optimizer.enabled=false"
     "--gui.enabled=false"
     "--api_server.enabled=false"
+    "--debug.enable_detailed_logging=true"
     "--router.job_timeout=`"$job_timeout`""
     "--router.max_passes=$max_passes"
     "--router.max_items=$max_items"
@@ -104,6 +111,10 @@ $BaseArgs = @(
     "--logging.file.pattern=$LoggingPattern"
     "--logging.console.level=INFO"
 )
+
+if (-not [string]::IsNullOrWhiteSpace($DebugFilterByNet)) {
+    $BaseArgs += "--debug.filter_by_net=$DebugFilterByNet"
+}
 
 # Function to parse log results
 function Parse-LogResults {
