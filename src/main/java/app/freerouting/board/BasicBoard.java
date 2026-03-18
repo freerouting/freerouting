@@ -474,14 +474,27 @@ public class BasicBoard implements Serializable {
       if (t instanceof PolylineTrace pt && pt.corner_count() == 2
           && t.first_corner().equals(new app.freerouting.geometry.planar.IntPoint(1885928, -1097274))
           && t.last_corner().equals(new app.freerouting.geometry.planar.IntPoint(1885928, -1098024))) {
-        app.freerouting.logger.FRLogger.info("  COMPARE_TRACE: net 94 REMOVE_ITEM called on trace [7,8]!");
+        FRLogger.trace(
+            "BasicBoard.remove_item",
+            "compare_trace_remove_item",
+            "REMOVE_ITEM called on trace [7,8]",
+            "Net #" + t.net_no_arr[0] + ",Trace #" + t.get_id_no() + ",Layer #" + t.get_layer(),
+            new Point[] { t.first_corner(), t.last_corner() });
         for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-          app.freerouting.logger.FRLogger.info("    " + ste.toString());
+          FRLogger.trace(
+              "BasicBoard.remove_item",
+              "compare_trace_remove_item_stack",
+              ste.toString(),
+              "Net #" + t.net_no_arr[0] + ",Trace #" + t.get_id_no() + ",Layer #" + t.get_layer(),
+              new Point[] { t.first_corner(), t.last_corner() });
         }
       } else {
-        app.freerouting.logger.FRLogger
-            .info("  COMPARE_TRACE: net 94 REMOVE_ITEM called on trace layer=" + t.get_layer() + " corners="
-                + t.first_corner() + " to " + t.last_corner() + " by " + Thread.currentThread().getStackTrace()[3]);
+        FRLogger.trace(
+            "BasicBoard.remove_item",
+            "compare_trace_remove_item",
+            "REMOVE_ITEM called by " + Thread.currentThread().getStackTrace()[3],
+            "Net #" + t.net_no_arr[0] + ",Trace #" + t.get_id_no() + ",Layer #" + t.get_layer(),
+            new Point[] { t.first_corner(), t.last_corner() });
       }
     }
     if (p_item.isDeletionForbidden()) {

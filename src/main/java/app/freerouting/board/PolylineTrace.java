@@ -461,11 +461,15 @@ public class PolylineTrace extends Trace implements Serializable {
                   if (curr_split_pieces[k] != null) {
                     found_trace_split = true;
                     if (this.net_no_arr.length > 0 && this.net_no_arr[0] == 94) {
-                      app.freerouting.logger.FRLogger
-                          .info("  COMPARE_TRACE: net 94 found_trace_split evaluating to TRUE for found_item layer="
-                              + found_trace.get_layer() + " corners=" + found_trace.first_corner() + " to "
-                              + found_trace.last_corner() + " at line index " + found_entry.shape_index_in_object
-                              + " with intersection " + intersecting_lines[j]);
+                      FRLogger.trace(
+                          "PolylineTrace.split",
+                          "compare_trace_found_trace_split",
+                          "found_trace_split=true at line index " + found_entry.shape_index_in_object
+                              + " with intersection " + intersecting_lines[j],
+                          "Net #" + this.net_no_arr[0] + ",Trace #" + found_trace.get_id_no() + ",Layer #"
+                              + found_trace.get_layer(),
+                          new Point[] { found_trace.first_corner(), found_trace.last_corner(), lines.corner(i),
+                              lines.corner(i + 1) });
                     }
                     split_pieces.add(curr_split_pieces[k]);
                   }

@@ -23,6 +23,7 @@ import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
@@ -443,25 +444,55 @@ public class BatchAutorouter extends NamedAlgorithm {
           PerformanceProfiler.end("autoroute_item");
           int tempIncomp = new RatsNest(board).incomplete_count();
           int netItemsAfter = board.get_connectable_items(curr_item.get_net_no(i)).size();
-          FRLogger.info("COMPARE_TRACE: Routing " + curr_item.getClass().getSimpleName() + " on net "
-              + curr_item.get_net_no(i) + " -> Result: " + autorouterResult.state + " - Incompletes: " + tempIncomp
-              + " - Ripped: " + ripped_item_list.size() + " - netItems: " + netItemsBefore + "->" + netItemsAfter);
+          FRLogger.trace(
+              "BatchAutorouter.autoroute_pass",
+              "compare_trace_route_item",
+              "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + autorouterResult.state
+                  + ", incompletes=" + tempIncomp + ", ripped=" + ripped_item_list.size() + ", netItems="
+                  + netItemsBefore + "->" + netItemsAfter,
+              "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no() + ",Type="
+                  + curr_item.getClass().getSimpleName(),
+              getImpactedPoints(curr_item));
 
           if (curr_item.get_net_no(i) == 94) {
-            FRLogger.info("COMPARE_TRACE: Dump net 94 items:");
+            FRLogger.trace(
+                "BatchAutorouter.autoroute_pass",
+                "compare_trace_dump_net_items",
+                "Dump net 94 items",
+                "Net #94",
+                new Point[0]);
             for (Item nItem : board.get_connectable_items(94)) {
               if (nItem instanceof Trace) {
                 Trace t = (Trace) nItem;
-                FRLogger.info(
-                    "  Trace: layer=" + t.get_layer() + " corners=" + t.first_corner() + " to " + t.last_corner());
+                FRLogger.trace(
+                    "BatchAutorouter.autoroute_pass",
+                    "compare_trace_dump_net_item",
+                    "Trace layer=" + t.get_layer() + " corners=" + t.first_corner() + " to " + t.last_corner(),
+                    "Net #94,Item #" + t.get_id_no() + ",Type=Trace",
+                    new Point[] { t.first_corner(), t.last_corner() });
               } else if (nItem instanceof Via) {
                 Via v = (Via) nItem;
-                FRLogger.info("  Via: center=" + v.get_center());
+                FRLogger.trace(
+                    "BatchAutorouter.autoroute_pass",
+                    "compare_trace_dump_net_item",
+                    "Via center=" + v.get_center(),
+                    "Net #94,Item #" + v.get_id_no() + ",Type=Via",
+                    new Point[] { v.get_center() });
               } else if (nItem instanceof Pin) {
                 Pin p = (Pin) nItem;
-                FRLogger.info("  Pin: center=" + p.get_center() + " name=" + p.name() + " comp=" + p.component_name());
+                FRLogger.trace(
+                    "BatchAutorouter.autoroute_pass",
+                    "compare_trace_dump_net_item",
+                    "Pin center=" + p.get_center() + " name=" + p.name() + " comp=" + p.component_name(),
+                    "Net #94,Item #" + p.get_id_no() + ",Type=Pin",
+                    new Point[] { p.get_center() });
               } else {
-                FRLogger.info("  Item: " + nItem.getClass().getSimpleName());
+                FRLogger.trace(
+                    "BatchAutorouter.autoroute_pass",
+                    "compare_trace_dump_net_item",
+                    "Item " + nItem.getClass().getSimpleName(),
+                    "Net #94,Item #" + nItem.get_id_no() + ",Type=" + nItem.getClass().getSimpleName(),
+                    getImpactedPoints(nItem));
               }
             }
           }
@@ -509,7 +540,12 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
 
       int incompletesBefore = new RatsNest(board).incomplete_count();
-      FRLogger.info("COMPARE_TRACE: Incompletes before remove_tails = " + incompletesBefore);
+      FRLogger.trace(
+          "BatchAutorouter.autoroute_pass",
+          "compare_trace_remove_tails",
+          "Incompletes before remove_tails=" + incompletesBefore,
+          "Autorouter pass #" + p_pass_no,
+          new Point[0]);
 
       if (this.remove_unconnected_vias) {
         remove_tails(Item.StopConnectionOption.NONE);
@@ -518,7 +554,12 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
 
       int incompletesAfter = new RatsNest(board).incomplete_count();
-      FRLogger.info("COMPARE_TRACE: Incompletes after remove_tails = " + incompletesAfter);
+      FRLogger.trace(
+          "BatchAutorouter.autoroute_pass",
+          "compare_trace_remove_tails",
+          "Incompletes after remove_tails=" + incompletesAfter,
+          "Autorouter pass #" + p_pass_no,
+          new Point[0]);
 
       // Fire final update for this pass
       BoardStatistics boardStatistics = board.get_statistics();
@@ -733,6 +774,22 @@ public class BatchAutorouter extends NamedAlgorithm {
     board.remove_trace_tails(-1, p_stop_connection_option);
     board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, this.trace_cost_arr, this.thread,
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+  }
+
+  private static Point[] getImpactedPoints(Item item) {
+    if (item instanceof Trace trace) {
+      return new Point[] { trace.first_corner(), trace.last_corner() };
+    }
+    if (item instanceof Via via) {
+      return new Point[] { via.get_center() };
+    }
+    if (item instanceof Pin pin) {
+      return new Point[] { pin.get_center() };
+    }
+    if (item instanceof DrillItem drillItem) {
+      return new Point[] { drillItem.get_center() };
+    }
+    return new Point[0];
   }
 
   // Tries to route an item on a specific net. Returns true, if the item is

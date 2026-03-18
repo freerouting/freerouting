@@ -7,10 +7,12 @@ import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
+import app.freerouting.board.Trace;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.interactive.AutorouteSettings;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.InteractiveActionThread;
@@ -222,7 +224,7 @@ public class BatchAutorouter {
         if (average.getAsDouble() < 20.0) {
           FRLogger.warn(
               "There were only "
-                  + FRLogger.DefaultFloatFormat.format(average.getAsDouble())
+                  + FRLogger.defaultFloatFormat.format(average.getAsDouble())
                   + " changes in the last "
                   + diffBetweenBoardsCheckSize
                   + " passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.");
@@ -273,8 +275,8 @@ public class BatchAutorouter {
         initialUnroutedCount,
         FRLogger.formatDuration(sessionDuration / 1000.0),
         FRLogger.formatScore(finalScore, finalUnrouted, finalViolations),
-        FRLogger.DefaultFloatFormat.format(totalCpuTime),
-        FRLogger.DefaultFloatFormat.format(totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0),
+        FRLogger.defaultFloatFormat.format(totalCpuTime),
+        FRLogger.defaultFloatFormat.format(totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0),
         peakHeap));
 
     PerformanceProfiler.printResults();
@@ -387,8 +389,14 @@ public class BatchAutorouter {
               p_pass_no);
           PerformanceProfiler.end("autoroute_item");
           int tempIncomp = new RatsNest(routing_board, hdlg.get_locale()).incomplete_count();
-          FRLogger.info("COMPARE_TRACE: Routing " + curr_item.getClass().getSimpleName() + " on net "
-              + curr_item.get_net_no(i) + " -> Result: " + result + " - Incompletes: " + tempIncomp);
+          FRLogger.trace(
+              "BatchAutorouter.autoroute_pass",
+              "compare_trace_route_item",
+              "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + result + ", incompletes="
+                  + tempIncomp,
+              "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no() + ",Type="
+                  + curr_item.getClass().getSimpleName(),
+              getImpactedPoints(curr_item));
           if (result == AutorouteEngine.AutorouteResult.ROUTED
               || result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED) {
             ++routed;
@@ -458,8 +466,8 @@ public class BatchAutorouter {
           routing_board.get_hash(),
           FRLogger.formatDuration(passDuration / 1000.0),
           scoreStr,
-          FRLogger.DefaultFloatFormat.format(this.totalCpuTime),
-          FRLogger.DefaultFloatFormat.format(this.totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0)));
+          FRLogger.defaultFloatFormat.format(this.totalCpuTime),
+          FRLogger.defaultFloatFormat.format(this.totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0)));
 
       PerformanceProfiler.recordPass(p_pass_no, incompleteCount, passDuration, currentRipupCost);
 
@@ -498,6 +506,16 @@ public class BatchAutorouter {
       this.air_line = null;
       return false;
     }
+  }
+
+  private static Point[] getImpactedPoints(Item item) {
+    if (item instanceof Trace trace) {
+      return new Point[] {trace.first_corner(), trace.last_corner()};
+    }
+    if (item instanceof DrillItem drillItem) {
+      return new Point[] {drillItem.get_center()};
+    }
+    return new Point[0];
   }
 
   private void remove_tails(Item.StopConnectionOption p_stop_connection_option) {
