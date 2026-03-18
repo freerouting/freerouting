@@ -221,6 +221,13 @@ public class MainApplication extends WindowBase {
         System.setProperty("freerouting.log.console.level", arg.substring("--logging.console.level=".length()));
       } else if (arg.startsWith("--logging.file.pattern=")) {
         System.setProperty("freerouting.log.file.pattern", arg.substring("--logging.file.pattern=".length()));
+      } else if (arg.startsWith("--debug.enable_detailed_logging=")) {
+        boolean detailedLoggingEnabled = Boolean
+            .parseBoolean(arg.substring("--debug.enable_detailed_logging=".length()));
+        FRLogger.granularTraceEnabled = detailedLoggingEnabled;
+        if (detailedLoggingEnabled) {
+          System.setProperty("freerouting.log.file.level", "TRACE");
+        }
       }
     }
 
@@ -472,8 +479,9 @@ public class MainApplication extends WindowBase {
       if (new_frame.is_intermediate_stage_file_available()) {
         LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String load_snapshot_confirmation = String.format(resources.getString("load_snapshot_confirmation"),
-            modification_time.format(formatter));
+        String load_snapshot_confirmation = resources
+            .getString("load_snapshot_confirmation")
+            .formatted(modification_time.format(formatter));
 
         if (WindowMessage.confirm(load_snapshot_confirmation)) {
           new_frame.load_intermediate_stage_file();
@@ -739,8 +747,9 @@ public class MainApplication extends WindowBase {
     if (new_frame.is_intermediate_stage_file_available()) {
       LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-      String load_snapshot_confirmation = String.format(resources.getString("load_snapshot_confirmation"),
-          modification_time.format(formatter));
+      String load_snapshot_confirmation = resources
+          .getString("load_snapshot_confirmation")
+          .formatted(modification_time.format(formatter));
 
       if (WindowMessage.confirm(load_snapshot_confirmation)) {
         new_frame.load_intermediate_stage_file();
