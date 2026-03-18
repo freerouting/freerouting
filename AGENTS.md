@@ -36,6 +36,8 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   - **Execution Time:** (Medium priority) Aim to reduce the time taken for routing without compromising the above metrics.
   - **Memory Usage:** (Medium priority) Ensure that any optimizations do not lead to excessive memory consumption, especially for large PCB designs.
   - **Trace Length Optimization:** (Low priority) The total length of traces should be minimized while respecting design rules.
+- **Testing & Validation:** Always write comprehensive unit tests for any new routing logic or optimizations. Use the existing test suite as a reference and ensure that all tests pass before merging changes. For any new features or optimizations, add specific test cases that validate the expected behavior and performance improvements.
+  - **Running Tests:** If you implement a small change you can run only one unit test to do a quick check, preferably the `Issue508Test_BM01_first_2_nets` which is one of the quickest routing test. Use `./gradlew test` to run all unit tests and `./gradlew check` for the full integration testing suite, which includes tests based on actual PCB design files.
 - **Licensing:** This project is open-source under the **GPLv3** license. Ensure all dependencies and contributions respect this license.
 
 # Workflow Commands
