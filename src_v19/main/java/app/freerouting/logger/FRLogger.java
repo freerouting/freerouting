@@ -2,6 +2,7 @@ package app.freerouting.logger;
 
 import app.freerouting.Freerouting;
 import app.freerouting.board.BasicBoard;
+import app.freerouting.debug.DebugControl;
 import app.freerouting.geometry.planar.Point;
 import java.text.DecimalFormat;
 import java.time.Duration;
@@ -404,13 +405,13 @@ public class FRLogger {
         logger = LogManager.getLogger(Freerouting.class);
       }
 
-      if (granularTraceEnabled && (impactedItems.isEmpty() || true)) {
+      if (granularTraceEnabled && (impactedItems.isEmpty() || DebugControl.getInstance().isInterested(impactedItems))) {
         String formattedMessage = String.format("[%s] [%s] %s: %s", method, operation, message, impactedItems);
         logger.trace(formattedMessage);
       }
     }
 
-    boolean wasInterestingTraceEvent = true;
+    boolean wasInterestingTraceEvent = DebugControl.getInstance().check(operation, impactedItems);
     if (wasInterestingTraceEvent) {
       publishTraceEvent(new TraceEvent(method, operation, message, impactedItems, impactedPoints, Instant.now()));
     }
