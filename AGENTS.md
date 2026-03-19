@@ -30,6 +30,8 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 - **Baseline Performance:** The original v1.9 implementation serves as a performance and correctness baseline. Any new implementation should aim to match or exceed the routing quality and efficiency of the v1.9 version. 
   - To compare performance, use the script `scripts/tests/compare-versions.ps1` which runs both versions on a PCB design and outputs key metrics.
   - TRACE level logs are written to `logs/` folder with `freerouting-v190.log` and `freerouting-current.log` filenames for easy comparison.
+  - Log files can become huge, so use the script's filtering capabilities to focus on specific nets (`-DebugFilterByNet` command line argument), limit routing passes (`max_passes`) or items (`max_items`) when analyzing performance differences between the two versions.
+  - Use PowerShell commands to extract and compare relevant log entries for specific nets or routing steps to identify where the new implementation may be diverging from the v1.9 baseline in terms of routing decisions, trace optimizations, or clearance handling.
 - **Algorithm Performance Metrics:** When optimizing routing algorithms, focus on key performance metrics such as:
   - **Clearance Violations:** (Critical priority) Ensure that no routing changes introduce new clearance violations.
   - **Routing Completion Rate:** (High priority) The percentage of successfully routed nets.
