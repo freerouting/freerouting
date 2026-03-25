@@ -632,7 +632,45 @@ public class MazeSearchAlgo {
       MazeListElement p_from_element,
       int p_add_costs,
       MazeSearchElement.Adjustment p_adjustment) {
-    if (p_door.get_maze_search_element(p_section_no).is_occupied || p_shape_entry == null) {
+    boolean door_section_occupied = p_door.get_maze_search_element(p_section_no).is_occupied;
+    if (door_section_occupied || p_shape_entry == null) {
+      FRLogger.info(
+          "RAW_SECTION skip selected_section="
+              + p_section_no
+              + ", from_section="
+              + p_from_element.section_no_of_door
+              + ", backtrack_section="
+              + p_from_element.section_no_of_backtrack_door
+              + ", occupied="
+              + door_section_occupied
+              + ", shape_entry_null="
+              + (p_shape_entry == null)
+              + ", adjustment="
+              + p_adjustment
+              + ", net="
+              + ctrl.net_no);
+      FRLogger.trace(
+          "MazeSearchAlgo.expand_to_door_section",
+          "skip_assign_raw",
+          "selected_section="
+              + p_section_no
+              + ", from_section="
+              + p_from_element.section_no_of_door
+              + ", backtrack_section="
+              + p_from_element.section_no_of_backtrack_door
+              + ", occupied="
+              + door_section_occupied
+              + ", shape_entry_null="
+              + (p_shape_entry == null)
+              + ", adjustment="
+              + p_adjustment,
+          "Net #"
+              + ctrl.net_no
+              + ", door="
+              + describe_expandable(p_door)
+              + ", from_door="
+              + describe_expandable(p_from_element.door),
+          to_impacted_points(p_shape_entry));
       return false;
     }
     CompleteExpansionRoom next_room = p_door.other_room(p_from_element.next_room);
@@ -664,8 +702,73 @@ public class MazeSearchAlgo {
             room_ripped,
             p_adjustment,
             false);
+    FRLogger.info(
+        "RAW_SECTION assign selected_section="
+            + p_section_no
+            + ", from_section="
+            + p_from_element.section_no_of_door
+            + ", backtrack_section="
+            + p_from_element.section_no_of_backtrack_door
+            + ", add_costs="
+            + p_add_costs
+            + ", adjustment="
+            + p_adjustment
+            + ", room_ripped="
+            + room_ripped
+            + ", expansion_value="
+            + expansion_value
+            + ", sorting_value="
+            + sorting_value
+            + ", net="
+            + ctrl.net_no);
+    FRLogger.trace(
+        "MazeSearchAlgo.expand_to_door_section",
+        "assign_raw",
+        "selected_section="
+            + p_section_no
+            + ", from_section="
+            + p_from_element.section_no_of_door
+            + ", backtrack_section="
+            + p_from_element.section_no_of_backtrack_door
+            + ", add_costs="
+            + p_add_costs
+            + ", adjustment="
+            + p_adjustment
+            + ", room_ripped="
+            + room_ripped
+            + ", expansion_value="
+            + expansion_value
+            + ", sorting_value="
+            + sorting_value,
+        "Net #"
+            + ctrl.net_no
+            + ", door="
+            + describe_expandable(p_door)
+            + ", from_door="
+            + describe_expandable(p_from_element.door),
+        to_impacted_points(p_shape_entry));
     this.maze_expansion_list.add(new_element);
     return true;
+  }
+
+  private static String describe_expandable(ExpandableObject p_door) {
+    if (p_door == null) {
+      return "null";
+    }
+    return p_door.getClass().getSimpleName()
+        + "#"
+        + System.identityHashCode(p_door)
+        + "/dim="
+        + p_door.get_dimension()
+        + "/sections="
+        + p_door.maze_search_element_count();
+  }
+
+  private static Point[] to_impacted_points(FloatLine p_shape_entry) {
+    if (p_shape_entry == null) {
+      return null;
+    }
+    return new Point[] {p_shape_entry.a.round(), p_shape_entry.b.round()};
   }
 
   private void expand_to_drill(
