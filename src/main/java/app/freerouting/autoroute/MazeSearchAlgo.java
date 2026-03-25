@@ -632,6 +632,8 @@ public class MazeSearchAlgo {
           + ", occupied=" + door_section_occupied
           + ", shape_entry_null=" + (p_shape_entry == null)
           + ", adjustment=" + p_adjustment
+          + ", door=" + describe_expandable(p_door)
+          + ", from_door=" + describe_expandable(p_from_element.door)
           + ", net=" + ctrl.net_no);
       FRLogger.trace("MazeSearchAlgo.expand_to_door_section", "skip_assign_raw",
           "selected_section=" + p_section_no
@@ -668,6 +670,8 @@ public class MazeSearchAlgo {
         + ", room_ripped=" + room_ripped
         + ", expansion_value=" + expansion_value
         + ", sorting_value=" + sorting_value
+        + ", door=" + describe_expandable(p_door)
+        + ", from_door=" + describe_expandable(p_from_element.door)
         + ", net=" + ctrl.net_no);
     FRLogger.trace("MazeSearchAlgo.expand_to_door_section", "assign_raw",
         "selected_section=" + p_section_no
@@ -690,7 +694,23 @@ public class MazeSearchAlgo {
     if (p_door == null) {
       return "null";
     }
-    return p_door.getClass().getSimpleName() + "#" + System.identityHashCode(p_door)
+    if (p_door instanceof TargetItemExpansionDoor targetDoor) {
+      return "TargetItemExpansionDoor"
+          + "/item=" + targetDoor.item.get_id_no()
+          + "/tree_entry=" + targetDoor.tree_entry_no
+          + "/dim=" + p_door.get_dimension()
+          + "/sections=" + p_door.maze_search_element_count();
+    }
+    if (p_door instanceof ExpansionDrill drill) {
+      return "ExpansionDrill"
+          + "/location=" + drill.location
+          + "/layers=" + drill.first_layer + "-" + drill.last_layer
+          + "/dim=" + p_door.get_dimension()
+          + "/sections=" + p_door.maze_search_element_count();
+    }
+    IntBox bounds = p_door.get_shape().bounding_box();
+    return p_door.getClass().getSimpleName()
+        + "/bounds=[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]"
         + "/dim=" + p_door.get_dimension()
         + "/sections=" + p_door.maze_search_element_count();
   }

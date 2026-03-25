@@ -647,6 +647,10 @@ public class MazeSearchAlgo {
               + (p_shape_entry == null)
               + ", adjustment="
               + p_adjustment
+              + ", door="
+              + describe_expandable(p_door)
+              + ", from_door="
+              + describe_expandable(p_from_element.door)
               + ", net="
               + ctrl.net_no);
       FRLogger.trace(
@@ -719,6 +723,10 @@ public class MazeSearchAlgo {
             + expansion_value
             + ", sorting_value="
             + sorting_value
+            + ", door="
+            + describe_expandable(p_door)
+            + ", from_door="
+            + describe_expandable(p_from_element.door)
             + ", net="
             + ctrl.net_no);
     FRLogger.trace(
@@ -755,9 +763,47 @@ public class MazeSearchAlgo {
     if (p_door == null) {
       return "null";
     }
+    if (p_door instanceof TargetItemExpansionDoor) {
+      TargetItemExpansionDoor targetDoor = (TargetItemExpansionDoor) p_door;
+      return "TargetItemExpansionDoor"
+          + "/item="
+          + targetDoor.item.get_id_no()
+          + "/tree_entry="
+          + targetDoor.tree_entry_no
+          + "/dim="
+          + p_door.get_dimension()
+          + "/sections="
+          + p_door.maze_search_element_count();
+    }
+    if (p_door instanceof ExpansionDrill) {
+      ExpansionDrill drill = (ExpansionDrill) p_door;
+      return "ExpansionDrill"
+          + "/location="
+          + drill.location
+          + "/layers="
+          + drill.first_layer
+          + "-"
+          + drill.last_layer
+          + "/dim="
+          + p_door.get_dimension()
+          + "/sections="
+          + p_door.maze_search_element_count();
+    }
+    IntBox bounds = p_door.get_shape().bounding_box();
     return p_door.getClass().getSimpleName()
-        + "#"
-        + System.identityHashCode(p_door)
+        + "/bounds=["
+        + "("
+        + bounds.ll.x
+        + ","
+        + bounds.ll.y
+        + ")"
+        + ".."
+        + "("
+        + bounds.ur.x
+        + ","
+        + bounds.ur.y
+        + ")"
+        + "]"
         + "/dim="
         + p_door.get_dimension()
         + "/sections="
