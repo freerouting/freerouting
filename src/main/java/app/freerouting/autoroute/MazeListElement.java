@@ -124,11 +124,7 @@ public class MazeListElement implements Comparable<MazeListElement> {
     if (this == p_other) {
       return 0;
     }
-    int sortCompare = Double.compare(this.sorting_value, p_other.sorting_value);
-    if (sortCompare != 0) {
-      return sortCompare;
-    }
-    // Keep all same-cost entries in the TreeSet with deterministic order.
-    return Long.compare(this.sequence_no, p_other.sequence_no);
+    // v1.9 behavior: never return 0 for distinct entries so equal-cost elements are not dropped.
+    return this.sorting_value >= p_other.sorting_value ? 1 : -1;
   }
 }
