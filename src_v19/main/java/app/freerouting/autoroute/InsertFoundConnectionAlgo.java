@@ -195,14 +195,22 @@ public class InsertFoundConnectionAlgo {
         break;
       }
     }
+    int removedTraceStubs = 0;
     if (board.get_test_level().ordinal() < TestLevel.ALL_DEBUGGING_OUTPUT.ordinal()) {
       for (int i = 0; i < p_trace.corners.length - 1; ++i) {
         Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
         if (trace_stub != null) {
           board.remove_item(trace_stub);
+          removedTraceStubs++;
         }
       }
     }
+    FRLogger.trace(
+        "InsertFoundConnectionAlgo.insert_trace",
+        "compare_trace_stub_cleanup",
+        "net=" + ctrl.net_no + ", layer=" + p_trace.layer + ", removed_stubs=" + removedTraceStubs
+            + ", test_level=" + board.get_test_level(),
+        "Net #" + ctrl.net_no);
     board.rules.set_pin_edge_to_turn_dist(saved_edge_to_turn_dist);
     if (this.first_corner == null) {
       this.first_corner = p_trace.corners[0];

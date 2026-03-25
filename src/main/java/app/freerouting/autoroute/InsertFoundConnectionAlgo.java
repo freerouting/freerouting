@@ -79,9 +79,6 @@ public class InsertFoundConnectionAlgo {
    */
   private boolean insert_trace(LocateFoundConnectionAlgoAnyAngle.ResultItem p_trace) {
     if (p_trace.corners.length == 1) {
-      if (this.first_corner == null) {
-        this.first_corner = p_trace.corners[0];
-      }
       this.last_corner = p_trace.corners[0];
       return true;
     }
@@ -128,9 +125,9 @@ public class InsertFoundConnectionAlgo {
       if (ok_point != null && ok_point != insert_polyline.last_corner() && ctrl.with_neckdown && curr_corner_arr.length == 2) {
         neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_trace.layer, start_pin, end_pin);
       }
-      if (ok_point == insert_polyline.last_corner() || neckdown_inserted) {
+      if (insert_polyline.last_corner().equals(ok_point) || neckdown_inserted) {
         from_corner_no = i;
-      } else if (ok_point == insert_polyline.first_corner() && i != p_trace.corners.length - 1) {
+      } else if (insert_polyline.first_corner().equals(ok_point) && i != p_trace.corners.length - 1) {
         // if ok_point == insert_polyline.first_corner() the spring over may have failed.
         // Spring over may correct the situation because an insertion, which is ok with clearance
         // compensation
@@ -147,19 +144,35 @@ public class InsertFoundConnectionAlgo {
         }
         FRLogger.trace("InsertFoundConnectionAlgo: violation corrected");
       } else {
+        FRLogger.debug("InsertFoundConnectionAlgo: insert trace failed for net #" + ctrl.net_no
+            + " at corner " + i + "/" + (p_trace.corners.length - 1)
+            + " on layer " + p_trace.layer
+            + ", trace width: " + ctrl.trace_half_width[p_trace.layer]
+            + ", from corner: " + from_corner_no
+            + ", ok_point: " + (ok_point != null ? ok_point.toString() : "null")
+            + ", target: " + insert_polyline.last_corner());
         result = false;
         break;
       }
     }
 
+    int removedTraceStubs = 0;
     if (!FRLogger.isTraceEnabled()) {
       for (int i = 0; i < p_trace.corners.length - 1; i++) {
         Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
         if (trace_stub != null) {
           board.remove_item(trace_stub);
+          removedTraceStubs++;
         }
       }
     }
+    FRLogger.trace(
+        "InsertFoundConnectionAlgo.insert_trace",
+        "compare_trace_stub_cleanup",
+        "net=" + ctrl.net_no + ", layer=" + p_trace.layer + ", removed_stubs=" + removedTraceStubs
+            + ", trace_enabled=" + FRLogger.isTraceEnabled(),
+        "Net #" + ctrl.net_no,
+        new Point[0]);
 
     board.rules.set_pin_edge_to_turn_dist(saved_edge_to_turn_dist);
     if (this.first_corner == null) {

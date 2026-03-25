@@ -440,6 +440,7 @@ public class BatchAutorouter extends NamedAlgorithm {
               "BatchAutorouter.autoroute_pass",
               "compare_trace_route_item",
               "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + autorouterResult.state
+                  + ", details=" + autorouterResult.details
                   + ", incompletes=" + tempIncomp + ", netIncomplete=" + tempNetIncomp
                   + ", ripped=" + ripped_item_list.size() + ", netItems="
                   + netItemsBefore + "->" + netItemsAfter,
