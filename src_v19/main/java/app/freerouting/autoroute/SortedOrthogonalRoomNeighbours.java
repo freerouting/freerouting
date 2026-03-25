@@ -440,6 +440,16 @@ public class SortedOrthogonalRoomNeighbours {
     if (remove_edge_no >= 0) {
       // Touching neighbour missing at the edge side with index remove_edge_no
       // Remove the edge line and restart the algorithm.
+      FRLogger.info(
+          "ROOM_EDGE_REMOVE start"
+              + ", net="
+              + p_net_no
+              + ", layer="
+              + curr_incomplete_room.get_layer()
+              + ", remove_edge="
+              + remove_edge_no
+              + ", room_bounds="
+              + room_box);
       IntBox enlarged_box = remove_border_line(room_box, remove_edge_no);
       Collection<ExpansionDoor> door_list = this.completed_room.get_doors();
       TileShape ignore_shape = null;
@@ -471,10 +481,34 @@ public class SortedOrthogonalRoomNeighbours {
       Collection<IncompleteFreeSpaceExpansionRoom> new_rooms =
           p_autoroute_search_tree.complete_shape(
               enlarged_room, p_net_no, ignore_object, ignore_shape);
+      FRLogger.info(
+          "ROOM_EDGE_REMOVE complete_shape"
+              + ", net="
+              + p_net_no
+              + ", layer="
+              + curr_incomplete_room.get_layer()
+              + ", remove_edge="
+              + remove_edge_no
+              + ", enlarged_bounds="
+              + enlarged_box
+              + ", candidate_count="
+              + new_rooms.size());
       if (new_rooms.size() == 1) {
         // Check, that the area increases to prevent endless loop.
         IncompleteFreeSpaceExpansionRoom new_room = new_rooms.iterator().next();
         if (new_room.get_shape().area() > room_area) {
+          FRLogger.info(
+              "ROOM_EDGE_REMOVE applied"
+                  + ", net="
+                  + p_net_no
+                  + ", layer="
+                  + curr_incomplete_room.get_layer()
+                  + ", remove_edge="
+                  + remove_edge_no
+                  + ", old_bounds="
+                  + room_box
+                  + ", new_bounds="
+                  + new_room.get_shape().bounding_box());
           curr_incomplete_room.set_shape(new_room.get_shape());
           curr_incomplete_room.set_contained_shape(new_room.get_contained_shape());
           return true;

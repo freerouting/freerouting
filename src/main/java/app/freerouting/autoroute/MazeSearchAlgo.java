@@ -434,12 +434,18 @@ public class MazeSearchAlgo {
     }
 
     List<ExpansionDoor> room_doors_snapshot = new LinkedList<>(p_list_element.next_room.get_doors());
+    FRLogger.info("ROOM_DOOR context from_section=" + p_list_element.section_no_of_door
+        + ", backtrack_section=" + p_list_element.section_no_of_backtrack_door
+        + ", from_door=" + describe_expandable(p_list_element.door)
+        + ", next_room=" + describe_room(p_list_element.next_room)
+        + ", net=" + ctrl.net_no);
     for (int door_index = 0; door_index < room_doors_snapshot.size(); door_index++) {
       ExpansionDoor candidate_door = room_doors_snapshot.get(door_index);
       FRLogger.info("ROOM_DOOR candidate index=" + door_index
           + ", from_section=" + p_list_element.section_no_of_door
           + ", backtrack_section=" + p_list_element.section_no_of_backtrack_door
           + ", from_door=" + describe_expandable(p_list_element.door)
+          + ", next_room=" + describe_room(p_list_element.next_room)
           + ", candidate=" + describe_expandable(candidate_door)
           + ", net=" + ctrl.net_no);
     }
@@ -734,6 +740,16 @@ public class MazeSearchAlgo {
     } catch (RuntimeException e) {
       return "uninitialized";
     }
+  }
+
+  private static String describe_room(CompleteExpansionRoom p_room) {
+    if (p_room == null) {
+      return "null";
+    }
+    IntBox bounds = p_room.get_shape().bounding_box();
+    return p_room.getClass().getSimpleName()
+        + "/layer=" + p_room.get_layer()
+        + "/bounds=[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
   }
 
   private static Point[] to_impacted_points(FloatLine p_shape_entry) {

@@ -9,6 +9,7 @@ import app.freerouting.board.ShapeSearchTree90Degree;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
@@ -388,6 +389,16 @@ public class AutorouteEngine {
         }
         if (is_first_completed_room) {
           is_first_completed_room = false;
+          FRLogger.info(
+              "COMPLETE_ROOM first_candidate"
+                  + ", net="
+                  + this.net_no
+                  + ", layer="
+                  + curr_incomplete_room.get_layer()
+                  + ", incomplete_bounds="
+                  + describe_shape_bounds(curr_incomplete_room.get_shape())
+                  + ", from_door_bounds="
+                  + describe_shape_bounds(from_door_shape));
           CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(curr_incomplete_room);
           if (completed_room != null) {
             result.add(completed_room);
@@ -400,6 +411,16 @@ public class AutorouteEngine {
               .complete_shape(
                   curr_incomplete_room, this.net_no, ignore_object, from_door_shape);
           for (IncompleteFreeSpaceExpansionRoom tmp_room : curr_completed_shapes) {
+            FRLogger.info(
+                "COMPLETE_ROOM recalc_candidate"
+                    + ", net="
+                    + this.net_no
+                    + ", layer="
+                    + tmp_room.get_layer()
+                    + ", incomplete_bounds="
+                    + describe_shape_bounds(tmp_room.get_shape())
+                    + ", from_door_bounds="
+                    + describe_shape_bounds(from_door_shape));
             CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(tmp_room);
             if (completed_room != null) {
               result.add(completed_room);
@@ -435,7 +456,31 @@ public class AutorouteEngine {
     }
     complete_expansion_rooms.add(completed_room);
     this.autoroute_search_tree.insert(completed_room);
+    FRLogger.info(
+        "COMPLETE_ROOM added"
+            + ", net="
+            + this.net_no
+            + ", layer="
+            + completed_room.get_layer()
+            + ", bounds="
+            + describe_shape_bounds(completed_room.get_shape()));
     return completed_room;
+  }
+
+  private static String describe_shape_bounds(TileShape p_shape) {
+    if (p_shape == null) {
+      return "null";
+    }
+    IntBox bounds = p_shape.bounding_box();
+    return "[("
+        + bounds.ll.x
+        + ","
+        + bounds.ll.y
+        + ")..("
+        + bounds.ur.x
+        + ","
+        + bounds.ur.y
+        + ")]";
   }
 
   /**
