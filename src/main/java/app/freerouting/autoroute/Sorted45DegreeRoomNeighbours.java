@@ -5,6 +5,7 @@ import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Limits;
@@ -287,8 +288,21 @@ public class Sorted45DegreeRoomNeighbours {
     if (try_remove_edge_lines) {
       // Touching neighbour missing at the edge side with index remove_edge_no
       // Remove the edge line and restart the algorithm.
+      FRLogger.info("ROOM_EDGE_REMOVE start"
+          + ", net=" + p_net_no
+          + ", layer=" + curr_incomplete_room.get_layer()
+          + ", room_bounds=" + describe_bounds(room_oct.bounding_box()));
 
       IntOctagon enlarged_oct = remove_not_touching_border_lines(room_oct, this.edge_interior_touches_obstacle);
+      FRLogger.info("ROOM_EDGE_REMOVE enlarged"
+          + ", net=" + p_net_no
+          + ", layer=" + curr_incomplete_room.get_layer()
+          + ", enlarged_bounds=" + describe_bounds(enlarged_oct.bounding_box()));
+      FRLogger.info("ROOM_EDGE_REMOVE contained"
+          + ", net=" + p_net_no
+          + ", layer=" + curr_incomplete_room.get_layer()
+          + ", type=" + curr_incomplete_room.get_contained_shape().getClass().getSimpleName()
+          + ", bounds=" + describe_bounds(curr_incomplete_room.get_contained_shape().bounding_box()));
 
       Collection<ExpansionDoor> door_list = this.completed_room.get_doors();
       TileShape ignore_shape = null;
@@ -314,6 +328,10 @@ public class Sorted45DegreeRoomNeighbours {
       }
       IncompleteFreeSpaceExpansionRoom enlarged_room = new IncompleteFreeSpaceExpansionRoom(enlarged_oct, curr_incomplete_room.get_layer(), curr_incomplete_room.get_contained_shape());
       Collection<IncompleteFreeSpaceExpansionRoom> new_rooms = p_autoroute_search_tree.complete_shape(enlarged_room, p_net_no, ignore_object, ignore_shape);
+      FRLogger.info("ROOM_EDGE_REMOVE complete_shape"
+          + ", net=" + p_net_no
+          + ", layer=" + curr_incomplete_room.get_layer()
+          + ", candidate_count=" + new_rooms.size());
       if (new_rooms.size() == 1) {
         // Check, that the area increases to prevent endless loop.
         IncompleteFreeSpaceExpansionRoom new_room = new_rooms
@@ -322,6 +340,11 @@ public class Sorted45DegreeRoomNeighbours {
         if (new_room
             .get_shape()
             .area() > room_area) {
+          FRLogger.info("ROOM_EDGE_REMOVE applied"
+              + ", net=" + p_net_no
+              + ", layer=" + curr_incomplete_room.get_layer()
+              + ", old_bounds=" + describe_bounds(room_oct.bounding_box())
+              + ", new_bounds=" + describe_bounds(new_room.get_shape().bounding_box()));
           curr_incomplete_room.set_shape(new_room.get_shape());
           curr_incomplete_room.set_contained_shape(new_room.get_contained_shape());
           return true;
@@ -329,6 +352,10 @@ public class Sorted45DegreeRoomNeighbours {
       }
     }
     return false;
+  }
+
+  private static String describe_bounds(IntBox p_bounds) {
+    return "[(" + p_bounds.ll.x + "," + p_bounds.ll.y + ")..(" + p_bounds.ur.x + "," + p_bounds.ur.y + ")]";
   }
 
   /**

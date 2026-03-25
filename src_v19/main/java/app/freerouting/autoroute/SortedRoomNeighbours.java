@@ -407,6 +407,16 @@ public class SortedRoomNeighbours {
     if (remove_edge_no >= 0) {
       // Touching neighbour missing at the edge side with index remove_edge_no
       // Remove the edge line and restart the algorithm.
+      FRLogger.info(
+          "ROOM_EDGE_REMOVE start"
+              + ", net="
+              + p_net_no
+              + ", layer="
+              + curr_incomplete_room.get_layer()
+              + ", remove_edge="
+              + remove_edge_no
+              + ", room_bounds="
+              + curr_incomplete_room.get_shape().bounding_box());
       Simplex enlarged_shape = room_simplex.remove_border_line(remove_edge_no);
       IncompleteFreeSpaceExpansionRoom enlarged_room =
           new IncompleteFreeSpaceExpansionRoom(
@@ -415,6 +425,16 @@ public class SortedRoomNeighbours {
               curr_incomplete_room.get_contained_shape());
       Collection<IncompleteFreeSpaceExpansionRoom> new_rooms =
           p_autoroute_search_tree.complete_shape(enlarged_room, p_net_no, null, null);
+      FRLogger.info(
+          "ROOM_EDGE_REMOVE complete_shape"
+              + ", net="
+              + p_net_no
+              + ", layer="
+              + curr_incomplete_room.get_layer()
+              + ", remove_edge="
+              + remove_edge_no
+              + ", candidate_count="
+              + new_rooms.size());
       if (new_rooms.size() != 1) {
         if (p_test_level.ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal()) {
           FRLogger.warn("AutorouteEngine.calculate_doors: 1 completed shape expected");
@@ -430,6 +450,18 @@ public class SortedRoomNeighbours {
       if (remove_edge) {
         Iterator<IncompleteFreeSpaceExpansionRoom> it2 = new_rooms.iterator();
         IncompleteFreeSpaceExpansionRoom new_room = it2.next();
+        FRLogger.info(
+            "ROOM_EDGE_REMOVE applied"
+                + ", net="
+                + p_net_no
+                + ", layer="
+                + curr_incomplete_room.get_layer()
+                + ", remove_edge="
+                + remove_edge_no
+                + ", old_bounds="
+                + curr_incomplete_room.get_shape().bounding_box()
+                + ", new_bounds="
+                + new_room.get_shape().bounding_box());
         curr_incomplete_room.set_shape(new_room.get_shape());
         curr_incomplete_room.set_contained_shape(new_room.get_contained_shape());
         return true;

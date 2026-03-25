@@ -117,6 +117,13 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     }
     IntOctagon bounding_shape = start_shape;
     int room_layer = p_room.get_layer();
+    boolean debugAnchor =
+        p_net_no == 77
+            && room_layer == 0
+            && start_shape.lx == 1762393
+            && start_shape.ly == -1080137
+            && start_shape.rx == 1910447
+            && start_shape.uy == -1006110;
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
     result.add(
         new IncompleteFreeSpaceExpansionRoom(start_shape, room_layer, shape_to_be_contained));
@@ -146,6 +153,27 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             for (IncompleteFreeSpaceExpansionRoom curr_room : result) {
               IntOctagon curr_shape = (IntOctagon) curr_room.get_shape();
               if (curr_shape.overlaps(curr_object_shape)) {
+                if (debugAnchor) {
+                  int obstacleId = curr_object instanceof Item ? ((Item) curr_object).get_id_no() : -1;
+                  boolean obstacleContainsNet =
+                      curr_object instanceof Item && ((Item) curr_object).contains_net(p_net_no);
+                  FRLogger.info(
+                      "COMPLETE_SHAPE_OBS overlap"
+                          + ", net="
+                          + p_net_no
+                          + ", layer="
+                          + room_layer
+                          + ", obstacle="
+                          + curr_object
+                          + ", obstacle_id="
+                          + obstacleId
+                          + ", obstacle_contains_net="
+                          + obstacleContainsNet
+                          + ", room_bounds="
+                          + describe_bounds(curr_shape.bounding_box())
+                          + ", obstacle_bounds="
+                          + describe_bounds(curr_object_shape.bounding_box()));
+                }
                 if (curr_object instanceof CompleteFreeSpaceExpansionRoom
                     && p_ignore_shape != null) {
                   IntOctagon intersection = curr_shape.intersection(curr_object_shape);
@@ -167,6 +195,28 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 }
                 Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
                     curr_object_shape);
+                if (debugAnchor) {
+                  FRLogger.info(
+                      "COMPLETE_SHAPE_OBS restrained"
+                          + ", net="
+                          + p_net_no
+                          + ", layer="
+                          + room_layer
+                          + ", count="
+                          + new_restrained_shapes.size());
+                  for (IncompleteFreeSpaceExpansionRoom debug_room : new_restrained_shapes) {
+                    FRLogger.info(
+                        "COMPLETE_SHAPE_OBS room"
+                            + ", net="
+                            + p_net_no
+                            + ", layer="
+                            + room_layer
+                            + ", bounds="
+                            + describe_bounds(debug_room.get_shape().bounding_box())
+                            + ", contained="
+                            + describe_bounds(debug_room.get_contained_shape().bounding_box()));
+                  }
+                }
                 if (curr_object.toString().contains("id=56")) {
                   FRLogger.debug("Restrain Result Count: " + new_restrained_shapes.size());
                   for (IncompleteFreeSpaceExpansionRoom r : new_restrained_shapes) {
@@ -426,5 +476,17 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       result[i] = result[i].bounding_octagon();
     }
     return result;
+  }
+
+  private static String describe_bounds(IntBox p_bounds) {
+    return "[("
+        + p_bounds.ll.x
+        + ","
+        + p_bounds.ll.y
+        + ")..("
+        + p_bounds.ur.x
+        + ","
+        + p_bounds.ur.y
+        + ")]";
   }
 }

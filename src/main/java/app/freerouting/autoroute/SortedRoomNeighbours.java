@@ -335,9 +335,19 @@ public class SortedRoomNeighbours {
     if (remove_edge_no >= 0) {
       // Touching neighbour missing at the edge side with index remove_edge_no
       // Remove the edge line and restart the algorithm.
+      FRLogger.info("ROOM_EDGE_REMOVE start"
+          + ", net=" + p_net_no
+          + ", layer=" + curr_incomplete_room.get_layer()
+          + ", remove_edge=" + remove_edge_no
+          + ", room_bounds=" + curr_incomplete_room.get_shape().bounding_box());
       Simplex enlarged_shape = room_simplex.remove_border_line(remove_edge_no);
       IncompleteFreeSpaceExpansionRoom enlarged_room = new IncompleteFreeSpaceExpansionRoom(enlarged_shape, curr_incomplete_room.get_layer(), curr_incomplete_room.get_contained_shape());
       Collection<IncompleteFreeSpaceExpansionRoom> new_rooms = p_autoroute_search_tree.complete_shape(enlarged_room, p_net_no, null, null);
+      FRLogger.info("ROOM_EDGE_REMOVE complete_shape"
+          + ", net=" + p_net_no
+          + ", layer=" + curr_incomplete_room.get_layer()
+          + ", remove_edge=" + remove_edge_no
+          + ", candidate_count=" + new_rooms.size());
       if (new_rooms.size() != 1) {
         FRLogger.trace("AutorouteEngine.calculate_doors: 1 completed shape expected");
         return false;
@@ -355,6 +365,12 @@ public class SortedRoomNeighbours {
       if (remove_edge) {
         Iterator<IncompleteFreeSpaceExpansionRoom> it2 = new_rooms.iterator();
         IncompleteFreeSpaceExpansionRoom new_room = it2.next();
+        FRLogger.info("ROOM_EDGE_REMOVE applied"
+            + ", net=" + p_net_no
+            + ", layer=" + curr_incomplete_room.get_layer()
+            + ", remove_edge=" + remove_edge_no
+            + ", old_bounds=" + curr_incomplete_room.get_shape().bounding_box()
+            + ", new_bounds=" + new_room.get_shape().bounding_box());
         curr_incomplete_room.set_shape(new_room.get_shape());
         curr_incomplete_room.set_contained_shape(new_room.get_contained_shape());
         return true;
@@ -372,8 +388,8 @@ public class SortedRoomNeighbours {
         .get_shape()
         .to_Simplex();
     for (SortedRoomNeighbour next_neighbour : this.sorted_neighbours) {
-      int first_touching_side_no = prev_neighbour.touching_side_no_of_room % room_simplex.border_line_count();
-      int last_touching_side_no = next_neighbour.touching_side_no_of_room % room_simplex.border_line_count();
+      int first_touching_side_no = prev_neighbour.touching_side_no_of_room;
+      int last_touching_side_no = next_neighbour.touching_side_no_of_room;
 
       int curr_next_no = room_simplex.next_no(first_touching_side_no);
       boolean intersection_with_prev_neighbour_ends_at_corner = (first_touching_side_no != last_touching_side_no || prev_neighbour == this.sorted_neighbours.getLast()) && prev_neighbour
