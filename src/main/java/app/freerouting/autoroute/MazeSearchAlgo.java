@@ -28,6 +28,7 @@ import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
@@ -432,7 +433,18 @@ public class MazeSearchAlgo {
       }
     }
 
-    for (ExpansionDoor to_door : p_list_element.next_room.get_doors()) {
+    List<ExpansionDoor> room_doors_snapshot = new LinkedList<>(p_list_element.next_room.get_doors());
+    for (int door_index = 0; door_index < room_doors_snapshot.size(); door_index++) {
+      ExpansionDoor candidate_door = room_doors_snapshot.get(door_index);
+      FRLogger.info("ROOM_DOOR candidate index=" + door_index
+          + ", from_section=" + p_list_element.section_no_of_door
+          + ", backtrack_section=" + p_list_element.section_no_of_backtrack_door
+          + ", from_door=" + describe_expandable(p_list_element.door)
+          + ", candidate=" + describe_expandable(candidate_door)
+          + ", net=" + ctrl.net_no);
+    }
+
+    for (ExpansionDoor to_door : room_doors_snapshot) {
       if (to_door == p_list_element.door) {
         continue;
       }
@@ -694,25 +706,34 @@ public class MazeSearchAlgo {
     if (p_door == null) {
       return "null";
     }
+    String section_count = safe_maze_section_count(p_door);
     if (p_door instanceof TargetItemExpansionDoor targetDoor) {
       return "TargetItemExpansionDoor"
           + "/item=" + targetDoor.item.get_id_no()
           + "/tree_entry=" + targetDoor.tree_entry_no
           + "/dim=" + p_door.get_dimension()
-          + "/sections=" + p_door.maze_search_element_count();
+          + "/sections=" + section_count;
     }
     if (p_door instanceof ExpansionDrill drill) {
       return "ExpansionDrill"
           + "/location=" + drill.location
           + "/layers=" + drill.first_layer + "-" + drill.last_layer
           + "/dim=" + p_door.get_dimension()
-          + "/sections=" + p_door.maze_search_element_count();
+          + "/sections=" + section_count;
     }
     IntBox bounds = p_door.get_shape().bounding_box();
     return p_door.getClass().getSimpleName()
         + "/bounds=[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]"
         + "/dim=" + p_door.get_dimension()
-        + "/sections=" + p_door.maze_search_element_count();
+        + "/sections=" + section_count;
+  }
+
+  private static String safe_maze_section_count(ExpandableObject p_door) {
+    try {
+      return Integer.toString(p_door.maze_search_element_count());
+    } catch (RuntimeException e) {
+      return "uninitialized";
+    }
   }
 
   private static Point[] to_impacted_points(FloatLine p_shape_entry) {
