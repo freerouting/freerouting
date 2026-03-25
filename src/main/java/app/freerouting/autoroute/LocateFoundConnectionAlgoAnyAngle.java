@@ -276,6 +276,18 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
     if (result_corner != null && result_corner != this.current_from_point) {
       result.add(result_corner);
     }
+    if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
+      FRLogger.trace("compare_trace_next_corners_raw net=" + this.ctrl.net_no
+          + ", layer=" + this.current_trace_layer
+          + ", from_door=" + this.current_from_door_index
+          + ", to_door=" + this.current_to_door_index
+          + ", target_door=" + this.current_target_door_index
+          + ", end_of_trace=" + end_of_trace
+          + ", corrected=" + (corrected_result != null)
+          + ", result_size=" + result.size()
+          + ", result_corner=" + result_corner
+          + ", current_from=" + this.current_from_point);
+    }
     return result;
   }
 

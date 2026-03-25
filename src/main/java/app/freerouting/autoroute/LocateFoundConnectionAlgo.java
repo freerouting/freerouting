@@ -65,6 +65,21 @@ public abstract class LocateFoundConnectionAlgo {
     for (int i = 0; i < backtrack_array.length; i++) {
       this.backtrack_array[i] = it.next();
     }
+    if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
+      FRLogger.trace("compare_trace_backtrack_raw net=" + this.ctrl.net_no
+          + ", size=" + this.backtrack_array.length);
+      for (int i = 0; i < this.backtrack_array.length; i++) {
+        BacktrackElement element = this.backtrack_array[i];
+        String nextRoomType = element.next_room != null
+            ? element.next_room.getClass().getSimpleName()
+            : "null";
+        FRLogger.trace("compare_trace_backtrack_raw net=" + this.ctrl.net_no
+            + ", idx=" + i
+            + ", door_type=" + element.door.getClass().getSimpleName()
+            + ", section=" + element.section_no_of_door
+            + ", next_room_type=" + nextRoomType);
+      }
+    }
     this.connection_items = new LinkedList<>();
     BacktrackElement start_info = this.backtrack_array[backtrack_array.length - 1];
     if (!(start_info.door instanceof TargetItemExpansionDoor)) {
@@ -351,6 +366,19 @@ public abstract class LocateFoundConnectionAlgo {
       corner_arr[i] = it2.next();
     }
     ResultItem result = new ResultItem(corner_arr, this.current_trace_layer);
+    if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
+      IntPoint first = corner_arr.length > 0 ? corner_arr[0] : null;
+      IntPoint last = corner_arr.length > 0 ? corner_arr[corner_arr.length - 1] : null;
+      FRLogger.trace("compare_trace_next_trace_raw net=" + this.ctrl.net_no
+          + ", trace_layer=" + this.current_trace_layer
+          + ", next_layer=" + next_layer
+          + ", corner_count=" + corner_arr.length
+          + ", first=" + first
+          + ", last=" + last
+          + ", from_door=" + this.current_from_door_index
+          + ", to_door=" + this.current_to_door_index
+          + ", target_door=" + this.current_target_door_index);
+    }
     this.current_trace_layer = next_layer;
     return result;
   }

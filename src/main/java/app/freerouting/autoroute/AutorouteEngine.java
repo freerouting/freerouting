@@ -160,6 +160,14 @@ public class AutorouteEngine {
           "Failed to route connection between " + sourceItems + " and " + targetItems
               + ", because no connection was found between their nets.");
     }
+    if (p_ctrl.net_no == 33 || p_ctrl.net_no == 66 || p_ctrl.net_no == 67) {
+      String destinationType = search_result.destination_door != null
+          ? search_result.destination_door.getClass().getSimpleName()
+          : "null";
+      FRLogger.trace("compare_trace_maze_result_raw net=" + p_ctrl.net_no
+          + ", section=" + search_result.section_no_of_door
+          + ", destination_type=" + destinationType);
+    }
 
     LocateFoundConnectionAlgo autoroute_result = null;
     if (search_result != null) {
