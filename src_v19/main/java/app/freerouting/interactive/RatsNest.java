@@ -11,6 +11,7 @@ import app.freerouting.board.Via;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.awt.Graphics;
 import java.util.Collection;
@@ -76,9 +77,23 @@ public class RatsNest {
 
   public int incomplete_count() {
     int result = 0;
+    StringBuilder perNet = new StringBuilder();
     for (int i = 0; i < net_incompletes.length; ++i) {
-      result += net_incompletes[i].count();
+      int netIncomplete = net_incompletes[i].count();
+      result += netIncomplete;
+      if (netIncomplete > 0) {
+        if (!perNet.isEmpty()) {
+          perNet.append(',');
+        }
+        perNet.append(i + 1).append('=').append(netIncomplete);
+      }
     }
+    FRLogger.trace("RatsNest.incomplete_count", "total_incomplete_count",
+        "RatsNest total incomplete count=" + result,
+        "RatsNest");
+    FRLogger.trace("RatsNest.incomplete_count", "net_breakdown",
+        "RatsNest incomplete net breakdown=" + perNet,
+        "RatsNest");
     return result;
   }
 

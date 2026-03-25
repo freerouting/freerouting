@@ -180,8 +180,22 @@ public class RatsNest {
    */
   public int incomplete_count() {
     int result = drc.getIncompleteCount();
+    StringBuilder perNet = new StringBuilder();
+    for (int netNo = 1; netNo <= this.is_filtered.length; netNo++) {
+      int netIncomplete = drc.getIncompleteCount(netNo);
+      if (netIncomplete > 0) {
+        if (!perNet.isEmpty()) {
+          perNet.append(',');
+        }
+        perNet.append(netNo).append('=').append(netIncomplete);
+      }
+    }
     FRLogger.trace("RatsNest.incomplete_count", "total_incomplete_count",
         "RatsNest total incomplete count=" + result,
+        "RatsNest",
+        new app.freerouting.geometry.planar.Point[0]);
+    FRLogger.trace("RatsNest.incomplete_count", "net_breakdown",
+        "RatsNest incomplete net breakdown=" + perNet,
         "RatsNest",
         new app.freerouting.geometry.planar.Point[0]);
     return result;

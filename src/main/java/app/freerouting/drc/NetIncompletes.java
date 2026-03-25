@@ -76,10 +76,8 @@ public class NetIncompletes {
             netLabel,
             new Point[0]);
 
-        // Filter out dangling items (vias and tracks with is_tail() == true)
-        // AND items with zero contacts (unconnected pins/pads)
-        // These are DRC violations, not unrouted connections, and should not be counted
-        // as incompletes
+        // Keep v1.9 semantics for ratsnest counting: all connectable net items
+        // contribute to connected-set and airline computation.
         Collection<Item> filtered_items = new LinkedList<>();
         int dangling_count = 0;
         int unconnected_count = 0;
@@ -91,22 +89,12 @@ public class NetIncompletes {
                 conduction_area_count++;
             }
 
-            // Skip dangling vias and traces - they're violations, not incomplete
-            // connections
             if (item.is_tail()) {
                 dangling_count++;
-                continue;
             }
-            // Skip items with no contacts - they're isolated/unconnected, not incomplete
-            // connections
-            // EXCEPT for DrillItems (pins/vias) - unrouted pins legitimately have no
-            // contacts
-            // and SHOULD appear in the ratsnest
-            // EXCEPT for ConductionArea which acts as a connection medium
             if (!(item instanceof ConductionArea) && !(item instanceof DrillItem)
                     && item.get_normal_contacts().isEmpty()) {
                 unconnected_count++;
-                continue;
             }
 
             // Track if ConductionArea made it through the filter
@@ -276,30 +264,24 @@ public class NetIncompletes {
      */
     private NetItem[] calculate_net_items(Collection<Item> p_item_list) {
         ArrayList<NetItem> result = new ArrayList<>();
-        Set<Item> unique_items = new HashSet<>(p_item_list);
-        int unique_items_count = unique_items.size();
+        int input_size = p_item_list.size();
+        Collection<Item> pending_items = new LinkedList<>(p_item_list);
+        int curr_index = 0;
 
-        while (!unique_items.isEmpty()) {
-            Item start_item = unique_items.iterator().next();
+        while (!pending_items.isEmpty()) {
+            Item start_item = pending_items.iterator().next();
             Collection<Item> curr_connected_set = start_item.get_connected_set(this.net.net_number);
+            pending_items.removeAll(curr_connected_set);
 
-            // Prevent ConcurrentModificationException by creating a list of items to remove
-            Collection<Item> items_in_component = new ArrayList<>();
-            for (Item item_in_set : curr_connected_set) {
-                if (unique_items.contains(item_in_set)) {
-                    items_in_component.add(item_in_set);
-                }
-            }
-
-            for (Item curr_item : items_in_component) {
+            for (Item curr_item : curr_connected_set) {
                 result.add(new NetItem(curr_item, curr_connected_set));
+                ++curr_index;
             }
-            unique_items.removeAll(items_in_component);
         }
 
-        if (result.size() > unique_items_count) {
+        if (curr_index > input_size) {
             FRLogger.warn("NetIncompletes.calculate_net_items: too many items");
-        } else if (result.size() < unique_items_count) {
+        } else if (curr_index < input_size) {
             FRLogger.warn("NetIncompletes.calculate_net_items: too few items");
         }
         return result.toArray(new NetItem[0]);

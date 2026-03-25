@@ -388,12 +388,36 @@ public class BatchAutorouter {
           AutorouteEngine.AutorouteResult result = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list,
               p_pass_no);
           PerformanceProfiler.end("autoroute_item");
-          int tempIncomp = new RatsNest(routing_board, hdlg.get_locale()).incomplete_count();
+          if (!ripped_item_list.isEmpty()) {
+            for (Item rippedItem : ripped_item_list) {
+              StringBuilder rippedNets = new StringBuilder();
+              for (int netIx = 0; netIx < rippedItem.net_count(); netIx++) {
+                if (netIx > 0) {
+                  rippedNets.append('|');
+                }
+                rippedNets.append(rippedItem.get_net_no(netIx));
+              }
+              FRLogger.trace(
+                  "BatchAutorouter.autoroute_pass",
+                  "compare_trace_ripped_item",
+                  "source_item=" + curr_item.get_id_no()
+                      + ", source_net=" + curr_item.get_net_no(i)
+                      + ", ripped_id=" + rippedItem.get_id_no()
+                      + ", ripped_type=" + rippedItem.getClass().getSimpleName()
+                      + ", ripped_net_count=" + rippedItem.net_count()
+                      + ", ripped_nets=" + rippedNets,
+                  "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no(),
+                  getImpactedPoints(rippedItem));
+            }
+          }
+          RatsNest tempRatsNest = new RatsNest(routing_board, hdlg.get_locale());
+          int tempIncomp = tempRatsNest.incomplete_count();
+          int tempNetIncomp = tempRatsNest.incomplete_count(curr_item.get_net_no(i));
           FRLogger.trace(
               "BatchAutorouter.autoroute_pass",
               "compare_trace_route_item",
               "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + result + ", incompletes="
-                  + tempIncomp,
+                  + tempIncomp + ", netIncomplete=" + tempNetIncomp,
               "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no() + ",Type="
                   + curr_item.getClass().getSimpleName(),
               getImpactedPoints(curr_item));
@@ -468,6 +492,27 @@ public class BatchAutorouter {
           scoreStr,
           FRLogger.defaultFloatFormat.format(this.totalCpuTime),
           FRLogger.defaultFloatFormat.format(this.totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0)));
+
+      StringBuilder perNetBreakdown = new StringBuilder();
+      for (int netNo = 1; netNo <= routing_board.rules.nets.max_net_no(); netNo++) {
+        int netIncompletes = ratsNest.incomplete_count(netNo);
+        if (netIncompletes > 0) {
+          FRLogger.trace("BatchAutorouter.autoroute_pass", "compare_unrouted_net",
+              "pass=" + p_pass_no + ", net=" + netNo + ", incomplete=" + netIncompletes,
+              "Net #" + netNo,
+              new Point[0]);
+          if (!perNetBreakdown.isEmpty()) {
+            perNetBreakdown.append(',');
+          }
+          perNetBreakdown.append(netNo).append('=').append(netIncompletes);
+        }
+      }
+      FRLogger.trace("BatchAutorouter.autoroute_pass", "compare_unrouted_breakdown",
+          "pass=" + p_pass_no
+              + ", total=" + incompleteCount
+              + ", breakdown=" + perNetBreakdown,
+          "",
+          new Point[0]);
 
       PerformanceProfiler.recordPass(p_pass_no, incompleteCount, passDuration, currentRipupCost);
 

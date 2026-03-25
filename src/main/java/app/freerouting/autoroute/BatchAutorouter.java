@@ -62,7 +62,6 @@ public class BatchAutorouter extends NamedAlgorithm {
   private final int trace_pull_tight_accuracy;
   // Reusable collections to reduce memory churn (thread-safe as each thread has
   // its own BatchAutorouter instance)
-  private final SortedSet<Item> reusable_ripped_item_list = new TreeSet<>();
   private final List<Item> reusable_autoroute_item_list = new ArrayList<>();
   private final Set<Item> reusable_handled_items = new TreeSet<>();
   protected RoutingJob job;
@@ -387,16 +386,6 @@ public class BatchAutorouter extends NamedAlgorithm {
           break;
         }
 
-        // Check if this item should be skipped due to repeated failures
-        if (board.failureLog.shouldSkip(curr_item)) {
-          Net net = board.rules.nets.get(curr_item.get_net_no(0));
-          String netName = (net != null) ? net.name : "net#" + curr_item.get_net_no(0);
-          job.logDebug("Skipping " + curr_item.getClass().getSimpleName() + " on net '" + netName
-              + "' - exceeded failure threshold (" + board.failureLog.getFailureCount(curr_item) + " failures)");
-          --items_to_go_count;
-          continue;
-        }
-
         // Let's go through all nets of this item
         for (int i = 0; i < curr_item.net_count(); i++) {
           // If the user requested to stop the auto-router, we stop it
@@ -411,44 +400,48 @@ public class BatchAutorouter extends NamedAlgorithm {
           }
           this.totalItemsRouted++;
 
-          // OPTIMIZATION: Check if the item is already connected before doing expensive
-          // setup
-          // This avoids overhead if a previous item in this pass already routed this
-          // connection
-          Set<Item> unconnected_set = curr_item.get_unconnected_set(curr_item.get_net_no(i));
-
-          if (unconnected_set.isEmpty()) {
-            ++skipped;
-            --items_to_go_count;
-            // No need to fire event for simple skip
-            continue;
-          }
-
           // We visually mark the area of the board, which is changed by the auto-router
           board.start_marking_changed_area();
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
-          // Reuse instance collection to reduce memory allocation
-          reusable_ripped_item_list.clear();
-          SortedSet<Item> ripped_item_list = reusable_ripped_item_list;
-
-          // The item could not be routed, so we have to remove the ripped traces
-          if (!ripped_item_list.isEmpty()) {
-            for (Item curr_ripped_item : ripped_item_list) {
-              board.remove_item(curr_ripped_item);
-            }
-          }
+          // Use a fresh set per item to mirror v1.9 behavior and avoid cross-item side effects.
+          SortedSet<Item> ripped_item_list = new TreeSet<>();
           int netItemsBefore = board.get_connectable_items(curr_item.get_net_no(i)).size();
           PerformanceProfiler.start("autoroute_item");
           var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no);
           PerformanceProfiler.end("autoroute_item");
-          int tempIncomp = new RatsNest(board).incomplete_count();
+          if (!ripped_item_list.isEmpty()) {
+            for (Item rippedItem : ripped_item_list) {
+              StringBuilder rippedNets = new StringBuilder();
+              for (int netIx = 0; netIx < rippedItem.net_count(); netIx++) {
+                if (netIx > 0) {
+                  rippedNets.append('|');
+                }
+                rippedNets.append(rippedItem.get_net_no(netIx));
+              }
+              FRLogger.trace(
+                  "BatchAutorouter.autoroute_pass",
+                  "compare_trace_ripped_item",
+                  "source_item=" + curr_item.get_id_no()
+                      + ", source_net=" + curr_item.get_net_no(i)
+                      + ", ripped_id=" + rippedItem.get_id_no()
+                      + ", ripped_type=" + rippedItem.getClass().getSimpleName()
+                      + ", ripped_net_count=" + rippedItem.net_count()
+                      + ", ripped_nets=" + rippedNets,
+                  "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no(),
+                  getImpactedPoints(rippedItem));
+            }
+          }
+          RatsNest tempRatsNest = new RatsNest(board);
+          int tempIncomp = tempRatsNest.incomplete_count();
+          int tempNetIncomp = tempRatsNest.incomplete_count(curr_item.get_net_no(i));
           int netItemsAfter = board.get_connectable_items(curr_item.get_net_no(i)).size();
           FRLogger.trace(
               "BatchAutorouter.autoroute_pass",
               "compare_trace_route_item",
               "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + autorouterResult.state
-                  + ", incompletes=" + tempIncomp + ", ripped=" + ripped_item_list.size() + ", netItems="
+                  + ", incompletes=" + tempIncomp + ", netIncomplete=" + tempNetIncomp
+                  + ", ripped=" + ripped_item_list.size() + ", netItems="
                   + netItemsBefore + "->" + netItemsAfter,
               "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no() + ",Type="
                   + curr_item.getClass().getSimpleName(),
@@ -734,6 +727,30 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
       job.logInfo(passCompletedMessage);
 
+      RatsNest ratsNest = new RatsNest(this.board);
+      StringBuilder perNetBreakdown = new StringBuilder();
+      for (int netNo = 1; netNo <= this.board.rules.nets.max_net_no(); netNo++) {
+        int netIncomplete = ratsNest.incomplete_count(netNo);
+        if (netIncomplete > 0) {
+          FRLogger.trace(
+              "BatchAutorouter.autoroute_pass",
+              "compare_unrouted_net",
+              "pass=" + currentPass + ", net=" + netNo + ", incomplete=" + netIncomplete,
+              "Net #" + netNo,
+              new Point[0]);
+          if (!perNetBreakdown.isEmpty()) {
+            perNetBreakdown.append(',');
+          }
+          perNetBreakdown.append(netNo).append('=').append(netIncomplete);
+        }
+      }
+      FRLogger.trace("BatchAutorouter.autoroute_pass", "compare_unrouted_breakdown",
+          "pass=" + currentPass
+              + ", total=" + ratsNest.incomplete_count()
+              + ", breakdown=" + perNetBreakdown,
+          "",
+          new Point[0]);
+
       if (this.settings.save_intermediate_stages) {
         fireBoardSnapshotEvent(this.board);
       }
@@ -895,32 +912,17 @@ public class BatchAutorouter extends NamedAlgorithm {
     FloatPoint to_corner = null;
     double min_distance = Double.MAX_VALUE;
     for (Item curr_from_item : p_from_items) {
-      FloatPoint curr_from_corner;
-      if (curr_from_item instanceof DrillItem item) {
-        curr_from_corner = item
-            .get_center()
-            .to_float();
-      } else if (curr_from_item instanceof PolylineTrace from_trace) {
-        // Use trace endpoints as potential connection points
-        continue; // We'll handle traces in the second loop for better efficiency
-      } else {
+      if (!(curr_from_item instanceof DrillItem)) {
         continue;
       }
+      FloatPoint curr_from_corner = ((DrillItem) curr_from_item).get_center().to_float();
 
       for (Item curr_to_item : p_to_items) {
-        FloatPoint curr_to_corner;
-        if (curr_to_item instanceof DrillItem drillItem) {
-          curr_to_corner = drillItem
-              .get_center()
-              .to_float();
-        } else if (curr_to_item instanceof PolylineTrace to_trace) {
-          // Find nearest point on trace to the from item point
-          curr_to_corner = nearest_point_on_trace(to_trace, curr_from_corner);
-        } else {
+        if (!(curr_to_item instanceof DrillItem)) {
           continue;
         }
-
-        double curr_distance = curr_from_corner.distance(curr_to_corner);
+        FloatPoint curr_to_corner = ((DrillItem) curr_to_item).get_center().to_float();
+        double curr_distance = curr_from_corner.distance_square(curr_to_corner);
         if (curr_distance < min_distance) {
           min_distance = curr_distance;
           from_corner = curr_from_corner;
@@ -928,46 +930,7 @@ public class BatchAutorouter extends NamedAlgorithm {
         }
       }
     }
-
-    // Check trace-to-trace and trace-to-drill connections
-    for (Item curr_from_item : p_from_items) {
-      if (!(curr_from_item instanceof PolylineTrace from_trace)) {
-        continue;
-      }
-
-      for (Item curr_to_item : p_to_items) {
-        FloatPoint curr_from_corner;
-        FloatPoint curr_to_corner;
-
-        if (curr_to_item instanceof DrillItem item) {
-          // Trace to drill item
-          curr_to_corner = item
-              .get_center()
-              .to_float();
-          curr_from_corner = nearest_point_on_trace(from_trace, curr_to_corner);
-        } else if (curr_to_item instanceof PolylineTrace to_trace) {
-          // Trace to trace - find closest points between the two traces
-          FloatPoint[] closest_points = find_closest_points_between_traces(from_trace, to_trace);
-          curr_from_corner = closest_points[0];
-          curr_to_corner = closest_points[1];
-        } else {
-          continue;
-        }
-
-        double curr_distance = curr_from_corner.distance(curr_to_corner);
-        if (curr_distance < min_distance) {
-          min_distance = curr_distance;
-          from_corner = curr_from_corner;
-          to_corner = curr_to_corner;
-        }
-      }
-    }
-
-    if (from_corner != null && to_corner != null) {
-      this.air_line = new FloatLine(from_corner, to_corner);
-    } else {
-      this.air_line = null;
-    }
+    this.air_line = new FloatLine(from_corner, to_corner);
   }
 
   /**

@@ -152,10 +152,12 @@ public class InsertFoundConnectionAlgo {
       }
     }
 
-    for (int i = 0; i < p_trace.corners.length - 1; i++) {
-      Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
-      if (trace_stub != null) {
-        board.remove_item(trace_stub);
+    if (!FRLogger.isTraceEnabled()) {
+      for (int i = 0; i < p_trace.corners.length - 1; i++) {
+        Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
+        if (trace_stub != null) {
+          board.remove_item(trace_stub);
+        }
       }
     }
 
