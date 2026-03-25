@@ -26,11 +26,11 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
-import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -47,7 +47,7 @@ public class MazeSearchAlgo {
   /**
    * The queue of expanded elements used in this search algorithm.
    */
-  final PriorityQueue<MazeListElement> maze_expansion_list;
+  final SortedSet<MazeListElement> maze_expansion_list;
 
   /**
    * Used for calculating of a good lower bound for the distance between a new
@@ -72,8 +72,10 @@ public class MazeSearchAlgo {
   MazeSearchAlgo(AutorouteEngine p_autoroute_engine, AutorouteControl p_ctrl) {
     autoroute_engine = p_autoroute_engine;
     ctrl = p_ctrl;
+    random_generator.setSeed(
+        p_ctrl.ripup_costs); // Keep v1.9 deterministic randomization across passes.
     this.search_tree = p_autoroute_engine.autoroute_search_tree;
-    maze_expansion_list = new PriorityQueue<>(Comparator.comparingDouble(o -> o.sorting_value));
+    maze_expansion_list = new TreeSet<>();
     destination_distance = new DestinationDistance(ctrl.trace_costs, ctrl.layer_active, ctrl.min_normal_via_cost,
         ctrl.min_cheap_via_cost);
   }
@@ -221,18 +223,15 @@ public class MazeSearchAlgo {
     MazeListElement list_element = null;
     MazeSearchElement curr_door_section = null;
     // Search the next element, which is not yet expanded.
-    // Use poll() to efficiently get and remove the best element (O(log n) instead
-    // of O(n))
     boolean next_element_found = false;
     while (!maze_expansion_list.isEmpty()) {
       if (this.autoroute_engine.is_stop_requested()) {
         return false;
       }
 
-      list_element = maze_expansion_list.poll(); // O(log n) - gets highest priority element
-      if (list_element == null) {
-        break; // Queue unexpectedly empty
-      }
+      Iterator<MazeListElement> it = maze_expansion_list.iterator();
+      list_element = it.next();
+      it.remove();
 
       int curr_section_no = list_element.section_no_of_door;
       curr_door_section = list_element.door.get_maze_search_element(curr_section_no);
@@ -241,53 +240,57 @@ public class MazeSearchAlgo {
         next_element_found = true;
         break;
       }
-      // Element already occupied, recycle and continue
       MazeListElement.recycle(list_element);
+      list_element = null;
     }
     if (!next_element_found) {
       return false;
     }
-    curr_door_section.backtrack_door = list_element.backtrack_door;
-    curr_door_section.section_no_of_backtrack_door = list_element.section_no_of_backtrack_door;
-    curr_door_section.room_ripped = list_element.room_ripped;
-    curr_door_section.adjustment = list_element.adjustment;
+    try {
+      curr_door_section.backtrack_door = list_element.backtrack_door;
+      curr_door_section.section_no_of_backtrack_door = list_element.section_no_of_backtrack_door;
+      curr_door_section.room_ripped = list_element.room_ripped;
+      curr_door_section.adjustment = list_element.adjustment;
 
-    if (list_element.door instanceof DrillPage) {
-      expand_to_drills_of_page(list_element);
-      return true;
-    }
+      if (list_element.door instanceof DrillPage) {
+        expand_to_drills_of_page(list_element);
+        return true;
+      }
 
-    if (list_element.door instanceof TargetItemExpansionDoor curr_door) {
-      if (curr_door.is_destination_door()) {
-        // The destination is reached.
-        this.destination_door = curr_door;
+      if (list_element.door instanceof TargetItemExpansionDoor curr_door) {
+        if (curr_door.is_destination_door()) {
+          // The destination is reached.
+          this.destination_door = curr_door;
+          this.section_no_of_destination_door = list_element.section_no_of_door;
+          return false;
+        }
+      }
+      if (ctrl.is_fanout && list_element.door instanceof ExpansionDrill
+          && list_element.backtrack_door instanceof ExpansionDrill) {
+        // algorithm completed after the first drill;
+        this.destination_door = list_element.door;
         this.section_no_of_destination_door = list_element.section_no_of_door;
         return false;
       }
-    }
-    if (ctrl.is_fanout && list_element.door instanceof ExpansionDrill
-        && list_element.backtrack_door instanceof ExpansionDrill) {
-      // algorithm completed after the first drill;
-      this.destination_door = list_element.door;
-      this.section_no_of_destination_door = list_element.section_no_of_door;
-      return false;
-    }
-    if (ctrl.vias_allowed && list_element.door instanceof ExpansionDrill
-        && !(list_element.backtrack_door instanceof ExpansionDrill)) {
-      expand_to_other_layers(list_element);
-    }
+      if (ctrl.vias_allowed && list_element.door instanceof ExpansionDrill
+          && !(list_element.backtrack_door instanceof ExpansionDrill)) {
+        expand_to_other_layers(list_element);
+      }
 
-    if (list_element.next_room != null) {
       if (list_element.next_room != null) {
-        if (!expand_to_room_doors(list_element)) {
-          return true; // occupation by ripup is delayed or nothing was expanded
-          // In case nothing was expanded allow the section to be occupied from
-          // somewhere else, if the next room is thin.
+        if (list_element.next_room != null) {
+          if (!expand_to_room_doors(list_element)) {
+            return true; // occupation by ripup is delayed or nothing was expanded
+            // In case nothing was expanded allow the section to be occupied from
+            // somewhere else, if the next room is thin.
+          }
         }
       }
+      curr_door_section.is_occupied = true;
+      return true;
+    } finally {
+      MazeListElement.recycle(list_element);
     }
-    curr_door_section.is_occupied = true;
-    return true;
   }
 
   /**

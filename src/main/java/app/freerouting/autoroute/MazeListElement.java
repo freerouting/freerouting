@@ -3,6 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.geometry.planar.FloatLine;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Information for the maze expand Algorithm contained in expansion doors and
@@ -15,6 +16,7 @@ public class MazeListElement implements Comparable<MazeListElement> {
   // synchronization)
   private static final ThreadLocal<Deque<MazeListElement>> POOL = ThreadLocal.withInitial(ArrayDeque::new);
   private static final int MAX_POOL_SIZE = 500; // Cap pool size to prevent unbounded growth
+  private static final AtomicLong SEQUENCE_COUNTER = new AtomicLong();
 
   /**
    * The door or drill belonging to this MazeListElement
@@ -53,6 +55,7 @@ public class MazeListElement implements Comparable<MazeListElement> {
   boolean room_ripped;
   MazeSearchElement.Adjustment adjustment;
   boolean already_checked;
+  long sequence_no;
 
   /**
    * Private constructor for pooling
@@ -88,6 +91,7 @@ public class MazeListElement implements Comparable<MazeListElement> {
     element.room_ripped = p_room_ripped;
     element.adjustment = p_adjustment;
     element.already_checked = p_already_checked;
+    element.sequence_no = SEQUENCE_COUNTER.getAndIncrement();
 
     return element;
   }
@@ -115,16 +119,16 @@ public class MazeListElement implements Comparable<MazeListElement> {
   }
 
   @Override
+  @SuppressWarnings("NullableProblems")
   public int compareTo(MazeListElement p_other) {
-    double compare_value = this.sorting_value - p_other.sorting_value;
-    // make sure, that the result cannot be 0, so that no element in the set is
-    // skipped because of equal size.
-    int result;
-    if (compare_value >= 0) {
-      result = 1;
-    } else {
-      result = -1;
+    if (this == p_other) {
+      return 0;
     }
-    return result;
+    int sortCompare = Double.compare(this.sorting_value, p_other.sorting_value);
+    if (sortCompare != 0) {
+      return sortCompare;
+    }
+    // Keep all same-cost entries in the TreeSet with deterministic order.
+    return Long.compare(this.sequence_no, p_other.sequence_no);
   }
 }
