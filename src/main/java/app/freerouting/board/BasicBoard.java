@@ -470,6 +470,13 @@ public class BasicBoard implements Serializable {
     if (p_item == null) {
       return;
     }
+    if (is_item_activity_debug_candidate(p_item)) {
+      FRLogger.info("ITEM_ACTIVITY action=REMOVE"
+          + ", id=" + p_item.get_id_no()
+          + ", type=" + p_item.getClass().getSimpleName()
+          + ", bounds=" + describe_bounds(p_item.bounding_box())
+          + ", net0=" + first_net_or_none(p_item));
+    }
     if (p_item instanceof Trace t && t.net_no_arr.length > 0 && t.net_no_arr[0] == 94) {
       if (t instanceof PolylineTrace pt && pt.corner_count() == 2
           && t.first_corner().equals(new app.freerouting.geometry.planar.IntPoint(1885928, -1097274))
@@ -1232,6 +1239,13 @@ public class BasicBoard implements Serializable {
     if (p_item == null) {
       return;
     }
+    if (is_item_activity_debug_candidate(p_item)) {
+      FRLogger.info("ITEM_ACTIVITY action=INSERT"
+          + ", id=" + p_item.get_id_no()
+          + ", type=" + p_item.getClass().getSimpleName()
+          + ", bounds=" + describe_bounds(p_item.bounding_box())
+          + ", net0=" + first_net_or_none(p_item));
+    }
 
     if (rules == null || rules.clearance_matrix == null || p_item.clearance_class_no() < 0
         || p_item.clearance_class_no() >= rules.clearance_matrix.get_class_count()) {
@@ -1252,6 +1266,23 @@ public class BasicBoard implements Serializable {
    * database if necessary.
    */
   public void additional_update_after_change(Item p_item) {
+  }
+
+  private static boolean is_item_activity_debug_candidate(Item p_item) {
+    IntBox bounds = p_item.bounding_box();
+    IntBox debugWindow = new IntBox(1620000, -1105000, 1930000, -1003000);
+    return bounds != null && bounds.intersects(debugWindow);
+  }
+
+  private static String first_net_or_none(Item p_item) {
+    return p_item.net_count() > 0 ? Integer.toString(p_item.get_net_no(0)) : "none";
+  }
+
+  private static String describe_bounds(IntBox p_bounds) {
+    if (p_bounds == null) {
+      return "null";
+    }
+    return "[(" + p_bounds.ll.x + "," + p_bounds.ll.y + ")..(" + p_bounds.ur.x + "," + p_bounds.ur.y + ")]";
   }
 
   /**

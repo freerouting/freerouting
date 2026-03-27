@@ -368,8 +368,40 @@ public class AutorouteEngine {
           break;
         }
       }
+      FRLogger.info(
+          "COMPLETE_ROOM input"
+              + ", net="
+              + this.net_no
+              + ", layer="
+              + p_room.get_layer()
+              + ", room_bounds="
+              + describe_shape_bounds(p_room.get_shape())
+              + ", contained_bounds="
+              + describe_shape_bounds(p_room.get_contained_shape())
+              + ", from_door_bounds="
+              + describe_shape_bounds(from_door_shape)
+              + ", ignore_object="
+              + (ignore_object == null ? "null" : ignore_object.getClass().getSimpleName()));
       Collection<IncompleteFreeSpaceExpansionRoom> completed_shapes = this.autoroute_search_tree.complete_shape(
           p_room, this.net_no, ignore_object, from_door_shape);
+      int initialCandidateIndex = 0;
+      for (IncompleteFreeSpaceExpansionRoom initialCandidate : completed_shapes) {
+        FRLogger.info(
+            "COMPLETE_ROOM initial_candidate"
+                + ", net="
+                + this.net_no
+                + ", layer="
+                + initialCandidate.get_layer()
+                + ", index="
+                + initialCandidateIndex
+                + ", dimension="
+                + initialCandidate.get_shape().dimension()
+                + ", incomplete_bounds="
+                + describe_shape_bounds(initialCandidate.get_shape())
+                + ", from_door_bounds="
+                + describe_shape_bounds(from_door_shape));
+        ++initialCandidateIndex;
+      }
 
       // DEBUG: Log when room completion fails
       if (completed_shapes.isEmpty()) {

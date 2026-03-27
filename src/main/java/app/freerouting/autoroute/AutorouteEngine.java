@@ -405,8 +405,26 @@ public class AutorouteEngine {
           break;
         }
       }
+      FRLogger.info("COMPLETE_ROOM input"
+          + ", net=" + this.net_no
+          + ", layer=" + p_room.get_layer()
+          + ", room_bounds=" + describe_shape_bounds(p_room.get_shape())
+          + ", contained_bounds=" + describe_shape_bounds(p_room.get_contained_shape())
+          + ", from_door_bounds=" + describe_shape_bounds(from_door_shape)
+          + ", ignore_object=" + (ignore_object == null ? "null" : ignore_object.getClass().getSimpleName()));
       Collection<IncompleteFreeSpaceExpansionRoom> completed_shapes = this.autoroute_search_tree.complete_shape(p_room,
           this.net_no, ignore_object, from_door_shape);
+      int initialCandidateIndex = 0;
+      for (IncompleteFreeSpaceExpansionRoom initialCandidate : completed_shapes) {
+        FRLogger.info("COMPLETE_ROOM initial_candidate"
+            + ", net=" + this.net_no
+            + ", layer=" + initialCandidate.get_layer()
+            + ", index=" + initialCandidateIndex
+            + ", dimension=" + initialCandidate.get_shape().dimension()
+            + ", incomplete_bounds=" + describe_shape_bounds(initialCandidate.get_shape())
+            + ", from_door_bounds=" + describe_shape_bounds(from_door_shape));
+        ++initialCandidateIndex;
+      }
       this.remove_incomplete_expansion_room(p_room);
       boolean is_first_completed_room = true;
       for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : completed_shapes) {
@@ -507,12 +525,11 @@ public class AutorouteEngine {
     if (p_room.get_doors() == null) {
       return;
     }
-    // Snapshot the doors to avoid ConcurrentModificationException and restarting
-    // the iterator
-    // This changes the complexity from O(N^2) (due to restarts) to O(N)
-    List<ExpansionDoor> doors_snapshot = new ArrayList<>(p_room.get_doors());
-
-    for (ExpansionDoor curr_door : doors_snapshot) {
+    // Keep v1.9 semantics: completing a neighbour can mutate door topology, so
+    // restart iteration on the updated door set.
+    Iterator<ExpansionDoor> it = p_room.get_doors().iterator();
+    while (it.hasNext()) {
+      ExpansionDoor curr_door = it.next();
       // cast to ExpansionRoom because ExpansionDoor.other_room works differently with
       // parameter type CompleteExpansionRoom.
       ExpansionRoom neighbour_room = curr_door.other_room((ExpansionRoom) p_room);
@@ -521,6 +538,7 @@ public class AutorouteEngine {
       }
       if (neighbour_room instanceof IncompleteFreeSpaceExpansionRoom room) {
         this.complete_expansion_room(room);
+        it = p_room.get_doors().iterator();
       } else if (neighbour_room instanceof ObstacleExpansionRoom obstacle_neighbour_room) {
         if (!obstacle_neighbour_room.all_doors_calculated()) {
           this.calculate_doors(obstacle_neighbour_room);

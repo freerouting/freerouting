@@ -174,16 +174,53 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
           boolean is_obstacle = curr_object.is_trace_obstacle(p_net_no);
 
           int shape_index = curr_leaf.shape_index_in_object;
+          if (debugAnchor) {
+            int obstacleId = curr_object instanceof Item item ? item.get_id_no() : -1;
+            boolean obstacleContainsNet = curr_object instanceof Item item && item.contains_net(p_net_no);
+            boolean sameLayer = curr_object.shape_layer(shape_index) == room_layer;
+            boolean ignoredObject = curr_object == p_ignore_object;
+            IntOctagon curr_object_shape = curr_object.get_tree_shape(this, shape_index).bounding_octagon();
+            FRLogger.info("COMPLETE_SHAPE_OBS visit"
+                + ", net=" + p_net_no
+                + ", layer=" + room_layer
+                + ", obstacle=" + curr_object
+                + ", obstacle_id=" + obstacleId
+                + ", obstacle_contains_net=" + obstacleContainsNet
+                + ", is_trace_obstacle=" + is_obstacle
+                + ", same_layer=" + sameLayer
+                + ", ignored_object=" + ignoredObject
+                + ", bounds=" + describe_bounds(curr_object_shape.bounding_box()));
+          }
           if (is_obstacle && curr_object.shape_layer(shape_index) == room_layer && curr_object != p_ignore_object) {
 
             IntOctagon curr_object_shape = curr_object
                 .get_tree_shape(this, shape_index)
                 .bounding_octagon();
+            if (debugAnchor) {
+              int obstacleId = curr_object instanceof Item item ? item.get_id_no() : -1;
+              boolean obstacleContainsNet = curr_object instanceof Item item && item.contains_net(p_net_no);
+              FRLogger.info("COMPLETE_SHAPE_OBS candidate"
+                  + ", net=" + p_net_no
+                  + ", layer=" + room_layer
+                  + ", obstacle=" + curr_object
+                  + ", obstacle_id=" + obstacleId
+                  + ", obstacle_contains_net=" + obstacleContainsNet
+                  + ", obstacle_bounds=" + describe_bounds(curr_object_shape.bounding_box()));
+            }
             Collection<IncompleteFreeSpaceExpansionRoom> new_result = new LinkedList<>();
             IntOctagon new_bounding_shape = IntOctagon.EMPTY;
             for (IncompleteFreeSpaceExpansionRoom curr_room : result) {
               IntOctagon curr_shape = (IntOctagon) curr_room.get_shape();
-              if (curr_shape.overlaps(curr_object_shape)) {
+              boolean overlaps = curr_shape.overlaps(curr_object_shape);
+              if (debugAnchor) {
+                FRLogger.info("COMPLETE_SHAPE_OBS test"
+                    + ", net=" + p_net_no
+                    + ", layer=" + room_layer
+                    + ", overlap=" + overlaps
+                    + ", room_bounds=" + describe_bounds(curr_shape.bounding_box())
+                    + ", obstacle_bounds=" + describe_bounds(curr_object_shape.bounding_box()));
+              }
+              if (overlaps) {
                 if (debugAnchor) {
                   int obstacleId = curr_object instanceof Item item ? item.get_id_no() : -1;
                   boolean obstacleContainsNet = curr_object instanceof Item item && item.contains_net(p_net_no);
