@@ -826,10 +826,24 @@ public class Polyline implements Serializable {
     FRLogger.trace(
         "Polyline.split",
         "compare_trace_split_called",
-        "p_line_no=" + p_line_no + ", arr.length=" + arr.length + ", arr.length-2=" + (arr.length - 2)
-            + ", new_end_corner=" + new_end_corner + " (type=" + new_end_corner.getClass().getSimpleName()
-            + "), last_corner=" + this.last_corner() + " (type=" + this.last_corner().getClass().getSimpleName()
-            + "), equals=" + new_end_corner.equals(this.last_corner()),
+        "p_line_no="
+            + p_line_no
+            + ", arr.length="
+            + arr.length
+            + ", arr.length-2="
+            + (arr.length - 2)
+            + ", new_end_corner="
+            + debug_point(new_end_corner)
+            + " (type="
+            + new_end_corner.getClass().getSimpleName()
+            + ")"
+            + ", last_corner="
+            + debug_point(this.last_corner())
+            + " (type="
+            + this.last_corner().getClass().getSimpleName()
+            + ")"
+            + ", equals="
+            + new_end_corner.equals(this.last_corner()),
         "Polyline split p_line_no=" + p_line_no,
         new Point[] { this.first_corner(), new_end_corner, this.last_corner() });
     StringBuilder sb = new StringBuilder("    CORNERS:");
@@ -901,6 +915,13 @@ public class Polyline implements Serializable {
       }
     }
     return false;
+  }
+
+  private static String debug_point(Point p_point) {
+    if (p_point instanceof IntPoint intPoint) {
+      return "(" + intPoint.x + "," + intPoint.y + ")";
+    }
+    return String.valueOf(p_point);
   }
 
   /**
