@@ -595,6 +595,14 @@ public class ShapeSearchTree extends MinAreaTree {
               if (intersection.dimension() == 2) {
                 boolean ignore_expansion_room = curr_object instanceof CompleteFreeSpaceExpansionRoom
                     && p_ignore_shape != null && p_ignore_shape.contains(intersection);
+                FRLogger.info("COMPLETE_SHAPE_DECISION"
+                    + ", net=" + p_net_no
+                    + ", layer=" + room_layer
+                    + ", action=" + (ignore_expansion_room ? "IGNORE" : "RESTRAIN")
+                    + ", obstacle_type=" + curr_object.getClass().getSimpleName()
+                    + ", obstacle_bounds=" + curr_object_shape.bounding_box()
+                    + ", overlap_bounds=" + intersection.bounding_box()
+                    + ", ignore_bounds=" + (p_ignore_shape == null ? "null" : p_ignore_shape.bounding_box()));
                 // cannot happen in free angle routing, because then expansion_rooms
                 // may not overlap. Therefore, that can be removed as soon as special
                 // function for 45-degree routing is used.
@@ -603,7 +611,8 @@ public class ShapeSearchTree extends MinAreaTree {
                   Collection<IncompleteFreeSpaceExpansionRoom> new_rooms = restrain_shape(curr_incomplete_room,
                       curr_object_shape);
                   new_result.addAll(new_rooms);
-                  for (IncompleteFreeSpaceExpansionRoom tmp_room : new_rooms) {
+                  // Keep v1.9 semantics: the bounding shape must include all accumulated rooms.
+                  for (IncompleteFreeSpaceExpansionRoom tmp_room : new_result) {
                     new_bounding_shape = new_bounding_shape.union(tmp_room
                         .get_shape()
                         .bounding_shape(this.bounding_directions));

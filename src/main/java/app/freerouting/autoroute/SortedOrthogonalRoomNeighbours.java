@@ -326,6 +326,8 @@ public class SortedOrthogonalRoomNeighbours {
       TileShape ignore_shape = null;
       SearchTreeObject ignore_object = null;
       double max_door_area = 0;
+      int ignore_candidate_count = 0;
+      int equal_area_tie_count = 0;
       for (ExpansionDoor curr_door : door_list) {
         // insert the overlapping doors with CompleteFreeSpaceExpansionRooms
         // for the information in complete_shape about the objects to ignore.
@@ -335,15 +337,47 @@ public class SortedOrthogonalRoomNeighbours {
             if (other_room instanceof CompleteFreeSpaceExpansionRoom room) {
               TileShape curr_door_shape = curr_door.get_shape();
               double curr_door_area = curr_door_shape.area();
+              ++ignore_candidate_count;
+              FRLogger.info("ROOM_EDGE_REMOVE ignore_candidate"
+                  + ", net=" + p_net_no
+                  + ", layer=" + curr_incomplete_room.get_layer()
+                  + ", remove_edge=" + remove_edge_no
+                  + ", candidate_no=" + ignore_candidate_count
+                  + ", candidate_bounds=" + curr_door_shape.bounding_box()
+                  + ", candidate_area=" + curr_door_area);
               if (curr_door_area > max_door_area) {
                 max_door_area = curr_door_area;
                 ignore_shape = curr_door_shape;
                 ignore_object = room;
+                FRLogger.info("ROOM_EDGE_REMOVE ignore_selected"
+                    + ", net=" + p_net_no
+                    + ", layer=" + curr_incomplete_room.get_layer()
+                    + ", remove_edge=" + remove_edge_no
+                    + ", reason=larger_area"
+                    + ", selected_bounds=" + curr_door_shape.bounding_box()
+                    + ", selected_area=" + curr_door_area);
+              } else if (Double.compare(curr_door_area, max_door_area) == 0) {
+                ++equal_area_tie_count;
+                FRLogger.info("ROOM_EDGE_REMOVE ignore_tie"
+                    + ", net=" + p_net_no
+                    + ", layer=" + curr_incomplete_room.get_layer()
+                    + ", remove_edge=" + remove_edge_no
+                    + ", tie_no=" + equal_area_tie_count
+                    + ", tie_bounds=" + curr_door_shape.bounding_box()
+                    + ", tie_area=" + curr_door_area);
               }
             }
           }
         }
       }
+      FRLogger.info("ROOM_EDGE_REMOVE ignore_summary"
+          + ", net=" + p_net_no
+          + ", layer=" + curr_incomplete_room.get_layer()
+          + ", remove_edge=" + remove_edge_no
+          + ", candidate_count=" + ignore_candidate_count
+          + ", tie_count=" + equal_area_tie_count
+          + ", selected_bounds=" + (ignore_shape == null ? "null" : ignore_shape.bounding_box())
+          + ", selected_area=" + max_door_area);
       IncompleteFreeSpaceExpansionRoom enlarged_room = new IncompleteFreeSpaceExpansionRoom(enlarged_box, curr_incomplete_room.get_layer(), curr_incomplete_room.get_contained_shape());
       Collection<IncompleteFreeSpaceExpansionRoom> new_rooms = p_autoroute_search_tree.complete_shape(enlarged_room, p_net_no, ignore_object, ignore_shape);
       FRLogger.info("ROOM_EDGE_REMOVE complete_shape"
