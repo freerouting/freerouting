@@ -144,6 +144,30 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
           boolean is_obstacle = curr_object.is_trace_obstacle(p_net_no);
 
           int shape_index = curr_leaf.shape_index_in_object;
+          boolean sameLayer = curr_object.shape_layer(shape_index) == room_layer;
+          boolean ignoredObject = curr_object == p_ignore_object;
+          if (debugAnchor) {
+            FRLogger.info(
+                "COMPLETE_SHAPE_FILTER"
+                    + ", step="
+                    + debugStep
+                    + ", net="
+                    + p_net_no
+                    + ", layer="
+                    + room_layer
+                    + ", shape_index="
+                    + shape_index
+                    + ", is_trace_obstacle="
+                    + is_obstacle
+                    + ", same_layer="
+                    + sameLayer
+                    + ", ignored_object="
+                    + ignoredObject
+                    + ", accepted="
+                    + (is_obstacle && sameLayer && !ignoredObject)
+                    + ", obstacle="
+                    + curr_object);
+          }
           if (debugAnchor) {
             FRLogger.info(
                 "COMPLETE_SHAPE_STEP"
@@ -167,8 +191,6 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             int obstacleId = curr_object instanceof Item ? ((Item) curr_object).get_id_no() : -1;
             boolean obstacleContainsNet =
                 curr_object instanceof Item && ((Item) curr_object).contains_net(p_net_no);
-            boolean sameLayer = curr_object.shape_layer(shape_index) == room_layer;
-            boolean ignoredObject = curr_object == p_ignore_object;
             IntOctagon curr_object_shape = curr_object.get_tree_shape(this, shape_index).bounding_octagon();
             FRLogger.info(
                 "COMPLETE_SHAPE_OBS visit"
@@ -191,9 +213,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                     + ", bounds="
                     + describe_bounds(curr_object_shape.bounding_box()));
           }
-          if (is_obstacle
-              && curr_object.shape_layer(shape_index) == room_layer
-              && curr_object != p_ignore_object) {
+          if (is_obstacle && sameLayer && !ignoredObject) {
 
             IntOctagon curr_object_shape = curr_object.get_tree_shape(this, shape_index).bounding_octagon();
             if (debugAnchor) {
@@ -260,6 +280,23 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                     && p_ignore_shape != null) {
                   IntOctagon intersection = curr_shape.intersection(curr_object_shape);
                   if (p_ignore_shape.contains(intersection)) {
+                    if (debugAnchor) {
+                      FRLogger.info(
+                          "COMPLETE_SHAPE_DECISION"
+                              + ", step="
+                              + debugStep
+                              + ", net="
+                              + p_net_no
+                              + ", layer="
+                              + room_layer
+                              + ", action=SKIP_BY_IGNORE_SHAPE"
+                              + ", overlap="
+                              + overlaps
+                              + ", room_bounds="
+                              + describe_bounds(curr_shape.bounding_box())
+                              + ", obstacle_bounds="
+                              + describe_bounds(curr_object_shape.bounding_box()));
+                    }
                     // ignore also all objects, whose intersection is contained in the
                     // 2-dim overlap-door with the from_room.
                     if (!p_ignore_shape.contains(curr_shape)) {
@@ -268,6 +305,23 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                     }
                     continue;
                   }
+                }
+                if (debugAnchor) {
+                  FRLogger.info(
+                      "COMPLETE_SHAPE_DECISION"
+                          + ", step="
+                          + debugStep
+                          + ", net="
+                          + p_net_no
+                          + ", layer="
+                          + room_layer
+                          + ", action=RESTRAIN"
+                          + ", overlap="
+                          + overlaps
+                          + ", room_bounds="
+                          + describe_bounds(curr_shape.bounding_box())
+                          + ", obstacle_bounds="
+                          + describe_bounds(curr_object_shape.bounding_box()));
                 }
                 if (curr_object.toString().contains("id=56")) {
                   FRLogger.debug("Restrain called for Obstacle 56."
@@ -317,6 +371,23 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                   new_bounding_shape = new_bounding_shape.union(tmp_shape.get_shape().bounding_box());
                 }
               } else {
+                if (debugAnchor) {
+                  FRLogger.info(
+                      "COMPLETE_SHAPE_DECISION"
+                          + ", step="
+                          + debugStep
+                          + ", net="
+                          + p_net_no
+                          + ", layer="
+                          + room_layer
+                          + ", action=KEEP_NON_OVERLAP"
+                          + ", overlap="
+                          + overlaps
+                          + ", room_bounds="
+                          + describe_bounds(curr_shape.bounding_box())
+                          + ", obstacle_bounds="
+                          + describe_bounds(curr_object_shape.bounding_box()));
+                }
                 new_result.add(curr_room);
                 new_bounding_shape = new_bounding_shape.union(curr_shape.bounding_box());
               }
