@@ -681,8 +681,12 @@ public class MazeSearchAlgo {
               + p_adjustment
               + ", door="
               + describe_expandable(p_door)
+              + ", door_bounds="
+              + describe_expandable_bounds(p_door)
               + ", from_door="
               + describe_expandable(p_from_element.door)
+              + ", from_door_bounds="
+              + describe_expandable_bounds(p_from_element.door)
               + ", net="
               + ctrl.net_no);
       FRLogger.trace(
@@ -704,8 +708,12 @@ public class MazeSearchAlgo {
               + ctrl.net_no
               + ", door="
               + describe_expandable(p_door)
+              + ", door_bounds="
+              + describe_expandable_bounds(p_door)
               + ", from_door="
-              + describe_expandable(p_from_element.door),
+              + describe_expandable(p_from_element.door)
+              + ", from_door_bounds="
+              + describe_expandable_bounds(p_from_element.door),
           to_impacted_points(p_shape_entry));
       return false;
     }
@@ -757,8 +765,12 @@ public class MazeSearchAlgo {
             + sorting_value
             + ", door="
             + describe_expandable(p_door)
+            + ", door_bounds="
+            + describe_expandable_bounds(p_door)
             + ", from_door="
             + describe_expandable(p_from_element.door)
+            + ", from_door_bounds="
+            + describe_expandable_bounds(p_from_element.door)
             + ", net="
             + ctrl.net_no);
     FRLogger.trace(
@@ -784,8 +796,12 @@ public class MazeSearchAlgo {
             + ctrl.net_no
             + ", door="
             + describe_expandable(p_door)
+            + ", door_bounds="
+            + describe_expandable_bounds(p_door)
             + ", from_door="
-            + describe_expandable(p_from_element.door),
+            + describe_expandable(p_from_element.door)
+            + ", from_door_bounds="
+            + describe_expandable_bounds(p_from_element.door),
         to_impacted_points(p_shape_entry));
     this.maze_expansion_list.add(new_element);
     return true;
@@ -849,6 +865,14 @@ public class MazeSearchAlgo {
     } catch (RuntimeException e) {
       return "uninitialized";
     }
+  }
+
+  private static String describe_expandable_bounds(ExpandableObject p_door) {
+    if (p_door == null) {
+      return "null";
+    }
+    IntBox bounds = p_door.get_shape().bounding_box();
+    return "[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
   }
 
   private static String describe_room(CompleteExpansionRoom p_room) {
