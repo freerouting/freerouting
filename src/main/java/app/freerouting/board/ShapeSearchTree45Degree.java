@@ -157,6 +157,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
         && start_shape.bottomY == -1080137
         && start_shape.rightX == 1910447
         && start_shape.topY == -1006110;
+    int debugStep = 0;
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
     result.add(new IncompleteFreeSpaceExpansionRoom(start_shape, room_layer, shape_to_be_contained));
     this.node_stack.reset();
@@ -175,6 +176,16 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
           int shape_index = curr_leaf.shape_index_in_object;
           if (debugAnchor) {
+            FRLogger.info("COMPLETE_SHAPE_STEP"
+                + ", step=" + debugStep
+                + ", phase=visit"
+                + ", net=" + p_net_no
+                + ", layer=" + room_layer
+                + ", shape_index=" + shape_index
+                + ", is_trace_obstacle=" + is_obstacle
+                + ", same_layer=" + (curr_object.shape_layer(shape_index) == room_layer)
+                + ", ignored_object=" + (curr_object == p_ignore_object)
+                + ", obstacle=" + curr_object);
             int obstacleId = curr_object instanceof Item item ? item.get_id_no() : -1;
             boolean obstacleContainsNet = curr_object instanceof Item item && item.contains_net(p_net_no);
             boolean sameLayer = curr_object.shape_layer(shape_index) == room_layer;
@@ -273,6 +284,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             }
             result = new_result;
             bounding_shape = new_bounding_shape;
+          }
+          if (debugAnchor) {
+            debugStep++;
           }
         } else {
           this.node_stack.push(((InnerNode) curr_node).first_child);

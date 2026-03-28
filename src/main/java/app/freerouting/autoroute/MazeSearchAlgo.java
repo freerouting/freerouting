@@ -326,7 +326,18 @@ public class MazeSearchAlgo {
       curr_door_is_small = door_is_small(curr_door, 2 * half_width_add);
     }
 
+    int doorCountBeforeCompletion = p_list_element.next_room.get_doors().size();
     this.autoroute_engine.complete_neighbour_rooms(p_list_element.next_room);
+    int doorCountAfterCompletion = p_list_element.next_room.get_doors().size();
+    FRLogger.info("ROOM_COMPLETE_SYNC"
+        + ", net=" + ctrl.net_no
+        + ", layer=" + layer_no
+        + ", from_section=" + p_list_element.section_no_of_door
+        + ", backtrack_section=" + p_list_element.section_no_of_backtrack_door
+        + ", from_door=" + describe_expandable(p_list_element.door)
+        + ", next_room=" + describe_room(p_list_element.next_room)
+        + ", door_count_before=" + doorCountBeforeCompletion
+        + ", door_count_after=" + doorCountAfterCompletion);
 
     FloatPoint shape_entry_middle = p_list_element.shape_entry.a.middle_point(p_list_element.shape_entry.b);
 
