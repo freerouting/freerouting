@@ -175,7 +175,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
           boolean is_obstacle = curr_object.is_trace_obstacle(p_net_no);
 
           int shape_index = curr_leaf.shape_index_in_object;
-          boolean sameLayer = curr_object.shape_layer(shape_index) == room_layer;
+          int objectLayer = curr_object.shape_layer(shape_index);
+          boolean sameLayer = objectLayer == room_layer;
           boolean ignoredObject = curr_object == p_ignore_object;
           if (debugAnchor) {
             FRLogger.info("COMPLETE_SHAPE_FILTER"
@@ -183,6 +184,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 + ", net=" + p_net_no
                 + ", layer=" + room_layer
                 + ", shape_index=" + shape_index
+                + ", object_layer=" + objectLayer
                 + ", is_trace_obstacle=" + is_obstacle
                 + ", same_layer=" + sameLayer
                 + ", ignored_object=" + ignoredObject
@@ -197,17 +199,21 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 + ", layer=" + room_layer
                 + ", shape_index=" + shape_index
                 + ", is_trace_obstacle=" + is_obstacle
-                + ", same_layer=" + (curr_object.shape_layer(shape_index) == room_layer)
+                + ", object_layer=" + objectLayer
+                + ", same_layer=" + sameLayer
                 + ", ignored_object=" + (curr_object == p_ignore_object)
                 + ", obstacle=" + curr_object);
             int obstacleId = curr_object instanceof Item item ? item.get_id_no() : -1;
+            String obstacleNets = curr_object instanceof Item item ? java.util.Arrays.toString(item.net_no_arr) : "[]";
             boolean obstacleContainsNet = curr_object instanceof Item item && item.contains_net(p_net_no);
             IntOctagon curr_object_shape = curr_object.get_tree_shape(this, shape_index).bounding_octagon();
             FRLogger.info("COMPLETE_SHAPE_OBS visit"
                 + ", net=" + p_net_no
                 + ", layer=" + room_layer
+                + ", shape_index=" + shape_index
                 + ", obstacle=" + curr_object
                 + ", obstacle_id=" + obstacleId
+                + ", obstacle_nets=" + obstacleNets
                 + ", obstacle_contains_net=" + obstacleContainsNet
                 + ", is_trace_obstacle=" + is_obstacle
                 + ", same_layer=" + sameLayer
@@ -221,12 +227,14 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 .bounding_octagon();
             if (debugAnchor) {
               int obstacleId = curr_object instanceof Item item ? item.get_id_no() : -1;
+              String obstacleNets = curr_object instanceof Item item ? java.util.Arrays.toString(item.net_no_arr) : "[]";
               boolean obstacleContainsNet = curr_object instanceof Item item && item.contains_net(p_net_no);
               FRLogger.info("COMPLETE_SHAPE_OBS candidate"
                   + ", net=" + p_net_no
                   + ", layer=" + room_layer
                   + ", obstacle=" + curr_object
                   + ", obstacle_id=" + obstacleId
+                  + ", obstacle_nets=" + obstacleNets
                   + ", obstacle_contains_net=" + obstacleContainsNet
                   + ", obstacle_bounds=" + describe_bounds(curr_object_shape.bounding_box()));
             }
