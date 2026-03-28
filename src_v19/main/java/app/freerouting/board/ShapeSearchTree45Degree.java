@@ -198,6 +198,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 curr_object instanceof Item
                     ? java.util.Arrays.toString(((Item) curr_object).net_no_arr)
                     : "[]";
+            boolean obstacleOnBoard = curr_object instanceof Item && ((Item) curr_object).is_on_the_board();
             boolean obstacleContainsNet =
                 curr_object instanceof Item && ((Item) curr_object).contains_net(p_net_no);
             IntOctagon curr_object_shape = curr_object.get_tree_shape(this, shape_index).bounding_octagon();
@@ -215,6 +216,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                     + obstacleId
                     + ", obstacle_nets="
                     + obstacleNets
+                    + ", obstacle_on_board="
+                    + obstacleOnBoard
                     + ", obstacle_contains_net="
                     + obstacleContainsNet
                     + ", is_trace_obstacle="
@@ -235,6 +238,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                   curr_object instanceof Item
                       ? java.util.Arrays.toString(((Item) curr_object).net_no_arr)
                       : "[]";
+              boolean obstacleOnBoard = curr_object instanceof Item && ((Item) curr_object).is_on_the_board();
               boolean obstacleContainsNet =
                   curr_object instanceof Item && ((Item) curr_object).contains_net(p_net_no);
               FRLogger.info(
@@ -249,6 +253,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                       + obstacleId
                       + ", obstacle_nets="
                       + obstacleNets
+                      + ", obstacle_on_board="
+                      + obstacleOnBoard
                       + ", obstacle_contains_net="
                       + obstacleContainsNet
                       + ", obstacle_bounds="

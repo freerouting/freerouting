@@ -205,6 +205,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 + ", obstacle=" + curr_object);
             int obstacleId = curr_object instanceof Item item ? item.get_id_no() : -1;
             String obstacleNets = curr_object instanceof Item item ? java.util.Arrays.toString(item.net_no_arr) : "[]";
+            boolean obstacleOnBoard = curr_object instanceof Item item && item.is_on_the_board();
             boolean obstacleContainsNet = curr_object instanceof Item item && item.contains_net(p_net_no);
             IntOctagon curr_object_shape = curr_object.get_tree_shape(this, shape_index).bounding_octagon();
             FRLogger.info("COMPLETE_SHAPE_OBS visit"
@@ -214,6 +215,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 + ", obstacle=" + curr_object
                 + ", obstacle_id=" + obstacleId
                 + ", obstacle_nets=" + obstacleNets
+                + ", obstacle_on_board=" + obstacleOnBoard
                 + ", obstacle_contains_net=" + obstacleContainsNet
                 + ", is_trace_obstacle=" + is_obstacle
                 + ", same_layer=" + sameLayer
@@ -228,6 +230,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             if (debugAnchor) {
               int obstacleId = curr_object instanceof Item item ? item.get_id_no() : -1;
               String obstacleNets = curr_object instanceof Item item ? java.util.Arrays.toString(item.net_no_arr) : "[]";
+              boolean obstacleOnBoard = curr_object instanceof Item item && item.is_on_the_board();
               boolean obstacleContainsNet = curr_object instanceof Item item && item.contains_net(p_net_no);
               FRLogger.info("COMPLETE_SHAPE_OBS candidate"
                   + ", net=" + p_net_no
@@ -235,6 +238,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                   + ", obstacle=" + curr_object
                   + ", obstacle_id=" + obstacleId
                   + ", obstacle_nets=" + obstacleNets
+                  + ", obstacle_on_board=" + obstacleOnBoard
                   + ", obstacle_contains_net=" + obstacleContainsNet
                   + ", obstacle_bounds=" + describe_bounds(curr_object_shape.bounding_box()));
             }
