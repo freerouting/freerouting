@@ -500,7 +500,7 @@ public class JobControllerV1 extends BaseController {
 
   /* Download the output of the job, typically in Specctra SES format.
    * If the job is still running or paused, returns the partial output generated so far.
-   * If no output is available yet, returns a 202 Accepted response.
+   * If no output is available yet, returns a 204 No Content response.
    */
   @Operation(summary = "Download job output file", description = "Downloads the output file of a routing job in Specctra SES format. "
       + "If the job is completed, returns the final output. "
@@ -541,7 +541,7 @@ public class JobControllerV1 extends BaseController {
     if (session == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
-          .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
+          .entity(GSON.toJson(java.util.Map.of("error", "The session ID '" + job.sessionId + "' is invalid.")))
           .build();
     }
 
@@ -552,7 +552,7 @@ public class JobControllerV1 extends BaseController {
         || job.state == RoutingJobState.INVALID) {
       return Response
           .status(Response.Status.BAD_REQUEST)
-          .entity("{\"error\":\"The job is in state '" + job.state + "' and has no valid output.\"}")
+          .entity(GSON.toJson(java.util.Map.of("error", "The job is in state '" + job.state + "' and has no valid output.")))
           .build();
     }
 
@@ -564,16 +564,15 @@ public class JobControllerV1 extends BaseController {
     // Check if output data is available
     if (job.output == null || job.output.getData() == null) {
       if (isInProgress) {
-        // Job is running but hasn't written any output yet
+        // Job is running but hasn't written any output yet — return 204 No Content (no body per RFC 7231)
         return Response
             .status(Response.Status.NO_CONTENT)
-            .entity("{\"error\":\"The job is in progress but no output data is available yet. Use GET /{jobId}/output/stream for real-time updates.\"}")
             .build();
       }
       // QUEUED or READY_TO_START
       return Response
           .status(Response.Status.BAD_REQUEST)
-          .entity("{\"error\":\"The job hasn't started yet.\"}")
+          .entity(GSON.toJson(java.util.Map.of("error", "The job hasn't started yet.")))
           .build();
     }
 
