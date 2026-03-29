@@ -498,12 +498,20 @@ public class JobControllerV1 extends BaseController {
     }
   }
 
-  /* Download the output of the job, typically in Specctra SES format. */
-  @Operation(summary = "Download job output file", description = "Downloads the output file of a completed routing job, typically in Specctra SES format. The file is returned as Base64-encoded data.")
+  /* Download the output of the job, typically in Specctra SES format.
+   * If the job is still running or paused, returns the partial output generated so far.
+   * If no output is available yet, returns a 202 Accepted response.
+   */
+  @Operation(summary = "Download job output file", description = "Downloads the output file of a routing job in Specctra SES format. "
+      + "If the job is completed, returns the final output. "
+      + "If the job is still running or paused, returns the partial output generated so far (202 Accepted). "
+      + "The file is returned as Base64-encoded data.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Output downloaded successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BoardFilePayload.class))),
+      @ApiResponse(responseCode = "200", description = "Output downloaded successfully (job completed)", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BoardFilePayload.class))),
+      @ApiResponse(responseCode = "202", description = "Partial output returned (job still in progress)", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BoardFilePayload.class))),
+      @ApiResponse(responseCode = "204", description = "Job is in progress but no output data is available yet"),
       @ApiResponse(responseCode = "404", description = "Job not found"),
-      @ApiResponse(responseCode = "400", description = "Job not completed or invalid session")
+      @ApiResponse(responseCode = "400", description = "Job failed, was cancelled, or session is invalid")
   })
   @GET
   @Path("/{jobId}/output")
@@ -537,11 +545,35 @@ public class JobControllerV1 extends BaseController {
           .build();
     }
 
-    // Check if the job is completed
-    if (job.state != RoutingJobState.COMPLETED) {
+    // Reject jobs that have failed, been cancelled, or are in an invalid terminal state
+    if (job.state == RoutingJobState.TERMINATED
+        || job.state == RoutingJobState.CANCELLED
+        || job.state == RoutingJobState.TIMED_OUT
+        || job.state == RoutingJobState.INVALID) {
       return Response
           .status(Response.Status.BAD_REQUEST)
-          .entity("{\"error\":\"The job hasn't finished yet.\"}")
+          .entity("{\"error\":\"The job is in state '" + job.state + "' and has no valid output.\"}")
+          .build();
+    }
+
+    // For in-progress jobs (RUNNING, PAUSED, STOPPING), return partial output if available
+    boolean isInProgress = job.state == RoutingJobState.RUNNING
+        || job.state == RoutingJobState.PAUSED
+        || job.state == RoutingJobState.STOPPING;
+
+    // Check if output data is available
+    if (job.output == null || job.output.getData() == null) {
+      if (isInProgress) {
+        // Job is running but hasn't written any output yet
+        return Response
+            .status(Response.Status.NO_CONTENT)
+            .entity("{\"error\":\"The job is in progress but no output data is available yet. Use GET /{jobId}/output/stream for real-time updates.\"}")
+            .build();
+      }
+      // QUEUED or READY_TO_START
+      return Response
+          .status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"The job hasn't started yet.\"}")
           .build();
     }
 
@@ -560,6 +592,13 @@ public class JobControllerV1 extends BaseController {
     var response = GSON.toJson(result);
     FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output", "",
         response.replace(result.dataBase64, TextManager.shortenString(result.dataBase64, 4)));
+
+    // Return 202 Accepted for in-progress jobs, 200 OK for completed jobs
+    if (isInProgress) {
+      return Response
+          .accepted(response)
+          .build();
+    }
     return Response
         .ok(response)
         .build();
