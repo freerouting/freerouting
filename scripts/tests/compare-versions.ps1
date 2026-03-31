@@ -263,6 +263,13 @@ Write-Host "`n==================================================" -ForegroundCol
 Write-Host "  Comparison Summary" -ForegroundColor $InfoColor
 Write-Host "==================================================" -ForegroundColor $InfoColor
 
+Write-Host "`nSettings" -ForegroundColor Cyan
+Write-Host "  Log Level:   $LoggingLevel"
+Write-Host "  Max Passes:  $max_passes"
+Write-Host "  Max Items:   $max_items"
+Write-Host "  Max Threads: $max_threads"
+Write-Host "  Timeout:     $job_timeout"
+
 if ($CurrentResult -and $V19Result) {
     $Results = @($CurrentResult, $V19Result)
 
