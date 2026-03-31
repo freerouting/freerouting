@@ -314,7 +314,7 @@ public class Sorted45DegreeRoomNeighbours {
     if (try_remove_edge_lines) {
       // Touching neighbour missing at the edge side with index remove_edge_no
       // Remove the edge line and restart the algorithm.
-      FRLogger.info(
+      FRLogger.trace(
           "ROOM_EDGE_REMOVE start"
               + ", net="
               + p_net_no
@@ -325,7 +325,7 @@ public class Sorted45DegreeRoomNeighbours {
 
       IntOctagon enlarged_oct =
           remove_not_touching_border_lines(room_oct, this.edge_interior_touches_obstacle);
-      FRLogger.info(
+      FRLogger.trace(
           "ROOM_EDGE_REMOVE enlarged"
               + ", net="
               + p_net_no
@@ -333,7 +333,7 @@ public class Sorted45DegreeRoomNeighbours {
               + curr_incomplete_room.get_layer()
               + ", enlarged_bounds="
               + describe_bounds(enlarged_oct.bounding_box()));
-      FRLogger.info(
+      FRLogger.trace(
           "ROOM_EDGE_REMOVE contained"
               + ", net="
               + p_net_no
@@ -374,7 +374,7 @@ public class Sorted45DegreeRoomNeighbours {
       Collection<IncompleteFreeSpaceExpansionRoom> new_rooms =
           p_autoroute_search_tree.complete_shape(
               enlarged_room, p_net_no, ignore_object, ignore_shape);
-      FRLogger.info(
+      FRLogger.trace(
           "ROOM_EDGE_REMOVE complete_shape"
               + ", net="
               + p_net_no
@@ -386,7 +386,7 @@ public class Sorted45DegreeRoomNeighbours {
         // Check, that the area increases to prevent endless loop.
         IncompleteFreeSpaceExpansionRoom new_room = new_rooms.iterator().next();
         if (new_room.get_shape().area() > room_area) {
-          FRLogger.info(
+          FRLogger.trace(
               "ROOM_EDGE_REMOVE applied"
                   + ", net="
                   + p_net_no

@@ -368,7 +368,7 @@ public class AutorouteEngine {
           break;
         }
       }
-      FRLogger.info(
+      FRLogger.trace(
           "COMPLETE_ROOM input"
               + ", net="
               + this.net_no
@@ -386,7 +386,7 @@ public class AutorouteEngine {
           p_room, this.net_no, ignore_object, from_door_shape);
       int initialCandidateIndex = 0;
       for (IncompleteFreeSpaceExpansionRoom initialCandidate : completed_shapes) {
-        FRLogger.info(
+        FRLogger.trace(
             "COMPLETE_ROOM initial_candidate"
                 + ", net="
                 + this.net_no
@@ -421,7 +421,7 @@ public class AutorouteEngine {
         }
         if (is_first_completed_room) {
           is_first_completed_room = false;
-          FRLogger.info(
+          FRLogger.trace(
               "COMPLETE_ROOM first_candidate"
                   + ", net="
                   + this.net_no
@@ -443,7 +443,7 @@ public class AutorouteEngine {
               .complete_shape(
                   curr_incomplete_room, this.net_no, ignore_object, from_door_shape);
           for (IncompleteFreeSpaceExpansionRoom tmp_room : curr_completed_shapes) {
-            FRLogger.info(
+            FRLogger.trace(
                 "COMPLETE_ROOM recalc_candidate"
                     + ", net="
                     + this.net_no
@@ -488,7 +488,7 @@ public class AutorouteEngine {
     }
     complete_expansion_rooms.add(completed_room);
     this.autoroute_search_tree.insert(completed_room);
-    FRLogger.info(
+    FRLogger.trace(
         "COMPLETE_ROOM added"
             + ", net="
             + this.net_no

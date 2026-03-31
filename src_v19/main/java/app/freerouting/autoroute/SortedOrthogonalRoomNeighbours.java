@@ -440,7 +440,7 @@ public class SortedOrthogonalRoomNeighbours {
     if (remove_edge_no >= 0) {
       // Touching neighbour missing at the edge side with index remove_edge_no
       // Remove the edge line and restart the algorithm.
-      FRLogger.info(
+      FRLogger.trace(
           "ROOM_EDGE_REMOVE start"
               + ", net="
               + p_net_no
@@ -467,7 +467,7 @@ public class SortedOrthogonalRoomNeighbours {
               TileShape curr_door_shape = curr_door.get_shape();
               double curr_door_area = curr_door_shape.area();
               ++ignore_candidate_count;
-              FRLogger.info(
+              FRLogger.trace(
                   "ROOM_EDGE_REMOVE ignore_candidate"
                       + ", net="
                       + p_net_no
@@ -485,7 +485,7 @@ public class SortedOrthogonalRoomNeighbours {
                 max_door_area = curr_door_area;
                 ignore_shape = curr_door_shape;
                 ignore_object = (CompleteFreeSpaceExpansionRoom) other_room;
-                FRLogger.info(
+                FRLogger.trace(
                     "ROOM_EDGE_REMOVE ignore_selected"
                         + ", net="
                         + p_net_no
@@ -500,7 +500,7 @@ public class SortedOrthogonalRoomNeighbours {
                         + curr_door_area);
               } else if (Double.compare(curr_door_area, max_door_area) == 0) {
                 ++equal_area_tie_count;
-                FRLogger.info(
+                FRLogger.trace(
                     "ROOM_EDGE_REMOVE ignore_tie"
                         + ", net="
                         + p_net_no
@@ -519,7 +519,7 @@ public class SortedOrthogonalRoomNeighbours {
           }
         }
       }
-      FRLogger.info(
+      FRLogger.trace(
           "ROOM_EDGE_REMOVE ignore_summary"
               + ", net="
               + p_net_no
@@ -543,7 +543,7 @@ public class SortedOrthogonalRoomNeighbours {
       Collection<IncompleteFreeSpaceExpansionRoom> new_rooms =
           p_autoroute_search_tree.complete_shape(
               enlarged_room, p_net_no, ignore_object, ignore_shape);
-      FRLogger.info(
+      FRLogger.trace(
           "ROOM_EDGE_REMOVE complete_shape"
               + ", net="
               + p_net_no
@@ -559,7 +559,7 @@ public class SortedOrthogonalRoomNeighbours {
         // Check, that the area increases to prevent endless loop.
         IncompleteFreeSpaceExpansionRoom new_room = new_rooms.iterator().next();
         if (new_room.get_shape().area() > room_area) {
-          FRLogger.info(
+          FRLogger.trace(
               "ROOM_EDGE_REMOVE applied"
                   + ", net="
                   + p_net_no

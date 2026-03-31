@@ -405,7 +405,7 @@ public class AutorouteEngine {
           break;
         }
       }
-      FRLogger.info("COMPLETE_ROOM input"
+      FRLogger.trace("COMPLETE_ROOM input"
           + ", net=" + this.net_no
           + ", layer=" + p_room.get_layer()
           + ", room_bounds=" + describe_shape_bounds(p_room.get_shape())
@@ -416,7 +416,7 @@ public class AutorouteEngine {
           this.net_no, ignore_object, from_door_shape);
       int initialCandidateIndex = 0;
       for (IncompleteFreeSpaceExpansionRoom initialCandidate : completed_shapes) {
-        FRLogger.info("COMPLETE_ROOM initial_candidate"
+        FRLogger.trace("COMPLETE_ROOM initial_candidate"
             + ", net=" + this.net_no
             + ", layer=" + initialCandidate.get_layer()
             + ", index=" + initialCandidateIndex
@@ -435,7 +435,7 @@ public class AutorouteEngine {
         }
         if (is_first_completed_room) {
           is_first_completed_room = false;
-          FRLogger.info("COMPLETE_ROOM first_candidate"
+          FRLogger.trace("COMPLETE_ROOM first_candidate"
               + ", net=" + this.net_no
               + ", layer=" + curr_incomplete_room.get_layer()
               + ", incomplete_bounds=" + describe_shape_bounds(curr_incomplete_room.get_shape())
@@ -451,7 +451,7 @@ public class AutorouteEngine {
           Collection<IncompleteFreeSpaceExpansionRoom> curr_completed_shapes = this.autoroute_search_tree
               .complete_shape(curr_incomplete_room, this.net_no, ignore_object, from_door_shape);
           for (IncompleteFreeSpaceExpansionRoom tmp_room : curr_completed_shapes) {
-            FRLogger.info("COMPLETE_ROOM recalc_candidate"
+            FRLogger.trace("COMPLETE_ROOM recalc_candidate"
                 + ", net=" + this.net_no
                 + ", layer=" + tmp_room.get_layer()
                 + ", incomplete_bounds=" + describe_shape_bounds(tmp_room.get_shape())
@@ -485,7 +485,7 @@ public class AutorouteEngine {
     }
     complete_expansion_rooms.add(completed_room);
     this.autoroute_search_tree.insert(completed_room);
-    FRLogger.info("COMPLETE_ROOM added"
+    FRLogger.trace("COMPLETE_ROOM added"
         + ", net=" + this.net_no
         + ", layer=" + completed_room.get_layer()
         + ", bounds=" + describe_shape_bounds(completed_room.get_shape()));

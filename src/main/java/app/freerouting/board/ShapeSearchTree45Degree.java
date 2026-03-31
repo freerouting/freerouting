@@ -132,7 +132,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
           int filterObstacleId = curr_object instanceof Item item ? item.get_id_no() : -1;
           String filterObstacleNets = curr_object instanceof Item item ? java.util.Arrays.toString(item.net_no_arr) : "[]";
           if (debugAnchor) {
-            FRLogger.info("COMPLETE_SHAPE_FILTER"
+            FRLogger.trace("COMPLETE_SHAPE_FILTER"
                 + ", step=" + debugStep
                 + ", net=" + p_net_no
                 + ", layer=" + room_layer
@@ -147,7 +147,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 + ", obstacle=" + curr_object);
           }
           if (debugAnchor) {
-            FRLogger.info("COMPLETE_SHAPE_STEP"
+            FRLogger.trace("COMPLETE_SHAPE_STEP"
                 + ", step=" + debugStep
                 + ", phase=visit"
                 + ", net=" + p_net_no
@@ -163,7 +163,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             boolean obstacleOnBoard = curr_object instanceof Item item && item.is_on_the_board();
             boolean obstacleContainsNet = curr_object instanceof Item item && item.contains_net(p_net_no);
             IntOctagon curr_object_shape = curr_object.get_tree_shape(this, shape_index).bounding_octagon();
-            FRLogger.info("COMPLETE_SHAPE_OBS visit"
+            FRLogger.trace("COMPLETE_SHAPE_OBS visit"
                 + ", net=" + p_net_no
                 + ", layer=" + room_layer
                 + ", shape_index=" + shape_index
@@ -187,7 +187,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
               String obstacleNets = curr_object instanceof Item item ? java.util.Arrays.toString(item.net_no_arr) : "[]";
               boolean obstacleOnBoard = curr_object instanceof Item item && item.is_on_the_board();
               boolean obstacleContainsNet = curr_object instanceof Item item && item.contains_net(p_net_no);
-              FRLogger.info("COMPLETE_SHAPE_OBS candidate"
+              FRLogger.trace("COMPLETE_SHAPE_OBS candidate"
                   + ", net=" + p_net_no
                   + ", layer=" + room_layer
                   + ", obstacle=" + curr_object
@@ -203,7 +203,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
               IntOctagon curr_shape = (IntOctagon) curr_room.get_shape();
               boolean overlaps = curr_shape.overlaps(curr_object_shape);
               if (debugAnchor) {
-                FRLogger.info("COMPLETE_SHAPE_OBS test"
+                FRLogger.trace("COMPLETE_SHAPE_OBS test"
                     + ", net=" + p_net_no
                     + ", layer=" + room_layer
                     + ", overlap=" + overlaps
@@ -214,7 +214,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 if (debugAnchor) {
                   int obstacleId = curr_object instanceof Item item ? item.get_id_no() : -1;
                   boolean obstacleContainsNet = curr_object instanceof Item item && item.contains_net(p_net_no);
-                  FRLogger.info("COMPLETE_SHAPE_OBS overlap"
+                  FRLogger.trace("COMPLETE_SHAPE_OBS overlap"
                       + ", net=" + p_net_no
                       + ", layer=" + room_layer
                       + ", obstacle=" + curr_object
@@ -227,7 +227,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                   IntOctagon intersection = curr_shape.intersection(curr_object_shape);
                   if (p_ignore_shape.contains(intersection)) {
                     if (debugAnchor) {
-                      FRLogger.info("COMPLETE_SHAPE_DECISION"
+                      FRLogger.trace("COMPLETE_SHAPE_DECISION"
                           + ", step=" + debugStep
                           + ", net=" + p_net_no
                           + ", layer=" + room_layer
@@ -246,7 +246,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                   }
                 }
                 if (debugAnchor) {
-                  FRLogger.info("COMPLETE_SHAPE_DECISION"
+                  FRLogger.trace("COMPLETE_SHAPE_DECISION"
                       + ", step=" + debugStep
                       + ", net=" + p_net_no
                       + ", layer=" + room_layer
@@ -257,12 +257,12 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 }
                 Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room, curr_object_shape);
                 if (debugAnchor) {
-                  FRLogger.info("COMPLETE_SHAPE_OBS restrained"
+                  FRLogger.trace("COMPLETE_SHAPE_OBS restrained"
                       + ", net=" + p_net_no
                       + ", layer=" + room_layer
                       + ", count=" + new_restrained_shapes.size());
                   for (IncompleteFreeSpaceExpansionRoom debug_room : new_restrained_shapes) {
-                    FRLogger.info("COMPLETE_SHAPE_OBS room"
+                    FRLogger.trace("COMPLETE_SHAPE_OBS room"
                         + ", net=" + p_net_no
                         + ", layer=" + room_layer
                         + ", bounds=" + describe_bounds(debug_room.get_shape().bounding_box())
@@ -278,7 +278,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 }
               } else {
                 if (debugAnchor) {
-                  FRLogger.info("COMPLETE_SHAPE_DECISION"
+                  FRLogger.trace("COMPLETE_SHAPE_DECISION"
                       + ", step=" + debugStep
                       + ", net=" + p_net_no
                       + ", layer=" + room_layer

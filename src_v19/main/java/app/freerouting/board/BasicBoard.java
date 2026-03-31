@@ -604,7 +604,7 @@ public class BasicBoard implements Serializable {
       return;
     }
     if (is_item_activity_debug_candidate(p_item)) {
-      FRLogger.info(
+      FRLogger.trace(
           "ITEM_ACTIVITY action=REMOVE"
               + ", id="
               + p_item.get_id_no()
@@ -1317,7 +1317,7 @@ public class BasicBoard implements Serializable {
     }
 
     if (is_item_activity_debug_candidate(p_item)) {
-      FRLogger.info(
+      FRLogger.trace(
           "ITEM_ACTIVITY action=INSERT"
               + ", id="
               + p_item.get_id_no()

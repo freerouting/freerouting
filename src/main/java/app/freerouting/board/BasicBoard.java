@@ -471,7 +471,7 @@ public class BasicBoard implements Serializable {
       return;
     }
     if (is_item_activity_debug_candidate(p_item)) {
-      FRLogger.info("ITEM_ACTIVITY action=REMOVE"
+      FRLogger.trace("ITEM_ACTIVITY action=REMOVE"
           + ", id=" + p_item.get_id_no()
           + ", type=" + p_item.getClass().getSimpleName()
           + ", bounds=" + describe_bounds(p_item.bounding_box())
@@ -1240,7 +1240,7 @@ public class BasicBoard implements Serializable {
       return;
     }
     if (is_item_activity_debug_candidate(p_item)) {
-      FRLogger.info("ITEM_ACTIVITY action=INSERT"
+      FRLogger.trace("ITEM_ACTIVITY action=INSERT"
           + ", id=" + p_item.get_id_no()
           + ", type=" + p_item.getClass().getSimpleName()
           + ", bounds=" + describe_bounds(p_item.bounding_box())

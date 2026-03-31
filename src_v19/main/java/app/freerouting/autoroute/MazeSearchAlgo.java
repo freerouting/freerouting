@@ -311,7 +311,7 @@ public class MazeSearchAlgo {
     int doorCountBeforeCompletion = p_list_element.next_room.get_doors().size();
     this.autoroute_engine.complete_neighbour_rooms(p_list_element.next_room);
     int doorCountAfterCompletion = p_list_element.next_room.get_doors().size();
-    FRLogger.info(
+    FRLogger.trace(
         "ROOM_COMPLETE_SYNC"
             + ", net="
             + ctrl.net_no
@@ -448,7 +448,7 @@ public class MazeSearchAlgo {
     }
 
     List<ExpansionDoor> room_doors_snapshot = new LinkedList<>(p_list_element.next_room.get_doors());
-    FRLogger.info(
+    FRLogger.trace(
         "ROOM_DOOR context from_section="
             + p_list_element.section_no_of_door
             + ", backtrack_section="
@@ -461,7 +461,7 @@ public class MazeSearchAlgo {
             + ctrl.net_no);
     for (int door_index = 0; door_index < room_doors_snapshot.size(); ++door_index) {
       ExpansionDoor candidate_door = room_doors_snapshot.get(door_index);
-      FRLogger.info(
+      FRLogger.trace(
           "ROOM_DOOR candidate index="
               + door_index
               + ", from_section="
@@ -686,7 +686,7 @@ public class MazeSearchAlgo {
       MazeSearchElement.Adjustment p_adjustment) {
     boolean door_section_occupied = p_door.get_maze_search_element(p_section_no).is_occupied;
     if (door_section_occupied || p_shape_entry == null) {
-      FRLogger.info(
+      FRLogger.trace(
           "RAW_SECTION skip selected_section="
               + p_section_no
               + ", from_section="
@@ -766,7 +766,7 @@ public class MazeSearchAlgo {
             room_ripped,
             p_adjustment,
             false);
-    FRLogger.info(
+    FRLogger.trace(
         "RAW_SECTION assign selected_section="
             + p_section_no
             + ", from_section="

@@ -634,7 +634,7 @@ public class ShapeSearchTree extends MinAreaTree {
                 boolean ignore_expansion_room = curr_object instanceof CompleteFreeSpaceExpansionRoom
                     && p_ignore_shape != null
                     && p_ignore_shape.contains(intersection);
-                FRLogger.info(
+                FRLogger.trace(
                     "COMPLETE_SHAPE_DECISION"
                         + ", net="
                         + p_net_no

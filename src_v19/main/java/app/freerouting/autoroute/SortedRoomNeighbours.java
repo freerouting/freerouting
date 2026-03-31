@@ -407,7 +407,7 @@ public class SortedRoomNeighbours {
     if (remove_edge_no >= 0) {
       // Touching neighbour missing at the edge side with index remove_edge_no
       // Remove the edge line and restart the algorithm.
-      FRLogger.info(
+      FRLogger.trace(
           "ROOM_EDGE_REMOVE start"
               + ", net="
               + p_net_no
@@ -425,7 +425,7 @@ public class SortedRoomNeighbours {
               curr_incomplete_room.get_contained_shape());
       Collection<IncompleteFreeSpaceExpansionRoom> new_rooms =
           p_autoroute_search_tree.complete_shape(enlarged_room, p_net_no, null, null);
-      FRLogger.info(
+      FRLogger.trace(
           "ROOM_EDGE_REMOVE complete_shape"
               + ", net="
               + p_net_no
@@ -450,7 +450,7 @@ public class SortedRoomNeighbours {
       if (remove_edge) {
         Iterator<IncompleteFreeSpaceExpansionRoom> it2 = new_rooms.iterator();
         IncompleteFreeSpaceExpansionRoom new_room = it2.next();
-        FRLogger.info(
+        FRLogger.trace(
             "ROOM_EDGE_REMOVE applied"
                 + ", net="
                 + p_net_no
