@@ -147,6 +147,11 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
           int objectLayer = curr_object.shape_layer(shape_index);
           boolean sameLayer = objectLayer == room_layer;
           boolean ignoredObject = curr_object == p_ignore_object;
+          int filterObstacleId = curr_object instanceof Item ? ((Item) curr_object).get_id_no() : -1;
+          String filterObstacleNets =
+              curr_object instanceof Item
+                  ? java.util.Arrays.toString(((Item) curr_object).net_no_arr)
+                  : "[]";
           if (debugAnchor) {
             FRLogger.info(
                 "COMPLETE_SHAPE_FILTER"
@@ -168,6 +173,10 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                     + ignoredObject
                     + ", accepted="
                     + (is_obstacle && sameLayer && !ignoredObject)
+                    + ", obstacle_id="
+                    + filterObstacleId
+                    + ", obstacle_nets="
+                    + filterObstacleNets
                     + ", obstacle="
                     + curr_object);
           }

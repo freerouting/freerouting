@@ -8,7 +8,6 @@ import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Objects;
 
 /**
  * The SearchTreeManager manages the search trees used in the auto-router. It is
@@ -151,15 +150,8 @@ public class SearchTreeManager {
    * p_clearance_class_no. Initialized the tree, if it is not yet allocated.
    */
   public ShapeSearchTree get_autoroute_tree(int p_clearance_class_no) {
-    String preferred_autoroute_tree_key = "ShapeSearchTree_FortyfiveDegree_cc" + p_clearance_class_no;
-    if (this.board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-      preferred_autoroute_tree_key = "ShapeSearchTree90Degree_NinetyDegree_cc" + p_clearance_class_no;
-    } else if (this.board.rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE) {
-      preferred_autoroute_tree_key = "ShapeSearchTree45Degree_FortyfiveDegree_cc" + p_clearance_class_no;
-    }
-
     for (ShapeSearchTree curr_tree : compensated_search_trees) {
-      if (Objects.equals(curr_tree.key, preferred_autoroute_tree_key)) {
+      if (curr_tree.compensated_clearance_class_no == p_clearance_class_no) {
         return curr_tree;
       }
     }
