@@ -13,7 +13,7 @@ param(
     [string]$LoggingLevel = "TRACE",
     [string]$LoggingPattern = "%msg%n",
     [int]$max_passes = 1,
-    [int]$max_items = 43,
+    [int]$max_items = 42,
     [int]$max_threads = 1,
     [string]$job_timeout = "00:03:00",
     [Alias("debug.filter_by_net")]
