@@ -81,72 +81,23 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
    */
   @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> complete_shape(IncompleteFreeSpaceExpansionRoom p_room, int p_net_no, SearchTreeObject p_ignore_object, TileShape p_ignore_shape) {
-    TileShape contained_shape = p_room.get_contained_shape();
-    IntOctagon shape_to_be_contained;
-
-    if (contained_shape.is_IntOctagon()) {
-      shape_to_be_contained = contained_shape.bounding_octagon();
-    } else if (contained_shape instanceof Simplex simplex) {
-      // Clean up the Simplex by removing short border lines
-      var lineCount = simplex.border_line_count();
-      for (int i = 0; i < lineCount; i++) {
-        if (i < 0) {
-          break;
-        }
-
-        // Remove the tiny line from the Simplex to avoid problems with the octagon conversion
-        // Remove lines that are the same as the next line just in the opposite direction
-        Line line = simplex.border_line(i);
-        Line nextLine = simplex.border_line((i + 1) % lineCount);
-        if ((line.length() < 10) || (line.equals(nextLine.opposite()))) {
-          simplex = simplex.remove_border_line(i);
-          lineCount = simplex.border_line_count();
-          i = i - 1;
-        }
-      }
-
-      if (simplex.border_line_count() < 3) {
-        // If the Simplex has less than 3 lines, it cannot be converted to an octagon
-        return new LinkedList<>();
-      }
-
-      // Convert Simplex to IntOctagon for processing
-      shape_to_be_contained = simplex.bounding_octagon();
-      if (shape_to_be_contained == null) {
-        // If conversion fails (e.g., unbounded Simplex)
-        FRLogger.debug("ShapeSearchTree45Degree.complete_shape: cannot convert Simplex to IntOctagon");
-        return new LinkedList<>();
-      }
-    } else {
-      FRLogger.debug("ShapeSearchTree45Degree.complete_shape: unexpected shape type");
+    if (!(p_room.get_contained_shape().is_IntOctagon())) {
+      FRLogger.warn("ShapeSearchTree45Degree.complete_shape: unexpected p_shape_to_be_contained");
       return new LinkedList<>();
     }
+    IntOctagon shape_to_be_contained = p_room.get_contained_shape().bounding_octagon();
 
     if (this.root == null) {
       return new LinkedList<>();
     }
 
-    IntOctagon start_shape = board
-        .get_bounding_box()
-        .bounding_octagon();
+    IntOctagon start_shape = board.get_bounding_box().bounding_octagon();
     if (p_room.get_shape() != null) {
-      TileShape room_shape = p_room.get_shape();
-      IntOctagon octagon_room_shape;
-
-      if (room_shape instanceof IntOctagon octagon) {
-        octagon_room_shape = octagon;
-      } else if (room_shape instanceof Simplex) {
-        octagon_room_shape = room_shape.bounding_octagon();
-        if (octagon_room_shape == null) {
-          FRLogger.warn("ShapeSearchTree45Degree.complete_shape: cannot convert room shape Simplex to IntOctagon");
-          return new LinkedList<>();
-        }
-      } else {
-        FRLogger.warn("ShapeSearchTree45Degree.complete_shape: room shape type not supported");
+      if (!(p_room.get_shape() instanceof IntOctagon)) {
+        FRLogger.warn("ShapeSearchTree45Degree.complete_shape: p_start_shape of type IntOctagon expected");
         return new LinkedList<>();
       }
-
-      start_shape = octagon_room_shape.intersection(start_shape);
+      start_shape = p_room.get_shape().bounding_octagon().intersection(start_shape);
     }
 
     IntOctagon bounding_shape = start_shape;

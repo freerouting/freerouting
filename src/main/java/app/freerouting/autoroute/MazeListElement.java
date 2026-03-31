@@ -1,22 +1,12 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.geometry.planar.FloatLine;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Information for the maze expand Algorithm contained in expansion doors and
  * drills while the maze expanding algorithm is in progress.
- * Uses object pooling to reduce memory allocation during pathfinding.
  */
 public class MazeListElement implements Comparable<MazeListElement> {
-
-  // Thread-local pool for recycling instances (thread-safe without
-  // synchronization)
-  private static final ThreadLocal<Deque<MazeListElement>> POOL = ThreadLocal.withInitial(ArrayDeque::new);
-  private static final int MAX_POOL_SIZE = 500; // Cap pool size to prevent unbounded growth
-  private static final AtomicLong SEQUENCE_COUNTER = new AtomicLong();
 
   /**
    * The door or drill belonging to this MazeListElement
@@ -55,67 +45,51 @@ public class MazeListElement implements Comparable<MazeListElement> {
   boolean room_ripped;
   MazeSearchElement.Adjustment adjustment;
   boolean already_checked;
-  long sequence_no;
-
-  /**
-   * Private constructor for pooling
-   */
-  private MazeListElement() {
+  /** Creates a new instance of MazeListElement */
+  private MazeListElement(ExpandableObject p_door, int p_section_no_of_door,
+      ExpandableObject p_backtrack_door, int p_section_no_of_backtrack_door,
+      double p_expansion_value, double p_sorting_value,
+      CompleteExpansionRoom p_next_room, FloatLine p_shape_entry,
+      boolean p_room_ripped, MazeSearchElement.Adjustment p_adjustment, boolean p_already_checked) {
+    door = p_door;
+    section_no_of_door = p_section_no_of_door;
+    backtrack_door = p_backtrack_door;
+    section_no_of_backtrack_door = p_section_no_of_backtrack_door;
+    expansion_value = p_expansion_value;
+    sorting_value = p_sorting_value;
+    next_room = p_next_room;
+    shape_entry = p_shape_entry;
+    room_ripped = p_room_ripped;
+    adjustment = p_adjustment;
+    already_checked = p_already_checked;
   }
 
-  /**
-   * Obtain a MazeListElement from the pool or create a new one if pool is empty
-   */
+  /** Creates a new MazeListElement (v1.9-style allocation semantics). */
   public static MazeListElement obtain(ExpandableObject p_door, int p_section_no_of_door,
       ExpandableObject p_backtrack_door, int p_section_no_of_backtrack_door,
       double p_expansion_value, double p_sorting_value,
       CompleteExpansionRoom p_next_room, FloatLine p_shape_entry,
       boolean p_room_ripped, MazeSearchElement.Adjustment p_adjustment, boolean p_already_checked) {
-
-    Deque<MazeListElement> pool = POOL.get();
-    MazeListElement element = pool.poll();
-
-    if (element == null) {
-      element = new MazeListElement();
-    }
-
-    // Initialize/reset fields
-    element.door = p_door;
-    element.section_no_of_door = p_section_no_of_door;
-    element.backtrack_door = p_backtrack_door;
-    element.section_no_of_backtrack_door = p_section_no_of_backtrack_door;
-    element.expansion_value = p_expansion_value;
-    element.sorting_value = p_sorting_value;
-    element.next_room = p_next_room;
-    element.shape_entry = p_shape_entry;
-    element.room_ripped = p_room_ripped;
-    element.adjustment = p_adjustment;
-    element.already_checked = p_already_checked;
-    element.sequence_no = SEQUENCE_COUNTER.getAndIncrement();
-
-    return element;
+    return new MazeListElement(
+        p_door,
+        p_section_no_of_door,
+        p_backtrack_door,
+        p_section_no_of_backtrack_door,
+        p_expansion_value,
+        p_sorting_value,
+        p_next_room,
+        p_shape_entry,
+        p_room_ripped,
+        p_adjustment,
+        p_already_checked);
   }
 
-  /**
-   * Recycle this element back to the pool for reuse
-   */
-  public static void recycle(MazeListElement element) {
-    if (element == null) {
+  /** No-op for parity with v1.9 allocation behavior during investigations. */
+  public static void recycle(MazeListElement _element) {
+    if (_element == null) {
       return;
     }
-
-    Deque<MazeListElement> pool = POOL.get();
-    if (pool.size() < MAX_POOL_SIZE) {
-      // Clear references to help GC
-      element.door = null;
-      element.backtrack_door = null;
-      element.next_room = null;
-      element.shape_entry = null;
-      element.adjustment = null;
-
-      pool.offer(element);
-    }
-    // If pool is full, let element be GC'd
+    // Intentionally empty.
   }
 
   @Override
