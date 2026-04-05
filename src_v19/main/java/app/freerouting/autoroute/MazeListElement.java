@@ -62,15 +62,37 @@ public class MazeListElement implements Comparable<MazeListElement> {
 
   @Override
   public int compareTo(MazeListElement p_other) {
-    double compare_value = (this.sorting_value - p_other.sorting_value);
-    // make sure, that the result cannot be 0, so that no element in the set is
-    // skipped because of equal size.
-    int result;
-    if (compare_value >= 0) {
-      result = 1;
-    } else {
-      result = -1;
+    if (this.sorting_value < p_other.sorting_value) {
+      return -1;
     }
-    return result;
+    if (this.sorting_value > p_other.sorting_value) {
+      return 1;
+    }
+    // Tie-break 1: expansion_value
+    if (this.expansion_value < p_other.expansion_value) {
+      return -1;
+    }
+    if (this.expansion_value > p_other.expansion_value) {
+      return 1;
+    }
+    // Tie-break 2: door id
+    int id1 = this.door.get_id_no();
+    int id2 = p_other.door.get_id_no();
+    if (id1 < id2) {
+      return -1;
+    }
+    if (id1 > id2) {
+      return 1;
+    }
+    // Tie-break 3: section_no
+    if (this.section_no_of_door < p_other.section_no_of_door) {
+      return -1;
+    }
+    if (this.section_no_of_door > p_other.section_no_of_door) {
+      return 1;
+    }
+    // If truly equal (same door, same section, same values), return 0 to avoid duplicates in the set.
+    return 0;
   }
 }
+

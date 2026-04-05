@@ -21,4 +21,9 @@ public interface SearchTreeObject extends ShapeTree.Storable {
    * returns for this object the layer of the shape with index p_index.
    */
   int shape_layer(int p_index);
+
+  /**
+   * Returns a unique identification number of this object.
+   */
+  int get_id_no();
 }

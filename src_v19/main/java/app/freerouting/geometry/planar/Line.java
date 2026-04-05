@@ -46,6 +46,10 @@ public class Line implements Comparable<Line>, Serializable {
     return new Line(p_a, b);
   }
 
+  public int get_id_no() {
+    return 31 * a.get_id_no() + b.get_id_no();
+  }
+
   /** returns true, if this and p_ob define the same line */
   @Override
   public final boolean equals(Object p_ob) {

@@ -131,6 +131,15 @@ public class SortedOrthogonalRoomNeighbours {
     Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<>();
     p_autoroute_search_tree.overlapping_tree_entries(
         room_shape, p_room.get_layer(), overlapping_objects);
+
+    ((LinkedList<ShapeTree.TreeEntry>) overlapping_objects).sort((e1, e2) -> {
+      int id_diff = ((SearchTreeObject) e1.object).get_id_no() - ((SearchTreeObject) e2.object).get_id_no();
+      if (id_diff != 0) {
+        return id_diff;
+      }
+      return e1.shape_index_in_object - e2.shape_index_in_object;
+    });
+
     // Calculate the touching neighbour objects and sort them in counterclock sense
     // around the border of the room shape.
     for (ShapeTree.TreeEntry curr_entry : overlapping_objects) {
@@ -168,13 +177,11 @@ public class SortedOrthogonalRoomNeighbours {
         }
         continue;
       }
-      if (dimension < 0) {
-
-        FRLogger.warn("AutorouteEngine.calculate_doors: dimension >= 0 expected");
-        continue;
-      }
-      result.add_sorted_neighbour(curr_box, intersection);
-      if (dimension > 0) {
+      if (dimension == 1) {
+        int[] touching_sides = room_box.touching_sides(curr_box);
+        if (touching_sides.length == 2) {
+        result.add_sorted_neighbour(curr_object, curr_box, intersection);
+        }
         // make  sure, that there is a door to the neighbour room.
         ExpansionRoom neighbour_room = null;
         if (curr_object instanceof ExpansionRoom) {
@@ -580,8 +587,10 @@ public class SortedOrthogonalRoomNeighbours {
     return false;
   }
 
-  private void add_sorted_neighbour(IntBox p_neighbour_shape, IntBox p_intersection) {
-    SortedRoomNeighbour new_neighbour = new SortedRoomNeighbour(p_neighbour_shape, p_intersection);
+  private void add_sorted_neighbour(
+      SearchTreeObject p_search_tree_object, IntBox p_neighbour_shape, IntBox p_intersection) {
+    SortedRoomNeighbour new_neighbour =
+        new SortedRoomNeighbour(p_search_tree_object, p_neighbour_shape, p_intersection);
     sorted_neighbours.add(new_neighbour);
   }
 
@@ -590,6 +599,7 @@ public class SortedOrthogonalRoomNeighbours {
    * room shape.
    */
   private class SortedRoomNeighbour implements Comparable<SortedRoomNeighbour> {
+    public final SearchTreeObject search_tree_object;
     /** The shape of the neighbour room */
     public final IntBox shape;
     /** The intersection of this ExpansionRoom shape with the neighbour_shape */
@@ -599,7 +609,9 @@ public class SortedOrthogonalRoomNeighbours {
     /** The last side of the room shape, where the neighbour_shape touches */
     public final int last_touching_side;
 
-    public SortedRoomNeighbour(IntBox p_neighbour_shape, IntBox p_intersection) {
+    public SortedRoomNeighbour(
+        SearchTreeObject p_search_tree_object, IntBox p_neighbour_shape, IntBox p_intersection) {
+      search_tree_object = p_search_tree_object;
       shape = p_neighbour_shape;
       intersection = p_intersection;
 
@@ -702,6 +714,10 @@ public class SortedOrthogonalRoomNeighbours {
             FRLogger.warn("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
             return 0;
           }
+        }
+        if (cmp_value == 0) {
+          // Deterministic tie-breaker for identical geometry
+          cmp_value = this.search_tree_object.get_id_no() - p_other.search_tree_object.get_id_no();
         }
       }
       return cmp_value;

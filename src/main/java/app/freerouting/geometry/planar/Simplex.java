@@ -71,6 +71,15 @@ public class Simplex extends TileShape implements Serializable {
     return result;
   }
 
+  @Override
+  public int get_id_no() {
+    int result = 0;
+    for (Line curr : arr) {
+      result = 31 * result + curr.get_id_no();
+    }
+    return result;
+  }
+
   /**
    * Returns true, if the determinant of the direction of index p_no -1 and the direction of index p_no is {@literal >} 0
    */

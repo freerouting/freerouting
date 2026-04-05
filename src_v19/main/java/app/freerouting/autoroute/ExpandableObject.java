@@ -28,4 +28,8 @@ public interface ExpandableObject {
 
   /** Resets this ExpandableObject for autorouting the next connection. */
   void reset();
+
+  /** Returns a unique identification number for this object to allow deterministic sorting. */
+  int get_id_no();
 }
+

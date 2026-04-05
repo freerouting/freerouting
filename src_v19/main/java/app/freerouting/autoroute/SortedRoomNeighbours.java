@@ -169,6 +169,15 @@ public class SortedRoomNeighbours {
     Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<>();
     p_autoroute_search_tree.overlapping_tree_entries(
         room_shape, p_room.get_layer(), overlapping_objects);
+
+    ((LinkedList<ShapeTree.TreeEntry>) overlapping_objects).sort((e1, e2) -> {
+      int id_diff = ((SearchTreeObject) e1.object).get_id_no() - ((SearchTreeObject) e2.object).get_id_no();
+      if (id_diff != 0) {
+        return id_diff;
+      }
+      return e1.shape_index_in_object - e2.shape_index_in_object;
+    });
+
     // Calculate the touching neighbour objects and sort them in counterclock sense
     // around the border of the room shape.
     for (ShapeTree.TreeEntry curr_entry : overlapping_objects) {
@@ -218,7 +227,7 @@ public class SortedRoomNeighbours {
           continue;
         }
         result.add_sorted_neighbour(
-            curr_shape, intersection, touching_sides[0], touching_sides[1], false, false);
+            curr_object, curr_shape, intersection, touching_sides[0], touching_sides[1], false, false);
         // make  sure, that there is a door to the neighbour room.
         ExpansionRoom neighbour_room = null;
         if (curr_object instanceof ExpansionRoom) {
@@ -276,6 +285,7 @@ public class SortedRoomNeighbours {
           }
         }
         result.add_sorted_neighbour(
+            curr_object,
             curr_shape,
             intersection,
             touching_side_no_of_room,
@@ -350,6 +360,7 @@ public class SortedRoomNeighbours {
   }
 
   private void add_sorted_neighbour(
+      SearchTreeObject p_search_tree_object,
       TileShape p_neighbour_shape,
       TileShape p_intersection,
       int p_touching_side_no_of_room,
@@ -358,6 +369,7 @@ public class SortedRoomNeighbours {
       boolean p_neighbour_room_touch_is_corner) {
     SortedRoomNeighbour new_neighbour =
         new SortedRoomNeighbour(
+            p_search_tree_object,
             p_neighbour_shape,
             p_intersection,
             p_touching_side_no_of_room,
@@ -636,6 +648,8 @@ public class SortedRoomNeighbours {
    */
   private class SortedRoomNeighbour implements Comparable<SortedRoomNeighbour> {
     private static final double c_dist_tolerance = 1;
+
+    public final SearchTreeObject search_tree_object;
     /** The shape of the neighbour room */
     public final TileShape neighbour_shape;
     /** The intersection of this ExpansionRoom shape with the neighbour_shape */
@@ -657,12 +671,14 @@ public class SortedRoomNeighbours {
     private Point precalculated_last_corner;
 
     public SortedRoomNeighbour(
+        SearchTreeObject p_search_tree_object,
         TileShape p_neighbour_shape,
         TileShape p_intersection,
         int p_touching_side_no_of_room,
         int p_touching_side_no_of_neighbour_room,
         boolean p_room_touch_is_corner,
         boolean p_neighbour_room_touch_is_corner) {
+      search_tree_object = p_search_tree_object;
       neighbour_shape = p_neighbour_shape;
       intersection = p_intersection;
       touching_side_no_of_room = p_touching_side_no_of_room;
@@ -715,7 +731,12 @@ public class SortedRoomNeighbours {
           }
         }
       }
-      return Signum.as_int(delta_distance);
+      int res = Signum.as_int(delta_distance);
+      if (res == 0) {
+        // Deterministic tie-breaker for identical geometry
+        res = this.search_tree_object.get_id_no() - p_other.search_tree_object.get_id_no();
+      }
+      return res;
     }
 
     /** Returns the first corner of the intersection shape with the neighbour. */

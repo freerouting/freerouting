@@ -60,6 +60,30 @@ public class Issue508Test extends TestBasedOnAnIssue {
         "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should complete no more than 86 unrouted connections after the first pass.");
   }
 
+  @Test
+  public void testCheckNet78() throws Exception {
+    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", new TestingSettings());
+    app.freerouting.interactive.HeadlessBoardManager boardManager = new app.freerouting.interactive.HeadlessBoardManager(job);
+    boardManager.loadFromSpecctraDsn(job.input.getData(), null, new app.freerouting.board.ItemIdentificationNumberGenerator());
+    app.freerouting.board.RoutingBoard board = boardManager.get_routing_board();
+
+    System.out.println("Board loaded. Max net_no=" + board.rules.nets.max_net_no());
+    java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+    for (;;) {
+      app.freerouting.datastructures.UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
+      if (curr_ob == null) break;
+      if (curr_ob instanceof app.freerouting.board.Trace) {
+        app.freerouting.board.Trace trace = (app.freerouting.board.Trace)curr_ob;
+        if (trace.net_count() > 0 && trace.get_net_no(0) == 78) {
+          System.out.println("Trace ID=" + trace.get_id_no() + 
+             " Net=" + trace.get_net_no(0) + 
+             " BoundingBox=" + trace.bounding_box() +
+             " Width=" + trace.get_half_width() * 2);
+        }
+      }
+    }
+  }
+
   @AfterEach
   public void tearDown() {
     if (job != null) {

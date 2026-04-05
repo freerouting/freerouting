@@ -101,6 +101,11 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     return this.room_is_net_dependent;
   }
 
+  @Override
+  public int get_id_no() {
+    return id_no;
+  }
+
   /**
    * Returns the list doors to target items of this room
    */
@@ -208,3 +213,4 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     }
   }
 }
+

@@ -115,6 +115,10 @@ public class IntPoint extends Point implements Serializable {
     return new FloatPoint(x, y);
   }
 
+  public int get_id_no() {
+    return 31 * x + y;
+  }
+
   /** returns the determinant of the vectors (x, y) and (p_other.x, p_other.y) */
   public final long determinant(IntPoint p_other) {
     return (long) x * p_other.y - (long) y * p_other.x;
@@ -384,5 +388,10 @@ public class IntPoint extends Point implements Serializable {
   @Override
   int compare_y(RationalPoint p_other) {
     return -p_other.compare_y(this);
+  }
+
+  @Override
+  public String toString() {
+    return "(" + this.x + "," + this.y + ")";
   }
 }

@@ -130,6 +130,10 @@ public class IntPoint extends Point implements Serializable {
     return new FloatPoint(x, y);
   }
 
+  public int get_id_no() {
+    return 31 * x + y;
+  }
+
   /**
    * returns the determinant of the vectors (x, y) and (p_other.x, p_other.y)
    */

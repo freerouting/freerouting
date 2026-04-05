@@ -66,4 +66,13 @@ public class TargetItemExpansionDoor implements ExpandableObject {
   public void reset() {
     maze_search_info.reset();
   }
+
+  @Override
+  public int get_id_no() {
+    // Stable combination of item ID and room ID
+    int id1 = item.get_id_no();
+    int id2 = (room != null) ? room.get_id_no() : 0;
+    return id1 * 31 + id2;
+  }
 }
+

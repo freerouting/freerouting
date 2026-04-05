@@ -111,6 +111,16 @@ public class SortedOrthogonalRoomNeighbours {
     SortedOrthogonalRoomNeighbours result = new SortedOrthogonalRoomNeighbours(p_room, completed_room);
     Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<>();
     p_autoroute_search_tree.overlapping_tree_entries(room_shape, p_room.get_layer(), overlapping_objects);
+
+    // Sort the overlapping objects deterministically to ensure parity with v1.9.
+    ((LinkedList<ShapeTree.TreeEntry>) overlapping_objects).sort((e1, e2) -> {
+      int id_diff = ((SearchTreeObject) e1.object).get_id_no() - ((SearchTreeObject) e2.object).get_id_no();
+      if (id_diff != 0) {
+        return id_diff;
+      }
+      return e1.shape_index_in_object - e2.shape_index_in_object;
+    });
+
     // Calculate the touching neighbour objects and sort them in counterclock sense
     // around the border of the room shape.
     for (ShapeTree.TreeEntry curr_entry : overlapping_objects) {
@@ -118,8 +128,8 @@ public class SortedOrthogonalRoomNeighbours {
       if (curr_object == p_room) {
         continue;
       }
-      if ((completed_room instanceof CompleteFreeSpaceExpansionRoom room) && !curr_object.is_trace_obstacle(p_net_no)) {
-        room.calculate_target_doors(curr_entry, p_net_no, p_autoroute_search_tree);
+      if ((completed_room instanceof CompleteFreeSpaceExpansionRoom fs_room) && !curr_object.is_trace_obstacle(p_net_no)) {
+        fs_room.calculate_target_doors(curr_entry, p_net_no, p_autoroute_search_tree);
         continue;
       }
       TileShape curr_shape = curr_object.get_tree_shape(p_autoroute_search_tree, curr_entry.shape_index_in_object);
@@ -129,13 +139,13 @@ public class SortedOrthogonalRoomNeighbours {
       }
       IntBox intersection = room_box.intersection(curr_box);
       int dimension = intersection.dimension();
-      if (dimension > 1 && completed_room instanceof ObstacleExpansionRoom room) {
+      if (dimension > 1 && completed_room instanceof ObstacleExpansionRoom obs_room) {
         if (curr_object instanceof Item curr_item) {
           // only Obstacle expansion room may have a 2-dim overlap
           if (curr_item.is_routable()) {
             ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
             ObstacleExpansionRoom curr_overlap_room = item_info.get_expansion_room(curr_entry.shape_index_in_object, p_autoroute_search_tree);
-            room.create_overlap_door(curr_overlap_room);
+            obs_room.create_overlap_door(curr_overlap_room);
           }
         }
         continue;
@@ -145,12 +155,12 @@ public class SortedOrthogonalRoomNeighbours {
         FRLogger.warn("AutorouteEngine.calculate_doors: dimension >= 0 expected");
         continue;
       }
-      result.add_sorted_neighbour(curr_box, intersection);
+      result.add_sorted_neighbour(curr_object, curr_box, intersection);
       if (dimension > 0) {
         // make  sure, that there is a door to the neighbour room.
         ExpansionRoom neighbour_room = null;
-        if (curr_object instanceof ExpansionRoom room) {
-          neighbour_room = room;
+        if (curr_object instanceof ExpansionRoom ex_room) {
+          neighbour_room = ex_room;
         } else if (curr_object instanceof Item curr_item) {
           if (curr_item.is_routable()) {
             // expand the item for ripup and pushing purposes
@@ -405,8 +415,8 @@ public class SortedOrthogonalRoomNeighbours {
     return false;
   }
 
-  private void add_sorted_neighbour(IntBox p_neighbour_shape, IntBox p_intersection) {
-    SortedRoomNeighbour new_neighbour = new SortedRoomNeighbour(p_neighbour_shape, p_intersection);
+  private void add_sorted_neighbour(SearchTreeObject p_search_tree_object, IntBox p_neighbour_shape, IntBox p_intersection) {
+    SortedRoomNeighbour new_neighbour = new SortedRoomNeighbour(p_search_tree_object, p_neighbour_shape, p_intersection);
     sorted_neighbours.add(new_neighbour);
   }
 
@@ -415,6 +425,10 @@ public class SortedOrthogonalRoomNeighbours {
    */
   private class SortedRoomNeighbour implements Comparable<SortedRoomNeighbour> {
 
+    /**
+     * The search tree object of the neighbour room
+     */
+    public final SearchTreeObject search_tree_object;
     /**
      * The shape of the neighbour room
      */
@@ -432,7 +446,8 @@ public class SortedOrthogonalRoomNeighbours {
      */
     public final int last_touching_side;
 
-    public SortedRoomNeighbour(IntBox p_neighbour_shape, IntBox p_intersection) {
+    public SortedRoomNeighbour(SearchTreeObject p_search_tree_object, IntBox p_neighbour_shape, IntBox p_intersection) {
+      search_tree_object = p_search_tree_object;
       shape = p_neighbour_shape;
       intersection = p_intersection;
 
@@ -526,6 +541,10 @@ public class SortedOrthogonalRoomNeighbours {
             return 0;
           }
         }
+      }
+      if (cmp_value == 0) {
+        // Deterministic tie-breaker for identical geometry
+        cmp_value = this.search_tree_object.get_id_no() - p_other.search_tree_object.get_id_no();
       }
       return cmp_value;
     }

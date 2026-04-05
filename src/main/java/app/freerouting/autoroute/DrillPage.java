@@ -186,4 +186,10 @@ class DrillPage implements ExpandableObject {
   public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
     return null;
   }
-}
+
+  @Override
+  public int get_id_no() {
+    // Stable hash of shape and net_no
+    return 31 * shape.get_id_no() + net_no;
+  }
+}

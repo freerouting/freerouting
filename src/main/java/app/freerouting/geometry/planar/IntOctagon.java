@@ -158,6 +158,18 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     return new IntPoint(x, y);
   }
 
+  public int get_id_no() {
+    int result = leftX;
+    result = 31 * result + rightX;
+    result = 31 * result + bottomY;
+    result = 31 * result + topY;
+    result = 31 * result + lowerLeftDiagonalX;
+    result = 31 * result + upperRightDiagonalX;
+    result = 31 * result + upperLeftDiagonalX;
+    result = 31 * result + lowerRightDiagonalX;
+    return result;
+  }
+
   /**
    * Additional to the function corner() for performance reasons to avoid allocation of an IntPoint.
    */

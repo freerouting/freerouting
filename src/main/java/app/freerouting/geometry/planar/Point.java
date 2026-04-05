@@ -65,6 +65,11 @@ public abstract class Point implements Serializable {
   public abstract FloatPoint to_float();
 
   /**
+   * Returns a unique ID for this point for deterministic tie-breaking.
+   */
+  public abstract int get_id_no();
+
+  /**
    * returns true, if this Point is a RationalPoint with denominator z = 0.
    */
   public abstract boolean is_infinite();

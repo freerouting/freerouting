@@ -241,57 +241,49 @@ public class MazeSearchAlgo {
         next_element_found = true;
         break;
       }
-      MazeListElement.recycle(list_element);
-      list_element = null;
     }
     if (!next_element_found) {
       return false;
     }
-    try {
-      curr_door_section.backtrack_door = list_element.backtrack_door;
-      curr_door_section.section_no_of_backtrack_door = list_element.section_no_of_backtrack_door;
-      curr_door_section.room_ripped = list_element.room_ripped;
-      curr_door_section.adjustment = list_element.adjustment;
+    curr_door_section.backtrack_door = list_element.backtrack_door;
+    curr_door_section.section_no_of_backtrack_door = list_element.section_no_of_backtrack_door;
+    curr_door_section.room_ripped = list_element.room_ripped;
+    curr_door_section.adjustment = list_element.adjustment;
 
-      if (list_element.door instanceof DrillPage) {
-        expand_to_drills_of_page(list_element);
-        return true;
-      }
+    if (list_element.door instanceof DrillPage) {
+      expand_to_drills_of_page(list_element);
+      return true;
+    }
 
-      if (list_element.door instanceof TargetItemExpansionDoor curr_door) {
-        if (curr_door.is_destination_door()) {
-          // The destination is reached.
-          this.destination_door = curr_door;
-          this.section_no_of_destination_door = list_element.section_no_of_door;
-          return false;
-        }
-      }
-      if (ctrl.is_fanout && list_element.door instanceof ExpansionDrill
-          && list_element.backtrack_door instanceof ExpansionDrill) {
-        // algorithm completed after the first drill;
-        this.destination_door = list_element.door;
+    if (list_element.door instanceof TargetItemExpansionDoor curr_door) {
+      if (curr_door.is_destination_door()) {
+        // The destination is reached.
+        this.destination_door = curr_door;
         this.section_no_of_destination_door = list_element.section_no_of_door;
         return false;
       }
-      if (ctrl.vias_allowed && list_element.door instanceof ExpansionDrill
-          && !(list_element.backtrack_door instanceof ExpansionDrill)) {
-        expand_to_other_layers(list_element);
-      }
-
-      if (list_element.next_room != null) {
-        if (list_element.next_room != null) {
-          if (!expand_to_room_doors(list_element)) {
-            return true; // occupation by ripup is delayed or nothing was expanded
-            // In case nothing was expanded allow the section to be occupied from
-            // somewhere else, if the next room is thin.
-          }
-        }
-      }
-      curr_door_section.is_occupied = true;
-      return true;
-    } finally {
-      MazeListElement.recycle(list_element);
     }
+    if (ctrl.is_fanout && list_element.door instanceof ExpansionDrill
+        && list_element.backtrack_door instanceof ExpansionDrill) {
+      // algorithm completed after the first drill;
+      this.destination_door = list_element.door;
+      this.section_no_of_destination_door = list_element.section_no_of_door;
+      return false;
+    }
+    if (ctrl.vias_allowed && list_element.door instanceof ExpansionDrill
+        && !(list_element.backtrack_door instanceof ExpansionDrill)) {
+      expand_to_other_layers(list_element);
+    }
+
+    if (list_element.next_room != null) {
+      if (!expand_to_room_doors(list_element)) {
+        return true; // occupation by ripup is delayed or nothing was expanded
+        // In case nothing was expanded allow the section to be occupied from
+        // somewhere else, if the next room is thin.
+      }
+    }
+    curr_door_section.is_occupied = true;
+    return true;
   }
 
   /**
@@ -426,11 +418,17 @@ public class MazeSearchAlgo {
               if (ripup_costs > 0) {
                 // delay the occupation by ripup to allow shoving the room by another door
                 // sections.
-                MazeListElement new_element = MazeListElement.obtain(p_list_element.door,
-                    p_list_element.section_no_of_door, p_list_element.backtrack_door,
+                MazeListElement new_element = new MazeListElement(
+                    p_list_element.door,
+                    p_list_element.section_no_of_door,
+                    p_list_element.backtrack_door,
                     p_list_element.section_no_of_backtrack_door,
-                    p_list_element.expansion_value + ripup_costs, p_list_element.sorting_value + ripup_costs,
-                    p_list_element.next_room, p_list_element.shape_entry, true, p_list_element.adjustment,
+                    p_list_element.expansion_value + ripup_costs,
+                    p_list_element.sorting_value + ripup_costs,
+                    p_list_element.next_room,
+                    p_list_element.shape_entry,
+                    true,
+                    p_list_element.adjustment,
                     true);
                 this.maze_expansion_list.add(new_element);
               }
@@ -692,9 +690,18 @@ public class MazeSearchAlgo {
     boolean room_ripped = p_add_costs > 0 && p_adjustment == MazeSearchElement.Adjustment.NONE
         || p_from_element.already_checked && p_from_element.room_ripped;
 
-    MazeListElement new_element = MazeListElement.obtain(p_door, p_section_no, p_from_element.door,
-        p_from_element.section_no_of_door, expansion_value, sorting_value, next_room, p_shape_entry,
-        room_ripped, p_adjustment, false);
+    MazeListElement new_element = new MazeListElement(
+        p_door,
+        p_section_no,
+        p_from_element.door,
+        p_from_element.section_no_of_door,
+        expansion_value,
+        sorting_value,
+        next_room,
+        p_shape_entry,
+        room_ripped,
+        p_adjustment,
+        false);
     FRLogger.trace("RAW_SECTION assign selected_section=" + p_section_no
         + ", from_section=" + p_from_element.section_no_of_door
         + ", backtrack_section=" + p_from_element.section_no_of_backtrack_door
@@ -839,9 +846,18 @@ public class MazeSearchAlgo {
       expansion_value += ctrl.min_normal_via_cost;
     }
     double sorting_value = expansion_value + this.destination_distance.calculate(nearest_point, layer);
-    MazeListElement new_element = MazeListElement.obtain(p_drill, section_no, new_backtrack_door,
-        new_section_no_of_backtrack_door, expansion_value, sorting_value, null, shape_entry,
-        p_from_element.room_ripped, MazeSearchElement.Adjustment.NONE, false);
+    MazeListElement new_element = new MazeListElement(
+        p_drill,
+        section_no,
+        new_backtrack_door,
+        new_section_no_of_backtrack_door,
+        expansion_value,
+        sorting_value,
+        null,
+        shape_entry,
+        p_from_element.room_ripped,
+        MazeSearchElement.Adjustment.NONE,
+        false);
     this.maze_expansion_list.add(new_element);
   }
 
@@ -862,9 +878,18 @@ public class MazeSearchAlgo {
             ctrl.trace_costs[layer].vertical)
         + this.destination_distance.calculate(
             nearest_point, layer);
-    MazeListElement new_element = MazeListElement.obtain(p_drill_page, layer, p_from_element.door,
-        p_from_element.section_no_of_door, expansion_value, sorting_value, p_from_element.next_room,
-        p_from_element.shape_entry, p_from_element.room_ripped, MazeSearchElement.Adjustment.NONE, false);
+    MazeListElement new_element = new MazeListElement(
+        p_drill_page,
+        layer,
+        p_from_element.door,
+        p_from_element.section_no_of_door,
+        expansion_value,
+        sorting_value,
+        p_from_element.next_room,
+        p_from_element.shape_entry,
+        p_from_element.room_ripped,
+        MazeSearchElement.Adjustment.NONE,
+        false);
     this.maze_expansion_list.add(new_element);
   }
 
@@ -1013,10 +1038,18 @@ public class MazeSearchAlgo {
       FloatPoint shape_entry_middle = p_list_element.shape_entry.a.middle_point(p_list_element.shape_entry.b);
       double sorting_value = expansion_value + this.destination_distance.calculate(shape_entry_middle, to_layer);
       int curr_room_index = to_layer - curr_drill.first_layer;
-      MazeListElement new_element = MazeListElement.obtain(curr_drill, curr_room_index, curr_drill,
-          p_list_element.section_no_of_door, expansion_value, sorting_value,
-          curr_drill.room_arr[curr_room_index], p_list_element.shape_entry, room_ripped,
-          MazeSearchElement.Adjustment.NONE, false);
+      MazeListElement new_element = new MazeListElement(
+          curr_drill,
+          curr_room_index,
+          curr_drill,
+          p_list_element.section_no_of_door,
+          expansion_value,
+          sorting_value,
+          curr_drill.room_arr[curr_room_index],
+          p_list_element.shape_entry,
+          room_ripped,
+          MazeSearchElement.Adjustment.NONE,
+          false);
       this.maze_expansion_list.add(new_element);
     }
   }
@@ -1114,8 +1147,18 @@ public class MazeSearchAlgo {
         FloatPoint curr_center = connection_shape.centre_of_gravity();
         FloatLine shape_entry = new FloatLine(curr_center, curr_center);
         double sorting_value = this.destination_distance.calculate(curr_center, curr_room.get_layer());
-        MazeListElement new_list_element = MazeListElement.obtain(curr_door, 0, null, 0, 0, sorting_value, curr_room,
-            shape_entry, false, MazeSearchElement.Adjustment.NONE, false);
+        MazeListElement new_list_element = new MazeListElement(
+            curr_door,
+            0,
+            null,
+            0,
+            0,
+            sorting_value,
+            curr_room,
+            shape_entry,
+            false,
+            MazeSearchElement.Adjustment.NONE,
+            false);
         maze_expansion_list.add(new_list_element);
         start_ok = true;
       }

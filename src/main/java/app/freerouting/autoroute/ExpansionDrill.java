@@ -124,8 +124,15 @@ public class ExpansionDrill implements ExpandableObject {
     }
   }
 
+  @Override
+  public int get_id_no() {
+    // Stable hash of location and layers
+    return 31 * (31 * location.get_id_no() + first_layer) + last_layer;
+  }
+
   /*
    * Test draw of the shape of this drill.
+
    */
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity) {
     Color draw_color = p_graphics_context.get_hilight_color();
