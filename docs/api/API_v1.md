@@ -261,9 +261,14 @@ For complete details on how to configure and enable authentication on your own s
   **Parameters:**
     - `jobId` *(required)*: The unique identifier of the job.
 
-  **Description:** Retrieves the output data for a completed routing job.
+  **Description:** Retrieves the output data for a routing job in Specctra SES format.
 
-  **Response body:** Contains some details and the [Base64-encoded](https://en.wikipedia.org/wiki/Base64) Specctra SES data.
+  - If the job is **completed**, returns the final output with HTTP **200 OK**.
+  - If the job is **running, paused, or stopping**, returns the partial output generated so far with HTTP **202 Accepted**. The output will be updated as routing progresses; use `GET /jobs/{jobId}/output/stream` for real-time SSE updates.
+  - If the job is in progress but **no output data is available yet**, returns HTTP **204 No Content**.
+  - If the job **failed, was cancelled, timed out, or is invalid**, returns HTTP **400 Bad Request** with an error message.
+
+  **Response body (200 or 202):** Contains some details and the [Base64-encoded](https://en.wikipedia.org/wiki/Base64) Specctra SES data.
 
   ```json
   {
