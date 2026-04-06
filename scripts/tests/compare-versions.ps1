@@ -5,6 +5,7 @@
 #   .\compare-versions.ps1
 #   .\compare-versions.ps1 -de "$PSScriptRoot\..\..\tests\Issue508-DAC2020_bm01.dsn"
 #   .\compare-versions.ps1 -DebugFilterByNet "Net-(C7-Pad2)"
+#   .\compare-versions.ps1 -LogNameSuffix "max42"
 
 param(
     [string]$de = "$PSScriptRoot\..\..\tests\Issue508-DAC2020_bm01.dsn",
@@ -17,7 +18,8 @@ param(
     [int]$max_threads = 1,
     [string]$job_timeout = "00:03:00",
     [Alias("debug.filter_by_net")]
-    [string]$DebugFilterByNet = ""
+    [string]$DebugFilterByNet = "",
+    [string]$LogNameSuffix = ""
 )
 
 # Colors for output
@@ -81,13 +83,16 @@ if (-not [string]::IsNullOrWhiteSpace($DebugFilterByNet)) {
     Write-Host "  Net Filter:  $DebugFilterByNet" -ForegroundColor White
 }
 
-# Log Files
-$CurrentLogFile = Join-Path $LogBaseDir "freerouting-current.log"
-$V19LogFile = Join-Path $LogBaseDir "freerouting-v190.log"
-
-# Clean up old logs
-if (Test-Path $CurrentLogFile) { Remove-Item $CurrentLogFile -Force }
-if (Test-Path $V19LogFile) { Remove-Item $V19LogFile -Force }
+# Log Files (run-specific names avoid lock conflicts from diff tools/open handles)
+$RunSuffix = if ([string]::IsNullOrWhiteSpace($LogNameSuffix)) {
+    "run-$($max_items)-$((Get-Date).ToString('yyyyMMdd-HHmmss'))-$PID"
+} else {
+    $LogNameSuffix
+}
+$CurrentLogFile = Join-Path $LogBaseDir "freerouting-current-$RunSuffix.log"
+$V19LogFile = Join-Path $LogBaseDir "freerouting-v190-$RunSuffix.log"
+$CurrentLogFileCanonical = Join-Path $LogBaseDir "freerouting-current.log"
+$V19LogFileCanonical = Join-Path $LogBaseDir "freerouting-v190.log"
 
 # Calculate Output Files
 $OutputDirectory = Split-Path $OutputFileAbs -Parent
@@ -114,6 +119,24 @@ $BaseArgs = @(
 
 if (-not [string]::IsNullOrWhiteSpace($DebugFilterByNet)) {
     $BaseArgs += "--debug.filter_by_net=$DebugFilterByNet"
+}
+
+function Sync-CanonicalLog {
+    param(
+        [string]$Source,
+        [string]$Canonical
+    )
+
+    if (-not (Test-Path $Source)) {
+        return
+    }
+
+    try {
+        Copy-Item $Source $Canonical -Force -ErrorAction Stop
+    }
+    catch {
+        Write-Host "WARNING: Could not sync '$Source' to '$Canonical'. $_" -ForegroundColor $WarningColor
+    }
 }
 
 # Function to parse log results
@@ -184,8 +207,15 @@ function Invoke-Version {
     Write-Host "  Running $VersionName" -ForegroundColor $Color
     Write-Host "--------------------------------------------------" -ForegroundColor $Color
 
-    # Clean previous log if exists
-    if (Test-Path $LogPath) { Remove-Item $LogPath -Force }
+    # Remove previous run-specific file if present.
+    if (Test-Path $LogPath) {
+        try {
+            Remove-Item $LogPath -Force -ErrorAction Stop
+        }
+        catch {
+            Write-Host "WARNING: Could not remove existing log '$LogPath'. $_" -ForegroundColor $WarningColor
+        }
+    }
 
     $env:FREEROUTING_LOG_DIR = $LogBaseDir
 
@@ -258,6 +288,10 @@ $V19Result = Invoke-Version -VersionName "V1.9 Version" `
     -OutputFile $V19OutputFile `
     -Color $SuccessColor
 
+# Best-effort compatibility sync for tooling that expects canonical filenames.
+Sync-CanonicalLog -Source $CurrentLogFile -Canonical $CurrentLogFileCanonical
+Sync-CanonicalLog -Source $V19LogFile -Canonical $V19LogFileCanonical
+
 # Summary
 Write-Host "`n==================================================" -ForegroundColor $InfoColor
 Write-Host "  Comparison Summary" -ForegroundColor $InfoColor
@@ -286,4 +320,7 @@ if ($CurrentResult -and $V19Result) {
 
     Write-Host "`nCompare logs:" -ForegroundColor $InfoColor
     Write-Host "  code --diff `"$($CurrentResult.LogFile)`" `"$($V19Result.LogFile)`"" -ForegroundColor Yellow
+    Write-Host "`nCanonical log aliases (best-effort):" -ForegroundColor $InfoColor
+    Write-Host "  $CurrentLogFileCanonical" -ForegroundColor Gray
+    Write-Host "  $V19LogFileCanonical" -ForegroundColor Gray
 }
