@@ -222,15 +222,16 @@ public class InsertFoundConnectionAlgo {
     }
 
     int removedTraceStubs = 0;
-    if (!FRLogger.isTraceEnabled()) {
-      for (int i = 0; i < p_trace.corners.length - 1; i++) {
-        Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
-        if (trace_stub != null) {
-          board.remove_item(trace_stub);
-          removedTraceStubs++;
-        }
+    // We should always execute stub removal during automated routing to match v1.9 behavior,
+    // logging conditionally modifying the trace layout is an anti-pattern.
+    for (int i = 0; i < p_trace.corners.length - 1; i++) {
+      Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
+      if (trace_stub != null) {
+        board.remove_item(trace_stub);
+        removedTraceStubs++;
       }
     }
+
     FRLogger.trace(
         "InsertFoundConnectionAlgo.insert_trace",
         "compare_trace_stub_cleanup",
@@ -387,3 +388,4 @@ public class InsertFoundConnectionAlgo {
     return point.toString();
   }
 }
+
