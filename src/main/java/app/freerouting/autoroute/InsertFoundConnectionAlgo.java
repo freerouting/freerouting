@@ -45,7 +45,7 @@ public class InsertFoundConnectionAlgo {
     int curr_layer = p_connection.target_layer;
     InsertFoundConnectionAlgo new_instance = new InsertFoundConnectionAlgo(p_board, p_ctrl);
     for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
-      if (p_ctrl.net_no == 33 || p_ctrl.net_no == 66 || p_ctrl.net_no == 67) {
+      if (true) {
         Point startCorner = curr_new_item.corners.length > 0 ? curr_new_item.corners[0] : null;
         Point endCorner = curr_new_item.corners.length > 0
             ? curr_new_item.corners[curr_new_item.corners.length - 1]
@@ -138,7 +138,7 @@ public class InsertFoundConnectionAlgo {
       }
       if (ok_point == insert_polyline.last_corner() || neckdown_inserted) {
         from_corner_no = i;
-        if (ctrl.net_no == 33 || ctrl.net_no == 66 || ctrl.net_no == 67) {
+        if (true) {
           FRLogger.trace(
               "compare_trace_insert_segment_raw net=" + ctrl.net_no + ", layer=" + p_trace.layer
                   + ", i=" + i + ", from_corner_no=" + from_corner_no
@@ -172,7 +172,7 @@ public class InsertFoundConnectionAlgo {
           }
         }
         FRLogger.trace("InsertFoundConnectionAlgo: violation corrected");
-        if (ctrl.net_no == 33 || ctrl.net_no == 66 || ctrl.net_no == 67) {
+        if (true) {
           FRLogger.trace(
               "compare_trace_insert_segment_raw net=" + ctrl.net_no + ", layer=" + p_trace.layer
                   + ", i=" + i + ", from_corner_no=" + from_corner_no
@@ -198,7 +198,7 @@ public class InsertFoundConnectionAlgo {
             + ", from corner: " + from_corner_no
             + ", ok_point: " + (ok_point != null ? ok_point.toString() : "null")
             + ", target: " + insert_polyline.last_corner());
-        if (ctrl.net_no == 33 || ctrl.net_no == 66 || ctrl.net_no == 67) {
+        if (true) {
           FRLogger.trace(
               "compare_trace_insert_segment_raw net=" + ctrl.net_no + ", layer=" + p_trace.layer
                   + ", i=" + i + ", from_corner_no=" + from_corner_no
@@ -222,8 +222,6 @@ public class InsertFoundConnectionAlgo {
     }
 
     int removedTraceStubs = 0;
-    // We should always execute stub removal during automated routing to match v1.9 behavior,
-    // logging conditionally modifying the trace layout is an anti-pattern.
     for (int i = 0; i < p_trace.corners.length - 1; i++) {
       Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
       if (trace_stub != null) {
