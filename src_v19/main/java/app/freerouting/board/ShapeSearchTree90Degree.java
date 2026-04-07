@@ -59,6 +59,8 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     }
     IntBox bounding_shape = start_shape;
     int room_layer = p_room.get_layer();
+    boolean debugAnchor = is_complete_shape_debug_anchor(p_net_no, room_layer, start_shape);
+    int debugStep = 0;
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
     result.add(
         new IncompleteFreeSpaceExpansionRoom(start_shape, room_layer, shape_to_be_contained));
@@ -76,24 +78,40 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
           Leaf curr_leaf = (Leaf) curr_node;
           SearchTreeObject curr_object = (SearchTreeObject) curr_leaf.object;
           int shape_index = curr_leaf.shape_index_in_object;
-          if (curr_object.is_trace_obstacle(p_net_no)
-              && curr_object.shape_layer(shape_index) == room_layer
-              && curr_object != p_ignore_object) {
+          boolean is_obstacle = curr_object.is_trace_obstacle(p_net_no);
+          int objectLayer = curr_object.shape_layer(shape_index);
+          boolean sameLayer = objectLayer == room_layer;
+          boolean ignoredObject = curr_object == p_ignore_object;
+          if (debugAnchor) {
+            trace_complete_shape_filter(debugStep, p_net_no, room_layer, shape_index, objectLayer, is_obstacle, sameLayer, ignoredObject, curr_object);
+          }
+          if (is_obstacle && sameLayer && !ignoredObject) {
 
             IntBox curr_object_shape = curr_object.get_tree_shape(this, shape_index).bounding_box();
+            if (debugAnchor) {
+              trace_complete_shape_candidate(debugStep, p_net_no, room_layer, curr_object, curr_object_shape);
+            }
             Collection<IncompleteFreeSpaceExpansionRoom> new_result = new LinkedList<>();
             IntBox new_bounding_shape = IntBox.EMPTY;
+            boolean hadRoomsBeforeObstacle = !result.isEmpty();
             for (IncompleteFreeSpaceExpansionRoom curr_room : result) {
               IntBox curr_shape = (IntBox) curr_room.get_shape();
-              if (curr_shape.overlaps(curr_object_shape)) {
+              boolean overlaps = curr_shape.overlaps(curr_object_shape);
+              if (overlaps) {
                 if (curr_object instanceof CompleteFreeSpaceExpansionRoom
                     && p_ignore_shape != null) {
                   IntBox intersection = curr_shape.intersection(curr_object_shape);
                   if (p_ignore_shape.contains(intersection)) {
+                    if (debugAnchor) {
+                      trace_complete_shape_decision(debugStep, p_net_no, room_layer, "SKIP_BY_IGNORE_SHAPE", overlaps, curr_shape, curr_object_shape);
+                    }
                     // ignore also all objects, whose intersection is contained in the
                     // 2-dim overlap-door with the from_room.
                     continue;
                   }
+                }
+                if (debugAnchor) {
+                  trace_complete_shape_decision(debugStep, p_net_no, room_layer, "RESTRAIN", overlaps, curr_shape, curr_object_shape);
                 }
                 Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room,
                     curr_object_shape);
@@ -103,12 +121,25 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
                   new_bounding_shape = new_bounding_shape.union(tmp_shape.get_shape().bounding_box());
                 }
               } else {
+                if (debugAnchor) {
+                  trace_complete_shape_decision(debugStep, p_net_no, room_layer, "KEEP_NON_OVERLAP", overlaps, curr_shape, curr_object_shape);
+                }
                 new_result.add(curr_room);
                 new_bounding_shape = new_bounding_shape.union(curr_shape.bounding_box());
               }
             }
+            if (hadRoomsBeforeObstacle && new_result.isEmpty()) {
+              FRLogger.trace("COMPLETE_SHAPE_BLOCKED net=" + p_net_no + ", layer=" + room_layer
+                  + ", contained=" + describe_bounds(shape_to_be_contained)
+                  + ", obstacle_type=" + curr_object.getClass().getSimpleName()
+                  + ", obstacle_id=" + obstacle_id(curr_object)
+                  + ", obstacle_bounds=" + describe_bounds(curr_object_shape));
+            }
             result = new_result;
             bounding_shape = new_bounding_shape;
+          }
+          if (debugAnchor) {
+            debugStep++;
           }
         } else {
           this.node_stack.push(((InnerNode) curr_node).first_child);
@@ -117,6 +148,74 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
       }
     }
     return result;
+  }
+
+  private static String describe_bounds(IntBox p_bounds) {
+    return "[(" + p_bounds.ll.x + "," + p_bounds.ll.y + ")..(" + p_bounds.ur.x + "," + p_bounds.ur.y + ")]";
+  }
+
+  /**
+   * Returns true for the specific room being diagnosed in the current parity investigation.
+   * Update these coordinates to anchor detailed per-leaf logging to a different room.
+   */
+  private static boolean is_complete_shape_debug_anchor(int p_net_no, int p_room_layer, IntBox p_start_shape) {
+    return p_net_no == 84
+        && p_room_layer == 0
+        && p_start_shape.ll.x == 1767436
+        && p_start_shape.ll.y == -1206395
+        && p_start_shape.ur.x == 1994010
+        && p_start_shape.ur.y == -782336;
+  }
+
+  private static void trace_complete_shape_filter(
+      int p_step, int p_net_no, int p_room_layer, int p_shape_index, int p_object_layer,
+      boolean p_is_obstacle, boolean p_same_layer, boolean p_ignored_object, SearchTreeObject p_object) {
+    FRLogger.trace("COMPLETE_SHAPE_FILTER"
+        + ", step=" + p_step
+        + ", net=" + p_net_no
+        + ", layer=" + p_room_layer
+        + ", shape_index=" + p_shape_index
+        + ", object_layer=" + p_object_layer
+        + ", is_trace_obstacle=" + p_is_obstacle
+        + ", same_layer=" + p_same_layer
+        + ", ignored_object=" + p_ignored_object
+        + ", accepted=" + (p_is_obstacle && p_same_layer && !p_ignored_object)
+        + ", obstacle_id=" + obstacle_id(p_object)
+        + ", obstacle_nets=" + obstacle_nets(p_object)
+        + ", obstacle=" + p_object);
+  }
+
+  private static void trace_complete_shape_candidate(
+      int p_step, int p_net_no, int p_room_layer, SearchTreeObject p_object, IntBox p_obstacle_shape) {
+    FRLogger.trace("COMPLETE_SHAPE_OBS candidate"
+        + ", step=" + p_step
+        + ", net=" + p_net_no
+        + ", layer=" + p_room_layer
+        + ", obstacle=" + p_object
+        + ", obstacle_id=" + obstacle_id(p_object)
+        + ", obstacle_nets=" + obstacle_nets(p_object)
+        + ", obstacle_bounds=" + describe_bounds(p_obstacle_shape));
+  }
+
+  private static void trace_complete_shape_decision(
+      int p_step, int p_net_no, int p_room_layer, String p_action,
+      boolean p_overlap, IntBox p_room_shape, IntBox p_obstacle_shape) {
+    FRLogger.trace("COMPLETE_SHAPE_DECISION"
+        + ", step=" + p_step
+        + ", net=" + p_net_no
+        + ", layer=" + p_room_layer
+        + ", action=" + p_action
+        + ", overlap=" + p_overlap
+        + ", room_bounds=" + describe_bounds(p_room_shape)
+        + ", obstacle_bounds=" + describe_bounds(p_obstacle_shape));
+  }
+
+  private static int obstacle_id(SearchTreeObject p_object) {
+    return p_object instanceof Item ? ((Item) p_object).get_id_no() : -1;
+  }
+
+  private static String obstacle_nets(SearchTreeObject p_object) {
+    return p_object instanceof Item ? java.util.Arrays.toString(((Item) p_object).net_no_arr) : "[]";
   }
 
   /**

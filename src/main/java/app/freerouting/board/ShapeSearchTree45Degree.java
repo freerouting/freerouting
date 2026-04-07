@@ -137,6 +137,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             }
             Collection<IncompleteFreeSpaceExpansionRoom> new_result = new LinkedList<>();
             IntOctagon new_bounding_shape = IntOctagon.EMPTY;
+            boolean hadRoomsBeforeObstacle = !result.isEmpty();
             for (IncompleteFreeSpaceExpansionRoom curr_room : result) {
               IntOctagon curr_shape = (IntOctagon) curr_room.get_shape();
               boolean overlaps = curr_shape.overlaps(curr_object_shape);
@@ -174,6 +175,13 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 new_result.add(curr_room);
                 new_bounding_shape = new_bounding_shape.union(curr_shape.bounding_box());
               }
+            }
+            if (hadRoomsBeforeObstacle && new_result.isEmpty()) {
+              FRLogger.trace("COMPLETE_SHAPE_BLOCKED net=" + p_net_no + ", layer=" + room_layer
+                  + ", contained=" + describe_bounds(shape_to_be_contained.bounding_box())
+                  + ", obstacle_type=" + curr_object.getClass().getSimpleName()
+                  + ", obstacle_id=" + obstacle_id(curr_object)
+                  + ", obstacle_bounds=" + describe_bounds(curr_object_shape.bounding_box()));
             }
             result = new_result;
             bounding_shape = new_bounding_shape;
