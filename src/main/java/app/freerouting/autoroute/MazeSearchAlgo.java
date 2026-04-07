@@ -1263,11 +1263,27 @@ public class MazeSearchAlgo {
 
     double ripup_cost = this.ctrl.ripup_costs * cost_factor;
     double detour = 1;
+    double trace_length = 0;
+    double min_trace_length = 0;
+    int item_count = 0;
+    String connectionItemIds = "[]";
     if (fanout_via_cost_factor <= 1) // p_obstacle_item does not belong to a fanout
     {
       Connection obstacle_connection = Connection.get(p_obstacle_item);
       if (obstacle_connection != null) {
         detour = obstacle_connection.get_detour();
+        trace_length = obstacle_connection.trace_length();
+        item_count = obstacle_connection.item_list.size();
+        if (obstacle_connection.start_point != null && obstacle_connection.end_point != null) {
+          min_trace_length = obstacle_connection.start_point.to_float().distance(obstacle_connection.end_point.to_float());
+        }
+        StringBuilder sb = new StringBuilder("[");
+        for (app.freerouting.board.Item ci : obstacle_connection.item_list) {
+          if (sb.length() > 1) sb.append(",");
+          sb.append(ci.get_id_no());
+        }
+        sb.append("]");
+        connectionItemIds = sb.toString();
       }
     }
     boolean randomize = this.ctrl.ripup_pass_no >= 4 && this.ctrl.ripup_pass_no % 3 != 0;
@@ -1282,7 +1298,27 @@ public class MazeSearchAlgo {
     ripup_cost *= fanout_via_cost_factor;
     int result = Math.max((int) ripup_cost, 1);
     final int MAX_RIPUP_COSTS = Integer.MAX_VALUE / 100;
-    return Math.min(result, MAX_RIPUP_COSTS);
+    result = Math.min(result, MAX_RIPUP_COSTS);
+    String obstacleNets = "[]";
+    if (p_obstacle_item instanceof app.freerouting.board.Item obstacleItem) {
+      int[] nets = new int[obstacleItem.net_count()];
+      for (int i = 0; i < nets.length; i++) {
+        nets[i] = obstacleItem.get_net_no(i);
+      }
+      obstacleNets = java.util.Arrays.toString(nets);
+    }
+    FRLogger.trace("CHECK_RIPUP net=" + ctrl.net_no
+        + ", obstacle_id=" + (p_obstacle_item instanceof app.freerouting.board.Item obstItem ? obstItem.get_id_no() : -1)
+        + ", obstacle_nets=" + obstacleNets
+        + ", connection_items=" + connectionItemIds
+        + ", half_width=" + cost_factor
+        + ", ripup_costs=" + this.ctrl.ripup_costs
+        + ", trace_length=" + trace_length
+        + ", min_trace_length=" + min_trace_length
+        + ", item_count=" + item_count
+        + ", detour=" + detour
+        + ", result=" + result);
+    return result;
   }
 
   /**
