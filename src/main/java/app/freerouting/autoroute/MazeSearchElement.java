@@ -16,6 +16,11 @@ public class MazeSearchElement {
   public int section_no_of_backtrack_door;
   public boolean room_ripped;
   public Adjustment adjustment = Adjustment.NONE;
+  /**
+   * The ripup cost paid to enter this door's room via the maze search.
+   * Zero when room_ripped is false.
+   */
+  public int ripup_cost;
 
   /**
    * Resets this MazeSearchElement for autorouting the next connection.
@@ -26,6 +31,7 @@ public class MazeSearchElement {
     section_no_of_backtrack_door = 0;
     room_ripped = false;
     adjustment = Adjustment.NONE;
+    ripup_cost = 0;
   }
 
   public enum Adjustment {

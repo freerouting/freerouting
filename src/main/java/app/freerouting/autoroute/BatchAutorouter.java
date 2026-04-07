@@ -436,6 +436,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           int tempIncomp = tempRatsNest.incomplete_count();
           int tempNetIncomp = tempRatsNest.incomplete_count(curr_item.get_net_no(i));
           int netItemsAfter = board.get_connectable_items(curr_item.get_net_no(i)).size();
+          int maxItemId = board.communication.id_no_generator.max_generated_no();
           FRLogger.trace(
               "BatchAutorouter.autoroute_pass",
               "compare_trace_route_item",
@@ -443,7 +444,8 @@ public class BatchAutorouter extends NamedAlgorithm {
                   + ", details=" + autorouterResult.details
                   + ", incompletes=" + tempIncomp + ", netIncomplete=" + tempNetIncomp
                   + ", ripped=" + ripped_item_list.size() + ", netItems="
-                  + netItemsBefore + "->" + netItemsAfter,
+                  + netItemsBefore + "->" + netItemsAfter
+                  + ", maxItemId=" + maxItemId,
               "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no() + ",Type="
                   + curr_item.getClass().getSimpleName(),
               getImpactedPoints(curr_item));

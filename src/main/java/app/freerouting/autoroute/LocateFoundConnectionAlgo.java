@@ -249,6 +249,7 @@ public abstract class LocateFoundConnectionAlgo {
             + ", door_type=" + doorType
             + ", section=" + curr_section_no
             + ", room_ripped=" + curr_maze_search_element.room_ripped
+            + ", ripup_cost=" + curr_maze_search_element.ripup_cost
             + ", next_room_type=" + nextRoomType
             + ", obstacle_id=" + obstacleId);
       }

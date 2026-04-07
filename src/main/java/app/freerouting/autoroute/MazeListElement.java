@@ -45,6 +45,12 @@ public class MazeListElement implements Comparable<MazeListElement> {
   final boolean room_ripped;
   final MazeSearchElement.Adjustment adjustment;
   final boolean already_checked;
+  /**
+   * The ripup cost paid to enter the next_room through this door.
+   * Non-zero only when room_ripped is true and this element was directly created
+   * by expand_to_door_section with a positive add_costs.
+   */
+  int ripup_cost = 0;
 
   /** Creates a new instance of ExpansionInfo */
   public MazeListElement(

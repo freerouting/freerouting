@@ -234,6 +234,7 @@ public class MazeSearchAlgo {
     curr_door_section.backtrack_door = list_element.backtrack_door;
     curr_door_section.section_no_of_backtrack_door = list_element.section_no_of_backtrack_door;
     curr_door_section.room_ripped = list_element.room_ripped;
+    curr_door_section.ripup_cost = list_element.ripup_cost;
     curr_door_section.adjustment = list_element.adjustment;
 
     if (list_element.door instanceof DrillPage) {
@@ -435,6 +436,7 @@ public class MazeSearchAlgo {
                         true,
                         p_list_element.adjustment,
                         true);
+                new_element.ripup_cost = ripup_costs;
                 this.maze_expansion_list.add(new_element);
               }
               return something_expanded;
@@ -766,6 +768,10 @@ public class MazeSearchAlgo {
             room_ripped,
             p_adjustment,
             false);
+    // Store the direct ripup cost (non-zero only when this specific door caused a ripup).
+    if (p_add_costs > 0 && p_adjustment == MazeSearchElement.Adjustment.NONE) {
+      new_element.ripup_cost = p_add_costs;
+    }
     FRLogger.trace(
         "RAW_SECTION assign selected_section="
             + p_section_no

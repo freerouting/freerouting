@@ -388,14 +388,43 @@ public class BatchAutorouter {
           AutorouteEngine.AutorouteResult result = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list,
               p_pass_no);
           PerformanceProfiler.end("autoroute_item");
+          if (!ripped_item_list.isEmpty()) {
+            for (Item rippedItem : ripped_item_list) {
+              StringBuilder rippedNets = new StringBuilder();
+              for (int netIx = 0; netIx < rippedItem.net_count(); netIx++) {
+                if (netIx > 0) {
+                  rippedNets.append('|');
+                }
+                rippedNets.append(rippedItem.get_net_no(netIx));
+              }
+              FRLogger.trace(
+                  "BatchAutorouter.autoroute_pass",
+                  "compare_trace_ripped_item",
+                  "source_item=" + curr_item.get_id_no()
+                      + ", source_net=" + curr_item.get_net_no(i)
+                      + ", ripped_id=" + rippedItem.get_id_no()
+                      + ", ripped_type=" + rippedItem.getClass().getSimpleName()
+                      + ", ripped_net_count=" + rippedItem.net_count()
+                      + ", ripped_nets=" + rippedNets,
+                  "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no(),
+                  getImpactedPoints(rippedItem));
+            }
+          }
           RatsNest tempRatsNest = new RatsNest(routing_board, hdlg.get_locale());
           int tempIncomp = tempRatsNest.incomplete_count();
           int tempNetIncomp = tempRatsNest.incomplete_count(curr_item.get_net_no(i));
+          int netItemsBefore = 0; // not tracked per-item in v19; reported as 0->0
+          int netItemsAfter = 0;
+          int maxItemId = routing_board.communication.id_no_generator.max_generated_no();
           FRLogger.trace(
               "BatchAutorouter.autoroute_pass",
               "compare_trace_route_item",
-              "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + result + ", incompletes="
-                  + tempIncomp + ", netIncomplete=" + tempNetIncomp + ", details=n/a",
+              "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + result
+                  + ", details=n/a"
+                  + ", incompletes=" + tempIncomp + ", netIncomplete=" + tempNetIncomp
+                  + ", ripped=" + ripped_item_list.size() + ", netItems="
+                  + netItemsBefore + "->" + netItemsAfter
+                  + ", maxItemId=" + maxItemId,
               "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no() + ",Type="
                   + curr_item.getClass().getSimpleName(),
               getImpactedPoints(curr_item));
