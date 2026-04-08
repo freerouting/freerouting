@@ -22,7 +22,9 @@ import app.freerouting.rules.Net;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -373,6 +375,7 @@ public class BatchAutorouter {
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> ripped_item_list = new TreeSet<>();
+          Map<Item, Integer> ripped_item_costs = new LinkedHashMap<>();
 
           // Check maxItems limit (Integer.MAX_VALUE means no limit)
           int maxItems = hdlg.get_settings().autoroute_settings.getMaxItems();
@@ -386,7 +389,7 @@ public class BatchAutorouter {
 
           PerformanceProfiler.start("autoroute_item");
           AutorouteEngine.AutorouteResult result = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list,
-              p_pass_no);
+              ripped_item_costs, p_pass_no);
           PerformanceProfiler.end("autoroute_item");
           if (!ripped_item_list.isEmpty()) {
             for (Item rippedItem : ripped_item_list) {
@@ -397,6 +400,7 @@ public class BatchAutorouter {
                 }
                 rippedNets.append(rippedItem.get_net_no(netIx));
               }
+              int ripupCost = ripped_item_costs.getOrDefault(rippedItem, -1);
               FRLogger.trace(
                   "BatchAutorouter.autoroute_pass",
                   "compare_trace_ripped_item",
@@ -405,7 +409,8 @@ public class BatchAutorouter {
                       + ", ripped_id=" + rippedItem.get_id_no()
                       + ", ripped_type=" + rippedItem.getClass().getSimpleName()
                       + ", ripped_net_count=" + rippedItem.net_count()
-                      + ", ripped_nets=" + rippedNets,
+                      + ", ripped_nets=" + rippedNets
+                      + ", ripup_cost=" + ripupCost,
                   "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no(),
                   getImpactedPoints(rippedItem));
             }
@@ -564,6 +569,7 @@ public class BatchAutorouter {
   // Tries to route an item on a specific net. Returns result status.
   private AutorouteEngine.AutorouteResult autoroute_item(Item p_item, int p_route_net_no,
       SortedSet<Item> p_ripped_item_list,
+      Map<Item, Integer> p_ripup_costs,
       int p_ripup_pass_no) {
     try {
       boolean contains_plane = false;
@@ -636,10 +642,12 @@ public class BatchAutorouter {
 
       // Do the auto-routing between the two sets of items
       AutorouteEngine.AutorouteResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set,
-          route_dest_set, autoroute_control, p_ripped_item_list);
+          route_dest_set, autoroute_control, p_ripped_item_list, p_ripup_costs);
 
       // Update the changed area of the board
       if (autoroute_result == AutorouteEngine.AutorouteResult.ROUTED) {
+        int maxItemIdBeforeOpt = routing_board.communication.id_no_generator.max_generated_no();
+        FRLogger.trace("compare_trace_opt_changed_area_before net=" + p_route_net_no + ", maxItemId=" + maxItemIdBeforeOpt);
         routing_board.opt_changed_area(
             new int[0],
             null,
@@ -647,6 +655,8 @@ public class BatchAutorouter {
             autoroute_control.trace_costs,
             this.thread,
             TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+        int maxItemIdAfterOpt = routing_board.communication.id_no_generator.max_generated_no();
+        FRLogger.trace("compare_trace_opt_changed_area_after net=" + p_route_net_no + ", maxItemId=" + maxItemIdAfterOpt + ", delta=" + (maxItemIdAfterOpt - maxItemIdBeforeOpt));
       }
 
       // Return the result

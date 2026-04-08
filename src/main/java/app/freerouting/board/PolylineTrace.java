@@ -679,10 +679,6 @@ public class PolylineTrace extends Trace implements Serializable {
       throw new Exception("Max normalization depth reached with trace '" + this.get_id_no() + "'");
     }
 
-    // Early exit if trace is very simple (only 2 points)
-    if (this.corner_count() <= 2) {
-      return false;
-    }
 
     boolean observers_activated = false;
     BasicBoard routing_board = this.board;

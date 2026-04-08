@@ -152,6 +152,7 @@ public class InsertFoundConnectionAlgo {
     for (int i = 1; i < p_trace.corners.length; ++i) {
       Point[] curr_corner_arr = Arrays.copyOfRange(p_trace.corners, from_corner_no, i + 1);
       Polyline insert_polyline = new Polyline(curr_corner_arr);
+      int maxItemIdBeforeSeg = board.communication.id_no_generator.max_generated_no();
       Point ok_point = board.insert_forced_trace_polyline(
           insert_polyline,
           ctrl.trace_half_width[p_trace.layer],
@@ -165,6 +166,10 @@ public class InsertFoundConnectionAlgo {
           ctrl.pull_tight_accuracy,
           true,
           null);
+      int maxItemIdAfterSeg = board.communication.id_no_generator.max_generated_no();
+      FRLogger.trace("compare_trace_insert_segment_ids net=" + ctrl.net_no + ", i=" + i
+          + ", maxItemIdBefore=" + maxItemIdBeforeSeg + ", maxItemIdAfter=" + maxItemIdAfterSeg
+          + ", delta=" + (maxItemIdAfterSeg - maxItemIdBeforeSeg));
       boolean neckdown_inserted = false;
       if (ok_point != null
           && ok_point != insert_polyline.last_corner()

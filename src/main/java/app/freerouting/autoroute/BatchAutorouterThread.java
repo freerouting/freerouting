@@ -486,7 +486,7 @@ public class BatchAutorouterThread extends StoppableThread {
 
       // Do the auto-routing between the two sets of items
       AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
-          autoroute_control, p_ripped_item_list);
+          autoroute_control, p_ripped_item_list, null); // null: costs not needed by this thread
 
       // Update the changed area of the board
       if (autoroute_result.state == AutorouteAttemptState.ROUTED) {

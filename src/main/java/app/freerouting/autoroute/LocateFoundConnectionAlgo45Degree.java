@@ -12,6 +12,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.SortedSet;
 
 public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo {
@@ -20,8 +21,8 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
    * Creates a new instance of LocateFoundConnectionAlgo45Degree
    */
   public LocateFoundConnectionAlgo45Degree(MazeSearchAlgo.Result p_maze_search_result, AutorouteControl p_ctrl, ShapeSearchTree p_search_tree, AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list) {
-    super(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list);
+      SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
+    super(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_ripup_costs);
   }
 
   private static FloatPoint round_to_integer(FloatPoint p_point) {

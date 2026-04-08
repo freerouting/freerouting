@@ -185,7 +185,7 @@ public class ExpandTestState extends InteractiveState {
       SortedSet<Item> ripped_item_list = new TreeSet<>();
       this.autoroute_result = LocateFoundConnectionAlgo.get_instance(search_result, control_settings,
           this.autoroute_engine.autoroute_search_tree,
-          hdlg.get_routing_board().rules.get_trace_angle_restriction(), ripped_item_list);
+          hdlg.get_routing_board().rules.get_trace_angle_restriction(), ripped_item_list, null);
       hdlg
           .get_routing_board()
           .generate_snapshot();

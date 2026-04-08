@@ -32,7 +32,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
@@ -406,9 +408,10 @@ public class BatchAutorouter extends NamedAlgorithm {
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           // Use a fresh set per item to mirror v1.9 behavior and avoid cross-item side effects.
           SortedSet<Item> ripped_item_list = new TreeSet<>();
+          Map<Item, Integer> ripped_item_costs = new LinkedHashMap<>();
           int netItemsBefore = board.get_connectable_items(curr_item.get_net_no(i)).size();
           PerformanceProfiler.start("autoroute_item");
-          var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no);
+          var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, ripped_item_costs, p_pass_no);
           PerformanceProfiler.end("autoroute_item");
           if (!ripped_item_list.isEmpty()) {
             for (Item rippedItem : ripped_item_list) {
@@ -419,6 +422,7 @@ public class BatchAutorouter extends NamedAlgorithm {
                 }
                 rippedNets.append(rippedItem.get_net_no(netIx));
               }
+              int ripupCost = ripped_item_costs.getOrDefault(rippedItem, -1);
               FRLogger.trace(
                   "BatchAutorouter.autoroute_pass",
                   "compare_trace_ripped_item",
@@ -427,7 +431,8 @@ public class BatchAutorouter extends NamedAlgorithm {
                       + ", ripped_id=" + rippedItem.get_id_no()
                       + ", ripped_type=" + rippedItem.getClass().getSimpleName()
                       + ", ripped_net_count=" + rippedItem.net_count()
-                      + ", ripped_nets=" + rippedNets,
+                      + ", ripped_nets=" + rippedNets
+                      + ", ripup_cost=" + ripupCost,
                   "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no(),
                   getImpactedPoints(rippedItem));
             }
@@ -815,7 +820,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   // Tries to route an item on a specific net. Returns true, if the item is
   // routed.
   private AutorouteAttemptResult autoroute_item(Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list,
-      int p_ripup_pass_no) {
+      Map<Item, Integer> p_ripup_costs, int p_ripup_pass_no) {
     try {
       boolean contains_plane = false;
 
@@ -879,12 +884,16 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       // Do the auto-routing between the two sets of items
       AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
-          autoroute_control, p_ripped_item_list);
+          autoroute_control, p_ripped_item_list, p_ripup_costs);
 
       // Update the changed area of the board
       if (autoroute_result.state == AutorouteAttemptState.ROUTED) {
+        int maxItemIdBeforeOpt = board.communication.id_no_generator.max_generated_no();
+        FRLogger.trace("compare_trace_opt_changed_area_before net=" + p_route_net_no + ", maxItemId=" + maxItemIdBeforeOpt);
         board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, autoroute_control.trace_costs,
             this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+        int maxItemIdAfterOpt = board.communication.id_no_generator.max_generated_no();
+        FRLogger.trace("compare_trace_opt_changed_area_after net=" + p_route_net_no + ", maxItemId=" + maxItemIdAfterOpt + ", delta=" + (maxItemIdAfterOpt - maxItemIdBeforeOpt));
       }
 
       return autoroute_result;

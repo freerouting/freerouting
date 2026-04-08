@@ -14,7 +14,9 @@ import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.SortedSet;
 
 public abstract class LocateFoundConnectionAlgo {
@@ -53,12 +55,13 @@ public abstract class LocateFoundConnectionAlgo {
       ShapeSearchTree p_search_tree,
       AngleRestriction p_angle_restriction,
       SortedSet<Item> p_ripped_item_list,
+      Map<Item, Integer> p_ripup_costs,
       TestLevel p_test_level) {
     this.ctrl = p_ctrl;
     this.angle_restriction = p_angle_restriction;
     this.test_level = p_test_level;
     Collection<BacktrackElement> backtrack_list =
-        backtrack(p_maze_search_result, p_ripped_item_list, p_ctrl.net_no);
+        backtrack(p_maze_search_result, p_ripped_item_list, p_ripup_costs, p_ctrl.net_no);
     this.backtrack_array = new BacktrackElement[backtrack_list.size()];
     Iterator<BacktrackElement> it = backtrack_list.iterator();
     for (int i = 0; i < backtrack_array.length; ++i) {
@@ -174,6 +177,7 @@ public abstract class LocateFoundConnectionAlgo {
       ShapeSearchTree p_search_tree,
       AngleRestriction p_angle_restriction,
       SortedSet<Item> p_ripped_item_list,
+      Map<Item, Integer> p_ripup_costs,
       TestLevel p_test_level) {
     if (p_maze_search_result == null) {
       return null;
@@ -188,6 +192,7 @@ public abstract class LocateFoundConnectionAlgo {
               p_search_tree,
               p_angle_restriction,
               p_ripped_item_list,
+              p_ripup_costs,
               p_test_level);
     } else {
       result =
@@ -197,6 +202,7 @@ public abstract class LocateFoundConnectionAlgo {
               p_search_tree,
               p_angle_restriction,
               p_ripped_item_list,
+              p_ripup_costs,
               p_test_level);
     }
     return result;
@@ -220,7 +226,7 @@ public abstract class LocateFoundConnectionAlgo {
    * null, if p_destination_door is null.
    */
   private static Collection<BacktrackElement> backtrack(
-      MazeSearchAlgo.Result p_maze_search_result, SortedSet<Item> p_ripped_item_list, int p_net_no) {
+      MazeSearchAlgo.Result p_maze_search_result, SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs, int p_net_no) {
     if (p_maze_search_result == null) {
       return null;
     }
@@ -246,7 +252,11 @@ public abstract class LocateFoundConnectionAlgo {
       if (curr_maze_search_element.room_ripped) {
         for (CompleteExpansionRoom tmp_room : curr_drill.room_arr) {
           if (tmp_room instanceof ObstacleExpansionRoom) {
-            p_ripped_item_list.add(((ObstacleExpansionRoom) tmp_room).get_item());
+            Item rippedItem = ((ObstacleExpansionRoom) tmp_room).get_item();
+            p_ripped_item_list.add(rippedItem);
+            if (p_ripup_costs != null) {
+              p_ripup_costs.put(rippedItem, curr_maze_search_element.ripup_cost);
+            }
           }
         }
       }
@@ -293,7 +303,11 @@ public abstract class LocateFoundConnectionAlgo {
       }
       if (curr_maze_search_element.room_ripped) {
         if (curr_next_room instanceof ObstacleExpansionRoom) {
-          p_ripped_item_list.add(((ObstacleExpansionRoom) curr_next_room).get_item());
+          Item rippedItem = ((ObstacleExpansionRoom) curr_next_room).get_item();
+          p_ripped_item_list.add(rippedItem);
+          if (p_ripup_costs != null) {
+            p_ripup_costs.put(rippedItem, curr_maze_search_element.ripup_cost);
+          }
         }
       }
       step++;

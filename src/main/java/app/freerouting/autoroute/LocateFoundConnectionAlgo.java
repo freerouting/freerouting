@@ -12,7 +12,9 @@ import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.SortedSet;
 
 public abstract class LocateFoundConnectionAlgo {
@@ -56,10 +58,10 @@ public abstract class LocateFoundConnectionAlgo {
    * Creates a new instance of LocateFoundConnectionAlgo
    */
   protected LocateFoundConnectionAlgo(MazeSearchAlgo.Result p_maze_search_result, AutorouteControl p_ctrl, ShapeSearchTree p_search_tree, AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list) {
+      SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
     this.ctrl = p_ctrl;
     this.angle_restriction = p_angle_restriction;
-    Collection<BacktrackElement> backtrack_list = backtrack(p_maze_search_result, p_ripped_item_list, p_ctrl.net_no);
+    Collection<BacktrackElement> backtrack_list = backtrack(p_maze_search_result, p_ripped_item_list, p_ripup_costs, p_ctrl.net_no);
     this.backtrack_array = new BacktrackElement[backtrack_list.size()];
     Iterator<BacktrackElement> it = backtrack_list.iterator();
     for (int i = 0; i < backtrack_array.length; i++) {
@@ -164,15 +166,15 @@ public abstract class LocateFoundConnectionAlgo {
    * Returns a new Instance of LocateFoundConnectionAlgo or null, if p_destination_door is null.
    */
   public static LocateFoundConnectionAlgo get_instance(MazeSearchAlgo.Result p_maze_search_result, AutorouteControl p_ctrl, ShapeSearchTree p_search_tree, AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list) {
+      SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
     if (p_maze_search_result == null) {
       return null;
     }
     LocateFoundConnectionAlgo result;
     if (p_angle_restriction == AngleRestriction.NINETY_DEGREE || p_angle_restriction == AngleRestriction.FORTYFIVE_DEGREE) {
-      result = new LocateFoundConnectionAlgo45Degree(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list);
+      result = new LocateFoundConnectionAlgo45Degree(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_ripup_costs);
     } else {
-      result = new LocateFoundConnectionAlgoAnyAngle(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list);
+      result = new LocateFoundConnectionAlgoAnyAngle(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_ripup_costs);
     }
     return result;
   }
@@ -189,7 +191,7 @@ public abstract class LocateFoundConnectionAlgo {
   /**
    * Creates a list of doors by backtracking from p_destination_door to the start door. Returns null, if p_destination_door is null.
    */
-  private static Collection<BacktrackElement> backtrack(MazeSearchAlgo.Result p_maze_search_result, SortedSet<Item> p_ripped_item_list, int p_net_no) {
+  private static Collection<BacktrackElement> backtrack(MazeSearchAlgo.Result p_maze_search_result, SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs, int p_net_no) {
     if (p_maze_search_result == null) {
       return null;
     }
@@ -213,6 +215,9 @@ public abstract class LocateFoundConnectionAlgo {
         for (CompleteExpansionRoom tmp_room : curr_drill.room_arr) {
           if (tmp_room instanceof ObstacleExpansionRoom room) {
             p_ripped_item_list.add(room.get_item());
+            if (p_ripup_costs != null) {
+              p_ripup_costs.put(room.get_item(), curr_maze_search_element.ripup_cost);
+            }
           }
         }
       }
@@ -256,6 +261,9 @@ public abstract class LocateFoundConnectionAlgo {
       if (curr_maze_search_element.room_ripped) {
         if (curr_next_room instanceof ObstacleExpansionRoom room) {
           p_ripped_item_list.add(room.get_item());
+          if (p_ripup_costs != null) {
+            p_ripup_costs.put(room.get_item(), curr_maze_search_element.ripup_cost);
+          }
         }
       }
       step++;

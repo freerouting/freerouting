@@ -11,6 +11,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.SortedSet;
 
 /**
@@ -27,6 +28,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
       ShapeSearchTree p_search_tree,
       AngleRestriction p_angle_restriction,
       SortedSet<Item> p_ripped_item_list,
+      Map<Item, Integer> p_ripup_costs,
       TestLevel p_test_level) {
     super(
         p_maze_search_result,
@@ -34,6 +36,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
         p_search_tree,
         p_angle_restriction,
         p_ripped_item_list,
+        p_ripup_costs,
         p_test_level);
   }
 

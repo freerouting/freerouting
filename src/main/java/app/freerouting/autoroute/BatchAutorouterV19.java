@@ -428,7 +428,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
             // We need to adapt to the current interface
             AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set,
                     route_dest_set,
-                    autoroute_control, p_ripped_item_list);
+                    autoroute_control, p_ripped_item_list, null); // null: costs not needed here
 
             // Update the changed area of the board
             if (autoroute_result.state == AutorouteAttemptState.ROUTED) {

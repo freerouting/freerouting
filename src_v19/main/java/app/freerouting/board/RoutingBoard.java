@@ -709,6 +709,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
     Set<Item> picked_items = this.pick_items(from_corner, p_layer, filter);
+    if (p_net_no_arr != null && p_net_no_arr.length > 0) {
+      FRLogger.trace("compare_trace_insert_forced_sub net=" + p_net_no_arr[0]
+          + ", step=start, pickedSize=" + picked_items.size()
+          + ", from=" + from_corner + ", to=" + to_corner
+          + ", idMax=" + communication.id_no_generator.max_generated_no());
+    }
     if (picked_items.size() == 1) {
       Trace curr_picked_trace = (Trace) picked_items.iterator().next();
       if (curr_picked_trace.nets_equal(p_net_no_arr)
@@ -747,6 +753,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     int last_shape_no = trace_shapes.length;
     boolean orthogonal_mode =
         (rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE);
+    int idBeforeShoveLoop = communication.id_no_generator.max_generated_no();
     for (int i = 0; i < trace_shapes.length; ++i) {
       TileShape curr_trace_shape = trace_shapes[i];
       if (orthogonal_mode) {
@@ -775,6 +782,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           break;
         }
       }
+      int idBeforeShove = communication.id_no_generator.max_generated_no();
       boolean insert_ok =
           shove_trace_algo.insert(
               curr_trace_shape,
@@ -786,11 +794,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               p_max_recursion_depth,
               p_max_via_recursion_depth,
               p_max_spring_over_recursion_depth);
+      int idAfterShove = communication.id_no_generator.max_generated_no();
+      if (p_net_no_arr != null && p_net_no_arr.length > 0) {
+        FRLogger.trace("compare_trace_shove_shape net=" + p_net_no_arr[0]
+            + ", shapeIdx=" + i + ", idBefore=" + idBeforeShove + ", idAfter=" + idAfterShove
+            + ", delta=" + (idAfterShove - idBeforeShove));
+      }
       if (!insert_ok) {
         return null;
       }
     }
     Point new_corner = to_corner;
+    if (p_net_no_arr != null && p_net_no_arr.length > 0) {
+      FRLogger.trace("compare_trace_insert_forced_sub net=" + p_net_no_arr[0]
+          + ", step=after_shove_loop, shoveLoopDelta=" + (communication.id_no_generator.max_generated_no() - idBeforeShoveLoop)
+          + ", last_shape_no=" + last_shape_no + ", trace_shapes.length=" + trace_shapes.length
+          + ", idMax=" + communication.id_no_generator.max_generated_no());
+    }
     if (last_shape_no < trace_shapes.length) {
       // the shove with index last_shape_no failed.
       // Sample the shove line to a shorter shove distance and try again.
@@ -901,9 +921,25 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
     try {
       // Remove evtl. generated cycles because otherwise pull_tight may not work correctly.
-      if (new_trace.normalize(changed_area.get_area(p_layer))) {
+      int idBeforeNorm = communication.id_no_generator.max_generated_no();
+      boolean normalizeResult = new_trace != null && new_trace.normalize(changed_area.get_area(p_layer));
+      int idAfterNorm = communication.id_no_generator.max_generated_no();
+      if (p_net_no_arr != null && p_net_no_arr.length > 0) {
+        FRLogger.trace("compare_trace_insert_forced_sub net=" + p_net_no_arr[0]
+            + ", step=normalize, result=" + normalizeResult
+            + ", idBefore=" + idBeforeNorm + ", idAfter=" + idAfterNorm
+            + ", delta=" + (idAfterNorm - idBeforeNorm));
+      }
+      if (normalizeResult) {
 
+        int idBeforeSplit = communication.id_no_generator.max_generated_no();
         pull_tight_algo.split_traces_at_keep_point();
+        int idAfterSplit = communication.id_no_generator.max_generated_no();
+        if (p_net_no_arr != null && p_net_no_arr.length > 0) {
+          FRLogger.trace("compare_trace_insert_forced_sub net=" + p_net_no_arr[0]
+              + ", step=split_at_keep, idBefore=" + idBeforeSplit + ", idAfter=" + idAfterSplit
+              + ", delta=" + (idAfterSplit - idBeforeSplit));
+        }
         // otherwise the new corner may no more be contained in the new trace after optimizing
         ItemSelectionFilter item_filter =
             new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
@@ -1007,7 +1043,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             false);
     AutorouteEngine.AutorouteResult result =
         curr_autoroute_engine.autoroute_connection(
-            route_start_set, route_dest_set, ctrl_settings, ripped_item_list);
+            route_start_set, route_dest_set, ctrl_settings, ripped_item_list, null);
     if (result == AutorouteEngine.AutorouteResult.ROUTED) {
       final int time_limit_to_prevent_endless_loop = 1000;
       opt_changed_area(
@@ -1064,7 +1100,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             false);
     AutorouteEngine.AutorouteResult result =
         curr_autoroute_engine.autoroute_connection(
-            pin_connected_set, unconnected_set, ctrl_settings, ripped_item_list);
+            pin_connected_set, unconnected_set, ctrl_settings, ripped_item_list, null);
     if (result == AutorouteEngine.AutorouteResult.ROUTED) {
       final int time_limit_to_prevent_endless_loop = 1000;
       opt_changed_area(

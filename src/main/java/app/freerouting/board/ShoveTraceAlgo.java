@@ -188,6 +188,30 @@ public class ShoveTraceAlgo {
     }
     int trace_piece_count = shape_entries.substitute_trace_count();
 
+    if (p_net_no_arr != null && p_net_no_arr.length > 0 && !obstacles.isEmpty()) {
+      StringBuilder obstacleLog = new StringBuilder();
+      obstacleLog.append(trace_piece_count > 0 ? "[shove_check_obstacles]" : "[shove_check_obstacles_zero]")
+          .append(" net=").append(p_net_no_arr[0])
+          .append(", shape_bb=").append(p_trace_shape.bounding_box())
+          .append(", trace_piece_count=").append(trace_piece_count)
+          .append(", obstacles=[");
+      boolean first = true;
+      for (Item obs : obstacles) {
+        if (!first) obstacleLog.append(", ");
+        first = false;
+        obstacleLog.append("{id=").append(obs.get_id_no())
+            .append(",type=").append(obs.getClass().getSimpleName());
+        if (obs instanceof PolylineTrace pt) {
+          obstacleLog.append(",nets=").append(java.util.Arrays.toString(pt.net_no_arr))
+              .append(",fc=").append(pt.first_corner())
+              .append(",lc=").append(pt.last_corner());
+        }
+        obstacleLog.append("}");
+      }
+      obstacleLog.append("]");
+      FRLogger.trace(obstacleLog.toString());
+    }
+
     if (shape_entries.stack_depth() > 1) {
       this.board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
       return false;
@@ -298,6 +322,29 @@ public class ShoveTraceAlgo {
       return false;
     }
     int trace_piece_count = shape_entries.substitute_trace_count();
+    if (p_net_no_arr != null && p_net_no_arr.length > 0 && !obstacles.isEmpty()) {
+      StringBuilder obstacleLog = new StringBuilder();
+      obstacleLog.append(trace_piece_count > 0 ? "[shove_insert_obstacles]" : "[shove_insert_obstacles_zero]")
+          .append(" net=").append(p_net_no_arr[0])
+          .append(", shape_bb=").append(p_trace_shape.bounding_box())
+          .append(", trace_piece_count=").append(trace_piece_count)
+          .append(", obstacles=[");
+      boolean first = true;
+      for (Item obs : obstacles) {
+        if (!first) obstacleLog.append(", ");
+        first = false;
+        obstacleLog.append("{id=").append(obs.get_id_no())
+            .append(",type=").append(obs.getClass().getSimpleName());
+        if (obs instanceof PolylineTrace pt) {
+          obstacleLog.append(",nets=").append(java.util.Arrays.toString(pt.net_no_arr))
+              .append(",fc=").append(pt.first_corner())
+              .append(",lc=").append(pt.last_corner());
+        }
+        obstacleLog.append("}");
+      }
+      obstacleLog.append("]");
+      FRLogger.trace(obstacleLog.toString());
+    }
     if (trace_piece_count == 0) {
       return true;
     }

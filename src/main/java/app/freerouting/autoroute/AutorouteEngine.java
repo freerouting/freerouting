@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -121,9 +122,10 @@ public class AutorouteEngine {
   /**
    * Auto-routes a connection between p_start_set and p_dest_set. Returns
    * ALREADY_CONNECTED, ROUTED, NOT_ROUTED, or INSERT_ERROR.
+   * p_ripup_costs is an optional map to receive per-ripped-item ripup costs (may be null).
    */
   public AutorouteAttemptResult autoroute_connection(Set<Item> p_start_set, Set<Item> p_dest_set,
-      AutorouteControl p_ctrl, SortedSet<Item> p_ripped_item_list) {
+      AutorouteControl p_ctrl, SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
     String sourceItems = String.join(", ", p_start_set
         .stream()
         .map(Item::toString)
@@ -174,7 +176,7 @@ public class AutorouteEngine {
     if (search_result != null) {
       try {
         autoroute_result = LocateFoundConnectionAlgo.get_instance(search_result, p_ctrl, this.autoroute_search_tree,
-            board.rules.get_trace_angle_restriction(), p_ripped_item_list);
+            board.rules.get_trace_angle_restriction(), p_ripped_item_list, p_ripup_costs);
       } catch (Exception e) {
         FRLogger.error("AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance", e);
       }

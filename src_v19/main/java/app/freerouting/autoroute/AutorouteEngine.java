@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -110,7 +111,8 @@ public class AutorouteEngine {
       Set<Item> p_start_set,
       Set<Item> p_dest_set,
       AutorouteControl p_ctrl,
-      SortedSet<Item> p_ripped_item_list) {
+      SortedSet<Item> p_ripped_item_list,
+      Map<Item, Integer> p_ripup_costs) {
     MazeSearchAlgo maze_search_algo;
     try {
       maze_search_algo = MazeSearchAlgo.get_instance(p_start_set, p_dest_set, this, p_ctrl);
@@ -144,6 +146,7 @@ public class AutorouteEngine {
             this.autoroute_search_tree,
             board.rules.get_trace_angle_restriction(),
             p_ripped_item_list,
+            p_ripup_costs,
             board.get_test_level());
       } catch (Exception e) {
         FRLogger.error("AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance", e);

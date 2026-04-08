@@ -195,6 +195,7 @@ public class ExpandTestState extends InteractiveState {
               this.autoroute_engine.autoroute_search_tree,
               hdlg.get_routing_board().rules.get_trace_angle_restriction(),
               ripped_item_list,
+              null, // ripup costs not needed here
               TestLevel.ALL_DEBUGGING_OUTPUT);
       hdlg.get_routing_board().generate_snapshot();
       SortedSet<Item> ripped_connections = new TreeSet<>();
