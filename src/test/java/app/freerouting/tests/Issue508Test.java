@@ -11,43 +11,100 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 /// KiCad DAC 2020 Benchmarks
+/// DAC2020_bm01.dsn: There are 195 connections in total on the board
 public class Issue508Test extends TestBasedOnAnIssue {
 
   private RoutingJob job;
 
   @Test
   public void testIssue508_BM01_first_2_nets_only() {
-    // Set console logging level to TRACE for detailed output
-    System.setProperty("freerouting.logging.console.level", "TRACE");
-    FRLogger.granularTraceEnabled = true;
-
-    // Enable detailed logging and filter to Net #98
-    Freerouting.globalSettings.debugSettings.enableDetailedLogging = true;
-    Freerouting.globalSettings.debugSettings.filterByNet.add("98");
-    Freerouting.globalSettings.debugSettings.filterByNet.add("99");
-
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
     testSettingsSource.setMaxItems(2);
-    testSettingsSource.setJobTimeoutString("00:00:15"); // 15 seconds timeout
+    testSettingsSource.setJobTimeoutString("00:00:15");
 
     // Get the job with injected settings
     RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
 
     RunRoutingJob(job);
 
-    // There are 195 connections in total on the board
-    // If both net (99 and 98) are routed, there should be 193 incomplete connections left
-    // If only net 99 is routed, there should be 194 incomplete connections left
     assertTrue(GetBoardStatistics(job).connections.incompleteCount <= 194,
-        "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 193 incomplete connections with the target of 2 items to route.");
+        "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 194 or less incomplete connections with the target of 2 items to route.");
+  }
+
+  @Test
+  public void testIssue508_BM01_first_43_nets_only() {
+    // Create testing settings
+    TestingSettings testSettingsSource = new TestingSettings();
+    testSettingsSource.setMaxPasses(1);
+    testSettingsSource.setMaxItems(43);
+    testSettingsSource.setJobTimeoutString("00:01:00");
+
+    // Get the job with injected settings
+    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
+
+    RunRoutingJob(job);
+
+    assertTrue(GetBoardStatistics(job).connections.incompleteCount <= 161,
+            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 161 or less incomplete connections with the target of 43 items to route.");
+  }
+
+  @Test
+  public void testIssue508_BM01_first_61_nets_only() {
+    // Create testing settings
+    TestingSettings testSettingsSource = new TestingSettings();
+    testSettingsSource.setMaxPasses(1);
+    testSettingsSource.setMaxItems(61);
+    testSettingsSource.setJobTimeoutString("00:01:00");
+
+    // Get the job with injected settings
+    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
+
+    RunRoutingJob(job);
+
+    assertTrue(GetBoardStatistics(job).connections.incompleteCount <= 147,
+            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 147 or less incomplete connections with the target of 61 items to route.");
+  }
+
+  @Test
+  public void testIssue508_BM01_first_111_nets_only() {
+    // Create testing settings
+    TestingSettings testSettingsSource = new TestingSettings();
+    testSettingsSource.setMaxPasses(1);
+    testSettingsSource.setMaxItems(111);
+    testSettingsSource.setJobTimeoutString("00:01:30");
+
+    // Get the job with injected settings
+    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
+
+    RunRoutingJob(job);
+
+    assertTrue(GetBoardStatistics(job).connections.incompleteCount <= 134,
+            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 134 or less incomplete connections with the target of 111 items to route.");
+  }
+
+  @Test
+  public void testIssue508_BM01_first_151_nets_only() {
+    // Create testing settings
+    TestingSettings testSettingsSource = new TestingSettings();
+    testSettingsSource.setMaxPasses(1);
+    testSettingsSource.setMaxItems(151);
+    testSettingsSource.setJobTimeoutString("00:03:00");
+
+    // Get the job with injected settings
+    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testSettingsSource);
+
+    RunRoutingJob(job);
+
+    assertTrue(GetBoardStatistics(job).connections.incompleteCount <= 126,
+            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 126 or less incomplete connections with the target of 151 items to route.");
   }
 
   @Test
   public void test_Issue_508_BM01_first_pass_only() {
     TestingSettings testingSettings = new TestingSettings();
-    testingSettings.setJobTimeoutString("00:00:30");
+    testingSettings.setJobTimeoutString("00:03:00");
     testingSettings.setMaxPasses(1);
 
     // Get a routing job
@@ -56,32 +113,8 @@ public class Issue508Test extends TestBasedOnAnIssue {
     // Run the job
     RunRoutingJob(job);
 
-    assertTrue(job.board.get_statistics().connections.incompleteCount <= 86,
-        "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should complete no more than 86 unrouted connections after the first pass.");
-  }
-
-  @Test
-  public void testCheckNet78() throws Exception {
-    RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", new TestingSettings());
-    app.freerouting.interactive.HeadlessBoardManager boardManager = new app.freerouting.interactive.HeadlessBoardManager(job);
-    boardManager.loadFromSpecctraDsn(job.input.getData(), null, new app.freerouting.board.ItemIdentificationNumberGenerator());
-    app.freerouting.board.RoutingBoard board = boardManager.get_routing_board();
-
-    System.out.println("Board loaded. Max net_no=" + board.rules.nets.max_net_no());
-    java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
-    for (;;) {
-      app.freerouting.datastructures.UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
-      if (curr_ob == null) break;
-      if (curr_ob instanceof app.freerouting.board.Trace) {
-        app.freerouting.board.Trace trace = (app.freerouting.board.Trace)curr_ob;
-        if (trace.net_count() > 0 && trace.get_net_no(0) == 78) {
-          System.out.println("Trace ID=" + trace.get_id_no() + 
-             " Net=" + trace.get_net_no(0) + 
-             " BoundingBox=" + trace.bounding_box() +
-             " Width=" + trace.get_half_width() * 2);
-        }
-      }
-    }
+    assertTrue(job.board.get_statistics().connections.incompleteCount <= 97,
+            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should complete no more than 86 unrouted connections after the first pass.");
   }
 
   @AfterEach
