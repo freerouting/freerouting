@@ -678,6 +678,8 @@ public class PolylineTrace extends Trace implements Serializable {
           "We reached the maximum normalization depth (" + MAX_NORMALIZATION_DEPTH + ").");
     }
 
+    boolean debugNet49 = this.net_no_arr != null && this.net_no_arr.length > 0 && this.net_no_arr[0] == 49 && normalization_depth == 0;
+
     boolean observers_activated = false;
     BasicBoard routing_board = this.board;
     if (this.board != null) {
@@ -689,9 +691,27 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     Collection<PolylineTrace> split_pieces = this.split(p_clip_shape);
     boolean result = (split_pieces.size() != 1);
+    if (debugNet49) {
+      FRLogger.trace("compare_trace_normalize_net49 depth=" + normalization_depth
+          + ", thisId=" + this.get_id_no() + ", thisOnBoard=" + this.is_on_the_board()
+          + ", thisFirst=" + this.first_corner() + ", thisLast=" + this.last_corner()
+          + ", splitPieces=" + split_pieces.size());
+      for (PolylineTrace piece : split_pieces) {
+        FRLogger.trace("compare_trace_normalize_net49  piece id=" + piece.get_id_no()
+            + ", onBoard=" + piece.is_on_the_board()
+            + ", first=" + piece.first_corner() + ", last=" + piece.last_corner());
+      }
+    }
     for (PolylineTrace curr_split_trace : split_pieces) {
       if (curr_split_trace.is_on_the_board()) {
         boolean trace_combined = curr_split_trace.combine();
+        if (debugNet49) {
+          FRLogger.trace("compare_trace_normalize_net49  after_combine id=" + curr_split_trace.get_id_no()
+              + ", onBoard=" + curr_split_trace.is_on_the_board()
+              + ", combined=" + trace_combined
+              + ", first=" + (curr_split_trace.is_on_the_board() ? curr_split_trace.first_corner() : "N/A")
+              + ", last=" + (curr_split_trace.is_on_the_board() ? curr_split_trace.last_corner() : "N/A"));
+        }
         if (curr_split_trace.corner_count() == 2
             && curr_split_trace.first_corner().equals(curr_split_trace.last_corner())) {
           // remove trace with only 1 corner

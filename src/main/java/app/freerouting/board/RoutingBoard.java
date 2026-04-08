@@ -872,8 +872,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
     // To avoid, that a separate handling for moving backwards in the own trace line
     // becomes necessary, pull tight is called here.
+    if (p_net_no_arr != null && p_net_no_arr.length > 0) {
+      ItemSelectionFilter _dbg_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
+      Set<Item> _dbg_before = this.pick_items(new_corner, p_layer, _dbg_filter);
+      FRLogger.trace("compare_trace_insert_forced_sub net=" + p_net_no_arr[0]
+          + ", step=before_pull_tight, pickedAtEndCorner=" + _dbg_before.size()
+          + ", new_trace_null=" + (new_trace == null)
+          + ", new_corner=" + new_corner);
+    }
     if (p_tidy_width > 0 && new_trace != null) {
       new_trace.pull_tight(pull_tight_algo);
+    }
+    if (p_net_no_arr != null && p_net_no_arr.length > 0) {
+      ItemSelectionFilter _dbg_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
+      Set<Item> _dbg_after = this.pick_items(new_corner, p_layer, _dbg_filter);
+      FRLogger.trace("compare_trace_insert_forced_sub net=" + p_net_no_arr[0]
+          + ", step=after_pull_tight, pickedAtEndCorner=" + _dbg_after.size()
+          + ", new_corner=" + new_corner);
     }
     return new_corner;
   }

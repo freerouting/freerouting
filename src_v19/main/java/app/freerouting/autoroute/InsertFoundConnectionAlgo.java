@@ -267,6 +267,14 @@ public class InsertFoundConnectionAlgo {
       for (int i = 0; i < p_trace.corners.length - 1; ++i) {
         Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
         if (trace_stub != null) {
+          FRLogger.trace("compare_trace_stub_found net=" + ctrl.net_no
+              + ", corner_idx=" + i
+              + ", corner=" + p_trace.corners[i]
+              + ", stub_id=" + trace_stub.get_id_no()
+              + ", stub_first=" + trace_stub.first_corner()
+              + ", stub_last=" + trace_stub.last_corner()
+              + ", start_contacts=" + trace_stub.get_start_contacts().size()
+              + ", end_contacts=" + trace_stub.get_end_contacts().size());
           board.remove_item(trace_stub);
           removedTraceStubs++;
         }
