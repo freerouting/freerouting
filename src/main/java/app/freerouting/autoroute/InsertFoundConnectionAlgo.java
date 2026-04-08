@@ -227,9 +227,30 @@ public class InsertFoundConnectionAlgo {
     }
 
     int removedTraceStubs = 0;
+    // The last corner of this route segment is the destination. A trace whose far end equals the
+    // destination must NOT be removed: it is the final-leg trace connecting to the destination pin.
+    // pull_tight during the final segment's insertion can shift an adjacent trace's endpoint away
+    // from the junction, leaving the final-leg trace with start_contacts=0 even though it is a
+    // valid, required connection (not a dangling stub).
+    Point destinationCorner = p_trace.corners[p_trace.corners.length - 1];
     for (int i = 0; i < p_trace.corners.length - 1; i++) {
       Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
       if (trace_stub != null) {
+        // Determine the far end (the non-queried endpoint) of the candidate stub.
+        Point far_end = trace_stub.first_corner().equals(p_trace.corners[i])
+            ? trace_stub.last_corner()
+            : trace_stub.first_corner();
+        // Guard: do not remove a trace whose far end is the route destination.
+        // Such a trace is the final segment to the destination pin; removing it would
+        // disconnect the destination from the route, causing an incomplete connection.
+        if (far_end.equals(destinationCorner)) {
+          FRLogger.trace("compare_trace_stub_destination_protected net=" + ctrl.net_no
+              + ", corner_idx=" + i
+              + ", stub_id=" + trace_stub.get_id_no()
+              + ", far_end=" + far_end
+              + ", destination=" + destinationCorner);
+          continue;
+        }
         FRLogger.trace("compare_trace_stub_found net=" + ctrl.net_no
             + ", corner_idx=" + i
             + ", corner=" + p_trace.corners[i]

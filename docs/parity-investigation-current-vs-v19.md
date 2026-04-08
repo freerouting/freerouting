@@ -1,6 +1,6 @@
 # Routing Parity Investigation: Current vs v1.9
 
-## Status: **RESOLVED** (item ID parity achieved for 41-item run)
+## Status: **ACTIVE** — Step 51 divergence under investigation (41-item run resolved ✅)
 
 ---
 
@@ -15,7 +15,7 @@ The current freerouting implementation was ripping more items than v1.9 when rou
 
 ---
 
-## Root Cause (Identified & Fixed)
+## Root Cause (Identified & Fixed) — 41-item run
 
 ### 1. Item ID as a Tie-Breaker
 
@@ -51,7 +51,7 @@ The fix was NOT in the ID generator or routing logic directly. Instead, the opti
 
 ---
 
-## Resolution Verification
+## Resolution Verification — 41-item run
 
 Running `scripts/tests/compare-versions.ps1 -InputFile tests/Issue508-DAC2020_bm01.dsn -MaxItems 41`:
 
@@ -69,6 +69,104 @@ The `maxItemId` values match **at all 41 steps** (verified programmatically: "AL
 ## Key Question: Do Ripping Costs Cause Divergence?
 
 **Answer: No.** Ripup costs are identical between the two versions for all matching ripped items. The divergence was purely structural (item ID → door ID → expansion ordering), not cost-driven. This was confirmed after adding `ripup_cost=N` to the `compare_trace_ripped_item` log — all 7 ripped items show the same costs in both versions.
+
+---
+
+## New Divergence: Step 51 — Net #49 (USBVCC), Item #269
+
+### Symptom
+
+After achieving parity on the 41-item run, a new divergence was found in the 61-item run at step 51:
+
+| Metric | Current | v1.9 |
+|---|---|---|
+| `maxItemId` after Net #49 | **3477** | **3479** (diff: −2) |
+| `netIncomplete` for Net #49 | **2** | **1** |
+| `incompletes` total | **155** | **154** |
+
+This 2-item offset **persists for all subsequent steps** (every step has Current's `maxItemId` = v1.9's `maxItemId` − 2), affecting routing decisions that use item IDs as tie-breakers.
+
+### Segment Insertion Log (Identical in Both Versions)
+
+Both current and v1.9 produce **exactly the same** segment insertion log for Net #49:
+
+| i | Decision | from→to | delta |
+|---|---|---|---|
+| 1 | ADVANCE | (1140391,-1011936)→(1139816,-1011936) | 1 (ID 3469) |
+| 2 | ADVANCE | (1139816,-1011936)→(1139814,-1011936) | 1 (ID 3470) |
+| 3 | ADVANCE | (1139814,-1011936)→(1123350,-1028400) | 1 (ID 3471) |
+| 4 | VIOLATION_CORRECTED | from_corner_no=2 | 0 |
+| 5 | VIOLATION_CORRECTED | from_corner_no=2 | 0 |
+| 6 | ADVANCE | (1139814,-1011936)→(1079119,-1038574) | 5 (IDs 3472–3476) |
+| 7 | ADVANCE | (1079119,-1038574)→(1079119,-1042416) | 1 (ID 3477) |
+
+### Stub Removal Log (Different)
+
+| Version | Stub Found | Result |
+|---|---|---|
+| **Current** | `stub_id=3477, first=(1079119,-1038574), last=(1079119,-1042416), start_contacts=0, end_contacts=1` | `removed_stubs=1` |
+| **v1.9** | _(no stub found)_ | `removed_stubs=0` |
+
+### Root Cause
+
+During `insert_forced_trace_polyline` for **segment i=7** (`(1079119,-1038574)` → `(1079119,-1042416)`), `pull_tight` in **current** modifies an adjacent trace (one of IDs 3472–3476 from segment i=6), shifting its endpoint away from `(1079119,-1038574)`. This leaves trace 3477 (the final-leg trace) with **`start_contacts=0`** at `(1079119,-1038574)`.
+
+The stub removal loop in `InsertFoundConnectionAlgo.insert_trace()` then **incorrectly identifies trace 3477 as a stub and removes it**, disconnecting the destination pin at `(1079119,-1042416)`. This causes `netIncomplete=2` for net #49 (instead of the correct `netIncomplete=1`), and the 2-item offset (`maxItemId` being 2 less than v1.9) propagates to all subsequent steps.
+
+In **v1.9**, `pull_tight` preserves the adjacent trace's endpoint at `(1079119,-1038574)`, so trace 3477 has `start_contacts≥1` and `get_trace_tail()` returns null → **no stub removed** (correct behavior).
+
+### Diagnostic Markers in Logs
+
+**Current log** (61-item run):
+```
+compare_trace_stub_found net=49, corner_idx=6, corner=(1079119,-1038574), stub_id=3477,
+    stub_first=(1079119,-1038574), stub_last=(1079119,-1042416),
+    start_contacts=0, end_contacts=1
+[InsertFoundConnectionAlgo.insert_trace] [compare_trace_stub_cleanup] net=49, layer=0, removed_stubs=1, trace_enabled=true
+```
+
+**v1.9 log** (61-item run):
+```
+[InsertFoundConnectionAlgo.insert_trace] [compare_trace_stub_cleanup] net=49, layer=0, removed_stubs=0, test_level=RELEASE_VERSION
+```
+
+### Why v1.9 Also Runs the Stub Check Loop
+
+The v1.9 code has a guard:
+```java
+if (board.get_test_level().ordinal() < TestLevel.ALL_DEBUGGING_OUTPUT.ordinal()) {
+```
+Since `test_level=RELEASE_VERSION` (ordinal < `ALL_DEBUGGING_OUTPUT`), the loop DOES run in v1.9. The loop finds **no stub** because `get_trace_tail((1079119,-1038574))` returns null — there IS no trace with `first_corner=(1079119,-1038574)` and `start_contacts=0` in v1.9's board state (contacts are ≥1 due to different pull_tight behavior).
+
+### Fix Applied
+
+In `InsertFoundConnectionAlgo.insert_trace()`, the stub removal loop now **protects the final-leg trace** from removal. A trace is not removed as a stub if its far end (the non-queried endpoint) equals the route's destination corner (`p_trace.corners[p_trace.corners.length - 1]`):
+
+```java
+Point destinationCorner = p_trace.corners[p_trace.corners.length - 1];
+for (int i = 0; i < p_trace.corners.length - 1; i++) {
+    Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
+    if (trace_stub != null) {
+        // Determine the "far end" of the stub (the non-queried end)
+        Point far_end = trace_stub.first_corner().equals(p_trace.corners[i])
+            ? trace_stub.last_corner()
+            : trace_stub.first_corner();
+        // Don't remove if the far end IS the destination: this trace is the final segment.
+        // Removing it would disconnect the destination from the route.
+        if (far_end.equals(destinationCorner)) {
+            FRLogger.trace("compare_trace_stub_destination_protected ...");
+            continue;
+        }
+        board.remove_item(trace_stub);
+        removedTraceStubs++;
+    }
+}
+```
+
+**Why this is correct:**
+- Trace 3477: `first_corner=(1079119,-1038574)` (queried, `start_contacts=0`), `last_corner=(1079119,-1042416)` = `destinationCorner` → **protected** ✓
+- Stubs #476, #497, #527 (nets 78, 77, 76): far end ≠ destination → **still removed** ✓
+- Stubs #1098, #1149 (nets 31, 33): far end ≠ destination → **still removed** ✓
 
 ---
 
@@ -135,6 +233,17 @@ compare_trace_ripped_item | source_item=<id>, source_net=<net>, ripped_id=<id>, 
 BACKTRACK_STEP net=N, step=N, door_type=<type>, section=N, room_ripped=<bool>, ripup_cost=N, next_room_type=<type>, obstacle_id=N
 ```
 
+### `compare_trace_stub_cleanup` (both versions)
+```
+[InsertFoundConnectionAlgo.insert_trace] [compare_trace_stub_cleanup] net=N, layer=N, removed_stubs=N, trace_enabled=<bool>
+```
+(v1.9 appends `test_level=<level>` instead of `trace_enabled=<bool>`)
+
+### `compare_trace_stub_destination_protected` (current only, added in fix)
+```
+compare_trace_stub_destination_protected net=N, corner_idx=N, stub_id=N, far_end=(...,...), destination=(...,...)
+```
+
 ---
 
 ## Key Files
@@ -147,6 +256,7 @@ BACKTRACK_STEP net=N, step=N, door_type=<type>, section=N, room_ripped=<bool>, r
 | `src/main/java/app/freerouting/autoroute/LocateFoundConnectionAlgo.java` | Backtrack/solution path; `BACKTRACK_STEP` logging; ripup cost map |
 | `src/main/java/app/freerouting/autoroute/AutorouteEngine.java` | `autoroute_connection()` forwards cost map |
 | `src/main/java/app/freerouting/autoroute/BatchAutorouter.java` | Outer routing loop; `compare_trace_route_item` / `compare_trace_ripped_item` with `ripup_cost=` |
+| `src/main/java/app/freerouting/autoroute/InsertFoundConnectionAlgo.java` | **Step 51 fix**: stub removal loop now protects final-leg traces |
 | `src/main/java/app/freerouting/autoroute/ExpansionDoor.java` | `get_id_no()` = `Math.min(id1,id2)*31 + Math.max(id1,id2)` |
 | `src/main/java/app/freerouting/autoroute/ObstacleExpansionRoom.java` | `get_id_no()` = `(item.get_id_no() << 10) \| index_in_item` |
 | `src/main/java/app/freerouting/board/ItemIdentificationNumberGenerator.java` | Sequential counter `++last_generated_id_no`; was the source of ID divergence |
@@ -160,12 +270,13 @@ While parity is achieved for the first 41 items, the 200-item run shows:
 - Current: **127 unrouted** items
 - v1.9: **97 unrouted** items
 
-This secondary divergence begins after ~100 items and is a **separate issue**. Possible causes:
-1. After 41 items, `opt_changed_area()` may diverge again (creating different item IDs for later items)
-2. The current version may have other algorithmic differences in later passes
-3. Memory/GC differences (current uses ~2x more heap than v1.9)
+After applying the Step 51 (net=49) fix, the next divergence check should be run with:
 
-This requires a separate parity investigation starting at the first divergence point after item 41 in the 200-item run.
+```powershell
+.\scripts\tests\compare-versions.ps1 -InputFile tests\Issue508-DAC2020_bm01.dsn -MaxItems 61
+```
+
+Expected outcome: `maxItemId` values should match at all 61 steps after the fix.
 
 ---
 
@@ -177,9 +288,13 @@ This requires a separate parity investigation starting at the first divergence p
 
 3. **Ripup costs are NOT the cause** — Once we verified the costs were identical (by adding `ripup_cost=` to logs), the investigation pivoted to structural causes (item ID → door ID).
 
-4. **`opt_changed_area()` is the culprit** — Post-routing trace optimization in the current version creates a different number of trace segments than v1.9, inflating the item ID counter. The fix was to align this behavior.
+4. **`opt_changed_area()` is the culprit (41-item run)** — Post-routing trace optimization in the current version creates a different number of trace segments than v1.9, inflating the item ID counter. The fix was to align this behavior.
 
 5. **`maxItemId` is the right diagnostic** — Tracking `board.communication.id_no_generator.max_generated_no()` after each routing step is the most direct way to detect when ID divergence begins.
+
+6. **Stub removal can be wrong** — When `pull_tight` moves an adjacent trace's endpoint during segment insertion, the final-leg trace can appear as a stub (start_contacts=0) even though it's actually the only connection to the destination pin. Always check whether a "stub" trace is the final connection to the route destination before removing it.
+
+7. **Identical segment insertion logs ≠ identical board state** — Even when both versions show the same segment decisions (`ok_point`, `delta`, `decision`), the internal board state (trace geometry, contact relationships) can differ due to subtle pull_tight behavior differences. The stub removal check is what makes the divergence observable.
 
 ---
 
@@ -188,6 +303,9 @@ This requires a separate parity investigation starting at the first divergence p
 ```powershell
 # Run 41-item comparison
 .\scripts\tests\compare-versions.ps1 -InputFile tests\Issue508-DAC2020_bm01.dsn -MaxItems 41
+
+# Run 61-item comparison (to verify Step 51 fix)
+.\scripts\tests\compare-versions.ps1 -InputFile tests\Issue508-DAC2020_bm01.dsn -MaxItems 61
 
 # Check ripped items with costs
 Select-String "compare_trace_ripped_item" logs\freerouting-current.log | ForEach-Object { $_.Line }
@@ -199,4 +317,8 @@ $v19 = @(Select-String "compare_trace_route_item" logs\freerouting-v190.log | Wh
 for ($i = 0; $i -lt [Math]::Min($cur.Count, $v19.Count); $i++) {
     if ($cur[$i] -ne $v19[$i]) { Write-Host "DIVERGE at step $i`: CUR=$($cur[$i]) V19=$($v19[$i])"; break }
 }
+
+# Check stub cleanup for specific net
+findstr "compare_trace_stub.*net=49" logs\freerouting-current.log
+findstr "compare_trace_stub.*net=49" logs\freerouting-v190.log
 ```
