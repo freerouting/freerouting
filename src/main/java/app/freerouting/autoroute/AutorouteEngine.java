@@ -158,18 +158,15 @@ public class AutorouteEngine {
       }
     }
 
-    if (search_result == null) {
-      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED,
-          "Failed to route connection between " + sourceItems + " and " + targetItems
-              + ", because no connection was found between their nets.");
-    }
-    if (p_ctrl.net_no == 33 || p_ctrl.net_no == 66 || p_ctrl.net_no == 67) {
-      String destinationType = search_result.destination_door != null
-          ? search_result.destination_door.getClass().getSimpleName()
-          : "null";
-      FRLogger.trace("compare_trace_maze_result_raw net=" + p_ctrl.net_no
-          + ", section=" + search_result.section_no_of_door
-          + ", destination_type=" + destinationType);
+    if (search_result != null) {
+      if (p_ctrl.net_no == 33 || p_ctrl.net_no == 66 || p_ctrl.net_no == 67) {
+        String destinationType = search_result.destination_door != null
+            ? search_result.destination_door.getClass().getSimpleName()
+            : "null";
+        FRLogger.trace("compare_trace_maze_result_raw net=" + p_ctrl.net_no
+            + ", section=" + search_result.section_no_of_door
+            + ", destination_type=" + destinationType);
+      }
     }
 
     LocateFoundConnectionAlgo autoroute_result = null;
@@ -182,10 +179,19 @@ public class AutorouteEngine {
       }
     }
 
+    // Always clean up expansion rooms from the search tree, regardless of search outcome.
+    // This mirrors v1.9's behavior: clear() is called before any early returns so that
+    // stale CompleteFreeSpaceExpansionRoom objects don't pollute subsequent routing attempts.
     if (!this.maintain_database) {
       this.clear();
     } else {
       this.reset_all_doors();
+    }
+
+    if (search_result == null) {
+      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED,
+          "Failed to route connection between " + sourceItems + " and " + targetItems
+              + ", because no connection was found between their nets.");
     }
 
     if (autoroute_result == null) {
