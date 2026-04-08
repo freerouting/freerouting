@@ -104,7 +104,7 @@ public class Issue508Test extends TestBasedOnAnIssue {
   @Test
   public void test_Issue_508_BM01_first_pass_only() {
     TestingSettings testingSettings = new TestingSettings();
-    testingSettings.setJobTimeoutString("00:03:00");
+    testingSettings.setJobTimeoutString("00:04:30");
     testingSettings.setMaxPasses(1);
 
     // Get a routing job
@@ -113,8 +113,24 @@ public class Issue508Test extends TestBasedOnAnIssue {
     // Run the job
     RunRoutingJob(job);
 
-    assertTrue(job.board.get_statistics().connections.incompleteCount <= 97,
-            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should complete no more than 86 unrouted connections after the first pass.");
+    assertTrue(job.board.get_statistics().connections.incompleteCount <= 56,
+            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 56 or less unrouted connections after the first pass.");
+  }
+
+  @Test
+  public void test_Issue_508_BM01_first_2_passes_only() {
+    TestingSettings testingSettings = new TestingSettings();
+    testingSettings.setJobTimeoutString("00:05:00");
+    testingSettings.setMaxPasses(2);
+
+    // Get a routing job
+    job = GetRoutingJob("Issue508-DAC2020_bm01.dsn", testingSettings);
+
+    // Run the job
+    RunRoutingJob(job);
+
+    assertTrue(job.board.get_statistics().connections.incompleteCount <= 28,
+            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 28 or less unrouted connections after the first 2 passes.");
   }
 
   @AfterEach
