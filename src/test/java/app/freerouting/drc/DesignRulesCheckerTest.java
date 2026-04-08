@@ -14,6 +14,7 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.management.SessionManager;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.tests.TestBasedOnAnIssue;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.File;
@@ -22,7 +23,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class DesignRulesCheckerTest {
+public class DesignRulesCheckerTest extends TestBasedOnAnIssue {
 
   @BeforeEach
   protected void setUp() {
@@ -32,7 +33,13 @@ public class DesignRulesCheckerTest {
   @Test
   void test_DrcReport_Structure() {
     // Create a simple routing job with a DSN file
-    RoutingJob job = getRoutingJobFromTestFile("BBD_Mars-64.dsn");
+    RoutingJob job = GetRoutingJob("BBD_Mars-64.dsn");
+
+    assertNotNull(job, "Job should not be null");
+
+    job.board = LoadDsnBoard(job);
+
+    assertNotNull(job.board, "Board should be loaded");
 
     assertNotNull(job, "Job should not be null");
     assertNotNull(job.board, "Board should be loaded");
@@ -57,9 +64,12 @@ public class DesignRulesCheckerTest {
   @Test
   void test_DrcReport_JsonFormat() {
     // Create a simple routing job with a DSN file
-    RoutingJob job = getRoutingJobFromTestFile("BBD_Mars-64.dsn");
+    RoutingJob job = GetRoutingJob("BBD_Mars-64.dsn");
 
     assertNotNull(job, "Job should not be null");
+
+    job.board = LoadDsnBoard(job);
+
     assertNotNull(job.board, "Board should be loaded");
 
     // Create DRC checker
@@ -84,51 +94,5 @@ public class DesignRulesCheckerTest {
     assertTrue(json.has("violations"), "JSON should have violations field");
     assertTrue(json.has("unconnected_items"), "JSON should have unconnected_items field");
     assertTrue(json.has("schematic_parity"), "JSON should have schematic_parity field");
-  }
-
-  private RoutingJob getRoutingJobFromTestFile(String filename) {
-    // Create a new session
-    UUID sessionId = UUID.randomUUID();
-    Session session = SessionManager
-        .getInstance()
-        .createSession(sessionId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
-
-    // Create a new job
-    RoutingJob job = new RoutingJob(session.id);
-
-    // Look for the file in the tests directory
-    Path testDirectory = Path
-        .of(".")
-        .toAbsolutePath();
-    File testFile = Path
-        .of(testDirectory.toString(), "tests", filename)
-        .toFile();
-
-    while (!testFile.exists()) {
-      testDirectory = testDirectory.getParent();
-      if (testDirectory == null) {
-        fail("Test file not found: " + filename);
-      }
-
-      testFile = Path
-          .of(testDirectory.toString(), "tests", filename)
-          .toFile();
-    }
-
-    // Load the file as input
-    try {
-      job.setInput(testFile);
-
-      // Load the board
-      if (job.input.format == FileFormat.DSN) {
-        HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-        boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
-        job.board = boardManager.get_routing_board();
-      }
-    } catch (Exception e) {
-      fail("Failed to load test file: " + e.getMessage());
-    }
-
-    return job;
   }
 }

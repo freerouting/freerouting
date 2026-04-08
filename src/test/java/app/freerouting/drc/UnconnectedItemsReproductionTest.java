@@ -23,10 +23,12 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.UUID;
+
+import app.freerouting.tests.TestBasedOnAnIssue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class UnconnectedItemsReproductionTest {
+public class UnconnectedItemsReproductionTest extends TestBasedOnAnIssue {
 
     @BeforeEach
     protected void setUp() {
@@ -36,8 +38,12 @@ public class UnconnectedItemsReproductionTest {
     @Test
     void test_Connectivity_Of_Overlapping_Traces() {
         // Load the problematic board
-        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+        RoutingJob job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+
         assertNotNull(job, "Job should not be null");
+
+        job.board = LoadDsnBoard(job);
+
         assertNotNull(job.board, "Board should be loaded");
 
         BasicBoard board = job.board;
@@ -85,8 +91,12 @@ public class UnconnectedItemsReproductionTest {
     @Test
     void test_Connectivity_Of_Via_2522() {
         // Load the problematic board
-        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+        RoutingJob job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+
         assertNotNull(job, "Job should not be null");
+
+        job.board = LoadDsnBoard(job);
+
         assertNotNull(job.board, "Board should be loaded");
 
         BasicBoard board = job.board;
@@ -115,8 +125,12 @@ public class UnconnectedItemsReproductionTest {
     @Test
     void test_Connectivity_Of_Trace_2576() {
         // Load the problematic board
-        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+        RoutingJob job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+
         assertNotNull(job, "Job should not be null");
+
+        job.board = LoadDsnBoard(job);
+
         assertNotNull(job.board, "Board should be loaded");
 
         BasicBoard board = job.board;
@@ -169,38 +183,5 @@ public class UnconnectedItemsReproductionTest {
         } else {
             fail("Trace 2576 not found in the board.");
         }
-    }
-
-    private RoutingJob getRoutingJobFromTestFile(String filename) {
-        UUID sessionId = UUID.randomUUID();
-        Session session = SessionManager
-                .getInstance()
-                .createSession(sessionId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
-
-        RoutingJob job = new RoutingJob(session.id);
-
-        Path testDirectory = Path.of(".").toAbsolutePath();
-        File testFile = Path.of(testDirectory.toString(), "tests", filename).toFile();
-
-        while (!testFile.exists()) {
-            testDirectory = testDirectory.getParent();
-            if (testDirectory == null) {
-                fail("Test file not found: " + filename);
-            }
-            testFile = Path.of(testDirectory.toString(), "tests", filename).toFile();
-        }
-
-        try {
-            job.setInput(testFile);
-            if (job.input.format == FileFormat.DSN) {
-                HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-                boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
-                job.board = boardManager.get_routing_board();
-            }
-        } catch (Exception e) {
-            fail("Failed to load test file: " + e.getMessage());
-        }
-
-        return job;
     }
 }
