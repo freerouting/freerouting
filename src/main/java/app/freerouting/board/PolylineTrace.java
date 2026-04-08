@@ -448,6 +448,17 @@ public class PolylineTrace extends Trace implements Serializable {
           Line[] intersecting_lines = found_line_segment.intersection(curr_line_segment);
           Collection<PolylineTrace> split_pieces = new LinkedList<>();
 
+          boolean debugNet49 = this.net_no_arr != null && this.net_no_arr.length > 0 && this.net_no_arr[0] == 49;
+          if (debugNet49 && intersecting_lines.length > 0) {
+            FRLogger.trace("compare_trace_split_found_trace net=49, this_id=" + this.get_id_no()
+                + ", this_seg=" + i
+                + ", this_first=" + this.first_corner() + ", this_last=" + this.last_corner()
+                + ", found_id=" + found_trace.get_id_no()
+                + ", found_seg=" + found_entry.shape_index_in_object
+                + ", found_first=" + found_trace.first_corner() + ", found_last=" + found_trace.last_corner()
+                + ", intersections=" + intersecting_lines.length);
+          }
+
           // try splitting the found trace first
           boolean found_trace_split = false;
 
@@ -511,7 +522,18 @@ public class PolylineTrace extends Trace implements Serializable {
             for (int j = 0; j < 2; j++) {
               while (it2.hasNext()) {
                 PolylineTrace curr_piece = it2.next();
-                board.remove_if_cycle(curr_piece);
+                boolean debugThis = this.net_no_arr != null && this.net_no_arr.length > 0 && this.net_no_arr[0] == 49;
+                Point pieceFirst = debugThis && curr_piece.is_on_the_board() ? curr_piece.first_corner() : null;
+                Point pieceLast = debugThis && curr_piece.is_on_the_board() ? curr_piece.last_corner() : null;
+                int pieceId = curr_piece.get_id_no();
+                boolean removedAsCycle = board.remove_if_cycle(curr_piece);
+                if (debugThis && removedAsCycle) {
+                  FRLogger.trace("compare_trace_split_cycle_removed net=49, pass=" + j
+                      + ", piece_id=" + pieceId
+                      + ", piece_first=" + pieceFirst
+                      + ", piece_last=" + pieceLast
+                      + ", this_id=" + this.get_id_no());
+                }
               }
 
               // remove cycles in the own split pieces last

@@ -127,7 +127,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     }
     for (TraceInfo curr_trace_info : contact_trace_info) {
       board.insert_trace(connect_points, curr_trace_info.layer, curr_trace_info.half_width, this.net_no_arr,
-          curr_trace_info.clearance_type, FixedState.NOT_FIXED);
+          curr_trace_info.clearance_type, FixedState.UNFIXED);
     }
   }
 
@@ -263,9 +263,6 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   @Override
   public Set<Item> get_normal_contacts() {
     Point drill_center = this.get_center();
-    // Use tolerance for connectivity detection: min_width/2 + 1
-    // This matches the tolerance used in Trace (half_width + 1)
-    int tolerance = (int) (this.min_width() / 2) + 1;
     TileShape search_shape = TileShape.get_instance(drill_center);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, -1);
     Set<Item> result = new TreeSet<>();
@@ -275,13 +272,15 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       }
       if (curr_item != this && curr_item.shares_net(this) && curr_item.shares_layer(this)) {
         if (curr_item instanceof Trace curr_trace) {
-          // Check if points are within tolerance distance
-          if (isWithinTolerance(drill_center, curr_trace.first_corner(), tolerance) ||
-              isWithinTolerance(drill_center, curr_trace.last_corner(), tolerance)) {
+          // Use exact matching to match trace endpoints to pin/via center.
+          // Tolerance-based matching causes false cycle detection during trace normalization
+          // when nearby trace endpoints (but not at pin center) are incorrectly treated as contacts.
+          if (drill_center.equals(curr_trace.first_corner()) ||
+              drill_center.equals(curr_trace.last_corner())) {
             result.add(curr_item);
           }
         } else if (curr_item instanceof DrillItem curr_drill_item) {
-          if (isWithinTolerance(drill_center, curr_drill_item.get_center(), tolerance)) {
+          if (drill_center.equals(curr_drill_item.get_center())) {
             result.add(curr_item);
           }
         } else if (curr_item instanceof ConductionArea curr_area) {

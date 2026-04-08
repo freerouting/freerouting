@@ -1034,7 +1034,7 @@ public class BasicBoard implements Serializable {
   public boolean check_polyline_trace(Polyline p_polyline, int p_layer, int p_pen_half_width, int[] p_net_no_arr,
       int p_clearance_class) {
     Trace tmp_trace = new PolylineTrace(p_polyline, p_layer, p_pen_half_width, p_net_no_arr, p_clearance_class, 0, 0,
-        FixedState.NOT_FIXED, this);
+        FixedState.UNFIXED, this);
     Set<Pin> contact_pins = tmp_trace.touching_pins_at_end_corners();
     for (int i = 0; i < tmp_trace.tile_shape_count(); i++) {
       if (!this.check_trace_shape(tmp_trace.get_tile_shape(i), p_layer, p_net_no_arr, p_clearance_class,

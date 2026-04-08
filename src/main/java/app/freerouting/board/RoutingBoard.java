@@ -394,7 +394,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     Collection<Item> contact_list = p_drill_item.get_normal_contacts();
     for (Item curr_contact : contact_list) {
       if (curr_contact.get_fixed_state() == FixedState.SHOVE_FIXED) {
-        curr_contact.set_fixed_state(FixedState.NOT_FIXED);
+        curr_contact.set_fixed_state(FixedState.UNFIXED);
       }
     }
 
@@ -802,7 +802,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     int idBeforeInsert = communication.id_no_generator.max_generated_no();
     PolylineTrace new_trace = insert_trace_without_cleaning(new_polyline, p_layer, p_half_width, p_net_no_arr,
-        p_clearance_class_no, FixedState.NOT_FIXED);
+        p_clearance_class_no, FixedState.UNFIXED);
     int idAfterInsert = communication.id_no_generator.max_generated_no();
     boolean combineResult = new_trace.combine();
     int idAfterCombine = communication.id_no_generator.max_generated_no();
@@ -1050,7 +1050,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
     }
 
-    this.insert_trace(connection_line, trace_layer, p_pen_half_width, net_no_arr, p_cl_type, FixedState.NOT_FIXED);
+    this.insert_trace(connection_line, trace_layer, p_pen_half_width, net_no_arr, p_cl_type, FixedState.UNFIXED);
 
     if (!p_from_point.equals(first_corner)) {
       Trace tail = this.get_trace_tail(first_corner, trace_layer, net_no_arr);

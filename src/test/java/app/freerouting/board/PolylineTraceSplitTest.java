@@ -71,7 +71,7 @@ public class PolylineTraceSplitTest {
         Polyline polyline1 = new Polyline(new Point[] { p1, p2, p3, p4 });
         PolylineTrace trace1 = new PolylineTrace(
                 polyline1, layerIndex, halfWidth, new int[] { netNo },
-                clearanceClass, 360, 0, app.freerouting.board.FixedState.NOT_FIXED, board);
+                clearanceClass, 360, 0, app.freerouting.board.FixedState.UNFIXED, board);
         board.insert_item(trace1);
 
         // Step 2: Create second trace (corresponds to trace 361 before combining in
@@ -81,7 +81,7 @@ public class PolylineTraceSplitTest {
         Polyline polyline2 = new Polyline(p4, p5);
         PolylineTrace trace2 = new PolylineTrace(
                 polyline2, layerIndex, halfWidth, new int[] { netNo },
-                clearanceClass, 361, 0, app.freerouting.board.FixedState.NOT_FIXED, board);
+                clearanceClass, 361, 0, app.freerouting.board.FixedState.UNFIXED, board);
         board.insert_item(trace2);
 
         // Step 3: Combine the traces (simulates the router's combine operation)
@@ -119,7 +119,7 @@ public class PolylineTraceSplitTest {
         Polyline polyline3 = new Polyline(new Point[] { p4, p7, p6 });
         PolylineTrace trace3 = new PolylineTrace(
                 polyline3, layerIndex, halfWidth, new int[] { netNo },
-                clearanceClass, 362, 0, app.freerouting.board.FixedState.NOT_FIXED, board);
+                clearanceClass, 362, 0, app.freerouting.board.FixedState.UNFIXED, board);
         board.insert_item(trace3);
 
         // Step 5: Trigger split operation (this happens during normalization)
@@ -191,7 +191,7 @@ public class PolylineTraceSplitTest {
         Polyline polyline1 = new Polyline(new Point[] { p1, p2, p3, p4 });
         PolylineTrace trace1 = new PolylineTrace(
                 polyline1, layerIndex, halfWidth, new int[] { netNo },
-                clearanceClass, 1, 0, app.freerouting.board.FixedState.NOT_FIXED, board);
+                clearanceClass, 1, 0, app.freerouting.board.FixedState.UNFIXED, board);
         board.insert_item(trace1);
 
         // Create a second trace that only overlaps with the middle segment
@@ -201,7 +201,7 @@ public class PolylineTraceSplitTest {
         Polyline polyline2 = new Polyline(p5, p6);
         PolylineTrace trace2 = new PolylineTrace(
                 polyline2, layerIndex, halfWidth, new int[] { netNo },
-                clearanceClass, 2, 0, app.freerouting.board.FixedState.NOT_FIXED, board);
+                clearanceClass, 2, 0, app.freerouting.board.FixedState.UNFIXED, board);
         board.insert_item(trace2);
 
         // Split trace1
@@ -254,14 +254,14 @@ public class PolylineTraceSplitTest {
         Polyline polyline1 = new Polyline(new Point[] { pA, pB, pC });
         PolylineTrace traceABC = new PolylineTrace(
                 polyline1, layerIndex, halfWidth, new int[] { netNo },
-                clearanceClass, 1, 0, app.freerouting.board.FixedState.NOT_FIXED, board);
+                clearanceClass, 1, 0, app.freerouting.board.FixedState.UNFIXED, board);
         board.insert_item(traceABC);
 
         // Insert overlapping trace from B to C
         Polyline polyline2 = new Polyline(pB, pC);
         PolylineTrace traceBC = new PolylineTrace(
                 polyline2, layerIndex, halfWidth, new int[] { netNo },
-                clearanceClass, 2, 0, app.freerouting.board.FixedState.NOT_FIXED, board);
+                clearanceClass, 2, 0, app.freerouting.board.FixedState.UNFIXED, board);
         board.insert_item(traceBC);
 
         // Check that traceABC is NOT detected as a cycle
