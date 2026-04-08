@@ -210,11 +210,22 @@ public class PolylineTrace extends Trace implements Serializable {
    * In case of combine the other trace will be deleted and this trace will remain.
    */
   private boolean combine_at_start(boolean p_ignore_areas) {
+    boolean debugNet49 = this.net_no_arr != null && this.net_no_arr.length > 0 && this.net_no_arr[0] == 49;
     Point start_corner = first_corner();
     Collection<Item> contacts = get_normal_contacts(start_corner, false);
     if (p_ignore_areas) {
       // remove conduction areas from the list
       contacts.removeIf(c -> c instanceof ConductionArea);
+    }
+    if (debugNet49) {
+      FRLogger.trace("compare_trace_combine_at_start_net49 thisId=" + this.get_id_no()
+          + ", thisFixed=" + this.get_fixed_state()
+          + ", start=" + start_corner + ", contacts=" + contacts.size());
+      for (Item c : contacts) {
+        FRLogger.trace("  contact id=" + c.get_id_no() + ", type=" + c.getClass().getSimpleName()
+            + ", fixed=" + c.get_fixed_state()
+            + (c instanceof Trace ? ", first=" + ((Trace)c).first_corner() + ", last=" + ((Trace)c).last_corner() : ""));
+      }
     }
     if (contacts.size() != 1) {
       return false;
@@ -237,6 +248,11 @@ public class PolylineTrace extends Trace implements Serializable {
             trace_found = true;
             break;
           }
+        } else if (debugNet49) {
+          FRLogger.trace("  combine_at_start REJECTED: layer=" + other_trace.get_layer() + "==" + get_layer()
+              + ", nets=" + other_trace.nets_equal(this)
+              + ", width=" + other_trace.get_half_width() + "==" + get_half_width()
+              + ", fixed=" + other_trace.get_fixed_state() + "==" + this.get_fixed_state());
         }
       }
     }
@@ -304,11 +320,22 @@ public class PolylineTrace extends Trace implements Serializable {
    * trace. In case of combine the other trace will be deleted and this trace will remain.
    */
   private boolean combine_at_end(boolean p_ignore_areas) {
+    boolean debugNet49 = this.net_no_arr != null && this.net_no_arr.length > 0 && this.net_no_arr[0] == 49;
     Point end_corner = last_corner();
     Collection<Item> contacts = get_normal_contacts(end_corner, false);
     if (p_ignore_areas) {
       // remove conduction areas from the list
       contacts.removeIf(c -> c instanceof ConductionArea);
+    }
+    if (debugNet49) {
+      FRLogger.trace("compare_trace_combine_at_end_net49 thisId=" + this.get_id_no()
+          + ", thisFixed=" + this.get_fixed_state()
+          + ", end=" + end_corner + ", contacts=" + contacts.size());
+      for (Item c : contacts) {
+        FRLogger.trace("  contact id=" + c.get_id_no() + ", type=" + c.getClass().getSimpleName()
+            + ", fixed=" + c.get_fixed_state()
+            + (c instanceof Trace ? ", first=" + ((Trace)c).first_corner() + ", last=" + ((Trace)c).last_corner() : ""));
+      }
     }
     if (contacts.size() != 1) {
       return false;
@@ -331,6 +358,11 @@ public class PolylineTrace extends Trace implements Serializable {
             trace_found = true;
             break;
           }
+        } else if (debugNet49) {
+          FRLogger.trace("  combine_at_end REJECTED: layer=" + other_trace.get_layer() + "==" + get_layer()
+              + ", nets=" + other_trace.nets_equal(this)
+              + ", width=" + other_trace.get_half_width() + "==" + get_half_width()
+              + ", fixed=" + other_trace.get_fixed_state() + "==" + this.get_fixed_state());
         }
       }
     }
