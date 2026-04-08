@@ -1,6 +1,6 @@
 # Routing Parity Investigation: Current vs v1.9
 
-## Status: **ACTIVE** — Step 51 divergence under investigation (41-item run resolved ✅)
+## Status: **RESOLVED** — 111-item (MaxItems=61) run achieves full parity ✅
 
 ---
 
@@ -72,13 +72,13 @@ The `maxItemId` values match **at all 41 steps** (verified programmatically: "AL
 
 ---
 
-## New Divergence: Step 51 — Net #49 (USBVCC), Item #269
+## Net #49 (USBVCC) — Step 51 — Originally Diverging, Now Resolved
 
-### Symptom
+### Original Symptom (Before Fix)
 
-After achieving parity on the 41-item run, a new divergence was found in the 61-item run at step 51:
+After achieving parity on the 41-item run, the 61-item run showed divergence at step 51:
 
-| Metric | Current | v1.9 |
+| Metric | Current (old) | v1.9 |
 |---|---|---|
 | `maxItemId` after Net #49 | **3477** | **3479** (diff: −2) |
 | `netIncomplete` for Net #49 | **2** | **1** |
@@ -214,6 +214,12 @@ Same changes as current: cost map, `ripup_cost=` logging, `maxItemId=` tracking.
 ### 9. `BatchAutorouterThread.java` and other callers (current)
 Pass `null` for the cost map (costs not needed outside debug logging path).
 
+### 10. `PolylineTrace.java` (both current and v19)
+Added detailed debug logging to `combine_at_start()`, `combine_at_end()`, `normalize()`, and `split()` for tracing routing decisions for specific nets.
+
+### 11. `RoutingBoard.java` (current)
+Added sub-step logging to `insert_forced_trace_polyline()`: `insert_and_combine`, `normalize`, `split_at_keep`, `before_pull_tight`, `after_pull_tight`.
+
 ---
 
 ## Log Format Reference
@@ -239,9 +245,9 @@ BACKTRACK_STEP net=N, step=N, door_type=<type>, section=N, room_ripped=<bool>, r
 ```
 (v1.9 appends `test_level=<level>` instead of `trace_enabled=<bool>`)
 
-### `compare_trace_stub_destination_protected` (current only, added in fix)
+### `compare_trace_stub_found` (both versions)
 ```
-compare_trace_stub_destination_protected net=N, corner_idx=N, stub_id=N, far_end=(...,...), destination=(...,...)
+compare_trace_stub_found net=N, corner_idx=N, corner=(...), stub_id=N, stub_first=(...), stub_last=(...), start_contacts=N, end_contacts=N
 ```
 
 ---
@@ -256,27 +262,23 @@ compare_trace_stub_destination_protected net=N, corner_idx=N, stub_id=N, far_end
 | `src/main/java/app/freerouting/autoroute/LocateFoundConnectionAlgo.java` | Backtrack/solution path; `BACKTRACK_STEP` logging; ripup cost map |
 | `src/main/java/app/freerouting/autoroute/AutorouteEngine.java` | `autoroute_connection()` forwards cost map |
 | `src/main/java/app/freerouting/autoroute/BatchAutorouter.java` | Outer routing loop; `compare_trace_route_item` / `compare_trace_ripped_item` with `ripup_cost=` |
-| `src/main/java/app/freerouting/autoroute/InsertFoundConnectionAlgo.java` | **Step 51 fix**: stub removal loop now protects final-leg traces |
+| `src/main/java/app/freerouting/autoroute/InsertFoundConnectionAlgo.java` | **Net 49 & 65 fix**: destination-corner guard was added then reverted; stub removal loop now matches v1.9 exactly |
 | `src/main/java/app/freerouting/autoroute/ExpansionDoor.java` | `get_id_no()` = `Math.min(id1,id2)*31 + Math.max(id1,id2)` |
 | `src/main/java/app/freerouting/autoroute/ObstacleExpansionRoom.java` | `get_id_no()` = `(item.get_id_no() << 10) \| index_in_item` |
 | `src/main/java/app/freerouting/board/ItemIdentificationNumberGenerator.java` | Sequential counter `++last_generated_id_no`; was the source of ID divergence |
+| `src/main/java/app/freerouting/board/PolylineTrace.java` | Debug logging in combine/normalize/split |
+| `src/main/java/app/freerouting/board/RoutingBoard.java` | Sub-step logging in `insert_forced_trace_polyline()` |
 | Mirror files under `src_v19/` | v1.9 reference; same instrumentation applied for log parity |
 
 ---
 
-## Remaining Performance Delta (200-item run)
+## Performance Summary
 
-While parity is achieved for the first 41 items, the 200-item run shows:
-- Current: **127 unrouted** items
-- v1.9: **97 unrouted** items
-
-After applying the Step 51 (net=49) fix, the next divergence check should be run with:
-
-```powershell
-.\scripts\tests\compare-versions.ps1 -InputFile tests\Issue508-DAC2020_bm01.dsn -MaxItems 61
-```
-
-Expected outcome: `maxItemId` values should match at all 61 steps after the fix.
+| Run | Current | v1.9 | Status |
+|---|---|---|---|
+| 41-item | 163 unrouted | 163 unrouted | ✅ Parity |
+| 111-item (MaxItems=61) | **134 unrouted** | **134 unrouted** | ✅ **Parity** |
+| 200-item | TBD | ~97 unrouted | 🔄 Next target |
 
 ---
 
@@ -292,33 +294,30 @@ Expected outcome: `maxItemId` values should match at all 61 steps after the fix.
 
 5. **`maxItemId` is the right diagnostic** — Tracking `board.communication.id_no_generator.max_generated_no()` after each routing step is the most direct way to detect when ID divergence begins.
 
-6. **Stub removal can be wrong** — When `pull_tight` moves an adjacent trace's endpoint during segment insertion, the final-leg trace can appear as a stub (start_contacts=0) even though it's actually the only connection to the destination pin. Always check whether a "stub" trace is the final connection to the route destination before removing it.
+6. **Stub removal guards can backfire** — A guard added to protect destination-connecting traces from removal (net=49 fix) later caused regression for net=65 by preventing a legitimate stub removal. When the upstream divergence causing the net=49 stub problem was resolved by other means, the guard became unnecessary and harmful. Always re-evaluate protective guards when upstream behavior changes.
 
-7. **Identical segment insertion logs ≠ identical board state** — Even when both versions show the same segment decisions (`ok_point`, `delta`, `decision`), the internal board state (trace geometry, contact relationships) can differ due to subtle pull_tight behavior differences. The stub removal check is what makes the divergence observable.
+7. **Use `start_contacts=0, end_contacts=0` to distinguish genuine stubs** — A trace with both endpoints having 0 contacts is a truly floating segment and should be removed regardless of what its endpoints are. A trace with `end_contacts=0` but whose endpoint IS the destination terminal is still a valid final-leg trace and should NOT be removed based on the endpoint alone.
 
 ---
 
 ## Comparison Commands
 
 ```powershell
-# Run 41-item comparison
-.\scripts\tests\compare-versions.ps1 -InputFile tests\Issue508-DAC2020_bm01.dsn -MaxItems 41
+# Run 111-item comparison (default for compare-versions.ps1)
+.\scripts\tests\compare-versions.ps1
 
-# Run 61-item comparison (to verify Step 51 fix)
-.\scripts\tests\compare-versions.ps1 -InputFile tests\Issue508-DAC2020_bm01.dsn -MaxItems 61
+# Run with specific max items (use -max_items, not -MaxItems)
+.\scripts\tests\compare-versions.ps1 -max_items 200
 
-# Check ripped items with costs
-Select-String "compare_trace_ripped_item" logs\freerouting-current.log | ForEach-Object { $_.Line }
-Select-String "compare_trace_ripped_item" logs\freerouting-v190.log | ForEach-Object { $_.Line }
+# Find first divergence between segment ID logs
+python -u scripts\find_divergence.py logs\freerouting-current.log logs\freerouting-v190.log
 
-# Verify maxItemId matches at every step
-$cur = @(Select-String "compare_trace_route_item" logs\freerouting-current.log | Where-Object { $_.Line -match "maxItemId=(\d+)" } | ForEach-Object { $matches[1] })
-$v19 = @(Select-String "compare_trace_route_item" logs\freerouting-v190.log | Where-Object { $_.Line -match "maxItemId=(\d+)" } | ForEach-Object { $matches[1] })
-for ($i = 0; $i -lt [Math]::Min($cur.Count, $v19.Count); $i++) {
-    if ($cur[$i] -ne $v19[$i]) { Write-Host "DIVERGE at step $i`: CUR=$($cur[$i]) V19=$($v19[$i])"; break }
-}
-
-# Check stub cleanup for specific net
-findstr "compare_trace_stub.*net=49" logs\freerouting-current.log
-findstr "compare_trace_stub.*net=49" logs\freerouting-v190.log
+# Check stub cleanup behavior
+python -u -c "
+log_file = 'logs/freerouting-current.log'
+with open(log_file, encoding='utf-8', errors='replace') as f:
+    for line in f:
+        if 'stub_cleanup' in line or 'stub_found' in line:
+            print(line.rstrip())
+"
 ```
