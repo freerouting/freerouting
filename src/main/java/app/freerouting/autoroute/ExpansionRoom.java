@@ -44,4 +44,9 @@ public interface ExpansionRoom {
    * Returns the layer of this expansion room.
    */
   int get_layer();
-}
+
+  /**
+   * Returns a unique identification number for this expansion room.
+   */
+  int get_id_no();
+}

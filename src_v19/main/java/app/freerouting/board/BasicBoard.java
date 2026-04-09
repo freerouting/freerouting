@@ -603,6 +603,18 @@ public class BasicBoard implements Serializable {
     if (p_item == null) {
       return;
     }
+    if (is_item_activity_debug_candidate(p_item)) {
+      FRLogger.trace(
+          "ITEM_ACTIVITY action=REMOVE"
+              + ", id="
+              + p_item.get_id_no()
+              + ", type="
+              + p_item.getClass().getSimpleName()
+              + ", bounds="
+              + describe_bounds(p_item.bounding_box())
+              + ", net0="
+              + first_net_or_none(p_item));
+    }
     additional_update_after_change(p_item); // must be called before p_item is deleted.
     search_tree_manager.remove(p_item);
     item_list.delete(p_item);
@@ -1304,6 +1316,19 @@ public class BasicBoard implements Serializable {
       return;
     }
 
+    if (is_item_activity_debug_candidate(p_item)) {
+      FRLogger.trace(
+          "ITEM_ACTIVITY action=INSERT"
+              + ", id="
+              + p_item.get_id_no()
+              + ", type="
+              + p_item.getClass().getSimpleName()
+              + ", bounds="
+              + describe_bounds(p_item.bounding_box())
+              + ", net0="
+              + first_net_or_none(p_item));
+    }
+
     if (rules == null
         || rules.clearance_matrix == null
         || p_item.clearance_class_no() < 0
@@ -1323,6 +1348,31 @@ public class BasicBoard implements Serializable {
    * necessary.
    */
   public void additional_update_after_change(Item p_item) {}
+
+  private static boolean is_item_activity_debug_candidate(Item p_item) {
+    IntBox bounds = p_item.bounding_box();
+    IntBox debugWindow = new IntBox(1620000, -1105000, 1930000, -1003000);
+    return bounds != null && bounds.intersects(debugWindow);
+  }
+
+  private static String first_net_or_none(Item p_item) {
+    return p_item.net_count() > 0 ? Integer.toString(p_item.get_net_no(0)) : "none";
+  }
+
+  private static String describe_bounds(IntBox p_bounds) {
+    if (p_bounds == null) {
+      return "null";
+    }
+    return "[("
+        + p_bounds.ll.x
+        + ","
+        + p_bounds.ll.y
+        + ")..("
+        + p_bounds.ur.x
+        + ","
+        + p_bounds.ur.y
+        + ")]";
+  }
 
   /**
    * Restores the situation at the previous snapshot. Returns false, if no more undo is possible.

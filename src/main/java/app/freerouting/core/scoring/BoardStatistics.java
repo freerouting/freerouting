@@ -17,7 +17,6 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.gui.FileFormat;
-import app.freerouting.interactive.RatsNest;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.rules.BoardRules;
@@ -198,7 +197,7 @@ public class BoardStatistics implements Serializable {
       }
       if (curr_item instanceof Trace curr_trace) {
         FixedState fixed_state = curr_trace.get_fixed_state();
-        if (fixed_state == FixedState.NOT_FIXED || fixed_state == FixedState.SHOVE_FIXED) {
+        if (fixed_state == FixedState.UNFIXED || fixed_state == FixedState.SHOVE_FIXED) {
           double weighted_trace_length = curr_trace.get_length() * (curr_trace.get_half_width() + board
               .clearance_value(curr_trace.clearance_class_no(), default_clearance_class, curr_trace.get_layer()));
           if (fixed_state == FixedState.SHOVE_FIXED) {

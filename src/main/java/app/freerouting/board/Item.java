@@ -835,7 +835,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    */
   public void unfix() {
     if (fixed_state != FixedState.SYSTEM_FIXED) {
-      fixed_state = FixedState.NOT_FIXED;
+      fixed_state = FixedState.UNFIXED;
     }
   }
 
@@ -1121,7 +1121,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    * Internal function used in the implementation of print_info
    */
   protected void print_fixed_info(ObjectInfoPanel p_window, Locale p_locale) {
-    if (this.fixed_state != FixedState.NOT_FIXED) {
+    if (this.fixed_state != FixedState.UNFIXED) {
       TextManager tm = new TextManager(this.getClass(), p_locale);
 
       p_window.append(", ");

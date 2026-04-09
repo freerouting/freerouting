@@ -185,7 +185,7 @@ class Wiring extends ScopeKeyword {
   }
 
   private static void write_fixed_state(IndentFileWriter p_file, FixedState p_fixed_state) throws IOException {
-    if (p_fixed_state == FixedState.NOT_FIXED) {
+    if (p_fixed_state == FixedState.UNFIXED) {
       return;
     }
     p_file.new_line();
@@ -230,7 +230,7 @@ class Wiring extends ScopeKeyword {
 
   static FixedState calc_fixed(IJFlexScanner p_scanner) {
     try {
-      FixedState result = FixedState.NOT_FIXED;
+      FixedState result = FixedState.UNFIXED;
       Object next_token = p_scanner.next_token();
       if (next_token == SHOVE_FIXED) {
         result = FixedState.SHOVE_FIXED;
@@ -242,12 +242,12 @@ class Wiring extends ScopeKeyword {
       next_token = p_scanner.next_token();
       if (next_token != CLOSED_BRACKET) {
         FRLogger.warn("Wiring.is_fixed: ) expected at '" + p_scanner.get_scope_identifier() + "'");
-        return FixedState.NOT_FIXED;
+        return FixedState.UNFIXED;
       }
       return result;
     } catch (IOException e) {
       FRLogger.error("Wiring.is_fixed: IO error scanning file", e);
-      return FixedState.NOT_FIXED;
+      return FixedState.UNFIXED;
     }
   }
 
@@ -323,7 +323,7 @@ class Wiring extends ScopeKeyword {
   private Item read_wire_scope(ReadScopeParameter p_par) {
     Net.Id net_id = null;
     String clearance_class_name = null;
-    FixedState fixed = FixedState.NOT_FIXED;
+    FixedState fixed = FixedState.UNFIXED;
     Path path = null; // Used, if a trace is read.
     Shape border_shape = null; // Used, if a conduction area is read.
     Collection<Shape> hole_list = new LinkedList<>();
@@ -508,7 +508,7 @@ class Wiring extends ScopeKeyword {
 
   private boolean read_via_scope(ReadScopeParameter p_par) {
     try {
-      FixedState fixed = FixedState.NOT_FIXED;
+      FixedState fixed = FixedState.UNFIXED;
       // read the padstack name
       Object next_token = p_par.scanner.next_token();
       if (!(next_token instanceof String padstack_name)) {

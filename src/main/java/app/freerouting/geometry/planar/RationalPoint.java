@@ -61,6 +61,14 @@ public class RationalPoint extends Point implements Serializable {
    * returns true, if this RationalPoint is equal to p_ob
    */
   @Override
+  public int get_id_no() {
+    int result = x.hashCode();
+    result = 31 * result + y.hashCode();
+    result = 31 * result + z.hashCode();
+    return result;
+  }
+
+  @Override
   public final boolean equals(Object p_ob) {
     if (this == p_ob) {
       return true;

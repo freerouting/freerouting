@@ -51,6 +51,12 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     return this.shape;
   }
 
+  @Override
+  public int get_id_no() {
+    return (this.item.get_id_no() << 10) | this.index_in_item;
+  }
+
+
   /**
    * Checks, if this room has already a 1-dimensional door to p_other
    */

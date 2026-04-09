@@ -97,6 +97,12 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     return this.room_is_net_dependent;
   }
 
+  /** Returns the identification number of this room. */
+  @Override
+  public int get_id_no() {
+    return id_no;
+  }
+
   /** Returns the list doors to target items of this room */
   @Override
   public Collection<TargetItemExpansionDoor> get_target_doors() {

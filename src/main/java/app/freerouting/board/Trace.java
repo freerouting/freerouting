@@ -173,8 +173,6 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     if (p_point == null || !(p_point.equals(this.first_corner()) || p_point.equals(this.last_corner()))) {
       return new TreeSet<>();
     }
-    // Use tolerance for connectivity detection: half_width + 1
-    int tolerance = this.half_width + 1;
     TileShape search_shape = TileShape.get_instance(p_point);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
     Set<Item> result = new TreeSet<>();
@@ -184,13 +182,12 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       }
       if (curr_item != this && curr_item.shares_layer(this) && (p_ignore_net || curr_item.shares_net(this))) {
         if (curr_item instanceof Trace curr_trace) {
-          // Check if points are within tolerance distance
-          if (isWithinTolerance(p_point, curr_trace.first_corner(), tolerance) ||
-              isWithinTolerance(p_point, curr_trace.last_corner(), tolerance)) {
+          if (p_point.equals(curr_trace.first_corner()) ||
+              p_point.equals(curr_trace.last_corner())) {
             result.add(curr_item);
           }
         } else if (curr_item instanceof DrillItem curr_drill_item) {
-          if (isWithinTolerance(p_point, curr_drill_item.get_center(), tolerance)) {
+          if (p_point.equals(curr_drill_item.get_center())) {
             result.add(curr_item);
           }
         } else if (curr_item instanceof ConductionArea curr_area) {
@@ -201,25 +198,6 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       }
     }
     return result;
-  }
-
-  /**
-   * Checks if two points are within the specified tolerance distance.
-   * Uses Manhattan distance for efficiency.
-   */
-  private boolean isWithinTolerance(Point p1, Point p2, int tolerance) {
-    if (p1 == null || p2 == null) {
-      return false;
-    }
-    // Convert to FloatPoint for distance calculation
-    FloatPoint fp1 = p1.to_float();
-    FloatPoint fp2 = p2.to_float();
-
-    // Use Manhattan distance (|x1-x2| + |y1-y2|) which is faster than Euclidean
-    // and sufficient for connectivity detection
-    double dx = Math.abs(fp1.x - fp2.x);
-    double dy = Math.abs(fp1.y - fp2.y);
-    return (dx + dy) <= tolerance;
   }
 
   @Override
@@ -309,7 +287,14 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * Checks, if this trace can be reached by other items via more than one path
    */
   public boolean is_cycle() {
+    boolean debugNet49 = this.net_no_arr != null && this.net_no_arr.length > 0 && this.net_no_arr[0] == 49;
     if (this.is_overlap()) {
+      if (debugNet49) {
+        FRLogger.trace("compare_trace_is_cycle_overlap net=49, id=" + this.get_id_no()
+            + ", first=" + this.first_corner() + ", last=" + this.last_corner()
+            + ", start_contacts=" + this.get_start_contacts().stream().map(i->i.get_id_no()+"").collect(java.util.stream.Collectors.joining(","))
+            + ", end_contacts=" + this.get_end_contacts().stream().map(i->i.get_id_no()+"").collect(java.util.stream.Collectors.joining(",")));
+      }
       return true;
     }
     Collection<Item> start_contacts = this.get_start_contacts();
@@ -328,6 +313,12 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     }
     for (Item curr_contact : start_contacts) {
       if (curr_contact.is_cycle_recu(visited_items, this, this, ignore_areas)) {
+        if (debugNet49) {
+          FRLogger.trace("compare_trace_is_cycle_dfs net=49, id=" + this.get_id_no()
+              + ", first=" + this.first_corner() + ", last=" + this.last_corner()
+              + ", start_contacts=" + start_contacts.stream().map(i->i.get_id_no()+"").collect(java.util.stream.Collectors.joining(","))
+              + ", found_via=" + curr_contact.get_id_no());
+        }
         return true;
       }
     }

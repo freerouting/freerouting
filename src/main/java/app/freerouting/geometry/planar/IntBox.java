@@ -266,6 +266,10 @@ public class IntBox extends RegularTileShape implements Serializable {
     return this;
   }
 
+  public int get_id_no() {
+    return 31 * ll.get_id_no() + ur.get_id_no();
+  }
+
   @Override
   public IntOctagon bounding_octagon() {
     return to_IntOctagon();

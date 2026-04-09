@@ -23,7 +23,7 @@
 
     <Properties>
         <Property name="filename">${sys:freerouting.log.file:-logs/freerouting-v190.log}</Property>
-        <Property name="default_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-6level %msg%n</Property>
+        <Property name="default_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %-6level %msg%n</Property>
     </Properties>
 
     <ThresholdFilter level="trace"/>

@@ -2,6 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
+import app.freerouting.debug.DebugControl;
 import app.freerouting.logger.FRLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -270,6 +271,33 @@ public class StartupOptions {
           if (parts.length == 2) {
             logging_file_location = parts[1];
           }
+        } else if (p_args[i].startsWith("--debug.enable_detailed_logging")) {
+          String[] parts = p_args[i].split("=", 2);
+          if (parts.length == 2) {
+            DebugControl.debugSettings.enableDetailedLogging = Boolean.parseBoolean(parts[1]);
+            FRLogger.granularTraceEnabled = DebugControl.debugSettings.enableDetailedLogging;
+          }
+        } else if (p_args[i].startsWith("--debug.filter_by_net")) {
+          String[] parts = p_args[i].split("=", 2);
+          if (parts.length == 2) {
+            DebugControl.debugSettings.filterByNet.clear();
+            String[] nets = parts[1].split(",");
+            for (String net : nets) {
+              String normalizedNet = net.trim().toLowerCase();
+              if (!normalizedNet.isEmpty()) {
+                DebugControl.debugSettings.filterByNet.add(normalizedNet);
+              }
+            }
+          }
+        } else if (p_args[i].startsWith("--debug.operation_filters")) {
+          String[] parts = p_args[i].split("=", 2);
+          if (parts.length == 2) {
+            DebugControl.debugSettings.operationFilters = Arrays
+                .stream(parts[1].split(","))
+                .map(String::trim)
+                .filter(filter -> !filter.isEmpty())
+                .toArray(String[]::new);
+          }
         }
       } catch (Exception e) {
         FRLogger.error("There was a problem parsing the '" + p_args[i] + "' parameter", e);
@@ -314,3 +342,4 @@ public class StartupOptions {
     return item_selection_strategy;
   }
 }
+

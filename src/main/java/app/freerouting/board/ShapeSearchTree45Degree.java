@@ -81,76 +81,29 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
    */
   @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> complete_shape(IncompleteFreeSpaceExpansionRoom p_room, int p_net_no, SearchTreeObject p_ignore_object, TileShape p_ignore_shape) {
-    TileShape contained_shape = p_room.get_contained_shape();
-    IntOctagon shape_to_be_contained;
-
-    if (contained_shape.is_IntOctagon()) {
-      shape_to_be_contained = contained_shape.bounding_octagon();
-    } else if (contained_shape instanceof Simplex simplex) {
-      // Clean up the Simplex by removing short border lines
-      var lineCount = simplex.border_line_count();
-      for (int i = 0; i < lineCount; i++) {
-        if (i < 0) {
-          break;
-        }
-
-        // Remove the tiny line from the Simplex to avoid problems with the octagon conversion
-        // Remove lines that are the same as the next line just in the opposite direction
-        Line line = simplex.border_line(i);
-        Line nextLine = simplex.border_line((i + 1) % lineCount);
-        if ((line.length() < 10) || (line.equals(nextLine.opposite()))) {
-          simplex = simplex.remove_border_line(i);
-          lineCount = simplex.border_line_count();
-          i = i - 1;
-        }
-      }
-
-      if (simplex.border_line_count() < 3) {
-        // If the Simplex has less than 3 lines, it cannot be converted to an octagon
-        return new LinkedList<>();
-      }
-
-      // Convert Simplex to IntOctagon for processing
-      shape_to_be_contained = simplex.bounding_octagon();
-      if (shape_to_be_contained == null) {
-        // If conversion fails (e.g., unbounded Simplex)
-        FRLogger.debug("ShapeSearchTree45Degree.complete_shape: cannot convert Simplex to IntOctagon");
-        return new LinkedList<>();
-      }
-    } else {
-      FRLogger.debug("ShapeSearchTree45Degree.complete_shape: unexpected shape type");
+    if (!(p_room.get_contained_shape().is_IntOctagon())) {
+      FRLogger.warn("ShapeSearchTree45Degree.complete_shape: unexpected p_shape_to_be_contained");
       return new LinkedList<>();
     }
+    IntOctagon shape_to_be_contained = p_room.get_contained_shape().bounding_octagon();
 
     if (this.root == null) {
       return new LinkedList<>();
     }
 
-    IntOctagon start_shape = board
-        .get_bounding_box()
-        .bounding_octagon();
+    IntOctagon start_shape = board.get_bounding_box().bounding_octagon();
     if (p_room.get_shape() != null) {
-      TileShape room_shape = p_room.get_shape();
-      IntOctagon octagon_room_shape;
-
-      if (room_shape instanceof IntOctagon octagon) {
-        octagon_room_shape = octagon;
-      } else if (room_shape instanceof Simplex) {
-        octagon_room_shape = room_shape.bounding_octagon();
-        if (octagon_room_shape == null) {
-          FRLogger.warn("ShapeSearchTree45Degree.complete_shape: cannot convert room shape Simplex to IntOctagon");
-          return new LinkedList<>();
-        }
-      } else {
-        FRLogger.warn("ShapeSearchTree45Degree.complete_shape: room shape type not supported");
+      if (!(p_room.get_shape() instanceof IntOctagon)) {
+        FRLogger.warn("ShapeSearchTree45Degree.complete_shape: p_start_shape of type IntOctagon expected");
         return new LinkedList<>();
       }
-
-      start_shape = octagon_room_shape.intersection(start_shape);
+      start_shape = p_room.get_shape().bounding_octagon().intersection(start_shape);
     }
 
     IntOctagon bounding_shape = start_shape;
     int room_layer = p_room.get_layer();
+    boolean debugAnchor = is_complete_shape_debug_anchor(p_net_no, room_layer, start_shape);
+    int debugStep = 0;
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
     result.add(new IncompleteFreeSpaceExpansionRoom(start_shape, room_layer, shape_to_be_contained));
     this.node_stack.reset();
@@ -168,19 +121,33 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
           boolean is_obstacle = curr_object.is_trace_obstacle(p_net_no);
 
           int shape_index = curr_leaf.shape_index_in_object;
-          if (is_obstacle && curr_object.shape_layer(shape_index) == room_layer && curr_object != p_ignore_object) {
+          int objectLayer = curr_object.shape_layer(shape_index);
+          boolean sameLayer = objectLayer == room_layer;
+          boolean ignoredObject = curr_object == p_ignore_object;
+          if (debugAnchor) {
+            trace_complete_shape_filter(debugStep, p_net_no, room_layer, shape_index, objectLayer, is_obstacle, sameLayer, ignoredObject, curr_object);
+          }
+          if (is_obstacle && sameLayer && !ignoredObject) {
 
             IntOctagon curr_object_shape = curr_object
                 .get_tree_shape(this, shape_index)
                 .bounding_octagon();
+            if (debugAnchor) {
+              trace_complete_shape_candidate(debugStep, p_net_no, room_layer, curr_object, curr_object_shape);
+            }
             Collection<IncompleteFreeSpaceExpansionRoom> new_result = new LinkedList<>();
             IntOctagon new_bounding_shape = IntOctagon.EMPTY;
+            boolean hadRoomsBeforeObstacle = !result.isEmpty();
             for (IncompleteFreeSpaceExpansionRoom curr_room : result) {
               IntOctagon curr_shape = (IntOctagon) curr_room.get_shape();
-              if (curr_shape.overlaps(curr_object_shape)) {
+              boolean overlaps = curr_shape.overlaps(curr_object_shape);
+              if (overlaps) {
                 if (curr_object instanceof CompleteFreeSpaceExpansionRoom && p_ignore_shape != null) {
                   IntOctagon intersection = curr_shape.intersection(curr_object_shape);
                   if (p_ignore_shape.contains(intersection)) {
+                    if (debugAnchor) {
+                      trace_complete_shape_decision(debugStep, p_net_no, room_layer, "SKIP_BY_IGNORE_SHAPE", overlaps, curr_shape, curr_object_shape);
+                    }
                     // ignore also all objects, whose intersection is contained in the
                     // 2-dim overlap-door with the from_room.
                     if (!p_ignore_shape.contains(curr_shape)) {
@@ -189,6 +156,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                     }
                     continue;
                   }
+                }
+                if (debugAnchor) {
+                  trace_complete_shape_decision(debugStep, p_net_no, room_layer, "RESTRAIN", overlaps, curr_shape, curr_object_shape);
                 }
                 Collection<IncompleteFreeSpaceExpansionRoom> new_restrained_shapes = restrain_shape(curr_room, curr_object_shape);
                 new_result.addAll(new_restrained_shapes);
@@ -199,12 +169,25 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                       .bounding_box());
                 }
               } else {
+                if (debugAnchor) {
+                  trace_complete_shape_decision(debugStep, p_net_no, room_layer, "KEEP_NON_OVERLAP", overlaps, curr_shape, curr_object_shape);
+                }
                 new_result.add(curr_room);
                 new_bounding_shape = new_bounding_shape.union(curr_shape.bounding_box());
               }
             }
+            if (hadRoomsBeforeObstacle && new_result.isEmpty()) {
+              FRLogger.trace("COMPLETE_SHAPE_BLOCKED net=" + p_net_no + ", layer=" + room_layer
+                  + ", contained=" + describe_bounds(shape_to_be_contained.bounding_box())
+                  + ", obstacle_type=" + curr_object.getClass().getSimpleName()
+                  + ", obstacle_id=" + obstacle_id(curr_object)
+                  + ", obstacle_bounds=" + describe_bounds(curr_object_shape.bounding_box()));
+            }
             result = new_result;
             bounding_shape = new_bounding_shape;
+          }
+          if (debugAnchor) {
+            debugStep++;
           }
         } else {
           this.node_stack.push(((InnerNode) curr_node).first_child);
@@ -255,10 +238,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
     TileShape contained_shape = p_incomplete_room.get_contained_shape();
     if (contained_shape == null || contained_shape.is_empty()) {
-      FRLogger.trace("ShapeSearchTree45Degree.restrain_shape: p_shape_to_be_contained is empty");
+      FRLogger.warn("ShapeSearchTree45Degree.restrain_shape: p_shape_to_be_contained is empty");
       return result;
     }
-
     IntOctagon shape_to_be_contained;
     if (contained_shape.is_IntOctagon()) {
       shape_to_be_contained = contained_shape.bounding_octagon();
@@ -453,5 +435,66 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       result[i] = result[i].bounding_octagon();
     }
     return result;
+  }
+
+  private static String describe_bounds(IntBox p_bounds) {
+    return "[(" + p_bounds.ll.x + "," + p_bounds.ll.y + ")..(" + p_bounds.ur.x + "," + p_bounds.ur.y + ")]";
+  }
+
+  private static boolean is_complete_shape_debug_anchor(int p_net_no, int p_room_layer, IntOctagon p_start_shape) {
+    return p_net_no == 77
+        && p_room_layer == 0
+        && p_start_shape.leftX == 1762393
+        && p_start_shape.bottomY == -1080137
+        && p_start_shape.rightX == 1910447
+        && p_start_shape.topY == -1006110;
+  }
+
+  private static void trace_complete_shape_filter(int p_step, int p_net_no, int p_room_layer, int p_shape_index, int p_object_layer, boolean p_is_obstacle, boolean p_same_layer,
+                                                  boolean p_ignored_object, SearchTreeObject p_object) {
+    FRLogger.trace("COMPLETE_SHAPE_FILTER"
+        + ", step=" + p_step
+        + ", net=" + p_net_no
+        + ", layer=" + p_room_layer
+        + ", shape_index=" + p_shape_index
+        + ", object_layer=" + p_object_layer
+        + ", is_trace_obstacle=" + p_is_obstacle
+        + ", same_layer=" + p_same_layer
+        + ", ignored_object=" + p_ignored_object
+        + ", accepted=" + (p_is_obstacle && p_same_layer && !p_ignored_object)
+        + ", obstacle_id=" + obstacle_id(p_object)
+        + ", obstacle_nets=" + obstacle_nets(p_object)
+        + ", obstacle=" + p_object);
+  }
+
+  private static void trace_complete_shape_candidate(int p_step, int p_net_no, int p_room_layer, SearchTreeObject p_object, IntOctagon p_obstacle_shape) {
+    FRLogger.trace("COMPLETE_SHAPE_OBS candidate"
+        + ", step=" + p_step
+        + ", net=" + p_net_no
+        + ", layer=" + p_room_layer
+        + ", obstacle=" + p_object
+        + ", obstacle_id=" + obstacle_id(p_object)
+        + ", obstacle_nets=" + obstacle_nets(p_object)
+        + ", obstacle_bounds=" + describe_bounds(p_obstacle_shape.bounding_box()));
+  }
+
+  private static void trace_complete_shape_decision(int p_step, int p_net_no, int p_room_layer, String p_action, boolean p_overlap, IntOctagon p_room_shape,
+                                                    IntOctagon p_obstacle_shape) {
+    FRLogger.trace("COMPLETE_SHAPE_DECISION"
+        + ", step=" + p_step
+        + ", net=" + p_net_no
+        + ", layer=" + p_room_layer
+        + ", action=" + p_action
+        + ", overlap=" + p_overlap
+        + ", room_bounds=" + describe_bounds(p_room_shape.bounding_box())
+        + ", obstacle_bounds=" + describe_bounds(p_obstacle_shape.bounding_box()));
+  }
+
+  private static int obstacle_id(SearchTreeObject p_object) {
+    return p_object instanceof Item item ? item.get_id_no() : -1;
+  }
+
+  private static String obstacle_nets(SearchTreeObject p_object) {
+    return p_object instanceof Item item ? java.util.Arrays.toString(item.net_no_arr) : "[]";
   }
 }

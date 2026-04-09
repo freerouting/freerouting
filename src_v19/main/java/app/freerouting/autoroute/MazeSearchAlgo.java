@@ -29,6 +29,7 @@ import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
@@ -233,6 +234,7 @@ public class MazeSearchAlgo {
     curr_door_section.backtrack_door = list_element.backtrack_door;
     curr_door_section.section_no_of_backtrack_door = list_element.section_no_of_backtrack_door;
     curr_door_section.room_ripped = list_element.room_ripped;
+    curr_door_section.ripup_cost = list_element.ripup_cost;
     curr_door_section.adjustment = list_element.adjustment;
 
     if (list_element.door instanceof DrillPage) {
@@ -307,7 +309,27 @@ public class MazeSearchAlgo {
       curr_door_is_small = door_is_small(curr_door, 2 * half_width_add);
     }
 
+    int doorCountBeforeCompletion = p_list_element.next_room.get_doors().size();
     this.autoroute_engine.complete_neighbour_rooms(p_list_element.next_room);
+    int doorCountAfterCompletion = p_list_element.next_room.get_doors().size();
+    FRLogger.trace(
+        "ROOM_COMPLETE_SYNC"
+            + ", net="
+            + ctrl.net_no
+            + ", layer="
+            + layer_no
+            + ", from_section="
+            + p_list_element.section_no_of_door
+            + ", backtrack_section="
+            + p_list_element.section_no_of_backtrack_door
+            + ", from_door="
+            + describe_expandable(p_list_element.door)
+            + ", next_room="
+            + describe_room(p_list_element.next_room)
+            + ", door_count_before="
+            + doorCountBeforeCompletion
+            + ", door_count_after="
+            + doorCountAfterCompletion);
 
     FloatPoint shape_entry_middle =
         p_list_element.shape_entry.a.middle_point(p_list_element.shape_entry.b);
@@ -414,6 +436,7 @@ public class MazeSearchAlgo {
                         true,
                         p_list_element.adjustment,
                         true);
+                new_element.ripup_cost = ripup_costs;
                 this.maze_expansion_list.add(new_element);
               }
               return something_expanded;
@@ -426,7 +449,38 @@ public class MazeSearchAlgo {
       }
     }
 
-    for (ExpansionDoor to_door : p_list_element.next_room.get_doors()) {
+    List<ExpansionDoor> room_doors_snapshot = new LinkedList<>(p_list_element.next_room.get_doors());
+    FRLogger.trace(
+        "ROOM_DOOR context from_section="
+            + p_list_element.section_no_of_door
+            + ", backtrack_section="
+            + p_list_element.section_no_of_backtrack_door
+            + ", from_door="
+            + describe_expandable(p_list_element.door)
+            + ", next_room="
+            + describe_room(p_list_element.next_room)
+            + ", net="
+            + ctrl.net_no);
+    for (int door_index = 0; door_index < room_doors_snapshot.size(); ++door_index) {
+      ExpansionDoor candidate_door = room_doors_snapshot.get(door_index);
+      FRLogger.trace(
+          "ROOM_DOOR candidate index="
+              + door_index
+              + ", from_section="
+              + p_list_element.section_no_of_door
+              + ", backtrack_section="
+              + p_list_element.section_no_of_backtrack_door
+              + ", from_door="
+              + describe_expandable(p_list_element.door)
+              + ", next_room="
+              + describe_room(p_list_element.next_room)
+              + ", candidate="
+              + describe_expandable(candidate_door)
+              + ", net="
+              + ctrl.net_no);
+    }
+
+    for (ExpansionDoor to_door : room_doors_snapshot) {
       if (to_door == p_list_element.door) {
         continue;
       }
@@ -632,7 +686,57 @@ public class MazeSearchAlgo {
       MazeListElement p_from_element,
       int p_add_costs,
       MazeSearchElement.Adjustment p_adjustment) {
-    if (p_door.get_maze_search_element(p_section_no).is_occupied || p_shape_entry == null) {
+    boolean door_section_occupied = p_door.get_maze_search_element(p_section_no).is_occupied;
+    if (door_section_occupied || p_shape_entry == null) {
+      FRLogger.trace(
+          "RAW_SECTION skip selected_section="
+              + p_section_no
+              + ", from_section="
+              + p_from_element.section_no_of_door
+              + ", backtrack_section="
+              + p_from_element.section_no_of_backtrack_door
+              + ", occupied="
+              + door_section_occupied
+              + ", shape_entry_null="
+              + (p_shape_entry == null)
+              + ", adjustment="
+              + p_adjustment
+              + ", door="
+              + describe_expandable(p_door)
+              + ", door_bounds="
+              + describe_expandable_bounds(p_door)
+              + ", from_door="
+              + describe_expandable(p_from_element.door)
+              + ", from_door_bounds="
+              + describe_expandable_bounds(p_from_element.door)
+              + ", net="
+              + ctrl.net_no);
+      FRLogger.trace(
+          "MazeSearchAlgo.expand_to_door_section",
+          "skip_assign_raw",
+          "selected_section="
+              + p_section_no
+              + ", from_section="
+              + p_from_element.section_no_of_door
+              + ", backtrack_section="
+              + p_from_element.section_no_of_backtrack_door
+              + ", occupied="
+              + door_section_occupied
+              + ", shape_entry_null="
+              + (p_shape_entry == null)
+              + ", adjustment="
+              + p_adjustment,
+          "Net #"
+              + ctrl.net_no
+              + ", door="
+              + describe_expandable(p_door)
+              + ", door_bounds="
+              + describe_expandable_bounds(p_door)
+              + ", from_door="
+              + describe_expandable(p_from_element.door)
+              + ", from_door_bounds="
+              + describe_expandable_bounds(p_from_element.door),
+          to_impacted_points(p_shape_entry));
       return false;
     }
     CompleteExpansionRoom next_room = p_door.other_room(p_from_element.next_room);
@@ -664,8 +768,163 @@ public class MazeSearchAlgo {
             room_ripped,
             p_adjustment,
             false);
+    // Store the direct ripup cost (non-zero only when this specific door caused a ripup).
+    if (p_add_costs > 0 && p_adjustment == MazeSearchElement.Adjustment.NONE) {
+      new_element.ripup_cost = p_add_costs;
+    }
+    FRLogger.trace(
+        "RAW_SECTION assign selected_section="
+            + p_section_no
+            + ", from_section="
+            + p_from_element.section_no_of_door
+            + ", backtrack_section="
+            + p_from_element.section_no_of_backtrack_door
+            + ", add_costs="
+            + p_add_costs
+            + ", adjustment="
+            + p_adjustment
+            + ", room_ripped="
+            + room_ripped
+            + ", expansion_value="
+            + expansion_value
+            + ", sorting_value="
+            + sorting_value
+            + ", door="
+            + describe_expandable(p_door)
+            + ", door_bounds="
+            + describe_expandable_bounds(p_door)
+            + ", from_door="
+            + describe_expandable(p_from_element.door)
+            + ", from_door_bounds="
+            + describe_expandable_bounds(p_from_element.door)
+            + ", net="
+            + ctrl.net_no);
+    FRLogger.trace(
+        "MazeSearchAlgo.expand_to_door_section",
+        "assign_raw",
+        "selected_section="
+            + p_section_no
+            + ", from_section="
+            + p_from_element.section_no_of_door
+            + ", backtrack_section="
+            + p_from_element.section_no_of_backtrack_door
+            + ", add_costs="
+            + p_add_costs
+            + ", adjustment="
+            + p_adjustment
+            + ", room_ripped="
+            + room_ripped
+            + ", expansion_value="
+            + expansion_value
+            + ", sorting_value="
+            + sorting_value,
+        "Net #"
+            + ctrl.net_no
+            + ", door="
+            + describe_expandable(p_door)
+            + ", door_bounds="
+            + describe_expandable_bounds(p_door)
+            + ", from_door="
+            + describe_expandable(p_from_element.door)
+            + ", from_door_bounds="
+            + describe_expandable_bounds(p_from_element.door),
+        to_impacted_points(p_shape_entry));
     this.maze_expansion_list.add(new_element);
     return true;
+  }
+
+  private static String describe_expandable(ExpandableObject p_door) {
+    if (p_door == null) {
+      return "null";
+    }
+    String section_count = safe_maze_section_count(p_door);
+    if (p_door instanceof TargetItemExpansionDoor) {
+      TargetItemExpansionDoor targetDoor = (TargetItemExpansionDoor) p_door;
+      return "TargetItemExpansionDoor"
+          + "/item="
+          + targetDoor.item.get_id_no()
+          + "/tree_entry="
+          + targetDoor.tree_entry_no
+          + "/dim="
+          + p_door.get_dimension()
+          + "/sections="
+          + section_count;
+    }
+    if (p_door instanceof ExpansionDrill) {
+      ExpansionDrill drill = (ExpansionDrill) p_door;
+      return "ExpansionDrill"
+          + "/location="
+          + drill.location
+          + "/layers="
+          + drill.first_layer
+          + "-"
+          + drill.last_layer
+          + "/dim="
+          + p_door.get_dimension()
+          + "/sections="
+          + section_count;
+    }
+    IntBox bounds = p_door.get_shape().bounding_box();
+    return p_door.getClass().getSimpleName()
+        + "/bounds=["
+        + "("
+        + bounds.ll.x
+        + ","
+        + bounds.ll.y
+        + ")"
+        + ".."
+        + "("
+        + bounds.ur.x
+        + ","
+        + bounds.ur.y
+        + ")"
+        + "]"
+        + "/dim="
+        + p_door.get_dimension()
+        + "/sections="
+        + section_count;
+  }
+
+  private static String safe_maze_section_count(ExpandableObject p_door) {
+    try {
+      return Integer.toString(p_door.maze_search_element_count());
+    } catch (RuntimeException e) {
+      return "uninitialized";
+    }
+  }
+
+  private static String describe_expandable_bounds(ExpandableObject p_door) {
+    if (p_door == null) {
+      return "null";
+    }
+    IntBox bounds = p_door.get_shape().bounding_box();
+    return "[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
+  }
+
+  private static String describe_room(CompleteExpansionRoom p_room) {
+    if (p_room == null) {
+      return "null";
+    }
+    IntBox bounds = p_room.get_shape().bounding_box();
+    return p_room.getClass().getSimpleName()
+        + "/layer="
+        + p_room.get_layer()
+        + "/bounds=[("
+        + bounds.ll.x
+        + ","
+        + bounds.ll.y
+        + ")..("
+        + bounds.ur.x
+        + ","
+        + bounds.ur.y
+        + ")]";
+  }
+
+  private static Point[] to_impacted_points(FloatLine p_shape_entry) {
+    if (p_shape_entry == null) {
+      return null;
+    }
+    return new Point[] {p_shape_entry.a.round(), p_shape_entry.b.round()};
   }
 
   private void expand_to_drill(
@@ -1169,11 +1428,27 @@ public class MazeSearchAlgo {
 
     double ripup_cost = this.ctrl.ripup_costs * cost_factor;
     double detour = 1;
+    double trace_length = 0;
+    double min_trace_length = 0;
+    int item_count = 0;
+    String connectionItemIds = "[]";
     if (fanout_via_cost_factor <= 1) // p_obstacle_item does not belong to a fanout
     {
       Connection obstacle_connection = Connection.get(p_obstacle_item);
       if (obstacle_connection != null) {
         detour = obstacle_connection.get_detour();
+        trace_length = obstacle_connection.trace_length();
+        item_count = obstacle_connection.item_list.size();
+        if (obstacle_connection.start_point != null && obstacle_connection.end_point != null) {
+          min_trace_length = obstacle_connection.start_point.to_float().distance(obstacle_connection.end_point.to_float());
+        }
+        StringBuilder sb = new StringBuilder("[");
+        for (app.freerouting.board.Item ci : obstacle_connection.item_list) {
+          if (sb.length() > 1) sb.append(",");
+          sb.append(ci.get_id_no());
+        }
+        sb.append("]");
+        connectionItemIds = sb.toString();
       }
     }
     boolean randomize = this.ctrl.ripup_pass_no >= 4 && this.ctrl.ripup_pass_no % 3 != 0;
@@ -1188,7 +1463,28 @@ public class MazeSearchAlgo {
     ripup_cost *= fanout_via_cost_factor;
     int result = Math.max((int) ripup_cost, 1);
     final int MAX_RIPUP_COSTS = Integer.MAX_VALUE / 100;
-    return Math.min(result, MAX_RIPUP_COSTS);
+    result = Math.min(result, MAX_RIPUP_COSTS);
+    String obstacleNets = "[]";
+    if (p_obstacle_item instanceof app.freerouting.board.Item) {
+      app.freerouting.board.Item obstacleItem = (app.freerouting.board.Item) p_obstacle_item;
+      int[] nets = new int[obstacleItem.net_count()];
+      for (int i = 0; i < nets.length; i++) {
+        nets[i] = obstacleItem.get_net_no(i);
+      }
+      obstacleNets = java.util.Arrays.toString(nets);
+    }
+    FRLogger.trace("CHECK_RIPUP net=" + ctrl.net_no
+        + ", obstacle_id=" + (p_obstacle_item instanceof app.freerouting.board.Item ? ((app.freerouting.board.Item) p_obstacle_item).get_id_no() : -1)
+        + ", obstacle_nets=" + obstacleNets
+        + ", connection_items=" + connectionItemIds
+        + ", half_width=" + cost_factor
+        + ", ripup_costs=" + this.ctrl.ripup_costs
+        + ", trace_length=" + trace_length
+        + ", min_trace_length=" + min_trace_length
+        + ", item_count=" + item_count
+        + ", detour=" + detour
+        + ", result=" + result);
+    return result;
   }
 
   /**

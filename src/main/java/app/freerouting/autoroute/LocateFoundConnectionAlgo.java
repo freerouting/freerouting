@@ -12,7 +12,9 @@ import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.SortedSet;
 
 public abstract class LocateFoundConnectionAlgo {
@@ -56,14 +58,29 @@ public abstract class LocateFoundConnectionAlgo {
    * Creates a new instance of LocateFoundConnectionAlgo
    */
   protected LocateFoundConnectionAlgo(MazeSearchAlgo.Result p_maze_search_result, AutorouteControl p_ctrl, ShapeSearchTree p_search_tree, AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list) {
+      SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
     this.ctrl = p_ctrl;
     this.angle_restriction = p_angle_restriction;
-    Collection<BacktrackElement> backtrack_list = backtrack(p_maze_search_result, p_ripped_item_list);
+    Collection<BacktrackElement> backtrack_list = backtrack(p_maze_search_result, p_ripped_item_list, p_ripup_costs, p_ctrl.net_no);
     this.backtrack_array = new BacktrackElement[backtrack_list.size()];
     Iterator<BacktrackElement> it = backtrack_list.iterator();
     for (int i = 0; i < backtrack_array.length; i++) {
       this.backtrack_array[i] = it.next();
+    }
+    if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
+      FRLogger.trace("compare_trace_backtrack_raw net=" + this.ctrl.net_no
+          + ", size=" + this.backtrack_array.length);
+      for (int i = 0; i < this.backtrack_array.length; i++) {
+        BacktrackElement element = this.backtrack_array[i];
+        String nextRoomType = element.next_room != null
+            ? element.next_room.getClass().getSimpleName()
+            : "null";
+        FRLogger.trace("compare_trace_backtrack_raw net=" + this.ctrl.net_no
+            + ", idx=" + i
+            + ", door_type=" + element.door.getClass().getSimpleName()
+            + ", section=" + element.section_no_of_door
+            + ", next_room_type=" + nextRoomType);
+      }
     }
     this.connection_items = new LinkedList<>();
     BacktrackElement start_info = this.backtrack_array[backtrack_array.length - 1];
@@ -149,15 +166,15 @@ public abstract class LocateFoundConnectionAlgo {
    * Returns a new Instance of LocateFoundConnectionAlgo or null, if p_destination_door is null.
    */
   public static LocateFoundConnectionAlgo get_instance(MazeSearchAlgo.Result p_maze_search_result, AutorouteControl p_ctrl, ShapeSearchTree p_search_tree, AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list) {
+      SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
     if (p_maze_search_result == null) {
       return null;
     }
     LocateFoundConnectionAlgo result;
     if (p_angle_restriction == AngleRestriction.NINETY_DEGREE || p_angle_restriction == AngleRestriction.FORTYFIVE_DEGREE) {
-      result = new LocateFoundConnectionAlgo45Degree(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list);
+      result = new LocateFoundConnectionAlgo45Degree(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_ripup_costs);
     } else {
-      result = new LocateFoundConnectionAlgoAnyAngle(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list);
+      result = new LocateFoundConnectionAlgoAnyAngle(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_ripup_costs);
     }
     return result;
   }
@@ -174,7 +191,7 @@ public abstract class LocateFoundConnectionAlgo {
   /**
    * Creates a list of doors by backtracking from p_destination_door to the start door. Returns null, if p_destination_door is null.
    */
-  private static Collection<BacktrackElement> backtrack(MazeSearchAlgo.Result p_maze_search_result, SortedSet<Item> p_ripped_item_list) {
+  private static Collection<BacktrackElement> backtrack(MazeSearchAlgo.Result p_maze_search_result, SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs, int p_net_no) {
     if (p_maze_search_result == null) {
       return null;
     }
@@ -182,6 +199,14 @@ public abstract class LocateFoundConnectionAlgo {
     CompleteExpansionRoom curr_next_room = null;
     ExpandableObject curr_backtrack_door = p_maze_search_result.destination_door;
     MazeSearchElement curr_maze_search_element = curr_backtrack_door.get_maze_search_element(p_maze_search_result.section_no_of_door);
+    boolean debugBacktrack = (p_net_no == 98);
+    if (debugBacktrack) {
+      String destType = curr_backtrack_door.getClass().getSimpleName();
+      FRLogger.trace("BACKTRACK_START net=" + p_net_no
+          + ", dest_type=" + destType
+          + ", dest_section=" + p_maze_search_result.section_no_of_door
+          + ", dest_room_ripped=" + curr_maze_search_element.room_ripped);
+    }
     if (curr_backtrack_door instanceof TargetItemExpansionDoor door) {
       curr_next_room = door.room;
     } else if (curr_backtrack_door instanceof ExpansionDrill curr_drill) {
@@ -190,11 +215,15 @@ public abstract class LocateFoundConnectionAlgo {
         for (CompleteExpansionRoom tmp_room : curr_drill.room_arr) {
           if (tmp_room instanceof ObstacleExpansionRoom room) {
             p_ripped_item_list.add(room.get_item());
+            if (p_ripup_costs != null) {
+              p_ripup_costs.put(room.get_item(), curr_maze_search_element.ripup_cost);
+            }
           }
         }
       }
     }
     BacktrackElement curr_backtrack_element = new BacktrackElement(curr_backtrack_door, p_maze_search_result.section_no_of_door, curr_next_room);
+    int step = 0;
     for (; ; ) {
       result.add(curr_backtrack_element);
       curr_backtrack_door = curr_maze_search_element.backtrack_door;
@@ -213,11 +242,31 @@ public abstract class LocateFoundConnectionAlgo {
       }
       curr_maze_search_element = curr_backtrack_door.get_maze_search_element(curr_section_no);
       curr_backtrack_element = new BacktrackElement(curr_backtrack_door, curr_section_no, curr_next_room);
+      if (debugBacktrack) {
+        String doorType = curr_backtrack_door.getClass().getSimpleName();
+        String nextRoomType = curr_next_room != null ? curr_next_room.getClass().getSimpleName() : "null";
+        int obstacleId = -1;
+        if (curr_next_room instanceof ObstacleExpansionRoom obst) {
+          obstacleId = obst.get_item().get_id_no();
+        }
+        FRLogger.trace("BACKTRACK_STEP net=" + p_net_no
+            + ", step=" + step
+            + ", door_type=" + doorType
+            + ", section=" + curr_section_no
+            + ", room_ripped=" + curr_maze_search_element.room_ripped
+            + ", ripup_cost=" + curr_maze_search_element.ripup_cost
+            + ", next_room_type=" + nextRoomType
+            + ", obstacle_id=" + obstacleId);
+      }
       if (curr_maze_search_element.room_ripped) {
         if (curr_next_room instanceof ObstacleExpansionRoom room) {
           p_ripped_item_list.add(room.get_item());
+          if (p_ripup_costs != null) {
+            p_ripup_costs.put(room.get_item(), curr_maze_search_element.ripup_cost);
+          }
         }
       }
+      step++;
     }
     return result;
   }
@@ -351,6 +400,19 @@ public abstract class LocateFoundConnectionAlgo {
       corner_arr[i] = it2.next();
     }
     ResultItem result = new ResultItem(corner_arr, this.current_trace_layer);
+    if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
+      IntPoint first = corner_arr.length > 0 ? corner_arr[0] : null;
+      IntPoint last = corner_arr.length > 0 ? corner_arr[corner_arr.length - 1] : null;
+      FRLogger.trace("compare_trace_next_trace_raw net=" + this.ctrl.net_no
+          + ", trace_layer=" + this.current_trace_layer
+          + ", next_layer=" + next_layer
+          + ", corner_count=" + corner_arr.length
+          + ", first=" + first
+          + ", last=" + last
+          + ", from_door=" + this.current_from_door_index
+          + ", to_door=" + this.current_to_door_index
+          + ", target_door=" + this.current_target_door_index);
+    }
     this.current_trace_layer = next_layer;
     return result;
   }

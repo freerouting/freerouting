@@ -73,7 +73,7 @@ public class ShapeTraceEntries {
     } else {
       board.remove_item(p_trace);
       for (int i = 0; i < pieces.length; i++) {
-        board.insert_trace_without_cleaning(pieces[i], p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), FixedState.NOT_FIXED);
+        board.insert_trace_without_cleaning(pieces[i], p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), FixedState.UNFIXED);
       }
     }
   }
@@ -85,12 +85,12 @@ public class ShapeTraceEntries {
     BasicBoard board = p_trace.board;
     board.additional_update_after_change(p_trace);
     board.item_list.save_for_undo(p_trace);
-    PolylineTrace start_piece = new PolylineTrace(p_start_piece, p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), 0, 0, FixedState.NOT_FIXED, board);
+    PolylineTrace start_piece = new PolylineTrace(p_start_piece, p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), 0, 0, FixedState.UNFIXED, board);
     start_piece.board = board;
     board.item_list.insert(start_piece);
     start_piece.set_on_the_board(true);
 
-    PolylineTrace end_piece = new PolylineTrace(p_end_piece, p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), 0, 0, FixedState.NOT_FIXED, board);
+    PolylineTrace end_piece = new PolylineTrace(p_end_piece, p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), 0, 0, FixedState.UNFIXED, board);
     end_piece.board = board;
     board.item_list.insert(end_piece);
     end_piece.set_on_the_board(true);
@@ -217,7 +217,7 @@ public class ShapeTraceEntries {
       // no valid trace piece, return the next one
       return next_substitute_trace_piece();
     }
-    return new PolylineTrace(piece_polyline, this.layer, curr_trace.get_half_width(), curr_trace.net_no_arr, curr_trace.clearance_class_no(), 0, 0, FixedState.NOT_FIXED, this.board);
+    return new PolylineTrace(piece_polyline, this.layer, curr_trace.get_half_width(), curr_trace.net_no_arr, curr_trace.clearance_class_no(), 0, 0, FixedState.UNFIXED, this.board);
   }
 
   /**

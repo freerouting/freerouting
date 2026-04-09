@@ -646,7 +646,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * </ul>
    *
    * <p>When this value changes, existing pin exit stubs that were shove-fixed
-   * are released (set to NOT_FIXED) to allow re-optimization with the new constraint.
+   * are released (set to UNFIXED) to allow re-optimization with the new constraint.
    * Only simple 2-corner exit traces are unfixed.
    *
    * <p>This setting is ignored if the board is read-only.
@@ -671,7 +671,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
             if ((curr_contact instanceof PolylineTrace trace)
                 && curr_contact.get_fixed_state() == FixedState.SHOVE_FIXED) {
               if (trace.corner_count() == 2) {
-                curr_contact.set_fixed_state(FixedState.NOT_FIXED);
+                curr_contact.set_fixed_state(FixedState.UNFIXED);
               }
             }
           }

@@ -9,6 +9,7 @@ import app.freerouting.board.ShapeSearchTree90Degree;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
@@ -19,6 +20,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -120,9 +122,10 @@ public class AutorouteEngine {
   /**
    * Auto-routes a connection between p_start_set and p_dest_set. Returns
    * ALREADY_CONNECTED, ROUTED, NOT_ROUTED, or INSERT_ERROR.
+   * p_ripup_costs is an optional map to receive per-ripped-item ripup costs (may be null).
    */
   public AutorouteAttemptResult autoroute_connection(Set<Item> p_start_set, Set<Item> p_dest_set,
-      AutorouteControl p_ctrl, SortedSet<Item> p_ripped_item_list) {
+      AutorouteControl p_ctrl, SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
     String sourceItems = String.join(", ", p_start_set
         .stream()
         .map(Item::toString)
@@ -155,26 +158,40 @@ public class AutorouteEngine {
       }
     }
 
-    if (search_result == null) {
-      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED,
-          "Failed to route connection between " + sourceItems + " and " + targetItems
-              + ", because no connection was found between their nets.");
+    if (search_result != null) {
+      if (p_ctrl.net_no == 33 || p_ctrl.net_no == 66 || p_ctrl.net_no == 67) {
+        String destinationType = search_result.destination_door != null
+            ? search_result.destination_door.getClass().getSimpleName()
+            : "null";
+        FRLogger.trace("compare_trace_maze_result_raw net=" + p_ctrl.net_no
+            + ", section=" + search_result.section_no_of_door
+            + ", destination_type=" + destinationType);
+      }
     }
 
     LocateFoundConnectionAlgo autoroute_result = null;
     if (search_result != null) {
       try {
         autoroute_result = LocateFoundConnectionAlgo.get_instance(search_result, p_ctrl, this.autoroute_search_tree,
-            board.rules.get_trace_angle_restriction(), p_ripped_item_list);
+            board.rules.get_trace_angle_restriction(), p_ripped_item_list, p_ripup_costs);
       } catch (Exception e) {
         FRLogger.error("AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance", e);
       }
     }
 
+    // Always clean up expansion rooms from the search tree, regardless of search outcome.
+    // This mirrors v1.9's behavior: clear() is called before any early returns so that
+    // stale CompleteFreeSpaceExpansionRoom objects don't pollute subsequent routing attempts.
     if (!this.maintain_database) {
       this.clear();
     } else {
       this.reset_all_doors();
+    }
+
+    if (search_result == null) {
+      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED,
+          "Failed to route connection between " + sourceItems + " and " + targetItems
+              + ", because no connection was found between their nets.");
     }
 
     if (autoroute_result == null) {
@@ -396,8 +413,26 @@ public class AutorouteEngine {
           break;
         }
       }
+      FRLogger.trace("COMPLETE_ROOM input"
+          + ", net=" + this.net_no
+          + ", layer=" + p_room.get_layer()
+          + ", room_bounds=" + describe_shape_bounds(p_room.get_shape())
+          + ", contained_bounds=" + describe_shape_bounds(p_room.get_contained_shape())
+          + ", from_door_bounds=" + describe_shape_bounds(from_door_shape)
+          + ", ignore_object=" + (ignore_object == null ? "null" : ignore_object.getClass().getSimpleName()));
       Collection<IncompleteFreeSpaceExpansionRoom> completed_shapes = this.autoroute_search_tree.complete_shape(p_room,
           this.net_no, ignore_object, from_door_shape);
+      int initialCandidateIndex = 0;
+      for (IncompleteFreeSpaceExpansionRoom initialCandidate : completed_shapes) {
+        FRLogger.trace("COMPLETE_ROOM initial_candidate"
+            + ", net=" + this.net_no
+            + ", layer=" + initialCandidate.get_layer()
+            + ", index=" + initialCandidateIndex
+            + ", dimension=" + initialCandidate.get_shape().dimension()
+            + ", incomplete_bounds=" + describe_shape_bounds(initialCandidate.get_shape())
+            + ", from_door_bounds=" + describe_shape_bounds(from_door_shape));
+        ++initialCandidateIndex;
+      }
       this.remove_incomplete_expansion_room(p_room);
       boolean is_first_completed_room = true;
       for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : completed_shapes) {
@@ -408,6 +443,11 @@ public class AutorouteEngine {
         }
         if (is_first_completed_room) {
           is_first_completed_room = false;
+          FRLogger.trace("COMPLETE_ROOM first_candidate"
+              + ", net=" + this.net_no
+              + ", layer=" + curr_incomplete_room.get_layer()
+              + ", incomplete_bounds=" + describe_shape_bounds(curr_incomplete_room.get_shape())
+              + ", from_door_bounds=" + describe_shape_bounds(from_door_shape));
           CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(curr_incomplete_room);
           if (completed_room != null) {
             result.add(completed_room);
@@ -419,6 +459,11 @@ public class AutorouteEngine {
           Collection<IncompleteFreeSpaceExpansionRoom> curr_completed_shapes = this.autoroute_search_tree
               .complete_shape(curr_incomplete_room, this.net_no, ignore_object, from_door_shape);
           for (IncompleteFreeSpaceExpansionRoom tmp_room : curr_completed_shapes) {
+            FRLogger.trace("COMPLETE_ROOM recalc_candidate"
+                + ", net=" + this.net_no
+                + ", layer=" + tmp_room.get_layer()
+                + ", incomplete_bounds=" + describe_shape_bounds(tmp_room.get_shape())
+                + ", from_door_bounds=" + describe_shape_bounds(from_door_shape));
             CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(tmp_room);
             if (completed_room != null) {
               result.add(completed_room);
@@ -448,7 +493,19 @@ public class AutorouteEngine {
     }
     complete_expansion_rooms.add(completed_room);
     this.autoroute_search_tree.insert(completed_room);
+    FRLogger.trace("COMPLETE_ROOM added"
+        + ", net=" + this.net_no
+        + ", layer=" + completed_room.get_layer()
+        + ", bounds=" + describe_shape_bounds(completed_room.get_shape()));
     return completed_room;
+  }
+
+  private static String describe_shape_bounds(TileShape p_shape) {
+    if (p_shape == null) {
+      return "null";
+    }
+    IntBox bounds = p_shape.bounding_box();
+    return "[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
   }
 
   /**
@@ -476,12 +533,11 @@ public class AutorouteEngine {
     if (p_room.get_doors() == null) {
       return;
     }
-    // Snapshot the doors to avoid ConcurrentModificationException and restarting
-    // the iterator
-    // This changes the complexity from O(N^2) (due to restarts) to O(N)
-    List<ExpansionDoor> doors_snapshot = new ArrayList<>(p_room.get_doors());
-
-    for (ExpansionDoor curr_door : doors_snapshot) {
+    // Keep v1.9 semantics: completing a neighbour can mutate door topology, so
+    // restart iteration on the updated door set.
+    Iterator<ExpansionDoor> it = p_room.get_doors().iterator();
+    while (it.hasNext()) {
+      ExpansionDoor curr_door = it.next();
       // cast to ExpansionRoom because ExpansionDoor.other_room works differently with
       // parameter type CompleteExpansionRoom.
       ExpansionRoom neighbour_room = curr_door.other_room((ExpansionRoom) p_room);
@@ -490,6 +546,7 @@ public class AutorouteEngine {
       }
       if (neighbour_room instanceof IncompleteFreeSpaceExpansionRoom room) {
         this.complete_expansion_room(room);
+        it = p_room.get_doors().iterator();
       } else if (neighbour_room instanceof ObstacleExpansionRoom obstacle_neighbour_room) {
         if (!obstacle_neighbour_room.all_doors_calculated()) {
           this.calculate_doors(obstacle_neighbour_room);

@@ -10,6 +10,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.SortedSet;
 
 /**
@@ -23,8 +24,8 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    * Creates a new instance of LocateFoundConnectionAlgo
    */
   protected LocateFoundConnectionAlgoAnyAngle(MazeSearchAlgo.Result p_maze_search_result, AutorouteControl p_ctrl, ShapeSearchTree p_search_tree, AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list) {
-    super(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list);
+      SortedSet<Item> p_ripped_item_list, Map<Item, Integer> p_ripup_costs) {
+    super(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_ripup_costs);
   }
 
   /**
@@ -275,6 +276,18 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
     this.current_to_door_index = new_door_ind;
     if (result_corner != null && result_corner != this.current_from_point) {
       result.add(result_corner);
+    }
+    if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
+      FRLogger.trace("compare_trace_next_corners_raw net=" + this.ctrl.net_no
+          + ", layer=" + this.current_trace_layer
+          + ", from_door=" + this.current_from_door_index
+          + ", to_door=" + this.current_to_door_index
+          + ", target_door=" + this.current_target_door_index
+          + ", end_of_trace=" + end_of_trace
+          + ", corrected=" + (corrected_result != null)
+          + ", result_size=" + result.size()
+          + ", result_corner=" + result_corner
+          + ", current_from=" + this.current_from_point);
     }
     return result;
   }

@@ -75,6 +75,9 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   /** Converts the physical instance of this shape to a simpler physical instance, if possible. */
   public abstract TileShape simplify();
 
+  /** Returns a unique ID for this shape for deterministic tie-breaking. */
+  public abstract int get_id_no();
+
   /** checks if this TileShape is an IntBox or can be converted into an IntBox */
   public abstract boolean is_IntBox();
 

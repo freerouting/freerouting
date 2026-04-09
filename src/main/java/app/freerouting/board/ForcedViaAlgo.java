@@ -136,7 +136,7 @@ public class ForcedViaAlgo {
         }
       }
     }
-    p_board.insert_via(via_padstack, p_location, p_net_no_arr, p_via_info.get_clearance_class(), FixedState.NOT_FIXED, p_via_info.attach_smd_allowed());
+    p_board.insert_via(via_padstack, p_location, p_net_no_arr, p_via_info.get_clearance_class(), FixedState.UNFIXED, p_via_info.attach_smd_allowed());
     return true;
   }
 

@@ -7,7 +7,6 @@ import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.LineSegment;
@@ -23,9 +22,10 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ClearanceMatrix;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -324,7 +324,7 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public void overlapping_objects(ConvexShape p_shape, int p_layer, int[] p_ignore_net_nos,
       Set<SearchTreeObject> p_obstacles) {
-    Collection<TreeEntry> tree_entries = new ArrayList<>();
+    Collection<TreeEntry> tree_entries = new LinkedList<>();
     overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, tree_entries);
     if (p_obstacles != null) {
       for (TreeEntry curr_entry : tree_entries) {
@@ -480,7 +480,7 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public void overlapping_objects_with_clearance(ConvexShape p_shape, int p_layer, int[] p_ignore_net_nos,
       int p_cl_type, Set<SearchTreeObject> p_obstacles) {
-    Collection<TreeEntry> tree_entries = new ArrayList<>();
+    Collection<TreeEntry> tree_entries = new LinkedList<>();
     if (this.is_clearance_compensation_used()) {
       overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, tree_entries);
     } else {
@@ -525,7 +525,7 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   public Collection<TreeEntry> overlapping_tree_entries_with_clearance(ConvexShape p_shape, int p_layer,
       int[] p_ignore_net_nos, int p_clearance_class) {
-    Collection<TreeEntry> result = new ArrayList<>();
+    Collection<TreeEntry> result = new LinkedList<>();
     if (this.is_clearance_compensation_used()) {
       this.overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, result);
     } else {
@@ -550,80 +550,98 @@ public class ShapeSearchTree extends MinAreaTree {
       int p_net_no, SearchTreeObject p_ignore_object, TileShape p_ignore_shape) {
     if (p_room.get_contained_shape() == null) {
       FRLogger.warn("ShapeSearchTree.complete_shape: p_shape_to_be_contained != null expected");
-      return new ArrayList<>();
+      return new LinkedList<>();
     }
     if (this.root == null) {
-      return new ArrayList<>();
+      return new LinkedList<>();
     }
     TileShape start_shape = board.get_bounding_box();
     if (p_room.get_shape() != null) {
       start_shape = start_shape.intersection(p_room.get_shape());
     }
     RegularTileShape bounding_shape = start_shape.bounding_shape(this.bounding_directions);
-    Collection<IncompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
+    Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
     if (start_shape.dimension() == 2) {
       IncompleteFreeSpaceExpansionRoom new_room = new IncompleteFreeSpaceExpansionRoom(start_shape, p_room.get_layer(),
           p_room.get_contained_shape());
       result.add(new_room);
     }
+
+    // To ensure exact algorithmic parity with v1.9, we need to visit obstacles
+    // in a deterministic order. The non-deterministic order of tree traversal
+    // causes different room partitioning.
+    List<Leaf> overlapping_leaves = new LinkedList<>();
     this.node_stack.reset();
     this.node_stack.push(this.root);
     TreeNode curr_node;
     int room_layer = p_room.get_layer();
 
-    for (;;) {
-      curr_node = this.node_stack.pop();
-      if (curr_node == null) {
-        break;
-      }
+    while ((curr_node = this.node_stack.pop()) != null) {
       if (curr_node.bounding_shape.intersects(bounding_shape)) {
-        if (curr_node instanceof Leaf curr_leaf) {
-          SearchTreeObject curr_object = (SearchTreeObject) curr_leaf.object;
-          int shape_index = curr_leaf.shape_index_in_object;
-          if (curr_object.is_trace_obstacle(p_net_no) && curr_object.shape_layer(shape_index) == room_layer
-              && curr_object != p_ignore_object) {
-
-            TileShape curr_object_shape = curr_object.get_tree_shape(this, shape_index);
-            Collection<IncompleteFreeSpaceExpansionRoom> new_result = new ArrayList<>();
-            RegularTileShape new_bounding_shape = IntOctagon.EMPTY;
-
-            for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : result) {
-              boolean something_changed = false;
-              TileShape intersection = curr_incomplete_room
-                  .get_shape()
-                  .intersection(curr_object_shape);
-              if (intersection.dimension() == 2) {
-                boolean ignore_expansion_room = curr_object instanceof CompleteFreeSpaceExpansionRoom
-                    && p_ignore_shape != null && p_ignore_shape.contains(intersection);
-                // cannot happen in free angle routing, because then expansion_rooms
-                // may not overlap. Therefore, that can be removed as soon as special
-                // function for 45-degree routing is used.
-                if (!ignore_expansion_room) {
-                  something_changed = true;
-                  Collection<IncompleteFreeSpaceExpansionRoom> new_rooms = restrain_shape(curr_incomplete_room,
-                      curr_object_shape);
-                  new_result.addAll(new_rooms);
-                  for (IncompleteFreeSpaceExpansionRoom tmp_room : new_rooms) {
-                    new_bounding_shape = new_bounding_shape.union(tmp_room
-                        .get_shape()
-                        .bounding_shape(this.bounding_directions));
-                  }
-                }
-              }
-              if (!something_changed) {
-                new_result.add(curr_incomplete_room);
-                new_bounding_shape = new_bounding_shape.union(curr_incomplete_room
-                    .get_shape()
-                    .bounding_shape(this.bounding_directions));
-              }
-            }
-            result = new_result;
-            bounding_shape = new_bounding_shape;
-          }
+        if (curr_node instanceof Leaf leaf) {
+          overlapping_leaves.add(leaf);
         } else {
           this.node_stack.push(((InnerNode) curr_node).first_child);
           this.node_stack.push(((InnerNode) curr_node).second_child);
         }
+      }
+    }
+
+    // Sort obstacles to ensure deterministic room partitioning.
+    // v1.9's "natural" order was based on its tree structure.
+    // Sorting with Leaf's natural comparison (which uses item id_no and shape_index)
+    // provides a stable visit order.
+    Collections.sort(overlapping_leaves);
+
+    for (Leaf curr_leaf : overlapping_leaves) {
+      SearchTreeObject curr_object = (SearchTreeObject) curr_leaf.object;
+      int shape_index = curr_leaf.shape_index_in_object;
+      if (curr_object.is_trace_obstacle(p_net_no) && curr_object.shape_layer(shape_index) == room_layer
+          && curr_object != p_ignore_object) {
+
+        TileShape curr_object_shape = curr_object.get_tree_shape(this, shape_index);
+        Collection<IncompleteFreeSpaceExpansionRoom> new_result = new LinkedList<>();
+        RegularTileShape new_bounding_shape = IntOctagon.EMPTY;
+
+        for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : result) {
+          boolean something_changed = false;
+          TileShape intersection = curr_incomplete_room
+              .get_shape()
+              .intersection(curr_object_shape);
+          if (intersection.dimension() == 2) {
+            boolean ignore_expansion_room = curr_object instanceof CompleteFreeSpaceExpansionRoom
+                && p_ignore_shape != null && p_ignore_shape.contains(intersection);
+            FRLogger.trace("COMPLETE_SHAPE_DECISION"
+                + ", net=" + p_net_no
+                + ", layer=" + room_layer
+                + ", action=" + (ignore_expansion_room ? "IGNORE" : "RESTRAIN")
+                + ", obstacle_type=" + curr_object.getClass().getSimpleName()
+                + ", obstacle_bounds=" + curr_object_shape.bounding_box()
+                + ", overlap_bounds=" + intersection.bounding_box()
+                + ", ignore_bounds=" + (p_ignore_shape == null ? "null" : p_ignore_shape.bounding_box()));
+
+            if (!ignore_expansion_room) {
+              something_changed = true;
+              Collection<IncompleteFreeSpaceExpansionRoom> new_rooms = restrain_shape(curr_incomplete_room,
+                  curr_object_shape);
+              new_result.addAll(new_rooms);
+              // Keep v1.9 semantics: the bounding shape must include all accumulated rooms.
+              for (IncompleteFreeSpaceExpansionRoom tmp_room : new_result) {
+                new_bounding_shape = new_bounding_shape.union(tmp_room
+                    .get_shape()
+                    .bounding_shape(this.bounding_directions));
+              }
+            }
+          }
+          if (!something_changed) {
+            new_result.add(curr_incomplete_room);
+            new_bounding_shape = new_bounding_shape.union(curr_incomplete_room
+                .get_shape()
+                .bounding_shape(this.bounding_directions));
+          }
+        }
+        result = new_result;
+        bounding_shape = new_bounding_shape;
       }
     }
     result = divide_large_room(result, board.get_bounding_box());
@@ -639,6 +657,7 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   private Collection<IncompleteFreeSpaceExpansionRoom> restrain_shape(
       IncompleteFreeSpaceExpansionRoom p_incomplete_room, TileShape p_obstacle_shape) {
+    Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
     // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained
     // are on the right side of this line, and that the line segment
     // intersects with the interior of p_shape.
@@ -647,14 +666,10 @@ public class ShapeSearchTree extends MinAreaTree {
     // Then intersect p_shape with the halfplane defined by the
     // opposite of this line.
 
-    Simplex obstacle_simplex = null;
-    if (!(p_obstacle_shape instanceof IntOctagon)) {
-      obstacle_simplex = p_obstacle_shape.to_Simplex(); // otherwise border_lines of length 0 for octagons may not
-      // be handled
-      // correctly
-    }
+    // Always convert to Simplex to match v1.9 semantics - the comment below explains why:
+    // "otherwise border_lines of length 0 for octagons may not be handled correctly"
+    Simplex obstacle_simplex = p_obstacle_shape.to_Simplex();
 
-    Collection<IncompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
     TileShape room_shape = p_incomplete_room.get_shape();
     int layer = p_incomplete_room.get_layer();
 
@@ -671,38 +686,19 @@ public class ShapeSearchTree extends MinAreaTree {
     Line cut_line = null;
     double cut_line_distance = -1;
 
-    if (p_obstacle_shape instanceof IntOctagon obstacle_octagon) {
-      for (int i = 0; i < 8; i++) {
-        IntPoint p1 = obstacle_octagon.corner(i);
-        IntPoint p2 = obstacle_octagon.corner((i + 1) % 8);
-        if (p1.equals(p2)) {
-          continue;
-        }
-        Line curr_line = obstacle_octagon.border_line(i);
-        if (room_shape.is_intersected_interior_by(p1, p2, curr_line)) {
-          double curr_min_distance = shape_to_be_contained.distance_to_the_left(curr_line);
+    for (int i = 0; i < obstacle_simplex.border_line_count(); i++) {
+      LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
+      if (room_shape.is_intersected_interior_by(curr_line_segment)) {
+        // otherwise curr_object may not touch the intersection
+        // of p_shape with the half_plane defined by the cut_line.
+        // That may lead to problems when creating the ExpansionRooms.
+        Line curr_line = obstacle_simplex.border_line(i);
 
-          if (curr_min_distance > cut_line_distance) {
-            cut_line_distance = curr_min_distance;
-            cut_line = curr_line.opposite();
-          }
-        }
-      }
-    } else {
-      for (int i = 0; i < obstacle_simplex.border_line_count(); i++) {
-        LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
-        if (room_shape.is_intersected_interior_by(curr_line_segment)) {
-          // otherwise curr_object may not touch the intersection
-          // of p_shape with the half_plane defined by the cut_line.
-          // That may lead to problems when creating the ExpansionRooms.
-          Line curr_line = obstacle_simplex.border_line(i);
+        double curr_min_distance = shape_to_be_contained.distance_to_the_left(curr_line);
 
-          double curr_min_distance = shape_to_be_contained.distance_to_the_left(curr_line);
-
-          if (curr_min_distance > cut_line_distance) {
-            cut_line_distance = curr_min_distance;
-            cut_line = curr_line.opposite();
-          }
+        if (curr_min_distance > cut_line_distance) {
+          cut_line_distance = curr_min_distance;
+          cut_line = curr_line.opposite();
         }
       }
     }
@@ -724,32 +720,14 @@ public class ShapeSearchTree extends MinAreaTree {
         return result;
       }
 
-      if (p_obstacle_shape instanceof IntOctagon obstacle_octagon) {
-        for (int i = 0; i < 8; i++) {
-          IntPoint p1 = obstacle_octagon.corner(i);
-          IntPoint p2 = obstacle_octagon.corner((i + 1) % 8);
-          if (p1.equals(p2)) {
-            continue;
-          }
-          Line curr_line = obstacle_octagon.border_line(i);
-          if (room_shape.is_intersected_interior_by(p1, p2, curr_line)) {
-            if (shape_to_be_contained.side_of(curr_line) == Side.COLLINEAR) {
-              // curr_line intersects with the interior of p_shape_to_be_contained
-              cut_line = curr_line.opposite();
-              break;
-            }
-          }
-        }
-      } else {
-        for (int i = 0; i < obstacle_simplex.border_line_count(); i++) {
-          LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
-          if (room_shape.is_intersected_interior_by(curr_line_segment)) {
-            Line curr_line = obstacle_simplex.border_line(i);
-            if (shape_to_be_contained.side_of(curr_line) == Side.COLLINEAR) {
-              // curr_line intersects with the interior of p_shape_to_be_contained
-              cut_line = curr_line.opposite();
-              break;
-            }
+      for (int i = 0; i < obstacle_simplex.border_line_count(); i++) {
+        LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
+        if (room_shape.is_intersected_interior_by(curr_line_segment)) {
+          Line curr_line = obstacle_simplex.border_line(i);
+          if (shape_to_be_contained.side_of(curr_line) == Side.COLLINEAR) {
+            // curr_line intersects with the interior of p_shape_to_be_contained
+            cut_line = curr_line.opposite();
+            break;
           }
         }
       }
@@ -903,7 +881,7 @@ public class ShapeSearchTree extends MinAreaTree {
       // many tree shapes.
     }
 
-    Collection<TileShape> tree_shape_list = new ArrayList<>();
+    Collection<TileShape> tree_shape_list = new LinkedList<>();
     for (int i = 0; i < convex_shapes.length; i++) {
       TileShape curr_convex_shape = convex_shapes[i];
 

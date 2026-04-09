@@ -7,9 +7,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * A Polyline is a sequence of lines, where no 2 consecutive lines may be parallel. A Polyline of n lines defines a Polygon of n-1 intersection points of consecutive lines. The lines of the objects of
- * class Polyline are normally defined by points with integer coordinates, whereas the intersections of Lines can be represented in general only by infinite precision rational points. We use polylines
- * with integer coordinates instead of polygons with infinite precision rational coordinates because of its better performance in geometric calculations.
+ * A Polyline is a sequence of lines, where no 2 consecutive lines may be
+ * parallel. A Polyline of n lines defines a Polygon of n-1 intersection points
+ * of consecutive lines. The lines of the objects of
+ * class Polyline are normally defined by points with integer coordinates,
+ * whereas the intersections of Lines can be represented in general only by
+ * infinite precision rational points. We use polylines
+ * with integer coordinates instead of polygons with infinite precision rational
+ * coordinates because of its better performance in geometric calculations.
  */
 public class Polyline implements Serializable {
 
@@ -23,8 +28,11 @@ public class Polyline implements Serializable {
   private transient IntBox precalculated_bounding_box;
 
   /**
-   * creates a polyline of length p_polygon.corner_count + 1 from p_polygon, so that the i-th corner of p_polygon will be the intersection of the i-th and the i+1-th lines of the new created
-   * p_polyline for 0 {@literal <}= i {@literal <} p_point_arr.length. p_polygon must have at least 2 corners
+   * creates a polyline of length p_polygon.corner_count + 1 from p_polygon, so
+   * that the i-th corner of p_polygon will be the intersection of the i-th and
+   * the i+1-th lines of the new created
+   * p_polyline for 0 {@literal <}= i {@literal <} p_point_arr.length. p_polygon
+   * must have at least 2 corners
    */
   public Polyline(Polygon p_polygon) {
     Point[] point_arr = p_polygon.corner_array();
@@ -68,7 +76,9 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Creates a polyline from an array of lines. Lines, which are parallel to the previous line are skipped. The directed lines are normalized, so that they intersect the previous line before the next
+   * Creates a polyline from an array of lines. Lines, which are parallel to the
+   * previous line are skipped. The directed lines are normalized, so that they
+   * intersect the previous line before the next
    * line
    */
   public Polyline(Line[] p_line_arr) {
@@ -127,7 +137,8 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * checks if previous and next line are equal or opposite and removes the resulting overlap
+   * checks if previous and next line are equal or opposite and removes the
+   * resulting overlap
    */
   private static Line[] remove_overlaps(Line[] p_line_arr) {
     if (p_line_arr.length < 4) {
@@ -139,7 +150,7 @@ public class Polyline implements Serializable {
     if (!p_line_arr[0].is_equal_or_opposite(p_line_arr[2])) {
       ++new_length;
     }
-    // else  skip the first line
+    // else skip the first line
     tmp_arr[new_length] = p_line_arr[1];
     ++new_length;
     for (int i = 2; i < p_line_arr.length - 2; i++) {
@@ -237,7 +248,8 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * returns the array of the intersection of two consecutive lines approximated by FloatPoint's.
+   * returns the array of the intersection of two consecutive lines approximated
+   * by FloatPoint's.
    */
   public Point[] corner_arr() {
     if (arr.length < 2) {
@@ -257,7 +269,8 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * returns the array of the intersection of two consecutive lines approximated by FloatPoint's.
+   * returns the array of the intersection of two consecutive lines approximated
+   * by FloatPoint's.
    */
   public FloatPoint[] corner_approx_arr() {
     if (arr.length < 2) {
@@ -277,7 +290,8 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Returns an approximation of the intersection of the p_no-th with the (p_no - 1)-th line by a FloatPoint.
+   * Returns an approximation of the intersection of the p_no-th with the (p_no -
+   * 1)-th line by a FloatPoint.
    */
   public FloatPoint corner_approx(int p_no) {
     int no;
@@ -359,14 +373,17 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Calculates the cumulative distance between consecutive corners of this polyline.
+   * Calculates the cumulative distance between consecutive corners of this
+   * polyline.
    */
   public double length_approx() {
     return length_approx(0, arr.length - 2);
   }
 
   /**
-   * calculates for each line a shape around this line where the right and left edge lines have the distance p_half_width from the center line Returns an array of convex shapes of length line_count -
+   * calculates for each line a shape around this line where the right and left
+   * edge lines have the distance p_half_width from the center line Returns an
+   * array of convex shapes of length line_count -
    * 2
    */
   public TileShape[] offset_shapes(int p_half_width) {
@@ -374,7 +391,9 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * calculates for each line between p_from_no and p_to_no a shape around this line, where the right and left edge lines have the distance p_half_width from the center line
+   * calculates for each line between p_from_no and p_to_no a shape around this
+   * line, where the right and left edge lines have the distance p_half_width from
+   * the center line
    */
   public TileShape[] offset_shapes(int p_half_width, int p_from_no, int p_to_no) {
     int from_no = Math.max(p_from_no, 0);
@@ -450,7 +469,8 @@ public class Polyline implements Serializable {
             next_border_line = arr[j].opposite().translate(-p_half_width);
           }
 
-          if (next_border_line.side_of(corner_to_check) == Side.ON_THE_LEFT && next_border_line.side_of(this.corner(i)) == Side.ON_THE_RIGHT
+          if (next_border_line.side_of(corner_to_check) == Side.ON_THE_LEFT
+              && next_border_line.side_of(this.corner(i)) == Side.ON_THE_RIGHT
               && next_border_line.side_of(this.corner(i - 1)) == Side.ON_THE_RIGHT)
           // an outstanding corner
           {
@@ -487,7 +507,8 @@ public class Polyline implements Serializable {
           } else {
             prev_border_line = arr[j].opposite().translate(-p_half_width);
           }
-          if (prev_border_line.side_of(corner_to_check) == Side.ON_THE_LEFT && prev_border_line.side_of(this.corner(i)) == Side.ON_THE_RIGHT
+          if (prev_border_line.side_of(corner_to_check) == Side.ON_THE_LEFT
+              && prev_border_line.side_of(this.corner(i)) == Side.ON_THE_RIGHT
               && prev_border_line.side_of(this.corner(i - 1)) == Side.ON_THE_RIGHT)
           // an outstanding corner
           {
@@ -534,7 +555,9 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Calculates for the p_no-th line segment a shape around this line where the right and left edge lines have the distance p_half_width from the center line. 0 {@literal <}= p_no {@literal <}=
+   * Calculates for the p_no-th line segment a shape around this line where the
+   * right and left edge lines have the distance p_half_width from the center
+   * line. 0 {@literal <}= p_no {@literal <}=
    * arr.length - 3
    */
   public TileShape offset_shape(int p_half_width, int p_no) {
@@ -547,7 +570,9 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Calculates for the p_no-th line segment a box shape around this line where the border lines have the distance p_half_width from the center line. 0 {@literal <}= p_no {@literal <}= arr.length - 3
+   * Calculates for the p_no-th line segment a box shape around this line where
+   * the border lines have the distance p_half_width from the center line. 0
+   * {@literal <}= p_no {@literal <}= arr.length - 3
    */
   public IntBox offset_box(int p_half_width, int p_no) {
     LineSegment curr_line_segment = new LineSegment(this, p_no + 1);
@@ -614,7 +639,8 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Returns the smallest box containing the intersection points from index p_from_corner_no to index p_to_corner_no of the lines of this polyline
+   * Returns the smallest box containing the intersection points from index
+   * p_from_corner_no to index p_to_corner_no of the lines of this polyline
    */
   public IntBox bounding_box(int p_from_corner_no, int p_to_corner_no) {
     int from_corner_no = Math.max(p_from_corner_no, 0);
@@ -636,7 +662,8 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Returns the smallest box containing the intersection points of the lines of this polyline
+   * Returns the smallest box containing the intersection points of the lines of
+   * this polyline
    */
   public IntBox bounding_box() {
     if (precalculated_bounding_box == null) {
@@ -646,7 +673,8 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Returns the smallest octagon containing the intersection points from index p_from_corner_no to index p_to_corner_no of the lines of this polyline
+   * Returns the smallest octagon containing the intersection points from index
+   * p_from_corner_no to index p_to_corner_no of the lines of this polyline
    */
   public IntOctagon bounding_octagon(int p_from_corner_no, int p_to_corner_no) {
     int from_corner_no = Math.max(p_from_corner_no, 0);
@@ -672,13 +700,15 @@ public class Polyline implements Serializable {
       llx = Math.min(llx, tmp);
       urx = Math.max(urx, tmp);
     }
-    IntOctagon surrounding_octagon = new IntOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx), (int) Math.ceil(uy), (int) Math.floor(ulx), (int) Math.ceil(lrx),
+    IntOctagon surrounding_octagon = new IntOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx),
+        (int) Math.ceil(uy), (int) Math.floor(ulx), (int) Math.ceil(lrx),
         (int) Math.floor(llx), (int) Math.ceil(urx));
     return surrounding_octagon;
   }
 
   /**
-   * Calculates an approximation of the nearest point on this polyline to p_from_point.
+   * Calculates an approximation of the nearest point on this polyline to
+   * p_from_point.
    */
   public FloatPoint nearest_point_approx(FloatPoint p_from_point) {
     double min_distance = Double.MAX_VALUE;
@@ -716,8 +746,12 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Combines the two polylines, if they have a common end corner. The order of lines in this polyline will be preserved. Returns the combined polyline or this polyline, if this polyline and p_other
-   * have no common end corner. If there is something to combine at the start of this polyline, p_other is inserted in front of this polyline. If there is something to combine at the end of this
+   * Combines the two polylines, if they have a common end corner. The order of
+   * lines in this polyline will be preserved. Returns the combined polyline or
+   * this polyline, if this polyline and p_other
+   * have no common end corner. If there is something to combine at the start of
+   * this polyline, p_other is inserted in front of this polyline. If there is
+   * something to combine at the end of this
    * polyline, this polyline is inserted in front of p_other.
    */
   public Polyline combine(Polyline p_other) {
@@ -772,8 +806,12 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Splits this polyline at the line with number p_line_no into two by inserting p_endline as concluding line of the first split piece and as the start line of the second split piece. p_endline and
-   * the line with number p_line_no must not be parallel. The order of the lines ins the two result pieces is preserved. p_line_no must be bigger than 0 and less than arr.length - 1. Returns null, if
+   * Splits this polyline at the line with number p_line_no into two by inserting
+   * p_endline as concluding line of the first split piece and as the start line
+   * of the second split piece. p_endline and
+   * the line with number p_line_no must not be parallel. The order of the lines
+   * ins the two result pieces is preserved. p_line_no must be bigger than 0 and
+   * less than arr.length - 1. Returns null, if
    * nothing was split.
    */
   public Polyline[] split(int p_line_no, Line p_end_line) {
@@ -785,7 +823,41 @@ public class Polyline implements Serializable {
       return null;
     }
     Point new_end_corner = this.arr[p_line_no].intersection(p_end_line);
-    if (p_line_no == 1 && new_end_corner.equals(this.first_corner()) || p_line_no >= arr.length - 2 && new_end_corner.equals(this.last_corner())) {
+    FRLogger.trace(
+        "Polyline.split",
+        "compare_trace_split_called",
+        "p_line_no="
+            + p_line_no
+            + ", arr.length="
+            + arr.length
+            + ", arr.length-2="
+            + (arr.length - 2)
+            + ", new_end_corner="
+            + debug_point(new_end_corner)
+            + " (type="
+            + new_end_corner.getClass().getSimpleName()
+            + ")"
+            + ", last_corner="
+            + debug_point(this.last_corner())
+            + " (type="
+            + this.last_corner().getClass().getSimpleName()
+            + ")"
+            + ", equals="
+            + new_end_corner.equals(this.last_corner()),
+        "Polyline split p_line_no=" + p_line_no,
+        new Point[] { this.first_corner(), new_end_corner, this.last_corner() });
+    StringBuilder sb = new StringBuilder("    CORNERS:");
+    for (int i = 0; i < this.corner_count(); i++) {
+      sb.append(" ").append(this.corner_approx(i));
+    }
+    FRLogger.trace(
+        "Polyline.split",
+        "compare_trace_split_corners",
+        sb.toString(),
+        "Polyline split p_line_no=" + p_line_no,
+        new Point[] { this.first_corner(), new_end_corner, this.last_corner() });
+    if (p_line_no == 1 && new_end_corner.equals(this.first_corner())
+        || p_line_no >= arr.length - 2 && new_end_corner.equals(this.last_corner())) {
       // No split, if p_end_line does not intersect, but touches
       // only this Polyline at an end point.
       return null;
@@ -822,7 +894,8 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * create a new Polyline by skipping the lines of this Polyline from p_from_no to p_to_no
+   * create a new Polyline by skipping the lines of this Polyline from p_from_no
+   * to p_to_no
    */
   public Polyline skip_lines(int p_from_no, int p_to_no) {
     if (p_from_no < 0 || p_to_no > arr.length - 1 || p_from_no > p_to_no) {
@@ -844,9 +917,19 @@ public class Polyline implements Serializable {
     return false;
   }
 
+  private static String debug_point(Point p_point) {
+    if (p_point instanceof IntPoint intPoint) {
+      return "(" + intPoint.x + "," + intPoint.y + ")";
+    }
+    return String.valueOf(p_point);
+  }
+
   /**
-   * Creates a perpendicular line segment from p_from_point onto the nearest line segment of this polyline to p_from_side. Returns null, if the perpendicular line does not intersect the nearest line
-   * segment inside its segment bounds or if p_from_point is contained in this polyline.
+   * Creates a perpendicular line segment from p_from_point onto the nearest line
+   * segment of this polyline to p_from_side. Returns null, if the perpendicular
+   * line does not intersect the nearest line
+   * segment inside its segment bounds or if p_from_point is contained in this
+   * polyline.
    */
   public LineSegment projection_line(Point p_from_point) {
     FloatPoint from_point = p_from_point.to_float();
@@ -883,7 +966,9 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Shortens this polyline to p_new_line_count lines. Additionally, the last line segment will be approximately shortened to p_new_length. The last corner of the new polyline will be an IntPoint.
+   * Shortens this polyline to p_new_line_count lines. Additionally, the last line
+   * segment will be approximately shortened to p_new_length. The last corner of
+   * the new polyline will be an IntPoint.
    */
   public Polyline shorten(int p_new_line_count, double p_last_segment_length) {
     FloatPoint last_corner = this.corner_approx(p_new_line_count - 2);
@@ -902,7 +987,8 @@ public class Polyline implements Serializable {
     }
     Line new_prev_last_line = new Line(first_line_point, new_last_corner);
     new_lines[p_new_line_count - 2] = new_prev_last_line;
-    new_lines[p_new_line_count - 1] = Line.get_instance(new_last_corner, new_prev_last_line.direction().turn_45_degree(6));
+    new_lines[p_new_line_count - 1] = Line.get_instance(new_last_corner,
+        new_prev_last_line.direction().turn_45_degree(6));
     return new Polyline(new_lines);
   }
 }

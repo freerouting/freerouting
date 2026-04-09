@@ -29,11 +29,11 @@ public class VersionChecker implements Runnable {
 
       client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(HttpResponse::body).thenAccept(this::processResponse).exceptionally(e ->
       {
-        FRLogger.warn("Failed to check for new version: " + (e == null ? "Unknown error" : e.getMessage()));
+        FRLogger.warn("Failed to check for new version");
         return null;
       });
     } catch (Exception e) { 
-      FRLogger.warn("Failed to check for new version: " + (e == null ? "Unknown error" : e.getMessage()));
+      FRLogger.warn("Failed to check for new version");
     }
   }
 

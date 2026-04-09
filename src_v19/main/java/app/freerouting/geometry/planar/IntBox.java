@@ -67,6 +67,10 @@ public class IntBox extends RegularTileShape implements Serializable {
     return ((double) (ur.x - ll.x)) * ((double) (ur.y - ll.y));
   }
 
+  public int get_id_no() {
+    return 31 * ll.get_id_no() + ur.get_id_no();
+  }
+
   @Override
   public double circumference() {
     return 2 * ((ur.x - ll.x) + (ur.y - ll.y));

@@ -1,10 +1,14 @@
 package app.freerouting.tests;
 
 import app.freerouting.Freerouting;
+import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.gui.FileFormat;
+import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
@@ -18,6 +22,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestBasedOnAnIssue {
 

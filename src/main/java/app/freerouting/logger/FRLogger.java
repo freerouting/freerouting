@@ -394,9 +394,10 @@ public class FRLogger {
    *                      "InsertFoundConnectionAlgo").
    * @param operation     The operation type (e.g. "insertion", "removal").
    * @param message       The details of the log message.
-   * @param impactedItems A string describing the impacted items (e.g. "Net #1,
-   *                      Trace #123").
+   * @param impactedItems A string describing the impacted items, separated by comma
+   *                      (e.g. "Net #1,Trace #123").
    *                      This string is used by DebugControl to filter execution.
+   * @param impactedPoints List of points that the operation focused on
    */
   public static boolean trace(String method, String operation, String message, String impactedItems, Point[] impactedPoints) {
     if (enabled) {

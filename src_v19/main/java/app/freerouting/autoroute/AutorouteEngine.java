@@ -9,6 +9,7 @@ import app.freerouting.board.ShapeSearchTree90Degree;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
@@ -18,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -109,7 +111,8 @@ public class AutorouteEngine {
       Set<Item> p_start_set,
       Set<Item> p_dest_set,
       AutorouteControl p_ctrl,
-      SortedSet<Item> p_ripped_item_list) {
+      SortedSet<Item> p_ripped_item_list,
+      Map<Item, Integer> p_ripup_costs) {
     MazeSearchAlgo maze_search_algo;
     try {
       maze_search_algo = MazeSearchAlgo.get_instance(p_start_set, p_dest_set, this, p_ctrl);
@@ -125,6 +128,14 @@ public class AutorouteEngine {
         FRLogger.error("AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection", e);
       }
     }
+    if (search_result != null && (p_ctrl.net_no == 33 || p_ctrl.net_no == 66 || p_ctrl.net_no == 67)) {
+      String destinationType = search_result.destination_door != null
+          ? search_result.destination_door.getClass().getSimpleName()
+          : "null";
+      FRLogger.trace("compare_trace_maze_result_raw net=" + p_ctrl.net_no
+          + ", section=" + search_result.section_no_of_door
+          + ", destination_type=" + destinationType);
+    }
 
     LocateFoundConnectionAlgo autoroute_result = null;
     if (search_result != null) {
@@ -135,6 +146,7 @@ public class AutorouteEngine {
             this.autoroute_search_tree,
             board.rules.get_trace_angle_restriction(),
             p_ripped_item_list,
+            p_ripup_costs,
             board.get_test_level());
       } catch (Exception e) {
         FRLogger.error("AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance", e);
@@ -359,8 +371,40 @@ public class AutorouteEngine {
           break;
         }
       }
+      FRLogger.trace(
+          "COMPLETE_ROOM input"
+              + ", net="
+              + this.net_no
+              + ", layer="
+              + p_room.get_layer()
+              + ", room_bounds="
+              + describe_shape_bounds(p_room.get_shape())
+              + ", contained_bounds="
+              + describe_shape_bounds(p_room.get_contained_shape())
+              + ", from_door_bounds="
+              + describe_shape_bounds(from_door_shape)
+              + ", ignore_object="
+              + (ignore_object == null ? "null" : ignore_object.getClass().getSimpleName()));
       Collection<IncompleteFreeSpaceExpansionRoom> completed_shapes = this.autoroute_search_tree.complete_shape(
           p_room, this.net_no, ignore_object, from_door_shape);
+      int initialCandidateIndex = 0;
+      for (IncompleteFreeSpaceExpansionRoom initialCandidate : completed_shapes) {
+        FRLogger.trace(
+            "COMPLETE_ROOM initial_candidate"
+                + ", net="
+                + this.net_no
+                + ", layer="
+                + initialCandidate.get_layer()
+                + ", index="
+                + initialCandidateIndex
+                + ", dimension="
+                + initialCandidate.get_shape().dimension()
+                + ", incomplete_bounds="
+                + describe_shape_bounds(initialCandidate.get_shape())
+                + ", from_door_bounds="
+                + describe_shape_bounds(from_door_shape));
+        ++initialCandidateIndex;
+      }
 
       // DEBUG: Log when room completion fails
       if (completed_shapes.isEmpty()) {
@@ -380,6 +424,16 @@ public class AutorouteEngine {
         }
         if (is_first_completed_room) {
           is_first_completed_room = false;
+          FRLogger.trace(
+              "COMPLETE_ROOM first_candidate"
+                  + ", net="
+                  + this.net_no
+                  + ", layer="
+                  + curr_incomplete_room.get_layer()
+                  + ", incomplete_bounds="
+                  + describe_shape_bounds(curr_incomplete_room.get_shape())
+                  + ", from_door_bounds="
+                  + describe_shape_bounds(from_door_shape));
           CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(curr_incomplete_room);
           if (completed_room != null) {
             result.add(completed_room);
@@ -392,6 +446,16 @@ public class AutorouteEngine {
               .complete_shape(
                   curr_incomplete_room, this.net_no, ignore_object, from_door_shape);
           for (IncompleteFreeSpaceExpansionRoom tmp_room : curr_completed_shapes) {
+            FRLogger.trace(
+                "COMPLETE_ROOM recalc_candidate"
+                    + ", net="
+                    + this.net_no
+                    + ", layer="
+                    + tmp_room.get_layer()
+                    + ", incomplete_bounds="
+                    + describe_shape_bounds(tmp_room.get_shape())
+                    + ", from_door_bounds="
+                    + describe_shape_bounds(from_door_shape));
             CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(tmp_room);
             if (completed_room != null) {
               result.add(completed_room);
@@ -427,7 +491,31 @@ public class AutorouteEngine {
     }
     complete_expansion_rooms.add(completed_room);
     this.autoroute_search_tree.insert(completed_room);
+    FRLogger.trace(
+        "COMPLETE_ROOM added"
+            + ", net="
+            + this.net_no
+            + ", layer="
+            + completed_room.get_layer()
+            + ", bounds="
+            + describe_shape_bounds(completed_room.get_shape()));
     return completed_room;
+  }
+
+  private static String describe_shape_bounds(TileShape p_shape) {
+    if (p_shape == null) {
+      return "null";
+    }
+    IntBox bounds = p_shape.bounding_box();
+    return "[("
+        + bounds.ll.x
+        + ","
+        + bounds.ll.y
+        + ")..("
+        + bounds.ur.x
+        + ","
+        + bounds.ur.y
+        + ")]";
   }
 
   /**
