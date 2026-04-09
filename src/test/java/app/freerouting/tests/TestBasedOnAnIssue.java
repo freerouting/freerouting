@@ -137,20 +137,4 @@ public class TestBasedOnAnIssue {
 
     return new BoardStatistics(job.board);
   }
-
-  protected RoutingBoard LoadDsnBoard(RoutingJob job) {
-    // Load the file as input
-    try {
-      // Load the board
-      if (job.input.format == FileFormat.DSN) {
-        HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-        boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
-        return boardManager.get_routing_board();
-      }
-    } catch (Exception e) {
-      fail("Failed to load test file: " + e.getMessage());
-    }
-
-    return null;
-  }
 }

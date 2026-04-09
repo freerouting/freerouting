@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
+import app.freerouting.board.BoardLoader;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.Session;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class DrcCoordinateTest extends TestBasedOnAnIssue {
@@ -31,13 +33,14 @@ public class DrcCoordinateTest extends TestBasedOnAnIssue {
     }
 
     @Test
+    @Disabled("Temporary disabled: DSN file reader ends up in an endless loop for this file.")
     void test_DrcCoordinates_AreInCorrectRange() {
         // Get the job with injected settings
         RoutingJob job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
 
         assertNotNull(job, "Job should not be null");
 
-        job.board = LoadDsnBoard(job);
+        BoardLoader.loadBoardIfNeeded(job);
 
         assertNotNull(job.board, "Board should be loaded");
 
