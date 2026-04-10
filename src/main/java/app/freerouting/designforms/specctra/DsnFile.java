@@ -34,7 +34,12 @@ public class DsnFile {
    * p_item_observers and idNoGenerator are used, in case the board is embedded
    * into a host system. Returns false, if an error
    * occurred.
+   *
+   * @deprecated Use {@link app.freerouting.designforms.specctra.io.DsnReader#readBoard} which
+   *     returns a typed {@link app.freerouting.designforms.specctra.io.DsnReadResult} and does
+   *     not require a {@link BoardManager} from the caller.
    */
+  @Deprecated
   public static ReadResult read(InputStream inputStream, BoardManager boardManager, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     IJFlexScanner dsnFlexScanner = new SpecctraDsnStreamReader(inputStream);
@@ -91,9 +96,14 @@ public class DsnFile {
    * part of a signal layer, if that layer does not contain any traces This is
    * useful in case the layer type was not set
    * correctly to plane in the dsn-file. Returns true, if something was changed.
+   *
+   * <p>Called from {@link app.freerouting.designforms.specctra.io.DsnReader#readBoard} when the
+   * DSN file contains no {@code (autoroute ...)} scope.
    */
-  private static boolean adjust_plane_autoroute_settings(BoardManager p_board_handling) {
-    BasicBoard routing_board = p_board_handling.get_routing_board();
+  public static boolean adjustPlaneAutorouteSettings(BasicBoard routing_board) {
+    if (routing_board == null) {
+      return false;
+    }
     app.freerouting.board.LayerStructure board_layer_structure = routing_board.layer_structure;
     if (board_layer_structure.arr.length <= 2) {
       return false;
@@ -172,8 +182,17 @@ public class DsnFile {
     }
     // Note: Layer preferred direction adjustments are now handled by
     // RoutingJob.routerSettings
-    // This code has been removed as part of the RouterSettings consolidation
     return true;
+  }
+
+  /**
+   * Sets contains_plane to true for nets with a conduction_area covering a large
+   * part of a signal layer, if that layer does not contain any traces This is
+   * useful in case the layer type was not set
+   * correctly to plane in the dsn-file. Returns true, if something was changed.
+   */
+  private static boolean adjust_plane_autoroute_settings(BoardManager p_board_handling) {
+    return adjustPlaneAutorouteSettings(p_board_handling.get_routing_board());
   }
 
   /**

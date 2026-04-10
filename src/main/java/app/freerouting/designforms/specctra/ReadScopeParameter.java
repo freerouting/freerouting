@@ -1,11 +1,19 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.AngleRestriction;
+import app.freerouting.board.BasicBoard;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
+import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.interactive.BoardManager;
+import app.freerouting.interactive.InteractiveSettings;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.settings.RouterSettings;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -54,26 +62,99 @@ public class ReadScopeParameter {
 
   boolean dsn_file_generated_by_host = true;
 
-  boolean board_outline_ok = true;
+  /** Set to {@code false} by the structure reader when the board outline is absent. */
+  public boolean board_outline_ok = true;
   Communication.SpecctraParserInfo.WriteResolution write_resolution;
   /**
    * The following objects will be initialised when the structure scope is read.
    */
   CoordinateTransform coordinate_transform;
   LayerStructure layer_structure;
-  RouterSettings autoroute_settings;
+  /** Nullable — only populated when an {@code (autoroute ...)} scope is present in the DSN file. */
+  public RouterSettings autoroute_settings;
   Unit unit = Unit.MIL;
   int resolution = 100; // default resolution
 
   /**
-   * Creates a new instance of ReadScopeParameter
+   * Creates a new instance of ReadScopeParameter with an externally-provided {@link BoardManager}.
+   * Use this constructor from {@link app.freerouting.designforms.specctra.DsnFile#read}.
    */
-  ReadScopeParameter(IJFlexScanner p_scanner, BoardManager p_board_handling, BoardObservers p_observers, IdentificationNumberGenerator p_item_id_no_generator) {
+  public ReadScopeParameter(IJFlexScanner p_scanner, BoardManager p_board_handling, BoardObservers p_observers, IdentificationNumberGenerator p_item_id_no_generator) {
     scanner = p_scanner;
     board_handling = p_board_handling;
     observers = p_observers;
     item_id_no_generator = p_item_id_no_generator;
   }
+
+  /**
+   * Creates a new instance of ReadScopeParameter <em>without</em> an external {@link BoardManager}.
+   * An internal minimal shim is constructed to receive the parsed board.
+   * Use this constructor from {@link app.freerouting.designforms.specctra.io.DsnReader#readBoard}.
+   *
+   * @param p_scanner          the token scanner over the DSN input stream
+   * @param p_observers        nullable; for host-system embedding
+   * @param p_item_id_no_generator nullable; for host-system embedding
+   */
+  public ReadScopeParameter(IJFlexScanner p_scanner, BoardObservers p_observers, IdentificationNumberGenerator p_item_id_no_generator) {
+    this(p_scanner, new MinimalBoardManager(), p_observers, p_item_id_no_generator);
+  }
+
+  /**
+   * Returns the {@link BasicBoard} that was created during parsing, or {@code null} if parsing
+   * has not yet reached the board-construction step.
+   */
+  public BasicBoard getBoard() {
+    return board_handling.get_routing_board();
+  }
+
+  // -------------------------------------------------------------------------
+  // Minimal internal shim — satisfies the BoardManager contract during parsing
+  // without requiring a HeadlessBoardManager or a RoutingJob.
+  // -------------------------------------------------------------------------
+
+  private static final class MinimalBoardManager implements BoardManager {
+
+    private RoutingBoard board;
+
+    @Override
+    public RoutingBoard get_routing_board() {
+      return board;
+    }
+
+    @Override
+    public void create_board(IntBox p_bounding_box, app.freerouting.board.LayerStructure p_layer_structure,
+        PolylineShape[] p_outline_shapes, String p_outline_clearance_class_name,
+        BoardRules p_rules, Communication p_board_communication) {
+      int outlineClearanceNo = 0;
+      if (p_rules != null) {
+        if (p_outline_clearance_class_name != null && p_rules.clearance_matrix != null) {
+          outlineClearanceNo = Math.max(0, p_rules.clearance_matrix.get_no(p_outline_clearance_class_name));
+        } else {
+          outlineClearanceNo = p_rules.get_default_net_class()
+              .default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.AREA);
+        }
+      }
+      board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes,
+          outlineClearanceNo, p_rules, p_board_communication);
+    }
+
+    @Override
+    public void initialize_manual_trace_half_widths() {
+      // no-op: no InteractiveSettings in headless shim
+    }
+
+    @Override
+    public InteractiveSettings get_settings() {
+      return null;
+    }
+
+    @Override
+    public RoutingJob getCurrentRoutingJob() {
+      return null;
+    }
+  }
+
+  // -------------------------------------------------------------------------
 
   /**
    * Information for inserting a plane
