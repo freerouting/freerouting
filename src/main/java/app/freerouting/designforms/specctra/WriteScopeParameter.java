@@ -10,17 +10,17 @@ import app.freerouting.settings.RouterSettings;
  */
 public class WriteScopeParameter {
 
-  final BasicBoard board;
-  final RouterSettings autoroute_settings;
-  final IndentFileWriter file;
-  final CoordinateTransform coordinate_transform;
-  final boolean compat_mode;
-  final IdentifierType identifier_type;
+  public final BasicBoard board;
+  public final RouterSettings autoroute_settings;
+  public final IndentFileWriter file;
+  public final CoordinateTransform coordinate_transform;
+  public final boolean compat_mode;
+  public final IdentifierType identifier_type;
 
   /**
    * Creates a new instance of WriteScopeParameter. If p_compat_mode is true, only standard specctra dsb scopes are written, so that any host system with a specctra interface can read them.
    */
-  WriteScopeParameter(BasicBoard p_board, RouterSettings p_autoroute_settings, IndentFileWriter p_file, String p_string_quote, CoordinateTransform p_coordinate_transform, boolean p_compat_mode) {
+  public WriteScopeParameter(BasicBoard p_board, RouterSettings p_autoroute_settings, IndentFileWriter p_file, String p_string_quote, CoordinateTransform p_coordinate_transform, boolean p_compat_mode) {
     board = p_board;
     autoroute_settings = p_autoroute_settings;
     file = p_file;

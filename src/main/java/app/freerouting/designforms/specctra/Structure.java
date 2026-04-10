@@ -38,7 +38,7 @@ import java.util.Objects;
 /**
  * Class for reading and writing structure scopes from dsn-files.
  */
-class Structure extends ScopeKeyword {
+public class Structure extends ScopeKeyword {
 
   /**
    * Creates a new instance of Structure

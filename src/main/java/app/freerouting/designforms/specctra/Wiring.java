@@ -34,7 +34,7 @@ import java.util.Set;
 /**
  * Class for reading and writing wiring scopes from dsn-files.
  */
-class Wiring extends ScopeKeyword {
+public class Wiring extends ScopeKeyword {
 
   /**
    * Creates a new instance of Wiring

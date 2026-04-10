@@ -8,12 +8,11 @@ import app.freerouting.board.FixedState;
 import app.freerouting.board.Item;
 import app.freerouting.board.Trace;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.designforms.specctra.io.DsnWriter;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.interactive.BoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
-import app.freerouting.settings.RouterSettings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -182,47 +181,21 @@ public class DsnFile {
    * the write failed. If p_compat_mode is true, only standard specctra dsn scopes
    * are written, so that any host system with
    * a specctra interface can read them.
+   *
+   * @deprecated Use {@link app.freerouting.designforms.specctra.io.DsnWriter#write}
+   *     directly. This wrapper retains the legacy boolean-return / BoardManager
+   *     signature for backward compatibility only.
    */
+  @Deprecated
   public static boolean write(BoardManager boardManager, OutputStream outputStream, String p_design_name,
       boolean p_compat_mode) {
-    IndentFileWriter output_file = new IndentFileWriter(outputStream);
-
     try {
-      write_pcb_scope(boardManager, output_file, p_design_name, p_compat_mode);
+      DsnWriter.write(boardManager.get_routing_board(), outputStream, p_design_name, p_compat_mode);
+      return true;
     } catch (IOException e) {
       FRLogger.error("unable to write Specctra DSN file", e);
       return false;
     }
-    try {
-      output_file.close();
-    } catch (IOException e) {
-      FRLogger.error("unable to close Specctra DSN file", e);
-      return false;
-    }
-    return true;
-  }
-
-  private static void write_pcb_scope(BoardManager boardManager, IndentFileWriter indentFileWriter,
-      String p_design_name, boolean p_compat_mode) throws IOException {
-    BasicBoard routing_board = boardManager.get_routing_board();
-    WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, null, indentFileWriter,
-        routing_board.communication.specctra_parser_info.string_quote,
-        routing_board.communication.coordinate_transform, p_compat_mode);
-
-    indentFileWriter.start_scope(false);
-    indentFileWriter.write("pcb ");
-    write_scope_parameter.identifier_type.write(p_design_name, indentFileWriter);
-    Parser.write_scope(write_scope_parameter.file, write_scope_parameter.board.communication.specctra_parser_info,
-        write_scope_parameter.identifier_type, false);
-    Resolution.write_scope(indentFileWriter, routing_board.communication);
-    Unit.write_scope(indentFileWriter, routing_board.communication.unit);
-    Structure.write_scope(write_scope_parameter);
-    Placement.write_scope(write_scope_parameter);
-    Library.write_scope(write_scope_parameter);
-    PartLibrary.write_scope(write_scope_parameter);
-    Network.write_scope(write_scope_parameter);
-    Wiring.write_scope(write_scope_parameter);
-    indentFileWriter.end_scope();
   }
 
   static boolean read_on_off_scope(IJFlexScanner p_scanner) {
