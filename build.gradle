@@ -7,11 +7,11 @@ plugins {
     id 'jvm-test-suite'
     id 'signing'
     id 'maven-publish'
-    id "com.vanniktech.maven.publish" version "0.31.0"
+    id "com.vanniktech.maven.publish" version "0.33.0"
     id 'net.nemerosa.versioning' version '3.1.0'
-    id 'com.github.ben-manes.versions' version '0.52.0'
-    id 'org.openrewrite.rewrite' version '7.22.0'
-    id "com.diffplug.spotless" version "8.2.1"
+    id 'com.github.ben-manes.versions' version '0.53.0'
+    id 'org.openrewrite.rewrite' version '7.30.0'
+    id "com.diffplug.spotless" version "8.4.0"
 }
 
 java {
@@ -95,7 +95,7 @@ dependencies {
     implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
     implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
     implementation 'jakarta.activation:jakarta.activation-api:2.1.4'
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.4'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.5'
 
     // Add Jersey dependencies
     implementation 'org.glassfish.jersey.core:jersey-common:4.0.0'
@@ -106,40 +106,40 @@ dependencies {
     implementation 'org.glassfish.jersey.media:jersey-media-sse:4.0.0'
     implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:4.0.0'
     implementation 'org.glassfish.jersey.containers:jersey-container-servlet:4.0.0'
-    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.6'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.7'
 
     // Add Jetty dependencies
-    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.4'
-    implementation 'org.eclipse.jetty:jetty-server:12.1.4'
-    implementation 'org.eclipse.jetty:jetty-util:12.1.4'
-    implementation 'org.eclipse.jetty:jetty-security:12.1.4'
+    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.8'
+    implementation 'org.eclipse.jetty:jetty-server:12.1.8'
+    implementation 'org.eclipse.jetty:jetty-util:12.1.8'
+    implementation 'org.eclipse.jetty:jetty-security:12.1.8'
 
     // Add SLF4J API and binding dependencies for Jersey logging
     implementation 'org.slf4j:slf4j-api:2.0.17'
     implementation 'org.slf4j:slf4j-nop:2.0.17'
 
     // Add Google Cloud BigQuery dependencies for telemetry
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.40.0'
-    implementation 'com.google.api:gax:2.72.1'
-    implementation 'com.google.api-client:google-api-client-appengine:2.8.1'
-    implementation 'com.google.cloud:google-cloud-core:2.62.1'
-    implementation 'com.google.cloud:google-cloud-core-http:2.62.1'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.55.3'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.43.0'
+    implementation 'com.google.api:gax:2.77.0'
+    implementation 'com.google.api-client:google-api-client-appengine:2.9.0'
+    implementation 'com.google.cloud:google-cloud-core:2.67.0'
+    implementation 'com.google.cloud:google-cloud-core-http:2.67.0'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.62.0'
 
     // Add Google Sheets API dependencies for API key validation
-    implementation 'com.google.api-client:google-api-client:2.8.1'
-    implementation 'com.google.apis:google-api-services-sheets:v4-rev20240416-2.0.0'
+    implementation 'com.google.api-client:google-api-client:2.9.0'
+    implementation 'com.google.apis:google-api-services-sheets:v4-rev20260213-2.0.0'
 
     // Add Swagger/OpenAPI dependencies for API documentation (OpenAPI 3.0)
-    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.27'
-    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.27'
-    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.27'
+    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.47'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.47'
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.47'
 
     // OpenRewrite:
-    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.23.0'
-    rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.23.0'
+    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.32.0'
+    rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.32.0'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
-    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:2.3.0'
+    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.34.0'
     rewrite 'org.openrewrite.recipe:rewrite-gradle:2.3.0'
 }
 
