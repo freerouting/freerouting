@@ -43,7 +43,7 @@ public class ReadScopeParameter {
   Collection<String> via_padstack_names;
 
   boolean via_at_smd_allowed;
-  AngleRestriction snap_angle = AngleRestriction.FORTYFIVE_DEGREE;
+  public AngleRestriction snap_angle = AngleRestriction.FORTYFIVE_DEGREE;
 
   /**
    * The logical parts are used for pin and gate swaw
@@ -55,25 +55,25 @@ public class ReadScopeParameter {
   /**
    * The following objects are from the parser scope.
    */
-  String string_quote = "\"";
+  public String string_quote = "\"";
 
-  String host_cad;
-  String host_version;
+  public String host_cad;
+  public String host_version;
 
   boolean dsn_file_generated_by_host = true;
 
   /** Set to {@code false} by the structure reader when the board outline is absent. */
   public boolean board_outline_ok = true;
-  Communication.SpecctraParserInfo.WriteResolution write_resolution;
+  public Communication.SpecctraParserInfo.WriteResolution write_resolution;
   /**
    * The following objects will be initialised when the structure scope is read.
    */
-  CoordinateTransform coordinate_transform;
-  LayerStructure layer_structure;
+  public CoordinateTransform coordinate_transform;
+  public LayerStructure layer_structure;
   /** Nullable — only populated when an {@code (autoroute ...)} scope is present in the DSN file. */
   public RouterSettings autoroute_settings;
-  Unit unit = Unit.MIL;
-  int resolution = 100; // default resolution
+  public Unit unit = Unit.MIL;
+  public int resolution = 100; // default resolution
 
   /**
    * Creates a new instance of ReadScopeParameter with an externally-provided {@link BoardManager}.

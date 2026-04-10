@@ -14,7 +14,7 @@ import java.nio.file.Path;
  * Utility methods for loading {@link RoutingBoard} instances from DSN fixture files
  * inside the {@code tests/} directory. Intended for use in unit tests only.
  */
-final class DsnTestFixtures {
+public final class DsnTestFixtures {
 
   private DsnTestFixtures() {
   }
@@ -26,7 +26,7 @@ final class DsnTestFixtures {
    *
    * @param filename the filename (e.g. {@code "Issue143-rpi_splitter.dsn"})
    */
-  static InputStream openResource(String filename) {
+  public static InputStream openResource(String filename) {
     try {
       return openFixtureStream(filename);
     } catch (IOException e) {
