@@ -32,7 +32,6 @@ public class UnconnectedItemsReproductionTest extends TestBasedOnAnIssue {
     }
 
     @Test
-    @Disabled("Temporary disabled: DSN file reader ends up in an endless loop for this file.")
     void test_Connectivity_Of_Overlapping_Traces() {
         // Load the problematic board
         RoutingJob job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
@@ -86,7 +85,6 @@ public class UnconnectedItemsReproductionTest extends TestBasedOnAnIssue {
     }
 
     @Test
-    @Disabled("Temporary disabled: DSN file reader ends up in an endless loop for this file.")
     void test_Connectivity_Of_Via_2522() {
         // Load the problematic board
         RoutingJob job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
@@ -121,7 +119,6 @@ public class UnconnectedItemsReproductionTest extends TestBasedOnAnIssue {
     }
 
     @Test
-    @Disabled("Temporary disabled: DSN file reader ends up in an endless loop for this file.")
     void test_Connectivity_Of_Trace_2576() {
         // Load the problematic board
         RoutingJob job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
