@@ -14,6 +14,7 @@ import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
 import app.freerouting.designforms.specctra.io.DsnReadResult;
 import app.freerouting.designforms.specctra.io.DsnReader;
+import app.freerouting.designforms.specctra.io.DsnWriter;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.logger.FRLogger;
@@ -22,6 +23,7 @@ import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -356,7 +358,11 @@ public class HeadlessBoardManager implements BoardManager {
   public long calculateCrc32() {
     // Create a memory stream
     ByteArrayOutputStream memoryStream = new ByteArrayOutputStream();
-    DsnFile.write(this, memoryStream, "N/A", false);
+    try {
+      DsnWriter.write(this.get_routing_board(), memoryStream, "N/A", false);
+    } catch (IOException e) {
+      FRLogger.error("HeadlessBoardManager.calculateCrc32: unable to serialise board to DSN", e);
+    }
 
     // Transform the output stream to an input stream
     InputStream inputStream = new ByteArrayInputStream(memoryStream.toByteArray());
@@ -413,11 +419,11 @@ public class HeadlessBoardManager implements BoardManager {
    * @param identificationNumberGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    *
-   * @see DsnFile#read
-   * @see DsnFile.ReadResult
-   * @see BoardObservers
-   */
-  public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
+    * @see app.freerouting.designforms.specctra.io.DsnReader#readBoard
+    * @see DsnFile.ReadResult
+    * @see BoardObservers
+    */
+   public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     if (inputStream == null) {
       return DsnFile.ReadResult.ERROR;

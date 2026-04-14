@@ -10,8 +10,6 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
-import app.freerouting.interactive.BoardManager;
-import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.settings.RouterSettings;
@@ -26,7 +24,7 @@ import java.util.List;
 public class ReadScopeParameter {
 
   final IJFlexScanner scanner;
-  final BoardManager board_handling;
+  final BoardParserCallback board_handling;
   final NetList netlist = new NetList();
   final BoardObservers observers;
   final IdentificationNumberGenerator item_id_no_generator;
@@ -84,27 +82,20 @@ public class ReadScopeParameter {
   public int resolution = 100; // default resolution
 
   /**
-   * Creates a new instance of ReadScopeParameter with an externally-provided {@link BoardManager}.
-   * Use this constructor from {@link app.freerouting.designforms.specctra.DsnFile#read}.
-   */
-  public ReadScopeParameter(IJFlexScanner p_scanner, BoardManager p_board_handling, BoardObservers p_observers, IdentificationNumberGenerator p_item_id_no_generator) {
-    scanner = p_scanner;
-    board_handling = p_board_handling;
-    observers = p_observers;
-    item_id_no_generator = p_item_id_no_generator;
-  }
-
-  /**
-   * Creates a new instance of ReadScopeParameter <em>without</em> an external {@link BoardManager}.
+   * Creates a new instance of ReadScopeParameter without an external board manager.
    * An internal minimal shim is constructed to receive the parsed board.
    * Use this constructor from {@link app.freerouting.designforms.specctra.io.DsnReader#readBoard}.
    *
-   * @param p_scanner          the token scanner over the DSN input stream
-   * @param p_observers        nullable; for host-system embedding
+   * @param p_scanner              the token scanner over the DSN input stream
+   * @param p_observers            nullable; for host-system embedding
    * @param p_item_id_no_generator nullable; for host-system embedding
    */
-  public ReadScopeParameter(IJFlexScanner p_scanner, BoardObservers p_observers, IdentificationNumberGenerator p_item_id_no_generator) {
-    this(p_scanner, new MinimalBoardManager(), p_observers, p_item_id_no_generator);
+  public ReadScopeParameter(IJFlexScanner p_scanner, BoardObservers p_observers,
+      IdentificationNumberGenerator p_item_id_no_generator) {
+    scanner = p_scanner;
+    board_handling = new MinimalBoardManager();
+    observers = p_observers;
+    item_id_no_generator = p_item_id_no_generator;
   }
 
   /**
@@ -124,11 +115,11 @@ public class ReadScopeParameter {
   }
 
   // -------------------------------------------------------------------------
-  // Minimal internal shim — satisfies the BoardManager contract during parsing
-  // without requiring a HeadlessBoardManager or a RoutingJob.
+  // Minimal internal shim — satisfies the BoardParserCallback contract during
+  // parsing without requiring a HeadlessBoardManager or a RoutingJob.
   // -------------------------------------------------------------------------
 
-  private static final class MinimalBoardManager implements BoardManager {
+  private static final class MinimalBoardManager implements BoardParserCallback {
 
     private RoutingBoard board;
 
@@ -138,13 +129,15 @@ public class ReadScopeParameter {
     }
 
     @Override
-    public void create_board(IntBox p_bounding_box, app.freerouting.board.LayerStructure p_layer_structure,
+    public void create_board(IntBox p_bounding_box,
+        app.freerouting.board.LayerStructure p_layer_structure,
         PolylineShape[] p_outline_shapes, String p_outline_clearance_class_name,
         BoardRules p_rules, Communication p_board_communication) {
       int outlineClearanceNo = 0;
       if (p_rules != null) {
         if (p_outline_clearance_class_name != null && p_rules.clearance_matrix != null) {
-          outlineClearanceNo = Math.max(0, p_rules.clearance_matrix.get_no(p_outline_clearance_class_name));
+          outlineClearanceNo = Math.max(0,
+              p_rules.clearance_matrix.get_no(p_outline_clearance_class_name));
         } else {
           outlineClearanceNo = p_rules.get_default_net_class()
               .default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.AREA);
@@ -159,10 +152,6 @@ public class ReadScopeParameter {
       // no-op: no InteractiveSettings in headless shim
     }
 
-    @Override
-    public InteractiveSettings get_settings() {
-      return null;
-    }
 
     @Override
     public RoutingJob getCurrentRoutingJob() {

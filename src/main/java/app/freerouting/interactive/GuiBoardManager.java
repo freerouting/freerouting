@@ -22,6 +22,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.SessionToEagle;
+import app.freerouting.designforms.specctra.io.DsnWriter;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -47,6 +48,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -2048,7 +2050,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return false;
     }
 
-    boolean wasSaveSuccessful = DsnFile.write(this, p_output_stream, p_design_name, p_compat_mode);
+    boolean wasSaveSuccessful;
+    try {
+      DsnWriter.write(get_routing_board(), p_output_stream, p_design_name, p_compat_mode);
+      wasSaveSuccessful = true;
+    } catch (IOException e) {
+      FRLogger.error("unable to write Specctra DSN file", e);
+      wasSaveSuccessful = false;
+    }
 
     if (wasSaveSuccessful) {
       originalBoardChecksum = calculateCrc32();

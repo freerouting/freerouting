@@ -9,7 +9,7 @@ import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.designforms.specctra.DsnFile;
-import app.freerouting.designforms.specctra.RulesFile;
+import app.freerouting.designforms.specctra.io.RulesWriter;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.ScreenMessages;
@@ -696,7 +696,11 @@ public class BoardFrame extends WindowBase {
       return false;
     }
 
-    RulesFile.write(p_board_handling, outputStream, designName);
+    try {
+      RulesWriter.write(p_board_handling.get_routing_board(), outputStream, designName);
+    } catch (IOException e) {
+      FRLogger.error("unable to write rules file", e);
+    }
     return true;
   }
 

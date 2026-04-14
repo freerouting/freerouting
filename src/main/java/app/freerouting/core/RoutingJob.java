@@ -5,7 +5,7 @@ import app.freerouting.core.events.RoutingJobLogEntryAddedEvent;
 import app.freerouting.core.events.RoutingJobLogEntryAddedEventListener;
 import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
-import app.freerouting.designforms.specctra.RulesFile;
+import app.freerouting.designforms.specctra.io.RulesReader;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.gui.WindowMessage;
 import app.freerouting.interactive.GuiBoardManager;
@@ -161,7 +161,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
       FRLogger.info("Opening '" + rules_file_name + "'...");
       InputStream input_stream = new FileInputStream(rules_file);
       if (dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message)) {
-        return RulesFile.read(input_stream, p_design_name, p_board_handling);
+        return RulesReader.read(input_stream, p_design_name, p_board_handling.get_routing_board());
       }
     } catch (IOException _) {
       FRLogger.error("File '" + rules_file_name + "' was not found.", null);
