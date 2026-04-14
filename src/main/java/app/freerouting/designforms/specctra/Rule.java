@@ -290,7 +290,7 @@ public abstract class Rule {
 
   public static class WidthRule extends Rule {
 
-    final double value;
+    public final double value;
 
     public WidthRule(double p_value) {
       value = p_value;

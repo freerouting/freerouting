@@ -2,6 +2,7 @@ package app.freerouting.designforms.specctra.io;
 
 import app.freerouting.board.BasicBoard;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Sealed result type for all outcomes of a DSN read operation.
@@ -24,14 +25,21 @@ public sealed interface DsnReadResult
             DsnReadResult.ParseError,
             DsnReadResult.IoError {
 
-  /** Full board + metadata are available. The board is fully constructed and routable. */
-  record Success(BasicBoard board, DsnMetadata metadata) implements DsnReadResult {}
+  /**
+   * Full board + metadata are available. The board is fully constructed and routable.
+   *
+   * @param warnings non-fatal issues encountered during loading (e.g. degenerate wires, duplicate
+   *                 vias, missing nets). Never {@code null}; may be empty.
+   */
+  record Success(BasicBoard board, DsnMetadata metadata, List<String> warnings) implements DsnReadResult {}
 
   /**
    * The board was constructed but the {@code (structure (boundary ...))} (outline) scope was
    * absent from the DSN file. The board reference is still valid and may be used with caution.
+   *
+   * @param warnings non-fatal issues encountered during loading. Never {@code null}; may be empty.
    */
-  record OutlineMissing(BasicBoard board, DsnMetadata metadata) implements DsnReadResult {}
+  record OutlineMissing(BasicBoard board, DsnMetadata metadata, List<String> warnings) implements DsnReadResult {}
 
   /**
    * The token stream did not conform to the expected Specctra DSN grammar.

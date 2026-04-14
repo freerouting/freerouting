@@ -16,6 +16,7 @@ import app.freerouting.designforms.specctra.io.DsnReadResult;
 import app.freerouting.designforms.specctra.io.DsnReader;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
@@ -428,8 +429,14 @@ public class HeadlessBoardManager implements BoardManager {
 
       if (dsnResult instanceof DsnReadResult.Success success) {
         this.board = (RoutingBoard) success.board();
+        for (String w : success.warnings()) {
+          FRLogger.warn("DSN loader: " + w);
+        }
       } else if (dsnResult instanceof DsnReadResult.OutlineMissing outlineMissing) {
         this.board = (RoutingBoard) outlineMissing.board();
+        for (String w : outlineMissing.warnings()) {
+          FRLogger.warn("DSN loader: " + w);
+        }
       } else {
         // ParseError or IoError — no board was constructed
         if (dsnResult instanceof DsnReadResult.IoError ioError) {

@@ -4,6 +4,8 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.designforms.specctra.io.RulesReader;
+import app.freerouting.designforms.specctra.io.RulesWriter;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
@@ -22,102 +24,24 @@ public class RulesFile {
   private RulesFile() {
   }
 
+  /**
+   * @deprecated Use {@link RulesWriter#write(BasicBoard, OutputStream, String)} instead.
+   */
+  @Deprecated
   public static void write(GuiBoardManager p_board_handling, OutputStream p_output_stream, String p_design_name) {
-    IndentFileWriter output_file = new IndentFileWriter(p_output_stream);
-    BasicBoard routing_board = p_board_handling.get_routing_board();
-    WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, null, output_file,
-        routing_board.communication.specctra_parser_info.string_quote, routing_board.communication.coordinate_transform,
-        false);
     try {
-      write_rules(write_scope_parameter, p_design_name);
+      RulesWriter.write(p_board_handling.get_routing_board(), p_output_stream, p_design_name);
     } catch (IOException e) {
-      FRLogger.error("unable to write rules to file", e);
-    }
-    try {
-      output_file.close();
-    } catch (IOException e) {
-      FRLogger.error("unable to close rules file", e);
+      FRLogger.error("RulesFile.write: unable to write rules to file", e);
     }
   }
 
+  /**
+   * @deprecated Use {@link RulesReader#read(InputStream, String, BasicBoard)} instead.
+   */
+  @Deprecated
   public static boolean read(InputStream p_input_stream, String p_design_name, GuiBoardManager p_board_handling) {
-    BasicBoard routing_board = p_board_handling.get_routing_board();
-    IJFlexScanner scanner = new SpecctraDsnStreamReader(p_input_stream);
-    try {
-      Object curr_token = scanner.next_token();
-      if (curr_token != Keyword.OPEN_BRACKET) {
-        FRLogger.warn("RulesFile.read: open bracket expected at '" + scanner.get_scope_identifier() + "'");
-        return false;
-      }
-      curr_token = scanner.next_token();
-      if (curr_token != Keyword.RULES) {
-        FRLogger.warn("RulesFile.read: keyword rules expected at '" + scanner.get_scope_identifier() + "'");
-        return false;
-      }
-      curr_token = scanner.next_token();
-      if (curr_token != Keyword.PCB_SCOPE) {
-        FRLogger.warn("RulesFile.read: keyword pcb expected at '" + scanner.get_scope_identifier() + "'");
-        return false;
-      }
-      scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      curr_token = scanner.next_token();
-      if (!(curr_token instanceof String) || !curr_token.equals(p_design_name)) {
-        FRLogger.warn("RulesFile.read: design_name not matching at '" + scanner.get_scope_identifier() + "'");
-      }
-    } catch (IOException e) {
-      FRLogger.error("RulesFile.read: IO error scanning file", e);
-      return false;
-    }
-    LayerStructure layer_structure = new LayerStructure(routing_board.layer_structure);
-    CoordinateTransform coordinate_transform = routing_board.communication.coordinate_transform;
-    Object next_token = null;
-    for (;;) {
-      Object prev_token = next_token;
-      try {
-        next_token = scanner.next_token();
-      } catch (IOException e) {
-        FRLogger.error("RulesFile.read: IO error scanning file", e);
-        return false;
-      }
-      if (next_token == null) {
-        FRLogger.warn("Structure.read_scope: unexpected end of file at '" + scanner.get_scope_identifier() + "'");
-        return false;
-      }
-      if (next_token == Keyword.CLOSED_BRACKET) {
-        // end of scope
-        break;
-      }
-      boolean read_ok = true;
-      if (prev_token == Keyword.OPEN_BRACKET) {
-        if (next_token == Keyword.RULE) {
-          add_rules(Rule.read_scope(scanner), routing_board, null);
-        } else if (next_token == Keyword.LAYER) {
-          add_layer_rules(scanner, routing_board);
-        } else if (next_token == Keyword.PADSTACK) {
-          Library.read_padstack_scope(scanner, layer_structure, coordinate_transform, routing_board.library.padstacks);
-        } else if (next_token == Keyword.VIA) {
-          read_via_info(scanner, routing_board);
-        } else if (next_token == Keyword.VIA_RULE) {
-          read_via_rule(scanner, routing_board);
-        } else if (next_token == Keyword.CLASS) {
-          read_net_class(scanner, layer_structure, routing_board);
-        } else if (next_token == Keyword.SNAP_ANGLE) {
-          AngleRestriction snap_angle = Structure.read_snap_angle(scanner);
-          if (snap_angle != null) {
-            routing_board.rules.set_trace_angle_restriction(snap_angle);
-          }
-          // Note: RouterSettings are now managed by RoutingJob, not InteractiveSettings
-          // This section is kept for backwards compatibility when reading old rules files
-          // but the settings are not applied to InteractiveSettings anymore
-        } else {
-          ScopeKeyword.skip_scope(scanner);
-        }
-      }
-      if (!read_ok) {
-        return false;
-      }
-    }
-    return true;
+    return RulesReader.read(p_input_stream, p_design_name, p_board_handling.get_routing_board());
   }
 
   private static void write_rules(WriteScopeParameter p_par, String p_design_name) throws IOException {

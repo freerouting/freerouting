@@ -103,9 +103,9 @@ public final class DsnReader {
       if (par.autoroute_settings == null) {
         DsnFile.adjustPlaneAutorouteSettings(board);
       }
-      return new DsnReadResult.Success(board, null);
+      return new DsnReadResult.Success(board, null, par.getWarnings());
     } else if (!par.board_outline_ok) {
-      return new DsnReadResult.OutlineMissing(board, null);
+      return new DsnReadResult.OutlineMissing(board, null, par.getWarnings());
     } else {
       return new DsnReadResult.ParseError("(pcb", "DSN structure parsing failed");
     }
@@ -227,7 +227,7 @@ public final class DsnReader {
         par.autoroute_settings
     );
 
-    return new DsnReadResult.Success(par.getBoard(), metadata);
+    return new DsnReadResult.Success(par.getBoard(), metadata, par.getWarnings());
   }
 
   // -------------------------------------------------------------------------

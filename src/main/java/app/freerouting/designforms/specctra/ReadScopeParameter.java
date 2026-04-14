@@ -15,8 +15,10 @@ import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.settings.RouterSettings;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Helper class that contains some structured properties and helper functions for the DSN parser.
@@ -28,6 +30,12 @@ public class ReadScopeParameter {
   final NetList netlist = new NetList();
   final BoardObservers observers;
   final IdentificationNumberGenerator item_id_no_generator;
+
+  /**
+   * Warnings collected during DSN parsing (e.g. skipped wires, missing padstacks, degenerate
+   * geometry). Callers can retrieve these via {@link #getWarnings()} after the read completes.
+   */
+  public final List<String> warnings = new ArrayList<>();
   /**
    * Collection of elements of class PlaneInfo. The plane cannot be inserted directly into the boards, because the layers may not be read completely.
    */
@@ -100,11 +108,19 @@ public class ReadScopeParameter {
   }
 
   /**
-   * Returns the {@link BasicBoard} that was created during parsing, or {@code null} if parsing
+   * Returns the board that was created during parsing, or {@code null} if parsing
    * has not yet reached the board-construction step.
    */
   public BasicBoard getBoard() {
     return board_handling.get_routing_board();
+  }
+
+  /**
+   * Returns an unmodifiable view of the warnings collected during DSN parsing.
+   * The list is populated as the file is read; call this method after the read completes.
+   */
+  public List<String> getWarnings() {
+    return java.util.Collections.unmodifiableList(warnings);
   }
 
   // -------------------------------------------------------------------------

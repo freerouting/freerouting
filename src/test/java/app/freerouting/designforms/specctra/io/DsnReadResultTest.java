@@ -3,6 +3,7 @@ package app.freerouting.designforms.specctra.io;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,13 +40,23 @@ class DsnReadResultTest {
   @Test
   void successAndOutlineMissingHoldNullBoard() {
     // Board is allowed to be null at the data-model level (parser wires it later)
-    var success = new DsnReadResult.Success(null, null);
+    var success = new DsnReadResult.Success(null, null, List.of());
     assertNull(success.board());
     assertNull(success.metadata());
+    assertTrue(success.warnings().isEmpty());
 
-    var missing = new DsnReadResult.OutlineMissing(null, null);
+    var missing = new DsnReadResult.OutlineMissing(null, null, List.of());
     assertNull(missing.board());
     assertNull(missing.metadata());
+    assertTrue(missing.warnings().isEmpty());
+  }
+
+  @Test
+  void warningsAreExposed() {
+    var warnings = List.of("Wiring: degenerate wire skipped", "Wiring: duplicate via skipped at (100, 200)");
+    var success = new DsnReadResult.Success(null, null, warnings);
+    assertEquals(2, success.warnings().size());
+    assertTrue(success.warnings().get(0).contains("degenerate wire"));
   }
 
   @Test
@@ -58,8 +69,8 @@ class DsnReadResultTest {
 
   @Test
   void instanceOfChecks() {
-    DsnReadResult success      = new DsnReadResult.Success(null, null);
-    DsnReadResult outlineMiss  = new DsnReadResult.OutlineMissing(null, null);
+    DsnReadResult success      = new DsnReadResult.Success(null, null, List.of());
+    DsnReadResult outlineMiss  = new DsnReadResult.OutlineMissing(null, null, List.of());
     DsnReadResult parseErr     = new DsnReadResult.ParseError("x", "y");
     DsnReadResult ioErr        = new DsnReadResult.IoError(new IOException());
 

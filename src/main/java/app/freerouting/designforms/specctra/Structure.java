@@ -435,7 +435,7 @@ public class Structure extends ScopeKeyword {
     return true;
   }
 
-  static AngleRestriction read_snap_angle(IJFlexScanner p_scanner) {
+  public static AngleRestriction read_snap_angle(IJFlexScanner p_scanner) {
     try {
       Object next_token = p_scanner.next_token();
       AngleRestriction snap_angle;
@@ -463,7 +463,7 @@ public class Structure extends ScopeKeyword {
     }
   }
 
-  static void write_snap_angle(IndentFileWriter p_file, AngleRestriction p_angle_restriction) throws IOException {
+  public static void write_snap_angle(IndentFileWriter p_file, AngleRestriction p_angle_restriction) throws IOException {
     p_file.start_scope();
     p_file.write("snap_angle ");
     p_file.new_line();
@@ -603,7 +603,7 @@ public class Structure extends ScopeKeyword {
    * the rule is set on all layers. Returns true, if the string smd_to_turn_gap
    * was found.
    */
-  static boolean set_clearance_rule(Rule.ClearanceRule p_rule, int p_layer_no,
+  public static boolean set_clearance_rule(Rule.ClearanceRule p_rule, int p_layer_no,
       CoordinateTransform p_coordinate_transform, BoardRules p_board_rules, String p_string_quote) {
     boolean result = false;
     int curr_clearance = (int) Math.round(p_coordinate_transform.dsn_to_board(p_rule.value));

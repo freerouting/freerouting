@@ -233,7 +233,7 @@ public class Network extends ScopeKeyword {
     return true;
   }
 
-  static ViaInfo read_via_info(IJFlexScanner p_scanner, BasicBoard p_board) {
+  public static ViaInfo read_via_info(IJFlexScanner p_scanner, BasicBoard p_board) {
     try {
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       Object next_token = p_scanner.next_token();
@@ -290,7 +290,7 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  static Collection<String> read_via_rule(IJFlexScanner p_scanner, BasicBoard p_board) {
+  public static Collection<String> read_via_rule(IJFlexScanner p_scanner, BasicBoard p_board) {
     try {
       Collection<String> result = new LinkedList<>();
       for (; ; ) {
@@ -361,7 +361,7 @@ public class Network extends ScopeKeyword {
   /**
    * Inserts a via rule into the board. Replaces an already existing via rule with the same
    */
-  static boolean add_via_rule(Collection<String> p_name_list, BasicBoard p_board) {
+  public static boolean add_via_rule(Collection<String> p_name_list, BasicBoard p_board) {
     Iterator<String> it = p_name_list.iterator();
     String rule_name = it.next();
     ViaRule existing_rule = p_board.rules.get_via_rule(rule_name);
@@ -393,7 +393,7 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  static void insert_net_class(NetClass p_class, LayerStructure p_layer_structure, BasicBoard p_board, CoordinateTransform p_coordinate_transform, boolean p_via_at_smd_allowed) {
+  public static void insert_net_class(NetClass p_class, LayerStructure p_layer_structure, BasicBoard p_board, CoordinateTransform p_coordinate_transform, boolean p_via_at_smd_allowed) {
     app.freerouting.rules.NetClass board_net_class = p_board.rules.append_net_class(p_class.name);
     if (p_class.trace_clearance_class != null) {
       int trace_clearance_class = p_board.rules.clearance_matrix.get_no(p_class.trace_clearance_class);

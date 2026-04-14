@@ -138,7 +138,7 @@ public class AutorouteSettings {
     return p_settings;
   }
 
-  static void write_scope(IndentFileWriter p_file, RouterSettings p_settings,
+  public static void write_scope(IndentFileWriter p_file, RouterSettings p_settings,
       app.freerouting.board.LayerStructure p_layer_structure, IdentifierType p_identifier_type) throws IOException {
     p_file.start_scope();
     p_file.write("autoroute_settings");
