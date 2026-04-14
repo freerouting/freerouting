@@ -10,7 +10,7 @@ import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.designforms.specctra.DsnFile;
+import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.settings.RouterScoringSettings;
 import app.freerouting.settings.SettingsMerger;

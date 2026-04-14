@@ -1,7 +1,7 @@
 package app.freerouting.settings.sources;
 
 import app.freerouting.Freerouting;
-import app.freerouting.designforms.specctra.io.DsnTestFixtures;
+import app.freerouting.io.specctra.DsnTestFixtures;
 import app.freerouting.settings.GlobalSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

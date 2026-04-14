@@ -10,11 +10,11 @@ import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.designforms.specctra.DsnFile;
-import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
-import app.freerouting.designforms.specctra.io.DsnReadResult;
-import app.freerouting.designforms.specctra.io.DsnReader;
-import app.freerouting.designforms.specctra.io.DsnWriter;
+import app.freerouting.io.specctra.parser.DsnFile;
+import app.freerouting.io.specctra.parser.SpecctraSesFileWriter;
+import app.freerouting.io.specctra.DsnReadResult;
+import app.freerouting.io.specctra.DsnReader;
+import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.logger.FRLogger;
@@ -419,7 +419,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @param identificationNumberGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    *
-    * @see app.freerouting.designforms.specctra.io.DsnReader#readBoard
+    * @see app.freerouting.io.specctra.DsnReader#readBoard
     * @see DsnFile.ReadResult
     * @see BoardObservers
     */

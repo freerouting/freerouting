@@ -5,7 +5,7 @@ import app.freerouting.core.events.RoutingJobLogEntryAddedEvent;
 import app.freerouting.core.events.RoutingJobLogEntryAddedEventListener;
 import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
-import app.freerouting.designforms.specctra.io.RulesReader;
+import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.gui.WindowMessage;
 import app.freerouting.interactive.GuiBoardManager;

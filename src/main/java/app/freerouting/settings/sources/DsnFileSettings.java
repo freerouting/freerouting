@@ -1,7 +1,7 @@
 package app.freerouting.settings.sources;
 
-import app.freerouting.designforms.specctra.io.DsnReadResult;
-import app.freerouting.designforms.specctra.io.DsnReader;
+import app.freerouting.io.specctra.DsnReadResult;
+import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
