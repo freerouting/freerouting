@@ -323,8 +323,11 @@ tasks.register('runV19', JavaExec) {
 
 
 tasks.register('dist', Copy) {
-    dependsOn assemble
-    from 'build/libs/freerouting-current-executable.jar'
+    dependsOn executableJar
+    from('build/libs/') {
+        include 'freerouting-current-executable.jar'
+        rename 'freerouting-current-executable.jar', 'freerouting-executable.jar'
+    }
     into 'build/dist/'
 }
 

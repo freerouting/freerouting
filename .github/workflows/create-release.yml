@@ -49,7 +49,7 @@ jobs:
           tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
           tagRegexGroup: 1   # Optional. Default is 1.
       - name: Create Distribution
-        run: distribution\create-distribution-jar.bat ${{ steps.tagName.outputs.tag }}
+        run: .\scripts\build\create-distribution-jar.bat ${{ steps.tagName.outputs.tag }}
       - uses: AButler/upload-release-assets@v3.0
         with:
           files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}.jar'
@@ -113,7 +113,7 @@ jobs:
       #    - name: Set App Version
       #      run: $env:APP_VERSION=${{ steps.tagName.outputs.tag }}
       - name: Create Distribution
-        run: distribution\create-distribution-windows-x64.bat ${{ steps.tagName.outputs.tag }}
+        run: .\scripts\build\create-distribution-windows-x64.bat ${{ steps.tagName.outputs.tag }}
       - uses: AButler/upload-release-assets@v3.0
         with:
           files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-windows-x64.msi'
