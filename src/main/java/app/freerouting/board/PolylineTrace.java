@@ -692,8 +692,9 @@ public class PolylineTrace extends Trace implements Serializable {
       return null;
     }
     // Guard: if this trace cannot be deleted (e.g. USER_FIXED / protect), splitting would leave
-    // the original on the board AND insert duplicate pieces, causing an infinite loop in
-    // normalize_traces.  Return null so the caller knows the split is not possible.
+    // the original on the board AND insert duplicate pieces. The outer normalize_traces loop
+    // would then keep finding the same "changed" state and never converge. Return null so the
+    // caller knows the split is not possible.
     if (isDeletionForbidden()) {
       return null;
     }
@@ -778,8 +779,9 @@ public class PolylineTrace extends Trace implements Serializable {
             board.remove_item(curr_split_trace);
             result = true;
           } else {
+            int netNo = curr_split_trace.net_count() > 0 ? curr_split_trace.net_no_arr[0] : -1;
             FRLogger.warn("PolylineTrace.normalize: skipping removal of degenerate user-fixed trace #"
-                + curr_split_trace.get_id_no() + " (first==last corner)");
+                + curr_split_trace.get_id_no() + " on net " + netNo + " (first==last corner)");
           }
         } else if (trace_combined) {
           curr_split_trace.normalize(p_clip_shape, normalization_depth + 1);
@@ -1287,5 +1289,4 @@ public class PolylineTrace extends Trace implements Serializable {
     return true;
   }
 }
-
 

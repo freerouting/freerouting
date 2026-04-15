@@ -362,6 +362,7 @@ public class HeadlessBoardManager implements BoardManager {
       DsnWriter.write(this.get_routing_board(), memoryStream, "N/A", false);
     } catch (IOException e) {
       FRLogger.error("HeadlessBoardManager.calculateCrc32: unable to serialise board to DSN", e);
+      throw new IllegalStateException("Unable to serialize board to DSN for CRC32 calculation", e);
     }
 
     // Transform the output stream to an input stream

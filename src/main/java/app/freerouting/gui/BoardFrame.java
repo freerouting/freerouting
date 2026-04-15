@@ -692,7 +692,7 @@ public class BoardFrame extends WindowBase {
       RulesWriter.write(p_board_handling.get_routing_board(), outputStream, designName);
       return true;
     } catch (IOException e) {
-      FRLogger.error("unable to save rules file", e);
+      FRLogger.error("unable to save rules file for design '" + designName + "'", e);
       return false;
     }
   }
