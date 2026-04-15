@@ -10,10 +10,14 @@ import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.designforms.specctra.DsnFile;
-import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
+import app.freerouting.io.specctra.parser.DsnFile;
+import app.freerouting.io.specctra.parser.SpecctraSesFileWriter;
+import app.freerouting.io.specctra.DsnReadResult;
+import app.freerouting.io.specctra.DsnReader;
+import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
@@ -354,7 +358,12 @@ public class HeadlessBoardManager implements BoardManager {
   public long calculateCrc32() {
     // Create a memory stream
     ByteArrayOutputStream memoryStream = new ByteArrayOutputStream();
-    DsnFile.write(this, memoryStream, "N/A", false);
+    try {
+      DsnWriter.write(this.get_routing_board(), memoryStream, "N/A", false);
+    } catch (IOException e) {
+      FRLogger.error("HeadlessBoardManager.calculateCrc32: unable to serialise board to DSN", e);
+      throw new IllegalStateException("Unable to serialize board to DSN for CRC32 calculation", e);
+    }
 
     // Transform the output stream to an input stream
     InputStream inputStream = new ByteArrayInputStream(memoryStream.toByteArray());
@@ -411,53 +420,70 @@ public class HeadlessBoardManager implements BoardManager {
    * @param identificationNumberGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    *
-   * @see DsnFile#read
-   * @see DsnFile.ReadResult
-   * @see BoardObservers
-   */
-  public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
+    * @see app.freerouting.io.specctra.DsnReader#readBoard
+    * @see DsnFile.ReadResult
+    * @see BoardObservers
+    */
+   public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     if (inputStream == null) {
       return DsnFile.ReadResult.ERROR;
     }
 
-    DsnFile.ReadResult read_result;
     try {
-      // TODO: we should have a returned object that represent the DSN file, and we
-      // should create a RoutingBoard/BasicBoard based on that as a next step
-      // we create the board inside the DSN file reader instead at the moment, and
-      // save it in the board field of the BoardHandling class
-      read_result = DsnFile.read(inputStream, this, boardObservers, identificationNumberGenerator);
+      // Use the new BoardManager-free reader; stream is closed inside readBoard.
+      DsnReadResult dsnResult = DsnReader.readBoard(inputStream, boardObservers, identificationNumberGenerator);
 
-      // Apply board-specific optimizations to RouterSettings after board is loaded
-      if (read_result == DsnFile.ReadResult.OK && this.board != null && this.routingJob != null) {
+      if (dsnResult instanceof DsnReadResult.Success success) {
+        this.board = (RoutingBoard) success.board();
+        for (String w : success.warnings()) {
+          FRLogger.warn("DSN loader: " + w);
+        }
+      } else if (dsnResult instanceof DsnReadResult.OutlineMissing outlineMissing) {
+        this.board = (RoutingBoard) outlineMissing.board();
+        for (String w : outlineMissing.warnings()) {
+          FRLogger.warn("DSN loader: " + w);
+        }
+      } else {
+        // ParseError or IoError — no board was constructed
+        if (dsnResult instanceof DsnReadResult.IoError ioError) {
+          routingJob.logError("There was an IO error while reading DSN file.", ioError.cause());
+        } else if (dsnResult instanceof DsnReadResult.ParseError parseError) {
+          routingJob.logError("There was a parse error while reading DSN file at '" + parseError.location() + "': " + parseError.detail(), null);
+        }
+        return DsnFile.ReadResult.ERROR;
+      }
+
+      // Apply board-specific optimisations to RouterSettings after board is loaded
+      if (this.board != null && this.routingJob != null) {
         int boardLayerCount = this.board.get_layer_count();
         if (this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
           this.routingJob.routerSettings.setLayerCount(boardLayerCount);
         }
-        // Apply board-specific optimizations for better routing performance
         this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
       }
-    } catch (Exception e) {
-      read_result = DsnFile.ReadResult.ERROR;
-      routingJob.logError("There was an error while reading DSN file.", e);
-    }
-    if (read_result == DsnFile.ReadResult.OK) {
-      var boardStats = new BoardStatistics(this.board);
-      FRAnalytics.fileLoaded("DSN", GSON.toJson(boardStats));
-      this.board.reduce_nets_of_route_items();
-      originalBoardChecksum = calculateCrc32();
-      FRAnalytics.boardLoaded(this.board.communication.specctra_parser_info.host_cad,
-          this.board.communication.specctra_parser_info.host_version, this.board.get_layer_count(),
-          this.board.components.count(), this.board.rules.nets.max_net_no());
-    }
 
-    try {
-      inputStream.close();
-    } catch (IOException _) {
-      read_result = DsnFile.ReadResult.ERROR;
+      if (this.board != null) {
+        var boardStats = new BoardStatistics(this.board);
+        FRAnalytics.fileLoaded("DSN", GSON.toJson(boardStats));
+        this.board.reduce_nets_of_route_items();
+        originalBoardChecksum = calculateCrc32();
+        FRAnalytics.boardLoaded(
+            this.board.communication.specctra_parser_info.host_cad,
+            this.board.communication.specctra_parser_info.host_version,
+            this.board.get_layer_count(),
+            this.board.components.count(),
+            this.board.rules.nets.max_net_no());
+      }
+
+      return (dsnResult instanceof DsnReadResult.OutlineMissing)
+          ? DsnFile.ReadResult.OUTLINE_MISSING
+          : DsnFile.ReadResult.OK;
+
+    } catch (Exception e) {
+      routingJob.logError("There was an error while reading DSN file.", e);
+      return DsnFile.ReadResult.ERROR;
     }
-    return read_result;
   }
 
   /**

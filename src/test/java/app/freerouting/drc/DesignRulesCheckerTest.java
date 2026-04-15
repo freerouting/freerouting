@@ -33,7 +33,6 @@ public class DesignRulesCheckerTest extends TestBasedOnAnIssue {
   }
 
   @Test
-  @Disabled("Temporary disabled: DSN file reader ends up in an endless loop for this file.")
   void test_DrcReport_Structure() {
     // Create a simple routing job with a DSN file
     RoutingJob job = GetRoutingJob("BBD_Mars-64.dsn");
@@ -65,7 +64,6 @@ public class DesignRulesCheckerTest extends TestBasedOnAnIssue {
   }
 
   @Test
-  @Disabled("Temporary disabled: DSN file reader ends up in an endless loop for this file.")
   void test_DrcReport_JsonFormat() {
     // Create a simple routing job with a DSN file
     RoutingJob job = GetRoutingJob("BBD_Mars-64.dsn");

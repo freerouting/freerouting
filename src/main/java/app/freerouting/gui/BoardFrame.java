@@ -8,8 +8,8 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.designforms.specctra.DsnFile;
-import app.freerouting.designforms.specctra.RulesFile;
+import app.freerouting.io.specctra.parser.DsnFile;
+import app.freerouting.io.specctra.RulesWriter;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.ScreenMessages;
@@ -688,16 +688,13 @@ public class BoardFrame extends WindowBase {
   private boolean saveRulesAs(File rulesFile, String designName, GuiBoardManager p_board_handling) {
     FRLogger.info("Saving '" + rulesFile.getPath() + "'...");
 
-    OutputStream outputStream;
-    try {
-      outputStream = new FileOutputStream(rulesFile);
+    try (OutputStream outputStream = new FileOutputStream(rulesFile)) {
+      RulesWriter.write(p_board_handling.get_routing_board(), outputStream, designName);
+      return true;
     } catch (IOException e) {
-      FRLogger.error("unable to create rules file", e);
+      FRLogger.error("unable to save rules file for design '" + designName + "'", e);
       return false;
     }
-
-    RulesFile.write(p_board_handling, outputStream, designName);
-    return true;
   }
 
   public void saveAsEagleScriptScr(File outputFile, String design_name) {

@@ -17,7 +17,7 @@ import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
+import app.freerouting.io.specctra.parser.SpecctraSesFileWriter;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.FileFormat;
