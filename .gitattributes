@@ -1,0 +1,9 @@
+# Shell scripts must always use LF line endings (CRLF breaks the shebang on Linux/macOS)
+*.sh        text eol=lf
+
+# Windows batch files use CRLF
+*.bat       text eol=crlf
+
+# Default behaviour for everything else
+*           text=auto
+

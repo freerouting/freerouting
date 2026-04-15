@@ -72,6 +72,8 @@ jobs:
           cache: 'gradle'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: Grant execute permission for build scripts
+        run: chmod +x scripts/build/*.sh
       - name: Build with Gradle
         run: ./gradlew dist
       - name: Get Tag name
@@ -137,6 +139,8 @@ jobs:
           cache: 'gradle'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: Grant execute permission for build scripts
+        run: chmod +x scripts/build/*.sh
       - name: Build with Gradle
         run: ./gradlew dist
       - name: Get Tag name
