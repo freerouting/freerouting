@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-# Gradle build the application
-RUN ./gradlew build
+# Gradle build the application and produce the executable fat jar
+RUN ./gradlew build executableJar
 
 # Stage 2: Create the final image
 FROM eclipse-temurin:25-jre-jammy
@@ -17,7 +17,7 @@ FROM eclipse-temurin:25-jre-jammy
 WORKDIR /app
 
 # Copy the built application from the build stage
-COPY --from=build /app/build/libs/freerouting-executable.jar /app/freerouting-executable.jar
+COPY --from=build /app/build/libs/freerouting-current-executable.jar /app/freerouting-executable.jar
 
 # Expose the port the app runs on
 EXPOSE 37864
