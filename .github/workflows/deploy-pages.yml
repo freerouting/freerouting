@@ -31,7 +31,8 @@ jobs:
       - name: Upload website folder as Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # .nojekyll inside website/ tells GitHub Pages to skip Jekyll processing
+          # jekyll: false — package files as-is without Jekyll processing
+          jekyll: false
           path: ./website
 
       - name: Deploy to GitHub Pages
