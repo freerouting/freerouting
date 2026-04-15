@@ -33,7 +33,6 @@ public class DrcCoordinateTest extends TestBasedOnAnIssue {
     }
 
     @Test
-    @Disabled("Temporary disabled: DSN file reader ends up in an endless loop for this file.")
     void test_DrcCoordinates_AreInCorrectRange() {
         // Get the job with injected settings
         RoutingJob job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");

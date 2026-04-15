@@ -93,7 +93,7 @@ public class RoutingJobScheduler {
                         if (sesFile.exists()) {
                           FRLogger.info("Loading SES file: " + globalSettings.design_session_filename);
                           java.io.FileInputStream sesStream = new java.io.FileInputStream(sesFile);
-                          app.freerouting.designforms.specctra.SesFileReader.read(sesStream, job.board);
+                          app.freerouting.io.specctra.parser.SesFileReader.read(sesStream, job.board);
                           sesStream.close();
                         } else {
                           FRLogger.warn("SES file not found: " + globalSettings.design_session_filename);

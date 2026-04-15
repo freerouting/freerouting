@@ -1,5 +1,7 @@
 package app.freerouting.settings.sources;
 
+import app.freerouting.io.specctra.DsnReadResult;
+import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
@@ -17,32 +19,20 @@ public class DsnFileSettings implements SettingsSource {
 
     /**
      * Creates a DsnFileSettings source from a DSN file input stream.
+     * Performs a lightweight metadata-only parse that stops after the
+     * {@code (structure ...)} scope — significantly faster than a full board load.
      *
-     * @param inputStream    DSN file input stream
-     * @param filename       Name of the DSN file (for logging)
+     * @param inputStream DSN file input stream (closed by this constructor)
+     * @param filename    Name of the DSN file (for logging)
      */
     public DsnFileSettings(InputStream inputStream, String filename) {
         this.filename = filename;
-        this.settings = loadSettings(inputStream);
-    }
-
-    private RouterSettings loadSettings(InputStream inputStream) {
-        try {
-            // Use existing AutorouteSettings.read_scope to parse DSN autoroute settings
-            // This will be refactored to return a RouterSettings object with nullable
-            // fields
-            // For now, we'll create an empty RouterSettings and populate it
-            // TODO: Update AutorouteSettings.read_scope to work with new architecture
-
-            RouterSettings settings = new RouterSettings();
-            settings.setLayerCount(2);
-
-            FRLogger.debug("Loaded router settings from DSN file: " + filename);
-            return settings;
-        } catch (Exception e) {
-            FRLogger.warn("Failed to load settings from DSN file: " + filename + ": " + e.getMessage());
-            return new RouterSettings();
-        }
+        DsnReadResult result = DsnReader.readMetadata(inputStream);
+        this.settings = (result instanceof DsnReadResult.Success s && s.metadata() != null
+            && s.metadata().routerSettings() != null)
+            ? s.metadata().routerSettings()
+            : new RouterSettings();
+        FRLogger.debug("Loaded router settings from DSN file: " + filename);
     }
 
     @Override

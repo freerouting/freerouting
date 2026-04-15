@@ -219,14 +219,27 @@ public class RouterSettings implements Serializable, Cloneable {
 
   /**
    * Set the layer count and initialize the layer specific settings.
+   * Also initialises the per-layer trace-cost arrays so that
+   * {@link #set_preferred_direction_trace_costs} and
+   * {@link #set_against_preferred_direction_trace_costs} can be called
+   * immediately without a prior call to {@link #applyBoardSpecificOptimizations}.
    */
   public void setLayerCount(int layerCount) {
     isLayerActive = new boolean[layerCount];
     isPreferredDirectionHorizontalOnLayer = new boolean[layerCount];
+    if (scoring == null) {
+      scoring = new RouterScoringSettings();
+    }
+    // Initialize per-layer cost arrays with a neutral default so callers can
+    // write individual entries without waiting for applyBoardSpecificOptimizations.
+    scoring.preferredDirectionTraceCost = new double[layerCount];
+    scoring.undesiredDirectionTraceCost = new double[layerCount];
 
     for (int i = 0; i < layerCount; i++) {
       isLayerActive[i] = true;
       isPreferredDirectionHorizontalOnLayer[i] = i % 2 == 1;
+      scoring.preferredDirectionTraceCost[i] = 1.0;
+      scoring.undesiredDirectionTraceCost[i] = 1.0;
     }
   }
 

@@ -141,6 +141,9 @@ dependencies {
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
     rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.34.0'
     rewrite 'org.openrewrite.recipe:rewrite-gradle:2.3.0'
+
+    // ArchUnit: package-architecture enforcement
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
 }
 
 ext {

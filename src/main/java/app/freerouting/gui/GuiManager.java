@@ -356,7 +356,7 @@ public class GuiManager {
                 if (sesFile.exists()) {
                     FRLogger.info("Loading SES file: " + globalSettings.design_session_filename);
                     FileInputStream sesStream = new FileInputStream(sesFile);
-                    app.freerouting.designforms.specctra.SesFileReader.read(sesStream,
+                    app.freerouting.io.specctra.parser.SesFileReader.read(sesStream,
                             new_frame.board_panel.board_handling.get_routing_board());
                     sesStream.close();
                     new_frame.refresh_windows(); // Refresh UI to show loaded routes
