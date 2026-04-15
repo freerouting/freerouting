@@ -691,11 +691,8 @@ public class BoardFrame extends WindowBase {
     try (OutputStream outputStream = new FileOutputStream(rulesFile)) {
       RulesWriter.write(p_board_handling.get_routing_board(), outputStream, designName);
       return true;
-    } catch (FileNotFoundException e) {
-      FRLogger.error("unable to create rules file", e);
-      return false;
     } catch (IOException e) {
-      FRLogger.error("unable to write rules file", e);
+      FRLogger.error("unable to save rules file", e);
       return false;
     }
   }

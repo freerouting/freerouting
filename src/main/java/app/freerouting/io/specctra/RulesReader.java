@@ -58,37 +58,32 @@ public final class RulesReader {
 
     IJFlexScanner scanner = new SpecctraDsnStreamReader(in);
     try {
-      try {
-        // Validate the "(rules PCB <name>" header
-        Object currToken = scanner.next_token();
-        if (currToken != Keyword.OPEN_BRACKET) {
-          FRLogger.warn("RulesReader.read: open bracket expected at '"
-              + scanner.get_scope_identifier() + "'");
-          return false;
-        }
-        currToken = scanner.next_token();
-        if (currToken != Keyword.RULES) {
-          FRLogger.warn("RulesReader.read: keyword 'rules' expected at '"
-              + scanner.get_scope_identifier() + "'");
-          return false;
-        }
-        currToken = scanner.next_token();
-        if (currToken != Keyword.PCB_SCOPE) {
-          FRLogger.warn("RulesReader.read: keyword 'pcb' expected at '"
-              + scanner.get_scope_identifier() + "'");
-          return false;
-        }
-        scanner.yybegin(SpecctraDsnStreamReader.NAME);
-        currToken = scanner.next_token();
-        if (!(currToken instanceof String) || !currToken.equals(designName)) {
-          FRLogger.warn("RulesReader.read: design_name not matching at '"
-              + scanner.get_scope_identifier() + "' (expected '" + designName
-              + "', got '" + currToken + "')");
-          // non-fatal: continue reading
-        }
-      } catch (IOException e) {
-        FRLogger.error("RulesReader.read: IO error scanning rules header", e);
+      // Validate the "(rules PCB <name>" header
+      Object currToken = scanner.next_token();
+      if (currToken != Keyword.OPEN_BRACKET) {
+        FRLogger.warn("RulesReader.read: open bracket expected at '"
+            + scanner.get_scope_identifier() + "'");
         return false;
+      }
+      currToken = scanner.next_token();
+      if (currToken != Keyword.RULES) {
+        FRLogger.warn("RulesReader.read: keyword 'rules' expected at '"
+            + scanner.get_scope_identifier() + "'");
+        return false;
+      }
+      currToken = scanner.next_token();
+      if (currToken != Keyword.PCB_SCOPE) {
+        FRLogger.warn("RulesReader.read: keyword 'pcb' expected at '"
+            + scanner.get_scope_identifier() + "'");
+        return false;
+      }
+      scanner.yybegin(SpecctraDsnStreamReader.NAME);
+      currToken = scanner.next_token();
+      if (!(currToken instanceof String) || !currToken.equals(designName)) {
+        FRLogger.warn("RulesReader.read: design_name not matching at '"
+            + scanner.get_scope_identifier() + "' (expected '" + designName
+            + "', got '" + currToken + "')");
+        // non-fatal: continue reading
       }
 
       LayerStructure layerStructure = new LayerStructure(board.layer_structure);
@@ -138,6 +133,9 @@ public final class RulesReader {
         }
       }
       return true;
+    } catch (IOException e) {
+      FRLogger.error("RulesReader.read: IO error scanning rules header", e);
+      return false;
     } finally {
       closeQuietly(in);
     }
