@@ -84,7 +84,7 @@ public class Keyword {
   public static final Keyword POWER = new Keyword("power");
   public static final Keyword PULL_TIGHT = new Keyword("pull_tight");
   public static final Keyword RECTANGLE = new Keyword("rectangle");
-  public static final Keyword RESOLUTION_SCOPE = new Resolution();
+  public static final ScopeKeyword RESOLUTION_SCOPE = new Resolution();
   public static final Keyword ROTATE = new Keyword("rotate");
   public static final Keyword ROTATE_FIRST = new Keyword("rotate_first");
   public static final Keyword ROUTES = new Keyword("routes");

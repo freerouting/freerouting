@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,22 +37,13 @@ class DsnReaderMetadataTest {
   }
 
   @Test
-  void readMetadataIsFasterThanReadBoard() {
-    // Just proves the path terminates in a reasonable time on a large DSN
-    long t0 = System.currentTimeMillis();
-    DsnReader.readMetadata(DsnTestFixtures.openResource("Issue187-processor.Z80.dsn"));
-    long metaMs = System.currentTimeMillis() - t0;
-
-    t0 = System.currentTimeMillis();
-    DsnReader.readBoard(DsnTestFixtures.openResource("Issue187-processor.Z80.dsn"), null, null);
-    long boardMs = System.currentTimeMillis() - t0;
-
-    assertTrue(metaMs < boardMs,
-        "readMetadata (%dms) should be faster than readBoard (%dms)".formatted(metaMs, boardMs));
+  void readMetadataCompletesWithinReasonableTimeOnLargeDsn() {
+    assertTimeoutPreemptively(Duration.ofSeconds(5),
+        () -> DsnReader.readMetadata(DsnTestFixtures.openResource("Issue187-processor.Z80.dsn")));
   }
 
   @Test
-  void readMetadataReturnsSuccessWithNullMetadataForNullStream() {
+  void readMetadataReturnsParseErrorForNullStream() {
     DsnReadResult result = DsnReader.readMetadata(null);
     assertInstanceOf(DsnReadResult.ParseError.class, result);
   }
@@ -66,4 +58,3 @@ class DsnReaderMetadataTest {
     assertNotNull(meta.unit(), "unit must be set from (resolution ...) scope");
   }
 }
-

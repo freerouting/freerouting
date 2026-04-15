@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DsnMetadataTest {
 
@@ -39,8 +40,7 @@ class DsnMetadataTest {
     String str = meta.toString();
 
     // Java record toString() includes the field names and values
-    assert str.contains("KiCad");
-    assert str.contains("4");
+    assertTrue(str.contains("KiCad"), "toString should contain host CAD");
+    assertTrue(str.contains("4"), "toString should contain layer count");
   }
 }
-

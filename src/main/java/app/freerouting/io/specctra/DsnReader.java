@@ -190,9 +190,7 @@ public final class DsnReader {
           Keyword.PARSER_SCOPE.read_scope(par);
         } else if (nextToken == Keyword.RESOLUTION_SCOPE) {
           // Populates par.unit, par.resolution
-          // RESOLUTION_SCOPE is declared as Keyword in the Keyword class but its
-          // runtime type is Resolution (a ScopeKeyword), so we need the cast.
-          ((ScopeKeyword) Keyword.RESOLUTION_SCOPE).read_scope(par);
+          Keyword.RESOLUTION_SCOPE.read_scope(par);
         } else if (nextToken == Keyword.STRUCTURE_SCOPE) {
           // Populates par.layer_structure, par.snap_angle, par.autoroute_settings
           // and creates the board via MinimalBoardManager (if a valid boundary exists).
@@ -240,4 +238,3 @@ public final class DsnReader {
     }
   }
 }
-

@@ -46,92 +46,101 @@ public final class RulesReader {
    *         {@code false} on any parse or I/O error
    */
   public static boolean read(InputStream in, String designName, BasicBoard board) {
-    IJFlexScanner scanner = new SpecctraDsnStreamReader(in);
-    try {
-      // Validate the "(rules PCB <name>" header
-      Object currToken = scanner.next_token();
-      if (currToken != Keyword.OPEN_BRACKET) {
-        FRLogger.warn("RulesReader.read: open bracket expected at '"
-            + scanner.get_scope_identifier() + "'");
-        return false;
-      }
-      currToken = scanner.next_token();
-      if (currToken != Keyword.RULES) {
-        FRLogger.warn("RulesReader.read: keyword 'rules' expected at '"
-            + scanner.get_scope_identifier() + "'");
-        return false;
-      }
-      currToken = scanner.next_token();
-      if (currToken != Keyword.PCB_SCOPE) {
-        FRLogger.warn("RulesReader.read: keyword 'pcb' expected at '"
-            + scanner.get_scope_identifier() + "'");
-        return false;
-      }
-      scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      currToken = scanner.next_token();
-      if (!(currToken instanceof String) || !currToken.equals(designName)) {
-        FRLogger.warn("RulesReader.read: design_name not matching at '"
-            + scanner.get_scope_identifier() + "' (expected '" + designName
-            + "', got '" + currToken + "')");
-        // non-fatal: continue reading
-      }
-    } catch (IOException e) {
-      FRLogger.error("RulesReader.read: IO error scanning rules header", e);
+    if (in == null) {
+      FRLogger.warn("RulesReader.read: input stream is null");
+      return false;
+    }
+    if (board == null) {
+      FRLogger.warn("RulesReader.read: board is null");
       closeQuietly(in);
       return false;
     }
 
-    LayerStructure layerStructure = new LayerStructure(board.layer_structure);
-    CoordinateTransform coordinateTransform = board.communication.coordinate_transform;
-
-    // Parse all top-level scopes in the rules body
-    Object nextToken = null;
-    for (;;) {
-      Object prevToken = nextToken;
+    IJFlexScanner scanner = new SpecctraDsnStreamReader(in);
+    try {
       try {
-        nextToken = scanner.next_token();
+        // Validate the "(rules PCB <name>" header
+        Object currToken = scanner.next_token();
+        if (currToken != Keyword.OPEN_BRACKET) {
+          FRLogger.warn("RulesReader.read: open bracket expected at '"
+              + scanner.get_scope_identifier() + "'");
+          return false;
+        }
+        currToken = scanner.next_token();
+        if (currToken != Keyword.RULES) {
+          FRLogger.warn("RulesReader.read: keyword 'rules' expected at '"
+              + scanner.get_scope_identifier() + "'");
+          return false;
+        }
+        currToken = scanner.next_token();
+        if (currToken != Keyword.PCB_SCOPE) {
+          FRLogger.warn("RulesReader.read: keyword 'pcb' expected at '"
+              + scanner.get_scope_identifier() + "'");
+          return false;
+        }
+        scanner.yybegin(SpecctraDsnStreamReader.NAME);
+        currToken = scanner.next_token();
+        if (!(currToken instanceof String) || !currToken.equals(designName)) {
+          FRLogger.warn("RulesReader.read: design_name not matching at '"
+              + scanner.get_scope_identifier() + "' (expected '" + designName
+              + "', got '" + currToken + "')");
+          // non-fatal: continue reading
+        }
       } catch (IOException e) {
-        FRLogger.error("RulesReader.read: IO error scanning rules body", e);
-        closeQuietly(in);
+        FRLogger.error("RulesReader.read: IO error scanning rules header", e);
         return false;
       }
-      if (nextToken == null) {
-        FRLogger.warn("RulesReader.read: unexpected end of file at '"
-            + scanner.get_scope_identifier() + "'");
-        closeQuietly(in);
-        return false;
-      }
-      if (nextToken == Keyword.CLOSED_BRACKET) {
-        // end of (rules ...) scope — success
-        break;
-      }
-      if (prevToken == Keyword.OPEN_BRACKET) {
-        if (nextToken == Keyword.RULE) {
-          applyRules(Rule.read_scope(scanner), board, null);
-        } else if (nextToken == Keyword.LAYER) {
-          applyLayerRules(scanner, board);
-        } else if (nextToken == Keyword.PADSTACK) {
-          Library.read_padstack_scope(scanner, layerStructure, coordinateTransform,
-              board.library.padstacks);
-        } else if (nextToken == Keyword.VIA) {
-          applyViaInfo(scanner, board);
-        } else if (nextToken == Keyword.VIA_RULE) {
-          applyViaRule(scanner, board);
-        } else if (nextToken == Keyword.CLASS) {
-          applyNetClass(scanner, layerStructure, board);
-        } else if (nextToken == Keyword.SNAP_ANGLE) {
-          AngleRestriction snapAngle = Structure.read_snap_angle(scanner);
-          if (snapAngle != null) {
-            board.rules.set_trace_angle_restriction(snapAngle);
+
+      LayerStructure layerStructure = new LayerStructure(board.layer_structure);
+      CoordinateTransform coordinateTransform = board.communication.coordinate_transform;
+
+      // Parse all top-level scopes in the rules body
+      Object nextToken = null;
+      for (;;) {
+        Object prevToken = nextToken;
+        try {
+          nextToken = scanner.next_token();
+        } catch (IOException e) {
+          FRLogger.error("RulesReader.read: IO error scanning rules body", e);
+          return false;
+        }
+        if (nextToken == null) {
+          FRLogger.warn("RulesReader.read: unexpected end of file at '"
+              + scanner.get_scope_identifier() + "'");
+          return false;
+        }
+        if (nextToken == Keyword.CLOSED_BRACKET) {
+          // end of (rules ...) scope — success
+          break;
+        }
+        if (prevToken == Keyword.OPEN_BRACKET) {
+          if (nextToken == Keyword.RULE) {
+            applyRules(Rule.read_scope(scanner), board, null);
+          } else if (nextToken == Keyword.LAYER) {
+            applyLayerRules(scanner, board);
+          } else if (nextToken == Keyword.PADSTACK) {
+            Library.read_padstack_scope(scanner, layerStructure, coordinateTransform,
+                board.library.padstacks);
+          } else if (nextToken == Keyword.VIA) {
+            applyViaInfo(scanner, board);
+          } else if (nextToken == Keyword.VIA_RULE) {
+            applyViaRule(scanner, board);
+          } else if (nextToken == Keyword.CLASS) {
+            applyNetClass(scanner, layerStructure, board);
+          } else if (nextToken == Keyword.SNAP_ANGLE) {
+            AngleRestriction snapAngle = Structure.read_snap_angle(scanner);
+            if (snapAngle != null) {
+              board.rules.set_trace_angle_restriction(snapAngle);
+            }
+          } else {
+            ScopeKeyword.skip_scope(scanner);
           }
-        } else {
-          ScopeKeyword.skip_scope(scanner);
         }
       }
+      return true;
+    } finally {
+      closeQuietly(in);
     }
-
-    closeQuietly(in);
-    return true;
   }
 
   // -------------------------------------------------------------------------
@@ -231,4 +240,3 @@ public final class RulesReader {
     }
   }
 }
-

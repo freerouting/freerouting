@@ -688,20 +688,16 @@ public class BoardFrame extends WindowBase {
   private boolean saveRulesAs(File rulesFile, String designName, GuiBoardManager p_board_handling) {
     FRLogger.info("Saving '" + rulesFile.getPath() + "'...");
 
-    OutputStream outputStream;
-    try {
-      outputStream = new FileOutputStream(rulesFile);
-    } catch (IOException e) {
+    try (OutputStream outputStream = new FileOutputStream(rulesFile)) {
+      RulesWriter.write(p_board_handling.get_routing_board(), outputStream, designName);
+      return true;
+    } catch (FileNotFoundException e) {
       FRLogger.error("unable to create rules file", e);
       return false;
-    }
-
-    try {
-      RulesWriter.write(p_board_handling.get_routing_board(), outputStream, designName);
     } catch (IOException e) {
       FRLogger.error("unable to write rules file", e);
+      return false;
     }
-    return true;
   }
 
   public void saveAsEagleScriptScr(File outputFile, String design_name) {
