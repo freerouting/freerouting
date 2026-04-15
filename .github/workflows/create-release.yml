@@ -120,37 +120,6 @@ jobs:
           release-tag: v${{ steps.tagName.outputs.tag }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-  build-macos-x64:
-
-    needs: build-and-test
-
-    runs-on: [ macos-13 ]
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '25'
-          cache: 'gradle'
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Build with Gradle
-        run: ./gradlew dist
-      - name: Get Tag name
-        uses: olegtarasov/get-tag@v2.1
-        id: tagName
-        with:
-          tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-          tagRegexGroup: 1   # Optional. Default is 1.
-      - name: Create Distribution
-        run: scripts/build/create-distribution-macos-x64.sh ${{ steps.tagName.outputs.tag }}
-      - uses: AButler/upload-release-assets@v3.0
-        with:
-          files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg'
-          release-tag: v${{ steps.tagName.outputs.tag }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-macos-arm64:
 
