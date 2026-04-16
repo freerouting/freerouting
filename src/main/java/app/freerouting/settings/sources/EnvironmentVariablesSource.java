@@ -86,7 +86,7 @@ public class EnvironmentVariablesSource implements SettingsSource {
         }
 
         if (parsedCount > 0) {
-            FRLogger.info("Parsed " + parsedCount + " router settings from environment variables");
+            FRLogger.info("Parsed " + parsedCount + " router setting(s) from environment variables");
         } else {
             FRLogger.debug("No router settings found in environment variables");
         }

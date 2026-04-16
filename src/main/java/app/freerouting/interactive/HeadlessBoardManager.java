@@ -432,18 +432,15 @@ public class HeadlessBoardManager implements BoardManager {
 
     try {
       // Use the new BoardManager-free reader; stream is closed inside readBoard.
-      DsnReadResult dsnResult = DsnReader.readBoard(inputStream, boardObservers, identificationNumberGenerator);
+      String inputFilename = (this.routingJob != null && this.routingJob.input != null)
+          ? this.routingJob.input.getFilename()
+          : null;
+      DsnReadResult dsnResult = DsnReader.readBoard(inputStream, boardObservers, identificationNumberGenerator, inputFilename);
 
       if (dsnResult instanceof DsnReadResult.Success success) {
         this.board = (RoutingBoard) success.board();
-        for (String w : success.warnings()) {
-          FRLogger.warn("DSN loader: " + w);
-        }
       } else if (dsnResult instanceof DsnReadResult.OutlineMissing outlineMissing) {
         this.board = (RoutingBoard) outlineMissing.board();
-        for (String w : outlineMissing.warnings()) {
-          FRLogger.warn("DSN loader: " + w);
-        }
       } else {
         // ParseError or IoError — no board was constructed
         if (dsnResult instanceof DsnReadResult.IoError ioError) {

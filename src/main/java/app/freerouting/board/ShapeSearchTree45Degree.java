@@ -238,7 +238,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
     TileShape contained_shape = p_incomplete_room.get_contained_shape();
     if (contained_shape == null || contained_shape.is_empty()) {
-      FRLogger.warn("ShapeSearchTree45Degree.restrain_shape: p_shape_to_be_contained is empty");
+      FRLogger.debug("ShapeSearchTree45Degree.restrain_shape: p_shape_to_be_contained is empty");
       return result;
     }
     IntOctagon shape_to_be_contained;

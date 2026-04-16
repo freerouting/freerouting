@@ -128,7 +128,7 @@ public class SettingsMerger implements Cloneable {
         // Validate the merged settings
         mergedSettings.validate();
 
-        FRLogger.info("Settings merged successfully from " + sortedSources.size() + " sources");
+        FRLogger.info("Settings merged successfully from " + sortedSources.size() + " source(s)");
         return mergedSettings;
     }
 

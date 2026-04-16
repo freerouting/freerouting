@@ -315,7 +315,7 @@ public class Wiring extends ScopeKeyword {
         board.normalize_traces(i);
       } catch (Exception _) {
         String msg = "Wiring: normalization of net '" + board.rules.nets.get(i).name + "' failed";
-        FRLogger.warn(msg);
+        FRLogger.debug(msg);
         p_par.warnings.add(msg);
       }
     }
@@ -465,7 +465,7 @@ public class Wiring extends ScopeKeyword {
       } else {
         String msg = "Wiring: degenerate wire skipped (all corners identical) at '"
             + p_par.scanner.get_scope_identifier() + "' on layer '" + path.layer.name + "'";
-        FRLogger.warn(msg);
+        FRLogger.debug(msg);
         p_par.warnings.add(msg);
       }
     } else if (path instanceof PolylinePath) {

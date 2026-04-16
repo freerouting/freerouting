@@ -417,7 +417,7 @@ public abstract class Shape {
       if (corner_list.size() < 5) {
         // Single-point paths are not valid traces, skip them
         FRLogger
-            .warn("Shape.read_polygon_path_scope: skipping path with too few coordinates (need at least 2 points) at '"
+            .debug("Shape.read_polygon_path_scope: skipping path with too few coordinates (need at least 2 points) at '"
                 + p_scanner.get_scope_identifier() + "'");
         return null;
       }
