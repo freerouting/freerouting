@@ -57,9 +57,12 @@ public class BatchAutorouter extends NamedAlgorithm {
   // The modulo of the pass number to check if the improvements were so small that
   // process should stop despite not all items are routed
   private static final int STOP_AT_PASS_MODULO = 4;
-  // Number of consecutive passes with no reduction in incompleteCount before
+  // Number of consecutive passes with no meaningful score improvement before
   // aborting (prevents endless looping when items cannot be routed)
   private static final int STAGNATION_PASS_LIMIT = 10;
+  // Minimum score gain (on the 0–1000 normalized scale) that counts as a
+  // meaningful improvement; gains smaller than this are treated as stagnation.
+  private static final float STAGNATION_SCORE_THRESHOLD = 0.5f;
 
   private final boolean remove_unconnected_vias;
   private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
@@ -664,9 +667,9 @@ public class BatchAutorouter extends NamedAlgorithm {
 
     int currentPass = 1;
     int consecutiveNoImprovementPasses = 0;
-    int lastIncompleteCount = Integer.MAX_VALUE;
-    int bestIncompleteCount = Integer.MAX_VALUE;
-    int passOfLastImprovement = 0;
+    float lastBestScore = Float.NEGATIVE_INFINITY;   // score at last board-restore or improvement
+    float globalBestScore = Float.NEGATIVE_INFINITY; // best score seen across all passes
+    int passOfBestScore = 0;                         // pass where globalBestScore was achieved
     while (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
       if (job != null && job.state == RoutingJobState.TIMED_OUT) {
         this.thread.request_stop_auto_router();
@@ -720,7 +723,7 @@ public class BatchAutorouter extends NamedAlgorithm {
             var boardStatistics = this.board.get_statistics();
             // Reset pass-local stagnation counter when restoring a previous board state
             consecutiveNoImprovementPasses = 0;
-            lastIncompleteCount = boardStatistics.connections.incompleteCount;
+            lastBestScore = boardStatistics.getNormalizedScore(job.routerSettings.scoring);
             job.logInfo(
                 "Restoring an earlier board that has the score of "
                     + FRLogger.formatScore(boardStatistics.getNormalizedScore(job.routerSettings.scoring),
@@ -774,19 +777,25 @@ public class BatchAutorouter extends NamedAlgorithm {
         fireBoardSnapshotEvent(this.board);
       }
 
-      // Stagnation detection: abort if incompleteCount hasn't improved for
-      // STAGNATION_PASS_LIMIT consecutive passes (only after the minimum passes).
+      // Stagnation detection: abort when the normalized score hasn't improved by
+      // at least STAGNATION_SCORE_THRESHOLD over STAGNATION_PASS_LIMIT consecutive
+      // passes (only checked after the mandatory minimum passes and only while items
+      // remain unconnected — a fully-routed board never triggers this path).
       if (currentPass >= STOP_AT_PASS_MINIMUM && boardStatisticsAfter.connections.incompleteCount > 0) {
-        int currentIncomplete = boardStatisticsAfter.connections.incompleteCount;
-        if (currentIncomplete < lastIncompleteCount) {
+
+        // --- Pass-local counter (resets after board restores) ---
+        if (boardScoreAfter > lastBestScore + STAGNATION_SCORE_THRESHOLD) {
           consecutiveNoImprovementPasses = 0;
-          lastIncompleteCount = currentIncomplete;
+          lastBestScore = boardScoreAfter;
         } else {
           consecutiveNoImprovementPasses++;
           if (consecutiveNoImprovementPasses >= STAGNATION_PASS_LIMIT) {
             String report = buildUnroutedConnectionsReport();
-            job.logInfo("The router made no improvement in the last " + STAGNATION_PASS_LIMIT
-                + " passes (" + currentIncomplete + " item" + (currentIncomplete == 1 ? "" : "s")
+            job.logInfo("The router's score (" + FRLogger.defaultFloatFormat.format(boardScoreAfter)
+                + ") has not improved by more than " + STAGNATION_SCORE_THRESHOLD
+                + " points in the last " + STAGNATION_PASS_LIMIT + " passes ("
+                + boardStatisticsAfter.connections.incompleteCount + " item"
+                + (boardStatisticsAfter.connections.incompleteCount == 1 ? "" : "s")
                 + " still unconnected). Stopping the auto-router.\n"
                 + "The following connections could not be routed -- please review your design "
                 + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
@@ -795,27 +804,33 @@ public class BatchAutorouter extends NamedAlgorithm {
             break;
           }
         }
-        // Global best-count tracker: if the overall minimum hasn't improved in
-        // STAGNATION_PASS_LIMIT passes, stop even when board-restores reset the local counter.
-        if (currentIncomplete < bestIncompleteCount) {
-          bestIncompleteCount = currentIncomplete;
-          passOfLastImprovement = currentPass;
-        } else if ((currentPass - passOfLastImprovement) >= STAGNATION_PASS_LIMIT) {
+
+        // --- Global best tracker (not reset by board restores) ---
+        // Stops the router if no pass anywhere has meaningfully improved the score
+        // in the last STAGNATION_PASS_LIMIT passes, even across board-restore cycles.
+        if (boardScoreAfter > globalBestScore + STAGNATION_SCORE_THRESHOLD) {
+          globalBestScore = boardScoreAfter;
+          passOfBestScore = currentPass;
+        } else if ((currentPass - passOfBestScore) >= STAGNATION_PASS_LIMIT) {
           String report = buildUnroutedConnectionsReport();
-          job.logInfo("The router's best incomplete count (" + bestIncompleteCount
-              + " unconnected item" + (bestIncompleteCount == 1 ? "" : "s")
-              + ") has not improved since pass #" + passOfLastImprovement
-              + ". Stopping the auto-router after " + currentPass + " passes.\n"
+          job.logInfo("The router's best score (" + FRLogger.defaultFloatFormat.format(globalBestScore)
+              + ") has not improved by more than " + STAGNATION_SCORE_THRESHOLD
+              + " points since pass #" + passOfBestScore
+              + ". Stopping the auto-router after " + currentPass + " passes ("
+              + boardStatisticsAfter.connections.incompleteCount + " item"
+              + (boardStatisticsAfter.connections.incompleteCount == 1 ? "" : "s")
+              + " still unconnected).\n"
               + "The following connections could not be routed -- please review your design "
               + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
               + report);
           thread.request_stop_auto_router();
           break;
         }
+
       } else if (boardStatisticsAfter.connections.incompleteCount == 0) {
         // Board is fully routed; reset stagnation state
         consecutiveNoImprovementPasses = 0;
-        lastIncompleteCount = 0;
+        lastBestScore = boardScoreAfter;
       }
 
       // check if there are still unrouted items
