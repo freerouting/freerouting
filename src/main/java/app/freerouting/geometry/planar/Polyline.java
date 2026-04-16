@@ -164,7 +164,9 @@ public class Polyline implements Serializable {
     }
     tmp_arr[new_length] = p_line_arr[p_line_arr.length - 2];
     ++new_length;
-    if (!p_line_arr[p_line_arr.length - 1].is_equal_or_opposite(tmp_arr[new_length - 2])) {
+    // Guard: new_length must be >= 2 before accessing tmp_arr[new_length - 2].
+    // If the loop decremented new_length all the way to 0 the index would be -1.
+    if (new_length >= 2 && !p_line_arr[p_line_arr.length - 1].is_equal_or_opposite(tmp_arr[new_length - 2])) {
       tmp_arr[new_length] = p_line_arr[p_line_arr.length - 1];
       ++new_length;
     }

@@ -179,6 +179,15 @@ public class RouterSettings implements Serializable, Cloneable {
       scoring.undesiredDirectionTraceCost = new double[layer_count];
     }
 
+    // Guard against null defaults that can occur when RouterSettings is
+    // deserialized without going through DefaultSettings (e.g. from board history).
+    if (scoring.defaultPreferredDirectionTraceCost == null) {
+      scoring.defaultPreferredDirectionTraceCost = 1.0;
+    }
+    if (scoring.defaultUndesiredDirectionTraceCost == null) {
+      scoring.defaultUndesiredDirectionTraceCost = 1.0;
+    }
+
     for (int i = 0; i < layer_count; i++) {
       isLayerActive[i] = p_board.layer_structure.arr[i].is_signal;
       if (p_board.layer_structure.arr[i].is_signal) {
