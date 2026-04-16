@@ -26,6 +26,16 @@ jobs:
         with:
           ref: ${{ inputs.git_ref }}        
 
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+          cache: 'gradle'
+
+      - name: Run tests on native runner
+        run: ./gradlew test
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 

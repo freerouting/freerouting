@@ -7,8 +7,12 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-# Gradle build the application and produce the executable fat jar
-RUN ./gradlew build executableJar
+# Gradle build the application and produce the executable fat jar.
+# Tests are intentionally skipped here: they require a functional loopback
+# network interface that is not reliably available under QEMU emulation used
+# for cross-platform (linux/arm64) builds. Tests are run separately on the
+# native CI runner before this image is built.
+RUN ./gradlew executableJar -x test
 
 # Stage 2: Create the final image
 FROM eclipse-temurin:25-jre-jammy
