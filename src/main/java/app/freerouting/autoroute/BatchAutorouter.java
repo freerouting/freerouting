@@ -24,6 +24,7 @@ import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.drc.AirLine;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
@@ -56,6 +57,12 @@ public class BatchAutorouter extends NamedAlgorithm {
   // The modulo of the pass number to check if the improvements were so small that
   // process should stop despite not all items are routed
   private static final int STOP_AT_PASS_MODULO = 4;
+  // Number of consecutive passes with no meaningful score improvement before
+  // aborting (prevents endless looping when items cannot be routed)
+  private static final int STAGNATION_PASS_LIMIT = 10;
+  // Minimum score gain (on the 0–1000 normalized scale) that counts as a
+  // meaningful improvement; gains smaller than this are treated as stagnation.
+  private static final float STAGNATION_SCORE_THRESHOLD = 0.5f;
 
   private final boolean remove_unconnected_vias;
   private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
@@ -659,6 +666,10 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
 
     int currentPass = 1;
+    int consecutiveNoImprovementPasses = 0;
+    float lastBestScore = Float.NEGATIVE_INFINITY;   // score at last board-restore or improvement
+    float globalBestScore = Float.NEGATIVE_INFINITY; // best score seen across all passes
+    int passOfBestScore = 0;                         // pass where globalBestScore was achieved
     while (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
       if (job != null && job.state == RoutingJobState.TIMED_OUT) {
         this.thread.request_stop_auto_router();
@@ -710,11 +721,17 @@ public class BatchAutorouter extends NamedAlgorithm {
 
             this.board = boardToRestore;
             var boardStatistics = this.board.get_statistics();
+            // Reset pass-local stagnation counter when restoring a previous board state
+            consecutiveNoImprovementPasses = 0;
+            boardStatisticsAfter = boardStatistics;
+            boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
+            lastBestScore = boardScoreAfter;
+            currentBoardHash = this.board.get_hash();
             job.logInfo(
                 "Restoring an earlier board that has the score of "
-                    + FRLogger.formatScore(boardStatistics.getNormalizedScore(job.routerSettings.scoring),
-                        boardStatistics.connections.incompleteCount,
-                        boardStatistics.clearanceViolations.totalCount)
+                    + FRLogger.formatScore(boardScoreAfter,
+                        boardStatisticsAfter.connections.incompleteCount,
+                        boardStatisticsAfter.clearanceViolations.totalCount)
                     + ".");
           }
         }
@@ -763,6 +780,62 @@ public class BatchAutorouter extends NamedAlgorithm {
         fireBoardSnapshotEvent(this.board);
       }
 
+      // Stagnation detection: abort when the normalized score hasn't improved by
+      // at least STAGNATION_SCORE_THRESHOLD over STAGNATION_PASS_LIMIT consecutive
+      // passes (only checked after the mandatory minimum passes and only while items
+      // remain unconnected — a fully-routed board never triggers this path).
+      if (currentPass >= STOP_AT_PASS_MINIMUM && boardStatisticsAfter.connections.incompleteCount > 0) {
+
+        // --- Pass-local counter (resets after board restores) ---
+        if (boardScoreAfter > lastBestScore + STAGNATION_SCORE_THRESHOLD) {
+          consecutiveNoImprovementPasses = 0;
+          lastBestScore = boardScoreAfter;
+        } else {
+          consecutiveNoImprovementPasses++;
+          if (consecutiveNoImprovementPasses >= STAGNATION_PASS_LIMIT) {
+            String report = buildUnroutedConnectionsReport();
+            job.logInfo("The router's score (" + FRLogger.defaultFloatFormat.format(boardScoreAfter)
+                + ") has not improved by more than " + STAGNATION_SCORE_THRESHOLD
+                + " points in the last " + STAGNATION_PASS_LIMIT + " passes ("
+                + boardStatisticsAfter.connections.incompleteCount + " item"
+                + (boardStatisticsAfter.connections.incompleteCount == 1 ? "" : "s")
+                + " still unconnected). Stopping the auto-router.\n"
+                + "The following connections could not be routed -- please review your design "
+                + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
+                + report);
+            thread.request_stop_auto_router();
+            break;
+          }
+        }
+
+        // --- Global best tracker (not reset by board restores) ---
+        // Stops the router if no pass anywhere has meaningfully improved the score
+        // in the last STAGNATION_PASS_LIMIT passes, even across board-restore cycles.
+        if (boardScoreAfter > globalBestScore + STAGNATION_SCORE_THRESHOLD) {
+          globalBestScore = boardScoreAfter;
+          passOfBestScore = currentPass;
+        } else if ((currentPass - passOfBestScore) >= STAGNATION_PASS_LIMIT) {
+          String report = buildUnroutedConnectionsReport();
+          job.logInfo("The router's best score (" + FRLogger.defaultFloatFormat.format(globalBestScore)
+              + ") has not improved by more than " + STAGNATION_SCORE_THRESHOLD
+              + " points since pass #" + passOfBestScore
+              + ". Stopping the auto-router after " + currentPass + " passes ("
+              + boardStatisticsAfter.connections.incompleteCount + " item"
+              + (boardStatisticsAfter.connections.incompleteCount == 1 ? "" : "s")
+              + " still unconnected).\n"
+              + "The following connections could not be routed -- please review your design "
+              + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
+              + report);
+          thread.request_stop_auto_router();
+          break;
+        }
+
+      } else if (boardStatisticsAfter.connections.incompleteCount == 0) {
+        // Board is fully routed; reset stagnation state
+        consecutiveNoImprovementPasses = 0;
+        lastBestScore = boardScoreAfter;
+      }
+
       // check if there are still unrouted items
       if (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
         currentPass++;
@@ -792,6 +865,78 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
 
     return !this.thread.is_stop_auto_router_requested();
+  }
+
+  /**
+   * Builds a human-readable summary of all unrouted connections on the current board,
+   * grouped by net. For each unrouted connection the component and pin names of both
+   * endpoints are listed so that the user can identify exactly which connections are
+   * missing and address them in their design.
+   *
+   * <p>Example output:
+   * <pre>
+   *   Net 'GND' (1 unrouted connection):
+   *     - J2-A1  ->  U1-1
+   *   Net '/MIPI_CSI_D0_N' (1 unrouted connection):
+   *     - J2-A2  ->  U1-2
+   * </pre>
+   *
+   * @return a formatted, multi-line string describing every unrouted airline
+   */
+  private String buildUnroutedConnectionsReport() {
+    RatsNest ratsNest = new RatsNest(this.board);
+    AirLine[] airlines = ratsNest.get_airlines();
+
+    if (airlines == null || airlines.length == 0) {
+      return "  (no unrouted connections found)";
+    }
+
+    // Group airlines by net name for a cleaner report
+    Map<String, List<String>> byNet = new LinkedHashMap<>();
+    for (AirLine al : airlines) {
+      String netName = al.net != null ? al.net.name : "(unknown net)";
+      String fromDesc = describeItem(al.from_item);
+      String toDesc   = describeItem(al.to_item);
+      byNet.computeIfAbsent(netName, k -> new ArrayList<>())
+           .add("    - " + fromDesc + "  ->  " + toDesc);
+    }
+
+    StringBuilder sb = new StringBuilder();
+    for (Map.Entry<String, List<String>> entry : byNet.entrySet()) {
+      int count = entry.getValue().size();
+      sb.append("  Net '").append(entry.getKey()).append("' (")
+        .append(count).append(" unrouted connection").append(count == 1 ? "" : "s").append("):\n");
+      for (String line : entry.getValue()) {
+        sb.append(line).append('\n');
+      }
+    }
+    return sb.toString().stripTrailing();
+  }
+
+  /**
+   * Returns a short, user-friendly description of a board item suitable for the
+   * stagnation report.  For pins the format is {@code ComponentName-PinName}
+   * (e.g. {@code J2-A3}); for all other item types a generic fallback is used.
+   */
+  private String describeItem(Item item) {
+    if (item instanceof Pin pin) {
+      try {
+        app.freerouting.board.Component comp = board.components.get(pin.get_component_no());
+        if (comp != null) {
+          app.freerouting.core.Package pkg = comp.get_package();
+          if (pkg != null) {
+            app.freerouting.core.Package.Pin pkgPin = pkg.get_pin(pin.pin_no);
+            if (pkgPin != null) {
+              return comp.name + "-" + pkgPin.name;
+            }
+          }
+          return comp.name + " (pin #" + pin.pin_no + ")";
+        }
+      } catch (Exception e) {
+        // fall through to generic
+      }
+    }
+    return item != null ? item.toString() : "(unknown)";
   }
 
   private void remove_tails(Item.StopConnectionOption p_stop_connection_option) {
