@@ -788,7 +788,7 @@ public class BatchAutorouter extends NamedAlgorithm {
             job.logInfo("The router made no improvement in the last " + STAGNATION_PASS_LIMIT
                 + " passes (" + currentIncomplete + " item" + (currentIncomplete == 1 ? "" : "s")
                 + " still unconnected). Stopping the auto-router.\n"
-                + "The following connections could not be routed — please review your design "
+                + "The following connections could not be routed -- please review your design "
                 + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
                 + report);
             thread.request_stop_auto_router();
@@ -806,7 +806,7 @@ public class BatchAutorouter extends NamedAlgorithm {
               + " unconnected item" + (bestIncompleteCount == 1 ? "" : "s")
               + ") has not improved since pass #" + passOfLastImprovement
               + ". Stopping the auto-router after " + currentPass + " passes.\n"
-              + "The following connections could not be routed — please review your design "
+              + "The following connections could not be routed -- please review your design "
               + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
               + report);
           thread.request_stop_auto_router();
@@ -858,9 +858,9 @@ public class BatchAutorouter extends NamedAlgorithm {
    * <p>Example output:
    * <pre>
    *   Net 'GND' (1 unrouted connection):
-   *     - J2-A1  →  U1-1
+   *     - J2-A1  ->  U1-1
    *   Net '/MIPI_CSI_D0_N' (1 unrouted connection):
-   *     - J2-A2  →  U1-2
+   *     - J2-A2  ->  U1-2
    * </pre>
    *
    * @return a formatted, multi-line string describing every unrouted airline
@@ -880,7 +880,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       String fromDesc = describeItem(al.from_item);
       String toDesc   = describeItem(al.to_item);
       byNet.computeIfAbsent(netName, k -> new ArrayList<>())
-           .add("    - " + fromDesc + "  \u2192  " + toDesc);
+           .add("    - " + fromDesc + "  ->  " + toDesc);
     }
 
     StringBuilder sb = new StringBuilder();
