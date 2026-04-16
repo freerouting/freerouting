@@ -20,9 +20,9 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.AccessControlException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.zip.ZipEntry;
@@ -91,7 +91,7 @@ public abstract class WindowNetSamples extends BoardSubWindow {
     String archive_path_name = MainApplication.WEB_FILE_BASE_NAME + p_archive_name + ".zip";
     URL archive_url;
     try {
-      archive_url = new URL(archive_path_name);
+      archive_url = URI.create(archive_path_name).toURL();
     } catch (MalformedURLException e) {
       return null;
     }
