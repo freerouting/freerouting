@@ -89,9 +89,11 @@ class SesRoundTripTest {
     RoutingBoard source = DsnTestFixtures.loadBoard("Issue593-BBD_Mars-64.dsn");
 
     // Import its companion SES first so the board has routing data
+    SesImportSummary originalImport;
     try (InputStream sesIn = DsnTestFixtures.openFixtureStream("Issue593-BBD_Mars-64.ses")) {
-      SesReader.read(sesIn, source);
+      originalImport = SesReader.read(sesIn, source);
     }
+    assertTrue(originalImport.wiresImported() > 0, "Fixture SES must contain at least one wire");
 
     // Write the board's routing state to a byte array
     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -107,6 +109,12 @@ class SesRoundTripTest {
         "Re-imported SES must contain at least one wire; got: " + summary.wiresImported());
     assertEquals(0, summary.errorsEncountered(),
         "No errors expected on re-import of self-written SES; got: " + summary.errorsEncountered());
+    // Verify no wires were silently dropped due to normalization failures inside
+    // BasicBoard.insert_trace. A mismatch here means the writer produced geometry
+    // that the reader could not fully restore.
+    assertEquals(originalImport.wiresImported(), summary.wiresImported(),
+        "Round-trip wire count must match the original import count; lost "
+            + (originalImport.wiresImported() - summary.wiresImported()) + " wire(s)");
   }
 
   /**
