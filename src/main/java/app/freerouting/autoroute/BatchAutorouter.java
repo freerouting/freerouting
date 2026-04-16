@@ -889,7 +889,7 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
 
     // Group airlines by net name for a cleaner report
-    java.util.LinkedHashMap<String, java.util.List<String>> byNet = new java.util.LinkedHashMap<>();
+    Map<String, List<String>> byNet = new LinkedHashMap<>();
     for (AirLine al : airlines) {
       String netName = al.net != null ? al.net.name : "(unknown net)";
       String fromDesc = describeItem(al.from_item);
