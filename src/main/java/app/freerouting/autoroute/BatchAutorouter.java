@@ -723,12 +723,15 @@ public class BatchAutorouter extends NamedAlgorithm {
             var boardStatistics = this.board.get_statistics();
             // Reset pass-local stagnation counter when restoring a previous board state
             consecutiveNoImprovementPasses = 0;
-            lastBestScore = boardStatistics.getNormalizedScore(job.routerSettings.scoring);
+            boardStatisticsAfter = boardStatistics;
+            boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
+            lastBestScore = boardScoreAfter;
+            currentBoardHash = this.board.get_hash();
             job.logInfo(
                 "Restoring an earlier board that has the score of "
-                    + FRLogger.formatScore(boardStatistics.getNormalizedScore(job.routerSettings.scoring),
-                        boardStatistics.connections.incompleteCount,
-                        boardStatistics.clearanceViolations.totalCount)
+                    + FRLogger.formatScore(boardScoreAfter,
+                        boardStatisticsAfter.connections.incompleteCount,
+                        boardStatisticsAfter.clearanceViolations.totalCount)
                     + ".");
           }
         }
