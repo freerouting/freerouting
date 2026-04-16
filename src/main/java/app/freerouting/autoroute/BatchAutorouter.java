@@ -899,7 +899,7 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
 
     StringBuilder sb = new StringBuilder();
-    for (Map.Entry<String, java.util.List<String>> entry : byNet.entrySet()) {
+    for (Map.Entry<String, List<String>> entry : byNet.entrySet()) {
       int count = entry.getValue().size();
       sb.append("  Net '").append(entry.getKey()).append("' (")
         .append(count).append(" unrouted connection").append(count == 1 ? "" : "s").append("):\n");
