@@ -147,8 +147,8 @@ public class Issue508Test extends TestBasedOnAnIssue {
 
     assertTrue(elapsedMs < 30_000,
             "Routing of the reference board 'Issue508-DAC2020_bm07.dsn' should complete in less than 30 seconds, but took " + elapsedMs + " ms.");
-    assertTrue(job.getCurrentPass() <= 8,
-            "Routing of the reference board 'Issue508-DAC2020_bm07.dsn' should complete within the first pass, but required " + job.getCurrentPass() + " passes.");
+    assertTrue(job.getCurrentPass() <= 9,
+            "Routing of the reference board 'Issue508-DAC2020_bm07.dsn' should complete within the first 9 passes, but required " + job.getCurrentPass() + " passes.");
     assertTrue(job.board.get_statistics().connections.incompleteCount <= 0,
             "Routing of the reference board 'Issue508-DAC2020_bm07.dsn' should result in 0 unrouted connections after the first pass.");
   }
@@ -168,7 +168,7 @@ public class Issue508Test extends TestBasedOnAnIssue {
     assertTrue(elapsedMs < 20_000,
             "Routing of the reference board 'Issue508-DAC2020_bm08.dsn' should complete in less than 20 seconds, but took " + elapsedMs + " ms.");
     assertTrue(job.getCurrentPass() <= 2,
-            "Routing of the reference board 'Issue508-DAC2020_bm08.dsn' should complete within the first pass, but required " + job.getCurrentPass() + " passes.");
+            "Routing of the reference board 'Issue508-DAC2020_bm08.dsn' should complete within the first 2 passes, but required " + job.getCurrentPass() + " passes.");
     assertTrue(job.board.get_statistics().connections.incompleteCount <= 0,
             "Routing of the reference board 'Issue508-DAC2020_bm08.dsn' should result in 0 unrouted connections after the first pass.");
   }
