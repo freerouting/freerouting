@@ -172,6 +172,12 @@ public class RouterSettings implements Serializable, Cloneable {
     boolean curr_preferred_direction_is_horizontal = horizontal_width < vertical_width;
 
     // initialize the layer specific settings.
+    if (isLayerActive == null || isLayerActive.length != layer_count) {
+      isLayerActive = new boolean[layer_count];
+    }
+    if (isPreferredDirectionHorizontalOnLayer == null || isPreferredDirectionHorizontalOnLayer.length != layer_count) {
+      isPreferredDirectionHorizontalOnLayer = new boolean[layer_count];
+    }
     if (scoring.preferredDirectionTraceCost == null || scoring.preferredDirectionTraceCost.length != layer_count) {
       scoring.preferredDirectionTraceCost = new double[layer_count];
     }
