@@ -9,6 +9,54 @@ import java.time.Duration;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests related to GitHub Issue #555: Routing Timeouts on BBD_Mars-64.dsn
+ *
+ * <p><b>Problem Summary:</b><br>
+ * A significant performance regression was identified during overnight batch testing on a
+ * medium-sized reference board ({@code BBD_Mars-64.dsn}). In a series of 100 iterations run with
+ * different random seeds (AMD Ryzen 5 3600, 32 GB RAM, 15-minute timeout per run), every single
+ * run failed by hitting the 15-minute timeout with approximately 30 unrouted connections remaining.
+ * Historically, this board had been routed successfully in under 4 minutes.
+ *
+ * <p><b>Test Configuration Used to Reproduce:</b>
+ * <pre>
+ *   java -jar freerouting-executable.jar \
+ *     -de BBD_Mars-64.dsn -do BBD_Mars-64.ses \
+ *     --gui.enabled=false \
+ *     --router.max_threads=11 \
+ *     --router.max_passes=120 \
+ *     --router.optimizer.enabled=false \
+ *     --router.job_timeout="00:15:00"
+ * </pre>
+ *
+ * <p><b>Expected Behavior:</b> The board should route fully (or near-fully) within 4–5 minutes
+ * across a wide variety of random seeds.
+ *
+ * <p><b>Actual Behavior:</b> All 100 iterations timed out at 15 minutes, each leaving ~30
+ * unrouted connections, indicating a systematic regression rather than a seed-specific edge case.
+ *
+ * <p><b>Root-Cause Hypothesis:</b> The regression is suspected to be linked to a recent change in
+ * the core routing algorithm (possibly the maze-routing or expansion logic). A broader review of
+ * the auto-router's performance characteristics — clearance handling, expansion ordering, and
+ * tie-breaking — may be required to restore the original routing quality.
+ *
+ * <p><b>Benchmark Reference Points:</b>
+ * <ul>
+ *   <li>Freerouting v1.8: ~29.5 minutes (with failure)</li>
+ *   <li>Freerouting v1.9: ~27 minutes (with failure)</li>
+ *   <li>Freerouting v2.0: ~9 minutes (with partial failure)</li>
+ *   <li>Freerouting v2.1: score 976.35, completed in ~3.6 minutes</li>
+ * </ul>
+ *
+ * <p><b>Secondary Board – CNH_Functional_Tester_1.dsn:</b><br>
+ * A second, smaller reference board ({@code Issue555-CNH_Functional_Tester_1.dsn}) is also
+ * included in the test suite to track routing completion rate under a strict 40-pass limit.
+ * v1.8 / v1.9 / v2.0 each completed this board in ~10–12 seconds with 4 unrouted connections
+ * remaining; v2.1 achieves score 962.18 with 6 unrouted in ~54 seconds when capped at 40 passes.
+ *
+ * @see <a href="https://github.com/freerouting/freerouting/issues/555">GitHub Issue #555</a>
+ */
 public class Issue555Test extends TestBasedOnAnIssue {
 
   @Test
