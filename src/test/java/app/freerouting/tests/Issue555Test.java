@@ -94,7 +94,6 @@ public class Issue555Test extends TestBasedOnAnIssue {
   }
 
   @Test
-  @Disabled("Temporary disabled: Routing_performance_with_CNH_Functional_Tester_1")
   void test_Issue_555_Routing_performance_with_CNH_Functional_Tester_1() {
     IO.println(
         "Testing performance by routing reference board 'Issue555-CNH_Functional_Tester_1.dsn' with default settings.");
@@ -102,6 +101,8 @@ public class Issue555Test extends TestBasedOnAnIssue {
         "The benchmark times for Freerouting v1.8, v1.9 and v2.0 were 12 seconds (4 unrouted), 10 seconds (4 unrouted) and 11 seconds (4 unrouted) in 6 passes.");
     IO.println(
         "The benchmark score for Freerouting v2.1 is 962.18 (6 unrouted), completed in 54 seconds, hitting the 40 pass limit.");
+    IO.println(
+        "The benchmark score for Freerouting v2.2 is 955.73 (5 unrouted), completed in 42 seconds, with 18 passes.");
 
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:03:00");
