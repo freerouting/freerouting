@@ -147,11 +147,11 @@ public class Issue230Test extends TestBasedOnAnIssue {
         "Routing of 'Issue230-CNH_Functional_Tester_1.dsn' should complete in under 5 minutes, but took " + elapsedMs + " ms.");
 
     // --- Routing quality (based on observed realistic results for this board) ---
-    assertTrue(job.getCurrentPass() <= 25,
-        "Routing of 'Issue230-CNH_Functional_Tester_1.dsn' required too many passes: " + job.getCurrentPass() + " (expected <= 25).");
-    assertTrue(job.board.get_statistics().connections.incompleteCount <= 10,
+    assertTrue(job.getCurrentPass() <= 20,
+        "Routing of 'Issue230-CNH_Functional_Tester_1.dsn' required too many passes: " + job.getCurrentPass() + " (expected <= 20).");
+    assertTrue(job.board.get_statistics().connections.incompleteCount <= 5,
         "Routing of 'Issue230-CNH_Functional_Tester_1.dsn' left too many unrouted connections: "
-            + job.board.get_statistics().connections.incompleteCount + " (expected <= 10).");
+            + job.board.get_statistics().connections.incompleteCount + " (expected <= 5).");
 
     // --- Core bug check for Issue #230 ---
     // The board has 4 copper layers: F.Cu (0, signal/active), In1.Cu (1, power/inactive),
