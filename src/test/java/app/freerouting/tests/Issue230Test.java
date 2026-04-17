@@ -51,14 +51,26 @@ import static org.junit.jupiter.api.Assertions.fail;
  * needed to trigger it; simply adjusting the via cost slider in the GUI is sufficient.
  *
  * <p><b>Root Cause / Observed Behavior:</b><br>
- * The routing engine does not fully respect the "inactive" status of layers when the via cost
- * threshold is sufficiently low (≤ 45). Reducing via cost makes the router more aggressive in
- * seeking alternative paths through vias, which causes it to inadvertently consider — and
- * ultimately commit to — layer transitions onto layers that should be off-limits. The
- * inactive-layer constraint is not enforced during the via/layer-selection phase of the routing
- * algorithm, allowing the router to escape to forbidden layers whenever via usage is made cheap
- * enough. In effect, the inactive-layer setting acts as a soft cost rather than a hard
- * exclusion, and a sufficiently low via cost is able to outweigh it.
+ * The exported DSN file actually contains all 4 copper layers; freerouting correctly omits the
+ * power-plane layers from its UI (the "Parameter / Select" and "Parameter / Autoroute" windows),
+ * but — critically — the omission is only cosmetic. The routing algorithm itself still has
+ * access to those layers and, under the right cost conditions, will use them.
+ *
+ * <p>The specific trigger is a via cost of ≤ 45 in the
+ * "Settings / Auto-router / Detailed Settings" dialog. Lowering the via cost to 45 (and pressing
+ * Enter to apply) and then starting the auto-router is sufficient to reproduce the issue — no
+ * Fanout or Post-route options need to be enabled. At via cost 46 the bug does not occur.
+ * A notable side effect of this threshold is a dramatic increase in routing passes: in the
+ * reporter's tests the pass count jumped from 5 (cost = 46) to 210 (cost = 45), suggesting
+ * that the router is taking many additional, otherwise-forbidden layer transitions.
+ *
+ * <p>The confirmed root cause is the {@code LocateFoundConnectionAlgo} class, which is part of
+ * the auto-routing routine. Its connection-location logic suggested wire modifications that
+ * could result in traces on inactive layers in certain edge cases. When the via cost was high
+ * enough these suggestions were implicitly rejected by the cost model; at ≤ 45 the cost model
+ * no longer suppressed them, allowing illegal layer assignments to propagate into the routed
+ * output. In effect, the inactive-layer setting acted as a soft cost rather than a hard
+ * exclusion, and a sufficiently low via cost was able to outweigh it.
  *
  * <p><b>Affected Versions:</b><br>
  * Reported on freerouting plugin 1.8.0 and standalone freerouting 1.8 (2023-05-22).
@@ -83,6 +95,18 @@ import static org.junit.jupiter.api.Assertions.fail;
  *       {@code In2.Cu}) that were not enabled for routing — visible as green routes on the
  *       power plane layers in the KiCad PCB editor.</li>
  * </ol>
+ *
+ * <p><b>Suggested Improvement (from maintainer):</b><br>
+ * A cleaner long-term solution would be to display power-plane layers in both the
+ * "Parameter / Select" and "Parameter / Autoroute" UI windows, but have auto-routing
+ * disabled for them by default. This would make their existence explicit to the user and
+ * allow intentional opt-in rather than relying on silent omission.
+ *
+ * <p><b>Fix:</b><br>
+ * The {@code LocateFoundConnectionAlgo} class was patched so that its wire-modification
+ * suggestions are always validated against layer activity before being committed. Inactive
+ * layers are now treated as hard constraints in every code path of that class, regardless
+ * of the configured via cost.
  *
  * <p><b>Expected Behavior:</b><br>
  * The router must never place traces on layers that are marked as inactive / not enabled for
