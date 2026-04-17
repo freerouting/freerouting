@@ -70,10 +70,18 @@ public class InsertFoundConnectionAlgo {
       return null;
     }
     if (p_connection.target_item instanceof PolylineTrace to_trace) {
-      p_board.connect_to_trace(new_instance.first_corner, to_trace, p_ctrl.trace_half_width[p_connection.start_layer], p_ctrl.trace_clearance_class_no);
+      if (new_instance.first_corner != null) {
+        p_board.connect_to_trace(new_instance.first_corner, to_trace, p_ctrl.trace_half_width[p_connection.start_layer], p_ctrl.trace_clearance_class_no);
+      } else {
+        FRLogger.warn("InsertFoundConnectionAlgo: first_corner is null for net #" + p_ctrl.net_no + ", skipping connect_to_trace for target item. This may indicate a degenerate route segment.");
+      }
     }
     if (p_connection.start_item instanceof PolylineTrace to_trace) {
-      p_board.connect_to_trace(new_instance.last_corner, to_trace, p_ctrl.trace_half_width[p_connection.target_layer], p_ctrl.trace_clearance_class_no);
+      if (new_instance.last_corner != null) {
+        p_board.connect_to_trace(new_instance.last_corner, to_trace, p_ctrl.trace_half_width[p_connection.target_layer], p_ctrl.trace_clearance_class_no);
+      } else {
+        FRLogger.warn("InsertFoundConnectionAlgo: last_corner is null for net #" + p_ctrl.net_no + ", skipping connect_to_trace for start item. This may indicate a degenerate route segment.");
+      }
     }
 
     try {
@@ -90,6 +98,11 @@ public class InsertFoundConnectionAlgo {
    */
   private boolean insert_trace(LocateFoundConnectionAlgoAnyAngle.ResultItem p_trace) {
     if (p_trace.corners.length == 1) {
+      // Single-point trace: the start and end are the same location (already at the target).
+      // Set both first_corner and last_corner so that connect_to_trace is not called with null.
+      if (this.first_corner == null) {
+        this.first_corner = p_trace.corners[0];
+      }
       this.last_corner = p_trace.corners[0];
       return true;
     }

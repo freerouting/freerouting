@@ -934,6 +934,10 @@ public class Polyline implements Serializable {
    * polyline.
    */
   public LineSegment projection_line(Point p_from_point) {
+    if (p_from_point == null) {
+      FRLogger.warn("Polyline.projection_line: p_from_point is null; returning null. This indicates a degenerate routing connection was attempted with an uninitialized endpoint.");
+      return null;
+    }
     FloatPoint from_point = p_from_point.to_float();
     double min_distance = Double.MAX_VALUE;
     Line result_line = null;

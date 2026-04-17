@@ -81,11 +81,25 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
    */
   @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> complete_shape(IncompleteFreeSpaceExpansionRoom p_room, int p_net_no, SearchTreeObject p_ignore_object, TileShape p_ignore_shape) {
-    if (!(p_room.get_contained_shape().is_IntOctagon())) {
-      FRLogger.warn("ShapeSearchTree45Degree.complete_shape: unexpected p_shape_to_be_contained");
+    TileShape containedRaw = p_room.get_contained_shape();
+    if (containedRaw == null) {
+      FRLogger.warn("ShapeSearchTree45Degree.complete_shape: contained shape is null, skipping expansion room");
       return new LinkedList<>();
     }
-    IntOctagon shape_to_be_contained = p_room.get_contained_shape().bounding_octagon();
+    if (!containedRaw.is_IntOctagon()) {
+      // The contained shape is not an IntOctagon (e.g. a Simplex from a non-45° trace segment).
+      // Use the bounding octagon as a safe conservative approximation so the expansion room is
+      // not silently discarded, which was previously causing incomplete routing connections.
+      FRLogger.debug("ShapeSearchTree45Degree.complete_shape: non-IntOctagon contained shape, using bounding octagon approximation");
+    }
+    IntOctagon shape_to_be_contained = containedRaw.bounding_octagon();
+    if (shape_to_be_contained == null) {
+      // bounding_octagon() returned null — this can happen for empty/degenerate shapes (e.g. a
+      // zero-length trace segment). Discard the expansion room gracefully rather than throw NPE.
+      FRLogger.warn("ShapeSearchTree45Degree.complete_shape: bounding_octagon() returned null for contained shape of type "
+          + containedRaw.getClass().getSimpleName() + ", skipping expansion room");
+      return new LinkedList<>();
+    }
 
     if (this.root == null) {
       return new LinkedList<>();

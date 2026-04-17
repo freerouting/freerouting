@@ -458,14 +458,20 @@ public class Wiring extends ScopeKeyword {
       Polygon polygon = new Polygon(corner_arr);
 
       // if it doesn't have two different points, it's not a valid polygon, so we must skip it
-      if (polygon.corner_array().length >= 2) {
+      Point[] polygonCorners = polygon.corner_array();
+      // A wire is degenerate if it has fewer than 2 corners, or if it has exactly 2 corners that
+      // are identical (zero-length trace segment). Such traces cause normalization cycles and should
+      // be silently skipped rather than inserted as user-fixed degenerate traces.
+      boolean isDegenerate = polygonCorners.length < 2
+          || (polygonCorners.length == 2 && polygonCorners[0].equals(polygonCorners[1]));
+      if (!isDegenerate) {
         Polyline trace_polyline = new Polyline(polygon);
         // Traces are not yet normalized here because cycles may be removed premature.
         result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
       } else {
-        String msg = "Wiring: degenerate wire skipped (all corners identical) at '"
+        String msg = "Wiring: degenerate wire skipped (zero-length or identical corners) at '"
             + p_par.scanner.get_scope_identifier() + "' on layer '" + path.layer.name + "'";
-        FRLogger.debug(msg);
+        FRLogger.warn(msg);
         p_par.warnings.add(msg);
       }
     } else if (path instanceof PolylinePath) {
