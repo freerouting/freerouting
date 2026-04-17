@@ -133,6 +133,46 @@ public class Issue508Test extends TestBasedOnAnIssue {
             "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 28 or less unrouted connections after the first 2 passes.");
   }
 
+  @Test
+  public void test_Issue_508_BM07() {
+    TestingSettings testingSettings = new TestingSettings();
+    testingSettings.setJobTimeoutString("00:00:30");
+
+    // Get a routing job
+    job = GetRoutingJob("Issue508-DAC2020_bm07.dsn", testingSettings);
+
+    // Run the job and measure elapsed time via the job's own timestamps
+    RunRoutingJob(job);
+    long elapsedMs = java.time.Duration.between(job.startedAt, job.finishedAt).toMillis();
+
+    assertTrue(elapsedMs < 30_000,
+            "Routing of the reference board 'Issue508-DAC2020_bm07.dsn' should complete in less than 30 seconds, but took " + elapsedMs + " ms.");
+    assertTrue(job.getCurrentPass() <= 8,
+            "Routing of the reference board 'Issue508-DAC2020_bm07.dsn' should complete within the first pass, but required " + job.getCurrentPass() + " passes.");
+    assertTrue(job.board.get_statistics().connections.incompleteCount <= 0,
+            "Routing of the reference board 'Issue508-DAC2020_bm07.dsn' should result in 0 unrouted connections after the first pass.");
+  }
+
+  @Test
+  public void test_Issue_508_BM08() {
+    TestingSettings testingSettings = new TestingSettings();
+    testingSettings.setJobTimeoutString("00:00:20");
+
+    // Get a routing job
+    job = GetRoutingJob("Issue508-DAC2020_bm08.dsn", testingSettings);
+
+    // Run the job and measure elapsed time via the job's own timestamps
+    RunRoutingJob(job);
+    long elapsedMs = java.time.Duration.between(job.startedAt, job.finishedAt).toMillis();
+
+    assertTrue(elapsedMs < 20_000,
+            "Routing of the reference board 'Issue508-DAC2020_bm08.dsn' should complete in less than 20 seconds, but took " + elapsedMs + " ms.");
+    assertTrue(job.getCurrentPass() <= 2,
+            "Routing of the reference board 'Issue508-DAC2020_bm08.dsn' should complete within the first pass, but required " + job.getCurrentPass() + " passes.");
+    assertTrue(job.board.get_statistics().connections.incompleteCount <= 0,
+            "Routing of the reference board 'Issue508-DAC2020_bm08.dsn' should result in 0 unrouted connections after the first pass.");
+  }
+
   @AfterEach
   public void tearDown() {
     if (job != null) {
