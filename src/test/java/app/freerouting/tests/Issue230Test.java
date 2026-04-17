@@ -100,10 +100,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * allow intentional opt-in rather than relying on silent omission.
  *
  * <p><b>Fix:</b><br>
- * The {@code LocateFoundConnectionAlgo} class was patched so that its wire-modification
- * suggestions are always validated against layer activity before being committed. Inactive
- * layers are now treated as hard constraints in every code path of that class, regardless
- * of the configured via cost.
+ * The routing pipeline must be patched so that inactive layers are treated as hard
+ * constraints — absolute exclusions — in every decision path: initial net routing, via
+ * placement, layer-transition logic, and post-route trace optimisation. The primary
+ * candidate class is {@code LocateFoundConnectionAlgo}, whose wire-modification
+ * suggestions must be validated against layer activity before being committed.
+ * Additionally, the {@code MazeSearchAlgo} expansion logic should be reviewed to ensure
+ * that expansion rooms on inactive layers are never offered as candidates, regardless of
+ * the via-cost setting. Until these guards are in place the test below acts as the
+ * regression sentinel: it asserts that zero traces land on {@code In1.Cu} or
+ * {@code In2.Cu} after a full routing run with the default via cost.
  *
  * <p><b>Expected Behavior:</b><br>
  * The router must never place traces on layers that are marked as inactive / not enabled for
