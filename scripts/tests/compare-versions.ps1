@@ -8,12 +8,12 @@
 #   .\compare-versions.ps1 -LogNameSuffix "max42"
 
 param(
-    [string]$de = "$PSScriptRoot\..\..\tests\Issue508-DAC2020_bm01.dsn",
-    [string]$do = "$PSScriptRoot\..\..\tests\Issue508-DAC2020_bm01.ses",
+    [string]$de = "$PSScriptRoot\..\..\tests\Issue230-CNH_Functional_Tester_1.dsn",
+    [string]$do = "$PSScriptRoot\..\..\tests\Issue230-CNH_Functional_Tester_1.ses",
     [string]$LoggingLocation = "$PSScriptRoot\..\..\logs\",
     [string]$LoggingLevel = "TRACE",
     [string]$LoggingPattern = "%msg%n",
-    [int]$max_passes = 3,
+    [int]$max_passes = 0,
     [int]$max_items = 0,
     [int]$max_threads = 1,
     [string]$job_timeout = "00:03:00",
