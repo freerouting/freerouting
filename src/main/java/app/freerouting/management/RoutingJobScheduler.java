@@ -72,6 +72,7 @@ public class RoutingJobScheduler {
 
                   // load the board from the input into a RoutingBoard object
                   if (job.input.format == FileFormat.DSN) {
+                    try {
                     HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
                     boardManager.loadFromSpecctraDsn(job.input.getData(), null,
                         new ItemIdentificationNumberGenerator());
@@ -102,17 +103,21 @@ public class RoutingJobScheduler {
                         FRLogger.error("Failed to load SES file", e);
                       }
                     }
+
+                    // All pre-checks look fine, start the routing process on a new thread
+                    StoppableThread routerThread = new RoutingJobSchedulerActionThread(job);
+                    job.thread = routerThread;
+                    job.thread.start();
+                    job.state = RoutingJobState.RUNNING;
+                    } catch (Exception e) {
+                      FRLogger.error("Failed to set up routing job '" + job.id + "', it will be terminated.", e);
+                      job.state = RoutingJobState.TERMINATED;
+                    }
                   } else {
                     FRLogger.warn("Only DSN format is supported as an input.");
                     job.state = RoutingJobState.INVALID;
                     continue;
                   }
-
-                  // All pre-checks look fine, start the routing process on a new thread
-                  StoppableThread routerThread = new RoutingJobSchedulerActionThread(job);
-                  job.thread = routerThread;
-                  job.thread.start();
-                  job.state = RoutingJobState.RUNNING;
                 } else {
                   break;
                 }
