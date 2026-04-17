@@ -745,7 +745,13 @@ public class Structure extends ScopeKeyword {
       KeepoutType p_keepout_type, FixedState p_fixed_state) {
     Area keepout_area = Shape.transform_area_to_board(p_area.shape_list, p_par.coordinate_transform);
     if (keepout_area.dimension() < 2) {
-      FRLogger.warn("Structure.insert_keepout: keepout is not an area at '" + p_area.area_name + "'");
+      // A degenerate keepout (e.g. all polygon vertices identical, exported incorrectly by the EDA
+      // tool) cannot be enforced as a routing constraint. The board remains valid — the keepout
+      // restriction is simply not applied, making routing more permissive in that area.
+      // This is a known export defect in some EDA tools (e.g. KiCad 4.0.7).
+      FRLogger.warn("Keepout zone '" + p_area.area_name + "' was skipped because its geometry is degenerate "
+          + "(e.g. zero-area polygon). This is likely a DSN export issue in your EDA tool. "
+          + "The board will be routed without this keepout constraint.");
       return true;
     }
     BasicBoard board = p_par.board_handling.get_routing_board();

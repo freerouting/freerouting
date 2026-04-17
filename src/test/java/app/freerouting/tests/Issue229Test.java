@@ -56,7 +56,7 @@ public class Issue229Test extends TestBasedOnAnIssue {
     var statsAfter = GetBoardStatistics(job);
 
     assertEquals(0, statsAfter.clearanceViolations.totalCount, "The total count of clearance violations should be 0");
-    assertTrue(statsAfter.connections.incompleteCount <= 50,
-        "Expected at most 50 incomplete connections, but got " + statsAfter.connections.incompleteCount);
+    assertTrue(statsAfter.connections.incompleteCount <= 20,
+        "Expected at most 20 incomplete connections, but got " + statsAfter.connections.incompleteCount);
   }
 }

@@ -780,7 +780,10 @@ public class PolylineTrace extends Trace implements Serializable {
             result = true;
           } else {
             int netNo = curr_split_trace.net_count() > 0 ? curr_split_trace.net_no_arr[0] : -1;
-            FRLogger.warn("PolylineTrace.normalize: skipping removal of degenerate user-fixed trace #"
+            // A degenerate user-fixed trace (first==last corner) cannot be removed because
+            // deletion is forbidden. This is expected for boards with malformed DSN geometry
+            // (e.g. bad EDA export). The user was already warned at load time; suppress here.
+            FRLogger.debug("PolylineTrace.normalize: skipping removal of degenerate user-fixed trace #"
                 + curr_split_trace.get_id_no() + " on net " + netNo + " (first==last corner)");
           }
         } else if (trace_combined) {

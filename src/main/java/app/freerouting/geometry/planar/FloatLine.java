@@ -16,7 +16,7 @@ public class FloatLine {
    */
   public FloatLine(FloatPoint p_a, FloatPoint p_b) {
     if (p_a == null || p_b == null) {
-      FRLogger.warn("FloatLine: Parameter is null");
+      FRLogger.debug("FloatLine: one or both endpoints are null (degenerate line segment)");
     }
     a = p_a;
     b = p_b;

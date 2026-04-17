@@ -459,18 +459,26 @@ public class Wiring extends ScopeKeyword {
 
       // if it doesn't have two different points, it's not a valid polygon, so we must skip it
       Point[] polygonCorners = polygon.corner_array();
-      // A wire is degenerate if it has fewer than 2 corners, or if it has exactly 2 corners that
-      // are identical (zero-length trace segment). Such traces cause normalization cycles and should
-      // be silently skipped rather than inserted as user-fixed degenerate traces.
-      boolean isDegenerate = polygonCorners.length < 2
-          || (polygonCorners.length == 2 && polygonCorners[0].equals(polygonCorners[1]));
+      // A wire is degenerate if it has fewer than 2 corners, or if all corners map to the same
+      // point (zero-length trace). This covers both the 2-point identical case and the N-point
+      // all-equal case (e.g. KiCad 4.0.7 exports 3 identical vertices for some degenerate shapes).
+      // Such traces cause infinite normalization cycles and must be skipped.
+      boolean hasDistinctCorner = false;
+      for (int i = 1; i < polygonCorners.length; i++) {
+        if (!polygonCorners[i].equals(polygonCorners[0])) {
+          hasDistinctCorner = true;
+          break;
+        }
+      }
+      boolean isDegenerate = polygonCorners.length < 2 || !hasDistinctCorner;
       if (!isDegenerate) {
         Polyline trace_polyline = new Polyline(polygon);
         // Traces are not yet normalized here because cycles may be removed premature.
         result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
       } else {
-        String msg = "Wiring: degenerate wire skipped (zero-length or identical corners) at '"
-            + p_par.scanner.get_scope_identifier() + "' on layer '" + path.layer.name + "'";
+        String msg = "Wiring: degenerate wire trace skipped (all " + polygonCorners.length
+            + " corners are identical — zero-length trace) on layer '" + path.layer.name
+            + "'. This is likely a DSN export issue in your EDA tool.";
         FRLogger.warn(msg);
         p_par.warnings.add(msg);
       }

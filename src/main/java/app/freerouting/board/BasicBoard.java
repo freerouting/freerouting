@@ -252,7 +252,12 @@ public class BasicBoard implements Serializable {
     try {
       new_trace.normalize(clip_shape);
     } catch (Exception e) {
-      FRLogger.error("Couldn't insert new trace, because its normalization failed.", e);
+      // Normalization can fail for geometrically degenerate trace segments (e.g. caused by
+      // malformed input geometry or extreme routing situations). The segment is skipped and
+      // the connection may remain unrouted. This is non-critical — other segments will continue.
+      FRLogger.warn("A trace segment could not be normalized and was skipped. "
+          + "Affected net may have an unrouted connection. Cause: " + e.getMessage());
+      FRLogger.debug("BasicBoard.insert_trace_segment: normalization exception detail: " + e);
     }
   }
 

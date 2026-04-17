@@ -96,7 +96,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     if (shape_to_be_contained == null) {
       // bounding_octagon() returned null — this can happen for empty/degenerate shapes (e.g. a
       // zero-length trace segment). Discard the expansion room gracefully rather than throw NPE.
-      FRLogger.warn("ShapeSearchTree45Degree.complete_shape: bounding_octagon() returned null for contained shape of type "
+      FRLogger.debug("ShapeSearchTree45Degree.complete_shape: bounding_octagon() returned null for contained shape of type "
           + containedRaw.getClass().getSimpleName() + ", skipping expansion room");
       return new LinkedList<>();
     }

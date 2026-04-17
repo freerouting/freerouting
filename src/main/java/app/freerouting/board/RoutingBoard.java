@@ -867,7 +867,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         }
       }
     } catch (Exception e) {
-      FRLogger.error("RoutingBoard.insert_forced_trace_polyline: Couldn't remove generated circles from the board.", e);
+      // Max normalization depth is hit for geometrically complex or degenerate trace segments.
+      // The router skips the segment and continues; affected connections may remain unrouted.
+      FRLogger.warn("RoutingBoard.insert_forced_trace_polyline: A trace could not be normalized and was skipped. Cause: " + e.getMessage());
+      FRLogger.debug("RoutingBoard.insert_forced_trace_polyline: normalization stack: " + e);
     }
 
     // To avoid, that a separate handling for moving backwards in the own trace line
