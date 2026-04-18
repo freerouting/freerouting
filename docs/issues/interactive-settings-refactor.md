@@ -251,6 +251,58 @@ Fields like `interactiveSettings.layer`, `interactiveSettings.push_enabled`, etc
 
 ---
 
+## Two-Way Binding: Technology Research & Decision {#binding-research}
+
+### Options Evaluated
+
+#### 1. JGoodies Binding (`com.jgoodies:jgoodies-binding`, latest 2.7.0)
+Mature library that connects JavaBean properties to Swing components via `ValueModel` / `PropertyAdapter` abstractions. Reduces boilerplate and supports two-way sync out of the box.
+
+| Dimension | Assessment |
+|---|---|
+| **Last release** | 2.7.0 (≈ 2013); no commits since |
+| **Java 17/21/25 compatibility** | Not guaranteed; no module-info; known classpath issues on newer JDK versions |
+| **License** | BSD — compatible with GPLv3 |
+| **Dependency risk** | High — abandoned, unlikely to be patched for Java 25 modules or VirtualThread edge cases |
+| **Verdict** | ❌ **Do not adopt** — abandoned; would introduce a fragile transitive dependency |
+
+#### 2. BetterBeansBinding / JSR-295 BeansBinding
+Successor to the abandoned JSR-295 specification. Both projects are unmaintained (last activity > 10 years ago) and do not support modern Java versions.
+
+| Verdict | ❌ **Do not adopt** — dead project |
+
+#### 3. JavaFX Properties / ObservableValue
+JavaFX's `javafx.beans.property.*` package provides first-class reactive properties with full two-way binding support (`Bindings.bindBidirectional`). However, this project uses **Swing** for its GUI and mixing JavaFX into a Swing application requires `Platform.runLater` bridging, adding substantial complexity and a JavaFX runtime dependency.
+
+| Verdict | ❌ **Do not adopt** — wrong toolkit; adds JavaFX module dependency |
+
+#### 4. Pure `java.beans.PropertyChangeSupport` + Observer / MVP pattern ✅ **CHOSEN**
+The approach documented in the [Oracle Java SE MVC guide](https://www.oracle.com/technical-resources/articles/javase/application-design-with-mvc.html) and used throughout the existing codebase. No external dependency. Ships with every JDK. Works on Java 25. Fully compatible with GPLv3.
+
+**Pattern:** `InteractiveSettings` acts as the **Model** in an MVP-style trio:
+- **Model** – `InteractiveSettings`: holds state, fires `PropertyChangeEvent` on every mutation.
+- **View** – Swing panel classes (`SelectParameterWindow`, `RouteParameterWindow`, …): registers as `PropertyChangeListener`; updates controls; calls setters on user action.
+- **Presenter** – `GuiBoardManager` (`refreshGuiFromSettings()`): orchestrates initial push of model state to all views after a DSN/binary load.
+
+**Why this is the correct choice for this codebase:**
+- Zero new dependency – consistent with the project's lean dependency philosophy.
+- Already used elsewhere in the `interactive` package for board-change notification.
+- Fully thread-safe when event dispatch is guarded by `SwingUtilities.invokeLater`.
+- Composable: individual panels subscribe only to the properties they care about (named-property listeners), avoiding unnecessary repaints.
+- Trivially testable: swap Swing components for mock `PropertyChangeListener` implementations.
+
+### Implementation Checklist (informs Sub-Issue 05)
+
+1. `InteractiveSettings` gets a `private final PropertyChangeSupport pcs = new PropertyChangeSupport(this)`.
+2. `addPropertyChangeListener` / `removePropertyChangeListener` delegates expose it publicly.
+3. Every setter in `InteractiveSettings` fires `pcs.firePropertyChange(PROP_NAME, oldVal, newVal)` using `public static final String` constants (e.g. `PROP_LAYER = "layer"`).
+4. `InteractiveSettings.getSettings()` override constructs and returns a fresh `RouterSettings` snapshot — ensures `SettingsMerger` always sees current GUI values.
+5. Each GUI panel implements `PropertyChangeListener` and subscribes to the singleton during `GuiBoardManager` initialisation (or panel construction).
+6. `GuiBoardManager.refreshGuiFromSettings()` triggers a full push from model → all registered views (called after DSN/binary load and settings reset).
+7. Panel action/change listeners invoke the appropriate `InteractiveSettings` setter; the resulting `PropertyChangeEvent` propagates to all other registered listeners — no extra sync calls needed.
+
+---
+
 ## Sub-Issue 05 – Two-way binding: all GUI panels ↔ `InteractiveSettings` (incl. inherited `GuiSettings` / `RouterSettings` fields) {#sub-05}
 
 **Files:** `InteractiveSettings.java`, `GuiSettings.java`, panel classes in `app.freerouting.gui` (e.g. `SelectParameterWindow`, `RouteParameterWindow`, layer selector, autoroute-parameter window), `GuiBoardManager.java`
