@@ -3,6 +3,8 @@ package app.freerouting.interactive;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.sources.GuiSettings;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -11,7 +13,7 @@ import java.util.Arrays;
 /**
  * Contains the values of the interactive/GUI settings of the board handling.
  */
-public class InteractiveSettings implements Serializable {
+public class InteractiveSettings extends GuiSettings implements Serializable {
 
   /**
    * The array of manual trace half widths, initially equal to the automatic trace
@@ -104,6 +106,7 @@ public class InteractiveSettings implements Serializable {
    * Creates a new interactive settings variable.
    */
   public InteractiveSettings(RoutingBoard p_board) {
+    super(null);
     // Initialise with default values.
     layer = 0;
     push_enabled = true;
@@ -131,6 +134,7 @@ public class InteractiveSettings implements Serializable {
    * Copy constructor
    */
   public InteractiveSettings(InteractiveSettings p_settings) {
+    super(null);
     this.read_only = p_settings.read_only;
     this.layer = p_settings.layer;
     this.push_enabled = p_settings.push_enabled;

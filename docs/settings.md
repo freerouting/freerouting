@@ -152,12 +152,28 @@ java -jar freerouting.jar
 
 ## Settings Precedence
 
-The settings are applied in the following order of precedence (highest to lowest):
+Settings are resolved by the `SettingsMerger` class, which collects all active `SettingsSource` implementations, sorts them by ascending priority, and applies each source on top of the previously accumulated result. The full priority ladder (lowest → highest) is:
 
-1. **Command Line Arguments**
-2. **Environment Variables**
-3. **JSON Configuration File**
-4. **Default Settings** (hardcoded in the application)
-   This means that command-line arguments take precedence over environment variables, which in turn take precedence over
-   the settings specified in the JSON configuration file. If a setting is not defined in any of these sources, the
-   default value hardcoded in the application will be used.
+| Priority | Source | Class |
+|----------|--------|-------|
+| 0 | Default Settings (hardcoded baseline) | `DefaultSettings` |
+| 10 | JSON configuration file (`freerouting.json`) | `JsonFileSettings` |
+| 20 | DSN file metadata | `DsnFileSettings` |
+| 30 | SES file metadata | `SesFileSettings` |
+| 40 | RULES file overrides | `RulesFileSettings` |
+| 50 | GUI (interactive user changes) | `GuiSettings` |
+| 55 | Environment variables (`FREEROUTING__ROUTER__*`) | `EnvironmentVariablesSource` |
+| 60 | CLI arguments (`--router.*`) | `CliSettings` |
+| 70 | REST API caller — highest priority | `ApiSettings` |
+
+If a setting is not defined in any source, the hardcoded default from `DefaultSettings` is used.
+
+## Settings Architecture — Why Fields Must Be Nullable
+
+`RouterSettings` intentionally declares all its fields as nullable reference types (e.g. `Integer`, `Boolean`, `String`) **with no default initializers**. This is a deliberate architectural constraint required by the merge mechanism:
+
+`SettingsMerger.merge()` calls `RouterSettings.applyNewValuesFrom(source)`, which delegates to `ReflectionUtil.copyFields()`. That method copies a field from the incoming source into the accumulated result **only when the source field is non-null and differs from the Java language default for that type**.
+
+If any field were initialised to a non-null value inside the `RouterSettings` constructor (e.g. `public Integer maxPasses = 9999;`), every source's settings object would carry that value, and the merger would incorrectly treat it as an explicit override. A low-priority source (such as the JSON file) would then silently win over a higher-priority source (such as the API) whenever the user left that field unspecified in the high-priority source.
+
+**Keep all `RouterSettings` fields null-initialised.** Concrete defaults belong exclusively in `DefaultSettings.getSettings()`, which is always the first source applied and therefore acts as the safe fallback for every field.

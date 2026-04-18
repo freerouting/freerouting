@@ -6,21 +6,50 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Central class responsible for merging router settings from multiple sources.
+ * Central class responsible for merging router settings from multiple sources
+ * into a single, resolved {@link RouterSettings} instance.
  *
- * Settings are merged according to priority order:
- * 1. Default settings (priority 0) - lowest priority, applied first
- * 2. JSON file settings (priority 10)
- * 3. DSN file settings (priority 20)
- * 4. SES file settings (priority 30)
- * 5. RULES file settings (priority 40)
- * 6. GUI settings (priority 50)
- * 7. Environment variables (priority 55)
- * 8. CLI settings (priority 60)
- * 9. API settings (priority 70) - highest priority, overrides all others
+ * <h2>How merging works</h2>
+ * Sources are sorted by ascending priority and applied one on top of another.
+ * {@link DefaultSettings} (priority 0) always provides the initial base.
+ * Every subsequent source calls {@link RouterSettings#applyNewValuesFrom}, which
+ * delegates to {@link app.freerouting.management.ReflectionUtil#copyFields}.
+ * That method iterates the public, non-static fields of the incoming
+ * {@code RouterSettings} object and copies a field into the target <em>only when
+ * the source value is non-null and not equal to the field's Java default value</em>.
  *
- * The merger uses reflection to copy only non-null fields from each source,
- * allowing higher-priority sources to override lower-priority ones.
+ * <h2>Why all {@code RouterSettings} fields must be nullable (no default initializers)</h2>
+ * The null-check inside {@code copyFields} is the sole mechanism that
+ * distinguishes "this source intentionally sets a value" from "this source has no
+ * opinion about this field".  If a field were initialised to a non-null default
+ * (e.g. {@code public Integer maxPasses = 9999;}), every source's
+ * {@code RouterSettings} object would carry that default, and the merger would
+ * treat it as an intentional override — meaning a low-priority source (e.g. the
+ * JSON file) would silently override a higher-priority source (e.g. the API)
+ * whenever the user left that setting unspecified.  Keeping all fields as
+ * {@code null} by default ensures that only fields explicitly populated by a
+ * source can win at merge time.
+ *
+ * <h2>Priority order</h2>
+ * <ol>
+ *   <li>Default settings (priority 0) — lowest priority, applied first as the base</li>
+ *   <li>JSON file settings (priority 10) — {@code freerouting.json} in user-data folder</li>
+ *   <li>DSN file settings (priority 20) — metadata extracted from the Specctra design file</li>
+ *   <li>SES file settings (priority 30) — metadata from Specctra session files</li>
+ *   <li>RULES file settings (priority 40) — explicit routing-rule overrides</li>
+ *   <li>GUI settings (priority 50) — values changed interactively by the user</li>
+ *   <li>Environment variables (priority 55) — {@code FREEROUTING__ROUTER__*} env vars</li>
+ *   <li>CLI settings (priority 60) — {@code --router.*} command-line arguments</li>
+ *   <li>API settings (priority 70) — highest priority, supplied by a REST API caller</li>
+ * </ol>
+ *
+ * <h2>Adding a new source</h2>
+ * Implement {@link SettingsSource}, choose a priority that fits the desired
+ * override order, and register the instance via
+ * {@link #addOrReplaceSources(SettingsSource...)} before calling {@link #merge()}.
+ * Remember that the {@code RouterSettings} object returned by the new source must
+ * only populate fields that the source actually provides; all other fields must
+ * remain {@code null}.
  */
 public class SettingsMerger implements Cloneable {
 

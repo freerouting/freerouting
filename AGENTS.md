@@ -47,6 +47,14 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   - **Running Tests:** If you implement a small change you can run only one unit test to do a quick check, preferably the `Issue508Test_BM01_first_2_nets` which is one of the quickest routing test. Use `./gradlew test` to run all unit tests and `./gradlew check` for the full integration testing suite, which includes tests based on actual PCB design files.
 - **Licensing:** This project is open-source under the **GPLv3** license. Ensure all dependencies and contributions respect this license.
 
+# Settings & Configuration System
+
+Router configuration is resolved at runtime by `SettingsMerger`, which layers nine `SettingsSource` implementations in ascending priority order (0 = defaults → 70 = API). The merger calls `RouterSettings.applyNewValuesFrom(source)`, which uses `ReflectionUtil.copyFields()` to copy a field only when the source value is **non-null and not the Java language default** for that type.
+
+This design has one critical invariant: **all fields in `RouterSettings` (and its nested `RouterOptimizerSettings` / `RouterScoringSettings`) must be nullable reference types with no default initializers.** If a field were initialised to a non-null value (e.g. `public Integer maxPasses = 9999;`), every source object would carry that value and the merger could no longer distinguish "this source sets this field" from "this source has no opinion". A low-priority source would then silently override a higher-priority one. All hardcoded defaults belong exclusively in `DefaultSettings.getSettings()`, which is always applied first as the base layer.
+
+The full priority ladder is documented in `docs/settings.md`. Key sources: `DefaultSettings` (0), `JsonFileSettings` (10), `DsnFileSettings` (20), `SesFileSettings` (30), `RulesFileSettings` (40), `GuiSettings` (50), `EnvironmentVariablesSource` (55), `CliSettings` (60), `ApiSettings` (70).
+
 # Workflow Commands
 
 Execute the following commands from the root directory using the Gradle Wrapper:
