@@ -251,6 +251,260 @@ Fields like `interactiveSettings.layer`, `interactiveSettings.push_enabled`, etc
 
 ---
 
+## Accessibility Identifiers for GUI Test Automation {#accessibility-identifiers}
+
+### The Question
+
+> *Is there a way to use accessibility identifiers on the GUI to automate testing?*
+
+**Yes — and it is the recommended strategy for every Swing testing library.** Java Swing has two complementary mechanisms that serve as "test IDs", and both are already part of the standard JDK with no extra dependency.
+
+---
+
+### Mechanism 1 – `Component.setName(String)` / `Component.getName()`
+
+Every `java.awt.Component` (and therefore every Swing widget) has a `name` property settable via `setName()`. This name:
+
+- is **not** displayed to the user
+- is **not** the label text (`JButton.getText()`) — it is a separate identity string
+- survives look-and-feel changes, layout refactors, and i18n label updates
+- is used by **AssertJ Swing** as its primary component-lookup key
+
+```java
+// In production GUI code (e.g. SelectParameterWindow constructor):
+JComboBox<String> layerCombo = new JComboBox<>();
+layerCombo.setName("layer-selector");   // ← test ID
+
+JCheckBox pushCheck = new JCheckBox("Push enabled");
+pushCheck.setName("push-enabled");      // ← test ID
+```
+
+```java
+// In test code (AssertJ Swing):
+window.comboBox("layer-selector").selectItem(2);
+window.checkBox("push-enabled").check();
+```
+
+AssertJ Swing docs explicitly state: *"Using a unique name for GUI components **guarantees** that we can always find them, regardless of any change in the GUI"* — this is the most robust lookup strategy available.
+
+---
+
+### Mechanism 2 – `AccessibleContext.setAccessibleName(String)` + `setAccessibleDescription(String)`
+
+`javax.accessibility.AccessibleContext` (exposed via `component.getAccessibleContext()`) holds:
+
+| Field | Purpose |
+|---|---|
+| `accessibleName` | Short human-readable label (read by screen readers and test tools) |
+| `accessibleDescription` | Longer tooltip-style description |
+| `accessibleRole` | Role enum (`PUSH_BUTTON`, `CHECK_BOX`, `COMBO_BOX`, …) |
+
+This is the **assistive technology API** (JAWS, NVDA, Java Access Bridge on Windows). It also doubles as a test-automation hook: tools like **QF-Test** and **Marathon** use `accessibleName` as the primary identity. The Oracle Swing accessibility tutorial notes: *"The information that enables assistive technologies can be used for other tools, as well, such as automated GUI testers."*
+
+```java
+JComboBox<String> layerCombo = new JComboBox<>();
+layerCombo.setName("layer-selector");                                    // test automation
+layerCombo.getAccessibleContext().setAccessibleName("Active layer");     // screen readers
+layerCombo.getAccessibleContext().setAccessibleDescription(
+    "Selects the copper layer currently being routed");                  // tooltip/AT
+```
+
+---
+
+### Comparison: `setName` vs `setAccessibleName`
+
+| | `setName(String)` | `setAccessibleName(String)` |
+|---|---|---|
+| **Used by** | AssertJ Swing, UISpec4J, abego GuiTesting | QF-Test, Marathon, JAWS, NVDA, Java Access Bridge |
+| **Visible to user?** | No | No (but read aloud by screen readers) |
+| **Survives i18n?** | Yes (set a stable key) | Typically localised — can diverge from test ID |
+| **Best practice** | Stable machine-readable key (e.g. `"layer-selector"`) | Human-readable label (can be localised) |
+| **Set together?** | ✅ Yes — they are independent fields | ✅ Yes |
+
+**Recommendation: always set both.** `setName` gives the stable test automation key; `setAccessibleName` gives the screen-reader-friendly label.
+
+---
+
+### Naming Convention for This Project
+
+Adopt a **kebab-case component-ID** convention mirroring common web-accessibility practice:
+
+```
+<panel-area>-<widget-type>-<semantic-name>
+```
+
+Examples:
+
+| Component | `setName` ID | `setAccessibleName` |
+|---|---|---|
+| Layer selector combo | `"route-layer-selector"` | `"Active routing layer"` |
+| Push-enabled checkbox | `"route-push-enabled"` | `"Enable push routing"` |
+| Manual trace width spinner | `"route-trace-width"` | `"Manual trace width"` |
+| Auto-route start button | `"autoroute-start-button"` | `"Start auto-routing"` |
+| Max passes spinner | `"autoroute-max-passes"` | `"Maximum routing passes"` |
+
+---
+
+### What Needs to Change in the Codebase
+
+1. **Every interactive widget** in `app.freerouting.gui` that is read or written by `InteractiveSettings` must get a `setName(STABLE_ID)` call in its constructor or factory method.
+2. Add `setAccessibleName(localizedLabel)` + `setAccessibleDescription(...)` for assistive technology compliance (good practice regardless of testing).
+3. Maintain a **constants class** (e.g. `GUIComponentIds`) that centralises all ID strings — test code and production code import the same constants, preventing typos:
+
+```java
+// src/main/java/app/freerouting/gui/GUIComponentIds.java
+public final class GUIComponentIds {
+    private GUIComponentIds() {}
+
+    // Route parameter panel
+    public static final String ROUTE_LAYER_SELECTOR    = "route-layer-selector";
+    public static final String ROUTE_PUSH_ENABLED      = "route-push-enabled";
+    public static final String ROUTE_TRACE_WIDTH       = "route-trace-width";
+
+    // Autoroute panel
+    public static final String AUTOROUTE_MAX_PASSES    = "autoroute-max-passes";
+    public static final String AUTOROUTE_START_BUTTON  = "autoroute-start-button";
+    // …
+}
+```
+
+```java
+// In production code:
+pushCheck.setName(GUIComponentIds.ROUTE_PUSH_ENABLED);
+
+// In test code:
+window.checkBox(GUIComponentIds.ROUTE_PUSH_ENABLED).requireSelected();
+```
+
+---
+
+### Sub-Issue Addition: `GUIComponentIds` and `setName` pass
+
+This work should be added as part of **Sub-Issue 05** (two-way binding), since the binding wiring and the widget naming are both introduced at panel-construction time. Concretely:
+
+- Create `GUIComponentIds.java` constants class.
+- For every panel class touched in Sub-Issue 05, add `setName(GUIComponentIds.CONSTANT)` and `getAccessibleContext().setAccessibleName(...)` to each interactive widget.
+- Add a Checkstyle or ArchUnit rule `AllGuiWidgetsMustHaveNameTest` that verifies all `JButton`, `JCheckBox`, `JComboBox`, `JSpinner`, `JTextField` instances inside the `app.freerouting.gui` package have a non-null, non-empty name at runtime (checked via a post-construction unit test rather than a static rule).
+
+---
+
+## GUI Testing: Technology Research & Decision {#gui-testing-research}
+
+Testing a Swing GUI requires choosing between three broad strategies that can be used independently or in combination. The table below summarises what was evaluated; the recommended approach follows.
+
+### Options Evaluated
+
+#### 1. AssertJ Swing (`org.assertj:assertj-swing`, latest 3.17.1 — Sep 2020)
+A fork of FEST Swing, the most widely recommended Swing functional-testing library. Simulates real OS-level user gestures (mouse clicks, keyboard input) against live Swing components running in the EDT.
+
+| Dimension | Assessment |
+|---|---|
+| **Last release** | 3.17.1 (Sep 2020); no commits since early 2021 |
+| **Java 17/21/25 compatibility** | Requires `--add-opens` JVM flags for internal AWT packages on Java 9+; works with flag set but not officially validated on Java 25 |
+| **CI / headless** | Needs a real or virtual display (Xvfb on Linux CI); requires pairing with Caciocavallo (see below) for truly headless runs |
+| **License** | Apache 2.0 — compatible with GPLv3 |
+| **Verdict** | ✅ **Viable for end-to-end / smoke GUI tests** but requires extra CI setup; should **not** be the primary unit-testing strategy because of the display requirement and slow execution |
+
+#### 2. Caciocavallo (`net.java.openjdk.cacio:cacio-tta`)
+A pluggable AWT toolkit that renders Swing to an in-memory buffer, enabling fully headless Swing tests without Xvfb. Used as a companion to AssertJ Swing or UISpec4J in CI pipelines.
+
+| Dimension | Assessment |
+|---|---|
+| **Last release** | Active; Java 17 branch explicitly supported with `--add-exports` flags |
+| **Java 21/25** | Requires `--add-exports java.desktop/...=ALL-UNNAMED`; no module descriptor — may need flag management in Gradle test JVM args |
+| **CI** | Ideal for Linux CI (GitHub Actions) without a display server |
+| **License** | GPL-2.0 — compatible with GPLv3 |
+| **Verdict** | ✅ **Adopt as the headless display backend** for any tests that need to instantiate real Swing components in CI |
+
+#### 3. UISpec4J
+Lightweight alternative to AssertJ Swing; uses its own EDT interception model. Can pair with Caciocavallo for headless execution.
+
+| Dimension | Assessment |
+|---|---|
+| **Last release** | 2.5 snapshot; infrequent maintenance |
+| **Verdict** | ⚠️ Lower community momentum than AssertJ Swing; **skip in favour of AssertJ Swing** |
+
+#### 4. MVP + Mockito: test the Presenter without any Swing components ✅ **PRIMARY STRATEGY**
+The most robust and fastest testing strategy. The GUI is split into:
+- **View interface** (`SettingsView`, `LayerSelectorView`, …) — thin contracts with only setter/getter/listener methods; no Swing imports.
+- **Presenter** (part of `GuiBoardManager` or thin collaborators) — holds the logic; depends only on the View interface and `InteractiveSettings`.
+- **Swing implementation** — implements the View interface; untested at unit level, covered by smoke/integration tests only.
+
+Presenters are tested with **Mockito** mock views — zero Swing, zero EDT, zero display. This is the [Oracle-recommended MVC pattern](https://www.oracle.com/technical-resources/articles/javase/application-design-with-mvc.html) applied at unit-test granularity.
+
+```java
+@Test
+void setLayer_updatesViewAndInteractiveSettings() {
+    SettingsView mockView = mock(SettingsView.class);
+    InteractiveSettings settings = InteractiveSettings.getOrCreate(mockBoard);
+    SettingsPresenter presenter = new SettingsPresenter(mockView, settings);
+
+    presenter.onLayerChanged(2);
+
+    assertThat(settings.get_layer()).isEqualTo(2);
+    verify(mockView).showLayer(2);
+}
+```
+
+| Dimension | Assessment |
+|---|---|
+| **Speed** | Milliseconds per test — no EDT, no rendering |
+| **CI** | Fully headless; no extra JVM flags or display backend needed |
+| **Coverage** | Covers all business logic in the presenter and the `PropertyChangeSupport` wiring |
+| **Java 25** | Zero compatibility risk |
+| **Verdict** | ✅ **Primary unit-testing strategy for all GUI logic** |
+
+#### 5. `java.awt.headless=true` + `SwingUtilities.invokeAndWait` boundary tests
+For cases where a real Swing component must be constructed (e.g., verifying that `InteractiveSettings.getOrCreate` integrates with a `BoardFrame`), run with `-Djava.awt.headless=true` and avoid any component that requires a native peer. `JFrame`, `JDialog` etc. will throw `HeadlessException`; use `JPanel` / model-only classes instead. This is sufficient for sub-issue 08's `GuiStartupHeadlessTest`.
+
+---
+
+### Recommended Testing Pyramid for This Issue
+
+```
+┌─────────────────────────────────────┐
+│  E2E / Smoke (AssertJ Swing +       │  ← few; slow; CI with Caciocavallo
+│  Caciocavallo on GitHub Actions)    │
+├─────────────────────────────────────┤
+│  Integration: headless=true,        │  ← DSN load, SettingsMerger wiring
+│  model + presenter, no Swing peers  │
+├─────────────────────────────────────┤
+│  Unit: MVP Presenter + Mockito      │  ← MAJORITY of tests; fast; no display
+│  (PropertyChangeSupport, setters,   │
+│   RouterSettings snapshot)          │
+└─────────────────────────────────────┘
+```
+
+### Gradle / CI Configuration Required
+
+```groovy
+// build.gradle – test JVM args for Caciocavallo on headless CI
+tasks.withType(Test).configureEach {
+    // Required for AssertJ Swing + Caciocavallo on Java 17+
+    jvmArgs(
+        "--add-exports=java.desktop/java.awt=ALL-UNNAMED",
+        "--add-exports=java.desktop/java.awt.peer=ALL-UNNAMED",
+        "--add-exports=java.desktop/sun.awt.image=ALL-UNNAMED",
+        "--add-opens=java.desktop/java.awt=ALL-UNNAMED"
+    )
+    // Use Caciocavallo in-memory toolkit when no display is available
+    if (System.getenv("CI") != null) {
+        systemProperty "awt.toolkit", "com.github.caciocavallosilano.cacio.ctc.CTCToolkit"
+        systemProperty "java.awt.graphicsenv", "com.github.caciocavallosilano.cacio.ctc.CTCGraphicsEnvironment"
+    }
+}
+```
+
+```groovy
+// test dependencies
+testImplementation "org.assertj:assertj-swing-junit5:3.17.1"
+testImplementation "com.github.caciocavallosilano.caciocavallo:cacio-tta:1.11"
+```
+
+> **Note on Java 25:** Caciocavallo's `--add-exports` approach relies on strong encapsulation relaxation. If the build switches to a stricter module boundary in a future Java release, the AssertJ Swing + Caciocavallo tier may need to be re-evaluated. The MVP + Mockito tier is immune to this risk.
+
+---
+
 ## Two-Way Binding: Technology Research & Decision {#binding-research}
 
 ### Options Evaluated
