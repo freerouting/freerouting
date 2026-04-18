@@ -471,7 +471,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         .setSelected(this.guiBoardManager.get_routing_board().rules.get_ignore_conduction());
     this.settings_routing_hilight_routing_obstacle_check_box
         .setSelected(this.guiBoardManager.interactiveSettings.get_hilight_routing_obstacle());
-    this.settings_routing_neckdown_check_box.setSelected(this.guiBoardManager.interactiveSettings.automatic_neckdown);
+    this.settings_routing_neckdown_check_box.setSelected(this.guiBoardManager.interactiveSettings.get_automatic_neckdown());
 
     double edge_to_turn_dist = this.guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
     edge_to_turn_dist = this.guiBoardManager.coordinate_transform.board_to_user(edge_to_turn_dist);
@@ -499,7 +499,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       this.route_detail_outline_keepout_check_box.setSelected(outline.keepout_outside_outline_generated());
     }
     int accuracy_slider_value = c_accuracy_max_slider_value
-        - this.guiBoardManager.interactiveSettings.trace_pull_tight_accuracy / c_accuracy_scale_factor + 1;
+        - this.guiBoardManager.interactiveSettings.get_trace_pull_tight_accuracy() / c_accuracy_scale_factor + 1;
     accuracy_slider.setValue(accuracy_slider_value);
   }
 
@@ -691,7 +691,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.interactiveSettings.automatic_neckdown = settings_routing_neckdown_check_box.isSelected();
+      guiBoardManager.interactiveSettings.set_automatic_neckdown(settings_routing_neckdown_check_box.isSelected());
     }
   }
 
@@ -812,7 +812,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     @Override
     public void stateChanged(ChangeEvent evt) {
       int new_accuracy = (c_accuracy_max_slider_value - accuracy_slider.getValue() + 1) * c_accuracy_scale_factor;
-      guiBoardManager.interactiveSettings.trace_pull_tight_accuracy = new_accuracy;
+      guiBoardManager.interactiveSettings.set_trace_pull_tight_accuracy(new_accuracy);
     }
   }
 

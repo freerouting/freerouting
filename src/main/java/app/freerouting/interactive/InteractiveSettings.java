@@ -12,89 +12,96 @@ import java.util.Arrays;
 
 /**
  * Contains the values of the interactive/GUI settings of the board handling.
+ *
+ * <p>This class is the concrete {@link GuiSettings} source (priority 50) supplied to the
+ * {@link app.freerouting.settings.SettingsMerger}. Any field mutation is therefore visible to the
+ * router settings pipeline on the next {@code merge()} call.
+ *
+ * <p>In GUI mode this class acts as the concrete {@link GuiSettings} source at priority 50 in the
+ * {@link app.freerouting.settings.SettingsMerger} pipeline. Use {@link #getOrCreate(RoutingBoard)}
+ * to obtain the singleton instance; never construct it directly from GUI code.
+ *
+ * <p><strong>Singleton contract:</strong> exactly one instance exists for the lifetime of a GUI
+ * session. Use {@link #getOrCreate(RoutingBoard)} to obtain it. In headless mode the instance is
+ * {@code null}; use {@link BoardManager#getInteractiveSettings()} to safely obtain it.
+ *
+ * @see GuiSettings
+ * @see app.freerouting.settings.SettingsMerger
  */
 public class InteractiveSettings extends GuiSettings implements Serializable {
 
+  /** The single GUI-session instance; {@code null} when running headless. */
+  private static volatile InteractiveSettings instance;
+
   /**
-   * The array of manual trace half widths, initially equal to the automatic trace
-   * half widths.
+   * Returns the singleton, creating it (bound to {@code board}) if not yet initialised.
+   *
+   * <p>In headless mode this method is never called; use
+   * {@link BoardManager#getInteractiveSettings()} to safely obtain the instance (returns
+   * {@code null} when headless).
+   *
+   * @param board the routing board to bind the settings to on first creation
+   * @return the singleton {@link InteractiveSettings} instance
+   */
+  public static InteractiveSettings getOrCreate(RoutingBoard board) {
+    if (instance == null) {
+      synchronized (InteractiveSettings.class) {
+        if (instance == null) {
+          instance = new InteractiveSettings(board);
+        }
+      }
+    }
+    return instance;
+  }
+
+  /**
+   * Resets the singleton. <strong>For test use only.</strong>
+   */
+  static void resetForTesting() {
+    instance = null;
+  }
+
+  /**
+   * The array of manual trace half widths, initially equal to the automatic trace half widths.
+   * This is a {@code final} array reference; individual entries are mutated via
+   * {@link #set_manual_trace_half_width(int, int)}.
    */
   final int[] manual_trace_half_width_arr;
-  /**
-   * Router parameter: accuracy for trace pull tight operations in interactive
-   * routing.
-   * Lower values mean more accurate but slower pull tight.
-   */
-  public int trace_pull_tight_accuracy = 500;
-  /**
-   * Router parameter: enables automatic neckdown in interactive routing.
-   * When true, traces automatically narrow down when approaching pads.
-   */
-  public boolean automatic_neckdown = true;
-  /**
-   * the current layer index
-   */
-  int layer;
-  /**
-   * allows pushing obstacles aside
-   */
-  boolean push_enabled;
-  /**
-   * allows dragging components with the route
-   */
-  boolean drag_components_enabled;
-  /**
-   * indicates if interactive selections are made on all visible layers or only on
-   * the current layer
-   */
-  boolean select_on_all_visible_layers;
-  /**
-   * Route mode: stitching or dynamic
-   */
-  boolean is_stitch_route;
-  /**
-   * The width of the pull tight region of traces around the cursor
-   */
-  int trace_pull_tight_region_width;
-  /**
-   * Via snaps to smd center, if attach smd is allowed.
-   */
-  boolean via_snap_to_smd_center;
-  /**
-   * The horizontal placement grid when moving components, if {@literal >} 0.
-   */
-  int horizontal_component_grid;
-  /**
-   * The vertical placement grid when moving components, if {@literal >} 0.
-   */
-  int vertical_component_grid;
-  /**
-   * Indicates if the routing rule selection is manual by the user or automatic by
-   * the net rules.
-   */
-  boolean manual_rule_selection;
-  /**
-   * If true, the current routing obstacle is highlighted in dynamic routing.
-   */
-  boolean hilight_routing_obstacle;
-  /**
-   * The index of the clearance class used for traces in interactive routing in
-   * the clearance matrix, if manual_route_selection is on.
-   */
-  int manual_trace_clearance_class;
-  /**
-   * The index of the via rule used in routing in the board via rules if
-   * manual_route_selection is on.
-   */
-  int manual_via_rule_index;
-  /**
-   * If true, the mouse wheel is used for zooming.
-   */
-  boolean zoom_with_wheel;
-  /**
-   * The filter used in interactive selection of board items.
-   */
-  ItemSelectionFilter item_selection_filter;
+
+  /** Router parameter: accuracy for trace pull tight operations in interactive routing. */
+  private int trace_pull_tight_accuracy = 500;
+  /** Router parameter: enables automatic neckdown in interactive routing. */
+  private boolean automatic_neckdown = true;
+  /** The current layer index. */
+  private int layer;
+  /** Allows pushing obstacles aside. */
+  private boolean push_enabled;
+  /** Allows dragging components with the route. */
+  private boolean drag_components_enabled;
+  /** Indicates if interactive selections are made on all visible layers or only on the current layer. */
+  private boolean select_on_all_visible_layers;
+  /** Route mode: stitching or dynamic. */
+  private boolean is_stitch_route;
+  /** The width of the pull tight region of traces around the cursor. */
+  private int trace_pull_tight_region_width;
+  /** Via snaps to smd center, if attach smd is allowed. */
+  private boolean via_snap_to_smd_center;
+  /** The horizontal placement grid when moving components, if &gt; 0. */
+  private int horizontal_component_grid;
+  /** The vertical placement grid when moving components, if &gt; 0. */
+  private int vertical_component_grid;
+  /** Indicates if the routing rule selection is manual by the user or automatic by the net rules. */
+  private boolean manual_rule_selection;
+  /** If true, the current routing obstacle is highlighted in dynamic routing. */
+  private boolean hilight_routing_obstacle;
+  /** The index of the clearance class used for traces in interactive routing. */
+  private int manual_trace_clearance_class;
+  /** The index of the via rule used in routing in the board via rules if manual_route_selection is on. */
+  private int manual_via_rule_index;
+  /** If true, the mouse wheel is used for zooming. */
+  private boolean zoom_with_wheel;
+  /** The filter used in interactive selection of board items. */
+  private ItemSelectionFilter item_selection_filter;
 
   /**
    * Indicates, if the data of this class are not allowed to be changed in
@@ -159,8 +166,69 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
 
   }
 
+  /**
+   * Returns the number of layers this settings object was created for.
+   * Equivalent to {@code manual_trace_half_width_arr.length}.
+   *
+   * @return the layer count
+   */
+  public int get_layer_count() {
+    return manual_trace_half_width_arr.length;
+  }
+
   public int get_layer() {
     return this.layer;
+  }
+
+  /**
+   * Sets the current active layer index.
+   *
+   * @param p_layer_no the new layer index
+   */
+  public void set_layer(int p_layer_no) {
+    if (read_only) {
+      return;
+    }
+    layer = p_layer_no;
+  }
+
+  /**
+   * Returns the trace pull tight accuracy.
+   */
+  public int get_trace_pull_tight_accuracy() {
+    return trace_pull_tight_accuracy;
+  }
+
+  /**
+   * Sets the trace pull tight accuracy.
+   * Lower values mean more accurate but slower pull tight.
+   *
+   * @param p_value the new accuracy value
+   */
+  public void set_trace_pull_tight_accuracy(int p_value) {
+    if (read_only) {
+      return;
+    }
+    trace_pull_tight_accuracy = p_value;
+  }
+
+  /**
+   * Returns whether automatic neckdown is enabled in interactive routing.
+   */
+  public boolean get_automatic_neckdown() {
+    return automatic_neckdown;
+  }
+
+  /**
+   * Enables or disables automatic neckdown in interactive routing.
+   *
+   * @param p_value {@code true} to enable automatic neckdown
+   */
+  public void set_automatic_neckdown(boolean p_value) {
+    if (read_only) {
+      return;
+    }
+    automatic_neckdown = p_value;
   }
 
   /**
@@ -461,3 +529,5 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
     this.read_only = false;
   }
 }
+
+

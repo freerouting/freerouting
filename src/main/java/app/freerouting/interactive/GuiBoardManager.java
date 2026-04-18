@@ -114,6 +114,21 @@ import javax.swing.SwingUtilities;
 public class GuiBoardManager extends HeadlessBoardManager {
 
   /**
+   * The GUI-session singleton for interactive settings.
+   *
+   * <p>This field holds the {@link InteractiveSettings} singleton that acts as the live
+   * {@link app.freerouting.settings.sources.GuiSettings} source (priority 50) for the
+   * {@link SettingsMerger} pipeline. It is initialised in {@link #create_board} and in
+   * {@link #loadFromSpecctraDsn} (when DSN reading bypasses {@code create_board}).
+   *
+   * <p>This field intentionally shadows the removed {@code interactiveSettings} field that
+   * previously lived on {@link HeadlessBoardManager}; it is not accessible from headless code.
+   *
+   * @see InteractiveSettings#getOrCreate(app.freerouting.board.RoutingBoard)
+   */
+  public InteractiveSettings interactiveSettings;
+
+  /**
    * The minimum interval in milliseconds between consecutive board panel repaints.
    *
    * <p>This throttle mechanism prevents excessive repainting during intensive operations,
@@ -704,7 +719,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public void set_layer_visibility(int p_layer, double p_value) {
     if (p_layer >= 0 && p_layer < graphics_context.layer_count()) {
       graphics_context.set_layer_visibility(p_layer, p_value);
-      if (p_value == 0 && interactiveSettings.layer == p_layer) {
+      if (p_value == 0 && interactiveSettings.get_layer() == p_layer) {
         // change the current layer to the best visible layer, if it becomes invisible;
         double best_visibility = 0;
         int best_visible_layer = 0;
@@ -714,7 +729,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
             best_visible_layer = i;
           }
         }
-        interactiveSettings.layer = best_visible_layer;
+        interactiveSettings.set_layer(best_visible_layer);
       }
     }
   }
@@ -741,7 +756,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public int get_trace_halfwidth(int p_net_no, int p_layer) {
     int result;
-    if (interactiveSettings.manual_rule_selection) {
+    if (interactiveSettings.get_manual_rule_selection()) {
       result = interactiveSettings.manual_trace_half_width_arr[p_layer];
     } else {
       result = board.rules.get_trace_half_width(p_net_no, p_layer);
@@ -768,7 +783,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see NetClass#is_active_routing_layer(int)
    */
   public boolean is_active_routing_layer(int p_net_no, int p_layer) {
-    if (interactiveSettings.manual_rule_selection) {
+    if (interactiveSettings.get_manual_rule_selection()) {
       return true;
     }
     Net curr_net = this.board.rules.nets.get(p_net_no);
@@ -802,8 +817,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public int get_trace_clearance_class(int p_net_no) {
     int result;
-    if (interactiveSettings.manual_rule_selection) {
-      result = interactiveSettings.manual_trace_clearance_class;
+    if (interactiveSettings.get_manual_rule_selection()) {
+      result = interactiveSettings.get_manual_trace_clearance_class();
     } else {
       result = board.rules.nets
           .get(p_net_no)
@@ -833,8 +848,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public ViaRule get_via_rule(int p_net_no) {
     ViaRule result = null;
-    if (interactiveSettings.manual_rule_selection) {
-      result = board.rules.via_rules.get(this.interactiveSettings.manual_via_rule_index);
+    if (interactiveSettings.get_manual_rule_selection()) {
+      result = board.rules.via_rules.get(this.interactiveSettings.get_manual_via_rule_index());
     }
     if (result == null) {
       result = board.rules.nets
@@ -967,7 +982,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   void set_layer(int p_layer_no) {
     Layer curr_layer = board.layer_structure.arr[p_layer_no];
     screen_messages.set_layer(curr_layer.name);
-    interactiveSettings.layer = p_layer_no;
+    interactiveSettings.set_layer(p_layer_no);
 
     // Change the selected layer in the select parameter window.
     if ((!this.board_is_read_only) && (curr_layer.is_signal)) {
@@ -998,7 +1013,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void display_layer_message() {
     screen_messages.clear_add_field();
-    Layer curr_layer = board.layer_structure.arr[this.interactiveSettings.layer];
+    Layer curr_layer = board.layer_structure.arr[this.interactiveSettings.get_layer()];
     screen_messages.set_layer(curr_layer.name);
   }
 
@@ -1022,11 +1037,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void set_manual_trace_half_width(int p_layer_no, int p_value) {
     if (p_layer_no == ComboBoxLayer.ALL_LAYER_INDEX) {
-      for (int i = 0; i < interactiveSettings.manual_trace_half_width_arr.length; i++) {
+      for (int i = 0; i < interactiveSettings.get_layer_count(); i++) {
         this.interactiveSettings.set_manual_trace_half_width(i, p_value);
       }
     } else if (p_layer_no == ComboBoxLayer.INNER_LAYER_INDEX) {
-      for (int i = 1; i < interactiveSettings.manual_trace_half_width_arr.length - 1; i++) {
+      for (int i = 1; i < interactiveSettings.get_layer_count() - 1; i++) {
         this.interactiveSettings.set_manual_trace_half_width(i, p_value);
       }
     } else {
@@ -1344,6 +1359,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
     super.create_board(p_bounding_box, p_layer_structure, p_outline_shapes, p_outline_clearance_class_name, p_rules,
         p_board_communication);
 
+    // Initialise the GUI-session singleton for interactive settings.
+    this.interactiveSettings = InteractiveSettings.getOrCreate(this.board);
+    this.initialize_manual_trace_half_widths();
+
     // create the interactive/GUI settings with default values
     double unit_factor = p_board_communication.coordinate_transform.board_to_dsn(1);
     this.coordinate_transform = new CoordinateTransform(1, p_board_communication.unit, unit_factor,
@@ -1352,6 +1371,64 @@ public class GuiBoardManager extends HeadlessBoardManager {
     // create a graphics context for the board
     Dimension panel_size = panel.getPreferredSize();
     graphics_context = new GraphicsContext(p_bounding_box, panel_size, p_layer_structure, this.locale);
+  }
+
+  /**
+   * Returns the GUI-session {@link InteractiveSettings} singleton.
+   *
+   * <p>The returned instance is also the live {@link app.freerouting.settings.sources.GuiSettings}
+   * source (priority 50) registered in the {@link SettingsMerger} pipeline. It is always
+   * non-null after a board has been created or loaded.
+   *
+   * @return the {@link InteractiveSettings} singleton; non-null after board initialisation
+   */
+  @Override
+  public InteractiveSettings getInteractiveSettings() {
+    return interactiveSettings;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>Always returns {@code true} for {@link GuiBoardManager}: the GUI session guarantees a
+   * non-null {@link InteractiveSettings} singleton after board initialisation.
+   */
+  @Override
+  public boolean isInteractiveModeSupported() {
+    return true;
+  }
+
+  /**
+   * Returns the GUI-session {@link InteractiveSettings} singleton.
+   *
+   * @return the {@link InteractiveSettings} singleton; non-null after board initialisation
+   * @deprecated Use {@link #getInteractiveSettings()} instead.
+   */
+  @Deprecated
+  @Override
+  public InteractiveSettings get_settings() {
+    return interactiveSettings;
+  }
+
+  /**
+   * Initialises manual trace half-widths from the board's default net class rules.
+   *
+   * <p>Copies the default trace width for each layer from the board's default net class into
+   * {@link InteractiveSettings#manual_trace_half_width_arr}. Must be called after the board is
+   * created or loaded.
+   *
+   * @see InteractiveSettings#manual_trace_half_width_arr
+   * @see app.freerouting.rules.NetClass#get_trace_half_width(int)
+   */
+  @Override
+  public void initialize_manual_trace_half_widths() {
+    if (interactiveSettings == null || this.board == null) {
+      return;
+    }
+    for (int i = 0; i < interactiveSettings.get_layer_count(); i++) {
+      interactiveSettings.manual_trace_half_width_arr[i] =
+          this.board.rules.get_default_net_class().get_trace_half_width(i);
+    }
   }
 
   /**
@@ -2019,7 +2096,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
       routingJob.logError("Couldn't read design file", e);
       return false;
     }
-    screen_messages.set_layer(board.layer_structure.arr[interactiveSettings.layer].name);
+    screen_messages.set_layer(board.layer_structure.arr[interactiveSettings.get_layer()].name);
     return true;
   }
 
@@ -2109,8 +2186,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Loads a board design from a Specctra DSN format file.
    *
-   * <p>Extends the base implementation by setting the initial layer to 0 after
-   * loading completes.
+   * <p>Extends the base implementation by setting the initial layer to 0 after loading completes.
+   * Unlike {@link #create_board}, {@code super.loadFromSpecctraDsn} uses {@link
+   * app.freerouting.io.specctra.parser.DsnFile#readBoard} which bypasses {@code create_board} and
+   * therefore does not initialise {@code interactiveSettings}. This override ensures
+   * {@code interactiveSettings} is always non-null before {@link #set_layer} is called.
    *
    * @param inputStream the stream containing the DSN data
    * @param boardObservers observers to be notified of board changes
@@ -2123,7 +2203,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     var result = super.loadFromSpecctraDsn(inputStream, boardObservers, identificationNumberGenerator);
-    this.set_layer(0);
+    if (this.board != null && this.interactiveSettings == null) {
+      this.interactiveSettings = InteractiveSettings.getOrCreate(this.board);
+      this.initialize_manual_trace_half_widths();
+    }
+    if (result != DsnFile.ReadResult.ERROR) {
+      this.set_layer(0);
+    }
     return result;
   }
 
@@ -2802,7 +2888,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveSettings#item_selection_filter
    */
   Set<Item> pick_items(FloatPoint p_location) {
-    return pick_items(p_location, interactiveSettings.item_selection_filter);
+    return pick_items(p_location, interactiveSettings.get_item_selection_filter());
   }
 
   /**
@@ -2821,10 +2907,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   Set<Item> pick_items(FloatPoint p_location, ItemSelectionFilter p_item_filter) {
     IntPoint location = p_location.round();
-    Set<Item> result = board.pick_items(location, interactiveSettings.layer, p_item_filter);
-    if (result.isEmpty() && interactiveSettings.select_on_all_visible_layers) {
+    Set<Item> result = board.pick_items(location, interactiveSettings.get_layer(), p_item_filter);
+    if (result.isEmpty() && interactiveSettings.get_select_on_all_visible_layers()) {
       for (int i = 0; i < graphics_context.layer_count(); i++) {
-        if (i == interactiveSettings.layer || graphics_context.get_layer_visibility(i) <= 0) {
+        if (i == interactiveSettings.get_layer() || graphics_context.get_layer_visibility(i) <= 0) {
           continue;
         }
         result.addAll(board.pick_items(location, i, p_item_filter));

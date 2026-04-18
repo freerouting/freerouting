@@ -71,10 +71,10 @@ Additionally, `interactiveSettings` is declared `public` on `HeadlessBoardManage
 
 | # | Title |
 |---|---|
-| 1 | Fix immediate NPE: initialise `interactiveSettings` before `set_layer` is called in `GuiBoardManager` |
-| 2 | Make `InteractiveSettings` a singleton and move it out of `HeadlessBoardManager` |
-| 3 | Introduce `BoardManager.getInteractiveSettings()` optional accessor and update `BoardManager` JavaDoc |
-| 4 | Replace direct field access with accessor methods; update `InteractiveSettings` JavaDoc |
+| 1 | ~~Fix immediate NPE: initialise `interactiveSettings` before `set_layer` is called in `GuiBoardManager`~~ ✅ |
+| 2 | ~~Make `InteractiveSettings` a singleton and move it out of `HeadlessBoardManager`~~ ✅ |
+| 3 | ~~Introduce `BoardManager.getInteractiveSettings()` optional accessor and update `BoardManager` JavaDoc~~ ✅ |
+| 4 | ~~Replace direct field access with accessor methods; update `InteractiveSettings` JavaDoc~~ ✅ |
 | 5 | Two-way binding: all GUI panels ↔ `InteractiveSettings` fields (including inherited `GuiSettings` fields) |
 | 6 | Register the singleton as the live `GuiSettings` source in `SettingsMerger`; update `GuiSettings` JavaDoc |
 | 7 | Guard headless / API code paths against `interactiveSettings` usage |
@@ -82,7 +82,7 @@ Additionally, `interactiveSettings` is declared `public` on `HeadlessBoardManage
 
 ---
 
-## Sub-Issue 01 – Fix immediate NPE in `GuiBoardManager.loadFromSpecctraDsn` {#sub-01}
+## Sub-Issue 01 – Fix immediate NPE in `GuiBoardManager.loadFromSpecctraDsn` ✅ {#sub-01}
 
 **File:** `src/main/java/app/freerouting/interactive/GuiBoardManager.java`
 
@@ -124,7 +124,7 @@ Note: `InteractiveSettings.getOrCreate(board)` is introduced in Sub-Issue 02.
 
 ---
 
-## Sub-Issue 02 – Make `InteractiveSettings` a singleton and remove it from `HeadlessBoardManager` {#sub-02}
+## Sub-Issue 02 – Make `InteractiveSettings` a singleton and remove it from `HeadlessBoardManager` ✅ {#sub-02}
 
 **Files:** `InteractiveSettings.java`, `HeadlessBoardManager.java`, `GuiBoardManager.java`
 
@@ -181,7 +181,7 @@ static void resetForTesting() {
 
 ---
 
-## Sub-Issue 03 – Optional `getInteractiveSettings()` accessor and `BoardManager` JavaDoc {#sub-03}
+## Sub-Issue 03 – Optional `getInteractiveSettings()` accessor and `BoardManager` JavaDoc ✅ {#sub-03}
 
 **File:** `src/main/java/app/freerouting/interactive/BoardManager.java`
 
@@ -225,7 +225,7 @@ default boolean isInteractiveModeSupported() { return false; }
 
 ---
 
-## Sub-Issue 04 – Encapsulate fields and update `InteractiveSettings` JavaDoc {#sub-04}
+## Sub-Issue 04 – Encapsulate fields and update `InteractiveSettings` JavaDoc ✅ {#sub-04}
 
 **Files:** `InteractiveSettings.java`, `RouteState.java`, `DragState.java`, `StitchRouteState.java`, `TileConstructionState.java`, `InspectedItemState.java`, `GuiBoardManager.java`
 
