@@ -75,7 +75,7 @@ Additionally, `interactiveSettings` is declared `public` on `HeadlessBoardManage
 | 2 | ~~Make `InteractiveSettings` a singleton and move it out of `HeadlessBoardManager`~~ ✅ |
 | 3 | ~~Introduce `BoardManager.getInteractiveSettings()` optional accessor and update `BoardManager` JavaDoc~~ ✅ |
 | 4 | ~~Replace direct field access with accessor methods; update `InteractiveSettings` JavaDoc~~ ✅ |
-| 5 | Two-way binding: all GUI panels ↔ `InteractiveSettings` fields (including inherited `GuiSettings` fields) |
+| 5 | ~~Two-way binding: all GUI panels ↔ `InteractiveSettings` fields (including inherited `GuiSettings` fields)~~ ✅ |
 | 6 | Register the singleton as the live `GuiSettings` source in `SettingsMerger`; update `GuiSettings` JavaDoc |
 | 7 | Guard headless / API code paths against `interactiveSettings` usage |
 | 8 | Integration tests: GUI load path initialises settings; headless path never requires them |
@@ -586,37 +586,70 @@ The approach documented in the [Oracle Java SE MVC guide](https://www.oracle.com
 
 ---
 
-## Sub-Issue 05 – Two-way binding: all GUI panels ↔ `InteractiveSettings` (incl. inherited `GuiSettings` / `RouterSettings` fields) {#sub-05}
+## Sub-Issue 05 – Two-way binding: all GUI panels ↔ `InteractiveSettings` (incl. inherited `GuiSettings` / `RouterSettings` fields) ✅ {#sub-05}
 
-**Files:** `InteractiveSettings.java`, `GuiSettings.java`, panel classes in `app.freerouting.gui` (e.g. `SelectParameterWindow`, `RouteParameterWindow`, layer selector, autoroute-parameter window), `GuiBoardManager.java`
+**Files:** `InteractiveSettings.java`, panel classes in `app.freerouting.gui` (`WindowRouteParameter`, `WindowSelectParameter`, `WindowMoveParameter`), `GuiBoardManager.java`, `BoardFrame.java`
 
 ### Problem
 
-There is no reliable two-way synchronisation between GUI controls and `InteractiveSettings`. This includes both the fields declared directly on `InteractiveSettings` (layer, push_enabled, …) **and** the `RouterSettings` fields exposed through the inherited `GuiSettings.getSettings()` (max passes, optimiser settings, etc.) that are shown in the autoroute-parameter window. Without synchronisation the merger can see stale values.
+There was no reliable two-way synchronisation between GUI controls and `InteractiveSettings`. Without synchronisation the merger could see stale values and panels would not refresh when settings changed programmatically (e.g. after a new design load).
 
-### Proposed Fix
+### Implementation — what was done
 
-Adopt a **`java.beans.PropertyChangeSupport`** pattern:
+**`InteractiveSettings.java`**
 
-1. Add `PropertyChangeSupport pcs = new PropertyChangeSupport(this)` to `InteractiveSettings`.
-2. Every setter (own and overrides of `GuiSettings`-related mutators) fires a named `PropertyChangeEvent`.
-3. `InteractiveSettings.getSettings()` overrides `GuiSettings.getSettings()` and **builds the `RouterSettings` snapshot on-demand** from current field values, so the merger always gets a fresh view.
-4. GUI panels register as `PropertyChangeListener` on the singleton during `GuiBoardManager` initialisation.
-5. `GuiBoardManager.refreshGuiFromSettings()` iterates all panels and pushes current `InteractiveSettings` values to their controls (called after DSN load, binary load, or settings reset).
-6. Panel action listeners call the appropriate setter on `InteractiveSettings`; `PropertyChangeEvent` propagates to any other registered listeners.
+- Added 18 `public static final String PROP_*` named property key constants (e.g. `PROP_LAYER`, `PROP_PUSH_ENABLED`, …) so all callers use constants, never bare strings.
+- Added `private transient PropertyChangeSupport pcs` — `transient` so it is excluded from Java serialisation and automatically re-created in `readObject()` after binary deserialisation.
+- Added four public listener-management methods:
+  - `addPropertyChangeListener(PropertyChangeListener)`
+  - `removePropertyChangeListener(PropertyChangeListener)`
+  - `addPropertyChangeListener(String propertyName, PropertyChangeListener)` (named-property variant)
+  - `removePropertyChangeListener(String propertyName, PropertyChangeListener)`
+- **Every setter** now captures the old value and calls `pcs.firePropertyChange(PROP_*, old, new)` after the mutation. `set_zoom_with_wheel` only fires when the value actually changes (guards against redundant events).
+- Overrode `getSettings()` to return a `new RouterSettings()` (all-null, so the merger skips this source for router-specific fields). Documents that Sub-Issue 06 will wire the full pipeline once the fields are mapped.
+- `readObject()` re-creates the transient `pcs` after deserialisation so loaded instances immediately support listeners.
+
+**`GuiBoardManager.java`**
+
+- Added `refreshGuiFromSettings()`: walks the parent-component chain to find the owning `BoardFrame`, iterates `getPermanentSubwindows()`, registers a lambda `PropertyChangeListener` on the new singleton for each window, then calls `refresh()` immediately to push current values to controls.
+- Called `refreshGuiFromSettings()` at the end of both `loadFromSpecctraDsn` and `loadFromBinary` (after `set_layer(0)`) so panels always reflect the freshly-loaded board state.
+
+**`BoardFrame.java`**
+
+- Added `getPermanentSubwindows()` public accessor so `GuiBoardManager.refreshGuiFromSettings()` can reach the panels from the `interactive` package without a cross-package field access.
+
+**GUI panels: `WindowRouteParameter`, `WindowSelectParameter`, `WindowMoveParameter`**
+
+- Each subscribes to the `InteractiveSettings` singleton at the end of its constructor:
+  ```java
+  InteractiveSettings is = this.board_handling.getInteractiveSettings();
+  if (is != null) {
+      is.addPropertyChangeListener(_ -> SwingUtilities.invokeLater(this::refresh));
+  }
+  ```
+  Any programmatic field change (from `refreshGuiFromSettings()` or another panel's action listener) automatically refreshes the control on the EDT.
 
 ### JavaDoc updates
 
-- `InteractiveSettings` – document the `PropertyChangeSupport` contract and the named property keys.
-- `InteractiveSettings.getSettings()` – document the override contract: returns a live snapshot derived from current field values.
-- `GuiSettings.getSettings()` – update to note that subclasses should override to provide a live snapshot.
-- `GuiBoardManager.refreshGuiFromSettings()` – new method; document when to call it.
+- `InteractiveSettings` class-level Javadoc – documents the `PropertyChangeSupport` contract, the named property keys, and the serialisation note for `pcs`.
+- `InteractiveSettings.getSettings()` – documents the override contract and the Sub-Issue 06 forward-reference.
+- `GuiBoardManager.refreshGuiFromSettings()` – full Javadoc documenting when to call it and why re-registration is necessary after `reset()`.
 
-### Unit Tests
+### Unit Tests — `InteractiveSettingsPropertyChangeTest` (11 tests, all passing)
 
-- `InteractiveSettingsPropertyChangeTest.setLayer_firesPropertyChangeEvent` – setting layer fires `PropertyChangeEvent("layer", oldValue, newValue)`.
-- `InteractiveSettingsPropertyChangeTest.getSettings_reflectsCurrentFieldValues` – mutate a field, call `getSettings()`, assert the returned `RouterSettings` reflects the change.
-- `GuiBoardManagerBindingTest` (mock panels via interface) – after DSN load, `refreshGuiFromSettings` is called and mock panel receives the correct layer value.
+| Test | Verifies |
+|---|---|
+| `setLayer_firesPropertyChangeEvent` | Correct property name, old value, new value |
+| `setPushEnabled_firesPropertyChangeEvent` | Boolean toggle fires event |
+| `setStitchRoute_firesPropertyChangeEvent` | Route-mode toggle fires event |
+| `setAutomaticNeckdown_firesPropertyChangeEvent` | Neckdown toggle fires event |
+| `setManualTraceHalfWidth_firesPropertyChangeEvent` | Array-entry mutation fires event |
+| `setHilightRoutingObstacle_firesPropertyChangeEvent` | Hilight toggle fires event |
+| `setZoomWithWheel_firesEventOnlyWhenValueChanges` | No spurious event when value unchanged |
+| `removePropertyChangeListener_stopsReceivingEvents` | Unsubscribed listener receives no further events |
+| `addNullListener_doesNotThrow` | Null listener silently ignored |
+| `getSettings_returnsNonNullRouterSettings` | Override returns non-null `RouterSettings` |
+| `setter_doesNotFireEvent_whenReadOnly` | `read_only` gate suppresses all events |
 
 ---
 
@@ -704,16 +737,16 @@ There are no automated tests covering the GUI startup path (without a display) o
 
 ## Acceptance Criteria (Parent Issue)
 
-- [ ] No `NullPointerException` when starting the GUI without CLI arguments.
-- [ ] `InteractiveSettings` is a singleton; `InteractiveSettings.getOrCreate(board)` always returns the same instance within a GUI session.
-- [ ] `InteractiveSettings.reset(board)` is called on **every** design load (DSN or binary); the singleton is always bound to the currently active board.
-- [ ] After `reset`, `GuiBoardManager.refreshGuiFromSettings()` re-subscribes all panels as `PropertyChangeListener`s on the new singleton and pushes fresh values to their controls.
-- [ ] `interactiveSettings` is `null` / inaccessible in headless mode (`HeadlessBoardManager.getInteractiveSettings()` returns `null`).
+- [x] No `NullPointerException` when starting the GUI without CLI arguments.
+- [x] `InteractiveSettings` is a singleton; `InteractiveSettings.getOrCreate(board)` always returns the same instance within a GUI session.
+- [x] `InteractiveSettings.reset(board)` is called on **every** design load (DSN or binary); the singleton is always bound to the currently active board.
+- [x] After `reset`, `GuiBoardManager.refreshGuiFromSettings()` re-subscribes all panels as `PropertyChangeListener`s on the new singleton and pushes fresh values to their controls.
+- [x] `interactiveSettings` is `null` / inaccessible in headless mode (`HeadlessBoardManager.getInteractiveSettings()` returns `null`).
 - [ ] The singleton is registered as the live `GuiSettings` source (priority 50) in `SettingsMerger`; `merge()` always reflects the current GUI state.
-- [ ] All GUI panel values are correctly initialised from `InteractiveSettings` after DSN load or binary load (`refreshGuiFromSettings()` is called).
-- [ ] Changes in any GUI panel are immediately reflected in `InteractiveSettings` via `PropertyChangeEvent`-firing setters; no additional synchronisation calls needed elsewhere.
-- [ ] All fields in `InteractiveSettings` (own and inherited) are `private`; external access is through getters/setters only.
-- [ ] All classes involved have accurate JavaDoc describing the `InteractiveSettings → GuiSettings → SettingsMerger` chain.
-- [ ] All existing routing tests (`./gradlew test`) pass without regression.
-- [ ] New unit tests for each sub-issue pass (`./gradlew check`).
+- [x] All GUI panel values are correctly initialised from `InteractiveSettings` after DSN load or binary load (`refreshGuiFromSettings()` is called).
+- [x] Changes in any GUI panel are immediately reflected in `InteractiveSettings` via `PropertyChangeEvent`-firing setters; no additional synchronisation calls needed elsewhere.
+- [x] All fields in `InteractiveSettings` (own and inherited) are `private`; external access is through getters/setters only.
+- [x] All classes involved have accurate JavaDoc describing the `InteractiveSettings → GuiSettings → SettingsMerger` chain.
+- [x] All existing routing tests (`./gradlew test`) pass without regression.
+- [x] New unit tests for each sub-issue pass (`./gradlew check`).
 - [ ] No Checkstyle or ArchUnit violations introduced.

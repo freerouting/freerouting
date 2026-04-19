@@ -990,11 +990,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
 
     // make the layer visible, if it is invisible
-    if (graphics_context.get_layer_visibility(p_layer_no) == 0) {
-      graphics_context.set_layer_visibility(p_layer_no, 1);
-      panel.board_frame.refresh_windows();
+    if (graphics_context != null) {
+      if (graphics_context.get_layer_visibility(p_layer_no) == 0) {
+        graphics_context.set_layer_visibility(p_layer_no, 1);
+        if (panel != null && panel.board_frame != null) {
+          panel.board_frame.refresh_windows();
+        }
+      }
+      graphics_context.set_fully_visible_layer(p_layer_no);
     }
-    graphics_context.set_fully_visible_layer(p_layer_no);
     repaint();
   }
 
@@ -1428,6 +1432,47 @@ public class GuiBoardManager extends HeadlessBoardManager {
     for (int i = 0; i < interactiveSettings.get_layer_count(); i++) {
       interactiveSettings.manual_trace_half_width_arr[i] =
           this.board.rules.get_default_net_class().get_trace_half_width(i);
+    }
+  }
+
+  /**
+   * Re-subscribes all permanent GUI subwindows as {@link java.beans.PropertyChangeListener}s on
+   * the current {@link InteractiveSettings} singleton and pushes the fresh settings values to their
+   * controls by calling {@code refresh()} on each window.
+   *
+   * <p>Must be called after every design load (DSN or binary) once the new
+   * {@link InteractiveSettings} singleton has been bound to the new board, and after every
+   * {@link InteractiveSettings#reset(app.freerouting.board.RoutingBoard)} call since the old
+   * singleton (and its listener list) is discarded.
+   *
+   * <p>This method is a no-op when {@code interactiveSettings} is {@code null} (headless mode) or
+   * when there is no {@link BoardFrame} attached.
+   */
+  public void refreshGuiFromSettings() {
+    if (interactiveSettings == null || panel == null) {
+      return;
+    }
+    // Obtain the BoardFrame that owns the permanent subwindows via the panel's parent chain.
+    java.awt.Container parent = panel.getParent();
+    while (parent != null && !(parent instanceof app.freerouting.gui.BoardFrame)) {
+      parent = parent.getParent();
+    }
+    if (!(parent instanceof app.freerouting.gui.BoardFrame boardFrame)) {
+      return;
+    }
+
+    // Re-subscribe every permanent subwindow as a PropertyChangeListener.
+    // The listener simply calls refresh() on the next EDT cycle to pull the new values.
+    for (app.freerouting.gui.BoardSavableSubWindow subwindow : boardFrame.getPermanentSubwindows()) {
+      if (subwindow == null) {
+        continue;
+      }
+      // Capture the subwindow in a local effectively-final variable for the lambda.
+      final app.freerouting.gui.BoardSavableSubWindow sw = subwindow;
+      interactiveSettings.addPropertyChangeListener(_ ->
+          javax.swing.SwingUtilities.invokeLater(sw::refresh));
+      // Push current values immediately.
+      subwindow.refresh();
     }
   }
 
@@ -2100,6 +2145,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return false;
     }
     screen_messages.set_layer(board.layer_structure.arr[interactiveSettings.get_layer()].name);
+    // Re-subscribe all GUI panels as PropertyChangeListeners on the restored singleton and
+    // push the loaded settings values to their controls.
+    refreshGuiFromSettings();
     return true;
   }
 
@@ -2217,9 +2265,26 @@ public class GuiBoardManager extends HeadlessBoardManager {
       // making any previously-constructed InteractiveSettings invalid for this board.
       this.interactiveSettings = InteractiveSettings.reset(this.board);
       this.initialize_manual_trace_half_widths();
+
+      // Initialize the graphics context if it was not yet created (e.g. first load bypassing create_board).
+      if (this.graphics_context == null) {
+        Dimension panel_size = (panel != null) ? panel.getPreferredSize() : new Dimension(800, 600);
+        this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
+            this.board.layer_structure, this.locale);
+      }
+
+      // Initialize the coordinate transform if it was not yet created (e.g. first load bypassing create_board).
+      if (this.coordinate_transform == null) {
+        double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
+        this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
+            this.board.communication.unit);
+      }
     }
     if (result != DsnFile.ReadResult.ERROR) {
       this.set_layer(0);
+      // Re-subscribe all GUI panels as PropertyChangeListeners on the new singleton and
+      // push the fresh settings values to their controls.
+      refreshGuiFromSettings();
     }
     return result;
   }

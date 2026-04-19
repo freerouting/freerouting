@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
+import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
@@ -137,6 +138,12 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+
+    // Subscribe to the InteractiveSettings singleton so this window stays in sync.
+    InteractiveSettings is = this.board_handling.getInteractiveSettings();
+    if (is != null) {
+      is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
+    }
   }
 
   /**

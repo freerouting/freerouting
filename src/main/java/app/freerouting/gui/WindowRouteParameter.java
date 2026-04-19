@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardOutline;
 import app.freerouting.board.PolylineTrace;
@@ -396,6 +397,13 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+
+    // Subscribe to the InteractiveSettings singleton so this window stays in sync when
+    // settings are changed programmatically (e.g. after a new design load).
+    InteractiveSettings is = this.guiBoardManager.getInteractiveSettings();
+    if (is != null) {
+      is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
+    }
   }
 
   @Override
