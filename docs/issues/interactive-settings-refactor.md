@@ -111,7 +111,7 @@ public DsnFile.ReadResult loadFromSpecctraDsn(
 }
 ```
 
-Note: `InteractiveSettings.getOrCreate(board)` is introduced in Sub-Issue 02.
+Note: `InteractiveSettings.getOrCreate(board)` is introduced in Sub-Issue 02. For the **first** load in a session `getOrCreate` is appropriate; **subsequent** loads must use `InteractiveSettings.reset(board)` to guarantee the singleton is rebound to the new board (see the design note in Sub-Issue 02).
 
 ### JavaDoc updates
 
@@ -166,6 +166,31 @@ static void resetForTesting() {
 3. Add `protected InteractiveSettings interactiveSettings` to `GuiBoardManager`.
 4. Move `initialize_manual_trace_half_widths()` and `get_settings()` implementations from `HeadlessBoardManager` to `GuiBoardManager`; provide a **no-op** default in `HeadlessBoardManager` (returns `null` from `get_settings()`).
 
+> **Design note – reinitialise on every design load:**
+> The singleton must be **reset and recreated** each time a new design (DSN or `.frb` binary) is loaded into the GUI. Loading a new design replaces `this.board` with a new `RoutingBoard` instance whose layer count, net list, and design rules differ from the previous board. An `InteractiveSettings` that was constructed for the old board (e.g. a different `manual_trace_half_width_arr` size) is therefore invalid for the new one.
+>
+> Concretely, `GuiBoardManager.loadFromSpecctraDsn` (and the equivalent binary-load path) must call `InteractiveSettings.reset(this.board)` — a new public factory method that atomically replaces the singleton:
+>
+> ```java
+> /**
+>  * Discards the current singleton and creates a fresh one bound to {@code board}.
+>  * Must be called whenever a new design is loaded into the GUI session.
+>  *
+>  * @param board the newly loaded {@link RoutingBoard}; must not be {@code null}
+>  * @return the new singleton instance
+>  */
+> public static InteractiveSettings reset(RoutingBoard board) {
+>     synchronized (InteractiveSettings.class) {
+>         instance = new InteractiveSettings(board);
+>         return instance;
+>     }
+> }
+> ```
+>
+> - `getOrCreate(board)` continues to be used for the **initial** creation (first load in a session, or after `resetForTesting()`).
+> - `reset(board)` is used for every **subsequent** load to guarantee the singleton is always bound to the currently active board.
+> - All registered `PropertyChangeListener`s (GUI panels) must be **re-registered** after a `reset` call, since the old instance is discarded. `GuiBoardManager.refreshGuiFromSettings()` is the natural place to do this: it re-subscribes panels to the new singleton and pushes the fresh settings values to their controls.
+
 ### JavaDoc updates
 
 - `InteractiveSettings` class-level Javadoc – document the singleton contract, the `GuiSettings → SettingsMerger` relationship, and that the instance is `null`/inaccessible in headless mode.
@@ -175,9 +200,12 @@ static void resetForTesting() {
 ### Unit Tests
 
 - `InteractiveSettingsSingletonTest.getOrCreate_returnsSameInstance` – two consecutive `getOrCreate` calls return the identical reference.
-- `InteractiveSettingsSingletonTest.resetForTesting_allowsFreshCreation` – after reset a new instance is created.
+- `InteractiveSettingsSingletonTest.resetForTesting_allowsFreshCreation` – after `resetForTesting()` a new instance is created.
+- `InteractiveSettingsSingletonTest.reset_replacesInstance` – `reset(newBoard)` returns a different object reference than the previous singleton; the old reference is no longer returned by `getOrCreate`.
+- `InteractiveSettingsSingletonTest.reset_rebindsToNewBoard` – after `reset(boardB)`, `getOrCreate(boardA)` returns the instance bound to `boardB` (the singleton ignores the stale board argument).
 - `HeadlessBoardManagerTest.getSettings_returnsNull` – confirm `null` from a headless manager.
 - `GuiBoardManagerTest.getSettings_returnsNonNull_afterLoad` – non-null after DSN load.
+- `GuiBoardManagerTest.secondLoad_reinitializesInteractiveSettings` – load a second DSN into the same `GuiBoardManager`; assert that `getInteractiveSettings()` returns a **new** instance (not the one from the first load) and that `get_layer()` is `0`.
 
 ---
 
@@ -552,8 +580,9 @@ The approach documented in the [Oracle Java SE MVC guide](https://www.oracle.com
 3. Every setter in `InteractiveSettings` fires `pcs.firePropertyChange(PROP_NAME, oldVal, newVal)` using `public static final String` constants (e.g. `PROP_LAYER = "layer"`).
 4. `InteractiveSettings.getSettings()` override constructs and returns a fresh `RouterSettings` snapshot — ensures `SettingsMerger` always sees current GUI values.
 5. Each GUI panel implements `PropertyChangeListener` and subscribes to the singleton during `GuiBoardManager` initialisation (or panel construction).
-6. `GuiBoardManager.refreshGuiFromSettings()` triggers a full push from model → all registered views (called after DSN/binary load and settings reset).
+6. `GuiBoardManager.refreshGuiFromSettings()` triggers a full push from model → all registered views (called after DSN/binary load and settings reset). It must also **re-register** all panels as `PropertyChangeListener`s on the new singleton whenever `InteractiveSettings.reset(board)` has been called, since the old instance is discarded and its listener list is gone.
 7. Panel action/change listeners invoke the appropriate `InteractiveSettings` setter; the resulting `PropertyChangeEvent` propagates to all other registered listeners — no extra sync calls needed.
+8. **On every design load** (`loadFromSpecctraDsn`, binary load, file → open): call `InteractiveSettings.reset(this.board)` to replace the singleton, then call `refreshGuiFromSettings()` to re-subscribe all panels and push fresh values to their controls.
 
 ---
 
@@ -677,6 +706,8 @@ There are no automated tests covering the GUI startup path (without a display) o
 
 - [ ] No `NullPointerException` when starting the GUI without CLI arguments.
 - [ ] `InteractiveSettings` is a singleton; `InteractiveSettings.getOrCreate(board)` always returns the same instance within a GUI session.
+- [ ] `InteractiveSettings.reset(board)` is called on **every** design load (DSN or binary); the singleton is always bound to the currently active board.
+- [ ] After `reset`, `GuiBoardManager.refreshGuiFromSettings()` re-subscribes all panels as `PropertyChangeListener`s on the new singleton and pushes fresh values to their controls.
 - [ ] `interactiveSettings` is `null` / inaccessible in headless mode (`HeadlessBoardManager.getInteractiveSettings()` returns `null`).
 - [ ] The singleton is registered as the live `GuiSettings` source (priority 50) in `SettingsMerger`; `merge()` always reflects the current GUI state.
 - [ ] All GUI panel values are correctly initialised from `InteractiveSettings` after DSN load or binary load (`refreshGuiFromSettings()` is called).
