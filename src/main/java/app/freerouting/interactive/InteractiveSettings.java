@@ -294,22 +294,31 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
 
   /**
    * Returns a live {@link RouterSettings} snapshot built from the current field values of this
-   * instance. This override ensures that the {@link app.freerouting.settings.SettingsMerger} always
-   * reads up-to-date GUI state at priority 50 rather than a stale static snapshot.
+   * instance.
    *
-   * <p>Only fields that {@code InteractiveSettings} actually owns are populated here. Fields that
-   * belong exclusively to other settings sources (e.g. via_costs, max_passes) are left {@code null}
-   * so the merger can correctly resolve them from lower-priority sources.
+   * <p>This override ensures that the {@link app.freerouting.settings.SettingsMerger} always reads
+   * up-to-date GUI state at priority 50 rather than a stale static snapshot. It is called on every
+   * {@code merge()} invocation (e.g. when the user starts the autorouter, saves settings, or the
+   * toolbar rebuilds settings).
+   *
+   * <p>Only fields that {@code InteractiveSettings} actually owns are populated; fields that belong
+   * exclusively to other settings sources (e.g. {@code maxPasses}, {@code maxThreads}) are left
+   * {@code null} so the merger correctly resolves them from their authoritative sources.
+   *
+   * <p>Currently mapped fields:
+   * <ul>
+   *   <li>{@link RouterSettings#trace_pull_tight_accuracy} ← {@link #trace_pull_tight_accuracy}</li>
+   *   <li>{@link RouterSettings#automatic_neckdown} ← {@link #automatic_neckdown}</li>
+   * </ul>
    *
    * @return a new {@link RouterSettings} containing the current GUI-controlled values
    */
   @Override
   public RouterSettings getSettings() {
-    // InteractiveSettings currently does not map directly to RouterSettings fields —
-    // those are owned by WindowAutorouteParameter → routingJob.routerSettings.
-    // Return an empty (all-null) RouterSettings so the merger ignores this source for
-    // router-specific settings until Sub-Issue 06 wires the full pipeline.
-    return new RouterSettings();
+    RouterSettings snapshot = new RouterSettings();
+    snapshot.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
+    snapshot.automatic_neckdown = this.automatic_neckdown;
+    return snapshot;
   }
 
   /**

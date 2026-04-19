@@ -2137,6 +2137,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
       // Adopt the deserialized instance as the authoritative singleton so that subsequent
       // getOrCreate / getInteractiveSettings calls return the same object.
       InteractiveSettings.setInstance(interactiveSettings);
+      // Register the singleton as the live GuiSettings source (priority 50) in the merger so
+      // that every subsequent merge() call reflects the current interactive GUI state.
+      this.settingsMerger.addOrReplaceSources(interactiveSettings);
       coordinate_transform = (CoordinateTransform) p_design.readObject();
       graphics_context = (GraphicsContext) p_design.readObject();
       originalBoardChecksum = calculateCrc32();
@@ -2265,6 +2268,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
       // making any previously-constructed InteractiveSettings invalid for this board.
       this.interactiveSettings = InteractiveSettings.reset(this.board);
       this.initialize_manual_trace_half_widths();
+
+      // Register the singleton as the live GuiSettings source (priority 50) in the merger so
+      // that every subsequent merge() call reflects the current interactive GUI state.
+      this.settingsMerger.addOrReplaceSources(this.interactiveSettings);
 
       // Initialize the graphics context if it was not yet created (e.g. first load bypassing create_board).
       if (this.graphics_context == null) {

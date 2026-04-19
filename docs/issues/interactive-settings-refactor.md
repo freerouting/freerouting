@@ -76,7 +76,7 @@ Additionally, `interactiveSettings` is declared `public` on `HeadlessBoardManage
 | 3 | ~~Introduce `BoardManager.getInteractiveSettings()` optional accessor and update `BoardManager` JavaDoc~~ ✅ |
 | 4 | ~~Replace direct field access with accessor methods; update `InteractiveSettings` JavaDoc~~ ✅ |
 | 5 | ~~Two-way binding: all GUI panels ↔ `InteractiveSettings` fields (including inherited `GuiSettings` fields)~~ ✅ |
-| 6 | Register the singleton as the live `GuiSettings` source in `SettingsMerger`; update `GuiSettings` JavaDoc |
+| 6 | ~~Register the singleton as the live `GuiSettings` source in `SettingsMerger`; update `GuiSettings` JavaDoc~~ ✅ |
 | 7 | Guard headless / API code paths against `interactiveSettings` usage |
 | 8 | Integration tests: GUI load path initialises settings; headless path never requires them |
 
@@ -742,7 +742,7 @@ There are no automated tests covering the GUI startup path (without a display) o
 - [x] `InteractiveSettings.reset(board)` is called on **every** design load (DSN or binary); the singleton is always bound to the currently active board.
 - [x] After `reset`, `GuiBoardManager.refreshGuiFromSettings()` re-subscribes all panels as `PropertyChangeListener`s on the new singleton and pushes fresh values to their controls.
 - [x] `interactiveSettings` is `null` / inaccessible in headless mode (`HeadlessBoardManager.getInteractiveSettings()` returns `null`).
-- [ ] The singleton is registered as the live `GuiSettings` source (priority 50) in `SettingsMerger`; `merge()` always reflects the current GUI state.
+- [x] The singleton is registered as the live `GuiSettings` source (priority 50) in `SettingsMerger`; `merge()` always reflects the current GUI state.
 - [x] All GUI panel values are correctly initialised from `InteractiveSettings` after DSN load or binary load (`refreshGuiFromSettings()` is called).
 - [x] Changes in any GUI panel are immediately reflected in `InteractiveSettings` via `PropertyChangeEvent`-firing setters; no additional synchronisation calls needed elsewhere.
 - [x] All fields in `InteractiveSettings` (own and inherited) are `private`; external access is through getters/setters only.
