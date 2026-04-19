@@ -78,7 +78,7 @@ Additionally, `interactiveSettings` is declared `public` on `HeadlessBoardManage
 | 5 | ~~Two-way binding: all GUI panels ↔ `InteractiveSettings` fields (including inherited `GuiSettings` fields)~~ ✅ |
 | 6 | ~~Register the singleton as the live `GuiSettings` source in `SettingsMerger`; update `GuiSettings` JavaDoc~~ ✅ |
 | 7 | ~~Guard headless / API code paths against `interactiveSettings` usage~~ ✅ |
-| 8 | Integration tests: GUI load path initialises settings; headless path never requires them |
+| 8 | ~~Integration tests: GUI load path initialises settings; headless path never requires them~~ ✅ |
 
 ---
 
@@ -711,27 +711,36 @@ Some autorouting or API code paths may transitively reach `interactiveSettings` 
 
 ---
 
-## Sub-Issue 08 – Integration tests: GUI load path and headless path {#sub-08}
+## Sub-Issue 08 – Integration tests: GUI load path and headless path ✅ {#sub-08}
 
-**Files:** `src/test/java/app/freerouting/tests/`
+**Files:**
+- `src/test/java/app/freerouting/interactive/GuiStartupHeadlessTest.java`
+- `src/test/java/app/freerouting/tests/HeadlessCompleteRoutingTest.java`
 
 ### Problem
 
-There are no automated tests covering the GUI startup path (without a display) or verifying that the headless path is fully independent of `InteractiveSettings`.
+There were no automated tests covering the GUI startup path (without a display) or verifying that the headless path is fully independent of `InteractiveSettings`.
 
-### Proposed Fix
+### Implementation
 
-1. Add `GuiStartupHeadlessTest` (headless AWT via `-Djava.awt.headless=true`) running `GuiBoardManager.loadFromSpecctraDsn` and asserting:
-   - `InteractiveSettings.getOrCreate(board)` is non-null after load.
-   - `getInteractiveSettings().get_layer() == 0`.
-   - `initialize_manual_trace_half_widths()` produces values derived from board rules.
-   - `SettingsMerger.merge()` reflects the current `InteractiveSettings` state.
-2. Add `HeadlessCompleteRoutingTest` – routing job completes without touching `InteractiveSettings`; `getInteractiveSettings()` returns `null` throughout.
-3. Ensure both test classes are included in `./gradlew check`.
+1. Added `GuiStartupHeadlessTest` (package `app.freerouting.interactive`, headless AWT via `-Djava.awt.headless=true`) using `HeadlessBoardManager` for board loading and manually replicating the `GuiBoardManager.loadFromSpecctraDsn` singleton-reset steps. Tests assert:
+   - `InteractiveSettings.getOrCreate(board)` is non-null after `InteractiveSettings.reset(board)`.
+   - `get_layer()` returns `0` immediately after reset.
+   - `initialize_manual_trace_half_widths()` produces values equal to the board rule defaults.
+   - `SettingsMerger.merge()` reflects live mutations of the registered `InteractiveSettings` singleton.
+   - Calling `reset(board)` a second time replaces the singleton and returns a fresh instance.
+   - The merged `RouterSettings` is non-null even with only `DefaultSettings` + `InteractiveSettings` sources.
+
+2. Added `HeadlessCompleteRoutingTest` (package `app.freerouting.tests`, extends `TestBasedOnAnIssue`) – routing jobs complete without touching `InteractiveSettings`:
+   - Full routing pass on `Issue508-DAC2020_bm01.dsn` (3 passes, 50 items, 90 s timeout) reaches a terminal state.
+   - Empty-board routing (`empty_board.dsn`, 1 pass, 30 s timeout) completes without NPE.
+   - `HeadlessBoardManager.getInteractiveSettings()` returns `null` throughout headless routing.
+
+3. Both test classes are picked up by `./gradlew check` automatically (JUnit 5 discovery).
 
 ### JavaDoc updates
 
-- `GuiBoardManager` – cross-reference `GuiStartupHeadlessTest` in the class-level Javadoc usage example.
+- `GuiBoardManager` class-level Javadoc updated to cross-reference `GuiStartupHeadlessTest` as a usage example of the GUI load path.
 
 ---
 
