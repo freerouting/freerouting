@@ -55,7 +55,43 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /**
-   * Resets the singleton. <strong>For test use only.</strong>
+   * Discards the current singleton and creates a fresh one bound to {@code board}.
+   *
+   * <p>Must be called whenever a new design is loaded into the GUI session (DSN or binary load),
+   * because the new board may have a different layer count, net list, or design rules than the
+   * previous one. An {@code InteractiveSettings} constructed for the old board is invalid for the
+   * new one.
+   *
+   * <p>After this call all {@code PropertyChangeListener} panels must be re-registered on the new
+   * instance. {@link GuiBoardManager#refreshGuiFromSettings()} is the canonical place to do this.
+   *
+   * @param board the newly loaded {@link RoutingBoard}; must not be {@code null}
+   * @return the new singleton instance
+   */
+  public static InteractiveSettings reset(RoutingBoard board) {
+    synchronized (InteractiveSettings.class) {
+      instance = new InteractiveSettings(board);
+      return instance;
+    }
+  }
+
+  /**
+   * Replaces the singleton with an already-constructed instance.
+   *
+   * <p>Used after binary deserialisation where the {@link InteractiveSettings} object is read
+   * directly from the stream. The deserialized instance must become the authoritative singleton so
+   * that subsequent {@link #getOrCreate} calls return it.
+   *
+   * @param is the deserialized instance; must not be {@code null}
+   */
+  static void setInstance(InteractiveSettings is) {
+    synchronized (InteractiveSettings.class) {
+      instance = is;
+    }
+  }
+
+  /**
+   * Resets the singleton to {@code null}. <strong>For test use only.</strong>
    */
   static void resetForTesting() {
     instance = null;

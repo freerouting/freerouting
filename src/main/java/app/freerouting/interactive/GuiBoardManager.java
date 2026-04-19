@@ -1359,8 +1359,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     super.create_board(p_bounding_box, p_layer_structure, p_outline_shapes, p_outline_clearance_class_name, p_rules,
         p_board_communication);
 
-    // Initialise the GUI-session singleton for interactive settings.
-    this.interactiveSettings = InteractiveSettings.getOrCreate(this.board);
+    // Reset and rebind the GUI-session singleton for the newly created board.
+    this.interactiveSettings = InteractiveSettings.reset(this.board);
     this.initialize_manual_trace_half_widths();
 
     // create the interactive/GUI settings with default values
@@ -2089,6 +2089,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
     try {
       board = (RoutingBoard) p_design.readObject();
       interactiveSettings = (InteractiveSettings) p_design.readObject();
+      // Adopt the deserialized instance as the authoritative singleton so that subsequent
+      // getOrCreate / getInteractiveSettings calls return the same object.
+      InteractiveSettings.setInstance(interactiveSettings);
       coordinate_transform = (CoordinateTransform) p_design.readObject();
       graphics_context = (GraphicsContext) p_design.readObject();
       originalBoardChecksum = calculateCrc32();
@@ -2186,11 +2189,17 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Loads a board design from a Specctra DSN format file.
    *
-   * <p>Extends the base implementation by setting the initial layer to 0 after loading completes.
-   * Unlike {@link #create_board}, {@code super.loadFromSpecctraDsn} uses {@link
-   * app.freerouting.io.specctra.parser.DsnFile#readBoard} which bypasses {@code create_board} and
-   * therefore does not initialise {@code interactiveSettings}. This override ensures
-   * {@code interactiveSettings} is always non-null before {@link #set_layer} is called.
+   * <p>Extends the base implementation by resetting and rebinding the
+   * {@link InteractiveSettings} singleton to the newly loaded board, then setting the initial
+   * layer to 0. {@code super.loadFromSpecctraDsn} uses
+   * {@link app.freerouting.io.specctra.parser.DsnFile#readBoard} which bypasses
+   * {@code create_board} and therefore does not initialise {@code interactiveSettings}. This
+   * override guarantees {@code interactiveSettings} is always valid and bound to the current
+   * board before {@link #set_layer} is called.
+   *
+   * <p>Calling this method a second time (e.g. to open a new design in the same window)
+   * discards the previous {@link InteractiveSettings} instance and creates a fresh one
+   * via {@link InteractiveSettings#reset(RoutingBoard)}.
    *
    * @param inputStream the stream containing the DSN data
    * @param boardObservers observers to be notified of board changes
@@ -2203,8 +2212,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     var result = super.loadFromSpecctraDsn(inputStream, boardObservers, identificationNumberGenerator);
-    if (this.board != null && this.interactiveSettings == null) {
-      this.interactiveSettings = InteractiveSettings.getOrCreate(this.board);
+    if (this.board != null) {
+      // Always reset: a new DSN load may introduce a different layer count or design rules,
+      // making any previously-constructed InteractiveSettings invalid for this board.
+      this.interactiveSettings = InteractiveSettings.reset(this.board);
       this.initialize_manual_trace_half_widths();
     }
     if (result != DsnFile.ReadResult.ERROR) {
@@ -3018,7 +3029,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
     close_files();
     graphics_context = null;
     coordinate_transform = null;
+    // Clear the instance field and the static singleton so that a subsequent
+    // getOrCreate/reset call (e.g. when reopening the application) starts fresh.
     interactiveSettings = null;
+    InteractiveSettings.resetForTesting();
     interactive_state = null;
     ratsnest = null;
     clearance_violations = null;
