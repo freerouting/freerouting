@@ -77,7 +77,7 @@ Additionally, `interactiveSettings` is declared `public` on `HeadlessBoardManage
 | 4 | ~~Replace direct field access with accessor methods; update `InteractiveSettings` JavaDoc~~ ✅ |
 | 5 | ~~Two-way binding: all GUI panels ↔ `InteractiveSettings` fields (including inherited `GuiSettings` fields)~~ ✅ |
 | 6 | ~~Register the singleton as the live `GuiSettings` source in `SettingsMerger`; update `GuiSettings` JavaDoc~~ ✅ |
-| 7 | Guard headless / API code paths against `interactiveSettings` usage |
+| 7 | ~~Guard headless / API code paths against `interactiveSettings` usage~~ ✅ |
 | 8 | Integration tests: GUI load path initialises settings; headless path never requires them |
 
 ---
