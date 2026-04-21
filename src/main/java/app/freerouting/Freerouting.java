@@ -341,8 +341,7 @@ public class Freerouting
 
     routingJob.tryToSetOutputFile(new File(globalSettings.design_output_filename));
 
-    routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
-    routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layers.totalCount);
+  applyCliRouterSettings(routingJob, globalSettings);
     routingJob.state = RoutingJobState.READY_TO_START;
 
     // Wait for the RoutingJobScheduler to do its work
@@ -375,6 +374,15 @@ public class Freerouting
         FRLogger.error("Couldn't save the output file '" + globalSettings.design_output_filename + "'", e);
       }
     }
+  }
+
+  static void applyCliRouterSettings(RoutingJob routingJob, GlobalSettings globalSettings)
+  {
+    routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
+    routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layers.totalCount);
+    routingJob.routerSettings.set_stop_pass_no(
+        routingJob.routerSettings.get_start_pass_no() + globalSettings.routerSettings.maxPasses - 1
+    );
   }
 
   private static void ShutdownApplication()
