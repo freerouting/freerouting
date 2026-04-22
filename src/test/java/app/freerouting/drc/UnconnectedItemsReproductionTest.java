@@ -13,7 +13,8 @@ import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.settings.GlobalSettings;
 import java.util.Collection;
 
-import app.freerouting.tests.TestBasedOnAnIssue;
+import app.freerouting.tests.RoutingFixtureTest;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +26,7 @@ import org.junit.jupiter.api.Test;
  *      accurate report consistent with the reference JSON.
  * Reference: tests/Issue575-drc_Natural_Tone_Preamp_7_unconnected_items-freerouting_drc.json
  */
-public class UnconnectedItemsReproductionTest extends TestBasedOnAnIssue {
+public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
     private static final String TEST_BOARD = "Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn";
 

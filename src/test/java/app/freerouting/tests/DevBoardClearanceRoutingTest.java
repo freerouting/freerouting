@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class Issue558Test extends TestBasedOnAnIssue {
+public class DevBoardClearanceRoutingTest extends RoutingFixtureTest {
 
   @Test
   @Disabled("Temporary disabled: Freerouting leaves 2 items unconnected.")

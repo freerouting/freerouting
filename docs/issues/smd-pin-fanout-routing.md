@@ -12,7 +12,7 @@ The board is **theoretically 100 % routable** (confirmed by the v1.9 baseline an
 
 Without a fanout pass, the maze-search algorithm must solve both "escape from the SMD pad onto a via" and "reach the destination pin" in a single expansion. On dense boards this frequently fails: the occupied regions around SMD pads block all via-placement sites, and the router marks the connection as unroutable even though a short stub-trace + via solution exists.
 
-**Affected file:** `tests/Issue508-DAC2020_bm05.dsn`  
+**Affected file:** `fixtures/Issue508-DAC2020_bm05.dsn`  
 **Regression:** This board should complete with 0 unrouted connections. Currently it does not.  
 **Priority:** High — DAC 2020 bm05 is one of the standard benchmark boards; failure here undermines benchmark credibility.
 
@@ -28,7 +28,7 @@ Without a fanout pass, the maze-search algorithm must solve both "escape from th
 | Fanout pre-pass | ✅ `BatchFanout` | ❌ missing |
 | Routing result | 0 unrouted | **TBD — needs measurement** |
 
-> **Next step:** Add a test `Issue508Test_BM05` (see Sub-issue #4 below) to capture the current incomplete count so we have a concrete baseline to improve against.
+> **Next step:** Add a test `Dac2020Bm05RoutingTest` (see Sub-issue #4 below) to capture the current incomplete count so we have a concrete baseline to improve against.
 
 ### Board Characteristics (bm05)
 
@@ -394,9 +394,9 @@ This pass runs only once (after pass N) and targets the specific failure mode of
 
 ## Test Board Selection
 
-### Survey of DSN files in `tests/`
+### Survey of DSN files in `fixtures/`
 
-All 78 DSN files in the `tests/` directory were scanned for `(attach off)` usage and layer/component count.  Boards with `(attach off)` on at least one padstack are affected by this issue to some degree.  The following three were selected as the best **fast and targeted** test cases:
+All 78 DSN files in the `fixtures/` directory were scanned for `(attach off)` usage and layer/component count.  Boards with `(attach off)` on at least one padstack are affected by this issue to some degree.  The following three were selected as the best **fast and targeted** test cases:
 
 | Board | Layers | Components | Nets | `(attach off)` count | Reason selected |
 |---|---|---|---|---|---|
@@ -404,9 +404,9 @@ All 78 DSN files in the `tests/` directory were scanned for `(attach off)` usage
 | `Issue508-DAC2020_bm06.dsn` | 2 (Top / Bottom) | 34 all-SMD | 38 | 24 | Direct structural twin of bm05 (same benchmark suite, same padstack naming); fewer nets → faster |
 | `Issue508-DAC2020_bm10.dsn` | 4 (Top / Route2 / Route15 / Bottom) | 61 SMD | 63 | 26 | Only 4-layer candidate in the shortlist; also exercises the outer-layer cost penalty (Solution 11) |
 
-The primary test board (`Issue508-DAC2020_bm05.dsn`) is excluded from the table above because it has its own dedicated test class `Issue508BM05Test`.
+The primary test board (`Issue508-DAC2020_bm05.dsn`) is excluded from the table above because it has its own dedicated test class `Dac2020Bm05RoutingTest`.
 
-### Synthetic minimal reproduction: `tests/SMD-routing-issue-demo.dsn`
+### Synthetic minimal reproduction: `fixtures/SMD-routing-issue-demo.dsn`
 
 A hand-crafted minimal board was created specifically to isolate and demonstrate the bug:
 
@@ -458,7 +458,7 @@ return !this.drill_allowed() || !(p_other instanceof Via);
 The removed clause `|| !via.attach_allowed` was blocking same-net vias from being placed at SMD pad locations. This is incorrect: `attach_allowed = false` (from Specctra `(attach off)`) is a cross-net DRC constraint, not a same-net routing constraint.
 
 **Acceptance criteria:**
-- `Issue508Test_BM05` passes with 0 unrouted (or measurably improved).
+- `Dac2020Bm05RoutingTest` passes with 0 unrouted (or measurably improved).
 - `./gradlew test` shows no regressions on bm01, bm07, bm08.
 - No new clearance violations on any test board.
 
@@ -488,7 +488,7 @@ Create `src/main/java/app/freerouting/autoroute/BatchFanout.java` with:
 **Acceptance criteria:**
 - `BatchFanout` compiles cleanly.
 - All existing tests pass after integration.
-- `Issue508Test_BM05` passes (see Sub-issue #4).
+- `Dac2020Bm05RoutingTest` passes (see Sub-issue #4).
 
 ---
 
@@ -509,9 +509,9 @@ Create `src/main/java/app/freerouting/autoroute/BatchFanout.java` with:
 
 **Status:** 🔲 Open
 
-#### `Issue508BM05Test.java` — primary bm05 acceptance gate
+#### `Dac2020Bm05RoutingTest.java` — primary bm05 acceptance gate
 
-Create `src/test/java/app/freerouting/tests/Issue508BM05Test.java` with four escalating tests:
+Create `src/test/java/app/freerouting/tests/Dac2020Bm05RoutingTest.java` with four escalating tests:
 
 ```java
 // Ultra-fast smoke (15 s) — at least 1 of 2 SMD items routed after fix
@@ -531,9 +531,9 @@ Create `src/test/java/app/freerouting/tests/Issue508BM05Test.java` with four esc
 
 ---
 
-#### `SmdPinRoutingIssueTest.java` — cross-board regression suite
+#### `SmdPinFanoutRoutingTest.java` — cross-board regression suite
 
-Create `src/test/java/app/freerouting/tests/SmdPinRoutingIssueTest.java`.  Covers four boards and one synthetic DSN:
+Create `src/test/java/app/freerouting/tests/SmdPinFanoutRoutingTest.java`.  Covers four boards and one synthetic DSN:
 
 | Test method | Board | Current result | After fix |
 |---|---|---|---|
@@ -547,7 +547,7 @@ Create `src/test/java/app/freerouting/tests/SmdPinRoutingIssueTest.java`.  Cover
 | `test_BM10_first_10_items` | `Issue508-DAC2020_bm10.dsn` | ❌ Fails | ✅ ≤ 58 incomplete |
 | `test_BM10_full_routing` | `Issue508-DAC2020_bm10.dsn` | ❌ Fails | ✅ 0 incomplete |
 
-**Acceptance criteria:** All `SmdPinRoutingIssueTest` tests pass; `test_SmdDemo_board_loads_and_routes` passes both before and after the fix (it is the non-failing baseline documenter).
+**Acceptance criteria:** All `SmdPinFanoutRoutingTest` tests pass; `test_SmdDemo_board_loads_and_routes` passes both before and after the fix (it is the non-failing baseline documenter).
 
 ---
 
@@ -579,7 +579,7 @@ if (Boolean.TRUE.equals(this.settings.withFanout)
 
 **Acceptance criteria:**
 - No regression on any existing test (bm01 through bm08, Issue*.java).
-- `Issue508Test_BM05.test_Issue_508_BM05_full_routing` passes.
+- `Dac2020Bm05RoutingTest.test_Issue_508_BM05_full_routing` passes.
 - `./gradlew check` green.
 
 ---
@@ -606,14 +606,14 @@ Exit criteria:
 
 ```
 Sub-issue #0 (fix Pin.is_obstacle — quickest possible fix, validate alone)
-  → Sub-issue #4 (tests already created — SmdPinRoutingIssueTest and Issue508BM05Test
+  → Sub-issue #4 (tests already created — SmdPinFanoutRoutingTest and Dac2020Bm05RoutingTest
                   now serve as the live regression gate; test_SmdDemo_board_loads_and_routes
                   already PASSES and proves the bug)
   → [If #0 insufficient] Sub-issue #1 (add get_smd_pins)
   → Sub-issue #2 (implement BatchFanout)
   → Sub-issue #3 (withFanout setting)
   → Sub-issue #5 (integrate into BatchAutorouter)
-  → All SmdPinRoutingIssueTest and Issue508BM05Test tests must pass
+  → All SmdPinFanoutRoutingTest and Dac2020Bm05RoutingTest tests must pass
   → Sub-issue #6 (compare-versions validation)
 ```
 
@@ -630,9 +630,9 @@ Sub-issue #0 (fix Pin.is_obstacle — quickest possible fix, validate alone)
 | `src/main/java/app/freerouting/settings/RouterSettings.java` | Modify | 🔲 Open | Sub-issue #3: Add `public Boolean withFanout;` |
 | `src/main/java/app/freerouting/settings/sources/DefaultSettings.java` | Modify | 🔲 Open | Sub-issue #3: Set `withFanout = true` |
 | `docs/settings.md` | Modify | 🔲 Open | Document `withFanout` setting |
-| `tests/SMD-routing-issue-demo.dsn` | **New** | ✅ Created | Minimal synthetic 2-layer all-SMD board (6-pin QFN + 0603s, 6 nets); proves bug with score `0.00` |
-| `src/test/java/app/freerouting/tests/Issue508BM05Test.java` | **New** | ✅ Created | Primary bm05 acceptance gate (4 escalating tests) |
-| `src/test/java/app/freerouting/tests/SmdPinRoutingIssueTest.java` | **New** | ✅ Created | Cross-board regression suite (4 boards × 2 tests each + 3 synthetic DSN tests) |
+| `fixtures/SMD-routing-issue-demo.dsn` | **New** | ✅ Created | Minimal synthetic 2-layer all-SMD board (6-pin QFN + 0603s, 6 nets); proves bug with score `0.00` |
+| `src/test/java/app/freerouting/tests/Dac2020Bm05RoutingTest.java` | **New** | ✅ Created | Primary bm05 acceptance gate (4 escalating tests) |
+| `src/test/java/app/freerouting/tests/SmdPinFanoutRoutingTest.java` | **New** | ✅ Created | Cross-board regression suite (4 boards × 2 tests each + 3 synthetic DSN tests) |
 
 ---
 
@@ -661,8 +661,8 @@ Key difference from v1.9 API: v1.9's `BatchFanout` depends on `InteractiveAction
 ## Acceptance Criteria (overall)
 
 1. ✅ `./gradlew test` passes with no regressions on existing tests.
-2. ✅ `Issue508BM05Test.test_Issue_508_BM05_full_routing` passes: 0 unrouted connections.
-3. ✅ All `SmdPinRoutingIssueTest` tests pass (9 tests across 4 boards + synthetic DSN).
+2. ✅ `Dac2020Bm05RoutingTest.test_Issue_508_BM05_full_routing` passes: 0 unrouted connections.
+3. ✅ All `SmdPinFanoutRoutingTest` tests pass (9 tests across 4 boards + synthetic DSN).
 4. ✅ `compare-versions.ps1` shows current ≥ v1.9 routing completion on bm05.
 5. ✅ No new clearance violations on any existing benchmark board.
 6. ✅ `withFanout = false` disables the pre-pass; existing boards (bm07, bm08, bm01) are unaffected.

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class TestBasedOnAnIssue {
+public class RoutingFixtureTest {
 
   protected RoutingJobScheduler scheduler;
 
@@ -58,7 +58,7 @@ public class TestBasedOnAnIssue {
         .of(".")
         .toAbsolutePath();
     File testFile = Path
-        .of(testDirectory.toString(), "tests", filename)
+        .of(testDirectory.toString(), "fixtures", filename)
         .toFile();
     while (!testFile.exists()) {
       testDirectory = testDirectory.getParent();
@@ -67,7 +67,7 @@ public class TestBasedOnAnIssue {
       }
 
       testFile = Path
-          .of(testDirectory.toString(), "tests", filename)
+          .of(testDirectory.toString(), "fixtures", filename)
           .toFile();
       if (testFile == null) {
         break;
@@ -142,3 +142,4 @@ public class TestBasedOnAnIssue {
     return new BoardStatistics(job.board);
   }
 }
+

@@ -8,7 +8,7 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Test;
 
-public class Issue508Test_BM01_first_2_nets extends TestBasedOnAnIssue {
+public class Dac2020Bm01RoutingTest extends RoutingFixtureTest {
 
   private RoutingJob job;
 

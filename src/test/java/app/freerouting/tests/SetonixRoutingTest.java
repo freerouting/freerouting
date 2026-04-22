@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
  * Attached files: DSN file (Issue159-setonix_2hp-pcb.dsn).
  * Command line arguments: none.
  */
-public class Issue159Test extends TestBasedOnAnIssue {
+public class SetonixRoutingTest extends RoutingFixtureTest {
 
   @Test
   void test_Issue_159_Out_of_memory_error() {

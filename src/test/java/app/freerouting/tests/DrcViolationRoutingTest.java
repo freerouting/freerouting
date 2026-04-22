@@ -9,7 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class Issue575Test extends TestBasedOnAnIssue {
+public class DrcViolationRoutingTest extends RoutingFixtureTest {
 
   private RoutingJob job;
 

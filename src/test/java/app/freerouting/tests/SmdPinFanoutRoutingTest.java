@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
  *       61 SMD components, 63 nets (also exercises outer-layer cost penalty).</li>
  * </ol>
  */
-public class SmdPinRoutingIssueTest extends TestBasedOnAnIssue {
+public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
 
   private RoutingJob job;
 

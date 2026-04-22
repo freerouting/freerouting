@@ -8,7 +8,7 @@ import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-public class Issue522Test extends TestBasedOnAnIssue {
+public class MaxPassesSettingRoutingTest extends RoutingFixtureTest {
 
   private RoutingJob job;
 

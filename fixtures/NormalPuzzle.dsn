@@ -1,0 +1,1107 @@
+(PCB "PCB1"
+  (parser
+    (host_cad "EasyEDA Pro")
+    (host_version "3.2.69")
+  )
+  (resolution mil 1000)
+  (structure
+    (boundary(path signal 0 0 0 0 3937.01 3937.01 3937.01 3937.01 0 0 0 )
+    )
+    (via via0
+    )
+    (grid via   0.25)
+    (grid wire   0.25)
+    (grid place   0.25)
+    (rule(clear 6.03))
+    (rule(clear 6.03 (type default_smd)))
+    (rule(clear 6.03 (type smd_smd)))
+    (rule(width 10.05))
+    (layer TopLayer
+      (type signal)
+    )
+    (layer BottomLayer
+      (type signal)
+    )
+  )
+
+  (placement
+    (component u1
+      (place u1 0 0 front 0
+      )
+    )
+  )
+  (library
+    (image u1
+      (pin p0d4925c776822d267 0d4925c776822d267 572.19 3586.15)
+      (pin p0d4925c776822d267 0d4925c776822d268 512.87 3586.15)
+      (pin p0d4925c776822d267 a2f62c362f73115e7 2989.66 1402.01)
+      (pin p0d4925c776822d267 a2f62c362f73115e8 2930.34 1402.01)
+      (pin p0d4925c776822d267 99688b45f50d4a2e7 3339.66 3262.01)
+      (pin p0d4925c776822d267 99688b45f50d4a2e8 3280.34 3262.01)
+      (pin p0d4925c776822d267 b43ae1e37984acee7 1146.94 1728.45)
+      (pin p0d4925c776822d267 b43ae1e37984acee8 1087.62 1728.45)
+      (pin p0d4925c776822d267 7685398fe6142c4e7 811.94 1201.44)
+      (pin p0d4925c776822d267 7685398fe6142c4e8 752.62 1201.44)
+      (pin p0d4925c776822d267 2a0a26492f39ebee7 1550.93 1201.44)
+      (pin p0d4925c776822d267 2a0a26492f39ebee8 1491.61 1201.44)
+      (pin p0d4925c776822d267 d74d8d74ab6f39417 1650.93 890.64)
+      (pin p0d4925c776822d267 d74d8d74ab6f39418 1591.61 890.64)
+      (pin p0d4925c776822d267 bcdb76f5bd25c3df7 1416.18 1046.04)
+      (pin p0d4925c776822d267 bcdb76f5bd25c3df8 1356.86 1046.04)
+      (pin p0d4925c776822d267 aff352371fe69ebe7 2070.42 1279.14)
+      (pin p0d4925c776822d267 aff352371fe69ebe8 2011.1 1279.14)
+      (pin p0d4925c776822d267 ee2247fc869cd36e7 2339.91 1279.14)
+      (pin p0d4925c776822d267 ee2247fc869cd36e8 2280.59 1279.14)
+      (pin p0d4925c776822d267 6ad8870226d9b17c7 2439.91 968.34)
+      (pin p0d4925c776822d267 6ad8870226d9b17c8 2380.59 968.34)
+      (pin p0d4925c776822d267 d12c38445ad5b82f7 2205.17 1123.74)
+      (pin p0d4925c776822d267 d12c38445ad5b82f8 2145.85 1123.74)
+      (pin p0d4925c776822d267 3bbaeb723cdcb1be7 2809.41 1201.44)
+      (pin p0d4925c776822d267 3bbaeb723cdcb1be8 2750.09 1201.44)
+      (pin p0d4925c776822d267 b7f03dfcca029f677 3328.9 1201.44)
+      (pin p0d4925c776822d267 b7f03dfcca029f678 3269.58 1201.44)
+      (pin p0d4925c776822d267 58277d1c906689fe7 3428.9 890.64)
+      (pin p0d4925c776822d267 58277d1c906689fe8 3369.58 890.64)
+      (pin p0d4925c776822d267 1764f1c73d1462f27 3194.16 1046.04)
+      (pin p0d4925c776822d267 1764f1c73d1462f28 3134.84 1046.04)
+      (pin p0d4925c776822d267 58bfbda31c7957af7 3059.41 812.94)
+      (pin p0d4925c776822d267 58bfbda31c7957af8 3000.09 812.94)
+      (pin p0d4925c776822d267 f2bb51822c9afd697 3563.65 812.94)
+      (pin p0d4925c776822d267 f2bb51822c9afd698 3504.33 812.94)
+      (pin p0d4925c776822d267 f2f3da6e8fd573be7 3663.65 657.53)
+      (pin p0d4925c776822d267 f2f3da6e8fd573be8 3604.33 657.53)
+      (pin p0d4925c776822d267 fafc3958b49ce2ce7 3428.9 735.23)
+      (pin p0d4925c776822d267 fafc3958b49ce2ce8 3369.58 735.23)
+      (pin p0d4925c776822d267 aa3cba4507547a157 946.69 812.94)
+      (pin p0d4925c776822d267 aa3cba4507547a158 887.37 812.94)
+      (pin p0d4925c776822d267 093bf7631c1a77087 1835.67 812.94)
+      (pin p0d4925c776822d267 093bf7631c1a77088 1776.35 812.94)
+      (pin p0d4925c776822d267 6d0adf1a434d733e7 1935.67 657.53)
+      (pin p0d4925c776822d267 6d0adf1a434d733e8 1876.35 657.53)
+      (pin p0d4925c776822d267 270222a82f86713d7 1700.93 735.23)
+      (pin p0d4925c776822d267 270222a82f86713d8 1641.61 735.23)
+      (pin p0d4925c776822d267 5485be7fa2ef1d4e7 2574.66 579.83)
+      (pin p0d4925c776822d267 5485be7fa2ef1d4e8 2515.34 579.83)
+      (pin p0d4925c776822d267 266f9ac87c5f18dd7 2859.41 579.83)
+      (pin p0d4925c776822d267 266f9ac87c5f18dd8 2800.09 579.83)
+      (pin p0d4925c776822d267 56a99a01ac693c307 2959.41 296.73)
+      (pin p0d4925c776822d267 56a99a01ac693c308 2900.09 296.73)
+      (pin p0d4925c776822d267 1b1b08d64be0326e7 2709.41 424.43)
+      (pin p0d4925c776822d267 1b1b08d64be0326e8 2650.09 424.43)
+      (pin p0d4925c776822d267 170dddd7afa4d31e7 677.19 502.13)
+      (pin p0d4925c776822d267 170dddd7afa4d31e8 617.87 502.13)
+      (pin p0d4925c776822d267 8b487772d90a584e7 1216.18 502.13)
+      (pin p0d4925c776822d267 8b487772d90a584e8 1156.86 502.13)
+      (pin p0d4925c776822d267 6da1551009cf481e7 1316.18 219.03)
+      (pin p0d4925c776822d267 6da1551009cf481e8 1256.86 219.03)
+      (pin p0d4925c776822d267 2871ca38694492547 1081.43 346.73)
+      (pin p0d4925c776822d267 2871ca38694492548 1022.11 346.73)
+      (pin p0d4925c776822d267 4779b82ed38e626e7 1447.13 1857.42)
+      (pin p0d4925c776822d267 4779b82ed38e626e8 1387.81 1857.42)
+      (pin p0d4925c776822d267 b08dc02c43efd9ce7 2251.37 1857.42)
+      (pin p0d4925c776822d267 b08dc02c43efd9ce8 2192.05 1857.42)
+      (pin p0d4925c776822d267 0a46b90bb64783ee7 2351.37 1496.62)
+      (pin p0d4925c776822d267 0a46b90bb64783ee8 2292.05 1496.62)
+      (pin p0d4925c776822d267 a75a8fa2453ddfce7 2101.37 1702.02)
+      (pin p0d4925c776822d267 a75a8fa2453ddfce8 2042.05 1702.02)
+      (pin p0d4925c776822d267 d32a4468bacdae1e7 2920.87 1935.12)
+      (pin p0d4925c776822d267 d32a4468bacdae1e8 2861.55 1935.12)
+      (pin p0d4925c776822d267 097503b7a9667cc87 3490.36 1935.12)
+      (pin p0d4925c776822d267 097503b7a9667cc88 3431.04 1935.12)
+      (pin p0d4925c776822d267 c82ec0e0a5e738ae7 3590.36 1574.32)
+      (pin p0d4925c776822d267 c82ec0e0a5e738ae8 3531.04 1574.32)
+      (pin p0d4925c776822d267 806fcf21bbd47c3e7 3340.36 1779.72)
+      (pin p0d4925c776822d267 806fcf21bbd47c3e8 3281.04 1779.72)
+      (pin p0d4925c776822d267 62700c3246f3b44e7 1581.88 2168.22)
+      (pin p0d4925c776822d267 62700c3246f3b44e8 1522.56 2168.22)
+      (pin p0d4925c776822d267 545090c2e7e729be7 2451.37 2168.22)
+      (pin p0d4925c776822d267 545090c2e7e729be8 2392.05 2168.22)
+      (pin p0d4925c776822d267 91c685c484d0a6b97 2551.37 2012.82)
+      (pin p0d4925c776822d267 91c685c484d0a6b98 2492.05 2012.82)
+      (pin p0d4925c776822d267 912712a7492ba41e7 2301.37 2090.52)
+      (pin p0d4925c776822d267 912712a7492ba41e8 2242.05 2090.52)
+      (pin p0d4925c776822d267 68f14fd5eeb73c8e7 2820.87 2479.03)
+      (pin p0d4925c776822d267 68f14fd5eeb73c8e8 2761.55 2479.03)
+      (pin p0d4925c776822d267 8885b0501fda63297 3390.36 2479.03)
+      (pin p0d4925c776822d267 8885b0501fda63298 3331.04 2479.03)
+      (pin p0d4925c776822d267 55aa29f1a90a9ffe7 3490.36 2245.93)
+      (pin p0d4925c776822d267 55aa29f1a90a9ffe8 3431.04 2245.93)
+      (pin p0d4925c776822d267 993b693e281e191e7 3240.36 2323.63)
+      (pin p0d4925c776822d267 993b693e281e191e8 3181.04 2323.63)
+      (pin p0d4925c776822d267 54d4b7197c2fd91e7 1312.38 2634.43)
+      (pin p0d4925c776822d267 54d4b7197c2fd91e8 1253.06 2634.43)
+      (pin p0d4925c776822d267 40f72bd381a347ee7 2051.37 2634.43)
+      (pin p0d4925c776822d267 40f72bd381a347ee8 1992.05 2634.43)
+      (pin p0d4925c776822d267 fb7d79d5809200be7 2151.37 2401.33)
+      (pin p0d4925c776822d267 fb7d79d5809200be8 2092.05 2401.33)
+      (pin p0d4925c776822d267 ab2ba0d149d8953e7 1901.37 2556.73)
+      (pin p0d4925c776822d267 ab2ba0d149d8953e8 1842.05 2556.73)
+      (pin p0d4925c776822d267 1233960bbc41805e7 2686.12 3122.94)
+      (pin p0d4925c776822d267 1233960bbc41805e8 2626.8 3122.94)
+      (pin p0d4925c776822d267 6afb52d26f15013e7 3190.36 3122.94)
+      (pin p0d4925c776822d267 6afb52d26f15013e8 3131.04 3122.94)
+      (pin p0d4925c776822d267 ba8d91f5f8f1767e7 3290.36 2712.13)
+      (pin p0d4925c776822d267 ba8d91f5f8f1767e8 3231.04 2712.13)
+      (pin p0d4925c776822d267 5c5f115950801d5c7 3055.61 2867.53)
+      (pin p0d4925c776822d267 5c5f115950801d5c8 2996.29 2867.53)
+      (pin p0d4925c776822d267 0a034a12a9e5724e7 1177.64 3456.04)
+      (pin p0d4925c776822d267 0a034a12a9e5724e8 1118.32 3456.04)
+      (pin p0d4925c776822d267 b76f39524d02fbfc7 1851.37 3456.04)
+      (pin p0d4925c776822d267 b76f39524d02fbfc8 1792.05 3456.04)
+      (pin p0d4925c776822d267 d2f4cd90c06f012e7 1951.37 2995.23)
+      (pin p0d4925c776822d267 d2f4cd90c06f012e8 1892.05 2995.23)
+      (pin p0d4925c776822d267 5862c519e3781b2e7 1716.63 3200.64)
+      (pin p0d4925c776822d267 5862c519e3781b2e8 1657.31 3200.64)
+      (pin p0d4925c776822d267 f95ba4957661555e7 528.4 2442.94)
+      (pin p0d4925c776822d267 f95ba4957661555e8 469.08 2442.94)
+      (pin p0d4925c776822d267 f789ef73bb55a26e7 997.89 2442.94)
+      (pin p0d4925c776822d267 f789ef73bb55a26e8 938.57 2442.94)
+      (pin p0d4925c776822d267 3cb33f78c82b65667 1097.89 2032.13)
+      (pin p0d4925c776822d267 3cb33f78c82b65668 1038.57 2032.13)
+      (pin p0d4925c776822d267 bff8e5bc9f72bbbe7 847.89 2187.53)
+      (pin p0d4925c776822d267 bff8e5bc9f72bbbe8 788.57 2187.53)
+      (pin p0d4925c776822d267 0805d6c05d97a42e7 1719.91 158.34)
+      (pin p0d4925c776822d267 0805d6c05d97a42e8 1660.59 158.34)
+      (pin p0d4925c776822d267 0ccaa92966c40dca7 2558.9 158.34)
+      (pin p0d4925c776822d267 0ccaa92966c40dca8 2499.58 158.34)
+      (pin p0d4925c776822d267 a5c074c299344f9b7 3548.9 187.53)
+      (pin p0d4925c776822d267 a5c074c299344f9b8 3489.58 187.53)
+      (pin p0d4925c776822d267 9b9a5fd6650cb0fe7 3314.16 342.94)
+      (pin p0d4925c776822d267 9b9a5fd6650cb0fe8 3254.84 342.94)
+      (pin p0d4925c776822d267 2d75aa699cca62b67 376.18 1720.64)
+      (pin p0d4925c776822d267 2d75aa699cca62b68 316.86 1720.64)
+      (pin p0d4925c776822d267 5b06b8071d8bcc537 980.42 1720.64)
+      (pin p0d4925c776822d267 5b06b8071d8bcc538 921.1 1720.64)
+      (pin p0d4925c776822d267 235ca0660e1101ae7 1080.42 1209.83)
+      (pin p0d4925c776822d267 235ca0660e1101ae8 1021.1 1209.83)
+      (pin p0d4925c776822d267 94c22536427f5d1e7 845.67 1415.23)
+      (pin p0d4925c776822d267 94c22536427f5d1e8 786.35 1415.23)
+      (pin p0d4925c776822d267 83bc89c6652da0de7 393.65 3109.14)
+      (pin p0d4925c776822d267 83bc89c6652da0de8 334.33 3109.14)
+      (pin p0d4925c776822d267 f65d209b51177b177 797.89 3109.14)
+      (pin p0d4925c776822d267 f65d209b51177b178 738.57 3109.14)
+      (pin p0d4925c776822d267 98f6613516248dbe7 897.89 2826.04)
+      (pin p0d4925c776822d267 98f6613516248dbe8 838.57 2826.04)
+      (pin p0d4925c776822d267 d15b2c5a409b69567 663.14 2903.74)
+      (pin p0d4925c776822d267 d15b2c5a409b69568 603.82 2903.74)
+      (pin p0d4925c776822d267 3dc6569621ba3afa7 2820.87 3789.14)
+      (pin p0d4925c776822d267 3dc6569621ba3afa8 2761.55 3789.14)
+      (pin p0d4925c776822d267 143a7dc6a52064397 3390.36 3789.14)
+      (pin p0d4925c776822d267 143a7dc6a52064398 3331.04 3789.14)
+      (pin p0d4925c776822d267 6f5690c4d0f4dc477 3490.36 3506.04)
+      (pin p0d4925c776822d267 6f5690c4d0f4dc478 3431.04 3506.04)
+      (pin p0d4925c776822d267 7b0479b284f645bf7 3240.36 3583.74)
+      (pin p0d4925c776822d267 7b0479b284f645bf8 3181.04 3583.74)
+      (pin p0d4925c776822d267 c9b0ca8dbd5586ae7 207.19 445.64)
+      (pin p0d4925c776822d267 c9b0ca8dbd5586ae8 147.87 445.64)
+      (pin p0d4925c776822d267 aa9454f9554cd7ae7 207.19 934.14)
+      (pin p0d4925c776822d267 aa9454f9554cd7ae8 147.87 934.14)
+      (pin p0d4925c776822d267 c77c34de88abb34e7 611.43 1034.14)
+      (pin p0d4925c776822d267 c77c34de88abb34e8 552.11 1034.14)
+      (pin p0d4925c776822d267 04cc904fab1a15df7 476.69 856.44)
+      (pin p0d4925c776822d267 04cc904fab1a15df8 417.37 856.44)
+      (pin p0d4925c776822d267 d8c4dfdb50975dae7 2200.42 3487.02)
+      (pin p0d4925c776822d267 d8c4dfdb50975dae8 2141.1 3487.02)
+      (pin p0d4925c776822d267 30107beb6d36e71e7 2789.41 3487.02)
+      (pin p0d4925c776822d267 30107beb6d36e71e8 2730.09 3487.02)
+      (pin p0d4925c776822d267 8895730d88c5343e7 2889.41 3176.21)
+      (pin p0d4925c776822d267 8895730d88c5343e8 2830.09 3176.21)
+      (pin p0d4925c776822d267 377b2d911702632b7 2654.66 3253.92)
+      (pin p0d4925c776822d267 377b2d911702632b8 2595.34 3253.92)
+      (pin p0d4925c776822d267 89bada162270477e7 1811.94 2843.51)
+      (pin p0d4925c776822d267 89bada162270477e8 1752.62 2843.51)
+      (pin p0d4925c776822d267 c8771b3cfc5daffe7 2450.93 2843.51)
+      (pin p0d4925c776822d267 c8771b3cfc5daffe8 2391.61 2843.51)
+      (pin p0d4925c776822d267 6a7651b5170f700a7 2550.93 2532.71)
+      (pin p0d4925c776822d267 6a7651b5170f700a8 2491.61 2532.71)
+      (pin p0d4925c776822d267 674f39c244c21f687 2316.18 2688.11)
+      (pin p0d4925c776822d267 674f39c244c21f688 2256.86 2688.11)
+      (pin p0d4925c776822d267 b8137fdd0f6157167 2385.17 3020.81)
+      (pin p0d4925c776822d267 b8137fdd0f6157168 2325.85 3020.81)
+      (pin p0d4925c776822d267 26be7a05d22af80e7 2989.41 3020.81)
+      (pin p0d4925c776822d267 26be7a05d22af80e8 2930.09 3020.81)
+      (pin p0d4925c776822d267 04535647f28414a17 3089.41 2710.01)
+      (pin p0d4925c776822d267 04535647f28414a18 3030.09 2710.01)
+      (pin p0d4925c776822d267 faa23f430dc872137 2839.41 2865.41)
+      (pin p0d4925c776822d267 faa23f430dc872138 2780.09 2865.41)
+    )
+
+    (padstack via0
+      (shape(circle TopLayer 24))
+      (shape(circle BottomLayer 24))
+    )
+
+    (padstack p0d4925c776822d267
+      (shape(polygon TopLayer 0.1 -15.88 -17.01 -15.88 17.01 -15.88 17.01 15.88 17.01 15.88 17.01 15.88 -17.01 15.88 -17.01 -15.88 -17.01))
+    )
+  )
+  (network
+    (net $1N1
+      (pins u1-0d4925c776822d267 u1-99688b45f50d4a2e8 u1-b43ae1e37984acee8)
+    )
+    (net $1N3
+      (pins u1-0d4925c776822d268 u1-a2f62c362f73115e8)
+    )
+    (net $1N2
+      (pins u1-a2f62c362f73115e7 u1-99688b45f50d4a2e7 u1-b43ae1e37984acee7)
+    )
+    (net $1N6
+      (pins u1-7685398fe6142c4e7 u1-d74d8d74ab6f39418 u1-bcdb76f5bd25c3df8)
+    )
+    (net $1N4
+      (pins u1-7685398fe6142c4e8 u1-2a0a26492f39ebee8)
+    )
+    (net $1N5
+      (pins u1-2a0a26492f39ebee7 u1-d74d8d74ab6f39417 u1-bcdb76f5bd25c3df7)
+    )
+    (net $1N9
+      (pins u1-aff352371fe69ebe7 u1-6ad8870226d9b17c8 u1-d12c38445ad5b82f8)
+    )
+    (net $1N7
+      (pins u1-aff352371fe69ebe8 u1-ee2247fc869cd36e8)
+    )
+    (net $1N8
+      (pins u1-ee2247fc869cd36e7 u1-6ad8870226d9b17c7 u1-d12c38445ad5b82f7)
+    )
+    (net $1N12
+      (pins u1-3bbaeb723cdcb1be7 u1-58277d1c906689fe8 u1-1764f1c73d1462f28)
+    )
+    (net $1N10
+      (pins u1-3bbaeb723cdcb1be8 u1-b7f03dfcca029f678)
+    )
+    (net $1N11
+      (pins u1-b7f03dfcca029f677 u1-58277d1c906689fe7 u1-1764f1c73d1462f27)
+    )
+    (net $1N15
+      (pins u1-58bfbda31c7957af7 u1-f2f3da6e8fd573be8 u1-fafc3958b49ce2ce8)
+    )
+    (net $1N13
+      (pins u1-58bfbda31c7957af8 u1-f2bb51822c9afd698)
+    )
+    (net $1N14
+      (pins u1-f2bb51822c9afd697 u1-f2f3da6e8fd573be7 u1-fafc3958b49ce2ce7)
+    )
+    (net $1N18
+      (pins u1-aa3cba4507547a157 u1-6d0adf1a434d733e8 u1-270222a82f86713d8)
+    )
+    (net $1N16
+      (pins u1-aa3cba4507547a158 u1-093bf7631c1a77088)
+    )
+    (net $1N17
+      (pins u1-093bf7631c1a77087 u1-6d0adf1a434d733e7 u1-270222a82f86713d7)
+    )
+    (net $1N21
+      (pins u1-5485be7fa2ef1d4e7 u1-56a99a01ac693c308 u1-1b1b08d64be0326e8)
+    )
+    (net $1N19
+      (pins u1-5485be7fa2ef1d4e8 u1-266f9ac87c5f18dd8)
+    )
+    (net $1N20
+      (pins u1-266f9ac87c5f18dd7 u1-56a99a01ac693c307 u1-1b1b08d64be0326e7)
+    )
+    (net $1N24
+      (pins u1-170dddd7afa4d31e7 u1-6da1551009cf481e8 u1-2871ca38694492548)
+    )
+    (net $1N22
+      (pins u1-170dddd7afa4d31e8 u1-8b487772d90a584e8)
+    )
+    (net $1N23
+      (pins u1-8b487772d90a584e7 u1-6da1551009cf481e7 u1-2871ca38694492547)
+    )
+    (net $1N27
+      (pins u1-4779b82ed38e626e7 u1-0a46b90bb64783ee8 u1-a75a8fa2453ddfce8)
+    )
+    (net $1N25
+      (pins u1-4779b82ed38e626e8 u1-b08dc02c43efd9ce8)
+    )
+    (net $1N26
+      (pins u1-b08dc02c43efd9ce7 u1-0a46b90bb64783ee7 u1-a75a8fa2453ddfce7)
+    )
+    (net $1N30
+      (pins u1-d32a4468bacdae1e7 u1-c82ec0e0a5e738ae8 u1-806fcf21bbd47c3e8)
+    )
+    (net $1N28
+      (pins u1-d32a4468bacdae1e8 u1-097503b7a9667cc88)
+    )
+    (net $1N29
+      (pins u1-097503b7a9667cc87 u1-c82ec0e0a5e738ae7 u1-806fcf21bbd47c3e7)
+    )
+    (net $1N33
+      (pins u1-62700c3246f3b44e7 u1-91c685c484d0a6b98 u1-912712a7492ba41e8)
+    )
+    (net $1N31
+      (pins u1-62700c3246f3b44e8 u1-545090c2e7e729be8)
+    )
+    (net $1N32
+      (pins u1-545090c2e7e729be7 u1-91c685c484d0a6b97 u1-912712a7492ba41e7)
+    )
+    (net $1N36
+      (pins u1-68f14fd5eeb73c8e7 u1-55aa29f1a90a9ffe8 u1-993b693e281e191e8)
+    )
+    (net $1N34
+      (pins u1-68f14fd5eeb73c8e8 u1-8885b0501fda63298)
+    )
+    (net $1N35
+      (pins u1-8885b0501fda63297 u1-55aa29f1a90a9ffe7 u1-993b693e281e191e7)
+    )
+    (net $1N39
+      (pins u1-54d4b7197c2fd91e7 u1-fb7d79d5809200be8 u1-ab2ba0d149d8953e8)
+    )
+    (net $1N37
+      (pins u1-54d4b7197c2fd91e8 u1-40f72bd381a347ee8)
+    )
+    (net $1N38
+      (pins u1-40f72bd381a347ee7 u1-fb7d79d5809200be7 u1-ab2ba0d149d8953e7)
+    )
+    (net $1N42
+      (pins u1-1233960bbc41805e7 u1-ba8d91f5f8f1767e8 u1-5c5f115950801d5c8)
+    )
+    (net $1N40
+      (pins u1-1233960bbc41805e8 u1-6afb52d26f15013e8)
+    )
+    (net $1N41
+      (pins u1-6afb52d26f15013e7 u1-ba8d91f5f8f1767e7 u1-5c5f115950801d5c7)
+    )
+    (net $1N45
+      (pins u1-0a034a12a9e5724e7 u1-d2f4cd90c06f012e8 u1-5862c519e3781b2e8)
+    )
+    (net $1N43
+      (pins u1-0a034a12a9e5724e8 u1-b76f39524d02fbfc8)
+    )
+    (net $1N44
+      (pins u1-b76f39524d02fbfc7 u1-d2f4cd90c06f012e7 u1-5862c519e3781b2e7)
+    )
+    (net $1N48
+      (pins u1-f95ba4957661555e7 u1-3cb33f78c82b65668 u1-bff8e5bc9f72bbbe8)
+    )
+    (net $1N46
+      (pins u1-f95ba4957661555e8 u1-f789ef73bb55a26e8)
+    )
+    (net $1N47
+      (pins u1-f789ef73bb55a26e7 u1-3cb33f78c82b65667 u1-bff8e5bc9f72bbbe7)
+    )
+    (net $1N51
+      (pins u1-0805d6c05d97a42e7 u1-a5c074c299344f9b8 u1-9b9a5fd6650cb0fe8)
+    )
+    (net $1N49
+      (pins u1-0805d6c05d97a42e8 u1-0ccaa92966c40dca8)
+    )
+    (net $1N50
+      (pins u1-0ccaa92966c40dca7 u1-a5c074c299344f9b7 u1-9b9a5fd6650cb0fe7)
+    )
+    (net $1N54
+      (pins u1-2d75aa699cca62b67 u1-235ca0660e1101ae8 u1-94c22536427f5d1e8)
+    )
+    (net $1N52
+      (pins u1-2d75aa699cca62b68 u1-5b06b8071d8bcc538)
+    )
+    (net $1N53
+      (pins u1-5b06b8071d8bcc537 u1-235ca0660e1101ae7 u1-94c22536427f5d1e7)
+    )
+    (net $1N57
+      (pins u1-83bc89c6652da0de7 u1-98f6613516248dbe8 u1-d15b2c5a409b69568)
+    )
+    (net $1N55
+      (pins u1-83bc89c6652da0de8 u1-f65d209b51177b178)
+    )
+    (net $1N56
+      (pins u1-f65d209b51177b177 u1-98f6613516248dbe7 u1-d15b2c5a409b69567)
+    )
+    (net $1N60
+      (pins u1-3dc6569621ba3afa7 u1-6f5690c4d0f4dc478 u1-7b0479b284f645bf8)
+    )
+    (net $1N58
+      (pins u1-3dc6569621ba3afa8 u1-143a7dc6a52064398)
+    )
+    (net $1N59
+      (pins u1-143a7dc6a52064397 u1-6f5690c4d0f4dc477 u1-7b0479b284f645bf7)
+    )
+    (net $1N63
+      (pins u1-c9b0ca8dbd5586ae7 u1-c77c34de88abb34e8 u1-04cc904fab1a15df8)
+    )
+    (net $1N61
+      (pins u1-c9b0ca8dbd5586ae8 u1-aa9454f9554cd7ae8)
+    )
+    (net $1N62
+      (pins u1-aa9454f9554cd7ae7 u1-c77c34de88abb34e7 u1-04cc904fab1a15df7)
+    )
+    (net $1N66
+      (pins u1-d8c4dfdb50975dae7 u1-8895730d88c5343e8 u1-377b2d911702632b8)
+    )
+    (net $1N64
+      (pins u1-d8c4dfdb50975dae8 u1-30107beb6d36e71e8)
+    )
+    (net $1N65
+      (pins u1-30107beb6d36e71e7 u1-8895730d88c5343e7 u1-377b2d911702632b7)
+    )
+    (net $1N69
+      (pins u1-89bada162270477e7 u1-6a7651b5170f700a8 u1-674f39c244c21f688)
+    )
+    (net $1N67
+      (pins u1-89bada162270477e8 u1-c8771b3cfc5daffe8)
+    )
+    (net $1N68
+      (pins u1-c8771b3cfc5daffe7 u1-6a7651b5170f700a7 u1-674f39c244c21f687)
+    )
+    (net $1N72
+      (pins u1-b8137fdd0f6157167 u1-04535647f28414a18 u1-faa23f430dc872138)
+    )
+    (net $1N70
+      (pins u1-b8137fdd0f6157168 u1-26be7a05d22af80e8)
+    )
+    (net $1N71
+      (pins u1-26be7a05d22af80e7 u1-04535647f28414a17 u1-faa23f430dc872137)
+    )
+    (class $1N1 '$1N1'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N3 '$1N3'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N2 '$1N2'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N6 '$1N6'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N4 '$1N4'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N5 '$1N5'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N9 '$1N9'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N7 '$1N7'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N8 '$1N8'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N12 '$1N12'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N10 '$1N10'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N11 '$1N11'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N15 '$1N15'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N13 '$1N13'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N14 '$1N14'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N18 '$1N18'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N16 '$1N16'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N17 '$1N17'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N21 '$1N21'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N19 '$1N19'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N20 '$1N20'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N24 '$1N24'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N22 '$1N22'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N23 '$1N23'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N27 '$1N27'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N25 '$1N25'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N26 '$1N26'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N30 '$1N30'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N28 '$1N28'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N29 '$1N29'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N33 '$1N33'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N31 '$1N31'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N32 '$1N32'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N36 '$1N36'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N34 '$1N34'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N35 '$1N35'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N39 '$1N39'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N37 '$1N37'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N38 '$1N38'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N42 '$1N42'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N40 '$1N40'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N41 '$1N41'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N45 '$1N45'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N43 '$1N43'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N44 '$1N44'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N48 '$1N48'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N46 '$1N46'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N47 '$1N47'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N51 '$1N51'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N49 '$1N49'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N50 '$1N50'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N54 '$1N54'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N52 '$1N52'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N53 '$1N53'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N57 '$1N57'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N55 '$1N55'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N56 '$1N56'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N60 '$1N60'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N58 '$1N58'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N59 '$1N59'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N63 '$1N63'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N61 '$1N61'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N62 '$1N62'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N66 '$1N66'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N64 '$1N64'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N65 '$1N65'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N69 '$1N69'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N67 '$1N67'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N68 '$1N68'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N72 '$1N72'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N70 '$1N70'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+    (class $1N71 '$1N71'
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 10)
+        (clearance 4.02)
+      )
+    )
+  )
+
+  (wiring
+  )
+)

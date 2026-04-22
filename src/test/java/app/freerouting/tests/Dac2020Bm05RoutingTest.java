@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
  *   <li><b>After Sub-issue #5</b> (BatchFanout integration): 0 unrouted.</li>
  * </ul>
  */
-public class Issue508BM05Test extends TestBasedOnAnIssue {
+public class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
 
   private RoutingJob job;
 

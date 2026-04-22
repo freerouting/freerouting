@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see app.freerouting.interactive.HeadlessBoardManager
  */
-class HeadlessCompleteRoutingTest extends TestBasedOnAnIssue {
+class HeadlessCompleteRoutingTest extends RoutingFixtureTest {
 
   @BeforeEach
   @Override

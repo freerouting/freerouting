@@ -34,7 +34,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 # Specific Constraints & Logic
 
 - **Safety First:** Be *extremely careful* when modifying the routing algorithms. Even minor changes can lead to severe regressions in trace optimization, clearance violations, or routing completion rates.
-- **Regressions Prevention:** Before refactoring any core routing logic, you **must** verify your changes against the existing test suite to prevent trace regressions. Always run reproduction tests on actual PCB design files (`.dsn`) if an issue is reported (see `src/test/java/app/freerouting/tests/TestBasedOnAnIssue.java` and fixtures in `tests/`).
+- **Regressions Prevention:** Before refactoring any core routing logic, you **must** verify your changes against the existing test suite to prevent trace regressions. Always run reproduction tests on actual PCB design files (`.dsn`) if an issue is reported (see `src/test/java/app/freerouting/tests/RoutingFixtureTest.java` and fixtures in `fixtures/`).
 - **Baseline Performance:** The original v1.9 implementation serves as a performance and correctness baseline. Any new implementation should aim to match or exceed the routing quality and efficiency of the v1.9 version. 
   - To compare performance, use the script `scripts/tests/compare-versions.ps1` which runs both versions on a PCB design and outputs key metrics.
   - TRACE level logs are written to `logs/` folder with `freerouting-v190.log` and `freerouting-current.log` filenames for easy comparison.
@@ -54,9 +54,9 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   - **Running Tests:** If you implement a small change you can run only one unit test to do a quick check, preferably the `Issue508Test_BM01_first_2_nets` which is one of the quickest routing test. Use `./gradlew test` to run all unit tests and `./gradlew check` for the full integration testing suite, which includes tests based on actual PCB design files.
 - **GUI vs Headless Guard:** Before calling any method that accesses `interactiveSettings`, always check `getInteractiveSettings() != null` or restrict the call to `GuiBoardManager` only. Shared `interactive`-package code (e.g., routing states like `RouteState`, `DragState`) may access `hdlg.interactiveSettings` directly — ensure those code paths are only reachable when `hdlg` is a `GuiBoardManager` instance.
 - **Test Placement Conventions:**
-  - Issue-regression and full-pipeline tests → `src/test/java/app/freerouting/tests/` (extend `TestBasedOnAnIssue`).
+  - Issue-regression and full-pipeline tests → `src/test/java/app/freerouting/tests/` (extend `RoutingFixtureTest`).
   - Unit/integration tests scoped to a specific package → place in the matching test package (e.g., tests for `app.freerouting.interactive` go in `src/test/java/app/freerouting/interactive/`).
-  - DSN fixture files live in `tests/`; reference them by filename (e.g., `"Issue508-DAC2020_bm01.dsn"`). The quickest fixture for smoke-checks is `Issue508Test_BM01_first_2_nets`.
+  - DSN fixture files live in `fixtures/`; reference them by filename (e.g., `"Issue508-DAC2020_bm01.dsn"`). The quickest fixture for smoke-checks is `Dac2020Bm01RoutingTest`.
   - Bound long-running routing tests with `TestingSettings.setMaxPasses(n)`, `setMaxItems(m)`, and `setJobTimeoutString("HH:MM:SS")` to keep CI fast.
 - **Issue Tracking:** Detailed per-issue specifications live in `docs/issues/`. Each file documents the problem, sub-issues (with ✅ when done), proposed/actual implementation, and acceptance criteria. Keep these files up-to-date as sub-issues are resolved so future agents have accurate context without re-reading the full conversation history.
 - **Licensing:** This project is open-source under the **GPLv3** license. Ensure all dependencies and contributions respect this license.
