@@ -126,7 +126,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see InteractiveSettings#getOrCreate(app.freerouting.board.RoutingBoard)
    */
-  public InteractiveSettings interactiveSettings;
+  private InteractiveSettings interactiveSettings;
 
   /**
    * The minimum interval in milliseconds between consecutive board panel repaints.
