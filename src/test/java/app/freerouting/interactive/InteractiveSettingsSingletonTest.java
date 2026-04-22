@@ -100,7 +100,7 @@ class InteractiveSettingsSingletonTest {
   }
 
   @Test
-  void setInstance_adoptesProvidedInstance() {
+  void setInstance_adoptsProvidedInstance() {
     var board = headlessManager.get_routing_board();
     assertNotNull(board);
 

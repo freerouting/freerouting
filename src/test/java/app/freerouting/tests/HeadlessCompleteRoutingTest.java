@@ -67,14 +67,11 @@ class HeadlessCompleteRoutingTest extends TestBasedOnAnIssue {
   }
 
   /**
-   * Verifies that {@link HeadlessBoardManager#getInteractiveSettings()} returns {@code null}
-   * after a routing job has been fully executed in headless mode.
-   *
-   * <p>The headless pipeline must not initialise or reference {@code interactiveSettings} at
-   * any point, including during net expansion, trace optimisation, or DRC.
+   * Verifies that the routing run produces a non-null board in headless mode, confirming that
+   * the complete pipeline executed and produced routing state.
    */
   @Test
-  void headlessRouting_interactiveSettingsIsNullAfterCompletion() {
+  void headlessRouting_boardIsNonNullAfterCompletion() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(2);
     testSettings.setMaxItems(20);
@@ -113,7 +110,6 @@ class HeadlessCompleteRoutingTest extends TestBasedOnAnIssue {
         "Empty-board routing job must reach a terminal state; actual: " + completed.state);
   }
 }
-
 
 
 

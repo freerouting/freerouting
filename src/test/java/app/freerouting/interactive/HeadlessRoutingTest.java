@@ -44,6 +44,9 @@ class HeadlessRoutingTest {
     Freerouting.globalSettings = new GlobalSettings();
     InteractiveSettings.resetForTesting();
     scheduler = RoutingJobScheduler.getInstance();
+    synchronized (scheduler.jobs) {
+      scheduler.jobs.clear();
+    }
   }
 
   /**
@@ -104,7 +107,7 @@ class HeadlessRoutingTest {
    * confirming the entire pipeline executed without errors.
    */
   @Test
-  void headlessRouting_boardIsNonNull_andInteractiveSettingsStayNull() {
+  void headlessRouting_boardIsNonNullAfterCompletion() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(1);
     testSettings.setMaxItems(5);
@@ -144,8 +147,13 @@ class HeadlessRoutingTest {
       if (testingSettings == null) {
         testingSettings = new TestingSettings();
       }
-      testingSettings.setJobTimeoutString("00:01:00");
-      testingSettings.setMaxPasses(100);
+      var testRouterSettings = testingSettings.getSettings();
+      if (testRouterSettings.jobTimeoutString == null) {
+        testingSettings.setJobTimeoutString("00:01:00");
+      }
+      if (testRouterSettings.maxPasses == null) {
+        testingSettings.setMaxPasses(100);
+      }
       merger.addOrReplaceSources(testingSettings);
 
       Freerouting.globalSettings.settingsMergerProtype.addOrReplaceSources(testingSettings);
@@ -184,5 +192,3 @@ class HeadlessRoutingTest {
     return job;
   }
 }
-
-

@@ -2148,9 +2148,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return false;
     }
     screen_messages.set_layer(board.layer_structure.arr[interactiveSettings.get_layer()].name);
-    // Re-subscribe all GUI panels as PropertyChangeListeners on the restored singleton and
-    // push the loaded settings values to their controls.
-    refreshGuiFromSettings();
+    // Defer GUI refresh until surrounding load flow has recreated frame-managed subwindows.
+    javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
     return true;
   }
 
@@ -2289,9 +2288,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     if (result != DsnFile.ReadResult.ERROR) {
       this.set_layer(0);
-      // Re-subscribe all GUI panels as PropertyChangeListeners on the new singleton and
-      // push the fresh settings values to their controls.
-      refreshGuiFromSettings();
+      // Defer GUI refresh until surrounding load flow has recreated frame-managed subwindows.
+      javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
     }
     return result;
   }

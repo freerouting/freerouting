@@ -102,7 +102,7 @@ public class MoveItemState extends InteractiveState {
           return null;
         }
         if (grid_snap_component == null && (p_board_handling.interactiveSettings.get_horizontal_component_grid() > 0
-            || p_board_handling.interactiveSettings.get_horizontal_component_grid() > 0)) {
+            || p_board_handling.interactiveSettings.get_vertical_component_grid() > 0)) {
           grid_snap_component = curr_component;
         }
         if (!component_list.contains(curr_component)) {
