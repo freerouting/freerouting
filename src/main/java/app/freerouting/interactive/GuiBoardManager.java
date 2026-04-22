@@ -2280,6 +2280,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     var result = super.loadFromSpecctraDsn(inputStream, boardObservers, identificationNumberGenerator);
+
     if (this.board != null) {
       // Always reset: a new DSN load may introduce a different layer count or design rules,
       // making any previously-constructed InteractiveSettings invalid for this board.
@@ -2289,26 +2290,25 @@ public class GuiBoardManager extends HeadlessBoardManager {
       // Register the singleton as the live GuiSettings source (priority 50) in the merger so
       // that every subsequent merge() call reflects the current interactive GUI state.
       this.settingsMerger.addOrReplaceSources(this.interactiveSettings);
-
-      // Initialize the graphics context if it was not yet created (e.g. first load bypassing create_board).
-      if (this.graphics_context == null) {
-        Dimension panel_size = (panel != null) ? panel.getPreferredSize() : new Dimension(800, 600);
-        this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
-            this.board.layer_structure, this.locale);
-      }
-
-      // Initialize the coordinate transform if it was not yet created (e.g. first load bypassing create_board).
-      if (this.coordinate_transform == null) {
-        double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
-        this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
-            this.board.communication.unit);
-      }
     }
-    if (result != DsnFile.ReadResult.ERROR) {
+
+    // Initialize the GUI-specific graphics context and coordinate transform that
+    // create_board() would normally set up, but which are bypassed when loading
+    // directly from a DSN file via DsnReader. Always recreate on a successful load
+    // because the new design may have different dimensions, layer count, or units.
+    if (result != DsnFile.ReadResult.ERROR && this.board != null) {
+      double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
+      this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
+          this.board.communication.unit);
+      Dimension panel_size = (panel != null) ? panel.getPreferredSize() : new Dimension(800, 600);
+      this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
+          this.board.layer_structure, this.locale);
+
       this.set_layer(0);
       // Defer GUI refresh until surrounding load flow has recreated frame-managed subwindows.
       javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
     }
+
     return result;
   }
 

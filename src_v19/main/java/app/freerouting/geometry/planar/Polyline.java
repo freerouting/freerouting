@@ -296,7 +296,7 @@ public class Polyline implements Serializable {
   /** Returns the intersection of the p_no-th with the (p_no - 1)-th edge line. */
   public Point corner(int p_no) {
     if (arr.length < 2) {
-      FRLogger.warn("Polyline.corner: arr.length is < 2");
+      FRLogger.trace("Polyline.corner: arr.length is < 2");
       return null;
     }
     int no;
