@@ -2109,8 +2109,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Loads a board design from a Specctra DSN format file.
    *
-   * <p>Extends the base implementation by setting the initial layer to 0 after
-   * loading completes.
+   * <p>Extends the base implementation by initialising the GUI-specific
+   * {@link GraphicsContext} and {@link CoordinateTransform} that
+   * {@code create_board()} would normally set up but which are bypassed when loading
+   * directly from a DSN file via {@code DsnReader}. Both objects are created lazily
+   * (only when not yet present) so that a second load into the same window does not
+   * discard a valid context unnecessarily. Additionally, the manual trace half-widths
+   * are re-synchronised to the board rules just parsed, and {@link #set_layer} is
+   * called only when the load succeeded (i.e. the result is not {@code ERROR}).
    *
    * @param inputStream the stream containing the DSN data
    * @param boardObservers observers to be notified of board changes
@@ -2124,19 +2130,33 @@ public class GuiBoardManager extends HeadlessBoardManager {
       IdentificationNumberGenerator identificationNumberGenerator) {
     var result = super.loadFromSpecctraDsn(inputStream, boardObservers, identificationNumberGenerator);
 
-    // Initialize the GUI-specific graphics context and coordinate transform that
-    // create_board() would normally set up, but which are bypassed when loading
-    // directly from a DSN file via DsnReader.
-    if (result != DsnFile.ReadResult.ERROR && this.board != null) {
-      double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
-      this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
-          this.board.communication.unit);
-      Dimension panel_size = panel.getPreferredSize();
-      this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
-          this.board.layer_structure, this.locale);
+    if (this.board != null) {
+      // The super implementation already creates a fresh InteractiveSettings bound to this
+      // board via new InteractiveSettings(this.board).  Re-sync the manual trace widths so
+      // they reflect the board rules that were just parsed.
+      this.initialize_manual_trace_half_widths();
+
+      // Initialize the GUI-specific graphics context and coordinate transform that
+      // create_board() would normally set up, but which are bypassed when loading
+      // directly from a DSN file via DsnReader.  Use null-checks so that a second load
+      // into the same window does not unnecessarily discard a valid context.
+      if (this.graphics_context == null) {
+        Dimension panel_size = (panel != null) ? panel.getPreferredSize() : new Dimension(800, 600);
+        this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
+            this.board.layer_structure, this.locale);
+      }
+
+      if (this.coordinate_transform == null) {
+        double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
+        this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
+            this.board.communication.unit);
+      }
     }
 
-    this.set_layer(0);
+    if (result != DsnFile.ReadResult.ERROR) {
+      this.set_layer(0);
+    }
+
     return result;
   }
 
