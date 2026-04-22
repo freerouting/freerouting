@@ -65,10 +65,15 @@ class ApiRoutingTest {
 
     server = Freerouting.InitializeAPI(settings);
 
-    long deadline = System.currentTimeMillis() + 5_000;
+    // Jetty + Jersey cold-start can take >5 s on GitHub Actions shared runners.
+// 30 s gives enough headroom without making failures wait too long.
+    long deadline = System.currentTimeMillis() + 30_000;
     while (!server.isStarted()) {
+      if (server.isFailed()) {
+        fail("API server failed to start (Jetty lifecycle state: FAILED)");
+      }
       if (System.currentTimeMillis() > deadline) {
-        fail("API server did not start within 5 seconds");
+        fail("API server did not start within 30 seconds");
       }
       Thread.sleep(50);
     }
