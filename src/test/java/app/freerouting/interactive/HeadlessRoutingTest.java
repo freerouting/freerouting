@@ -60,10 +60,12 @@ class HeadlessRoutingTest {
   void headlessManager_getInteractiveSettings_isNullAfterDsnLoad() {
     assertDoesNotThrow(() -> {
       var manager = new HeadlessBoardManager(new RoutingJob());
-      manager.loadFromSpecctraDsn(
-          new FileInputStream("tests/empty_board.dsn"),
-          new BoardObserverAdaptor(),
-          new ItemIdentificationNumberGenerator());
+      try (FileInputStream dsnInput = new FileInputStream("tests/empty_board.dsn")) {
+        manager.loadFromSpecctraDsn(
+            dsnInput,
+            new BoardObserverAdaptor(),
+            new ItemIdentificationNumberGenerator());
+      }
 
       assertNull(manager.getInteractiveSettings(),
           "HeadlessBoardManager.getInteractiveSettings() must return null at all times in headless mode");
