@@ -37,7 +37,11 @@ import java.util.List;
  *   <li>DSN file settings (priority 20) — metadata extracted from the Specctra design file</li>
  *   <li>SES file settings (priority 30) — metadata from Specctra session files</li>
  *   <li>RULES file settings (priority 40) — explicit routing-rule overrides</li>
- *   <li>GUI settings (priority 50) — values changed interactively by the user</li>
+ *   <li>GUI settings (priority 50) — {@code InteractiveSettings} (a {@code GuiSettings} subclass)
+ *       in GUI mode; a plain {@code GuiSettings} placeholder before board load; absent in headless
+ *       mode. The concrete {@code InteractiveSettings} singleton is registered here by
+ *       {@code GuiBoardManager} immediately after each board load so that every subsequent
+ *       {@link #merge()} call reflects the live user-controlled state.</li>
  *   <li>Environment variables (priority 55) — {@code FREEROUTING__ROUTER__*} env vars</li>
  *   <li>CLI settings (priority 60) — {@code --router.*} command-line arguments</li>
  *   <li>API settings (priority 70) — highest priority, supplied by a REST API caller</li>
@@ -84,7 +88,17 @@ public class SettingsMerger implements Cloneable {
 
     /**
      * Adds or replaces settings sources in the merger.
-     * If a source of the same class already exists, it is replaced.
+     *
+     * <p>A source is considered a replacement candidate if any of the following conditions hold:
+     * <ol>
+     *   <li>The existing and new sources are the same class (exact match).</li>
+     *   <li>The existing source's class is a supertype of the new source's class — i.e. the new
+     *       source is a more-specific subclass. This allows, for example, an
+     *       {@code InteractiveSettings} instance (a {@code GuiSettings} subclass) to replace
+     *       a plain {@code GuiSettings} placeholder that was registered at startup before the
+     *       board was loaded.</li>
+     * </ol>
+     * If no replacement candidate is found the new source is appended.
      *
      * @param newSources List of new settings sources to add or replace
      */
@@ -94,7 +108,11 @@ public class SettingsMerger implements Cloneable {
             boolean replaced = false;
             for (int i = 0; i < sources.size(); i++) {
                 SettingsSource existingSource = sources.get(i);
-                if (existingSource.getClass().equals(newSource.getClass())) {
+                // Replace if same class OR if the existing class is a supertype of the new class
+                // (allows a concrete subclass such as InteractiveSettings to replace a base-class
+                // placeholder such as sources.GuiSettings that was registered before board load).
+                if (existingSource.getClass().equals(newSource.getClass())
+                        || existingSource.getClass().isAssignableFrom(newSource.getClass())) {
                     sources.set(i, newSource);
                     replaced = true;
                     break;

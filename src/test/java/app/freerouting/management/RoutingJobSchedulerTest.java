@@ -25,12 +25,18 @@ public class RoutingJobSchedulerTest {
   void setUp() {
     Freerouting.globalSettings = new GlobalSettings();
     scheduler = RoutingJobScheduler.getInstance();
+    // Ensure a clean queue before each test; synchronize to avoid racing with the scheduler thread.
+    synchronized (scheduler.jobs) {
+      scheduler.jobs.clear();
+    }
   }
 
   @AfterEach
   void tearDown() {
-    // Clear the job queue after each test
-    scheduler.jobs.clear();
+    // Clear the job queue after each test; synchronize to avoid racing with the scheduler thread.
+    synchronized (scheduler.jobs) {
+      scheduler.jobs.clear();
+    }
   }
 
   @Test

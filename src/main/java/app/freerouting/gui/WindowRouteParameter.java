@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardOutline;
 import app.freerouting.board.PolylineTrace;
@@ -396,6 +397,13 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+
+    // Subscribe to the InteractiveSettings singleton so this window stays in sync when
+    // settings are changed programmatically (e.g. after a new design load).
+    InteractiveSettings is = this.guiBoardManager.getInteractiveSettings();
+    if (is != null) {
+      is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
+    }
   }
 
   @Override
@@ -447,13 +455,13 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       settings_routing_snap_angle_none_button.setSelected(true);
     }
 
-    if (this.guiBoardManager.interactiveSettings.get_is_stitch_route()) {
+    if (this.guiBoardManager.getInteractiveSettings().get_is_stitch_route()) {
       settings_routing_stitch_button.setSelected(true);
     } else {
       settings_routing_dynamic_button.setSelected(true);
     }
 
-    if (this.guiBoardManager.interactiveSettings.get_manual_rule_selection()) {
+    if (this.guiBoardManager.getInteractiveSettings().get_manual_rule_selection()) {
       settings_routing_manual_button.setSelected(true);
       if (this.manual_rule_window != null) {
         this.manual_rule_window.setVisible(true);
@@ -462,23 +470,23 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       settings_routing_automatic_button.setSelected(true);
     }
 
-    this.settings_routing_shove_check_box.setSelected(this.guiBoardManager.interactiveSettings.get_push_enabled());
+    this.settings_routing_shove_check_box.setSelected(this.guiBoardManager.getInteractiveSettings().get_push_enabled());
     this.settings_routing_drag_component_check_box
-        .setSelected(this.guiBoardManager.interactiveSettings.get_drag_components_enabled());
+        .setSelected(this.guiBoardManager.getInteractiveSettings().get_drag_components_enabled());
     this.settings_routing_via_snap_to_smd_center_check_box
-        .setSelected(this.guiBoardManager.interactiveSettings.get_via_snap_to_smd_center());
+        .setSelected(this.guiBoardManager.getInteractiveSettings().get_via_snap_to_smd_center());
     this.settings_routing_ignore_conduction_check_box
         .setSelected(this.guiBoardManager.get_routing_board().rules.get_ignore_conduction());
     this.settings_routing_hilight_routing_obstacle_check_box
-        .setSelected(this.guiBoardManager.interactiveSettings.get_hilight_routing_obstacle());
-    this.settings_routing_neckdown_check_box.setSelected(this.guiBoardManager.interactiveSettings.automatic_neckdown);
+        .setSelected(this.guiBoardManager.getInteractiveSettings().get_hilight_routing_obstacle());
+    this.settings_routing_neckdown_check_box.setSelected(this.guiBoardManager.getInteractiveSettings().get_automatic_neckdown());
 
     double edge_to_turn_dist = this.guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
     edge_to_turn_dist = this.guiBoardManager.coordinate_transform.board_to_user(edge_to_turn_dist);
     this.edge_to_turn_dist_field.setValue(edge_to_turn_dist);
     this.settings_routing_restrict_pin_exit_directions_check_box.setSelected(edge_to_turn_dist > 0);
 
-    int region_slider_value = this.guiBoardManager.interactiveSettings.get_trace_pull_tight_region_width() / c_region_scale_factor;
+    int region_slider_value = this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_region_width() / c_region_scale_factor;
     region_slider_value = Math.min(region_slider_value, c_region_max_slider_value);
     region_slider.setValue(region_slider_value);
     region_width_field.setValue(region_slider_value);
@@ -499,7 +507,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       this.route_detail_outline_keepout_check_box.setSelected(outline.keepout_outside_outline_generated());
     }
     int accuracy_slider_value = c_accuracy_max_slider_value
-        - this.guiBoardManager.interactiveSettings.trace_pull_tight_accuracy / c_accuracy_scale_factor + 1;
+        - this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_accuracy() / c_accuracy_scale_factor + 1;
     accuracy_slider.setValue(accuracy_slider_value);
   }
 
@@ -527,7 +535,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
     region_slider.setValue(slider_value);
     region_width_field.setValue(slider_value);
-    guiBoardManager.interactiveSettings.set_current_pull_tight_region_width(new_tidy_width);
+    guiBoardManager.getInteractiveSettings().set_current_pull_tight_region_width(new_tidy_width);
   }
 
   private class SnapAngle90Listener implements ActionListener {
@@ -606,7 +614,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.interactiveSettings.set_stitch_route(false);
+      guiBoardManager.getInteractiveSettings().set_stitch_route(false);
     }
   }
 
@@ -614,7 +622,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.interactiveSettings.set_stitch_route(true);
+      guiBoardManager.getInteractiveSettings().set_stitch_route(true);
     }
   }
 
@@ -623,7 +631,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       manual_rule_window.setVisible(false);
-      guiBoardManager.interactiveSettings.set_manual_tracewidth_selection(false);
+      guiBoardManager.getInteractiveSettings().set_manual_tracewidth_selection(false);
     }
   }
 
@@ -639,7 +647,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         first_time = false;
       }
       manual_rule_window.setVisible(true);
-      guiBoardManager.interactiveSettings.set_manual_tracewidth_selection(true);
+      guiBoardManager.getInteractiveSettings().set_manual_tracewidth_selection(true);
     }
   }
 
@@ -647,7 +655,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.interactiveSettings.set_push_enabled(settings_routing_shove_check_box.isSelected());
+      guiBoardManager.getInteractiveSettings().set_push_enabled(settings_routing_shove_check_box.isSelected());
       refresh();
     }
   }
@@ -656,7 +664,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.interactiveSettings
+      guiBoardManager.getInteractiveSettings()
           .set_via_snap_to_smd_center(settings_routing_via_snap_to_smd_center_check_box.isSelected());
     }
   }
@@ -673,7 +681,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.interactiveSettings
+      guiBoardManager.getInteractiveSettings()
           .set_hilight_routing_obstacle(settings_routing_hilight_routing_obstacle_check_box.isSelected());
     }
   }
@@ -682,7 +690,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.interactiveSettings.set_drag_components_enabled(settings_routing_drag_component_check_box.isSelected());
+      guiBoardManager.getInteractiveSettings().set_drag_components_enabled(settings_routing_drag_component_check_box.isSelected());
       refresh();
     }
   }
@@ -691,7 +699,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.interactiveSettings.automatic_neckdown = settings_routing_neckdown_check_box.isSelected();
+      guiBoardManager.getInteractiveSettings().set_automatic_neckdown(settings_routing_neckdown_check_box.isSelected());
     }
   }
 
@@ -812,7 +820,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     @Override
     public void stateChanged(ChangeEvent evt) {
       int new_accuracy = (c_accuracy_max_slider_value - accuracy_slider.getValue() + 1) * c_accuracy_scale_factor;
-      guiBoardManager.interactiveSettings.trace_pull_tight_accuracy = new_accuracy;
+      guiBoardManager.getInteractiveSettings().set_trace_pull_tight_accuracy(new_accuracy);
     }
   }
 

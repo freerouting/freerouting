@@ -479,7 +479,7 @@ public class Wiring extends ScopeKeyword {
         String msg = "Wiring: degenerate wire trace skipped (all " + polygonCorners.length
             + " corners are identical — zero-length trace) on layer '" + path.layer.name
             + "'. This is likely a DSN export issue in your EDA tool.";
-        FRLogger.warn(msg);
+        FRLogger.debug(msg);
         p_par.warnings.add(msg);
       }
     } else if (path instanceof PolylinePath) {
