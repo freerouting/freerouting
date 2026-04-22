@@ -75,23 +75,6 @@ import java.io.OutputStream;
  */
 public class HeadlessBoardManager implements BoardManager {
 
-  /**
-   * Settings for interactive actions, maintained for compatibility with the BoardManager interface.
-   *
-   * <p><strong>Note:</strong> In headless mode, these settings are primarily used for:
-   * <ul>
-   *   <li>Default trace width configurations</li>
-   *   <li>Manual routing rule selections (when applicable)</li>
-   *   <li>Layer and item selection filters</li>
-   * </ul>
-   *
-   * <p><strong>TODO:</strong> The headless manager should not require interactive settings.
-   * This dependency should be refactored to use a more appropriate configuration mechanism
-   * for non-interactive contexts.
-   *
-   * @see InteractiveSettings
-   */
-  public InteractiveSettings interactiveSettings;
 
   /**
    * Listener for autorouter thread events during automated routing operations.
@@ -217,41 +200,24 @@ public class HeadlessBoardManager implements BoardManager {
   }
 
   /**
-   * Returns the interactive settings for this board manager.
+   * Returns {@code null} in headless mode. GUI-specific interactive settings are not applicable
+   * outside of a GUI session. Use {@link GuiBoardManager#getInteractiveSettings()} to obtain
+   * settings in GUI mode.
    *
-   * <p>In headless mode, these settings are maintained primarily for compatibility
-   * with the {@link BoardManager} interface. They control default trace widths,
-   * manual routing rules, and selection filters.
-   *
-   * @return the interactive settings, or null if not yet initialized
-   *
-   * @see InteractiveSettings
+   * @return {@code null} always in headless mode
    */
   @Override
-  public InteractiveSettings get_settings() {
-    return interactiveSettings;
+  public InteractiveSettings getInteractiveSettings() {
+    return null;
   }
 
   /**
-   * Initializes manual trace half-widths from the board's default net class rules.
-   *
-   * <p>This method copies the default trace widths for each layer from the board's
-   * default net class into the interactive settings' manual trace width array.
-   * This ensures that manual trace width values are available even in headless mode.
-   *
-   * <p>Should be called after the board is created or loaded to ensure manual
-   * trace widths reflect the board's design rules.
-   *
-   * @see InteractiveSettings#manual_trace_half_width_arr
-   * @see app.freerouting.rules.NetClass#get_trace_half_width(int)
+   * No-op in headless mode. Manual trace half-widths are managed by the GUI layer via
+   * {@link InteractiveSettings}; this method has no effect when running without a GUI.
    */
   @Override
   public void initialize_manual_trace_half_widths() {
-    for (int i = 0; i < interactiveSettings.manual_trace_half_width_arr.length; i++) {
-      interactiveSettings.manual_trace_half_width_arr[i] = this.board.rules
-          .get_default_net_class()
-          .get_trace_half_width(i);
-    }
+    // No-op: interactiveSettings is a GUI-only concern managed by GuiBoardManager.
   }
 
   /**
@@ -303,8 +269,6 @@ public class HeadlessBoardManager implements BoardManager {
     }
     this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules,
         p_board_communication);
-
-    this.interactiveSettings = new InteractiveSettings(this.board);
   }
 
   /**

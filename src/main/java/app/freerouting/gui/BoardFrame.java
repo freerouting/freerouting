@@ -100,6 +100,7 @@ public class BoardFrame extends WindowBase {
    */
   private final BoardPanelStatus message_panel;
   private final Locale locale;
+  private final SettingsMerger settingsMerger;
   private final List<Consumer<RoutingBoard>> boardLoadedEventListeners = new ArrayList<>();
   private final List<Consumer<RoutingBoard>> boardSavedEventListeners = new ArrayList<>();
   private final BoardObservers board_observers;
@@ -160,7 +161,7 @@ public class BoardFrame extends WindowBase {
     super(800, 150);
 
     this.routingJob = routingJob;
-
+    this.settingsMerger = settingsMerger;
     this.board_observers = boardObservers;
     this.locale = globalSettings.currentLocale;
     this.setLanguage(this.locale);
@@ -407,17 +408,22 @@ public class BoardFrame extends WindowBase {
         viewport_position = new Point(0, 0);
 
         // Initialize the RouterSettings layer count to match the loaded board
-        // Restore board-specific calculations from old RouterSettings(RoutingBoard)
-        // constructor
         RoutingBoard board = board_panel.board_handling.get_routing_board();
         int boardLayerCount = board.get_layer_count();
 
         if (this.routingJob.routerSettings.isLayerActive == null ||
             this.routingJob.routerSettings.isLayerActive.length != boardLayerCount) {
-
           // Initialize layer arrays and apply board-specific optimizations
           this.routingJob.routerSettings.setLayerCount(boardLayerCount);
           this.routingJob.routerSettings.applyBoardSpecificOptimizations(board);
+        }
+
+        // Merge all settings sources (DefaultSettings, DsnFileSettings, CliSettings, …)
+        // so that routerSettings has fully-populated non-null values before any GUI window
+        // tries to read fields like scoring.via_costs.  Without this step the windows would
+        // NPE on the first access to any nullable RouterSettings field.
+        if (this.settingsMerger != null) {
+          this.routingJob.setSettings(this.settingsMerger.merge());
         }
 
         initialize_windows();
@@ -959,6 +965,13 @@ public class BoardFrame extends WindowBase {
 
   public void addBoardLoadedEventListener(Consumer<RoutingBoard> listener) {
     boardLoadedEventListeners.add(listener);
+  }
+
+  /**
+   * Returns the array of permanent subwindows for use by {@code GuiBoardManager.refreshGuiFromSettings()}.
+   */
+  public BoardSavableSubWindow[] getPermanentSubwindows() {
+    return permanent_subwindows;
   }
 
   public void addReadOnlyEventListener(Consumer<RoutingBoard> listener) {

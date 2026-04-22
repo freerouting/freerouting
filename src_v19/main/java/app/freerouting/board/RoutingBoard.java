@@ -833,7 +833,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
                 new_polyline.arr.length - (trace_shapes.length - last_shape_no - 1), sample_width);
         Point curr_last_corner = new_polyline.last_corner();
         if (!(curr_last_corner instanceof IntPoint)) {
-          FRLogger.warn("RoutingBoard.insert_forced_trace_polyline: IntPoint expected");
+          FRLogger.trace("RoutingBoard.insert_forced_trace_polyline: IntPoint expected");
           return from_corner;
         }
         new_corner = curr_last_corner;
@@ -880,7 +880,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
               p_max_via_recursion_depth,
               p_max_spring_over_recursion_depth);
       if (!insert_ok) {
-        FRLogger.warn("RoutingBoard.insert_forced_trace_polyline: shove trace failed");
+        FRLogger.trace("RoutingBoard.insert_forced_trace_polyline: shove trace failed");
         return null;
       }
     }

@@ -1,6 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.interactive.GuiBoardManager;
+import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -63,7 +64,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(horizontal_grid_field, gridbag_constraints);
     main_panel.add(horizontal_grid_field);
-    set_horizontal_grid_field(this.board_handling.interactiveSettings.get_horizontal_component_grid());
+    set_horizontal_grid_field(this.board_handling.getInteractiveSettings().get_horizontal_component_grid());
     horizontal_grid_field.addKeyListener(new HorizontalGridFieldKeyListener());
     horizontal_grid_field.addFocusListener(new HorizontalGridFieldFocusListener());
 
@@ -77,7 +78,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(vertical_grid_field, gridbag_constraints);
     main_panel.add(vertical_grid_field);
-    set_vertical_grid_field(this.board_handling.interactiveSettings.get_vertical_component_grid());
+    set_vertical_grid_field(this.board_handling.getInteractiveSettings().get_vertical_component_grid());
     vertical_grid_field.addKeyListener(new VerticalGridFieldKeyListener());
     vertical_grid_field.addFocusListener(new VerticalGridFieldFocusListener());
 
@@ -105,7 +106,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     ButtonGroup button_group = new ButtonGroup();
     button_group.add(settings_controls_zoom_radiobutton);
     button_group.add(settings_controls_rotate_radiobutton);
-    if (this.board_handling.interactiveSettings.get_zoom_with_wheel()) {
+    if (this.board_handling.getInteractiveSettings().get_zoom_with_wheel()) {
       settings_controls_zoom_radiobutton.setSelected(true);
     } else {
       settings_controls_rotate_radiobutton.setSelected(true);
@@ -121,6 +122,12 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+
+    // Subscribe to the InteractiveSettings singleton so this window stays in sync.
+    InteractiveSettings is = this.board_handling.getInteractiveSettings();
+    if (is != null) {
+      is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
+    }
   }
 
   private void set_horizontal_grid_field(double p_value) {
@@ -156,8 +163,8 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
         if (input_value < 0) {
           input_value = 0;
         }
-        board_handling.interactiveSettings.set_horizontal_component_grid((int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
-        set_horizontal_grid_field(board_handling.interactiveSettings.get_horizontal_component_grid());
+        board_handling.getInteractiveSettings().set_horizontal_component_grid((int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
+        set_horizontal_grid_field(board_handling.getInteractiveSettings().get_horizontal_component_grid());
       } else {
         key_input_completed = false;
       }
@@ -170,7 +177,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!key_input_completed) {
         // restore the text field.
-        set_horizontal_grid_field(board_handling.interactiveSettings.get_horizontal_component_grid());
+        set_horizontal_grid_field(board_handling.getInteractiveSettings().get_horizontal_component_grid());
         key_input_completed = true;
       }
     }
@@ -195,8 +202,8 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
         if (input_value < 0) {
           input_value = 0;
         }
-        board_handling.interactiveSettings.set_vertical_component_grid((int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
-        set_vertical_grid_field(board_handling.interactiveSettings.get_vertical_component_grid());
+        board_handling.getInteractiveSettings().set_vertical_component_grid((int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
+        set_vertical_grid_field(board_handling.getInteractiveSettings().get_vertical_component_grid());
       } else {
         key_input_completed = false;
       }
@@ -209,7 +216,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!key_input_completed) {
         // restore the text field.
-        set_vertical_grid_field(board_handling.interactiveSettings.get_vertical_component_grid());
+        set_vertical_grid_field(board_handling.getInteractiveSettings().get_vertical_component_grid());
         key_input_completed = true;
       }
     }
@@ -223,7 +230,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_handling.interactiveSettings.set_zoom_with_wheel(true);
+      board_handling.getInteractiveSettings().set_zoom_with_wheel(true);
     }
   }
 
@@ -231,7 +238,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_handling.interactiveSettings.set_zoom_with_wheel(false);
+      board_handling.getInteractiveSettings().set_zoom_with_wheel(false);
     }
   }
 }
