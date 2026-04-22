@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
+import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
@@ -137,6 +138,12 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+
+    // Subscribe to the InteractiveSettings singleton so this window stays in sync.
+    InteractiveSettings is = this.board_handling.getInteractiveSettings();
+    if (is != null) {
+      is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
+    }
   }
 
   /**
@@ -144,12 +151,12 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
    */
   @Override
   public void refresh() {
-    if (this.board_handling.interactiveSettings.get_select_on_all_visible_layers()) {
+    if (this.board_handling.getInteractiveSettings().get_select_on_all_visible_layers()) {
       settings_select_all_visible_button.setSelected(true);
     } else {
       settings_select_current_only_button.setSelected(true);
     }
-    ItemSelectionFilter item_selection_filter = this.board_handling.interactiveSettings.get_item_selection_filter();
+    ItemSelectionFilter item_selection_filter = this.board_handling.getInteractiveSettings().get_item_selection_filter();
     if (item_selection_filter == null) {
       FRLogger.warn("SelectParameterWindow.refresh: item_selection_filter is null");
     } else {
@@ -158,7 +165,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
         this.settings_select_item_selection_choices[i].setSelected(item_selection_filter.is_selected(filter_values[i]));
       }
     }
-    settings_select_layer_name_arr[this.board_handling.interactiveSettings.get_layer()].setSelected(true);
+    settings_select_layer_name_arr[this.board_handling.getInteractiveSettings().get_layer()].setSelected(true);
   }
 
   /**
@@ -188,7 +195,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_handling.interactiveSettings.set_select_on_all_visible_layers(true);
+      board_handling.getInteractiveSettings().set_select_on_all_visible_layers(true);
     }
   }
 
@@ -196,7 +203,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_handling.interactiveSettings.set_select_on_all_visible_layers(false);
+      board_handling.getInteractiveSettings().set_select_on_all_visible_layers(false);
     }
   }
 

@@ -33,6 +33,10 @@ public class TestBasedOnAnIssue {
   protected void setUp() {
     Freerouting.globalSettings = new GlobalSettings();
     scheduler = RoutingJobScheduler.getInstance();
+    // Clear any leftover jobs from previous tests to avoid singleton state leaking between test runs.
+    synchronized (scheduler.jobs) {
+      scheduler.jobs.clear();
+    }
   }
 
   protected RoutingJob GetRoutingJob(String filename) {

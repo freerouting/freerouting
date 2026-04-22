@@ -324,7 +324,7 @@ public class Polyline implements Serializable {
    */
   public Point corner(int p_no) {
     if (arr.length < 2) {
-      FRLogger.warn("Polyline.corner: arr.length is < 2");
+      FRLogger.trace("Polyline.corner: arr.length is < 2");
       return null;
     }
     int no;

@@ -48,6 +48,8 @@ public class RoutingJobScheduler {
               .count() > 0) {
             RoutingJob[] jobsArray;
             synchronized (jobs) {
+              // Remove any null entries that could have been introduced by concurrent access
+              jobs.removeIf(j -> j == null);
               // sort the jobs by priority
               Collections.sort(jobs);
 
@@ -129,6 +131,8 @@ public class RoutingJobScheduler {
           Thread.sleep(250);
         } catch (InterruptedException e) {
           FRLogger.error("RoutingJobScheduler thread was interrupted.", e);
+        } catch (Exception e) {
+          FRLogger.error("RoutingJobScheduler thread encountered an unexpected error and will continue.", e);
         }
       }
     });

@@ -1,11 +1,13 @@
 package app.freerouting.settings.sources;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -42,22 +44,24 @@ public class JsonFileSettings implements SettingsSource {
     private RouterSettings loadSettings() {
         if (!Files.exists(jsonFilePath)) {
             FRLogger.debug("JSON settings file not found: " + jsonFilePath);
-            return new RouterSettings(); // Return empty settings (all nulls after we update RouterSettings)
+            return new RouterSettings();
         }
 
         try (Reader reader = Files.newBufferedReader(jsonFilePath, StandardCharsets.UTF_8)) {
-            Gson gson = new GsonBuilder().create();
-            GlobalSettings globalSettings = gson.fromJson(reader, GlobalSettings.class);
-
-            if (globalSettings != null && globalSettings.routerSettings != null) {
+            JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
+            JsonElement routerElement = root.get("router");
+            if (routerElement != null && routerElement.isJsonObject()) {
+                RouterSettings loaded = GsonProvider.GSON.fromJson(routerElement, RouterSettings.class);
                 FRLogger.debug("Loaded router settings from: " + jsonFilePath);
-                return globalSettings.routerSettings;
+                return loaded;
             }
         } catch (IOException e) {
             FRLogger.warn("Failed to load settings from JSON file: " + jsonFilePath + ": " + e.getMessage());
+        } catch (Exception e) {
+            FRLogger.warn("Failed to parse JSON settings file: " + jsonFilePath + ": " + e.getMessage());
         }
 
-        return new RouterSettings(); // Return empty settings on error
+        return new RouterSettings();
     }
 
     @Override

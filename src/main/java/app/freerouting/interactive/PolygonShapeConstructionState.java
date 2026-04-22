@@ -51,7 +51,7 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState {
         // shape is invalid, maybe it has selfintersections
         construction_succeeded = false;
       } else {
-        construction_succeeded = hdlg.get_routing_board().check_shape(obstacle_shape, hdlg.interactiveSettings.layer, new int[0],
+        construction_succeeded = hdlg.get_routing_board().check_shape(obstacle_shape, hdlg.getInteractiveSettings().get_layer(), new int[0],
             cl_class);
       }
       if (construction_succeeded) {
@@ -60,7 +60,7 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState {
           hdlg.get_routing_board().start_notify_observers();
         }
         hdlg.get_routing_board().generate_snapshot();
-        hdlg.get_routing_board().insert_obstacle(obstacle_shape, hdlg.interactiveSettings.layer, cl_class, FixedState.UNFIXED);
+        hdlg.get_routing_board().insert_obstacle(obstacle_shape, hdlg.getInteractiveSettings().get_layer(), cl_class, FixedState.UNFIXED);
         hdlg.get_routing_board().end_notify_observers();
         if (this.observers_activated) {
           hdlg.get_routing_board().end_notify_observers();

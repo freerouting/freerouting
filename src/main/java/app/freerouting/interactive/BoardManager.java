@@ -15,6 +15,23 @@ import app.freerouting.rules.BoardRules;
  * (GUI-based) and headless (batch/automated) modes. Implementations must provide functionality
  * for board creation, configuration, and access to board state.
  *
+ * <p><strong>GUI / Headless duality:</strong>
+ * <ul>
+ *   <li>In <em>GUI mode</em> ({@link GuiBoardManager}) the {@link InteractiveSettings} singleton
+ *       is always non-null and also acts as the {@link app.freerouting.settings.sources.GuiSettings}
+ *       source (priority 50) registered in the
+ *       {@link app.freerouting.settings.SettingsMerger} pipeline.
+ *       Use {@link #getInteractiveSettings()} to obtain it.</li>
+ *   <li>In <em>headless mode</em> ({@link HeadlessBoardManager}) there is no GUI; therefore
+ *       {@link #getInteractiveSettings()} returns {@code null} and
+ *       {@link #isInteractiveModeSupported()} returns {@code false}.</li>
+ * </ul>
+ *
+ * <p><strong>Settings pipeline (GUI mode only):</strong>
+ * <pre>
+ * InteractiveSettings  →  GuiSettings.getSettings()  →  SettingsMerger  →  RouterSettings
+ * </pre>
+ *
  * <p><strong>Primary Responsibilities:</strong>
  * <ul>
  *   <li><strong>Board Lifecycle:</strong> Create and initialize routing boards</li>
@@ -44,14 +61,11 @@ import app.freerouting.rules.BoardRules;
  * // Access board for routing operations
  * RoutingBoard board = manager.get_routing_board();
  *
- * // Configure settings
- * manager.initialize_manual_trace_half_widths();
+ * // Access interactive settings only when in GUI mode
+ * if (manager.isInteractiveModeSupported()) {
+ *     InteractiveSettings settings = manager.getInteractiveSettings();
+ * }
  * }</pre>
- *
- * <p><strong>Design Considerations:</strong>
- * The interface is intentionally minimal to support diverse implementations while ensuring
- * compatibility between interactive and headless modes. This allows the same routing algorithms
- * to work seamlessly regardless of execution context.
  *
  * @see GuiBoardManager
  * @see HeadlessBoardManager
@@ -152,26 +166,42 @@ public interface BoardManager {
       Communication p_board_communication);
 
   /**
+   * Returns the interactive GUI settings singleton, or {@code null} when running headless.
+   *
+   * <p>The returned {@link InteractiveSettings} instance is also the
+   * {@link app.freerouting.settings.sources.GuiSettings} source registered in the
+   * {@link app.freerouting.settings.SettingsMerger} at priority 50. Callers must not
+   * cache this reference; always obtain it through this accessor.
+   *
+   * <p>Check {@link #isInteractiveModeSupported()} before calling if you are unsure which
+   * implementation is in use.
+   *
+   * @return the singleton {@link InteractiveSettings}, or {@code null} in headless mode
+   */
+  InteractiveSettings getInteractiveSettings();
+
+  /**
+   * Returns {@code true} if this manager runs with an active GUI and therefore guarantees that
+   * {@link #getInteractiveSettings()} returns a non-null value after board initialisation.
+   *
+   * <p>Defaults to {@code false}. Only {@link GuiBoardManager} overrides this to {@code true}.
+   *
+   * @return {@code true} when a GUI is active; {@code false} in headless mode
+   */
+  default boolean isInteractiveModeSupported() {
+    return false;
+  }
+
+  /**
    * Returns the interactive settings that control routing behavior and user preferences.
    *
-   * <p>Interactive settings include:
-   * <ul>
-   *   <li><strong>Layer settings:</strong> Current active layer, layer visibility</li>
-   *   <li><strong>Trace widths:</strong> Manual trace width overrides per layer</li>
-   *   <li><strong>Selection filters:</strong> Which item types can be selected</li>
-   *   <li><strong>Routing modes:</strong> Manual vs. automatic rule selection</li>
-   *   <li><strong>Via preferences:</strong> Preferred via types and rules</li>
-   * </ul>
-   *
-   * <p><strong>Note:</strong> Even in headless mode, these settings may be used to
-   * control routing behavior, though many interactive-specific settings are not
-   * relevant without a GUI.
-   *
-   * @return the interactive settings instance, or null if not initialized
-   *
-   * @see InteractiveSettings
+   * @return the interactive settings instance, or {@code null} if not initialized / headless
+   * @deprecated Use {@link #getInteractiveSettings()} instead.
    */
-  InteractiveSettings get_settings();
+  @Deprecated
+  default InteractiveSettings get_settings() {
+    return getInteractiveSettings();
+  }
 
   /**
    * Returns the current routing job context associated with this board manager.

@@ -329,6 +329,7 @@ public class BoardPanel extends JPanel {
     addMouseWheelListener(evt -> board_handling.mouse_wheel_moved(evt.getPoint(), evt.getWheelRotation()));
 
     board_handling = new GuiBoardManager(this, globalSettings, routingJob, settingMerger);
+    board_handling.setBoardFrame(this.board_frame);
     setAutoscrolls(true);
     this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
   }
@@ -364,6 +365,7 @@ public class BoardPanel extends JPanel {
     }
 
     board_handling = new GuiBoardManager(this, globalSettings, routingJob, settingsMerger);
+    board_handling.setBoardFrame(this.board_frame);
   }
 
   /**
