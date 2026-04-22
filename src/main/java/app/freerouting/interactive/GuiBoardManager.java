@@ -129,6 +129,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
   private InteractiveSettings interactiveSettings;
 
   /**
+   * Direct reference to the {@link app.freerouting.gui.BoardFrame} that owns this manager.
+   *
+   * <p>Set by {@link #setBoardFrame(app.freerouting.gui.BoardFrame)} immediately after
+   * construction (and after every {@link BoardPanel#reset_board_handling} call). Having a direct
+   * back-reference avoids walking the AWT component hierarchy to locate the frame.
+   */
+  private app.freerouting.gui.BoardFrame boardFrame;
+
+  /**
    * The minimum interval in milliseconds between consecutive board panel repaints.
    *
    * <p>This throttle mechanism prevents excessive repainting during intensive operations,
@@ -417,6 +426,19 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * visual debugging feedback.
    */
   private Point[] impactedPoints;
+
+  /**
+   * Sets the owning {@link app.freerouting.gui.BoardFrame} for this manager.
+   *
+   * <p>Must be called by {@link app.freerouting.gui.BoardPanel} immediately after constructing or
+   * resetting the {@code GuiBoardManager} instance so that {@link #refreshGuiFromSettings()} can
+   * reach the frame's permanent subwindows without walking the AWT component hierarchy.
+   *
+   * @param boardFrame the frame that owns this manager; {@code null} clears the reference
+   */
+  public void setBoardFrame(app.freerouting.gui.BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
+  }
 
   /**
    * Creates a new GUI board manager for interactive routing operations.
@@ -1452,12 +1474,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (interactiveSettings == null || panel == null) {
       return;
     }
-    // Obtain the BoardFrame that owns the permanent subwindows via the panel's parent chain.
-    java.awt.Container parent = panel.getParent();
-    while (parent != null && !(parent instanceof app.freerouting.gui.BoardFrame)) {
-      parent = parent.getParent();
-    }
-    if (!(parent instanceof app.freerouting.gui.BoardFrame boardFrame)) {
+    // Use the direct BoardFrame back-reference set by BoardPanel.
+    if (boardFrame == null) {
       return;
     }
 
