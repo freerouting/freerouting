@@ -654,7 +654,7 @@ public class Freerouting {
     // If the GUI is disabled then we are in CLI mode
     boolean cliResult = true;
     if (!globalSettings.guiSettings.isEnabled) {
-      if ((globalSettings.routerSettings.enabled != null && !globalSettings.routerSettings.enabled) && (globalSettings.drcSettings.enabled)) {
+      if ((globalSettings.settingsMergerProtype.merge().enabled != null && !globalSettings.settingsMergerProtype.merge().enabled) && (globalSettings.drcSettings.enabled)) {
         cliResult = InitializeDRC(globalSettings);
       } else {
         cliResult = InitializeCLI(globalSettings);

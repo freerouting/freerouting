@@ -32,8 +32,13 @@ public class GlobalSettings implements Serializable {
   public final UserProfileSettings userProfileSettings = new UserProfileSettings();
   @SerializedName("gui")
   public final GuiSettings guiSettings = new GuiSettings();
-  @SerializedName("router")
-  public final RouterSettings routerSettings = new RouterSettings();
+  /**
+   * @deprecated Use {@link #settingsMergerProtype} to obtain merged {@link RouterSettings}.
+   *             This field is retained only as a transient placeholder so that existing code that
+   *             still references it compiles; it is no longer serialised or deserialised.
+   */
+  @Deprecated
+  public final transient RouterSettings routerSettings = new RouterSettings();
   @SerializedName("drc")
   public final DesignRulesCheckerSettings drcSettings = new DesignRulesCheckerSettings();
   @SerializedName("usage_and_diagnostic_data")

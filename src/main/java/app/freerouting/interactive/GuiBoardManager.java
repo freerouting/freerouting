@@ -2123,6 +2123,19 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     var result = super.loadFromSpecctraDsn(inputStream, boardObservers, identificationNumberGenerator);
+
+    // Initialize the GUI-specific graphics context and coordinate transform that
+    // create_board() would normally set up, but which are bypassed when loading
+    // directly from a DSN file via DsnReader.
+    if (result != DsnFile.ReadResult.ERROR && this.board != null) {
+      double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
+      this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
+          this.board.communication.unit);
+      Dimension panel_size = panel.getPreferredSize();
+      this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
+          this.board.layer_structure, this.locale);
+    }
+
     this.set_layer(0);
     return result;
   }

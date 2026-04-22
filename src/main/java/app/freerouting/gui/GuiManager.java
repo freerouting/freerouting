@@ -85,14 +85,6 @@ public class GuiManager {
             FRLogger.info("Opening '" + globalSettings.initialInputFile + "'...");
             routingJob = new RoutingJob(guiSession.id);
 
-            // Apply CLI settings from GlobalSettings to the RoutingJob
-            // This ensures that command-line arguments are used by the autorouter
-            if (globalSettings.routerSettings != null) {
-                routingJob.routerSettings.applyNewValuesFrom(globalSettings.routerSettings);
-            } else {
-                FRLogger.warn("[CLI Settings] globalSettings.routerSettings is null, CLI settings not applied!");
-            }
-
             try {
                 routingJob.setInput(globalSettings.initialInputFile);
             } catch (Exception e) {
@@ -124,12 +116,12 @@ public class GuiManager {
             new_frame.board_panel.board_handling.screen_messages.set_board_score(
                     bs.getNormalizedScore(routingJob.routerSettings.scoring), bs.connections.incompleteCount,
                     bs.clearanceViolations.totalCount);
-            new_frame.board_panel.board_handling.set_num_threads(globalSettings.routerSettings.maxThreads);
+            new_frame.board_panel.board_handling.set_num_threads(routingJob.routerSettings.maxThreads);
             new_frame.board_panel.board_handling
-                    .set_board_update_strategy(globalSettings.routerSettings.optimizer.boardUpdateStrategy);
-            new_frame.board_panel.board_handling.set_hybrid_ratio(globalSettings.routerSettings.optimizer.hybridRatio);
+                    .set_board_update_strategy(routingJob.routerSettings.optimizer.boardUpdateStrategy);
+            new_frame.board_panel.board_handling.set_hybrid_ratio(routingJob.routerSettings.optimizer.hybridRatio);
             new_frame.board_panel.board_handling
-                    .set_item_selection_strategy(globalSettings.routerSettings.optimizer.itemSelectionStrategy);
+                    .set_item_selection_strategy(routingJob.routerSettings.optimizer.itemSelectionStrategy);
 
             if (globalSettings.initialOutputFile != null) {
                 // if the design_output_filename file exists we need to delete it before setting
@@ -324,8 +316,6 @@ public class GuiManager {
                     .getInstance()
                     .getGuiSession().id);
 
-            // Apply CLI settings from GlobalSettings to the RoutingJob
-            routingJob.routerSettings.applyNewValuesFrom(globalSettings.routerSettings);
 
             routingJob.setDummyInputFile("tutorial_board.dsn");
             // Load an empty template file from the resources
