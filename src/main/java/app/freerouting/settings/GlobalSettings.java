@@ -34,11 +34,17 @@ public class GlobalSettings implements Serializable {
   public final GuiSettings guiSettings = new GuiSettings();
   /**
    * @deprecated Use {@link #settingsMergerProtype} to obtain merged {@link RouterSettings}.
-   *             This field is retained only as a transient placeholder so that existing code that
-   *             still references it compiles; it is no longer serialised or deserialised.
+   *             This field is retained as a serialisation bridge for {@code freerouting.json}
+   *             (written on save, read back on load) and as a target for legacy code paths such
+   *             as {@code applyCommandLineArguments} and {@code setValue}.
+   *             The {@code @SerializedName} is also required so that
+   *             {@code ReflectionUtil.setFieldValue} can resolve the {@code "router.*"} property
+   *             path. Do not use this field to drive routing decisions — obtain a merged
+   *             {@link RouterSettings} via {@link #settingsMergerProtype} instead.
    */
   @Deprecated
-  public final transient RouterSettings routerSettings = new RouterSettings();
+  @SerializedName("router")
+  public final RouterSettings routerSettings = new RouterSettings();
   @SerializedName("drc")
   public final DesignRulesCheckerSettings drcSettings = new DesignRulesCheckerSettings();
   @SerializedName("usage_and_diagnostic_data")
