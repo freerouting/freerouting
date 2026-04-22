@@ -45,7 +45,7 @@ import org.junit.jupiter.api.Test;
  */
 class GuiStartupHeadlessTest {
 
-  private static final String TEST_DSN = "tests/empty_board.dsn";
+  private static final String TEST_DSN = "fixtures/empty_board.dsn";
 
   private RoutingBoard board;
   private InteractiveSettings settings;

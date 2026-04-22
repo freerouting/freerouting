@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
  *  (a) the board model correctly exposes connectivity state, and
  *  (b) the DRC checker detects genuine disconnections and produces an
  *      accurate report consistent with the reference JSON.
- * Reference: tests/Issue575-drc_Natural_Tone_Preamp_7_unconnected_items-freerouting_drc.json
+ * Reference: fixtures/Issue575-drc_Natural_Tone_Preamp_7_unconnected_items-freerouting_drc.json
  */
 public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
@@ -149,7 +149,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
      * affected by normalization failures, so that number must stay stable.
      *
      * <p>Reference:
-     * {@code tests/Issue575-drc_Natural_Tone_Preamp_7_unconnected_items-freerouting_drc.json}
+     * {@code fixtures/Issue575-drc_Natural_Tone_Preamp_7_unconnected_items-freerouting_drc.json}
      */
     @Test
     void test_DRC_Dangling_Track_Count_Matches_Reference() {

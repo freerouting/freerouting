@@ -12,7 +12,7 @@ import java.nio.file.Path;
 
 /**
  * Utility methods for loading {@link RoutingBoard} instances from DSN fixture files
- * inside the {@code tests/} directory. Intended for use in unit tests only.
+ * inside the {@code fixtures/} directory. Intended for use in unit tests only.
  */
 public final class DsnTestFixtures {
 
@@ -20,7 +20,7 @@ public final class DsnTestFixtures {
   }
 
   /**
-   * Opens a DSN fixture file from the {@code tests/} directory as a stream.
+   * Opens a DSN fixture file from the {@code fixtures/} directory as a stream.
    * Throws {@link UncheckedIOException} if the file cannot be found, so tests can
    * call this without a {@code throws} clause.
    *
@@ -35,7 +35,7 @@ public final class DsnTestFixtures {
   }
 
   /**
-   * Loads a board from a named DSN fixture file in the {@code tests/} directory.
+   * Loads a board from a named DSN fixture file in the {@code fixtures/} directory.
    *
    * @param filename the filename (e.g. {@code "Issue143-rpi_splitter.dsn"})
    * @return the loaded routing board
@@ -60,14 +60,14 @@ public final class DsnTestFixtures {
 
   static InputStream openFixtureStream(String filename) throws IOException {
     Path searchDir = Path.of(".").toAbsolutePath();
-    File candidate = Path.of(searchDir.toString(), "tests", filename).toFile();
+    File candidate = Path.of(searchDir.toString(), "fixtures", filename).toFile();
     while (!candidate.exists()) {
       searchDir = searchDir.getParent();
       if (searchDir == null) {
         throw new IOException("Cannot find DSN fixture: " + filename
             + " — searched all ancestors of " + Path.of(".").toAbsolutePath());
       }
-      candidate = Path.of(searchDir.toString(), "tests", filename).toFile();
+      candidate = Path.of(searchDir.toString(), "fixtures", filename).toFile();
     }
     return new FileInputStream(candidate);
   }

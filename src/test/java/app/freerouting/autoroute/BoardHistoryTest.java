@@ -30,13 +30,13 @@ class BoardHistoryTest {
   void setUp() throws FileNotFoundException {
     // Load a simple board for testing
     HeadlessBoardManager boardManager1 = new HeadlessBoardManager(new RoutingJob());
-    FileInputStream inputStream1 = new FileInputStream("tests/empty_board.dsn");
+    FileInputStream inputStream1 = new FileInputStream("fixtures/empty_board.dsn");
     DsnFile.ReadResult result1 = boardManager1.loadFromSpecctraDsn(inputStream1, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
     board1 = boardManager1.get_routing_board();
 
     // Load a more complex board
     HeadlessBoardManager boardManager2 = new HeadlessBoardManager(new RoutingJob());
-    FileInputStream inputStream2 = new FileInputStream("tests/Issue159-setonix_2hp-pcb.dsn");
+    FileInputStream inputStream2 = new FileInputStream("fixtures/Issue159-setonix_2hp-pcb.dsn");
     DsnFile.ReadResult result2 = boardManager2.loadFromSpecctraDsn(inputStream2, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
     board2 = boardManager2.get_routing_board();
 

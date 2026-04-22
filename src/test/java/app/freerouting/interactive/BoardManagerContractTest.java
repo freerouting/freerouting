@@ -45,7 +45,7 @@ class BoardManagerContractTest {
   void headlessManager_getInteractiveSettings_returnsNull() throws FileNotFoundException {
     var manager = new HeadlessBoardManager(new RoutingJob());
     manager.loadFromSpecctraDsn(
-        new FileInputStream("tests/empty_board.dsn"),
+        new FileInputStream("fixtures/empty_board.dsn"),
         new BoardObserverAdaptor(),
         new ItemIdentificationNumberGenerator());
 
@@ -57,7 +57,7 @@ class BoardManagerContractTest {
   void headlessManager_deprecated_getSettings_alsoReturnsNull() throws FileNotFoundException {
     var manager = new HeadlessBoardManager(new RoutingJob());
     manager.loadFromSpecctraDsn(
-        new FileInputStream("tests/empty_board.dsn"),
+        new FileInputStream("fixtures/empty_board.dsn"),
         new BoardObserverAdaptor(),
         new ItemIdentificationNumberGenerator());
 

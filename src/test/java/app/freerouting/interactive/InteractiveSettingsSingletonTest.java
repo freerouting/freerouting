@@ -31,7 +31,7 @@ class InteractiveSettingsSingletonTest {
 
     headlessManager = new HeadlessBoardManager(new RoutingJob());
     headlessManager.loadFromSpecctraDsn(
-        new FileInputStream("tests/empty_board.dsn"),
+        new FileInputStream("fixtures/empty_board.dsn"),
         new BoardObserverAdaptor(),
         new ItemIdentificationNumberGenerator());
   }

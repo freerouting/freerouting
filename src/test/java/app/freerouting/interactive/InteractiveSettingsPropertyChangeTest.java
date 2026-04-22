@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class InteractiveSettingsPropertyChangeTest {
 
-  private static final String TEST_DSN = "tests/empty_board.dsn";
+  private static final String TEST_DSN = "fixtures/empty_board.dsn";
 
   private InteractiveSettings settings;
 
