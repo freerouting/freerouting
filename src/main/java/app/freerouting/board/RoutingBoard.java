@@ -737,7 +737,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             sample_width);
         Point curr_last_corner = new_polyline.last_corner();
         if (!(curr_last_corner instanceof IntPoint)) {
-          FRLogger.warn("RoutingBoard.insert_forced_trace_polyline: IntPoint expected");
+          FRLogger.trace("RoutingBoard.insert_forced_trace_polyline: IntPoint expected");
           if (p_net_no_arr != null && p_net_no_arr.length > 0 && p_net_no_arr[0] == 94) {
             FRLogger.trace(
                 "RoutingBoard.insert_forced_trace_polyline",
@@ -792,7 +792,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
           p_clearance_class_no, null, p_max_recursion_depth, p_max_via_recursion_depth,
           p_max_spring_over_recursion_depth);
       if (!insert_ok) {
-        FRLogger.warn("RoutingBoard.insert_forced_trace_polyline: shove trace failed");
+        FRLogger.trace("RoutingBoard.insert_forced_trace_polyline: shove trace failed");
         return null;
       }
     }
@@ -869,8 +869,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     } catch (Exception e) {
       // Max normalization depth is hit for geometrically complex or degenerate trace segments.
       // The router skips the segment and continues; affected connections may remain unrouted.
-      FRLogger.warn("RoutingBoard.insert_forced_trace_polyline: A trace could not be normalized and was skipped. Cause: " + e.getMessage());
-      FRLogger.debug("RoutingBoard.insert_forced_trace_polyline: normalization stack: " + e);
+      FRLogger.trace("RoutingBoard.insert_forced_trace_polyline: A trace could not be normalized and was skipped. Cause: " + e.getMessage());
     }
 
     // To avoid, that a separate handling for moving backwards in the own trace line
