@@ -403,10 +403,8 @@ public class HeadlessBoardManager implements BoardManager {
 
       if (dsnResult instanceof DsnReadResult.Success success) {
         this.board = (RoutingBoard) success.board();
-        this.interactiveSettings = new InteractiveSettings(this.board);
       } else if (dsnResult instanceof DsnReadResult.OutlineMissing outlineMissing) {
         this.board = (RoutingBoard) outlineMissing.board();
-        this.interactiveSettings = new InteractiveSettings(this.board);
       } else {
         // ParseError or IoError — no board was constructed
         if (dsnResult instanceof DsnReadResult.IoError ioError) {
