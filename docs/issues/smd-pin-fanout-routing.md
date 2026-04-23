@@ -511,7 +511,7 @@ Create `src/main/java/app/freerouting/autoroute/BatchFanout.java` with:
 
 #### `Dac2020Bm05RoutingTest.java` — primary bm05 acceptance gate
 
-Create `src/test/java/app/freerouting/tests/Dac2020Bm05RoutingTest.java` with four escalating tests:
+Create `src/test/java/app/freerouting/fixtures/Dac2020Bm05RoutingTest.java` with four escalating tests:
 
 ```java
 // Ultra-fast smoke (15 s) — at least 1 of 2 SMD items routed after fix
@@ -533,7 +533,7 @@ Create `src/test/java/app/freerouting/tests/Dac2020Bm05RoutingTest.java` with fo
 
 #### `SmdPinFanoutRoutingTest.java` — cross-board regression suite
 
-Create `src/test/java/app/freerouting/tests/SmdPinFanoutRoutingTest.java`.  Covers four boards and one synthetic DSN:
+Create `src/test/java/app/freerouting/fixtures/SmdPinFanoutRoutingTest.java`.  Covers four boards and one synthetic DSN:
 
 | Test method | Board | Current result | After fix |
 |---|---|---|---|
@@ -591,7 +591,7 @@ if (Boolean.TRUE.equals(this.settings.withFanout)
 Run `scripts/tests/compare-versions.ps1` with `Issue508-DAC2020_bm05.dsn` after Sub-issues #1–5 are complete:
 
 ```powershell
-.\scripts\tests\compare-versions.ps1 -InputFile "tests\Issue508-DAC2020_bm05.dsn" `
+.\scripts\tests\compare-versions.ps1 -InputFile "fixtures\Issue508-DAC2020_bm05.dsn" `
     -MaxPasses 20 -JobTimeout "00:05:00"
 ```
 
@@ -631,8 +631,8 @@ Sub-issue #0 (fix Pin.is_obstacle — quickest possible fix, validate alone)
 | `src/main/java/app/freerouting/settings/sources/DefaultSettings.java` | Modify | 🔲 Open | Sub-issue #3: Set `withFanout = true` |
 | `docs/settings.md` | Modify | 🔲 Open | Document `withFanout` setting |
 | `fixtures/SMD-routing-issue-demo.dsn` | **New** | ✅ Created | Minimal synthetic 2-layer all-SMD board (6-pin QFN + 0603s, 6 nets); proves bug with score `0.00` |
-| `src/test/java/app/freerouting/tests/Dac2020Bm05RoutingTest.java` | **New** | ✅ Created | Primary bm05 acceptance gate (4 escalating tests) |
-| `src/test/java/app/freerouting/tests/SmdPinFanoutRoutingTest.java` | **New** | ✅ Created | Cross-board regression suite (4 boards × 2 tests each + 3 synthetic DSN tests) |
+| `src/test/java/app/freerouting/fixtures/Dac2020Bm05RoutingTest.java` | **New** | ✅ Created | Primary bm05 acceptance gate (4 escalating tests) |
+| `src/test/java/app/freerouting/fixtures/SmdPinFanoutRoutingTest.java` | **New** | ✅ Created | Cross-board regression suite (4 boards × 2 tests each + 3 synthetic DSN tests) |
 
 ---
 
