@@ -231,7 +231,7 @@ class ApiRoutingTest {
   private static Path findTestFile(String filename) throws IOException {
     Path dir = Path.of(".").toAbsolutePath();
     for (int i = 0; i < 10; i++) {
-      Path candidate = dir.resolve("tests").resolve(filename);
+      Path candidate = dir.resolve("fixtures").resolve(filename);
       if (Files.exists(candidate)) {
         return candidate;
       }

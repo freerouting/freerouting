@@ -1,0 +1,105 @@
+(pcb "SMD-routing-issue-demo.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "freerouting-test")
+    (host_version "1.0")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Bottom
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  0 0  150000 0  150000 -90000  0 -90000  0 0)
+    )
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (library
+    (padstack Rect[T]Pad_800.000000x200.000000_um
+      (shape (rect Top -400 -100 400 100))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1100.000000x1000.000000_um
+      (shape (rect Top -550 -500 550 500))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle Top 600))
+      (shape (circle Bottom 600))
+      (attach off)
+    )
+    (image "MiniQFN-6"
+      (pin Rect[T]Pad_800.000000x200.000000_um 1 -3000  400)
+      (pin Rect[T]Pad_800.000000x200.000000_um 2 -3000    0)
+      (pin Rect[T]Pad_800.000000x200.000000_um 3 -3000 -400)
+      (pin Rect[T]Pad_800.000000x200.000000_um 4  3000 -400)
+      (pin Rect[T]Pad_800.000000x200.000000_um 5  3000    0)
+      (pin Rect[T]Pad_800.000000x200.000000_um 6  3000  400)
+    )
+    (image "0603"
+      (pin Rect[T]Pad_1100.000000x1000.000000_um 1 -850 0)
+      (pin Rect[T]Pad_1100.000000x1000.000000_um 2  850 0)
+    )
+  )
+  (placement
+    (component "MiniQFN-6"
+      (place U1 75000 -45000 front 0.000000)
+    )
+    (component "0603"
+      (place R1 20000  -35000 front 0.000000)
+      (place R2 130000 -35000 front 0.000000)
+      (place R3 20000  -55000 front 0.000000)
+      (place R4 130000 -55000 front 0.000000)
+    )
+  )
+  (network
+    (net NET_CROSS_A
+      (pins U1-1 R2-2)
+    )
+    (net NET_CROSS_B
+      (pins U1-6 R1-1)
+    )
+    (net NET_LOCAL_LEFT_MID
+      (pins U1-2 R1-2)
+    )
+    (net NET_LOCAL_LEFT_BOT
+      (pins U1-3 R3-2)
+    )
+    (net NET_LOCAL_RIGHT_MID
+      (pins U1-5 R2-1)
+    )
+    (net NET_LOCAL_RIGHT_BOT
+      (pins U1-4 R4-1)
+    )
+    (class default
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)
+
+
+

@@ -39,7 +39,7 @@ import org.junit.jupiter.api.Test;
  * Attached files: DSN file (Issue229-display-8-digit-hc595.dsn) and KiCad PCB file.
  * Command line arguments: none.
  */
-public class Issue229Test extends TestBasedOnAnIssue {
+public class Display8DigitRoutingTest extends RoutingFixtureTest {
 
   @Test
   void test_Issue_229_Keepout_zone_was_not_exported_correctly() {

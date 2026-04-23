@@ -731,7 +731,7 @@ There were no automated tests covering the GUI startup path (without a display) 
    - Calling `reset(board)` a second time replaces the singleton and returns a fresh instance.
    - The merged `RouterSettings` is non-null even with only `DefaultSettings` + `InteractiveSettings` sources.
 
-2. Added `HeadlessCompleteRoutingTest` (package `app.freerouting.tests`, extends `TestBasedOnAnIssue`) – routing jobs complete without touching `InteractiveSettings`:
+2. Added `HeadlessCompleteRoutingTest` (package `app.freerouting.tests`, extends `RoutingFixtureTest`) – routing jobs complete without touching `InteractiveSettings`:
    - Full routing pass on `Issue508-DAC2020_bm01.dsn` (3 passes, 50 items, 90 s timeout) reaches a terminal state.
    - Empty-board routing (`empty_board.dsn`, 1 pass, 30 s timeout) completes without NPE.
    - `HeadlessBoardManager.getInteractiveSettings()` returns `null` throughout headless routing.

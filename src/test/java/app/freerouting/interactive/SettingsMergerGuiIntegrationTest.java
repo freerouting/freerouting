@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class SettingsMergerGuiIntegrationTest {
 
-    private static final String TEST_DSN = "tests/empty_board.dsn";
+    private static final String TEST_DSN = "fixtures/empty_board.dsn";
 
     private RoutingBoard board;
 

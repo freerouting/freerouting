@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class Issue026Test extends TestBasedOnAnIssue {
+public class J2ReferenceRoutingTest extends RoutingFixtureTest {
 
   @Test
   void test_Issue_026_Autorouter_interrupted_and_connections_not_found() {

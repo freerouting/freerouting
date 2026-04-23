@@ -60,7 +60,7 @@ class HeadlessRoutingTest {
   void headlessManager_getInteractiveSettings_isNullAfterDsnLoad() {
     assertDoesNotThrow(() -> {
       var manager = new HeadlessBoardManager(new RoutingJob());
-      try (FileInputStream dsnInput = new FileInputStream("tests/empty_board.dsn")) {
+      try (FileInputStream dsnInput = new FileInputStream("fixtures/empty_board.dsn")) {
         manager.loadFromSpecctraDsn(
             dsnInput,
             new BoardObserverAdaptor(),
@@ -131,13 +131,13 @@ class HeadlessRoutingTest {
     RoutingJob job = new RoutingJob(session.id);
 
     Path testDirectory = Path.of(".").toAbsolutePath();
-    File testFile = Path.of(testDirectory.toString(), "tests", filename).toFile();
+    File testFile = Path.of(testDirectory.toString(), "fixtures", filename).toFile();
     while (!testFile.exists()) {
       testDirectory = testDirectory.getParent();
       if (testDirectory == null) {
         break;
       }
-      testFile = Path.of(testDirectory.toString(), "tests", filename).toFile();
+      testFile = Path.of(testDirectory.toString(), "fixtures", filename).toFile();
     }
 
     try {

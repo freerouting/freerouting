@@ -14,7 +14,7 @@ import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.management.SessionManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.sources.TestingSettings;
-import app.freerouting.tests.TestBasedOnAnIssue;
+import app.freerouting.tests.RoutingFixtureTest;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class DrcCoordinateTest extends TestBasedOnAnIssue {
+public class DrcCoordinateTest extends RoutingFixtureTest {
 
     @BeforeEach
     protected void setUp() {

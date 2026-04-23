@@ -57,7 +57,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://github.com/freerouting/freerouting/issues/555">GitHub Issue #555</a>
  */
-public class Issue555Test extends TestBasedOnAnIssue {
+public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
 
   @Test
   @Disabled("Temporary disabled: Routing_performance_with_BBD_Mars_64")

@@ -5,7 +5,7 @@ import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class MaxItemsTest extends TestBasedOnAnIssue {
+public class MaxItemsRoutingTest extends RoutingFixtureTest {
 
     @Test
     public void testMaxItemsLimit() {

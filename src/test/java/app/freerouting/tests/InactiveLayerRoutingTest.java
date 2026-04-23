@@ -126,7 +126,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @see <a href="https://github.com/freerouting/freerouting/issues/230">GitHub Issue #230</a>
  */
-public class Issue230Test extends TestBasedOnAnIssue {
+public class InactiveLayerRoutingTest extends RoutingFixtureTest {
 
   private RoutingJob job;
 

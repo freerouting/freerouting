@@ -3,13 +3,13 @@
 #
 # Usage:
 #   .\compare-versions.ps1
-#   .\compare-versions.ps1 -de "$PSScriptRoot\..\..\tests\Issue508-DAC2020_bm01.dsn"
+#   .\compare-versions.ps1 -de "$PSScriptRoot\..\..\fixtures\Issue508-DAC2020_bm01.dsn"
 #   .\compare-versions.ps1 -DebugFilterByNet "Net-(C7-Pad2)"
 #   .\compare-versions.ps1 -LogNameSuffix "max42"
 
 param(
-    [string]$de = "$PSScriptRoot\..\..\tests\Issue230-CNH_Functional_Tester_1.dsn",
-    [string]$do = "$PSScriptRoot\..\..\tests\Issue230-CNH_Functional_Tester_1.ses",
+    [string]$de = "$PSScriptRoot\..\..\fixtures\Issue508-DAC2020_bm05.dsn",
+    [string]$do = "$PSScriptRoot\..\..\fixtures\Issue508-DAC2020_bm05.ses",
     [string]$LoggingLocation = "$PSScriptRoot\..\..\logs\",
     [string]$LoggingLevel = "TRACE",
     [string]$LoggingPattern = "%msg%n",
