@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 public class DevBoardClearanceRoutingTest extends RoutingFixtureTest {
 
   @Test
-  @Disabled("Temporary disabled: Freerouting leaves 2 items unconnected.")
   void test_Issue_558_Clearance_violation_at_board_edge() {
     var job = GetRoutingJob("Issue558-dev-board.dsn");
 
