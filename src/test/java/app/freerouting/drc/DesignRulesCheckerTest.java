@@ -15,7 +15,7 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.management.SessionManager;
 import app.freerouting.settings.GlobalSettings;
-import app.freerouting.tests.RoutingFixtureTest;
+import app.freerouting.fixtures.RoutingFixtureTest;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.File;

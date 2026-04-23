@@ -8,15 +8,15 @@
 #   .\compare-versions.ps1 -LogNameSuffix "max42"
 
 param(
-    [string]$de = "$PSScriptRoot\..\..\fixtures\Issue508-DAC2020_bm05.dsn",
-    [string]$do = "$PSScriptRoot\..\..\fixtures\Issue508-DAC2020_bm05.ses",
+    [string]$de = "$PSScriptRoot\..\..\fixtures\Issue555-BBD_Mars-64.dsn",
+    [string]$do = "$PSScriptRoot\..\..\fixtures\Issue555-BBD_Mars-64.ses",
     [string]$LoggingLocation = "$PSScriptRoot\..\..\logs\",
     [string]$LoggingLevel = "TRACE",
     [string]$LoggingPattern = "%msg%n",
     [int]$max_passes = 0,
     [int]$max_items = 0,
     [int]$max_threads = 1,
-    [string]$job_timeout = "00:03:00",
+    [string]$job_timeout = "00:30:00",
     [Alias("debug.filter_by_net")]
     [string]$DebugFilterByNet = "",
     [string]$LogNameSuffix = ""

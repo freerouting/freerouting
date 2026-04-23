@@ -13,7 +13,7 @@ import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.settings.GlobalSettings;
 import java.util.Collection;
 
-import app.freerouting.tests.RoutingFixtureTest;
+import app.freerouting.fixtures.RoutingFixtureTest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

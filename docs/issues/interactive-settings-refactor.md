@@ -715,7 +715,7 @@ Some autorouting or API code paths may transitively reach `interactiveSettings` 
 
 **Files:**
 - `src/test/java/app/freerouting/interactive/GuiStartupHeadlessTest.java`
-- `src/test/java/app/freerouting/tests/HeadlessCompleteRoutingTest.java`
+- `src/test/java/app/freerouting/fixtures/HeadlessCompleteRoutingTest.java`
 
 ### Problem
 

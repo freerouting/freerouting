@@ -1,4 +1,4 @@
-package app.freerouting.tests;
+package app.freerouting.fixtures;
 
 import app.freerouting.Freerouting;
 import app.freerouting.board.ItemIdentificationNumberGenerator;

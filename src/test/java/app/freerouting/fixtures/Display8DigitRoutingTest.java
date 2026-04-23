@@ -1,4 +1,4 @@
-package app.freerouting.tests;
+package app.freerouting.fixtures;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
