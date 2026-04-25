@@ -50,7 +50,7 @@ public class SessionControllerV1 extends BaseController {
     // filter the list of sessions to only include the ones that the user has access
     // to
     var response = GSON.toJson(SessionManager.getInstance().listSessionIds(userId));
-    FRAnalytics.apiEndpointCalled("GET v1/sessions/list", "", response);
+    FRAnalytics.apiEndpointCalled("GET v1/sessions/list", "", response, userId);
     return Response.ok(response).build();
   }
 
@@ -73,7 +73,7 @@ public class SessionControllerV1 extends BaseController {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
     } else {
       var response = GSON.toJson(newSession);
-      FRAnalytics.apiEndpointCalled("POST v1/sessions/create", "", response);
+      FRAnalytics.apiEndpointCalled("POST v1/sessions/create", "", response, userId);
       return Response.ok(response).build();
     }
   }
@@ -97,7 +97,7 @@ public class SessionControllerV1 extends BaseController {
       return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
     } else {
       var response = GSON.toJson(session);
-      FRAnalytics.apiEndpointCalled("GET v1/sessions/" + sessionId, "", response);
+      FRAnalytics.apiEndpointCalled("GET v1/sessions/" + sessionId, "", response, userId);
       return Response.ok(response).build();
     }
   }
@@ -125,7 +125,7 @@ public class SessionControllerV1 extends BaseController {
     var logs = logEntries.getEntries(null, session.id);
 
     var response = GSON.toJson(logs);
-    FRAnalytics.apiEndpointCalled("GET v1/sessions/" + sessionId + "/logs", "", response);
+    FRAnalytics.apiEndpointCalled("GET v1/sessions/" + sessionId + "/logs", "", response, userId);
     return Response.ok(response).build();
   }
 }

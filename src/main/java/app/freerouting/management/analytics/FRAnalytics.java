@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A class to manage analytics for the application.
@@ -368,11 +369,32 @@ public class FRAnalytics {
   }
 
   public static void apiEndpointCalled(String apiMethod, String requestBody, String responseBody) {
+    apiEndpointCalled(apiMethod, requestBody, responseBody, null);
+  }
+
+  /**
+   * Tracks an API endpoint call, attributing it to the authenticated caller identified by
+   * {@code userId}. When {@code userId} is non-null it is used as both the {@code anonymous_id}
+   * sent to the analytics backend and the {@code user_id} property stored in BigQuery, so that
+   * API-originated events can be correlated per caller even in headless/API-only deployments
+   * where the static {@link #permanent_user_id} is never set.
+   */
+  public static void apiEndpointCalled(String apiMethod, String requestBody, String responseBody, UUID userId) {
     Map<String, String> properties = new HashMap<>();
     properties.put("api_method", apiMethod);
     properties.put("api_request", requestBody);
     properties.put("api_response", responseBody);
 
-    trackAnonymousAction(permanent_user_id, "API Endpoint Called", properties);
+    // Determine the effective identity: prefer the per-request caller UUID over the
+    // static permanent_user_id (which is always null in headless / API-only mode).
+    String effectiveUserId = (userId != null) ? userId.toString() : permanent_user_id;
+
+    // Inject the resolved user_id into the properties map so that it overrides the
+    // null permanent_user_id that trackAnonymousAction would otherwise write.
+    if (effectiveUserId != null) {
+      properties.put("user_id", effectiveUserId);
+    }
+
+    trackAnonymousAction(effectiveUserId, "API Endpoint Called", properties);
   }
 }

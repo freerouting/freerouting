@@ -123,7 +123,7 @@ public class JobControllerV1 extends BaseController {
 
     // Return the job object
     var response = GSON.toJson(job);
-    FRAnalytics.apiEndpointCalled("POST v1/jobs/enqueue", request, response);
+    FRAnalytics.apiEndpointCalled("POST v1/jobs/enqueue", request, response, userId);
     return Response
         .ok(response)
         .build();
@@ -165,7 +165,7 @@ public class JobControllerV1 extends BaseController {
 
     // Return a list of jobs in the session
     var response = GSON.toJson(result);
-    FRAnalytics.apiEndpointCalled("GET v1/jobs/list/" + sessionId, "", response);
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/list/" + sessionId, "", response, userId);
     return Response
         .ok(response)
         .build();
@@ -214,7 +214,7 @@ public class JobControllerV1 extends BaseController {
     }
 
     var response = GSON.toJson(job);
-    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId, "", response);
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId, "", response, userId);
     return Response
         .ok(response)
         .build();
@@ -273,7 +273,7 @@ public class JobControllerV1 extends BaseController {
         .saveJob(job);
 
     var response = GSON.toJson(job);
-    FRAnalytics.apiEndpointCalled("PUT v1/jobs/" + jobId + "/start", "", response);
+    FRAnalytics.apiEndpointCalled("PUT v1/jobs/" + jobId + "/start", "", response, userId);
     return Response
         .ok(response)
         .build();
@@ -323,7 +323,7 @@ public class JobControllerV1 extends BaseController {
         .cancelJob(job);
 
     var response = GsonProvider.GSON.toJson(job);
-    FRAnalytics.apiEndpointCalled("PUT v1/jobs/" + jobId + "/cancel", "", response);
+    FRAnalytics.apiEndpointCalled("PUT v1/jobs/" + jobId + "/cancel", "", response, userId);
 
     return Response
         .ok(response)
@@ -393,7 +393,7 @@ public class JobControllerV1 extends BaseController {
 
     // Return the job object
     var response = GSON.toJson(job);
-    FRAnalytics.apiEndpointCalled("POST v1/jobs/" + jobId + "/settings", GSON.toJson(routerSettings), response);
+    FRAnalytics.apiEndpointCalled("POST v1/jobs/" + jobId + "/settings", GSON.toJson(routerSettings), response, userId);
     return Response
         .ok(response)
         .build();
@@ -491,7 +491,7 @@ public class JobControllerV1 extends BaseController {
           .toJson(input)
           .replace(input.dataBase64, TextManager.shortenString(input.dataBase64, 4));
       var response = GSON.toJson(job);
-      FRAnalytics.apiEndpointCalled("POST v1/jobs/" + jobId + "/input", request, response);
+      FRAnalytics.apiEndpointCalled("POST v1/jobs/" + jobId + "/input", request, response, userId);
       return Response
           .ok(response)
           .build();
@@ -590,7 +590,7 @@ public class JobControllerV1 extends BaseController {
 
     var response = GSON.toJson(result);
     FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output", "",
-        response.replace(result.dataBase64, TextManager.shortenString(result.dataBase64, 4)));
+        response.replace(result.dataBase64, TextManager.shortenString(result.dataBase64, 4)), userId);
 
     // Return 202 Accepted for in-progress jobs, 200 OK for completed jobs
     if (isInProgress) {
@@ -690,7 +690,7 @@ public class JobControllerV1 extends BaseController {
     }, 0, 200, TimeUnit.MILLISECONDS);
 
     // Log the API call
-    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output/stream", "", "stream-started");
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output/stream", "", "stream-started", userId);
   }
 
   @Operation(summary = "Get job logs", description = "Retrieves all log entries associated with a specific routing job.")
@@ -735,7 +735,7 @@ public class JobControllerV1 extends BaseController {
     var logs = logEntries.getEntries(null, job.id);
 
     var response = GSON.toJson(logs);
-    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/logs", "", response);
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/logs", "", response, userId);
     return Response
         .ok(response)
         .build();
@@ -809,7 +809,7 @@ public class JobControllerV1 extends BaseController {
     });
 
     // Log the API call
-    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/logs/stream", "", "stream-started");
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/logs/stream", "", "stream-started", userId);
   }
 
   /* Get DRC report for a job */
@@ -888,7 +888,7 @@ public class JobControllerV1 extends BaseController {
     String drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
 
     // Log the API call
-    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/drc", "", "drc-report-generated");
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/drc", "", "drc-report-generated", userId);
 
     return Response
         .ok(drcReportJson)
