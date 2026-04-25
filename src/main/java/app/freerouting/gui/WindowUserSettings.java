@@ -43,9 +43,9 @@ public class WindowUserSettings extends WindowBase {
 
     JDialog profileDialog = new JDialog((Frame) null, "User Settings", true);
     profileDialog.setTitle(tm.getText("title"));
-    profileDialog.setSize(480, 500);
-    profileDialog.setMinimumSize(new Dimension(480, 500));
-    profileDialog.setMaximumSize(new Dimension(480, 500));
+    profileDialog.setSize(480, 600);
+    profileDialog.setMinimumSize(new Dimension(480, 600));
+    profileDialog.setMaximumSize(new Dimension(480, 600));
     profileDialog.setResizable(false);
     profileDialog.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
@@ -58,11 +58,13 @@ public class WindowUserSettings extends WindowBase {
     // User ID
     gbc.gridx = 0;
     gbc.gridy = 0;
+    gbc.gridwidth = 1;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
     JLabel userIdLabel = new JLabel(tm.getText("user_id"));
     profileDialog.add(userIdLabel, gbc);
     gbc.gridx = 1;
+    gbc.gridwidth = 3;
     gbc.weightx = 1.0;
     gbc.ipadx = 0;
     JTextField userIdField = new JTextField(globalSettings.userProfileSettings.userId);
@@ -72,11 +74,13 @@ public class WindowUserSettings extends WindowBase {
     // Email
     gbc.gridx = 0;
     gbc.gridy = 1;
+    gbc.gridwidth = 1;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
     JLabel emailLabel = new JLabel(tm.getText("email"));
     profileDialog.add(emailLabel, gbc);
     gbc.gridx = 1;
+    gbc.gridwidth = 3;
     gbc.weightx = 1.0;
     gbc.ipadx = 0;
     PlaceholderTextField emailField = new PlaceholderTextField(tm.getText("email_placeholder"));
@@ -86,7 +90,7 @@ public class WindowUserSettings extends WindowBase {
     // Telemetry
     gbc.gridx = 0;
     gbc.gridy = 2;
-    gbc.gridwidth = 2;
+    gbc.gridwidth = 4;
     JCheckBox telemetryCheckbox = new JCheckBox(tm.getText("allow_telemetry"));
     telemetryCheckbox.setSelected(globalSettings.userProfileSettings.isTelemetryAllowed);
     telemetryCheckbox.addItemListener(_ -> globalSettings.userProfileSettings.isTelemetryAllowed = telemetryCheckbox.isSelected());
@@ -95,7 +99,7 @@ public class WindowUserSettings extends WindowBase {
     // Contacting
     gbc.gridx = 0;
     gbc.gridy = 3;
-    gbc.gridwidth = 2;
+    gbc.gridwidth = 4;
     JCheckBox allowContactCheckbox = new JCheckBox(tm.getText("allow_contact"));
     allowContactCheckbox.setSelected(globalSettings.userProfileSettings.isContactAllowed);
     allowContactCheckbox.addItemListener(_ -> globalSettings.userProfileSettings.isContactAllowed = allowContactCheckbox.isSelected());
@@ -104,7 +108,7 @@ public class WindowUserSettings extends WindowBase {
     // Update button
     gbc.gridx = 0;
     gbc.gridy = 4;
-    gbc.gridwidth = 2;
+    gbc.gridwidth = 4;
     gbc.anchor = GridBagConstraints.CENTER;
     JButton updateButton = new JButton(tm.getText("save_settings_button"));
     var buttonSize = new Dimension(100, updateButton.getPreferredSize().height);
@@ -160,14 +164,14 @@ public class WindowUserSettings extends WindowBase {
     // Visual separation for statistics
     gbc.gridx = 0;
     gbc.gridy = 5;
-    gbc.gridwidth = 2;
+    gbc.gridwidth = 4;
     gbc.fill = GridBagConstraints.BOTH;
     JSeparator separator = new JSeparator();
     profileDialog.add(separator, gbc);
 
     // Statistics header
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.gridwidth = 2;
+    gbc.gridwidth = 4;
     gbc.gridy = 6;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
@@ -177,11 +181,13 @@ public class WindowUserSettings extends WindowBase {
     // Statistics
     gbc.gridwidth = 1;
     gbc.gridy = 7;
+    gbc.gridx = 0;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
     JLabel sessionsLabel = new JLabel(tm.getText("sessions_total"));
     profileDialog.add(sessionsLabel, gbc);
     gbc.gridx = 1;
+    gbc.gridwidth = 3;
     gbc.weightx = 1.0;
     gbc.ipadx = 0;
     JLabel sessionsValue = new JLabel(globalSettings.statistics.sessionsTotal.toString());
@@ -189,11 +195,13 @@ public class WindowUserSettings extends WindowBase {
 
     gbc.gridx = 0;
     gbc.gridy = 8;
+    gbc.gridwidth = 1;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
     JLabel startedJobsLabel = new JLabel(tm.getText("jobs_started"));
     profileDialog.add(startedJobsLabel, gbc);
     gbc.gridx = 1;
+    gbc.gridwidth = 3;
     gbc.weightx = 1.0;
     gbc.ipadx = 0;
     JLabel startedJobsValue = new JLabel(globalSettings.statistics.jobsStarted.toString());
@@ -201,11 +209,13 @@ public class WindowUserSettings extends WindowBase {
 
     gbc.gridx = 0;
     gbc.gridy = 9;
+    gbc.gridwidth = 1;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
     JLabel completedJobsLabel = new JLabel(tm.getText("jobs_completed"));
     profileDialog.add(completedJobsLabel, gbc);
     gbc.gridx = 1;
+    gbc.gridwidth = 3;
     gbc.weightx = 1.0;
     gbc.ipadx = 0;
     JLabel completedJobsValue = new JLabel(globalSettings.statistics.jobsCompleted.toString());
@@ -214,7 +224,7 @@ public class WindowUserSettings extends WindowBase {
     // Visual separation for sponsor message
     gbc.gridx = 0;
     gbc.gridy = 10;
-    gbc.gridwidth = 2;
+    gbc.gridwidth = 4;
     gbc.fill = GridBagConstraints.BOTH;
     JSeparator separator2 = new JSeparator();
     profileDialog.add(separator2, gbc);
@@ -222,17 +232,47 @@ public class WindowUserSettings extends WindowBase {
     // Sponsor message
     gbc.gridx = 0;
     gbc.gridy = 11;
-    gbc.gridwidth = 2;
+    gbc.gridwidth = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     JLabel sponsorMessage = new JLabel(tm.getText("sponsor_message"));
     profileDialog.add(sponsorMessage, gbc);
 
-    // Sponsor button
+    // Email me button (columns 0-1)
     gbc.gridy = 12;
+    gbc.gridx = 0;
+    gbc.gridwidth = 2;
     gbc.anchor = GridBagConstraints.CENTER;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    JButton emailButton = new JButton(tm.getText("email_button"));
+    emailButton.addActionListener(_ ->
+    {
+      String mailtoUri = "mailto:info@freerouting.app?subject=My%20success%20story%20with%20Freerouting";
+      try {
+        // Prefer Desktop.mail(); on Windows it may fail if no default client is set
+        Desktop.getDesktop().mail(new URI(mailtoUri));
+      } catch (Exception ex1) {
+        try {
+          // Fall back to browse() which uses the Windows shell URL handler
+          Desktop.getDesktop().browse(new URI(mailtoUri));
+        } catch (Exception ex2) {
+          try {
+            // Last resort: invoke the Windows shell directly
+            Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "", mailtoUri});
+          } catch (Exception ex3) {
+            FRLogger.error("Failed to open email link", ex3);
+          }
+        }
+      }
+    });
+    profileDialog.add(emailButton, gbc);
+
+    // Sponsor button (columns 2-3)
+    gbc.gridy = 12;
+    gbc.gridx = 2;
+    gbc.gridwidth = 2;
+    gbc.anchor = GridBagConstraints.CENTER;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
     JButton sponsorButton = new JButton(tm.getText("sponsor_button"));
-    sponsorButton.setPreferredSize(new Dimension(150, sponsorButton.getPreferredSize().height));
-    sponsorButton.setMaximumSize(new Dimension(150, sponsorButton.getPreferredSize().height));
     sponsorButton.addActionListener(_ ->
     {
       try {
