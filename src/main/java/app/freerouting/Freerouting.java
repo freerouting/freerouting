@@ -121,6 +121,27 @@ public class Freerouting {
       } catch (IOException e) {
         FRLogger.error("Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
       }
+
+      // Print a sponsor/success-story message to stdout (not the log) once the
+      // condition is met: ≥5 completed jobs and the user has not yet saved their email
+      if ((globalSettings.statistics.jobsCompleted >= 5)
+          && globalSettings.userProfileSettings.userEmail.isEmpty()) {
+        String nl = System.lineSeparator();
+        System.out.println(
+            nl
+            + "╔══════════════════════════════════════════════════════════════════╗" + nl
+            + "║           Thank you for using Freerouting!                       ║" + nl
+            + "║                                                                  ║" + nl
+            + "║  If you would like to support the project, please consider       ║" + nl
+            + "║  sponsoring me at https://github.com/sponsors/andrasfuchs        ║" + nl
+            + "║  Even a small monthly donation is greatly appreciated!           ║" + nl
+            + "║                                                                  ║" + nl
+            + "║  You can also fuel my passion by sharing your success stories    ║" + nl
+            + "║  with Freerouting — send them to info@freerouting.app            ║" + nl
+            + "║  I would love to read every one of them!                         ║" + nl
+            + "╚══════════════════════════════════════════════════════════════════╝"
+        );
+      }
     }
 
     return true;
