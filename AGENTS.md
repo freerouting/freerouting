@@ -88,3 +88,16 @@ Execute the following commands from the root directory using the Gradle Wrapper:
 # Communication Style
 
 Your communication should be direct, professional, and technically precise. Acknowledge and respect the inherent complexity of PCB routing logic. Do not oversimplify geometric problems; instead, provide thorough, algorithmically-sound justifications for any proposed code changes. Output complete and correct code when finalizing solutions.
+
+- **Spelling:** The product name is always written **"Freerouting"** (capital F). Never write "freerouting" in prose, documentation, or user-facing messages.
+
+# DRC & Clearance Architecture
+
+Key facts about how design-rule checking and clearances work — important context for any issue investigation:
+
+- **Internal DRC entry point:** `DesignRulesChecker.getAllClearanceViolations()` is the comprehensive DRC method that iterates all board item pairs. Always use this when you need a complete violation count. The shortcut `board.get_outline().clearance_violation_count()` (currently used in `BoardStatistics`) only checks violations from the `BoardOutline`'s perspective and is incomplete.
+- **`BoardStatistics.clearanceViolations.totalCount` is currently incomplete:** It calls `board.get_outline().clearance_violation_count()` instead of `DesignRulesChecker.getAllClearanceViolations()`. Do not treat this count as a definitive "no violations" signal without understanding this limitation (see Issue 558).
+- **A passing test is not always correct:** A routing fixture test that asserts `clearanceViolations.totalCount == 0` may pass because the internal DRC is checking the wrong threshold, not because the routing is actually correct. Always verify that the DRC is checking the same clearance values that the final EDA tool (e.g. KiCad) will check.
+- **KiCad DSN export does not include copper-to-edge clearance:** KiCad's "copper to board edge clearance" setting is **not written into the Specctra `.dsn` file**. Freerouting therefore assigns the `BoardOutline` the default conductor-to-conductor clearance class and routes traces at that (smaller) distance from the board edge. KiCad's own DRC will flag violations after import. The Specctra format supports `(clearance_class ...)` inside `(boundary ...)`, and freerouting already parses it — the fix requires KiCad to start emitting it. See `docs/issues/Issue558-copper-to-edge-clearance.md` for the full analysis and workaround plan.
+- **Board outline clearance class:** The `BoardOutline` item's clearance class is set during `HeadlessBoardManager.create_board()` from `p_outline_clearance_class_name`. When this is `null` (the KiCad case), it falls back to `ItemClass.AREA` = class 1 = "default". The `ShapeSearchTree` then uses this class's compensation value to determine how close routing can approach the board edge.
+
