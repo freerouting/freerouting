@@ -859,8 +859,11 @@ public class BatchAutorouter extends NamedAlgorithm {
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED,
           currentPass, this.board.get_hash()));
     } else {
-      // TODO: set it to TIMED_OUT if it was interrupted because of timeout
-      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.CANCELLED,
+      // Distinguish between a user-requested cancellation and a job timeout so that
+      // API consumers can tell the two apart via TaskStateChangedEvent.
+      boolean isTimedOut = (job != null) && (job.state == RoutingJobState.TIMED_OUT);
+      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this,
+          isTimedOut ? TaskState.TIMED_OUT : TaskState.CANCELLED,
           currentPass, this.board.get_hash()));
     }
 

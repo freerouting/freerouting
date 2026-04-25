@@ -1270,13 +1270,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #hide_ratsnest()
    */
   public void remove_ratsnest() {
-    // TODO: test these two versions combined with get_ratsnest() method
-
-    // Version A
     ratsnest = null;
-
-    // Version B
-    // do nothing as we create a new instance of ratsnest every time
   }
 
   /**
@@ -1296,16 +1290,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #remove_ratsnest()
    */
   public RatsNest get_ratsnest() {
-    // TODO: test these two versions combined with remove_ratsnest() method
-
-    // Version A
     if (ratsnest == null) {
       ratsnest = new RatsNest(this.board);
     }
     return this.ratsnest;
-
-    // Version B
-    // return new RatsNest(this.board);
   }
 
   /**

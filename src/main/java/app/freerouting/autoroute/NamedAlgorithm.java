@@ -26,7 +26,10 @@ public abstract class NamedAlgorithm implements Serializable {
   protected final transient List<TaskStateChangedEventListener> taskStateChangedEventListeners = new ArrayList<>();
   protected final RouterSettings settings;
   // The routing board.
-  // TODO: This should be a transient field, but it is not possible to serialize the board with the JSON serializer.
+  // NOTE: Declared transient so that both Java object serialisation and Gson skip it.
+  // RoutingBoard is not JSON-serialisable, so it must be excluded from any serialised
+  // representation of a NamedAlgorithm. Callers are responsible for re-injecting the
+  // board reference after deserialisation if needed.
   protected transient RoutingBoard board;
 
   protected NamedAlgorithm(StoppableThread thread, RoutingBoard board, RouterSettings settings) {
