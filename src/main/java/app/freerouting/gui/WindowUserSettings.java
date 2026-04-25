@@ -87,9 +87,18 @@ public class WindowUserSettings extends WindowBase {
     emailField.setText(globalSettings.userProfileSettings.userEmail);
     profileDialog.add(emailField, gbc);
 
+    // Email hint
+    gbc.gridx = 1;
+    gbc.gridy = 2;
+    gbc.gridwidth = 3;
+    gbc.weightx = 1.0;
+    gbc.ipadx = 0;
+    JLabel emailHint = new JLabel(tm.getText("email_hint"));
+    profileDialog.add(emailHint, gbc);
+
     // Telemetry
     gbc.gridx = 0;
-    gbc.gridy = 2;
+    gbc.gridy = 3;
     gbc.gridwidth = 4;
     JCheckBox telemetryCheckbox = new JCheckBox(tm.getText("allow_telemetry"));
     telemetryCheckbox.setSelected(globalSettings.userProfileSettings.isTelemetryAllowed);
@@ -98,7 +107,7 @@ public class WindowUserSettings extends WindowBase {
 
     // Contacting
     gbc.gridx = 0;
-    gbc.gridy = 3;
+    gbc.gridy = 4;
     gbc.gridwidth = 4;
     JCheckBox allowContactCheckbox = new JCheckBox(tm.getText("allow_contact"));
     allowContactCheckbox.setSelected(globalSettings.userProfileSettings.isContactAllowed);
@@ -107,7 +116,7 @@ public class WindowUserSettings extends WindowBase {
 
     // Update button
     gbc.gridx = 0;
-    gbc.gridy = 4;
+    gbc.gridy = 5;
     gbc.gridwidth = 4;
     gbc.anchor = GridBagConstraints.CENTER;
     JButton updateButton = new JButton(tm.getText("save_settings_button"));
@@ -163,7 +172,7 @@ public class WindowUserSettings extends WindowBase {
 
     // Visual separation for statistics
     gbc.gridx = 0;
-    gbc.gridy = 5;
+    gbc.gridy = 6;
     gbc.gridwidth = 4;
     gbc.fill = GridBagConstraints.BOTH;
     JSeparator separator = new JSeparator();
@@ -172,7 +181,7 @@ public class WindowUserSettings extends WindowBase {
     // Statistics header
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.gridwidth = 4;
-    gbc.gridy = 6;
+    gbc.gridy = 7;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
     JLabel statisticsHeader = new JLabel(tm.getText("statistics_header", globalSettings.statistics.startTime.substring(0, 10)));
@@ -180,7 +189,7 @@ public class WindowUserSettings extends WindowBase {
 
     // Statistics
     gbc.gridwidth = 1;
-    gbc.gridy = 7;
+    gbc.gridy = 8;
     gbc.gridx = 0;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
@@ -194,7 +203,7 @@ public class WindowUserSettings extends WindowBase {
     profileDialog.add(sessionsValue, gbc);
 
     gbc.gridx = 0;
-    gbc.gridy = 8;
+    gbc.gridy = 9;
     gbc.gridwidth = 1;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
@@ -208,7 +217,7 @@ public class WindowUserSettings extends WindowBase {
     profileDialog.add(startedJobsValue, gbc);
 
     gbc.gridx = 0;
-    gbc.gridy = 9;
+    gbc.gridy = 10;
     gbc.gridwidth = 1;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
@@ -223,7 +232,7 @@ public class WindowUserSettings extends WindowBase {
 
     // Visual separation for sponsor message
     gbc.gridx = 0;
-    gbc.gridy = 10;
+    gbc.gridy = 11;
     gbc.gridwidth = 4;
     gbc.fill = GridBagConstraints.BOTH;
     JSeparator separator2 = new JSeparator();
@@ -231,14 +240,14 @@ public class WindowUserSettings extends WindowBase {
 
     // Sponsor message
     gbc.gridx = 0;
-    gbc.gridy = 11;
+    gbc.gridy = 12;
     gbc.gridwidth = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     JLabel sponsorMessage = new JLabel(tm.getText("sponsor_message"));
     profileDialog.add(sponsorMessage, gbc);
 
     // Email me button (columns 0-1)
-    gbc.gridy = 12;
+    gbc.gridy = 13;
     gbc.gridx = 0;
     gbc.gridwidth = 2;
     gbc.anchor = GridBagConstraints.CENTER;
@@ -247,17 +256,18 @@ public class WindowUserSettings extends WindowBase {
     emailButton.addActionListener(_ ->
     {
       String mailtoUri = "mailto:info@freerouting.app?subject=My%20success%20story%20with%20Freerouting";
+      String gmailUri  = "https://mail.google.com/mail/?view=cm&to=info%40freerouting.app&su=My%20success%20story%20with%20Freerouting";
       try {
         // Prefer Desktop.mail(); on Windows it may fail if no default client is set
         Desktop.getDesktop().mail(new URI(mailtoUri));
       } catch (Exception ex1) {
         try {
-          // Fall back to browse() which uses the Windows shell URL handler
-          Desktop.getDesktop().browse(new URI(mailtoUri));
+          // Fall back to Gmail compose URL in the default browser
+          Desktop.getDesktop().browse(new URI(gmailUri));
         } catch (Exception ex2) {
           try {
             // Last resort: invoke the Windows shell directly
-            Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "", mailtoUri});
+            Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "", gmailUri});
           } catch (Exception ex3) {
             FRLogger.error("Failed to open email link", ex3);
           }
@@ -267,7 +277,7 @@ public class WindowUserSettings extends WindowBase {
     profileDialog.add(emailButton, gbc);
 
     // Sponsor button (columns 2-3)
-    gbc.gridy = 12;
+    gbc.gridy = 13;
     gbc.gridx = 2;
     gbc.gridwidth = 2;
     gbc.anchor = GridBagConstraints.CENTER;
