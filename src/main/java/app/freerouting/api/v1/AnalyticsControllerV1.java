@@ -62,13 +62,11 @@ public class AnalyticsControllerV1 {
     }
 
     try {
-      // TODO: implement some caching mechanism, and insert the cached items in a
-      // batch
-
-      // Send the payload to the BigQuery analytics service
-      var bigqueryClient = new BigQueryClient(Constants.FREEROUTING_VERSION,
-          globalSettings.usageAndDiagnosticData.bigqueryServiceAccountKey);
-      bigqueryClient.track(trackPayload.userId, trackPayload.anonymousId, trackPayload.event, trackPayload.properties);
+      // Reuse the singleton BigQueryClient — credential refresh and GCP service
+      // construction happen at most once per process (or on key rotation).
+      BigQueryClient.getInstance(Constants.FREEROUTING_VERSION,
+          globalSettings.usageAndDiagnosticData.bigqueryServiceAccountKey)
+          .track(trackPayload.userId, trackPayload.anonymousId, trackPayload.event, trackPayload.properties);
     } catch (Exception e) {
       return Response
           .status(Response.Status.INTERNAL_SERVER_ERROR)
