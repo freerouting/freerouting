@@ -23,6 +23,9 @@ public class FreeroutingApplication extends Application {
     classes.add(ApiExceptionMapper.class);
     classes.add(NotFoundExceptionMapper.class);
     classes.add(app.freerouting.api.security.ApiKeyValidationFilter.class);
+    // Tracks all error (4xx/5xx) responses centrally; 2xx paths remain tracked
+    // individually by the controller methods with full request/response payloads.
+    classes.add(ApiAnalyticsFilter.class);
     classes.add(SseFeature.class);
     return classes;
   }
