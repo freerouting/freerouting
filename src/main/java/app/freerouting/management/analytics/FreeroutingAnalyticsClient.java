@@ -1,6 +1,5 @@
 package app.freerouting.management.analytics;
 
-import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.dto.Context;
 import app.freerouting.management.analytics.dto.Library;
 import app.freerouting.management.analytics.dto.Payload;
@@ -75,9 +74,11 @@ public class FreeroutingAnalyticsClient implements AnalyticsClient {
           // return response.toString();
         }
       } catch (Exception e) {
-        FRLogger.debug("Exception in FreeroutingAnalyticsClient.sendPayloadAsync: " + connection.getRequestMethod() + " " + connection
-            .getURL()
-            .toString() + " - " + e.getMessage(), null);
+        // Do not log here directly — connection may be null if the exception was thrown
+        // before openConnection() succeeded, and a per-failure log line would flood the
+        // output when the analytics endpoint is down.  Delegate to the aggregator, which
+        // logs the first failure immediately and then emits a single hourly summary.
+        AnalyticsErrorAggregator.recordFailure(endpoint, e);
       }
     }).start();
   }
