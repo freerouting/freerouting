@@ -91,6 +91,12 @@ public class GuiManager {
                 FRLogger.error("Couldn't read the file", e);
             }
 
+            if (routingJob.input == null) {
+                FRLogger.warn(tm.getText("message_6") + " " + globalSettings.initialInputFile + " "
+                                + tm.getText("message_7"));
+                return false;
+            }
+
             if (routingJob.input.format == FileFormat.UNKNOWN) {
                 FRLogger.warn(tm.getText("message_6") + " " + globalSettings.initialInputFile + " "
                                 + tm.getText("message_7"));

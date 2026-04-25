@@ -82,6 +82,12 @@ public class Freerouting {
     } catch (Exception e) {
       FRLogger.error("Couldn't load the input file '" + globalSettings.initialInputFile + "'", e);
     }
+
+    if (routingJob.input == null) {
+      FRLogger.warn("Couldn't read the input file '" + globalSettings.initialInputFile + "', aborting.");
+      return false;
+    }
+
     cliSession.addJob(routingJob);
 
     var desiredOutputFile = new File(globalSettings.initialOutputFile);
