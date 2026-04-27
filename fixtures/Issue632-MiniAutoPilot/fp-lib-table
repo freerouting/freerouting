@@ -1,0 +1,4 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "PKLibrary") (type "KiCad") (uri "C:/Users/pkapp/Documents/KiCad/10.0/footprints/PKLibrary.pretty") (options "") (descr ""))
+)
