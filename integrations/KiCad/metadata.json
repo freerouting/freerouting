@@ -112,6 +112,15 @@
       "download_size": 61403478,
       "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-2.1.0.zip",
       "install_size": 67021614
+    },
+    {
+      "version": "2.2.0",
+      "status": "stable",
+      "kicad_version": "6.0",
+      "download_sha256": "b8d5717656474231575c3d5c53c9a8377503b7515202ec4ac4467fdc96f95d5d",
+      "download_size": 53223841,
+      "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-2.2.0.zip",
+      "install_size": 57616039
     }
   ]
 }
