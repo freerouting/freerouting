@@ -136,7 +136,7 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.47'
 
     // OpenRewrite:
-    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.32.0'
+    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.33.1'
     rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.32.0'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
     rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.34.0'
