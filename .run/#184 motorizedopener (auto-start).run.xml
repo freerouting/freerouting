@@ -2,7 +2,7 @@
   <configuration default="false" name="#184 motorizedopener (auto-start)" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-im -de .\tests\Issue184-motorizedopener\freerouting.dsn -do .\tests\Issue184-motorizedopener\freerouting.ses" />
+    <option name="PROGRAM_PARAMETERS" value="-im -de .\fixtures\Issue184-motorizedopener\freerouting.dsn -do .\fixtures\Issue184-motorizedopener\freerouting.ses" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

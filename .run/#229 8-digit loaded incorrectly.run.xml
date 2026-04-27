@@ -2,7 +2,7 @@
   <configuration default="false" name="#229 8-digit loaded incorrectly" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue229-display-8-digit-hc595.dsn" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue229-display-8-digit-hc595.dsn" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

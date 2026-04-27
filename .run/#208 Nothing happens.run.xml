@@ -2,7 +2,7 @@
   <configuration default="false" name="#208 Nothing happens" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue208-freerouting.dsn" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue208-freerouting.dsn" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

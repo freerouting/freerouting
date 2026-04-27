@@ -2,7 +2,7 @@
   <configuration default="false" name="#027-zMRETestFixture.dsn" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue027-zMRETestFixture.dsn" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue027-zMRETestFixture.dsn" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

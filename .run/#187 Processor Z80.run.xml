@@ -2,7 +2,7 @@
   <configuration default="false" name="#187 Processor Z80" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue187-processor.Z80.dsn" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue187-processor.Z80.dsn" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

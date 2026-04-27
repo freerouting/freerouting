@@ -2,7 +2,7 @@
   <configuration default="false" name="#066 Project_GP8B.dsn" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-Xmx32g -mt 24 -us greedy -is prioritized -de .\tests\Issue066-Project_GP8B.dsn -do .\tests\Issue066-Project_GP8B.ses" />
+    <option name="PROGRAM_PARAMETERS" value="-Xmx32g -mt 24 -us greedy -is prioritized -de .\fixtures\Issue066-Project_GP8B.dsn -do .\fixtures\Issue066-Project_GP8B.ses" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

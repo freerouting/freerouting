@@ -2,7 +2,7 @@
   <configuration default="false" name="#054 Autorouter aborts" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue054-tairakb.dsn -do .\tests\Issue054-tairakb.ses" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue054-tairakb.dsn -do .\fixtures\Issue054-tairakb.ses" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

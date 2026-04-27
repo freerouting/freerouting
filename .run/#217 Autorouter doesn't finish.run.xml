@@ -2,7 +2,7 @@
   <configuration default="false" name="#217 Autorouter doesn't finish" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue217-8088sbc.dsn" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue217-8088sbc.dsn" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

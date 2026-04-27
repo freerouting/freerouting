@@ -2,7 +2,7 @@
   <configuration default="false" name="#035 Read place scope" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-mp 16 -de .\tests\Issue035-ReadPlaceScope.dsn -do .\tests\Issue035-ReadPlaceScope.ses" />
+    <option name="PROGRAM_PARAMETERS" value="-mp 16 -de .\fixtures\Issue035-ReadPlaceScope.dsn -do .\fixtures\Issue035-ReadPlaceScope.ses" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

@@ -2,7 +2,7 @@
   <configuration default="false" name="#269 Z10 module - vias should be on power layers" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue269-z10_module.dsn -do .\tests\Issue269-z10_module.ses" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue269-z10_module.dsn -do .\fixtures\Issue269-z10_module.ses" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

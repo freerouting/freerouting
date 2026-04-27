@@ -2,7 +2,7 @@
   <configuration default="false" name="#102 BBD Mars with &quot;-oit 0&quot;" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue102-Mars-64-revE-rot00.dsn -do .\tests\Mars-64_oit_0p00000_gte.ses -oit 0" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue102-Mars-64-revE-rot00.dsn -do .\fixtures\Mars-64_oit_0p00000_gte.ses -oit 0" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

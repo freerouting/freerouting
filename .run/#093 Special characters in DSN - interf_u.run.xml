@@ -2,7 +2,7 @@
   <configuration default="false" name="#093 Special characters in DSN - interf_u" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue093-interf_u.dsn" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue093-interf_u.dsn" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

@@ -2,7 +2,7 @@
   <configuration default="false" name="#070 Ignore net class from routing" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue070-Autorouter_FQ101_PCB_2022-05-13.dsn -inc GND,VCC" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue070-Autorouter_FQ101_PCB_2022-05-13.dsn -inc GND,VCC" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

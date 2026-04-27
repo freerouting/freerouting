@@ -2,7 +2,7 @@
   <configuration default="false" name="#297 OutOfMemory exception" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue297-myboard.dsn -do .\tests\Issue297-myboard.ses" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue297-myboard.dsn -do .\fixtures\Issue297-myboard.ses" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

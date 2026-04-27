@@ -2,7 +2,7 @@
   <configuration default="false" name="#289 FHT-8086 (slow)" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue289-Autorouter_PCB_FHT-8086_2024-03-08.dsn -do .\tests\Issue289-Autorouter_PCB_FHT-8086_2024-03-08.ses" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue289-Autorouter_PCB_FHT-8086_2024-03-08.dsn -do .\fixtures\Issue289-Autorouter_PCB_FHT-8086_2024-03-08.ses" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />

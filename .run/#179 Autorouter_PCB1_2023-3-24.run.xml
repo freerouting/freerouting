@@ -2,7 +2,7 @@
   <configuration default="false" name="#179 Autorouter_PCB1_2023-3-24" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
-    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue179-Autorouter_PCB1_2023-3-24.dsn" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\fixtures\Issue179-Autorouter_PCB1_2023-3-24.dsn" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.freerouting.management.analytics.*" />
