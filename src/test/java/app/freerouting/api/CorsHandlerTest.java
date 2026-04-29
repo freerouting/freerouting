@@ -95,4 +95,37 @@ class CorsHandlerTest {
     HttpResponse<Void> nonApiResponse = client.send(nonApiPreflight, HttpResponse.BodyHandlers.discarding());
     assertTrue(nonApiResponse.headers().firstValue("Access-Control-Allow-Origin").isEmpty());
   }
+
+  @Test
+  void corsPreflightAllowsFreeroutingCustomHeaders() throws Exception {
+    HttpClient client = HttpClient.newHttpClient();
+
+    // Simulate a browser preflight for Freerouting-Profile-ID (as sent by EasyEDA / browser clients)
+    HttpRequest preflight = HttpRequest.newBuilder(baseUri.resolve("/v1/system/status"))
+        .method("OPTIONS", HttpRequest.BodyPublishers.noBody())
+        .header("Origin", "http://example.com")
+        .header("Access-Control-Request-Method", "GET")
+        .header("Access-Control-Request-Headers", "Freerouting-Profile-ID,Freerouting-Environment-Host,Freerouting-Profile-Email")
+        .timeout(Duration.ofSeconds(5))
+        .build();
+
+    HttpResponse<Void> response = client.send(preflight, HttpResponse.BodyHandlers.discarding());
+
+    // The preflight must be accepted (200 or 204)
+    assertTrue(response.statusCode() == 200 || response.statusCode() == 204,
+        "Expected 200 or 204 for CORS preflight, got: " + response.statusCode());
+
+    // Access-Control-Allow-Origin must be echoed back
+    assertEquals("http://example.com",
+        response.headers().firstValue("Access-Control-Allow-Origin").orElse(null));
+
+    // Access-Control-Allow-Headers must include all three Freerouting-specific headers
+    String allowedHeaders = response.headers().firstValue("Access-Control-Allow-Headers").orElse("").toLowerCase();
+    assertTrue(allowedHeaders.contains("freerouting-profile-id"),
+        "Access-Control-Allow-Headers should include 'Freerouting-Profile-ID', got: " + allowedHeaders);
+    assertTrue(allowedHeaders.contains("freerouting-profile-email"),
+        "Access-Control-Allow-Headers should include 'Freerouting-Profile-Email', got: " + allowedHeaders);
+    assertTrue(allowedHeaders.contains("freerouting-environment-host"),
+        "Access-Control-Allow-Headers should include 'Freerouting-Environment-Host', got: " + allowedHeaders);
+  }
 }

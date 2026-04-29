@@ -283,7 +283,15 @@ public class Freerouting {
       corsHandler.setAllowCredentials(true);
       corsHandler.setAllowedOriginPatterns(splitCommaSeparated(allowedOrigins));
       corsHandler.setAllowedMethods(Set.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
-      corsHandler.setAllowedHeaders(Set.of("X-Requested-With", "Content-Type", "Accept", "Origin", "Authorization"));
+      corsHandler.setAllowedHeaders(Set.of(
+          "X-Requested-With",
+          "Content-Type",
+          "Accept",
+          "Origin",
+          "Authorization",
+          "Freerouting-Profile-ID",
+          "Freerouting-Profile-Email",
+          "Freerouting-Environment-Host"));
       corsHandler.setHandler(context);
 
       PathMappingsHandler pathMappingsHandler = new PathMappingsHandler();

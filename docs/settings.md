@@ -126,7 +126,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`http_allowed`**: Allows or disallows HTTP connections to the API server.
 - **`endpoints`**: A list of endpoints that the API server will listen on. Each endpoint is specified as
   `[protocol]://[host]:[port]`.
-- *`cors_origins`*: A comma-separated list of origins for the `Access-Control-Allow-Origin` CORS header. Set to `*` to accept all origins (this can be a security risk).
+- *`cors_origins`*: A comma-separated list of origins for the `Access-Control-Allow-Origin` CORS header. Set to `*` to accept all origins (this can be a security risk). When CORS is enabled, the server automatically allows the following request headers in preflight responses: `Content-Type`, `Accept`, `Origin`, `X-Requested-With`, `Authorization`, `Freerouting-Profile-ID`, `Freerouting-Profile-Email`, and `Freerouting-Environment-Host`. This ensures browser-based clients (e.g. EasyEDA at `https://pro.lceda.cn`) can authenticate successfully without being blocked by CORS preflight checks.
 
 ### Command Line Arguments
 
