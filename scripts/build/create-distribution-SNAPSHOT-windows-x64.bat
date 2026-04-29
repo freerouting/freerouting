@@ -10,7 +10,7 @@ echo "> Distribution directory="%DIR%
 cd %DIR%
 
 echo "> Building the Java runtime"
-"%JAVA_HOME%\bin\jlink.exe" -p "%JAVA_HOME%\jmods" --add-modules java.desktop,java.logging,java.net.http,java.sql,java.xml --strip-debug --no-header-files --no-man-pages --strip-native-commands --vm=server --output "%JAVA_HOME%\runtime"
+"%JAVA_HOME%\bin\jlink.exe" -p "%JAVA_HOME%\jmods" --add-modules java.desktop,java.logging,java.management,java.net.http,java.sql,java.xml,jdk.crypto.ec,jdk.crypto.mscapi,jdk.management --strip-debug --no-header-files --no-man-pages --strip-native-commands --vm=server --output "%JAVA_HOME%\runtime"
 
 echo "> Creating the installer package"
 "%JAVA_HOME%\bin\jpackage.exe" --input "..\..\build\dist" --main-jar "freerouting-executable.jar" --name "freerouting" --type %APP_TYPE% --runtime-image "%JAVA_HOME%\runtime" --app-version 0.0.0 --win-per-user-install --win-menu --win-menu-group freerouting --license-file "..\..\LICENSE" --icon "..\..\assets\icon\freerouting_icon_256x256_v3.ico"

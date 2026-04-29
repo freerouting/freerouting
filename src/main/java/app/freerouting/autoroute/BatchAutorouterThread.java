@@ -526,10 +526,15 @@ public class BatchAutorouterThread extends StoppableThread {
   }
 
   private void captureStats() {
-    ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
-    long id = this.threadId();
-    this.cpuTimeUsed = threadMXBean.getThreadCpuTime(id) / 1000.0f / 1000.0f / 1000.0f;
-    this.maxMemoryUsed = threadMXBean.getThreadAllocatedBytes(id) / (1024.0f * 1024.0f);
+    try {
+      ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      long id = this.threadId();
+      this.cpuTimeUsed = threadMXBean.getThreadCpuTime(id) / 1000.0f / 1000.0f / 1000.0f;
+      this.maxMemoryUsed = threadMXBean.getThreadAllocatedBytes(id) / (1024.0f * 1024.0f);
+    } catch (Throwable t) {
+      // java.management or jdk.management module may not be available in minimal JRE builds;
+      // leave cpuTimeUsed and maxMemoryUsed at their zero-initialized defaults.
+    }
   }
 
   public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener) {

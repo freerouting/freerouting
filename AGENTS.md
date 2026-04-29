@@ -184,3 +184,80 @@ GROUP BY api_method ORDER BY error_count DESC;
 | `api/ApiAnalyticsFilter.java` | JAX-RS dual filter; tracks all ≥ 400 responses centrally |
 | `api/FreeroutingApplication.java` | Registers `ApiAnalyticsFilter` alongside existing filters |
 | `api/v1/AnalyticsControllerV1.java` | Receives analytics POSTs and writes to BigQuery via `BigQueryClient.getInstance()` |
+
+# Installer / jlink Module Requirements
+
+The Windows, Linux, and macOS installers use `jlink` to build a minimal bundled JRE. The `--add-modules` list must include every JDK module that the application (or its bundled libraries) accesses at runtime — `jlink` does **not** auto-detect usages from inside a fat jar.
+
+## Correct `--add-modules` list per platform
+
+| Platform | Required modules |
+|---|---|
+| **Windows** | `java.desktop,java.logging,java.management,java.net.http,java.sql,java.xml,jdk.crypto.ec,jdk.crypto.mscapi,jdk.management` |
+| **Linux** | `java.desktop,java.logging,java.management,java.net.http,java.sql,java.xml,jdk.crypto.ec,jdk.management` |
+| **macOS** | `java.desktop,java.logging,java.management,java.net.http,java.sql,java.xml,jdk.crypto.ec,jdk.management` |
+
+> `jdk.crypto.mscapi` is **Windows-only** (provides `SunMSCAPI` for the Windows OS certificate store). Do not add it to Linux/macOS scripts.
+
+## Why each module is needed
+
+- **`java.management`** — `ManagementFactory` (used in `SystemControllerV1`, `BatchAutorouterThread`, `RoutingJobSchedulerActionThread`, Log4j2 startup, Jersey-server). Missing this module causes `NoClassDefFoundError: java/lang/management/ManagementFactory` on startup and crashes the `/v1/system/status` endpoint with HTTP 500.
+- **`jdk.management`** — `com.sun.management.ThreadMXBean.getThreadAllocatedBytes()` and `com.sun.management.OperatingSystemMXBean.getCpuLoad()`. Transitively brings in `java.management`.
+- **`jdk.crypto.ec`** — EC crypto provider (`SunEC`) required for TLS 1.3 / ECDHE key exchange. Without it, all HTTPS connections to Google APIs (OAuth2, BigQuery, Sheets) fail at the SSL handshake.
+- **`jdk.crypto.mscapi`** — Windows native certificate store access. Without it, Java uses only its own bundled `cacerts`, which is usually sufficient but may miss system-level certificates.
+
+## Modules explicitly NOT needed
+
+- `java.instrument` — javassist references it but HK2/Jersey proxy generation uses `ClassLoader.defineClass()`, not bytecode redefining. Do not add.
+- `jdk.attach` / `jdk.jdi` — javassist debugging tools. Not needed for runtime proxy generation. Do not add.
+- `jdk.httpserver` — referenced in jersey-server module-info but Freerouting uses Jetty, not the JDK HTTP server. Do not add.
+- `java.naming` — log4j-core requires it `static` (optional) for JNDI lookups; Freerouting does not use JNDI lookups. Do not add.
+- `java.rmi` — log4j-core requires it for remote JMX; not needed for local embedded logging. Do not add.
+
+## Defensive coding pattern for `ManagementFactory`
+
+All `ManagementFactory` call sites are wrapped in `try/catch (Throwable)` so the application degrades gracefully (returns -1 / skips stats) rather than crashing when running on a custom or stripped JRE:
+
+```java
+try {
+    ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+    // ...use threadMXBean...
+} catch (Throwable t) {
+    // java.management or jdk.management module not available in this JRE build
+}
+```
+
+Affected files: `SystemControllerV1.getCpuLoad()`, `BatchAutorouterThread.captureStats()`, `RoutingJobSchedulerActionThread.monitorCpuAndMemoryUsage()`.
+
+## Analysing module requirements
+
+To check what JDK modules a jar requires, use:
+```bash
+jdeps --ignore-missing-deps -q --print-module-deps <jar-file>
+```
+For the project's own thin jar (without bundled deps):
+```bash
+jdeps --ignore-missing-deps -q --print-module-deps build/libs/freerouting.jar
+```
+To inspect a named module's `requires` declarations:
+```bash
+jar --describe-module --file <jar-file> | grep requires
+```
+
+# API Authentication Filter Architecture
+
+## `ApiKeyValidationFilter` bypass bug (Issue 650)
+
+**Critical invariant:** `ApiKeyValidationFilter` checks for the `Authorization: Bearer` header and immediately rejects with 401 if the header is absent — **before** calling `ApiKeyValidationService.validateApiKey()`. This means even when `authentication.enabled=false`, requests without an `Authorization` header are rejected.
+
+The fix is to call `ApiKeyValidationService.getInstance()` first and skip all validation (including the header null-check) when `isEnabled == false`:
+
+```java
+ApiKeyValidationService validationService = ApiKeyValidationService.getInstance();
+if (!validationService.isAuthenticationEnabled()) {
+    return; // skip all validation
+}
+// ...then check for the header...
+```
+
+**`ApiKeyValidationService.validateApiKey(apiKey)` already returns `true` when `isEnabled == false`** — the bug is entirely in the filter's early-exit before that call is reached.

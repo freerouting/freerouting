@@ -27,9 +27,13 @@ public class SystemControllerV1 {
 
   @Operation(summary = "Get CPU load", description = "Returns the current system CPU load as a percentage (0-100). Returns -1 if CPU load cannot be determined.")
   public static double getCpuLoad() {
-    OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
-    if (osBean instanceof com.sun.management.OperatingSystemMXBean bean) {
-      return bean.getCpuLoad() * 100;
+    try {
+      OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
+      if (osBean instanceof com.sun.management.OperatingSystemMXBean bean) {
+        return bean.getCpuLoad() * 100;
+      }
+    } catch (Throwable t) {
+      // java.management or jdk.management module may not be available in minimal JRE builds
     }
     return -1;
   }

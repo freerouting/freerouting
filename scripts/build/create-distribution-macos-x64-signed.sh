@@ -28,7 +28,7 @@ else
     tar xvzf jdk14.tar.gz
     echo "> creating runtime image"
     $JAVA_HOME/bin/jlink -p "$JAVA_HOME/jmods" \
-        --add-modules java.desktop,java.logging,java.net.http,java.sql,java.xml \
+        --add-modules java.desktop,java.logging,java.management,java.net.http,java.sql,java.xml,jdk.crypto.ec,jdk.management \
         --strip-debug \
         --no-header-files \
         --no-man-pages \

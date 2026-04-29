@@ -185,47 +185,52 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
   }
 
   private void monitorCpuAndMemoryUsage(RoutingJob job) {
-    // Get the ThreadMXBean instance and cast it to com.sun.management.ThreadMXBean
-    ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+    try {
+      // Get the ThreadMXBean instance and cast it to com.sun.management.ThreadMXBean
+      ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
 
-    // Get all live thread IDs
-    long[] threadIds = threadMXBean.getAllThreadIds();
+      // Get all live thread IDs
+      long[] threadIds = threadMXBean.getAllThreadIds();
 
-    // Iterate through the thread IDs and get memory usage
-    for (long threadId : threadIds) {
-      if (threadId == job.thread.threadId()) {
-        // CPU time and memory usage
-        float cpuTime = threadMXBean.getThreadCpuTime(threadId) / 1000.0f / 1000.0f / 1000.0f;
+      // Iterate through the thread IDs and get memory usage
+      for (long threadId : threadIds) {
+        if (threadId == job.thread.threadId()) {
+          // CPU time and memory usage
+          float cpuTime = threadMXBean.getThreadCpuTime(threadId) / 1000.0f / 1000.0f / 1000.0f;
 
-        // Enable thread memory allocation measurement
-        threadMXBean.setThreadAllocatedMemoryEnabled(true);
+          // Enable thread memory allocation measurement
+          threadMXBean.setThreadAllocatedMemoryEnabled(true);
 
-        // Get the thread's allocated memory in bytes
-        long allocatedMemory = threadMXBean.getThreadAllocatedBytes(threadId);
-        float allocatedMB = allocatedMemory / (1024.0f * 1024.0f);
+          // Get the thread's allocated memory in bytes
+          long allocatedMemory = threadMXBean.getThreadAllocatedBytes(threadId);
+          float allocatedMB = allocatedMemory / (1024.0f * 1024.0f);
 
-        // Update the job's resource usage
-        // Fix: Use assignment instead of accumulation for total time, as
-        // getThreadCpuTime returns cumulative time
-        // Note: This only tracks the main thread. Worker threads add their stats
-        // separately.
-        job.resourceUsage.cpuTimeUsed = cpuTime;
-        // Fix: maxMemoryUsed represents total allocated bytes here, so we accumulate if
-        // we track partials,
-        // but here it tracks the monotonically increasing allocation of the main
-        // thread.
-        job.resourceUsage.maxMemoryUsed = allocatedMB;
+          // Update the job's resource usage
+          // Fix: Use assignment instead of accumulation for total time, as
+          // getThreadCpuTime returns cumulative time
+          // Note: This only tracks the main thread. Worker threads add their stats
+          // separately.
+          job.resourceUsage.cpuTimeUsed = cpuTime;
+          // Fix: maxMemoryUsed represents total allocated bytes here, so we accumulate if
+          // we track partials,
+          // but here it tracks the monotonically increasing allocation of the main
+          // thread.
+          job.resourceUsage.maxMemoryUsed = allocatedMB;
+        }
       }
-    }
 
-    // Track peak heap memory usage across all threads
-    java.lang.management.MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-    long heapUsed = memoryMXBean.getHeapMemoryUsage().getUsed();
-    float heapUsedMB = heapUsed / (1024.0f * 1024.0f);
+      // Track peak heap memory usage across all threads
+      java.lang.management.MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+      long heapUsed = memoryMXBean.getHeapMemoryUsage().getUsed();
+      float heapUsedMB = heapUsed / (1024.0f * 1024.0f);
 
-    // Update peak memory if current usage is higher
-    if (heapUsedMB > job.resourceUsage.peakMemoryUsed) {
-      job.resourceUsage.peakMemoryUsed = heapUsedMB;
+      // Update peak memory if current usage is higher
+      if (heapUsedMB > job.resourceUsage.peakMemoryUsed) {
+        job.resourceUsage.peakMemoryUsed = heapUsedMB;
+      }
+    } catch (Throwable t) {
+      // java.management or jdk.management module may not be available in minimal JRE builds;
+      // resource usage stats will remain at their current values.
     }
   }
 
