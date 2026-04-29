@@ -123,7 +123,7 @@ final class AnalyticsErrorAggregator {
     // to wait up to FLUSH_INTERVAL_MINUTES to discover that analytics delivery is broken.
     if (firstFailureLogged.compareAndSet(false, true)) {
       FRLogger.warn(
-          "Analytics tracking: first delivery failure in this window — "
+          "Analytics tracking: first delivery failure in this window - "
               + key
               + ". Further failures will be aggregated and reported every "
               + FLUSH_INTERVAL_MINUTES
@@ -215,7 +215,7 @@ final class AnalyticsErrorAggregator {
       message = message.substring(0, 100) + "…";
     }
 
-    return path + " → " + exceptionType + ": " + message;
+    return path + " - " + exceptionType + ": " + message;
   }
 }
 
