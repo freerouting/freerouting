@@ -51,6 +51,30 @@ Authorization: Bearer <API_KEY>
 
 For complete details on how to configure and enable authentication on your own server, please see the [API Authentication System Documentation](API_authentication.md).
 
+## Required headers
+
+All protected endpoints (i.e. everything except `/v1/system/*`, `/v1/analytics/*`, `/openapi/*`, and `/swagger-ui`) **require** the following header on every request:
+
+| Header | Required | Format | Description |
+|--------|----------|--------|-------------|
+| `Freerouting-Environment-Host` | **Yes** | `<ToolName>/<Version>` | Identifies the calling EDA tool and its version. |
+
+**Examples:**
+
+```http
+Freerouting-Environment-Host: KiCad/10.0
+Freerouting-Environment-Host: EasyEDA/1.0
+Freerouting-Environment-Host: Postman/11.14
+```
+
+If the header is absent or does not match the `<ToolName>/<Version>` format, the server returns **HTTP 400 Bad Request**:
+
+```json
+{
+  "error": "The 'Freerouting-Environment-Host' request header is required. It must identify the calling EDA tool and its version using the format '<ToolName>/<Version>'. Examples: 'KiCad/10.0', 'EasyEDA/1.0', 'Postman/11.14'. See https://github.com/freerouting/freerouting/blob/master/docs/API/API_v1.md for details."
+}
+```
+
 ---
 
 ## Endpoints
@@ -96,15 +120,21 @@ For complete details on how to configure and enable authentication on your own s
   POST /sessions/create
   ```
 
-  **Description:** Creates a new session.
+  **Description:** Creates a new routing session for the authenticated user.
 
-  **Response body:** Contains the new session ID.
+  **Request headers:**
+
+  | Header | Required | Format | Description |
+  |--------|----------|--------|-------------|
+  | `Freerouting-Environment-Host` | **Yes** | `<ToolName>/<Version>` | Identifies the calling EDA tool and its version (e.g. `KiCad/10.0`, `EasyEDA/1.0`). |
+
+  **Response body:** Contains the new session ID and the resolved host value.
 
   ```json
   {
     "id": "13f4f1b4-29a1-48a5-8efb-8cec519d8bd3",
     "user_id": "d0071163-7ba3-46b3-b3af-bc2ebfd4d1a0",
-    "host": "Postman/11.14"
+    "host": "KiCad/10.0"
   }
   ```
 

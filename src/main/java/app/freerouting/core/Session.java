@@ -25,6 +25,11 @@ public class Session implements Serializable {
    */
   public Session(UUID userId, String host) {
     this.userId = userId;
+
+    // Normalise: treat null or blank as the safe default
+    if (host == null || host.isBlank()) {
+      host = "Unknown/0.0";
+    }
     this.host = host;
 
     // check if the host value is valid (it must contain the host name and version separated by "/")

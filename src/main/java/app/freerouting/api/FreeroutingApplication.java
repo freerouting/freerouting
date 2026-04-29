@@ -23,6 +23,8 @@ public class FreeroutingApplication extends Application {
     classes.add(ApiExceptionMapper.class);
     classes.add(NotFoundExceptionMapper.class);
     classes.add(app.freerouting.api.security.ApiKeyValidationFilter.class);
+    // Enforces the mandatory Freerouting-Environment-Host header on every protected endpoint.
+    classes.add(EnvironmentHostValidationFilter.class);
     // Tracks all error (4xx/5xx) responses centrally; 2xx paths remain tracked
     // individually by the controller methods with full request/response payloads.
     classes.add(ApiAnalyticsFilter.class);

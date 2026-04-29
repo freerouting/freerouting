@@ -9,6 +9,7 @@ import app.freerouting.management.SessionManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -54,9 +55,21 @@ public class SessionControllerV1 extends BaseController {
     return Response.ok(response).build();
   }
 
-  @Operation(summary = "Create new session", description = "Creates a new routing session for the authenticated user. The session will be associated with the user's ID and the specified host environment.")
+  @Operation(
+      summary = "Create new session",
+      description = "Creates a new routing session for the authenticated user. The session will be associated with the user's ID and the specified host environment.",
+      parameters = {
+          @Parameter(
+              name = "Freerouting-Environment-Host",
+              in = ParameterIn.HEADER,
+              description = "Identifies the calling EDA tool and its version in the format '<name>/<version>' (e.g. 'KiCad/10.0', 'EasyEDA/1.0'). Required on all protected endpoints.",
+              required = true,
+              example = "KiCad/10.0",
+              schema = @Schema(type = "string", pattern = "^[^/]+/[^/]+$"))
+      })
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Session created successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Session.class))),
+      @ApiResponse(responseCode = "400", description = "Missing or invalid Freerouting-Environment-Host header", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "{\"error\":\"The 'Freerouting-Environment-Host' request header is required...\"}"))),
       @ApiResponse(responseCode = "500", description = "Failed to create session", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "{}")))
   })
   @POST
@@ -65,6 +78,9 @@ public class SessionControllerV1 extends BaseController {
   public Response createSession() {
     // Authenticate the user
     UUID userId = AuthenticateUser();
+
+    // The EnvironmentHostValidationFilter guarantees this header is present and
+    // well-formed (<name>/<version>) before the controller is reached.
     String host = httpHeaders.getHeaderString("Freerouting-Environment-Host");
 
     // create a new session using the authenticated user as the owner
