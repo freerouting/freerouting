@@ -370,6 +370,11 @@ public class Freerouting {
    * @param args
    */
   void main(String[] args) {
+    // Transform URL protocol invocation into standard CLI arguments
+    if (args.length > 0 && UrlProtocolHandler.isProtocolUrl(args[0])) {
+      args = UrlProtocolHandler.parseUrlToArgs(args[0]);
+    }
+
     // CRITICAL: Set up logging configuration BEFORE any logging occurs
     // This must happen before FRLogger.traceEntry() or any other logging call
 
@@ -583,6 +588,9 @@ public class Freerouting {
     // parse the command line arguments (for the non-router settings)
     globalSettings.applyCommandLineArguments(args);
 
+    // Register freerouting:// protocol handler (Windows/Linux, idempotent)
+    ProtocolRegistrar.registerIfNeeded();
+
     FRLogger.debug("GUI Language: " + globalSettings.currentLocale);
 
     FRLogger.debug("Host: " + globalSettings.runtimeEnvironment.host);
@@ -708,6 +716,16 @@ public class Freerouting {
         Thread.sleep(500);
       } catch (InterruptedException _) {
         break;
+      }
+
+      // Check API server idle timeout
+      int idleTimeout = globalSettings.apiServerSettings.idleTimeout;
+      if (idleTimeout > 0 && globalSettings.apiServerSettings.isRunning) {
+        long idleMs = System.currentTimeMillis() - app.freerouting.api.IdleTimeoutFilter.getLastActivityTime();
+        if (idleMs >= idleTimeout * 1000L) {
+          FRLogger.info("API server idle timeout reached (" + idleTimeout + "s), shutting down");
+          globalSettings.apiServerSettings.isRunning = false;
+        }
       }
     }
 

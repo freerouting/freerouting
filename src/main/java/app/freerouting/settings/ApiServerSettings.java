@@ -17,4 +17,6 @@ public class ApiServerSettings implements Serializable {
   public ApiAuthenticationSettings authentication = new ApiAuthenticationSettings();
   @SerializedName("cors_origins")
   public String cors_origins = "";
+  @SerializedName("idle_timeout")
+  public Integer idleTimeout = 0;
 }
