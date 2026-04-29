@@ -678,9 +678,9 @@ public class Freerouting {
       }
     }
 
-    // If the GUI is disabled then we are in CLI mode
+    // If the GUI is disabled and the API server is not running, then we are in CLI mode
     boolean cliResult = true;
-    if (!globalSettings.guiSettings.isEnabled) {
+    if (!globalSettings.guiSettings.isEnabled && !globalSettings.apiServerSettings.isRunning) {
       var mergedRouterSettings = globalSettings.settingsMergerProtype.merge();
       if ((mergedRouterSettings.enabled != null && !mergedRouterSettings.enabled) && (globalSettings.drcSettings.enabled)) {
         cliResult = InitializeDRC(globalSettings);
