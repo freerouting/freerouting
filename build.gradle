@@ -61,6 +61,13 @@ tasks.named('check') {
     dependsOn(testing.suites.integrationTest)
 }
 
+// Mockito agent configuration — must be declared before the dependencies block.
+// Required for inline-mock-maker on Java 21+ (Mockito docs section 0.3):
+// https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+configurations {
+    mockitoAgent
+}
+
 repositories {
     flatDir {
         dirs 'libs'
@@ -144,6 +151,13 @@ dependencies {
 
     // ArchUnit: package-architecture enforcement
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
+
+    // Mockito: mocking framework for unit tests
+    testImplementation 'org.mockito:mockito-core:5.18.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.18.0'
+    // Separate non-transitive configuration so Mockito can be attached as a -javaagent
+    // (required for Java 21+ inline-mock-maker, per Mockito docs section 0.3)
+    mockitoAgent('org.mockito:mockito-core:5.18.0') { transitive = false }
 }
 
 ext {
@@ -380,6 +394,10 @@ test {
     }
 
     timeout = Duration.ofMinutes(15)
+
+    // Attach Mockito as a Java agent so that the inline-mock-maker can function
+    // on Java 21+ without the JVM's self-attach restriction warning.
+    jvmArgs "-javaagent:${configurations.mockitoAgent.asPath}"
 }
 
 rewrite {

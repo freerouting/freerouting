@@ -103,6 +103,14 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
     // Service initializes lazily and fetches providers internally.
     ApiKeyValidationService validationService = ApiKeyValidationService.getInstance();
 
+    // If authentication is globally disabled, allow all requests through unconditionally —
+    // no header inspection needed. This is the correct behaviour for local/plugin deployments
+    // where the operator has explicitly set authentication.enabled=false.
+    if (!validationService.isAuthenticationEnabled()) {
+      FRLogger.debug("API key validation skipped: authentication is disabled for path " + path);
+      return;
+    }
+
     // Get API key from Authorization header
     String authHeader = requestContext.getHeaderString(AUTHORIZATION_HEADER);
     String apiKey = null;
@@ -137,9 +145,13 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
    * @param message        The error message
    */
   private void abortWithUnauthorized(ContainerRequestContext requestContext, String message) {
+    // Build a JSON string directly — using a Map subtype (e.g. Collections$SingletonMap)
+    // as the entity causes a "MessageBodyWriter not found" 500 error in Jersey because
+    // the Gson provider does not register a writer for that internal JDK class.
+    String jsonBody = "{\"error\":\"" + message.replace("\\", "\\\\").replace("\"", "\\\"") + "\"}";
     Response response = Response
         .status(Response.Status.UNAUTHORIZED)
-        .entity(java.util.Collections.singletonMap("error", message))
+        .entity(jsonBody)
         .type("application/json")
         .build();
     requestContext.abortWith(response);

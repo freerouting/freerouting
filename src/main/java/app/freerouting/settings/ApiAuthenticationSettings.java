@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class ApiAuthenticationSettings implements Serializable {
 
     @SerializedName("enabled")
-    public Boolean isEnabled = false;
+    public Boolean isEnabled = true;
 
     @SerializedName("providers")
     public String providers = "";

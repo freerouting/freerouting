@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
+import app.freerouting.api.security.ApiKeyValidationService;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
@@ -43,9 +44,10 @@ class ApiRoutingTest {
   private static final String TEST_USER_ID = "00000000-0000-0000-0000-000000000001";
 
   /**
-   * Dummy bearer token used when API-key authentication is disabled (the default in unit tests).
-   * When {@code ApiKeyValidationService.isEnabled == false}, any non-empty bearer value is
-   * accepted, so this value serves only to satisfy the header-presence check in the filter.
+   * Dummy bearer token sent in every request via the {@code Authorization} header.
+   * Authentication is explicitly disabled in this test's {@code setUp()} (no providers
+   * are configured), so the token value is irrelevant — it is kept only for documentation
+   * purposes and to satisfy any future filter that checks header presence.
    */
   private static final String TEST_BEARER = "test-api-key";
 
@@ -55,6 +57,7 @@ class ApiRoutingTest {
 
   @BeforeEach
   void setUp() throws Exception {
+    ApiKeyValidationService.resetForTesting(); // ensure singleton re-reads the settings below
     Freerouting.globalSettings = new GlobalSettings();
 
     ApiServerSettings settings = new ApiServerSettings();
@@ -62,6 +65,12 @@ class ApiRoutingTest {
     settings.isHttpAllowed = true;
     settings.endpoints = new String[]{"http://127.0.0.1:0"};
     settings.cors_origins = null; // No CORS needed for unit tests
+    // Disable authentication for this test: no providers are configured, so enabling
+    // auth would deny every request. Real deployments have auth ON by default.
+    // Must be set on both the local settings object AND globalSettings, because
+    // ApiKeyValidationService reads from Freerouting.globalSettings at singleton init time.
+    settings.authentication.isEnabled = false;
+    Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
 
     server = Freerouting.InitializeAPI(settings);
 
@@ -88,6 +97,7 @@ class ApiRoutingTest {
     if (server != null) {
       server.stop();
     }
+    ApiKeyValidationService.resetForTesting();
   }
 
   /**

@@ -62,7 +62,7 @@ public class ApiKeyValidationService {
     /**
      * Resets the service instance (for testing purposes).
      */
-    static synchronized void resetForTesting() {
+    public static synchronized void resetForTesting() {
         instance = null;
     }
 
@@ -71,6 +71,15 @@ public class ApiKeyValidationService {
      */
     List<ApiKeyProvider> getProviders() {
         return providers;
+    }
+
+    /**
+     * Returns whether API key authentication is currently enabled.
+     *
+     * @return {@code true} if authentication is required, {@code false} if all requests are allowed through.
+     */
+    public boolean isAuthenticationEnabled() {
+        return isEnabled;
     }
 
     /**

@@ -246,11 +246,11 @@ jar --describe-module --file <jar-file> | grep requires
 
 # API Authentication Filter Architecture
 
-## `ApiKeyValidationFilter` bypass bug (Issue 650)
+## `ApiKeyValidationFilter` bypass bug (Issue 650) ✅ Fixed
 
-**Critical invariant:** `ApiKeyValidationFilter` checks for the `Authorization: Bearer` header and immediately rejects with 401 if the header is absent — **before** calling `ApiKeyValidationService.validateApiKey()`. This means even when `authentication.enabled=false`, requests without an `Authorization` header are rejected.
+**What was wrong:** `ApiKeyValidationFilter` checked for the `Authorization: Bearer` header and immediately rejected with 401 if the header was absent — **before** calling `ApiKeyValidationService.validateApiKey()`. This meant even when `authentication.enabled=false`, requests without an `Authorization` header were rejected.
 
-The fix is to call `ApiKeyValidationService.getInstance()` first and skip all validation (including the header null-check) when `isEnabled == false`:
+**Fix applied:** After `ApiKeyValidationService.getInstance()`, skip all validation when authentication is disabled:
 
 ```java
 ApiKeyValidationService validationService = ApiKeyValidationService.getInstance();
@@ -260,4 +260,21 @@ if (!validationService.isAuthenticationEnabled()) {
 // ...then check for the header...
 ```
 
-**`ApiKeyValidationService.validateApiKey(apiKey)` already returns `true` when `isEnabled == false`** — the bug is entirely in the filter's early-exit before that call is reached.
+**`ApiKeyValidationService.validateApiKey(apiKey)` already returns `true` when `isEnabled == false`** — the bug was entirely in the filter's early-exit before that call was reached.
+
+## Secure-by-default configuration (since Issue 650 fix)
+
+Two defaults were hardened:
+
+| Setting | Old default | New default | Reason |
+|---|---|---|---|
+| `ApiAuthenticationSettings.isEnabled` | `false` | **`true`** | Auth off + world-wide bind was a security risk |
+| `ApiServerSettings.endpoints` | `https://0.0.0.0:37864` | **`http://127.0.0.1:37864`** | Localhost-only by default; `https://` was misleading (HTTPS not implemented, fell back to HTTP silently) |
+
+**For local EDA plugin use (KiCad, EasyEDA):** The server already binds to `127.0.0.1` only, so network-level exposure is eliminated. Authentication should be explicitly disabled for seamless plugin operation:
+
+```
+java -jar freerouting-executable.jar --gui.enabled=false --api_server.enabled=true --api_server.authentication.enabled=false
+```
+
+**For remote/cloud deployments:** Keep `authentication.enabled=true` (the default) and configure a provider (e.g. GoogleSheets). To expose to a network interface, explicitly set `--api_server.endpoints=http://0.0.0.0:37864`.

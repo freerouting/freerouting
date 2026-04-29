@@ -12,7 +12,7 @@ public class ApiServerSettings implements Serializable {
   @SerializedName("http_allowed")
   public Boolean isHttpAllowed = true;
   @SerializedName("endpoints")
-  public String[] endpoints = { "https://0.0.0.0:37864" };
+  public String[] endpoints = { "http://127.0.0.1:37864" };
   @SerializedName("authentication")
   public ApiAuthenticationSettings authentication = new ApiAuthenticationSettings();
   @SerializedName("cors_origins")
