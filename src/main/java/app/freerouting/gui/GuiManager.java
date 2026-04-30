@@ -15,6 +15,8 @@ import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.GuiSettings;
+import app.freerouting.io.specctra.SesReader;
+import app.freerouting.io.specctra.SesImportSummary;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -352,9 +354,11 @@ public class GuiManager {
                 if (sesFile.exists()) {
                     FRLogger.info("Loading SES file: " + globalSettings.design_session_filename);
                     FileInputStream sesStream = new FileInputStream(sesFile);
-                    app.freerouting.io.specctra.parser.SesFileReader.read(sesStream,
+                    SesImportSummary summary = SesReader.read(sesStream,
                             new_frame.board_panel.board_handling.get_routing_board());
-                    sesStream.close();
+                    FRLogger.info("SES file loaded: " + summary.wiresImported() + " wires, "
+                            + summary.viasImported() + " vias imported"
+                            + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
                     new_frame.refresh_windows(); // Refresh UI to show loaded routes
                 } else {
                     FRLogger.warn("SES file not found: " + globalSettings.design_session_filename);

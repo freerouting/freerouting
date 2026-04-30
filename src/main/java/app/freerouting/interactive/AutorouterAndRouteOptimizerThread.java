@@ -17,7 +17,7 @@ import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.io.specctra.parser.SpecctraSesFileWriter;
+import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.FileFormat;
@@ -234,13 +234,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       @Override
       public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-          boolean wasSaveSuccessful = SpecctraSesFileWriter.write(boardManager.get_routing_board(), outputStream,
-              routingJob.name);
-
-          if (wasSaveSuccessful) {
-            byte[] sesOutputData = outputStream.toByteArray();
-            routingJob.output.setData(sesOutputData);
-          }
+          SesWriter.write(boardManager.get_routing_board(), outputStream, routingJob.name);
+          routingJob.output.setData(outputStream.toByteArray());
         } catch (Exception e) {
           routingJob.logError("Couldn't save the SES output into the job object.", e);
         }

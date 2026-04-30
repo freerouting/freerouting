@@ -13,6 +13,8 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
+import app.freerouting.io.specctra.SesReader;
+import app.freerouting.io.specctra.SesImportSummary;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -96,8 +98,10 @@ public class RoutingJobScheduler {
                         if (sesFile.exists()) {
                           FRLogger.info("Loading SES file: " + globalSettings.design_session_filename);
                           java.io.FileInputStream sesStream = new java.io.FileInputStream(sesFile);
-                          app.freerouting.io.specctra.parser.SesFileReader.read(sesStream, job.board);
-                          sesStream.close();
+                          SesImportSummary summary = SesReader.read(sesStream, job.board);
+                          FRLogger.info("SES file loaded: " + summary.wiresImported() + " wires, "
+                              + summary.viasImported() + " vias imported"
+                              + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
                         } else {
                           FRLogger.warn("SES file not found: " + globalSettings.design_session_filename);
                         }
