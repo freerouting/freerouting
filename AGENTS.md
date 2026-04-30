@@ -198,7 +198,8 @@ Both workflows build a multi-platform manifest image using Docker Buildx + QEMU.
 |---|---|
 | `linux/amd64` | x86-64 servers, PCs, most cloud VMs |
 | `linux/arm64` | Apple Silicon, AWS Graviton, Raspberry Pi 4/5 (64-bit OS) |
-| `linux/arm/v7` | Raspberry Pi 2/3/4 (32-bit OS), Umbrel, CasaOS, ARMv7 home-server stacks |
+
+> **Note:** `linux/arm/v7` (32-bit ARM) support was dropped when the project moved to Java 25, because `eclipse-temurin:25` no longer publishes an `arm/v7` image. Raspberry Pi users running a 32-bit OS should switch to a 64-bit OS image to use the official Docker image.
 
 `provenance: false` is set on both workflows so that the manifest does not contain build-attestation entries (which show up as `"architecture": "unknown"` in `docker manifest inspect`).
 
