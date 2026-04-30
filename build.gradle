@@ -230,6 +230,8 @@ tasks.register('writeVersionInfo') {
     def versionId = publishing.versionId
     def buildDateValue = buildDate
 
+    inputs.property("versionId", versionId)
+    inputs.property("buildDate", buildDateValue)
     outputs.dir(outputDir)
 
     doLast {
@@ -277,6 +279,8 @@ tasks.register('writeVersionInfoV19') {
     def versionId = "1.9.0"
     def buildDateValue = buildDate
 
+    inputs.property("versionId", versionId)
+    inputs.property("buildDate", buildDateValue)
     outputs.dir(outputDir)
 
     doLast {
