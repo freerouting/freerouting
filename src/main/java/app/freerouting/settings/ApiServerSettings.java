@@ -18,5 +18,5 @@ public class ApiServerSettings implements Serializable {
   @SerializedName("cors_origins")
   public String cors_origins = "";
   @SerializedName("idle_timeout")
-  public Integer idleTimeout = 0;
+  public Integer idleTimeout;
 }

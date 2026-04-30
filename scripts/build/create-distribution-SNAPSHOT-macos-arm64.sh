@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export APP_VERSION=$1
-export APP_TYPE="app-image"
+export APP_TYPE="dmg"
 
 echo "> JAVA_HOME="$JAVA_HOME
 
@@ -26,7 +26,7 @@ $JAVA_HOME/bin/jlink -p "$JAVA_HOME/jmods" \
 		--vm=server \
 		--output $JAVA_HOME/runtime
 
-echo "> Creating the app image"
+echo "> Creating the package"
 # Use a fixed numeric version for jpackage (SNAPSHOT strings are not valid app-version values)
 $JAVA_HOME/bin/jpackage --input ../../build/dist/ \
  --name freerouting \
@@ -34,14 +34,5 @@ $JAVA_HOME/bin/jpackage --input ../../build/dist/ \
  --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version 1.0.0 --license-file ../../LICENSE \
  --icon ../../assets/icon/freerouting_icon_256x256_v3.icns
 
-echo "> Registering freerouting:// URL scheme in Info.plist"
-PLIST="freerouting.app/Contents/Info.plist"
-/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes array" "$PLIST"
-/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:0 dict" "$PLIST"
-/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:0:CFBundleURLName string 'Freerouting Protocol'" "$PLIST"
-/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes array" "$PLIST"
-/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes:0 string freerouting" "$PLIST"
-
-echo "> Creating DMG"
-hdiutil create -volname "Freerouting" -srcfolder freerouting.app -ov -format UDZO freerouting-$APP_VERSION-macos-arm64.dmg
+mv freerouting-1.0.0.dmg freerouting-$APP_VERSION-macos-arm64.dmg
 

@@ -1,7 +1,5 @@
 package app.freerouting;
 
-import app.freerouting.logger.FRLogger;
-
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -34,7 +32,7 @@ public class UrlProtocolHandler {
       }
       return args.toArray(new String[0]);
     } catch (Exception e) {
-      FRLogger.warn("Failed to parse protocol URL: " + url + " (" + e.getMessage() + ")");
+      System.err.println("Failed to parse protocol URL: " + url + " (" + e.getMessage() + ")");
       return new String[]{url};
     }
   }
