@@ -16,7 +16,9 @@ import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
@@ -136,6 +138,17 @@ public class GlobalSettings implements Serializable {
     return userDataPath;
   }
 
+  /**
+   * Returns the resolved absolute path of the {@code freerouting.json} configuration file.
+   * <p>This path is derived from {@link #getUserDataPath()} and is updated atomically
+   * whenever {@link #setUserDataPath(Path)} is called (before the lock is engaged).
+   * Use this accessor for logging, diagnostics, or tests that need to verify where the
+   * configuration file is written.
+   */
+  public static Path getConfigurationFilePath() {
+    return configurationFilePath;
+  }
+
   public static void setUserDataPath(Path userDataPath) {
     if (!isUserDataPathLocked) {
       GlobalSettings.userDataPath = userDataPath;
@@ -143,26 +156,157 @@ public class GlobalSettings implements Serializable {
     }
   }
 
+  /**
+   * Resets the user-data-path lock and path to their initial defaults.
+   * <p><strong>For testing only.</strong> Must never be called from production code.
+   * Resets both static path fields and the lock flag so that
+   * {@link #setUserDataPath(Path)} can be exercised in isolated unit tests.
+   */
+  static void resetForTesting() {
+    isUserDataPathLocked = false;
+    userDataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
+    configurationFilePath = userDataPath.resolve("freerouting.json");
+  }
+
+  /**
+   * Returns the "release-safe" version string to be written to {@code freerouting.json}.
+   * <p>The {@code -SNAPSHOT} suffix (appended by the build system to development builds) is
+   * stripped so that only real release versions are recorded in the config file.
+   * <p>This matters for migration: we only want to trigger per-version migration steps when
+   * the user updates from one <em>release</em> to another, not on every SNAPSHOT rebuild.
+   * Concretely, both {@code "2.2.1-SNAPSHOT"} and {@code "2.2.1"} produce {@code "2.2.1"}.
+   *
+   * @return the normalized version string, with any {@code -SNAPSHOT} suffix removed
+   */
+  public static String getReleaseSafeVersion() {
+    String v = FREEROUTING_VERSION;
+    int snapshotIdx = v.indexOf("-SNAPSHOT");
+    return snapshotIdx >= 0 ? v.substring(0, snapshotIdx) : v;
+  }
+
+  /**
+   * Compares two release-style version strings (e.g. {@code "2.2.0"} vs {@code "2.3.1"}).
+   *
+   * @return negative if {@code v1 < v2}, zero if equal, positive if {@code v1 > v2}.
+   *         Returns {@code -1}/{@code +1} without further detail when either string cannot
+   *         be parsed as a dot-separated numeric version.
+   */
+  static int compareVersionStrings(String v1, String v2) {
+    if (v1 == null && v2 == null) {
+      return 0;
+    }
+    if (v1 == null) {
+      return -1;
+    }
+    if (v2 == null) {
+      return 1;
+    }
+    String[] parts1 = v1.split("\\.");
+    String[] parts2 = v2.split("\\.");
+    int len = Math.max(parts1.length, parts2.length);
+    for (int i = 0; i < len; i++) {
+      try {
+        int n1 = i < parts1.length ? Integer.parseInt(parts1[i]) : 0;
+        int n2 = i < parts2.length ? Integer.parseInt(parts2[i]) : 0;
+        if (n1 != n2) {
+          return Integer.compare(n1, n2);
+        }
+      } catch (NumberFormatException e) {
+        String s1 = i < parts1.length ? parts1[i] : "";
+        String s2 = i < parts2.length ? parts2[i] : "";
+        int cmp = s1.compareTo(s2);
+        if (cmp != 0) {
+          return cmp;
+        }
+      }
+    }
+    return 0;
+  }
+
   /*
-   * Loads the settings from the default JSON settings file
+   * Loads the settings from the default JSON settings file.
+   *
+   * <p>Throws {@link NoSuchFileException} when the file (or its parent directory) does not
+   * exist yet — this is the expected first-run condition and callers should treat it as
+   * "create a new default config".
+   *
+   * <p>Throws {@link AccessDeniedException} when the OS denies read access to the file or
+   * its parent directory.  The exception message already contains the path; the caller
+   * should log an actionable warning that includes instructions on how to fix permissions.
+   *
+   * <p>Returns {@code null} when the file exists but its JSON content is corrupt or cannot
+   * be parsed.  A WARN message is logged internally before returning so the user is always
+   * notified regardless of how the caller handles the return value.
    */
   public static GlobalSettings load() throws IOException {
     GlobalSettings loadedSettings = null;
     try (Reader reader = Files.newBufferedReader(configurationFilePath, StandardCharsets.UTF_8)) {
       loadedSettings = GsonProvider.GSON.fromJson(reader, GlobalSettings.class);
+    } catch (com.google.gson.JsonSyntaxException | com.google.gson.JsonIOException e) {
+      // The file exists but is corrupt or cannot be parsed — log an actionable WARN
+      // and fall through with loadedSettings == null so the caller starts fresh.
+      FRLogger.warn("freerouting.json at '" + configurationFilePath
+          + "' is corrupt or cannot be parsed — starting with default settings. "
+          + "Delete the file or fix its JSON content manually to suppress this message. "
+          + "Parse error: " + e.getMessage());
+      return null;
     }
+    // NoSuchFileException and AccessDeniedException (both extend IOException) propagate
+    // to the caller as-is.  The caller is responsible for logging actionable messages.
 
     GlobalSettings defaultSettings = new GlobalSettings();
     if (loadedSettings != null) {
-      // If the version numbers are different, we must save the file again to update
-      // it
-      boolean isSaveNeeded = !loadedSettings.version.equals(FREEROUTING_VERSION);
+      // Preserve the version that was stored in the file so that future migration
+      // code can compare it against the current release version.
+      // NOTE: loadedSettings.version may be null for very old config files that
+      // pre-date the version field.
+      String fileVersion = loadedSettings.version;
+      String currentVersion = getReleaseSafeVersion();
+
+      // -----------------------------------------------------------------------
+      // Version-change warnings — give the user actionable feedback whenever the
+      // config file was written by a different version of Freerouting.
+      // -----------------------------------------------------------------------
+      if (fileVersion == null) {
+        FRLogger.warn("freerouting.json at '" + configurationFilePath
+            + "' has no version field (very old config file). "
+            + "Some settings may not be available and have been reset to their defaults. "
+            + "The file will be re-saved with the current version (" + currentVersion + ").");
+      } else {
+        int cmp = compareVersionStrings(fileVersion, currentVersion);
+        if (cmp < 0) {
+          // File was written by an older version — the most common case after an
+          // upgrade.  Migration logic is not yet implemented, so warn the user.
+          FRLogger.warn("freerouting.json at '" + configurationFilePath
+              + "' was written by an older version of Freerouting (file: " + fileVersion
+              + ", current: " + currentVersion + "). "
+              + "No migration logic is implemented for this version transition, so some settings "
+              + "may have been reset to their defaults. "
+              + "The file will be re-saved with the updated version string.");
+        } else if (cmp > 0) {
+          // File was written by a newer version — downgrade scenario.
+          FRLogger.warn("freerouting.json at '" + configurationFilePath
+              + "' was written by a newer version of Freerouting (file: " + fileVersion
+              + ", current: " + currentVersion + "). "
+              + "Some settings from the newer version may not be understood or may be ignored. "
+              + "Consider upgrading Freerouting to the version that originally wrote this file.");
+        }
+      }
+
+      // Always record the current release-safe version in the in-memory object and
+      // on disk.  Using the release-safe version (no -SNAPSHOT) means SNAPSHOT
+      // rebuilds of the same release never trigger a spurious re-save / migration.
+      boolean isSaveNeeded = !currentVersion.equals(fileVersion);
 
       // Apply all the loaded settings to the result if they are not null
       ReflectionUtil.copyFields(defaultSettings, loadedSettings);
-      loadedSettings.version = FREEROUTING_VERSION;
+      loadedSettings.version = currentVersion;
 
       if (isSaveNeeded) {
+        // TODO: insert per-version migration steps here when needed, e.g.:
+        //   migrateSettings(fileVersion, currentVersion, loadedSettings);
+        FRLogger.info("freerouting.json config version changed from '"
+            + fileVersion + "' to '" + currentVersion + "' – re-saving configuration.");
         saveAsJson(loadedSettings);
       }
     }
@@ -171,16 +315,55 @@ public class GlobalSettings implements Serializable {
   }
 
   /*
-   * Saves the settings to the default JSON settings file
+   * Saves the settings to the default JSON settings file.
+   *
+   * <p>The {@code version} field is always normalised to the release-safe version
+   * (no {@code -SNAPSHOT} suffix) before writing so that SNAPSHOT builds never
+   * pollute the stored config with a non-release version string.
+   *
+   * <p>Throws {@link AccessDeniedException} (subtype of {@link IOException}) when the OS
+   * denies write access to the target directory or file.  The exception message contains
+   * the path; the caller should log an actionable warning advising the user to check
+   * permissions and, in Docker deployments, to verify the volume mount configuration.
    */
   public static void saveAsJson(GlobalSettings globalSettings) throws IOException {
     // Make sure that we have the directory structure in place, and create it if it
     // doesn't exist
-    Files.createDirectories(configurationFilePath.getParent());
+    try {
+      Files.createDirectories(configurationFilePath.getParent());
+    } catch (AccessDeniedException e) {
+      throw new AccessDeniedException(
+          configurationFilePath.getParent().toString(), null,
+          "Cannot create the user-data directory '" + configurationFilePath.getParent()
+              + "' — permission denied. freerouting.json cannot be saved. "
+              + "Check that the process has write permission on the parent directory. "
+              + "In Docker deployments, verify that the volume is mounted with write access.");
+    } catch (IOException e) {
+      throw new IOException(
+          "Failed to create the user-data directory '" + configurationFilePath.getParent()
+              + "': " + e.getMessage()
+              + ". freerouting.json cannot be saved.", e);
+    }
+
+    // Always stamp the file with the release-safe version, regardless of what the
+    // caller had set on the object (safety net for all call sites).
+    globalSettings.version = getReleaseSafeVersion();
 
     // Write the settings to the file
     try (Writer writer = Files.newBufferedWriter(configurationFilePath, StandardCharsets.UTF_8)) {
       GsonProvider.GSON.toJson(globalSettings, writer);
+    } catch (AccessDeniedException e) {
+      throw new AccessDeniedException(
+          configurationFilePath.toString(), null,
+          "Cannot write freerouting.json to '" + configurationFilePath
+              + "' — permission denied. Settings won't be persisted. "
+              + "Check that the process has write permission on the file and its parent directory. "
+              + "In Docker deployments, verify that the volume is mounted with write access.");
+    } catch (IOException e) {
+      throw new IOException(
+          "Failed to write freerouting.json to '" + configurationFilePath
+              + "': " + e.getMessage()
+              + ". Settings won't be persisted.", e);
     }
   }
 

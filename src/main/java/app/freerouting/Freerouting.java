@@ -26,7 +26,9 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Arrays;
@@ -400,21 +402,24 @@ public class Freerouting {
             .substring("--user_data_path=".length()));
       }
     }
-    // 4, create the directory if it doesn't exist
-    if (!userdataPath
-        .toFile()
-        .exists()) {
-      userdataPath
-          .toFile()
-          .mkdirs();
+    // 4, create the directory if it doesn't exist yet; directory creation is also
+    // attempted lazily when the first write happens (in saveAsJson), so a failure
+    // here is non-fatal – but we print a warning to stderr because logging is not
+    // initialised at this point.
+    if (!userdataPath.toFile().exists()) {
+      if (!userdataPath.toFile().mkdirs()) {
+        System.err.println("WARNING: Could not create user-data directory '" + userdataPath
+            + "'. Freerouting will attempt to create it when writing files. "
+            + "If this persists, check permissions for the specified path.");
+      }
     }
-    // 5, check if it exists now, and if it does, apply it to GlobalSettings
-    if (userdataPath
-        .toFile()
-        .exists()) {
-      GlobalSettings.setUserDataPath(userdataPath);
-    }
-    // 6, make sure that this settings can't be changed later on
+    // 5, always register the resolved path with GlobalSettings – even when the
+    // directory could not be created yet.  saveAsJson() calls
+    // Files.createDirectories() before each write, so the directory will be
+    // created on demand.  Prior to this fix the path was silently ignored (and
+    // the default temp-dir path was locked in) whenever mkdirs() returned false.
+    GlobalSettings.setUserDataPath(userdataPath);
+    // 6, make sure that this setting can't be changed later on
     GlobalSettings.lockUserDataPath();
 
     // Parse logging settings from environment variables and command line arguments
@@ -519,24 +524,48 @@ public class Freerouting {
 
     try {
       globalSettings = GlobalSettings.load();
-      FRLogger.debug("Settings were loaded from freerouting.json");
-    } catch (Exception _) {
-      // we don't want to stop if the configuration file doesn't exist
+      FRLogger.debug("Settings loaded from '" + GlobalSettings.getConfigurationFilePath() + "'.");
+    } catch (NoSuchFileException _) {
+      // Normal first-run condition — the file does not exist yet and will be
+      // created below with default values.
+      FRLogger.debug("No freerouting.json found at '" + GlobalSettings.getConfigurationFilePath()
+          + "' — will create one with default settings.");
+    } catch (AccessDeniedException e) {
+      FRLogger.warn("Cannot read freerouting.json at '"
+          + GlobalSettings.getConfigurationFilePath() + "': " + e.getReason()
+          + ". The file and/or its parent directory may have incorrect permissions. "
+          + "Check that the process has read access. "
+          + "In Docker deployments, verify the volume mount configuration. "
+          + "Freerouting will start with default settings.");
+    } catch (IOException e) {
+      FRLogger.warn("Failed to load freerouting.json from '"
+          + GlobalSettings.getConfigurationFilePath() + "': " + e.getMessage()
+          + ". Freerouting will start with default settings.");
     }
 
-    if ((globalSettings == null) || (globalSettings.version != Constants.FREEROUTING_VERSION)) {
+    if ((globalSettings == null) || !GlobalSettings.getReleaseSafeVersion().equals(globalSettings.version)) {
       // let's see if we can preserve the user ID
       String userId = globalSettings == null ? UUID.randomUUID().toString() : globalSettings.userProfileSettings.userId;
 
       globalSettings = new GlobalSettings();
       globalSettings.userProfileSettings.userId = userId;
-      globalSettings.version = Constants.FREEROUTING_VERSION;
+      globalSettings.version = GlobalSettings.getReleaseSafeVersion();
 
       // save the default values
       try {
         GlobalSettings.saveAsJson(globalSettings);
-      } catch (Exception _) {
-        // it's ok if we can't save the configuration file
+        FRLogger.debug("Default settings saved to '" + GlobalSettings.getConfigurationFilePath() + "'.");
+      } catch (AccessDeniedException e) {
+        FRLogger.warn("Cannot write freerouting.json to '"
+            + GlobalSettings.getConfigurationFilePath() + "': " + e.getReason()
+            + ". The directory and/or file may have incorrect permissions. "
+            + "Check that the process has write access. "
+            + "In Docker deployments, verify the volume mount configuration. "
+            + "Settings won't be persisted across restarts.");
+      } catch (IOException e) {
+        FRLogger.warn("Failed to save freerouting.json to '"
+            + GlobalSettings.getConfigurationFilePath() + "': " + e.getMessage()
+            + ". Settings won't be persisted across restarts.");
       }
     }
 

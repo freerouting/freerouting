@@ -167,6 +167,8 @@ Below is a comprehensive list of command-line options available in Freerouting, 
     - `freerouting.log` will be created in this directory.
     - `freerouting.json` (settings) will be read from this directory if it exists, or created there if it doesn't.
   - Format constraint: Must use the `--user_data_path=path` syntax with an equals sign.
+  - If the directory does not exist when Freerouting starts, it is created automatically on the first write (e.g. when `freerouting.json` is saved for the first time). A warning is printed to stderr if the initial `mkdirs()` attempt fails; the path is still registered and the directory will be created later.
+  - This option takes priority over the `FREEROUTING__USER_DATA_PATH` environment variable and over `FREEROUTING__LOGGING__FILE__LOCATION`.
 
 - **`-help`**
   Displays help information and exits.
