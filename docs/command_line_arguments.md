@@ -227,7 +227,7 @@ FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864
 | `api_server.authentication.enabled` | Boolean | Require API-key authentication. Default: `true`. |
 | `api_server.cors_origins` | String | Comma-separated CORS origin allowlist (use `*` for all origins). |
 
-**Example — expose to all network interfaces without authentication (Docker):**
+**Example — expose to all network interfaces without authentication (Docker or LAN):**
 
 ```bash
 java -jar freerouting-executable.jar \
@@ -236,6 +236,8 @@ java -jar freerouting-executable.jar \
   --api_server.authentication.enabled=false \
   --api_server-endpoints=http://0.0.0.0:37864
 ```
+
+For a complete self-hosting walkthrough — including Docker Compose, systemd, and platform-specific notes — see the [Self-Hosting Guide](self-hosting.md).
 
 ## Examples
 

@@ -185,6 +185,27 @@ GROUP BY api_method ORDER BY error_count DESC;
 | `api/FreeroutingApplication.java` | Registers `ApiAnalyticsFilter` alongside existing filters |
 | `api/v1/AnalyticsControllerV1.java` | Receives analytics POSTs and writes to BigQuery via `BigQueryClient.getInstance()` |
 
+# Docker Multi-Platform Build
+
+The Docker images are built and published by two GitHub Actions workflows:
+
+- `.github/workflows/docker-release.yml` — triggered on every GitHub release; tags the image with the semver version and `latest`.
+- `.github/workflows/docker-nightly.yml` — triggered on every push to `master`; tags the image as `nightly`.
+
+Both workflows build a multi-platform manifest image using Docker Buildx + QEMU. The supported platforms are:
+
+| Platform | Hardware |
+|---|---|
+| `linux/amd64` | x86-64 servers, PCs, most cloud VMs |
+| `linux/arm64` | Apple Silicon, AWS Graviton, Raspberry Pi 4/5 (64-bit OS) |
+| `linux/arm/v7` | Raspberry Pi 2/3/4 (32-bit OS), Umbrel, CasaOS, ARMv7 home-server stacks |
+
+`provenance: false` is set on both workflows so that the manifest does not contain build-attestation entries (which show up as `"architecture": "unknown"` in `docker manifest inspect`).
+
+The Gradle tests are run on the native `ubuntu-latest` runner **before** the multi-platform build step to avoid QEMU network/loopback unreliability inside the cross-compiled build container.
+
+For end-user self-hosting instructions see `docs/self-hosting.md`.
+
 # Installer / jlink Module Requirements
 
 The Windows, Linux, and macOS installers use `jlink` to build a minimal bundled JRE. The `--add-modules` list must include every JDK module that the application (or its bundled libraries) accesses at runtime — `jlink` does **not** auto-detect usages from inside a fat jar.

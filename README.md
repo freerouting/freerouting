@@ -82,7 +82,9 @@ Freerouting offers public API endpoints for PCB routing. The API root is `https:
 
 To access full functionality, request access on the [Freerouting website](https://www.freerouting.app/).
 
-Please note that the Freerouting API and [its documentation](docs/api/API_v1.md) are in beta and may change.
+Please note that the Freerouting API and [its documentation](docs/API/API_v1.md) are in beta and may change.
+
+You can also **self-host the Freerouting API** on your own machine or server. See the [Self-Hosting Guide](docs/self-hosting.md) for step-by-step instructions using Docker or a plain Java JRE.
 
 ## Running Freerouting using Java JRE
 
@@ -108,7 +110,13 @@ Installers are available for Windows x64, Linux x64, and macOS. For other system
 
 ## Docker Image on GitHub Container Registry (GHCR)
 
-Freerouting Docker images for both stable releases (e.g., 2.2.2) and development (nightly) builds are available directly from [ghcr.io/freerouting/freerouting](https://ghcr.io/freerouting/freerouting).
+Freerouting Docker images for both stable releases (e.g., `2.2.2`) and development (`nightly`) builds are available from [ghcr.io/freerouting/freerouting](https://ghcr.io/freerouting/freerouting). The image is a multi-platform manifest supporting:
+
+- `linux/amd64` — x86-64 servers, PCs, most cloud VMs
+- `linux/arm64` — Apple Silicon, AWS Graviton, Raspberry Pi 4/5 with 64-bit OS
+- `linux/arm/v7` — Raspberry Pi 2/3/4 with 32-bit OS, Umbrel, CasaOS, and other ARMv7 home-server stacks
+
+Docker automatically selects the correct variant for your hardware. For full setup instructions — including Docker Compose examples, network configuration, and running without Docker — see the **[Self-Hosting Guide](docs/self-hosting.md)**.
 
 ## Contributing
 
