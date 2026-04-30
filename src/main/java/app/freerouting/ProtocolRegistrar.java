@@ -68,7 +68,7 @@ public class ProtocolRegistrar {
     Path desktopFile = applicationsDir.resolve("freerouting-url-handler.desktop");
     String content = "[Desktop Entry]\n"
         + "Name=Freerouting\n"
-        + "Exec=" + exePath + " %u\n"
+        + "Exec=\"" + exePath + "\" %u\n"
         + "Type=Application\n"
         + "NoDisplay=true\n"
         + "MimeType=x-scheme-handler/freerouting;\n";
@@ -90,7 +90,7 @@ public class ProtocolRegistrar {
         .start();
     int exitCode = process.waitFor();
     if (exitCode != 0) {
-      String output = new String(process.getInputStream().readAllBytes());
+      String output = new String(process.getInputStream().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
       throw new IOException("Command failed (exit " + exitCode + "): " + String.join(" ", command) + " — " + output);
     }
   }
