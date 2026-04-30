@@ -6,9 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for command line argument parsing in GlobalSettings, specifically for
- * the -de argument
- * that supports multiple file types (DSN, SES, RULES).
+ * Tests for command line argument parsing in GlobalSettings.
+ * Covers the -de argument (multiple file types) and the general --key=value
+ * mechanism including string-array fields like api_server.endpoints.
  */
 class GlobalSettingsCommandLineTest {
 
@@ -155,5 +155,71 @@ class GlobalSettingsCommandLineTest {
         assertEquals("myboard.ses", settings.design_session_filename);
         assertEquals("output.ses", settings.initialOutputFile);
         assertEquals(10, settings.routerSettings.maxPasses);
+    }
+
+    // -------------------------------------------------------------------------
+    // Tests for string-array settings via the --key=value mechanism
+    // -------------------------------------------------------------------------
+
+    @Test
+    void testApiServerEndpointsSingleValue() {
+        // Reproduces the Docker bug: --api_server-endpoints=http://0.0.0.0:37864
+        // must be accepted and stored as a single-element String[] array.
+        String[] args = { "--api_server-endpoints=http://0.0.0.0:37864" };
+        settings.applyCommandLineArguments(args);
+
+        String[] endpoints = settings.apiServerSettings.endpoints;
+        assertNotNull(endpoints, "endpoints must not be null");
+        assertEquals(1, endpoints.length, "expected exactly one endpoint");
+        assertEquals("http://0.0.0.0:37864", endpoints[0]);
+    }
+
+    @Test
+    void testApiServerEndpointsMultipleValues() {
+        // Multiple endpoints expressed as a comma-separated list.
+        String[] args = { "--api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37865" };
+        settings.applyCommandLineArguments(args);
+
+        String[] endpoints = settings.apiServerSettings.endpoints;
+        assertNotNull(endpoints, "endpoints must not be null");
+        assertEquals(2, endpoints.length, "expected two endpoints");
+        assertEquals("http://0.0.0.0:37864", endpoints[0]);
+        assertEquals("http://127.0.0.1:37865", endpoints[1]);
+    }
+
+    @Test
+    void testApiServerEndpointsDotNotation() {
+        // Verify that the dot notation also works alongside the dash notation.
+        String[] args = { "--api_server.endpoints=http://0.0.0.0:37864" };
+        settings.applyCommandLineArguments(args);
+
+        String[] endpoints = settings.apiServerSettings.endpoints;
+        assertNotNull(endpoints, "endpoints must not be null");
+        assertEquals(1, endpoints.length);
+        assertEquals("http://0.0.0.0:37864", endpoints[0]);
+    }
+
+    @Test
+    void testApiServerEndpointsWithSpacesAroundCommas() {
+        // Leading/trailing whitespace around comma-separated tokens must be stripped.
+        String[] args = { "--api_server-endpoints=http://0.0.0.0:37864 , http://127.0.0.1:37865" };
+        settings.applyCommandLineArguments(args);
+
+        String[] endpoints = settings.apiServerSettings.endpoints;
+        assertNotNull(endpoints);
+        assertEquals(2, endpoints.length);
+        assertEquals("http://0.0.0.0:37864", endpoints[0]);
+        assertEquals("http://127.0.0.1:37865", endpoints[1]);
+    }
+
+    @Test
+    void testValueContainingEqualSignIsNotTruncated() {
+        // If a value contained a '=' (e.g. a URL query param), split("=", 2) must
+        // preserve everything after the first '=' as the value.  Use a setting
+        // whose value is a String to keep the assertion simple.
+        String[] args = { "--api_server.cors_origins=https://example.com?foo=bar" };
+        settings.applyCommandLineArguments(args);
+
+        assertEquals("https://example.com?foo=bar", settings.apiServerSettings.cors_origins);
     }
 }

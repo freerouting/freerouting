@@ -74,6 +74,20 @@ public class ReflectionUtil {
 
       return Boolean.parseBoolean(value.toString());
     }
+    if (targetType == String[].class) {
+      // Parse a comma-separated string into a String array.
+      // This allows CLI arguments and environment variables to supply list values,
+      // e.g. --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
+      String raw = value.toString().trim();
+      if (raw.isEmpty()) {
+        return new String[0];
+      }
+      String[] tokens = raw.split(",");
+      for (int i = 0; i < tokens.length; i++) {
+        tokens[i] = tokens[i].trim();
+      }
+      return tokens;
+    }
     // Add more type conversions as needed
     return value;
   }

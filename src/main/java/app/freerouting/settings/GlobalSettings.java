@@ -440,9 +440,11 @@ public class GlobalSettings implements Serializable {
       try {
         if (p_args[i].startsWith("--")) {
           // it's a general settings value setter
+          // Use split limit=2 so that values containing '=' (e.g. URLs with query strings)
+          // are captured correctly as a single token.
           String[] parts = p_args[i]
               .substring(2)
-              .split("=");
+              .split("=", 2);
           if ((parts.length == 2) && (!Objects.equals(parts[0], "user_data_path"))) {
             if (parts[0].startsWith("debug.")) {
               // handle debug settings

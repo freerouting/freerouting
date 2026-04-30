@@ -125,28 +125,45 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`enabled`**: Enables or disables the built-in API server.
 - **`http_allowed`**: Allows or disallows HTTP connections to the API server.
 - **`endpoints`**: A list of endpoints that the API server will listen on. Each endpoint is specified as
-  `[protocol]://[host]:[port]`.
+  `[protocol]://[host]:[port]`.  
+  When set via CLI or environment variable, provide a **comma-separated string** of endpoint URLs:
+  - CLI: `--api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864`
+  - Env var: `FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864`
 - *`cors_origins`*: A comma-separated list of origins for the `Access-Control-Allow-Origin` CORS header. Set to `*` to accept all origins (this can be a security risk). When CORS is enabled, the server automatically allows the following request headers in preflight responses: `Content-Type`, `Accept`, `Origin`, `X-Requested-With`, `Authorization`, `Freerouting-Profile-ID`, `Freerouting-Profile-Email`, and `Freerouting-Environment-Host`. This ensures browser-based clients (e.g. EasyEDA at `https://pro.lceda.cn`) can authenticate successfully without being blocked by CORS preflight checks.
 
 ### Command Line Arguments
 
-Freerouting can also be configured using command-line arguments. These arguments override the settings specified in the JSON configuration file. You must use `--{property-name}={property-value}` format, where `property-name` is the hierarchical definition of the property you want to change and the `property-value` is its desired value. You can use `.`, `-` and `:` charapters to separate the hierarchical levels in the `property-name` parameter.
+Freerouting can also be configured using command-line arguments. These arguments override the settings specified in the JSON configuration file. You must use `--{property-name}={property-value}` format, where `property-name` is the hierarchical definition of the property you want to change and the `property-value` is its desired value. You can use `.`, `-` and `:` characters to separate the hierarchical levels in the `property-name` parameter.
 
-**Example:**
+**Scalar example:**
 
 ```bash
 java -jar freerouting.jar --gui.enabled=false --router.max_passes=200
+```
+
+**List-valued settings** (e.g. `api_server.endpoints`) must be passed as a **comma-separated string**; whitespace around commas is ignored:
+
+```bash
+java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864
+java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
 ```
 
 ### Environment Variables
 
 Environment variables provide another way to override settings. The environment variable names correspond to the keys in the JSON settings file, starting with `FREEROUTING__` and periods replaced by double underscores.
 
-**Example:**
+**Scalar example:**
 
 ```bash
 FREEROUTING__GUI__ENABLED=false
 FREEROUTING__ROUTER__MAX_PASSES=200
+java -jar freerouting.jar
+```
+
+**List-valued settings** use the same comma-separated format as CLI arguments:
+
+```bash
+FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864
 java -jar freerouting.jar
 ```
 

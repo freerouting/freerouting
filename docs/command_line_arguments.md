@@ -194,14 +194,48 @@ java -jar freerouting-2.0.0.jar --setting_name=value
 - **Adjust the via cost:**
 
   ```bash
-  java -jar freerouting-2.0.0.jar --router.via_costs 150
+  java -jar freerouting-2.0.0.jar --router.via_costs=150
   ```
 
-These settings allow for granular control over the routing process, enabling you to optimize performance and outcomes according to your specific needs.
+### List-valued settings
 
-### Accessing the Full List of Settings
+Settings whose value is a list (e.g. `api_server.endpoints`) accept a **comma-separated string** when set via CLI argument or environment variable. Whitespace around each comma is stripped automatically.
 
-For a complete list of adjustable settings and detailed explanations, refer to the [Settings Documentation](/docs/settings.md).
+```bash
+# Single endpoint
+java -jar freerouting-2.0.0.jar --api_server-endpoints=http://0.0.0.0:37864
+
+# Multiple endpoints (comma-separated)
+java -jar freerouting-2.0.0.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
+```
+
+The equivalent environment-variable syntax is:
+
+```bash
+FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864
+```
+
+> **Note:** Commas are the chosen delimiter because URL characters that would normally include a comma are percent-encoded by browsers/tools, so plain commas in the string unambiguously mark element boundaries.
+
+### API Server Settings
+
+| Setting | Type | Description |
+|---------|------|-------------|
+| `api_server.enabled` | Boolean | Enable or disable the built-in REST API server. |
+| `api_server.http_allowed` | Boolean | Allow plain HTTP connections (in addition to HTTPS). |
+| `api_server-endpoints` | String list | Comma-separated list of `protocol://host:port` endpoints the server will bind to. Default: `http://127.0.0.1:37864`. |
+| `api_server.authentication.enabled` | Boolean | Require API-key authentication. Default: `true`. |
+| `api_server.cors_origins` | String | Comma-separated CORS origin allowlist (use `*` for all origins). |
+
+**Example — expose to all network interfaces without authentication (Docker):**
+
+```bash
+java -jar freerouting-executable.jar \
+  --gui.enabled=false \
+  --api_server.enabled=true \
+  --api_server.authentication.enabled=false \
+  --api_server-endpoints=http://0.0.0.0:37864
+```
 
 ## Examples
 
