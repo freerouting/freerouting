@@ -158,17 +158,17 @@
 build/
 ├── classes/          # Compiled .class files
 ├── libs/             # All JAR files
-│   ├── freerouting-2.0.1.jar              # Standard JAR
-│   ├── freerouting-2.0.1-executable.jar   # Fat JAR (runnable)
-│   ├── freerouting-2.0.1-javadoc.jar      # API docs (only when publishing)
-│   └── freerouting-2.0.1-sources.jar      # Source code (only when publishing)
+│   ├── freerouting-2.2.2.jar              # Standard JAR
+│   ├── freerouting-2.2.2-executable.jar   # Fat JAR (runnable)
+│   ├── freerouting-2.2.2-javadoc.jar      # API docs (only when publishing)
+│   └── freerouting-2.2.2-sources.jar      # Source code (only when publishing)
 ├── reports/          # Test and build reports
 └── tmp/              # Temporary files
 ```
 
 ### Running the Executable JAR
 ```powershell
-java -jar build/libs/freerouting-2.0.1-executable.jar
+java -jar build/libs/freerouting-2.2.2-executable.jar
 ```
 
 ## Summary of Optimizations

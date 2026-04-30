@@ -8,7 +8,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 
 ```json
 {
-  "version": "2.0.0",
+  "version": "2.2.2",
   "profile": {
     "id": "09730e5f-4886-49f0-afba-76f459408907",
     "email": "info@freerouting.app"

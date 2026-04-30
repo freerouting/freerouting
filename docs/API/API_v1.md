@@ -417,7 +417,7 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
     "coordinate_units": "mm",
     "date": "2025-12-11T16:15:54.777901+01:00",
     "kicad_version": "N/A",
-    "freerouting_version": "Freerouting 2.1.2-SNAPSHOT",
+    "freerouting_version": "Freerouting 2.2.2",
     "source": "Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn",
     "unconnected_items": [
       {

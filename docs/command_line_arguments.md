@@ -11,10 +11,10 @@ This document provides detailed information on how to use Freerouting via the CL
 To run Freerouting from the command line, use the following syntax:
 
 ```bash
-java -jar freerouting-2.0.0.jar [options]
+java -jar freerouting-2.2.2.jar [options]
 ```
 
-Replace `freerouting-2.0.0.jar` with the actual filename of the Freerouting JAR file you are using.
+Replace `freerouting-2.2.2.jar` with the actual filename of the Freerouting JAR file you are using.
 
 ## Command-Line Options
 
@@ -180,7 +180,7 @@ Freerouting allows you to fine-tune its internal settings beyond the standard co
 **Syntax:**
 
 ```bash
-java -jar freerouting-2.0.0.jar --setting_name=value
+java -jar freerouting-2.2.2.jar --setting_name=value
 ```
 
 **Examples:**
@@ -188,13 +188,13 @@ java -jar freerouting-2.0.0.jar --setting_name=value
 - **Disable the GUI:**
 
   ```bash
-  java -jar freerouting-2.0.0.jar --gui.enabled=false
+  java -jar freerouting-2.2.2.jar --gui.enabled=false
   ```
 
 - **Adjust the via cost:**
 
   ```bash
-  java -jar freerouting-2.0.0.jar --router.via_costs=150
+  java -jar freerouting-2.2.2.jar --router.via_costs=150
   ```
 
 ### List-valued settings
@@ -203,10 +203,10 @@ Settings whose value is a list (e.g. `api_server.endpoints`) accept a **comma-se
 
 ```bash
 # Single endpoint
-java -jar freerouting-2.0.0.jar --api_server-endpoints=http://0.0.0.0:37864
+java -jar freerouting-2.2.2.jar --api_server-endpoints=http://0.0.0.0:37864
 
 # Multiple endpoints (comma-separated)
-java -jar freerouting-2.0.0.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
+java -jar freerouting-2.2.2.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
 ```
 
 The equivalent environment-variable syntax is:
@@ -246,7 +246,7 @@ Below are some common usage examples to help you get started.
 Autoroute a design and save the results:
 
 ```bash
-java -jar freerouting-2.0.0.jar -de MyBoard.dsn -do MyBoard.ses
+java -jar freerouting-2.2.2.jar -de MyBoard.dsn -do MyBoard.ses
 ```
 
 - Loads `MyBoard.dsn`.
@@ -258,7 +258,7 @@ java -jar freerouting-2.0.0.jar -de MyBoard.dsn -do MyBoard.ses
 Ignore the `GND` and `VCC` net classes during routing:
 
 ```bash
-java -jar freerouting-2.0.0.jar -de MyBoard.dsn -do MyBoard.ses -inc GND,VCC
+java -jar freerouting-2.2.2.jar -de MyBoard.dsn -do MyBoard.ses -inc GND,VCC
 ```
 
 - Nets in the `GND` and `VCC` classes will not be routed.
@@ -269,7 +269,7 @@ java -jar freerouting-2.0.0.jar -de MyBoard.dsn -do MyBoard.ses -inc GND,VCC
 Limit the autorouter to 10 passes and use 4 threads:
 
 ```bash
-java -jar freerouting-2.0.0.jar -de MyBoard.dsn -do MyBoard.ses -mp 10 -mt 4
+java -jar freerouting-2.2.2.jar -de MyBoard.dsn -do MyBoard.ses -mp 10 -mt 4
 ```
 
 - Sets a cap on routing time and resource usage.
