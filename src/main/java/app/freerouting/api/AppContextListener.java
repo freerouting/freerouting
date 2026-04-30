@@ -4,6 +4,7 @@ import app.freerouting.logger.FRLogger;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.NetworkConnector;
 import org.eclipse.jetty.server.Server;
@@ -15,8 +16,19 @@ public class AppContextListener implements ServletContextListener {
   public void contextInitialized(ServletContextEvent sce) {
     String fullUrl = "http://localhost:37864";
 
-    // Try to get the Jetty server instance from the ServletContext and extract the host and port
-    Server server = (Server) sce.getServletContext().getAttribute("org.eclipse.jetty.server.Server");
+    // In Jetty 12 (EE10) the Server is no longer stored as a plain ServletContext attribute.
+    // The supported API is to obtain the wrapping ServletContextHandler via its static helper
+    // and then call getServer() on it.
+    Server server = null;
+    ServletContextHandler contextHandler = ServletContextHandler.getServletContextHandler(sce.getServletContext());
+    if (contextHandler != null) {
+      server = contextHandler.getServer();
+    }
+    // Fallback for other servlet containers that still expose the legacy attribute.
+    if (server == null) {
+      server = (Server) sce.getServletContext().getAttribute("org.eclipse.jetty.server.Server");
+    }
+
     if (server != null) {
       Connector[] connectors = server.getConnectors();
       for (Connector connector : connectors) {
@@ -33,7 +45,7 @@ public class AppContextListener implements ServletContextListener {
         }
       }
     } else {
-      FRLogger.warn("Could not retrieve Jetty Server instance from ServletContext.");
+      FRLogger.debug("Could not retrieve Jetty Server instance from ServletContext; using default URL.");
     }
 
     FRLogger.info("API web server started successfully at " + fullUrl + ". You can ping it at " + fullUrl + "/v1/system/status.");
