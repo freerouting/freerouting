@@ -8,7 +8,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service that handles API key validation using multiple configured providers.
+ * Singleton service that orchestrates API key validation across one or more configured
+ * {@link ApiKeyProvider} implementations.
+ *
+ * <h2>Provider pipeline</h2>
+ * Providers are evaluated in the order they are declared in the {@code providers} configuration
+ * string (comma-separated). The first provider that returns
+ * {@link ApiKeyValidationResult#ACCESS_GRANTED} or {@link ApiKeyValidationResult#ACCESS_DENIED}
+ * short-circuits evaluation. If every provider returns {@link ApiKeyValidationResult#UNDECIDED}
+ * or {@link ApiKeyValidationResult#PROVIDER_FAILED}, access is denied.
+ *
+ * <h2>Disabled mode</h2>
+ * When {@code apiServerSettings.authentication.isEnabled} is {@code false} (or the settings
+ * object is absent), {@link #isAuthenticationEnabled()} returns {@code false} and
+ * {@link #validateApiKey(String)} unconditionally returns {@code true}. The
+ * {@link ApiKeyValidationFilter} short-circuits on this flag before inspecting any header.
+ *
+ * <h2>Default configuration</h2>
+ * Authentication is <strong>enabled by default</strong>. Operators running Freerouting locally
+ * (e.g. as a KiCad plugin) must explicitly set {@code authentication.enabled=false} to allow
+ * unauthenticated access.
+ *
+ * <h2>Singleton lifecycle</h2>
+ * Obtain the instance via {@link #getInstance()}. Call {@link #resetForTesting()} in unit tests
+ * to force re-initialization with a fresh configuration.
  */
 public class ApiKeyValidationService {
 
@@ -52,6 +75,15 @@ public class ApiKeyValidationService {
         }
     }
 
+    /**
+     * Returns the singleton {@code ApiKeyValidationService}, creating it lazily on first call.
+     *
+     * <p>Initialization reads {@link app.freerouting.Freerouting#globalSettings} to determine
+     * whether authentication is enabled and which providers to instantiate. Subsequent calls
+     * return the already-initialized instance.</p>
+     *
+     * @return the shared {@code ApiKeyValidationService} instance.
+     */
     public static synchronized ApiKeyValidationService getInstance() {
         if (instance == null) {
             instance = new ApiKeyValidationService();
@@ -67,7 +99,10 @@ public class ApiKeyValidationService {
     }
 
     /**
-     * Gets the initialized providers (for testing purposes).
+     * Returns the list of initialized {@link ApiKeyProvider} instances (for testing purposes).
+     *
+     * <p>Package-private visibility is intentional — only test classes in the same package
+     * should inspect the provider list directly.</p>
      */
     List<ApiKeyProvider> getProviders() {
         return providers;

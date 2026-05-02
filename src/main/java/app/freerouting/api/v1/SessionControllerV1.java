@@ -27,6 +27,24 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.UUID;
 
+/**
+ * JAX-RS controller for routing session lifecycle management.
+ *
+ * <p>A <em>session</em> groups one or more routing jobs under a single caller identity. Sessions
+ * are created per EDA-tool invocation and are associated with the authenticated user's UUID.</p>
+ *
+ * <h2>Endpoints</h2>
+ * <ul>
+ *   <li>{@code POST /v1/sessions/create} — create a new session; requires the
+ *       {@code Freerouting-Environment-Host} header.</li>
+ *   <li>{@code GET  /v1/sessions/list} — list all sessions owned by the caller.</li>
+ *   <li>{@code GET  /v1/sessions/{sessionId}} — retrieve details of a specific session.</li>
+ *   <li>{@code GET  /v1/sessions/{sessionId}/logs} — retrieve all log entries for a session.</li>
+ * </ul>
+ *
+ * <p>All endpoints authenticate the caller via {@link app.freerouting.api.BaseController#AuthenticateUser()}
+ * using the {@code Freerouting-Profile-ID} request header.</p>
+ */
 @Path("/v1/sessions")
 @Tag(name = "Sessions", description = "Session management endpoints for creating and managing routing sessions")
 public class SessionControllerV1 extends BaseController {

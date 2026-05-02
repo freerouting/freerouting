@@ -48,6 +48,25 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * JAX-RS controller for PCB routing job management.
+ *
+ * <h2>Typical workflow</h2>
+ * <ol>
+ *   <li>POST {@code /v1/jobs/enqueue} — create a job inside a session.</li>
+ *   <li>POST {@code /v1/jobs/{jobId}/input} — upload the Base64-encoded Specctra DSN file.</li>
+ *   <li>POST {@code /v1/jobs/{jobId}/settings} — (optional) override default router settings.</li>
+ *   <li>PUT  {@code /v1/jobs/{jobId}/start} — transition the job from QUEUED → READY_TO_START.</li>
+ *   <li>GET  {@code /v1/jobs/{jobId}} — poll job state and statistics.</li>
+ *   <li>GET  {@code /v1/jobs/{jobId}/output} — download the Specctra SES result (200 when complete,
+ *       202 while still running, 204 if routing has not yet produced any output).</li>
+ *   <li>GET  {@code /v1/jobs/{jobId}/output/stream} — real-time SSE stream of output updates.</li>
+ *   <li>GET  {@code /v1/jobs/{jobId}/drc} — retrieve a KiCad-compatible DRC report.</li>
+ * </ol>
+ *
+ * <p>All endpoints authenticate the caller via {@link app.freerouting.api.BaseController#AuthenticateUser()}
+ * and verify that the referenced session belongs to that caller.</p>
+ */
 @Path("/v1/jobs")
 @Tag(name = "Jobs", description = "Routing job management endpoints for creating, monitoring, and controlling PCB routing jobs")
 public class JobControllerV1 extends BaseController {
@@ -57,9 +76,13 @@ public class JobControllerV1 extends BaseController {
   public JobControllerV1() {
   }
 
-  /*
-   * Enqueue a new job with the given session id. In order to start the job, both
-   * an input file and its settings must be uploaded first.
+  /**
+   * Enqueues a new routing job within the given session.
+   * <p>
+   * The job is created in {@code QUEUED} state. Both an input file and router settings must be
+   * uploaded before the job can be transitioned to {@code READY_TO_START} via
+   * {@code PUT /v1/jobs/{jobId}/start}.
+   * </p>
    */
   @Operation(summary = "Enqueue new routing job", description = "Creates and enqueues a new PCB routing job within a session. The job must have both input file and settings uploaded before it can be started.")
   @RequestBody(description = "Routing job configuration", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class)))
@@ -130,9 +153,13 @@ public class JobControllerV1 extends BaseController {
 
   }
 
-  /*
-   * Get a list of all jobs in the session with the given id, returning only basic
-   * details about them.
+  /**
+   * Lists all routing jobs in the specified session.
+   * <p>
+   * Pass {@code "all"} (or any value that does not resolve to a known session) as
+   * {@code sessionId} to retrieve all jobs belonging to the authenticated user regardless
+   * of session.
+   * </p>
    */
   @Operation(summary = "List routing jobs", description = "Retrieves a list of all routing jobs in the specified session. Use 'all' as sessionId to list all jobs for the authenticated user.")
   @ApiResponses(value = {
@@ -171,9 +198,9 @@ public class JobControllerV1 extends BaseController {
         .build();
   }
 
-  /*
-   * Get the current detailed status of the job with id, including statistical
-   * data about the (partially) completed board is the process already started.
+  /**
+   * Returns detailed status and statistics for a single routing job, including
+   * board statistics if routing has already started.
    */
   @Operation(summary = "Get job details", description = "Retrieves detailed status and statistics of a routing job, including progress information if the job has started.")
   @ApiResponses(value = {
@@ -220,7 +247,14 @@ public class JobControllerV1 extends BaseController {
         .build();
   }
 
-  /* Start or continue the job with the given id. */
+  /**
+   * Transitions a job from {@code QUEUED} to {@code READY_TO_START}, signalling the
+   * routing scheduler to pick it up for processing.
+   * <p>
+   * The job must be in {@code QUEUED} state; attempting to start an already-running
+   * or completed job returns HTTP 400.
+   * </p>
+   */
   @Operation(summary = "Start routing job", description = "Starts or continues a queued routing job. The job must have both input file and settings uploaded before it can be started.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Job started successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
@@ -279,10 +313,18 @@ public class JobControllerV1 extends BaseController {
         .build();
   }
 
-  /* Stop the job with the given id, and cancels the job. */
-  @Operation(summary = "Cancel routing job", description = "Cancels a routing job. Note: This endpoint is currently not fully implemented.")
+  /**
+   * Cancels the routing job with the given ID.
+   * <p>
+   * Delegates to {@link app.freerouting.management.RoutingJobScheduler#cancelJob(RoutingJob)}.
+   * The job state is set to {@code CANCELLED}; any in-progress routing pass is interrupted.
+   * The partially-completed output (if any) is still accessible via
+   * {@code GET /v1/jobs/{jobId}/output} after cancellation.
+   * </p>
+   */
+  @Operation(summary = "Cancel routing job", description = "Cancels a running or queued routing job. The job state is set to CANCELLED and any in-progress routing pass is interrupted. Partial output (if any) remains accessible.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "501", description = "Not implemented", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "{\"error\":\"This method is not implemented yet.\"}"))),
+      @ApiResponse(responseCode = "200", description = "Job cancelled successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
       @ApiResponse(responseCode = "404", description = "Job not found"),
       @ApiResponse(responseCode = "400", description = "Invalid session ID")
   })
@@ -330,7 +372,13 @@ public class JobControllerV1 extends BaseController {
         .build();
   }
 
-  /* Change the settings of the job, such as the router settings. */
+  /**
+   * Updates the {@link RouterSettings} for a job that is still in {@code QUEUED} state.
+   * <p>
+   * The body is deserialized as a partial {@code RouterSettings} object; only the fields
+   * present in the JSON are applied via the settings merger pipeline.
+   * </p>
+   */
   @Operation(summary = "Update job settings", description = "Updates the router settings for a queued job. The job must be in QUEUED state and not yet started.")
   @RequestBody(description = "Router settings configuration", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RouterSettings.class)))
   @ApiResponses(value = {
@@ -463,7 +511,7 @@ public class JobControllerV1 extends BaseController {
     if ((input.dataBase64 == null) || (input.dataBase64.isEmpty())) {
       return Response
           .status(Response.Status.BAD_REQUEST)
-          .entity("{\"error\":\"The input data must be base-64 encoded and put into the data_base64 field.\"}")
+          .entity("{\"error\":\"The input data must be base-64 encoded and put into the \\\"data\\\" field.\"}")
           .build();
     }
 
@@ -498,9 +546,17 @@ public class JobControllerV1 extends BaseController {
     }
   }
 
-  /* Download the output of the job, typically in Specctra SES format.
-   * If the job is still running or paused, returns the partial output generated so far.
-   * If no output is available yet, returns a 204 No Content response.
+  /**
+   * Downloads the output file of a routing job in Specctra SES format.
+   * <ul>
+   *   <li><b>200 OK</b> — job is {@code COMPLETED}; returns the final SES output.</li>
+   *   <li><b>202 Accepted</b> — job is {@code RUNNING}, {@code PAUSED}, or {@code STOPPING};
+   *       returns the partial output generated so far.</li>
+   *   <li><b>204 No Content</b> — job is in progress but no output bytes are available yet.</li>
+   *   <li><b>400 Bad Request</b> — job has not started, or is {@code TERMINATED},
+   *       {@code CANCELLED}, {@code TIMED_OUT}, or {@code INVALID}.</li>
+   * </ul>
+   * <p>The output data is Base64-encoded in the {@code data} field of the response.</p>
    */
   @Operation(summary = "Download job output file", description = "Downloads the output file of a routing job in Specctra SES format. "
       + "If the job is completed, returns the final output. "
@@ -603,7 +659,15 @@ public class JobControllerV1 extends BaseController {
         .build();
   }
 
-  /* Stream the output of the job in real-time using Server-Sent Events. */
+  /**
+   * Streams the job output file in real-time using Server-Sent Events (SSE).
+   * <p>
+   * A new SSE event is pushed every ~200 ms when the output CRC32 checksum changes.
+   * Each event payload is a JSON-serialized {@link app.freerouting.api.dto.BoardFilePayload}
+   * with the current Base64-encoded SES data. The stream is closed automatically when the
+   * job transitions to {@code COMPLETED} or {@code CANCELLED}.
+   * </p>
+   */
   @Operation(summary = "Stream job output in real-time", description = "Streams the output file of a routing job in real-time using Server-Sent Events (SSE). Updates are sent every 200ms when the output changes.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "SSE stream established", content = @Content(mediaType = MediaType.SERVER_SENT_EVENTS))
@@ -741,7 +805,14 @@ public class JobControllerV1 extends BaseController {
         .build();
   }
 
-  /* Stream the log entries of the job in real-time using Server-Sent Events. */
+  /**
+   * Streams log entries for a routing job in real-time using Server-Sent Events (SSE).
+   * <p>
+   * An SSE event is pushed each time the job fires a {@code logEntryAdded} event. Each event
+   * payload is a JSON-serialized log entry. The connection is closed when the job transitions
+   * to {@code COMPLETED} or {@code CANCELLED}.
+   * </p>
+   */
   @Operation(summary = "Stream job logs in real-time", description = "Streams log entries of a routing job in real-time using Server-Sent Events (SSE). New log entries are sent as they are generated.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "SSE stream established", content = @Content(mediaType = MediaType.SERVER_SENT_EVENTS))
@@ -812,7 +883,15 @@ public class JobControllerV1 extends BaseController {
     FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/logs/stream", "", "stream-started", userId);
   }
 
-  /* Get DRC report for a job */
+  /**
+   * Generates and returns a KiCad-compatible DRC (Design Rules Check) report for a routing job.
+   * <p>
+   * If the job's board is not already loaded in memory, the input DSN file is loaded on demand.
+   * The report JSON follows the {@code https://schemas.kicad.org/drc.v1.json} schema and
+   * includes unconnected items and clearance violations. Returns HTTP 500 if the board cannot
+   * be loaded from the stored DSN input.
+   * </p>
+   */
   @Operation(summary = "Get DRC report", description = "Generates and retrieves a Design Rules Check (DRC) report for a routing job. The report includes violations and statistics in JSON format.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "DRC report generated successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON)),

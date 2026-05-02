@@ -21,11 +21,35 @@ import jakarta.ws.rs.core.Response;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
+/**
+ * JAX-RS controller for system-level monitoring and environment information endpoints.
+ *
+ * <p>This controller exposes two unauthenticated, publicly accessible endpoints:
+ * <ul>
+ *   <li>{@code GET /v1/system/status} — returns current CPU, RAM, storage and session-count
+ *       metrics as a {@link app.freerouting.api.dto.SystemStatus} JSON object.</li>
+ *   <li>{@code GET /v1/system/environment} — returns the deserialized
+ *       {@code Freerouting.globalSettings.runtimeEnvironment} for diagnostics.</li>
+ * </ul>
+ *
+ * <p>Neither endpoint requires an {@code Authorization} header or a
+ * {@code Freerouting-Environment-Host} header; both are excluded from API-key validation
+ * and environment-host validation filters.</p>
+ */
 @Path("/v1/system")
 @Tag(name = "System", description = "System monitoring and environment information endpoints")
 public class SystemControllerV1 {
 
-  @Operation(summary = "Get CPU load", description = "Returns the current system CPU load as a percentage (0-100). Returns -1 if CPU load cannot be determined.")
+  /**
+   * Returns the current system-wide CPU load as a percentage in the range {@code [0, 100]}.
+   *
+   * <p>Uses {@link com.sun.management.OperatingSystemMXBean#getCpuLoad()} when the
+   * {@code jdk.management} module is available. Falls back to {@code -1} on minimal JRE
+   * builds where the module is absent, or if the JVM cannot determine CPU load.</p>
+   *
+   * @return a {@code double} in the range {@code [0, 100]} representing CPU utilisation,
+   *         or {@code -1} if the value cannot be determined.
+   */
   public static double getCpuLoad() {
     try {
       OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();

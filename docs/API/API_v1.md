@@ -2,7 +2,7 @@
 
 The Freerouting API provides auto-routing functionality through standard HTTP RESTful endpoints.
 
-You can test the GET endpoints directly in your browser, but we highly recommend using tools like [Postman](https://www.postman.com/) or [Swagger UI](https://swagger.io/tools/swagger-ui/) for more extensive testing.
+You can test the GET endpoints directly in your browser, but we highly recommend using tools like [Postman](https://www.postman.com/) or the built-in **Swagger UI** (see [Developer Tools](#developer-tools) below) for more extensive testing.
 
 ## Base URL
 
@@ -37,11 +37,15 @@ https://api.freerouting.app/v1
 
 ## Authentication
 
-The Freerouting API allows administrators to optionally enable endpoint protection through different validation providers (e.g., Google Sheets). 
+The Freerouting API protects sensitive endpoints through a configurable API key validation system.
 
-By default, or if disabled, **the API does not require authentication**, which is the typical configuration when running Freerouting locally as a plugin for a PCB editor (like KiCad or Altium). 
+**Default behaviour:** authentication is **enabled** by default. Users of the public API (**https://api.freerouting.app**) must register at [www.freerouting.app](https://www.freerouting.app) to obtain a free API key.
 
-However, for the public endpoint (**https://api.freerouting.app**), authentication is **always enabled**. Users of the public API must register at [www.freerouting.app](https://www.freerouting.app) to get an API key.
+**Local / plugin use:** when running Freerouting locally as a plugin for a PCB editor (e.g. KiCad or EasyEDA), operators can disable authentication so that the plugin integrates without an API key:
+
+```
+java -jar freerouting-executable.jar --gui.enabled=false --api_server.enabled=true --api_server.authentication.enabled=false
+```
 
 If authentication is enabled, requests to protected endpoints must include a valid API key under the `Authorization` header:
 
@@ -53,21 +57,23 @@ For complete details on how to configure and enable authentication on your own s
 
 ## Required headers
 
-All protected endpoints (i.e. everything except `/v1/system/*`, `/v1/analytics/*`, `/openapi/*`, and `/swagger-ui`) **require** the following header on every request:
+All protected endpoints (i.e. everything except `/v1/system/*`, `/v1/analytics/*`, `/openapi/*`, and `/swagger-ui`) **require** the following headers on every request:
 
 | Header | Required | Format | Description |
 |--------|----------|--------|-------------|
+| `Freerouting-Profile-ID` | **Yes** | RFC 4122 UUID | Identifies the calling user. Used for session ownership, job access control, and analytics. |
 | `Freerouting-Environment-Host` | **Yes** | `<ToolName>/<Version>` | Identifies the calling EDA tool and its version. |
 
 **Examples:**
 
 ```http
+Freerouting-Profile-ID: 550e8400-e29b-41d4-a716-446655440000
 Freerouting-Environment-Host: KiCad/10.0
 Freerouting-Environment-Host: EasyEDA/1.0
 Freerouting-Environment-Host: Postman/11.14
 ```
 
-If the header is absent or does not match the `<ToolName>/<Version>` format, the server returns **HTTP 400 Bad Request**:
+If `Freerouting-Environment-Host` is absent or does not match the `<ToolName>/<Version>` format, the server returns **HTTP 400 Bad Request**:
 
 ```json
 {
@@ -87,7 +93,7 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
   GET /system/status
   ```
 
-  **Description:** Returns the current status of the system.
+  **Description:** Returns the current status of the system. This endpoint is **publicly accessible** (no API key or profile header required).
 
   **Response body:**
 
@@ -108,7 +114,7 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
   GET /system/environment
   ```
 
-  **Description:** Returns information about the system environment.
+  **Description:** Returns information about the system environment. This endpoint is **publicly accessible** (no API key or profile header required).
 
 ---
 
@@ -126,6 +132,7 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
 
   | Header | Required | Format | Description |
   |--------|----------|--------|-------------|
+  | `Freerouting-Profile-ID` | **Yes** | RFC 4122 UUID | The caller's user ID. |
   | `Freerouting-Environment-Host` | **Yes** | `<ToolName>/<Version>` | Identifies the calling EDA tool and its version (e.g. `KiCad/10.0`, `EasyEDA/1.0`). |
 
   **Response body:** Contains the new session ID and the resolved host value.
@@ -144,7 +151,7 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
   GET /sessions/list
   ```
 
-  **Description:** Retrieves a list of all active sessions.
+  **Description:** Retrieves a list of all active sessions owned by the authenticated user.
 
 - **Retrieve a Specific Session**
 
@@ -160,14 +167,13 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
 - **Get log entries of a session**
 
   ```http
-  GET /sessions/{sessionId}/logs/{timestamp}
+  GET /sessions/{sessionId}/logs
   ```
 
   **Parameters:**
     - `sessionId` *(required)*: The unique identifier of the session.
-    - 'timestamp' *(optional)*: The timestamp from which the log entries will be listed.'
 
-  **Description:** Retrieves a JSON array of log entries for a specific session.
+  **Description:** Retrieves a JSON array of all log entries recorded for a specific session.
 
 ---
 
@@ -189,7 +195,7 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
   }
   ```
 
-  **Description:** Submits a new routing job to be processed.
+  **Description:** Submits a new routing job (in `QUEUED` state) to be processed. Both an input file and router settings must be uploaded before the job can be started.
 
 - **List Jobs for a Session**
 
@@ -198,7 +204,7 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
   ```
 
   **Parameters:**
-    - `sessionId` *(required)*: The unique identifier of the session.
+    - `sessionId` *(required)*: The unique identifier of the session. Pass `"all"` (or any value that does not resolve to a known session) to retrieve all jobs belonging to the authenticated user regardless of session.
 
   **Description:** Retrieves a list of routing jobs associated with a specific session.
 
@@ -220,7 +226,7 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
   **Parameters:**
     - `jobId` *(required)*: The unique identifier of the job.
 
-  **Description:** Updates the settings for a specific routing job.
+  **Description:** Updates the router settings for a specific routing job. The job must still be in `QUEUED` state.
 
 - **Start a Job**
 
@@ -231,19 +237,29 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
   **Parameters:**
     - `jobId` *(required)*: The unique identifier of the job.
 
-  **Description:** Starts processing the specified routing job.
+  **Description:** Transitions the job from `QUEUED` to `READY_TO_START`, signalling the scheduler to begin routing.
+
+- **Cancel a Job**
+
+  ```http
+  PUT /jobs/{jobId}/cancel
+  ```
+
+  **Parameters:**
+    - `jobId` *(required)*: The unique identifier of the job.
+
+  **Description:** Cancels a running or queued routing job. The job state is set to `CANCELLED` and any in-progress routing pass is interrupted. Partial output (if any) remains accessible via `GET /jobs/{jobId}/output`.
 
 - **Get log entries of a job**
 
   ```http
-  GET /jobs/{jobId}/logs/{timestamp}
+  GET /jobs/{jobId}/logs
   ```
 
   **Parameters:**
-    - `JobId` *(required)*: The unique identifier of the job.
-    - 'timestamp' *(optional)*: The timestamp from which the log entries will be listed.'
+    - `jobId` *(required)*: The unique identifier of the job.
 
-  **Description:** Retrieves a JSON array of log entries for a specific job.
+  **Description:** Retrieves a JSON array of all log entries recorded for a specific job.
 
 - **Get log entries in real-time as a stream**
 
@@ -252,9 +268,9 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
   ```
 
   **Parameters:**
-    - `JobId` *(required)*: The unique identifier of the job.
+    - `jobId` *(required)*: The unique identifier of the job.
 
-  **Description:** Opens a stream channel with the server and pushes JSON objects of log entries for a specific job.
+  **Description:** Opens a Server-Sent Events (SSE) stream and pushes JSON log entry objects as they are generated by the routing process.
 
 ---
 
@@ -267,11 +283,9 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
   ```
 
   **Parameters:**
-    - `JobId` *(required)*: The unique identifier of the job.
-    - `filename` *(required)*: The name of the file.
-    - `data` *(required)*: The base-64 encoded data of the file.
+    - `jobId` *(required)*: The unique identifier of the job.
 
-  **Description:** Submits input data for a routing job.
+  **Description:** Submits input data for a routing job. The job must still be in `QUEUED` state.
 
   **Request body:** Contains the filename and the [Base64-encoded](https://en.wikipedia.org/wiki/Base64) Specctra DSN data.
 
@@ -280,7 +294,7 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
     "filename": "BBD-Mars-64-revE.dsn",
     "data": "KGFyZHdhcmVcU...W1hdGY5OC4zMTcgLKQ0K"
   }
-  ```  
+  ```
 
 - **Get Output for a Job**
 
@@ -333,7 +347,7 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
   **Parameters:**
     - `jobId` *(required)*: The unique identifier of the job.
 
-  **Description:** Opens a stream channel with the server and pushes JSON objects of updated output for a specific job.
+  **Description:** Opens a Server-Sent Events (SSE) stream and pushes updated output objects as the routing progresses. Each event payload is a JSON-serialized `BoardFilePayload` with the latest Base64-encoded SES data.
 
 ---
 
@@ -407,9 +421,9 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
   **Parameters:**
     - `jobId` *(required)*: The unique identifier of the job.
 
-  **Description:** Retrieves the DRC report of a routing job.
+  **Description:** Generates and returns a KiCad-compatible DRC report for a routing job. The board is loaded from the stored DSN input on demand if not already in memory. Returns **HTTP 500** if the board cannot be loaded.
 
-  **Response body:** Contains the DRC report of the job.
+  **Response body:** Contains the DRC report in KiCad DRC v1 JSON format.
 
   ```json
   {
@@ -419,59 +433,30 @@ If the header is absent or does not match the `<ToolName>/<Version>` format, the
     "kicad_version": "N/A",
     "freerouting_version": "Freerouting 2.2.2",
     "source": "Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn",
-    "unconnected_items": [
-      {
-        "description": "Unconnected items: Pin [GND] and Pin [GND]",
-        "items": [
-          {
-            "description": "Pin [GND]",
-            "pos": {
-              "x": 1183.875,
-              "y": -1075.0
-            },
-            "uuid": "148"
-          },
-          {
-            "description": "Pin [GND]",
-            "pos": {
-              "x": 1183.875,
-              "y": -1075.0
-            },
-            "uuid": "636"
-          }
-        ],
-        "severity": "warning",
-        "type": "unconnected"
-      },
-      {
-        "description": "Unconnected items: Trace [GND] and Trace [GND]",
-        "items": [
-          {
-            "description": "Trace [GND]",
-            "pos": {
-              "x": 1521.75,
-              "y": -1030.3945
-            },
-            "uuid": "2396"
-          },
-          {
-            "description": "Trace [GND]",
-            "pos": {
-              "x": 1521.75,
-              "y": -1030.464
-            },
-            "uuid": "2410"
-          }
-        ],
-        "severity": "warning",
-        "type": "unconnected"
-      }
-    ],
+    "unconnected_items": [],
     "violations": [],
     "schematic_parity": []
   }
   ```
-  
+
+---
+
+### Developer Tools
+
+The following endpoints are **publicly accessible** (no API key or profile header required):
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /openapi/openapi.json` | OpenAPI 3.0 specification in JSON format |
+| `GET /openapi/openapi.yaml` | OpenAPI 3.0 specification in YAML format |
+| `GET /swagger-ui/index.html` | Interactive Swagger UI documentation |
+
+The Swagger UI link is also printed to the server log on startup:
+
+```
+API web server started successfully at http://localhost:37864. ... Swagger UI is available at http://localhost:37864/swagger-ui.
+```
+
 ---
 
 ## Notes

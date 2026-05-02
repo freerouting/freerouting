@@ -20,6 +20,23 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+/**
+ * JAX-RS controller that receives analytics event payloads from Freerouting client libraries
+ * and writes them to BigQuery via the singleton {@link app.freerouting.management.analytics.BigQueryClient}.
+ *
+ * <h2>Endpoints</h2>
+ * <ul>
+ *   <li>{@code POST /v1/analytics/track} — record a single analytics event (e.g.
+ *       {@code "API Endpoint Called"}). Requires the BigQuery service-account key to be
+ *       configured via {@code FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY}.</li>
+ *   <li>{@code POST /v1/analytics/identify} — associate user traits with a user ID.
+ *       Not yet implemented (returns HTTP 501).</li>
+ * </ul>
+ *
+ * <p>Both endpoints are excluded from API-key validation and environment-host validation
+ * (public access), so that remote Freerouting instances can send analytics without needing
+ * a caller API key.</p>
+ */
 @Path("/v1/analytics")
 @Tag(name = "Analytics", description = "Endpoints for tracking user actions and analytics data")
 public class AnalyticsControllerV1 {
@@ -72,7 +89,7 @@ public class AnalyticsControllerV1 {
           .status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity("""
               {
-                "error": "An error occurred while processing the request."
+                "error": "An error occurred while processing the request.",
                 "message": "%s"
               }
               """.formatted(e.getMessage()))

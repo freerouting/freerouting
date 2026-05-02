@@ -36,11 +36,10 @@ import java.util.regex.Pattern;
  * </ul>
  *
  * <h2>Configuration</h2>
- * The Google Sheet URL must be configured via the environment variable:
- *
+ * The Google Sheet URL and Google API key must be configured via:
  * <pre>
- * <pre>FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS
- * </pre>
+ * FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL
+ * FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY
  * </pre>
  *
  * <h2>Caching and Resilience</h2>

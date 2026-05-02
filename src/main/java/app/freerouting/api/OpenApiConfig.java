@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
@@ -47,11 +46,17 @@ import jakarta.ws.rs.core.Application;
 }, security = {
                 @SecurityRequirement(name = "ApiKeyAuth")
 })
-@SecurityScheme(name = "ApiKeyAuth", type = SecuritySchemeType.APIKEY, in = SecuritySchemeIn.HEADER, paramName = "Freerouting-Api-Key", description = """
-                API Key authentication for Freerouting API.
+@SecurityScheme(name = "ApiKeyAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", description = """
+                API Key authentication for the Freerouting API.
 
-                The API key should be included in the 'Freerouting-Api-Key' header for all requests.
-                This key is used to identify and authenticate users accessing the API.
+                Pass your API key (a RFC 4122 GUID) as a Bearer token in the standard HTTP
+                Authorization header:
+
+                    Authorization: Bearer 550e8400-e29b-41d4-a716-446655440000
+
+                API keys can be obtained by registering at https://www.freerouting.app.
+                When running Freerouting locally (e.g. as a KiCad or EasyEDA plugin) with
+                authentication disabled, this header is not required.
                 """)
 public class OpenApiConfig extends Application {
         // This class serves as the OpenAPI configuration holder

@@ -38,10 +38,18 @@ import java.io.IOException;
  * </ul>
  *
  * <h2>Configuration</h2>
- * The API key provider is configured via the
- * {@code FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS}
- * environment variable. If not configured, all protected endpoints will be
- * denied access.
+ * Authentication is configured through the {@code apiServerSettings.authentication} block.
+ * The relevant environment variables are:
+ * <ul>
+ *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__ENABLED} — set to {@code false} for
+ *       local/plugin deployments.</li>
+ *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__PROVIDERS} — comma-separated provider
+ *       list (e.g. {@code "GoogleSheets"}).</li>
+ *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__SHEET_URL}</li>
+ *   <li>{@code FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY}</li>
+ * </ul>
+ * If authentication is enabled but no providers are configured, all protected endpoints are
+ * denied access (fail-secure).
  *
  * @see ApiKeyProvider
  * @see GoogleSheetsApiKeyProvider

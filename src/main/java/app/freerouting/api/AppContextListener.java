@@ -10,6 +10,17 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.NetworkConnector;
 import org.eclipse.jetty.server.Server;
 
+/**
+ * Servlet context lifecycle listener that fires once when the Jetty server finishes starting.
+ *
+ * <p>On {@link #contextInitialized} it:
+ * <ol>
+ *   <li>Resolves the actual bound host and port from the first {@link NetworkConnector}.</li>
+ *   <li>Logs an INFO message with the base URL and the Swagger UI link.</li>
+ *   <li>Logs a WARN message if API authentication is disabled, reminding operators to
+ *       enable it before exposing the server to a network.</li>
+ * </ol>
+ */
 @WebListener
 public class AppContextListener implements ServletContextListener {
 
@@ -49,7 +60,7 @@ public class AppContextListener implements ServletContextListener {
       FRLogger.debug("Could not retrieve Jetty Server instance from ServletContext; using default URL.");
     }
 
-    FRLogger.info("API web server started successfully at " + fullUrl + ". You can ping it at " + fullUrl + "/v1/system/status. Swagger UI is available at " + fullUrl + "/swagger-ui/index.html.");
+    FRLogger.info("API web server started successfully at " + fullUrl + ". You can ping it at " + fullUrl + "/v1/system/status. Swagger UI is available at " + fullUrl + "/swagger-ui.");
 
     if (!ApiKeyValidationService.getInstance().isAuthenticationEnabled()) {
       FRLogger.warn("API server authentication is DISABLED. All API endpoints are accessible without an API key. Enable authentication in the configuration before exposing this server to a network.");

@@ -10,6 +10,23 @@ import java.util.HashSet;
 import java.util.Set;
 import org.glassfish.jersey.media.sse.SseFeature;
 
+/**
+ * Jersey JAX-RS application entry point.
+ *
+ * <p>Registers all controllers, exception mappers, and filters for the Freerouting API.
+ * The request-filter chain executes in ascending {@link jakarta.annotation.Priority} order:</p>
+ *
+ * <ol>
+ *   <li><b>Priority 1000</b> — {@link app.freerouting.api.security.ApiKeyValidationFilter}:
+ *       validates {@code Authorization: Bearer} tokens; aborts with 401 on failure.</li>
+ *   <li><b>Priority 1050</b> — {@link EnvironmentHostValidationFilter}:
+ *       validates the {@code Freerouting-Environment-Host} header format; aborts with 400 on
+ *       failure.</li>
+ *   <li><b>Priority 5000</b> — {@link ApiAnalyticsFilter}:
+ *       captures HTTP ≥ 400 responses for analytics; 2xx paths are tracked individually by each
+ *       controller method.</li>
+ * </ol>
+ */
 @ApplicationPath("/")
 public class FreeroutingApplication extends Application {
 

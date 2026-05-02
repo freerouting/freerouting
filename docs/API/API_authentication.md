@@ -4,7 +4,13 @@
 
 The Freerouting API implements a modular API authentication system to optionally protect sensitive endpoints from unauthorized access. The system uses a **provider-based architecture** that allows for multiple API key validation storage backends. Providers are evaluated in a priority fallback sequence.
 
-By default, authentication is disabled, meaning all endpoints are publicly available. This is ideal for running Freerouting locally as a plugin for PCB editors.
+Authentication is **enabled by default**. This is the secure-by-default configuration introduced in the Issue 650 fix. For local deployments (e.g. running Freerouting as a KiCad or EasyEDA plugin), authentication must be explicitly disabled:
+
+```
+java -jar freerouting-executable.jar --gui.enabled=false --api_server.enabled=true --api_server.authentication.enabled=false
+```
+
+Additionally, the server binds to `http://127.0.0.1:37864` (localhost only) by default. To expose it to a network interface, explicitly set `--api_server.endpoints=http://0.0.0.0:37864`.
 
 ### Key Features
 
@@ -154,7 +160,7 @@ A representative JSON configuration snippet showing the `authentication` block t
 
 ```json
   "api_server": {
-    "endpoints": ["https://0.0.0.0:37864"],
+    "endpoints": ["http://127.0.0.1:37864"],
     "authentication": {
       "enabled": true,
       "providers": "GoogleSheets",
@@ -206,7 +212,7 @@ $env:FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY="YOU
     - Restart the Freerouting API server
 
 4. **Verify**:
-    - Check logs for: "API key validation enabled with Google Sheets provider"
+    - Check logs for: `"Added GoogleSheets API Key Provider"`
     - Test with a valid API key:
       `curl -H "Authorization: Bearer YOUR_KEY" http://localhost:37864/v1/sessions/list`
 
@@ -230,6 +236,7 @@ The following endpoints are **publicly accessible** without API key validation:
 | `/dev/*`          | Development and testing endpoints   |
 | `/openapi/*`      | OpenAPI specification (JSON/YAML)   |
 | `/swagger-ui`     | Swagger UI documentation interface  |
+| `/swagger-ui/*`   | Swagger UI static assets            |
 
 All other endpoints require a valid API key in the `Authorization: Bearer <API_KEY>` header.
 
@@ -270,7 +277,7 @@ Response:
 
 ```json
 {
-  "error": "Missing API key. Please provide a valid API key in the Authorization header using Bearer scheme (Authorization: Bearer <API_KEY>)."
+  "error": "Missing API key. Please provide a valid API key in the Authorization header using Bearer scheme (Authorization: Bearer <API_KEY>). You can apply for a free API key at https://www.freerouting.app."
 }
 ```
 
@@ -290,11 +297,18 @@ Response:
 
 ### 401 Unauthorized - Provider Not Configured
 
+When authentication is enabled but no providers are correctly configured, all requests to protected
+endpoints are denied. The log will contain:
+
+```
+API authentication is enabled but no providers are correctly configured. Denying access.
+```
+
 Response:
 
 ```json
 {
-  "error": "API key validation is not properly configured."
+  "error": "Invalid or unauthorized API key."
 }
 ```
 
@@ -304,7 +318,7 @@ Response:
 
 ### Provider Not Initializing
 
-**Symptom**: All protected endpoints return 401 with "API key validation is not properly configured"
+**Symptom**: All protected endpoints return 401 with "Invalid or unauthorized API key." and the log contains `"API authentication is enabled but no providers are correctly configured. Denying access."`
 
 **Solutions**:
 
@@ -497,14 +511,17 @@ The API key validation system logs the following events:
 
 **INFO Level**:
 
-- `"API key validation enabled with Google Sheets provider"` - Provider initialized successfully
-- `"Successfully refreshed X valid API keys from Google Sheets"` - Cache refresh completed
+- `"Added GoogleSheets API Key Provider"` — Google Sheets provider initialized successfully
+- `"Successfully refreshed X valid API keys from Google Sheets (total entries: Y, skipped: Z)"` — Cache refresh completed with a change in key count
+- `"Google Sheets API key provider initialized with X keys"` — Provider constructed
 
 **WARN Level**:
 
-- `"Google Sheets URL not configured"` - Environment variable not set
-- `"API key validation failed: missing API key for path X"` - Request without API key
-- `"API key validation failed: invalid or unauthorized API key for path X"` - Invalid key used
+- `"GoogleSheets provider configured but sheetUrl or googleApiKey is missing."` — Required configuration absent
+- `"API key validation failed: missing or invalid Authorization header for path X"` — Request without API key
+- `"API key validation failed: invalid or unauthorized API key for path X"` — Invalid key used
+- `"API authentication is enabled but no providers are correctly configured. Denying access."` — No usable providers
+- `"API server authentication is DISABLED. All API endpoints are accessible without an API key."` — Auth disabled warning (logged once on server startup)
 
 **ERROR Level**:
 
