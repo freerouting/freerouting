@@ -198,6 +198,17 @@ tasks.register('executableJar', Jar) {
         configurations.runtimeClasspath.collect { zipTree(it) }
     } {
         exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+        // Remove JNDI classes to eliminate Log4j2 JNDI startup warnings on stripped JREs.
+        // The jlink image intentionally excludes java.naming for security (see AGENTS.md).
+        // Without this exclusion, Log4j2's plugin scanner loads JndiLookup.class, which
+        // loads JndiManager.class, whose static initializer probes for javax.naming.Context,
+        // fails with NoClassDefFoundError, and emits WARN lines before main() even runs.
+        // Setting log4j2.disableJndi=true suppresses actual lookups but does NOT prevent
+        // the class from being loaded during plugin scanning. Freerouting never configures
+        // SMTP/JMS appenders, so removing these classes has no functional impact.
+        exclude 'org/apache/logging/log4j/core/lookup/JndiLookup.class'
+        exclude 'org/apache/logging/log4j/core/net/JndiManager.class'
+        exclude 'org/apache/logging/log4j/core/net/JndiManager$*.class'
     }
 
     from files(sourceSets.main.output)
