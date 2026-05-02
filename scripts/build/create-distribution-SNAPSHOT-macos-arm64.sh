@@ -31,6 +31,7 @@ echo "> Creating the package"
 # Use a fixed numeric version for jpackage (SNAPSHOT strings are not valid app-version values)
 $JAVA_HOME/bin/jpackage --input ../../build/dist/ \
  --name freerouting \
+ --vendor "Andras Fuchs" \
  --main-jar freerouting-executable.jar \
  --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version 1.0.0 --license-file ../../LICENSE \
  --icon ../../assets/icon/freerouting_icon_256x256_v3.icns \

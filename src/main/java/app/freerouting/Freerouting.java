@@ -491,6 +491,13 @@ public class Freerouting {
 
     // Set system properties for log4j2 ConfigurationFactory to read
     // This MUST happen before any logging calls
+
+    // Disable JNDI lookups — Freerouting does not use them, and the java.naming module
+    // is intentionally excluded from the jlink runtime to reduce attack surface
+    // (Log4Shell / CVE-2021-44228). Without this property Log4j2 tries to load
+    // javax.naming.Context at bootstrap and emits a noisy WARN for every lookup plugin.
+    System.setProperty("log4j2.disableJndi", "true");
+
     System.setProperty("log4j2.configurationFactory", "app.freerouting.logger.Log4j2ConfigurationFactory");
     System.setProperty("freerouting.logging.console.enabled", String.valueOf(consoleLoggingEnabled));
     System.setProperty("freerouting.logging.console.level", consoleLoggingLevel);

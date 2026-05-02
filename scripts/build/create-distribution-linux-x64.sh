@@ -33,6 +33,7 @@ echo "> Creating the package"
 # Note: jpackage on Linux requires a PNG icon; .ico is a Windows-only format.
 $JAVA_HOME/bin/jpackage --input ../../build/dist/ \
  --name freerouting \
+ --vendor "Andras Fuchs" \
  --main-jar freerouting-executable.jar \
  --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version $APP_VERSION \
  --icon ../../assets/icon/freerouting_icon_256x256_v3.png \

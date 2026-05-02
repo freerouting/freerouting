@@ -233,7 +233,7 @@ The Windows, Linux, and macOS installers use `jlink` to build a minimal bundled 
 - `java.instrument` — javassist references it but HK2/Jersey proxy generation uses `ClassLoader.defineClass()`, not bytecode redefining. Do not add.
 - `jdk.attach` / `jdk.jdi` — javassist debugging tools. Not needed for runtime proxy generation. Do not add.
 - `jdk.httpserver` — referenced in jersey-server module-info but Freerouting uses Jetty, not the JDK HTTP server. Do not add.
-- `java.naming` — log4j-core requires it `static` (optional) for JNDI lookups; Freerouting does not use JNDI lookups. Do not add.
+- `java.naming` — log4j-core requires it `static` (optional) for JNDI lookups; Freerouting does not use JNDI lookups. Do not add. Instead, `System.setProperty("log4j2.disableJndi", "true")` is set at the very start of the Log4j2 property-setup block in `Freerouting.main()` (before `LogManager.getContext()` is first called) so Log4j2 skips its JNDI plugin registration entirely and emits no WARN.
 - `java.rmi` — log4j-core requires it for remote JMX; not needed for local embedded logging. Do not add.
 
 ## Defensive coding pattern for `ManagementFactory`
