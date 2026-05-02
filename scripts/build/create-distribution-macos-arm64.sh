@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 export APP_VERSION=$1
 export APP_TYPE="dmg"

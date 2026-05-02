@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 export APP_VERSION=$1
 export APP_TYPE="app-image"
@@ -29,11 +30,12 @@ $JAVA_HOME/bin/jlink -p "$JAVA_HOME/jmods" \
         --output $JAVA_HOME/runtime
 
 echo "> Creating the package"
+# Note: jpackage on Linux requires a PNG icon; .ico is a Windows-only format.
 $JAVA_HOME/bin/jpackage --input ../../build/dist/ \
  --name freerouting \
  --main-jar freerouting-executable.jar \
  --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version $APP_VERSION \
- --icon ../../assets/icon/freerouting_icon_256x256_v3.ico
+ --icon ../../assets/icon/freerouting_icon_256x256_v3.png
 
 echo "> Composing the distribution file"
 mv freerouting freerouting-$APP_VERSION-linux-x64
