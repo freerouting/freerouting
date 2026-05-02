@@ -13,6 +13,7 @@ import threading
 import subprocess
 import configparser
 import re
+import shlex
 import urllib.request
 import urllib.parse
 import tempfile
@@ -176,12 +177,22 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         self.module_file = config['artifact']['location']
         self.module_path = self.here_path / self.module_file
 
-        # Set temp filename using pathlib
-        self.module_input = self.dirpath / 'freerouting.dsn'
-        self.temp_input = self.dirpath / 'temp-freerouting.dsn'
-        self.module_output = self.dirpath / 'freerouting.ses'
-        self.module_rules = self.dirpath / 'freerouting.rules'
-        
+        # When the project directory path contains spaces, pcbnew's ExportSpecctraDSN
+        # and the Java subprocess may fail to locate the files (spaces-in-path bug).
+        # In that case, redirect all intermediate routing files to a guaranteed
+        # space-free temporary directory so the full pipeline works correctly.
+        if ' ' in str(self.dirpath):
+            self.routing_dir = Path(tempfile.mkdtemp(prefix="freerouting_"))
+            print(f"Project path contains spaces; using temp routing dir: {self.routing_dir}")
+        else:
+            self.routing_dir = self.dirpath
+
+        # Set routing file paths (inside routing_dir which is space-free when needed)
+        self.module_input = self.routing_dir / 'freerouting.dsn'
+        self.temp_input = self.routing_dir / 'temp-freerouting.dsn'
+        self.module_output = self.routing_dir / 'freerouting.ses'
+        self.module_rules = self.routing_dir / 'freerouting.rules'
+
         # Remove previous temp files using unlink with missing_ok
         self.temp_input.unlink(missing_ok=True)
         self.module_output.unlink(missing_ok=True)
@@ -339,8 +350,10 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             if ok and self.module_output.is_file(): # Use is_file()
                 self.module_input.unlink(missing_ok=True) # Use unlink
                 self.module_output.unlink(missing_ok=True) # Use unlink
+                self._cleanup_routing_dir()
                 return True
             else:
+                self._cleanup_routing_dir()
                 wx_show_error(textwrap.dedent("""
                 Failed to invoke:
                 * pcbnew.ImportSpecctraSES
@@ -349,12 +362,22 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         else:
             return True
 
+    def _cleanup_routing_dir(self):
+        """Remove the temporary routing directory if it differs from the project directory."""
+        if hasattr(self, 'routing_dir') and self.routing_dir != self.dirpath:
+            try:
+                shutil.rmtree(str(self.routing_dir), ignore_errors=True)
+            except Exception as e:
+                print(f"Warning: could not remove temp routing dir {self.routing_dir}: {e}")
+
     # invoke chain of dependent methods
     def RunSteps(self):
 
         self.prepare()
 
         if not self.RunRouter() :
+            # Routing was cancelled or failed; clean up temp routing dir if one was created
+            self._cleanup_routing_dir()
             return
 
         # Remove temp DSN file
@@ -362,7 +385,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
 
         wx_safe_invoke(self.RunImport)
-        
+        # Note: _cleanup_routing_dir() is called inside RunImport
 
     # kicad plugin action entry
     def Run(self):
@@ -650,7 +673,11 @@ class ProcessThread(threading.Thread):
             pass
 
     def show_error(self):
-        command_str = " ".join(self.command) # command is already list of strings
+        # Use platform-appropriate quoting so paths with spaces are displayed correctly
+        if platform.system() == 'Windows':
+            command_str = subprocess.list2cmdline(self.command)
+        else:
+            command_str = ' '.join(shlex.quote(arg) for arg in self.command)
         if self.has_error() :
             wx_show_error(textwrap.dedent(f"""
             Process failure:
