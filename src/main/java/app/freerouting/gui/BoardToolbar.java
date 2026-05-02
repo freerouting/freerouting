@@ -173,6 +173,10 @@ class BoardToolbar extends JPanel {
           .stream(routingJobs)
           .findFirst()
           .get();
+      if (guiRoutingJob.input == null) {
+        FRLogger.warn("Cannot start routing: no input file loaded. Open a DSN/SES file first.");
+        return;
+      }
       guiRoutingJob.routerSettings = board_frame.board_panel.board_handling.settingsMerger.merge();
       InteractiveActionThread thread = board_frame.board_panel.board_handling
           .start_autorouter_and_route_optimizer(guiRoutingJob);
