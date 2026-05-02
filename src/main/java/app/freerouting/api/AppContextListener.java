@@ -1,6 +1,7 @@
 package app.freerouting.api;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.api.security.ApiKeyValidationService;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
@@ -48,7 +49,11 @@ public class AppContextListener implements ServletContextListener {
       FRLogger.debug("Could not retrieve Jetty Server instance from ServletContext; using default URL.");
     }
 
-    FRLogger.info("API web server started successfully at " + fullUrl + ". You can ping it at " + fullUrl + "/v1/system/status.");
+    FRLogger.info("API web server started successfully at " + fullUrl + ". You can ping it at " + fullUrl + "/v1/system/status. Swagger UI is available at " + fullUrl + "/swagger-ui/index.html.");
+
+    if (!ApiKeyValidationService.getInstance().isAuthenticationEnabled()) {
+      FRLogger.warn("API server authentication is DISABLED. All API endpoints are accessible without an API key. Enable authentication in the configuration before exposing this server to a network.");
+    }
   }
 
   @Override

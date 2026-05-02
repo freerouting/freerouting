@@ -270,14 +270,21 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
       }
 
       // Atomically replace the cache
+      int previousCacheSize = this.apiKeyCache.size();
       this.apiKeyCache = newCache;
       this.isHealthy = true;
       this.lastSuccessfulRefresh = System.currentTimeMillis();
 
-      String message = String.format(
-          "Successfully refreshed %d valid API keys from Google Sheets (total entries: %d, skipped: %d)",
-          validKeysCount, newCache.size(), skippedRows);
-      FRLogger.info(message);
+      if (newCache.size() != previousCacheSize) {
+        String message = String.format(
+            "Successfully refreshed %d valid API keys from Google Sheets (total entries: %d, skipped: %d)",
+            validKeysCount, newCache.size(), skippedRows);
+        FRLogger.info(message);
+      } else {
+        FRLogger.debug(String.format(
+            "Google Sheets API key cache refreshed, no change in key count (%d valid keys, total entries: %d, skipped: %d)",
+            validKeysCount, newCache.size(), skippedRows));
+      }
 
     } catch (IOException e) {
       FRLogger.error("Failed to refresh API keys from Google Sheets. Using cached data.", null, e);
