@@ -70,6 +70,16 @@ final class AnalyticsErrorAggregator {
   private static final ConcurrentHashMap<String, AtomicLong> errorCounts = new ConcurrentHashMap<>();
 
   /**
+   * Latest server-side error-body snippet per error key, populated only for HTTP-level failures
+   * (i.e. when the remote server replied with a 4xx/5xx and we could read its response body).
+   * Stored as a bounded string (max {@value #MAX_BODY_LENGTH} characters) so keys remain stable.
+   */
+  private static final ConcurrentHashMap<String, String> serverResponseBodies = new ConcurrentHashMap<>();
+
+  /** Maximum number of characters kept from a server error-body for display. */
+  private static final int MAX_BODY_LENGTH = 250;
+
+  /**
    * {@code true} once the first failure in the current window has been logged immediately.
    * Reset to {@code false} after each hourly flush.
    */
@@ -106,7 +116,7 @@ final class AnalyticsErrorAggregator {
   // -------------------------------------------------------------------------
 
   /**
-   * Records one analytics delivery failure.
+   * Records one analytics delivery failure (network-level: DNS, connect, SSL, reset, …).
    *
    * <p>If this is the first failure in the current window it is logged immediately at {@code WARN}.
    * All subsequent failures in the same window are silently counted until the next hourly flush.
@@ -115,19 +125,49 @@ final class AnalyticsErrorAggregator {
    * @param e        the exception that caused the failure
    */
   static void recordFailure(String endpoint, Exception e) {
+    recordFailure(endpoint, e, null);
+  }
+
+  /**
+   * Records one analytics delivery failure with an optional server-side error body.
+   *
+   * <p>Use this overload when the server replied with an HTTP error (4xx/5xx) and you were
+   * able to read its response body — it will be included in the hourly summary so that
+   * operators can see the exact server-side error message without having to inspect the
+   * server logs separately.
+   *
+   * @param endpoint           the URL that was being called when the failure occurred
+   * @param e                  the exception that caused the failure
+   * @param serverResponseBody the raw HTTP error body returned by the server, or {@code null}
+   */
+  static void recordFailure(String endpoint, Exception e, String serverResponseBody) {
     String key = normaliseKey(endpoint, e);
+
+    // Keep the latest server response body for this key (bounded to MAX_BODY_LENGTH).
+    if (serverResponseBody != null && !serverResponseBody.isBlank()) {
+      serverResponseBodies.put(key, truncate(serverResponseBody, MAX_BODY_LENGTH));
+    }
+
     errorCounts.computeIfAbsent(key, _ -> new AtomicLong(0)).incrementAndGet();
     windowTotal.incrementAndGet();
 
     // Log the very first failure in this window immediately so operators do not have
     // to wait up to FLUSH_INTERVAL_MINUTES to discover that analytics delivery is broken.
     if (firstFailureLogged.compareAndSet(false, true)) {
-      FRLogger.warn(
-          "Analytics tracking: first delivery failure in this window - "
-              + key
-              + ". Further failures will be aggregated and reported every "
-              + FLUSH_INTERVAL_MINUTES
-              + " minutes.");
+      String body = serverResponseBodies.get(key);
+      String hint = actionableHint(key);
+      StringBuilder msg = new StringBuilder("Analytics tracking: first delivery failure in this window - ")
+          .append(key);
+      if (body != null) {
+        msg.append(" | Server response: ").append(body);
+      }
+      msg.append(". Further failures will be aggregated and reported every ")
+          .append(FLUSH_INTERVAL_MINUTES)
+          .append(" minutes.");
+      if (hint != null) {
+        msg.append(' ').append(hint);
+      }
+      FRLogger.warn(msg.toString());
     }
   }
 
@@ -170,12 +210,25 @@ final class AnalyticsErrorAggregator {
 
     snapshot.entrySet().stream()
         .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-        .forEach(entry -> sb
-            .append("  • ")
-            .append(entry.getKey())
-            .append(": ")
-            .append(entry.getValue())
-            .append("×\n"));
+        .forEach(entry -> {
+          String key = entry.getKey();
+          sb.append("  • ").append(key).append(": ").append(entry.getValue()).append("×\n");
+
+          // Append the server-side error body if we captured one for this key.
+          String body = serverResponseBodies.get(key);
+          if (body != null) {
+            sb.append("      Server response: ").append(body).append('\n');
+          }
+
+          // Append a per-error-type actionable hint to guide operators.
+          String hint = actionableHint(key);
+          if (hint != null) {
+            sb.append("      ").append(hint).append('\n');
+          }
+        });
+
+    // Drain stale server-response-body entries that no longer have a matching counter.
+    serverResponseBodies.keySet().retainAll(errorCounts.keySet());
 
     if (total > ERROR_THRESHOLD) {
       // Sustained outage: use ERROR so that log-based alerting rules can fire.
@@ -211,11 +264,52 @@ final class AnalyticsErrorAggregator {
 
     String exceptionType = e.getClass().getSimpleName();
     String message = (e.getMessage() != null) ? e.getMessage() : "(no message)";
-    if (message.length() > 100) {
-      message = message.substring(0, 100) + "…";
+    if (message.length() > 200) {
+      message = message.substring(0, 200) + "…";
     }
 
     return path + " - " + exceptionType + ": " + message;
+  }
+
+  /**
+   * Returns a concise, actionable hint for operators based on the normalised error key.
+   * Returns {@code null} if no specific guidance is available for this error pattern.
+   */
+  static String actionableHint(String key) {
+    if (key.contains("IOException") && (key.contains(" 500") || key.contains("code: 500"))) {
+      return "→ Action: The analytics server returned HTTP 500. Check the server logs and verify that the "
+          + "FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY environment variable "
+          + "is set to a valid service-account JSON on the analytics server.";
+    }
+    if (key.contains("IOException") && (key.contains(" 401") || key.contains("code: 401"))) {
+      return "→ Action: HTTP 401 Unauthorized. The write key or service-account credentials used by this "
+          + "instance are invalid or expired. Check FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY.";
+    }
+    if (key.contains("UnknownHostException")) {
+      return "→ Action: DNS resolution failed. Verify that this host has network access and that "
+          + "api.freerouting.app is reachable (try: nslookup api.freerouting.app).";
+    }
+    if (key.contains("ConnectException")) {
+      return "→ Action: Connection refused or timed out. Check network/firewall rules between this "
+          + "host and the analytics endpoint, or verify that the server is running.";
+    }
+    if (key.contains("SocketException") && key.contains("reset")) {
+      return "→ Action: Server closed the connection unexpectedly. This may indicate server overload, "
+          + "an intermediate proxy resetting idle connections, or a server-side crash.";
+    }
+    if (key.contains("SSLHandshakeException")) {
+      return "→ Action: TLS handshake failed. Verify that the JRE trust store contains the server "
+          + "certificate's CA, that the system clock is correct, and that TLS 1.2+ is enabled.";
+    }
+    return null;
+  }
+
+  /** Truncates {@code s} to at most {@code maxLen} characters, appending "…" if cut. */
+  private static String truncate(String s, int maxLen) {
+    if (s == null) {
+      return null;
+    }
+    return s.length() <= maxLen ? s : s.substring(0, maxLen) + "…";
   }
 }
 

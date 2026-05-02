@@ -64,14 +64,24 @@ public class FreeroutingAnalyticsClient implements AnalyticsClient {
           os.write(input, 0, input.length);
         }
 
-        // Read the response
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
-          StringBuilder response = new StringBuilder();
-          String responseLine;
-          while ((responseLine = br.readLine()) != null) {
-            response.append(responseLine.trim());
+        // Check the HTTP response code *before* touching getInputStream() so that we can
+        // read the error-stream body on HTTP 4xx/5xx — getInputStream() would throw and
+        // swallow that body.
+        int responseCode = connection.getResponseCode();
+        if (responseCode >= 400) {
+          // Read the server's error body for diagnostic context and forward it to the
+          // aggregator so it can surface it in the hourly summary log.
+          String errorBody = readErrorBody(connection);
+          AnalyticsErrorAggregator.recordFailure(
+              endpoint,
+              new IOException("Server returned HTTP response code: " + responseCode + " for URL: " + endpoint),
+              errorBody);
+        } else {
+          // Consume the success body (currently unused but keeps the connection clean).
+          try (BufferedReader br = new BufferedReader(
+              new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+            while (br.readLine() != null) { /* discard */ }
           }
-          // return response.toString();
         }
       } catch (Exception e) {
         // Do not log here directly — connection may be null if the exception was thrown
@@ -81,6 +91,27 @@ public class FreeroutingAnalyticsClient implements AnalyticsClient {
         AnalyticsErrorAggregator.recordFailure(endpoint, e);
       }
     }).start();
+  }
+
+  /**
+   * Safely reads the body from {@link HttpURLConnection#getErrorStream()}.
+   * Returns an empty string if the error stream is null or unreadable.
+   */
+  private static String readErrorBody(HttpURLConnection connection) {
+    if (connection.getErrorStream() == null) {
+      return "";
+    }
+    try (BufferedReader br = new BufferedReader(
+        new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
+      StringBuilder sb = new StringBuilder();
+      String line;
+      while ((line = br.readLine()) != null) {
+        sb.append(line.trim());
+      }
+      return sb.toString();
+    } catch (Exception ignored) {
+      return "";
+    }
   }
 
   public void identify(String userId, String anonymousId, Traits traits) throws IOException {
