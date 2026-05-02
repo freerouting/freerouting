@@ -276,6 +276,23 @@ final class AnalyticsErrorAggregator {
    * Returns {@code null} if no specific guidance is available for this error pattern.
    */
   static String actionableHint(String key) {
+    // ---- Cloudflare proxy errors (never reach the origin application) ----
+    // 520–527: generic Cloudflare "origin returned an unexpected response" family.
+    // 530 + body "error code: 1033": Cloudflare Argo Tunnel is down between the edge
+    //   and the origin server.  The application itself is not involved.
+    if (key.contains("IOException") && (key.contains("code: 530") || key.contains(" 530"))) {
+      return "→ Action: HTTP 530 is a Cloudflare proxy error — the request never reached the "
+          + "origin server. Error 1033 in the response body means the Cloudflare Argo Tunnel "
+          + "to the origin is down or misconfigured. Check the Cloudflare dashboard (Zero Trust → "
+          + "Access → Tunnels) and verify that the tunnel connector on the origin host is running "
+          + "(e.g. `cloudflared tunnel run <name>`).";
+    }
+    if (key.contains("IOException") && (key.contains("code: 52") || key.contains(" 52"))) {
+      return "→ Action: HTTP 52x is a Cloudflare error meaning the origin server returned an "
+          + "unexpected or empty response to Cloudflare. Check origin server health and Cloudflare "
+          + "error logs in the dashboard.";
+    }
+    // ---- Application-level HTTP errors ----
     if (key.contains("IOException") && (key.contains(" 500") || key.contains("code: 500"))) {
       return "→ Action: The analytics server returned HTTP 500. Check the server logs and verify that the "
           + "FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY environment variable "
@@ -285,6 +302,7 @@ final class AnalyticsErrorAggregator {
       return "→ Action: HTTP 401 Unauthorized. The write key or service-account credentials used by this "
           + "instance are invalid or expired. Check FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY.";
     }
+    // ---- Network / transport errors ----
     if (key.contains("UnknownHostException")) {
       return "→ Action: DNS resolution failed. Verify that this host has network access and that "
           + "api.freerouting.app is reachable (try: nslookup api.freerouting.app).";
