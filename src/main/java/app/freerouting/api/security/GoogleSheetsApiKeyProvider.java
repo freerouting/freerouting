@@ -125,7 +125,7 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
         CACHE_REFRESH_INTERVAL_MINUTES,
         TimeUnit.MINUTES);
 
-    FRLogger.info("Google Sheets API key provider initialized with " + apiKeyCache.size() + " keys");
+    FRLogger.debug("Google Sheets API key provider initialized with " + apiKeyCache.size() + " keys");
   }
 
   /**

@@ -63,7 +63,7 @@ public class ApiKeyValidationService {
                         try {
                             providers.add(new GoogleSheetsApiKeyProvider(authSettings.googleSheets.sheetUrl,
                                     authSettings.googleSheets.googleApiKey));
-                            FRLogger.info("Added GoogleSheets API Key Provider");
+                            FRLogger.debug("Added GoogleSheets API Key Provider");
                         } catch (Exception e) {
                             FRLogger.error("Failed to initialize Google Sheets API key provider.", null, e);
                         }
