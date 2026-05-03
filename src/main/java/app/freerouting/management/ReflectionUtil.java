@@ -184,8 +184,16 @@ public class ReflectionUtil {
                 sourceArrayLength = java.lang.reflect.Array.getLength(sourceValue);
               }
 
-              // Check if the target field is null or its length is 0
-              if ((targetValue == null) || ((targetArrayLength == 0) && (sourceArrayLength > 0))) {
+              // Check if the target field is null, length-zero, or a different
+              // length than the source. The original code only copied when target
+              // was null or empty, which silently dropped layer arrays (e.g.
+              // RouterSettings.isLayerActive[]) that grew from 2 elements (default)
+              // to 4 elements (from a 4-layer DSN's autoroute_settings) -- causing
+              // the "AutorouteSettings.get_layer_active: p_layer=N out of range
+              // [0..1]" warnings on multi-layer boards.
+              if ((targetValue == null)
+                  || (targetArrayLength == 0 && sourceArrayLength > 0)
+                  || (targetArrayLength != sourceArrayLength && sourceArrayLength > 0)) {
                 // The field is an array of primitive types or strings, so we can copy it
                 // directly
                 field.set(target, sourceValue);

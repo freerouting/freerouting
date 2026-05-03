@@ -864,10 +864,18 @@ public class Structure extends ScopeKeyword {
           }
           Keyword.PLANE_SCOPE.read_scope(p_par);
         } else if (next_token == Keyword.AUTOROUTE_SETTINGS) {
+          // BUGFIX: original code only parsed autoroute_settings when
+          // layer_structure was still null (i.e. before any other element
+          // had constructed it). With the layer_structure already set up
+          // (the natural case when autoroute_settings comes after layers
+          // / rules / etc.), the block was silently skipped and the
+          // RouterSettings's per-layer arrays stayed at default size,
+          // producing "AutorouteSettings.get_layer_active: p_layer=N
+          // out of range" warnings on inner layers.
           if (p_par.layer_structure == null) {
             p_par.layer_structure = new LayerStructure(board_construction_info.layer_info);
-            p_par.autoroute_settings = AutorouteSettings.read_scope(p_par.scanner, p_par.layer_structure);
           }
+          p_par.autoroute_settings = AutorouteSettings.read_scope(p_par.scanner, p_par.layer_structure);
         } else if (next_token == Keyword.CONTROL) {
           read_ok = read_control_scope(p_par);
         } else if (next_token == Keyword.FLIP_STYLE) {
