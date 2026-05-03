@@ -379,12 +379,15 @@ public class Freerouting {
     // settings and logs will be located there
     // 1, set it to the temp directory by default
     Path userdataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
+    String userdataPathSource = "default (java.io.tmpdir)";
     // 2, check if we need to override it with the "FREEROUTING__USER_DATA_PATH"
     // environment variable value
     if (System.getenv("FREEROUTING__USER_DATA_PATH") != null) {
       userdataPath = Path.of(System.getenv("FREEROUTING__USER_DATA_PATH"));
+      userdataPathSource = "environment variable FREEROUTING__USER_DATA_PATH";
     } else if (System.getenv("FREEROUTING__LOGGING__FILE__LOCATION") != null) {
       userdataPath = Path.of(System.getenv("FREEROUTING__LOGGING__FILE__LOCATION"));
+      userdataPathSource = "environment variable FREEROUTING__LOGGING__FILE__LOCATION (deprecated fallback)";
     }
     // 3, check if we need to override it with the "--user_data_path={directory}"
     // command line argument
@@ -400,6 +403,7 @@ public class Freerouting {
         userdataPath = Path.of(userDataPathArg
             .get()
             .substring("--user_data_path=".length()));
+        userdataPathSource = "CLI argument --user_data_path";
       }
     }
     // 4, create the directory if it doesn't exist yet; directory creation is also
@@ -409,10 +413,30 @@ public class Freerouting {
     if (!userdataPath.toFile().exists()) {
       if (!userdataPath.toFile().mkdirs()) {
         System.err.println("WARNING: Could not create user-data directory '" + userdataPath
-            + "'. Freerouting will attempt to create it when writing files. "
+            + "' (source: " + userdataPathSource + "). "
+            + "Freerouting will attempt to create it when writing files. "
             + "If this persists, check permissions for the specified path.");
       }
+    } else {
+      // Directory exists — proactively check read and write permissions so that
+      // permission problems are surfaced immediately rather than at first I/O.
+      if (!userdataPath.toFile().canRead()) {
+        System.err.println("WARNING: User-data directory '" + userdataPath
+            + "' (source: " + userdataPathSource + ") exists but is NOT READABLE. "
+            + "freerouting.json cannot be loaded. "
+            + "Check that the process has read permission on the directory. "
+            + "In Docker deployments, verify the volume mount and file ownership.");
+      }
+      if (!userdataPath.toFile().canWrite()) {
+        System.err.println("WARNING: User-data directory '" + userdataPath
+            + "' (source: " + userdataPathSource + ") exists but is NOT WRITABLE. "
+            + "freerouting.json cannot be saved and settings won't be persisted. "
+            + "Check that the process has write permission on the directory. "
+            + "In Docker deployments, verify the volume mount and file ownership.");
+      }
     }
+    // capture for later use once logging is available
+    final String resolvedUserdataPathSource = userdataPathSource;
     // 5, always register the resolved path with GlobalSettings – even when the
     // directory could not be created yet.  saveAsJson() calls
     // Files.createDirectories() before each write, so the directory will be
@@ -527,6 +551,8 @@ public class Freerouting {
 
     // Log system information
     FRLogger.info("Freerouting " + VERSION_NUMBER_STRING);
+    FRLogger.debug("[startup] user-data path : " + GlobalSettings.getUserDataPath() + "  (source: " + resolvedUserdataPathSource + ")");
+    FRLogger.debug("[startup] log file       : " + fileLoggingLocation);
     Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 
     try {
