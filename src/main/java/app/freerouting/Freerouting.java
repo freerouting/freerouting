@@ -576,6 +576,29 @@ public class Freerouting {
           + ". Freerouting will start with default settings.");
     }
 
+    // Detect stale logging.file.location in the loaded JSON.
+    // Old versions of Freerouting stored the absolute log path in freerouting.json and
+    // applied it at startup, potentially redirecting the log away from the volume mount.
+    // The current code does NOT re-apply the stored path (logging is already configured
+    // above via system properties), but we warn if we detect a mismatch so operators
+    // can spot a stale config.
+    if (globalSettings != null
+        && globalSettings.logging.file.location != null
+        && !globalSettings.logging.file.location.isBlank()
+        && !globalSettings.logging.file.location.equals(fileLoggingLocation)) {
+      FRLogger.warn("[startup] freerouting.json contains a stale 'logging.file.location' value: '"
+          + globalSettings.logging.file.location + "'. "
+          + "The actual log file is being written to '" + fileLoggingLocation + "' (as resolved at startup). "
+          + "The stale value will be corrected in freerouting.json on next save. "
+          + "If you see this in Docker, the old JSON was written by an earlier version that stored "
+          + "the host path; the fix is to delete freerouting.json so it is regenerated with the correct path.");
+    }
+    // Always keep the stored log path in sync with the resolved path so the JSON
+    // self-heals and old images that do apply the stored path will get the right value.
+    if (globalSettings != null) {
+      globalSettings.logging.file.location = fileLoggingLocation;
+    }
+
     if ((globalSettings == null) || !GlobalSettings.getReleaseSafeVersion().equals(globalSettings.version)) {
       // let's see if we can preserve the user ID
       String userId = globalSettings == null ? UUID.randomUUID().toString() : globalSettings.userProfileSettings.userId;
@@ -583,6 +606,8 @@ public class Freerouting {
       globalSettings = new GlobalSettings();
       globalSettings.userProfileSettings.userId = userId;
       globalSettings.version = GlobalSettings.getReleaseSafeVersion();
+      // Stamp the correct log path into the new settings object too.
+      globalSettings.logging.file.location = fileLoggingLocation;
 
       // save the default values
       try {
