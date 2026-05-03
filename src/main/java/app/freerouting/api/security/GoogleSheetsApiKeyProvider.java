@@ -286,7 +286,7 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
       }
 
     } catch (IOException e) {
-      FRLogger.error("Failed to refresh API keys from Google Sheets. Using cached data.", null, e);
+      FRLogger.error("Failed to refresh API keys from Google Sheets. Using cached data.", null);
       this.isHealthy = false;
     }
   }
