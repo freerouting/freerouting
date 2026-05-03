@@ -551,17 +551,17 @@ public class Freerouting {
 
     // Log system information
     FRLogger.info("Freerouting " + VERSION_NUMBER_STRING);
-    FRLogger.debug("[startup] user-data path : " + GlobalSettings.getUserDataPath() + "  (source: " + resolvedUserdataPathSource + ")");
-    FRLogger.debug("[startup] log file       : " + fileLoggingLocation);
+    FRLogger.info("[startup] user-data path : " + GlobalSettings.getUserDataPath() + "  (source: " + resolvedUserdataPathSource + ")");
+    FRLogger.info("[startup] log file       : " + fileLoggingLocation);
     Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 
     try {
       globalSettings = GlobalSettings.load();
-      FRLogger.debug("Settings loaded from '" + GlobalSettings.getConfigurationFilePath() + "'.");
+      FRLogger.info("Settings loaded from '" + GlobalSettings.getConfigurationFilePath() + "'.");
     } catch (NoSuchFileException _) {
       // Normal first-run condition — the file does not exist yet and will be
       // created below with default values.
-      FRLogger.debug("No freerouting.json found at '" + GlobalSettings.getConfigurationFilePath()
+      FRLogger.info("No freerouting.json found at '" + GlobalSettings.getConfigurationFilePath()
           + "' — will create one with default settings.");
     } catch (AccessDeniedException e) {
       FRLogger.warn("Cannot read freerouting.json at '"
