@@ -1,6 +1,5 @@
 # Freerouting v2.2.2 Architecture Map
 
-File created: May 4, 2026
 Last modified: May 4, 2026
 
 This document provides a concise map of the current codebase for contributors and maintainers. It highlights the principal packages, the repository layout, and the fastest path to the code that owns a given behavior.
