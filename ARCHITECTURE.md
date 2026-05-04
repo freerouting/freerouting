@@ -1,4 +1,5 @@
 # Freerouting v2.2.2 Architecture Map
+
 File created: May 4, 2026
 Last modified: May 4, 2026
 
@@ -33,25 +34,25 @@ Use the table below to jump to the package most likely to own the behavior you a
 
 | If you are working on... | Start with... |
 | --- | --- |
-| DSN / SES file loading or writing | `app.freerouting.io` |
+| DSN / SES file loading or writing | `app.freerouting.io.specctra` |
 | Board items, board state, or board-level helpers | `app.freerouting.board` |
 | Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
 | GUI windows, panels, menus, or drawing | `app.freerouting.gui` and `app.freerouting.interactive` |
-| API endpoints or background job execution | `app.freerouting.api` and `app.freerouting.management` |
+| API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
-| Geometry, shapes, points, and planar math | `app.freerouting.geometry` |
+| Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
 
 ## Package Glossary
 
 ### `app.freerouting`
 
-Application bootstrap and top-level wiring. Start here when you need the entry point for the program.
+Application bootstrap and top-level wiring. Start here when you need the entry point for the program, [Freerouting.java](src/main/java/app/freerouting/Freerouting.java).
 
-### `app.freerouting.io`
+### `app.freerouting.io.specctra`
 
-Import and export for board files. The public DSN and SES entry points are in `io.specctra`; the parser internals are in `io.specctra.parser`.
+Import and export for board files. The public DSN and SES entry points are in this package, and parser internals live in `io.specctra.parser`.
 
 ### `app.freerouting.board`
 
@@ -69,7 +70,7 @@ The rule model that defines nets, clearance classes, via rules, and layer constr
 
 Design-rule checking and violation reporting. Use this package when you need to understand why a routed board is still invalid.
 
-### `app.freerouting.geometry`
+### `app.freerouting.geometry.planar`
 
 Planar geometry primitives and helper classes used throughout routing and board operations.
 
@@ -83,15 +84,15 @@ The editor interaction layer and GUI session state. This package bridges user ac
 
 ### `app.freerouting.api`
 
-HTTP API controllers, filters, and server-facing request handling.
+HTTP API controllers, filters, and server-facing request handling. The concrete endpoints live in `api.v1`, with supporting DTOs in `api.dto`, authentication in `api.security`, and developer-only mocks in `api.dev`.
 
 ### `app.freerouting.management`
 
-Session management, job scheduling, analytics, and service-layer coordination.
+Session management, job scheduling, analytics, Gson adapters, and service-layer coordination. The analytics code lives in `management.analytics`, and the JSON helpers live in `management.gson`.
 
 ### `app.freerouting.core`
 
-Shared application data such as routing jobs, sessions, scoring, and statistics.
+Shared application data such as routing jobs, sessions, scoring, and statistics. The board statistics helpers live in `core.scoring`.
 
 ### `app.freerouting.settings`
 
@@ -113,17 +114,28 @@ Diagnostics and debugging utilities.
 
 Low-level board rendering helpers used by the GUI.
 
+### Notable Nested Packages
+
+Several implementation areas live one level below the top-level package grouping above:
+
+- `app.freerouting.geometry.planar` contains the actual planar primitives and helper classes; start with [Point.java](src/main/java/app/freerouting/geometry/planar/Point.java) and [Shape.java](src/main/java/app/freerouting/geometry/planar/Shape.java).
+- `app.freerouting.io.specctra` contains DSN and SES import/export; parser internals live in `parser/`. Start with [DsnReader.java](src/main/java/app/freerouting/io/specctra/DsnReader.java), [DsnWriter.java](src/main/java/app/freerouting/io/specctra/DsnWriter.java), [SesReader.java](src/main/java/app/freerouting/io/specctra/SesReader.java), and [SesWriter.java](src/main/java/app/freerouting/io/specctra/SesWriter.java).
+- `app.freerouting.management.analytics` and `app.freerouting.management.gson` contain analytics clients and Gson adapters; start with [FRAnalytics.java](src/main/java/app/freerouting/management/analytics/FRAnalytics.java) and [GsonProvider.java](src/main/java/app/freerouting/management/gson/GsonProvider.java).
+- `app.freerouting.core.scoring` contains board statistics and scoring helpers; start with [BoardStatistics.java](src/main/java/app/freerouting/core/scoring/BoardStatistics.java).
+- `app.freerouting.api.v1`, `app.freerouting.api.dto`, `app.freerouting.api.security`, and `app.freerouting.api.dev` contain the public controllers, payloads, authentication, and mocked endpoints; start with [JobControllerV1.java](src/main/java/app/freerouting/api/v1/JobControllerV1.java), [BoardFilePayload.java](src/main/java/app/freerouting/api/dto/BoardFilePayload.java), and [ApiKeyValidationService.java](src/main/java/app/freerouting/api/security/ApiKeyValidationService.java).
+- `app.freerouting.autoroute.events` contains routing event callbacks; start with [BoardUpdatedEvent.java](src/main/java/app/freerouting/autoroute/events/BoardUpdatedEvent.java).
+
 ## How The Code Fits Together
 
 ### Routing Path
 
-The primary routing packages are `board`, `autoroute`, `rules`, `drc`, and `geometry`.
+The primary routing packages are `board`, `autoroute`, `rules`, `drc`, and `geometry.planar`.
 
 - `board` stores the current design.
 - `rules` defines what is permitted.
 - `autoroute` chooses the next routing action.
 - `drc` validates the result.
-- `geometry` provides the shapes and measurements used by all of the above.
+- `geometry.planar` provides the shapes and measurements used by all of the above.
 
 When diagnosing routing behavior, start in `autoroute`, then trace the data into the board and rule objects it reads.
 
@@ -138,7 +150,7 @@ When diagnosing user interaction, rendering, or editor state, begin here.
 
 ### API and Headless Path
 
-Server-side operation is handled by `api` and `management`.
+Server-side operation is handled by `api.v1` and `management`.
 
 - `api` exposes HTTP endpoints and request filters.
 - `management` coordinates jobs, sessions, and background services.
@@ -147,7 +159,7 @@ When diagnosing headless execution or API behavior, begin here.
 
 ### File I/O Path
 
-File parsing and export live in `io`.
+File parsing and export live in `io.specctra`.
 
 - `io.specctra` is the public import/export layer.
 - `io.specctra.parser` contains the lower-level grammar and parsing logic.
