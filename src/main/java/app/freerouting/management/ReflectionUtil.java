@@ -184,7 +184,10 @@ public class ReflectionUtil {
                 sourceArrayLength = java.lang.reflect.Array.getLength(sourceValue);
               }
 
-              // Copy the array if the target is null or if the source is non-empty.\n              // This ensures that settings are correctly updated even if the array length\n              // remains the same but contents differ.\n              if (targetValue == null || sourceArrayLength > 0) {
+              // Copy the array if the target is null or if the source is non-empty.
+              // This ensures that settings are correctly updated even if the array length
+              // remains the same but contents differ.
+              if (targetValue == null || sourceArrayLength > 0) {
                 // The field is an array of primitive types or strings, so we can copy it
                 // directly
                 field.set(target, sourceValue);
