@@ -286,10 +286,20 @@ public class PolylineTrace extends Trace implements Serializable {
       if (skip_line) {
         --to_no;
       }
-      board.search_tree_manager.merge_entries_in_front(other_trace, this, joined_polyline, other_lines.length - 3,
-          to_no);
-      other_trace.clear_search_tree_entries();
-      this.lines = joined_polyline;
+      boolean merged = board.search_tree_manager.merge_entries_in_front(other_trace, this, joined_polyline,
+          other_lines.length - 3, to_no);
+      if (merged) {
+        other_trace.clear_search_tree_entries();
+        this.lines = joined_polyline;
+      } else {
+        // Fall back to the generic remove + reinsert path. The optimized merge
+        // requires that both traces have entries in every compensated search
+        // tree; if any tree is missing entries we cannot reuse them.
+        board.search_tree_manager.remove(this);
+        this.lines = joined_polyline;
+        this.clear_derived_data();
+        board.search_tree_manager.insert(this);
+      }
     }
     if (this.lines.arr.length < 3) {
       board.remove_item(this);
@@ -392,9 +402,20 @@ public class PolylineTrace extends Trace implements Serializable {
       if (skip_line) {
         --to_no;
       }
-      board.search_tree_manager.merge_entries_at_end(other_trace, this, joined_polyline, this_lines.length - 3, to_no);
-      other_trace.clear_search_tree_entries();
-      this.lines = joined_polyline;
+      boolean merged = board.search_tree_manager.merge_entries_at_end(other_trace, this, joined_polyline,
+          this_lines.length - 3, to_no);
+      if (merged) {
+        other_trace.clear_search_tree_entries();
+        this.lines = joined_polyline;
+      } else {
+        // Fall back to the generic remove + reinsert path. The optimized merge
+        // requires that both traces have entries in every compensated search
+        // tree; if any tree is missing entries we cannot reuse them.
+        board.search_tree_manager.remove(this);
+        this.lines = joined_polyline;
+        this.clear_derived_data();
+        board.search_tree_manager.insert(this);
+      }
     }
     if (this.lines.arr.length < 3) {
       board.remove_item(this);

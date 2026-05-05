@@ -238,23 +238,52 @@ public class SearchTreeManager {
   /**
    * Merges the tree entries from p_from_trace in front of p_to_trace. Special
    * implementation for combine trace for performance reasons.
+   *
+   * <p>Returns {@code true} on success. Returns {@code false} (without mutating
+   * any tree) if either trace is missing search-tree entries in any of the
+   * compensated search trees, indicating that the caller must fall back to the
+   * generic remove + reinsert path. This can occur when an autoroute pass adds
+   * a per-clearance-class compensated tree mid-flight while a trace is in a
+   * transient state, or when items have been added through a code path that
+   * skipped one of the trees. Crashing with a NullPointerException in
+   * {@link ShapeSearchTree#merge_entries_in_front} is undesirable and not
+   * recoverable for the autorouter, so we surface the condition to the caller.
    */
-  void merge_entries_in_front(PolylineTrace p_from_trace, PolylineTrace p_to_trace, Polyline p_joined_polyline,
+  boolean merge_entries_in_front(PolylineTrace p_from_trace, PolylineTrace p_to_trace, Polyline p_joined_polyline,
       int p_from_entry_no, int p_to_entry_no) {
+    for (ShapeSearchTree curr_tree : compensated_search_trees) {
+      if (p_from_trace.get_search_tree_entries(curr_tree) == null
+          || p_to_trace.get_search_tree_entries(curr_tree) == null) {
+        return false;
+      }
+    }
     for (ShapeSearchTree curr_tree : compensated_search_trees) {
       curr_tree.merge_entries_in_front(p_from_trace, p_to_trace, p_joined_polyline, p_from_entry_no, p_to_entry_no);
     }
+    return true;
   }
 
   /**
    * Merges the tree entries from p_from_trace to the end of p_to_trace. Special
    * implementation for combine trace for performance reasons.
+   *
+   * <p>Returns {@code true} on success. Returns {@code false} (without mutating
+   * any tree) if either trace is missing search-tree entries in any of the
+   * compensated search trees; see {@link #merge_entries_in_front} for the
+   * rationale.
    */
-  void merge_entries_at_end(PolylineTrace p_from_trace, PolylineTrace p_to_trace, Polyline p_joined_polyline,
+  boolean merge_entries_at_end(PolylineTrace p_from_trace, PolylineTrace p_to_trace, Polyline p_joined_polyline,
       int p_from_entry_no, int p_to_entry_no) {
+    for (ShapeSearchTree curr_tree : compensated_search_trees) {
+      if (p_from_trace.get_search_tree_entries(curr_tree) == null
+          || p_to_trace.get_search_tree_entries(curr_tree) == null) {
+        return false;
+      }
+    }
     for (ShapeSearchTree curr_tree : compensated_search_trees) {
       curr_tree.merge_entries_at_end(p_from_trace, p_to_trace, p_joined_polyline, p_from_entry_no, p_to_entry_no);
     }
+    return true;
   }
 
   /**
