@@ -292,9 +292,12 @@ public class PolylineTrace extends Trace implements Serializable {
         other_trace.clear_search_tree_entries();
         this.lines = joined_polyline;
       } else {
-        // Fall back to the generic remove + reinsert path. The optimized merge
-        // requires that both traces have entries in every compensated search
-        // tree; if any tree is missing entries we cannot reuse them.
+        // Fall back to the generic remove + reinsert path. The optimized
+        // merge requires that both traces have entries in every compensated
+        // search tree; if any tree is missing entries we cannot reuse them.
+        // remove(this) must precede the lines assignment so it acts on the
+        // pre-merge geometry; the assignment is therefore not deduplicated
+        // with the merged-branch assignment above.
         board.search_tree_manager.remove(this);
         this.lines = joined_polyline;
         this.clear_derived_data();

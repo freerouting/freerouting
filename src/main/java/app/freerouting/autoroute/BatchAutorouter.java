@@ -120,14 +120,14 @@ public class BatchAutorouter extends NamedAlgorithm {
       // every inner-layer routing attempt and the autorouter silently skips
       // those nets.
       if (settingsCosts == null || settingsCosts.length < boardLayerCount) {
-        this.trace_cost_arr = new AutorouteControl.ExpansionCostFactor[boardLayerCount];
-        if (settingsCosts != null) {
-          System.arraycopy(settingsCosts, 0, this.trace_cost_arr, 0, settingsCosts.length);
-        }
+        final int originalLength = (settingsCosts == null) ? 0 : settingsCosts.length;
+        this.trace_cost_arr = java.util.Arrays.copyOf(settingsCosts == null
+            ? new AutorouteControl.ExpansionCostFactor[0]
+            : settingsCosts, boardLayerCount);
         // Fill any tail entries with a neutral cost so the array is fully
         // populated. Using 1.0/1.0 matches the default trace cost from
         // RouterSettings and avoids zero-cost short circuits.
-        for (int i = (settingsCosts == null ? 0 : settingsCosts.length); i < boardLayerCount; i++) {
+        for (int i = originalLength; i < boardLayerCount; i++) {
           this.trace_cost_arr[i] = new AutorouteControl.ExpansionCostFactor(1.0, 1.0);
         }
       } else {
