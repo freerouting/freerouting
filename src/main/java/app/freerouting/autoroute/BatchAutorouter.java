@@ -107,11 +107,35 @@ public class BatchAutorouter extends NamedAlgorithm {
     this.random = new Random(0);
 
     this.remove_unconnected_vias = p_remove_unconnected_vias;
+    final int boardLayerCount = this.board.get_layer_count();
     if (p_with_preferred_directions) {
-      this.trace_cost_arr = this.settings.get_trace_cost_arr();
+      AutorouteControl.ExpansionCostFactor[] settingsCosts = this.settings.get_trace_cost_arr();
+      // Defensively size to the board's layer count. settings.get_trace_cost_arr()
+      // returns an array sized from scoring.preferredDirectionTraceCost.length,
+      // which can disagree with the board's actual layer count when the merged
+      // RouterSettings retained a default-source array length (e.g. 2) and
+      // applyBoardSpecificOptimizations did not run or did not run with the
+      // current board. Indexing trace_cost_arr by layer (e.g. in
+      // DestinationDistance) then throws ArrayIndexOutOfBoundsException at
+      // every inner-layer routing attempt and the autorouter silently skips
+      // those nets.
+      if (settingsCosts == null || settingsCosts.length < boardLayerCount) {
+        this.trace_cost_arr = new AutorouteControl.ExpansionCostFactor[boardLayerCount];
+        if (settingsCosts != null) {
+          System.arraycopy(settingsCosts, 0, this.trace_cost_arr, 0, settingsCosts.length);
+        }
+        // Fill any tail entries with a neutral cost so the array is fully
+        // populated. Using 1.0/1.0 matches the default trace cost from
+        // RouterSettings and avoids zero-cost short circuits.
+        for (int i = (settingsCosts == null ? 0 : settingsCosts.length); i < boardLayerCount; i++) {
+          this.trace_cost_arr[i] = new AutorouteControl.ExpansionCostFactor(1.0, 1.0);
+        }
+      } else {
+        this.trace_cost_arr = settingsCosts;
+      }
     } else {
       // remove preferred direction
-      this.trace_cost_arr = new AutorouteControl.ExpansionCostFactor[this.board.get_layer_count()];
+      this.trace_cost_arr = new AutorouteControl.ExpansionCostFactor[boardLayerCount];
       for (int i = 0; i < this.trace_cost_arr.length; i++) {
         double curr_min_cost = this.settings.get_preferred_direction_trace_costs(i);
         this.trace_cost_arr[i] = new AutorouteControl.ExpansionCostFactor(curr_min_cost, curr_min_cost);
