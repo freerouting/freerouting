@@ -8,7 +8,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -26,9 +28,10 @@ jobs:
         run: ./gradlew build
 
   delete-old-snapshot-assets:
-
     runs-on: [ ubuntu-latest ]
-
+    timeout-minutes: 10
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Delete old SNAPSHOT assets
@@ -43,17 +46,17 @@ jobs:
             freerouting-SNAPSHOT-*.*   
 
   build-jar:
-
-    needs: delete-old-snapshot-assets
-
+    needs: [ build-and-test, delete-old-snapshot-assets ]
     runs-on: [ windows-latest ]
-
+    timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'temurin'
           java-version: '25'
           cache: 'gradle'
       - name: Build with Gradle
@@ -67,17 +70,17 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-ubuntu-x64:
-
-    needs: delete-old-snapshot-assets
-
+    needs: [ build-and-test, delete-old-snapshot-assets ]
     runs-on: [ ubuntu-latest ]
-
+    timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'temurin'
           java-version: '25'
           cache: 'gradle'
       - name: Grant execute permission for gradlew
@@ -95,17 +98,17 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows-x64:
-
-    needs: delete-old-snapshot-assets
-
+    needs: [ build-and-test, delete-old-snapshot-assets ]
     runs-on: [ windows-latest ]
-
+    timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'temurin'
           java-version: '25'
           cache: 'gradle'
       - name: Build with Gradle
@@ -118,19 +121,18 @@ jobs:
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-
   build-macos-arm64:
-
-    needs: delete-old-snapshot-assets
-
+    needs: [ build-and-test, delete-old-snapshot-assets ]
     runs-on: [ macos-latest ]
-
+    timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'temurin'
           java-version: '25'
           cache: 'gradle'
       - name: Grant execute permission for gradlew

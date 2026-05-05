@@ -12,6 +12,9 @@ concurrency:
   group: '${{ github.workflow }}-triage-${{ github.event_name }}-${{ github.event.pull_request.number || github.event.issue.number }}'
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 defaults:
   run:
     shell: 'bash'

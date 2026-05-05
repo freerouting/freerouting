@@ -2,14 +2,15 @@ name: Publish a new release
 
 on:
   push:
-    # Sequence of patterns matched against refs/tags
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - 'v*'
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -27,17 +28,17 @@ jobs:
         run: ./gradlew build
 
   build-jar:
-
     needs: build-and-test
-
     runs-on: [ windows-latest ]
-
+    timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'temurin'
           java-version: '25'
           cache: 'gradle'
       - name: Build with Gradle
@@ -46,8 +47,8 @@ jobs:
         uses: olegtarasov/get-tag@v2.1
         id: tagName
         with:
-          tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-          tagRegexGroup: 1   # Optional. Default is 1.
+          tagRegex: "v(.*)"
+          tagRegexGroup: 1
       - name: Create Distribution
         run: .\scripts\build\create-distribution-jar.bat ${{ steps.tagName.outputs.tag }}
       - uses: AButler/upload-release-assets@v3.0
@@ -57,17 +58,17 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-ubuntu-x64:
-
     needs: build-and-test
-
     runs-on: [ ubuntu-latest ]
-
+    timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'temurin'
           java-version: '25'
           cache: 'gradle'
       - name: Grant execute permission for gradlew
@@ -80,8 +81,8 @@ jobs:
         uses: olegtarasov/get-tag@v2.1
         id: tagName
         with:
-          tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-          tagRegexGroup: 1   # Optional. Default is 1.
+          tagRegex: "v(.*)"
+          tagRegexGroup: 1
       - name: Create Distribution
         run: scripts/build/create-distribution-linux-x64.sh ${{ steps.tagName.outputs.tag }}
       - uses: AButler/upload-release-assets@v3.0
@@ -91,17 +92,17 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows-x64:
-
     needs: build-and-test
-
     runs-on: [ windows-latest ]
-
+    timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'temurin'
           java-version: '25'
           cache: 'gradle'
       - name: Build with Gradle
@@ -110,10 +111,8 @@ jobs:
         uses: olegtarasov/get-tag@v2.1
         id: tagName
         with:
-          tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-          tagRegexGroup: 1   # Optional. Default is 1.
-      #    - name: Set App Version
-      #      run: $env:APP_VERSION=${{ steps.tagName.outputs.tag }}
+          tagRegex: "v(.*)"
+          tagRegexGroup: 1
       - name: Create Distribution
         run: .\scripts\build\create-distribution-windows-x64.bat ${{ steps.tagName.outputs.tag }}
       - uses: AButler/upload-release-assets@v3.0
@@ -122,19 +121,18 @@ jobs:
           release-tag: v${{ steps.tagName.outputs.tag }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-
   build-macos-arm64:
-
     needs: build-and-test
-
     runs-on: [ macos-latest ]
-
+    timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'temurin'
           java-version: '25'
           cache: 'gradle'
       - name: Grant execute permission for gradlew
@@ -147,8 +145,8 @@ jobs:
         uses: olegtarasov/get-tag@v2.1
         id: tagName
         with:
-          tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-          tagRegexGroup: 1   # Optional. Default is 1.
+          tagRegex: "v(.*)"
+          tagRegexGroup: 1
       - name: Create Distribution
         run: scripts/build/create-distribution-macos-arm64.sh ${{ steps.tagName.outputs.tag }}
       - uses: AButler/upload-release-assets@v3.0

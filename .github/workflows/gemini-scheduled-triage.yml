@@ -21,6 +21,9 @@ concurrency:
   group: '${{ github.workflow }}'
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 defaults:
   run:
     shell: 'bash'
