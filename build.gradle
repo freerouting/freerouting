@@ -146,7 +146,7 @@ dependencies {
     rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.32.0'
     rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.32.0'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
-    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.34.0'
+    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.35.2'
     rewrite 'org.openrewrite.recipe:rewrite-gradle:2.3.0'
 
     // ArchUnit: package-architecture enforcement
