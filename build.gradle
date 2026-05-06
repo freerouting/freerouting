@@ -153,11 +153,11 @@ dependencies {
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
 
     // Mockito: mocking framework for unit tests
-    testImplementation 'org.mockito:mockito-core:5.18.0'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.18.0'
+    testImplementation 'org.mockito:mockito-core:5.23.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.23.0'
     // Separate non-transitive configuration so Mockito can be attached as a -javaagent
     // (required for Java 21+ inline-mock-maker, per Mockito docs section 0.3)
-    mockitoAgent('org.mockito:mockito-core:5.18.0') { transitive = false }
+    mockitoAgent('org.mockito:mockito-core:5.23.0') { transitive = false }
 }
 
 ext {
