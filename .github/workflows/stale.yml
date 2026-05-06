@@ -12,18 +12,19 @@ on:
 jobs:
   stale:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       issues: write
       pull-requests: write
 
     steps:
-      - uses: actions/stale@v5
+      - uses: actions/stale@5bef64f19d7facfed16b01af6aa2c9a0ff3b7977 # ratchet:actions/stale@v9
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           days-before-stale: 120
           stale-issue-message: |
-            Hey there!👋
-            
+            Hey there! 👋
+
             This issue is stale because it has been inactive for 120 days.
             If this matter is still relevant, feel free to remove the stale label or add a comment.
             Otherwise, it will be closed in 7 days.

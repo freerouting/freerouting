@@ -16,6 +16,7 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     permissions:
       contents: read
       packages: write
@@ -24,7 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.git_ref }}        
+          ref: ${{ inputs.git_ref }}
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -33,6 +34,9 @@ jobs:
           java-version: '25'
           cache: 'gradle'
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Run tests on native runner
         run: ./gradlew test
 
@@ -40,7 +44,7 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3      
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to the Container registry
         uses: docker/login-action@v3

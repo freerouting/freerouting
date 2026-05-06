@@ -8,6 +8,9 @@ jobs:
       matrix:
         os: [ ubuntu-latest, macos-14, windows-latest ]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
@@ -18,7 +21,7 @@ jobs:
           cache: 'gradle'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Execute Gradle build
         run: ./gradlew build

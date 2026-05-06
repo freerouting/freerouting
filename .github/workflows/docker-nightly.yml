@@ -12,6 +12,7 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     permissions:
       contents: read
       packages: write
@@ -26,6 +27,9 @@ jobs:
           distribution: 'temurin'
           java-version: '25'
           cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
       - name: Run tests on native runner
         run: ./gradlew test
