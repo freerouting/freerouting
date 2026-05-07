@@ -4,7 +4,6 @@ import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
-import java.util.Arrays;
 
 /**
  * Provides hardcoded default values for all router settings.
@@ -16,10 +15,13 @@ public class DefaultSettings implements SettingsSource {
 
     @Override
     public RouterSettings getSettings() {
-        int defaultLayerCount = 2;
-
-        // Create a RouterSettings object with all default values
-        // These are the same defaults currently used in RouterSettings constructor
+        // Create a RouterSettings object with all default values.
+        // Layer-count-dependent arrays (isLayerActive, isPreferredDirectionHorizontalOnLayer,
+        // preferredDirectionTraceCost, undesiredDirectionTraceCost) are intentionally left null
+        // here. Their actual sizes must come from the board file (via DsnFileSettings) and are
+        // finalised by RouterSettings.applyBoardSpecificOptimizations() once the board is loaded.
+        // Hardcoding a size-2 default causes incorrect behaviour for any board that is not a
+        // 2-layer design.
         RouterSettings settings = new RouterSettings();
 
         settings.enabled = true;
@@ -34,12 +36,9 @@ public class DefaultSettings implements SettingsSource {
         settings.ignoreNetClasses = new String[0];
         settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
 
-        settings.isLayerActive = new boolean[defaultLayerCount];
-        settings.isPreferredDirectionHorizontalOnLayer = new boolean[defaultLayerCount];
-        for (int i = 0; i < defaultLayerCount; i++) {
-            settings.isLayerActive[i] = true;
-            settings.isPreferredDirectionHorizontalOnLayer[i] = i % 2 == 1;
-        }
+        // isLayerActive and isPreferredDirectionHorizontalOnLayer are left null intentionally –
+        // they will be populated by DsnFileSettings (from the DSN layer count) and then
+        // overwritten with board-geometry-aware values by applyBoardSpecificOptimizations().
 
         // Optimizer defaults
         settings.optimizer.enabled = false;
@@ -51,13 +50,10 @@ public class DefaultSettings implements SettingsSource {
         settings.optimizer.hybridRatio = "1:1";
         settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.PRIORITIZED;
 
-        // Scoring defaults
+        // Scalar trace-cost defaults (layer-specific arrays are omitted for the same reason as
+        // the layer arrays above – their sizes depend on the board).
         settings.scoring.defaultPreferredDirectionTraceCost = 1.0;
         settings.scoring.defaultUndesiredDirectionTraceCost = 1.0;
-        settings.scoring.preferredDirectionTraceCost = new double[defaultLayerCount];
-        Arrays.fill(settings.scoring.preferredDirectionTraceCost, settings.scoring.defaultPreferredDirectionTraceCost);
-        settings.scoring.undesiredDirectionTraceCost = new double[defaultLayerCount];
-        Arrays.fill(settings.scoring.undesiredDirectionTraceCost, settings.scoring.defaultUndesiredDirectionTraceCost);
 
         settings.scoring.via_costs = 50;
         settings.scoring.plane_via_costs = 5;
