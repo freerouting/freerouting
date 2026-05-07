@@ -178,6 +178,61 @@ The primary routing packages are `board`, `autoroute`, `rules`, `drc`, and `geom
 
 When diagnosing routing behavior, start in `autoroute`, then trace the data into the board and rule objects it reads.
 
+### Routing Algorithm
+
+#### Table Level Overview
+
+Freerouting has two related routing stages:
+
+| Stage | Purpose | Board impact |
+| --- | --- | --- |
+| Autorouter | Connect the board | Adds missing traces and vias so unfinished nets become complete |
+| Optimizer | Improve the routed board | Reroutes parts of existing connections to reduce length, vias, and awkward shapes |
+
+#### Autorouter
+
+The autorouter is the "make it work" stage. It solves missing connections one at a time by finding a legal path through free space, writing that path onto the board, and then cleaning it up.
+
+- Find unfinished connections.
+
+    The batch router scans the board for items that are not yet fully connected and makes a pass through them. If a pass does not make useful progress, it can stop instead of looping forever.
+
+- Search for a legal path.
+
+    For each unfinished connection, the router checks the rules for that net and searches the board for a path that fits the clearance limits, layer limits, and via costs. In plain terms, it is looking for a route that is both possible and acceptable.
+
+- Turn the path into board geometry.
+
+    When the search succeeds, the result is converted into real traces and vias that can be placed on the board. This step decides exactly where the route changes layer and how it meets the connected items.
+
+- Clean up the new route.
+
+    The new geometry is inserted into the board, temporary fragments are removed, and the route is tightened so it fits better into the surrounding design.
+
+The autorouter may also temporarily rip up nearby conflicting traces or vias if that is what it takes to find a legal route. Its job is to turn an incomplete design into one that is electrically connected.
+
+#### Optimizer
+
+The optimizer is the "make it better" stage. It runs after routing is already complete and tries to improve the quality of existing routes without changing what connects to what.
+
+- Choose an existing route.
+
+    The optimizer picks a trace or route segment that might be improved.
+
+- Remove and reroute locally.
+
+    It temporarily rips up the selected area and reroutes it using optimizer-specific rules and scoring. This can use different priorities, preferred directions, or multiple candidate attempts.
+
+- Measure the result.
+
+    The new route is compared with the old one using board metrics such as trace length and via count. In multi-threaded mode, several candidates may be tried and the best one wins.
+
+- Keep the improvement or undo it.
+
+    If the new version is better, it stays on the board. If not, the optimizer restores the previous state so the design does not get worse.
+
+The optimizer changes the board more conservatively than the autorouter. Its job is to shorten routes, reduce vias, and polish the final layout.
+
 ### GUI and Interaction Path
 
 The interactive editor is split between `gui` and `interactive`.
