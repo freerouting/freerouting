@@ -375,4 +375,4 @@ Steps that process untrusted input (issue title/body) must explicitly blank the 
 Use `gradle/actions/setup-gradle@v4` (not v3). v4 is the current stable version with improved caching and Gradle 9 compatibility.
 
 ## `actions/stale` version
-Use `actions/stale@v9` (pinned to SHA `5bef64f19d7facfed16b01af6aa2c9a0ff3b7977`). v5 (previously used) ran on Node.js 16 which is EOL. Do not downgrade.
+Use `actions/stale@v9`. v5 (previously used) ran on Node.js 16 which is EOL. Do not downgrade. Do not pin to a commit SHA — the SHA has historically broken when the upstream repository rebased its release tags.
