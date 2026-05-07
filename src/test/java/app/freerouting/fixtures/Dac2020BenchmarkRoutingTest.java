@@ -7,6 +7,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.settings.sources.TestingSettings;
+import java.time.Duration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,8 +30,9 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     RunRoutingJob(job);
 
-    assertTrue(GetBoardStatistics(job).connections.incompleteCount <= 194,
-        "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 194 or less incomplete connections with the target of 2 items to route.");
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
+        .maxIncompleteConnections(194)
+        .check();
   }
 
   @Test
@@ -46,8 +48,9 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     RunRoutingJob(job);
 
-    assertTrue(GetBoardStatistics(job).connections.incompleteCount <= 161,
-            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 161 or less incomplete connections with the target of 43 items to route.");
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
+        .maxIncompleteConnections(161)
+        .check();
   }
 
   @Test
@@ -63,8 +66,9 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     RunRoutingJob(job);
 
-    assertTrue(GetBoardStatistics(job).connections.incompleteCount <= 147,
-            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 147 or less incomplete connections with the target of 61 items to route.");
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
+        .maxIncompleteConnections(147)
+        .check();
   }
 
   @Test
@@ -80,8 +84,9 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     RunRoutingJob(job);
 
-    assertTrue(GetBoardStatistics(job).connections.incompleteCount <= 134,
-            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 134 or less incomplete connections with the target of 111 items to route.");
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
+        .maxIncompleteConnections(134)
+        .check();
   }
 
   @Test
@@ -97,8 +102,9 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     RunRoutingJob(job);
 
-    assertTrue(GetBoardStatistics(job).connections.incompleteCount <= 126,
-            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 126 or less incomplete connections with the target of 151 items to route.");
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
+        .maxIncompleteConnections(126)
+        .check();
   }
 
   @Test
@@ -113,8 +119,9 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
     // Run the job
     RunRoutingJob(job);
 
-    assertTrue(job.board.get_statistics().connections.incompleteCount <= 56,
-            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 56 or less unrouted connections after the first pass.");
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
+        .maxIncompleteConnections(56)
+        .check();
   }
 
   @Test
@@ -129,8 +136,9 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
     // Run the job
     RunRoutingJob(job);
 
-    assertTrue(job.board.get_statistics().connections.incompleteCount <= 28,
-            "Routing of the reference board 'Issue508-DAC2020_bm01.dsn' should result in 28 or less unrouted connections after the first 2 passes.");
+    assertRoutingResult(job, "Issue508-DAC2020_bm01.dsn")
+        .maxIncompleteConnections(28)
+        .check();
   }
 
   @Test
@@ -143,14 +151,12 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     // Run the job and measure elapsed time via the job's own timestamps
     RunRoutingJob(job);
-    long elapsedMs = java.time.Duration.between(job.startedAt, job.finishedAt).toMillis();
 
-    assertTrue(elapsedMs < 30_000,
-            "Routing of the reference board 'Issue508-DAC2020_bm07.dsn' should complete in less than 30 seconds, but took " + elapsedMs + " ms.");
-    assertTrue(job.getCurrentPass() <= 9,
-            "Routing of the reference board 'Issue508-DAC2020_bm07.dsn' should complete within the first 9 passes, but required " + job.getCurrentPass() + " passes.");
-    assertTrue(job.board.get_statistics().connections.incompleteCount <= 0,
-            "Routing of the reference board 'Issue508-DAC2020_bm07.dsn' should result in 0 unrouted connections after the first pass.");
+    assertRoutingResult(job, "Issue508-DAC2020_bm07.dsn")
+        .maxDuration(Duration.ofSeconds(30))
+        .maxPasses(9)
+        .exactIncompleteConnections(0)
+        .check();
   }
 
   @Test
@@ -163,14 +169,12 @@ public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
     // Run the job and measure elapsed time via the job's own timestamps
     RunRoutingJob(job);
-    long elapsedMs = java.time.Duration.between(job.startedAt, job.finishedAt).toMillis();
 
-    assertTrue(elapsedMs < 20_000,
-            "Routing of the reference board 'Issue508-DAC2020_bm08.dsn' should complete in less than 20 seconds, but took " + elapsedMs + " ms.");
-    assertTrue(job.getCurrentPass() <= 2,
-            "Routing of the reference board 'Issue508-DAC2020_bm08.dsn' should complete within the first 2 passes, but required " + job.getCurrentPass() + " passes.");
-    assertTrue(job.board.get_statistics().connections.incompleteCount <= 0,
-            "Routing of the reference board 'Issue508-DAC2020_bm08.dsn' should result in 0 unrouted connections after the first pass.");
+    assertRoutingResult(job, "Issue508-DAC2020_bm08.dsn")
+        .maxDuration(Duration.ofSeconds(20))
+        .maxPasses(2)
+        .exactIncompleteConnections(0)
+        .check();
   }
 
   @AfterEach

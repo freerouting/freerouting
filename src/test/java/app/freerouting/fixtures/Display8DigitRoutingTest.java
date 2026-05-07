@@ -1,8 +1,5 @@
 package app.freerouting.fixtures;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -53,10 +50,9 @@ public class Display8DigitRoutingTest extends RoutingFixtureTest {
     // some connections may remain incomplete; we accept up to 50 incomplete connections.
     job = RunRoutingJob(job);
 
-    var statsAfter = GetBoardStatistics(job);
-
-    assertEquals(0, statsAfter.clearanceViolations.totalCount, "The total count of clearance violations should be 0");
-    assertTrue(statsAfter.connections.incompleteCount <= 20,
-        "Expected at most 20 incomplete connections, but got " + statsAfter.connections.incompleteCount);
+    assertRoutingResult(job, "Issue229-display-8-digit-hc595.dsn")
+        .exactClearanceViolations(0)
+        .maxIncompleteConnections(20)
+        .check();
   }
 }

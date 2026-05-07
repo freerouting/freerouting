@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
-import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.sources.TestingSettings;
 import java.time.Duration;
@@ -111,16 +110,15 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
         "RoutingJob.board must be non-null after routing+optimization run");
 
     // The optimizer must not introduce clearance violations.
-    BoardStatistics statsAfter = GetBoardStatistics(completed);
-    assertTrue(statsAfter.clearanceViolations.totalCount == 0,
-        "Optimizer must not introduce clearance violations; found: "
-            + statsAfter.clearanceViolations.totalCount);
+    assertRoutingResult(completed, FIXTURE_FILE)
+        .exactClearanceViolations(0)
+        .check();
 
     Duration duration = completed.getDuration();
+    var statsAfter = GetBoardStatistics(completed);
     IO.println("Issue420 optimizer test completed in "
         + FRLogger.formatDuration(duration.toSeconds())
         + " with " + statsAfter.connections.incompleteCount + " incomplete connections"
         + " and " + statsAfter.clearanceViolations.totalCount + " clearance violations.");
   }
 }
-
