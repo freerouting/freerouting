@@ -43,7 +43,7 @@ public class DsnFileSettings implements SettingsSource {
         // Always seed the layer arrays from the actual DSN layer count so that any board
         // with more or fewer than 2 layers gets correctly-sized arrays in the merged result –
         // well before applyBoardSpecificOptimizations() is called.
-        if (layerCount > 0) {
+        if (layerCount > 0 && rs.getLayerCount() == 0) {
             rs.setLayerCount(layerCount);
         }
 
