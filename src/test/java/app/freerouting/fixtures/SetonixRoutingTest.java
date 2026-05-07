@@ -1,8 +1,5 @@
 package app.freerouting.fixtures;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -55,10 +52,9 @@ public class SetonixRoutingTest extends RoutingFixtureTest {
 
     job = RunRoutingJob(job);
 
-    var statsAfter = GetBoardStatistics(job);
-
-    assertTrue(statsAfter.connections.incompleteCount <= 4,
-            "The incomplete count should be at most 4");
-    assertEquals(0, statsAfter.clearanceViolations.totalCount, "The total count of clearance violations should be 0");
+    assertRoutingResult(job, "Issue159-setonix_2hp-pcb.dsn")
+        .maxIncompleteConnections(4)
+        .exactClearanceViolations(0)
+        .check();
   }
 }

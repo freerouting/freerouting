@@ -1,6 +1,5 @@
 package app.freerouting.fixtures;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.logger.FRLogger;
@@ -87,19 +86,11 @@ public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
               + ".");
     }
 
-    assertTrue(Duration
-        .between(job.startedAt, job.finishedAt)
-        .compareTo(Duration.ofMinutes(20)) < 0,
-        "Routing of the reference board 'BBD_Mars-64.dsn' should complete within 5 minutes.");
-
-    // Check if we could finish within 40 passes
-    assertTrue(job.getCurrentPass() >= 1, "The routing job should have at least 1 pass.");
-    assertTrue(job.getCurrentPass() <= 99, "The routing job should stop after at most 99 passes.");
-
-    // Check if we have at most 6 unrouted connections
-    assertTrue(job.board.get_statistics().connections.incompleteCount <= 7,
-            "Routing of the reference board 'BBD_Mars-64.dsn' should leave at most 7 unrouted connections.");
-
+    assertRoutingResult(job, "Issue555-BBD_Mars-64.dsn")
+        .maxDuration(Duration.ofMinutes(20))
+        .passCount(1, 99)
+        .maxIncompleteConnections(7)
+        .check();
   }
 
   @Test
@@ -132,16 +123,10 @@ public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
               + ".");
     }
 
-    // Check if we could finish within 1 minute
-    assertTrue(job.getDuration().compareTo(Duration.ofMinutes(1)) < 0,
-        "Routing of the reference board 'Issue555-CNH_Functional_Tester_1.dsn' should complete within 1 minute.");
-
-    // Check if we could finish within 40 passes
-    assertTrue(job.getCurrentPass() >= 1, "The routing job should have at least 1 pass.");
-    assertTrue(job.getCurrentPass() <= 40, "The routing job should stop after at most 40 passes.");
-
-    // Check if we have at most 6 unrouted connections
-    assertTrue(job.board.get_statistics().connections.incompleteCount <= 6,
-        "Routing of the reference board 'Issue555-CNH_Functional_Tester_1.dsn' should leave at most 6 unrouted connections.");
+    assertRoutingResult(job, "Issue555-CNH_Functional_Tester_1.dsn")
+        .maxDuration(Duration.ofMinutes(1))
+        .passCount(1, 40)
+        .maxIncompleteConnections(6)
+        .check();
   }
 }

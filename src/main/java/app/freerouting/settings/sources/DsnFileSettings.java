@@ -28,11 +28,28 @@ public class DsnFileSettings implements SettingsSource {
     public DsnFileSettings(InputStream inputStream, String filename) {
         this.filename = filename;
         DsnReadResult result = DsnReader.readMetadata(inputStream);
-        this.settings = (result instanceof DsnReadResult.Success s && s.metadata() != null
-            && s.metadata().routerSettings() != null)
-            ? s.metadata().routerSettings()
-            : new RouterSettings();
-        FRLogger.debug("Loaded router settings from DSN file: " + filename);
+
+        RouterSettings extracted = null;
+        int layerCount = 0;
+
+        if (result instanceof DsnReadResult.Success s && s.metadata() != null) {
+            extracted = s.metadata().routerSettings(); // null when no (autoroute_settings …) block
+            layerCount = s.metadata().layerCount();
+        }
+
+        // Start with whatever the DSN's autoroute block provided (or a blank slate).
+        RouterSettings rs = (extracted != null) ? extracted : new RouterSettings();
+
+        // Always seed the layer arrays from the actual DSN layer count so that any board
+        // with more or fewer than 2 layers gets correctly-sized arrays in the merged result –
+        // well before applyBoardSpecificOptimizations() is called.
+        if (layerCount > 0 && rs.getLayerCount() == 0) {
+            rs.setLayerCount(layerCount);
+        }
+
+        this.settings = rs;
+        FRLogger.debug("Loaded router settings from DSN file: " + filename
+            + " (" + layerCount + " layers)");
     }
 
     @Override
