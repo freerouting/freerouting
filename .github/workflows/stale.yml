@@ -18,7 +18,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/stale@5bef64f19d7facfed16b01af6aa2c9a0ff3b7977 # ratchet:actions/stale@v9
+      - uses: actions/stale@v9
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           days-before-stale: 120

@@ -1,5 +1,8 @@
 package app.freerouting.fixtures;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import app.freerouting.Freerouting;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.board.RoutingBoard;
@@ -9,6 +12,7 @@ import app.freerouting.core.Session;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
@@ -20,10 +24,9 @@ import app.freerouting.settings.sources.TestingSettings;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
-
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class RoutingFixtureTest {
 
@@ -141,5 +144,211 @@ public class RoutingFixtureTest {
 
     return new BoardStatistics(job.board);
   }
-}
 
+  /**
+   * Creates a fluent assertion builder for checking routing result properties.
+   *
+   * <p>Usage:
+   * <pre>{@code
+   * assertRoutingResult(job, "MyBoard.dsn")
+   *     .maxDuration(Duration.ofMinutes(5))
+   *     .passCount(1, 40)
+   *     .maxIncompleteConnections(3)
+   *     .exactClearanceViolations(0)
+   *     .check();
+   * }</pre>
+   *
+   * <p>Pass {@code null} (or simply omit a setter call) for any property you do not want to
+   * check. A missing check is silently skipped.
+   *
+   * @param job       the completed routing job to inspect
+   * @param boardName human-readable board file name for use in failure messages
+   * @return a new {@link RoutingResultAssertions} builder bound to {@code job}
+   */
+  protected RoutingResultAssertions assertRoutingResult(RoutingJob job, String boardName) {
+    return new RoutingResultAssertions(job, boardName);
+  }
+
+  /**
+   * Fluent builder for asserting routing result properties.
+   *
+   * <p>All setter methods return {@code this} so calls can be chained. Call {@link #check()} at
+   * the end to execute every configured assertion. Assertions where the expected value was never
+   * set (i.e. remains {@code null}) are silently skipped, making it easy to add new checks
+   * without breaking tests that do not need them.
+   *
+   * <p>Failure messages always include both the expected constraint and the actual value measured
+   * from the job, so a CI failure immediately indicates what went wrong and by how much.
+   */
+  public static final class RoutingResultAssertions {
+
+    private final RoutingJob job;
+    private final String boardName;
+
+    private Duration maxDuration;
+    private Integer minPasses;
+    private Integer maxPasses;
+    private Integer maxIncompleteConnections;
+    private Integer exactIncompleteConnections;
+    private Integer maxClearanceViolations;
+    private Integer exactClearanceViolations;
+
+    RoutingResultAssertions(RoutingJob job, String boardName) {
+      this.job = job;
+      this.boardName = boardName;
+    }
+
+    /**
+     * Asserts that the routing job completed within the given wall-clock duration.
+     * Uses {@link RoutingJob#getDuration()} which returns the interval between
+     * {@code startedAt} and {@code finishedAt}.
+     */
+    public RoutingResultAssertions maxDuration(Duration max) {
+      this.maxDuration = max;
+      return this;
+    }
+
+    /**
+     * Convenience setter that configures both {@link #minPasses} and {@link #maxPasses}
+     * in one call.
+     */
+    public RoutingResultAssertions passCount(int min, int max) {
+      this.minPasses = min;
+      this.maxPasses = max;
+      return this;
+    }
+
+    /** Asserts that the router performed at least {@code min} routing passes. */
+    public RoutingResultAssertions minPasses(int min) {
+      this.minPasses = min;
+      return this;
+    }
+
+    /** Asserts that the router stopped at or before {@code max} routing passes. */
+    public RoutingResultAssertions maxPasses(int max) {
+      this.maxPasses = max;
+      return this;
+    }
+
+    /**
+     * Asserts that the number of unrouted connections is at most {@code max}.
+     * Mutually exclusive with {@link #exactIncompleteConnections(int)}; set only one.
+     */
+    public RoutingResultAssertions maxIncompleteConnections(int max) {
+      this.maxIncompleteConnections = max;
+      return this;
+    }
+
+    /**
+     * Asserts that the number of unrouted connections is exactly {@code expected}.
+     * Uses {@code assertEquals} internally, producing a clear diff in test output.
+     * Mutually exclusive with {@link #maxIncompleteConnections(int)}; set only one.
+     */
+    public RoutingResultAssertions exactIncompleteConnections(int expected) {
+      this.exactIncompleteConnections = expected;
+      return this;
+    }
+
+    /**
+     * Asserts that the number of clearance violations is at most {@code max}.
+     * Mutually exclusive with {@link #exactClearanceViolations(int)}; set only one.
+     */
+    public RoutingResultAssertions maxClearanceViolations(int max) {
+      this.maxClearanceViolations = max;
+      return this;
+    }
+
+    /**
+     * Asserts that the number of clearance violations is exactly {@code expected}.
+     * Uses {@code assertEquals} internally, producing a clear diff in test output.
+     * Mutually exclusive with {@link #maxClearanceViolations(int)}; set only one.
+     */
+    public RoutingResultAssertions exactClearanceViolations(int expected) {
+      this.exactClearanceViolations = expected;
+      return this;
+    }
+
+    /**
+     * Executes all configured assertions against the job supplied at construction time.
+     *
+     * <p>Assertions are evaluated in the following order:
+     * <ol>
+     *   <li>Maximum wall-clock duration</li>
+     *   <li>Minimum routing-pass count</li>
+     *   <li>Maximum routing-pass count</li>
+     *   <li>Maximum incomplete-connection count (or exact equality)</li>
+     *   <li>Maximum clearance-violation count (or exact equality)</li>
+     * </ol>
+     *
+     * <p>If both an exact and a maximum value are configured for the same property, both
+     * checks run independently. In practice, set only one per property.
+     */
+    public void check() {
+      Duration actualDuration = job.getDuration();
+      int actualPasses = job.getCurrentPass();
+      BoardStatistics stats = new BoardStatistics(job.board);
+      int actualIncomplete = stats.connections.incompleteCount;
+      int actualViolations = stats.clearanceViolations.totalCount;
+
+      if (maxDuration != null) {
+        assertTrue(
+            actualDuration != null && actualDuration.compareTo(maxDuration) < 0,
+            String.format(
+                "'%s' should complete within %s, but took %s.",
+                boardName,
+                FRLogger.formatDuration(maxDuration.toSeconds()),
+                actualDuration != null ? FRLogger.formatDuration(actualDuration.toSeconds()) : "N/A"));
+      }
+
+      if (minPasses != null) {
+        assertTrue(
+            actualPasses >= minPasses,
+            String.format(
+                "'%s' should have performed at least %d routing pass(es), but only had %d.",
+                boardName, minPasses, actualPasses));
+      }
+
+      if (maxPasses != null) {
+        assertTrue(
+            actualPasses <= maxPasses,
+            String.format(
+                "'%s' should complete within at most %d routing pass(es), but required %d.",
+                boardName, maxPasses, actualPasses));
+      }
+
+      if (maxIncompleteConnections != null) {
+        assertTrue(
+            actualIncomplete <= maxIncompleteConnections,
+            String.format(
+                "'%s' should have at most %d unrouted connection(s), but had %d.",
+                boardName, maxIncompleteConnections, actualIncomplete));
+      }
+
+      if (exactIncompleteConnections != null) {
+        assertEquals(
+            exactIncompleteConnections,
+            actualIncomplete,
+            String.format(
+                "'%s' should have exactly %d unrouted connection(s).",
+                boardName, exactIncompleteConnections));
+      }
+
+      if (maxClearanceViolations != null) {
+        assertTrue(
+            actualViolations <= maxClearanceViolations,
+            String.format(
+                "'%s' should have at most %d clearance violation(s), but had %d.",
+                boardName, maxClearanceViolations, actualViolations));
+      }
+
+      if (exactClearanceViolations != null) {
+        assertEquals(
+            exactClearanceViolations,
+            actualViolations,
+            String.format(
+                "'%s' should have exactly %d clearance violation(s).",
+                boardName, exactClearanceViolations));
+      }
+    }
+  }
+}

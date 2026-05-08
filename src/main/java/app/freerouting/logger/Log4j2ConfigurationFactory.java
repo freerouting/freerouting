@@ -36,7 +36,7 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
 
     @Override
     public Configuration getConfiguration(LoggerContext loggerContext, ConfigurationSource source) {
-        return getConfiguration(loggerContext, source.toString(), null);
+        return getConfiguration(loggerContext, source.toString(), (URI) null);
     }
 
     @Override

@@ -221,7 +221,7 @@ public class RouterSettings implements Serializable, Cloneable {
 
   /**
    * Get the number of layers configured in the router settings.
-   * 
+   *
    * @return The layer count
    */
   public int getLayerCount() {
@@ -267,14 +267,18 @@ public class RouterSettings implements Serializable, Cloneable {
   @Override
   public RouterSettings clone() {
     RouterSettings result = new RouterSettings();
-    result.setLayerCount(this.getLayerCount());
+    int layerCount = this.getLayerCount();
+    if (layerCount > 0) {
+      result.setLayerCount(layerCount);
+    }
     result.algorithm = this.algorithm;
     result.jobTimeoutString = this.jobTimeoutString;
-    result.isLayerActive = this.isLayerActive.clone();
-    result.isPreferredDirectionHorizontalOnLayer = this.isPreferredDirectionHorizontalOnLayer.clone();
+    result.isLayerActive = (this.isLayerActive != null) ? this.isLayerActive.clone() : null;
+    result.isPreferredDirectionHorizontalOnLayer = (this.isPreferredDirectionHorizontalOnLayer != null)
+        ? this.isPreferredDirectionHorizontalOnLayer.clone() : null;
     result.maxPasses = this.maxPasses;
     result.maxItems = this.maxItems;
-    result.ignoreNetClasses = this.ignoreNetClasses.clone();
+    result.ignoreNetClasses = (this.ignoreNetClasses != null) ? this.ignoreNetClasses.clone() : null;
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     result.enabled = this.enabled;
     result.vias_allowed = this.vias_allowed;
@@ -289,11 +293,11 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public int get_start_ripup_costs() {
-    return scoring.start_ripup_costs;
+    return scoring.startRipupCosts;
   }
 
   public void set_start_ripup_costs(int p_value) {
-    scoring.start_ripup_costs = Math.max(p_value, 1);
+    scoring.startRipupCosts = Math.max(p_value, 1);
   }
 
   public boolean getRunRouter() {
@@ -324,19 +328,19 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public int get_via_costs() {
-    return scoring.via_costs;
+    return scoring.viaCosts;
   }
 
   public void set_via_costs(int p_value) {
-    scoring.via_costs = Math.max(p_value, 1);
+    scoring.viaCosts = Math.max(p_value, 1);
   }
 
   public int get_plane_via_costs() {
-    return scoring.plane_via_costs;
+    return scoring.planeViaCosts;
   }
 
   public void set_plane_via_costs(int p_value) {
-    scoring.plane_via_costs = Math.max(p_value, 1);
+    scoring.planeViaCosts = Math.max(p_value, 1);
   }
 
   public void set_layer_active(int p_layer, boolean p_value) {
@@ -436,6 +440,9 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public AutorouteControl.ExpansionCostFactor[] get_trace_cost_arr() {
+    if (scoring.preferredDirectionTraceCost == null) {
+      return new AutorouteControl.ExpansionCostFactor[0];
+    }
     AutorouteControl.ExpansionCostFactor[] result = new AutorouteControl.ExpansionCostFactor[scoring.preferredDirectionTraceCost.length];
     for (int i = 0; i < result.length; i++) {
       result[i] = new AutorouteControl.ExpansionCostFactor(get_horizontal_trace_costs(i), get_vertical_trace_costs(i));

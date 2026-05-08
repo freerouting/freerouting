@@ -35,14 +35,14 @@ Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/freerou
 #### Windows (CMD)
 
 ```powershell
-gradlew assemble
+gradlew executableJar
 ```
 
 ![image](https://user-images.githubusercontent.com/910321/143483981-5f1f8473-098e-4cf2-997b-a34d14346853.png)
 
 #### Generated Executables
 
-All four .jar files will be generated in the `build\libs` subfolder. You would typically run the `freerouting-executable.jar` file.
+All four .jar files will be generated in the `build\libs` subfolder. You would typically run the `freerouting-current-executable.jar` file.
 
 ## How to create a new release
 
@@ -51,14 +51,14 @@ Creating a release takes about half an hour if everything goes according to the 
 Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 
 * Run the `gradlew wrapper --gradle-version latest` command to update the Gradle wrapper to the latest version.
-* Run the `./gradlew dependencyUpdates` command to check if there are any dependencies that need to be updated. Update them manually if necessary and commit the changes.
+* Run the `./gradlew dependencyUpdates useLatestVersions --no-configuration-cache --no-parallel` command to check if there are any dependencies that need to be updated. Update them manually if necessary and commit the changes.
 * Check if there are any [outstanding pull requests](https://github.com/freerouting/freerouting/pulls) and merge them as well
 * Change `ext.publishing.versionId` in `\gradle\project-info.gradle` to `2.3.4`
 * Push it to GitHub
 * Check if it was built successfully on GitHub Actions
 * Create a new draft release
-* Run `gradlew.bat assemble` -> this will generate the files in `\build\libs\freerouting*.jar`
-* Rename to `freerouting-executable.jar` to `freerouting-2.3.4.jar` and add it to the release draft
+* Run `gradlew.bat executableJar` -> this will generate the files in `\build\libs\freerouting*.jar`
+* Rename to `freerouting-current-executable.jar` to `freerouting-2.3.4.jar`
 * Update the `integrations\KiCad`
     * Copy `freerouting-2.3.4.jar` into `\integrations\KiCad\kicad-freerouting\plugins\jar\`
     * Update `\integrations\KiCad\kicad-freerouting\plugins\plugin.ini` with the new filename
@@ -70,22 +70,22 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
       to get hash and file sizes
     * Update `\integrations\KiCad\metadata.json` with these values
     * Push these changes to GitHub
-        * Run the "Run Kicad repository validation" command in KiCad Packager
+        * Run the "Run KiCad repository validation" command in KiCad Packager
     * Delete previous fork at https://gitlab.com/freeroutingapp/metadata
       (Settings / General / Delete this project)
     * Fork https://gitlab.com/kicad/addons/metadata again
     * Create a new branch, named `freerouting-2.3.4`
     * Replace https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json
       with the new one
-    * Create a megre request at https://gitlab.com/kicad/addons/metadata / Merge request / ...
-* Update README
+    * Create a merge request at https://gitlab.com/kicad/addons/metadata / Merge request / ...
+* Update README.md, integrations.md, self-hosting.md and settings.md
 * Publish the release
-* Check if Windows and Linux installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions)
+* Check if Windows, Linux and macOS installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions) and if the Docker image was updated on [GHCR.io](https://github.com/freerouting/freerouting/pkgs/container/freerouting)
 * Publish the library to Maven Central
     * Use the [Gradle Maven plugin]([url](https://github.com/vanniktech/gradle-maven-publish-plugin)) and set the properties in `/.gradle/gradle.properties`
-      ![image](https://github.com/user-attachments/assets/90744cab-ced0-47e0-a0db-1ed6c8a40c39)
+      <img width="896" height="293" alt="image" src="https://github.com/user-attachments/assets/fa85332d-91d8-4715-924d-aa8b6f86c64c" />      
     * Run the `./gradlew publishToMavenCentral --no-configuration-cache` command in the root folder to publish it to Maven Central
-    * Release the staging repository
+    * Publish the deployment [on Maven Central Repository](https://central.sonatype.com/publishing/deployments) 
 
 * Update the Docker image on Azure
     1. build docker image locally for Linux x64 (~2 mins)

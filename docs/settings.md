@@ -8,7 +8,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 
 ```json
 {
-  "version": "2.2.2",
+  "version": "2.2.3",
   "profile": {
     "id": "09730e5f-4886-49f0-afba-76f459408907",
     "email": "info@freerouting.app"
@@ -193,4 +193,4 @@ If a setting is not defined in any source, the hardcoded default from `DefaultSe
 
 If any field were initialised to a non-null value inside the `RouterSettings` constructor (e.g. `public Integer maxPasses = 9999;`), every source's settings object would carry that value, and the merger would incorrectly treat it as an explicit override. A low-priority source (such as the JSON file) would then silently win over a higher-priority source (such as the API) whenever the user left that field unspecified in the high-priority source.
 
-**Keep all `RouterSettings` fields null-initialised.** Concrete defaults belong exclusively in `DefaultSettings.getSettings()`, which is always the first source applied and therefore acts as the safe fallback for every field.
+**Keep all `RouterSettings` fields null-initialised.** Concrete defaults belong exclusively in `DefaultSettings.getSettings()`, which is always the first source applied and therefore acts as the safe fallback for every field

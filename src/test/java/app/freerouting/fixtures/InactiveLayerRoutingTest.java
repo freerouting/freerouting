@@ -6,7 +6,6 @@ import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests related to GitHub Issue #230: "Auto-router uses inactive layers if via cost set to 45 or lower"
@@ -138,20 +137,15 @@ public class InactiveLayerRoutingTest extends RoutingFixtureTest {
     // Get a routing job
     job = GetRoutingJob("Issue230-CNH_Functional_Tester_1.dsn", testingSettings);
 
-    // Run the job and measure elapsed time via the job's own timestamps
+    // Run the job
     RunRoutingJob(job);
-    long elapsedMs = java.time.Duration.between(job.startedAt, job.finishedAt).toMillis();
 
-    // --- Timing ---
-    assertTrue(elapsedMs < 300_000,
-        "Routing of 'Issue230-CNH_Functional_Tester_1.dsn' should complete in under 5 minutes, but took " + elapsedMs + " ms.");
-
-    // --- Routing quality (based on observed realistic results for this board) ---
-    assertTrue(job.getCurrentPass() <= 20,
-        "Routing of 'Issue230-CNH_Functional_Tester_1.dsn' required too many passes: " + job.getCurrentPass() + " (expected <= 20).");
-    assertTrue(job.board.get_statistics().connections.incompleteCount <= 5,
-        "Routing of 'Issue230-CNH_Functional_Tester_1.dsn' left too many unrouted connections: "
-            + job.board.get_statistics().connections.incompleteCount + " (expected <= 5).");
+    // --- Timing, pass count, and routing quality ---
+    assertRoutingResult(job, "Issue230-CNH_Functional_Tester_1.dsn")
+        .maxDuration(java.time.Duration.ofMillis(300_000))
+        .maxPasses(20)
+        .maxIncompleteConnections(5)
+        .check();
 
     // --- Core bug check for Issue #230 ---
     // The board has 4 copper layers: F.Cu (0, signal/active), In1.Cu (1, power/inactive),

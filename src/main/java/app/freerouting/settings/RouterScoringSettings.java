@@ -3,6 +3,24 @@ package app.freerouting.settings;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
+/**
+ * Weights that control how the autorouter scores a board state.
+ *
+ * <p>All fields are nullable so that the {@code SettingsMerger} / {@code ReflectionUtil.copyFields}
+ * pipeline can distinguish "this source has no opinion" (null) from "this source explicitly sets
+ * a value".  Hard-coded defaults must live exclusively in
+ * {@link app.freerouting.settings.sources.DefaultSettings}.
+ *
+ * <p>Naming conventions:
+ * <ul>
+ *   <li><b>penalty</b> — subtracted when a quality constraint is violated (unrouted net, DRC
+ *       violation, bend).  These appear in the board-score formula.</li>
+ *   <li><b>costs</b> — subtracted as an absolute cost proportional to resource usage (via count,
+ *       trace length).  These also appear in the board-score formula.</li>
+ *   <li><b>startRipupCosts</b> — a routing-control parameter passed to the maze-search engine;
+ *       it does <em>not</em> appear in the board-score formula.</li>
+ * </ul>
+ */
 public class RouterScoringSettings implements Serializable, Cloneable {
 
   // The cost of 1 mm of trace length if the trace is routed in the preferred
@@ -19,16 +37,19 @@ public class RouterScoringSettings implements Serializable, Cloneable {
   // direction.
   @SerializedName("default_undesired_direction_trace_cost")
   public Double defaultUndesiredDirectionTraceCost;
-  // The cost of a via.
+  // The cost of a via on a regular (non-plane) net.
   @SerializedName("via_costs")
-  public Integer via_costs;
+  public Integer viaCosts;
   // The cost of a via if the via is placed on a plane.
   @SerializedName("plane_via_costs")
-  public Integer plane_via_costs;
-  // The starting cost of a ripup operation. It might be increased during the
-  // auto-routing process.
+  public Integer planeViaCosts;
+  /**
+   * Base ripup cost for the first ripup-and-reroute pass.
+   * This is a routing-control parameter multiplied by the pass number inside
+   * {@code BatchAutorouter}; it does NOT appear in the board-score formula.
+   */
   @SerializedName("start_ripup_costs")
-  public Integer start_ripup_costs;
+  public Integer startRipupCosts;
   // The penalty for an unrouted net.
   @SerializedName("unrouted_net_penalty")
   public Float unroutedNetPenalty;

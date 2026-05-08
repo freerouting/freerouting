@@ -141,14 +141,14 @@ Use this approach when you cannot or do not want to use Docker.
 
 - [Java JRE 25+](https://adoptium.net/temurin/releases/) (select your OS, `JRE` package type, version `25`)
 - The Freerouting executable JAR from the [Releases page](https://github.com/freerouting/freerouting/releases)
-  (file name: `freerouting-2.2.2.jar` or `freerouting-executable.jar`)
+  (file name: `freerouting-2.2.3.jar` or `freerouting-executable.jar`)
 
 ### Quick start
 
 Run Freerouting in headless API-server mode:
 
 ```bash
-java -jar freerouting-2.2.2.jar \
+java -jar freerouting-2.2.3.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false
@@ -159,7 +159,7 @@ This starts the API server on `http://127.0.0.1:37864` (localhost only).
 To accept connections from other machines on your network:
 
 ```bash
-java -jar freerouting-2.2.2.jar \
+java -jar freerouting-2.2.3.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false \
@@ -171,7 +171,7 @@ java -jar freerouting-2.2.2.jar \
 To persist logs and data to a specific directory:
 
 ```bash
-java -jar freerouting-2.2.2.jar \
+java -jar freerouting-2.2.3.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false \
@@ -192,7 +192,7 @@ After=network.target
 [Service]
 Type=simple
 User=freerouting
-ExecStart=java -jar /opt/freerouting/freerouting-2.2.2.jar \
+ExecStart=java -jar /opt/freerouting/freerouting-2.2.3.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false \
@@ -228,7 +228,7 @@ Create `~/Library/LaunchAgents/app.freerouting.plist`:
   <array>
     <string>/usr/bin/java</string>
     <string>-jar</string>
-    <string>/opt/freerouting/freerouting-2.2.2.jar</string>
+    <string>/opt/freerouting/freerouting-2.2.3.jar</string>
     <string>--gui.enabled=false</string>
     <string>--api_server.enabled=true</string>
     <string>--api_server.authentication.enabled=false</string>
@@ -251,7 +251,7 @@ launchctl load ~/Library/LaunchAgents/app.freerouting.plist
 #### Windows — NSSM (Non-Sucking Service Manager)
 
 ```powershell
-nssm install Freerouting "java" "-jar C:\freerouting\freerouting-2.2.2.jar --gui.enabled=false --api_server.enabled=true --api_server.authentication.enabled=false --user_data_path=C:\freerouting\data"
+nssm install Freerouting "java" "-jar C:\freerouting\freerouting-2.2.3.jar --gui.enabled=false --api_server.enabled=true --api_server.authentication.enabled=false --user_data_path=C:\freerouting\data"
 nssm start Freerouting
 ```
 
@@ -328,7 +328,7 @@ A healthy response looks like:
 
 ```json
 {
-  "version": "2.2.2",
+  "version": "2.2.3",
   "status": "healthy"
 }
 ```
@@ -394,4 +394,3 @@ docker run -d -p 37864:37864 \
   --gui.enabled=false \
   --api_server.authentication.enabled=false
 ```
-
