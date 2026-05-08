@@ -7,10 +7,11 @@ plugins {
     id 'jvm-test-suite'
     id 'signing'
     id 'maven-publish'
-    id "com.vanniktech.maven.publish" version "0.33.0"
+    id "com.vanniktech.maven.publish" version "0.36.0"
     id 'net.nemerosa.versioning' version '3.1.0'
     id 'com.github.ben-manes.versions' version '0.54.0'
-    id 'org.openrewrite.rewrite' version '7.30.0'
+    id "se.patrikerdes.use-latest-versions" version "0.2.19"
+    id 'org.openrewrite.rewrite' version '7.32.2'
     id "com.diffplug.spotless" version "8.4.0"
 }
 
@@ -112,11 +113,11 @@ dependencies {
     //implementation group: 'javax.help', name: 'javahelp', version: '2.0.05'
 
     // https://mvnrepository.com/artifact/org.apache.logging.log4j
-    implementation 'org.apache.logging.log4j:log4j-core:2.25.2'
-    implementation 'org.apache.logging.log4j:log4j-api:2.25.2'
+    implementation 'org.apache.logging.log4j:log4j-core:2.26.0'
+    implementation 'org.apache.logging.log4j:log4j-api:2.26.0'
 
     // https://github.com/google/gson
-    implementation 'com.google.code.gson:gson:2.13.2'
+    implementation 'com.google.code.gson:gson:2.14.0'
 
     // https://segment.com/docs - this one doesn't work because it's missing the Java 9+ module-info.class
     //implementation 'com.segment.analytics.java:analytics:+'
@@ -129,59 +130,59 @@ dependencies {
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.5'
 
     // Add Jersey dependencies
-    implementation 'org.glassfish.jersey.core:jersey-common:4.0.0'
-    implementation 'org.glassfish.jersey.core:jersey-client:4.0.0'
-    implementation 'org.glassfish.jersey.core:jersey-server:4.0.0'
-    implementation 'org.glassfish.jersey.inject:jersey-hk2:4.0.0'
-    implementation 'org.glassfish.jersey.media:jersey-media-json-binding:4.0.0'
-    implementation 'org.glassfish.jersey.media:jersey-media-sse:4.0.0'
-    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:4.0.0'
-    implementation 'org.glassfish.jersey.containers:jersey-container-servlet:4.0.0'
-    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.7'
+    implementation 'org.glassfish.jersey.core:jersey-common:4.0.2'
+    implementation 'org.glassfish.jersey.core:jersey-client:4.0.2'
+    implementation 'org.glassfish.jersey.core:jersey-server:4.0.2'
+    implementation 'org.glassfish.jersey.inject:jersey-hk2:4.0.2'
+    implementation 'org.glassfish.jersey.media:jersey-media-json-binding:4.0.2'
+    implementation 'org.glassfish.jersey.media:jersey-media-sse:4.0.2'
+    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:4.0.2'
+    implementation 'org.glassfish.jersey.containers:jersey-container-servlet:4.0.2'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.8'
 
     // Add Jetty dependencies
-    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.8'
-    implementation 'org.eclipse.jetty:jetty-server:12.1.8'
-    implementation 'org.eclipse.jetty:jetty-util:12.1.8'
-    implementation 'org.eclipse.jetty:jetty-security:12.1.8'
+    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.9'
+    implementation 'org.eclipse.jetty:jetty-server:12.1.9'
+    implementation 'org.eclipse.jetty:jetty-util:12.1.9'
+    implementation 'org.eclipse.jetty:jetty-security:12.1.9'
 
     // Add SLF4J API and binding dependencies for Jersey logging
     implementation 'org.slf4j:slf4j-api:2.0.17'
     implementation 'org.slf4j:slf4j-nop:2.0.17'
 
     // Add Google Cloud BigQuery dependencies for telemetry
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.43.0'
-    implementation 'com.google.api:gax:2.77.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.47.0'
+    implementation 'com.google.api:gax:2.80.0'
     implementation 'com.google.api-client:google-api-client-appengine:2.9.0'
-    implementation 'com.google.cloud:google-cloud-core:2.67.0'
-    implementation 'com.google.cloud:google-cloud-core-http:2.67.0'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.62.0'
+    implementation 'com.google.cloud:google-cloud-core:2.70.0'
+    implementation 'com.google.cloud:google-cloud-core-http:2.70.0'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.66.0'
 
     // Add Google Sheets API dependencies for API key validation
     implementation 'com.google.api-client:google-api-client:2.9.0'
     implementation 'com.google.apis:google-api-services-sheets:v4-rev20260213-2.0.0'
 
     // Add Swagger/OpenAPI dependencies for API documentation (OpenAPI 3.0)
-    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.47'
-    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.47'
-    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.47'
+    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.49'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.49'
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.49'
 
     // OpenRewrite:
-    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.32.0'
-    rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.32.0'
+    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.34.1'
+    rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.34.1'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
-    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.34.0'
+    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.35.3'
     rewrite 'org.openrewrite.recipe:rewrite-gradle:0.1.0'
 
     // ArchUnit: package-architecture enforcement
-    testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.2'
 
     // Mockito: mocking framework for unit tests
-    testImplementation 'org.mockito:mockito-core:5.18.0'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.18.0'
+    testImplementation 'org.mockito:mockito-core:5.23.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.23.0'
     // Separate non-transitive configuration so Mockito can be attached as a -javaagent
     // (required for Java 21+ inline-mock-maker, per Mockito docs section 0.3)
-    mockitoAgent('org.mockito:mockito-core:5.18.0') { transitive = false }
+    mockitoAgent('org.mockito:mockito-core:5.23.0') { transitive = false }
 }
 
 ext {
