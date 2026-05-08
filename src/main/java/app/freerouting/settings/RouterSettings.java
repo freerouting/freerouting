@@ -293,11 +293,11 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public int get_start_ripup_costs() {
-    return scoring.start_ripup_costs;
+    return scoring.startRipupCosts;
   }
 
   public void set_start_ripup_costs(int p_value) {
-    scoring.start_ripup_costs = Math.max(p_value, 1);
+    scoring.startRipupCosts = Math.max(p_value, 1);
   }
 
   public boolean getRunRouter() {
@@ -328,19 +328,19 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public int get_via_costs() {
-    return scoring.via_costs;
+    return scoring.viaCosts;
   }
 
   public void set_via_costs(int p_value) {
-    scoring.via_costs = Math.max(p_value, 1);
+    scoring.viaCosts = Math.max(p_value, 1);
   }
 
   public int get_plane_via_costs() {
-    return scoring.plane_via_costs;
+    return scoring.planeViaCosts;
   }
 
   public void set_plane_via_costs(int p_value) {
-    scoring.plane_via_costs = Math.max(p_value, 1);
+    scoring.planeViaCosts = Math.max(p_value, 1);
   }
 
   public void set_layer_active(int p_layer, boolean p_value) {

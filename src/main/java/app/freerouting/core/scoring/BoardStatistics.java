@@ -427,7 +427,7 @@ public class BoardStatistics implements Serializable {
         + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
         + this.bends.totalCount * scoringSettings.bendPenalty;
     float costs = (float) (this.traces.totalLength * scoringSettings.defaultPreferredDirectionTraceCost
-        + this.vias.totalCount * scoringSettings.via_costs);
+        + this.vias.totalCount * scoringSettings.viaCosts);
 
     return maximumScore - penalties - costs;
   }
