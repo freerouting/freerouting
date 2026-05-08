@@ -85,7 +85,7 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
     * Use the [Gradle Maven plugin]([url](https://github.com/vanniktech/gradle-maven-publish-plugin)) and set the properties in `/.gradle/gradle.properties`
       ![image](https://github.com/user-attachments/assets/90744cab-ced0-47e0-a0db-1ed6c8a40c39)
     * Run the `./gradlew publishToMavenCentral --no-configuration-cache` command in the root folder to publish it to Maven Central
-    * Release the staging repository
+    * Publish the deployment [on Maven Central Repository](https://central.sonatype.com/publishing/deployments) 
 
 * Update the Docker image on Azure
     1. build docker image locally for Linux x64 (~2 mins)
