@@ -51,7 +51,7 @@ Creating a release takes about half an hour if everything goes according to the 
 Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 
 * Run the `gradlew wrapper --gradle-version latest` command to update the Gradle wrapper to the latest version.
-* Run the `./gradlew dependencyUpdates --no-configuration-cache --no-parallel` command to check if there are any dependencies that need to be updated. Update them manually if necessary and commit the changes.
+* Run the `./gradlew dependencyUpdates useLatestVersions --no-configuration-cache --no-parallel` command to check if there are any dependencies that need to be updated. Update them manually if necessary and commit the changes.
 * Check if there are any [outstanding pull requests](https://github.com/freerouting/freerouting/pulls) and merge them as well
 * Change `ext.publishing.versionId` in `\gradle\project-info.gradle` to `2.3.4`
 * Push it to GitHub
@@ -70,17 +70,17 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
       to get hash and file sizes
     * Update `\integrations\KiCad\metadata.json` with these values
     * Push these changes to GitHub
-        * Run the "Run Kicad repository validation" command in KiCad Packager
+        * Run the "Run KiCad repository validation" command in KiCad Packager
     * Delete previous fork at https://gitlab.com/freeroutingapp/metadata
       (Settings / General / Delete this project)
     * Fork https://gitlab.com/kicad/addons/metadata again
     * Create a new branch, named `freerouting-2.3.4`
     * Replace https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json
       with the new one
-    * Create a megre request at https://gitlab.com/kicad/addons/metadata / Merge request / ...
+    * Create a merge request at https://gitlab.com/kicad/addons/metadata / Merge request / ...
 * Update README
 * Publish the release
-* Check if Windows and Linux installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions)
+* Check if Windows, Linux and macOS installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions) and if the Docker image was updated on [GHCR.io](https://github.com/freerouting/freerouting/pkgs/container/freerouting)
 * Publish the library to Maven Central
     * Use the [Gradle Maven plugin]([url](https://github.com/vanniktech/gradle-maven-publish-plugin)) and set the properties in `/.gradle/gradle.properties`
       ![image](https://github.com/user-attachments/assets/90744cab-ced0-47e0-a0db-1ed6c8a40c39)
