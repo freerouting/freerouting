@@ -746,8 +746,8 @@ public class BoardPanel extends JPanel {
     Dimension panel_size = getSize();
     double adjusted_x_corner = Math.min(x_corner, panel_size.getWidth() - display_rect.getWidth());
     adjusted_x_corner = Math.max(adjusted_x_corner, 0);
-    double adjusted_y_corner = Math.min(y_corner, panel_size.getHeight());
-    adjusted_y_corner = Math.max(y_corner, 0);
+    double adjusted_y_corner = Math.min(y_corner, panel_size.getHeight() - display_rect.getHeight());
+    adjusted_y_corner = Math.max(adjusted_y_corner, 0);
     Point new_position = new Point((int) adjusted_x_corner, (int) adjusted_y_corner);
     set_viewport_position(new_position);
     Point adjustment_vector = new Point((int) (adjusted_x_corner - x_corner), (int) (adjusted_y_corner - y_corner));
