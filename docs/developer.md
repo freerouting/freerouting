@@ -35,14 +35,14 @@ Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/freerou
 #### Windows (CMD)
 
 ```powershell
-gradlew assemble
+gradlew executableJar
 ```
 
 ![image](https://user-images.githubusercontent.com/910321/143483981-5f1f8473-098e-4cf2-997b-a34d14346853.png)
 
 #### Generated Executables
 
-All four .jar files will be generated in the `build\libs` subfolder. You would typically run the `freerouting-executable.jar` file.
+All four .jar files will be generated in the `build\libs` subfolder. You would typically run the `freerouting-current-executable.jar` file.
 
 ## How to create a new release
 
@@ -57,8 +57,8 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 * Push it to GitHub
 * Check if it was built successfully on GitHub Actions
 * Create a new draft release
-* Run `gradlew.bat assemble` -> this will generate the files in `\build\libs\freerouting*.jar`
-* Rename to `freerouting-executable.jar` to `freerouting-2.3.4.jar` and add it to the release draft
+* Run `gradlew.bat executableJar` -> this will generate the files in `\build\libs\freerouting*.jar`
+* Rename to `freerouting-current-executable.jar` to `freerouting-2.3.4.jar`
 * Update the `integrations\KiCad`
     * Copy `freerouting-2.3.4.jar` into `\integrations\KiCad\kicad-freerouting\plugins\jar\`
     * Update `\integrations\KiCad\kicad-freerouting\plugins\plugin.ini` with the new filename
