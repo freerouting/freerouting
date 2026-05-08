@@ -9,7 +9,7 @@ plugins {
     id 'maven-publish'
     id "com.vanniktech.maven.publish" version "0.33.0"
     id 'net.nemerosa.versioning' version '3.1.0'
-    id 'com.github.ben-manes.versions' version '0.53.0'
+    id 'com.github.ben-manes.versions' version '0.54.0'
     id 'org.openrewrite.rewrite' version '7.30.0'
     id "com.diffplug.spotless" version "8.4.0"
 }
@@ -59,6 +59,30 @@ testing {
 
 tasks.named('check') {
     dependsOn(testing.suites.integrationTest)
+}
+
+tasks.named("dependencyUpdates").configure {
+    rejectVersionIf {
+        def current = it.currentVersion
+        def candidate = it.candidate.version
+
+        // 1. Skip non-stable versions (optional but recommended)
+        def isNonStable = { String version ->
+            def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { version.toUpperCase().contains(it) }
+            def regex = /^[0-9,.v-]+(-r)?$/
+            return !stableKeyword && !(version =~ regex)
+        }
+
+        if (isNonStable(candidate) && !isNonStable(current)) {
+            return true
+        }
+
+        // 2. Reject if the Major version is different
+        def currentMajor = current.tokenize('.')[0]
+        def candidateMajor = candidate.tokenize('.')[0]
+
+        return currentMajor != candidateMajor
+    }
 }
 
 // Mockito agent configuration — must be declared before the dependencies block.
@@ -147,7 +171,7 @@ dependencies {
     rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.32.0'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
     rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.34.0'
-    rewrite 'org.openrewrite.recipe:rewrite-gradle:2.3.0'
+    rewrite 'org.openrewrite.recipe:rewrite-gradle:0.1.0'
 
     // ArchUnit: package-architecture enforcement
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
