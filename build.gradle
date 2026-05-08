@@ -29,10 +29,15 @@ tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
-// javadoc is way too strict for my taste.
+// javadoc is required for Maven Central publishing but too strict for a non-library project.
+// addStringOption(option, value) emits "-option value" — passing '-quiet' as the value of
+// -Xdoclint:none is wrong and silently fails to suppress warnings.
+// Use addBooleanOption so -Xdoclint:none is emitted as a standalone flag, and
+// call options.quiet() separately to set -quiet.
 tasks.withType(Javadoc).configureEach {
     options.addStringOption 'encoding', 'UTF-8'
-    options.addStringOption 'Xdoclint:none', '-quiet'
+    options.addBooleanOption 'Xdoclint:none', true
+    options.quiet()
 }
 
 testing {
@@ -242,27 +247,29 @@ tasks.register('executableJar', Jar) {
     }
 }
 
-// Publishing
-
-mavenPublishing {
-    publishToMavenCentral()
-
-    signAllPublications()
-}
+// Publishing — configuration lives in gradle/publishing.gradle
 
 apply from: 'gradle/publishing.gradle'
 
-// Signing - Signing (generating the \builds\libs\*.asc files) is needed for publishing to Maven Central
-//signing {
-//    useGpgCmd()
-//
-//    sign configurations.runtimeElements
-//}
+// Signing — needed for publishing to Maven Central.
+// Reads signingInMemoryKey / signingInMemoryKeyId / signingInMemoryKeyPassword from
+// ~/.gradle/gradle.properties (the ASCII-armored private key with \n escaping actual newlines).
+// Falls back gracefully when those properties are absent (e.g. in local dev / CI test builds).
+// NOTE: Gradle properties preserve literal \n (two characters); we must unescape to real
+// newlines before handing the key to BouncyCastle's ArmoredInputStream.
+signing {
+    def key     = findProperty("signingInMemoryKey")
+    def keyId   = findProperty("signingInMemoryKeyId")
+    def keyPass = findProperty("signingInMemoryKeyPassword")
+    if (key) {
+        useInMemoryPgpKeys(keyId as String, (key as String).replace('\\n', '\n'), keyPass as String)
+    }
+}
 
 // write constants to code
 tasks.register('writeVersionInfo') {
     def outputDir = layout.buildDirectory.dir("generated-src/app/freerouting/constants")
-    def versionId = publishing.versionId
+    def versionId = publishInfo.versionId
     def buildDateValue = buildDate
 
     inputs.property("versionId", versionId)
@@ -288,6 +295,12 @@ tasks.register('writeVersionInfo') {
 sourceSets.main.java.srcDirs += layout.buildDirectory.dir("generated-src")
 
 compileJava.dependsOn += 'writeVersionInfo'
+
+// sourcesJar includes generated-src (from java.srcDirs); declare the dependency so that
+// writeVersionInfo runs first regardless of which plugin creates the sourcesJar task.
+tasks.matching { it.name == 'sourcesJar' }.configureEach {
+    dependsOn 'writeVersionInfo'
+}
 
 // ==================== V1.9 BUILD CONFIGURATION ====================
 

@@ -3,67 +3,13 @@ apply plugin: "com.vanniktech.maven.publish"
 // -----------------------------------------------------------------------------
 // Collect publishing information
 // -----------------------------------------------------------------------------
-ext.publishing = [:]
+ext.publishInfo = [:]
 
 apply from: 'gradle/project-info.gradle'
 
 // -----------------------------------------------------------------------------
 // Performs publishing
 // -----------------------------------------------------------------------------
-
-tasks.register('javadocJar', Jar) {
-    dependsOn javadoc
-    archiveClassifier = 'javadoc'
-    from javadoc.destinationDir
-    
-    // Only build when publishing or explicitly requested
-    onlyIf {
-        gradle.taskGraph.hasTask(':publish') || 
-        gradle.taskGraph.hasTask(':publishToMavenLocal') ||
-        gradle.taskGraph.hasTask(':javadocJar')
-    }
-}
-
-// create one jar for the source files
-tasks.register('sourcesJar', Jar) {
-    dependsOn classes
-    archiveClassifier = 'sources'
-    from sourceSets.main.allSource
-    
-    // Only build when publishing or explicitly requested
-    onlyIf {
-        gradle.taskGraph.hasTask(':publish') || 
-        gradle.taskGraph.hasTask(':publishToMavenLocal') ||
-        gradle.taskGraph.hasTask(':sourcesJar')
-    }
-}
-
-
-// Define the POM configuration
-def pomConfig = {
-    name ext.publishing.pomName
-    description ext.publishing.desc
-    url ext.publishing.websiteUrl
-    inceptionYear ext.publishing.inceptionYear
-    licenses {
-        license([:]) {
-            name ext.publishing.license
-            url ext.publishing.licenseUrl
-            distribution 'repo'
-        }
-    }
-    scm {
-        url ext.publishing.vcsUrl
-        connection ext.publishing.vcsUrl
-        developerConnection ext.publishing.vcsUrl
-    }
-    developers {
-        developer {
-            id ext.publishing.developerNameAlias
-            name ext.publishing.developerName
-        }
-    }
-}
 
 // Verify that the version is not a SNAPSHOT version (because then it can't be published to Maven Central)
 tasks.register('verifyVersion') {
@@ -74,72 +20,52 @@ tasks.register('verifyVersion') {
     }
 }
 
-// Set up the publishing for the maven-publish plugin
-publishing {
-    publications {
-        mavenCustom(MavenPublication) {
-            groupId = publishing.groupId
-            artifactId = publishing.artifactId
-            version = publishing.versionId
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
-            afterEvaluate {
-                artifact executableJar
-            }
-
-            pom.withXml {
-                def root = asNode()
-                root.appendNode 'description', publishing.desc
-                root.children().last() + pomConfig
-            }
-        }
-    }
-    repositories {
-        maven {
-            name = 'OSSRH'
-            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-
-            credentials {
-                username = project.findProperty("sonatypeUsername") ?: System.getenv("SONATYPE_USERNAME")
-                password = project.findProperty("sonatypePassword") ?: System.getenv("SONATYPE_PASSWORD")
-            }
-        }
-    }
-}
-
 // Define the publish task
 tasks.named("publish").configure {
     dependsOn verifyVersion
 }
 
+// Graft the executable JAR onto the vanniktech-managed publication after the
+// plugin has had a chance to create it (the publication is named 'maven' by default).
+// NOTE: use project.publishing to resolve the Gradle publishing extension explicitly â€”
+// ext.publishInfo is a local info-map that shadows the extension name in Groovy DSL.
+afterEvaluate {
+    def pub = project.publishing.publications.findByName('maven')
+    if (pub) {
+        pub.artifact(executableJar)
+    }
+}
+
 // Configuring the POM (Project Object Model) for Maven Central publication
 mavenPublishing {
-    coordinates(publishing.groupId, publishing.artifactId, publishing.versionId)
+    publishToMavenCentral()
+    signAllPublications()
+
+    coordinates(publishInfo.groupId, publishInfo.artifactId, publishInfo.versionId)
 
     pom {
-        name = publishing.pomName
-        description = publishing.desc
-        inceptionYear = publishing.inceptionYear
-        url = publishing.websiteUrl
+        name = publishInfo.pomName
+        description = publishInfo.desc
+        inceptionYear = publishInfo.inceptionYear
+        url = publishInfo.websiteUrl
         licenses {
             license {
-                name = publishing.license
-                url = publishing.licenseUrl
+                name = publishInfo.license
+                url = publishInfo.licenseUrl
                 distribution = "repo"
             }
         }
         developers {
             developer {
-                id = publishing.developerAlias
-                name = publishing.developerName
-                email = publishing.developerEmail
+                id = publishInfo.developerAlias
+                name = publishInfo.developerName
+                email = publishInfo.developerEmail
             }
         }
         scm {
-            url = publishing.vcsUrl
-            connection = publishing.vcsUrl
-            developerConnection = publishing.vcsUrl
+            url = publishInfo.vcsUrl
+            connection = publishInfo.vcsUrl
+            developerConnection = publishInfo.vcsUrl
         }
     }
 }
