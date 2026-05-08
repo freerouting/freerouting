@@ -1,5 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
-
 import java.time.Duration
 
 plugins {
@@ -14,6 +12,7 @@ plugins {
     id 'org.openrewrite.rewrite' version '7.32.2'
     id "com.diffplug.spotless" version "8.4.0"
 }
+
 
 java {
     sourceCompatibility = JavaVersion.VERSION_25
@@ -246,7 +245,7 @@ tasks.register('executableJar', Jar) {
 // Publishing
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 
     signAllPublications()
 }
