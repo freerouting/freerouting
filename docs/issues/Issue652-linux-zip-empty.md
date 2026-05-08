@@ -63,4 +63,3 @@ The fix is minimal (icon format only). The resulting Linux ZIP should be approxi
 - ✅ The ZIP size is in the same order of magnitude as v2.1.0 (~80–100 MB)
 - ✅ CI build fails loudly (due to `set -e`) if `jpackage` or any step errors out
 - ✅ macOS DMG builds are unaffected (icon and `--strip-native-commands` unchanged)
-

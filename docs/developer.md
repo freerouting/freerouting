@@ -78,7 +78,7 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
     * Replace https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json
       with the new one
     * Create a merge request at https://gitlab.com/kicad/addons/metadata / Merge request / ...
-* Update README
+* Update README.md, integrations.md, self-hosting.md and settings.md
 * Publish the release
 * Check if Windows, Linux and macOS installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions) and if the Docker image was updated on [GHCR.io](https://github.com/freerouting/freerouting/pkgs/container/freerouting)
 * Publish the library to Maven Central
