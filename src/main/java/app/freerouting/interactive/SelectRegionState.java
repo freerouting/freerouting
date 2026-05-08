@@ -22,6 +22,7 @@ public class SelectRegionState extends InteractiveState {
   @Override
   public InteractiveState button_released() {
     hdlg.screen_messages.set_status_message("");
+    hdlg.get_panel().repaint();
     return complete();
   }
 
@@ -30,7 +31,8 @@ public class SelectRegionState extends InteractiveState {
     if (corner1 == null) {
       corner1 = p_point;
     }
-    hdlg.repaint();
+      corner2 = p_point;
+    hdlg.get_panel().repaint();
     return this;
   }
 
