@@ -71,6 +71,7 @@ public class GlobalSettings implements Serializable {
       "it",
       "fr",
       "ar",
+      "he",
       "bn",
       "ru",
       "pt",
@@ -634,6 +635,8 @@ public class GlobalSettings implements Serializable {
             currentLocale = Locale.FRENCH;
           } else if (localeString.startsWith("ar")) {
             currentLocale = Locale.forLanguageTag("ar-EG");
+          } else if (localeString.startsWith("he") || localeString.startsWith("iw")) {
+            currentLocale = Locale.forLanguageTag("he-IL");
           } else if (localeString.startsWith("bn")) {
             currentLocale = Locale.forLanguageTag("bn-BD");
           } else if (localeString.startsWith("ru")) {
