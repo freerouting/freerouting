@@ -46,6 +46,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private final JSlider region_slider;
   private final JFormattedTextField region_width_field;
   private final JFormattedTextField edge_to_turn_dist_field;
+  private final JLabel region_percent_label;
+  private final JLabel accuracy_percent_label;
   private final JRadioButton settings_routing_snap_angle_90_button;
   private final JRadioButton settings_routing_snap_angle_45_button;
   private final JRadioButton settings_routing_snap_angle_none_button;
@@ -62,8 +64,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private final JCheckBox settings_routing_restrict_pin_exit_directions_check_box;
   private final ManualTraceWidthListener manual_trace_width_listener;
   private final JSlider accuracy_slider;
-  private final JRadioButton route_detail_on_button;
-  private final JRadioButton route_detail_off_button;
+  private final JFormattedTextField accuracy_value_field;
+  private final JCheckBox clearance_compensation_check_box;
   private final JCheckBox route_detail_outline_keepout_check_box;
   private boolean key_input_completed = true;
 
@@ -129,7 +131,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     main_panel.add(settings_routing_snap_angle_45_button, gridbag_constraints);
     gridbag.setConstraints(settings_routing_snap_angle_none_button, gridbag_constraints);
     main_panel.add(settings_routing_snap_angle_none_button, gridbag_constraints);
-    JLabel separator = new JLabel("   –––––––––––––––––––––––––––––––––––––––  ");
+    JLabel separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
 
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
@@ -144,7 +146,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     main_panel.add(route_mode_label);
 
     this.settings_routing_dynamic_button = new JRadioButton(tm.getText("dynamic"));
+    this.settings_routing_dynamic_button.setToolTipText(tm.getText("dynamic_tooltip"));
     this.settings_routing_stitch_button = new JRadioButton(tm.getText("stitching"));
+    this.settings_routing_stitch_button.setToolTipText(tm.getText("stitching_tooltip"));
 
     settings_routing_dynamic_button.addActionListener(new DynamicRouteListener());
     settings_routing_dynamic_button.addActionListener(
@@ -165,9 +169,10 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(settings_routing_stitch_button, gridbag_constraints);
     main_panel.add(settings_routing_stitch_button, gridbag_constraints);
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
-
+    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
 
     // add label and buttongroup for automatic or manual trace width selection.
 
@@ -179,7 +184,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     main_panel.add(trace_widths_label);
 
     settings_routing_automatic_button = new JRadioButton(tm.getText("automatic"));
+    settings_routing_automatic_button.setToolTipText(tm.getText("automatic_tooltip"));
     settings_routing_manual_button = new JRadioButton(tm.getText("manual"));
+    settings_routing_manual_button.setToolTipText(tm.getText("manual_tooltip"));
 
     settings_routing_automatic_button.addActionListener(new AutomaticTraceWidthListener());
     settings_routing_automatic_button.addActionListener(_ -> FRAnalytics
@@ -201,8 +208,10 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(settings_routing_manual_button, gridbag_constraints);
     main_panel.add(settings_routing_manual_button, gridbag_constraints);
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
+    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
 
     // add check box for push enabled
 
@@ -270,8 +279,10 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     // add labels and text field for restricting pin exit directions
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
+    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
 
     settings_routing_restrict_pin_exit_directions_check_box = new JCheckBox(tm.getText("restrict_pin_exit_directions"));
     settings_routing_restrict_pin_exit_directions_check_box.addActionListener(new RestrictPinExitDirectionsListener());
@@ -291,42 +302,78 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     NumberFormat number_format = NumberFormat.getInstance(p_board_frame.get_locale());
     number_format.setMaximumFractionDigits(7);
     this.edge_to_turn_dist_field = new JFormattedTextField(number_format);
-    this.edge_to_turn_dist_field.setColumns(5);
+    this.edge_to_turn_dist_field.setColumns(8);
+    this.edge_to_turn_dist_field.setToolTipText(tm.getText("pin_pad_to_turn_gap_tooltip"));
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag_constraints.weightx = 0.0;
+    gridbag_constraints.fill = GridBagConstraints.NONE;
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
     gridbag.setConstraints(edge_to_turn_dist_field, gridbag_constraints);
     main_panel.add(edge_to_turn_dist_field);
     edge_to_turn_dist_field.addKeyListener(new EdgeToTurnDistFieldKeyListener());
     edge_to_turn_dist_field.addFocusListener(new EdgeToTurnDistFieldFocusListener());
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    separator = new JLabel("–––––––––––––––––––––––––––––––––––––––  ");
+    gridbag_constraints.weightx = 0.0;
+    gridbag_constraints.fill = GridBagConstraints.NONE;
+    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
+    separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
     main_panel.add(separator, gridbag_constraints);
 
     // add label and slider for the pull tight region around the cursor.
 
-    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag_constraints.insets = new Insets(3, 10, 3, 10);
     JLabel pull_tight_region_label = new JLabel(tm.getText("pull_tight_region"));
     pull_tight_region_label.setToolTipText(tm.getText("pull_tight_region_tooltip"));
     gridbag.setConstraints(pull_tight_region_label, gridbag_constraints);
     main_panel.add(pull_tight_region_label);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
 
-    this.region_width_field = new JFormattedTextField(number_format);
-    this.region_width_field.setColumns(3);
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(region_width_field, gridbag_constraints);
-    main_panel.add(region_width_field);
-    region_width_field.addKeyListener(new RegionWidthFieldKeyListener());
-    region_width_field.addFocusListener(new RegionWidthFieldFocusListener());
+    NumberFormat normalized_format = NumberFormat.getIntegerInstance(p_board_frame.get_locale());
+    normalized_format.setGroupingUsed(false);
 
     this.region_slider = new JSlider();
     region_slider.setMaximum(c_region_max_slider_value);
+    region_slider.setToolTipText(tm.getText("pull_tight_region_tooltip"));
     region_slider.addChangeListener(new SliderChangeListener());
+    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
+    gridbag_constraints.weightx = 1.0;
+    gridbag_constraints.fill = GridBagConstraints.HORIZONTAL;
     gridbag.setConstraints(region_slider, gridbag_constraints);
     main_panel.add(region_slider);
 
-    separator = new JLabel("–––––––––––––––––––––––––––––––––––––––  ");
+    this.region_width_field = new JFormattedTextField(number_format);
+    this.region_width_field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(
+      new javax.swing.text.NumberFormatter(normalized_format)));
+    this.region_width_field.setColumns(4);
+    this.region_width_field.setToolTipText(tm.getText("pull_tight_region_tooltip"));
+    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
+    gridbag_constraints.weightx = 0.0;
+    gridbag_constraints.fill = GridBagConstraints.NONE;
+    gridbag_constraints.insets = new Insets(1, 10, 1, 2);
+    gridbag.setConstraints(region_width_field, gridbag_constraints);
+    main_panel.add(region_width_field);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
+    region_width_field.addKeyListener(new RegionWidthFieldKeyListener());
+    region_width_field.addFocusListener(new RegionWidthFieldFocusListener());
+
+    this.region_percent_label = new JLabel("%");
+    region_percent_label.setToolTipText(tm.getText("pull_tight_region_tooltip"));
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag_constraints.weightx = 0.0;
+    gridbag_constraints.fill = GridBagConstraints.NONE;
+    gridbag_constraints.insets = new Insets(1, 4, 1, 10);
+    gridbag.setConstraints(region_percent_label, gridbag_constraints);
+    main_panel.add(region_percent_label);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
+
+    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
+    separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
     main_panel.add(separator, gridbag_constraints);
 
     // add label and button group for the clearance compensation.
@@ -335,52 +382,76 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     clearance_compensation_label.setToolTipText(tm.getText("clearance_compensation_tooltip"));
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
-    gridbag_constraints.gridheight = 2;
+    gridbag_constraints.gridheight = 1;
     gridbag.setConstraints(clearance_compensation_label, gridbag_constraints);
     main_panel.add(clearance_compensation_label);
 
-    route_detail_on_button = new JRadioButton(tm.getText("on"));
-    route_detail_off_button = new JRadioButton(tm.getText("off"));
-
-    route_detail_on_button.addActionListener(new WindowRouteParameter.CompensationOnListener());
-    route_detail_on_button
-        .addActionListener(_ -> FRAnalytics.buttonClicked("route_detail_on_button", route_detail_on_button.getText()));
-    route_detail_off_button.addActionListener(new WindowRouteParameter.CompensationOffListener());
-    route_detail_off_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("route_detail_off_button", route_detail_off_button.getText()));
-
-    ButtonGroup clearance_compensation_button_group = new ButtonGroup();
-    clearance_compensation_button_group.add(route_detail_on_button);
-    clearance_compensation_button_group.add(route_detail_off_button);
-    route_detail_off_button.setSelected(true);
+    clearance_compensation_check_box = new JCheckBox(tm.getText("clearance_compensation_checkbox"));
+    clearance_compensation_check_box.setSelected(false);
+    clearance_compensation_check_box.setToolTipText(tm.getText("clearance_compensation_checkbox_tooltip"));
+    clearance_compensation_check_box.addActionListener(new WindowRouteParameter.CompensationCheckboxListener());
+    clearance_compensation_check_box.addActionListener(_ -> FRAnalytics.buttonClicked("clearance_compensation_checkbox", clearance_compensation_check_box.getText()));
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
-    gridbag.setConstraints(route_detail_on_button, gridbag_constraints);
-    main_panel.add(route_detail_on_button, gridbag_constraints);
-    gridbag.setConstraints(route_detail_off_button, gridbag_constraints);
-    main_panel.add(route_detail_off_button, gridbag_constraints);
+    gridbag.setConstraints(clearance_compensation_check_box, gridbag_constraints);
+    main_panel.add(clearance_compensation_check_box, gridbag_constraints);
 
+    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     JLabel separator2 = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator2, gridbag_constraints);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
     main_panel.add(separator2, gridbag_constraints);
 
     // add label and slider for the pull tight accuracy.
 
     JLabel pull_tight_accuracy_label = new JLabel(tm.getText("pull_tight_accuracy"));
     pull_tight_accuracy_label.setToolTipText(tm.getText("pull_tight_accuracy_tooltip"));
-    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag_constraints.insets = new Insets(3, 10, 3, 10);
+    gridbag_constraints.weightx = 0.0;
+    gridbag_constraints.fill = GridBagConstraints.NONE;
     gridbag.setConstraints(pull_tight_accuracy_label, gridbag_constraints);
     main_panel.add(pull_tight_accuracy_label);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
 
     this.accuracy_slider = new JSlider();
     accuracy_slider.setMaximum(c_accuracy_max_slider_value);
+    accuracy_slider.setToolTipText(tm.getText("pull_tight_accuracy_tooltip"));
     accuracy_slider.addChangeListener(new WindowRouteParameter.AccuracySliderChangeListener());
+    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
+    gridbag_constraints.weightx = 1.0;
+    gridbag_constraints.fill = GridBagConstraints.HORIZONTAL;
     gridbag.setConstraints(accuracy_slider, gridbag_constraints);
     main_panel.add(accuracy_slider);
 
+    this.accuracy_value_field = new JFormattedTextField(normalized_format);
+    this.accuracy_value_field.setColumns(4);
+    accuracy_value_field.setToolTipText(tm.getText("pull_tight_accuracy_tooltip"));
+    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
+    gridbag_constraints.weightx = 0.0;
+    gridbag_constraints.fill = GridBagConstraints.NONE;
+    gridbag_constraints.insets = new Insets(1, 10, 1, 2);
+    gridbag.setConstraints(accuracy_value_field, gridbag_constraints);
+    main_panel.add(accuracy_value_field);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
+    accuracy_value_field.addKeyListener(new AccuracyFieldKeyListener());
+    accuracy_value_field.addFocusListener(new AccuracyFieldFocusListener());
+
+    this.accuracy_percent_label = new JLabel("%");
+    accuracy_percent_label.setToolTipText(tm.getText("pull_tight_accuracy_tooltip"));
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag_constraints.weightx = 0.0;
+    gridbag_constraints.fill = GridBagConstraints.NONE;
+    gridbag_constraints.insets = new Insets(1, 4, 1, 10);
+    gridbag.setConstraints(accuracy_percent_label, gridbag_constraints);
+    main_panel.add(accuracy_percent_label);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
+
+    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
     main_panel.add(separator, gridbag_constraints);
 
     // add switch to define, if keepout is generated outside the outline.
@@ -489,17 +560,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     int region_slider_value = this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_region_width() / c_region_scale_factor;
     region_slider_value = Math.min(region_slider_value, c_region_max_slider_value);
     region_slider.setValue(region_slider_value);
-    region_width_field.setValue(region_slider_value);
+    region_width_field.setValue((int) Math.round(region_slider_value * 100.0 / c_region_max_slider_value));
 
     if (this.manual_rule_window != null) {
       this.manual_rule_window.refresh();
     }
 
-    if (this.guiBoardManager.get_routing_board().search_tree_manager.is_clearance_compensation_used()) {
-      this.route_detail_on_button.setSelected(true);
-    } else {
-      this.route_detail_off_button.setSelected(true);
-    }
+    boolean compUsed = this.guiBoardManager.get_routing_board().search_tree_manager.is_clearance_compensation_used();
+    this.clearance_compensation_check_box.setSelected(compUsed);
     BoardOutline outline = this.guiBoardManager
         .get_routing_board()
         .get_outline();
@@ -509,6 +577,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     int accuracy_slider_value = c_accuracy_max_slider_value
         - this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_accuracy() / c_accuracy_scale_factor + 1;
     accuracy_slider.setValue(accuracy_slider_value);
+    accuracy_value_field.setValue(accuracy_slider_value);
   }
 
   @Override
@@ -525,16 +594,16 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
   private void set_pull_tight_region_width(int p_slider_value) {
     int slider_value = Math.max(p_slider_value, 0);
-    slider_value = Math.min(p_slider_value, c_region_max_slider_value);
+    slider_value = Math.min(slider_value, c_region_max_slider_value);
     int new_tidy_width;
-    if (slider_value >= 0.9 * c_region_max_slider_value) {
+    if (slider_value >= c_region_max_slider_value) {
       slider_value = c_region_max_slider_value;
       new_tidy_width = Integer.MAX_VALUE;
     } else {
       new_tidy_width = slider_value * c_region_scale_factor;
     }
     region_slider.setValue(slider_value);
-    region_width_field.setValue(slider_value);
+    region_width_field.setValue((int) Math.round(slider_value * 100.0 / c_region_max_slider_value));
     guiBoardManager.getInteractiveSettings().set_current_pull_tight_region_width(new_tidy_width);
   }
 
@@ -767,8 +836,10 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         if (!(input instanceof Number)) {
           return;
         }
-        int input_value = ((Number) input).intValue();
-        set_pull_tight_region_width(input_value);
+        double percent_value = ((Number) input).doubleValue();
+        percent_value = Math.max(0.0, Math.min(100.0, percent_value));
+        int slider_value = (int) Math.round(percent_value * c_region_max_slider_value / 100.0);
+        set_pull_tight_region_width(slider_value);
       } else {
         key_input_completed = false;
       }
@@ -781,7 +852,42 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent p_evt) {
       if (!key_input_completed) {
         // restore the text field.
-        region_width_field.setValue(region_slider.getValue());
+        region_width_field.setValue((int) Math.round(region_slider.getValue() * 100.0 / c_region_max_slider_value));
+        key_input_completed = true;
+      }
+    }
+
+    @Override
+    public void focusGained(FocusEvent p_evt) {
+    }
+  }
+
+  private class AccuracyFieldKeyListener extends KeyAdapter {
+
+    @Override
+    public void keyTyped(KeyEvent p_evt) {
+      if (p_evt.getKeyChar() == '\n') {
+        key_input_completed = true;
+        Object input = accuracy_value_field.getValue();
+        if (!(input instanceof Number)) {
+          return;
+        }
+        double percent_value = ((Number) input).doubleValue();
+        percent_value = Math.max(0.0, Math.min(100.0, percent_value));
+        int slider_value = (int) Math.round(percent_value);
+        accuracy_slider.setValue(slider_value);
+      } else {
+        key_input_completed = false;
+      }
+    }
+  }
+
+  private class AccuracyFieldFocusListener implements FocusListener {
+
+    @Override
+    public void focusLost(FocusEvent p_evt) {
+      if (!key_input_completed) {
+        accuracy_value_field.setValue(accuracy_slider.getValue());
         key_input_completed = true;
       }
     }
@@ -795,7 +901,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void stateChanged(ChangeEvent evt) {
-      set_pull_tight_region_width(region_slider.getValue());
+      int sliderValue = region_slider.getValue();
+      region_width_field.setValue((int) Math.round(sliderValue * 100.0 / c_region_max_slider_value));
+      set_pull_tight_region_width(sliderValue);
     }
   }
 
@@ -815,11 +923,21 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
   }
 
+  private class CompensationCheckboxListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent p_evt) {
+      guiBoardManager.set_clearance_compensation(clearance_compensation_check_box.isSelected());
+    }
+  }
+
   private class AccuracySliderChangeListener implements ChangeListener {
 
     @Override
     public void stateChanged(ChangeEvent evt) {
-      int new_accuracy = (c_accuracy_max_slider_value - accuracy_slider.getValue() + 1) * c_accuracy_scale_factor;
+      int sliderValue = accuracy_slider.getValue();
+      accuracy_value_field.setValue(sliderValue);
+      int new_accuracy = (c_accuracy_max_slider_value - sliderValue + 1) * c_accuracy_scale_factor;
       guiBoardManager.getInteractiveSettings().set_trace_pull_tight_accuracy(new_accuracy);
     }
   }
