@@ -683,12 +683,29 @@ public class BatchAutorouter extends NamedAlgorithm {
     float lastBestScore = Float.NEGATIVE_INFINITY;   // score at last board-restore or improvement
     float globalBestScore = Float.NEGATIVE_INFINITY; // best score seen across all passes
     int passOfBestScore = 0;                         // pass where globalBestScore was achieved
+    // Track board hashes that have already been routed. If the board does not change between
+    // two consecutive passes (same hash at pass start), the router is making no progress and
+    // would produce identical decisions with identical ripup budgets — stop immediately rather
+    // than waiting for the full stagnation window. This mirrors the v1.9 behaviour and catches
+    // the degenerate case where plane-net items repeatedly fail or are inserted+removed each
+    // pass without updating the board state.
+    Set<String> alreadyRoutedBoardHashes = new java.util.HashSet<>();
     while (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
       if (job != null && job.state == RoutingJobState.TIMED_OUT) {
         this.thread.request_stop_auto_router();
       }
 
       String currentBoardHash = this.board.get_hash();
+
+      // Same-hash stop: if this board state has already been routed in a previous pass, no
+      // further progress is possible. Stop before wasting another pass.
+      if (alreadyRoutedBoardHashes.contains(currentBoardHash)) {
+        job.logInfo("Board state has not changed since pass #" + (currentPass - 1)
+            + " (hash " + currentBoardHash + "). The auto-router cannot make further progress; stopping.");
+        thread.request_stop_auto_router();
+        break;
+      }
+      alreadyRoutedBoardHashes.add(currentBoardHash);
 
       if (currentPass > this.settings.maxPasses) {
         thread.request_stop_auto_router();
@@ -743,6 +760,10 @@ public class BatchAutorouter extends NamedAlgorithm {
             boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
             lastBestScore = boardScoreAfter;
             currentBoardHash = this.board.get_hash();
+            // Reset the same-hash set after a board restore: the restored board will be
+            // routed with a higher ripup budget on subsequent passes, so earlier routing
+            // decisions from the same hash may no longer apply.
+            alreadyRoutedBoardHashes.clear();
             job.logInfo(
                 "Restoring an earlier board that has the score of "
                     + FRLogger.formatScore(boardScoreAfter,
