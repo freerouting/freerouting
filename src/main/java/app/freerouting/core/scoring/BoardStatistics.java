@@ -455,6 +455,15 @@ public class BoardStatistics implements Serializable {
   }
 
   public float getNormalizedScore(RouterScoringSettings scoringSettings) {
-    return Math.max(0, calculateScore(scoringSettings) / getMaximumScore(scoringSettings)) * 1000;
+    float maximumScore = getMaximumScore(scoringSettings);
+    if (maximumScore <= 0f) {
+      // Guard against division by zero and negative maximum scores (e.g. boards with no
+      // connections, or boards where all nets are single-pin nets). Return 0 so that the
+      // score is a defined value and comparisons like "score > threshold" work predictably.
+      // This also prevents NaN propagation which could silently break stagnation detection
+      // (NaN comparisons always return false, causing stagnation counters to never advance).
+      return 0f;
+    }
+    return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
   }
 }
