@@ -17,6 +17,15 @@ public class BoardStatisticsTraces implements Serializable {
   // The total length of all traces.
   @SerializedName("total_length")
   public Float totalLength;
+  /**
+   * Total trace length normalised to millimetres, regardless of the DSN internal coordinate
+   * system. {@code totalLength} is stored in raw board units (whose scale depends on the DSN
+   * resolution), making it unsuitable for the board-score formula which uses mm-denominated
+   * weights. {@code totalLengthMm} is derived from {@code totalLength} during BoardStatistics
+   * construction and should be used everywhere a real-world mm value is needed.
+   */
+  @SerializedName("total_length_mm")
+  public Float totalLengthMm;
   @SerializedName("total_weighted_length")
   public Float totalWeightedLength;
   // The average length of the traces.

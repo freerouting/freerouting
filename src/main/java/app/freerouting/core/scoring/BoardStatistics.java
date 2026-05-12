@@ -152,6 +152,16 @@ public class BoardStatistics implements Serializable {
         .stream()
         .mapToDouble(trace -> trace.get_length())
         .sum();
+    // Normalise trace length to millimetres so that calculateScore() uses a
+    // physically meaningful cost regardless of DSN coordinate resolution.
+    // Raw board units vary wildly: KiCad exports at 1e-6 mm/unit (1 nm), while
+    // EAGLE/Benchmark DSNs use ~0.1 µm/unit.  Without normalisation the trace-cost
+    // term in getNormalizedScore() is thousands of times larger than
+    // max_connections * unroutedNetPenalty for high-resolution boards, forcing the
+    // score to 0 even for a perfectly-routed, zero-violation layout.
+    double boardUnitToMmFactor = Unit.scale(1.0, board.communication.unit, Unit.MM)
+        / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+    this.traces.totalLengthMm = (float) (this.traces.totalLength * boardUnitToMmFactor);
     if (this.traces.totalCount > 0) {
       this.traces.averageLength = this.traces.totalLength / this.traces.totalCount;
     } else {
@@ -426,7 +436,15 @@ public class BoardStatistics implements Serializable {
     float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
         + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
         + this.bends.totalCount * scoringSettings.bendPenalty;
-    float costs = (float) (this.traces.totalLength * scoringSettings.defaultPreferredDirectionTraceCost
+    // Use the mm-normalised trace length so that the trace-cost term is comparable
+    // to the unroutedNetPenalty regardless of the DSN internal coordinate resolution.
+    // totalLength is in raw board units which vary wildly between DSN files
+    // (e.g. 1 nm for KiCad at resolution 1e6, vs 0.1 µm for EAGLE/benchmark boards),
+    // and would make the score collapse to 0 for high-resolution KiCad exports.
+    float traceLengthForCost = (this.traces.totalLengthMm != null)
+        ? this.traces.totalLengthMm
+        : this.traces.totalLength;
+    float costs = (float) (traceLengthForCost * scoringSettings.defaultPreferredDirectionTraceCost
         + this.vias.totalCount * scoringSettings.viaCosts);
 
     return maximumScore - penalties - costs;
