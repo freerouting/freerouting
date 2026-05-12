@@ -178,6 +178,16 @@ class BoardToolbar extends JPanel {
         return;
       }
       guiRoutingJob.routerSettings = board_frame.board_panel.board_handling.settingsMerger.merge();
+      // The GUI-path settingsMerger does not include DsnFileSettings, so the merged
+      // RouterSettings has isLayerActive == null (layer count 0).  Re-apply board-
+      // specific optimisations so the layer arrays are populated from the actual board
+      // before the autorouter reads them (fixes Issue #676 / "get_layer_active out of
+      // range [0..-1]" warnings and MazeSearchAlgo exceptions on LibrePCB DSN files).
+      app.freerouting.board.RoutingBoard routingBoard =
+          board_frame.board_panel.board_handling.get_routing_board();
+      if (routingBoard != null) {
+        guiRoutingJob.routerSettings.applyBoardSpecificOptimizations(routingBoard);
+      }
       InteractiveActionThread thread = board_frame.board_panel.board_handling
           .start_autorouter_and_route_optimizer(guiRoutingJob);
 

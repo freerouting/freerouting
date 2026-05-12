@@ -1,0 +1,541 @@
+(pcb ch32v-tx118s
+ (parser
+  (string_quote ")
+  (space_in_quoted_tokens on)
+  (host_cad "LibrePCB")
+  (host_version "2.0.0")
+ )
+ (resolution mm 1000000)
+ (unit mm)
+ (structure
+  (layer top_cu (type signal))
+  (layer bot_cu (type signal))
+  (boundary
+   (path pcb 0.0
+    0.0 0.0
+    21.59 0.0
+    21.59 19.685
+    0.0 19.685
+    0.0 0.0
+   )
+  )
+  (plane "GND"
+   (polygon top_cu 0.0
+    0.3175 19.3675
+    21.11375 19.3675
+    21.11375 0.3175
+    0.3175 0.3175
+   )
+  )
+  (via
+   "via-0.5:auto-1.0:auto-tht"
+  )
+  (rule
+   (width 0.2)
+   (clearance 0.2)
+   (clearance 0.0 (type smd_via_same_net))
+   (clearance 0.0 (type via_via_same_net))
+  )
+ )
+ (placement
+  (component "BOARD"
+   (place "BOARD" 0.0 0.0 front 0.0)
+  )
+  (component "J3:Soldered Wire Connector 1x01 ⌀1.0mm"
+   (place "J3" 2.54 17.145 front 180.0)
+  )
+  (component "J1:Soldered Wire Connector 1x06 ⌀1.0mm"
+   (place "J1" 6.985 8.89 front 180.0)
+  )
+  (component "C1:CAPC2012 (0805)"
+   (place "C1" 19.685 10.795 front 270.0)
+  )
+  (component "U1:SOIC127P600X175-8"
+   (place "U1" 13.335 10.795 front 180.0)
+  )
+  (component "R1:RESC2012 (0805)"
+   (place "R1" 19.685 6.985 front 270.0)
+  )
+  (component "J2:Soldered Wire Connector 1x02 ⌀1.0mm"
+   (place "J2" 2.54 3.81 front 180.0)
+  )
+  (component "J4:Pin Header 2.54mm 1x03 ⌀0.9mm"
+   (place "J4" 2.54 11.1125 back -180.0)
+  )
+  (component "LED1:OSRAM_CHIPLED0805_DIFFUSED"
+   (place "LED1" 18.415 2.54 front 0.0)
+  )
+ )
+ (library
+  (image "BOARD"
+  )
+  (image "J3:Soldered Wire Connector 1x01 ⌀1.0mm"
+   (pin "pad-0" (rotate 0.0) "b08d384fb99547b685448b4ef60cc4eb" 0.0 0.0)
+  )
+  (image "J1:Soldered Wire Connector 1x06 ⌀1.0mm"
+   (pin "pad-1" (rotate 0.0) "3d4ce2661d6243ae81683e282dbd42da" 0.0 -1.27)
+   (pin "pad-1" (rotate 0.0) "410e0b1501044a61bf2964357d087b18" 0.0 1.27)
+   (pin "pad-1" (rotate 0.0) "5de739a1a140426d80d4073b77befdf7" 0.0 3.81)
+   (pin "pad-0" (rotate 0.0) "7dfe0c46ae574b4c921cce1b81cd9e0c" 0.0 6.35)
+   (pin "pad-1" (rotate 0.0) "838f88d9f6894434a393ed144b654b98" 0.0 -3.81)
+   (pin "pad-1" (rotate 0.0) "a5df034909d64b118b6bec890694eedc" 0.0 -6.35)
+  )
+  (image "C1:CAPC2012 (0805)"
+   (outline (path signal 0.0
+     -1.0 0.625
+     -0.4 0.625
+     -0.4 -0.625
+     -1.0 -0.625
+     -1.0 0.625
+    )
+   )
+   (outline (path signal 0.0
+     1.0 0.625
+     0.4 0.625
+     0.4 -0.625
+     1.0 -0.625
+     1.0 0.625
+    )
+   )
+   (outline (path signal 0.25
+     -0.4 0.5
+     0.4 0.5
+    )
+   )
+   (outline (path signal 0.25
+     -0.4 -0.5
+     0.4 -0.5
+    )
+   )
+   (pin "pad-2" (rotate 0.0) "4f6ec20bc2e747d9ba0e8cde302966c5" -0.875 0.0)
+   (pin "pad-2" (rotate 0.0) "9902d57d5b644bc39a5ba21052667c9d" 0.875 0.0)
+  )
+  (image "U1:SOIC127P600X175-8"
+   (outline (path signal 0.0
+     -2.165 1.68
+     -3.0 1.68
+     -3.0 2.13
+     -2.165 2.13
+     -2.165 1.68
+    )
+   )
+   (outline (path signal 0.0
+     -1.95 1.68
+     -2.165 1.68
+     -2.165 2.13
+     -1.95 2.13
+     -1.95 1.68
+    )
+   )
+   (outline (path signal 0.0
+     -2.165 0.41
+     -3.0 0.41
+     -3.0 0.86
+     -2.165 0.86
+     -2.165 0.41
+    )
+   )
+   (outline (path signal 0.0
+     -1.95 0.41
+     -2.165 0.41
+     -2.165 0.86
+     -1.95 0.86
+     -1.95 0.41
+    )
+   )
+   (outline (path signal 0.0
+     -2.165 -0.86
+     -3.0 -0.86
+     -3.0 -0.41
+     -2.165 -0.41
+     -2.165 -0.86
+    )
+   )
+   (outline (path signal 0.0
+     -1.95 -0.86
+     -2.165 -0.86
+     -2.165 -0.41
+     -1.95 -0.41
+     -1.95 -0.86
+    )
+   )
+   (outline (path signal 0.0
+     -2.165 -2.13
+     -3.0 -2.13
+     -3.0 -1.68
+     -2.165 -1.68
+     -2.165 -2.13
+    )
+   )
+   (outline (path signal 0.0
+     -1.95 -2.13
+     -2.165 -2.13
+     -2.165 -1.68
+     -1.95 -1.68
+     -1.95 -2.13
+    )
+   )
+   (outline (path signal 0.0
+     2.165 -2.13
+     3.0 -2.13
+     3.0 -1.68
+     2.165 -1.68
+     2.165 -2.13
+    )
+   )
+   (outline (path signal 0.0
+     1.95 -2.13
+     2.165 -2.13
+     2.165 -1.68
+     1.95 -1.68
+     1.95 -2.13
+    )
+   )
+   (outline (path signal 0.0
+     2.165 -0.86
+     3.0 -0.86
+     3.0 -0.41
+     2.165 -0.41
+     2.165 -0.86
+    )
+   )
+   (outline (path signal 0.0
+     1.95 -0.86
+     2.165 -0.86
+     2.165 -0.41
+     1.95 -0.41
+     1.95 -0.86
+    )
+   )
+   (outline (path signal 0.0
+     2.165 0.41
+     3.0 0.41
+     3.0 0.86
+     2.165 0.86
+     2.165 0.41
+    )
+   )
+   (outline (path signal 0.0
+     1.95 0.41
+     2.165 0.41
+     2.165 0.86
+     1.95 0.86
+     1.95 0.41
+    )
+   )
+   (outline (path signal 0.0
+     2.165 1.68
+     3.0 1.68
+     3.0 2.13
+     2.165 2.13
+     2.165 1.68
+    )
+   )
+   (outline (path signal 0.0
+     1.95 1.68
+     2.165 1.68
+     2.165 2.13
+     1.95 2.13
+     1.95 1.68
+    )
+   )
+   (outline (path signal 0.25
+     -1.825 2.58
+     1.825 2.58
+     1.825 -2.58
+     -1.825 -2.58
+     -1.825 2.58
+    )
+   )
+   (pin "pad-3" (rotate 0.0) "030ad5efb6fc4884866c74dc806f28a9" -2.583 0.635)
+   (pin "pad-3" (rotate 0.0) "1774652b09d349618af62e0d0272cde3" 2.583 -1.905)
+   (pin "pad-3" (rotate 0.0) "1a3b50b0379c40d9a015c1117ee4d0ff" -2.583 1.905)
+   (pin "pad-3" (rotate 0.0) "1a3d74c1cd5549fa9717df952d5ac40b" 2.583 0.635)
+   (pin "pad-3" (rotate 0.0) "5f747ca7c5d641a1b16bd08f7df7050a" 2.583 -0.635)
+   (pin "pad-3" (rotate 0.0) "77f3d8f58e7f4fab906a76fe905b886a" -2.583 -0.635)
+   (pin "pad-3" (rotate 0.0) "ca7a042a80b04499bb1ef4a4c285bfa5" 2.583 1.905)
+   (pin "pad-3" (rotate 0.0) "e7d9d938534744d29bb563543f981b49" -2.583 -1.905)
+  )
+  (image "R1:RESC2012 (0805)"
+   (outline (path signal 0.0
+     -1.0 0.625
+     -0.6 0.625
+     -0.6 -0.625
+     -1.0 -0.625
+     -1.0 0.625
+    )
+   )
+   (outline (path signal 0.0
+     1.0 0.625
+     0.6 0.625
+     0.6 -0.625
+     1.0 -0.625
+     1.0 0.625
+    )
+   )
+   (outline (path signal 0.25
+     -0.6 0.5
+     0.6 0.5
+    )
+   )
+   (outline (path signal 0.25
+     -0.6 -0.5
+     0.6 -0.5
+    )
+   )
+   (pin "pad-4" (rotate 0.0) "79ee45afe9724d1d886688585eb544f9" 0.975 0.0)
+   (pin "pad-4" (rotate 0.0) "af8c5acf1aca456790cf1de3ecb6f642" -0.975 0.0)
+  )
+  (image "J2:Soldered Wire Connector 1x02 ⌀1.0mm"
+   (pin "pad-1" (rotate 0.0) "b27197f0d27f44ac900cd65a11055d0f" 0.0 -1.27)
+   (pin "pad-0" (rotate 0.0) "c2b81281c12e4d0fb03a23915580b92d" 0.0 1.27)
+  )
+  (image "J4:Pin Header 2.54mm 1x03 ⌀0.9mm"
+   (pin "pad-1" (rotate 0.0) "3121d4b609ee435d97141e91876be880" 0.0 -2.54)
+   (pin "pad-0" (rotate 0.0) "cb1d61c42ec648c29258807ac5470ad5" 0.0 2.54)
+   (pin "pad-1" (rotate 0.0) "d4c6ef1f8b5e4d4da15ec58ff1ec228a" 0.0 0.0)
+  )
+  (image "LED1:OSRAM_CHIPLED0805_DIFFUSED"
+   (outline (path signal 0.0
+     -0.9 0.625
+     -0.5 0.625
+     -0.5 -0.625
+     -0.7 -0.625
+     -0.7 -0.5
+     -0.655916 -0.485676
+     -0.628671 -0.448176
+     -0.628671 -0.401824
+     -0.655916 -0.364324
+     -0.7 -0.35
+     -0.744084 -0.364324
+     -0.771329 -0.401824
+     -0.771329 -0.448176
+     -0.744084 -0.485676
+     -0.7 -0.5
+     -0.7 -0.625
+     -0.9 -0.625
+     -0.9 -0.25
+     -0.804329 -0.23097
+     -0.723223 -0.176777
+     -0.66903 -0.095671
+     -0.65 0.0
+     -0.66903 0.095671
+     -0.723223 0.176777
+     -0.804329 0.23097
+     -0.9 0.25
+     -0.9 0.625
+    )
+   )
+   (outline (path signal 0.0
+     0.9 0.625
+     0.5 0.625
+     0.5 -0.625
+     0.9 -0.625
+     0.9 -0.25
+     0.804329 -0.23097
+     0.723223 -0.176777
+     0.66903 -0.095671
+     0.65 0.0
+     0.66903 0.095671
+     0.723223 0.176777
+     0.804329 0.23097
+     0.9 0.25
+     0.9 0.625
+    )
+   )
+   (outline (path signal 0.25
+     -0.5 0.5
+     0.5 0.5
+    )
+   )
+   (outline (path signal 0.25
+     -0.5 -0.5
+     0.5 -0.5
+    )
+   )
+   (outline (path signal 0.0
+     0.0 0.375
+     0.0 0.1
+     -0.2 0.1
+     -0.2 -0.1
+     0.0 -0.1
+     0.0 -0.375
+     0.2 -0.375
+     0.2 0.375
+     0.0 0.375
+    )
+   )
+   (pin "pad-5" (rotate 0.0) "82554e474d0a4093823bec23c56d39f1" 1.05 0.0)
+   (pin "pad-5" (rotate 0.0) "87f5279338a449a282e68699f6ee455b" -1.05 0.0)
+  )
+  (padstack "pad-0"
+   (shape (rect top_cu -1.095 -0.7935 1.095 0.7935))
+   (shape (rect bot_cu -1.095 -0.7935 1.095 0.7935))
+   (attach off)
+  )
+  (padstack "pad-1"
+   (shape (path top_cu 1.587 -0.3015 0.0 0.3015 0.0))
+   (shape (path bot_cu 1.587 -0.3015 0.0 0.3015 0.0))
+   (attach off)
+  )
+  (padstack "pad-2"
+   (shape (rect top_cu -0.475 -0.625 0.475 0.625))
+   (attach off)
+  )
+  (padstack "pad-3"
+   (shape (polygon top_cu 0.0
+     -0.6475 0.24
+     0.6475 0.24
+     0.7075 0.223923
+     0.751423 0.18
+     0.7675 0.12
+     0.7675 -0.12
+     0.751423 -0.18
+     0.7075 -0.223923
+     0.6475 -0.24
+     -0.6475 -0.24
+     -0.7075 -0.223923
+     -0.751423 -0.18
+     -0.7675 -0.12
+     -0.7675 0.12
+     -0.751423 0.18
+     -0.7075 0.223923
+     -0.6475 0.24
+    ))
+   (attach off)
+  )
+  (padstack "pad-4"
+   (shape (rect top_cu -0.375 -0.625 0.375 0.625))
+   (attach off)
+  )
+  (padstack "pad-5"
+   (shape (rect top_cu -0.6 -0.6 0.6 0.6))
+   (attach off)
+  )
+  (padstack "via-0.5:auto-1.0:auto-tht"
+   (shape (circle top_cu 1.0))
+   (shape (circle bot_cu 1.0))
+   (attach off)
+  )
+ )
+ (network
+  (net "K2"
+   (pins
+    J1-3d4ce2661d6243ae81683e282dbd42da
+    U1-5f747ca7c5d641a1b16bd08f7df7050a
+   )
+  )
+  (net "LED/SWIO"
+   (pins
+    U1-ca7a042a80b04499bb1ef4a4c285bfa5
+    R1-af8c5acf1aca456790cf1de3ecb6f642
+    J4-3121d4b609ee435d97141e91876be880
+   )
+  )
+  (net "N1"
+   (pins
+    R1-79ee45afe9724d1d886688585eb544f9
+    LED1-82554e474d0a4093823bec23c56d39f1
+   )
+  )
+  (net "GND"
+   (pins
+    J1-7dfe0c46ae574b4c921cce1b81cd9e0c
+    C1-9902d57d5b644bc39a5ba21052667c9d
+    U1-030ad5efb6fc4884866c74dc806f28a9
+    J2-c2b81281c12e4d0fb03a23915580b92d
+    J4-d4c6ef1f8b5e4d4da15ec58ff1ec228a
+    LED1-87f5279338a449a282e68699f6ee455b
+   )
+  )
+  (net "K1"
+   (pins
+    J1-410e0b1501044a61bf2964357d087b18
+    U1-1a3d74c1cd5549fa9717df952d5ac40b
+   )
+  )
+  (net "REED"
+   (pins
+    J3-b08d384fb99547b685448b4ef60cc4eb
+    U1-77f3d8f58e7f4fab906a76fe905b886a
+   )
+  )
+  (net "K4"
+   (pins
+    J1-a5df034909d64b118b6bec890694eedc
+    U1-1a3b50b0379c40d9a015c1117ee4d0ff
+   )
+  )
+  (net "VCC"
+   (pins
+    J1-5de739a1a140426d80d4073b77befdf7
+    C1-4f6ec20bc2e747d9ba0e8cde302966c5
+    U1-e7d9d938534744d29bb563543f981b49
+    J2-b27197f0d27f44ac900cd65a11055d0f
+    J4-cb1d61c42ec648c29258807ac5470ad5
+   )
+  )
+  (net "K3"
+   (pins
+    J1-838f88d9f6894434a393ed144b654b98
+    U1-1774652b09d349618af62e0d0272cde3
+   )
+  )
+ )
+ (wiring
+  (wire (path top_cu 0.5 2.54 17.145 3.175 17.78) (net "REED") (type route))
+  (wire (path top_cu 0.5 15.24 17.78 3.175 17.78) (net "REED") (type route))
+  (wire (path top_cu 0.5 17.78 15.24 15.24 17.78) (net "REED") (type route))
+  (wire (path top_cu 0.5 15.918 11.43 17.93875 11.43) (net "REED") (type route))
+  (wire (path bot_cu 0.5 17.78 15.24 17.93875 11.43) (net "REED") (type route))
+  (wire (path bot_cu 0.5 8.89 10.795 8.89 8.255) (net "LED/SWIO") (type route))
+  (wire (path top_cu 0.5 15.875 6.985 17.78 6.985) (net "LED/SWIO") (type route))
+  (wire (path bot_cu 0.5 8.255 11.43 5.08 11.43) (net "LED/SWIO") (type route))
+  (wire (path bot_cu 0.5 2.54 13.6525 5.08 11.43) (net "LED/SWIO") (type route))
+  (wire (path bot_cu 0.5 10.16 6.985 8.89 8.255) (net "LED/SWIO") (type route))
+  (wire (path bot_cu 0.5 15.875 6.985 10.16 6.985) (net "LED/SWIO") (type route))
+  (wire (path top_cu 0.5 10.16 6.985 10.16 8.255) (net "LED/SWIO") (type route))
+  (wire (path top_cu 0.5 10.752 8.89 10.16 8.255) (net "LED/SWIO") (type route))
+  (wire (path bot_cu 0.5 8.255 11.43 8.89 10.795) (net "LED/SWIO") (type route))
+  (wire (path top_cu 0.5 19.685 7.96 17.78 6.985) (net "LED/SWIO") (type route))
+  (wire (path bot_cu 0.5 2.54 2.54 4.445 4.445) (net "GND") (type route))
+  (wire (path top_cu 0.5 6.985 2.54 2.54 2.54) (net "GND") (type route))
+  (wire (path top_cu 0.5 6.985 2.54 15.24 2.54) (net "GND") (type route))
+  (wire (path bot_cu 0.5 3.4925 11.1125 4.445 10.16) (net "GND") (type route))
+  (wire (path top_cu 0.5 13.97 8.89 15.24 10.16) (net "GND") (type route))
+  (wire (path top_cu 0.5 17.365 2.54 15.24 2.54) (net "GND") (type route))
+  (wire (path bot_cu 0.5 2.54 11.1125 3.4925 11.1125) (net "GND") (type route))
+  (wire (path top_cu 0.5 13.97 8.89 13.97 3.81) (net "GND") (type route))
+  (wire (path top_cu 0.5 15.24 2.54 13.97 3.81) (net "GND") (type route))
+  (wire (path bot_cu 0.5 4.445 4.445 4.445 10.16) (net "GND") (type route))
+  (wire (path top_cu 0.5 6.985 12.7 10.752 12.7) (net "K3") (type route))
+  (wire (path top_cu 0.5 9.525 11.43 8.255 10.16) (net "K2") (type route))
+  (wire (path top_cu 0.5 10.752 11.43 9.525 11.43) (net "K2") (type route))
+  (wire (path top_cu 0.5 6.985 10.16 8.255 10.16) (net "K2") (type route))
+  (wire (path bot_cu 0.5 9.68375 15.24 11.27125 15.24) (net "K4") (type route))
+  (wire (path bot_cu 0.5 17.62125 8.89 11.27125 15.24) (net "K4") (type route))
+  (wire (path top_cu 0.5 15.918 8.89 17.62125 8.89) (net "K4") (type route))
+  (wire (path top_cu 0.5 6.985 15.24 9.68375 15.24) (net "K4") (type route))
+  (wire (path top_cu 0.5 6.985 7.62 9.525 10.16) (net "K1") (type route))
+  (wire (path top_cu 0.5 10.752 10.16 9.525 10.16) (net "K1") (type route))
+  (wire (path top_cu 0.5 15.918 10.16 16.158 9.92) (net "GND") (type route))
+  (wire (path top_cu 0.5 19.685 9.92 16.158 9.92) (net "GND") (type route))
+  (wire (path top_cu 0.5 12.7 6.0325 12.7 10.4775) (net "VCC") (type route))
+  (wire (path top_cu 0.5 11.7475 5.08 12.7 6.0325) (net "VCC") (type route))
+  (wire (path top_cu 0.5 6.985 5.08 11.7475 5.08) (net "VCC") (type route))
+  (wire (path top_cu 0.5 19.685 11.67 18.655 12.7) (net "VCC") (type route))
+  (wire (path top_cu 0.5 15.918 12.7 14.605 12.7) (net "VCC") (type route))
+  (wire (path top_cu 0.5 2.54 5.08 2.54 8.5725) (net "VCC") (type route))
+  (wire (path top_cu 0.5 14.605 12.7 12.7 10.4775) (net "VCC") (type route))
+  (wire (path top_cu 0.5 15.918 12.7 18.655 12.7) (net "VCC") (type route))
+  (wire (path top_cu 0.5 6.985 5.08 2.54 5.08) (net "VCC") (type route))
+  (wire (path top_cu 0.5 19.465 2.54 19.465 6.01) (net "N1") (type route))
+  (wire (path top_cu 0.5 19.685 6.01 19.465 6.01) (net "N1") (type route))
+  (via "via-0.5:auto-1.0:auto-tht" 17.78 15.24 (net "REED") (type route))
+  (via "via-0.5:auto-1.0:auto-tht" 17.93875 11.43 (net "REED") (type route))
+  (via "via-0.5:auto-1.0:auto-tht" 15.875 6.985 (net "LED/SWIO") (type route))
+  (via "via-0.5:auto-1.0:auto-tht" 10.16 6.985 (net "LED/SWIO") (type route))
+  (via "via-0.5:auto-1.0:auto-tht" 9.68375 15.24 (net "K4") (type route))
+  (via "via-0.5:auto-1.0:auto-tht" 17.62125 8.89 (net "K4") (type route))
+ )
+)
