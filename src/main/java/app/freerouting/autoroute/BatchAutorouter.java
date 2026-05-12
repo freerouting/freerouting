@@ -21,10 +21,10 @@ import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.drc.AirLine;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
-import app.freerouting.drc.AirLine;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
@@ -152,6 +152,22 @@ public class BatchAutorouter extends NamedAlgorithm {
     return curr_pass_no;
   }
 
+  private static Point[] getImpactedPoints(Item item) {
+    if (item instanceof Trace trace) {
+      return new Point[] { trace.first_corner(), trace.last_corner() };
+    }
+    if (item instanceof Via via) {
+      return new Point[] { via.get_center() };
+    }
+    if (item instanceof Pin pin) {
+      return new Point[] { pin.get_center() };
+    }
+    if (item instanceof DrillItem drillItem) {
+      return new Point[] { drillItem.get_center() };
+    }
+    return new Point[0];
+  }
+
   private boolean shouldFireBoardUpdate() {
     long currentTime = System.currentTimeMillis();
     if (currentTime - lastBoardUpdateTimestamp > 250) { // Limit updates to 4 times per second (250ms)
@@ -218,6 +234,11 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
     return autoroute_item_list;
   }
+
+  /**
+   * Auto-routes one ripup pass of all items of the board. Returns false, if the
+   * board is already completely routed.
+   */
 
   /**
    * Multi-threaded version of the router that routes one ripup pass of all items
@@ -341,10 +362,6 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
   }
 
-  /**
-   * Auto-routes one ripup pass of all items of the board. Returns false, if the
-   * board is already completely routed.
-   */
   /**
    * Auto-routes one ripup pass of all items of the board. Returns false, if the
    * board is already completely routed.
@@ -764,7 +781,7 @@ public class BatchAutorouter extends NamedAlgorithm {
             // routed with a higher ripup budget on subsequent passes, so earlier routing
             // decisions from the same hash may no longer apply.
             alreadyRoutedBoardHashes.clear();
-            job.logInfo(
+            job.logDebug(
                 "Restoring an earlier board that has the score of "
                     + FRLogger.formatScore(boardScoreAfter,
                         boardStatisticsAfter.connections.incompleteCount,
@@ -888,6 +905,29 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
     }
 
+    // Ensure we finish with the best board ever seen during this routing session.
+    // When stagnation or the max-pass limit fires, the loop exits with the board from the last
+    // completed pass, which may be worse than an earlier pass that was recorded in the history.
+    float currentFinalScore = new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
+    float bestHistoryScore = bh.getMaxScore();
+    if (bestHistoryScore > currentFinalScore) {
+      RoutingBoard bestBoard = bh.restoreBestBoard();
+      if (bestBoard != null) {
+        BoardStatistics currentStats = new BoardStatistics(this.board);
+        this.board = bestBoard;
+        BoardStatistics bestStats = new BoardStatistics(this.board);
+        job.logDebug("The final board state (score "
+            + FRLogger.formatScore(currentFinalScore,
+                currentStats.connections.incompleteCount,
+                currentStats.clearanceViolations.totalCount)
+            + ") is worse than the best board seen during routing (score "
+            + FRLogger.formatScore(bestStats.getNormalizedScore(job.routerSettings.scoring),
+                bestStats.connections.incompleteCount,
+                bestStats.clearanceViolations.totalCount)
+            + "). Restoring the best board as the final result.");
+      }
+    }
+
     job.board = this.board;
 
     if (!(this.remove_unconnected_vias || continueAutorouting || this.thread.is_stop_auto_router_requested())) {
@@ -993,22 +1033,6 @@ public class BatchAutorouter extends NamedAlgorithm {
     board.remove_trace_tails(-1, p_stop_connection_option);
     board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, this.trace_cost_arr, this.thread,
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
-  }
-
-  private static Point[] getImpactedPoints(Item item) {
-    if (item instanceof Trace trace) {
-      return new Point[] { trace.first_corner(), trace.last_corner() };
-    }
-    if (item instanceof Via via) {
-      return new Point[] { via.get_center() };
-    }
-    if (item instanceof Pin pin) {
-      return new Point[] { pin.get_center() };
-    }
-    if (item instanceof DrillItem drillItem) {
-      return new Point[] { drillItem.get_center() };
-    }
-    return new Point[0];
   }
 
   // Tries to route an item on a specific net. Returns true, if the item is
