@@ -114,7 +114,7 @@ Key facts about how copper pours (power/ground planes) are modelled and routed �
   - **Path B — `DsnFile.adjustPlaneAutorouteSettings()` (heuristic fallback):** Only invoked when the DSN has no `(autoroute ...)` scope. Uses a ≥ 50% board-area threshold and skips outer layers (index 0 and last). This latent outer-layer guard is a bug for non-KiCad DSN files, but Path A fires first for well-formed KiCad exports so it is not normally encountered.
 - **Via cost discount for plane nets:** When `contains_plane` is `true`, `BatchAutorouter.autoroute_item()` passes `settings.get_plane_via_costs()` (cheaper than the regular via cost) to `AutorouteControl`. This incentivises dropping vias onto the plane rather than routing traces across the board.
 - **Via optimisation for plane-connected vias:** `OptViaAlgo.opt_plane_or_fanout_via()` handles the post-routing via repositioning for the stub-to-plane case. It verifies the new location is inside the `ConductionArea` before moving.
-- **`getAutorouteItems()` quadratic false-work:** `BasicBoard.connectable_item_count()` counts `ConductionArea` as a connectable item. For a GND net with N pads + 1 pour, every pad whose `connected_set` has fewer than N+1 members is enqueued — even those already touching the plane. These items cycle through `autoroute_item()` and return `CONNECTED_TO_PLANE` immediately, wasting time but not causing mistakes. Fix (not yet implemented): skip items whose `connected_set` already contains a `ConductionArea` during queue building.
+- **`getAutorouteItems()` quadratic false-work (partially fixed):** `BasicBoard.connectable_item_count()` counts `ConductionArea` as a connectable item. For a GND net with N pads + 1 pour, every pad whose `connected_set` has fewer than N+1 members is enqueued — even those already touching the plane. **Fix applied:** `BatchAutorouter.getAutorouteItems()` now skips items that are already connected to a `ConductionArea` for plane nets (i.e., `net.contains_plane() && connected_set.anyMatch(ConductionArea)`). Items not yet connected to the plane are still enqueued so they can drop a via onto the pour. This eliminates the repeated `normalize_traces` failure (which arose because `InsertFoundConnectionAlgo` was called for those false-work items) and ensures `autoroute_pass()` returns `false` once all plane-net items are connected — letting the routing loop exit cleanly.
 - **Confirmed bug — plane routing introduces clearance violations (Issue 093):** Routing `Issue093-interf_u.dsn` (bottom-copper GND pour) with the current code introduces **62 clearance violations** and logs an internal error in `BatchAutorouter.autoroute_pass`. The plane-routing code path is active when this occurs. This is a safety-critical open bug tracked in `docs/issues/Issue152-copper-pour-plane-awareness.md`.
 - **No pour connectivity / void detection:** If a foreign-net trace cuts through a pour layer, creating an isolated copper island, Freerouting does **not** detect the disconnected region. The `RatsNest` and the exported `.ses` file will show the net as fully routed even though part of the pour is electrically floating. This is long-term future work.
 - **Loading boards to check plane flags without routing:** Use `DsnReader.readBoard(InputStream, BoardObservers, IdentificationNumberGenerator, String)` directly when you only need to inspect the loaded board state (e.g. verify `Net.contains_plane`) without running the routing scheduler. This is faster and avoids timeout issues in tests.
@@ -184,7 +184,6 @@ GROUP BY api_method ORDER BY error_count DESC;
 | `management/analytics/BigQueryClient.java` | Singleton GCP BigQuery writer; `getInstance()` avoids per-request re-auth |
 | `api/ApiAnalyticsFilter.java` | JAX-RS dual filter; tracks all ≥ 400 responses centrally |
 | `api/FreeroutingApplication.java` | Registers `ApiAnalyticsFilter` alongside existing filters |
-| `api/v1/AnalyticsControllerV1.java` | Receives analytics POSTs and writes to BigQuery via `BigQueryClient.getInstance()` |
 
 # Docker Multi-Platform Build
 
@@ -376,3 +375,65 @@ Use `gradle/actions/setup-gradle@v4` (not v3). v4 is the current stable version 
 
 ## `actions/stale` version
 Use `actions/stale@v9`. v5 (previously used) ran on Node.js 16 which is EOL. Do not downgrade. Do not pin to a commit SHA — the SHA has historically broken when the upstream repository rebased its release tags.
+
+# Trace Normalisation & Routing-Loop Architecture
+
+Key facts about how `PolylineTrace.normalize()`, `BasicBoard.normalize_traces()`, and `BatchAutorouter.runBatchLoop()` interact — established during the Issue 676 regression investigation.
+
+## `PolylineTrace.normalize()` depth limit
+
+`PolylineTrace.MAX_NORMALIZATION_DEPTH` (= 34) caps the recursion depth in the private `normalize(IntOctagon, int)` method. **Prior to the fix, exceeding the cap threw `Exception("Max normalization depth reached…")`.** This was silently swallowed by a try-catch in `InsertFoundConnectionAlgo` and logged as:
+> `WARNING The normalization of net 'GND' failed.`
+
+**Fix applied:** The `throw` was replaced with `FRLogger.debug(…) + return false`. `return false` is safe because the outer while-loop in `normalize_traces` treats it as "no change for this trace" and continues to the next trace, terminating normally. Both `public normalize(IntOctagon)` and `private normalize(IntOctagon, int)` no longer declare `throws Exception`, and all callers (in `InsertFoundConnectionAlgo`, `PullTightAlgo`, and `Wiring.java`) have had their try-catch wrappers removed.
+
+## `PolylineTrace.combine_at_end()` null search-tree entries
+
+`combine_at_end` contains two code paths:
+
+1. **Full remove + re-insert** — used when `joined_polyline.arr.length != new_line_count` (parallel lines were skipped at the join).
+2. **Optimised merge via `merge_entries_at_end`** — reuses existing search-tree leaf nodes for performance.
+
+Path 2 calls `p_to_trace.get_search_tree_entries(tree)` and `p_from_trace.get_search_tree_entries(tree)`. Either can return `null` if the trace has no entries in the given search tree (e.g. it was freshly inserted or its entries were cleared). This caused a `NullPointerException` inside `ShapeSearchTree.merge_entries_at_end` at line 237, visible in the stack as:
+```
+NullPointerException: Cannot load from object array because "to_trace_entries" is null
+    at ShapeSearchTree.merge_entries_at_end(ShapeSearchTree.java:237)
+    at PolylineTrace.combine_at_end(PolylineTrace.java:395)
+    at PolylineTrace.normalize(PolylineTrace.java:776)
+```
+Previously this NPE was hidden because the old try-catch in `InsertFoundConnectionAlgo` also caught `RuntimeException` (via `Exception`).
+
+**Fix applied (in `PolylineTrace.combine_at_end`):** Before choosing path 2, check whether both `this` and `other_trace` have entries in the default search tree (`board.search_tree_manager.get_default_tree()`). If either is null, fall back to path 1 (the safe full-remove + re-insert). This guard lives entirely in `combine_at_end` so the tree-management code in `ShapeSearchTree` does not need to be changed.
+
+```java
+boolean hasTreeEntries =
+    (this.get_search_tree_entries(board.search_tree_manager.get_default_tree()) != null)
+    && (other_trace.get_search_tree_entries(board.search_tree_manager.get_default_tree()) != null);
+if (joined_polyline.arr.length != new_line_count || !hasTreeEntries) {
+    // fall back to full remove + re-insert
+    ...
+}
+```
+
+> **Why the default tree is sufficient for the guard:** All traces are always inserted into the default tree. Compensated trees are built on top of it. If a trace is missing from the default tree it is definitionally not in any compensated tree either.
+
+## `BatchAutorouter` same-board-hash stop detection
+
+v1.9 maintained an `already_checked_board_hashes` set. Between passes it computed a board hash; if the same hash appeared twice, it stopped routing. The new `BatchAutorouter` lacked this, so when GND plane items kept being queued and attempted without changing board state the router looped endlessly with score 0.
+
+**Fix applied:** `runBatchLoop()` now maintains an `alreadyRoutedBoardHashes` `HashSet<String>`. Before each pass, the current board hash is checked; if already seen, the router logs an explanatory message and calls `thread.request_stop_auto_router()`. The set is cleared whenever a previous board state is restored (ripup + retry cycle) so that the restored state can be routed again with a higher ripup cost.
+
+## `BoardStatistics.getNormalizedScore()` division by zero / NaN
+
+`getMaximumScore()` returns `maximumCount * unroutedNetPenalty`. When a board is already fully routed (`maximumCount == 0`), this is 0, and dividing by it produces `NaN`. NaN failed all comparison-based stagnation checks, causing the score to always appear as 0.
+
+**Fix applied:** A `if (maximumScore <= 0f) return 0f;` guard was added in `getNormalizedScore()` before the division.
+
+## Symptom summary
+
+| Symptom | Root cause | Fix location |
+|---|---|---|
+| `WARNING The normalization of net 'GND' failed.` (every pass) | `PolylineTrace.normalize()` threw `Exception` at max depth | `PolylineTrace.normalize()` — throw → `return false` |
+| `NullPointerException` in `merge_entries_at_end` | Trace missing search-tree entries, `combine_at_end` chose optimised path | `PolylineTrace.combine_at_end()` — null guard before path 2 |
+| Score always 0 | `getNormalizedScore()` divided by 0 when board fully routed | `BoardStatistics.getNormalizedScore()` — `<= 0` guard |
+| Router loops endlessly on same board | No board-hash stagnation detection | `BatchAutorouter.runBatchLoop()` — `alreadyRoutedBoardHashes` set |
