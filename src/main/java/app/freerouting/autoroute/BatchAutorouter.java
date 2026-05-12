@@ -192,8 +192,21 @@ public class BatchAutorouter extends NamedAlgorithm {
               // If the item is not connected to all other items of the net, we add it to the
               // auto-router's to-do list
               if ((connected_set.size() < net_item_count) && (!curr_item.has_ignored_nets())) {
-                autoroute_item_list.add(curr_item);
                 Net net = board.rules.nets.get(curr_net_no);
+                // For plane nets: skip items whose connected set already contains a
+                // ConductionArea (copper pour). These items would immediately return
+                // CONNECTED_TO_PLANE in autoroute_item(), wasting time and causing
+                // spurious normalize_traces() failures on nearby stub geometry.
+                // Items not yet connected to the plane are still enqueued so they can
+                // be routed to the pour in this pass.
+                if (net != null && net.contains_plane()) {
+                  boolean alreadyConnectedToPlane = connected_set.stream()
+                      .anyMatch(connectedItem -> connectedItem instanceof ConductionArea);
+                  if (alreadyConnectedToPlane) {
+                    continue;
+                  }
+                }
+                autoroute_item_list.add(curr_item);
                 String netName = (net != null) ? net.name : "net#" + curr_net_no;
                 FRLogger.debug("Queuing item for routing: " + curr_item.getClass().getSimpleName() + " on net '"
                     + netName + "' (connected: " + connected_set.size() + "/" + net_item_count + ")");
@@ -703,8 +716,11 @@ public class BatchAutorouter extends NamedAlgorithm {
         if (((currentPass % STOP_AT_PASS_MODULO == 0) && (currentPass >= STOP_AT_PASS_MINIMUM))
             || (this.thread.is_stop_auto_router_requested())) {
           // Check if the score improved compared to the previous passes, restore a
-          // previous board if not
-          if (bh.getMaxScore() >= boardScoreAfter) {
+          // previous board if not. Use strict ">" so that equally-scored boards do NOT
+          // trigger a restore — if every board has the same (possibly zero) score the old
+          // ">=" test would restore on every check cycle, growing the history unboundedly
+          // and never stopping.
+          if (bh.getMaxScore() > boardScoreAfter) {
             var boardToRestore = bh.restoreBoard(MAXIMUM_TRIES_ON_THE_SAME_BOARD);
             if (boardToRestore == null) {
               job.logInfo("The router was not able to improve the board, stopping the auto-router.");
@@ -782,9 +798,15 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       // Stagnation detection: abort when the normalized score hasn't improved by
       // at least STAGNATION_SCORE_THRESHOLD over STAGNATION_PASS_LIMIT consecutive
-      // passes (only checked after the mandatory minimum passes and only while items
-      // remain unconnected — a fully-routed board never triggers this path).
-      if (currentPass >= STOP_AT_PASS_MINIMUM && boardStatisticsAfter.connections.incompleteCount > 0) {
+      // passes. This now fires whenever the router is still actively running
+      // (continueAutorouting == true) after the mandatory minimum passes, regardless
+      // of incompleteCount.  The old condition guarded on incompleteCount > 0, which
+      // caused the check to be bypassed — and the counter to be silently reset — for
+      // boards where DRC shows 0 incompletes but the router keeps cycling (e.g. when
+      // plane-net false-work items kept autoroute_pass() returning true).  If the
+      // board is genuinely done (continueAutorouting == false) the while-loop exits
+      // naturally and we never reach this block.
+      if (currentPass >= STOP_AT_PASS_MINIMUM && continueAutorouting) {
 
         // --- Pass-local counter (resets after board restores) ---
         if (boardScoreAfter > lastBestScore + STAGNATION_SCORE_THRESHOLD) {
@@ -830,8 +852,11 @@ public class BatchAutorouter extends NamedAlgorithm {
           break;
         }
 
-      } else if (boardStatisticsAfter.connections.incompleteCount == 0) {
-        // Board is fully routed; reset stagnation state
+      } else if (boardStatisticsAfter.connections.incompleteCount == 0 && boardScoreAfter > STAGNATION_SCORE_THRESHOLD) {
+        // Board is fully routed AND has a positive score (genuine success).
+        // A fully-routed board with score == 0 (e.g. caused by clearance violations
+        // from plane routing) must NOT reset the stagnation counter; it should keep
+        // accumulating until the global tracker fires.
         consecutiveNoImprovementPasses = 0;
         lastBestScore = boardScoreAfter;
       }
