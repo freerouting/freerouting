@@ -167,9 +167,9 @@ dependencies {
     implementation 'com.google.apis:google-api-services-sheets:v4-rev20260213-2.0.0'
 
     // Add Swagger/OpenAPI dependencies for API documentation (OpenAPI 3.0)
-    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.49'
-    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.49'
-    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.49'
+    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.50'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.50'
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.50'
 
     // OpenRewrite:
     rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.34.1'
