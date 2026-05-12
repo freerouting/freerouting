@@ -84,11 +84,7 @@ public class InsertFoundConnectionAlgo {
       }
     }
 
-    try {
-      p_board.normalize_traces(p_ctrl.net_no);
-    } catch (Exception _) {
-      FRLogger.warn("The normalization of net '" + p_board.rules.nets.get(p_ctrl.net_no).name + "' failed.");
-    }
+    p_board.normalize_traces(p_ctrl.net_no);
 
     return new_instance;
   }
@@ -412,4 +408,3 @@ public class InsertFoundConnectionAlgo {
     return point.toString();
   }
 }
-

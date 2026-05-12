@@ -726,13 +726,25 @@ public class PolylineTrace extends Trace implements Serializable {
    * @param p_clip_shape the shape to clip the trace to
    * @return true, if something was changed
    */
-  public boolean normalize(IntOctagon p_clip_shape) throws Exception {
+  public boolean normalize(IntOctagon p_clip_shape) {
     return normalize(p_clip_shape, 0);
   }
 
-  private boolean normalize(IntOctagon p_clip_shape, int normalization_depth) throws Exception {
+  private boolean normalize(IntOctagon p_clip_shape, int normalization_depth) {
     if (normalization_depth > MAX_NORMALIZATION_DEPTH) {
-      throw new Exception("Max normalization depth reached with trace '" + this.get_id_no() + "'");
+      // Return false (no further change at this depth level) rather than throwing an exception.
+      // The outer normalize_traces() loop treats a false return as "nothing changed" for this trace,
+      // which is safe: the trace geometry may be slightly sub-optimal (extra corners), but it remains
+      // structurally valid, its endpoint contacts are preserved and remove_tails() will not touch it.
+      // Throwing here was causing two problems:
+      //   1. Noisy WARN log in InsertFoundConnectionAlgo every routing pass for complex plane nets.
+      //   2. Intermediate trace fragments created during deep-recursion split/combine were left in an
+      //      inconsistent state, causing them to be misidentified as tails and removed by remove_tails(),
+      //      which in turn forced GND routing to re-attempt the same connection on every subsequent pass.
+      FRLogger.debug("PolylineTrace.normalize: max normalization depth (" + MAX_NORMALIZATION_DEPTH
+          + ") reached for trace #" + this.get_id_no() + " on net "
+          + (this.net_count() > 0 ? this.net_no_arr[0] : -1) + " — stopping recursion, trace kept as-is.");
+      return false;
     }
 
     boolean debugNet49 = this.net_no_arr != null && this.net_no_arr.length > 0 && this.net_no_arr[0] == 49 && normalization_depth == 0;
@@ -1292,4 +1304,3 @@ public class PolylineTrace extends Trace implements Serializable {
     return true;
   }
 }
-

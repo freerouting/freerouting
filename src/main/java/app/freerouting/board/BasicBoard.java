@@ -808,7 +808,7 @@ public class BasicBoard implements Serializable {
   /**
    * Normalizes the traces of this net
    */
-  public boolean normalize_traces(int p_net_no) throws Exception {
+  public boolean normalize_traces(int p_net_no) {
     boolean result = false;
     boolean something_changed = true;
     Item curr_item;
