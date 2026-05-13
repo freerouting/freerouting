@@ -73,7 +73,7 @@ def get_local_java_executable_path(os_name):
             print(f"Found Java in system PATH ({java_exe}), using that.")
             return java_exe
 
-    # 2. Find the latest Java JRE 21 in the temp folder (that we installed earlier)
+    # 2. Find the latest Java JRE 25 in the temp folder (that we installed earlier)
     java_found_exes = sorted(
         [str(p) for p in freerouting_jre_temp_folder.glob("jdk-25.*.*+*-jre/bin/java*") if p.is_file() and re.search(r"jdk-25\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", str(p))],
         reverse=True,
@@ -85,7 +85,7 @@ def get_local_java_executable_path(os_name):
         print(f"Found a downloaded JRE ({java_exe_path}), using that.")
         return java_exe_path
     
-    # 3. Check the Homebrew Java path on macOS and use it if the Java version is 21 or higher
+    # 3. Check the Homebrew Java path on macOS and use it if the Java version is 25 or higher
     if os_name == "mac":
         homebrew_java_path = "/opt/homebrew/opt/openjdk/bin/java"
         if Path(homebrew_java_path).is_file():
@@ -95,7 +95,7 @@ def get_local_java_executable_path(os_name):
                 print(f"Found Homebrew Java ({homebrew_java_path}), using that.")
                 return homebrew_java_path
             
-    # 4. Check $JAVA_HOME environment variable and use it if it's set and the Java version is 21 or higher
+    # 4. Check $JAVA_HOME environment variable and use it if it's set and the Java version is 25 or higher
     java_home = os.environ.get("JAVA_HOME")
     if java_home:
         java_home_exe = Path(java_home) / "bin" / "java"
@@ -513,7 +513,7 @@ def install_java_jre_25():
     # Download the Java JRE
     print("Downloading Java JRE from " + jre_url)
     try:
-        file_name, _ = download_with_progress_bar(jre_url)
+        file_name = download_with_progress_bar(jre_url)
         print("\nDownload complete.")
     except urllib.error.URLError as e:
         print(f"\nFailed to download Java JRE: {e}")
