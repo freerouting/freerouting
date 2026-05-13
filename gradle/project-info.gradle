@@ -3,7 +3,7 @@
 // -----------------------------------------------------------------------------
 ext.publishInfo.artifactId = project.name.toLowerCase()
 ext.publishInfo.groupId = 'app.freerouting'
-ext.publishInfo.versionId = '2.2.4'
+ext.publishInfo.versionId = '2.2.5-SNAPSHOT'
 ext.publishInfo.isReleaseVersion = !ext.publishInfo.versionId.endsWith("SNAPSHOT")
 
 ext.publishInfo.developerName = 'Andras Fuchs, Michael Hoffer, Andrey Belomutskiy, Alfons Wirtz'
