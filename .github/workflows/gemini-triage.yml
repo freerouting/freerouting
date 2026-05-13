@@ -22,7 +22,7 @@ defaults:
 jobs:
   triage:
     runs-on: 'ubuntu-latest'
-    timeout-minutes: 7
+    timeout-minutes: 10
     outputs:
       available_labels: '${{ steps.get_labels.outputs.available_labels }}'
       selected_labels: '${{ env.SELECTED_LABELS }}'
@@ -53,6 +53,18 @@ jobs:
             core.setOutput('available_labels', labelNames.join(','));
             core.info(`Found ${labelNames.length} labels: ${labelNames.join(', ')}`);
             return labelNames;
+
+      - name: 'Check Gemini authentication'
+        id: 'check_auth'
+        env:
+          HAS_GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY != '' }}'
+          HAS_GOOGLE_API_KEY: '${{ secrets.GOOGLE_API_KEY != '' }}'
+          HAS_WIF_PROVIDER: '${{ vars.GCP_WIF_PROVIDER != '' }}'
+        run: |-
+          if [[ "${HAS_GEMINI_API_KEY}" != "true" && "${HAS_GOOGLE_API_KEY}" != "true" && "${HAS_WIF_PROVIDER}" != "true" ]]; then
+            echo "::error::No Gemini authentication method configured. Please set one of: the GEMINI_API_KEY or GOOGLE_API_KEY secret, or the GCP_WIF_PROVIDER variable."
+            exit 1
+          fi
 
       - name: 'Run Gemini issue analysis'
         id: 'gemini_analysis'
@@ -149,6 +161,7 @@ jobs:
 
   label:
     runs-on: 'ubuntu-latest'
+    timeout-minutes: 10
     needs:
       - 'triage'
     if: |-

@@ -38,6 +38,18 @@ jobs:
           permission-issues: 'write'
           permission-pull-requests: 'write'
 
+      - name: 'Check Gemini authentication'
+        id: 'check_auth'
+        env:
+          HAS_GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY != '' }}'
+          HAS_GOOGLE_API_KEY: '${{ secrets.GOOGLE_API_KEY != '' }}'
+          HAS_WIF_PROVIDER: '${{ vars.GCP_WIF_PROVIDER != '' }}'
+        run: |-
+          if [[ "${HAS_GEMINI_API_KEY}" != "true" && "${HAS_GOOGLE_API_KEY}" != "true" && "${HAS_WIF_PROVIDER}" != "true" ]]; then
+            echo "::error::No Gemini authentication method configured. Please set one of: the GEMINI_API_KEY or GOOGLE_API_KEY secret, or the GCP_WIF_PROVIDER variable."
+            exit 1
+          fi
+
       - name: 'Run Gemini CLI'
         id: 'run_gemini'
         uses: 'google-github-actions/run-gemini-cli@v0' # ratchet:exclude
