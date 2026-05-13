@@ -10,13 +10,13 @@ import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.io.specctra.parser.DsnFile;
-import app.freerouting.io.specctra.parser.SpecctraSesFileWriter;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.io.specctra.DsnReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
-import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.io.specctra.SesWriter;
+import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
@@ -480,11 +480,18 @@ public class HeadlessBoardManager implements BoardManager {
    * @param designName the design name to include in the SES file header
    * @return true if save was successful, false if an error occurred
    *
-   * @see SpecctraSesFileWriter#write
+   * @see SesWriter#write
    * @see #loadFromSpecctraDsn
    */
   public boolean saveAsSpecctraSessionSes(OutputStream outputStream, String designName) {
-    boolean wasSaveSuccessful = SpecctraSesFileWriter.write(this.get_routing_board(), outputStream, designName);
+    boolean wasSaveSuccessful;
+    try {
+      SesWriter.write(this.get_routing_board(), outputStream, designName);
+      wasSaveSuccessful = true;
+    } catch (IOException e) {
+      FRLogger.error("unable to write session file", e);
+      wasSaveSuccessful = false;
+    }
 
     if (wasSaveSuccessful) {
       originalBoardChecksum = calculateCrc32();
