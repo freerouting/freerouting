@@ -94,8 +94,15 @@ class BoardHistoryTest {
 
   @Test
   void sizeCapNeverExceedsMaxHistorySize() {
-    // Verify the cap constant is positive.
-    assertTrue(BoardHistory.MAX_HISTORY_SIZE > 0, "MAX_HISTORY_SIZE must be positive");
+    BoardHistory history = new BoardHistory(scoringSettings, BoardHistory.MAX_HISTORY_SIZE);
+
+    // Add more entries than the configured cap and verify the cap is enforced.
+    history.add(board1);
+    history.add(board2);
+    history.add(board1);
+
+    assertTrue(history.size() <= BoardHistory.MAX_HISTORY_SIZE,
+        "History size must never exceed MAX_HISTORY_SIZE");
   }
 
   @Test
