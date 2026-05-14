@@ -55,6 +55,9 @@ testing {
                 all {
                     testTask.configure {
                         shouldRunAfter(test)
+                        systemProperty 'freerouting.logging.file.enabled', 'false'
+                        systemProperty 'freerouting.logging.console.enabled', 'true'
+                        systemProperty 'freerouting.logging.console.level', 'INFO'
                     }
                 }
             }
@@ -450,6 +453,15 @@ test {
     // Attach Mockito as a Java agent so that the inline-mock-maker can function
     // on Java 21+ without the JVM's self-attach restriction warning.
     jvmArgs "-javaagent:${configurations.mockitoAgent.asPath}"
+
+    // Default logging configuration for test runs:
+    //   - No log file is written (file logging is disabled).
+    //   - Console output is restricted to INFO level and above (ERROR, WARN, INFO).
+    // Individual tests may override freerouting.logging.* system properties
+    // before the Log4j2 context is initialised if finer-grained output is needed.
+    systemProperty 'freerouting.logging.file.enabled', 'false'
+    systemProperty 'freerouting.logging.console.enabled', 'true'
+    systemProperty 'freerouting.logging.console.level', 'INFO'
 }
 
 rewrite {
