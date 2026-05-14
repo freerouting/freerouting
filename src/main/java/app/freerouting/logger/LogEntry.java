@@ -52,6 +52,10 @@ public class LogEntry {
     return this.topic;
   }
 
+  public Throwable getException() {
+    return this.exception;
+  }
+
   @Override
   public String toString() {
     return "%-7s".formatted(this.type.toString().toUpperCase()) + " " + this.message;

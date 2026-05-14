@@ -434,7 +434,12 @@ public class BatchAutorouter extends NamedAlgorithm {
 
           if (this.settings.maxItems != null && this.totalItemsRouted >= this.settings.maxItems) {
             job.logInfo("Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
-            this.thread.request_stop_auto_router();
+            // Call requestStop() (sets ALL) instead of request_stop_auto_router() (sets
+            // AUTO_ROUTER_ONLY) so the optimizer phase is also skipped.  maxItems is a
+            // debugging/test ceiling meant to bound the entire routing job; running the
+            // optimizer on a deliberately-incomplete board is not useful and prevents the
+            // process from terminating promptly.
+            this.thread.requestStop();
             break;
           }
           this.totalItemsRouted++;
@@ -700,6 +705,7 @@ public class BatchAutorouter extends NamedAlgorithm {
     float lastBestScore = Float.NEGATIVE_INFINITY;   // score at last board-restore or improvement
     float globalBestScore = Float.NEGATIVE_INFINITY; // best score seen across all passes
     int passOfBestScore = 0;                         // pass where globalBestScore was achieved
+    int incompleteCountAtBestScore = 0;              // incomplete count when globalBestScore was recorded
     // Track board hashes that have already been routed. If the board does not change between
     // two consecutive passes (same hash at pass start), the router is making no progress and
     // would produce identical decisions with identical ripup budgets — stop immediately rather
@@ -874,14 +880,15 @@ public class BatchAutorouter extends NamedAlgorithm {
         if (boardScoreAfter > globalBestScore + STAGNATION_SCORE_THRESHOLD) {
           globalBestScore = boardScoreAfter;
           passOfBestScore = currentPass;
+          incompleteCountAtBestScore = boardStatisticsAfter.connections.incompleteCount;
         } else if ((currentPass - passOfBestScore) >= STAGNATION_PASS_LIMIT) {
           String report = buildUnroutedConnectionsReport();
           job.logInfo("The router's best score (" + FRLogger.defaultFloatFormat.format(globalBestScore)
               + ") has not improved by more than " + STAGNATION_SCORE_THRESHOLD
               + " points since pass #" + passOfBestScore
               + ". Stopping the auto-router after " + currentPass + " passes ("
-              + boardStatisticsAfter.connections.incompleteCount + " item"
-              + (boardStatisticsAfter.connections.incompleteCount == 1 ? "" : "s")
+              + incompleteCountAtBestScore + " item"
+              + (incompleteCountAtBestScore == 1 ? "" : "s")
               + " still unconnected).\n"
               + "The following connections could not be routed -- please review your design "
               + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
