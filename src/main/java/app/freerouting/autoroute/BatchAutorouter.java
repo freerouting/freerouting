@@ -434,7 +434,12 @@ public class BatchAutorouter extends NamedAlgorithm {
 
           if (this.settings.maxItems != null && this.totalItemsRouted >= this.settings.maxItems) {
             job.logInfo("Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
-            this.thread.request_stop_auto_router();
+            // Call requestStop() (sets ALL) instead of request_stop_auto_router() (sets
+            // AUTO_ROUTER_ONLY) so the optimizer phase is also skipped.  maxItems is a
+            // debugging/test ceiling meant to bound the entire routing job; running the
+            // optimizer on a deliberately-incomplete board is not useful and prevents the
+            // process from terminating promptly.
+            this.thread.requestStop();
             break;
           }
           this.totalItemsRouted++;
