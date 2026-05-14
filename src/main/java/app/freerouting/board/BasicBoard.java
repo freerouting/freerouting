@@ -806,13 +806,36 @@ public class BasicBoard implements Serializable {
   }
 
   /**
+   * The maximum number of outer-loop iterations in {@link #normalize_traces}.
+   * Each legitimate split/combine operation converges the board toward a stable state, so a
+   * well-formed net needs at most a small multiple of its trace count.  If we exceed this bound
+   * we are almost certainly oscillating (split → combine → split …) and must break out.
+   */
+  private static final int MAX_NORMALIZE_ITERATIONS = 2000;
+
+  /**
    * Normalizes the traces of this net
    */
   public boolean normalize_traces(int p_net_no) {
     boolean result = false;
     boolean something_changed = true;
     Item curr_item;
+    int iterationCount = 0;
     while (something_changed) {
+      if (++iterationCount > MAX_NORMALIZE_ITERATIONS) {
+        // Safety valve: after this many passes the outer loop has not converged.
+        // This can happen when a pair of traces keeps oscillating between a split state
+        // and a re-combined state (e.g. a self-intersecting or zero-length segment that
+        // the geometry engine cannot cleanly normalise).  Stop here rather than hanging
+        // the board-load thread for minutes.
+        String netName = (rules != null && rules.nets != null && rules.nets.get(p_net_no) != null)
+            ? rules.nets.get(p_net_no).name : String.valueOf(p_net_no);
+        FRLogger.warn("BasicBoard.normalize_traces: reached " + MAX_NORMALIZE_ITERATIONS
+            + " iterations for net '" + netName + "' — stopping to prevent hang."
+            + " The board geometry for this net may be oscillating (split/combine cycle);"
+            + " traces are kept as-is.");
+        break;
+      }
       something_changed = false;
       Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
       for (;;) {
