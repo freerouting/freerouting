@@ -91,4 +91,40 @@ class BoardHistoryTest {
     history.clear();
     assertEquals(0, history.size(), "History should be empty after clear()");
   }
+
+  @Test
+  void sizeCapNeverExceedsMaxHistorySize() {
+    BoardHistory history = new BoardHistory(scoringSettings, BoardHistory.MAX_HISTORY_SIZE);
+
+    // Add more entries than the configured cap and verify the cap is enforced.
+    history.add(board1);
+    history.add(board2);
+    history.add(board1);
+
+    assertTrue(history.size() <= BoardHistory.MAX_HISTORY_SIZE,
+        "History size must never exceed MAX_HISTORY_SIZE");
+  }
+
+  @Test
+  void sizeCapEvictsWorstEntry() {
+    // Use a cap of 1 so we can verify eviction with only two boards.
+    // board1 is empty (high score) and board2 is complex (lower score).
+    BoardHistory history = new BoardHistory(scoringSettings, 1);
+
+    // Fill to capacity with the better board.
+    history.add(board1);
+    assertEquals(1, history.size(), "History should have 1 entry after first add");
+
+    // Attempting to add board2 (lower score than board1) when at capacity should not
+    // evict board1 — the history only evicts the worst entry to make room for a
+    // strictly better board.
+    history.add(board2);
+    assertEquals(1, history.size(), "History size must stay at the cap");
+
+    // The surviving entry should be board1 (the higher-scoring board).
+    RoutingBoard best = history.restoreBestBoard();
+    assertNotNull(best, "History must still contain the best board");
+    assertEquals(board1.get_hash(), best.get_hash(),
+        "The better-scoring board (board1) must be retained when a worse board is added at capacity");
+  }
 }
