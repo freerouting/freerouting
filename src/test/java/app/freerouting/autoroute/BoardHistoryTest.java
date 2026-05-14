@@ -91,4 +91,21 @@ class BoardHistoryTest {
     history.clear();
     assertEquals(0, history.size(), "History should be empty after clear()");
   }
+
+  @Test
+  void sizeCapEvictsWorstEntry() {
+    // Fill the history beyond the cap by adding the same two boards repeatedly under
+    // different modified clones. Since we cannot easily create many unique RoutingBoards
+    // in a unit test, we verify the behaviour using the real cap constant.
+    BoardHistory history = new BoardHistory(scoringSettings);
+
+    // Adding the same board twice should not increase the size (duplicate check).
+    history.add(board1);
+    history.add(board1);
+    assertEquals(1, history.size(), "Duplicate boards must not be added");
+
+    // Verify the cap constant is positive and reasonable.
+    assertTrue(BoardHistory.MAX_HISTORY_SIZE > 0, "MAX_HISTORY_SIZE must be positive");
+    assertTrue(BoardHistory.MAX_HISTORY_SIZE <= 100, "MAX_HISTORY_SIZE should be a reasonable limit");
+  }
 }

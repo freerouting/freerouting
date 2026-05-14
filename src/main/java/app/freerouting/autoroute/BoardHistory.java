@@ -13,8 +13,20 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Records, manages and ranks the boards that were generated during the routing process. This implementation is thread-safe.
+ * <p>
+ * The history is bounded to {@link #MAX_HISTORY_SIZE} entries. When the cap is reached,
+ * the lowest-scoring entry is evicted before adding the new one. This prevents unbounded
+ * memory growth during long routing sessions (see Issue #684).
+ * </p>
  */
 public class BoardHistory {
+
+  /**
+   * Maximum number of board snapshots retained in memory at any time.
+   * Each snapshot stores the fully serialised board as a {@code byte[]}, which can be several
+   * megabytes for complex designs. Keeping the cap low is critical for long routing sessions.
+   */
+  public static final int MAX_HISTORY_SIZE = 30;
 
   private final List<BoardHistoryEntry> boards = Collections.synchronizedList(new ArrayList<>());
   private final RouterScoringSettings scoringSettings;
@@ -27,6 +39,14 @@ public class BoardHistory {
   public synchronized void add(RoutingBoard board) {
     if (contains(board)) {
       return;
+    }
+
+    // Evict the lowest-scoring entry when the cap is reached so that the list never
+    // grows beyond MAX_HISTORY_SIZE. We keep only the best-scoring snapshots.
+    if (boards.size() >= MAX_HISTORY_SIZE) {
+      // Sort descending (best score first) so the last element is the worst.
+      boards.sort((o1, o2) -> Float.compare(o2.score, o1.score));
+      boards.remove(boards.size() - 1);
     }
 
     boards.add(new BoardHistoryEntry(board, scoringSettings));

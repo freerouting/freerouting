@@ -46,8 +46,9 @@ import java.util.TreeSet;
  */
 public class BatchAutorouter extends NamedAlgorithm {
 
-  // The lowest rank of the board to be selected to go back to
-  private static final int BOARD_RANK_LIMIT = 50;
+  // The lowest rank of the board to be selected to go back to.
+  // Must not exceed BoardHistory.MAX_HISTORY_SIZE so the check can actually fire.
+  private static final int BOARD_RANK_LIMIT = BoardHistory.MAX_HISTORY_SIZE;
   // Maximum number of tries on the same board
   private static final int MAXIMUM_TRIES_ON_THE_SAME_BOARD = 3;
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
