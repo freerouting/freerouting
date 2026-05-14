@@ -272,10 +272,16 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     System.arraycopy(this_lines, 1, new_lines, join_pos, this_lines.length - 1);
     Polyline joined_polyline = new Polyline(new_lines);
-    if (joined_polyline.arr.length != new_line_count) {
-      // consecutive parallel lines where skipped at the join location
-      // combine without performance optimization
+    // Determine whether both traces have entries in the default search tree.
+    // If either is missing, the optimised merge_entries_in_front path will NPE,
+    // so we fall back to the safe full-remove + re-insert path in that case.
+    boolean hasTreeEntries = (this.get_search_tree_entries(board.search_tree_manager.get_default_tree()) != null)
+        && (other_trace.get_search_tree_entries(board.search_tree_manager.get_default_tree()) != null);
+    if (joined_polyline.arr.length != new_line_count || !hasTreeEntries) {
+      // consecutive parallel lines were skipped at the join location OR a trace
+      // lacks search-tree entries — combine without performance optimization
       board.search_tree_manager.remove(this);
+      this.clear_search_tree_entries();
       this.lines = joined_polyline;
       this.clear_derived_data();
       board.search_tree_manager.insert(this);
