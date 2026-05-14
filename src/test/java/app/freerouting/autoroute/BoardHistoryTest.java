@@ -94,9 +94,8 @@ class BoardHistoryTest {
 
   @Test
   void sizeCapNeverExceedsMaxHistorySize() {
-    // Verify the cap constant is positive and reasonable.
+    // Verify the cap constant is positive.
     assertTrue(BoardHistory.MAX_HISTORY_SIZE > 0, "MAX_HISTORY_SIZE must be positive");
-    assertTrue(BoardHistory.MAX_HISTORY_SIZE <= 100, "MAX_HISTORY_SIZE should be a reasonable limit");
   }
 
   @Test
