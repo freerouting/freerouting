@@ -28,12 +28,21 @@ public class BoardHistory {
    */
   public static final int MAX_HISTORY_SIZE = 30;
 
+  private final int maxHistorySize;
   private final List<BoardHistoryEntry> boards = Collections.synchronizedList(new ArrayList<>());
   private final RouterScoringSettings scoringSettings;
   private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
 
   public BoardHistory(RouterScoringSettings scoringSettings) {
+    this(scoringSettings, MAX_HISTORY_SIZE);
+  }
+
+  /**
+   * Package-private constructor that allows a custom cap. Intended for unit tests only.
+   */
+  BoardHistory(RouterScoringSettings scoringSettings, int maxHistorySize) {
     this.scoringSettings = scoringSettings;
+    this.maxHistorySize = maxHistorySize;
   }
 
   public synchronized void add(RoutingBoard board) {
@@ -41,12 +50,30 @@ public class BoardHistory {
       return;
     }
 
-    // Evict the lowest-scoring entry when the cap is reached so that the list never
-    // grows beyond MAX_HISTORY_SIZE. We keep only the best-scoring snapshots.
-    if (boards.size() >= MAX_HISTORY_SIZE) {
-      // Sort descending (best score first) so the last element is the worst.
-      boards.sort((o1, o2) -> Float.compare(o2.score, o1.score));
-      boards.remove(boards.size() - 1);
+    if (boards.size() >= maxHistorySize) {
+      // Compute the new board's score before the expensive serialisation so we can
+      // skip adding boards that would not improve the history.
+      float newScore = new BoardStatistics(board).getNormalizedScore(scoringSettings);
+
+      // Find the worst-scoring entry via a linear scan (O(n), n ≤ MAX_HISTORY_SIZE).
+      // Thread safety: this method is `synchronized`, so no other thread can modify
+      // `boards` through any other synchronized method while we iterate here.
+      int worstIndex = 0;
+      float worstScore = boards.get(0).score;
+      for (int i = 1; i < boards.size(); i++) {
+        if (boards.get(i).score < worstScore) {
+          worstScore = boards.get(i).score;
+          worstIndex = i;
+        }
+      }
+
+      // Only evict the worst entry if the new board scores strictly better.
+      // If the new board is equal or worse than the current worst, skip serialisation
+      // entirely — adding it would not improve the retained set.
+      if (newScore <= worstScore) {
+        return;
+      }
+      boards.remove(worstIndex);
     }
 
     boards.add(new BoardHistoryEntry(board, scoringSettings));

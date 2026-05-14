@@ -93,19 +93,32 @@ class BoardHistoryTest {
   }
 
   @Test
-  void sizeCapEvictsWorstEntry() {
-    // Fill the history beyond the cap by adding the same two boards repeatedly under
-    // different modified clones. Since we cannot easily create many unique RoutingBoards
-    // in a unit test, we verify the behaviour using the real cap constant.
-    BoardHistory history = new BoardHistory(scoringSettings);
-
-    // Adding the same board twice should not increase the size (duplicate check).
-    history.add(board1);
-    history.add(board1);
-    assertEquals(1, history.size(), "Duplicate boards must not be added");
-
+  void sizeCapNeverExceedsMaxHistorySize() {
     // Verify the cap constant is positive and reasonable.
     assertTrue(BoardHistory.MAX_HISTORY_SIZE > 0, "MAX_HISTORY_SIZE must be positive");
     assertTrue(BoardHistory.MAX_HISTORY_SIZE <= 100, "MAX_HISTORY_SIZE should be a reasonable limit");
+  }
+
+  @Test
+  void sizeCapEvictsWorstEntry() {
+    // Use a cap of 1 so we can verify eviction with only two boards.
+    // board1 is empty (high score) and board2 is complex (lower score).
+    BoardHistory history = new BoardHistory(scoringSettings, 1);
+
+    // Fill to capacity with the better board.
+    history.add(board1);
+    assertEquals(1, history.size(), "History should have 1 entry after first add");
+
+    // Attempting to add board2 (lower score than board1) when at capacity should not
+    // evict board1 — the history only evicts the worst entry to make room for a
+    // strictly better board.
+    history.add(board2);
+    assertEquals(1, history.size(), "History size must stay at the cap");
+
+    // The surviving entry should be board1 (the higher-scoring board).
+    RoutingBoard best = history.restoreBestBoard();
+    assertNotNull(best, "History must still contain the best board");
+    assertEquals(board1.get_hash(), best.get_hash(),
+        "The better-scoring board (board1) must be retained when a worse board is added at capacity");
   }
 }

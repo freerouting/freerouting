@@ -24,8 +24,11 @@ public class ItemIdentificationNumberGenerator implements IdentificationNumberGe
 
   private static final int c_max_id_no = Integer.MAX_VALUE / 2;
   private int last_generated_id_no;
-  /** Tracks how many times the counter has wrapped around (for diagnostics). */
-  private int wrapAroundCount;
+  /**
+   * Tracks how many times the counter has wrapped around (for diagnostics).
+   * {@code long} is used so the diagnostic counter itself never overflows.
+   */
+  private long wrapAroundCount;
 
   /**
    * Creates a new ItemIdentificationNumberGenerator.
@@ -44,7 +47,8 @@ public class ItemIdentificationNumberGenerator implements IdentificationNumberGe
       wrapAroundCount++;
       FRLogger.warn("IdNoGenerator: ID counter reached " + c_max_id_no
           + " and wrapped around to 1 (wrap #" + wrapAroundCount + ")."
-          + " IDs may be reused for newly created items."
+          + " IDs that were previously assigned to now-deleted items may be"
+          + " assigned again to newly created items."
           + " Consider restarting the router to regenerate IDs from scratch.");
       last_generated_id_no = 0;
     }
