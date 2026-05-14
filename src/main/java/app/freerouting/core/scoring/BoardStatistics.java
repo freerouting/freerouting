@@ -298,9 +298,11 @@ public class BoardStatistics implements Serializable {
     }
 
     // Clearance violations
-    this.clearanceViolations.totalCount = board
-        .get_outline()
-        .clearance_violation_count();
+    // Use the comprehensive DRC check that iterates all board item pairs,
+    // rather than the partial board.get_outline().clearance_violation_count()
+    // which only considers violations from the BoardOutline's perspective.
+    // See: docs/issues/roadmap-v230.md item #1 and AGENTS.md DRC architecture notes.
+    this.clearanceViolations.totalCount = drc.getAllClearanceViolations().size();
 
     // Convert all length values from board.communication.unit to the preferred unit
     if (unit == null) {
