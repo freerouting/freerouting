@@ -95,7 +95,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   private long lastBoardUpdateTimestamp = 0;
 
   public BatchAutorouter(RoutingJob job) {
-    this(job.thread, job.board, job.routerSettings, true, true,
+    this(job.thread, job.board, job.routerSettings, !job.routerSettings.withFanout, true,
         job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
     this.job = job;
   }
@@ -699,6 +699,12 @@ public class BatchAutorouter extends NamedAlgorithm {
           this.settings.get_plane_via_costs(),
           prefCosts,
           againstCosts);
+    }
+
+    job.logInfo("Checking fanout pre-pass. settings.withFanout=" + this.settings.withFanout + ", smd_pins=" + this.board.get_smd_pins().size());
+    // Run SMD fanout pre-pass when the board has SMD pins and fanout is enabled
+    if (Boolean.TRUE.equals(this.settings.withFanout) && !this.board.get_smd_pins().isEmpty()) {
+        BatchFanout.fanout_board(this.board, this.settings, this.thread);
     }
 
     int currentPass = 1;

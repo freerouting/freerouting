@@ -26,7 +26,7 @@ public class DefaultSettings implements SettingsSource {
      * This is intentionally the largest penalty so that routing completion
      * always dominates trace-length and via-count considerations.
      */
-    public static final float DEFAULT_UNROUTED_NET_PENALTY = 4000.0f;
+    public static final float DEFAULT_UNROUTED_NET_PENALTY = 1000000.0f;
 
     /**
      * Penalty subtracted from the board score for each clearance (DRC) violation.
@@ -94,6 +94,7 @@ public class DefaultSettings implements SettingsSource {
 
         settings.enabled = true;
         settings.algorithm = RouterSettings.ALGORITHM_CURRENT;
+        settings.withFanout = true;
         settings.jobTimeoutString = "12:00:00";
         settings.maxPasses = 9999;
         settings.maxItems = Integer.MAX_VALUE;

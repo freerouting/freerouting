@@ -18,6 +18,8 @@ public class RouterSettings implements Serializable, Cloneable {
   public Boolean enabled;
   @SerializedName("algorithm")
   public String algorithm;
+  @SerializedName("with_fanout")
+  public Boolean withFanout;
   @SerializedName("job_timeout")
   public String jobTimeoutString;
   @SerializedName("max_passes")
@@ -272,6 +274,7 @@ public class RouterSettings implements Serializable, Cloneable {
       result.setLayerCount(layerCount);
     }
     result.algorithm = this.algorithm;
+    result.withFanout = this.withFanout;
     result.jobTimeoutString = this.jobTimeoutString;
     result.isLayerActive = (this.isLayerActive != null) ? this.isLayerActive.clone() : null;
     result.isPreferredDirectionHorizontalOnLayer = (this.isPreferredDirectionHorizontalOnLayer != null)
