@@ -95,7 +95,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   private long lastBoardUpdateTimestamp = 0;
 
   public BatchAutorouter(RoutingJob job) {
-    this(job.thread, job.board, job.routerSettings, !job.routerSettings.withFanout, true,
+    this(job.thread, job.board, job.routerSettings, !Boolean.TRUE.equals(job.routerSettings.withFanout), true,
         job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
     this.job = job;
   }
