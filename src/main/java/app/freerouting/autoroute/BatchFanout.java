@@ -94,8 +94,9 @@ public class BatchFanout {
   public static void fanout_board(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread,
       FanoutProgressListener progressListener) {
     BatchFanout fanout_instance = new BatchFanout(p_board, p_settings, p_thread);
-    final int MAX_PASS_COUNT = 20;
-    for (int i = 0; i < MAX_PASS_COUNT; ++i) {
+    int maxPasses = (p_settings.fanout != null && p_settings.fanout.maxPasses != null)
+        ? p_settings.fanout.maxPasses : 20;
+    for (int i = 0; i < maxPasses; ++i) {
       int routed_count = fanout_instance.fanout_pass(i, progressListener);
       if (routed_count == 0 && fanout_instance.lastNotRoutedCount == 0) {
         break;
@@ -123,16 +124,23 @@ public class BatchFanout {
     int viasBeforePass = this.routing_board.get_vias().size();
     int ripup_costs = this.settings.get_start_ripup_costs() * (p_pass_no + 1);
 
+    long baseMillisPerPin = (this.settings.fanout != null && this.settings.fanout.maxMillisecondsPerPin != null)
+        ? this.settings.fanout.maxMillisecondsPerPin : 10000L;
+    boolean ripupAllowed = (this.settings.fanout == null || this.settings.fanout.ripupAllowed == null)
+        || Boolean.TRUE.equals(this.settings.fanout.ripupAllowed);
+    // Negative ripup costs signal "no ripup" to RoutingBoard.fanout()
+    int effectiveRipupCosts = ripupAllowed ? ripup_costs : -1;
+
     for (Component curr_component : this.sorted_components) {
       for (Component.Pin curr_pin : curr_component.smd_pins) {
-        double max_milliseconds = 10000 * (p_pass_no + 1);
+        double max_milliseconds = baseMillisPerPin * (p_pass_no + 1);
         TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
         this.routing_board.start_marking_changed_area();
         AutorouteAttemptResult curr_result =
             this.routing_board.fanout(
                 curr_pin.board_pin,
                 this.settings,
-                ripup_costs,
+                effectiveRipupCosts,
                 this.thread,
                 time_limit);
         switch (curr_result.state) {

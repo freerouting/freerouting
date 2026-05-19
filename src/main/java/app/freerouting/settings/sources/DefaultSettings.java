@@ -94,6 +94,7 @@ public class DefaultSettings implements SettingsSource {
 
         settings.enabled = true;
         settings.algorithm = RouterSettings.ALGORITHM_CURRENT;
+        // withFanout is kept for backward-compat; canonical default lives in fanout.enabled below.
         settings.withFanout = true;
         settings.jobTimeoutString = "12:00:00";
         settings.maxPasses = 9999;
@@ -108,6 +109,12 @@ public class DefaultSettings implements SettingsSource {
         // isLayerActive and isPreferredDirectionHorizontalOnLayer are left null intentionally –
         // they will be populated by DsnFileSettings (from the DSN layer count) and then
         // overwritten with board-geometry-aware values by applyBoardSpecificOptimizations().
+
+        // Fanout pre-pass defaults
+        settings.fanout.enabled = true;
+        settings.fanout.maxPasses = 20;
+        settings.fanout.maxMillisecondsPerPin = 10000L;
+        settings.fanout.ripupAllowed = true;
 
         // Optimizer defaults
         settings.optimizer.enabled = false;

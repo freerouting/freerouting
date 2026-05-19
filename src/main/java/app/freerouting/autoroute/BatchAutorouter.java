@@ -704,9 +704,9 @@ public class BatchAutorouter extends NamedAlgorithm {
           againstCosts);
     }
 
-    job.logInfo("Checking fanout pre-pass. settings.withFanout=" + this.settings.withFanout + ", smd_pins=" + this.board.get_smd_pins().size());
+    job.logInfo("Checking fanout pre-pass. settings.fanout.enabled=" + isFanoutEnabled(this.settings) + ", smd_pins=" + this.board.get_smd_pins().size());
     // Run SMD fanout pre-pass when the board has SMD pins and fanout is enabled
-    if (Boolean.TRUE.equals(this.settings.withFanout) && !this.board.get_smd_pins().isEmpty()) {
+    if (isFanoutEnabled(this.settings) && !this.board.get_smd_pins().isEmpty()) {
       job.logInfo("Starting fanout pre-pass on board '" + this.board.get_hash() + "' for "
           + this.board.get_smd_pins().size() + " SMD pin" + (this.board.get_smd_pins().size() == 1 ? "" : "s") + ".");
       BatchFanout.fanout_board(this.board, this.settings, this.thread, status -> {
@@ -904,7 +904,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           // fanout vias, when score plateaus with remaining incompletes. This gives the
           // autorouter a chance to escape local dead-ends introduced by pre-fanout geometry
           // while keeping fanout enabled as the default behavior.
-          if (Boolean.TRUE.equals(this.settings.withFanout)
+          if (isFanoutEnabled(this.settings)
               && !fanoutRecoveryApplied
               && boardStatisticsAfter.connections.incompleteCount > 0
               && consecutiveNoImprovementPasses >= FANOUT_RECOVERY_STAGNATION_PASSES) {
@@ -1042,8 +1042,24 @@ public class BatchAutorouter extends NamedAlgorithm {
    *
    * @return a formatted, multi-line string describing every unrouted airline
    */
-  private String buildUnroutedConnectionsReport() {
-    RatsNest ratsNest = new RatsNest(this.board);
+  /**
+   * Returns {@code true} when the fanout pre-pass should run.
+   * Checks {@code settings.fanout.enabled} first; falls back to the legacy
+   * {@code settings.withFanout} field for backward-compatibility with
+   * serialised payloads that predate the {@link FanoutSettings} block.
+   */
+  private static boolean isFanoutEnabled(RouterSettings settings) {
+    if (settings == null) {
+      return false;
+    }
+    if (settings.fanout != null && settings.fanout.enabled != null) {
+      return settings.fanout.enabled;
+    }
+    // Legacy fallback
+    return Boolean.TRUE.equals(settings.withFanout);
+  }
+
+  private String buildUnroutedConnectionsReport() {    RatsNest ratsNest = new RatsNest(this.board);
     AirLine[] airlines = ratsNest.get_airlines();
 
     if (airlines == null || airlines.length == 0) {
