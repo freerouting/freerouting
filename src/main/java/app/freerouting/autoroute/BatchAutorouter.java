@@ -61,6 +61,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   // Number of consecutive passes with no meaningful score improvement before
   // aborting (prevents endless looping when items cannot be routed)
   private static final int STAGNATION_PASS_LIMIT = 10;
+  // Number of no-improvement passes before attempting a one-time fanout-tail cleanup.
+  private static final int FANOUT_RECOVERY_STAGNATION_PASSES = 3;
   // Minimum score gain (on the 0–1000 normalized scale) that counts as a
   // meaningful improvement; gains smaller than this are treated as stagnation.
   private static final float STAGNATION_SCORE_THRESHOLD = 0.5f;
@@ -709,6 +711,7 @@ public class BatchAutorouter extends NamedAlgorithm {
 
     int currentPass = 1;
     int consecutiveNoImprovementPasses = 0;
+    boolean fanoutRecoveryApplied = false;
     float lastBestScore = Float.NEGATIVE_INFINITY;   // score at last board-restore or improvement
     float globalBestScore = Float.NEGATIVE_INFINITY; // best score seen across all passes
     int passOfBestScore = 0;                         // pass where globalBestScore was achieved
@@ -865,6 +868,28 @@ public class BatchAutorouter extends NamedAlgorithm {
           lastBestScore = boardScoreAfter;
         } else {
           consecutiveNoImprovementPasses++;
+
+          // One-time recovery for fanout-enabled jobs: aggressively remove tails, including
+          // fanout vias, when score plateaus with remaining incompletes. This gives the
+          // autorouter a chance to escape local dead-ends introduced by pre-fanout geometry
+          // while keeping fanout enabled as the default behavior.
+          if (Boolean.TRUE.equals(this.settings.withFanout)
+              && !fanoutRecoveryApplied
+              && boardStatisticsAfter.connections.incompleteCount > 0
+              && consecutiveNoImprovementPasses >= FANOUT_RECOVERY_STAGNATION_PASSES) {
+            int incompletesBeforeRecovery = boardStatisticsAfter.connections.incompleteCount;
+            remove_tails(Item.StopConnectionOption.NONE);
+            boardStatisticsAfter = new BoardStatistics(this.board);
+            boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
+            lastBestScore = boardScoreAfter;
+            consecutiveNoImprovementPasses = 0;
+            fanoutRecoveryApplied = true;
+            alreadyRoutedBoardHashes.clear();
+            job.logInfo("Applied one-time fanout recovery cleanup (removed fanout tails/vias). "
+                + "Incompletes: " + incompletesBeforeRecovery + " -> "
+                + boardStatisticsAfter.connections.incompleteCount + ".");
+          }
+
           if (consecutiveNoImprovementPasses >= STAGNATION_PASS_LIMIT) {
             String report = buildUnroutedConnectionsReport();
             job.logInfo("The router's score (" + FRLogger.defaultFloatFormat.format(boardScoreAfter)

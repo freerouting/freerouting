@@ -1238,14 +1238,16 @@ public class MazeSearchAlgo {
 
     double fanout_via_cost_factor = 1.0;
     double cost_factor = 1;
+    boolean preserveFanoutProtection = !this.ctrl.remove_unconnected_vias
+        && this.ctrl.ripup_costs <= (this.ctrl.settings.get_start_ripup_costs() * 2);
     if (p_obstacle_item instanceof Trace obstacle_trace) {
       cost_factor = obstacle_trace.get_half_width();
-      if (!this.ctrl.remove_unconnected_vias) {
+      if (preserveFanoutProtection) {
         // protect traces between SMD-pins and fanout vias
         fanout_via_cost_factor = calc_fanout_via_ripup_cost_factor(obstacle_trace);
       }
     } else if (p_obstacle_item instanceof Via) {
-      boolean look_if_fanout_via = !this.ctrl.remove_unconnected_vias;
+      boolean look_if_fanout_via = preserveFanoutProtection;
       Collection<Item> contact_list = p_obstacle_item.get_normal_contacts();
       int contact_count = 0;
       for (Item curr_contact : contact_list) {

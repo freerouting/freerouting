@@ -19,6 +19,7 @@ public class BatchFanout {
   private final RoutingBoard routing_board;
   private final RouterSettings settings;
   private final SortedSet<Component> sorted_components;
+  private int lastNotRoutedCount;
 
   private BatchFanout(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread) {
     this.thread = p_thread;
@@ -40,7 +41,7 @@ public class BatchFanout {
     final int MAX_PASS_COUNT = 20;
     for (int i = 0; i < MAX_PASS_COUNT; ++i) {
       int routed_count = fanout_instance.fanout_pass(i);
-      if (routed_count == 0) {
+      if (routed_count == 0 && fanout_instance.lastNotRoutedCount == 0) {
         break;
       }
     }
@@ -53,7 +54,7 @@ public class BatchFanout {
     int not_routed_count = 0;
     int insert_error_count = 0;
     int ripup_costs = this.settings.get_start_ripup_costs() * (p_pass_no + 1);
-    
+
     for (Component curr_component : this.sorted_components) {
       for (Component.Pin curr_pin : curr_component.smd_pins) {
         double max_milliseconds = 10000 * (p_pass_no + 1);
@@ -89,7 +90,8 @@ public class BatchFanout {
             + not_routed_count
             + ", errors: "
             + insert_error_count);
-    
+    this.lastNotRoutedCount = not_routed_count;
+
     return routed_count;
   }
 
@@ -100,7 +102,7 @@ public class BatchFanout {
     final SortedSet<Pin> smd_pins;
     /** The center of gravity of all SMD pins of this component. */
     final FloatPoint gravity_center_of_smd_pins;
-    
+
     Component(
         app.freerouting.board.Component p_board_component,
         Collection<app.freerouting.board.Pin> p_board_smd_pin_list) {
