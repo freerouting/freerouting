@@ -20,6 +20,31 @@ Without a fanout pass, the maze-search algorithm must solve both "escape from th
 
 ## Current State
 
+### Recent developments (2026-05-19, evening)
+
+1. **Headless fanout-only CLI mode is now working as expected.**
+   - Command used:
+     ```powershell
+     -de .\fixtures\Issue508-DAC2020_bm05.dsn -do .\fixtures\Issue508-DAC2020_bm05.ses --router.fanout.enabled=true --router.enabled=false --router.optimizer.enabled=false --gui.enabled=false
+     ```
+   - Root cause was settings merge behavior for explicit `false` values (`Boolean` wrappers) and missing fanout-only branch in `RoutingJobSchedulerActionThread` when router was disabled.
+   - Fix applied in current branch:
+     - `ReflectionUtil.copyFields(...)` now preserves explicit non-null wrapper values like `false`.
+     - `RoutingJobSchedulerActionThread` now runs fanout-only pre-pass when router is disabled and fanout is enabled.
+
+2. **New fanout heuristic tested on bm05 (U27-focused): outer pins first.**
+   - Change: `BatchFanout.Component.Pin.compareTo(...)` now prioritizes larger `distance_to_component_center` first.
+   - Motivation: reduce center congestion around dense QFN (`U27`) before attempting inner/central escapes.
+
+3. **Measured fanout-only benchmark progression on bm05:**
+   - Baseline (before heuristic): **85/138 escaped (61.6%)**.
+   - After outer-first pin ordering: **87/138 escaped (63.0%)**.
+   - Net gain: **+2 escaped pins**.
+
+4. **Status after latest run:**
+   - Improvement is real but still far from the **100%** target.
+   - `U27` remains the primary escape bottleneck and requires additional algorithmic work (door selection/tie-break behavior, local via candidate quality, or SMD-specific expansion heuristics).
+
 | Metric | v1.9 (with fanout) | Current (2026-05-19) |
 |---|---|---|
 | Total nets | 54 | 54 |

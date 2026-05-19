@@ -365,9 +365,9 @@ public class BatchFanout {
         double delta_dist =
             this.distance_to_component_center - p_other.distance_to_component_center;
         if (delta_dist > 0) {
-          result = 1;
-        } else if (delta_dist < 0) {
           result = -1;
+        } else if (delta_dist < 0) {
+          result = 1;
         } else {
           result = this.board_pin.pin_no - p_other.board_pin.pin_no;
         }
