@@ -1,10 +1,12 @@
 package app.freerouting.settings;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.settings.sources.DefaultSettings;
+import app.freerouting.settings.sources.CliSettings;
 import app.freerouting.settings.sources.EnvironmentVariablesSource;
 import app.freerouting.settings.sources.JsonFileSettings;
 import java.util.HashMap;
@@ -165,5 +167,20 @@ class SettingsMergerTest {
         // serialization name mismatch
         // assertFalse(merged.vias_allowed);
         assertEquals("freerouting-router-v19", merged.algorithm);
+    }
+
+    @Test
+    void testCliCanDisableRouterAndOptimizer() {
+        DefaultSettings defaults = new DefaultSettings();
+        CliSettings cli = new CliSettings(new String[] {
+            "--router.enabled=false",
+            "--router.optimizer.enabled=false"
+        });
+
+        RouterSettings merged = new SettingsMerger(defaults, cli).merge();
+
+        assertNotNull(merged);
+        assertFalse(merged.getRunRouter());
+        assertFalse(merged.getRunOptimizer());
     }
 }

@@ -155,6 +155,19 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       }
 
       job.stage = RoutingStage.IDLE;
+    } else if (isFanoutEnabled(job.routerSettings)) {
+      // Headless fanout-only mode: run the fanout pre-pass and skip autorouter passes.
+      job.stage = RoutingStage.ROUTING;
+      Integer originalMaxPasses = job.routerSettings.maxPasses;
+      try {
+        job.routerSettings.maxPasses = 0;
+        BatchAutorouter batchRouter = new BatchAutorouter(job);
+        batchRouter.runBatchLoop();
+        setJobOutputToSpecctraSes(job);
+      } finally {
+        job.routerSettings.maxPasses = originalMaxPasses;
+      }
+      job.stage = RoutingStage.IDLE;
     }
 
     if (job.routerSettings.getRunOptimizer()) {
@@ -256,5 +269,15 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         FRLogger.error("Couldn't save the output into the job object.", e);
       }
     }
+  }
+
+  private static boolean isFanoutEnabled(RouterSettings settings) {
+    if (settings == null) {
+      return false;
+    }
+    if (settings.fanout != null && settings.fanout.enabled != null) {
+      return settings.fanout.enabled;
+    }
+    return Boolean.TRUE.equals(settings.withFanout);
   }
 }

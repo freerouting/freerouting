@@ -121,8 +121,14 @@ public class ReflectionUtil {
         field.setAccessible(true);
         Object sourceValue = field.get(source);
 
-        // Only copy the field if the new value is not null, and not the default value
-        if ((sourceValue != null) && !sourceValue.equals(getDefaultValue(field))) {
+        // For nullable wrappers (Boolean/Integer/...), non-null already means "explicitly set".
+        // Keep default-value suppression only for primitive fields.
+        boolean shouldCopy = sourceValue != null;
+        if (shouldCopy && field.getType().isPrimitive()) {
+          shouldCopy = !sourceValue.equals(getDefaultValue(field));
+        }
+
+        if (shouldCopy) {
           // Check if the field is a primitive, wrapper type, or a string
           if (field.getType().isPrimitive()
               || field.getType() == String.class
