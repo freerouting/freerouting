@@ -8,7 +8,7 @@
 
 The board `Issue508-DAC2020_bm05.dsn` is a 2-layer (Top / Bottom), 48-component, fully-SMD reference board from the DAC 2020 benchmark suite. It has 54 nets, 11 SMD padstack types, and zero through-hole pins. All padstacks carry `(attach off)`, meaning no via may be placed *on top of* an SMD pad.
 
-The board is **theoretically 100 % routable** (confirmed by the v1.9 baseline and by PCB EDA tools that implement a fanout pre-pass). The current freerouting router leaves a number of nets unrouted because it is missing the **`BatchFanout` pre-routing phase** that v1.9 (`BatchFanout.java`) runs before the main `BatchAutorouter` passes.
+The board is **theoretically 100 % routable** (confirmed by the v1.9 baseline and by PCB EDA tools that implement a fanout pre-pass). The original regression was that the current router had no `BatchFanout` pre-routing phase. That gap is now closed in the current branch, but dense all-SMD cases are still not fully solved.
 
 Without a fanout pass, the maze-search algorithm must solve both "escape from the SMD pad onto a via" and "reach the destination pin" in a single expansion. On dense boards this frequently fails: the occupied regions around SMD pads block all via-placement sites, and the router marks the connection as unroutable even though a short stub-trace + via solution exists.
 
@@ -20,15 +20,38 @@ Without a fanout pass, the maze-search algorithm must solve both "escape from th
 
 ## Current State
 
-| Metric | v1.9 (with fanout) | Current (no fanout) |
+| Metric | v1.9 (with fanout) | Current (2026-05-19) |
 |---|---|---|
 | Total nets | 54 | 54 |
 | Padstack types | 11 (all SMD) | 11 (all SMD) |
 | `(attach off)` on all padstacks | yes | yes |
-| Fanout pre-pass | ✅ `BatchFanout` | ❌ missing |
-| Routing result | 0 unrouted | **TBD — needs measurement** |
+| Fanout pre-pass | ✅ `BatchFanout` | ✅ `BatchFanout` integrated in `BatchAutorouter` |
+| `Pin.is_obstacle()` same-net via guard | legacy behavior | ✅ fixed (same-net vias allowed) |
+| `withFanout` setting | n/a | ✅ present (default `true`) |
+| Routing result | 0 unrouted | mixed: `Issue558-dev-board.dsn` reaches 0 unrouted, `SMD-routing-issue-demo.dsn` still fails (6 unrouted) |
 
-> **Next step:** Add a test `Dac2020Bm05RoutingTest` (see Sub-issue #4 below) to capture the current incomplete count so we have a concrete baseline to improve against.
+> **Current focus:** fanout exists and is active, but on tightly packed all-SMD geometries it can still insert 0 escape vias; remaining work is algorithmic quality, not missing orchestration.
+
+### Clarification: what fanout is supposed to do (and what it does not do)
+
+Your understanding is correct for the intended goal:
+
+- Fanout is a **pre-pass for SMD escape**, not full net completion.
+- It iterates only `board.get_smd_pins()` and calls `RoutingBoard.fanout(pin, ...)` per SMD pin.
+- `RoutingBoard.fanout(...)` sets `ctrl.is_fanout = true`, and `MazeSearchAlgo` stops once the first drill transition is found (escape-via oriented behavior).
+
+Important nuance (explains what you see in GUI):
+
+- Fanout attempts can still **rip up / shove existing route fragments** while creating room for a legal escape via (`ripup_allowed` is enabled with escalating costs).
+- After a successful attempt, `opt_changed_area(...)` runs in the changed region.
+- So during fanout you may visually see non-SMD traces/vias move; this is a side effect of congestion handling, not fanout actively routing arbitrary non-SMD items as primary targets.
+
+### Measured current behavior (latest local verification)
+
+- `Issue558-dev-board.dsn`: fanout inserts escapes and routing completes to 0 unrouted in the fixture run.
+- `SMD-routing-issue-demo.dsn`: fanout pass #1..#20 inserts `+0` extra vias, then autorouter stops at score `0.00` with 6 unrouted.
+
+This confirms the remaining gap: **fanout is executing, but fails to find legal escape-via locations on some dense close-pin layouts**.
 
 ### Board Characteristics (bm05)
 
@@ -47,13 +70,13 @@ Because every component pad resides exclusively on the Top layer, any connection
 1. A short stub trace running *off* the pad on the Top layer, and
 2. A via placed at the end of that stub (not on the pad — `attach off` is enforced).
 
-The current `BatchAutorouter` has no pre-pass that pre-routes these stubs. It instead expects the maze search to find the via location on-the-fly, which succeeds on sparse boards but often fails on the dense inter-component regions of bm05.
+The current `BatchAutorouter` now runs a fanout pre-pass, but it still relies on the maze search to find legal nearby drill positions for each SMD escape. On sparse boards this works; on dense inter-component regions of bm05/demo it can still fail repeatedly.
 
 ---
 
 ## Root Cause
 
-### Missing `BatchFanout` Pre-Pass
+### Historical Root Cause: Missing `BatchFanout` Pre-Pass (now fixed)
 
 In v1.9 the routing pipeline is:
 
@@ -63,7 +86,7 @@ BatchAutorouter.autoroute_passes(…)   ← main routing passes
 BatchOptRoute.run(…)                  ← optimizer
 ```
 
-In the current codebase only the latter two stages exist; `BatchFanout` was never ported. The fanout pass iterates components sorted by descending SMD-pin count, and for each SMD pin calls `RoutingBoard.fanout(pin, …)` with `ctrl.is_fanout = true`. That special mode:
+The initial regression was that only the latter two stages existed and `BatchFanout` was not ported. The fanout pass is now implemented and integrated. It iterates components sorted by descending SMD-pin count, and for each SMD pin calls `RoutingBoard.fanout(pin, …)` with `ctrl.is_fanout = true`. That special mode:
 
 - Restricts the autoroute goal to *inserting exactly one via adjacent to the pin*, not to reaching a destination.
 - Sets `remove_unconnected_vias = false` so the placed via is retained even though the net is not yet connected end-to-end.
@@ -71,13 +94,13 @@ In the current codebase only the latter two stages exist; `BatchFanout` was neve
 
 After this pre-pass every SMD pin has a via stub, and the main `BatchAutorouter` only needs to connect via-to-via across the board — a substantially easier problem.
 
-### Supporting Evidence in Current Code
+### Supporting Evidence in Current Code (updated)
 
-- `AutorouteControl.is_fanout` field exists and is referenced in `MazeSearchAlgo` (lines 267 and 1087) but is **never set to `true`** in the current `BatchAutorouter`.
+- `AutorouteControl.is_fanout` is set via `RoutingBoard.fanout(...)`, which is now called from `BatchFanout` in `BatchAutorouter` pre-pass.
 - `RoutingBoard.fanout(Pin, …)` is fully implemented (lines 974–1012) and sets `ctrl.is_fanout = true` and `ctrl.remove_unconnected_vias = false`.
 - `Item.is_fanout_via(…)` is fully implemented.
 - The `(attach off)` / `attach_smd_allowed` pipeline is correct: `ViaInfo.attach_smd_allowed` propagates into `AutorouteControl.attach_smd_allowed`; `DrillPage.get_drills()` and `MazeSearchAlgo` both honour it.
-- The only missing piece is the **orchestration layer** that calls `RoutingBoard.fanout()` for all SMD pins *before* the main routing loop.
+- The orchestration layer now exists; the remaining issue is **fanout effectiveness** on dense all-SMD geometry, not missing invocation.
 
 ---
 
@@ -94,7 +117,7 @@ Understanding the precise failure mode is critical before selecting a solution. 
 1. `BatchAutorouter.autoroute_item(pin)` creates `AutorouteControl` for the net.
 2. `AutorouteControl.init_net()` iterates `via_rule.via_count()`. For every `ViaInfo` it checks `curr_via.attach_smd_allowed()`. On bm05, all padstacks have `(attach off)` → every `ViaInfo.attach_smd_allowed = false` → `AutorouteControl.attach_smd_allowed` stays `false`.
 3. `MazeSearchAlgo.get_instance()` is called. During initialization, destination items (the other SMD pins of the net) are added to `DestinationDistance`.
-4. During maze expansion, whenever the search encounters an `ExpansionDrill` (a candidate via location), `ForcedViaAlgo` checks whether the via would be a `Pin.is_obstacle()` blocker. For an SMD pad of the same net, `Pin.is_obstacle()` returns `true` when `via.attach_allowed = false` (line 358 of `Pin.java`).
+4. During maze expansion, whenever the search encounters an `ExpansionDrill` (a candidate via location), `ForcedViaAlgo` and drill-expansion gates still enforce geometric legality and attach rules. The earlier same-net `Pin.is_obstacle()` blocker has been fixed, but dense local geometry can still leave no legal escape site.
 5. This means: the maze search **cannot place a via at the exact location of an SMD pad**. It must find a via location *adjacent* to the pad, then route a trace segment from the pad to the via.
 6. On a dense board, the clear area adjacent to each SMD pad may be fully occupied by clearance envelopes of neighboring pads. No valid via location exists within reachable distance → maze returns `null` → net is not routed.
 
@@ -444,7 +467,7 @@ Note: the DSN format does **not** support `;` or `#` comment lines — the Specc
 
 ### Sub-issue #0 — Fix `Pin.is_obstacle()` to allow same-net vias on SMD pads *(Solution 4 — implement first)*
 
-**Status:** 🔲 Open
+**Status:** ✅ Done
 
 Change `Pin.java` line 358:
 ```java
@@ -466,7 +489,7 @@ The removed clause `|| !via.attach_allowed` was blocking same-net vias from bein
 
 ### Sub-issue #1 — Add `RoutingBoard.get_smd_pins()` *(prerequisite for Solution 3)*
 
-**Status:** 🔲 Open
+**Status:** ✅ Done (implemented on `BasicBoard` and used by `BatchAutorouter`/`BatchFanout`)
 
 Port `get_smd_pins()` from v1.9 `BasicBoard` to the current `RoutingBoard` (or `BasicBoard` if applicable).  
 Definition: returns all `Pin` items where `first_layer() == last_layer()`.  
@@ -476,7 +499,7 @@ Definition: returns all `Pin` items where `first_layer() == last_layer()`.
 
 ### Sub-issue #2 — Implement `BatchFanout` class *(core of Solution 3)*
 
-**Status:** 🔲 Open
+**Status:** ✅ Done (headless-compatible; integrated callback/progress path)
 
 Create `src/main/java/app/freerouting/autoroute/BatchFanout.java` with:
 - `public static void fanout_board(RoutingBoard board, RouterSettings settings, StoppableThread thread)`
@@ -494,7 +517,7 @@ Create `src/main/java/app/freerouting/autoroute/BatchFanout.java` with:
 
 ### Sub-issue #3 — Add `withFanout` setting to `RouterSettings` *(settings integration)*
 
-**Status:** 🔲 Open
+**Status:** ✅ Done (`RouterSettings.withFanout`, default `true` in `DefaultSettings`)
 
 - Add `public Boolean withFanout;` (nullable) to `RouterSettings`.
 - Set default `withFanout = true` in `DefaultSettings.getSettings()`.
@@ -507,7 +530,7 @@ Create `src/main/java/app/freerouting/autoroute/BatchFanout.java` with:
 
 ### Sub-issue #4 — Add regression tests *(acceptance gate)*
 
-**Status:** 🔲 Open
+**Status:** 🟡 In progress (tests exist; full gate not green yet for all boards)
 
 #### `Dac2020Bm05RoutingTest.java` — primary bm05 acceptance gate
 
@@ -565,7 +588,7 @@ Score `0.00` and 6/6 connections unrouted is definitive evidence of the root cau
 
 ### Sub-issue #5 — Integrate `BatchFanout` into `BatchAutorouter.autoroute_passes()` *(wiring)*
 
-**Status:** 🔲 Open
+**Status:** ✅ Done
 
 In `BatchAutorouter.autoroute_passes()`, before the first pass loop:
 
@@ -602,19 +625,15 @@ Exit criteria:
 
 ---
 
-## Implementation Order
+## Implementation Order (updated)
 
 ```
-Sub-issue #0 (fix Pin.is_obstacle — quickest possible fix, validate alone)
-  → Sub-issue #4 (tests already created — SmdPinFanoutRoutingTest and Dac2020Bm05RoutingTest
-                  now serve as the live regression gate; test_SmdDemo_board_loads_and_routes
-                  already PASSES and proves the bug)
-  → [If #0 insufficient] Sub-issue #1 (add get_smd_pins)
-  → Sub-issue #2 (implement BatchFanout)
-  → Sub-issue #3 (withFanout setting)
-  → Sub-issue #5 (integrate into BatchAutorouter)
-  → All SmdPinFanoutRoutingTest and Dac2020Bm05RoutingTest tests must pass
-  → Sub-issue #6 (compare-versions validation)
+Done: Sub-issue #0 → #1 → #2 → #3 → #5
+
+Remaining sequence:
+  → Stabilize Sub-issue #4 (all SMD regression tests green, including synthetic dense cases)
+  → Run Sub-issue #6 (`compare-versions.ps1` parity/performance validation on bm05)
+  → Tune fanout/maze behavior for close-pin escape-via failures
 ```
 
 ---
@@ -623,13 +642,13 @@ Sub-issue #0 (fix Pin.is_obstacle — quickest possible fix, validate alone)
 
 | File | Change type | Status | Description |
 |---|---|---|---|
-| `src/main/java/app/freerouting/board/Pin.java` | **Modify** | 🔲 Open | Sub-issue #0: remove `attach_allowed` guard for same-net via branch in `is_obstacle()` |
-| `src/main/java/app/freerouting/board/RoutingBoard.java` (or `BasicBoard`) | Modify | 🔲 Open | Sub-issue #1: Add `get_smd_pins()` |
-| `src/main/java/app/freerouting/autoroute/BatchFanout.java` | **New** | 🔲 Open | Sub-issue #2: Port from v1.9; headless-compatible |
-| `src/main/java/app/freerouting/autoroute/BatchAutorouter.java` | Modify | 🔲 Open | Sub-issue #5: Call `BatchFanout.fanout_board()` before main passes |
-| `src/main/java/app/freerouting/settings/RouterSettings.java` | Modify | 🔲 Open | Sub-issue #3: Add `public Boolean withFanout;` |
-| `src/main/java/app/freerouting/settings/sources/DefaultSettings.java` | Modify | 🔲 Open | Sub-issue #3: Set `withFanout = true` |
-| `docs/settings.md` | Modify | 🔲 Open | Document `withFanout` setting |
+| `src/main/java/app/freerouting/board/Pin.java` | **Modify** | ✅ Done | Sub-issue #0: removed `attach_allowed` guard for same-net via branch in `is_obstacle()` |
+| `src/main/java/app/freerouting/board/BasicBoard.java` | Modify | ✅ Done | Sub-issue #1: `get_smd_pins()` present and used |
+| `src/main/java/app/freerouting/autoroute/BatchFanout.java` | **New** | ✅ Done | Sub-issue #2: ported and integrated; progress callback added |
+| `src/main/java/app/freerouting/autoroute/BatchAutorouter.java` | Modify | ✅ Done | Sub-issue #5: fanout pre-pass wired before main passes |
+| `src/main/java/app/freerouting/settings/RouterSettings.java` | Modify | ✅ Done | Sub-issue #3: `public Boolean withFanout;` |
+| `src/main/java/app/freerouting/settings/sources/DefaultSettings.java` | Modify | ✅ Done | Sub-issue #3: `withFanout = true` |
+| `docs/settings.md` | Modify | 🔲 Open | Document `withFanout` setting (if missing/incomplete) |
 | `fixtures/SMD-routing-issue-demo.dsn` | **New** | ✅ Created | Minimal synthetic 2-layer all-SMD board (6-pin QFN + 0603s, 6 nets); proves bug with score `0.00` |
 | `src/test/java/app/freerouting/fixtures/Dac2020Bm05RoutingTest.java` | **New** | ✅ Created | Primary bm05 acceptance gate (4 escalating tests) |
 | `src/test/java/app/freerouting/fixtures/SmdPinFanoutRoutingTest.java` | **New** | ✅ Created | Cross-board regression suite (4 boards × 2 tests each + 3 synthetic DSN tests) |
@@ -654,7 +673,9 @@ public static void fanout_board(InteractiveActionThread p_thread) {
 // RoutingBoard.fanout() sets ctrl.is_fanout = true — maze search stops at first drill.
 ```
 
-Key difference from v1.9 API: v1.9's `BatchFanout` depends on `InteractiveActionThread` (GUI). The current port must use `StoppableThread` + headless-safe APIs only.
+Key difference from v1.9 API: v1.9's `BatchFanout` depends on `InteractiveActionThread` (GUI). The current port uses `StoppableThread` and is headless-safe.
+
+Additional current behavior: fanout progress now updates GUI and logs per pass as job-bound messages, including extra-via counts.
 
 ---
 
@@ -666,4 +687,3 @@ Key difference from v1.9 API: v1.9's `BatchFanout` depends on `InteractiveAction
 4. ✅ `compare-versions.ps1` shows current ≥ v1.9 routing completion on bm05.
 5. ✅ No new clearance violations on any existing benchmark board.
 6. ✅ `withFanout = false` disables the pre-pass; existing boards (bm07, bm08, bm01) are unaffected.
-
