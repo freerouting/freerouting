@@ -69,6 +69,22 @@ Without a fanout pass, the maze-search algorithm must solve both "escape from th
        - Secondary reason: `Rejected drill because its section is already occupied` → **1,784** occurrences.
      - This shifts the investigation focus from empty-via-site generation to **how drill candidates are associated with expansion rooms / how room continuity is preserved around dense U27 escape geometry**.
 
+  6. **`U27-*` diagnostics now use plain TRACE output (no granular filter dependency).**
+     - Logging changes (current branch):
+       - `MazeSearchAlgo` U27 fanout diagnostics now emit plain `FRLogger.trace("FANOUT_DIAG ...")` lines.
+       - `BatchFanout` U27 failure summaries now emit plain `FRLogger.trace("FANOUT_DIAG ...")` lines.
+     - Verification run (fanout-only, headless):
+       ```powershell
+       .\gradlew.bat run --args="-de .\fixtures\Issue508-DAC2020_bm05.dsn -do .\fixtures\Issue508-DAC2020_bm05.ses --router.fanout.enabled=true --router.enabled=false --router.optimizer.enabled=false --gui.enabled=false --logging.console.level=TRACE --logging.file.level=TRACE"
+       ```
+     - First observed blocked drill-page reason in this stream:
+       - `event=drill_page_scan, pin=U27-21, candidate_count=33` (non-empty drill page)
+       - immediately followed by multiple `event=drill_rejected_room_mismatch` entries.
+     - Layer-change admissibility rejection probe:
+       - No `layer_change_forbidden`, `layer_change_skipped`, `no_drill_page_for_target_pin`, or `no_valid_drill_after_page_scan` events were emitted in the sampled bm05 fanout-only traces.
+     - Current interpretation:
+       - The first meaningful blocker remains **room continuity mismatch during drill acceptance**, not an empty drill page and not a top-level layer-change admissibility gate.
+
 | Metric | v1.9 (with fanout) | Current (2026-05-19) |
 |---|---|---|
 | Total nets | 54 | 54 |

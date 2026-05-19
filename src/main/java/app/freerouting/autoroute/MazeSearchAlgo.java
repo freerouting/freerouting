@@ -806,18 +806,19 @@ public class MazeSearchAlgo {
         && ctrl.fanout_start_pin_name.startsWith("U27-");
   }
 
-  private String fanoutDiagnosticItems() {
-    return ctrl.fanout_start_pin_name == null ? "net=" + ctrl.net_no
-        : ctrl.fanout_start_pin_name + ",net=" + ctrl.net_no;
-  }
-
   private String fanoutDiagnosticLabel() {
     return ctrl.fanout_start_pin_name == null ? "fanout-pin(net=" + ctrl.net_no + ")"
         : ctrl.fanout_start_pin_name;
   }
 
-  private Point[] fanoutDiagnosticPoints() {
-    return ctrl.fanout_start_pin_center == null ? null : new Point[]{ctrl.fanout_start_pin_center};
+  private void traceFanoutDiagnostic(String event, String message) {
+    if (!shouldTraceFanoutDiagnostics()) {
+      return;
+    }
+    FRLogger.trace("FANOUT_DIAG event=" + event
+        + ", pin=" + fanoutDiagnosticLabel()
+        + ", net=" + ctrl.net_no
+        + ", " + message);
   }
 
   private void expand_to_drill(ExpansionDrill p_drill, MazeListElement p_from_element, int p_add_costs) {
@@ -832,20 +833,11 @@ public class MazeSearchAlgo {
       if (p_from_element.backtrack_door == null || !p_drill
           .get_shape()
           .intersects(p_from_element.backtrack_door.get_shape())) {
-        if (shouldTraceFanoutDiagnostics()) {
-          FRLogger.trace(
-              "MazeSearchAlgo.expand_to_drill",
-              "fanout_drill_rejected",
-              "Rejected drill because thin-room expansion does not intersect the backtrack door: drill="
-                  + fanoutDiagnosticLabel()
-                  + ", drill="
-                  + describe_expandable(p_drill)
-                  + ", from_door=" + describe_expandable(p_from_element.door)
-                  + ", backtrack=" + describe_expandable(p_from_element.backtrack_door)
-                  + ", room=" + describe_room(p_from_element.next_room),
-              fanoutDiagnosticItems(),
-              fanoutDiagnosticPoints());
-        }
+        traceFanoutDiagnostic("drill_rejected_thin_room_no_backtrack_intersection",
+            "drill=" + describe_expandable(p_drill)
+                + ", from_door=" + describe_expandable(p_from_element.door)
+                + ", backtrack=" + describe_expandable(p_from_element.backtrack_door)
+                + ", room=" + describe_room(p_from_element.next_room));
         return;
       }
     }
@@ -900,18 +892,11 @@ public class MazeSearchAlgo {
         MazeSearchElement.Adjustment.NONE,
         false);
     this.maze_expansion_list.add(new_element);
-    if (shouldTraceFanoutDiagnostics()) {
-      FRLogger.trace(
-          "MazeSearchAlgo.expand_to_drill",
-          "fanout_drill_accepted",
-          "Accepted drill candidate: pin=" + fanoutDiagnosticLabel()
-              + ", drill=" + describe_expandable(p_drill)
-              + ", room=" + describe_room(p_from_element.next_room)
-              + ", nearest_point=" + nearest_point
-              + ", expansion_value=" + expansion_value,
-          fanoutDiagnosticItems(),
-          fanoutDiagnosticPoints());
-    }
+    traceFanoutDiagnostic("drill_accepted",
+        "drill=" + describe_expandable(p_drill)
+            + ", room=" + describe_room(p_from_element.next_room)
+            + ", nearest_point=" + nearest_point
+            + ", expansion_value=" + expansion_value);
   }
 
   /**
@@ -951,67 +936,34 @@ public class MazeSearchAlgo {
     DrillPage drill_page = (DrillPage) p_from_element.door;
     Collection<ExpansionDrill> drill_list = drill_page.get_drills(this.autoroute_engine, this.ctrl.attach_smd_allowed);
     if (shouldTraceFanoutDiagnostics()) {
-      FRLogger.trace(
-          "MazeSearchAlgo.expand_to_drills_of_page",
-          "fanout_drill_page_scan",
-          "Scanning drill page with " + drill_list.size()
-              + " drill candidates for pin=" + fanoutDiagnosticLabel()
+      traceFanoutDiagnostic("drill_page_scan",
+          "candidate_count=" + drill_list.size()
               + ", attach_smd_allowed=" + this.ctrl.attach_smd_allowed
               + ", room=" + describe_room(p_from_element.next_room)
-              + ", from_door=" + describe_expandable(p_from_element.door),
-          fanoutDiagnosticItems(),
-          fanoutDiagnosticPoints());
+              + ", from_door=" + describe_expandable(p_from_element.door));
       if (drill_list.isEmpty()) {
-        FRLogger.trace(
-            "MazeSearchAlgo.expand_to_drills_of_page",
-            "fanout_drill_page_empty",
-            "No drill candidates were generated for this drill page for pin="
-                + fanoutDiagnosticLabel() + ".",
-            fanoutDiagnosticItems(),
-            fanoutDiagnosticPoints());
+        traceFanoutDiagnostic("drill_page_empty", "no_candidates=true");
       }
     }
     for (ExpansionDrill curr_drill : drill_list) {
       int section_no = from_room_layer - curr_drill.first_layer;
       if (section_no < 0 || section_no >= curr_drill.room_arr.length) {
-        if (shouldTraceFanoutDiagnostics()) {
-          FRLogger.trace(
-              "MazeSearchAlgo.expand_to_drills_of_page",
-              "fanout_drill_rejected",
-              "Rejected drill due to section index out of range: pin=" + fanoutDiagnosticLabel()
-                  + ", drill=" + describe_expandable(curr_drill)
-                  + ", section=" + section_no + ", room_arr_len=" + curr_drill.room_arr.length,
-              fanoutDiagnosticItems(),
-              fanoutDiagnosticPoints());
-        }
+        traceFanoutDiagnostic("drill_rejected_section_out_of_range",
+            "drill=" + describe_expandable(curr_drill)
+                + ", section=" + section_no + ", room_arr_len=" + curr_drill.room_arr.length);
         continue;
       }
       if (curr_drill.room_arr[section_no] != p_from_element.next_room) {
-        if (shouldTraceFanoutDiagnostics()) {
-          FRLogger.trace(
-              "MazeSearchAlgo.expand_to_drills_of_page",
-              "fanout_drill_rejected",
-              "Rejected drill because expansion room does not match the current room: pin="
-                  + fanoutDiagnosticLabel()
-                  + ", drill=" + describe_expandable(curr_drill)
-                  + ", expected_room=" + describe_room(p_from_element.next_room)
-                  + ", drill_room=" + describe_room(curr_drill.room_arr[section_no]),
-              fanoutDiagnosticItems(),
-              fanoutDiagnosticPoints());
-        }
+        traceFanoutDiagnostic("drill_rejected_room_mismatch",
+            "drill=" + describe_expandable(curr_drill)
+                + ", expected_room=" + describe_room(p_from_element.next_room)
+                + ", drill_room=" + describe_room(curr_drill.room_arr[section_no]));
         continue;
       }
       if (curr_drill.get_maze_search_element(section_no).is_occupied) {
-        if (shouldTraceFanoutDiagnostics()) {
-          FRLogger.trace(
-              "MazeSearchAlgo.expand_to_drills_of_page",
-              "fanout_drill_rejected",
-              "Rejected drill because its section is already occupied: pin=" + fanoutDiagnosticLabel()
-                  + ", drill=" + describe_expandable(curr_drill)
-                  + ", section=" + section_no,
-              fanoutDiagnosticItems(),
-              fanoutDiagnosticPoints());
-        }
+        traceFanoutDiagnostic("drill_rejected_section_occupied",
+            "drill=" + describe_expandable(curr_drill)
+                + ", section=" + section_no);
         continue;
       }
       expand_to_drill(curr_drill, p_from_element, 0);

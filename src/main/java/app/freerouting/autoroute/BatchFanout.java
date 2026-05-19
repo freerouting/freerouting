@@ -156,14 +156,11 @@ public class BatchFanout {
           case FAILED       -> {
             ++not_routed_count;
             if (fullPinName.startsWith("U27-")) {
-              FRLogger.trace(
-                  "BatchFanout.fanout_pass",
-                  "fanout_failed",
-                  (curr_result.details == null || curr_result.details.isEmpty()
-                      ? "Fanout attempt failed"
-                      : curr_result.details) + " [pin=" + fullPinName + "]",
-                  fullPinName,
-                  new app.freerouting.geometry.planar.Point[]{curr_pin.board_pin.get_center()});
+              FRLogger.trace("FANOUT_DIAG event=fanout_failed, pin=" + fullPinName
+                  + ", net=" + curr_pin.board_pin.get_net_no(0)
+                  + ", reason=" + (curr_result.details == null || curr_result.details.isEmpty()
+                  ? "Fanout attempt failed"
+                  : curr_result.details));
             }
           }
           case INSERT_ERROR -> ++insert_error_count;
