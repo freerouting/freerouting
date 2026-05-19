@@ -387,6 +387,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       int skipped = 0;
       BoardStatistics stats = board.get_statistics();
       RouterCounters routerCounters = new RouterCounters();
+      routerCounters.phase = "autoroute";
       routerCounters.passCount = p_pass_no;
       routerCounters.queuedToBeRoutedCount = items_to_go_count;
       routerCounters.skippedCount = skipped;
@@ -706,7 +707,37 @@ public class BatchAutorouter extends NamedAlgorithm {
     job.logInfo("Checking fanout pre-pass. settings.withFanout=" + this.settings.withFanout + ", smd_pins=" + this.board.get_smd_pins().size());
     // Run SMD fanout pre-pass when the board has SMD pins and fanout is enabled
     if (Boolean.TRUE.equals(this.settings.withFanout) && !this.board.get_smd_pins().isEmpty()) {
-        BatchFanout.fanout_board(this.board, this.settings, this.thread);
+      job.logInfo("Starting fanout pre-pass on board '" + this.board.get_hash() + "' for "
+          + this.board.get_smd_pins().size() + " SMD pin" + (this.board.get_smd_pins().size() == 1 ? "" : "s") + ".");
+      BatchFanout.fanout_board(this.board, this.settings, this.thread, status -> {
+        RouterCounters fanoutCounters = new RouterCounters();
+        fanoutCounters.phase = "fanout";
+        fanoutCounters.passCount = status.passNo();
+        fanoutCounters.queuedToBeRoutedCount = status.pinsToGo();
+        fanoutCounters.routedCount = status.routedCount();
+        fanoutCounters.skippedCount = 0;
+        fanoutCounters.rippedCount = 0;
+        fanoutCounters.failedToBeRoutedCount = status.notRoutedCount() + status.insertErrorCount();
+        fanoutCounters.incompleteCount = status.boardStatistics().connections.incompleteCount;
+        fanoutCounters.fanoutExtraViasCount = status.extraViasThisPass();
+        this.fireBoardUpdatedEvent(status.boardStatistics(), fanoutCounters, this.board);
+
+        if (status.passCompleted()) {
+          String boardHash = this.board.get_hash();
+          String fanoutMessage = "Fanout pass #" + status.passNo() + " on board '" + boardHash
+              + "' completed in " + FRLogger.formatDuration(status.passDurationMillis() / 1000.0)
+              + " with " + status.routedCount() + " SMD pin"
+              + (status.routedCount() == 1 ? "" : "s") + " fanouted, "
+              + status.notRoutedCount() + " not routed, " + status.insertErrorCount() + " insert error"
+              + (status.insertErrorCount() == 1 ? "" : "s")
+              + ", +" + status.extraViasThisPass() + " extra via"
+              + (status.extraViasThisPass() == 1 ? "" : "s")
+              + " (" + status.pinsToGo() + " SMD pin"
+              + (status.pinsToGo() == 1 ? "" : "s") + " still to check in pass, ripup costs="
+              + status.ripupCosts() + ").";
+          job.logInfo(fanoutMessage);
+        }
+      });
     }
 
     int currentPass = 1;

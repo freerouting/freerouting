@@ -222,6 +222,16 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
             .getBoardStatistics()
             .getNormalizedScore(routingJob.routerSettings.scoring);
 
+        if (event.getRouterCounters() != null && "fanout".equals(event.getRouterCounters().phase)) {
+          int extraVias = event.getRouterCounters().fanoutExtraViasCount == null ? 0
+              : event.getRouterCounters().fanoutExtraViasCount;
+          boardManager.screen_messages.set_status_message(
+              "Fanout pass #" + event.getRouterCounters().passCount
+                  + " (routed " + event.getRouterCounters().routedCount
+                  + ", failed " + event.getRouterCounters().failedToBeRoutedCount
+                  + ", +" + extraVias + " vias)");
+        }
+
         boardManager.screen_messages.set_batch_autoroute_info(event.getRouterCounters());
         boardManager.screen_messages.set_board_score(boardScore, event.getBoardStatistics().connections.incompleteCount,
             event.getBoardStatistics().clearanceViolations.totalCount);

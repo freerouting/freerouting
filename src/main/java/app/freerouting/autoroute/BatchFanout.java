@@ -2,6 +2,7 @@ package app.freerouting.autoroute;
 
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.StoppableThread;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
@@ -15,11 +16,34 @@ import java.util.TreeSet;
 /** Handles the sequencing of the fanout inside the batch autorouter. */
 public class BatchFanout {
 
+  @FunctionalInterface
+  public interface FanoutProgressListener {
+    void onProgress(FanoutPassStatus status);
+  }
+
+  public record FanoutPassStatus(
+      int passNo,
+      int ripupCosts,
+      int totalPins,
+      int pinsToGo,
+      int routedCount,
+      int notRoutedCount,
+      int insertErrorCount,
+      int extraViasThisPass,
+      int extraViasTotal,
+      long passDurationMillis,
+      BoardStatistics boardStatistics,
+      boolean passCompleted) {
+  }
+
   private final StoppableThread thread;
   private final RoutingBoard routing_board;
   private final RouterSettings settings;
   private final SortedSet<Component> sorted_components;
+  private final int totalSmdPinCount;
   private int lastNotRoutedCount;
+  private int extraViasTotal;
+  private long lastProgressUpdateTimestamp;
 
   private BatchFanout(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread) {
     this.thread = p_thread;
@@ -34,13 +58,23 @@ public class BatchFanout {
         sorted_components.add(curr_component);
       }
     }
+    int pinCount = 0;
+    for (Component component : sorted_components) {
+      pinCount += component.smd_pin_count;
+    }
+    this.totalSmdPinCount = pinCount;
   }
 
   public static void fanout_board(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread) {
+    fanout_board(p_board, p_settings, p_thread, null);
+  }
+
+  public static void fanout_board(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread,
+      FanoutProgressListener progressListener) {
     BatchFanout fanout_instance = new BatchFanout(p_board, p_settings, p_thread);
     final int MAX_PASS_COUNT = 20;
     for (int i = 0; i < MAX_PASS_COUNT; ++i) {
-      int routed_count = fanout_instance.fanout_pass(i);
+      int routed_count = fanout_instance.fanout_pass(i, progressListener);
       if (routed_count == 0 && fanout_instance.lastNotRoutedCount == 0) {
         break;
       }
@@ -48,11 +82,13 @@ public class BatchFanout {
   }
 
   /** Routes a fanout pass and returns the number of new fanouted SMD-pins in this pass. */
-  private int fanout_pass(int p_pass_no) {
-    int components_to_go = this.sorted_components.size();
+  private int fanout_pass(int p_pass_no, FanoutProgressListener progressListener) {
+    long passStart = System.currentTimeMillis();
+    int pinsToGo = this.totalSmdPinCount;
     int routed_count = 0;
     int not_routed_count = 0;
     int insert_error_count = 0;
+    int viasBeforePass = this.routing_board.get_vias().size();
     int ripup_costs = this.settings.get_start_ripup_costs() * (p_pass_no + 1);
 
     for (Component curr_component : this.sorted_components) {
@@ -75,24 +111,72 @@ public class BatchFanout {
           case FAILED       -> ++not_routed_count;
           case INSERT_ERROR -> ++insert_error_count;
         }
+        --pinsToGo;
+        int extraViasThisPass = Math.max(0, this.routing_board.get_vias().size() - viasBeforePass);
+        maybePublishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
+            insert_error_count, extraViasThisPass, false, passStart);
         if (this.thread.is_stop_auto_router_requested()) {
+          publishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
+              insert_error_count, extraViasThisPass, true, passStart);
           return routed_count;
         }
       }
-      --components_to_go;
     }
-    FRLogger.info(
-        "fanout pass: "
-            + (p_pass_no + 1)
-            + ", routed: "
-            + routed_count
-            + ", not routed: "
-            + not_routed_count
-            + ", errors: "
-            + insert_error_count);
+    int extraViasThisPass = Math.max(0, this.routing_board.get_vias().size() - viasBeforePass);
+    this.extraViasTotal += extraViasThisPass;
+    if (progressListener == null) {
+      FRLogger.info(
+          "fanout pass: "
+              + (p_pass_no + 1)
+              + ", routed: "
+              + routed_count
+              + ", not routed: "
+              + not_routed_count
+              + ", errors: "
+              + insert_error_count
+              + ", extra vias: +"
+              + extraViasThisPass);
+    }
     this.lastNotRoutedCount = not_routed_count;
+    publishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
+        insert_error_count, extraViasThisPass, true, passStart);
 
     return routed_count;
+  }
+
+  private void maybePublishProgress(FanoutProgressListener progressListener, int passNo, int ripupCosts, int pinsToGo,
+      int routedCount, int notRoutedCount, int insertErrorCount, int extraViasThisPass, boolean passCompleted,
+      long passStart) {
+    long now = System.currentTimeMillis();
+    if (passCompleted || now - lastProgressUpdateTimestamp >= 250) {
+      lastProgressUpdateTimestamp = now;
+      publishProgress(progressListener, passNo, ripupCosts, pinsToGo, routedCount, notRoutedCount, insertErrorCount,
+          extraViasThisPass, passCompleted, passStart);
+    }
+  }
+
+  private void publishProgress(FanoutProgressListener progressListener, int passNo, int ripupCosts, int pinsToGo,
+      int routedCount, int notRoutedCount, int insertErrorCount, int extraViasThisPass, boolean passCompleted,
+      long passStart) {
+    if (progressListener == null) {
+      return;
+    }
+    BoardStatistics boardStatistics = this.routing_board.get_statistics();
+    long duration = Math.max(0, System.currentTimeMillis() - passStart);
+    progressListener.onProgress(
+        new FanoutPassStatus(
+            passNo + 1,
+            ripupCosts,
+            this.totalSmdPinCount,
+            pinsToGo,
+            routedCount,
+            notRoutedCount,
+            insertErrorCount,
+            extraViasThisPass,
+            this.extraViasTotal + extraViasThisPass,
+            duration,
+            boardStatistics,
+            passCompleted));
   }
 
   private static class Component implements Comparable<Component> {
