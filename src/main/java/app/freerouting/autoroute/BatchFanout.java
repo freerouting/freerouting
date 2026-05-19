@@ -58,6 +58,12 @@ public class BatchFanout {
       EscapeStatistics escapeStatistics) {
   }
 
+  public record FanoutRunSummary(
+      int completedPassCount,
+      long totalDurationMillis,
+      EscapeStatistics escapeStatistics) {
+  }
+
   private final StoppableThread thread;
   private final RoutingBoard routing_board;
   private final RouterSettings settings;
@@ -87,31 +93,29 @@ public class BatchFanout {
     this.totalSmdPinCount = pinCount;
   }
 
-  public static void fanout_board(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread) {
-    fanout_board(p_board, p_settings, p_thread, null);
+  public static FanoutRunSummary fanout_board(RoutingBoard p_board, RouterSettings p_settings,
+      StoppableThread p_thread) {
+    return fanout_board(p_board, p_settings, p_thread, null);
   }
 
-  public static void fanout_board(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread,
+  public static FanoutRunSummary fanout_board(RoutingBoard p_board, RouterSettings p_settings,
+      StoppableThread p_thread,
       FanoutProgressListener progressListener) {
     BatchFanout fanout_instance = new BatchFanout(p_board, p_settings, p_thread);
+    long fanoutStart = System.currentTimeMillis();
     int maxPasses = (p_settings.fanout != null && p_settings.fanout.maxPasses != null)
         ? p_settings.fanout.maxPasses : 20;
+    int completedPasses = 0;
     for (int i = 0; i < maxPasses; ++i) {
       int routed_count = fanout_instance.fanout_pass(i, progressListener);
+      completedPasses++;
       if (routed_count == 0 && fanout_instance.lastNotRoutedCount == 0) {
         break;
       }
     }
-    // Log the final escape summary after all passes are done
     EscapeStatistics finalEscape = fanout_instance.computeEscapeStatistics();
-    FRLogger.info(
-        "fanout complete: escaped SMD pins: "
-            + finalEscape.escapedCount()
-            + "/"
-            + finalEscape.totalSmdPins()
-            + " ("
-            + String.format("%.1f", finalEscape.escapedPercentage())
-            + "%)");
+    long totalDurationMillis = Math.max(0, System.currentTimeMillis() - fanoutStart);
+    return new FanoutRunSummary(completedPasses, totalDurationMillis, finalEscape);
   }
 
   /** Routes a fanout pass and returns the number of new fanouted SMD-pins in this pass. */

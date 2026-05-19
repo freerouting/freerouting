@@ -29,6 +29,8 @@ import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
+import com.sun.management.ThreadMXBean;
+import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -97,7 +99,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   private long lastBoardUpdateTimestamp = 0;
 
   public BatchAutorouter(RoutingJob job) {
-    this(job.thread, job.board, job.routerSettings, !Boolean.TRUE.equals(job.routerSettings.withFanout), true,
+    this(job.thread, job.board, job.routerSettings, !isFanoutEnabled(job.routerSettings), true,
         job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
     this.job = job;
   }
@@ -171,6 +173,79 @@ public class BatchAutorouter extends NamedAlgorithm {
     return new Point[0];
   }
 
+  /**
+   * Returns {@code true} when the fanout pre-pass should run.
+   * Checks {@code settings.fanout.enabled} first; falls back to the legacy
+   * {@code settings.withFanout} field for backward-compatibility with
+   * serialised payloads that predate the {@link FanoutSettings} block.
+   */
+  private static boolean isFanoutEnabled(RouterSettings settings) {
+    if (settings == null) {
+      return false;
+    }
+    if (settings.fanout != null && settings.fanout.enabled != null) {
+      return settings.fanout.enabled;
+    }
+    // Legacy fallback
+    return Boolean.TRUE.equals(settings.withFanout);
+  }
+
+  private static float getCpuSecondsSnapshot(RoutingJob job) {
+    if (job == null || job.resourceUsage == null) {
+      return 0f;
+    }
+    return job.resourceUsage.cpuTimeUsed;
+  }
+
+  /**
+   * Auto-routes one ripup pass of all items of the board. Returns false, if the
+   * board is already completely routed.
+   */
+
+  private static float getAllocatedMemoryMbSnapshot(RoutingJob job) {
+    if (job == null || job.resourceUsage == null) {
+      return 0f;
+    }
+    return job.resourceUsage.maxMemoryUsed;
+  }
+
+  private static float getPeakHeapMbSnapshot(RoutingJob job) {
+    if (job == null || job.resourceUsage == null) {
+      return 0f;
+    }
+    return job.resourceUsage.peakMemoryUsed;
+  }
+
+  private static float sampleCurrentThreadCpuSeconds() {
+    try {
+      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      long cpuNanos = threadMxBean.getThreadCpuTime(Thread.currentThread().threadId());
+      return cpuNanos < 0 ? -1f : cpuNanos / 1_000_000_000.0f;
+    } catch (Throwable t) {
+      return -1f;
+    }
+  }
+
+  private static float sampleCurrentThreadAllocatedMb() {
+    try {
+      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      threadMxBean.setThreadAllocatedMemoryEnabled(true);
+      long allocatedBytes = threadMxBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+      return allocatedBytes < 0 ? -1f : allocatedBytes / (1024.0f * 1024.0f);
+    } catch (Throwable t) {
+      return -1f;
+    }
+  }
+
+  private static float sampleHeapUsageMb() {
+    try {
+      long heapUsed = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();
+      return heapUsed / (1024.0f * 1024.0f);
+    } catch (Throwable t) {
+      return 0f;
+    }
+  }
+
   private boolean shouldFireBoardUpdate() {
     long currentTime = System.currentTimeMillis();
     if (currentTime - lastBoardUpdateTimestamp > 250) { // Limit updates to 4 times per second (250ms)
@@ -237,11 +312,6 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
     return autoroute_item_list;
   }
-
-  /**
-   * Auto-routes one ripup pass of all items of the board. Returns false, if the
-   * board is already completely routed.
-   */
 
   /**
    * Multi-threaded version of the router that routes one ripup pass of all items
@@ -653,6 +723,23 @@ public class BatchAutorouter extends NamedAlgorithm {
     return "Freerouting Auto-router v1.0";
   }
 
+  /**
+   * Builds a human-readable summary of all unrouted connections on the current board,
+   * grouped by net. For each unrouted connection the component and pin names of both
+   * endpoints are listed so that the user can identify exactly which connections are
+   * missing and address them in their design.
+   *
+   * <p>Example output:
+   * <pre>
+   *   Net 'GND' (1 unrouted connection):
+   *     - J2-A1  ->  U1-1
+   *   Net '/MIPI_CSI_D0_N' (1 unrouted connection):
+   *     - J2-A2  ->  U1-2
+   * </pre>
+   *
+   * @return a formatted, multi-line string describing every unrouted airline
+   */
+
   @Override
   public NamedAlgorithmType getType() {
     return NamedAlgorithmType.ROUTER;
@@ -704,12 +791,18 @@ public class BatchAutorouter extends NamedAlgorithm {
           againstCosts);
     }
 
-    job.logInfo("Checking fanout pre-pass. settings.fanout.enabled=" + isFanoutEnabled(this.settings) + ", smd_pins=" + this.board.get_smd_pins().size());
+    job.logDebug("Checking fanout pre-pass. settings.fanout.enabled=" + isFanoutEnabled(this.settings) + ", smd_pins=" + this.board.get_smd_pins().size());
     // Run SMD fanout pre-pass when the board has SMD pins and fanout is enabled
     if (isFanoutEnabled(this.settings) && !this.board.get_smd_pins().isEmpty()) {
+      float fanoutCpuSecondsStart = sampleCurrentThreadCpuSeconds();
+      float fanoutAllocatedMbStart = sampleCurrentThreadAllocatedMb();
+      float fanoutPeakHeapMbAtStart = sampleHeapUsageMb();
+      final float[] fanoutPeakHeapMbObserved = new float[] { fanoutPeakHeapMbAtStart };
       job.logInfo("Starting fanout pre-pass on board '" + this.board.get_hash() + "' for "
           + this.board.get_smd_pins().size() + " SMD pin" + (this.board.get_smd_pins().size() == 1 ? "" : "s") + ".");
-      BatchFanout.fanout_board(this.board, this.settings, this.thread, status -> {
+      BatchFanout.FanoutRunSummary fanoutSummary = BatchFanout.fanout_board(this.board, this.settings, this.thread,
+          status -> {
+        fanoutPeakHeapMbObserved[0] = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
         RouterCounters fanoutCounters = new RouterCounters();
         fanoutCounters.phase = "fanout";
         fanoutCounters.passCount = status.passNo();
@@ -738,6 +831,40 @@ public class BatchAutorouter extends NamedAlgorithm {
           job.logInfo(fanoutMessage);
         }
       });
+
+      float fanoutCpuSecondsEnd = sampleCurrentThreadCpuSeconds();
+      float fanoutAllocatedMbEnd = sampleCurrentThreadAllocatedMb();
+
+      float fanoutCpuSecondsUsed;
+      if (fanoutCpuSecondsStart >= 0f && fanoutCpuSecondsEnd >= fanoutCpuSecondsStart) {
+        fanoutCpuSecondsUsed = fanoutCpuSecondsEnd - fanoutCpuSecondsStart;
+      } else {
+        fanoutCpuSecondsUsed = Math.max(0f, getCpuSecondsSnapshot(job));
+      }
+
+      float fanoutAllocatedGb;
+      if (fanoutAllocatedMbStart >= 0f && fanoutAllocatedMbEnd >= fanoutAllocatedMbStart) {
+        fanoutAllocatedGb = (fanoutAllocatedMbEnd - fanoutAllocatedMbStart) / 1024.0f;
+      } else {
+        fanoutAllocatedGb = Math.max(0f, getAllocatedMemoryMbSnapshot(job)) / 1024.0f;
+      }
+
+      float fanoutPeakHeapMb = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
+      fanoutPeakHeapMb = Math.max(fanoutPeakHeapMb, getPeakHeapMbSnapshot(job));
+      BatchFanout.EscapeStatistics finalEscape = fanoutSummary.escapeStatistics();
+      String fanoutCompletionStatus = this.thread.is_stop_auto_router_requested() ? "interrupted:" : "completed:";
+      String fanoutSummaryMessage = String.format(
+          "Fanout session %s started with %d total SMD pins, completed in %s, escaped pins: %d/%d (%.1f%%), using %s total CPU seconds, %s GB total allocated, and %s MB peak heap usage.",
+          fanoutCompletionStatus,
+          finalEscape.totalSmdPins(),
+          FRLogger.formatDuration(fanoutSummary.totalDurationMillis() / 1000.0),
+          finalEscape.escapedCount(),
+          finalEscape.totalSmdPins(),
+          finalEscape.escapedPercentage(),
+          FRLogger.defaultFloatFormat.format(fanoutCpuSecondsUsed),
+          FRLogger.defaultFloatFormat.format(fanoutAllocatedGb),
+          FRLogger.defaultFloatFormat.format(fanoutPeakHeapMb));
+      job.logInfo(fanoutSummaryMessage);
     }
 
     int currentPass = 1;
@@ -1024,39 +1151,6 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
 
     return !this.thread.is_stop_auto_router_requested();
-  }
-
-  /**
-   * Builds a human-readable summary of all unrouted connections on the current board,
-   * grouped by net. For each unrouted connection the component and pin names of both
-   * endpoints are listed so that the user can identify exactly which connections are
-   * missing and address them in their design.
-   *
-   * <p>Example output:
-   * <pre>
-   *   Net 'GND' (1 unrouted connection):
-   *     - J2-A1  ->  U1-1
-   *   Net '/MIPI_CSI_D0_N' (1 unrouted connection):
-   *     - J2-A2  ->  U1-2
-   * </pre>
-   *
-   * @return a formatted, multi-line string describing every unrouted airline
-   */
-  /**
-   * Returns {@code true} when the fanout pre-pass should run.
-   * Checks {@code settings.fanout.enabled} first; falls back to the legacy
-   * {@code settings.withFanout} field for backward-compatibility with
-   * serialised payloads that predate the {@link FanoutSettings} block.
-   */
-  private static boolean isFanoutEnabled(RouterSettings settings) {
-    if (settings == null) {
-      return false;
-    }
-    if (settings.fanout != null && settings.fanout.enabled != null) {
-      return settings.fanout.enabled;
-    }
-    // Legacy fallback
-    return Boolean.TRUE.equals(settings.withFanout);
   }
 
   private String buildUnroutedConnectionsReport() {    RatsNest ratsNest = new RatsNest(this.board);
