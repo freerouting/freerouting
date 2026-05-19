@@ -25,6 +25,7 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.ViaInfo;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -1009,10 +1010,8 @@ public class MazeSearchAlgo {
       int curr_layer = from_layer;
       for (;;) {
         TileShape curr_room_shape = curr_drill.room_arr[curr_layer - curr_drill.first_layer].get_shape();
-        ForcedPadAlgo.CheckDrillResult drill_result = ForcedViaAlgo.check_layer(ctrl.via_radius_arr[curr_layer],
-            ctrl.via_clearance_class, ctrl.attach_smd_allowed, curr_room_shape,
-            curr_drill.location, curr_layer, net_no_arr, ctrl.max_shove_trace_recursion_depth, 0,
-            autoroute_engine.board);
+        ForcedPadAlgo.CheckDrillResult drill_result = check_layer_with_any_matching_via(curr_drill, curr_layer,
+            curr_room_shape, net_no_arr);
         if (drill_result == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
           via_lower_bound = curr_layer + 1;
           break;
@@ -1039,10 +1038,8 @@ public class MazeSearchAlgo {
           break;
         }
         TileShape curr_room_shape = curr_drill.room_arr[curr_layer - curr_drill.first_layer].get_shape();
-        ForcedPadAlgo.CheckDrillResult drill_result = ForcedViaAlgo.check_layer(ctrl.via_radius_arr[curr_layer],
-            ctrl.via_clearance_class, ctrl.attach_smd_allowed, curr_room_shape,
-            curr_drill.location, curr_layer, net_no_arr, ctrl.max_shove_trace_recursion_depth, 0,
-            autoroute_engine.board);
+        ForcedPadAlgo.CheckDrillResult drill_result = check_layer_with_any_matching_via(curr_drill, curr_layer,
+            curr_room_shape, net_no_arr);
         if (drill_result == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
           via_upper_bound = curr_layer - 1;
           break;
@@ -1113,6 +1110,33 @@ public class MazeSearchAlgo {
           false);
       this.maze_expansion_list.add(new_element);
     }
+  }
+
+  private ForcedPadAlgo.CheckDrillResult check_layer_with_any_matching_via(ExpansionDrill p_drill, int p_layer,
+      TileShape p_room_shape, int[] p_net_no_arr) {
+    boolean drillableWithAttachSmd = false;
+    for (int i = 0; i < this.ctrl.via_rule.via_count(); i++) {
+      ViaInfo viaInfo = this.ctrl.via_rule.get_via(i);
+      Padstack viaPadstack = viaInfo.get_padstack();
+      if (p_layer < viaPadstack.from_layer() || p_layer > viaPadstack.to_layer()) {
+        continue;
+      }
+      ConvexShape viaShape = viaPadstack.get_shape(p_layer);
+      double viaRadius = viaShape == null ? 0 : 0.5 * viaShape.max_width();
+      double requiredRadius = Math.max(viaRadius, this.ctrl.trace_half_width[p_layer]);
+      ForcedPadAlgo.CheckDrillResult result = ForcedViaAlgo.check_layer(requiredRadius, viaInfo.get_clearance_class(),
+          viaInfo.attach_smd_allowed(), p_room_shape, p_drill.location, p_layer, p_net_no_arr,
+          this.ctrl.max_shove_trace_recursion_depth, 0, this.autoroute_engine.board,
+          this.ctrl.trace_half_width[p_layer], this.ctrl.trace_clearance_class_no);
+      if (result == ForcedPadAlgo.CheckDrillResult.DRILLABLE) {
+        return result;
+      }
+      if (result == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
+        drillableWithAttachSmd = true;
+      }
+    }
+    return drillableWithAttachSmd ? ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD
+        : ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
   }
 
   /**

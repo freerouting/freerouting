@@ -212,6 +212,16 @@ public class InsertFoundConnectionAlgo {
             + ", from corner: " + from_corner_no
             + ", ok_point: " + (ok_point != null ? ok_point.toString() : "null")
             + ", target: " + insert_polyline.last_corner());
+        traceFanoutDiagnostic("trace_insert_failed",
+            "layer=" + p_trace.layer
+                + ", corner_index=" + i
+                + ", from_corner_index=" + from_corner_no
+                + ", trace_half_width=" + ctrl.trace_half_width[p_trace.layer]
+                + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
+                + ", start_pin_clearance_class=" + (start_pin != null ? start_pin.clearance_class_no() : -1)
+                + ", end_pin_clearance_class=" + (end_pin != null ? end_pin.clearance_class_no() : -1)
+                + ", ok_point=" + formatPoint(ok_point)
+                + ", target=" + formatPoint(insert_polyline.last_corner()));
         if (true) {
           FRLogger.trace(
               "compare_trace_insert_segment_raw net=" + ctrl.net_no + ", layer=" + p_trace.layer
@@ -380,22 +390,57 @@ public class InsertFoundConnectionAlgo {
       if (curr_via_padstack.from_layer() > from_layer || curr_via_padstack.to_layer() < to_layer) {
         continue;
       }
-      if (ForcedViaAlgo.check(curr_via_info, p_location, net_no_arr, this.ctrl.max_shove_trace_recursion_depth, this.ctrl.max_shove_via_recursion_depth, this.board)) {
+      if (ForcedViaAlgo.check(curr_via_info, p_location, net_no_arr, this.ctrl.max_shove_trace_recursion_depth,
+          this.ctrl.max_shove_via_recursion_depth, this.board, this.ctrl.trace_half_width,
+          this.ctrl.trace_clearance_class_no)) {
         via_info = curr_via_info;
         break;
       }
     }
     if (via_info == null) {
       FRLogger.debug("InsertFoundConnectionAlgo: via mask not found for net #" + ctrl.net_no);
+      traceFanoutDiagnostic("via_mask_not_found",
+          "from_layer=" + from_layer
+              + ", to_layer=" + to_layer
+              + ", location=" + formatPoint(p_location)
+              + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
+              + ", via_clearance_class=" + ctrl.via_clearance_class
+              + ", trace_half_width_from=" + ctrl.trace_half_width[from_layer]
+              + ", trace_half_width_to=" + ctrl.trace_half_width[to_layer]);
       return false;
     }
     // insert the via
     if (!ForcedViaAlgo.insert(via_info, p_location, net_no_arr, this.ctrl.trace_clearance_class_no, this.ctrl.trace_half_width, this.ctrl.max_shove_trace_recursion_depth,
         this.ctrl.max_shove_via_recursion_depth, this.board)) {
       FRLogger.debug("InsertFoundConnectionAlgo: forced via failed for net #" + ctrl.net_no);
+      traceFanoutDiagnostic("forced_via_insert_failed",
+          "from_layer=" + from_layer
+              + ", to_layer=" + to_layer
+              + ", location=" + formatPoint(p_location)
+              + ", selected_via_clearance_class=" + via_info.get_clearance_class()
+              + ", selected_via_padstack=" + via_info.get_padstack().name
+              + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
+              + ", trace_half_width_from=" + ctrl.trace_half_width[from_layer]
+              + ", trace_half_width_to=" + ctrl.trace_half_width[to_layer]);
       return false;
     }
     return true;
+  }
+
+  private boolean shouldTraceFanoutDiagnostics() {
+    return ctrl.is_fanout
+        && ctrl.fanout_start_pin_name != null
+        && ctrl.fanout_start_pin_name.startsWith("U27-");
+  }
+
+  private void traceFanoutDiagnostic(String event, String message) {
+    if (!shouldTraceFanoutDiagnostics()) {
+      return;
+    }
+    FRLogger.trace("FANOUT_DIAG event=" + event
+        + ", pin=" + ctrl.fanout_start_pin_name
+        + ", net=" + ctrl.net_no
+        + ", " + message);
   }
 
   private static String formatPoint(Point point) {

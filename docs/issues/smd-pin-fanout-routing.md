@@ -85,6 +85,27 @@ Without a fanout pass, the maze-search algorithm must solve both "escape from th
      - Current interpretation:
        - The first meaningful blocker remains **room continuity mismatch during drill acceptance**, not an empty drill page and not a top-level layer-change admissibility gate.
 
+  7. **Clearance parity fix applied for fanout via-layer checks (2026-05-19, night).**
+     - `ForcedViaAlgo.check_layer(...)` now evaluates both:
+       - via pad footprint with via clearance class, and
+       - start-trace footprint with trace clearance class/trace half-width.
+     - `MazeSearchAlgo.expand_to_other_layers(...)` now evaluates drillability per concrete `ViaInfo` mask (padstack shape + clearance class), instead of a single coarse aggregate radius/class.
+     - Goal: ensure fanout maze layer-change admissibility uses the same effective clearance assumptions as actual via insertion.
+
+  8. **Insertion-stage diagnostics confirm dominant U27 failure mode is trace insertion, not via insertion.**
+     - `InsertFoundConnectionAlgo` now emits `FANOUT_DIAG` events for `U27-*`:
+       - `trace_insert_failed`
+       - `via_mask_not_found`
+       - `forced_via_insert_failed`
+     - Latest bm05 fanout-only run (`gradlew run` headless TRACE):
+       - `U27 via_mask_not_found = 0`
+       - `U27 forced_via_insert_failed = 0`
+       - `U27 trace_insert_failed = 688`
+     - Representative payload (U27-1):
+       - `layer=0`, `trace_half_width=1000`, `trace_clearance_class=3`, `start_pin_clearance_class=3`, `end_pin_clearance_class=3`.
+     - Interpretation:
+       - The current blocker for U27 fanout escapes is predominantly **forced top-layer trace segment insertion under clearance/geometry pressure**, not via-mask selection nor forced-via insertion.
+
 | Metric | v1.9 (with fanout) | Current (2026-05-19) |
 |---|---|---|
 | Total nets | 54 | 54 |
