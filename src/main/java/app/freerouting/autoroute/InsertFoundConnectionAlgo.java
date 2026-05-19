@@ -15,6 +15,7 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -147,16 +148,22 @@ public class InsertFoundConnectionAlgo {
           + ", maxItemIdBefore=" + maxItemIdBeforeSeg + ", maxItemIdAfter=" + maxItemIdAfterSeg
           + ", delta=" + (maxItemIdAfterSeg - maxItemIdBeforeSeg));
       boolean neckdown_inserted = false;
+      boolean micro_neckdown_inserted = false;
       if (ok_point != null && ok_point != insert_polyline.last_corner() && ctrl.with_neckdown && curr_corner_arr.length == 2) {
         neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_trace.layer, start_pin, end_pin);
       }
-      if (ok_point == insert_polyline.last_corner() || neckdown_inserted) {
+      if (!neckdown_inserted && ok_point != insert_polyline.last_corner() && ctrl.is_fanout && curr_corner_arr.length == 2) {
+        micro_neckdown_inserted = insert_fanout_micro_neckdown(ok_point, curr_corner_arr[1], p_trace.layer,
+            net_no_arr, start_pin, end_pin);
+      }
+      if (ok_point == insert_polyline.last_corner() || neckdown_inserted || micro_neckdown_inserted) {
         from_corner_no = i;
         if (true) {
           FRLogger.trace(
               "compare_trace_insert_segment_raw net=" + ctrl.net_no + ", layer=" + p_trace.layer
                   + ", i=" + i + ", from_corner_no=" + from_corner_no
                   + ", decision=ADVANCE, neckdown=" + neckdown_inserted
+                  + ", micro_neckdown=" + micro_neckdown_inserted
                   + ", ok_point=" + formatPoint(ok_point)
                   + ", first=" + formatPoint(insert_polyline.first_corner())
                   + ", last=" + formatPoint(insert_polyline.last_corner()));
@@ -165,6 +172,7 @@ public class InsertFoundConnectionAlgo {
               "compare_trace_insert_segment",
               "net=" + ctrl.net_no + ", layer=" + p_trace.layer + ", i=" + i + ", from_corner_no="
                   + from_corner_no + ", decision=ADVANCE, neckdown=" + neckdown_inserted
+                  + ", micro_neckdown=" + micro_neckdown_inserted
                   + ", ok_point=" + ok_point + ", first=" + insert_polyline.first_corner()
                   + ", last=" + insert_polyline.last_corner(),
               "Net #" + ctrl.net_no,
@@ -227,6 +235,7 @@ public class InsertFoundConnectionAlgo {
               "compare_trace_insert_segment_raw net=" + ctrl.net_no + ", layer=" + p_trace.layer
                   + ", i=" + i + ", from_corner_no=" + from_corner_no
                   + ", decision=FAIL, neckdown=" + neckdown_inserted
+                  + ", micro_neckdown=" + micro_neckdown_inserted
                   + ", ok_point=" + formatPoint(ok_point)
                   + ", first=" + formatPoint(insert_polyline.first_corner())
                   + ", last=" + formatPoint(insert_polyline.last_corner()));
@@ -235,6 +244,7 @@ public class InsertFoundConnectionAlgo {
               "compare_trace_insert_segment",
               "net=" + ctrl.net_no + ", layer=" + p_trace.layer + ", i=" + i + ", from_corner_no="
                   + from_corner_no + ", decision=FAIL, neckdown=" + neckdown_inserted
+                  + ", micro_neckdown=" + micro_neckdown_inserted
                   + ", ok_point=" + ok_point + ", first=" + insert_polyline.first_corner()
                   + ", last=" + insert_polyline.last_corner(),
               "Net #" + ctrl.net_no,
@@ -276,6 +286,51 @@ public class InsertFoundConnectionAlgo {
     }
     this.last_corner = p_trace.corners[p_trace.corners.length - 1];
     return result;
+  }
+
+  private boolean insert_fanout_micro_neckdown(Point ok_point, Point target_point, int layer, int[] net_no_arr,
+      Pin start_pin, Pin end_pin) {
+    Point from_point = ok_point != null ? ok_point : target_point;
+    if (from_point == null || target_point == null || from_point.equals(target_point)) {
+      return false;
+    }
+    int base_half_width = ctrl.trace_half_width[layer];
+    LinkedHashSet<Integer> candidate_half_widths = new LinkedHashSet<>();
+    if (start_pin != null && start_pin.is_on_layer(layer)) {
+      candidate_half_widths.add(start_pin.get_trace_neckdown_halfwidth(layer));
+    }
+    if (end_pin != null && end_pin.is_on_layer(layer)) {
+      candidate_half_widths.add(end_pin.get_trace_neckdown_halfwidth(layer));
+    }
+    candidate_half_widths.add(Math.max(1, (base_half_width * 3) / 4));
+    candidate_half_widths.add(Math.max(1, base_half_width / 2));
+
+    for (int candidate_half_width : candidate_half_widths) {
+      if (candidate_half_width <= 0 || candidate_half_width >= base_half_width) {
+        continue;
+      }
+      Point candidate_ok_point = board.insert_forced_trace_segment(from_point, target_point, candidate_half_width,
+          layer, net_no_arr, ctrl.trace_clearance_class_no, ctrl.max_shove_trace_recursion_depth,
+          ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE,
+          ctrl.pull_tight_accuracy, true, null);
+      if (candidate_ok_point == target_point) {
+        traceFanoutDiagnostic("trace_insert_micro_neckdown_success",
+            "layer=" + layer
+                + ", candidate_half_width=" + candidate_half_width
+                + ", base_half_width=" + base_half_width
+                + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
+                + ", from=" + formatPoint(from_point)
+                + ", to=" + formatPoint(target_point));
+        return true;
+      }
+    }
+    traceFanoutDiagnostic("trace_insert_micro_neckdown_failed",
+        "layer=" + layer
+            + ", base_half_width=" + base_half_width
+            + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
+            + ", from=" + formatPoint(from_point)
+            + ", to=" + formatPoint(target_point));
+    return false;
   }
 
   boolean insert_neckdown(Point p_from_corner, Point p_to_corner, int p_layer, Pin p_start_pin, Pin p_end_pin) {
