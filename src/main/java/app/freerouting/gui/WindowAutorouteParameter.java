@@ -8,6 +8,7 @@ import app.freerouting.settings.RouterSettings;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -18,6 +19,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -73,12 +76,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-    // create main panel
-
+    // create main content panel with GridBagLayout for input fields
     final JPanel main_panel = new JPanel();
-    getContentPane().add(main_panel);
+    final JPanel content_panel = new JPanel();
+    main_panel.setLayout(new java.awt.BorderLayout());
+    main_panel.add(content_panel, java.awt.BorderLayout.CENTER);
+    
     GridBagLayout gridbag = new GridBagLayout();
-    main_panel.setLayout(gridbag);
+    content_panel.setLayout(gridbag);
     GridBagConstraints gridbag_constraints = new GridBagConstraints();
     gridbag_constraints.anchor = GridBagConstraints.WEST;
     gridbag_constraints.insets = new Insets(1, 10, 1, 10);
@@ -86,16 +91,16 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = 3;
     JLabel layer_label = new JLabel(tm.getText("layer"));
     gridbag.setConstraints(layer_label, gridbag_constraints);
-    main_panel.add(layer_label);
+    content_panel.add(layer_label);
 
     JLabel active_label = new JLabel(tm.getText("active"));
     gridbag.setConstraints(active_label, gridbag_constraints);
-    main_panel.add(active_label);
+    content_panel.add(active_label);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     JLabel preferred_direction_label = new JLabel(tm.getText("preferred_direction"));
     gridbag.setConstraints(preferred_direction_label, gridbag_constraints);
-    main_panel.add(preferred_direction_label);
+    content_panel.add(preferred_direction_label);
 
     this.horizontal = tm.getText("horizontal");
     this.vertical = tm.getText("vertical");
@@ -118,7 +123,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       layer_name_arr[i] = new JLabel();
       layer_name_arr[i].setText(curr_layer.name);
       gridbag.setConstraints(layer_name_arr[i], gridbag_constraints);
-      main_panel.add(layer_name_arr[i]);
+      content_panel.add(layer_name_arr[i]);
 
       // set the active checkbox
       settings_autorouter_layer_active_arr[i] = new JCheckBox();
@@ -128,7 +133,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       board_handling.getCurrentRoutingJob().routerSettings.set_layer_active(i, curr_layer.is_signal);
       settings_autorouter_layer_active_arr[i].setEnabled(curr_layer.is_signal);
       gridbag.setConstraints(settings_autorouter_layer_active_arr[i], gridbag_constraints);
-      main_panel.add(settings_autorouter_layer_active_arr[i]);
+      content_panel.add(settings_autorouter_layer_active_arr[i]);
 
       // set the preferred direction combobox
       settings_autorouter_combo_box_arr.add(new JComboBox<>());
@@ -145,17 +150,17 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       // FRAnalytics.buttonClicked("settings_autorouter_combo_box_arr", null));
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(settings_autorouter_combo_box_arr.get(i), gridbag_constraints);
-      main_panel.add(settings_autorouter_combo_box_arr.get(i));
+      content_panel.add(settings_autorouter_combo_box_arr.get(i));
     }
 
     JLabel separator = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
-    main_panel.add(separator, gridbag_constraints);
+    content_panel.add(separator, gridbag_constraints);
 
     gridbag_constraints.gridwidth = 2;
     JLabel vias_allowed_label = new JLabel(tm.getText("vias_allowed"));
     gridbag.setConstraints(vias_allowed_label, gridbag_constraints);
-    main_panel.add(vias_allowed_label);
+    content_panel.add(vias_allowed_label);
 
     settings_autorouter_vias_allowed = new JCheckBox();
     settings_autorouter_vias_allowed.addActionListener(new ViasAllowedListener());
@@ -164,18 +169,18 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(settings_autorouter_vias_allowed, gridbag_constraints);
-    main_panel.add(settings_autorouter_vias_allowed);
+    content_panel.add(settings_autorouter_vias_allowed);
 
     separator = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
-    main_panel.add(separator, gridbag_constraints);
+    content_panel.add(separator, gridbag_constraints);
 
     JLabel passes_label = new JLabel(tm.getText("passes"));
 
     gridbag_constraints.gridwidth = 2;
     gridbag_constraints.gridheight = 2;
     gridbag.setConstraints(passes_label, gridbag_constraints);
-    main_panel.add(passes_label);
+    content_panel.add(passes_label);
 
     this.settings_autorouter_autoroute_pass_button = new JCheckBox(tm.getText("autoroute"));
     this.settings_autorouter_autoroute_pass_button.setToolTipText(tm.getText("autoroute_tooltip"));
@@ -198,20 +203,20 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.gridheight = 1;
 
     gridbag.setConstraints(settings_autorouter_autoroute_pass_button, gridbag_constraints);
-    main_panel.add(settings_autorouter_autoroute_pass_button, gridbag_constraints);
+    content_panel.add(settings_autorouter_autoroute_pass_button, gridbag_constraints);
     gridbag.setConstraints(settings_autorouter_postroute_pass_button, gridbag_constraints);
-    main_panel.add(settings_autorouter_postroute_pass_button, gridbag_constraints);
+    content_panel.add(settings_autorouter_postroute_pass_button, gridbag_constraints);
 
     separator = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
-    main_panel.add(separator, gridbag_constraints);
+    content_panel.add(separator, gridbag_constraints);
 
     // add label and number field for the via costs.
 
     gridbag_constraints.gridwidth = 2;
     JLabel via_cost_label = new JLabel(tm.getText("via_costs"));
     gridbag.setConstraints(via_cost_label, gridbag_constraints);
-    main_panel.add(via_cost_label);
+    content_panel.add(via_cost_label);
 
     NumberFormat number_format = NumberFormat.getIntegerInstance(p_board_frame.get_locale());
     this.via_cost_field = new JFormattedTextField(number_format);
@@ -220,7 +225,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.via_cost_field.addFocusListener(new WindowAutorouteParameter.ViaCostFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(via_cost_field, gridbag_constraints);
-    main_panel.add(via_cost_field);
+    content_panel.add(via_cost_field);
 
     this.plane_via_cost_field = new JFormattedTextField(number_format);
     this.plane_via_cost_field.setColumns(3);
@@ -230,10 +235,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = 2;
     JLabel plane_via_cost_label = new JLabel(tm.getText("plane_via_costs"));
     gridbag.setConstraints(plane_via_cost_label, gridbag_constraints);
-    main_panel.add(plane_via_cost_label);
+    content_panel.add(plane_via_cost_label);
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(plane_via_cost_field, gridbag_constraints);
-    main_panel.add(plane_via_cost_field);
+    content_panel.add(plane_via_cost_field);
 
     // add label and number field for the start ripup costs.
 
@@ -241,7 +246,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     JLabel start_ripup_costs_label = new JLabel();
     start_ripup_costs_label.setText(tm.getText("start_ripup_costs"));
     gridbag.setConstraints(start_ripup_costs_label, gridbag_constraints);
-    main_panel.add(start_ripup_costs_label);
+    content_panel.add(start_ripup_costs_label);
 
     start_ripup_costs = new JFormattedTextField(number_format);
     start_ripup_costs.setColumns(3);
@@ -249,14 +254,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.start_ripup_costs.addFocusListener(new WindowAutorouteParameter.StartRipupCostFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(start_ripup_costs, gridbag_constraints);
-    main_panel.add(start_ripup_costs);
+    content_panel.add(start_ripup_costs);
 
     // add label and number field for max passes
 
     gridbag_constraints.gridwidth = 2;
     JLabel max_passes_label = new JLabel(tm.getText("max_passes"));
     gridbag.setConstraints(max_passes_label, gridbag_constraints);
-    main_panel.add(max_passes_label);
+    content_panel.add(max_passes_label);
 
     max_passes_field = new JFormattedTextField(number_format);
     max_passes_field.setColumns(5);
@@ -264,14 +269,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.max_passes_field.addFocusListener(new WindowAutorouteParameter.MaxPassesFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(max_passes_field, gridbag_constraints);
-    main_panel.add(max_passes_field);
+    content_panel.add(max_passes_field);
 
     // add label and text field for job timeout
 
     gridbag_constraints.gridwidth = 2;
     JLabel job_timeout_label = new JLabel(tm.getText("job_timeout"));
     gridbag.setConstraints(job_timeout_label, gridbag_constraints);
-    main_panel.add(job_timeout_label);
+    content_panel.add(job_timeout_label);
 
     job_timeout_field = new JFormattedTextField();
     job_timeout_field.setColumns(10);
@@ -279,14 +284,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.job_timeout_field.addFocusListener(new WindowAutorouteParameter.JobTimeoutFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(job_timeout_field, gridbag_constraints);
-    main_panel.add(job_timeout_field);
+    content_panel.add(job_timeout_field);
 
     // add label and number field for max threads
 
     gridbag_constraints.gridwidth = 2;
     JLabel max_threads_label = new JLabel(tm.getText("max_threads"));
     gridbag.setConstraints(max_threads_label, gridbag_constraints);
-    main_panel.add(max_threads_label);
+    content_panel.add(max_threads_label);
 
     max_threads_field = new JFormattedTextField(number_format);
     max_threads_field.setColumns(3);
@@ -294,7 +299,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.max_threads_field.addFocusListener(new WindowAutorouteParameter.MaxThreadsFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(max_threads_field, gridbag_constraints);
-    main_panel.add(max_threads_field);
+    content_panel.add(max_threads_field);
 
     // add label and combo box for the router algorithm selection
     this.algorithm_current = tm.getText("algorithm_current");
@@ -313,31 +318,31 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     JLabel algorithm_label = new JLabel();
     algorithm_label.setText(tm.getText("algorithm"));
     gridbag.setConstraints(algorithm_label, gridbag_constraints);
-    main_panel.add(algorithm_label);
+    content_panel.add(algorithm_label);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(settings_autorouter_algorithm_combo_box, gridbag_constraints);
-    main_panel.add(settings_autorouter_algorithm_combo_box);
+    content_panel.add(settings_autorouter_algorithm_combo_box);
 
     JLabel separator2 = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator2, gridbag_constraints);
-    main_panel.add(separator2, gridbag_constraints);
+    content_panel.add(separator2, gridbag_constraints);
 
     // add label and number field for the trace costs on each layer.
 
     gridbag_constraints.gridwidth = 3;
     JLabel trace_costs_on_layer = new JLabel(tm.getText("trace_costs_on_layer"));
     gridbag.setConstraints(trace_costs_on_layer, gridbag_constraints);
-    main_panel.add(trace_costs_on_layer);
+    content_panel.add(trace_costs_on_layer);
 
     JLabel pref_dir_label = new JLabel(tm.getText("in_preferred_direction"));
     gridbag.setConstraints(pref_dir_label, gridbag_constraints);
-    main_panel.add(pref_dir_label);
+    content_panel.add(pref_dir_label);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     JLabel against_pref_dir_label = new JLabel(tm.getText("against_preferred_direction"));
     gridbag.setConstraints(against_pref_dir_label, gridbag_constraints);
-    main_panel.add(against_pref_dir_label);
+    content_panel.add(against_pref_dir_label);
 
     int signal_layer_count = layer_structure.signal_layer_count();
     signal_layer_name_arr = new JLabel[signal_layer_count];
@@ -355,7 +360,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       signal_layer_name_arr[i].setText(curr_signal_layer.name);
       gridbag_constraints.gridwidth = 3;
       gridbag.setConstraints(signal_layer_name_arr[i], gridbag_constraints);
-      main_panel.add(signal_layer_name_arr[i]);
+      content_panel.add(signal_layer_name_arr[i]);
       preferred_direction_trace_cost_arr[i] = new JFormattedTextField(float_number_format);
       preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
       preferred_direction_trace_cost_arr[i]
@@ -363,7 +368,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       preferred_direction_trace_cost_arr[i]
           .addFocusListener(new WindowAutorouteParameter.PreferredDirectionTraceCostFocusListener(i));
       gridbag.setConstraints(preferred_direction_trace_cost_arr[i], gridbag_constraints);
-      main_panel.add(preferred_direction_trace_cost_arr[i]);
+      content_panel.add(preferred_direction_trace_cost_arr[i]);
       against_preferred_direction_trace_cost_arr[i] = new JFormattedTextField(float_number_format);
       against_preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
       against_preferred_direction_trace_cost_arr[i]
@@ -372,15 +377,31 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           .addFocusListener(new WindowAutorouteParameter.AgainstPreferredDirectionTraceCostFocusListener(i));
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(against_preferred_direction_trace_cost_arr[i], gridbag_constraints);
-      main_panel.add(against_preferred_direction_trace_cost_arr[i]);
+      content_panel.add(against_preferred_direction_trace_cost_arr[i]);
       preferred_direction_trace_costs_input_completed[i] = true;
       against_preferred_direction_trace_costs_input_completed[i] = true;
     }
 
-    JLabel applyValuesNote = new JLabel(tm.getText("apply_values_note"));
-    gridbag.setConstraints(applyValuesNote, gridbag_constraints);
-    main_panel.add(applyValuesNote, gridbag_constraints);
+    // Create a dedicated footer so the action buttons are anchored and sized independently.
+    JPanel footer_panel = new JPanel(new java.awt.BorderLayout());
+    footer_panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+    JPanel button_panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+
+    JButton saveButton = new JButton(tm.getText("save_button"));
+    saveButton.addActionListener(new OKButtonListener());
+    saveButton.addActionListener(_ -> FRAnalytics.buttonClicked("autoroute_settings_save", tm.getText("save_button")));
+    button_panel.add(saveButton);
+
+    JButton cancelButton = new JButton(tm.getText("cancel_button"));
+    cancelButton.addActionListener(new CancelButtonListener());
+    cancelButton.addActionListener(_ -> FRAnalytics.buttonClicked("autoroute_settings_cancel", tm.getText("cancel_button")));
+    button_panel.add(cancelButton);
+
+    footer_panel.add(button_panel, java.awt.BorderLayout.EAST);
+    main_panel.add(footer_panel, java.awt.BorderLayout.SOUTH);
+    
+    getContentPane().add(main_panel);
     this.refresh();
     this.pack();
     this.setResizable(false);
@@ -1089,8 +1110,32 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!preferred_direction_trace_costs_input_completed[this.signal_layer_no]) {
-        start_ripup_cost_input_completed = true;
-        refresh();
+        // Save the value when focus is lost
+        int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
+        double old_value = board_handling.getCurrentRoutingJob().routerSettings
+            .get_preferred_direction_trace_costs(curr_layer_no);
+
+        // Commit the edit to ensure getValue() returns the typed value
+        try {
+          preferred_direction_trace_cost_arr[this.signal_layer_no].commitEdit();
+        } catch (java.text.ParseException e) {
+          // If parse fails, revert to old value
+          preferred_direction_trace_cost_arr[this.signal_layer_no].setValue(old_value);
+        }
+
+        Object input = preferred_direction_trace_cost_arr[this.signal_layer_no].getValue();
+        double input_value;
+        if (input instanceof Number number) {
+          input_value = number.doubleValue();
+          if (input_value <= 0) {
+            input_value = old_value;
+          }
+        } else {
+          input_value = old_value;
+        }
+        board_handling.getCurrentRoutingJob().routerSettings.set_preferred_direction_trace_costs(curr_layer_no, input_value);
+        preferred_direction_trace_cost_arr[this.signal_layer_no].setValue(input_value);
+        preferred_direction_trace_costs_input_completed[this.signal_layer_no] = true;
       }
     }
 
@@ -1145,13 +1190,273 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent p_evt) {
       if (!against_preferred_direction_trace_costs_input_completed[this.signal_layer_no]) {
-        start_ripup_cost_input_completed = true;
-        refresh();
+        // Save the value when focus is lost
+        int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
+        double old_value = board_handling.getCurrentRoutingJob().routerSettings
+            .get_against_preferred_direction_trace_costs(curr_layer_no);
+
+        // Commit the edit to ensure getValue() returns the typed value
+        try {
+          against_preferred_direction_trace_cost_arr[this.signal_layer_no].commitEdit();
+        } catch (java.text.ParseException e) {
+          // If parse fails, revert to old value
+          against_preferred_direction_trace_cost_arr[this.signal_layer_no].setValue(old_value);
+        }
+
+        Object input = against_preferred_direction_trace_cost_arr[this.signal_layer_no].getValue();
+        double input_value;
+        if (input instanceof Number number) {
+          input_value = number.doubleValue();
+          if (input_value <= 0) {
+            input_value = old_value;
+          }
+        } else {
+          input_value = old_value;
+        }
+        board_handling.getCurrentRoutingJob().routerSettings.set_against_preferred_direction_trace_costs(curr_layer_no,
+            input_value);
+        against_preferred_direction_trace_cost_arr[this.signal_layer_no].setValue(input_value);
+        against_preferred_direction_trace_costs_input_completed[this.signal_layer_no] = true;
       }
     }
 
     @Override
     public void focusGained(FocusEvent p_evt) {
+    }
+  }
+
+  /**
+   * OK button listener - saves all pending values and closes the window
+   */
+  private class OKButtonListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent p_evt) {
+      // Commit all pending values from text fields
+      commitAllPendingValues();
+      dispose();
+    }
+  }
+
+  /**
+   * Cancel button listener - closes the window without saving pending values
+   */
+  private class CancelButtonListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent p_evt) {
+      // Simply close the window without saving
+      dispose();
+    }
+  }
+
+  /**
+   * Commits all pending values from text input fields
+   */
+  private void commitAllPendingValues() {
+    // Via costs
+    if (!via_cost_input_completed) {
+      try {
+        via_cost_field.commitEdit();
+        int old_value = board_handling.getCurrentRoutingJob().routerSettings.get_via_costs();
+        Object input = via_cost_field.getValue();
+        int input_value;
+        if (input instanceof Number number) {
+          input_value = number.intValue();
+          if (input_value <= 0) {
+            input_value = 1;
+          }
+        } else {
+          input_value = old_value;
+        }
+        board_handling.getCurrentRoutingJob().routerSettings.set_via_costs(input_value);
+        via_cost_field.setValue(input_value);
+      } catch (java.text.ParseException e) {
+        // Ignore parse errors
+      }
+    }
+
+    // Plane via costs
+    if (!plane_via_cost_input_completed) {
+      try {
+        plane_via_cost_field.commitEdit();
+        int old_value = board_handling.getCurrentRoutingJob().routerSettings.get_plane_via_costs();
+        Object input = plane_via_cost_field.getValue();
+        int input_value;
+        if (input instanceof Number number) {
+          input_value = number.intValue();
+          if (input_value <= 0) {
+            input_value = 1;
+          }
+        } else {
+          input_value = old_value;
+        }
+        board_handling.getCurrentRoutingJob().routerSettings.set_plane_via_costs(input_value);
+        plane_via_cost_field.setValue(input_value);
+      } catch (java.text.ParseException e) {
+        // Ignore parse errors
+      }
+    }
+
+    // Start ripup costs
+    if (!start_ripup_cost_input_completed) {
+      try {
+        start_ripup_costs.commitEdit();
+        int old_value = board_handling.getCurrentRoutingJob().routerSettings.get_start_ripup_costs();
+        Object input = start_ripup_costs.getValue();
+        int input_value;
+        if (input instanceof Number number) {
+          input_value = number.intValue();
+          if (input_value <= 0) {
+            input_value = 1;
+          }
+        } else {
+          input_value = old_value;
+        }
+        board_handling.getCurrentRoutingJob().routerSettings.set_start_ripup_costs(input_value);
+        start_ripup_costs.setValue(input_value);
+      } catch (java.text.ParseException e) {
+        // Ignore parse errors
+      }
+    }
+
+    // Max passes
+    if (!max_passes_input_completed) {
+      try {
+        max_passes_field.commitEdit();
+        int old_value = board_handling.getCurrentRoutingJob().routerSettings.maxPasses;
+        Object input = max_passes_field.getValue();
+        int input_value;
+        if (input instanceof Number number) {
+          input_value = number.intValue();
+          if (input_value < 1) {
+            input_value = 1;
+          }
+          if (input_value > 9999) {
+            input_value = 9999;
+          }
+        } else {
+          input_value = old_value;
+        }
+        isUpdatingFromSettings = true;
+        try {
+          board_handling.getCurrentRoutingJob().routerSettings.setMaxPasses(input_value);
+        } finally {
+          isUpdatingFromSettings = false;
+        }
+        max_passes_field.setValue(input_value);
+      } catch (java.text.ParseException e) {
+        // Ignore parse errors
+      }
+    }
+
+    // Job timeout
+    if (!job_timeout_input_completed) {
+      try {
+        job_timeout_field.commitEdit();
+        String old_value = board_handling.getCurrentRoutingJob().routerSettings.jobTimeoutString;
+        Object input = job_timeout_field.getValue();
+        String input_value;
+        if (input instanceof String str) {
+          input_value = str;
+          if (!input_value.matches("^(\\d+\\.)?\\d{1,2}:\\d{2}:\\d{2}$")) {
+            input_value = old_value;
+          }
+        } else {
+          input_value = old_value;
+        }
+        isUpdatingFromSettings = true;
+        try {
+          board_handling.getCurrentRoutingJob().routerSettings.setJobTimeoutString(input_value);
+        } finally {
+          isUpdatingFromSettings = false;
+        }
+        job_timeout_field.setValue(input_value);
+      } catch (java.text.ParseException e) {
+        // Ignore parse errors
+      }
+    }
+
+    // Max threads
+    if (!max_threads_input_completed) {
+      try {
+        max_threads_field.commitEdit();
+        int old_value = board_handling.getCurrentRoutingJob().routerSettings.maxThreads;
+        Object input = max_threads_field.getValue();
+        int input_value;
+        int max_available = Runtime.getRuntime().availableProcessors();
+        if (input instanceof Number number) {
+          input_value = number.intValue();
+          if (input_value < 1) {
+            input_value = 1;
+          }
+          if (input_value > max_available) {
+            input_value = max_available;
+          }
+        } else {
+          input_value = old_value;
+        }
+        isUpdatingFromSettings = true;
+        try {
+          board_handling.getCurrentRoutingJob().routerSettings.setMaxThreads(input_value);
+        } finally {
+          isUpdatingFromSettings = false;
+        }
+        max_threads_field.setValue(input_value);
+      } catch (java.text.ParseException e) {
+        // Ignore parse errors
+      }
+    }
+
+    // Preferred and against preferred direction trace costs
+    for (int i = 0; i < preferred_direction_trace_cost_arr.length; i++) {
+      if (!preferred_direction_trace_costs_input_completed[i]) {
+        try {
+          preferred_direction_trace_cost_arr[i].commitEdit();
+          int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(i);
+          double old_value = board_handling.getCurrentRoutingJob().routerSettings
+              .get_preferred_direction_trace_costs(curr_layer_no);
+          Object input = preferred_direction_trace_cost_arr[i].getValue();
+          double input_value;
+          if (input instanceof Number number) {
+            input_value = number.doubleValue();
+            if (input_value <= 0) {
+              input_value = old_value;
+            }
+          } else {
+            input_value = old_value;
+          }
+          board_handling.getCurrentRoutingJob().routerSettings.set_preferred_direction_trace_costs(curr_layer_no, input_value);
+          preferred_direction_trace_cost_arr[i].setValue(input_value);
+          preferred_direction_trace_costs_input_completed[i] = true;
+        } catch (java.text.ParseException e) {
+          // Ignore parse errors
+        }
+      }
+
+      if (!against_preferred_direction_trace_costs_input_completed[i]) {
+        try {
+          against_preferred_direction_trace_cost_arr[i].commitEdit();
+          int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(i);
+          double old_value = board_handling.getCurrentRoutingJob().routerSettings
+              .get_against_preferred_direction_trace_costs(curr_layer_no);
+          Object input = against_preferred_direction_trace_cost_arr[i].getValue();
+          double input_value;
+          if (input instanceof Number number) {
+            input_value = number.doubleValue();
+            if (input_value <= 0) {
+              input_value = old_value;
+            }
+          } else {
+            input_value = old_value;
+          }
+          board_handling.getCurrentRoutingJob().routerSettings.set_against_preferred_direction_trace_costs(curr_layer_no, input_value);
+          against_preferred_direction_trace_cost_arr[i].setValue(input_value);
+          against_preferred_direction_trace_costs_input_completed[i] = true;
+        } catch (java.text.ParseException e) {
+          // Ignore parse errors
+        }
+      }
     }
   }
 }
