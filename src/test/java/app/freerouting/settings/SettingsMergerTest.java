@@ -183,4 +183,51 @@ class SettingsMergerTest {
         assertFalse(merged.getRunRouter());
         assertFalse(merged.getRunOptimizer());
     }
+
+    @Test
+    void testLegacyBatchModeEnablesRouterWhenJsonDisablesIt() {
+        DefaultSettings defaults = new DefaultSettings();
+        RouterSettings jsonSettings = new RouterSettings();
+        jsonSettings.enabled = false;
+        SettingsSource json = new SettingsSource() {
+            @Override
+            public RouterSettings getSettings() {
+                return jsonSettings;
+            }
+
+            @Override
+            public String getSourceName() {
+                return "JSON test source";
+            }
+
+            @Override
+            public int getPriority() {
+                return 10;
+            }
+        };
+        CliSettings cli = new CliSettings(new String[] {
+            "-de", "fixtures/Issue508-DAC2020_bm05.dsn",
+            "-do", "fixtures/Issue508-DAC2020_bm05.ses"
+        });
+
+        RouterSettings merged = new SettingsMerger(defaults, json, cli).merge();
+
+        assertNotNull(merged);
+        assertTrue(merged.getRunRouter());
+    }
+
+    @Test
+    void testExplicitRouterEnabledFalseOverridesLegacyBatchMode() {
+        DefaultSettings defaults = new DefaultSettings();
+        CliSettings cli = new CliSettings(new String[] {
+            "-de", "fixtures/Issue508-DAC2020_bm05.dsn",
+            "-do", "fixtures/Issue508-DAC2020_bm05.ses",
+            "--router.enabled=false"
+        });
+
+        RouterSettings merged = new SettingsMerger(defaults, cli).merge();
+
+        assertNotNull(merged);
+        assertFalse(merged.getRunRouter());
+    }
 }
