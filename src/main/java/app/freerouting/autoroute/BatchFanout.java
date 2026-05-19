@@ -139,6 +139,7 @@ public class BatchFanout {
       for (Component.Pin curr_pin : curr_component.smd_pins) {
         double max_milliseconds = baseMillisPerPin * (p_pass_no + 1);
         TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
+        String fullPinName = curr_component.board_component.name + "-" + curr_pin.board_pin.name();
         this.routing_board.start_marking_changed_area();
         AutorouteAttemptResult curr_result =
             this.routing_board.fanout(
@@ -152,7 +153,19 @@ public class BatchFanout {
              ++routed_count;
              FRLogger.trace("BatchFanout.fanout_pass", "fanout_success", "Fanout successful", curr_pin.board_pin.name(), new app.freerouting.geometry.planar.Point[]{curr_pin.board_pin.get_center()});
           }
-          case FAILED       -> ++not_routed_count;
+          case FAILED       -> {
+            ++not_routed_count;
+            if (fullPinName.startsWith("U27-")) {
+              FRLogger.trace(
+                  "BatchFanout.fanout_pass",
+                  "fanout_failed",
+                  (curr_result.details == null || curr_result.details.isEmpty()
+                      ? "Fanout attempt failed"
+                      : curr_result.details) + " [pin=" + fullPinName + "]",
+                  fullPinName,
+                  new app.freerouting.geometry.planar.Point[]{curr_pin.board_pin.get_center()});
+            }
+          }
           case INSERT_ERROR -> ++insert_error_count;
         }
         --pinsToGo;

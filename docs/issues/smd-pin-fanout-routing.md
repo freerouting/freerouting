@@ -45,6 +45,30 @@ Without a fanout pass, the maze-search algorithm must solve both "escape from th
    - Improvement is real but still far from the **100%** target.
    - `U27` remains the primary escape bottleneck and requires additional algorithmic work (door selection/tie-break behavior, local via candidate quality, or SMD-specific expansion heuristics).
 
+5. **Targeted `U27-*` fanout diagnostics are now available in current.**
+   - `RoutingBoard.fanout(...)` now tags fanout attempts with the full `component-pin` label (for example `U27-45`).
+   - `MazeSearchAlgo` now emits `fanout_drill_page_scan`, `fanout_drill_rejected`, and `fanout_drill_accepted` trace entries for `U27-*` fanout attempts.
+   - `BatchFanout.fanout_pass(...)` now emits `fanout_failed` trace entries with `[pin=U27-*]` appended to the message.
+   - Latest fanout-only verification command:
+     ```powershell
+     java -jar .\build\libs\freerouting-current-executable.jar `
+       -de .\fixtures\Issue508-DAC2020_bm05.dsn `
+       -do .\logs\Issue508\u27-fanout-diagnostics\Issue508-DAC2020_bm05.ses `
+       --router.fanout.enabled=true `
+       --router.enabled=false `
+       --router.optimizer.enabled=false `
+       --gui.enabled=false `
+       --debug.enable_detailed_logging=true `
+       --logging.file.location="C:\Work\freerouting\logs\Issue508\u27-fanout-diagnostics"
+     ```
+   - Latest measured finding from those logs:
+     - For `U27`, the dominant rejection mode is **not** “no drill candidates on the page”.
+     - Example: `U27-45` reaches drill pages with **100 drill candidates**, and several are accepted into the maze queue.
+     - Across the captured `U27-*` drill rejections, the dominant reason is:
+       - `Rejected drill because expansion room does not match the current room` → **84,551** occurrences.
+       - Secondary reason: `Rejected drill because its section is already occupied` → **1,784** occurrences.
+     - This shifts the investigation focus from empty-via-site generation to **how drill candidates are associated with expansion rooms / how room continuity is preserved around dense U27 escape geometry**.
+
 | Metric | v1.9 (with fanout) | Current (2026-05-19) |
 |---|---|---|
 | Total nets | 54 | 54 |

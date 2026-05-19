@@ -993,6 +993,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     AutorouteControl ctrl_settings = new AutorouteControl(this, pin_net_no, routerSettings);
     ctrl_settings.is_fanout = true;
+    Component pin_component = this.components.get(p_pin.get_component_no());
+    if (pin_component != null && p_pin.name() != null) {
+      ctrl_settings.fanout_start_pin_name = pin_component.name + "-" + p_pin.name();
+    } else {
+      ctrl_settings.fanout_start_pin_name = p_pin.toString();
+    }
+    ctrl_settings.fanout_start_pin_center = p_pin.get_center();
     ctrl_settings.remove_unconnected_vias = false;
     if (p_ripup_costs >= 0) {
       ctrl_settings.ripup_allowed = true;
