@@ -24,9 +24,11 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import com.sun.management.ThreadMXBean;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.ByteArrayOutputStream;
+import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -448,7 +450,25 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
   protected void thread_action() {
     routingJob.startedAt = Instant.now();
     routingJob.state = RoutingJobState.RUNNING;
-    boardManager.set_num_threads(routingJob.routerSettings.maxThreads);
+      boardManager.set_num_threads(routingJob.routerSettings.maxThreads);
+
+    // Start a background thread that periodically samples CPU time, total allocated
+    // memory, and peak heap usage — mirroring the headless RoutingJobSchedulerActionThread.
+    Thread resourceMonitor = new Thread(() -> {
+      while (routingJob.state == app.freerouting.core.RoutingJobState.RUNNING
+          || routingJob.state == app.freerouting.core.RoutingJobState.STOPPING) {
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          break;
+        }
+        monitorCpuAndMemoryUsage(routingJob);
+      }
+    });
+    resourceMonitor.setDaemon(true);
+    resourceMonitor.setName("resource-monitor-gui");
+    resourceMonitor.start();
 
     for (ThreadActionListener hl : this.listeners) {
       hl.autorouterStarted();
@@ -525,12 +545,15 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         }
 
         String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, completed in %s, final score: %s.",
+            "Auto-router session %s started with %d unrouted nets, completed in %s, final score: %s, using %s total CPU seconds, %s GB total allocated, and %s MB peak heap usage.",
             completionStatus,
             initialUnroutedCount,
             FRLogger.formatDuration(autoroutingSecondsToComplete),
             FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount,
-                bs.clearanceViolations.totalCount));
+                bs.clearanceViolations.totalCount),
+            FRLogger.defaultFloatFormat.format(routingJob.resourceUsage.cpuTimeUsed),
+            FRLogger.defaultFloatFormat.format(routingJob.resourceUsage.maxMemoryUsed / 1024.0f),
+            FRLogger.defaultFloatFormat.format(routingJob.resourceUsage.peakMemoryUsed));
 
         routingJob.logInfo(sessionSummary);
       } else {
@@ -656,6 +679,35 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
     }
 
     FRLogger.traceExit("BatchAutorouterThread.thread_action()");
+  }
+
+  /**
+   * Samples CPU time, total allocated memory, and peak heap usage for the current routing job
+   * thread and updates {@code routingJob.resourceUsage}. Mirrors the implementation in
+   * {@link app.freerouting.management.RoutingJobSchedulerActionThread}.
+   */
+  private void monitorCpuAndMemoryUsage(app.freerouting.core.RoutingJob job) {
+    try {
+      ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      long[] threadIds = threadMXBean.getAllThreadIds();
+      for (long threadId : threadIds) {
+        if (job.thread != null && threadId == job.thread.threadId()) {
+          float cpuTime = threadMXBean.getThreadCpuTime(threadId) / 1_000_000_000.0f;
+          threadMXBean.setThreadAllocatedMemoryEnabled(true);
+          long allocatedMemory = threadMXBean.getThreadAllocatedBytes(threadId);
+          float allocatedMB = allocatedMemory / (1024.0f * 1024.0f);
+          job.resourceUsage.cpuTimeUsed = cpuTime;
+          job.resourceUsage.maxMemoryUsed = allocatedMB;
+        }
+      }
+      java.lang.management.MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+      float heapUsedMB = memoryMXBean.getHeapMemoryUsage().getUsed() / (1024.0f * 1024.0f);
+      if (heapUsedMB > job.resourceUsage.peakMemoryUsed) {
+        job.resourceUsage.peakMemoryUsed = heapUsedMB;
+      }
+    } catch (Throwable t) {
+      // java.management or jdk.management module not available in this JRE build
+    }
   }
 
   /**
