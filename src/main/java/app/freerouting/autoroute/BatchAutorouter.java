@@ -1043,7 +1043,7 @@ public class BatchAutorouter extends NamedAlgorithm {
             consecutiveNoImprovementPasses = 0;
             fanoutRecoveryApplied = true;
             alreadyRoutedBoardHashes.clear();
-            job.logInfo("Applied one-time fanout recovery cleanup (removed fanout tails/vias). "
+            job.logDebug("Applied one-time fanout recovery cleanup (removed fanout tails/vias). "
                 + "Incompletes: " + incompletesBeforeRecovery + " -> "
                 + boardStatisticsAfter.connections.incompleteCount + ".");
           }

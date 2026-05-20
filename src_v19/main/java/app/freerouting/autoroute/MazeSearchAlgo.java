@@ -1440,7 +1440,7 @@ public class MazeSearchAlgo {
         ++contact_count;
         Trace obstacle_trace = (Trace) curr_contact;
         cost_factor = Math.max(cost_factor, obstacle_trace.get_half_width());
-        if (look_if_fanout_via) {
+        if (look_if_fanout_via && !this.ctrl.is_fanout) {
           double curr_fanout_via_cost_factor = calc_fanout_via_ripup_cost_factor(obstacle_trace);
           if (curr_fanout_via_cost_factor > 1) {
             fanout_via_cost_factor = curr_fanout_via_cost_factor;
@@ -1460,7 +1460,7 @@ public class MazeSearchAlgo {
     double min_trace_length = 0;
     int item_count = 0;
     String connectionItemIds = "[]";
-    if (fanout_via_cost_factor <= 1) // p_obstacle_item does not belong to a fanout
+    if (fanout_via_cost_factor <= 1 && !this.ctrl.is_fanout) // p_obstacle_item does not belong to a fanout, and not during fanout pass
     {
       Connection obstacle_connection = Connection.get(p_obstacle_item);
       if (obstacle_connection != null) {

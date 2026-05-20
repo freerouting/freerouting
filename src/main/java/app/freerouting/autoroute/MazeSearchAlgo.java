@@ -1354,7 +1354,7 @@ public class MazeSearchAlgo {
         }
         ++contact_count;
         cost_factor = Math.max(cost_factor, obstacle_trace.get_half_width());
-        if (look_if_fanout_via) {
+        if (look_if_fanout_via && !this.ctrl.is_fanout) {
           double curr_fanout_via_cost_factor = calc_fanout_via_ripup_cost_factor(obstacle_trace);
           if (curr_fanout_via_cost_factor > 1) {
             fanout_via_cost_factor = curr_fanout_via_cost_factor;
@@ -1368,30 +1368,30 @@ public class MazeSearchAlgo {
       }
     }
 
-    double ripup_cost = this.ctrl.ripup_costs * cost_factor;
-    double detour = 1;
-    double trace_length = 0;
-    double min_trace_length = 0;
-    int item_count = 0;
-    String connectionItemIds = "[]";
-    if (fanout_via_cost_factor <= 1) // p_obstacle_item does not belong to a fanout
-    {
-      Connection obstacle_connection = Connection.get(p_obstacle_item);
-      if (obstacle_connection != null) {
-        detour = obstacle_connection.get_detour();
-        trace_length = obstacle_connection.trace_length();
-        item_count = obstacle_connection.item_list.size();
-        if (obstacle_connection.start_point != null && obstacle_connection.end_point != null) {
-          min_trace_length = obstacle_connection.start_point.to_float().distance(obstacle_connection.end_point.to_float());
-        }
-        StringBuilder sb = new StringBuilder("[");
-        for (app.freerouting.board.Item ci : obstacle_connection.item_list) {
-          if (sb.length() > 1) sb.append(",");
-          sb.append(ci.get_id_no());
-        }
-        sb.append("]");
-        connectionItemIds = sb.toString();
-      }
+     double ripup_cost = this.ctrl.ripup_costs * cost_factor;
+     double detour = 1;
+     double trace_length = 0;
+     double min_trace_length = 0;
+     int item_count = 0;
+     String connectionItemIds = "[]";
+     if (fanout_via_cost_factor <= 1 && !this.ctrl.is_fanout) // p_obstacle_item does not belong to a fanout, and not during fanout pass
+     {
+       Connection obstacle_connection = Connection.get(p_obstacle_item);
+       if (obstacle_connection != null) {
+         detour = obstacle_connection.get_detour();
+         trace_length = obstacle_connection.trace_length();
+         item_count = obstacle_connection.item_list.size();
+         if (obstacle_connection.start_point != null && obstacle_connection.end_point != null) {
+           min_trace_length = obstacle_connection.start_point.to_float().distance(obstacle_connection.end_point.to_float());
+         }
+         StringBuilder sb = new StringBuilder("[");
+         for (app.freerouting.board.Item ci : obstacle_connection.item_list) {
+           if (sb.length() > 1) sb.append(",");
+           sb.append(ci.get_id_no());
+         }
+         sb.append("]");
+         connectionItemIds = sb.toString();
+       }
     }
     boolean randomize = this.ctrl.ripup_pass_no >= 4 && this.ctrl.ripup_pass_no % 3 != 0;
     if (randomize) {
