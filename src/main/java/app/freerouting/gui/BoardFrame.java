@@ -959,7 +959,9 @@ public class BoardFrame extends WindowBase {
   public void repaint_all() {
     this.repaint();
     for (int i = 0; i < permanent_subwindows.length; i++) {
-      permanent_subwindows[i].repaint();
+      if (permanent_subwindows[i] != null) {
+        permanent_subwindows[i].repaint();
+      }
     }
   }
 
@@ -1020,7 +1022,9 @@ public class BoardFrame extends WindowBase {
     @Override
     public void windowIconified(WindowEvent evt) {
       for (int i = 0; i < permanent_subwindows.length; i++) {
-        permanent_subwindows[i].parent_iconified();
+        if (permanent_subwindows[i] != null) {
+          permanent_subwindows[i].parent_iconified();
+        }
       }
       for (BoardSubWindow curr_subwindow : temporary_subwindows) {
         if (curr_subwindow != null) {
