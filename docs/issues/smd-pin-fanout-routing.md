@@ -108,7 +108,7 @@ Without a fanout pass, the maze-search algorithm must solve both "escape from th
 
   9. **Micro-neckdown fallback added for fanout trace insertion (2026-05-19, late night).**
      - Change in `InsertFoundConnectionAlgo.insert_trace(...)`:
-       - On failed 2-point fanout segment insertion, retry with reduced half-width candidates (`pin neckdown`, `75%`, `50%` of base width) while keeping the same trace clearance class.
+        - On failed 2-point fanout segment insertion, retry with reduced half-width candidates (`pin neckdown`, `75%`, `60%`, `50%` of base width) while keeping the same trace clearance class.
        - New events:
          - `trace_insert_micro_neckdown_success`
          - `trace_insert_micro_neckdown_failed`
@@ -117,6 +117,12 @@ Without a fanout pass, the maze-search algorithm must solve both "escape from th
        - After: `trace_insert_failed = 17`, `trace_insert_micro_neckdown_success = 234`, `trace_insert_micro_neckdown_failed = 19`, `fanout_failed = 179`, unique failed pins = `23`.
      - Interpretation:
        - The fallback materially improves dense U27 escape routing by resolving most prior segment-level insertion stalls without changing via-mask selection.
+
+   10. **Bounded bm05 fixture assertions added for completion-rate tracking (2026-05-20).**
+      - `Dac2020Bm05RoutingTest` now asserts the capped slices directly:
+        - `maxItems=2, maxPasses=1` → at most `106` incomplete connections.
+        - `maxItems=5, maxPasses=1` → at most `104` incomplete connections.
+      - These checks turn the smoke runs into regression gates so future fanout changes can be evaluated by actual routed-connection counts, not only TRACE diagnostics.
 
 | Metric | v1.9 (with fanout) | Current (2026-05-19) |
 |---|---|---|

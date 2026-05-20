@@ -15,8 +15,10 @@ public class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
 
     RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm05.dsn", testSettingsSource);
     RunRoutingJob(job);
-    
-    assertRoutingResult(job, "Issue508-DAC2020_bm05.dsn").check();
+
+    assertRoutingResult(job, "Issue508-DAC2020_bm05.dsn")
+        .maxIncompleteConnections(106)
+        .check();
   }
 
   @Test
@@ -29,7 +31,9 @@ public class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
     RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm05.dsn", testSettingsSource);
     RunRoutingJob(job);
 
-    assertRoutingResult(job, "Issue508-DAC2020_bm05.dsn").check();
+    assertRoutingResult(job, "Issue508-DAC2020_bm05.dsn")
+        .maxIncompleteConnections(104)
+        .check();
   }
 
   @Test

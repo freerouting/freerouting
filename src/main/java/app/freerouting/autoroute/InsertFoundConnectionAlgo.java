@@ -303,6 +303,7 @@ public class InsertFoundConnectionAlgo {
       candidate_half_widths.add(end_pin.get_trace_neckdown_halfwidth(layer));
     }
     candidate_half_widths.add(Math.max(1, (base_half_width * 3) / 4));
+    candidate_half_widths.add(Math.max(1, (base_half_width * 3) / 5));
     candidate_half_widths.add(Math.max(1, base_half_width / 2));
 
     for (int candidate_half_width : candidate_half_widths) {
