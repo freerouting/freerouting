@@ -12,6 +12,8 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.settings.GlobalSettings;
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import app.freerouting.fixtures.RoutingFixtureTest;
 
@@ -19,12 +21,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Reproduction tests for Issue #575 — DRC incorrectly reported items as
- * unconnected. These tests verify that:
- *  (a) the board model correctly exposes connectivity state, and
- *  (b) the DRC checker detects genuine disconnections and produces an
- *      accurate report consistent with the reference JSON.
- * Reference: fixtures/Issue575-drc_Natural_Tone_Preamp_7_unconnected_items-freerouting_drc.json
+ * Reproduction coverage for Issue #575 using a single-pass test.
+ *
+ * <p>The fixture board is expensive to load and analyze, so this class keeps
+ * all assertions in one test method to avoid repeated setup/DRC work.
  */
 public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
@@ -40,29 +40,20 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
         Freerouting.globalSettings = new GlobalSettings();
     }
 
-    // -------------------------------------------------------------------------
-    // Fixed tests (were failing with wrong assertions)
-    // -------------------------------------------------------------------------
-
-    /**
-     * Verifies that trace 2402 (GND net, Top layer) is correctly identified
-     * as a dangling trace by the board model.
-     *
-     * <p>Issue 575 context: several GND traces in this partially-routed board are
-     * genuinely disconnected at load time. The DRC should detect them; the board
-     * model's {@code is_tail()} method returning {@code true} confirms that fact.
-     * The original test mistakenly asserted the trace MUST connect to pin 321 —
-     * it does not, because the trace has no connected endpoints.
-     */
     @Test
-    void test_Connectivity_Of_Overlapping_Traces() {
+    void test_Issue575_Drc_Reproduction_SinglePass() {
         RoutingJob job = GetRoutingJob(TEST_BOARD);
         assertNotNull(job, "Job should not be null");
         BoardLoader.loadBoardIfNeeded(job);
         assertNotNull(job.board, "Board should be loaded");
 
         BasicBoard board = job.board;
+        DesignRulesChecker drc = new DesignRulesChecker(
+            board, new DesignRulesCheckerSettings());
+        Collection<UnconnectedItems> allIssues = drc.getAllUnconnectedItems();
+        DrcReport report = drc.generateReport(TEST_BOARD, "mm");
 
+        // Connectivity spot-check: overlapping GND traces and nearby pin.
         Item item1   = board.get_item(2402); // GND trace, Top layer
         Item item2   = board.get_item(2411); // GND trace, Bottom layer
         Item item321 = board.get_item(321);  // GND pin (component #26)
@@ -90,29 +81,6 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
             assertFalse(contacts1.contains(item321),
                 "Trace 2402 correctly has NO connection to pin 321 in this board state.");
         }
-    }
-
-    /**
-     * Verifies that via 2522 (+5V net) can be found in the board and that
-     * its connectivity state can be inspected.
-     *
-     * <p>The reference DRC JSON lists via 2522 as dangling. However, in the
-     * current board-loading state, widespread normalization failures leave many
-     * +5V traces disconnected at their endpoints; some of those stray traces
-     * overlap the via position on both layers, causing {@code is_tail()} to
-     * return {@code false} (contacts detected on multiple layers). This test
-     * therefore only asserts the via's presence and logs its state for
-     * diagnostic purposes — the {@link #test_DRC_Dangling_Track_Count_Matches_Reference()}
-     * test guards the total dangling-via count.
-     */
-    @Test
-    void test_Connectivity_Of_Via_2522() {
-        RoutingJob job = GetRoutingJob(TEST_BOARD);
-        assertNotNull(job, "Job should not be null");
-        BoardLoader.loadBoardIfNeeded(job);
-        assertNotNull(job.board, "Board should be loaded");
-
-        BasicBoard board = job.board;
 
         Item via2522item = board.get_items().stream()
             .filter(item -> item.get_id_no() == 2522)
@@ -120,47 +88,17 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
             .orElse(null);
 
         assertNotNull(via2522item, "Via 2522 should be found in the board");
-        Via via = assertInstanceOf(Via.class, via2522item, "Item 2522 should be a Via");
+        Via via2522 = assertInstanceOf(Via.class, via2522item, "Item 2522 should be a Via");
 
-        System.out.println("Via 2522 layers  : " + via.first_layer() + " to " + via.last_layer());
-        System.out.println("Via 2522 is_tail : " + via.is_tail());
-        System.out.println("Via 2522 contacts: " + via.get_normal_contacts().size());
+        System.out.println("Via 2522 layers  : " + via2522.first_layer() + " to " + via2522.last_layer());
+        System.out.println("Via 2522 is_tail : " + via2522.is_tail());
+        System.out.println("Via 2522 contacts: " + via2522.get_normal_contacts().size());
 
         // NOTE: the reference DRC JSON lists via 2522 as dangling, but in the
         // current codebase normalization failures cause stray traces to register
         // as multi-layer contacts on this via, so is_tail() may be false.
         // We do NOT assert is_tail() here; the dangling-via COUNT test guards
         // against regressions in overall via detection.
-    }
-
-    /**
-     * Verifies the DRC detects at least as many dangling tracks and exactly as
-     * many dangling vias as the reference freerouting DRC JSON documents.
-     *
-     * <p>The reference JSON records exactly {@value #EXPECTED_DANGLING_TRACKS}
-     * dangling tracks.  Due to normalization failures during board loading (trace
-     * endpoints may not align exactly with pin/via centres because of integer
-     * coordinate rounding) the DRC can flag additional traces as dangling.
-     * The lower-bound assertion therefore guards against under-detection
-     * regressions while remaining tolerant of harmless over-detection caused by
-     * normalization artefacts.
-     *
-     * <p>The via count is an exact assertion: via connectivity detection is not
-     * affected by normalization failures, so that number must stay stable.
-     *
-     * <p>Reference:
-     * {@code fixtures/Issue575-drc_Natural_Tone_Preamp_7_unconnected_items-freerouting_drc.json}
-     */
-    @Test
-    void test_DRC_Dangling_Track_Count_Matches_Reference() {
-        RoutingJob job = GetRoutingJob(TEST_BOARD);
-        assertNotNull(job, "Job should not be null");
-        BoardLoader.loadBoardIfNeeded(job);
-        assertNotNull(job.board, "Board should be loaded");
-
-        DesignRulesChecker drc = new DesignRulesChecker(
-            job.board, new DesignRulesCheckerSettings());
-        Collection<UnconnectedItems> allIssues = drc.getAllUnconnectedItems();
 
         long danglingTracks = allIssues.stream()
             .filter(ui -> "track_dangling".equals(ui.type))
@@ -184,26 +122,6 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
         assertEquals(EXPECTED_DANGLING_VIAS, danglingVias,
             "DRC should detect exactly " + EXPECTED_DANGLING_VIAS
             + " dangling vias in this board (per reference JSON).");
-    }
-
-    // -------------------------------------------------------------------------
-    // New tests extending DRC coverage
-    // -------------------------------------------------------------------------
-
-    /**
-     * Verifies that the DRC detects the expected number of unconnected net
-     * groups in the board, matching the reference freerouting DRC JSON.
-     */
-    @Test
-    void test_DRC_Unconnected_Net_Count_Matches_Reference() {
-        RoutingJob job = GetRoutingJob(TEST_BOARD);
-        assertNotNull(job, "Job should not be null");
-        BoardLoader.loadBoardIfNeeded(job);
-        assertNotNull(job.board, "Board should be loaded");
-
-        DesignRulesChecker drc = new DesignRulesChecker(
-            job.board, new DesignRulesCheckerSettings());
-        Collection<UnconnectedItems> allIssues = drc.getAllUnconnectedItems();
 
         long unconnectedNetGroups = allIssues.stream()
             .filter(ui -> "unconnected_items".equals(ui.type))
@@ -218,34 +136,6 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
         assertTrue(unconnectedNetGroups >= EXPECTED_UNCONNECTED_NET_GROUPS,
             "DRC should detect at least " + EXPECTED_UNCONNECTED_NET_GROUPS
             + " unconnected net groups (per reference JSON); actual=" + unconnectedNetGroups + ".");
-    }
-
-    /**
-     * Verifies that every via the DRC flags as dangling genuinely has
-     * {@code is_tail() == true} at the board-model level.
-     *
-     * <p>The reference DRC JSON documented vias 2522/2498/2497/2486 as dangling.
-     * Due to normalization failures those specific IDs may not be flagged in the
-     * current code (stray traces can appear as multi-layer contacts on a via,
-     * preventing {@code is_tail()} from returning {@code true} for some of them).
-     * This test therefore does not hardcode IDs; instead it verifies that:
-     * <ol>
-     *   <li>The DRC detects exactly {@value #EXPECTED_DANGLING_VIAS} dangling vias.</li>
-     *   <li>For each detected via, the board-model {@code is_tail()} agrees
-     *       (preventing the DRC from producing false positives).</li>
-     * </ol>
-     */
-    @Test
-    void test_DRC_Detects_Specific_Dangling_Vias() {
-        RoutingJob job = GetRoutingJob(TEST_BOARD);
-        assertNotNull(job, "Job should not be null");
-        BoardLoader.loadBoardIfNeeded(job);
-        assertNotNull(job.board, "Board should be loaded");
-
-        BasicBoard board = job.board;
-        DesignRulesChecker drc = new DesignRulesChecker(
-            board, new DesignRulesCheckerSettings());
-        Collection<UnconnectedItems> allIssues = drc.getAllUnconnectedItems();
 
         var danglingViaIssues = allIssues.stream()
             .filter(ui -> "via_dangling".equals(ui.type))
@@ -253,9 +143,9 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
         System.out.println("Dangling vias detected: " + danglingViaIssues.size());
         for (UnconnectedItems ui : danglingViaIssues) {
-            Via via = assertInstanceOf(Via.class, ui.first_item,
+            Via drcVia = assertInstanceOf(Via.class, ui.first_item,
                 "DRC item type mismatch: expected Via for id=" + ui.first_item.get_id_no());
-            System.out.println("  -> via id=" + via.get_id_no() + " is_tail=" + via.is_tail());
+            System.out.println("  -> via id=" + drcVia.get_id_no() + " is_tail=" + drcVia.is_tail());
         }
 
         assertEquals(EXPECTED_DANGLING_VIAS, danglingViaIssues.size(),
@@ -263,33 +153,19 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
         // Each DRC-reported dangling via must agree with the board-model is_tail() check.
         for (UnconnectedItems ui : danglingViaIssues) {
-            Via via = (Via) ui.first_item; // safe: already verified above
-            assertTrue(via.is_tail(),
-                "Via " + via.get_id_no()
+            Via drcVia = (Via) ui.first_item; // safe: already verified above
+            assertTrue(drcVia.is_tail(),
+                "Via " + drcVia.get_id_no()
                 + " is reported as dangling by DRC but is_tail() returns false — "
                 + "a false positive in the DRC.");
         }
-    }
-
-    /**
-     * Verifies that specific dangling tracks from the reference DRC JSON are
-     * individually detected by the DRC checker.
-     *
-     * <p>Spot-checks 4 representative track IDs across different nets and layers.
-     */
-    @Test
-    void test_DRC_Detects_Specific_Dangling_Tracks() {
-        RoutingJob job = GetRoutingJob(TEST_BOARD);
-        assertNotNull(job, "Job should not be null");
-        BoardLoader.loadBoardIfNeeded(job);
-        assertNotNull(job.board, "Board should be loaded");
-
-        BasicBoard board = job.board;
-        DesignRulesChecker drc = new DesignRulesChecker(
-            board, new DesignRulesCheckerSettings());
-        Collection<UnconnectedItems> allIssues = drc.getAllUnconnectedItems();
 
         // Sample from reference JSON: GND/Top(2340), +5V/Top(1869), GND/Bottom(2372), +5V/Bottom(1802)
+        Set<Integer> danglingTrackIds = allIssues.stream()
+            .filter(ui -> "track_dangling".equals(ui.type))
+            .map(ui -> ui.first_item.get_id_no())
+            .collect(Collectors.toSet());
+
         int[] spotCheckIds = {2340, 1869, 2372, 1802};
         for (int trackId : spotCheckIds) {
             Item trackItem = board.get_item(trackId);
@@ -299,35 +175,9 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
             assertTrue(track.is_tail(),
                 "Track " + trackId + " should be dangling (is_tail == true)");
 
-            boolean detectedByDrc = allIssues.stream()
-                .filter(ui -> "track_dangling".equals(ui.type))
-                .anyMatch(ui -> ui.first_item.get_id_no() == trackId);
-            assertTrue(detectedByDrc,
+            assertTrue(danglingTrackIds.contains(trackId),
                 "DRC should detect track " + trackId + " as a dangling track");
         }
-    }
-
-    /**
-     * Smoke-tests the full DRC report generation for this board. Verifies
-     * that the generated report is non-empty and contains violations
-     * consistent with the reference JSON.
-     *
-     * <p>Dangling-track violations use a lower-bound assertion (>= reference
-     * count) because normalization failures during board loading can produce
-     * additional stubs; see {@link #test_DRC_Dangling_Track_Count_Matches_Reference()}
-     * for a fuller explanation.  Via and unconnected-net counts use exact
-     * equality because they are unaffected by normalization artefacts.
-     */
-    @Test
-    void test_DRC_Full_Report_For_Issue575_Board() {
-        RoutingJob job = GetRoutingJob(TEST_BOARD);
-        assertNotNull(job, "Job should not be null");
-        BoardLoader.loadBoardIfNeeded(job);
-        assertNotNull(job.board, "Board should be loaded");
-
-        DesignRulesChecker drc = new DesignRulesChecker(
-            job.board, new DesignRulesCheckerSettings());
-        DrcReport report = drc.generateReport(TEST_BOARD, "mm");
 
         assertNotNull(report, "DRC report should not be null");
         assertNotNull(report.violations, "Violations list should not be null");
