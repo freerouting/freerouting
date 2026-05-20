@@ -37,26 +37,22 @@ The v1.9 source code now emits the same `FANOUT_DIAG` trace events as the curren
 
 These changes are diagnostic-only (no routing logic altered) and match the AGENTS.md requirement for log parity investigations: *"keep diagnostic payloads synchronized between current and v1.9"*.
 
-#### Per-pin first-mismatch geometric detail logging (current branch)
+#### Drill-Page Search Tree Mismatch Identified (2026-05-20)
 
-`MazeSearchAlgo.expand_to_drills_of_page()` now logs a richer `first_room_mismatch_detail` event on the **first** room-mismatch encountered during each drill-page scan. This event captures:
+A deep-dive investigation of search trees and clearance matrices has uncovered the primary bottleneck causing `drill_rejected_room_mismatch` rejections in headless mode:
 
-```
-FANOUT_DIAG event=first_room_mismatch_detail
-  pin=<component-pin>
-  net=<net_no>
-  drill_location=<Point>
-  expansion_room_id=<identity hash>   ← the room the expansion came from
-  expansion_room_bounds=<TileShape>   ← its geometry
-  drill_room_id=<identity hash>       ← the room assigned to the drill
-  drill_room_bounds=<TileShape>       ← its geometry
-  from_door_type=<class name>
-  backtrack_door_type=<class name>
-  section_no=<int>
-  layer=<int>
-```
+1. **Clearance Compensation Inconsistency:**
+   - In headless mode, `clearance_compensation_used` on the `SearchTreeManager` defaults to `false`. Consequently, `board.search_tree_manager.get_default_tree()` is initialized with `compensated_clearance_class_no = 0` (no clearance offset).
+   - However, the actual routing maze search (`MazeSearchAlgo` and `calculate_expansion_rooms`) evaluates room geometry and connectivity using the compensated search tree: `p_autoroute_engine.autoroute_search_tree` (which has `compensated_clearance_class_no = 1` for default wire clearance).
 
-This gives the investigation a concrete geometric pair for each mismatch — the first one per page-scan — without flooding logs. With v1.9 emitting equivalent `drill_rejected_room_mismatch` entries (including room shapes), a normalized diff of the two streams will pinpoint at which point the room assignments diverge between versions.
+2. **The Resulting Mismatch:**
+   - `DrillPage.get_drills(...)` queries overlaps and cuts out shapes using `get_default_tree()` (which is uncompensated). It then splits this uncompensated free space into convex pages to generate drill candidate locations.
+   - Because the obstacles are not compensated (not enlarged by clearance values), the calculated centers of gravity of these convex shapes can lie extremely close to actual obstacles or inside their compensated boundaries.
+   - When these drill candidate locations are passed to `calculate_expansion_rooms(...)`, it queries the **compensated** search tree (`p_autoroute_engine.autoroute_search_tree`). The candidate locations are found to overlap the enlarged compensated obstacle shapes, causing them to either fail room generation completely or fail to fall into the expected room boundaries, throwing high volumes of `drill_rejected_room_mismatch` rejections.
+
+3. **The Fix:**
+   - Modify `DrillPage.get_drills(...)` to query overlaps and get obstacle shapes using `p_autoroute_engine.autoroute_search_tree` instead of `this.board.search_tree_manager.get_default_tree()`.
+   - This aligns drill candidate generation perfectly with the compensated routing space, ensuring that drill centers are placed within the actual valid free space of the compensated tree.
 
 #### How to run the paired comparison
 
