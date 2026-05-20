@@ -16,9 +16,9 @@ bin/
 /scripts/build/runtime
 /scripts/build/Freerouting*
 
-#/tests/*.ses
-/tests/*.bin
-/tests/**/*.zip
+/fixtures/*.ses
+/fixtures/*.bin
+/fixtures/**/*.zip
 
 .jdk
 
