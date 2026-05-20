@@ -946,6 +946,8 @@ public class MazeSearchAlgo {
         traceFanoutDiagnostic("drill_page_empty", "no_candidates=true");
       }
     }
+    // Track the first room-mismatch per fanout attempt for first-mismatch investigation.
+    boolean firstMismatchLogged = false;
     for (ExpansionDrill curr_drill : drill_list) {
       int section_no = from_room_layer - curr_drill.first_layer;
       if (section_no < 0 || section_no >= curr_drill.room_arr.length) {
@@ -959,6 +961,24 @@ public class MazeSearchAlgo {
             "drill=" + describe_expandable(curr_drill)
                 + ", expected_room=" + describe_room(p_from_element.next_room)
                 + ", drill_room=" + describe_room(curr_drill.room_arr[section_no]));
+        // Log the first mismatch per page-scan with extra geometric context for investigation.
+        if (!firstMismatchLogged && shouldTraceFanoutDiagnostics()) {
+          firstMismatchLogged = true;
+          CompleteExpansionRoom expRoom = p_from_element.next_room;
+          CompleteExpansionRoom drillRoom = curr_drill.room_arr[section_no];
+          FRLogger.trace("FANOUT_DIAG event=first_room_mismatch_detail"
+              + ", pin=" + fanoutDiagnosticLabel()
+              + ", net=" + ctrl.net_no
+              + ", drill_location=" + curr_drill.location
+              + ", expansion_room_id=" + System.identityHashCode(expRoom)
+              + ", expansion_room_bounds=" + (expRoom != null ? expRoom.get_shape() : "null")
+              + ", drill_room_id=" + System.identityHashCode(drillRoom)
+              + ", drill_room_bounds=" + (drillRoom != null ? drillRoom.get_shape() : "null")
+              + ", from_door_type=" + (p_from_element.door != null ? p_from_element.door.getClass().getSimpleName() : "null")
+              + ", backtrack_door_type=" + (p_from_element.backtrack_door != null ? p_from_element.backtrack_door.getClass().getSimpleName() : "null")
+              + ", section_no=" + section_no
+              + ", layer=" + from_room_layer);
+        }
         continue;
       }
       if (curr_drill.get_maze_search_element(section_no).is_occupied) {

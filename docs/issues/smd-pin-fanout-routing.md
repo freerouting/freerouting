@@ -20,6 +20,92 @@ Without a fanout pass, the maze-search algorithm must solve both "escape from th
 
 ## Current State
 
+### Recent developments (2026-05-20, latest iteration)
+
+#### v1.9 FANOUT_DIAG log parity
+
+The v1.9 source code now emits the same `FANOUT_DIAG` trace events as the current branch, enabling side-by-side log comparison for U27-targeted fanout investigations:
+
+**Changes made to v1.9:**
+
+| File | Change |
+|---|---|
+| `src_v19/…/autoroute/AutorouteControl.java` | Added `public String fanout_start_pin_name;` field (reset to `null` in the constructor) |
+| `src_v19/…/board/RoutingBoard.java` | `fanout(Pin, …)` now constructs a `component-pin` label and assigns it to `ctrl_settings.fanout_start_pin_name` |
+| `src_v19/…/autoroute/MazeSearchAlgo.java` | `expand_to_drills_of_page(…)` now emits: `FANOUT_DIAG event=drill_page_scan`, `event=drill_accepted`, `event=drill_rejected_room_mismatch` (with room shapes), and `event=drill_rejected_section_occupied` — all gated on `ctrl.fanout_start_pin_name.startsWith("U27-")` for low-noise parity with the current branch |
+| `src_v19/…/autoroute/BatchFanout.java` | `fanout_pass(…)` now emits `FANOUT_DIAG event=fanout_failed` for the `NOT_ROUTED` case on U27 pins, matching the current branch format |
+
+These changes are diagnostic-only (no routing logic altered) and match the AGENTS.md requirement for log parity investigations: *"keep diagnostic payloads synchronized between current and v1.9"*.
+
+#### Per-pin first-mismatch geometric detail logging (current branch)
+
+`MazeSearchAlgo.expand_to_drills_of_page()` now logs a richer `first_room_mismatch_detail` event on the **first** room-mismatch encountered during each drill-page scan. This event captures:
+
+```
+FANOUT_DIAG event=first_room_mismatch_detail
+  pin=<component-pin>
+  net=<net_no>
+  drill_location=<Point>
+  expansion_room_id=<identity hash>   ← the room the expansion came from
+  expansion_room_bounds=<TileShape>   ← its geometry
+  drill_room_id=<identity hash>       ← the room assigned to the drill
+  drill_room_bounds=<TileShape>       ← its geometry
+  from_door_type=<class name>
+  backtrack_door_type=<class name>
+  section_no=<int>
+  layer=<int>
+```
+
+This gives the investigation a concrete geometric pair for each mismatch — the first one per page-scan — without flooding logs. With v1.9 emitting equivalent `drill_rejected_room_mismatch` entries (including room shapes), a normalized diff of the two streams will pinpoint at which point the room assignments diverge between versions.
+
+#### How to run the paired comparison
+
+```powershell
+# Build both executables
+.\gradlew.bat buildBothVersions
+
+# Run fanout-only with TRACE on current branch (U27 pins filtered)
+java -jar .\build\libs\freerouting-current-executable.jar `
+  -de .\fixtures\Issue508-DAC2020_bm05.dsn `
+  -do .\logs\Issue508\parity\current.ses `
+  --router.fanout.enabled=true --router.enabled=false `
+  --router.optimizer.enabled=false --gui.enabled=false `
+  --logging.file.level=TRACE `
+  "--logging.file.location=C:\Work\freerouting\logs\Issue508\parity"
+
+# Run fanout-only with TRACE on v1.9
+java -jar .\build\libs\freerouting-v190-executable.jar `
+  -de .\fixtures\Issue508-DAC2020_bm05.dsn `
+  -do .\logs\Issue508\parity\v190.ses `
+  --router.fanout.enabled=true --router.enabled=false `
+  --router.optimizer.enabled=false --gui.enabled=false `
+  --logging.file.level=TRACE `
+  "--logging.file.location=C:\Work\freerouting\logs\Issue508\parity"
+
+# Compare U27 drill_page_scan lines
+Select-String "FANOUT_DIAG.*event=drill_page_scan" `
+  "logs\Issue508\parity\freerouting-current.log" |
+  Select-Object -First 20
+
+Select-String "FANOUT_DIAG.*event=drill_page_scan" `
+  "logs\Issue508\parity\freerouting-v190.log" |
+  Select-Object -First 20
+
+# Normalized mismatch diff: extract room-mismatch lines with drill location + rooms
+Select-String "drill_rejected_room_mismatch" `
+  "logs\Issue508\parity\freerouting-current.log" |
+  ForEach-Object { $_ -replace 'expansion_value=[\d.]+|sorting_value=[\d.]+', '' } |
+  Select-Object -First 50
+
+Select-String "drill_rejected_room_mismatch" `
+  "logs\Issue508\parity\freerouting-v190.log" |
+  Select-Object -First 50
+```
+
+**Expected outcome:** If v1.9 has significantly fewer room-mismatch events (or mismatches on different drill locations), the `first_room_mismatch_detail` events in the current log will identify the exact room-pair divergence point. That pair becomes the anchor for the next investigation step.
+
+---
+
 ### Recent developments (2026-05-19, evening)
 
 1. **Headless fanout-only CLI mode is now working as expected.**
@@ -736,8 +822,13 @@ Done: Sub-issue #0 → #1 → #2 → #3 → #5
 
 Remaining sequence:
   → Stabilize Sub-issue #4 (all SMD regression tests green, including synthetic dense cases)
-  → Run Sub-issue #6 (`compare-versions.ps1` parity/performance validation on bm05)
-  → Tune fanout/maze behavior for close-pin escape-via failures
+  → Run paired FANOUT_DIAG comparison: current vs v1.9 on bm05 (U27 drill_page_scan / room_mismatch streams)
+    · Use first_room_mismatch_detail events in current to anchor the first geometric divergence
+    · Determine whether mismatch is a room-assignment ordering change (structural) or a numeric tie-break drift
+    · Apply smallest possible fix (ordering/tie-break in expand_to_door_section or room-completion path)
+  → Re-run parity comparison and confirm mismatch moves later / disappears without new violations
+  → Run Sub-issue #6 (compare-versions.ps1 parity/performance validation on bm05)
+  → Tune fanout/maze behavior for remaining close-pin escape-via failures
 ```
 
 ---
@@ -752,10 +843,15 @@ Remaining sequence:
 | `src/main/java/app/freerouting/autoroute/BatchAutorouter.java` | Modify | ✅ Done | Sub-issue #5: fanout pre-pass wired before main passes |
 | `src/main/java/app/freerouting/settings/RouterSettings.java` | Modify | ✅ Done | Sub-issue #3: `public Boolean withFanout;` |
 | `src/main/java/app/freerouting/settings/sources/DefaultSettings.java` | Modify | ✅ Done | Sub-issue #3: `withFanout = true` |
+| `src/main/java/app/freerouting/autoroute/MazeSearchAlgo.java` | Modify | ✅ Done | Added `first_room_mismatch_detail` per-page-scan event with full geometric context |
 | `docs/settings.md` | Modify | 🔲 Open | Document `withFanout` setting (if missing/incomplete) |
 | `fixtures/SMD-routing-issue-demo.dsn` | **New** | ✅ Created | Minimal synthetic 2-layer all-SMD board (6-pin QFN + 0603s, 6 nets); proves bug with score `0.00` |
 | `src/test/java/app/freerouting/fixtures/Dac2020Bm05RoutingTest.java` | **New** | ✅ Created | Primary bm05 acceptance gate (4 escalating tests) |
 | `src/test/java/app/freerouting/fixtures/SmdPinFanoutRoutingTest.java` | **New** | ✅ Created | Cross-board regression suite (4 boards × 2 tests each + 3 synthetic DSN tests) |
+| `src_v19/…/autoroute/AutorouteControl.java` | **Modify (v1.9)** | ✅ Done | Added `fanout_start_pin_name` field for FANOUT_DIAG log parity |
+| `src_v19/…/board/RoutingBoard.java` | **Modify (v1.9)** | ✅ Done | `fanout(Pin, …)` now sets `ctrl.fanout_start_pin_name` = component+pin label |
+| `src_v19/…/autoroute/MazeSearchAlgo.java` | **Modify (v1.9)** | ✅ Done | `expand_to_drills_of_page` now emits `FANOUT_DIAG` events (drill_page_scan, drill_accepted, drill_rejected_room_mismatch, drill_rejected_section_occupied) for U27-* parity with current |
+| `src_v19/…/autoroute/BatchFanout.java` | **Modify (v1.9)** | ✅ Done | `fanout_pass` now emits `FANOUT_DIAG event=fanout_failed` for U27 pins, matching current branch format |
 
 ---
 
