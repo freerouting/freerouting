@@ -3,6 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;
@@ -61,6 +62,10 @@ public class AutorouteControl {
    * If true, the autoroute algorithm completes after the first drill
    */
   public boolean is_fanout;
+  /** Source pin name for targeted fanout diagnostics. */
+  public String fanout_start_pin_name;
+  /** Source pin center for targeted fanout diagnostics. */
+  public Point fanout_start_pin_center;
   /**
    * Normally true, if the autorouter contains no fanout pass
    */
@@ -149,6 +154,8 @@ public class AutorouteControl {
       layer_active[i] = p_settings.get_layer_active(i);
     }
     is_fanout = false;
+    fanout_start_pin_name = null;
+    fanout_start_pin_center = null;
     remove_unconnected_vias = true;
     with_neckdown = p_settings.get_automatic_neckdown();
     tidy_region_width = Integer.MAX_VALUE;

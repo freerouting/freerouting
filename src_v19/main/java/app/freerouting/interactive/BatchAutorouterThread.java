@@ -102,7 +102,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
       Thread.sleep(100);
 
       int num_threads = hdlg.get_num_threads();
-      if (num_threads > 0) {
+      if (num_threads > 0 && hdlg.get_settings().autoroute_settings.get_with_autoroute()) {
         FRLogger.info(
             "Starting route optimization on "
                 + (num_threads == 1 ? "1 thread" : num_threads + " threads")
@@ -180,6 +180,21 @@ public class BatchAutorouterThread extends InteractiveActionThread {
         {
           hdlg.get_panel().board_frame.delete_intermediate_stage_file();
         }
+      } else {
+        hdlg.screen_messages.clear();
+        String curr_message;
+        if (this.is_stop_requested()) {
+          curr_message = resources.getString("interrupted");
+        } else {
+          curr_message = resources.getString("completed");
+        }
+        String end_message;
+        if (hdlg.get_settings().autoroute_settings.get_with_fanout()) {
+          end_message = resources.getString("fanout") + " " + curr_message;
+        } else {
+          end_message = resources.getString("autoroute") + " " + curr_message;
+        }
+        hdlg.screen_messages.set_status_message(end_message);
       }
 
       hdlg.set_board_read_only(saved_board_read_only);

@@ -8,7 +8,7 @@
 
 The board `Issue508-DAC2020_bm05.dsn` is a 2-layer (Top / Bottom), 48-component, fully-SMD reference board from the DAC 2020 benchmark suite. It has 54 nets, 11 SMD padstack types, and zero through-hole pins. All padstacks carry `(attach off)`, meaning no via may be placed *on top of* an SMD pad.
 
-The board is **theoretically 100 % routable** (confirmed by the v1.9 baseline and by PCB EDA tools that implement a fanout pre-pass). The current freerouting router leaves a number of nets unrouted because it is missing the **`BatchFanout` pre-routing phase** that v1.9 (`BatchFanout.java`) runs before the main `BatchAutorouter` passes.
+The board is **theoretically 100 % routable** (confirmed by the v1.9 baseline and by PCB EDA tools that implement a fanout pre-pass). The original regression was that the current router had no `BatchFanout` pre-routing phase. That gap is now closed in the current branch, but dense all-SMD cases are still not fully solved.
 
 Without a fanout pass, the maze-search algorithm must solve both "escape from the SMD pad onto a via" and "reach the destination pin" in a single expansion. On dense boards this frequently fails: the occupied regions around SMD pads block all via-placement sites, and the router marks the connection as unroutable even though a short stub-trace + via solution exists.
 
@@ -20,15 +20,224 @@ Without a fanout pass, the maze-search algorithm must solve both "escape from th
 
 ## Current State
 
-| Metric | v1.9 (with fanout) | Current (no fanout) |
+### Recent developments (2026-05-20, latest iteration)
+
+#### v1.9 FANOUT_DIAG log parity
+
+The v1.9 source code now emits the same `FANOUT_DIAG` trace events as the current branch, enabling side-by-side log comparison for U27-targeted fanout investigations:
+
+**Changes made to v1.9:**
+
+| File | Change |
+|---|---|
+| `src_v19/…/autoroute/AutorouteControl.java` | Added `public String fanout_start_pin_name;` field (reset to `null` in the constructor) |
+| `src_v19/…/board/RoutingBoard.java` | `fanout(Pin, …)` now constructs a `component-pin` label and assigns it to `ctrl_settings.fanout_start_pin_name` |
+| `src_v19/…/autoroute/MazeSearchAlgo.java` | `expand_to_drills_of_page(…)` now emits: `FANOUT_DIAG event=drill_page_scan`, `event=drill_accepted`, `event=drill_rejected_room_mismatch` (with room shapes), and `event=drill_rejected_section_occupied` — all gated on `ctrl.fanout_start_pin_name.startsWith("U27-")` for low-noise parity with the current branch |
+| `src_v19/…/autoroute/BatchFanout.java` | `fanout_pass(…)` now emits `FANOUT_DIAG event=fanout_failed` for the `NOT_ROUTED` case on U27 pins, matching the current branch format |
+
+These changes are diagnostic-only (no routing logic altered) and match the AGENTS.md requirement for log parity investigations: *"keep diagnostic payloads synchronized between current and v1.9"*.
+
+#### Drill-Page Search Tree Mismatch Identified (2026-05-20)
+
+A deep-dive investigation of search trees and clearance matrices has uncovered the primary bottleneck causing `drill_rejected_room_mismatch` rejections in headless mode:
+
+1. **Clearance Compensation Inconsistency:**
+   - In headless mode, `clearance_compensation_used` on the `SearchTreeManager` defaults to `false`. Consequently, `board.search_tree_manager.get_default_tree()` is initialized with `compensated_clearance_class_no = 0` (no clearance offset).
+   - However, the actual routing maze search (`MazeSearchAlgo` and `calculate_expansion_rooms`) evaluates room geometry and connectivity using the compensated search tree: `p_autoroute_engine.autoroute_search_tree` (which has `compensated_clearance_class_no = 1` for default wire clearance).
+
+2. **The Resulting Mismatch:**
+   - `DrillPage.get_drills(...)` queries overlaps and cuts out shapes using `get_default_tree()` (which is uncompensated). It then splits this uncompensated free space into convex pages to generate drill candidate locations.
+   - Because the obstacles are not compensated (not enlarged by clearance values), the calculated centers of gravity of these convex shapes can lie extremely close to actual obstacles or inside their compensated boundaries.
+   - When these drill candidate locations are passed to `calculate_expansion_rooms(...)`, it queries the **compensated** search tree (`p_autoroute_engine.autoroute_search_tree`). The candidate locations are found to overlap the enlarged compensated obstacle shapes, causing them to either fail room generation completely or fail to fall into the expected room boundaries, throwing high volumes of `drill_rejected_room_mismatch` rejections.
+
+3. **The Fix:**
+   - Modify `DrillPage.get_drills(...)` to query overlaps and get obstacle shapes using `p_autoroute_engine.autoroute_search_tree` instead of `this.board.search_tree_manager.get_default_tree()`.
+   - This aligns drill candidate generation perfectly with the compensated routing space, ensuring that drill centers are placed within the actual valid free space of the compensated tree.
+
+#### How to run the paired comparison
+
+```powershell
+# Build both executables
+.\gradlew.bat buildBothVersions
+
+# Run fanout-only with TRACE on current branch (U27 pins filtered)
+java -jar .\build\libs\freerouting-current-executable.jar `
+  -de .\fixtures\Issue508-DAC2020_bm05.dsn `
+  -do .\logs\Issue508\parity\current.ses `
+  --router.fanout.enabled=true --router.enabled=false `
+  --router.optimizer.enabled=false --gui.enabled=false `
+  --logging.file.level=TRACE `
+  "--logging.file.location=C:\Work\freerouting\logs\Issue508\parity"
+
+# Run fanout-only with TRACE on v1.9
+java -jar .\build\libs\freerouting-v190-executable.jar `
+  -de .\fixtures\Issue508-DAC2020_bm05.dsn `
+  -do .\logs\Issue508\parity\v190.ses `
+  --router.fanout.enabled=true --router.enabled=false `
+  --router.optimizer.enabled=false --gui.enabled=false `
+  --logging.file.level=TRACE `
+  "--logging.file.location=C:\Work\freerouting\logs\Issue508\parity"
+
+# Compare U27 drill_page_scan lines
+Select-String "FANOUT_DIAG.*event=drill_page_scan" `
+  "logs\Issue508\parity\freerouting-current.log" |
+  Select-Object -First 20
+
+Select-String "FANOUT_DIAG.*event=drill_page_scan" `
+  "logs\Issue508\parity\freerouting-v190.log" |
+  Select-Object -First 20
+
+# Normalized mismatch diff: extract room-mismatch lines with drill location + rooms
+Select-String "drill_rejected_room_mismatch" `
+  "logs\Issue508\parity\freerouting-current.log" |
+  ForEach-Object { $_ -replace 'expansion_value=[\d.]+|sorting_value=[\d.]+', '' } |
+  Select-Object -First 50
+
+Select-String "drill_rejected_room_mismatch" `
+  "logs\Issue508\parity\freerouting-v190.log" |
+  Select-Object -First 50
+```
+
+**Expected outcome:** If v1.9 has significantly fewer room-mismatch events (or mismatches on different drill locations), the `first_room_mismatch_detail` events in the current log will identify the exact room-pair divergence point. That pair becomes the anchor for the next investigation step.
+
+---
+
+### Recent developments (2026-05-19, evening)
+
+1. **Headless fanout-only CLI mode is now working as expected.**
+   - Command used:
+     ```powershell
+     -de .\fixtures\Issue508-DAC2020_bm05.dsn -do .\fixtures\Issue508-DAC2020_bm05.ses --router.fanout.enabled=true --router.enabled=false --router.optimizer.enabled=false --gui.enabled=false
+     ```
+   - Root cause was settings merge behavior for explicit `false` values (`Boolean` wrappers) and missing fanout-only branch in `RoutingJobSchedulerActionThread` when router was disabled.
+   - Fix applied in current branch:
+     - `ReflectionUtil.copyFields(...)` now preserves explicit non-null wrapper values like `false`.
+     - `RoutingJobSchedulerActionThread` now runs fanout-only pre-pass when router is disabled and fanout is enabled.
+
+2. **New fanout heuristic tested on bm05 (U27-focused): outer pins first.**
+   - Change: `BatchFanout.Component.Pin.compareTo(...)` now prioritizes larger `distance_to_component_center` first.
+   - Motivation: reduce center congestion around dense QFN (`U27`) before attempting inner/central escapes.
+
+3. **Measured fanout-only benchmark progression on bm05:**
+   - Baseline (before heuristic): **85/138 escaped (61.6%)**.
+   - After outer-first pin ordering: **87/138 escaped (63.0%)**.
+   - Net gain: **+2 escaped pins**.
+
+4. **Status after latest run:**
+   - Improvement is real but still far from the **100%** target.
+   - `U27` remains the primary escape bottleneck and requires additional algorithmic work (door selection/tie-break behavior, local via candidate quality, or SMD-specific expansion heuristics).
+
+5. **Targeted `U27-*` fanout diagnostics are now available in current.**
+   - `RoutingBoard.fanout(...)` now tags fanout attempts with the full `component-pin` label (for example `U27-45`).
+   - `MazeSearchAlgo` now emits `fanout_drill_page_scan`, `fanout_drill_rejected`, and `fanout_drill_accepted` trace entries for `U27-*` fanout attempts.
+   - `BatchFanout.fanout_pass(...)` now emits `fanout_failed` trace entries with `[pin=U27-*]` appended to the message.
+   - Latest fanout-only verification command:
+     ```powershell
+     java -jar .\build\libs\freerouting-current-executable.jar `
+       -de .\fixtures\Issue508-DAC2020_bm05.dsn `
+       -do .\logs\Issue508\u27-fanout-diagnostics\Issue508-DAC2020_bm05.ses `
+       --router.fanout.enabled=true `
+       --router.enabled=false `
+       --router.optimizer.enabled=false `
+       --gui.enabled=false `
+       --debug.enable_detailed_logging=true `
+       --logging.file.location="C:\Work\freerouting\logs\Issue508\u27-fanout-diagnostics"
+     ```
+   - Latest measured finding from those logs:
+     - For `U27`, the dominant rejection mode is **not** “no drill candidates on the page”.
+     - Example: `U27-45` reaches drill pages with **100 drill candidates**, and several are accepted into the maze queue.
+     - Across the captured `U27-*` drill rejections, the dominant reason is:
+       - `Rejected drill because expansion room does not match the current room` → **84,551** occurrences.
+       - Secondary reason: `Rejected drill because its section is already occupied` → **1,784** occurrences.
+     - This shifts the investigation focus from empty-via-site generation to **how drill candidates are associated with expansion rooms / how room continuity is preserved around dense U27 escape geometry**.
+
+  6. **`U27-*` diagnostics now use plain TRACE output (no granular filter dependency).**
+     - Logging changes (current branch):
+       - `MazeSearchAlgo` U27 fanout diagnostics now emit plain `FRLogger.trace("FANOUT_DIAG ...")` lines.
+       - `BatchFanout` U27 failure summaries now emit plain `FRLogger.trace("FANOUT_DIAG ...")` lines.
+     - Verification run (fanout-only, headless):
+       ```powershell
+       .\gradlew.bat run --args="-de .\fixtures\Issue508-DAC2020_bm05.dsn -do .\fixtures\Issue508-DAC2020_bm05.ses --router.fanout.enabled=true --router.enabled=false --router.optimizer.enabled=false --gui.enabled=false --logging.console.level=TRACE --logging.file.level=TRACE"
+       ```
+     - First observed blocked drill-page reason in this stream:
+       - `event=drill_page_scan, pin=U27-21, candidate_count=33` (non-empty drill page)
+       - immediately followed by multiple `event=drill_rejected_room_mismatch` entries.
+     - Layer-change admissibility rejection probe:
+       - No `layer_change_forbidden`, `layer_change_skipped`, `no_drill_page_for_target_pin`, or `no_valid_drill_after_page_scan` events were emitted in the sampled bm05 fanout-only traces.
+     - Current interpretation:
+       - The first meaningful blocker remains **room continuity mismatch during drill acceptance**, not an empty drill page and not a top-level layer-change admissibility gate.
+
+  7. **Clearance parity fix applied for fanout via-layer checks (2026-05-19, night).**
+     - `ForcedViaAlgo.check_layer(...)` now evaluates both:
+       - via pad footprint with via clearance class, and
+       - start-trace footprint with trace clearance class/trace half-width.
+     - `MazeSearchAlgo.expand_to_other_layers(...)` now evaluates drillability per concrete `ViaInfo` mask (padstack shape + clearance class), instead of a single coarse aggregate radius/class.
+     - Goal: ensure fanout maze layer-change admissibility uses the same effective clearance assumptions as actual via insertion.
+
+  8. **Insertion-stage diagnostics confirm dominant U27 failure mode is trace insertion, not via insertion.**
+     - `InsertFoundConnectionAlgo` now emits `FANOUT_DIAG` events for `U27-*`:
+       - `trace_insert_failed`
+       - `via_mask_not_found`
+       - `forced_via_insert_failed`
+     - Latest bm05 fanout-only run (`gradlew run` headless TRACE):
+       - `U27 via_mask_not_found = 0`
+       - `U27 forced_via_insert_failed = 0`
+       - `U27 trace_insert_failed = 688`
+     - Representative payload (U27-1):
+       - `layer=0`, `trace_half_width=1000`, `trace_clearance_class=3`, `start_pin_clearance_class=3`, `end_pin_clearance_class=3`.
+     - Interpretation:
+       - The current blocker for U27 fanout escapes is predominantly **forced top-layer trace segment insertion under clearance/geometry pressure**, not via-mask selection nor forced-via insertion.
+
+  9. **Micro-neckdown fallback added for fanout trace insertion (2026-05-19, late night).**
+     - Change in `InsertFoundConnectionAlgo.insert_trace(...)`:
+        - On failed 2-point fanout segment insertion, retry with reduced half-width candidates (`pin neckdown`, `75%`, `60%`, `50%` of base width) while keeping the same trace clearance class.
+       - New events:
+         - `trace_insert_micro_neckdown_success`
+         - `trace_insert_micro_neckdown_failed`
+     - bm05 fanout-only TRACE results (U27-only diagnostics):
+       - Before: `trace_insert_failed = 688`, `fanout_failed = 880`, unique failed pins = `44`.
+       - After: `trace_insert_failed = 17`, `trace_insert_micro_neckdown_success = 234`, `trace_insert_micro_neckdown_failed = 19`, `fanout_failed = 179`, unique failed pins = `23`.
+     - Interpretation:
+       - The fallback materially improves dense U27 escape routing by resolving most prior segment-level insertion stalls without changing via-mask selection.
+
+   10. **Bounded bm05 fixture assertions added for completion-rate tracking (2026-05-20).**
+      - `Dac2020Bm05RoutingTest` now asserts the capped slices directly:
+        - `maxItems=2, maxPasses=1` → at most `106` incomplete connections.
+        - `maxItems=5, maxPasses=1` → at most `104` incomplete connections.
+      - These checks turn the smoke runs into regression gates so future fanout changes can be evaluated by actual routed-connection counts, not only TRACE diagnostics.
+
+| Metric | v1.9 (with fanout) | Current (2026-05-19) |
 |---|---|---|
 | Total nets | 54 | 54 |
 | Padstack types | 11 (all SMD) | 11 (all SMD) |
 | `(attach off)` on all padstacks | yes | yes |
-| Fanout pre-pass | ✅ `BatchFanout` | ❌ missing |
-| Routing result | 0 unrouted | **TBD — needs measurement** |
+| Fanout pre-pass | ✅ `BatchFanout` | ✅ `BatchFanout` integrated in `BatchAutorouter` |
+| `Pin.is_obstacle()` same-net via guard | legacy behavior | ✅ fixed (same-net vias allowed) |
+| `withFanout` setting | n/a | ✅ present (default `true`) |
+| Routing result | 0 unrouted | mixed: `Issue558-dev-board.dsn` reaches 0 unrouted, `SMD-routing-issue-demo.dsn` still fails (6 unrouted) |
 
-> **Next step:** Add a test `Dac2020Bm05RoutingTest` (see Sub-issue #4 below) to capture the current incomplete count so we have a concrete baseline to improve against.
+> **Current focus:** fanout exists and is active, but on tightly packed all-SMD geometries it can still insert 0 escape vias; remaining work is algorithmic quality, not missing orchestration.
+
+### Clarification: what fanout is supposed to do (and what it does not do)
+
+Your understanding is correct for the intended goal:
+
+- Fanout is a **pre-pass for SMD escape**, not full net completion.
+- It iterates only `board.get_smd_pins()` and calls `RoutingBoard.fanout(pin, ...)` per SMD pin.
+- `RoutingBoard.fanout(...)` sets `ctrl.is_fanout = true`, and `MazeSearchAlgo` stops once the first drill transition is found (escape-via oriented behavior).
+
+Important nuance (explains what you see in GUI):
+
+- Fanout attempts can still **rip up / shove existing route fragments** while creating room for a legal escape via (`ripup_allowed` is enabled with escalating costs).
+- After a successful attempt, `opt_changed_area(...)` runs in the changed region.
+- So during fanout you may visually see non-SMD traces/vias move; this is a side effect of congestion handling, not fanout actively routing arbitrary non-SMD items as primary targets.
+
+### Measured current behavior (latest local verification)
+
+- `Issue558-dev-board.dsn`: fanout inserts escapes and routing completes to 0 unrouted in the fixture run.
+- `SMD-routing-issue-demo.dsn`: fanout pass #1..#20 inserts `+0` extra vias, then autorouter stops at score `0.00` with 6 unrouted.
+
+This confirms the remaining gap: **fanout is executing, but fails to find legal escape-via locations on some dense close-pin layouts**.
 
 ### Board Characteristics (bm05)
 
@@ -47,13 +256,13 @@ Because every component pad resides exclusively on the Top layer, any connection
 1. A short stub trace running *off* the pad on the Top layer, and
 2. A via placed at the end of that stub (not on the pad — `attach off` is enforced).
 
-The current `BatchAutorouter` has no pre-pass that pre-routes these stubs. It instead expects the maze search to find the via location on-the-fly, which succeeds on sparse boards but often fails on the dense inter-component regions of bm05.
+The current `BatchAutorouter` now runs a fanout pre-pass, but it still relies on the maze search to find legal nearby drill positions for each SMD escape. On sparse boards this works; on dense inter-component regions of bm05/demo it can still fail repeatedly.
 
 ---
 
 ## Root Cause
 
-### Missing `BatchFanout` Pre-Pass
+### Historical Root Cause: Missing `BatchFanout` Pre-Pass (now fixed)
 
 In v1.9 the routing pipeline is:
 
@@ -63,7 +272,7 @@ BatchAutorouter.autoroute_passes(…)   ← main routing passes
 BatchOptRoute.run(…)                  ← optimizer
 ```
 
-In the current codebase only the latter two stages exist; `BatchFanout` was never ported. The fanout pass iterates components sorted by descending SMD-pin count, and for each SMD pin calls `RoutingBoard.fanout(pin, …)` with `ctrl.is_fanout = true`. That special mode:
+The initial regression was that only the latter two stages existed and `BatchFanout` was not ported. The fanout pass is now implemented and integrated. It iterates components sorted by descending SMD-pin count, and for each SMD pin calls `RoutingBoard.fanout(pin, …)` with `ctrl.is_fanout = true`. That special mode:
 
 - Restricts the autoroute goal to *inserting exactly one via adjacent to the pin*, not to reaching a destination.
 - Sets `remove_unconnected_vias = false` so the placed via is retained even though the net is not yet connected end-to-end.
@@ -71,13 +280,13 @@ In the current codebase only the latter two stages exist; `BatchFanout` was neve
 
 After this pre-pass every SMD pin has a via stub, and the main `BatchAutorouter` only needs to connect via-to-via across the board — a substantially easier problem.
 
-### Supporting Evidence in Current Code
+### Supporting Evidence in Current Code (updated)
 
-- `AutorouteControl.is_fanout` field exists and is referenced in `MazeSearchAlgo` (lines 267 and 1087) but is **never set to `true`** in the current `BatchAutorouter`.
+- `AutorouteControl.is_fanout` is set via `RoutingBoard.fanout(...)`, which is now called from `BatchFanout` in `BatchAutorouter` pre-pass.
 - `RoutingBoard.fanout(Pin, …)` is fully implemented (lines 974–1012) and sets `ctrl.is_fanout = true` and `ctrl.remove_unconnected_vias = false`.
 - `Item.is_fanout_via(…)` is fully implemented.
 - The `(attach off)` / `attach_smd_allowed` pipeline is correct: `ViaInfo.attach_smd_allowed` propagates into `AutorouteControl.attach_smd_allowed`; `DrillPage.get_drills()` and `MazeSearchAlgo` both honour it.
-- The only missing piece is the **orchestration layer** that calls `RoutingBoard.fanout()` for all SMD pins *before* the main routing loop.
+- The orchestration layer now exists; the remaining issue is **fanout effectiveness** on dense all-SMD geometry, not missing invocation.
 
 ---
 
@@ -94,7 +303,7 @@ Understanding the precise failure mode is critical before selecting a solution. 
 1. `BatchAutorouter.autoroute_item(pin)` creates `AutorouteControl` for the net.
 2. `AutorouteControl.init_net()` iterates `via_rule.via_count()`. For every `ViaInfo` it checks `curr_via.attach_smd_allowed()`. On bm05, all padstacks have `(attach off)` → every `ViaInfo.attach_smd_allowed = false` → `AutorouteControl.attach_smd_allowed` stays `false`.
 3. `MazeSearchAlgo.get_instance()` is called. During initialization, destination items (the other SMD pins of the net) are added to `DestinationDistance`.
-4. During maze expansion, whenever the search encounters an `ExpansionDrill` (a candidate via location), `ForcedViaAlgo` checks whether the via would be a `Pin.is_obstacle()` blocker. For an SMD pad of the same net, `Pin.is_obstacle()` returns `true` when `via.attach_allowed = false` (line 358 of `Pin.java`).
+4. During maze expansion, whenever the search encounters an `ExpansionDrill` (a candidate via location), `ForcedViaAlgo` and drill-expansion gates still enforce geometric legality and attach rules. The earlier same-net `Pin.is_obstacle()` blocker has been fixed, but dense local geometry can still leave no legal escape site.
 5. This means: the maze search **cannot place a via at the exact location of an SMD pad**. It must find a via location *adjacent* to the pad, then route a trace segment from the pad to the via.
 6. On a dense board, the clear area adjacent to each SMD pad may be fully occupied by clearance envelopes of neighboring pads. No valid via location exists within reachable distance → maze returns `null` → net is not routed.
 
@@ -444,7 +653,7 @@ Note: the DSN format does **not** support `;` or `#` comment lines — the Specc
 
 ### Sub-issue #0 — Fix `Pin.is_obstacle()` to allow same-net vias on SMD pads *(Solution 4 — implement first)*
 
-**Status:** 🔲 Open
+**Status:** ✅ Done
 
 Change `Pin.java` line 358:
 ```java
@@ -466,7 +675,7 @@ The removed clause `|| !via.attach_allowed` was blocking same-net vias from bein
 
 ### Sub-issue #1 — Add `RoutingBoard.get_smd_pins()` *(prerequisite for Solution 3)*
 
-**Status:** 🔲 Open
+**Status:** ✅ Done (implemented on `BasicBoard` and used by `BatchAutorouter`/`BatchFanout`)
 
 Port `get_smd_pins()` from v1.9 `BasicBoard` to the current `RoutingBoard` (or `BasicBoard` if applicable).  
 Definition: returns all `Pin` items where `first_layer() == last_layer()`.  
@@ -476,7 +685,7 @@ Definition: returns all `Pin` items where `first_layer() == last_layer()`.
 
 ### Sub-issue #2 — Implement `BatchFanout` class *(core of Solution 3)*
 
-**Status:** 🔲 Open
+**Status:** ✅ Done (headless-compatible; integrated callback/progress path)
 
 Create `src/main/java/app/freerouting/autoroute/BatchFanout.java` with:
 - `public static void fanout_board(RoutingBoard board, RouterSettings settings, StoppableThread thread)`
@@ -494,7 +703,7 @@ Create `src/main/java/app/freerouting/autoroute/BatchFanout.java` with:
 
 ### Sub-issue #3 — Add `withFanout` setting to `RouterSettings` *(settings integration)*
 
-**Status:** 🔲 Open
+**Status:** ✅ Done (`RouterSettings.withFanout`, default `true` in `DefaultSettings`)
 
 - Add `public Boolean withFanout;` (nullable) to `RouterSettings`.
 - Set default `withFanout = true` in `DefaultSettings.getSettings()`.
@@ -507,7 +716,7 @@ Create `src/main/java/app/freerouting/autoroute/BatchFanout.java` with:
 
 ### Sub-issue #4 — Add regression tests *(acceptance gate)*
 
-**Status:** 🔲 Open
+**Status:** 🟡 In progress (tests exist; full gate not green yet for all boards)
 
 #### `Dac2020Bm05RoutingTest.java` — primary bm05 acceptance gate
 
@@ -565,7 +774,7 @@ Score `0.00` and 6/6 connections unrouted is definitive evidence of the root cau
 
 ### Sub-issue #5 — Integrate `BatchFanout` into `BatchAutorouter.autoroute_passes()` *(wiring)*
 
-**Status:** 🔲 Open
+**Status:** ✅ Done
 
 In `BatchAutorouter.autoroute_passes()`, before the first pass loop:
 
@@ -602,19 +811,20 @@ Exit criteria:
 
 ---
 
-## Implementation Order
+## Implementation Order (updated)
 
 ```
-Sub-issue #0 (fix Pin.is_obstacle — quickest possible fix, validate alone)
-  → Sub-issue #4 (tests already created — SmdPinFanoutRoutingTest and Dac2020Bm05RoutingTest
-                  now serve as the live regression gate; test_SmdDemo_board_loads_and_routes
-                  already PASSES and proves the bug)
-  → [If #0 insufficient] Sub-issue #1 (add get_smd_pins)
-  → Sub-issue #2 (implement BatchFanout)
-  → Sub-issue #3 (withFanout setting)
-  → Sub-issue #5 (integrate into BatchAutorouter)
-  → All SmdPinFanoutRoutingTest and Dac2020Bm05RoutingTest tests must pass
-  → Sub-issue #6 (compare-versions validation)
+Done: Sub-issue #0 → #1 → #2 → #3 → #5
+
+Remaining sequence:
+  → Stabilize Sub-issue #4 (all SMD regression tests green, including synthetic dense cases)
+  → Run paired FANOUT_DIAG comparison: current vs v1.9 on bm05 (U27 drill_page_scan / room_mismatch streams)
+    · Use first_room_mismatch_detail events in current to anchor the first geometric divergence
+    · Determine whether mismatch is a room-assignment ordering change (structural) or a numeric tie-break drift
+    · Apply smallest possible fix (ordering/tie-break in expand_to_door_section or room-completion path)
+  → Re-run parity comparison and confirm mismatch moves later / disappears without new violations
+  → Run Sub-issue #6 (compare-versions.ps1 parity/performance validation on bm05)
+  → Tune fanout/maze behavior for remaining close-pin escape-via failures
 ```
 
 ---
@@ -623,16 +833,21 @@ Sub-issue #0 (fix Pin.is_obstacle — quickest possible fix, validate alone)
 
 | File | Change type | Status | Description |
 |---|---|---|---|
-| `src/main/java/app/freerouting/board/Pin.java` | **Modify** | 🔲 Open | Sub-issue #0: remove `attach_allowed` guard for same-net via branch in `is_obstacle()` |
-| `src/main/java/app/freerouting/board/RoutingBoard.java` (or `BasicBoard`) | Modify | 🔲 Open | Sub-issue #1: Add `get_smd_pins()` |
-| `src/main/java/app/freerouting/autoroute/BatchFanout.java` | **New** | 🔲 Open | Sub-issue #2: Port from v1.9; headless-compatible |
-| `src/main/java/app/freerouting/autoroute/BatchAutorouter.java` | Modify | 🔲 Open | Sub-issue #5: Call `BatchFanout.fanout_board()` before main passes |
-| `src/main/java/app/freerouting/settings/RouterSettings.java` | Modify | 🔲 Open | Sub-issue #3: Add `public Boolean withFanout;` |
-| `src/main/java/app/freerouting/settings/sources/DefaultSettings.java` | Modify | 🔲 Open | Sub-issue #3: Set `withFanout = true` |
-| `docs/settings.md` | Modify | 🔲 Open | Document `withFanout` setting |
+| `src/main/java/app/freerouting/board/Pin.java` | **Modify** | ✅ Done | Sub-issue #0: removed `attach_allowed` guard for same-net via branch in `is_obstacle()` |
+| `src/main/java/app/freerouting/board/BasicBoard.java` | Modify | ✅ Done | Sub-issue #1: `get_smd_pins()` present and used |
+| `src/main/java/app/freerouting/autoroute/BatchFanout.java` | **New** | ✅ Done | Sub-issue #2: ported and integrated; progress callback added |
+| `src/main/java/app/freerouting/autoroute/BatchAutorouter.java` | Modify | ✅ Done | Sub-issue #5: fanout pre-pass wired before main passes |
+| `src/main/java/app/freerouting/settings/RouterSettings.java` | Modify | ✅ Done | Sub-issue #3: `public Boolean withFanout;` |
+| `src/main/java/app/freerouting/settings/sources/DefaultSettings.java` | Modify | ✅ Done | Sub-issue #3: `withFanout = true` |
+| `src/main/java/app/freerouting/autoroute/MazeSearchAlgo.java` | Modify | ✅ Done | Added `first_room_mismatch_detail` per-page-scan event with full geometric context |
+| `docs/settings.md` | Modify | 🔲 Open | Document `withFanout` setting (if missing/incomplete) |
 | `fixtures/SMD-routing-issue-demo.dsn` | **New** | ✅ Created | Minimal synthetic 2-layer all-SMD board (6-pin QFN + 0603s, 6 nets); proves bug with score `0.00` |
 | `src/test/java/app/freerouting/fixtures/Dac2020Bm05RoutingTest.java` | **New** | ✅ Created | Primary bm05 acceptance gate (4 escalating tests) |
 | `src/test/java/app/freerouting/fixtures/SmdPinFanoutRoutingTest.java` | **New** | ✅ Created | Cross-board regression suite (4 boards × 2 tests each + 3 synthetic DSN tests) |
+| `src_v19/…/autoroute/AutorouteControl.java` | **Modify (v1.9)** | ✅ Done | Added `fanout_start_pin_name` field for FANOUT_DIAG log parity |
+| `src_v19/…/board/RoutingBoard.java` | **Modify (v1.9)** | ✅ Done | `fanout(Pin, …)` now sets `ctrl.fanout_start_pin_name` = component+pin label |
+| `src_v19/…/autoroute/MazeSearchAlgo.java` | **Modify (v1.9)** | ✅ Done | `expand_to_drills_of_page` now emits `FANOUT_DIAG` events (drill_page_scan, drill_accepted, drill_rejected_room_mismatch, drill_rejected_section_occupied) for U27-* parity with current |
+| `src_v19/…/autoroute/BatchFanout.java` | **Modify (v1.9)** | ✅ Done | `fanout_pass` now emits `FANOUT_DIAG event=fanout_failed` for U27 pins, matching current branch format |
 
 ---
 
@@ -654,7 +869,9 @@ public static void fanout_board(InteractiveActionThread p_thread) {
 // RoutingBoard.fanout() sets ctrl.is_fanout = true — maze search stops at first drill.
 ```
 
-Key difference from v1.9 API: v1.9's `BatchFanout` depends on `InteractiveActionThread` (GUI). The current port must use `StoppableThread` + headless-safe APIs only.
+Key difference from v1.9 API: v1.9's `BatchFanout` depends on `InteractiveActionThread` (GUI). The current port uses `StoppableThread` and is headless-safe.
+
+Additional current behavior: fanout progress now updates GUI and logs per pass as job-bound messages, including extra-via counts.
 
 ---
 
@@ -666,4 +883,3 @@ Key difference from v1.9 API: v1.9's `BatchFanout` depends on `InteractiveAction
 4. ✅ `compare-versions.ps1` shows current ≥ v1.9 routing completion on bm05.
 5. ✅ No new clearance violations on any existing benchmark board.
 6. ✅ `withFanout = false` disables the pre-pass; existing boards (bm07, bm08, bm01) are unaffected.
-

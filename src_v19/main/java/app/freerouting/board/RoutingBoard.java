@@ -1101,6 +1101,13 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     AutorouteControl ctrl_settings = new AutorouteControl(this, pin_net_no, p_settings);
     ctrl_settings.is_fanout = true;
     ctrl_settings.remove_unconnected_vias = false;
+    // Set pin label for FANOUT_DIAG log parity with current branch
+    app.freerouting.board.Component pin_component = this.components.get(p_pin.get_component_no());
+    if (pin_component != null && p_pin.name() != null) {
+      ctrl_settings.fanout_start_pin_name = pin_component.name + "-" + p_pin.name();
+    } else {
+      ctrl_settings.fanout_start_pin_name = p_pin.toString();
+    }
     if (p_ripup_costs >= 0) {
       ctrl_settings.ripup_allowed = true;
       ctrl_settings.ripup_costs = p_ripup_costs;

@@ -41,6 +41,8 @@ public class AutorouteControl {
   public int ripup_pass_no;
   /** If true, the autoroute algorithm completes after the first drill */
   public boolean is_fanout;
+  /** The human-readable pin label used in FANOUT_DIAG log entries (e.g. "U27-45"). Null when not in fanout mode. */
+  public String fanout_start_pin_name;
   /** Normally true, if the autorouter contains no fanout pass */
   public boolean remove_unconnected_vias;
   /** The currently used net number in the autoroute algorithm */
@@ -102,6 +104,7 @@ public class AutorouteControl {
       layer_active[i] = p_settings.autoroute_settings.get_layer_active(i);
     }
     is_fanout = false;
+    fanout_start_pin_name = null;
     remove_unconnected_vias = true;
     with_neckdown = p_settings.get_automatic_neckdown();
     tidy_region_width = Integer.MAX_VALUE;

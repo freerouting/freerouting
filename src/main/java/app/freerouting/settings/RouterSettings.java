@@ -18,6 +18,20 @@ public class RouterSettings implements Serializable, Cloneable {
   public Boolean enabled;
   @SerializedName("algorithm")
   public String algorithm;
+  /**
+   * @deprecated Use {@link #fanout}{@code .enabled} instead.  This field is
+   * retained for backward-compatibility with serialised JSON payloads that
+   * still contain {@code "with_fanout"}.  During settings merging the value
+   * is migrated into {@link #fanout}{@code .enabled} by
+   * {@link #applyNewValuesFrom}.
+   */
+  @Deprecated
+  @SerializedName("with_fanout")
+  public Boolean withFanout;
+
+  /** Configuration for the SMD-pin fanout pre-pass. */
+  @SerializedName("fanout")
+  public FanoutSettings fanout;
   @SerializedName("job_timeout")
   public String jobTimeoutString;
   @SerializedName("max_passes")
@@ -58,6 +72,7 @@ public class RouterSettings implements Serializable, Cloneable {
   public RouterSettings() {
     this.optimizer = new RouterOptimizerSettings();
     this.scoring = new RouterScoringSettings();
+    this.fanout = new FanoutSettings();
   }
 
   /**
@@ -272,6 +287,7 @@ public class RouterSettings implements Serializable, Cloneable {
       result.setLayerCount(layerCount);
     }
     result.algorithm = this.algorithm;
+    result.withFanout = this.withFanout;
     result.jobTimeoutString = this.jobTimeoutString;
     result.isLayerActive = (this.isLayerActive != null) ? this.isLayerActive.clone() : null;
     result.isPreferredDirectionHorizontalOnLayer = (this.isPreferredDirectionHorizontalOnLayer != null)
@@ -288,6 +304,7 @@ public class RouterSettings implements Serializable, Cloneable {
     // Use proper clone() methods for nested objects
     result.optimizer = this.optimizer.clone();
     result.scoring = this.scoring.clone();
+    result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
 
     return result;
   }
@@ -483,6 +500,18 @@ public class RouterSettings implements Serializable, Cloneable {
     }
 
     int changedCount = ReflectionUtil.copyFields(settings, this);
+
+    // Migrate legacy withFanout into fanout.enabled so that old serialised
+    // payloads are honoured even when the new fanout block is absent.
+    if (settings.withFanout != null) {
+      if (this.fanout == null) {
+        this.fanout = new FanoutSettings();
+      }
+      if (this.fanout.enabled == null) {
+        this.fanout.enabled = settings.withFanout;
+        changedCount++;
+      }
+    }
 
     // Fire property change events for key properties to update GUI
     // Note: We fire events even if values didn't change to ensure GUI is in sync

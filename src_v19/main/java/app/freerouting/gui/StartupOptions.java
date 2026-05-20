@@ -29,6 +29,8 @@ public class StartupOptions {
   // 1);
   public int num_threads = 1;
   public boolean optimizer_enabled = true;
+  public boolean router_enabled = true;
+  public boolean fanout_enabled = false;
   public String job_timeout = null;
   public BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY;
   public String hybrid_ratio = "1:1";
@@ -218,6 +220,16 @@ public class StartupOptions {
           String[] parts = p_args[i].split("=");
           if (parts.length == 2) {
             optimizer_enabled = Boolean.parseBoolean(parts[1]);
+          }
+        } else if (p_args[i].startsWith("--router.enabled")) {
+          String[] parts = p_args[i].split("=");
+          if (parts.length == 2) {
+            router_enabled = Boolean.parseBoolean(parts[1]);
+          }
+        } else if (p_args[i].startsWith("--router.fanout.enabled")) {
+          String[] parts = p_args[i].split("=");
+          if (parts.length == 2) {
+            fanout_enabled = Boolean.parseBoolean(parts[1]);
           }
         } else if (p_args[i].startsWith("--router.job_timeout")) {
           String[] parts = p_args[i].split("=");
