@@ -65,8 +65,10 @@ public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
     @Test
     void test_4layer_board_issue066_layer_count_and_inner_layer_usage() {
         TestingSettings testingSettings = new TestingSettings();
-        // Keep CI-friendly: 2 passes over a bounded set of connections is enough to
-        // drive the router onto inner layers for a complex 4-layer board.
+        // Keep CI-friendly: this test validates DSN-derived layer handling, not fanout quality.
+        // Disable the expensive SMD fanout pre-pass so the bounded autorouter slice can still
+        // demonstrate inner-layer usage without timing out on 800+ SMD pins.
+        testingSettings.setFanoutEnabled(false);
         testingSettings.setMaxPasses(2);
         testingSettings.setMaxItems(60);
         testingSettings.setJobTimeoutString("00:02:00");
@@ -118,6 +120,7 @@ public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {
     @Test
     void test_6layer_board_issue289_layer_count_and_inner_layer_usage() {
         TestingSettings testingSettings = new TestingSettings();
+        testingSettings.setFanoutEnabled(false);
         testingSettings.setMaxPasses(2);
         testingSettings.setMaxItems(50);
         testingSettings.setJobTimeoutString("00:02:00");
