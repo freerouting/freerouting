@@ -172,6 +172,24 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   - `requests_per_window`: Maximum accepted requests per identity in each window.
   - `window_seconds`: Window duration in seconds.
 
+#### Recommended Rate-Limit Presets
+
+Use these as practical starting points, then tune based on observed traffic and client retry behavior.
+
+| Environment | API (`api_server.rate_limit`) | MCP (`mcp_server.rate_limit`) | Notes |
+|---|---|---|---|
+| Local development | `enabled=false` | `enabled=false` | Fast feedback loop, no throttling noise while debugging. |
+| Staging / internal QA | `enabled=true`, `requests_per_window=120`, `window_seconds=60` | `enabled=true`, `requests_per_window=60`, `window_seconds=60` | Catches runaway polling while staying permissive for tests. |
+| Production (default baseline) | `enabled=true`, `requests_per_window=180`, `window_seconds=60` | `enabled=true`, `requests_per_window=90`, `window_seconds=60` | Balanced baseline for mixed interactive + automation traffic. |
+| Production (strict) | `enabled=true`, `requests_per_window=120`, `window_seconds=60` | `enabled=true`, `requests_per_window=45`, `window_seconds=60` | For public exposure or when abuse pressure is expected. |
+
+Tuning guidance:
+
+- If legitimate clients hit HTTP `429` frequently, raise `requests_per_window` first.
+- Keep `window_seconds` at `60` unless you have a clear reason to use shorter bursts.
+- MCP generally needs lower limits than REST because tool loops can burst quickly.
+- Pair rate limits with authentication and correlation-ID logging for reliable incident analysis.
+
 ### Command Line Arguments
 
 Freerouting can also be configured using command-line arguments. These arguments override the settings specified in the JSON configuration file. You must use `--{property-name}={property-value}` format, where `property-name` is the hierarchical definition of the property you want to change and the `property-value` is its desired value. You can use `.`, `-` and `:` characters to separate the hierarchical levels in the `property-name` parameter.
