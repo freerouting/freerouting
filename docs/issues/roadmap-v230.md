@@ -96,6 +96,8 @@
 
 ### Days 13–15 — MCP Server & A2A Protocol
 - Expose existing REST API endpoints as MCP tools. Use OpenAPI spec to generate JSON Schema for each tool's input/output.
+- Run MCP as a **dedicated server** with its own `mcp_server` settings block (`enabled`, `endpoints`, auth, CORS, target API base URL).
+- Support MCP realtime channels in v2.3: SSE (`/v1/mcp/events`) and WebSocket (`/v1/mcp/ws`) in addition to JSON-RPC (`/v1/mcp`).
 - Serve `/.well-known/agent.json` (A2A Agent Card) as a static endpoint from the Jetty server.
 - Add MCP endpoint documentation to Swagger UI.
 - Update Python client: sync with any new API endpoint signatures.

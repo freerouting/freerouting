@@ -63,6 +63,19 @@ The primary way to configure Freerouting is through a JSON settings file. This f
       "http://0.0.0.0:37864"
     ],
     "cors_origins": ""
+  },
+  "mcp_server": {
+    "enabled": false,
+    "http_allowed": true,
+    "endpoints": [
+      "http://127.0.0.1:37964"
+    ],
+    "authentication": {
+      "enabled": true,
+      "providers": ""
+    },
+    "cors_origins": "",
+    "target_api_base_url": "http://127.0.0.1:37864"
   }
 }
 ```
@@ -131,6 +144,15 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   - Env var: `FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864`
 - *`cors_origins`*: A comma-separated list of origins for the `Access-Control-Allow-Origin` CORS header. Set to `*` to accept all origins (this can be a security risk). When CORS is enabled, the server automatically allows the following request headers in preflight responses: `Content-Type`, `Accept`, `Origin`, `X-Requested-With`, `Authorization`, `Freerouting-Profile-ID`, `Freerouting-Profile-Email`, and `Freerouting-Environment-Host`. This ensures browser-based clients (e.g. EasyEDA at `https://pro.lceda.cn`) can authenticate successfully without being blocked by CORS preflight checks.
 
+#### **`mcp_server` Section**
+
+- **`enabled`**: Enables or disables the dedicated MCP server.
+- **`http_allowed`**: Allows or disallows HTTP connections to the MCP server.
+- **`endpoints`**: A list of MCP listen endpoints (`[protocol]://[host]:[port]`).
+- **`authentication`**: API-key authentication settings specific to MCP (`enabled`, `providers`, provider credentials).
+- **`cors_origins`**: Optional CORS allowlist for browser-hosted MCP clients.
+- **`target_api_base_url`**: Base URL of the REST API server used by MCP tools to execute operations.
+
 ### Command Line Arguments
 
 Freerouting can also be configured using command-line arguments. These arguments override the settings specified in the JSON configuration file. You must use `--{property-name}={property-value}` format, where `property-name` is the hierarchical definition of the property you want to change and the `property-value` is its desired value. You can use `.`, `-` and `:` characters to separate the hierarchical levels in the `property-name` parameter.
@@ -141,11 +163,12 @@ Freerouting can also be configured using command-line arguments. These arguments
 java -jar freerouting.jar --gui.enabled=false --router.max_passes=200
 ```
 
-**List-valued settings** (e.g. `api_server.endpoints`) must be passed as a **comma-separated string**; whitespace around commas is ignored:
+**List-valued settings** (e.g. `api_server.endpoints`, `mcp_server.endpoints`) must be passed as a **comma-separated string**; whitespace around commas is ignored:
 
 ```bash
 java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864
 java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
+java -jar freerouting.jar --mcp_server-enabled=true --mcp_server-endpoints=http://127.0.0.1:37964 --mcp_server-target_api_base_url=http://127.0.0.1:37864
 ```
 
 ### Environment Variables
@@ -164,6 +187,9 @@ java -jar freerouting.jar
 
 ```bash
 FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864
+FREEROUTING__MCP_SERVER__ENABLED=true
+FREEROUTING__MCP_SERVER__ENDPOINTS=http://127.0.0.1:37964
+FREEROUTING__MCP_SERVER__TARGET_API_BASE_URL=http://127.0.0.1:37864
 java -jar freerouting.jar
 ```
 

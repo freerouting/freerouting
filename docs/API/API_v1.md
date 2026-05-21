@@ -457,6 +457,20 @@ The Swagger UI link is also printed to the server log on startup:
 API web server started successfully at http://localhost:37864. ... Swagger UI is available at http://localhost:37864/swagger-ui.
 ```
 
+### MCP Server Endpoints
+
+The MCP server is configured independently from the REST API server (`mcp_server` settings block).
+
+| Endpoint | Description |
+|----------|-------------|
+| `POST /v1/mcp` | MCP JSON-RPC entry point (`initialize`, `tools/list`, `tools/call`) |
+| `GET /v1/mcp/events` | MCP activity stream over SSE |
+| `GET /v1/mcp/ws` | MCP activity stream over WebSocket |
+
+For complete setup instructions (configuration, startup commands, verification, and troubleshooting), see:
+
+- [`docs/API/MCP_setup.md`](MCP_setup.md)
+
 ---
 
 ## Notes

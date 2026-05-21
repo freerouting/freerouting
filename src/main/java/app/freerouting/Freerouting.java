@@ -1,6 +1,13 @@
 package app.freerouting;
 
 import app.freerouting.api.AppContextListener;
+import app.freerouting.api.ApiExceptionMapper;
+import app.freerouting.api.EnvironmentHostValidationFilter;
+import app.freerouting.api.NotFoundExceptionMapper;
+import app.freerouting.api.mcp.McpApiKeyValidationFilter;
+import app.freerouting.api.mcp.McpContextListener;
+import app.freerouting.api.mcp.McpWebSocketEndpoint;
+import app.freerouting.api.v1.McpControllerV1;
 import app.freerouting.board.BoardLoader;
 import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
@@ -15,6 +22,7 @@ import app.freerouting.management.VersionChecker;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.McpServerSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.CliSettings;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -42,6 +50,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.ee10.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
 import org.eclipse.jetty.http.pathmap.ServletPathSpec;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -58,6 +67,7 @@ public class Freerouting {
       + Constants.FREEROUTING_BUILD_DATE + ")";
   public static GlobalSettings globalSettings;
   private static Server apiServer; // API server instance
+  private static Server mcpServer; // MCP server instance
 
   private static boolean InitializeCLI(GlobalSettings globalSettings) {
     if ((globalSettings.initialInputFile == null) || (globalSettings.initialOutputFile == null)) {
@@ -219,6 +229,9 @@ public class Freerouting {
       if (apiServer != null) {
         apiServer.stop();
       }
+      if (mcpServer != null) {
+        mcpServer.stop();
+      }
     } catch (Exception e) {
       FRLogger.error("Error stopping API server", e);
     }
@@ -328,6 +341,108 @@ public class Freerouting {
     }).start();
 
     return apiServer;
+  }
+
+  public static Server InitializeMCP(McpServerSettings mcpServerSettings) {
+    if (mcpServerSettings.endpoints.length == 0) {
+      FRLogger.warn("Can't start MCP server, because no endpoints are defined in McpServerSettings.");
+      return null;
+    }
+
+    Server mcpServer = new Server();
+
+    for (String endpointUrl : mcpServerSettings.endpoints) {
+      endpointUrl = endpointUrl.toLowerCase();
+      String[] endpointParts = endpointUrl.split("://");
+      String protocol = endpointParts[0];
+      String hostAndPort = endpointParts[1];
+      String[] hostAndPortParts = hostAndPort.split(":");
+      String host = hostAndPortParts[0];
+      int port = Integer.parseInt(hostAndPortParts[1]);
+
+      if (!"http".equals(protocol) && !"https".equals(protocol)) {
+        FRLogger.warn("Can't use the endpoint '%s' for the MCP server, because its protocol is not HTTP or HTTPS."
+            .formatted(endpointUrl));
+        continue;
+      }
+
+      if (!mcpServerSettings.isHttpAllowed && "http".equals(protocol)) {
+        FRLogger.warn(
+            "Can't use the endpoint '%s' for the MCP server, because HTTP is not allowed.".formatted(endpointUrl));
+        continue;
+      }
+
+      if ("https".equals(protocol)) {
+        FRLogger.warn("HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
+      }
+
+      ServerConnector connector = new ServerConnector(mcpServer);
+      connector.setHost(host);
+      connector.setPort(port);
+      mcpServer.addConnector(connector);
+    }
+
+    ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+    context.setContextPath("/");
+
+    Handler mcpHandler = context;
+
+    if (mcpServerSettings.cors_origins != null && !mcpServerSettings.cors_origins.equals("")) {
+      String allowedOrigins = mcpServerSettings.cors_origins;
+
+      CrossOriginHandler corsHandler = new CrossOriginHandler();
+      corsHandler.setAllowCredentials(true);
+      corsHandler.setAllowedOriginPatterns(splitCommaSeparated(allowedOrigins));
+      corsHandler.setAllowedMethods(Set.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
+      corsHandler.setAllowedHeaders(Set.of(
+          "X-Requested-With",
+          "Content-Type",
+          "Accept",
+          "Origin",
+          "Authorization",
+          "Freerouting-Profile-ID",
+          "Freerouting-Profile-Email",
+          "Freerouting-Environment-Host"));
+      corsHandler.setHandler(context);
+
+      PathMappingsHandler pathMappingsHandler = new PathMappingsHandler();
+      pathMappingsHandler.addMapping(new ServletPathSpec("/v1/mcp/*"), corsHandler);
+      pathMappingsHandler.addMapping(new ServletPathSpec("/*"), context);
+      mcpHandler = pathMappingsHandler;
+
+      FRLogger.info("MCP CORS configured for origins: " + allowedOrigins);
+    }
+
+    mcpServer.setHandler(mcpHandler);
+
+    ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
+    jerseyServlet.setInitOrder(0);
+    jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", String.join(",",
+        McpControllerV1.class.getName(),
+        McpApiKeyValidationFilter.class.getName(),
+        EnvironmentHostValidationFilter.class.getName(),
+        ApiExceptionMapper.class.getName(),
+        NotFoundExceptionMapper.class.getName()));
+
+    context.addEventListener(new McpContextListener());
+
+    JakartaWebSocketServletContainerInitializer.configure(context, (servletContext, wsContainer) -> {
+      wsContainer.addEndpoint(McpWebSocketEndpoint.class);
+    });
+
+    new Thread(() -> {
+      try {
+        mcpServer.start();
+        mcpServer.join();
+      } catch (Exception e) {
+        FRLogger.error("Error starting or joining MCP server", e);
+        if (globalSettings != null) {
+          globalSettings.mcpServerSettings.isRunning = false;
+        }
+      }
+    }).start();
+
+    return mcpServer;
   }
 
   private static Set<String> splitCommaSeparated(String value) {
@@ -747,6 +862,7 @@ public class Freerouting {
     if (globalSettings.drc_report_file != null) {
       globalSettings.guiSettings.isEnabled = false;
       globalSettings.apiServerSettings.isEnabled = false;
+      globalSettings.mcpServerSettings.isEnabled = false;
     }
 
     // Create the settings merger prototype based on the sources that will not change at runtime
@@ -761,6 +877,21 @@ public class Freerouting {
       apiServer = InitializeAPI(globalSettings.apiServerSettings);
       globalSettings.apiServerSettings.isEnabled = apiServer != null;
       globalSettings.apiServerSettings.isRunning = apiServer != null;
+
+      if (apiServer != null
+          && (globalSettings.mcpServerSettings.targetApiBaseUrl == null
+          || globalSettings.mcpServerSettings.targetApiBaseUrl.isBlank()
+          || "http://127.0.0.1:37864".equals(globalSettings.mcpServerSettings.targetApiBaseUrl))) {
+        if (apiServer.getConnectors().length > 0 && apiServer.getConnectors()[0] instanceof ServerConnector connector) {
+          globalSettings.mcpServerSettings.targetApiBaseUrl = "http://127.0.0.1:" + connector.getLocalPort();
+        }
+      }
+    }
+
+    if (globalSettings.mcpServerSettings.isEnabled) {
+      mcpServer = InitializeMCP(globalSettings.mcpServerSettings);
+      globalSettings.mcpServerSettings.isEnabled = mcpServer != null;
+      globalSettings.mcpServerSettings.isRunning = mcpServer != null;
     }
 
     // Initialize the GUI
@@ -775,7 +906,9 @@ public class Freerouting {
 
     // If the GUI is disabled and the API server is not running, then we are in CLI mode
     boolean cliResult = true;
-    if (!globalSettings.guiSettings.isEnabled && !globalSettings.apiServerSettings.isRunning) {
+    if (!globalSettings.guiSettings.isEnabled
+        && !globalSettings.apiServerSettings.isRunning
+        && !globalSettings.mcpServerSettings.isRunning) {
       var mergedRouterSettings = globalSettings.settingsMergerProtype.merge();
       if ((mergedRouterSettings.enabled != null && !mergedRouterSettings.enabled) && (globalSettings.drcSettings.enabled)) {
         cliResult = InitializeDRC(globalSettings);
@@ -784,13 +917,15 @@ public class Freerouting {
       }
     }
 
-    if ((!cliResult) && !globalSettings.apiServerSettings.isEnabled) {
+    if ((!cliResult) && !globalSettings.apiServerSettings.isEnabled && !globalSettings.mcpServerSettings.isEnabled) {
       ShutdownApplication();
       FRLogger.traceExit("MainApplication.main()");
       System.exit(1);
     }
 
-    while (globalSettings.guiSettings.isRunning || globalSettings.apiServerSettings.isRunning) {
+    while (globalSettings.guiSettings.isRunning
+        || globalSettings.apiServerSettings.isRunning
+        || globalSettings.mcpServerSettings.isRunning) {
       try {
         Thread.sleep(500);
       } catch (InterruptedException _) {
