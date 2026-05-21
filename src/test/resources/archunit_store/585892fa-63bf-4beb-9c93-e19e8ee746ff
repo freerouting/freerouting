@@ -1,0 +1,4 @@
+Constructor <app.freerouting.management.RoutingJobScheduler.<init>()> gets field <app.freerouting.gui.FileFormat.DSN> in (RoutingJobScheduler.java:79)
+Method <app.freerouting.api.v1.JobControllerV1.getDrcReport(java.lang.String)> gets field <app.freerouting.gui.FileFormat.DSN> in (JobControllerV1.java:937)
+Method <app.freerouting.management.RoutingJobSchedulerActionThread.setJobOutputToSpecctraSes(app.freerouting.core.RoutingJob)> gets field <app.freerouting.gui.FileFormat.SES> in (RoutingJobSchedulerActionThread.java:254)
+Method <app.freerouting.management.RoutingJobSchedulerActionThread.setJobOutputToSpecctraSes(app.freerouting.core.RoutingJob)> gets field <app.freerouting.gui.FileFormat.SES> in (RoutingJobSchedulerActionThread.java:259)

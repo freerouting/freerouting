@@ -41,7 +41,7 @@
 | 18 | i18n: missing strings + template consistency | ★★ | ★★ | ★ | 3 | 3 |
 | 19 | i18n: contextual translations (LLM workflow) | ★★ | ★★ | ★ | 2 | 3 |
 | 20 | Manual GUI testing | ★★★★ | ★★★ | ★ | 4 | 3 |
-| 21 | SoC: Command Pattern for `InteractiveState` | ★★★ | ★★★★ | ★★★ | 10 | 3 |
+| 21 | SoC: Command Pattern for `InteractiveState` + ArchUnit boundary enforcement | ★★★ | ★★★★ | ★★★ | 10 | 3 |
 | 22 | Code modernization + package rename | ★★ | ★★★ | ★★★ | 5 | 4 (last) |
 | 23 | Community beta testing | ★★★★ | ★ | ★ | 2 effort (+2wk cal) | 4 |
 | 24 | Architecture docs update (`docs/architecture.md`) | ★★★ | ★ | ★ | 1 | 4 |
@@ -192,6 +192,11 @@ The feature is **opt-in** (`RouterSettings.starGroundNetNames` defaults to empty
   - Each state becomes a `Command` with its execution logic decoupled from `GuiBoardManager`.
 - This enables `undo/redo` support and makes GUI testing with Mockito feasible.
 - Guard: all new Command classes must not reference `interactiveSettings` directly; use `getInteractiveSettings()` with null-guard.
+- Add/maintain ArchUnit module-boundary tests and freeze baselines for legacy SoC debt:
+  - `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`
+  - `src/test/resources/archunit.properties`
+  - `src/test/resources/archunit_store/`
+- Keep `docs/issues/Architecture-boundary-debt-tracker.md` updated with rule status (strict vs frozen), representative violations, and remediation steps.
 
 ### Manual GUI Testing (Days 61–64)
 - Test list (all new GUI components):
@@ -227,6 +232,9 @@ The feature is **opt-in** (`RouterSettings.starGroundNetNames` defaults to empty
 - Update `docs/architecture.md` Mermaid diagram: new packages, IPC layer, MCP server, `BatchFanout`, `StarGroundPlanner`.
 - Update `docs/settings.md`: `withFanout`, `copperToEdgeClearanceUm`, `bendCostFactor`, `starGroundNetNames`.
 - Update `docs/developer.md`: Python client release workflow.
+- Update architecture-boundary references and debt tracker links:
+  - `docs/architecture.md` (module boundaries + ArchUnit test entry points)
+  - `docs/issues/Architecture-boundary-debt-tracker.md`
 
 ---
 
