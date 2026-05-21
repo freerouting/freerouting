@@ -29,4 +29,10 @@ public class RouterCounters implements Serializable {
   // The number of items on the board that are still in the ratsnest (so they are not yet routed)
   @SerializedName("incomplete_count")
   public Integer incompleteCount;
+  // Optional phase marker (for example "autoroute" or "fanout") used by GUI progress rendering.
+  @SerializedName("phase")
+  public String phase;
+  // Optional fanout-only counter: number of additional vias inserted in the current pass.
+  @SerializedName("fanout_extra_vias_count")
+  public Integer fanoutExtraViasCount;
 }

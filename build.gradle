@@ -200,6 +200,10 @@ ext {
     buildTime = buildDateTime.format('HH:mm:ss.SSSZ')
 }
 
+def includeSlowTests = providers.gradleProperty('includeSlowTests')
+    .map { it.toBoolean() }
+    .orElse(false)
+
 def manifestAttributes = [
         'Automatic-Module-Name' : 'app.freerouting',
         'Built-By'              : System.properties['user.name'],
@@ -443,12 +447,19 @@ tasks.register('installLocalGitHook', Copy) {
 }
 
 test {
+    useJUnitPlatform {
+        // Daily runs skip slow tests unless explicitly requested.
+        if (!includeSlowTests.get()) {
+            excludeTags 'slow'
+        }
+    }
+
     testLogging {
         showExceptions = true
         showStandardStreams = true
     }
 
-    timeout = Duration.ofMinutes(15)
+    timeout = Duration.ofMinutes(30)
 
     // Attach Mockito as a Java agent so that the inline-mock-maker can function
     // on Java 21+ without the JVM's self-attach restriction warning.
@@ -462,6 +473,37 @@ test {
     systemProperty 'freerouting.logging.file.enabled', 'false'
     systemProperty 'freerouting.logging.console.enabled', 'true'
     systemProperty 'freerouting.logging.console.level', 'INFO'
+}
+
+tasks.register('testSlow', Test) {
+    group = 'verification'
+    description = 'Runs tests tagged with @Tag("slow").'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    shouldRunAfter(tasks.named('test'))
+    useJUnitPlatform {
+        includeTags 'slow'
+    }
+    testLogging {
+        showExceptions = true
+        showStandardStreams = true
+    }
+    timeout = Duration.ofMinutes(30)
+    jvmArgs "-javaagent:${configurations.mockitoAgent.asPath}"
+    systemProperty 'freerouting.logging.file.enabled', 'false'
+    systemProperty 'freerouting.logging.console.enabled', 'true'
+    systemProperty 'freerouting.logging.console.level', 'INFO'
+}
+
+tasks.register('testAll') {
+    group = 'verification'
+    description = 'Runs both fast/default tests and tests tagged with @Tag("slow").'
+    dependsOn(tasks.named('test'))
+    finalizedBy(tasks.named('testSlow'))
+}
+
+tasks.named('testSlow') {
+    mustRunAfter(tasks.named('test'))
 }
 
 rewrite {

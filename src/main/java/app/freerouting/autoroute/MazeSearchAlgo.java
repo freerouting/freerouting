@@ -25,6 +25,7 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.ViaInfo;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -800,6 +801,27 @@ public class MazeSearchAlgo {
     return new Point[]{p_shape_entry.a.round(), p_shape_entry.b.round()};
   }
 
+  private boolean shouldTraceFanoutDiagnostics() {
+    return ctrl.is_fanout
+        && ctrl.fanout_start_pin_name != null
+        && ctrl.fanout_start_pin_name.startsWith("U27-");
+  }
+
+  private String fanoutDiagnosticLabel() {
+    return ctrl.fanout_start_pin_name == null ? "fanout-pin(net=" + ctrl.net_no + ")"
+        : ctrl.fanout_start_pin_name;
+  }
+
+  private void traceFanoutDiagnostic(String event, String message) {
+    if (!shouldTraceFanoutDiagnostics()) {
+      return;
+    }
+    FRLogger.trace("FANOUT_DIAG event=" + event
+        + ", pin=" + fanoutDiagnosticLabel()
+        + ", net=" + ctrl.net_no
+        + ", " + message);
+  }
+
   private void expand_to_drill(ExpansionDrill p_drill, MazeListElement p_from_element, int p_add_costs) {
     int layer = p_from_element.next_room.get_layer();
     int trace_half_width = this.ctrl.compensated_trace_half_width[layer];
@@ -812,6 +834,11 @@ public class MazeSearchAlgo {
       if (p_from_element.backtrack_door == null || !p_drill
           .get_shape()
           .intersects(p_from_element.backtrack_door.get_shape())) {
+        traceFanoutDiagnostic("drill_rejected_thin_room_no_backtrack_intersection",
+            "drill=" + describe_expandable(p_drill)
+                + ", from_door=" + describe_expandable(p_from_element.door)
+                + ", backtrack=" + describe_expandable(p_from_element.backtrack_door)
+                + ", room=" + describe_room(p_from_element.next_room));
         return;
       }
     }
@@ -866,6 +893,11 @@ public class MazeSearchAlgo {
         MazeSearchElement.Adjustment.NONE,
         false);
     this.maze_expansion_list.add(new_element);
+    traceFanoutDiagnostic("drill_accepted",
+        "drill=" + describe_expandable(p_drill)
+            + ", room=" + describe_room(p_from_element.next_room)
+            + ", nearest_point=" + nearest_point
+            + ", expansion_value=" + expansion_value);
   }
 
   /**
@@ -904,15 +936,58 @@ public class MazeSearchAlgo {
     int from_room_layer = p_from_element.section_no_of_door;
     DrillPage drill_page = (DrillPage) p_from_element.door;
     Collection<ExpansionDrill> drill_list = drill_page.get_drills(this.autoroute_engine, this.ctrl.attach_smd_allowed);
+    if (shouldTraceFanoutDiagnostics()) {
+      traceFanoutDiagnostic("drill_page_scan",
+          "candidate_count=" + drill_list.size()
+              + ", attach_smd_allowed=" + this.ctrl.attach_smd_allowed
+              + ", room=" + describe_room(p_from_element.next_room)
+              + ", from_door=" + describe_expandable(p_from_element.door));
+      if (drill_list.isEmpty()) {
+        traceFanoutDiagnostic("drill_page_empty", "no_candidates=true");
+      }
+    }
+    // Track the first room-mismatch per fanout attempt for first-mismatch investigation.
+    boolean firstMismatchLogged = false;
     for (ExpansionDrill curr_drill : drill_list) {
       int section_no = from_room_layer - curr_drill.first_layer;
       if (section_no < 0 || section_no >= curr_drill.room_arr.length) {
+        traceFanoutDiagnostic("drill_rejected_section_out_of_range",
+            "drill=" + describe_expandable(curr_drill)
+                + ", section=" + section_no + ", room_arr_len=" + curr_drill.room_arr.length);
         continue;
       }
-      if (curr_drill.room_arr[section_no] == p_from_element.next_room
-          && !curr_drill.get_maze_search_element(section_no).is_occupied) {
-        expand_to_drill(curr_drill, p_from_element, 0);
+      if (curr_drill.room_arr[section_no] != p_from_element.next_room) {
+        traceFanoutDiagnostic("drill_rejected_room_mismatch",
+            "drill=" + describe_expandable(curr_drill)
+                + ", expected_room=" + describe_room(p_from_element.next_room)
+                + ", drill_room=" + describe_room(curr_drill.room_arr[section_no]));
+        // Log the first mismatch per page-scan with extra geometric context for investigation.
+        if (!firstMismatchLogged && shouldTraceFanoutDiagnostics()) {
+          firstMismatchLogged = true;
+          CompleteExpansionRoom expRoom = p_from_element.next_room;
+          CompleteExpansionRoom drillRoom = curr_drill.room_arr[section_no];
+          FRLogger.trace("FANOUT_DIAG event=first_room_mismatch_detail"
+              + ", pin=" + fanoutDiagnosticLabel()
+              + ", net=" + ctrl.net_no
+              + ", drill_location=" + curr_drill.location
+              + ", expansion_room_id=" + System.identityHashCode(expRoom)
+              + ", expansion_room_bounds=" + (expRoom != null ? expRoom.get_shape() : "null")
+              + ", drill_room_id=" + System.identityHashCode(drillRoom)
+              + ", drill_room_bounds=" + (drillRoom != null ? drillRoom.get_shape() : "null")
+              + ", from_door_type=" + (p_from_element.door != null ? p_from_element.door.getClass().getSimpleName() : "null")
+              + ", backtrack_door_type=" + (p_from_element.backtrack_door != null ? p_from_element.backtrack_door.getClass().getSimpleName() : "null")
+              + ", section_no=" + section_no
+              + ", layer=" + from_room_layer);
+        }
+        continue;
       }
+      if (curr_drill.get_maze_search_element(section_no).is_occupied) {
+        traceFanoutDiagnostic("drill_rejected_section_occupied",
+            "drill=" + describe_expandable(curr_drill)
+                + ", section=" + section_no);
+        continue;
+      }
+      expand_to_drill(curr_drill, p_from_element, 0);
     }
   }
 
@@ -955,10 +1030,8 @@ public class MazeSearchAlgo {
       int curr_layer = from_layer;
       for (;;) {
         TileShape curr_room_shape = curr_drill.room_arr[curr_layer - curr_drill.first_layer].get_shape();
-        ForcedPadAlgo.CheckDrillResult drill_result = ForcedViaAlgo.check_layer(ctrl.via_radius_arr[curr_layer],
-            ctrl.via_clearance_class, ctrl.attach_smd_allowed, curr_room_shape,
-            curr_drill.location, curr_layer, net_no_arr, ctrl.max_shove_trace_recursion_depth, 0,
-            autoroute_engine.board);
+        ForcedPadAlgo.CheckDrillResult drill_result = check_layer_with_any_matching_via(curr_drill, curr_layer,
+            curr_room_shape, net_no_arr);
         if (drill_result == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
           via_lower_bound = curr_layer + 1;
           break;
@@ -985,10 +1058,8 @@ public class MazeSearchAlgo {
           break;
         }
         TileShape curr_room_shape = curr_drill.room_arr[curr_layer - curr_drill.first_layer].get_shape();
-        ForcedPadAlgo.CheckDrillResult drill_result = ForcedViaAlgo.check_layer(ctrl.via_radius_arr[curr_layer],
-            ctrl.via_clearance_class, ctrl.attach_smd_allowed, curr_room_shape,
-            curr_drill.location, curr_layer, net_no_arr, ctrl.max_shove_trace_recursion_depth, 0,
-            autoroute_engine.board);
+        ForcedPadAlgo.CheckDrillResult drill_result = check_layer_with_any_matching_via(curr_drill, curr_layer,
+            curr_room_shape, net_no_arr);
         if (drill_result == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
           via_upper_bound = curr_layer - 1;
           break;
@@ -1059,6 +1130,33 @@ public class MazeSearchAlgo {
           false);
       this.maze_expansion_list.add(new_element);
     }
+  }
+
+  private ForcedPadAlgo.CheckDrillResult check_layer_with_any_matching_via(ExpansionDrill p_drill, int p_layer,
+      TileShape p_room_shape, int[] p_net_no_arr) {
+    boolean drillableWithAttachSmd = false;
+    for (int i = 0; i < this.ctrl.via_rule.via_count(); i++) {
+      ViaInfo viaInfo = this.ctrl.via_rule.get_via(i);
+      Padstack viaPadstack = viaInfo.get_padstack();
+      if (p_layer < viaPadstack.from_layer() || p_layer > viaPadstack.to_layer()) {
+        continue;
+      }
+      ConvexShape viaShape = viaPadstack.get_shape(p_layer);
+      double viaRadius = viaShape == null ? 0 : 0.5 * viaShape.max_width();
+      double requiredRadius = Math.max(viaRadius, this.ctrl.trace_half_width[p_layer]);
+      ForcedPadAlgo.CheckDrillResult result = ForcedViaAlgo.check_layer(requiredRadius, viaInfo.get_clearance_class(),
+          viaInfo.attach_smd_allowed(), p_room_shape, p_drill.location, p_layer, p_net_no_arr,
+          this.ctrl.max_shove_trace_recursion_depth, 0, this.autoroute_engine.board,
+          this.ctrl.trace_half_width[p_layer], this.ctrl.trace_clearance_class_no);
+      if (result == ForcedPadAlgo.CheckDrillResult.DRILLABLE) {
+        return result;
+      }
+      if (result == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
+        drillableWithAttachSmd = true;
+      }
+    }
+    return drillableWithAttachSmd ? ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD
+        : ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
   }
 
   /**
@@ -1238,14 +1336,16 @@ public class MazeSearchAlgo {
 
     double fanout_via_cost_factor = 1.0;
     double cost_factor = 1;
+    boolean preserveFanoutProtection = !this.ctrl.remove_unconnected_vias
+        && this.ctrl.ripup_costs <= (this.ctrl.settings.get_start_ripup_costs() * 2);
     if (p_obstacle_item instanceof Trace obstacle_trace) {
       cost_factor = obstacle_trace.get_half_width();
-      if (!this.ctrl.remove_unconnected_vias) {
+      if (preserveFanoutProtection) {
         // protect traces between SMD-pins and fanout vias
         fanout_via_cost_factor = calc_fanout_via_ripup_cost_factor(obstacle_trace);
       }
     } else if (p_obstacle_item instanceof Via) {
-      boolean look_if_fanout_via = !this.ctrl.remove_unconnected_vias;
+      boolean look_if_fanout_via = preserveFanoutProtection;
       Collection<Item> contact_list = p_obstacle_item.get_normal_contacts();
       int contact_count = 0;
       for (Item curr_contact : contact_list) {
@@ -1254,7 +1354,7 @@ public class MazeSearchAlgo {
         }
         ++contact_count;
         cost_factor = Math.max(cost_factor, obstacle_trace.get_half_width());
-        if (look_if_fanout_via) {
+        if (look_if_fanout_via && !this.ctrl.is_fanout) {
           double curr_fanout_via_cost_factor = calc_fanout_via_ripup_cost_factor(obstacle_trace);
           if (curr_fanout_via_cost_factor > 1) {
             fanout_via_cost_factor = curr_fanout_via_cost_factor;
@@ -1268,30 +1368,30 @@ public class MazeSearchAlgo {
       }
     }
 
-    double ripup_cost = this.ctrl.ripup_costs * cost_factor;
-    double detour = 1;
-    double trace_length = 0;
-    double min_trace_length = 0;
-    int item_count = 0;
-    String connectionItemIds = "[]";
-    if (fanout_via_cost_factor <= 1) // p_obstacle_item does not belong to a fanout
-    {
-      Connection obstacle_connection = Connection.get(p_obstacle_item);
-      if (obstacle_connection != null) {
-        detour = obstacle_connection.get_detour();
-        trace_length = obstacle_connection.trace_length();
-        item_count = obstacle_connection.item_list.size();
-        if (obstacle_connection.start_point != null && obstacle_connection.end_point != null) {
-          min_trace_length = obstacle_connection.start_point.to_float().distance(obstacle_connection.end_point.to_float());
-        }
-        StringBuilder sb = new StringBuilder("[");
-        for (app.freerouting.board.Item ci : obstacle_connection.item_list) {
-          if (sb.length() > 1) sb.append(",");
-          sb.append(ci.get_id_no());
-        }
-        sb.append("]");
-        connectionItemIds = sb.toString();
-      }
+     double ripup_cost = this.ctrl.ripup_costs * cost_factor;
+     double detour = 1;
+     double trace_length = 0;
+     double min_trace_length = 0;
+     int item_count = 0;
+     String connectionItemIds = "[]";
+     if (fanout_via_cost_factor <= 1 && !this.ctrl.is_fanout) // p_obstacle_item does not belong to a fanout, and not during fanout pass
+     {
+       Connection obstacle_connection = Connection.get(p_obstacle_item);
+       if (obstacle_connection != null) {
+         detour = obstacle_connection.get_detour();
+         trace_length = obstacle_connection.trace_length();
+         item_count = obstacle_connection.item_list.size();
+         if (obstacle_connection.start_point != null && obstacle_connection.end_point != null) {
+           min_trace_length = obstacle_connection.start_point.to_float().distance(obstacle_connection.end_point.to_float());
+         }
+         StringBuilder sb = new StringBuilder("[");
+         for (app.freerouting.board.Item ci : obstacle_connection.item_list) {
+           if (sb.length() > 1) sb.append(",");
+           sb.append(ci.get_id_no());
+         }
+         sb.append("]");
+         connectionItemIds = sb.toString();
+       }
     }
     boolean randomize = this.ctrl.ripup_pass_no >= 4 && this.ctrl.ripup_pass_no % 3 != 0;
     if (randomize) {

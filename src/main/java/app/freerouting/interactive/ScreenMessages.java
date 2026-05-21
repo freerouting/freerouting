@@ -107,8 +107,14 @@ public class ScreenMessages {
   public void set_batch_autoroute_info(RouterCounters routerCounters) {
     int items_to_go = routerCounters.queuedToBeRoutedCount;
     int routed = routerCounters.routedCount;
-    int ripped = routerCounters.rippedCount;
     int failed = routerCounters.failedToBeRoutedCount;
+    if ("fanout".equals(routerCounters.phase)) {
+      int extraVias = routerCounters.fanoutExtraViasCount == null ? 0 : routerCounters.fanoutExtraViasCount;
+      add_field.setText(tm.getText("to_route") + " " + items_to_go + ", " + tm.getText("routed") + " " + routed + ", ");
+      layer_field.setText(tm.getText("failed") + " " + failed + ", " + tm.getText("via_count") + " +" + extraVias);
+      return;
+    }
+    int ripped = routerCounters.rippedCount;
     add_field.setText(tm.getText("to_route") + " " + items_to_go + ", " + tm.getText("routed") + " " + routed + ", ");
     layer_field.setText(tm.getText("ripped") + " " + ripped + ", " + tm.getText("failed") + " " + failed);
   }

@@ -6,8 +6,11 @@ import app.freerouting.board.Connectable;
 import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.ClearanceViolation;
+import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
+import app.freerouting.board.Unit;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
@@ -149,6 +152,9 @@ public class BatchAutorouter {
     int diffBetweenBoardsCheckSizeDefault = 20;
     int diffBetweenBoardsCheckSize = diffBetweenBoardsCheckSizeDefault;
 
+    float bestScore = -1.0f;
+    int passesSinceImprovement = 0;
+
     while (still_unrouted_items && !this.is_interrupted) {
       if (thread.is_stop_auto_router_requested()) {
         this.is_interrupted = true;
@@ -212,6 +218,21 @@ public class BatchAutorouter {
       }
 
       still_unrouted_items = autoroute_pass(curr_pass_no, true);
+
+      if (this.finalScore > bestScore + 0.0001f) {
+        bestScore = this.finalScore;
+        passesSinceImprovement = 0;
+      } else {
+        passesSinceImprovement++;
+      }
+
+      if (passesSinceImprovement >= 20) {
+        FRLogger.warn(
+            "Auto-router has stagnated with no score improvement for "
+                + passesSinceImprovement
+                + " consecutive passes. Stopping now.");
+        this.is_interrupted = true;
+      }
 
       // let's check if there was enough change in the last pass, because if it was
       // too little we should probably stop
@@ -486,10 +507,8 @@ public class BatchAutorouter {
       RatsNest ratsNest = new RatsNest(routing_board, hdlg.get_locale());
       int incompleteCount = ratsNest.incomplete_count();
 
-      float score = 0.0f; // Score not easily available in v1.9 BatchAutorouter context yet
-      int violations = 0;
-      if (ratsNest.length_violation_count() > 0)
-        violations = ratsNest.length_violation_count();
+      int violations = calculateViolationsCount();
+      float score = calculateScore(ratsNest);
 
       this.finalScore = score;
       this.finalViolations = violations;
@@ -705,5 +724,63 @@ public class BatchAutorouter {
       }
     }
     this.air_line = new FloatLine(from_corner, to_corner);
+  }
+
+  private int calculateViolationsCount() {
+    Set<String> uniqueViolations = new HashSet<>();
+    Iterator<UndoableObjects.UndoableObjectNode> it = routing_board.item_list.start_read_object();
+    for (;;) {
+      UndoableObjects.Storable curr_ob = routing_board.item_list.read_object(it);
+      if (curr_ob == null) {
+        break;
+      }
+      if (curr_ob instanceof Item) {
+        Item curr_item = (Item) curr_ob;
+        Collection<ClearanceViolation> violations = curr_item.clearance_violations();
+        for (ClearanceViolation violation : violations) {
+          int idA = violation.first_item.get_id_no();
+          int idB = violation.second_item.get_id_no();
+          int minId = Math.min(idA, idB);
+          int maxId = Math.max(idA, idB);
+          String key = minId + "-" + maxId + "-" + violation.layer;
+          uniqueViolations.add(key);
+        }
+      }
+    }
+    return uniqueViolations.size();
+  }
+
+  private float calculateScore(RatsNest ratsNest) {
+    int maxConnections = 0;
+    for (int netNo = 1; netNo <= routing_board.rules.nets.max_net_no(); netNo++) {
+      maxConnections += Math.max(0, routing_board.connectable_item_count(netNo) - 1);
+    }
+    if (maxConnections <= 0) {
+      return 0.0f;
+    }
+
+    int incompleteCount = ratsNest.incomplete_count();
+    int uniqueViolations = calculateViolationsCount();
+    int totalBends = 0;
+    for (Trace trace : routing_board.get_traces()) {
+      if (trace instanceof PolylineTrace) {
+        totalBends += Math.max(0, ((PolylineTrace) trace).corner_count() - 2);
+      }
+    }
+
+    double boardUnitToMmFactor = Unit.scale(1.0, routing_board.communication.unit, Unit.MM)
+        / (routing_board.communication.resolution > 0 ? routing_board.communication.resolution : 1);
+    float traceLengthMm = (float) (routing_board.cumulative_trace_length() * boardUnitToMmFactor);
+    int viaCount = routing_board.get_vias().size();
+    float viaCosts = hdlg.get_settings().autoroute_settings.get_via_costs();
+
+    float penalties = incompleteCount * 1_000_000.0f
+        + uniqueViolations * 1_000.0f
+        + totalBends * 10.0f;
+    float costs = traceLengthMm * 1.0f
+        + viaCount * viaCosts;
+
+    float maximumScore = maxConnections * 1_000_000.0f;
+    return Math.max(0.0f, (maximumScore - penalties - costs) / maximumScore) * 1000.0f;
   }
 }

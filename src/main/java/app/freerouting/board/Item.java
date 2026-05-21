@@ -1237,7 +1237,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         }
         Collection<Item> trace_contact_list = curr_trace.get_normal_contacts();
         for (Item tmp_contact : trace_contact_list) {
-          if (tmp_contact instanceof Pin && curr_contact.first_layer() == curr_contact.last_layer() && tmp_contact
+          if (tmp_contact instanceof Pin && tmp_contact.first_layer() == tmp_contact.last_layer() && tmp_contact
               .get_normal_contacts()
               .size() <= 1) {
             return true;

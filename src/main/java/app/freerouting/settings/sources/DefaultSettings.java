@@ -26,7 +26,7 @@ public class DefaultSettings implements SettingsSource {
      * This is intentionally the largest penalty so that routing completion
      * always dominates trace-length and via-count considerations.
      */
-    public static final float DEFAULT_UNROUTED_NET_PENALTY = 4000.0f;
+    public static final float DEFAULT_UNROUTED_NET_PENALTY = 1000000.0f;
 
     /**
      * Penalty subtracted from the board score for each clearance (DRC) violation.
@@ -107,6 +107,12 @@ public class DefaultSettings implements SettingsSource {
         // isLayerActive and isPreferredDirectionHorizontalOnLayer are left null intentionally –
         // they will be populated by DsnFileSettings (from the DSN layer count) and then
         // overwritten with board-geometry-aware values by applyBoardSpecificOptimizations().
+
+        // Fanout pre-pass defaults
+        settings.fanout.enabled = true;
+        settings.fanout.maxPasses = 20;
+        settings.fanout.maxMillisecondsPerPin = 10000L;
+        settings.fanout.ripupAllowed = true;
 
         // Optimizer defaults
         settings.optimizer.enabled = false;

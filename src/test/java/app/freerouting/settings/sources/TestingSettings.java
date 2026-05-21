@@ -36,6 +36,13 @@ public class TestingSettings implements SettingsSource {
         }
     }
 
+    public void setFanoutEnabled(boolean enabled) {
+        if (this.settings.fanout == null) {
+            this.settings.fanout = new app.freerouting.settings.FanoutSettings();
+        }
+        this.settings.fanout.enabled = enabled;
+    }
+
     @Override
     public RouterSettings getSettings() {
         return settings;

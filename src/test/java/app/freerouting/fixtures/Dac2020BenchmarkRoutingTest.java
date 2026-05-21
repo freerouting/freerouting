@@ -9,10 +9,12 @@ import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.settings.sources.TestingSettings;
 import java.time.Duration;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /// KiCad DAC 2020 Benchmarks
 /// DAC2020_bm01.dsn: There are 195 connections in total on the board
+@Tag("slow")
 public class Dac2020BenchmarkRoutingTest extends RoutingFixtureTest {
 
   private RoutingJob job;

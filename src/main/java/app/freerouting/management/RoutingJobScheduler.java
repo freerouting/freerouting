@@ -12,6 +12,7 @@ import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.sources.ApiSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.io.specctra.SesImportSummary;
@@ -86,6 +87,12 @@ public class RoutingJobScheduler {
 
                     settingsMerger.addOrReplaceSources(
                         new DsnFileSettings(job.input.getData(), job.input.getFilename()));
+
+                    // Keep per-job overrides (e.g. tests toggling fanout/optimizer) by
+                    // applying the job's current settings as highest-priority API settings.
+                    if (job.routerSettings != null) {
+                      settingsMerger.addOrReplaceSources(new ApiSettings(job.routerSettings));
+                    }
 
                     // Apply the final merged settings to the job and optimize them for the board
                     job.routerSettings = settingsMerger.merge();
