@@ -83,6 +83,20 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Runtime settings and settings sources | `app.freerouting.settings` |
 | Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
 
+## Module Boundaries (ArchUnit)
+
+Architectural boundaries are codified in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`.
+
+- **Strict boundaries (must pass):**
+  - Core routing/model packages (`autoroute`, `board`, `rules`, `drc`, `geometry`) must not depend on GUI/editor or API packages.
+  - API/management packages must not depend on `gui` or `boardgraphics`.
+  - Headless paths (`api`, `management`, `core`) must not depend on `GuiBoardManager` or `InteractiveState`.
+- **Frozen boundaries (current debt, no further drift):**
+  - `interactive` state-machine classes should not be used outside `gui` + `interactive`.
+  - `io.specctra.parser` internals should not be depended on outside `io.specctra` public I/O entry points.
+
+Frozen boundaries use ArchUnit's `FreezingArchRule` with baselines stored in `src/test/resources/archunit_store/`.
+
 ## Package Glossary
 
 ### `app.freerouting`
