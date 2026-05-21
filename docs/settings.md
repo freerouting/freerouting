@@ -62,7 +62,12 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     "endpoints": [
       "http://0.0.0.0:37864"
     ],
-    "cors_origins": ""
+    "cors_origins": "",
+    "rate_limit": {
+      "enabled": false,
+      "requests_per_window": 120,
+      "window_seconds": 60
+    }
   },
   "mcp_server": {
     "enabled": false,
@@ -75,6 +80,11 @@ The primary way to configure Freerouting is through a JSON settings file. This f
       "providers": ""
     },
     "cors_origins": "",
+    "rate_limit": {
+      "enabled": false,
+      "requests_per_window": 120,
+      "window_seconds": 60
+    },
     "target_api_base_url": "http://127.0.0.1:37864"
   }
 }
@@ -143,6 +153,10 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   - CLI: `--api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864`
   - Env var: `FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864`
 - *`cors_origins`*: A comma-separated list of origins for the `Access-Control-Allow-Origin` CORS header. Set to `*` to accept all origins (this can be a security risk). When CORS is enabled, the server automatically allows the following request headers in preflight responses: `Content-Type`, `Accept`, `Origin`, `X-Requested-With`, `Authorization`, `Freerouting-Profile-ID`, `Freerouting-Profile-Email`, and `Freerouting-Environment-Host`. This ensures browser-based clients (e.g. EasyEDA at `https://pro.lceda.cn`) can authenticate successfully without being blocked by CORS preflight checks.
+- **`rate_limit`**: Fixed-window throttling for API requests.
+  - `enabled`: Enable/disable API-side rate limiting.
+  - `requests_per_window`: Maximum accepted requests per identity in each window.
+  - `window_seconds`: Window duration in seconds.
 
 #### **`mcp_server` Section**
 
@@ -153,6 +167,10 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`cors_origins`**: Optional CORS allowlist for browser-hosted MCP clients.
 - **`target_api_base_url`**: Base URL of the REST API server used by MCP tools to execute operations.
   Must point to the REST API base URL (for example `http://127.0.0.1:37864`) and not to MCP paths such as `/v1/mcp` or `/.well-known/*`.
+- **`rate_limit`**: Fixed-window throttling for MCP HTTP requests (for example `/v1/mcp`).
+  - `enabled`: Enable/disable MCP-side rate limiting.
+  - `requests_per_window`: Maximum accepted requests per identity in each window.
+  - `window_seconds`: Window duration in seconds.
 
 ### Command Line Arguments
 
@@ -170,6 +188,8 @@ java -jar freerouting.jar --gui.enabled=false --router.max_passes=200
 java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864
 java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
 java -jar freerouting.jar --mcp_server-enabled=true --mcp_server-endpoints=http://127.0.0.1:37964 --mcp_server-target_api_base_url=http://127.0.0.1:37864
+java -jar freerouting.jar --api_server.rate_limit.enabled=true --api_server.rate_limit.requests_per_window=120 --api_server.rate_limit.window_seconds=60
+java -jar freerouting.jar --mcp_server.rate_limit.enabled=true --mcp_server.rate_limit.requests_per_window=60 --mcp_server.rate_limit.window_seconds=60
 ```
 
 ### Environment Variables

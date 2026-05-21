@@ -226,6 +226,14 @@ Key facts and invariants for the dedicated MCP server implementation.
   - `Freerouting-Environment-Host` in `<ToolName>/<Version>` format.
 - Keep API and MCP authentication paths independent; changing one must not silently change the other.
 
+## Operational hardening invariants
+
+- API and MCP both support configurable fixed-window rate limits:
+  - `api_server.rate_limit`
+  - `mcp_server.rate_limit`
+- MCP and REST responses include `X-Correlation-ID` for request tracing.
+- MCP tool bridge must forward `X-Correlation-ID` to underlying REST calls so logs can be cross-linked.
+
 ## Required docs updates when MCP changes
 
 - Update `docs/API/MCP_setup.md` with concrete startup, verification, and troubleshooting steps.

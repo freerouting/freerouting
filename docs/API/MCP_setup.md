@@ -162,3 +162,11 @@ Required headers for both channels:
 - For local plugin workflows, `127.0.0.1` + auth disabled is acceptable.
 - For network exposure, enable auth on both servers and restrict `cors_origins`.
 - Prefer reverse proxy/TLS termination if exposing beyond localhost.
+
+## 10) Operational Hardening
+
+- MCP supports configurable fixed-window throttling via `mcp_server.rate_limit`.
+- REST API supports configurable fixed-window throttling via `api_server.rate_limit`.
+- Set both limits explicitly for production to prevent high-frequency polling loops.
+- Every MCP request now carries/returns `X-Correlation-ID`, and tool bridge calls forward this
+  header to REST so logs can be cross-linked across MCP and API layers.

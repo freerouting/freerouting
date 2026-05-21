@@ -26,6 +26,9 @@ public class McpServerSettings implements Serializable {
   @SerializedName("cors_origins")
   public String cors_origins = "";
 
+  @SerializedName("rate_limit")
+  public RateLimitSettings rateLimit = new RateLimitSettings();
+
   @SerializedName("target_api_base_url")
   public String targetApiBaseUrl = "http://127.0.0.1:37864";
 }

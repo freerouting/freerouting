@@ -475,6 +475,12 @@ MCP and A2A routes are explicitly wired into the OpenAPI generator so they appea
 The A2A card includes protocol/version metadata, auth scheme hints, contact and docs URLs,
 and tool-source/category metadata to help MCP/A2A clients configure themselves automatically.
 
+Operational controls:
+
+- API throttling is controlled by `api_server.rate_limit`.
+- MCP throttling is controlled by `mcp_server.rate_limit`.
+- Responses include `X-Correlation-ID`; MCP forwards this ID to bridged REST calls for cross-layer tracing.
+
 For complete setup instructions (configuration, startup commands, verification, and troubleshooting), see:
 
 - [`docs/API/MCP_setup.md`](MCP_setup.md)

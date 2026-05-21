@@ -1,6 +1,7 @@
 package app.freerouting.api.v1;
 
 import app.freerouting.api.BaseController;
+import app.freerouting.api.CorrelationIdFilter;
 import app.freerouting.api.mcp.McpRealtimeBridge;
 import app.freerouting.api.mcp.OpenApiMcpToolRegistry;
 import app.freerouting.Freerouting;
@@ -65,6 +66,8 @@ public class McpControllerV1 extends BaseController {
   @Produces(MediaType.APPLICATION_JSON)
   public Response rpc(String requestBody) {
     UUID userId = AuthenticateUser();
+    String correlationId = CorrelationIdFilter.resolveOrCreate(
+        headers.getHeaderString(CorrelationIdFilter.HEADER_NAME));
 
     JsonObject request;
     try {
@@ -81,10 +84,11 @@ public class McpControllerV1 extends BaseController {
 
     JsonObject response;
     try {
+      FRLogger.info("[mcp][cid=" + correlationId + "] method=" + method);
       response = switch (method == null ? "" : method) {
         case "initialize" -> handleInitialize(id);
         case "tools/list" -> handleToolsList(id);
-        case "tools/call" -> handleToolsCall(id, params);
+        case "tools/call" -> handleToolsCall(id, params, correlationId);
         default -> error(id, -32601, "Unknown method: " + method);
       };
     } catch (Exception e) {
@@ -93,7 +97,9 @@ public class McpControllerV1 extends BaseController {
     }
 
     FRAnalytics.apiEndpointCalled("POST v1/mcp", requestBody, response.toString(), userId);
-    return Response.ok(response.toString()).build();
+    return Response.ok(response.toString())
+        .header(CorrelationIdFilter.HEADER_NAME, correlationId)
+        .build();
   }
 
   @Operation(summary = "MCP event stream (SSE)", description = "Streams MCP activity notifications to clients.")
@@ -134,7 +140,8 @@ public class McpControllerV1 extends BaseController {
     return success(id, result);
   }
 
-  private JsonObject handleToolsCall(JsonElement id, JsonObject params) throws Exception {
+  private JsonObject handleToolsCall(JsonElement id, JsonObject params, String correlationId)
+      throws Exception {
     if (!params.has("name") || params.get("name").isJsonNull()) {
       return error(id, -32602, "Missing required parameter: name");
     }
@@ -153,7 +160,7 @@ public class McpControllerV1 extends BaseController {
 
     HttpResponse<String> response;
     try {
-      response = invokeTool(tool, arguments);
+      response = invokeTool(tool, arguments, correlationId);
     } catch (IllegalArgumentException ex) {
       return error(id, -32602, ex.getMessage());
     }
@@ -182,13 +189,16 @@ public class McpControllerV1 extends BaseController {
     return success(id, result);
   }
 
-  private HttpResponse<String> invokeTool(OpenApiMcpToolRegistry.ToolOperation tool, JsonObject arguments)
+  private HttpResponse<String> invokeTool(
+      OpenApiMcpToolRegistry.ToolOperation tool,
+      JsonObject arguments,
+      String correlationId)
       throws IOException, InterruptedException {
     String resolvedPath = resolvePath(tool.path(), getObject(arguments, "path"));
     URI uri = buildUriWithQuery(resolvedPath, getObject(arguments, "query"));
 
     HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
-    forwardHeaders(builder);
+    forwardHeaders(builder, correlationId);
 
     JsonElement bodyElement = arguments.get("body");
     String method = tool.method();
@@ -203,12 +213,13 @@ public class McpControllerV1 extends BaseController {
     return HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
   }
 
-  private void forwardHeaders(HttpRequest.Builder builder) {
+  private void forwardHeaders(HttpRequest.Builder builder, String correlationId) {
     // Forward only identity/auth headers required by the REST API contract.
     copyHeader("Authorization", builder);
     copyHeader("Freerouting-Profile-ID", builder);
     copyHeader("Freerouting-Profile-Email", builder);
     copyHeader("Freerouting-Environment-Host", builder);
+    builder.header(CorrelationIdFilter.HEADER_NAME, correlationId);
   }
 
   private void copyHeader(String name, HttpRequest.Builder builder) {
