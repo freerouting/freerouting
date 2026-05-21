@@ -156,6 +156,14 @@ class McpEndpointsTest {
     JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
     assertEquals("Freerouting MCP", payload.get("name").getAsString());
     assertTrue(payload.has("endpoints"));
+    assertTrue(payload.has("endpointMap"));
+    assertTrue(payload.has("protocols"));
+    assertTrue(payload.has("auth"));
+    assertTrue(payload.has("contact"));
+    assertTrue(payload.has("documentation"));
+    assertTrue(payload.has("tools"));
+    assertEquals("openapi", payload.getAsJsonObject("tools").get("source").getAsString());
+    assertTrue(payload.getAsJsonObject("tools").getAsJsonArray("categories").size() >= 3);
   }
 
   @Test

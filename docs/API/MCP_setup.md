@@ -87,6 +87,13 @@ Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:37964/v1/mcp" -Headers $he
 Invoke-RestMethod -Method Get -Uri "http://127.0.0.1:37964/.well-known/agent.json"
 ```
 
+The card includes richer metadata for client discovery and policy handling:
+
+- protocol details (`protocols.mcp.version`, transport list)
+- auth metadata (`auth.schemes`, required identity headers)
+- docs/contact links (`documentation`, `contact`)
+- tool metadata (`tools.source`, `tools.coverage`, `tools.categories`)
+
 ### 5.2 List tools
 
 ```powershell
@@ -99,6 +106,20 @@ Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:37964/v1/mcp" -Headers $he
 ```powershell
 $body = '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"get_v1_system_status","arguments":{}}}'
 Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:37964/v1/mcp" -Headers $headers -Body $body
+```
+
+### 5.4 Run the bundled MCP smoke test script
+
+```powershell
+Set-Location "C:\Work\freerouting"
+.\scripts\tests\run_test_mcp_smoke.ps1
+```
+
+Optional dry-run mode (prints requests only):
+
+```powershell
+Set-Location "C:\Work\freerouting"
+.\scripts\tests\run_test_mcp_smoke.ps1 -DryRun
 ```
 
 ## 6) Realtime Streams

@@ -471,6 +471,9 @@ The MCP server is configured independently from the REST API server (`mcp_server
 `mcp_server.target_api_base_url` must point to the REST API base URL (for example
 `http://127.0.0.1:37864`) and must not target MCP endpoints (`/v1/mcp*` or `/.well-known/*`).
 
+The A2A card includes protocol/version metadata, auth scheme hints, contact and docs URLs,
+and tool-source/category metadata to help MCP/A2A clients configure themselves automatically.
+
 For complete setup instructions (configuration, startup commands, verification, and troubleshooting), see:
 
 - [`docs/API/MCP_setup.md`](MCP_setup.md)
