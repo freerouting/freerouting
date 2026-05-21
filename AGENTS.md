@@ -208,9 +208,15 @@ Key facts and invariants for the dedicated MCP server implementation.
 
 ## Protocol surface (v2.3)
 
+- Public discovery endpoint: `GET /.well-known/agent.json` (A2A Agent Card).
 - JSON-RPC endpoint: `POST /v1/mcp` (`initialize`, `tools/list`, `tools/call`).
 - Realtime channels: `GET /v1/mcp/events` (SSE) and `GET /v1/mcp/ws` (WebSocket).
 - Tool inventory is generated from OpenAPI (`/openapi/openapi.json`) and exposes nearly all `/v1/*` routes except MCP routes themselves.
+
+## Target API guard
+
+- `mcp_server.target_api_base_url` must point to the REST API base URL.
+- It must never point to MCP routes (for example `/v1/mcp` or `/.well-known/*`), otherwise tool calls are rejected with a configuration error.
 
 ## Authentication and headers
 

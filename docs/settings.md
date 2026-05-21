@@ -152,6 +152,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`authentication`**: API-key authentication settings specific to MCP (`enabled`, `providers`, provider credentials).
 - **`cors_origins`**: Optional CORS allowlist for browser-hosted MCP clients.
 - **`target_api_base_url`**: Base URL of the REST API server used by MCP tools to execute operations.
+  Must point to the REST API base URL (for example `http://127.0.0.1:37864`) and not to MCP paths such as `/v1/mcp` or `/.well-known/*`.
 
 ### Command Line Arguments
 

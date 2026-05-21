@@ -68,6 +68,7 @@ public class EnvironmentHostValidationFilter implements ContainerRequestFilter {
     return p.startsWith("v1/system/")
         || p.startsWith("v1/analytics/")
         || p.startsWith("dev/")
+        || p.startsWith(".well-known/")
         || p.startsWith("openapi/")
         || p.equals("swagger-ui")
         || p.startsWith("swagger-ui/");
@@ -106,5 +107,3 @@ public class EnvironmentHostValidationFilter implements ContainerRequestFilter {
             .build());
   }
 }
-
-

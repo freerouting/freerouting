@@ -143,6 +143,46 @@ class McpEndpointsTest {
     assertNotNull(forwarded.get("body"));
   }
 
+  @Test
+  void agentCard_isPublicOnMcpServer() throws Exception {
+    HttpRequest request = HttpRequest.newBuilder(mcpBaseUri.resolve("/.well-known/agent.json"))
+        .GET()
+        .timeout(Duration.ofSeconds(10))
+        .build();
+
+    HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    assertEquals(200, response.statusCode());
+
+    JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
+    assertEquals("Freerouting MCP", payload.get("name").getAsString());
+    assertTrue(payload.has("endpoints"));
+  }
+
+  @Test
+  void toolsCall_rejectsMcpTargetApiBaseUrlMisconfiguration() throws Exception {
+    Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl = mcpBaseUri + "/v1/mcp";
+
+    JsonObject callRequest = new JsonObject();
+    callRequest.addProperty("jsonrpc", "2.0");
+    callRequest.addProperty("id", 4);
+    callRequest.addProperty("method", "tools/call");
+
+    JsonObject params = new JsonObject();
+    params.addProperty("name", "get_v1_system_status");
+    params.add("arguments", new JsonObject());
+    callRequest.add("params", params);
+
+    HttpResponse<String> response = httpClient.send(
+        authenticatedMcpRequest(callRequest),
+        HttpResponse.BodyHandlers.ofString());
+    assertEquals(200, response.statusCode());
+
+    JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
+    assertTrue(payload.has("error"));
+    assertEquals(-32602, payload.getAsJsonObject("error").get("code").getAsInt());
+    assertTrue(payload.getAsJsonObject("error").get("message").getAsString().contains("target_api_base_url"));
+  }
+
   private HttpRequest authenticatedMcpRequest(JsonObject requestBody) {
     return HttpRequest.newBuilder(mcpBaseUri.resolve("/v1/mcp"))
         .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))

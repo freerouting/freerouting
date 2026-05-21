@@ -19,8 +19,22 @@ public class McpApiKeyValidationFilter implements ContainerRequestFilter {
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String BEARER_PREFIX = "Bearer ";
 
+  private boolean isExcludedPath(String path) {
+    if (path == null) {
+      return false;
+    }
+    String normalizedPath = path.startsWith("/") ? path.substring(1) : path;
+    return normalizedPath.equals(".well-known/agent.json")
+        || normalizedPath.startsWith(".well-known/");
+  }
+
   @Override
   public void filter(ContainerRequestContext requestContext) throws IOException {
+    String path = requestContext.getUriInfo().getPath();
+    if (isExcludedPath(path)) {
+      return;
+    }
+
     McpApiKeyValidationService validationService = McpApiKeyValidationService.getInstance();
     if (!validationService.isAuthenticationEnabled()) {
       return;

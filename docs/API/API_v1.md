@@ -463,9 +463,13 @@ The MCP server is configured independently from the REST API server (`mcp_server
 
 | Endpoint | Description |
 |----------|-------------|
+| `GET /.well-known/agent.json` | Public A2A Agent Card for MCP discovery |
 | `POST /v1/mcp` | MCP JSON-RPC entry point (`initialize`, `tools/list`, `tools/call`) |
 | `GET /v1/mcp/events` | MCP activity stream over SSE |
 | `GET /v1/mcp/ws` | MCP activity stream over WebSocket |
+
+`mcp_server.target_api_base_url` must point to the REST API base URL (for example
+`http://127.0.0.1:37864`) and must not target MCP endpoints (`/v1/mcp*` or `/.well-known/*`).
 
 For complete setup instructions (configuration, startup commands, verification, and troubleshooting), see:
 

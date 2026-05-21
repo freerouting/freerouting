@@ -81,6 +81,12 @@ $body = '{"jsonrpc":"2.0","id":1,"method":"initialize"}'
 Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:37964/v1/mcp" -Headers $headers -Body $body
 ```
 
+### 5.1b Verify A2A agent card (public)
+
+```powershell
+Invoke-RestMethod -Method Get -Uri "http://127.0.0.1:37964/.well-known/agent.json"
+```
+
 ### 5.2 List tools
 
 ```powershell
@@ -126,6 +132,9 @@ Required headers for both channels:
   - Underlying REST API call failed; inspect `status` and `body` fields in MCP result.
 - No tools listed:
   - OpenAPI scan failed; verify server startup logs and API package visibility.
+- MCP error `-32602` mentioning `target_api_base_url`:
+  - `mcp_server.target_api_base_url` points to MCP endpoints (for example `/v1/mcp` or `/.well-known`).
+  - Set it to the REST API base URL, for example `http://127.0.0.1:37864`.
 
 ## 9) Security Notes
 

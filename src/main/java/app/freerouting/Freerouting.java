@@ -4,6 +4,7 @@ import app.freerouting.api.AppContextListener;
 import app.freerouting.api.ApiExceptionMapper;
 import app.freerouting.api.EnvironmentHostValidationFilter;
 import app.freerouting.api.NotFoundExceptionMapper;
+import app.freerouting.api.mcp.AgentCardController;
 import app.freerouting.api.mcp.McpApiKeyValidationFilter;
 import app.freerouting.api.mcp.McpContextListener;
 import app.freerouting.api.mcp.McpWebSocketEndpoint;
@@ -418,6 +419,7 @@ public class Freerouting {
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", String.join(",",
+        AgentCardController.class.getName(),
         McpControllerV1.class.getName(),
         McpApiKeyValidationFilter.class.getName(),
         EnvironmentHostValidationFilter.class.getName(),

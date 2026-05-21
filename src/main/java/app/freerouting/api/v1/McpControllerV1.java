@@ -36,6 +36,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -150,7 +151,12 @@ public class McpControllerV1 extends BaseController {
       return error(id, -32601, "Unknown tool: " + toolName);
     }
 
-    HttpResponse<String> response = invokeTool(tool, arguments);
+    HttpResponse<String> response;
+    try {
+      response = invokeTool(tool, arguments);
+    } catch (IllegalArgumentException ex) {
+      return error(id, -32602, ex.getMessage());
+    }
 
     JsonObject payload = new JsonObject();
     payload.addProperty("status", response.statusCode());
@@ -198,11 +204,11 @@ public class McpControllerV1 extends BaseController {
   }
 
   private void forwardHeaders(HttpRequest.Builder builder) {
+    // Forward only identity/auth headers required by the REST API contract.
     copyHeader("Authorization", builder);
     copyHeader("Freerouting-Profile-ID", builder);
     copyHeader("Freerouting-Profile-Email", builder);
     copyHeader("Freerouting-Environment-Host", builder);
-    copyHeader("Accept", builder);
   }
 
   private void copyHeader(String name, HttpRequest.Builder builder) {
@@ -219,7 +225,26 @@ public class McpControllerV1 extends BaseController {
         && !Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl.isBlank()
         ? Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl
         : "http://127.0.0.1:37864";
-    UriBuilder builder = UriBuilder.fromUri(baseUrl).path(path.startsWith("/") ? path.substring(1) : path);
+
+    URI targetBaseUri;
+    try {
+      targetBaseUri = URI.create(baseUrl);
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Invalid mcp_server.target_api_base_url: " + baseUrl);
+    }
+
+    String scheme = targetBaseUri.getScheme() == null ? "" : targetBaseUri.getScheme().toLowerCase(Locale.ROOT);
+    if (!"http".equals(scheme) && !"https".equals(scheme)) {
+      throw new IllegalArgumentException("mcp_server.target_api_base_url must use http or https.");
+    }
+
+    String basePath = targetBaseUri.getPath() == null ? "" : targetBaseUri.getPath();
+    if (basePath.startsWith("/v1/mcp") || basePath.contains("/.well-known")) {
+      throw new IllegalArgumentException(
+          "mcp_server.target_api_base_url points to MCP endpoints; it must point to the REST API base URL.");
+    }
+
+    UriBuilder builder = UriBuilder.fromUri(targetBaseUri).path(path.startsWith("/") ? path.substring(1) : path);
     for (Map.Entry<String, JsonElement> entry : query.entrySet()) {
       if (entry.getValue() == null || entry.getValue().isJsonNull()) {
         continue;
