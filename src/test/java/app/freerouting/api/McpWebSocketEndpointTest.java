@@ -84,6 +84,22 @@ class McpWebSocketEndpointTest {
     assertEquals(1008, status.intValue());
   }
 
+  @Test
+  void websocket_authEnabled_missingAuthorization_isRejected() throws Exception {
+    URI wsUri = startMcpServer(true);
+
+    TestWebSocketListener listener = new TestWebSocketListener();
+    HttpClient.newHttpClient().newWebSocketBuilder()
+        .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
+        .header("Freerouting-Environment-Host", "TestClient/1.0")
+        .connectTimeout(Duration.ofSeconds(5))
+        .buildAsync(wsUri, listener)
+        .join();
+
+    Integer status = listener.closeStatus.get(5, TimeUnit.SECONDS);
+    assertEquals(1008, status.intValue());
+  }
+
   private URI startMcpServer(boolean authenticationEnabled) throws Exception {
     McpApiKeyValidationService.resetForTesting();
 
