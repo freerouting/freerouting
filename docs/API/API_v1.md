@@ -460,6 +460,7 @@ API web server started successfully at http://localhost:37864. ... Swagger UI is
 ### MCP Server Endpoints
 
 The MCP server is configured independently from the REST API server (`mcp_server` settings block).
+MCP and A2A routes are explicitly wired into the OpenAPI generator so they appear in Swagger UI.
 
 | Endpoint | Description |
 |----------|-------------|

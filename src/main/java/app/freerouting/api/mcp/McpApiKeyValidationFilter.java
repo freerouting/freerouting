@@ -19,6 +19,14 @@ public class McpApiKeyValidationFilter implements ContainerRequestFilter {
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String BEARER_PREFIX = "Bearer ";
 
+  private boolean isMcpPath(String path) {
+    if (path == null) {
+      return false;
+    }
+    String normalizedPath = path.startsWith("/") ? path.substring(1) : path;
+    return normalizedPath.startsWith("v1/mcp") || normalizedPath.startsWith(".well-known/");
+  }
+
   private boolean isExcludedPath(String path) {
     if (path == null) {
       return false;
@@ -31,6 +39,9 @@ public class McpApiKeyValidationFilter implements ContainerRequestFilter {
   @Override
   public void filter(ContainerRequestContext requestContext) throws IOException {
     String path = requestContext.getUriInfo().getPath();
+    if (!isMcpPath(path)) {
+      return;
+    }
     if (isExcludedPath(path)) {
       return;
     }
