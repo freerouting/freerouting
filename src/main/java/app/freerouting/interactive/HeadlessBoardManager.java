@@ -20,6 +20,7 @@ import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import java.io.ByteArrayInputStream;
@@ -291,6 +292,22 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
 
+    var outline = this.board.get_outline();
+    if (outline == null) {
+      FRLogger.warn("Ignoring router.copper_to_edge_clearance_um because the board outline is unavailable.");
+      return;
+    }
+
+    int defaultAreaClassNo = this.board.rules.get_default_net_class().default_item_clearance_classes
+        .get(DefaultItemClearanceClasses.ItemClass.AREA);
+    boolean usesFallbackOutlineClass = outline.clearance_class_no() == defaultAreaClassNo;
+    boolean usesDefaultEdgeClearanceValue = Math.abs(configuredClearanceUm
+        - DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM) < 1e-9;
+    // Keep explicit DSN outline-clearance classes untouched when only the global default is active.
+    if (usesDefaultEdgeClearanceValue && !usesFallbackOutlineClass) {
+      return;
+    }
+
     int boardResolution = Math.max(1, this.board.communication.resolution);
     int configuredClearanceBoardUnits = (int) Math.round(
         Unit.scale(configuredClearanceUm * boardResolution, Unit.UM, this.board.communication.unit));
@@ -313,11 +330,6 @@ public class HeadlessBoardManager implements BoardManager {
       }
     }
 
-    var outline = this.board.get_outline();
-    if (outline == null) {
-      FRLogger.warn("Ignoring router.copper_to_edge_clearance_um because the board outline is unavailable.");
-      return;
-    }
 
     if (this.board.search_tree_manager != null) {
       this.board.search_tree_manager.remove(outline);

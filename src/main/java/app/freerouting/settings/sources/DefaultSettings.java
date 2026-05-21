@@ -81,6 +81,9 @@ public class DefaultSettings implements SettingsSource {
      */
     public static final double DEFAULT_UNDESIRED_DIRECTION_TRACE_COST = 1.0;
 
+    /** Default copper-to-board-edge clearance in micrometres (0.5 mm). */
+    public static final double DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM = 500.0;
+
     @Override
     public RouterSettings getSettings() {
         // Create a RouterSettings object with all default values.
@@ -103,7 +106,7 @@ public class DefaultSettings implements SettingsSource {
         settings.save_intermediate_stages = false;
         settings.ignoreNetClasses = new String[0];
         settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-        settings.copperToEdgeClearanceUm = 500.0;
+        settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
 
         // isLayerActive and isPreferredDirectionHorizontalOnLayer are left null intentionally –
         // they will be populated by DsnFileSettings (from the DSN layer count) and then

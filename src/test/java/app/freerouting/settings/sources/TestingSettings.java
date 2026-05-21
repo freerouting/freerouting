@@ -18,6 +18,8 @@ public class TestingSettings implements SettingsSource {
         // (RouterSettings constructor initializes them)
         this.settings.optimizer = null;
         this.settings.scoring = null;
+        // Keep legacy fixture expectations stable unless a test explicitly opts in.
+        this.settings.copperToEdgeClearanceUm = 0.0;
     }
 
     public void setMaxItems(int maxItems) {
