@@ -155,7 +155,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       }
 
       job.stage = RoutingStage.IDLE;
-    } else if (isFanoutEnabled(job.routerSettings)) {
+    } else if (job.routerSettings.isFanoutEnabled()) {
       // Headless fanout-only mode: run the fanout pre-pass and skip autorouter passes.
       job.stage = RoutingStage.ROUTING;
       Integer originalMaxPasses = job.routerSettings.maxPasses;
@@ -271,13 +271,4 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     }
   }
 
-  private static boolean isFanoutEnabled(RouterSettings settings) {
-    if (settings == null) {
-      return false;
-    }
-    if (settings.fanout != null && settings.fanout.enabled != null) {
-      return settings.fanout.enabled;
-    }
-    return Boolean.TRUE.equals(settings.withFanout);
-  }
 }

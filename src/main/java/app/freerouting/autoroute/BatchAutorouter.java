@@ -99,7 +99,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   private long lastBoardUpdateTimestamp = 0;
 
   public BatchAutorouter(RoutingJob job) {
-    this(job.thread, job.board, job.routerSettings, !isFanoutEnabled(job.routerSettings), true,
+    this(job.thread, job.board, job.routerSettings, !job.routerSettings.isFanoutEnabled(), true,
         job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
     this.job = job;
   }
@@ -171,23 +171,6 @@ public class BatchAutorouter extends NamedAlgorithm {
       return new Point[] { drillItem.get_center() };
     }
     return new Point[0];
-  }
-
-  /**
-   * Returns {@code true} when the fanout pre-pass should run.
-   * Checks {@code settings.fanout.enabled} first; falls back to the legacy
-   * {@code settings.withFanout} field for backward-compatibility with
-   * serialised payloads that predate the {@link FanoutSettings} block.
-   */
-  private static boolean isFanoutEnabled(RouterSettings settings) {
-    if (settings == null) {
-      return false;
-    }
-    if (settings.fanout != null && settings.fanout.enabled != null) {
-      return settings.fanout.enabled;
-    }
-    // Legacy fallback
-    return Boolean.TRUE.equals(settings.withFanout);
   }
 
   private static float getCpuSecondsSnapshot(RoutingJob job) {
@@ -791,9 +774,9 @@ public class BatchAutorouter extends NamedAlgorithm {
           againstCosts);
     }
 
-    job.logDebug("Checking fanout pre-pass. settings.fanout.enabled=" + isFanoutEnabled(this.settings) + ", smd_pins=" + this.board.get_smd_pins().size());
+    job.logDebug("Checking fanout pre-pass. settings.fanout.enabled=" + this.settings.isFanoutEnabled() + ", smd_pins=" + this.board.get_smd_pins().size());
     // Run SMD fanout pre-pass when the board has SMD pins and fanout is enabled
-    if (isFanoutEnabled(this.settings) && !this.board.get_smd_pins().isEmpty()) {
+    if (this.settings.isFanoutEnabled() && !this.board.get_smd_pins().isEmpty()) {
       float fanoutCpuSecondsStart = sampleCurrentThreadCpuSeconds();
       float fanoutAllocatedMbStart = sampleCurrentThreadAllocatedMb();
       float fanoutPeakHeapMbAtStart = sampleHeapUsageMb();
@@ -1031,7 +1014,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           // fanout vias, when score plateaus with remaining incompletes. This gives the
           // autorouter a chance to escape local dead-ends introduced by pre-fanout geometry
           // while keeping fanout enabled as the default behavior.
-          if (isFanoutEnabled(this.settings)
+          if (this.settings.isFanoutEnabled()
               && !fanoutRecoveryApplied
               && boardStatisticsAfter.connections.incompleteCount > 0
               && consecutiveNoImprovementPasses >= FANOUT_RECOVERY_STAGNATION_PASSES) {

@@ -94,8 +94,6 @@ public class DefaultSettings implements SettingsSource {
 
         settings.enabled = true;
         settings.algorithm = RouterSettings.ALGORITHM_CURRENT;
-        // withFanout is kept for backward-compat; canonical default lives in fanout.enabled below.
-        settings.withFanout = true;
         settings.jobTimeoutString = "12:00:00";
         settings.maxPasses = 9999;
         settings.maxItems = Integer.MAX_VALUE;
