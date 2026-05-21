@@ -220,6 +220,19 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     this.board_frame.refresh_windows();
   }
 
+  static boolean canRemoveNetClass(int rowCount, int selectedRow) {
+    return rowCount > 1 && selectedRow >= 0;
+  }
+
+  static void applyShoveFixedSelection(NetClass netClass, boolean shoveFixed) {
+    netClass.set_shove_fixed(shoveFixed);
+    netClass.set_pull_tight(!shoveFixed);
+  }
+
+  static void applyAutorouterIgnoreSelection(NetClass netClass, boolean ignoredByAutorouter) {
+    netClass.is_ignored_by_autorouter = ignoredByAutorouter;
+  }
+
   private enum ColumnName {
     NAME, VIA_RULE, CLEARANCE_CLASS, TRACE_WIDTH, ON_LAYER, SHOVE_FIXED, CYCLES_WITH_AREAS, MIN_TRACE_LENGTH, MAX_TRACE_LENGTH, IGNORED_BY_AUTOROUTER
   }
@@ -237,12 +250,11 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      if (table_model.getRowCount() <= 1) {
-        board_frame.screen_messages.set_status_message(tm.getText("message_1"));
-        return;
-      }
       int selected_row = table.getSelectedRow();
-      if (selected_row < 0) {
+      if (!canRemoveNetClass(table_model.getRowCount(), selected_row)) {
+        if (table_model.getRowCount() <= 1) {
+          board_frame.screen_messages.set_status_message(tm.getText("message_1"));
+        }
         return;
       }
       Object net_class_name = table_model.getValueAt(selected_row, ColumnName.NAME.ordinal());
@@ -570,9 +582,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         if (!(p_value instanceof Boolean)) {
           return;
         }
-        boolean value = (Boolean) p_value;
-        net_rule.set_shove_fixed(value);
-        net_rule.set_pull_tight(!value);
+        applyShoveFixedSelection(net_rule, (Boolean) p_value);
       } else if (p_col == ColumnName.CYCLES_WITH_AREAS.ordinal()) {
         if (!(p_value instanceof Boolean)) {
           return;
@@ -629,8 +639,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         if (!(p_value instanceof Boolean)) {
           return;
         }
-        boolean value = (Boolean) p_value;
-        net_rule.is_ignored_by_autorouter = value;
+        applyAutorouterIgnoreSelection(net_rule, (Boolean) p_value);
       } else if (p_col == ColumnName.CLEARANCE_CLASS.ordinal()) {
         if (!(p_value instanceof String new_name)) {
           return;
