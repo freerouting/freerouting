@@ -154,7 +154,7 @@ class GlobalSettingsCommandLineTest {
         assertEquals("myboard.dsn", settings.initialInputFile);
         assertEquals("myboard.ses", settings.design_session_filename);
         assertEquals("output.ses", settings.initialOutputFile);
-        assertEquals(10, settings.routerSettings.maxPasses);
+        assertEquals(10, settings.getMaxPasses());
     }
 
     // -------------------------------------------------------------------------

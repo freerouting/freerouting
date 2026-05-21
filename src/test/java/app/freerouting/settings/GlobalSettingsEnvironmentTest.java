@@ -17,8 +17,6 @@ class GlobalSettingsEnvironmentTest {
         // Create a GlobalSettings instance
         GlobalSettings settings = new GlobalSettings();
 
-        // Store original router settings
-        Integer originalMaxPasses = settings.routerSettings.maxPasses;
 
         // Set environment variables (simulated by calling setValue directly)
         // In real scenario, these would be system environment variables
