@@ -2,21 +2,26 @@ package app.freerouting.gui;
 
 import app.freerouting.management.TextManager;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 /**
- * The `BoardPanelStatus` class represents a status bar at the lower border of the board frame. It contains components such as message lines, current layer indicator, and cursor position.
+ * The `BoardPanelStatus` class represents a status bar at the lower border of the board frame. 
+ * It handles the positioning of layout messages, cursor telemetry, and system trackers.
  */
 class BoardPanelStatus extends JPanel {
 
@@ -28,11 +33,10 @@ class BoardPanelStatus extends JPanel {
   public final JLabel currentBoardScore;
   public final JLabel mousePosition;
   public final JLabel unitLabel;
-  // An icon for errors and warnings
+  
   private final JPanel errorsWarningsPanel;
   private final JLabel errorIcon;
   private final JLabel warningIcon;
-  // List to hold the listeners for error or warning label clicks
   private final List<ErrorOrWarningLabelClickedListener> errorOrWarningLabelClickedListeners = new ArrayList<>();
 
   /**
@@ -66,10 +70,8 @@ class BoardPanelStatus extends JPanel {
     countsPanel.add(warningLabel);
     errorsWarningsPanel.add(countsPanel, BorderLayout.WEST);
 
-    // Add mouse listeners for error and warning labels
     addErrorOrWarningLabelClickedListener();
 
-    // Add margin to the right of the labels
     int top = 0;
     int left = 0;
     int bottom = 0;
@@ -77,13 +79,11 @@ class BoardPanelStatus extends JPanel {
     warningLabel.setBorder(new EmptyBorder(top, left, bottom, right));
     errorLabel.setBorder(new EmptyBorder(top, left, bottom, right));
 
-    // Initialize status message label with SmartLabel for auto-truncation
     statusMessage = new SmartLabel();
     statusMessage.setHorizontalAlignment(SwingConstants.CENTER);
     tm.setText(statusMessage, "status_line");
     errorsWarningsPanel.add(statusMessage, BorderLayout.CENTER);
 
-    // Initialize additional message label with SmartLabel for auto-truncation
     additionalMessage = new SmartLabel();
     tm.setText(additionalMessage, "additional_text_field");
     additionalMessage.setMaximumSize(new Dimension(300, 14));
@@ -92,91 +92,81 @@ class BoardPanelStatus extends JPanel {
     errorsWarningsPanel.add(additionalMessage, BorderLayout.EAST);
     add(errorsWarningsPanel, BorderLayout.CENTER);
 
-    // Right panel with current layer and cursor position
-    JPanel rightMessagePanel = new JPanel(new BorderLayout());
-    rightMessagePanel.setMinimumSize(new Dimension(200, 20));
+    // -------------------------------------------------------------------------
+    // RIGHT PANEL FIX: Implemented a rigid BoxLayout to strictly prevent 
+    // any text element from physically overlapping another text element.
+    // -------------------------------------------------------------------------
+    
+    JPanel rightMessagePanel = new JPanel();
+    rightMessagePanel.setLayout(new BoxLayout(rightMessagePanel, BoxLayout.X_AXIS));
     rightMessagePanel.setOpaque(false);
-    rightMessagePanel.setPreferredSize(new Dimension(450, 20));
-
-    // Initialize current layer label
-    currentLayer = new JLabel();
-    tm.setText(currentLayer, "current_layer");
-    rightMessagePanel.add(currentLayer, BorderLayout.CENTER);
 
     // Initialize current board score label
     currentBoardScore = new JLabel();
     tm.setText(currentBoardScore, "current_board_score");
-    rightMessagePanel.add(currentBoardScore, BorderLayout.CENTER);
+    currentBoardScore.setAlignmentY(Component.CENTER_ALIGNMENT);
 
-    // Create cursor panel
-    JPanel cursorPanel = new JPanel(new BorderLayout());
-    cursorPanel.setMinimumSize(new Dimension(220, 14));
-    cursorPanel.setPreferredSize(new Dimension(220, 14));
+    // Initialize current layer label
+    currentLayer = new JLabel();
+    tm.setText(currentLayer, "current_layer");
+    currentLayer.setAlignmentY(Component.CENTER_ALIGNMENT);
 
-    // Initialize mouse position label
-    mousePosition = new JLabel();
-    mousePosition.setText("X 0.00   Y 0.00");
-    mousePosition.setMaximumSize(new Dimension(170, 14));
-    mousePosition.setPreferredSize(new Dimension(170, 14));
-    cursorPanel.add(mousePosition, BorderLayout.WEST);
+    // Initialize mouse position label 
+    mousePosition = new JLabel("X 0.00   Y 0.00");
+    mousePosition.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
+    mousePosition.setAlignmentY(Component.CENTER_ALIGNMENT);
 
-    // Initialize cursor label
-    unitLabel = new JLabel();
-    unitLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    unitLabel.setText("unit");
-    unitLabel.setMaximumSize(new Dimension(100, 14));
-    unitLabel.setMinimumSize(new Dimension(50, 14));
-    unitLabel.setPreferredSize(new Dimension(50, 14));
-    cursorPanel.add(unitLabel, BorderLayout.EAST);
-
-    rightMessagePanel.add(cursorPanel, BorderLayout.EAST);
-
+    // Initialize unit label
+    unitLabel = new JLabel("unit");
+    unitLabel.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
+    unitLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+    
+    // Inject our standalone system metrics component cleanly
+    // FIX: Passed 'locale' here!
+    SysInfoStatusBarItem sysInfo = new SysInfoStatusBarItem(locale);
+    sysInfo.setAlignmentY(Component.CENTER_ALIGNMENT);
+    
+    // Assemble the components sequentially using rigid, unbreakable spacer struts
+    rightMessagePanel.add(currentBoardScore);
+    rightMessagePanel.add(Box.createHorizontalStrut(25)); // Solid 25px gap
+    
+    rightMessagePanel.add(currentLayer);
+    rightMessagePanel.add(Box.createHorizontalStrut(30)); // Solid 30px gap
+    
+    rightMessagePanel.add(mousePosition);
+    rightMessagePanel.add(Box.createHorizontalStrut(15)); // Solid 15px gap
+    
+    rightMessagePanel.add(unitLabel);
+    rightMessagePanel.add(Box.createHorizontalStrut(20)); // Solid 20px gap
+    
+    rightMessagePanel.add(sysInfo);
+    rightMessagePanel.add(Box.createHorizontalStrut(10)); // End padding gap
+    
     add(rightMessagePanel, BorderLayout.EAST);
   }
 
-  /**
-   * Adds mouse listeners for error and warning labels to handle click events.
-   */
   private void addErrorOrWarningLabelClickedListener() {
-    // Raise an event if the user clicks on the error or warning label
     errorsWarningsPanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         raiseErrorOrWarningLabelClickedEvent();
       }
     });
-
-    // Change the mouse cursor to a hand when hovering over these labels
     errorsWarningsPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
   }
 
-  /**
-   * Raises the `ErrorOrWarningLabelClicked` event for all registered listeners.
-   */
   private void raiseErrorOrWarningLabelClickedEvent() {
     for (ErrorOrWarningLabelClickedListener listener : errorOrWarningLabelClickedListeners) {
       listener.errorOrWarningLabelClicked();
     }
   }
 
-  /**
-   * Adds an `ErrorOrWarningLabelClickedListener` to the list of listeners.
-   *
-   * @param listener the listener to be added
-   */
   public void addErrorOrWarningLabelClickedListener(ErrorOrWarningLabelClickedListener listener) {
     errorOrWarningLabelClickedListeners.add(listener);
   }
 
-  /**
-   * The `ErrorOrWarningLabelClickedListener` interface defines a method to handle the click event on the error or warning labels.
-   */
   @FunctionalInterface
   public interface ErrorOrWarningLabelClickedListener {
-
-    /**
-     * Invoked when the error or warning label is clicked.
-     */
     void errorOrWarningLabelClicked();
   }
 }
