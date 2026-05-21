@@ -1,5 +1,7 @@
 package app.freerouting.autoroute;
 
+import app.freerouting.board.Item;
+import app.freerouting.board.Pin;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
@@ -9,6 +11,8 @@ import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.RouterSettings;
+
+import java.util.Collection;
 
 /**
  * Structure for controlling the autoroute algorithm.
@@ -228,14 +232,43 @@ public class AutorouteControl {
       }
       via_info_arr[i] = new ViaMask(from_layer, to_layer, curr_via.attach_smd_allowed());
     }
+
+    boolean pure_smd_net = isPureSmdNet(p_board, p_net_no);
+    if (!this.attach_smd_allowed && layer_count > 1 && pure_smd_net) {
+      // Pure SMD nets must still be able to escape their component layer, even if the DSN marks
+      // every padstack as attach-off. This only relaxes the routing gate for same-net fanout;
+      // cross-net DRC remains governed by the padstack's attach flag.
+      this.attach_smd_allowed = true;
+    }
+
     for (int j = 0; j < this.layer_count; j++) {
       this.via_radius_arr[j] = Math.max(this.via_radius_arr[j], trace_half_width[j]);
       this.max_via_radius = Math.max(this.max_via_radius, this.via_radius_arr[j]);
     }
     double via_cost_factor = this.max_via_radius;
     via_cost_factor = Math.max(via_cost_factor, 1);
+    if (pure_smd_net) {
+      // Pure SMD boards need a much cheaper via escape to avoid exhausting the local pad channel
+      // before the search commits to a layer change.
+      via_cost_factor *= 0.1;
+    }
     min_normal_via_cost = p_via_costs * via_cost_factor;
     min_cheap_via_cost = 0.8 * min_normal_via_cost;
+  }
+
+  private static boolean isPureSmdNet(RoutingBoard p_board, int p_net_no) {
+    Collection<Item> net_items = p_board.get_connectable_items(p_net_no);
+    if (net_items.isEmpty()) {
+      return false;
+    }
+
+    for (Item item : net_items) {
+      if (!(item instanceof Pin pin) || pin.first_layer() != pin.last_layer()) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**

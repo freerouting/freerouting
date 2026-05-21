@@ -499,7 +499,11 @@ tasks.register('testAll') {
     group = 'verification'
     description = 'Runs both fast/default tests and tests tagged with @Tag("slow").'
     dependsOn(tasks.named('test'))
-    dependsOn(tasks.named('testSlow'))
+    finalizedBy(tasks.named('testSlow'))
+}
+
+tasks.named('testSlow') {
+    mustRunAfter(tasks.named('test'))
 }
 
 rewrite {
