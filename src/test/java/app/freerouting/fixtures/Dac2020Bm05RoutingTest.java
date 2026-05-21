@@ -2,6 +2,7 @@ package app.freerouting.fixtures;
 
 import app.freerouting.core.RoutingJob;
 import app.freerouting.settings.sources.TestingSettings;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
@@ -37,6 +38,7 @@ public class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
   }
 
   @Test
+  @Tag("slow")
   public void test_Issue_508_BM05_first_pass() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(1);
@@ -49,6 +51,7 @@ public class Dac2020Bm05RoutingTest extends RoutingFixtureTest {
   }
 
   @Test
+  @Tag("slow")
   public void test_Issue_508_BM05_full_routing() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(20);

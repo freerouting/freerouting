@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.sources.TestingSettings;
 import java.time.Duration;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -55,6 +56,7 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://github.com/freerouting/freerouting/issues/555">GitHub Issue #555</a>
  */
+@Tag("slow")
 public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
 
   @Test

@@ -59,6 +59,9 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
     RoutingJob job = GetRoutingJob(FIXTURE_FILE, testSettings);
     assertNotNull(job, "RoutingJob must not be null");
 
+    // Disable the fanout phase to speed up the test
+    job.routerSettings.fanout.enabled = false;
+
     RoutingJob completed = RunRoutingJob(job);
 
     assertTrue(
@@ -90,6 +93,9 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
 
     RoutingJob job = GetRoutingJob(FIXTURE_FILE, testSettings);
     assertNotNull(job, "RoutingJob must not be null");
+
+    // Disable the fanout phase to speed up the test
+    job.routerSettings.fanout.enabled = false;
 
     // Enable the optimizer with a minimal pass count.
     // The original reporter observed the crash after several optimizer passes, so even a
