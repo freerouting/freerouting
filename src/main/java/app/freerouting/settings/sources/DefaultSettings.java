@@ -103,6 +103,7 @@ public class DefaultSettings implements SettingsSource {
         settings.save_intermediate_stages = false;
         settings.ignoreNetClasses = new String[0];
         settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+        settings.copperToEdgeClearanceUm = 500.0;
 
         // isLayerActive and isPreferredDirectionHorizontalOnLayer are left null intentionally –
         // they will be populated by DsnFileSettings (from the DSN layer count) and then

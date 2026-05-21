@@ -79,9 +79,9 @@
 > [!NOTE]
 > The KiCad IPC API (Sprint 2) will ultimately bypass the DSN format limitation that causes Issue #558. However, the `copperToEdgeClearanceUm` CLI parameter is still valuable for non-KiCad DSN users and for CI test validation. Implement it now; it will remain useful even after IPC.
 
-- Add `public Double copperToEdgeClearanceUm` to `RouterSettings` (nullable, no default initializer).
+- Add `public Double copperToEdgeClearanceUm` to `RouterSettings` (nullable, no default initializer) and set the base default to **500 µm (0.5 mm)** in `DefaultSettings`.
 - After board load in `HeadlessBoardManager`, if non-null: create `"board_edge"` clearance class, populate matrix, update `BoardOutline` clearance class, re-insert into search tree.
-- Update `DevBoardClearanceRoutingTest` to inject `copperToEdgeClearanceUm = 500` and assert 0 violations at the correct threshold.
+- Update `DevBoardClearanceRoutingTest` to inject a **non-default** `copperToEdgeClearanceUm` value and assert the correct threshold is applied.
 
 ### Day 12 — Sprint 1 validation
 - `./gradlew check` — full suite must be green.

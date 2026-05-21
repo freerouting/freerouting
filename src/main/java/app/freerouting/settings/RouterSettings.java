@@ -22,6 +22,8 @@ public class RouterSettings implements Serializable, Cloneable {
   /** Configuration for the SMD-pin fanout pre-pass. */
   @SerializedName("fanout")
   public FanoutSettings fanout;
+  @SerializedName("copper_to_edge_clearance_um")
+  public Double copperToEdgeClearanceUm;
   @SerializedName("job_timeout")
   public String jobTimeoutString;
   @SerializedName("max_passes")
@@ -283,6 +285,7 @@ public class RouterSettings implements Serializable, Cloneable {
         ? this.isPreferredDirectionHorizontalOnLayer.clone() : null;
     result.maxPasses = this.maxPasses;
     result.maxItems = this.maxItems;
+    result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.ignoreNetClasses = (this.ignoreNetClasses != null) ? this.ignoreNetClasses.clone() : null;
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     result.enabled = this.enabled;

@@ -79,6 +79,9 @@ This design has one critical invariant: **all fields in `RouterSettings` (and it
 
 The full priority ladder is documented in `docs/settings.md`. Key sources: `DefaultSettings` (0), `JsonFileSettings` (10), `DsnFileSettings` (20), `SesFileSettings` (30), `RulesFileSettings` (40), `GuiSettings` (50), `EnvironmentVariablesSource` (55), `CliSettings` (60), `ApiSettings` (70).
 
+- **Copper-to-edge default:** `RouterSettings.copperToEdgeClearanceUm` defaults to **500.0 µm (0.5 mm)** in `DefaultSettings`. Keep the field nullable (no initializer in `RouterSettings`) so higher-priority sources can still override it cleanly.
+- **Override-test guidance:** When writing tests for the edge-clearance override path, set `copperToEdgeClearanceUm` to a **non-default** value so the test verifies source precedence/override behavior, not just default propagation.
+
 # Workflow Commands
 
 Execute the following commands from the root directory using the Gradle Wrapper:

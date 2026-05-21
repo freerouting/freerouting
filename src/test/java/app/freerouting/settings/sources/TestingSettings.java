@@ -43,6 +43,10 @@ public class TestingSettings implements SettingsSource {
         this.settings.fanout.enabled = enabled;
     }
 
+    public void setCopperToEdgeClearanceUm(double copperToEdgeClearanceUm) {
+        this.settings.copperToEdgeClearanceUm = copperToEdgeClearanceUm;
+    }
+
     @Override
     public RouterSettings getSettings() {
         return settings;
