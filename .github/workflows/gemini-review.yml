@@ -56,7 +56,7 @@ jobs:
       - name: 'Verify Docker for GitHub MCP server'
         run: |-
           docker --version
-          docker run --rm --entrypoint /bin/sh ghcr.io/github/github-mcp-server:v0.18.0 -lc 'echo MCP server image is runnable'
+          docker run --rm ghcr.io/github/github-mcp-server:latest --help
 
       - name: 'Run Gemini pull request review'
         uses: 'google-github-actions/run-gemini-cli@v0' # ratchet:exclude
@@ -99,7 +99,7 @@ jobs:
                     "--rm",
                     "-e",
                     "GITHUB_PERSONAL_ACCESS_TOKEN",
-                    "ghcr.io/github/github-mcp-server:v0.18.0"
+                    "ghcr.io/github/github-mcp-server:latest"
                   ],
                   "includeTools": [
                     "add_comment_to_pending_review",
