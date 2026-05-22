@@ -65,7 +65,6 @@ public class McpControllerV1 extends BaseController {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response rpc(String requestBody) {
-    UUID userId = AuthenticateUser();
     String correlationId = CorrelationIdFilter.resolveOrCreate(
         headers.getHeaderString(CorrelationIdFilter.HEADER_NAME));
 
@@ -73,10 +72,22 @@ public class McpControllerV1 extends BaseController {
     try {
       request = JsonParser.parseString(requestBody).getAsJsonObject();
     } catch (Exception e) {
-      return Response.ok(error(null, -32700, "Invalid JSON")).build();
+      return Response.ok(error(null, -32700, "Invalid JSON"))
+          .header(CorrelationIdFilter.HEADER_NAME, correlationId)
+          .build();
     }
 
     JsonElement id = request.get("id");
+
+    UUID userId;
+    try {
+      userId = AuthenticateUser();
+    } catch (Exception e) {
+      return Response.ok(error(id, -32602, "Authentication failed"))
+          .header(CorrelationIdFilter.HEADER_NAME, correlationId)
+          .build();
+    }
+
     String method = request.has("method") ? request.get("method").getAsString() : null;
     JsonObject params = request.has("params") && request.get("params").isJsonObject()
         ? request.getAsJsonObject("params")
@@ -262,7 +273,16 @@ public class McpControllerV1 extends BaseController {
       }
       builder.queryParam(entry.getKey(), entry.getValue().getAsString());
     }
-    return builder.build();
+    URI result = builder.build();
+
+    // Guard: ensure the final URI still targets the same host/port as the configured base URL.
+    if (!targetBaseUri.getHost().equals(result.getHost())
+        || targetBaseUri.getPort() != result.getPort()) {
+      throw new IllegalArgumentException(
+          "Resolved tool URI target does not match the configured mcp_server.target_api_base_url.");
+    }
+
+    return result;
   }
 
   private static String resolvePath(String rawPath, JsonObject pathArgs) {

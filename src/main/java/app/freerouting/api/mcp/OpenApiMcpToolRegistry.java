@@ -201,6 +201,9 @@ public class OpenApiMcpToolRegistry {
         query.add("required", queryRequired);
       }
       properties.add("query", query);
+      if (queryRequired.size() > 0) {
+        required.add("query");
+      }
     }
 
     JsonElement bodySchema = getJsonRequestBodySchema(requestBody);

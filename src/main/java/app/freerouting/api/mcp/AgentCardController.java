@@ -89,7 +89,7 @@ public class AgentCardController {
     schemes.add(primaryScheme);
     auth.add("schemes", schemes);
     JsonArray requiredHeaders = new JsonArray();
-    requiredHeaders.add("Freerouting-Profile-ID|Freerouting-Profile-Email");
+    requiredHeaders.add("Freerouting-Profile-ID");
     requiredHeaders.add("Freerouting-Environment-Host");
     auth.add("requiredHeaders", requiredHeaders);
     card.add("auth", auth);

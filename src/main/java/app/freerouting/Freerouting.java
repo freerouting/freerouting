@@ -1,16 +1,9 @@
 package app.freerouting;
 
 import app.freerouting.api.AppContextListener;
-import app.freerouting.api.ApiExceptionMapper;
-import app.freerouting.api.CorrelationIdFilter;
-import app.freerouting.api.EnvironmentHostValidationFilter;
-import app.freerouting.api.NotFoundExceptionMapper;
-import app.freerouting.api.mcp.AgentCardController;
-import app.freerouting.api.mcp.McpApiKeyValidationFilter;
+import app.freerouting.api.mcp.McpApplication;
 import app.freerouting.api.mcp.McpContextListener;
-import app.freerouting.api.mcp.McpRateLimitFilter;
 import app.freerouting.api.mcp.McpWebSocketEndpoint;
-import app.freerouting.api.v1.McpControllerV1;
 import app.freerouting.board.BoardLoader;
 import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
@@ -420,15 +413,7 @@ public class Freerouting {
 
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
-    jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", String.join(",",
-        CorrelationIdFilter.class.getName(),
-        AgentCardController.class.getName(),
-        McpControllerV1.class.getName(),
-        McpRateLimitFilter.class.getName(),
-        McpApiKeyValidationFilter.class.getName(),
-        EnvironmentHostValidationFilter.class.getName(),
-        ApiExceptionMapper.class.getName(),
-        NotFoundExceptionMapper.class.getName()));
+    jerseyServlet.setInitParameter("jakarta.ws.rs.Application", McpApplication.class.getName());
 
     context.addEventListener(new McpContextListener());
 
