@@ -14,13 +14,14 @@ The GUI, API, and job scheduler all build on this core pipeline. When investigat
 
 ```mermaid
 flowchart TD
-    DSN(["📄 .dsn — Design input"])
-    SES(["📄 .ses — Routed output"])
+    DSN([".dsn — Design input"])
+    SES([".ses — Routed output"])
 
     subgraph interfaces ["User Interfaces"]
         direction LR
-        GUI["🖥 **gui + interactive**\nSwing desktop"]
-        API["🌐 **api.v1**\nREST / HTTP"]
+        GUI["**gui + interactive**\nSwing desktop"]
+        API["**api.v1**\nREST / HTTP"]
+        MCP["**api.mcp + api.v1.McpControllerV1**\nMCP JSON-RPC + SSE + WS"]
     end
 
     subgraph services ["Shared Services"]
@@ -49,6 +50,7 @@ flowchart TD
 
     GUI --> MGMT
     API --> MGMT
+    MCP --> API
     MGMT <--> CORE
     CFG --> AR
     CORE --> AR
@@ -80,6 +82,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
 | GUI windows, panels, menus, or drawing | `app.freerouting.gui` and `app.freerouting.interactive` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
+| MCP server protocol bridge | `app.freerouting.api.mcp` and `app.freerouting.api.v1.McpControllerV1` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
 | Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
 
@@ -137,7 +140,7 @@ The editor interaction layer and GUI session state. This package bridges user ac
 
 ### `app.freerouting.api`
 
-HTTP API controllers, filters, and server-facing request handling. The concrete endpoints live in `api.v1`, with supporting DTOs in `api.dto`, authentication in `api.security`, and developer-only mocks in `api.dev`.
+HTTP API controllers, filters, and server-facing request handling. The concrete REST endpoints live in `api.v1`, MCP server infrastructure lives in `api.mcp`, supporting DTOs are in `api.dto`, authentication in `api.security`, and developer-only mocks in `api.dev`.
 
 ### `app.freerouting.management`
 

@@ -457,6 +457,34 @@ The Swagger UI link is also printed to the server log on startup:
 API web server started successfully at http://localhost:37864. ... Swagger UI is available at http://localhost:37864/swagger-ui.
 ```
 
+### MCP Server Endpoints
+
+The MCP server is configured independently from the REST API server (`mcp_server` settings block).
+MCP and A2A routes are explicitly wired into the OpenAPI generator so they appear in Swagger UI.
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /.well-known/agent.json` | Public A2A Agent Card for MCP discovery |
+| `POST /v1/mcp` | MCP JSON-RPC entry point (`initialize`, `tools/list`, `tools/call`) |
+| `GET /v1/mcp/events` | MCP activity stream over SSE |
+| `WS /v1/mcp/ws` | MCP activity stream over WebSocket (`ws://` or `wss://`) |
+
+`mcp_server.target_api_base_url` must point to the REST API base URL (for example
+`http://127.0.0.1:37864`) and must not target MCP endpoints (`/v1/mcp*` or `/.well-known/*`).
+
+The A2A card includes protocol/version metadata, auth scheme hints, contact and docs URLs,
+and tool-source/category metadata to help MCP/A2A clients configure themselves automatically.
+
+Operational controls:
+
+- API throttling is controlled by `api_server.rate_limit`.
+- MCP throttling is controlled by `mcp_server.rate_limit`.
+- Responses include `X-Correlation-ID`; MCP forwards this ID to bridged REST calls for cross-layer tracing.
+
+For complete setup instructions (configuration, startup commands, verification, and troubleshooting), see:
+
+- [`docs/API/MCP_setup.md`](MCP_setup.md)
+
 ---
 
 ## Notes

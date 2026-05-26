@@ -195,6 +195,52 @@ GROUP BY api_method ORDER BY error_count DESC;
 | `api/ApiAnalyticsFilter.java` | JAX-RS dual filter; tracks all ≥ 400 responses centrally |
 | `api/FreeroutingApplication.java` | Registers `ApiAnalyticsFilter` alongside existing filters |
 
+# MCP Server Architecture
+
+Key facts and invariants for the dedicated MCP server implementation.
+
+## Server separation and settings
+
+- Freerouting runs MCP as a **separate server** with its own settings block: `mcp_server`.
+- `mcp_server` has independent lifecycle flags and network config: `enabled`, `running`, `http_allowed`, `endpoints`, `cors_origins`.
+- MCP authentication config is independent from REST API config: `mcp_server.authentication`.
+- MCP tools execute against the REST API using `mcp_server.target_api_base_url`.
+
+## Protocol surface (v2.3)
+
+- Public discovery endpoint: `GET /.well-known/agent.json` (A2A Agent Card).
+- JSON-RPC endpoint: `POST /v1/mcp` (`initialize`, `tools/list`, `tools/call`).
+- Realtime channels: `GET /v1/mcp/events` (SSE) and `GET /v1/mcp/ws` (WebSocket).
+- Tool inventory is generated from OpenAPI (`/openapi/openapi.json`) and exposes nearly all `/v1/*` routes except MCP routes themselves.
+
+## Target API guard
+
+- `mcp_server.target_api_base_url` must point to the REST API base URL.
+- It must never point to MCP routes (for example `/v1/mcp` or `/.well-known/*`), otherwise tool calls are rejected with a configuration error.
+
+## Authentication and headers
+
+- MCP request authentication uses the same header conventions as API requests:
+  - `Authorization: Bearer <API_KEY>` when auth is enabled.
+  - `Freerouting-Profile-ID` (or `Freerouting-Profile-Email`).
+  - `Freerouting-Environment-Host` in `<ToolName>/<Version>` format.
+- Keep API and MCP authentication paths independent; changing one must not silently change the other.
+
+## Operational hardening invariants
+
+- API and MCP both support configurable fixed-window rate limits:
+  - `api_server.rate_limit`
+  - `mcp_server.rate_limit`
+- MCP and REST responses include `X-Correlation-ID` for request tracing.
+- MCP tool bridge must forward `X-Correlation-ID` to underlying REST calls so logs can be cross-linked.
+
+## Required docs updates when MCP changes
+
+- Update `docs/API/MCP_setup.md` with concrete startup, verification, and troubleshooting steps.
+- Update `docs/API/API_v1.md` MCP endpoint tables/examples.
+- Update `docs/settings.md` whenever `mcp_server` fields change.
+- Update `docs/architecture.md` if package boundaries or data flow changes.
+
 # Docker Multi-Platform Build
 
 The Docker images are built and published by two GitHub Actions workflows:

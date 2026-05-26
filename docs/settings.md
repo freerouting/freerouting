@@ -62,7 +62,30 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     "endpoints": [
       "http://0.0.0.0:37864"
     ],
-    "cors_origins": ""
+    "cors_origins": "",
+    "rate_limit": {
+      "enabled": false,
+      "requests_per_window": 120,
+      "window_seconds": 60
+    }
+  },
+  "mcp_server": {
+    "enabled": false,
+    "http_allowed": true,
+    "endpoints": [
+      "http://127.0.0.1:37964"
+    ],
+    "authentication": {
+      "enabled": true,
+      "providers": ""
+    },
+    "cors_origins": "",
+    "rate_limit": {
+      "enabled": false,
+      "requests_per_window": 120,
+      "window_seconds": 60
+    },
+    "target_api_base_url": "http://127.0.0.1:37864"
   }
 }
 ```
@@ -130,6 +153,42 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   - CLI: `--api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864`
   - Env var: `FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864`
 - *`cors_origins`*: A comma-separated list of origins for the `Access-Control-Allow-Origin` CORS header. Set to `*` to accept all origins (this can be a security risk). When CORS is enabled, the server automatically allows the following request headers in preflight responses: `Content-Type`, `Accept`, `Origin`, `X-Requested-With`, `Authorization`, `Freerouting-Profile-ID`, `Freerouting-Profile-Email`, and `Freerouting-Environment-Host`. This ensures browser-based clients (e.g. EasyEDA at `https://pro.lceda.cn`) can authenticate successfully without being blocked by CORS preflight checks.
+- **`rate_limit`**: Fixed-window throttling for API requests.
+  - `enabled`: Enable/disable API-side rate limiting.
+  - `requests_per_window`: Maximum accepted requests per identity in each window.
+  - `window_seconds`: Window duration in seconds.
+
+#### **`mcp_server` Section**
+
+- **`enabled`**: Enables or disables the dedicated MCP server.
+- **`http_allowed`**: Allows or disallows HTTP connections to the MCP server.
+- **`endpoints`**: A list of MCP listen endpoints (`[protocol]://[host]:[port]`).
+- **`authentication`**: API-key authentication settings specific to MCP (`enabled`, `providers`, provider credentials).
+- **`cors_origins`**: Optional CORS allowlist for browser-hosted MCP clients.
+- **`target_api_base_url`**: Base URL of the REST API server used by MCP tools to execute operations.
+  Must point to the REST API base URL (for example `http://127.0.0.1:37864`) and not to MCP paths such as `/v1/mcp` or `/.well-known/*`.
+- **`rate_limit`**: Fixed-window throttling for MCP HTTP requests (for example `/v1/mcp`).
+  - `enabled`: Enable/disable MCP-side rate limiting.
+  - `requests_per_window`: Maximum accepted requests per identity in each window.
+  - `window_seconds`: Window duration in seconds.
+
+#### Recommended Rate-Limit Presets
+
+Use these as practical starting points, then tune based on observed traffic and client retry behavior.
+
+| Environment | API (`api_server.rate_limit`) | MCP (`mcp_server.rate_limit`) | Notes |
+|---|---|---|---|
+| Local development | `enabled=false` | `enabled=false` | Fast feedback loop, no throttling noise while debugging. |
+| Staging / internal QA | `enabled=true`, `requests_per_window=120`, `window_seconds=60` | `enabled=true`, `requests_per_window=60`, `window_seconds=60` | Catches runaway polling while staying permissive for tests. |
+| Production (default baseline) | `enabled=true`, `requests_per_window=180`, `window_seconds=60` | `enabled=true`, `requests_per_window=90`, `window_seconds=60` | Balanced baseline for mixed interactive + automation traffic. |
+| Production (strict) | `enabled=true`, `requests_per_window=120`, `window_seconds=60` | `enabled=true`, `requests_per_window=45`, `window_seconds=60` | For public exposure or when abuse pressure is expected. |
+
+Tuning guidance:
+
+- If legitimate clients hit HTTP `429` frequently, raise `requests_per_window` first.
+- Keep `window_seconds` at `60` unless you have a clear reason to use shorter bursts.
+- MCP generally needs lower limits than REST because tool loops can burst quickly.
+- Pair rate limits with authentication and correlation-ID logging for reliable incident analysis.
 
 ### Command Line Arguments
 
@@ -141,11 +200,14 @@ Freerouting can also be configured using command-line arguments. These arguments
 java -jar freerouting.jar --gui.enabled=false --router.max_passes=200
 ```
 
-**List-valued settings** (e.g. `api_server.endpoints`) must be passed as a **comma-separated string**; whitespace around commas is ignored:
+**List-valued settings** (e.g. `api_server.endpoints`, `mcp_server.endpoints`) must be passed as a **comma-separated string**; whitespace around commas is ignored:
 
 ```bash
 java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864
 java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
+java -jar freerouting.jar --mcp_server-enabled=true --mcp_server-endpoints=http://127.0.0.1:37964 --mcp_server-target_api_base_url=http://127.0.0.1:37864
+java -jar freerouting.jar --api_server.rate_limit.enabled=true --api_server.rate_limit.requests_per_window=120 --api_server.rate_limit.window_seconds=60
+java -jar freerouting.jar --mcp_server.rate_limit.enabled=true --mcp_server.rate_limit.requests_per_window=60 --mcp_server.rate_limit.window_seconds=60
 ```
 
 ### Environment Variables
@@ -164,6 +226,9 @@ java -jar freerouting.jar
 
 ```bash
 FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864
+FREEROUTING__MCP_SERVER__ENABLED=true
+FREEROUTING__MCP_SERVER__ENDPOINTS=http://127.0.0.1:37964
+FREEROUTING__MCP_SERVER__TARGET_API_BASE_URL=http://127.0.0.1:37864
 java -jar freerouting.jar
 ```
 
