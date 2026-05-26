@@ -104,7 +104,53 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
        ```
 * Change `ext.publishing.versionId` in `\gradle\project-info.gradle` again to `2.3.5-SNAPSHOT`
 
-* Test and publish a new version of the Python Freerouting Client on PyPi.org
+* Test and publish a new version of the Python Freerouting Client on PyPi.org (in the separate `freerouting-python-client` repository)
+* Optionally regenerate non-official SDK scaffolds from this repository before preparing SDK PRs:
+    * `./scripts/sdk/regenerate-all.ps1 -SharedVersion 2.3.4`
+    * `./scripts/sdk/generate-javascript-client.ps1`
+    * `./scripts/sdk/generate-csharp-client.ps1`
+    * `./scripts/sdk/generate-cpp-client.ps1`
+
+## Client API SDK strategy
+
+Freerouting keeps its official API clients in separate repositories from the core Java codebase.
+
+- Current official support: **Python only** (repository: `freerouting-python-client`).
+- We also see active demand for additional SDKs, especially **JavaScript** and **C++**.
+
+### Why separate repositories
+
+- SDKs and the Freerouting server have different release cadences and dependency ecosystems.
+- Language-specific CI/CD and package publishing (PyPI, npm, etc.) stay isolated and easier to maintain.
+- Users get cleaner issue tracking and documentation per language.
+
+### Source of truth and generation model
+
+- The OpenAPI definition from this repository is the canonical API contract.
+- SDK repositories should generate client code from that OpenAPI contract, then keep a small handwritten layer for ergonomics.
+- Keep generated code reproducible by committing generation config and templates into each SDK repository.
+
+### JavaScript/C++ expansion plan
+
+- Start with JavaScript first (higher ecosystem demand and lower maintenance cost than C++ bindings).
+- Add C++ only with clear ownership and a maintained packaging/distribution plan.
+- Keep one repository per SDK (`freerouting-js-client`, `freerouting-cpp-client`) instead of mixing multiple language toolchains into this repository.
+
+### Release automation recommendation
+
+It is both possible and recommended to add templates/scripts that regenerate the JavaScript client at each Freerouting release.
+
+This repository includes starter generator scripts in `scripts/sdk/` for Python, JavaScript, C#, and C++.
+Officially supported client publishing remains Python-only for now.
+Use `scripts/sdk/regenerate-all.ps1` when you want one command that keeps all generated SDK scaffolds aligned to the same API and version.
+
+Recommended guardrails:
+
+- Trigger generation from release tag events (or manually for pre-releases).
+- Open an automated PR in the JavaScript SDK repository with the regenerated client and changelog.
+- Run SDK tests in CI before merge; publish to npm only after PR approval.
+- Avoid direct auto-publish on generation alone to reduce risk from contract-breaking changes.
+- Apply the same PR-first approach for C# and C++ scaffolds (generate, test in SDK repo, review, then publish).
 
 ## Source formatting and cleanup
 
