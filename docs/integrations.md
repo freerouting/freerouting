@@ -77,13 +77,13 @@
 
 ### Using the standalone freerouting application
 
-1) Download the latest `freerouting-2.2.3.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page
+1) Download the latest `freerouting-2.2.4.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page
 
 2) Start pcb-rnd and load your layout.
 
 3) Export the layout as Specctra DSN (File / Export... / Specctra DSN).
 
-4) Start the router by running the `freerouting-2.2.3.jar` file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
+4) Start the router by running the `freerouting-2.2.4.jar` file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
 
 5) Do the routing.
 
@@ -94,9 +94,9 @@
 
 ### Using freerouting from within pcb-rnd
 
-1) Download the latest freerouting-2.2.3-linux-x64.zip from the [Releases](https://github.com/freerouting/freerouting/releases) page
+1) Download the latest freerouting-2.2.4-linux-x64.zip from the [Releases](https://github.com/freerouting/freerouting/releases) page
 
-2) Unzip it and rename the top directory freerouting-2.2.3-linux-x64 to freerouting.net (the default location is /opt/freerouting.net)
+2) Unzip it and rename the top directory freerouting-2.2.4-linux-x64 to freerouting.net (the default location is /opt/freerouting.net)
 
 3) Start pcb-rnd and ensure that this directory is specified in (File / Preferences / Config Tree / Plugins / ar_extern / freerouting_net...); the location of the executable can be customised.
 

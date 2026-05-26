@@ -520,10 +520,21 @@ public class DesignRulesChecker {
         }
       }
     }
+    // Correct formula: for each net with ≥2 items, (items - 1) connections are needed
+    // (minimum spanning tree). Nets with 0 or 1 items contribute 0.
+    // The old formula (total_items - net_count) incorrectly included empty nets in the
+    // denominator, producing a max_connections value that was too small and could even be
+    // negative or zero, which caused getNormalizedScore() to always return 0.
     this.max_connections = net_item_lists
         .stream()
-        .mapToInt(Collection::size)
-        .sum() - net_item_lists.size();
+        .filter(list -> !list.isEmpty())
+        .mapToInt(list -> {
+          long endpointCount = list.stream()
+              .filter(item -> item instanceof Pin || item instanceof ConductionArea)
+              .count();
+          return (int) Math.max(0, endpointCount - 1);
+        })
+        .sum();
 
     int totalItems = net_item_lists
         .stream()

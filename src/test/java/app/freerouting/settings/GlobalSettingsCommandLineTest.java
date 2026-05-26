@@ -154,7 +154,7 @@ class GlobalSettingsCommandLineTest {
         assertEquals("myboard.dsn", settings.initialInputFile);
         assertEquals("myboard.ses", settings.design_session_filename);
         assertEquals("output.ses", settings.initialOutputFile);
-        assertEquals(10, settings.routerSettings.maxPasses);
+        assertEquals(10, settings.getMaxPasses());
     }
 
     // -------------------------------------------------------------------------
@@ -221,5 +221,27 @@ class GlobalSettingsCommandLineTest {
         settings.applyCommandLineArguments(args);
 
         assertEquals("https://example.com?foo=bar", settings.apiServerSettings.cors_origins);
+    }
+
+    @Test
+    void testApiAndMcpRateLimitSettingsViaCli() {
+        String[] args = {
+            "--api_server.rate_limit.enabled=true",
+            "--api_server.rate_limit.requests_per_window=15",
+            "--api_server.rate_limit.window_seconds=20",
+            "--mcp_server.rate_limit.enabled=true",
+            "--mcp_server.rate_limit.requests_per_window=5",
+            "--mcp_server.rate_limit.window_seconds=12"
+        };
+
+        settings.applyCommandLineArguments(args);
+
+        assertTrue(settings.apiServerSettings.rateLimit.enabled);
+        assertEquals(15, settings.apiServerSettings.rateLimit.requestsPerWindow);
+        assertEquals(20, settings.apiServerSettings.rateLimit.windowSeconds);
+
+        assertTrue(settings.mcpServerSettings.rateLimit.enabled);
+        assertEquals(5, settings.mcpServerSettings.rateLimit.requestsPerWindow);
+        assertEquals(12, settings.mcpServerSettings.rateLimit.windowSeconds);
     }
 }

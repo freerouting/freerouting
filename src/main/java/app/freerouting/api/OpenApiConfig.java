@@ -40,6 +40,7 @@ import jakarta.ws.rs.core.Application;
                 @Tag(name = "Sessions", description = "Session management endpoints"),
                 @Tag(name = "Jobs", description = "Routing job management endpoints"),
                 @Tag(name = "Analytics", description = "Analytics and tracking endpoints"),
+                @Tag(name = "MCP", description = "Model Context Protocol and A2A discovery endpoints"),
                 @Tag(name = "Dev - System", description = "Mock system endpoints for testing and development"),
                 @Tag(name = "Dev - Sessions", description = "Mock session endpoints for testing and development"),
                 @Tag(name = "Dev - Jobs", description = "Mock job endpoints for testing and development")

@@ -4,14 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
-import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.gui.FileFormat;
-import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
@@ -34,6 +30,9 @@ public class RoutingFixtureTest {
 
   @BeforeEach
   protected void setUp() {
+    // Reset static logging flags so that a previous test (e.g. Dac2020Bm01RoutingTest) that sets
+    // FRLogger.granularTraceEnabled = true does not contaminate subsequent tests.
+    FRLogger.granularTraceEnabled = false;
     Freerouting.globalSettings = new GlobalSettings();
     scheduler = RoutingJobScheduler.getInstance();
     // Clear any leftover jobs from previous tests to avoid singleton state leaking between test runs.
@@ -120,7 +119,7 @@ public class RoutingFixtureTest {
     long timeoutInMillis = TextManager.parseTimespanString(job.routerSettings.jobTimeoutString) * 1000;
 
     while ((job.state != RoutingJobState.COMPLETED) && (job.state != RoutingJobState.CANCELLED)
-        && (job.state != RoutingJobState.TERMINATED)) {
+        && (job.state != RoutingJobState.TERMINATED) && (job.state != RoutingJobState.TIMED_OUT)) {
       try {
         Thread.sleep(100);
       } catch (InterruptedException e) {
@@ -129,6 +128,14 @@ public class RoutingFixtureTest {
 
       // Check for timeout every iteration
       if (System.currentTimeMillis() - startTime > timeoutInMillis) {
+        // Request that the router stops cleanly before propagating the timeout.
+        // Without this, the routing thread keeps running and starves subsequent tests.
+        if (job.thread != null) {
+          job.thread.requestStop();
+        }
+        if (job.state == RoutingJobState.RUNNING) {
+          job.state = RoutingJobState.TIMED_OUT;
+        }
         float timeoutInMinutes = timeoutInMillis / 60000.0f;
         throw new RuntimeException("Routing job timed out after " + timeoutInMinutes + " minutes.");
       }

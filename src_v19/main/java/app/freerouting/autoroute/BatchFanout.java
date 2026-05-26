@@ -67,7 +67,18 @@ public class BatchFanout {
                 time_limit);
         switch (curr_result) {
           case ROUTED       -> ++routed_count;
-          case NOT_ROUTED   -> ++not_routed_count;
+          case NOT_ROUTED   -> {
+            ++not_routed_count;
+            // FANOUT_DIAG parity: log fanout failures for U27 pins matching current branch format
+            app.freerouting.board.Component cmp = this.routing_board.components.get(curr_pin.board_pin.get_component_no());
+            String pinLabel = (cmp != null && curr_pin.board_pin.name() != null)
+                ? cmp.name + "-" + curr_pin.board_pin.name() : curr_pin.board_pin.toString();
+            if (pinLabel.startsWith("U27-")) {
+              int net_no = curr_pin.board_pin.net_count() > 0 ? curr_pin.board_pin.get_net_no(0) : -1;
+              FRLogger.trace("FANOUT_DIAG event=fanout_failed, pin=" + pinLabel + ", net=" + net_no
+                  + ", reason=Failed to route (v1.9)");
+            }
+          }
           case INSERT_ERROR -> ++insert_error_count;
         }
         if (curr_result != AutorouteEngine.AutorouteResult.NOT_ROUTED) {

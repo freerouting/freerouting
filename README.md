@@ -7,7 +7,7 @@
 <p align="center">
     <a href="https://github.com/freerouting/freerouting/releases"><img src="https://img.shields.io/github/v/release/freerouting/freerouting" alt="Release version" /></a>
     <img src="https://img.shields.io/github/downloads/freerouting/freerouting/total" alt="Downloads"/>
-    <img src="https://img.shields.io/github/downloads/freerouting/freerouting/v2.2.3/total" alt="Downloads"/>
+    <img src="https://img.shields.io/github/downloads/freerouting/freerouting/v2.2.4/total" alt="Downloads"/>
     <a href="LICENSE"><img src="https://img.shields.io/github/license/freerouting/freerouting" alt="License"/></a>
 	<a href="https://github.com/freerouting/freerouting/blob/master/docs/code_of_conduct.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" alt="Contributor Covenant" /></a>
 </p>
@@ -69,7 +69,7 @@ Common command-line arguments:
 **Example Command:**
 
 ```bash
-java -jar freerouting-2.2.3.jar -de MyBoard.dsn -do MyBoard.ses -inc GND,VCC
+java -jar freerouting-2.2.4.jar -de MyBoard.dsn -do MyBoard.ses -inc GND,VCC
 ```
 
 This command routes `MyBoard.dsn`, ignores the `GND` and `VCC` net classes, and outputs `MyBoard.ses`.
@@ -83,6 +83,8 @@ Freerouting offers public API endpoints for PCB routing. The API root is `https:
 To access full functionality, request access on the [Freerouting website](https://www.freerouting.app/).
 
 Please note that the Freerouting API and [its documentation](docs/API/API_v1.md) are in beta and may change.
+
+The official Freerouting client SDK currently supports Python (maintained in the separate `freerouting-python-client` repository). This repository also provides OpenAPI-based SDK generation scripts in `scripts/sdk/` for JavaScript, C#, and C++ scaffolding, including `scripts/sdk/regenerate-all.ps1` for one-command scaffold refreshes.
 
 You can also **self-host the Freerouting API** on your own machine or server. See the [Self-Hosting Guide](docs/self-hosting.md) for step-by-step instructions using Docker or a plain Java JRE.
 
@@ -103,14 +105,14 @@ Installers are available for Windows x64, Linux x64, and macOS. For other system
 3. **Run Freerouting**:
 
    ```bash
-   java -jar freerouting-2.2.3.jar
+   java -jar freerouting-2.2.4.jar
    ```
 
    **Note for macOS Users**: Launch Freerouting from the Terminal; starting from Finder is not supported.
 
 ## Docker Image on GitHub Container Registry (GHCR)
 
-Freerouting Docker images for both stable releases (e.g., `2.2.3`) and development (`nightly`) builds are available from [ghcr.io/freerouting/freerouting](https://ghcr.io/freerouting/freerouting). The image is a multi-platform manifest supporting:
+Freerouting Docker images for both stable releases (e.g., `2.2.4`) and development (`nightly`) builds are available from [ghcr.io/freerouting/freerouting](https://ghcr.io/freerouting/freerouting). The image is a multi-platform manifest supporting:
 
 - `linux/amd64` — x86-64 servers, PCs, most cloud VMs
 - `linux/arm64` — Apple Silicon, AWS Graviton, Raspberry Pi 4/5 with 64-bit OS

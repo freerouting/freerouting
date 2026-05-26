@@ -29,6 +29,9 @@ public class CliSettings implements SettingsSource {
 
     private RouterSettings parseArguments(String[] args) {
         RouterSettings settings = new RouterSettings();
+        boolean hasDesignInputArgument = false;
+        boolean hasDesignOutputArgument = false;
+        boolean hasExplicitRouterEnabledArgument = false;
 
         // Parse command-line arguments and populate only the specified settings
         // This uses the same logic as GlobalSettings.applyCommandLineArguments
@@ -44,6 +47,10 @@ public class CliSettings implements SettingsSource {
                     String propertyName = parts[0];
                     String value = parts.length > 1 ? parts[1] : "";
 
+                    if ("router.enabled".equals(propertyName)) {
+                        hasExplicitRouterEnabledArgument = true;
+                    }
+
                     if (propertyName.startsWith("router.")) {
                         applyRouterSetting(settings, propertyName, value);
                     }
@@ -53,12 +60,25 @@ public class CliSettings implements SettingsSource {
                 String flag = arg.substring(1);
                 String value = (i + 1 < args.length && !args[i + 1].startsWith("-")) ? args[++i] : "";
 
+                if ("de".equals(flag)) {
+                    hasDesignInputArgument = true;
+                } else if ("do".equals(flag)) {
+                    hasDesignOutputArgument = true;
+                }
+
                 // Map short flags to router settings
                 String propertyName = mapFlagToProperty(flag);
                 if (propertyName != null && propertyName.startsWith("router.")) {
                     applyRouterSetting(settings, propertyName, value);
                 }
             }
+        }
+
+        // Legacy batch invocation (`-de ... -do ...`) is expected to route immediately.
+        // Force router enabled unless the caller explicitly set --router.enabled=... .
+        if (hasDesignInputArgument && hasDesignOutputArgument && !hasExplicitRouterEnabledArgument) {
+            settings.enabled = true;
+            FRLogger.debug("Applied CLI router setting: router.enabled = true (implicit from -de/-do batch mode)");
         }
 
         return settings;

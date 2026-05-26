@@ -19,6 +19,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 - **Architecture Reference:** The authoritative architecture overview lives in [`docs/architecture.md`](docs/architecture.md). It includes a Mermaid diagram of the full system, a package glossary, and navigation guidance. **Keep this file up-to-date whenever structural changes are made** — for example, when packages are added or reorganised, when a new interface (GUI mode, API version, CLI flag) is introduced, or when the boundary between the routing pipeline and the orchestration layer shifts. The in-repo diagram is the first document contributors read; a stale diagram misleads more than no diagram at all.
 - **Domain Orientation:** This is an **algorithmic-heavy** project. The complexity lies in spatial data structures, pathfinding (e.g., modified A*, Lee algorithm, maze routing), and geometric calculations.
 - **Separation of Concerns:** The **UI/Visualizer** and the **Routing Engine** are distinct domains. Always maintain a strict boundary between visual representation and core algorithmic logic. UI concerns should not bleed into the geometric models.
+- **Module Boundary Enforcement:** Architectural package boundaries are enforced by ArchUnit tests in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java` and `src/test/java/app/freerouting/io/SpecctraPackageArchTest.java`. Keep strict rules green. For known legacy boundary debt, use frozen rules (`FreezingArchRule`) and never relax strict rules to hide regressions.
 - **Repository Package Boundaries:** Keep routing/data logic in `src/main/java/app/freerouting/{autoroute,board,geometry,drc,core,rules}`; keep UI/editor flow in `src/main/java/app/freerouting/{gui,interactive,boardgraphics}`; keep REST/API server concerns in `src/main/java/app/freerouting/{api,management}`; keep file-format I/O in `src/main/java/app/freerouting/io/{specctra,specctra/parser}` — the public entry points live in `io.specctra` and grammar internals in `io.specctra.parser`.
 - **Coding Standards:** Adhere strictly to Clean Code principles and standard Java naming conventions (e.g., CamelCase for classes/methods). Prioritize readability and maintainability without sacrificing the algorithmic performance. 
 - **Legacy Reference Implementation:** The source code of the original v1.9 implementation is available in the `src_v19/` directory. It serves as a reference and benchmark baseline that we can comare against when refactoring or optimizing routing logic. Use it to understand the original algorithmic decisions and to ensure that any new implementation maintains or improves upon the original performance and correctness. The source code should be modified only when more gradual trace logging is needed to understand the original algorithm's behavior in specific scenarios. Do not refactor or optimize the v1.9 code directly; instead, use it as a reference for the current development branch.
@@ -54,7 +55,9 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
     - **Expected memory profile for a multi-pass routing job:** Working-set typically grows in a staircase pattern (each pass plateau, then a GC trim) up to a board-size-dependent peak, then drops sharply when the routing thread pool winds down and releases per-pass board state. The optimizer phase that follows normally runs at a significantly lower and flat memory footprint. Sustained growth *during* the optimizer (not routing) is the signal that indicates a genuine GC-root retention leak.
   - **Trace Length Optimization:** (Low priority) The total length of traces should be minimized while respecting design rules.
 - **Testing & Validation:** Always write comprehensive unit tests for any new routing logic or optimizations. Use the existing test suite as a reference and ensure that all tests pass before merging changes. For any new features or optimizations, add specific test cases that validate the expected behavior and performance improvements.
-  - **Running Tests:** If you implement a small change you can run only one unit test to do a quick check, preferably the `Issue508Test_BM01_first_2_nets` which is one of the quickest routing test. Use `./gradlew test` to run all unit tests and `./gradlew check` for the full integration testing suite, which includes tests based on actual PCB design files.
+  - **Running Tests:** If you implement a small change you can run only one unit test to do a quick check, preferably the `Issue508Test_BM01_first_2_nets` which is one of the quickest routing test. Use `./gradlew test` for the default (fast) unit-test set and `./gradlew check` for the full integration testing suite.
+  - **Slow-test tagging policy:** Tag long-running fixture/benchmark tests with `@Tag("slow")`. The default `test` task excludes these tests unless explicitly enabled (`-PincludeSlowTests=true`). Use `./gradlew testSlow` to run only slow tests, and `./gradlew testAll` to run both fast + slow sets before releases or merge-critical validation.
+  - **Timeout budget:** The Gradle unit-test task timeout is **30 minutes** to accommodate fanout-enabled routing fixtures on slower hardware.
   - **Large-board CI tests:** Boards with >500 nets can take several minutes per routing pass. Use `TestingSettings.setMaxItems(n)` (e.g. 100–200) to slice off a bounded chunk of work that runs in under 30 seconds while still exercising the target code path. Do **not** rely on a short `jobTimeoutString` alone — the timeout fires after the pass completes, so a single slow pass can still blow the budget.
   - **Full-scale OOM / stress tests** that cannot be bounded to CI time belong in `scripts/tests/` as standalone PowerShell scripts (see `run_test_Issue420_oom.ps1` as the reference pattern). These scripts build the executable JAR, run it headlessly with `-XX:+HeapDumpOnOutOfMemoryError`, sample the JVM working-set every 30 s via a `Start-Job` background sampler, and print a pass/fail summary with the memory trend at the end.
 - **GUI vs Headless Guard:** Before calling any method that accesses `interactiveSettings`, always check `getInteractiveSettings() != null` or restrict the call to `GuiBoardManager` only. Shared `interactive`-package code (e.g., routing states like `RouteState`, `DragState`) may access `hdlg.interactiveSettings` directly — ensure those code paths are only reachable when `hdlg` is a `GuiBoardManager` instance.
@@ -64,6 +67,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   - DSN fixture files live in `fixtures/`; reference them by filename (e.g., `"Issue508-DAC2020_bm01.dsn"`). The quickest fixture for smoke-checks is `Dac2020Bm01RoutingTest`.
   - Bound long-running routing tests with `TestingSettings.setMaxPasses(n)`, `setMaxItems(m)`, and `setJobTimeoutString("HH:MM:SS")` to keep CI fast.
 - **Issue Tracking:** Detailed per-issue specifications live in `docs/issues/`. Each file documents the problem, sub-issues (with ✅ when done), proposed/actual implementation, and acceptance criteria. Keep these files up-to-date as sub-issues are resolved so future agents have accurate context without re-reading the full conversation history.
+  - Architecture boundary debt is tracked in `docs/issues/Architecture-boundary-debt-tracker.md`. Update it whenever frozen ArchUnit baselines change or when a frozen rule is promoted to strict.
   - Temporary analysis artifacts (draft GitHub replies, one-off log extracts, heap-dump notes) should be written to `logs/<IssueNNN>/` — this directory is git-ignored and will not clutter the repository.
 - **Licensing:** This project is open-source under the **GPLv3** license. Ensure all dependencies and contributions respect this license.
 
@@ -75,11 +79,17 @@ This design has one critical invariant: **all fields in `RouterSettings` (and it
 
 The full priority ladder is documented in `docs/settings.md`. Key sources: `DefaultSettings` (0), `JsonFileSettings` (10), `DsnFileSettings` (20), `SesFileSettings` (30), `RulesFileSettings` (40), `GuiSettings` (50), `EnvironmentVariablesSource` (55), `CliSettings` (60), `ApiSettings` (70).
 
+- **Copper-to-edge default:** `RouterSettings.copperToEdgeClearanceUm` defaults to **500.0 µm (0.5 mm)** in `DefaultSettings`. Keep the field nullable (no initializer in `RouterSettings`) so higher-priority sources can still override it cleanly.
+- **Override-test guidance:** When writing tests for the edge-clearance override path, set `copperToEdgeClearanceUm` to a **non-default** value so the test verifies source precedence/override behavior, not just default propagation.
+
 # Workflow Commands
 
 Execute the following commands from the root directory using the Gradle Wrapper:
 
-- **Run Tests:** `./gradlew test` (or `./gradlew check` for full integration testing suite)
+- **Run Tests (fast/default):** `./gradlew test`
+- **Run Slow Tests Only:** `./gradlew testSlow`
+- **Run Fast + Slow Tests:** `./gradlew testAll`
+- **Run Full Verification Suite:** `./gradlew check`
 - **Build the Executable JAR:** `./gradlew executableJar` (Find the result in `build/libs/freerouting-current-executable.jar`)
 - **Build Both Current + v1.9 Executables:** `./gradlew buildBothVersions`
 - **Run Current Development Environment:** `./gradlew run`
@@ -114,7 +124,7 @@ Key facts about how copper pours (power/ground planes) are modelled and routed �
   - **Path B — `DsnFile.adjustPlaneAutorouteSettings()` (heuristic fallback):** Only invoked when the DSN has no `(autoroute ...)` scope. Uses a ≥ 50% board-area threshold and skips outer layers (index 0 and last). This latent outer-layer guard is a bug for non-KiCad DSN files, but Path A fires first for well-formed KiCad exports so it is not normally encountered.
 - **Via cost discount for plane nets:** When `contains_plane` is `true`, `BatchAutorouter.autoroute_item()` passes `settings.get_plane_via_costs()` (cheaper than the regular via cost) to `AutorouteControl`. This incentivises dropping vias onto the plane rather than routing traces across the board.
 - **Via optimisation for plane-connected vias:** `OptViaAlgo.opt_plane_or_fanout_via()` handles the post-routing via repositioning for the stub-to-plane case. It verifies the new location is inside the `ConductionArea` before moving.
-- **`getAutorouteItems()` quadratic false-work:** `BasicBoard.connectable_item_count()` counts `ConductionArea` as a connectable item. For a GND net with N pads + 1 pour, every pad whose `connected_set` has fewer than N+1 members is enqueued — even those already touching the plane. These items cycle through `autoroute_item()` and return `CONNECTED_TO_PLANE` immediately, wasting time but not causing mistakes. Fix (not yet implemented): skip items whose `connected_set` already contains a `ConductionArea` during queue building.
+- **`getAutorouteItems()` quadratic false-work (partially fixed):** `BasicBoard.connectable_item_count()` counts `ConductionArea` as a connectable item. For a GND net with N pads + 1 pour, every pad whose `connected_set` has fewer than N+1 members is enqueued — even those already touching the plane. **Fix applied:** `BatchAutorouter.getAutorouteItems()` now skips items that are already connected to a `ConductionArea` for plane nets (i.e., `net.contains_plane() && connected_set.anyMatch(ConductionArea)`). Items not yet connected to the plane are still enqueued so they can drop a via onto the pour. This eliminates the repeated `normalize_traces` failure (which arose because `InsertFoundConnectionAlgo` was called for those false-work items) and ensures `autoroute_pass()` returns `false` once all plane-net items are connected — letting the routing loop exit cleanly.
 - **Confirmed bug — plane routing introduces clearance violations (Issue 093):** Routing `Issue093-interf_u.dsn` (bottom-copper GND pour) with the current code introduces **62 clearance violations** and logs an internal error in `BatchAutorouter.autoroute_pass`. The plane-routing code path is active when this occurs. This is a safety-critical open bug tracked in `docs/issues/Issue152-copper-pour-plane-awareness.md`.
 - **No pour connectivity / void detection:** If a foreign-net trace cuts through a pour layer, creating an isolated copper island, Freerouting does **not** detect the disconnected region. The `RatsNest` and the exported `.ses` file will show the net as fully routed even though part of the pour is electrically floating. This is long-term future work.
 - **Loading boards to check plane flags without routing:** Use `DsnReader.readBoard(InputStream, BoardObservers, IdentificationNumberGenerator, String)` directly when you only need to inspect the loaded board state (e.g. verify `Net.contains_plane`) without running the routing scheduler. This is faster and avoids timeout issues in tests.
@@ -184,7 +194,52 @@ GROUP BY api_method ORDER BY error_count DESC;
 | `management/analytics/BigQueryClient.java` | Singleton GCP BigQuery writer; `getInstance()` avoids per-request re-auth |
 | `api/ApiAnalyticsFilter.java` | JAX-RS dual filter; tracks all ≥ 400 responses centrally |
 | `api/FreeroutingApplication.java` | Registers `ApiAnalyticsFilter` alongside existing filters |
-| `api/v1/AnalyticsControllerV1.java` | Receives analytics POSTs and writes to BigQuery via `BigQueryClient.getInstance()` |
+
+# MCP Server Architecture
+
+Key facts and invariants for the dedicated MCP server implementation.
+
+## Server separation and settings
+
+- Freerouting runs MCP as a **separate server** with its own settings block: `mcp_server`.
+- `mcp_server` has independent lifecycle flags and network config: `enabled`, `running`, `http_allowed`, `endpoints`, `cors_origins`.
+- MCP authentication config is independent from REST API config: `mcp_server.authentication`.
+- MCP tools execute against the REST API using `mcp_server.target_api_base_url`.
+
+## Protocol surface (v2.3)
+
+- Public discovery endpoint: `GET /.well-known/agent.json` (A2A Agent Card).
+- JSON-RPC endpoint: `POST /v1/mcp` (`initialize`, `tools/list`, `tools/call`).
+- Realtime channels: `GET /v1/mcp/events` (SSE) and `GET /v1/mcp/ws` (WebSocket).
+- Tool inventory is generated from OpenAPI (`/openapi/openapi.json`) and exposes nearly all `/v1/*` routes except MCP routes themselves.
+
+## Target API guard
+
+- `mcp_server.target_api_base_url` must point to the REST API base URL.
+- It must never point to MCP routes (for example `/v1/mcp` or `/.well-known/*`), otherwise tool calls are rejected with a configuration error.
+
+## Authentication and headers
+
+- MCP request authentication uses the same header conventions as API requests:
+  - `Authorization: Bearer <API_KEY>` when auth is enabled.
+  - `Freerouting-Profile-ID` (or `Freerouting-Profile-Email`).
+  - `Freerouting-Environment-Host` in `<ToolName>/<Version>` format.
+- Keep API and MCP authentication paths independent; changing one must not silently change the other.
+
+## Operational hardening invariants
+
+- API and MCP both support configurable fixed-window rate limits:
+  - `api_server.rate_limit`
+  - `mcp_server.rate_limit`
+- MCP and REST responses include `X-Correlation-ID` for request tracing.
+- MCP tool bridge must forward `X-Correlation-ID` to underlying REST calls so logs can be cross-linked.
+
+## Required docs updates when MCP changes
+
+- Update `docs/API/MCP_setup.md` with concrete startup, verification, and troubleshooting steps.
+- Update `docs/API/API_v1.md` MCP endpoint tables/examples.
+- Update `docs/settings.md` whenever `mcp_server` fields change.
+- Update `docs/architecture.md` if package boundaries or data flow changes.
 
 # Docker Multi-Platform Build
 
@@ -376,3 +431,65 @@ Use `gradle/actions/setup-gradle@v4` (not v3). v4 is the current stable version 
 
 ## `actions/stale` version
 Use `actions/stale@v9`. v5 (previously used) ran on Node.js 16 which is EOL. Do not downgrade. Do not pin to a commit SHA — the SHA has historically broken when the upstream repository rebased its release tags.
+
+# Trace Normalisation & Routing-Loop Architecture
+
+Key facts about how `PolylineTrace.normalize()`, `BasicBoard.normalize_traces()`, and `BatchAutorouter.runBatchLoop()` interact — established during the Issue 676 regression investigation.
+
+## `PolylineTrace.normalize()` depth limit
+
+`PolylineTrace.MAX_NORMALIZATION_DEPTH` (= 34) caps the recursion depth in the private `normalize(IntOctagon, int)` method. **Prior to the fix, exceeding the cap threw `Exception("Max normalization depth reached…")`.** This was silently swallowed by a try-catch in `InsertFoundConnectionAlgo` and logged as:
+> `WARNING The normalization of net 'GND' failed.`
+
+**Fix applied:** The `throw` was replaced with `FRLogger.debug(…) + return false`. `return false` is safe because the outer while-loop in `normalize_traces` treats it as "no change for this trace" and continues to the next trace, terminating normally. Both `public normalize(IntOctagon)` and `private normalize(IntOctagon, int)` no longer declare `throws Exception`, and all callers (in `InsertFoundConnectionAlgo`, `PullTightAlgo`, and `Wiring.java`) have had their try-catch wrappers removed.
+
+## `PolylineTrace.combine_at_end()` null search-tree entries
+
+`combine_at_end` contains two code paths:
+
+1. **Full remove + re-insert** — used when `joined_polyline.arr.length != new_line_count` (parallel lines were skipped at the join).
+2. **Optimised merge via `merge_entries_at_end`** — reuses existing search-tree leaf nodes for performance.
+
+Path 2 calls `p_to_trace.get_search_tree_entries(tree)` and `p_from_trace.get_search_tree_entries(tree)`. Either can return `null` if the trace has no entries in the given search tree (e.g. it was freshly inserted or its entries were cleared). This caused a `NullPointerException` inside `ShapeSearchTree.merge_entries_at_end` at line 237, visible in the stack as:
+```
+NullPointerException: Cannot load from object array because "to_trace_entries" is null
+    at ShapeSearchTree.merge_entries_at_end(ShapeSearchTree.java:237)
+    at PolylineTrace.combine_at_end(PolylineTrace.java:395)
+    at PolylineTrace.normalize(PolylineTrace.java:776)
+```
+Previously this NPE was hidden because the old try-catch in `InsertFoundConnectionAlgo` also caught `RuntimeException` (via `Exception`).
+
+**Fix applied (in `PolylineTrace.combine_at_end`):** Before choosing path 2, check whether both `this` and `other_trace` have entries in the default search tree (`board.search_tree_manager.get_default_tree()`). If either is null, fall back to path 1 (the safe full-remove + re-insert). This guard lives entirely in `combine_at_end` so the tree-management code in `ShapeSearchTree` does not need to be changed.
+
+```java
+boolean hasTreeEntries =
+    (this.get_search_tree_entries(board.search_tree_manager.get_default_tree()) != null)
+    && (other_trace.get_search_tree_entries(board.search_tree_manager.get_default_tree()) != null);
+if (joined_polyline.arr.length != new_line_count || !hasTreeEntries) {
+    // fall back to full remove + re-insert
+    ...
+}
+```
+
+> **Why the default tree is sufficient for the guard:** All traces are always inserted into the default tree. Compensated trees are built on top of it. If a trace is missing from the default tree it is definitionally not in any compensated tree either.
+
+## `BatchAutorouter` same-board-hash stop detection
+
+v1.9 maintained an `already_checked_board_hashes` set. Between passes it computed a board hash; if the same hash appeared twice, it stopped routing. The new `BatchAutorouter` lacked this, so when GND plane items kept being queued and attempted without changing board state the router looped endlessly with score 0.
+
+**Fix applied:** `runBatchLoop()` now maintains an `alreadyRoutedBoardHashes` `HashSet<String>`. Before each pass, the current board hash is checked; if already seen, the router logs an explanatory message and calls `thread.request_stop_auto_router()`. The set is cleared whenever a previous board state is restored (ripup + retry cycle) so that the restored state can be routed again with a higher ripup cost.
+
+## `BoardStatistics.getNormalizedScore()` division by zero / NaN
+
+`getMaximumScore()` returns `maximumCount * unroutedNetPenalty`. When a board is already fully routed (`maximumCount == 0`), this is 0, and dividing by it produces `NaN`. NaN failed all comparison-based stagnation checks, causing the score to always appear as 0.
+
+**Fix applied:** A `if (maximumScore <= 0f) return 0f;` guard was added in `getNormalizedScore()` before the division.
+
+## Symptom summary
+
+| Symptom | Root cause | Fix location |
+|---|---|---|
+| `WARNING The normalization of net 'GND' failed.` (every pass) | `PolylineTrace.normalize()` threw `Exception` at max depth | `PolylineTrace.normalize()` — throw → `return false` |
+| `NullPointerException` in `merge_entries_at_end` | Trace missing search-tree entries, `combine_at_end` chose optimised path | `PolylineTrace.combine_at_end()` — null guard before path 2 |
+| Score always 0 | `getNormalizedScore()` divided by 0 when board fully routed | `BoardStatistics.getNormalizedScore()` — `<= 0` guard |
+| Router loops endlessly on same board | No board-hash stagnation detection | `BatchAutorouter.runBatchLoop()` — `alreadyRoutedBoardHashes` set |

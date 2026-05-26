@@ -412,6 +412,10 @@ public class MainApplication extends WindowBase {
           startupOptions.item_selection_strategy);
       new_frame.board_panel.board_handling.settings.autoroute_settings.set_with_postroute(
           startupOptions.optimizer_enabled);
+      new_frame.board_panel.board_handling.settings.autoroute_settings.set_with_autoroute(
+          startupOptions.router_enabled);
+      new_frame.board_panel.board_handling.settings.autoroute_settings.set_with_fanout(
+          startupOptions.fanout_enabled);
       new_frame.board_panel.board_handling.settings.autoroute_settings.setMaxItems(startupOptions.getMaxItems());
 
       if (startupOptions.design_output_filename != null) {
@@ -742,6 +746,10 @@ public class MainApplication extends WindowBase {
     new_frame.board_panel.board_handling.set_item_selection_strategy(this.item_selection_strategy);
     new_frame.board_panel.board_handling.settings.autoroute_settings.set_with_postroute(
         startupOptions.optimizer_enabled);
+    new_frame.board_panel.board_handling.settings.autoroute_settings.set_with_autoroute(
+        startupOptions.router_enabled);
+    new_frame.board_panel.board_handling.settings.autoroute_settings.set_with_fanout(
+        startupOptions.fanout_enabled);
     new_frame.board_panel.board_handling.settings.autoroute_settings.setMaxItems(this.max_items);
 
     if (new_frame.is_intermediate_stage_file_available()) {

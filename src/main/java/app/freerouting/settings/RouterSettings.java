@@ -18,6 +18,12 @@ public class RouterSettings implements Serializable, Cloneable {
   public Boolean enabled;
   @SerializedName("algorithm")
   public String algorithm;
+
+  /** Configuration for the SMD-pin fanout pre-pass. */
+  @SerializedName("fanout")
+  public FanoutSettings fanout;
+  @SerializedName("copper_to_edge_clearance_um")
+  public Double copperToEdgeClearanceUm;
   @SerializedName("job_timeout")
   public String jobTimeoutString;
   @SerializedName("max_passes")
@@ -58,6 +64,7 @@ public class RouterSettings implements Serializable, Cloneable {
   public RouterSettings() {
     this.optimizer = new RouterOptimizerSettings();
     this.scoring = new RouterScoringSettings();
+    this.fanout = new FanoutSettings();
   }
 
   /**
@@ -278,6 +285,7 @@ public class RouterSettings implements Serializable, Cloneable {
         ? this.isPreferredDirectionHorizontalOnLayer.clone() : null;
     result.maxPasses = this.maxPasses;
     result.maxItems = this.maxItems;
+    result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.ignoreNetClasses = (this.ignoreNetClasses != null) ? this.ignoreNetClasses.clone() : null;
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     result.enabled = this.enabled;
@@ -288,6 +296,7 @@ public class RouterSettings implements Serializable, Cloneable {
     // Use proper clone() methods for nested objects
     result.optimizer = this.optimizer.clone();
     result.scoring = this.scoring.clone();
+    result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
 
     return result;
   }
@@ -317,6 +326,13 @@ public class RouterSettings implements Serializable, Cloneable {
       optimizer = new RouterOptimizerSettings();
     }
     optimizer.enabled = p_value;
+  }
+
+  /**
+   * Returns whether the fanout pre-pass should run.
+   */
+  public boolean isFanoutEnabled() {
+    return fanout != null && Boolean.TRUE.equals(fanout.enabled);
   }
 
   public boolean get_vias_allowed() {
@@ -483,6 +499,7 @@ public class RouterSettings implements Serializable, Cloneable {
     }
 
     int changedCount = ReflectionUtil.copyFields(settings, this);
+
 
     // Fire property change events for key properties to update GUI
     // Note: We fire events even if values didn't change to ensure GUI is in sync

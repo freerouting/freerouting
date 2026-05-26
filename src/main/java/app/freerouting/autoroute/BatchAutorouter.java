@@ -21,14 +21,16 @@ import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.drc.AirLine;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
-import app.freerouting.drc.AirLine;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
+import com.sun.management.ThreadMXBean;
+import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,8 +48,9 @@ import java.util.TreeSet;
  */
 public class BatchAutorouter extends NamedAlgorithm {
 
-  // The lowest rank of the board to be selected to go back to
-  private static final int BOARD_RANK_LIMIT = 50;
+  // The lowest rank of the board to be selected to go back to.
+  // Must not exceed BoardHistory.MAX_HISTORY_SIZE so the check can actually fire.
+  private static final int BOARD_RANK_LIMIT = BoardHistory.MAX_HISTORY_SIZE;
   // Maximum number of tries on the same board
   private static final int MAXIMUM_TRIES_ON_THE_SAME_BOARD = 3;
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
@@ -60,6 +63,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   // Number of consecutive passes with no meaningful score improvement before
   // aborting (prevents endless looping when items cannot be routed)
   private static final int STAGNATION_PASS_LIMIT = 10;
+  // Number of no-improvement passes before attempting a one-time fanout-tail cleanup.
+  private static final int FANOUT_RECOVERY_STAGNATION_PASSES = 3;
   // Minimum score gain (on the 0–1000 normalized scale) that counts as a
   // meaningful improvement; gains smaller than this are treated as stagnation.
   private static final float STAGNATION_SCORE_THRESHOLD = 0.5f;
@@ -94,7 +99,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   private long lastBoardUpdateTimestamp = 0;
 
   public BatchAutorouter(RoutingJob job) {
-    this(job.thread, job.board, job.routerSettings, true, true,
+    this(job.thread, job.board, job.routerSettings, !job.routerSettings.isFanoutEnabled(), true,
         job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
     this.job = job;
   }
@@ -152,6 +157,78 @@ public class BatchAutorouter extends NamedAlgorithm {
     return curr_pass_no;
   }
 
+  private static Point[] getImpactedPoints(Item item) {
+    if (item instanceof Trace trace) {
+      return new Point[] { trace.first_corner(), trace.last_corner() };
+    }
+    if (item instanceof Via via) {
+      return new Point[] { via.get_center() };
+    }
+    if (item instanceof Pin pin) {
+      return new Point[] { pin.get_center() };
+    }
+    if (item instanceof DrillItem drillItem) {
+      return new Point[] { drillItem.get_center() };
+    }
+    return new Point[0];
+  }
+
+  private static float getCpuSecondsSnapshot(RoutingJob job) {
+    if (job == null || job.resourceUsage == null) {
+      return 0f;
+    }
+    return job.resourceUsage.cpuTimeUsed;
+  }
+
+  /**
+   * Auto-routes one ripup pass of all items of the board. Returns false, if the
+   * board is already completely routed.
+   */
+
+  private static float getAllocatedMemoryMbSnapshot(RoutingJob job) {
+    if (job == null || job.resourceUsage == null) {
+      return 0f;
+    }
+    return job.resourceUsage.maxMemoryUsed;
+  }
+
+  private static float getPeakHeapMbSnapshot(RoutingJob job) {
+    if (job == null || job.resourceUsage == null) {
+      return 0f;
+    }
+    return job.resourceUsage.peakMemoryUsed;
+  }
+
+  private static float sampleCurrentThreadCpuSeconds() {
+    try {
+      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      long cpuNanos = threadMxBean.getThreadCpuTime(Thread.currentThread().threadId());
+      return cpuNanos < 0 ? -1f : cpuNanos / 1_000_000_000.0f;
+    } catch (Throwable t) {
+      return -1f;
+    }
+  }
+
+  private static float sampleCurrentThreadAllocatedMb() {
+    try {
+      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      threadMxBean.setThreadAllocatedMemoryEnabled(true);
+      long allocatedBytes = threadMxBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+      return allocatedBytes < 0 ? -1f : allocatedBytes / (1024.0f * 1024.0f);
+    } catch (Throwable t) {
+      return -1f;
+    }
+  }
+
+  private static float sampleHeapUsageMb() {
+    try {
+      long heapUsed = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();
+      return heapUsed / (1024.0f * 1024.0f);
+    } catch (Throwable t) {
+      return 0f;
+    }
+  }
+
   private boolean shouldFireBoardUpdate() {
     long currentTime = System.currentTimeMillis();
     if (currentTime - lastBoardUpdateTimestamp > 250) { // Limit updates to 4 times per second (250ms)
@@ -192,8 +269,21 @@ public class BatchAutorouter extends NamedAlgorithm {
               // If the item is not connected to all other items of the net, we add it to the
               // auto-router's to-do list
               if ((connected_set.size() < net_item_count) && (!curr_item.has_ignored_nets())) {
-                autoroute_item_list.add(curr_item);
                 Net net = board.rules.nets.get(curr_net_no);
+                // For plane nets: skip items whose connected set already contains a
+                // ConductionArea (copper pour). These items would immediately return
+                // CONNECTED_TO_PLANE in autoroute_item(), wasting time and causing
+                // spurious normalize_traces() failures on nearby stub geometry.
+                // Items not yet connected to the plane are still enqueued so they can
+                // be routed to the pour in this pass.
+                if (net != null && net.contains_plane()) {
+                  boolean alreadyConnectedToPlane = connected_set.stream()
+                      .anyMatch(connectedItem -> connectedItem instanceof ConductionArea);
+                  if (alreadyConnectedToPlane) {
+                    continue;
+                  }
+                }
+                autoroute_item_list.add(curr_item);
                 String netName = (net != null) ? net.name : "net#" + curr_net_no;
                 FRLogger.debug("Queuing item for routing: " + curr_item.getClass().getSimpleName() + " on net '"
                     + netName + "' (connected: " + connected_set.size() + "/" + net_item_count + ")");
@@ -332,10 +422,6 @@ public class BatchAutorouter extends NamedAlgorithm {
    * Auto-routes one ripup pass of all items of the board. Returns false, if the
    * board is already completely routed.
    */
-  /**
-   * Auto-routes one ripup pass of all items of the board. Returns false, if the
-   * board is already completely routed.
-   */
   private boolean autoroute_pass(int p_pass_no) {
     long passStartTime = System.currentTimeMillis();
     try {
@@ -354,6 +440,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       int skipped = 0;
       BoardStatistics stats = board.get_statistics();
       RouterCounters routerCounters = new RouterCounters();
+      routerCounters.phase = "autoroute";
       routerCounters.passCount = p_pass_no;
       routerCounters.queuedToBeRoutedCount = items_to_go_count;
       routerCounters.skippedCount = skipped;
@@ -404,7 +491,12 @@ public class BatchAutorouter extends NamedAlgorithm {
 
           if (this.settings.maxItems != null && this.totalItemsRouted >= this.settings.maxItems) {
             job.logInfo("Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
-            this.thread.request_stop_auto_router();
+            // Call requestStop() (sets ALL) instead of request_stop_auto_router() (sets
+            // AUTO_ROUTER_ONLY) so the optimizer phase is also skipped.  maxItems is a
+            // debugging/test ceiling meant to bound the entire routing job; running the
+            // optimizer on a deliberately-incomplete board is not useful and prevents the
+            // process from terminating promptly.
+            this.thread.requestStop();
             break;
           }
           this.totalItemsRouted++;
@@ -614,6 +706,23 @@ public class BatchAutorouter extends NamedAlgorithm {
     return "Freerouting Auto-router v1.0";
   }
 
+  /**
+   * Builds a human-readable summary of all unrouted connections on the current board,
+   * grouped by net. For each unrouted connection the component and pin names of both
+   * endpoints are listed so that the user can identify exactly which connections are
+   * missing and address them in their design.
+   *
+   * <p>Example output:
+   * <pre>
+   *   Net 'GND' (1 unrouted connection):
+   *     - J2-A1  ->  U1-1
+   *   Net '/MIPI_CSI_D0_N' (1 unrouted connection):
+   *     - J2-A2  ->  U1-2
+   * </pre>
+   *
+   * @return a formatted, multi-line string describing every unrouted airline
+   */
+
   @Override
   public NamedAlgorithmType getType() {
     return NamedAlgorithmType.ROUTER;
@@ -665,17 +774,112 @@ public class BatchAutorouter extends NamedAlgorithm {
           againstCosts);
     }
 
+    job.logDebug("Checking fanout pre-pass. settings.fanout.enabled=" + this.settings.isFanoutEnabled() + ", smd_pins=" + this.board.get_smd_pins().size());
+    // Run SMD fanout pre-pass when the board has SMD pins and fanout is enabled
+    if (this.settings.isFanoutEnabled() && !this.board.get_smd_pins().isEmpty()) {
+      float fanoutCpuSecondsStart = sampleCurrentThreadCpuSeconds();
+      float fanoutAllocatedMbStart = sampleCurrentThreadAllocatedMb();
+      float fanoutPeakHeapMbAtStart = sampleHeapUsageMb();
+      final float[] fanoutPeakHeapMbObserved = new float[] { fanoutPeakHeapMbAtStart };
+      job.logInfo("Starting fanout pre-pass on board '" + this.board.get_hash() + "' for "
+          + this.board.get_smd_pins().size() + " SMD pin" + (this.board.get_smd_pins().size() == 1 ? "" : "s") + ".");
+      BatchFanout.FanoutRunSummary fanoutSummary = BatchFanout.fanout_board(this.board, this.settings, this.thread,
+          status -> {
+        fanoutPeakHeapMbObserved[0] = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
+        RouterCounters fanoutCounters = new RouterCounters();
+        fanoutCounters.phase = "fanout";
+        fanoutCounters.passCount = status.passNo();
+        fanoutCounters.queuedToBeRoutedCount = status.pinsToGo();
+        fanoutCounters.routedCount = status.routedCount();
+        fanoutCounters.skippedCount = 0;
+        fanoutCounters.rippedCount = 0;
+        fanoutCounters.failedToBeRoutedCount = status.notRoutedCount() + status.insertErrorCount();
+        fanoutCounters.incompleteCount = status.boardStatistics().connections.incompleteCount;
+        fanoutCounters.fanoutExtraViasCount = status.extraViasThisPass();
+        this.fireBoardUpdatedEvent(status.boardStatistics(), fanoutCounters, this.board);
+
+        if (status.passCompleted()) {
+          String boardHash = this.board.get_hash();
+          String fanoutMessage = "Fanout pass #" + status.passNo() + " on board '" + boardHash
+              + "' completed in " + FRLogger.formatDuration(status.passDurationMillis() / 1000.0)
+              + " with " + status.routedCount() + " SMD pin"
+              + (status.routedCount() == 1 ? "" : "s") + " fanouted, "
+              + status.notRoutedCount() + " not routed, " + status.insertErrorCount() + " insert error"
+              + (status.insertErrorCount() == 1 ? "" : "s")
+              + ", +" + status.extraViasThisPass() + " extra via"
+              + (status.extraViasThisPass() == 1 ? "" : "s")
+              + " (" + status.pinsToGo() + " SMD pin"
+              + (status.pinsToGo() == 1 ? "" : "s") + " still to check in pass, ripup costs="
+              + status.ripupCosts() + ").";
+          job.logInfo(fanoutMessage);
+        }
+      });
+
+      float fanoutCpuSecondsEnd = sampleCurrentThreadCpuSeconds();
+      float fanoutAllocatedMbEnd = sampleCurrentThreadAllocatedMb();
+
+      float fanoutCpuSecondsUsed;
+      if (fanoutCpuSecondsStart >= 0f && fanoutCpuSecondsEnd >= fanoutCpuSecondsStart) {
+        fanoutCpuSecondsUsed = fanoutCpuSecondsEnd - fanoutCpuSecondsStart;
+      } else {
+        fanoutCpuSecondsUsed = Math.max(0f, getCpuSecondsSnapshot(job));
+      }
+
+      float fanoutAllocatedGb;
+      if (fanoutAllocatedMbStart >= 0f && fanoutAllocatedMbEnd >= fanoutAllocatedMbStart) {
+        fanoutAllocatedGb = (fanoutAllocatedMbEnd - fanoutAllocatedMbStart) / 1024.0f;
+      } else {
+        fanoutAllocatedGb = Math.max(0f, getAllocatedMemoryMbSnapshot(job)) / 1024.0f;
+      }
+
+      float fanoutPeakHeapMb = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
+      fanoutPeakHeapMb = Math.max(fanoutPeakHeapMb, getPeakHeapMbSnapshot(job));
+      BatchFanout.EscapeStatistics finalEscape = fanoutSummary.escapeStatistics();
+      String fanoutCompletionStatus = this.thread.is_stop_auto_router_requested() ? "interrupted:" : "completed:";
+      String fanoutSummaryMessage = String.format(
+          "Fanout session %s started with %d total SMD pins, completed in %s, escaped pins: %d/%d (%.1f%%), using %s total CPU seconds, %s GB total allocated, and %s MB peak heap usage.",
+          fanoutCompletionStatus,
+          finalEscape.totalSmdPins(),
+          FRLogger.formatDuration(fanoutSummary.totalDurationMillis() / 1000.0),
+          finalEscape.escapedCount(),
+          finalEscape.totalSmdPins(),
+          finalEscape.escapedPercentage(),
+          FRLogger.defaultFloatFormat.format(fanoutCpuSecondsUsed),
+          FRLogger.defaultFloatFormat.format(fanoutAllocatedGb),
+          FRLogger.defaultFloatFormat.format(fanoutPeakHeapMb));
+      job.logInfo(fanoutSummaryMessage);
+    }
+
     int currentPass = 1;
     int consecutiveNoImprovementPasses = 0;
+    boolean fanoutRecoveryApplied = false;
     float lastBestScore = Float.NEGATIVE_INFINITY;   // score at last board-restore or improvement
     float globalBestScore = Float.NEGATIVE_INFINITY; // best score seen across all passes
     int passOfBestScore = 0;                         // pass where globalBestScore was achieved
+    int incompleteCountAtBestScore = 0;              // incomplete count when globalBestScore was recorded
+    // Track board hashes that have already been routed. If the board does not change between
+    // two consecutive passes (same hash at pass start), the router is making no progress and
+    // would produce identical decisions with identical ripup budgets — stop immediately rather
+    // than waiting for the full stagnation window. This mirrors the v1.9 behaviour and catches
+    // the degenerate case where plane-net items repeatedly fail or are inserted+removed each
+    // pass without updating the board state.
+    Set<String> alreadyRoutedBoardHashes = new java.util.HashSet<>();
     while (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
       if (job != null && job.state == RoutingJobState.TIMED_OUT) {
         this.thread.request_stop_auto_router();
       }
 
       String currentBoardHash = this.board.get_hash();
+
+      // Same-hash stop: if this board state has already been routed in a previous pass, no
+      // further progress is possible. Stop before wasting another pass.
+      if (alreadyRoutedBoardHashes.contains(currentBoardHash)) {
+        job.logInfo("Board state has not changed since pass #" + (currentPass - 1)
+            + " (hash " + currentBoardHash + "). The auto-router cannot make further progress; stopping.");
+        thread.request_stop_auto_router();
+        break;
+      }
+      alreadyRoutedBoardHashes.add(currentBoardHash);
 
       if (currentPass > this.settings.maxPasses) {
         thread.request_stop_auto_router();
@@ -703,8 +907,11 @@ public class BatchAutorouter extends NamedAlgorithm {
         if (((currentPass % STOP_AT_PASS_MODULO == 0) && (currentPass >= STOP_AT_PASS_MINIMUM))
             || (this.thread.is_stop_auto_router_requested())) {
           // Check if the score improved compared to the previous passes, restore a
-          // previous board if not
-          if (bh.getMaxScore() >= boardScoreAfter) {
+          // previous board if not. Use strict ">" so that equally-scored boards do NOT
+          // trigger a restore — if every board has the same (possibly zero) score the old
+          // ">=" test would restore on every check cycle, growing the history unboundedly
+          // and never stopping.
+          if (bh.getMaxScore() > boardScoreAfter) {
             var boardToRestore = bh.restoreBoard(MAXIMUM_TRIES_ON_THE_SAME_BOARD);
             if (boardToRestore == null) {
               job.logInfo("The router was not able to improve the board, stopping the auto-router.");
@@ -727,7 +934,11 @@ public class BatchAutorouter extends NamedAlgorithm {
             boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
             lastBestScore = boardScoreAfter;
             currentBoardHash = this.board.get_hash();
-            job.logInfo(
+            // Reset the same-hash set after a board restore: the restored board will be
+            // routed with a higher ripup budget on subsequent passes, so earlier routing
+            // decisions from the same hash may no longer apply.
+            alreadyRoutedBoardHashes.clear();
+            job.logDebug(
                 "Restoring an earlier board that has the score of "
                     + FRLogger.formatScore(boardScoreAfter,
                         boardStatisticsAfter.connections.incompleteCount,
@@ -782,9 +993,15 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       // Stagnation detection: abort when the normalized score hasn't improved by
       // at least STAGNATION_SCORE_THRESHOLD over STAGNATION_PASS_LIMIT consecutive
-      // passes (only checked after the mandatory minimum passes and only while items
-      // remain unconnected — a fully-routed board never triggers this path).
-      if (currentPass >= STOP_AT_PASS_MINIMUM && boardStatisticsAfter.connections.incompleteCount > 0) {
+      // passes. This now fires whenever the router is still actively running
+      // (continueAutorouting == true) after the mandatory minimum passes, regardless
+      // of incompleteCount.  The old condition guarded on incompleteCount > 0, which
+      // caused the check to be bypassed — and the counter to be silently reset — for
+      // boards where DRC shows 0 incompletes but the router keeps cycling (e.g. when
+      // plane-net false-work items kept autoroute_pass() returning true).  If the
+      // board is genuinely done (continueAutorouting == false) the while-loop exits
+      // naturally and we never reach this block.
+      if (currentPass >= STOP_AT_PASS_MINIMUM && continueAutorouting) {
 
         // --- Pass-local counter (resets after board restores) ---
         if (boardScoreAfter > lastBestScore + STAGNATION_SCORE_THRESHOLD) {
@@ -792,6 +1009,28 @@ public class BatchAutorouter extends NamedAlgorithm {
           lastBestScore = boardScoreAfter;
         } else {
           consecutiveNoImprovementPasses++;
+
+          // One-time recovery for fanout-enabled jobs: aggressively remove tails, including
+          // fanout vias, when score plateaus with remaining incompletes. This gives the
+          // autorouter a chance to escape local dead-ends introduced by pre-fanout geometry
+          // while keeping fanout enabled as the default behavior.
+          if (this.settings.isFanoutEnabled()
+              && !fanoutRecoveryApplied
+              && boardStatisticsAfter.connections.incompleteCount > 0
+              && consecutiveNoImprovementPasses >= FANOUT_RECOVERY_STAGNATION_PASSES) {
+            int incompletesBeforeRecovery = boardStatisticsAfter.connections.incompleteCount;
+            remove_tails(Item.StopConnectionOption.NONE);
+            boardStatisticsAfter = new BoardStatistics(this.board);
+            boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
+            lastBestScore = boardScoreAfter;
+            consecutiveNoImprovementPasses = 0;
+            fanoutRecoveryApplied = true;
+            alreadyRoutedBoardHashes.clear();
+            job.logDebug("Applied one-time fanout recovery cleanup (removed fanout tails/vias). "
+                + "Incompletes: " + incompletesBeforeRecovery + " -> "
+                + boardStatisticsAfter.connections.incompleteCount + ".");
+          }
+
           if (consecutiveNoImprovementPasses >= STAGNATION_PASS_LIMIT) {
             String report = buildUnroutedConnectionsReport();
             job.logInfo("The router's score (" + FRLogger.defaultFloatFormat.format(boardScoreAfter)
@@ -814,14 +1053,15 @@ public class BatchAutorouter extends NamedAlgorithm {
         if (boardScoreAfter > globalBestScore + STAGNATION_SCORE_THRESHOLD) {
           globalBestScore = boardScoreAfter;
           passOfBestScore = currentPass;
+          incompleteCountAtBestScore = boardStatisticsAfter.connections.incompleteCount;
         } else if ((currentPass - passOfBestScore) >= STAGNATION_PASS_LIMIT) {
           String report = buildUnroutedConnectionsReport();
           job.logInfo("The router's best score (" + FRLogger.defaultFloatFormat.format(globalBestScore)
               + ") has not improved by more than " + STAGNATION_SCORE_THRESHOLD
               + " points since pass #" + passOfBestScore
               + ". Stopping the auto-router after " + currentPass + " passes ("
-              + boardStatisticsAfter.connections.incompleteCount + " item"
-              + (boardStatisticsAfter.connections.incompleteCount == 1 ? "" : "s")
+              + incompleteCountAtBestScore + " item"
+              + (incompleteCountAtBestScore == 1 ? "" : "s")
               + " still unconnected).\n"
               + "The following connections could not be routed -- please review your design "
               + "(e.g. check pad clearances, trace width rules, and available routing space):\n"
@@ -830,8 +1070,11 @@ public class BatchAutorouter extends NamedAlgorithm {
           break;
         }
 
-      } else if (boardStatisticsAfter.connections.incompleteCount == 0) {
-        // Board is fully routed; reset stagnation state
+      } else if (boardStatisticsAfter.connections.incompleteCount == 0 && boardScoreAfter > STAGNATION_SCORE_THRESHOLD) {
+        // Board is fully routed AND has a positive score (genuine success).
+        // A fully-routed board with score == 0 (e.g. caused by clearance violations
+        // from plane routing) must NOT reset the stagnation counter; it should keep
+        // accumulating until the global tracker fires.
         consecutiveNoImprovementPasses = 0;
         lastBestScore = boardScoreAfter;
       }
@@ -839,6 +1082,29 @@ public class BatchAutorouter extends NamedAlgorithm {
       // check if there are still unrouted items
       if (continueAutorouting && !this.thread.is_stop_auto_router_requested()) {
         currentPass++;
+      }
+    }
+
+    // Ensure we finish with the best board ever seen during this routing session.
+    // When stagnation or the max-pass limit fires, the loop exits with the board from the last
+    // completed pass, which may be worse than an earlier pass that was recorded in the history.
+    float currentFinalScore = new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
+    float bestHistoryScore = bh.getMaxScore();
+    if (bestHistoryScore > currentFinalScore) {
+      RoutingBoard bestBoard = bh.restoreBestBoard();
+      if (bestBoard != null) {
+        BoardStatistics currentStats = new BoardStatistics(this.board);
+        this.board = bestBoard;
+        BoardStatistics bestStats = new BoardStatistics(this.board);
+        job.logDebug("The final board state (score "
+            + FRLogger.formatScore(currentFinalScore,
+                currentStats.connections.incompleteCount,
+                currentStats.clearanceViolations.totalCount)
+            + ") is worse than the best board seen during routing (score "
+            + FRLogger.formatScore(bestStats.getNormalizedScore(job.routerSettings.scoring),
+                bestStats.connections.incompleteCount,
+                bestStats.clearanceViolations.totalCount)
+            + "). Restoring the best board as the final result.");
       }
     }
 
@@ -870,24 +1136,7 @@ public class BatchAutorouter extends NamedAlgorithm {
     return !this.thread.is_stop_auto_router_requested();
   }
 
-  /**
-   * Builds a human-readable summary of all unrouted connections on the current board,
-   * grouped by net. For each unrouted connection the component and pin names of both
-   * endpoints are listed so that the user can identify exactly which connections are
-   * missing and address them in their design.
-   *
-   * <p>Example output:
-   * <pre>
-   *   Net 'GND' (1 unrouted connection):
-   *     - J2-A1  ->  U1-1
-   *   Net '/MIPI_CSI_D0_N' (1 unrouted connection):
-   *     - J2-A2  ->  U1-2
-   * </pre>
-   *
-   * @return a formatted, multi-line string describing every unrouted airline
-   */
-  private String buildUnroutedConnectionsReport() {
-    RatsNest ratsNest = new RatsNest(this.board);
+  private String buildUnroutedConnectionsReport() {    RatsNest ratsNest = new RatsNest(this.board);
     AirLine[] airlines = ratsNest.get_airlines();
 
     if (airlines == null || airlines.length == 0) {
@@ -947,22 +1196,6 @@ public class BatchAutorouter extends NamedAlgorithm {
     board.remove_trace_tails(-1, p_stop_connection_option);
     board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, this.trace_cost_arr, this.thread,
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
-  }
-
-  private static Point[] getImpactedPoints(Item item) {
-    if (item instanceof Trace trace) {
-      return new Point[] { trace.first_corner(), trace.last_corner() };
-    }
-    if (item instanceof Via via) {
-      return new Point[] { via.get_center() };
-    }
-    if (item instanceof Pin pin) {
-      return new Point[] { pin.get_center() };
-    }
-    if (item instanceof DrillItem drillItem) {
-      return new Point[] { drillItem.get_center() };
-    }
-    return new Point[0];
   }
 
   // Tries to route an item on a specific net. Returns true, if the item is

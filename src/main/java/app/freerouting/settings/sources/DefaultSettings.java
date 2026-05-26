@@ -26,7 +26,7 @@ public class DefaultSettings implements SettingsSource {
      * This is intentionally the largest penalty so that routing completion
      * always dominates trace-length and via-count considerations.
      */
-    public static final float DEFAULT_UNROUTED_NET_PENALTY = 4000.0f;
+    public static final float DEFAULT_UNROUTED_NET_PENALTY = 1000000.0f;
 
     /**
      * Penalty subtracted from the board score for each clearance (DRC) violation.
@@ -81,6 +81,9 @@ public class DefaultSettings implements SettingsSource {
      */
     public static final double DEFAULT_UNDESIRED_DIRECTION_TRACE_COST = 1.0;
 
+    /** Default copper-to-board-edge clearance in micrometres (0.5 mm). */
+    public static final double DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM = 500.0;
+
     @Override
     public RouterSettings getSettings() {
         // Create a RouterSettings object with all default values.
@@ -103,10 +106,17 @@ public class DefaultSettings implements SettingsSource {
         settings.save_intermediate_stages = false;
         settings.ignoreNetClasses = new String[0];
         settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+        settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
 
         // isLayerActive and isPreferredDirectionHorizontalOnLayer are left null intentionally –
         // they will be populated by DsnFileSettings (from the DSN layer count) and then
         // overwritten with board-geometry-aware values by applyBoardSpecificOptimizations().
+
+        // Fanout pre-pass defaults
+        settings.fanout.enabled = true;
+        settings.fanout.maxPasses = 20;
+        settings.fanout.maxMillisecondsPerPin = 10000L;
+        settings.fanout.ripupAllowed = true;
 
         // Optimizer defaults
         settings.optimizer.enabled = false;

@@ -74,29 +74,14 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
                 parentDir.mkdirs();
             }
 
-            // Derive the rolling-file name pattern from the base log file path.
-            // e.g. /mnt/freerouting/freerouting.log → /mnt/freerouting/freerouting-%i.log.gz
-            String rollingFilePattern;
-            String logFileName = logFile.getName();
-            int dotIdx = logFileName.lastIndexOf('.');
-            String baseName = dotIdx > 0 ? logFileName.substring(0, dotIdx) : logFileName;
-            String parent = logFile.getParent() != null ? logFile.getParent() + File.separator : "";
-            rollingFilePattern = parent + baseName + "-%i.log.gz";
-
-            AppenderComponentBuilder fileAppender = builder.newAppender("File", "RollingFile")
+            // Keep investigations simple: write to a single growing, uncompressed log file.
+            AppenderComponentBuilder fileAppender = builder.newAppender("File", "File")
                     .addAttribute("fileName", fileLocation)
-                    .addAttribute("filePattern", rollingFilePattern)
                     .addAttribute("immediateFlush", true)
                     .addAttribute("bufferedIO", true)
                     .addAttribute("bufferSize", 8192)
                     .add(builder.newLayout("PatternLayout")
-                            .addAttribute("pattern", filePattern))
-                    .addComponent(builder.newComponent("Policies")
-                            .addComponent(builder.newComponent("SizeBasedTriggeringPolicy")
-                                    .addAttribute("size", "50 MB")))
-                    .addComponent(builder.newComponent("DefaultRolloverStrategy")
-                            .addAttribute("max", "10")
-                            .addAttribute("compressionLevel", "9"));
+                            .addAttribute("pattern", filePattern));
             builder.add(fileAppender);
         }
 

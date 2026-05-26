@@ -355,7 +355,8 @@ public class Pin extends DrillItem implements Serializable {
     if (p_other instanceof Trace) {
       return false;
     }
-    return !this.drill_allowed() || !(p_other instanceof Via) || !((Via) p_other).attach_allowed;
+    // Same-net vias must be allowed to contact SMD pins during fanout.
+    return !this.drill_allowed() || !(p_other instanceof Via);
   }
 
   @Override

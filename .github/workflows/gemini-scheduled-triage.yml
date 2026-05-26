@@ -5,13 +5,13 @@ on:
     - cron: '0 * * * *' # Runs every hour
   pull_request:
     branches:
-      - 'main'
+      - 'master'
       - 'release/**/*'
     paths:
       - '.github/workflows/gemini-scheduled-triage.yml'
   push:
     branches:
-      - 'main'
+      - 'master'
       - 'release/**/*'
     paths:
       - '.github/workflows/gemini-scheduled-triage.yml'
@@ -31,7 +31,7 @@ defaults:
 jobs:
   triage:
     runs-on: 'ubuntu-latest'
-    timeout-minutes: 7
+    timeout-minutes: 10
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -72,7 +72,7 @@ jobs:
           echo '🔍 Finding unlabeled issues and issues marked for triage...'
           ISSUES="$(gh issue list \
             --state 'open' \
-            --search 'no:label label:"status/needs-triage"' \
+            --search 'no:label OR label:"status/needs-triage"' \
             --json number,title,body \
             --limit '100' \
             --repo "${GITHUB_REPOSITORY}"
@@ -83,6 +83,18 @@ jobs:
 
           ISSUE_COUNT="$(echo "${ISSUES}" | jq 'length')"
           echo "✅ Found ${ISSUE_COUNT} issue(s) to triage! 🎯"
+
+      - name: 'Check Gemini authentication'
+        id: 'check_auth'
+        env:
+          HAS_GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY != '' }}"
+          HAS_GOOGLE_API_KEY: "${{ secrets.GOOGLE_API_KEY != '' }}"
+          HAS_WIF_PROVIDER: "${{ vars.GCP_WIF_PROVIDER != '' }}"
+        run: |-
+          if [[ "${HAS_GEMINI_API_KEY}" != "true" && "${HAS_GOOGLE_API_KEY}" != "true" && "${HAS_WIF_PROVIDER}" != "true" ]]; then
+            echo "::error::No Gemini authentication method configured. Please set one of: the GEMINI_API_KEY or GOOGLE_API_KEY secret, or the GCP_WIF_PROVIDER variable."
+            exit 1
+          fi
 
       - name: 'Run Gemini Issue Analysis'
         id: 'gemini_issue_analysis'
@@ -238,6 +250,7 @@ jobs:
 
   label:
     runs-on: 'ubuntu-latest'
+    timeout-minutes: 10
     needs:
       - 'triage'
     if: |-

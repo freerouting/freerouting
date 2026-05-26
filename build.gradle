@@ -55,6 +55,9 @@ testing {
                 all {
                     testTask.configure {
                         shouldRunAfter(test)
+                        systemProperty 'freerouting.logging.file.enabled', 'false'
+                        systemProperty 'freerouting.logging.console.enabled', 'true'
+                        systemProperty 'freerouting.logging.console.level', 'INFO'
                     }
                 }
             }
@@ -131,6 +134,7 @@ dependencies {
     implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
     implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
     implementation 'jakarta.activation:jakarta.activation-api:2.1.4'
+    implementation 'jakarta.websocket:jakarta.websocket-api:2.2.0'
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.5'
 
     // Add Jersey dependencies
@@ -146,6 +150,7 @@ dependencies {
 
     // Add Jetty dependencies
     implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.9'
+    implementation 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.9'
     implementation 'org.eclipse.jetty:jetty-server:12.1.9'
     implementation 'org.eclipse.jetty:jetty-util:12.1.9'
     implementation 'org.eclipse.jetty:jetty-security:12.1.9'
@@ -196,6 +201,10 @@ ext {
     buildDate = buildDateTime.format('yyyy-MM-dd')
     buildTime = buildDateTime.format('HH:mm:ss.SSSZ')
 }
+
+def includeSlowTests = providers.gradleProperty('includeSlowTests')
+    .map { it.toBoolean() }
+    .orElse(false)
 
 def manifestAttributes = [
         'Automatic-Module-Name' : 'app.freerouting',
@@ -440,16 +449,63 @@ tasks.register('installLocalGitHook', Copy) {
 }
 
 test {
+    useJUnitPlatform {
+        // Daily runs skip slow tests unless explicitly requested.
+        if (!includeSlowTests.get()) {
+            excludeTags 'slow'
+        }
+    }
+
     testLogging {
         showExceptions = true
         showStandardStreams = true
     }
 
-    timeout = Duration.ofMinutes(15)
+    timeout = Duration.ofMinutes(30)
 
     // Attach Mockito as a Java agent so that the inline-mock-maker can function
     // on Java 21+ without the JVM's self-attach restriction warning.
     jvmArgs "-javaagent:${configurations.mockitoAgent.asPath}"
+
+    // Default logging configuration for test runs:
+    //   - No log file is written (file logging is disabled).
+    //   - Console output is restricted to INFO level and above (ERROR, WARN, INFO).
+    // Individual tests may override freerouting.logging.* system properties
+    // before the Log4j2 context is initialised if finer-grained output is needed.
+    systemProperty 'freerouting.logging.file.enabled', 'false'
+    systemProperty 'freerouting.logging.console.enabled', 'true'
+    systemProperty 'freerouting.logging.console.level', 'INFO'
+}
+
+tasks.register('testSlow', Test) {
+    group = 'verification'
+    description = 'Runs tests tagged with @Tag("slow").'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    shouldRunAfter(tasks.named('test'))
+    useJUnitPlatform {
+        includeTags 'slow'
+    }
+    testLogging {
+        showExceptions = true
+        showStandardStreams = true
+    }
+    timeout = Duration.ofMinutes(30)
+    jvmArgs "-javaagent:${configurations.mockitoAgent.asPath}"
+    systemProperty 'freerouting.logging.file.enabled', 'false'
+    systemProperty 'freerouting.logging.console.enabled', 'true'
+    systemProperty 'freerouting.logging.console.level', 'INFO'
+}
+
+tasks.register('testAll') {
+    group = 'verification'
+    description = 'Runs both fast/default tests and tests tagged with @Tag("slow").'
+    dependsOn(tasks.named('test'))
+    finalizedBy(tasks.named('testSlow'))
+}
+
+tasks.named('testSlow') {
+    mustRunAfter(tasks.named('test'))
 }
 
 rewrite {

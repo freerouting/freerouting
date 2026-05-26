@@ -1,15 +1,13 @@
 package app.freerouting.api.security;
 
 import app.freerouting.logger.FRLogger;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -100,11 +98,11 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
     this.isHealthy = false;
 
     try {
-      HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+      NetHttpTransport httpTransport = new NetHttpTransport();
       this.sheetsService = new Sheets.Builder(httpTransport, JSON_FACTORY, null)
           .setApplicationName(APPLICATION_NAME)
           .build();
-    } catch (GeneralSecurityException | IOException e) {
+    } catch (Exception e) {
       FRLogger.error("Failed to initialize Google Sheets service", null, e);
       throw new RuntimeException("Failed to initialize Google Sheets API client", e);
     }

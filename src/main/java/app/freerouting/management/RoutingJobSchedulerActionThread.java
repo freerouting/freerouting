@@ -155,6 +155,19 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       }
 
       job.stage = RoutingStage.IDLE;
+    } else if (job.routerSettings.isFanoutEnabled()) {
+      // Headless fanout-only mode: run the fanout pre-pass and skip autorouter passes.
+      job.stage = RoutingStage.ROUTING;
+      Integer originalMaxPasses = job.routerSettings.maxPasses;
+      try {
+        job.routerSettings.maxPasses = 0;
+        BatchAutorouter batchRouter = new BatchAutorouter(job);
+        batchRouter.runBatchLoop();
+        setJobOutputToSpecctraSes(job);
+      } finally {
+        job.routerSettings.maxPasses = originalMaxPasses;
+      }
+      job.stage = RoutingStage.IDLE;
     }
 
     if (job.routerSettings.getRunOptimizer()) {
@@ -257,4 +270,5 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       }
     }
   }
+
 }

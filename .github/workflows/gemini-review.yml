@@ -19,7 +19,7 @@ defaults:
 jobs:
   review:
     runs-on: 'ubuntu-latest'
-    timeout-minutes: 7
+    timeout-minutes: 15
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -40,6 +40,23 @@ jobs:
 
       - name: 'Checkout repository'
         uses: 'actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8' # ratchet:actions/checkout@v5
+
+      - name: 'Check Gemini authentication'
+        id: 'check_auth'
+        env:
+          HAS_GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY != '' }}"
+          HAS_GOOGLE_API_KEY: "${{ secrets.GOOGLE_API_KEY != '' }}"
+          HAS_WIF_PROVIDER: "${{ vars.GCP_WIF_PROVIDER != '' }}"
+        run: |-
+          if [[ "${HAS_GEMINI_API_KEY}" != "true" && "${HAS_GOOGLE_API_KEY}" != "true" && "${HAS_WIF_PROVIDER}" != "true" ]]; then
+            echo "::error::No Gemini authentication method configured. Please set one of: the GEMINI_API_KEY or GOOGLE_API_KEY secret, or the GCP_WIF_PROVIDER variable."
+            exit 1
+          fi
+
+      - name: 'Verify Docker for GitHub MCP server'
+        run: |-
+          docker --version
+          docker run --rm ghcr.io/github/github-mcp-server:latest --help
 
       - name: 'Run Gemini pull request review'
         uses: 'google-github-actions/run-gemini-cli@v0' # ratchet:exclude
@@ -82,7 +99,7 @@ jobs:
                     "--rm",
                     "-e",
                     "GITHUB_PERSONAL_ACCESS_TOKEN",
-                    "ghcr.io/github/github-mcp-server:v0.18.0"
+                    "ghcr.io/github/github-mcp-server:latest"
                   ],
                   "includeTools": [
                     "add_comment_to_pending_review",

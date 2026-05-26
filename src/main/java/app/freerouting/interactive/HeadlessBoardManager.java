@@ -6,19 +6,21 @@ import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.io.specctra.parser.DsnFile;
-import app.freerouting.io.specctra.parser.SpecctraSesFileWriter;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.io.specctra.DsnReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
-import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.io.specctra.SesWriter;
+import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import java.io.ByteArrayInputStream;
@@ -74,6 +76,8 @@ import java.io.OutputStream;
  * @see RoutingJob
  */
 public class HeadlessBoardManager implements BoardManager {
+
+  private static final String BOARD_EDGE_CLEARANCE_CLASS_NAME = "board_edge";
 
 
   /**
@@ -269,6 +273,75 @@ public class HeadlessBoardManager implements BoardManager {
     }
     this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules,
         p_board_communication);
+    applyCopperToEdgeClearanceOverride();
+  }
+
+  private void applyCopperToEdgeClearanceOverride() {
+    if (this.board == null || this.routingJob == null || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.copperToEdgeClearanceUm == null) {
+      return;
+    }
+
+    double configuredClearanceUm = this.routingJob.routerSettings.copperToEdgeClearanceUm;
+    if (configuredClearanceUm < 0) {
+      FRLogger.warn("Ignoring router.copper_to_edge_clearance_um because it is negative: " + configuredClearanceUm);
+      return;
+    }
+    if (this.board.rules == null || this.board.rules.clearance_matrix == null) {
+      FRLogger.warn("Ignoring router.copper_to_edge_clearance_um because board rules are unavailable.");
+      return;
+    }
+
+    var outline = this.board.get_outline();
+    if (outline == null) {
+      FRLogger.warn("Ignoring router.copper_to_edge_clearance_um because the board outline is unavailable.");
+      return;
+    }
+
+    int defaultAreaClassNo = this.board.rules.get_default_net_class().default_item_clearance_classes
+        .get(DefaultItemClearanceClasses.ItemClass.AREA);
+    boolean usesFallbackOutlineClass = outline.clearance_class_no() == defaultAreaClassNo;
+    boolean usesDefaultEdgeClearanceValue = Math.abs(configuredClearanceUm
+        - DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM) < 1e-9;
+    // Keep explicit DSN outline-clearance classes untouched when only the global default is active.
+    if (usesDefaultEdgeClearanceValue && !usesFallbackOutlineClass) {
+      return;
+    }
+
+    int boardResolution = Math.max(1, this.board.communication.resolution);
+    int configuredClearanceBoardUnits = (int) Math.round(
+        Unit.scale(configuredClearanceUm * boardResolution, Unit.UM, this.board.communication.unit));
+
+    var matrix = this.board.rules.clearance_matrix;
+    int boardEdgeClassNo = matrix.get_no(BOARD_EDGE_CLEARANCE_CLASS_NAME);
+    if (boardEdgeClassNo < 0) {
+      matrix.append_class(BOARD_EDGE_CLEARANCE_CLASS_NAME);
+      boardEdgeClassNo = matrix.get_no(BOARD_EDGE_CLEARANCE_CLASS_NAME);
+    }
+    if (boardEdgeClassNo < 0) {
+      FRLogger.warn("Unable to create/find the board_edge clearance class for copper-to-edge override.");
+      return;
+    }
+
+    for (int layer = 0; layer < matrix.get_layer_count(); layer++) {
+      for (int classNo = 1; classNo < matrix.get_class_count(); classNo++) {
+        matrix.set_value(boardEdgeClassNo, classNo, layer, configuredClearanceBoardUnits);
+        matrix.set_value(classNo, boardEdgeClassNo, layer, configuredClearanceBoardUnits);
+      }
+    }
+
+
+    if (this.board.search_tree_manager != null) {
+      this.board.search_tree_manager.remove(outline);
+    }
+    outline.set_clearance_class_no(boardEdgeClassNo);
+    outline.clear_derived_data();
+    if (this.board.search_tree_manager != null) {
+      this.board.search_tree_manager.insert(outline);
+    }
+
+    FRLogger.info("Applied copper-to-edge clearance override: " + configuredClearanceUm + " um ("
+        + configuredClearanceBoardUnits + " board units).");
   }
 
   /**
@@ -422,6 +495,7 @@ public class HeadlessBoardManager implements BoardManager {
           this.routingJob.routerSettings.setLayerCount(boardLayerCount);
         }
         this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
+        applyCopperToEdgeClearanceOverride();
       }
 
       if (this.board != null) {
@@ -480,11 +554,18 @@ public class HeadlessBoardManager implements BoardManager {
    * @param designName the design name to include in the SES file header
    * @return true if save was successful, false if an error occurred
    *
-   * @see SpecctraSesFileWriter#write
+   * @see SesWriter#write
    * @see #loadFromSpecctraDsn
    */
   public boolean saveAsSpecctraSessionSes(OutputStream outputStream, String designName) {
-    boolean wasSaveSuccessful = SpecctraSesFileWriter.write(this.get_routing_board(), outputStream, designName);
+    boolean wasSaveSuccessful;
+    try {
+      SesWriter.write(this.get_routing_board(), outputStream, designName);
+      wasSaveSuccessful = true;
+    } catch (IOException e) {
+      FRLogger.error("unable to write session file", e);
+      wasSaveSuccessful = false;
+    }
 
     if (wasSaveSuccessful) {
       originalBoardChecksum = calculateCrc32();

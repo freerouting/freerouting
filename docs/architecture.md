@@ -14,13 +14,14 @@ The GUI, API, and job scheduler all build on this core pipeline. When investigat
 
 ```mermaid
 flowchart TD
-    DSN(["📄 .dsn — Design input"])
-    SES(["📄 .ses — Routed output"])
+    DSN([".dsn — Design input"])
+    SES([".ses — Routed output"])
 
     subgraph interfaces ["User Interfaces"]
         direction LR
-        GUI["🖥 **gui + interactive**\nSwing desktop"]
-        API["🌐 **api.v1**\nREST / HTTP"]
+        GUI["**gui + interactive**\nSwing desktop"]
+        API["**api.v1**\nREST / HTTP"]
+        MCP["**api.mcp + api.v1.McpControllerV1**\nMCP JSON-RPC + SSE + WS"]
     end
 
     subgraph services ["Shared Services"]
@@ -49,6 +50,7 @@ flowchart TD
 
     GUI --> MGMT
     API --> MGMT
+    MCP --> API
     MGMT <--> CORE
     CFG --> AR
     CORE --> AR
@@ -80,8 +82,23 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
 | GUI windows, panels, menus, or drawing | `app.freerouting.gui` and `app.freerouting.interactive` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
+| MCP server protocol bridge | `app.freerouting.api.mcp` and `app.freerouting.api.v1.McpControllerV1` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
 | Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
+
+## Module Boundaries (ArchUnit)
+
+Architectural boundaries are codified in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`.
+
+- **Strict boundaries (must pass):**
+  - Core routing/model packages (`autoroute`, `board`, `rules`, `drc`, `geometry`) must not depend on GUI/editor or API packages.
+  - API/management packages must not depend on `gui` or `boardgraphics`.
+  - Headless paths (`api`, `management`, `core`) must not depend on `GuiBoardManager` or `InteractiveState`.
+- **Frozen boundaries (current debt, no further drift):**
+  - `interactive` state-machine classes should not be used outside `gui` + `interactive`.
+  - `io.specctra.parser` internals should not be depended on outside `io.specctra` public I/O entry points.
+
+Frozen boundaries use ArchUnit's `FreezingArchRule` with baselines stored in `src/test/resources/archunit_store/`.
 
 ## Package Glossary
 
@@ -123,7 +140,7 @@ The editor interaction layer and GUI session state. This package bridges user ac
 
 ### `app.freerouting.api`
 
-HTTP API controllers, filters, and server-facing request handling. The concrete endpoints live in `api.v1`, with supporting DTOs in `api.dto`, authentication in `api.security`, and developer-only mocks in `api.dev`.
+HTTP API controllers, filters, and server-facing request handling. The concrete REST endpoints live in `api.v1`, MCP server infrastructure lives in `api.mcp`, supporting DTOs are in `api.dto`, authentication in `api.security`, and developer-only mocks in `api.dev`.
 
 ### `app.freerouting.management`
 
@@ -177,6 +194,65 @@ The primary routing packages are `board`, `autoroute`, `rules`, `drc`, and `geom
 - `geometry.planar` provides the shapes and measurements used by all of the above.
 
 When diagnosing routing behavior, start in `autoroute`, then trace the data into the board and rule objects it reads.
+
+### Routing Algorithm
+
+Freerouting routing is easiest to think about in two steps: first connect everything, then improve the result.
+
+#### High-Level Overview
+
+Freerouting has two related routing stages:
+
+| Stage | Purpose | Board impact |
+| --- | --- | --- |
+| Autorouter | Attempts to make every required connection | Adds missing traces and vias so unfinished nets become complete |
+| Optimizer | Improve route quality | Reroutes parts of existing connections to reduce length, vias, and awkward shapes |
+
+In settings, autorouter and optimizer options are part of the same routing configuration, so both can be reviewed before you run a job. During execution, Freerouting runs autorouter passes first and then continues to optimizer passes (if optimizer is enabled and the run is not interrupted).
+
+#### Autorouter
+
+The autorouter is the "make it work" stage. It solves missing connections one at a time by finding a legal path through free space, writing that path onto the board, and then cleaning it up.
+
+- Find unfinished connections.
+
+    The batch router scans the board for items that are not yet fully connected and works through them in passes. If a pass does not make useful progress, it stops instead of looping forever.
+
+- Search for a legal path.
+
+    For each unfinished connection, the router checks the net rules and searches for a path that respects clearance, layer limits, and via cost. In plain terms, it looks for a route that is both possible and allowed as specified by the user in their EDA software.
+
+- Turn the path into board geometry.
+
+    When the search succeeds, the path is converted into real traces and vias on the board. This step decides where the route changes layer and how it connects to existing items.
+
+- Clean up the new route.
+
+    The new geometry is inserted into the board, temporary artifacts are removed, and the route is tightened so it fits better into nearby routing.
+
+The autorouter may also temporarily rip up nearby conflicting traces or vias if needed to find a legal route. Its job is to turn an incomplete design into one that is electrically connected.
+
+#### Optimizer
+
+The optimizer is the "make it better" stage. It runs after routing is already complete and tries to improve the quality of existing routes without changing what connects to what.
+
+- Choose an existing route.
+
+    The optimizer picks a trace or route segment that looks improvable.
+
+- Remove and reroute locally.
+
+    It temporarily rips up the selected area and reroutes it using optimizer-specific rules and scoring. This can use different priorities, preferred directions, or multiple candidate attempts.
+
+- Measure the result.
+
+    The new route is compared with the old one using metrics such as trace length and via count. In multi-threaded mode, several candidates may be tried and the best one wins.
+
+- Keep the improvement or undo it.
+
+    If the new version is better, it stays on the board. If not, the optimizer restores the previous state so the design does not get worse.
+
+The optimizer changes the board more conservatively than the autorouter. Its job is to shorten routes, reduce vias, and polish the final layout.
 
 ### GUI and Interaction Path
 

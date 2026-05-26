@@ -22,7 +22,7 @@ defaults:
 jobs:
   triage:
     runs-on: 'ubuntu-latest'
-    timeout-minutes: 7
+    timeout-minutes: 10
     outputs:
       available_labels: '${{ steps.get_labels.outputs.available_labels }}'
       selected_labels: '${{ env.SELECTED_LABELS }}'
@@ -54,6 +54,18 @@ jobs:
             core.info(`Found ${labelNames.length} labels: ${labelNames.join(', ')}`);
             return labelNames;
 
+      - name: 'Check Gemini authentication'
+        id: 'check_auth'
+        env:
+          HAS_GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY != '' }}"
+          HAS_GOOGLE_API_KEY: "${{ secrets.GOOGLE_API_KEY != '' }}"
+          HAS_WIF_PROVIDER: "${{ vars.GCP_WIF_PROVIDER != '' }}"
+        run: |-
+          if [[ "${HAS_GEMINI_API_KEY}" != "true" && "${HAS_GOOGLE_API_KEY}" != "true" && "${HAS_WIF_PROVIDER}" != "true" ]]; then
+            echo "::error::No Gemini authentication method configured. Please set one of: the GEMINI_API_KEY or GOOGLE_API_KEY secret, or the GCP_WIF_PROVIDER variable."
+            exit 1
+          fi
+
       - name: 'Run Gemini issue analysis'
         id: 'gemini_analysis'
         if: |-
@@ -80,7 +92,7 @@ jobs:
           settings: |-
             {
               "model": {
-                "maxSessionTurns": 25
+                "maxSessionTurns": 50
               },
               "telemetry": {
                 "enabled": ${{ vars.GOOGLE_CLOUD_PROJECT != '' }},
@@ -88,7 +100,9 @@ jobs:
               },
               "tools": {
                 "core": [
-                  "run_shell_command(echo)"
+                  "run_shell_command(cat)",
+                  "run_shell_command(echo)",
+                  "run_shell_command(printenv)"
                 ]
               }
             }
@@ -97,13 +111,14 @@ jobs:
           prompt: |-
             ## Role
 
-            You are an issue triage assistant. Analyze the current GitHub issue and identify the most appropriate existing labels. Use the available tools to gather information; do not ask for information to be provided.
+            You are an issue triage assistant. Your sole purpose is to classify a GitHub issue and write a single line of output. All input data has already been provided to you below — do NOT run any shell commands to discover or verify it.
 
-            ## Guidelines
+            ## Critical Constraints
 
-            - Only use labels that are from the list of available labels.
-            - You can choose multiple labels to apply.
-            - When generating shell commands, you **MUST NOT** use command substitution with `$(...)`, `<(...)`, or `>(...)`. This is a security measure to prevent unintended command execution.
+            1. **No exploration**: All data you need is already provided in the Input Data section below. Do NOT run `printenv`, `env`, `ls`, `cat`, or any other command to look up or verify input data.
+            2. **One shell command only**: The only shell command you are permitted to run is the final `echo` in Step 4 to write your output. Running any other shell command is a wasted turn.
+            3. **Label exclusivity**: Only use labels that appear in the provided **Available Labels** list. Do not invent or guess labels.
+            4. **No command substitution**: When generating shell commands, you **MUST NOT** use `$(...)`, `<(...)`, or `>(...)`.
 
             ## Input Data
 
@@ -135,20 +150,23 @@ jobs:
 
             3. Convert the list of appropriate labels into a comma-separated list (CSV). If there are no appropriate labels, use the empty string.
 
-            4. Use the "echo" shell command to append the CSV labels to the output file path provided above:
+            4. Run **exactly one** shell command — the `echo` command below — to write your answer to the output file path shown above. Replace `[APPROPRIATE_LABELS_AS_CSV]` with your comma-separated labels and `[OUTPUT_FILE_PATH]` with the output file path shown above:
 
                 ```
-                echo "SELECTED_LABELS=[APPROPRIATE_LABELS_AS_CSV]" >> "[filepath_for_env]"
+                echo "SELECTED_LABELS=[APPROPRIATE_LABELS_AS_CSV]" >> "[OUTPUT_FILE_PATH]"
                 ```
 
-                for example:
+                Example:
 
                 ```
-                echo "SELECTED_LABELS=bug,enhancement" >> "/tmp/runner/env"
+                echo "SELECTED_LABELS=bug,enhancement" >> "/home/runner/work/_temp/_runner_file_commands/set_env_XXXXX"
                 ```
+
+            5. After running the `echo` command, your task is complete. Do not run any further commands.
 
   label:
     runs-on: 'ubuntu-latest'
+    timeout-minutes: 10
     needs:
       - 'triage'
     if: |-

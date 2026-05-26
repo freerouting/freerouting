@@ -152,6 +152,16 @@ public class BoardStatistics implements Serializable {
         .stream()
         .mapToDouble(trace -> trace.get_length())
         .sum();
+    // Normalise trace length to millimetres so that calculateScore() uses a
+    // physically meaningful cost regardless of DSN coordinate resolution.
+    // Raw board units vary wildly: KiCad exports at 1e-6 mm/unit (1 nm), while
+    // EAGLE/Benchmark DSNs use ~0.1 µm/unit.  Without normalisation the trace-cost
+    // term in getNormalizedScore() is thousands of times larger than
+    // max_connections * unroutedNetPenalty for high-resolution boards, forcing the
+    // score to 0 even for a perfectly-routed, zero-violation layout.
+    double boardUnitToMmFactor = Unit.scale(1.0, board.communication.unit, Unit.MM)
+        / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+    this.traces.totalLengthMm = (float) (this.traces.totalLength * boardUnitToMmFactor);
     if (this.traces.totalCount > 0) {
       this.traces.averageLength = this.traces.totalLength / this.traces.totalCount;
     } else {
@@ -288,9 +298,11 @@ public class BoardStatistics implements Serializable {
     }
 
     // Clearance violations
-    this.clearanceViolations.totalCount = board
-        .get_outline()
-        .clearance_violation_count();
+    // Use the comprehensive DRC check that iterates all board item pairs,
+    // rather than the partial board.get_outline().clearance_violation_count()
+    // which only considers violations from the BoardOutline's perspective.
+    // See: docs/issues/roadmap-v230.md item #1 and AGENTS.md DRC architecture notes.
+    this.clearanceViolations.totalCount = drc.getAllClearanceViolations().size();
 
     // Convert all length values from board.communication.unit to the preferred unit
     if (unit == null) {
@@ -426,7 +438,15 @@ public class BoardStatistics implements Serializable {
     float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
         + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
         + this.bends.totalCount * scoringSettings.bendPenalty;
-    float costs = (float) (this.traces.totalLength * scoringSettings.defaultPreferredDirectionTraceCost
+    // Use the mm-normalised trace length so that the trace-cost term is comparable
+    // to the unroutedNetPenalty regardless of the DSN internal coordinate resolution.
+    // totalLength is in raw board units which vary wildly between DSN files
+    // (e.g. 1 nm for KiCad at resolution 1e6, vs 0.1 µm for EAGLE/benchmark boards),
+    // and would make the score collapse to 0 for high-resolution KiCad exports.
+    float traceLengthForCost = (this.traces.totalLengthMm != null)
+        ? this.traces.totalLengthMm
+        : this.traces.totalLength;
+    float costs = (float) (traceLengthForCost * scoringSettings.defaultPreferredDirectionTraceCost
         + this.vias.totalCount * scoringSettings.viaCosts);
 
     return maximumScore - penalties - costs;
@@ -437,6 +457,15 @@ public class BoardStatistics implements Serializable {
   }
 
   public float getNormalizedScore(RouterScoringSettings scoringSettings) {
-    return Math.max(0, calculateScore(scoringSettings) / getMaximumScore(scoringSettings)) * 1000;
+    float maximumScore = getMaximumScore(scoringSettings);
+    if (maximumScore <= 0f) {
+      // Guard against division by zero and negative maximum scores (e.g. boards with no
+      // connections, or boards where all nets are single-pin nets). Return 0 so that the
+      // score is a defined value and comparisons like "score > threshold" work predictably.
+      // This also prevents NaN propagation which could silently break stagnation detection
+      // (NaN comparisons always return false, causing stagnation counters to never advance).
+      return 0f;
+    }
+    return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
   }
 }
