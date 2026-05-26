@@ -134,6 +134,7 @@ dependencies {
     implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
     implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
     implementation 'jakarta.activation:jakarta.activation-api:2.1.4'
+    implementation 'jakarta.websocket:jakarta.websocket-api:2.2.0'
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.5'
 
     // Add Jersey dependencies
@@ -149,6 +150,7 @@ dependencies {
 
     // Add Jetty dependencies
     implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.9'
+    implementation 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.9'
     implementation 'org.eclipse.jetty:jetty-server:12.1.9'
     implementation 'org.eclipse.jetty:jetty-util:12.1.9'
     implementation 'org.eclipse.jetty:jetty-security:12.1.9'
