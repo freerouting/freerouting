@@ -331,6 +331,31 @@ class GlobalSettingsUserDataPathTest {
     }
 
     @Test
+    void saveAndLoadPreservesRecentFilesOrderAndLimit() throws IOException {
+        Path customDir = tempDir.resolve("recent-files");
+        Files.createDirectories(customDir);
+        GlobalSettings.setUserDataPath(customDir);
+
+        GlobalSettings settings = new GlobalSettings();
+        for (int i = 1; i <= 12; i++) {
+            settings.guiSettings.addRecentFile("/tmp/design-" + i + ".dsn");
+        }
+
+        GlobalSettings.saveAsJson(settings);
+
+        GlobalSettings.resetForTesting();
+        GlobalSettings.setUserDataPath(customDir);
+        GlobalSettings loaded = GlobalSettings.load();
+
+        assertEquals(10, loaded.guiSettings.getRecentFiles().size(),
+                "Recent file history should be capped at 10 entries");
+        assertEquals("/tmp/design-12.dsn", loaded.guiSettings.getRecentFiles().get(0),
+                "Most recent file should be first after reload");
+        assertEquals("/tmp/design-3.dsn", loaded.guiSettings.getRecentFiles().get(9),
+                "Oldest retained file should be the tenth most recent entry");
+    }
+
+    @Test
     void load_normalizesVersionToReleaseSafe() throws IOException {
         Path customDir = tempDir.resolve("version-load");
         Files.createDirectories(customDir);

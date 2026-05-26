@@ -28,6 +28,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
@@ -55,6 +57,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import javax.swing.AbstractAction;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -170,6 +175,21 @@ public class BoardFrame extends WindowBase {
     // Set the menu bar of this frame.
     this.menubar = new BoardMenuBar(this, globalSettings.featureFlags);
 
+    // Global keybind for opening File > Recent Files submenu without mouse.
+    KeyStroke openRecentFilesShortcut = KeyStroke.getKeyStroke(KeyEvent.VK_R,
+        InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK);
+    getRootPane()
+        .getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+        .put(openRecentFilesShortcut, "openRecentFilesMenu");
+    getRootPane()
+        .getActionMap()
+        .put("openRecentFilesMenu", new AbstractAction() {
+          @Override
+          public void actionPerformed(java.awt.event.ActionEvent e) {
+            menubar.fileMenu.openRecentFilesMenuByKeybind();
+          }
+        });
+
     this.menubar.fileMenu.addOpenEventListener((File selectedFile) -> {
       if (selectedFile == null) {
         // There was no file selected in the dialog, so we do nothing
@@ -205,24 +225,17 @@ public class BoardFrame extends WindowBase {
             .enqueueJob(routingJob);
 
         // Set the input directory in the global settings
-        String oldInputDirectory = globalSettings.guiSettings.inputDirectory;
         globalSettings.guiSettings.inputDirectory = this.routingJob.input.getDirectoryPath();
-
-        // Save the global settings to the configuration file if the input directory was
-        // changed
-        if (!oldInputDirectory.equals(globalSettings.guiSettings.inputDirectory)) {
-          try {
-            GlobalSettings.saveAsJson(globalSettings);
-          } catch (IOException e) {
-            FRLogger.error("Couldn't save the global settings to the configuration file", e);
-          }
+        if ((routingJob.input.format == FileFormat.DSN) || (routingJob.input.format == FileFormat.FRB)) {
+          globalSettings.guiSettings.addRecentFile(selectedFile.getAbsolutePath());
         }
 
+        // Save the global settings to the configuration file so the input directory and
+        // recent-file history survive the next launch.
         try {
-          GlobalSettings.setDefaultValue("gui.input_directory", this.routingJob.input.getDirectoryPath());
-        } catch (Exception e) {
-          // it's ok if we can't save the configuration file
-          FRLogger.error("Couldn't update the input directory in the configuration file", e);
+          GlobalSettings.saveAsJson(globalSettings);
+        } catch (IOException e) {
+          FRLogger.error("Couldn't save the global settings to the configuration file", e);
         }
       }
 

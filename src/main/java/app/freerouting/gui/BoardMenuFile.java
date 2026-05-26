@@ -11,8 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.MenuElement;
+import javax.swing.MenuSelectionManager;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import app.freerouting.core.RoutingJob;
 
@@ -22,6 +27,7 @@ import app.freerouting.core.RoutingJob;
 public class BoardMenuFile extends JMenu {
 
   public final JMenuItem file_save_as_menuitem;
+  private final JMenu recent_files_menu;
   private final TextManager tm;
   private final List<Consumer<File>> openEventListeners = new ArrayList<>();
   private final List<Consumer<File>> saveAsEventListeners = new ArrayList<>();
@@ -42,11 +48,33 @@ public class BoardMenuFile extends JMenu {
     file_open_menuitem.addActionListener(_ -> {
       File selected_file = RoutingJob.showOpenDialog(globalSettings.guiSettings.inputDirectory, board_frame);
 
-      openEventListeners.forEach(listener -> listener.accept(selected_file));
+      fireOpenEventListeners(selected_file);
     });
     file_open_menuitem
         .addActionListener(_ -> FRAnalytics.buttonClicked("file_open_menuitem", file_open_menuitem.getText()));
     add(file_open_menuitem);
+
+    // File / Recently opened files...
+    recent_files_menu = new JMenu();
+    recent_files_menu.setText(tm.getText("recent_files"));
+    recent_files_menu.setToolTipText(tm.getText("recent_files_tooltip"));
+    recent_files_menu.setDelay(0);
+    recent_files_menu.addMenuListener(new MenuListener() {
+      @Override
+      public void menuSelected(MenuEvent e) {
+        rebuildRecentFilesMenu();
+        FRAnalytics.buttonClicked("file_recent_files_menuitem", recent_files_menu.getText());
+      }
+
+      @Override
+      public void menuDeselected(MenuEvent e) {
+      }
+
+      @Override
+      public void menuCanceled(MenuEvent e) {
+      }
+    });
+    add(recent_files_menu);
 
     // File / Save as...
     file_save_as_menuitem = new JMenuItem();
@@ -82,6 +110,49 @@ public class BoardMenuFile extends JMenu {
 
   public void addSaveAsEventListener(Consumer<File> listener) {
     saveAsEventListeners.add(listener);
+  }
+
+  private void fireOpenEventListeners(File selectedFile) {
+    openEventListeners.forEach(listener -> listener.accept(selectedFile));
+  }
+
+  private void rebuildRecentFilesMenu() {
+    recent_files_menu.removeAll();
+
+    List<String> recentFiles = globalSettings.guiSettings.getRecentFiles();
+    if (recentFiles.isEmpty()) {
+      JMenuItem empty_item = new JMenuItem(tm.getText("recent_files_empty"));
+      empty_item.setEnabled(false);
+      recent_files_menu.add(empty_item);
+      return;
+    }
+
+    for (String recentFilePath : recentFiles) {
+      File recentFile = new File(recentFilePath);
+      JMenuItem recentFileMenuItem = new JMenuItem();
+      recentFileMenuItem.setText(recentFile.getPath());
+      recentFileMenuItem.addActionListener(_ -> fireOpenEventListeners(recentFile));
+      recentFileMenuItem.addActionListener(
+          _ -> FRAnalytics.buttonClicked("file_recent_file_menuitem", recentFileMenuItem.getText()));
+      recent_files_menu.add(recentFileMenuItem);
+    }
+  }
+
+  public void openRecentFilesMenuByKeybind() {
+    rebuildRecentFilesMenu();
+
+    if (!(getParent() instanceof JMenuBar menuBar)) {
+      return;
+    }
+
+    MenuSelectionManager
+        .defaultManager()
+        .setSelectedPath(new MenuElement[] {
+            menuBar,
+            this,
+            recent_files_menu,
+            recent_files_menu.getPopupMenu()
+        });
   }
 
 }

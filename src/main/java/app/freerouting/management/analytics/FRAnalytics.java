@@ -58,6 +58,8 @@ public class FRAnalytics {
       put("file_save_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/SaveAndExit");
       put("file_cancel_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/CancelAndExit");
       put("file_save_as_menuitem", "app.freerouting.gui/Board/Menu/File/SaveAs");
+      put("file_recent_files_menuitem", "app.freerouting.gui/Board/Menu/File/RecentFiles");
+      put("file_recent_file_menuitem", "app.freerouting.gui/Board/Menu/File/RecentFile");
       put("file_write_logfile_menuitem", "app.freerouting.gui/Board/Menu/File/MacroRecording");
       put("file_replay_logfile_menuitem", "app.freerouting.gui/Board/Menu/File/MacroPlayback");
       put("file_save_settings_menuitem", "app.freerouting.gui/Board/Menu/File/SaveGUISettings");
