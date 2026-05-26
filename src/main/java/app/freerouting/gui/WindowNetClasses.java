@@ -15,26 +15,36 @@ import app.freerouting.rules.NetClass;
 import app.freerouting.rules.Nets;
 import app.freerouting.rules.ViaRule;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Point;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.JTableHeader;
 
 /**
@@ -54,9 +64,87 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private final Collection<JFrame> subwindows = new LinkedList<>();
   private final JComboBox<String> cl_class_combo_box;
   private final JComboBox<String> via_rule_combo_box;
+  private final int[] signal_layer_indices;
+  private final String[] signal_layer_names;
   private JPanel center_panel;
   private NetClassTable table;
   private NetClassTableModel table_model;
+
+  static String summarizeActiveLayerSelection(LayerStructure layerStructure, boolean[] activeLayers) {
+    List<String> selectedLayers = new ArrayList<>();
+    int layerCount = Math.min(layerStructure.arr.length, activeLayers.length);
+    for (int i = 0; i < layerCount; i++) {
+      if (layerStructure.arr[i].is_signal && activeLayers[i]) {
+        selectedLayers.add(layerStructure.arr[i].name);
+      }
+    }
+    if (selectedLayers.isEmpty()) {
+      return "";
+    }
+    if (isAllSignalLayersSelected(layerStructure, activeLayers)) {
+      return "__all__";
+    }
+    if (isAllInnerSignalLayersSelected(layerStructure, activeLayers)) {
+      return "__inner__";
+    }
+    return String.join(", ", selectedLayers);
+  }
+
+  private static boolean isAllSignalLayersSelected(LayerStructure layerStructure, boolean[] activeLayers) {
+    int layerCount = Math.min(layerStructure.arr.length, activeLayers.length);
+    for (int i = 0; i < layerCount; i++) {
+      if (layerStructure.arr[i].is_signal != activeLayers[i]) {
+        return false;
+      }
+    }
+    for (int i = layerCount; i < layerStructure.arr.length; i++) {
+      if (layerStructure.arr[i].is_signal) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static boolean isAllInnerSignalLayersSelected(LayerStructure layerStructure, boolean[] activeLayers) {
+    if (layerStructure.arr.length <= 2) {
+      return false;
+    }
+    boolean hasInnerSignalLayer = false;
+    for (int i = 1; i < layerStructure.arr.length - 1; i++) {
+      if (!layerStructure.arr[i].is_signal) {
+        continue;
+      }
+      hasInnerSignalLayer = true;
+      if (i >= activeLayers.length || !activeLayers[i]) {
+        return false;
+      }
+    }
+    if (!hasInnerSignalLayer) {
+      return false;
+    }
+    if (layerStructure.arr[0].is_signal && activeLayers.length > 0 && activeLayers[0]) {
+      return false;
+    }
+    if (activeLayers.length >= layerStructure.arr.length && layerStructure.arr[layerStructure.arr.length - 1].is_signal && activeLayers[layerStructure.arr.length - 1]) {
+      return false;
+    }
+    return true;
+  }
+
+  static boolean[] copyActiveLayerSelection(NetClass netClass, int layerCount) {
+    boolean[] result = new boolean[layerCount];
+    for (int i = 0; i < layerCount; i++) {
+      result[i] = netClass.is_active_routing_layer(i);
+    }
+    return result;
+  }
+
+  static void applyActiveLayerSelection(NetClass netClass, boolean[] activeLayers) {
+    int layerCount = Math.min(netClass.layer_count(), activeLayers.length);
+    for (int i = 0; i < layerCount; i++) {
+      netClass.set_active_routing_layer(i, activeLayers[i]);
+    }
+  }
 
   /**
    * Creates a new instance of NetClassesWindow
@@ -79,6 +167,19 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     add_combobox_items();
 
     add_table();
+
+    // Precompute signal layer metadata to avoid repeated iteration
+    LayerStructure ls = routing_board.layer_structure;
+    List<Integer> idxs = new ArrayList<>();
+    List<String> names = new ArrayList<>();
+    for (int i = 0; i < ls.arr.length; i++) {
+      if (ls.arr[i].is_signal) {
+        idxs.add(i);
+        names.add(ls.arr[i].name);
+      }
+    }
+    this.signal_layer_indices = idxs.stream().mapToInt(Integer::intValue).toArray();
+    this.signal_layer_names = names.toArray(new String[0]);
 
     JPanel net_class_button_panel = new JPanel();
     net_class_button_panel.setLayout(new FlowLayout());
@@ -195,7 +296,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     this.table
         .getColumnModel()
         .getColumn(ColumnName.ON_LAYER.ordinal())
-        .setCellEditor(new DefaultCellEditor(layer_combo_box));
+      .setCellEditor(new LayerSelectionCellEditor());
   }
 
   private void add_combobox_items() {
@@ -214,7 +315,6 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private void adjust_table() {
     this.table_model = new NetClassTableModel();
     this.table = new NetClassTable(this.table_model);
-    this.main_panel.remove(this.center_panel);
     this.add_table();
     this.pack();
     this.board_frame.refresh_windows();
@@ -482,8 +582,37 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] = board_rules.clearance_matrix.get_name(curr_net_class.get_trace_clearance_class());
         ComboBoxLayer.Layer combo_layer = layer_combo_box.get_selected_layer();
         set_trace_width_field(i, combo_layer);
-        this.data[i][ColumnName.ON_LAYER.ordinal()] = combo_layer.name;
+        this.data[i][ColumnName.ON_LAYER.ordinal()] = format_layer_selection(curr_net_class);
       }
+    }
+
+    private boolean[] get_layer_selection(int p_rule_no) {
+      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
+      NetClass curr_net_class = board_rules.net_classes.get(p_rule_no);
+      return copyActiveLayerSelection(curr_net_class, curr_net_class.layer_count());
+    }
+
+    private void apply_layer_selection(int p_rule_no, boolean[] p_selection) {
+      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
+      NetClass curr_net_class = board_rules.net_classes.get(p_rule_no);
+      applyActiveLayerSelection(curr_net_class, p_selection);
+      this.data[p_rule_no][ColumnName.ON_LAYER.ordinal()] = format_layer_selection(curr_net_class);
+      fireTableCellUpdated(p_rule_no, ColumnName.ON_LAYER.ordinal());
+    }
+
+    private String format_layer_selection(NetClass p_net_class) {
+      LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
+      String summary = summarizeActiveLayerSelection(layer_structure, copyActiveLayerSelection(p_net_class, p_net_class.layer_count()));
+      if (summary.isEmpty()) {
+        return tm.getText("no");
+      }
+      if ("__all__".equals(summary)) {
+        return tm.getText("all");
+      }
+      if ("__inner__".equals(summary)) {
+        return tm.getText("inner");
+      }
+      return summary;
     }
 
     void set_trace_width_field(int p_rule_no, ComboBoxLayer.Layer p_layer) {
@@ -652,6 +781,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           }
         }
         net_rule.set_trace_clearance_class(new_cl_class_index);
+      } else if (p_col == ColumnName.ON_LAYER.ordinal()) {
+        if (!(p_value instanceof boolean[] selected_layers)) {
+          return;
+        }
+        apply_layer_selection(p_row, selected_layers);
+        return;
       } else if (p_col == ColumnName.TRACE_WIDTH.ordinal()) {
         float curr_value = 0f;
         if (p_value instanceof Float float1) {
@@ -722,6 +857,104 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         curr_class = String.class;
       }
       return curr_class;
+    }
+  }
+
+  private class LayerSelectionCellEditor extends AbstractCellEditor implements TableCellEditor {
+
+    private final JButton editor_button;
+    private final JPopupMenu popup_menu;
+    private final JCheckBox[] layer_checkboxes;
+    private boolean[] current_selection;
+
+    LayerSelectionCellEditor() {
+      this.editor_button = new JButton();
+      this.editor_button.setPreferredSize(new Dimension(140, TEXTFIELD_HEIGHT + 6));
+      this.editor_button.setToolTipText(tm.getText("on_layer_tooltip", "Select layers to activate"));
+      this.popup_menu = new JPopupMenu();
+      // show popup when button pressed
+      this.editor_button.addActionListener(_ -> this.popup_menu.show(editor_button, 0, editor_button.getHeight()));
+
+      this.layer_checkboxes = build_signal_layer_checkboxes();
+
+      JPanel check_panel = new JPanel(new GridBagLayout());
+      GridBagConstraints constraints = new GridBagConstraints();
+      constraints.insets = new Insets(2, 6, 2, 6);
+      constraints.anchor = GridBagConstraints.WEST;
+      constraints.gridx = 0;
+      constraints.gridy = 0;
+
+      for (JCheckBox layer_checkbox : layer_checkboxes) {
+        layer_checkbox.setToolTipText(tm.getText("on_layer_checkbox_tooltip", "Toggle this layer"));
+        check_panel.add(layer_checkbox, constraints);
+        constraints.gridy++;
+      }
+
+      JPanel button_panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      JButton apply_button = new JButton(tm.getText("apply"));
+      apply_button.addActionListener(_ -> {
+        sync_selection_from_checkboxes();
+        popup_menu.setVisible(false);
+        fireEditingStopped();
+      });
+      JButton cancel_button = new JButton(tm.getText("cancel"));
+      cancel_button.addActionListener(_ -> {
+        popup_menu.setVisible(false);
+        fireEditingCanceled();
+      });
+      button_panel.add(apply_button);
+      button_panel.add(cancel_button);
+
+      JPanel popup_panel = new JPanel(new BorderLayout());
+      popup_panel.add(check_panel, BorderLayout.CENTER);
+      popup_panel.add(button_panel, BorderLayout.SOUTH);
+      JScrollPane popup_scroll = new JScrollPane(popup_panel);
+      popup_scroll.setPreferredSize(new Dimension(260, 220));
+      this.popup_menu.add(popup_scroll);
+    }
+
+    private JCheckBox[] build_signal_layer_checkboxes() {
+      // Build lightweight checkboxes from precomputed names (fast)
+      JCheckBox[] result = new JCheckBox[signal_layer_names.length];
+      for (int i = 0; i < signal_layer_names.length; i++) {
+        result[i] = new JCheckBox(signal_layer_names[i]);
+      }
+      return result;
+    }
+
+    private void sync_checkboxes_from_selection() {
+      if (current_selection == null) {
+        return;
+      }
+      for (int idx = 0; idx < signal_layer_indices.length; idx++) {
+        int layerIndex = signal_layer_indices[idx];
+        layer_checkboxes[idx].setSelected(layerIndex < current_selection.length && current_selection[layerIndex]);
+      }
+    }
+
+    private void sync_selection_from_checkboxes() {
+      if (current_selection == null) {
+        return;
+      }
+      for (int idx = 0; idx < signal_layer_indices.length; idx++) {
+        int layerIndex = signal_layer_indices[idx];
+        if (layerIndex < current_selection.length) {
+          current_selection[layerIndex] = layer_checkboxes[idx].isSelected();
+        }
+      }
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+      return current_selection == null ? null : current_selection.clone();
+    }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+      current_selection = table_model.get_layer_selection(row);
+      sync_checkboxes_from_selection();
+      editor_button.setText(value == null ? "" : value.toString());
+      return editor_button;
     }
   }
 }

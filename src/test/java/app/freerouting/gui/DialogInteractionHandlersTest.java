@@ -10,6 +10,8 @@ import static org.mockito.Mockito.verify;
 
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.InteractiveSettings;
+import app.freerouting.board.Layer;
+import app.freerouting.board.LayerStructure;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.NetClass;
 import app.freerouting.settings.RouterSettings;
@@ -116,6 +118,46 @@ class DialogInteractionHandlersTest {
     assertTrue(fieldNetClass.is_ignored_by_autorouter);
     WindowNetClasses.applyAutorouterIgnoreSelection(fieldNetClass, false);
     assertFalse(fieldNetClass.is_ignored_by_autorouter);
+  }
+
+  @Test
+  void netClasses_layerSelectionHelpersSummarizeAndApplyExplicitLayers() {
+    LayerStructure layerStructure = new LayerStructure(
+        new Layer[] {
+            new Layer("Top", true),
+            new Layer("Inner1", true),
+            new Layer("Inner2", true),
+            new Layer("Bottom", true)
+        });
+    NetClass netClass = new NetClass("signal", layerStructure, mock(ClearanceMatrix.class), false);
+
+    boolean[] explicitSelection = new boolean[] {true, false, false, true};
+    WindowNetClasses.applyActiveLayerSelection(netClass, explicitSelection);
+
+    assertTrue(netClass.is_active_routing_layer(0));
+    assertFalse(netClass.is_active_routing_layer(1));
+    assertFalse(netClass.is_active_routing_layer(2));
+    assertTrue(netClass.is_active_routing_layer(3));
+    assertEquals(
+        "Top, Bottom",
+        WindowNetClasses.summarizeActiveLayerSelection(layerStructure, explicitSelection));
+  }
+
+  @Test
+  void netClasses_layerSelectionHelpersRecognizeCanonicalSelections() {
+    LayerStructure layerStructure = new LayerStructure(
+        new Layer[] {
+            new Layer("Top", true),
+            new Layer("Core", false),
+            new Layer("Inner", true),
+            new Layer("Bottom", true)
+        });
+
+    boolean[] allSignalLayers = new boolean[] {true, false, true, true};
+    boolean[] innerSignalLayers = new boolean[] {false, false, true, false};
+
+    assertEquals("__all__", WindowNetClasses.summarizeActiveLayerSelection(layerStructure, allSignalLayers));
+    assertEquals("__inner__", WindowNetClasses.summarizeActiveLayerSelection(layerStructure, innerSignalLayers));
   }
 
   @Test
