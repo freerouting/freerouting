@@ -16,30 +16,52 @@ This document summarizes what changed with KiCad 10, what the KiCad IPC API is, 
 - Official docs state that headless IPC support through kicad-cli arrives in KiCad 11.
 - The IPC API is disabled by default in KiCad 10.
 - Forum reports from March and April 2026 show plugin discovery and attachment friction in KiCad 10.x.
+- KiCad team guidance to Freerouting confirms the SWIG runtime is deprecated and that SWIG-based plugins will not work in KiCad nightly or 11.0.
+- KiCad recommends plugin authors migrate to IPC during the KiCad 11 development cycle.
 
 ## Recommendation summary
 
 - Keep the DSN and IPC paths in parallel.
-- Do not replace DSN support.
+- Do not replace DSN support in Freerouting core.
 - Use IPC as a KiCad-native integration path for supported versions.
 - Treat IPC as a bridge around the running KiCad session, not as a standalone file loader.
+- Start migration now because the current SWIG-based KiCad plugin path is end-of-life for nightly and 11.0.
 - Keep the first implementation small and defensive.
+
+## Immediate impact of the KiCad team message
+
+The message from the KiCad team changes the urgency and clarifies scope.
+
+- The current plugin implementation that calls SWIG APIs (for example `pcbnew.ExportSpecctraDSN` and `pcbnew.ImportSpecctraSES`) is on a deprecating runtime and cannot be the long-term integration path.
+- DSN as a file format is still useful and should remain supported in Freerouting.
+- The main migration is not "remove DSN". The migration is "replace SWIG plugin execution path with an IPC-based plugin path".
+- For KiCad users, IPC is now a required strategic path, not an optional enhancement.
 
 ## Direct answers to current product questions
 
 ### Will the classic KiCad to Freerouting DSN path still work?
 
-Most likely yes in the near to medium term, but it should be treated as "supported legacy" rather than "strategic future".
+We need to separate two different things:
+
+- DSN file support in Freerouting
+- SWIG-based KiCad plugin execution path
+
+Updated expectation:
+
+- Freerouting should keep DSN read and write support.
+- The current SWIG-based plugin path should be considered legacy and near end-of-life for KiCad nightly and 11.0.
+- IPC should become the default KiCad integration path.
 
 What we can reasonably expect:
 
-- KiCad still has the Specctra DSN and SES import and export path in current releases.
-- There is no clear signal that this path will be removed immediately.
-- KiCad development direction is clearly moving toward IPC for plugin workflows.
+- KiCad still has Specctra DSN and SES support in current releases.
+- KiCad has explicitly signaled that SWIG plugin runtime is deprecated.
+- KiCad development direction for plugins is IPC.
 
 Practical interpretation for Freerouting:
 
-- Keep DSN as a first-class compatibility path.
+- Keep DSN as a compatibility data path.
+- Replace SWIG-based plugin calls with IPC-based plugin flow.
 - Expect slower feature parity on DSN compared to IPC, especially for newer rule details.
 - Add a regression check in CI that validates DSN export plus import still works against current KiCad release channels.
 
@@ -53,6 +75,7 @@ Why users benefit enough:
 - Better access to live design-rule context.
 - Better long-term alignment with KiCad plugin architecture.
 - Better path to richer UX such as progress updates and interactive control.
+- Avoids breakage when users move to KiCad nightly and 11.0 where SWIG-based plugin runtime is deprecated.
 
 Why burden stays manageable:
 
@@ -62,7 +85,8 @@ Why burden stays manageable:
 
 Decision rule:
 
-- IPC is justified if Phase 1 can be delivered without touching core routing algorithms and without regressing DSN workflow.
+- IPC is now mandatory for KiCad forward compatibility.
+- Keep Phase 1 scoped so it avoids core routing changes and does not regress DSN workflow.
 
 ### How do we make Java 25 not block usage?
 
@@ -151,18 +175,22 @@ Reasons:
 - DSN remains useful for offline workflows.
 - Parallel support is the safest way to test parity and avoid regressions.
 
-Do not remove the legacy plugin path yet.
+Important clarification:
+
+- Keep DSN format support.
+- Do not depend on the legacy SWIG plugin path for future KiCad compatibility.
 
 ## Best user experience
 
 The most intuitive user experience is:
 
-- If KiCad 10 or later is available, use IPC automatically.
+- If KiCad supports IPC and the plugin is attached, use IPC automatically.
 - If IPC is not available, fall back to DSN.
 - Show a clear message about which mode is active.
 - Keep the Java installation check and Java launcher logic that already exists in the Python plugin.
 - Let the user adjust routing settings before routing starts.
 - Never fail silently when runtime discovery fails.
+- If a SWIG-only path is detected, show a deprecation warning and suggest upgrading to IPC mode.
 
 ## Java installation and launch
 
@@ -182,7 +210,7 @@ Additional recommendation:
 
 ## Can we keep the current Python code?
 
-Yes, mostly.
+Yes, partially.
 
 Reuse the existing Python plugin as the entry point if it already handles:
 
@@ -191,7 +219,11 @@ Reuse the existing Python plugin as the entry point if it already handles:
 - user settings UI
 - launching Freerouting
 
-The plugin should be adapted, not replaced.
+The plugin should be adapted with a focused migration from SWIG calls to IPC calls.
+
+What should be retired over time:
+
+- direct dependence on SWIG-only APIs for export and import in the main routing flow
 
 What should be new:
 
@@ -299,19 +331,21 @@ Do not start with a large board.
 
 ## Practical next step list
 
-1. Confirm the KiCad IPC model in the plugin layer.
-2. Keep DSN support unchanged.
-3. Add a DSN compatibility check against current KiCad releases in CI.
-4. Add a small IPC bridge that only reads board data first.
-5. Write tests before adding write-back support.
-6. Add live update support only after the read path is stable.
-7. Add bundled Java runtime option to release packaging and plugin config.
-8. Update user documentation after bridge and runtime flow are stable.
+1. Freeze the SWIG-based path as legacy and avoid new feature work there.
+2. Confirm the KiCad IPC model in the plugin layer.
+3. Keep DSN support unchanged in Freerouting core.
+4. Add a DSN compatibility check against current KiCad releases in CI.
+5. Add a small IPC bridge that only reads board data first.
+6. Write tests before adding write-back support.
+7. Add live update support only after the read path is stable.
+8. Add bundled Java runtime option to release packaging and plugin config.
+9. Update user documentation after bridge and runtime flow are stable.
 
 ## Conclusion
 
-KiCad 10 is released and the IPC API is real, but the best approach for Freerouting is still gradual.
-The safest and most intuitive plan is to keep DSN, add IPC in parallel, and implement IPC in small steps.
+KiCad 10 is released and the IPC API is real.
+With KiCad signaling SWIG runtime deprecation for nightly and 11.0, IPC migration is now a required compatibility track.
+The safest plan is to keep DSN data support, move KiCad plugin execution to IPC, and implement in small steps.
 
 That gives us:
 
