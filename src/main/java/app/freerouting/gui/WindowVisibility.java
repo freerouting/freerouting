@@ -1,9 +1,12 @@
 package app.freerouting.gui;
 
 import app.freerouting.interactive.GuiBoardManager;
+import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -70,21 +73,31 @@ public abstract class WindowVisibility extends BoardSavableSubWindow {
     JLabel empty_label = new JLabel();
     gridbag.setConstraints(empty_label, gridbag_constraints);
     main_panel.add(empty_label);
-    gridbag_constraints.gridwidth = 2;
 
-    JButton appearance_layer_visibility_min_all_button = new JButton(tm.getText("minimum_all"));
-    appearance_layer_visibility_min_all_button.setToolTipText(tm.getText("minimum_all_tooltip"));
+    JPanel button_panel = new JPanel(new GridLayout(1, 2, 20, 0));
+    JPanel button_row_panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+    button_row_panel.add(button_panel);
+
+    TextManager visibility_tm = new TextManager(WindowVisibility.class, p_board_frame.get_locale());
+
+    JButton appearance_layer_visibility_min_all_button = new JButton(visibility_tm.getText("minimum_all"));
+    appearance_layer_visibility_min_all_button.setToolTipText(visibility_tm.getText("minimum_all_tooltip"));
     appearance_layer_visibility_min_all_button.addActionListener(new MinAllButtonListener());
     appearance_layer_visibility_min_all_button.addActionListener(_ -> FRAnalytics.buttonClicked("appearance_layer_visibility_min_all_button", appearance_layer_visibility_min_all_button.getText()));
-    gridbag.setConstraints(appearance_layer_visibility_min_all_button, gridbag_constraints);
-    main_panel.add(appearance_layer_visibility_min_all_button);
+    button_panel.add(appearance_layer_visibility_min_all_button);
 
-    JButton appearance_layer_visibility_max_all_button = new JButton(tm.getText("maximum_all"));
-    appearance_layer_visibility_max_all_button.setToolTipText(tm.getText("maximum_all_tooltip"));
+    JButton appearance_layer_visibility_max_all_button = new JButton(visibility_tm.getText("maximum_all"));
+    appearance_layer_visibility_max_all_button.setToolTipText(visibility_tm.getText("maximum_all_tooltip"));
     appearance_layer_visibility_max_all_button.addActionListener(new MaxAllButtonListener());
     appearance_layer_visibility_max_all_button.addActionListener(_ -> FRAnalytics.buttonClicked("appearance_layer_visibility_max_all_button", appearance_layer_visibility_max_all_button.getText()));
-    gridbag.setConstraints(appearance_layer_visibility_max_all_button, gridbag_constraints);
-    main_panel.add(appearance_layer_visibility_max_all_button);
+    button_panel.add(appearance_layer_visibility_max_all_button);
+
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag_constraints.fill = GridBagConstraints.NONE;
+    gridbag_constraints.weightx = 0.0;
+    gridbag_constraints.anchor = GridBagConstraints.CENTER;
+    gridbag.setConstraints(button_row_panel, gridbag_constraints);
+    main_panel.add(button_row_panel);
 
     this.pack();
     this.setResizable(false);
