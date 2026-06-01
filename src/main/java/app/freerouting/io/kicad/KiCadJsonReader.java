@@ -6,6 +6,7 @@ import app.freerouting.core.Package;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.geometry.planar.*;
 import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.BoardMetadata;
 import app.freerouting.io.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
@@ -325,7 +326,18 @@ public final class KiCadJsonReader {
       double durationMs = (endTime - startTime) / 1_000_000.0;
       FRLogger.info(String.format("KiCad JSON Loader performance: built RoutingBoard in %.2f ms (parsing + structure mapping)", durationMs));
 
-      return new BoardReadResult.Success(board, null, new ArrayList<>());
+      // Build metadata for the board
+      BoardMetadata metadata = new BoardMetadata(
+          "KiCad",
+          "v10.0",
+          layerCount,
+          userUnit,
+          resolution,
+          AngleRestriction.FORTYFIVE_DEGREE,
+          null
+      );
+
+      return new BoardReadResult.Success(board, metadata, new ArrayList<>());
 
     } catch (Throwable e) {
       FRLogger.warn("Failed to parse and read KiCad JSON board: " + e.getMessage());

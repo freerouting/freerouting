@@ -2,6 +2,7 @@ package app.freerouting.io.specctra;
 
 import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.settings.GlobalSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,13 +63,13 @@ class RulesRoundTripTest {
   @Test
   void loadingProducesWarningsForDegenerateWires() throws Exception {
     InputStream stream = DsnTestFixtures.openFixtureStream("Issue029-hw48na.dsn");
-    DsnReadResult result = DsnReader.readBoard(stream, null, null);
+    BoardReadResult result = DsnReader.readBoard(stream, null, null);
 
     // Board must load successfully (or at least partially)
-    assertInstanceOf(DsnReadResult.Success.class, result,
+    assertInstanceOf(BoardReadResult.Success.class, result,
         "Expected a successful read; got: " + result);
 
-    DsnReadResult.Success success = (DsnReadResult.Success) result;
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
     assertNotNull(success.board(), "Board must not be null after a successful read");
 
     // The DSN file contains at least one wire with duplicate/identical coordinates

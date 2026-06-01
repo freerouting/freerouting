@@ -17,11 +17,11 @@ public class DrcViolationRoutingTest extends RoutingFixtureTest {
     
     // Read the board without routing it
     ByteArrayInputStream inputStream = new ByteArrayInputStream(job.input.getData().readAllBytes());
-    app.freerouting.io.specctra.DsnReadResult result = DsnReader.readBoard(inputStream, null, null, "test");
+    app.freerouting.io.BoardReadResult result = DsnReader.readBoard(inputStream, null, null, "test");
     BasicBoard board = null;
-    if (result instanceof app.freerouting.io.specctra.DsnReadResult.Success s) {
+    if (result instanceof app.freerouting.io.BoardReadResult.Success s) {
       board = s.board();
-    } else if (result instanceof app.freerouting.io.specctra.DsnReadResult.OutlineMissing o) {
+    } else if (result instanceof app.freerouting.io.BoardReadResult.OutlineMissing o) {
       board = o.board();
     } else {
       throw new RuntimeException("Failed to read board: " + result);

@@ -2,7 +2,7 @@ package app.freerouting.io.kicad;
 
 import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.io.specctra.DsnReadResult;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.settings.GlobalSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -118,9 +118,9 @@ class KiCadJsonReaderTest {
         + "  ]\n"
         + "}";
 
-    DsnReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
-    assertInstanceOf(DsnReadResult.Success.class, result);
-    DsnReadResult.Success success = (DsnReadResult.Success) result;
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
     RoutingBoard board = (RoutingBoard) success.board();
 
     assertNotNull(board);
@@ -134,13 +134,13 @@ class KiCadJsonReaderTest {
 
   @Test
   void testParseNullReader() {
-    DsnReadResult result = KiCadJsonReader.readBoard(null, null, null);
-    assertInstanceOf(DsnReadResult.ParseError.class, result);
+    BoardReadResult result = KiCadJsonReader.readBoard(null, null, null);
+    assertInstanceOf(BoardReadResult.ParseError.class, result);
   }
 
   @Test
   void testParseInvalidJson() {
-    DsnReadResult result = KiCadJsonReader.readBoard(new StringReader("{invalid JSON"), null, null);
-    assertInstanceOf(DsnReadResult.ParseError.class, result);
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader("{invalid JSON"), null, null);
+    assertInstanceOf(BoardReadResult.ParseError.class, result);
   }
 }
