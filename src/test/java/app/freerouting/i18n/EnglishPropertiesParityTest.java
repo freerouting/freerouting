@@ -1,4 +1,6 @@
-// Ensure to use ./gradlew cleanTest test --tests app.freerouting.i18n.EnglishPropertiesParityTest --rerun-tasks
+// Use this to test for missing keys in all .propertie files
+// For individual testing use ./gradlew cleanTest test --tests app.freerouting.i18n.EnglishPropertiesParityTest --rerun-tasks
+// It will output a report to build/reports/i18n/EnglishPropertiesParityReport.txt and a JSON summary to build/reports/i18n/EnglishPropertiesParityReport.json
 
 package app.freerouting.i18n;
 
