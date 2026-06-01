@@ -4,6 +4,9 @@ import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.logger.FRLogger;
+import app.freerouting.io.CoordinateTransform;
 import java.io.IOException;
 
 /**

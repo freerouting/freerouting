@@ -129,10 +129,11 @@ class ModuleBoundariesArchTest {
 
     ArchRule rule = noClasses()
         .that()
-        .resideOutsideOfPackage("app.freerouting.io.specctra..")
+        .resideOutsideOfPackage("app.freerouting.io..")
         .should()
         .dependOnClassesThat()
-        .resideInAPackage("app.freerouting.io.specctra.parser..");
+        .resideInAPackage("app.freerouting.io.specctra.parser..")
+        .because("specctra parser internals are implementation details; only io packages (specctra, kicad) may access them");
 
     FreezingArchRule.freeze(rule).check(classes);
   }

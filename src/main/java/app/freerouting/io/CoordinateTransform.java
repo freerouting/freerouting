@@ -1,15 +1,20 @@
-package app.freerouting.io.specctra.parser;
+package app.freerouting.io;
 
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.io.specctra.parser.Circle;
+import app.freerouting.io.specctra.parser.Layer;
+import app.freerouting.io.specctra.parser.Polygon;
+import app.freerouting.io.specctra.parser.Rectangle;
+import app.freerouting.io.specctra.parser.Shape;
 import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 
 /**
- * Computes transformations between a specctra dsn-file coordinates and board coordinates.
+ * Computes transformations between board coordinates and external (e.g. Specctra DSN, KiCad JSON) coordinates.
  */
 public class CoordinateTransform implements Serializable {
 
@@ -18,7 +23,7 @@ public class CoordinateTransform implements Serializable {
   private final double base_y;
 
   /**
-   * Creates a new instance of CoordinateTransform. The base point of the dsn coordinate system will be translated to zero in the board coordinate system.
+   * Creates a new instance of CoordinateTransform.
    */
   public CoordinateTransform(double p_scale_factor, double p_base_x, double p_base_y) {
     scale_factor = p_scale_factor;
@@ -27,21 +32,21 @@ public class CoordinateTransform implements Serializable {
   }
 
   /**
-   * Scale a value from the board to the dsn coordinate system
+   * Scale a value from the board to the external coordinate system
    */
   public double board_to_dsn(double p_val) {
     return p_val / scale_factor;
   }
 
   /**
-   * Scale a value from the dsn to the board coordinate system
+   * Scale a value from the external to the board coordinate system
    */
   public double dsn_to_board(double p_val) {
     return p_val * scale_factor;
   }
 
   /**
-   * Transforms a geometry.planar.FloatPoint to a tuple of doubles in the dsn coordinate system.
+   * Transforms a geometry.planar.FloatPoint to a tuple of doubles in the external coordinate system.
    */
   public double[] board_to_dsn(FloatPoint p_point) {
     double[] result = new double[2];
@@ -51,7 +56,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /**
-   * Transforms a geometry.planar.FloatPoint to a tuple of doubles in the dsn coordinate system in relative (vector) coordinates.
+   * Transforms a geometry.planar.FloatPoint to a tuple of doubles in the external coordinate system in relative (vector) coordinates.
    */
   public double[] board_to_dsn_rel(FloatPoint p_point) {
     double[] result = new double[2];
@@ -61,7 +66,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /**
-   * Transforms an array of n geometry.planar.FloatPoints to an array of 2*n doubles in the dsn coordinate system.
+   * Transforms an array of n geometry.planar.FloatPoints to an array of 2*n doubles in the external coordinate system.
    */
   public double[] board_to_dsn(FloatPoint[] p_points) {
     double[] result = new double[2 * p_points.length];
@@ -73,7 +78,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /**
-   * Transforms an array of n geometry.planar.Lines to an array of 4*n doubles in the dsn coordinate system.
+   * Transforms an array of n geometry.planar.Lines to an array of 4*n doubles in the external coordinate system.
    */
   public double[] board_to_dsn(Line[] p_lines) {
     double[] result = new double[4 * p_lines.length];
@@ -89,7 +94,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /**
-   * Transforms an array of n geometry.planar.FloatPoints to an array of 2*n doubles in the dsn coordinate system in relative (vector) coordinates.
+   * Transforms an array of n geometry.planar.FloatPoints to an array of 2*n doubles in the external coordinate system in relative (vector) coordinates.
    */
   public double[] board_to_dsn_rel(FloatPoint[] p_points) {
     double[] result = new double[2 * p_points.length];
@@ -101,7 +106,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /**
-   * Transforms a geometry.planar.Vector to a tuple of doubles in the dsn coordinate system.
+   * Transforms a geometry.planar.Vector to a tuple of doubles in the external coordinate system.
    */
   public double[] board_to_dsn(Vector p_vector) {
     double[] result = new double[2];
@@ -112,7 +117,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /**
-   * Transforms a dsn tuple to a geometry.planar.FloatPoint
+   * Transforms an external tuple to a geometry.planar.FloatPoint
    */
   public FloatPoint dsn_to_board(double[] p_tuple) {
     double x = dsn_to_board(p_tuple[0] - base_x);
@@ -121,7 +126,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /**
-   * Transforms a dsn tuple to a geometry.planar.FloatPoint in relative (vector) coordinates.
+   * Transforms an external tuple to a geometry.planar.FloatPoint in relative (vector) coordinates.
    */
   public FloatPoint dsn_to_board_rel(double[] p_tuple) {
     double x = dsn_to_board(p_tuple[0]);
@@ -154,7 +159,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /**
-   * Transforms a board shape to a dsn shape.
+   * Transforms a board shape to an external shape.
    */
   public Shape board_to_dsn(app.freerouting.geometry.planar.Shape p_board_shape, Layer p_layer) {
     Shape result;
@@ -176,7 +181,7 @@ public class CoordinateTransform implements Serializable {
   }
 
   /**
-   * Transforms the relative (vector) coordinates of a geometry.planar.Shape to a specctra dsn shape.
+   * Transforms the relative (vector) coordinates of a geometry.planar.Shape to an external shape.
    */
   public Shape board_to_dsn_rel(app.freerouting.geometry.planar.Shape p_board_shape, Layer p_layer) {
     Shape result;

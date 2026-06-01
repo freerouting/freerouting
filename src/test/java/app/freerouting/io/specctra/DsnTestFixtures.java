@@ -1,6 +1,7 @@
 package app.freerouting.io.specctra;
 
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.io.BoardReadResult;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -73,13 +74,13 @@ public final class DsnTestFixtures {
   }
 
   private static RoutingBoard loadBoardFromStream(InputStream stream) throws IOException {
-    DsnReadResult result = DsnReader.readBoard(stream, null, null);
+    BoardReadResult result = DsnReader.readBoard(stream, null, null);
     return switch (result) {
-      case DsnReadResult.Success s -> (RoutingBoard) s.board();
-      case DsnReadResult.OutlineMissing o -> (RoutingBoard) o.board();
-      case DsnReadResult.ParseError e ->
+      case BoardReadResult.Success s -> (RoutingBoard) s.board();
+      case BoardReadResult.OutlineMissing o -> (RoutingBoard) o.board();
+      case BoardReadResult.ParseError e ->
           throw new IOException("DSN parse error at '" + e.location() + "': " + e.detail());
-      case DsnReadResult.IoError io -> throw new IOException("DSN I/O error", io.cause());
+      case BoardReadResult.IoError io -> throw new IOException("DSN I/O error", io.cause());
     };
   }
 }

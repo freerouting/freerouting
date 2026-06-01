@@ -2,6 +2,7 @@ package app.freerouting.io.specctra;
 
 import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.settings.GlobalSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,11 +25,11 @@ class DsnReaderTest {
   @Test
   void readBoardReturnsSuccess() {
     InputStream in = DsnTestFixtures.openResource("Issue143-rpi_splitter.dsn");
-    DsnReadResult result = DsnReader.readBoard(in, null, null);
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
 
-    assertInstanceOf(DsnReadResult.Success.class, result,
+    assertInstanceOf(BoardReadResult.Success.class, result,
         "Expected Success for a well-formed DSN file");
-    DsnReadResult.Success success = (DsnReadResult.Success) result;
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
     assertNotNull(success.board(), "Board must not be null on success");
     assertEquals(2, success.board().get_layer_count(),
         "Issue143-rpi_splitter.dsn is a 2-layer board");
@@ -37,10 +38,10 @@ class DsnReaderTest {
   @Test
   void readBoardSetsHostCad() {
     InputStream in = DsnTestFixtures.openResource("Issue143-rpi_splitter.dsn");
-    DsnReadResult result = DsnReader.readBoard(in, null, null);
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
 
-    assertInstanceOf(DsnReadResult.Success.class, result);
-    RoutingBoard board = (RoutingBoard) ((DsnReadResult.Success) result).board();
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
     assertNotNull(board.communication.specctra_parser_info,
         "SpecctraParserInfo must be populated");
   }
@@ -50,16 +51,16 @@ class DsnReaderTest {
   @Test
   void readBoardReturnsParseErrorForGarbage() {
     InputStream in = new ByteArrayInputStream("not a dsn file".getBytes(StandardCharsets.UTF_8));
-    DsnReadResult result = DsnReader.readBoard(in, null, null);
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
 
-    assertInstanceOf(DsnReadResult.ParseError.class, result,
+    assertInstanceOf(BoardReadResult.ParseError.class, result,
         "Garbage input must produce ParseError");
   }
 
   @Test
   void readBoardReturnsParseErrorForNullStream() {
-    DsnReadResult result = DsnReader.readBoard(null, null, null);
-    assertInstanceOf(DsnReadResult.ParseError.class, result);
+    BoardReadResult result = DsnReader.readBoard(null, null, null);
+    assertInstanceOf(BoardReadResult.ParseError.class, result);
   }
 
   // OutlineMissing path — synthetic DSN with no (boundary ...) scope
@@ -78,9 +79,9 @@ class DsnReaderTest {
   @Test
   void readBoardReturnsOutlineMissingWhenBoundaryAbsent() {
     InputStream in = new ByteArrayInputStream(DSN_NO_BOUNDARY.getBytes(StandardCharsets.UTF_8));
-    DsnReadResult result = DsnReader.readBoard(in, null, null);
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
 
-    assertInstanceOf(DsnReadResult.OutlineMissing.class, result,
+    assertInstanceOf(BoardReadResult.OutlineMissing.class, result,
         "A DSN file with no (boundary ...) scope must produce OutlineMissing");
   }
 
@@ -89,9 +90,9 @@ class DsnReaderTest {
   @Test
   void readBoardSucceedsForEmptyBoard() {
     InputStream in = DsnTestFixtures.openResource("empty_board.dsn");
-    DsnReadResult result = DsnReader.readBoard(in, null, null);
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
 
-    assertInstanceOf(DsnReadResult.Success.class, result,
+    assertInstanceOf(BoardReadResult.Success.class, result,
         "empty_board.dsn has a valid boundary and must succeed");
   }
 
@@ -100,15 +101,14 @@ class DsnReaderTest {
   @Test
   void patternSwitchIsExhaustive() {
     InputStream in = new ByteArrayInputStream("not dsn".getBytes(StandardCharsets.UTF_8));
-    DsnReadResult result = DsnReader.readBoard(in, null, null);
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
 
     String label = switch (result) {
-      case DsnReadResult.Success _        -> "success";
-      case DsnReadResult.OutlineMissing _ -> "outline";
-      case DsnReadResult.ParseError _     -> "parse";
-      case DsnReadResult.IoError _        -> "io";
+      case BoardReadResult.Success _        -> "success";
+      case BoardReadResult.OutlineMissing _ -> "outline";
+      case BoardReadResult.ParseError _     -> "parse";
+      case BoardReadResult.IoError _        -> "io";
     };
     assertNotNull(label);
   }
 }
-

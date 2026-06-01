@@ -13,7 +13,7 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
-import app.freerouting.io.specctra.DsnReadResult;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.io.specctra.SesWriter;
@@ -473,17 +473,17 @@ public class HeadlessBoardManager implements BoardManager {
       String inputFilename = (this.routingJob != null && this.routingJob.input != null)
           ? this.routingJob.input.getFilename()
           : null;
-      DsnReadResult dsnResult = DsnReader.readBoard(inputStream, boardObservers, identificationNumberGenerator, inputFilename);
+      BoardReadResult dsnResult = DsnReader.readBoard(inputStream, boardObservers, identificationNumberGenerator, inputFilename);
 
-      if (dsnResult instanceof DsnReadResult.Success success) {
+      if (dsnResult instanceof BoardReadResult.Success success) {
         this.board = (RoutingBoard) success.board();
-      } else if (dsnResult instanceof DsnReadResult.OutlineMissing outlineMissing) {
+      } else if (dsnResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
         this.board = (RoutingBoard) outlineMissing.board();
       } else {
         // ParseError or IoError — no board was constructed
-        if (dsnResult instanceof DsnReadResult.IoError ioError) {
+        if (dsnResult instanceof BoardReadResult.IoError ioError) {
           routingJob.logError("There was an IO error while reading DSN file.", ioError.cause());
-        } else if (dsnResult instanceof DsnReadResult.ParseError parseError) {
+        } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
           routingJob.logError("There was a parse error while reading DSN file at '" + parseError.location() + "': " + parseError.detail(), null);
         }
         return DsnFile.ReadResult.ERROR;
@@ -512,9 +512,9 @@ public class HeadlessBoardManager implements BoardManager {
             this.board.rules.nets.max_net_no());
       }
 
-      return (dsnResult instanceof DsnReadResult.OutlineMissing)
+      return (dsnResult instanceof BoardReadResult.OutlineMissing)
           ? DsnFile.ReadResult.OUTLINE_MISSING
-          : dsnResult instanceof DsnReadResult.Success
+          : dsnResult instanceof BoardReadResult.Success
               ? DsnFile.ReadResult.OK
               : DsnFile.ReadResult.ERROR;
 
@@ -539,16 +539,16 @@ public class HeadlessBoardManager implements BoardManager {
     }
 
     try (java.io.Reader reader = new java.io.InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
-      DsnReadResult dsnResult = KiCadJsonReader.readBoard(reader, boardObservers, identificationNumberGenerator);
+      BoardReadResult dsnResult = KiCadJsonReader.readBoard(reader, boardObservers, identificationNumberGenerator);
 
-      if (dsnResult instanceof DsnReadResult.Success success) {
+      if (dsnResult instanceof BoardReadResult.Success success) {
         this.board = (RoutingBoard) success.board();
-      } else if (dsnResult instanceof DsnReadResult.OutlineMissing outlineMissing) {
+      } else if (dsnResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
         this.board = (RoutingBoard) outlineMissing.board();
       } else {
-        if (dsnResult instanceof DsnReadResult.IoError ioError) {
+        if (dsnResult instanceof BoardReadResult.IoError ioError) {
           routingJob.logError("There was an IO error while reading KiCad JSON file.", ioError.cause());
-        } else if (dsnResult instanceof DsnReadResult.ParseError parseError) {
+        } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
           routingJob.logError("There was a parse error while reading KiCad JSON file at '" + parseError.location() + "': " + parseError.detail(), null);
         }
         return DsnFile.ReadResult.ERROR;
@@ -577,7 +577,7 @@ public class HeadlessBoardManager implements BoardManager {
             this.board.rules.nets.max_net_no());
       }
 
-      return (dsnResult instanceof DsnReadResult.OutlineMissing)
+      return (dsnResult instanceof BoardReadResult.OutlineMissing)
           ? DsnFile.ReadResult.OUTLINE_MISSING
           : DsnFile.ReadResult.OK;
 

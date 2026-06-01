@@ -5,8 +5,8 @@ import app.freerouting.core.*;
 import app.freerouting.core.Package;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.geometry.planar.*;
-import app.freerouting.io.specctra.DsnReadResult;
-import app.freerouting.io.specctra.parser.CoordinateTransform;
+import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.rules.*;
@@ -27,9 +27,9 @@ public final class KiCadJsonReader {
   }
 
   /**
-   * Reads a KiCad JSON structure and returns a fully constructed RoutingBoard wrapped in DsnReadResult.
+   * Reads a KiCad JSON structure and returns a fully constructed RoutingBoard wrapped in BoardReadResult.
    */
-  public static DsnReadResult readBoard(
+  public static BoardReadResult readBoard(
       Reader reader,
       BoardObservers observers,
       IdentificationNumberGenerator idGenerator) {
@@ -37,7 +37,7 @@ public final class KiCadJsonReader {
     long startTime = System.nanoTime();
 
     if (reader == null) {
-      return new DsnReadResult.ParseError("json_root", "Reader must not be null");
+      return new BoardReadResult.ParseError("json_root", "Reader must not be null");
     }
 
     if (observers == null) {
@@ -51,7 +51,7 @@ public final class KiCadJsonReader {
       // 1. Deserialize JSON
       KiCadBoardJson boardJson = GsonProvider.GSON.fromJson(reader, KiCadBoardJson.class);
       if (boardJson == null) {
-        return new DsnReadResult.ParseError("json_root", "JSON payload is empty or invalid");
+        return new BoardReadResult.ParseError("json_root", "JSON payload is empty or invalid");
       }
 
       long parseEndTime = System.nanoTime();
@@ -325,11 +325,11 @@ public final class KiCadJsonReader {
       double durationMs = (endTime - startTime) / 1_000_000.0;
       FRLogger.info(String.format("KiCad JSON Loader performance: built RoutingBoard in %.2f ms (parsing + structure mapping)", durationMs));
 
-      return new DsnReadResult.Success(board, null, new ArrayList<>());
+      return new BoardReadResult.Success(board, null, new ArrayList<>());
 
     } catch (Throwable e) {
       FRLogger.warn("Failed to parse and read KiCad JSON board: " + e.getMessage());
-      return new DsnReadResult.ParseError("json_payload", "Exception occurred: " + e.getMessage());
+      return new BoardReadResult.ParseError("json_payload", "Exception occurred: " + e.getMessage());
     }
   }
 

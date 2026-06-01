@@ -6,6 +6,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.PolygonShape;
+import app.freerouting.io.CoordinateTransform;
 import java.io.IOException;
 
 /**

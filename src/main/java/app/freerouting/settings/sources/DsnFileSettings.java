@@ -1,6 +1,6 @@
 package app.freerouting.settings.sources;
 
-import app.freerouting.io.specctra.DsnReadResult;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
@@ -27,12 +27,12 @@ public class DsnFileSettings implements SettingsSource {
      */
     public DsnFileSettings(InputStream inputStream, String filename) {
         this.filename = filename;
-        DsnReadResult result = DsnReader.readMetadata(inputStream);
+        BoardReadResult result = DsnReader.readMetadata(inputStream);
 
         RouterSettings extracted = null;
         int layerCount = 0;
 
-        if (result instanceof DsnReadResult.Success s && s.metadata() != null) {
+        if (result instanceof BoardReadResult.Success s && s.metadata() != null) {
             extracted = s.metadata().routerSettings(); // null when no (autoroute_settings …) block
             layerCount = s.metadata().layerCount();
         }

@@ -547,6 +547,76 @@ public class JobControllerV1 extends BaseController {
   }
 
   /**
+   * Upload the input of the job in KiCad JSON format. The JSON payload is sent as the
+   * raw request body (not Base64-encoded), which is more efficient for the IPC bridge
+   * workflow where the Python plugin serializes the KiCad board directly to JSON.
+   */
+  @Operation(summary = "Upload job input in KiCad JSON format", description = "Uploads the input PCB design file in KiCad JSON format. The JSON is sent as the raw request body (not Base64-encoded). "
+      + "This endpoint is optimized for the KiCad IPC bridge workflow.")
+  @RequestBody(description = "KiCad JSON board data (raw JSON, not Base64-encoded)", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON))
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "JSON input uploaded successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
+      @ApiResponse(responseCode = "404", description = "Job not found"),
+      @ApiResponse(responseCode = "400", description = "Invalid JSON data or job already started")
+  })
+  @POST
+  @Path("/{jobId}/input/json")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response uploadInputJson(
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId,
+      String jsonBody) {
+    UUID userId = AuthenticateUser();
+
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
+    if (job == null) {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
+    if (session == null) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
+          .build();
+    }
+
+    if (job.state != RoutingJobState.QUEUED) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"The job is already started and cannot be changed.\"}")
+          .build();
+    }
+
+    if (jsonBody == null || jsonBody.isBlank()) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"The JSON input data must not be empty.\"}")
+          .build();
+    }
+
+    // Store the raw JSON bytes as the input, marking format as JSON
+    byte[] jsonBytes = jsonBody.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+    if (!job.setInput(jsonBytes)) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"The JSON input data is invalid.\"}")
+          .build();
+    }
+
+    // Force the format to JSON (setInput may auto-detect, but be explicit)
+    job.input.format = FileFormat.JSON;
+    if (job.input.getFilename().isEmpty()) {
+      job.input.setFilename(job.name);
+    }
+
+    var routerSettings = new RouterSettings();
+    routerSettings.setLayerCount(job.input.statistics.layers.totalCount);
+    job.setSettings(routerSettings);
+
+    var request = TextManager.shortenString(jsonBody, 200);
+    var response = GSON.toJson(job);
+    FRAnalytics.apiEndpointCalled("POST v1/jobs/" + jobId + "/input/json", request, response, userId);
+    return Response.ok(response).build();
+  }
+
+  /**
    * Downloads the output file of a routing job in Specctra SES format.
    * <ul>
    *   <li><b>200 OK</b> — job is {@code COMPLETED}; returns the final SES output.</li>
@@ -660,6 +730,110 @@ public class JobControllerV1 extends BaseController {
   }
 
   /**
+   * Downloads the output file of a routing job in KiCad JSON format.
+   * <ul>
+   *   <li><b>200 OK</b> — job is {@code COMPLETED}; returns the final JSON output.</li>
+   *   <li><b>202 Accepted</b> — job is {@code RUNNING}, {@code PAUSED}, or {@code STOPPING};
+   *       returns the partial JSON output generated so far.</li>
+   *   <li><b>204 No Content</b> — job is in progress but no output bytes are available yet.</li>
+   *   <li><b>400 Bad Request</b> — job output is not in JSON format, or is in a terminal error state.</li>
+   * </ul>
+   * <p>Unlike the SES output endpoint, the JSON output is returned as raw JSON (not Base64-encoded),
+   * making it directly usable by the KiCad IPC bridge.</p>
+   */
+  @Operation(summary = "Download job output in KiCad JSON format", description = "Downloads the output of a routing job in KiCad JSON format. "
+      + "The JSON is returned as raw JSON (not Base64-encoded), optimized for the KiCad IPC bridge. "
+      + "If the job was submitted with JSON input, the output will also be in JSON format.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "JSON output downloaded successfully (job completed)", content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+      @ApiResponse(responseCode = "202", description = "Partial JSON output returned (job still in progress)", content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+      @ApiResponse(responseCode = "204", description = "Job is in progress but no output data is available yet"),
+      @ApiResponse(responseCode = "404", description = "Job not found"),
+      @ApiResponse(responseCode = "400", description = "Job output is not in JSON format, or job failed/was cancelled")
+  })
+  @GET
+  @Path("/{jobId}/output/json")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response downloadOutputJson(
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId) {
+    UUID userId = AuthenticateUser();
+
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
+    if (job == null) {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
+    if (session == null) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity(GSON.toJson(java.util.Map.of("error", "The session ID '" + job.sessionId + "' is invalid.")))
+          .build();
+    }
+
+    // Reject terminal error states
+    if (job.state == RoutingJobState.TERMINATED
+        || job.state == RoutingJobState.CANCELLED
+        || job.state == RoutingJobState.TIMED_OUT
+        || job.state == RoutingJobState.INVALID) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity(GSON.toJson(java.util.Map.of("error", "The job is in state '" + job.state + "' and has no valid output.")))
+          .build();
+    }
+
+    boolean isInProgress = job.state == RoutingJobState.RUNNING
+        || job.state == RoutingJobState.PAUSED
+        || job.state == RoutingJobState.STOPPING;
+
+    if (job.output == null || job.output.getData() == null) {
+      if (isInProgress) {
+        return Response.status(Response.Status.NO_CONTENT).build();
+      }
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity(GSON.toJson(java.util.Map.of("error", "The job hasn't started yet.")))
+          .build();
+    }
+
+    // If the output is not JSON format, attempt to generate JSON from the board
+    if (job.output.format != FileFormat.JSON) {
+      // If we have a board loaded, we can generate JSON on the fly
+      if (job.board != null) {
+        try {
+          String jsonStr = app.freerouting.io.kicad.KiCadJsonWriter.write(job.board, job.name);
+          FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output/json", "", "json-generated-from-board", userId);
+          if (isInProgress) {
+            return Response.accepted(jsonStr).build();
+          }
+          return Response.ok(jsonStr).build();
+        } catch (Exception e) {
+          FRLogger.error("Couldn't generate JSON output from board", e);
+          return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+              .entity(GSON.toJson(java.util.Map.of("error", "Failed to generate JSON output: " + e.getMessage())))
+              .build();
+        }
+      }
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity(GSON.toJson(java.util.Map.of("error", "The job output is not in JSON format (format: " + job.output.format + "). Use /v1/jobs/{jobId}/output for SES format.")))
+          .build();
+    }
+
+    // Output is JSON — return it as raw JSON (not Base64-encoded)
+    try {
+      byte[] outputBytes = job.output.getData().readAllBytes();
+      String jsonOutput = new String(outputBytes, java.nio.charset.StandardCharsets.UTF_8);
+      FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output/json", "", TextManager.shortenString(jsonOutput, 200), userId);
+      if (isInProgress) {
+        return Response.accepted(jsonOutput).build();
+      }
+      return Response.ok(jsonOutput).build();
+    } catch (Exception e) {
+      FRLogger.error("Couldn't read JSON output data", e);
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+          .entity(GSON.toJson(java.util.Map.of("error", "Failed to read JSON output: " + e.getMessage())))
+          .build();
+    }
+  }
+
+  /**
    * Streams the job output file in real-time using Server-Sent Events (SSE).
    * <p>
    * A new SSE event is pushed every ~200 ms when the output CRC32 checksum changes.
@@ -755,6 +929,88 @@ public class JobControllerV1 extends BaseController {
 
     // Log the API call
     FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output/stream", "", "stream-started", userId);
+  }
+
+  /**
+   * Streams the job output in KiCad JSON format in real-time using Server-Sent Events (SSE).
+   * <p>
+   * A new SSE event is pushed every ~500 ms when the board state changes (detected via CRC32).
+   * Each event payload is raw KiCad JSON (not Base64-encoded), making it directly consumable
+   * by the KiCad IPC bridge. The stream is closed automatically when the job transitions
+   * to {@code COMPLETED} or {@code CANCELLED}.
+   * </p>
+   */
+  @Operation(summary = "Stream job JSON output in real-time", description = "Streams the KiCad JSON output of a routing job in real-time using Server-Sent Events (SSE). "
+      + "Each event contains raw JSON (not Base64-encoded), optimized for the KiCad IPC bridge. "
+      + "Updates are sent every 500ms when the board state changes.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "SSE stream established", content = @Content(mediaType = MediaType.SERVER_SENT_EVENTS))
+  })
+  @GET
+  @Path("/{jobId}/output/json/stream")
+  @Produces(MediaType.SERVER_SENT_EVENTS)
+  public void streamOutputJson(
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId,
+      @Context SseEventSink eventSink,
+      @Context Sse sse) {
+    UUID userId = AuthenticateUser();
+
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
+    if (job == null || SessionManager.getInstance().getSession(job.sessionId.toString(), userId) == null) {
+      try {
+        eventSink.close();
+      } catch (Exception e) {
+        FRLogger.error("Error closing SSE event sink", e);
+      }
+      return;
+    }
+
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    java.util.concurrent.atomic.AtomicLong previousChecksum = new java.util.concurrent.atomic.AtomicLong(-1);
+
+    executor.scheduleAtFixedRate(() -> {
+      try {
+        if (job.board != null) {
+          // Generate JSON from the current board state
+          String jsonStr = app.freerouting.io.kicad.KiCadJsonWriter.write(job.board, job.name);
+          java.util.zip.CRC32 crc = new java.util.zip.CRC32();
+          crc.update(jsonStr.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+          long crcValue = crc.getValue();
+
+          if (crcValue != previousChecksum.get()) {
+            previousChecksum.set(crcValue);
+            OutboundSseEvent event = sse
+                .newEventBuilder()
+                .id(String.valueOf(System.currentTimeMillis()))
+                .name("json-output")
+                .data(jsonStr)
+                .mediaType(MediaType.APPLICATION_JSON_TYPE)
+                .build();
+            eventSink.send(event);
+          }
+        }
+
+        // Close the connection if the job is completed or cancelled
+        if (job.state == RoutingJobState.COMPLETED || job.state == RoutingJobState.CANCELLED) {
+          try {
+            eventSink.close();
+          } catch (Exception ex) {
+            FRLogger.error("Error closing SSE event sink", ex);
+          }
+          executor.shutdown();
+        }
+      } catch (Exception e) {
+        FRLogger.error("Error while streaming JSON output", e);
+        try {
+          eventSink.close();
+        } catch (Exception ex) {
+          FRLogger.error("Error closing SSE event sink", ex);
+        }
+        executor.shutdown();
+      }
+    }, 0, 500, TimeUnit.MILLISECONDS);
+
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output/json/stream", "", "json-stream-started", userId);
   }
 
   @Operation(summary = "Get job logs", description = "Retrieves all log entries associated with a specific routing job.")
@@ -934,10 +1190,14 @@ public class JobControllerV1 extends BaseController {
     // Check if the job has a board loaded, and load it if needed
     if (!BoardLoader.loadBoardIfNeeded(job)) {
       // Try to load the board if input is available
-      if (job.input != null && job.input.format == FileFormat.DSN) {
+      if (job.input != null) {
         try {
           HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-          boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
+          if (job.input.format == FileFormat.JSON) {
+            boardManager.loadFromKiCadJson(job.input.getData(), null, new ItemIdentificationNumberGenerator());
+          } else {
+            boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
+          }
           job.board = boardManager.get_routing_board();
         } catch (Exception e) {
           FRLogger.error("Couldn't load the board for DRC check", e);
