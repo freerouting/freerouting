@@ -170,6 +170,20 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   public static FileFormat getFileFormat(byte[] content) {
+    if (content == null) {
+      return FileFormat.UNKNOWN;
+    }
+    // First, check if it's a JSON file (the first non-whitespace character is '{')
+    for (byte b : content) {
+      if (b == ' ' || b == '\t' || b == '\r' || b == '\n') {
+        continue;
+      }
+      if (b == '{') {
+        return FileFormat.JSON;
+      }
+      break;
+    }
+
     // Open the file as a binary file and read the first 6 bytes to determine the
     // file format
     try (InputStream fileInputStream = new ByteArrayInputStream(content)) {
@@ -227,6 +241,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         case BINARY_FILE_EXTENSION -> FileFormat.FRB;
         case "ses" -> FileFormat.SES;
         case "scr" -> FileFormat.SCR;
+        case "json" -> FileFormat.JSON;
         default -> FileFormat.UNKNOWN;
       };
     }

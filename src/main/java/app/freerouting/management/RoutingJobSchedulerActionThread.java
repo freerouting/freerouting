@@ -106,7 +106,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       router.addBoardUpdatedEventListener(new BoardUpdatedEventListener() {
         @Override
         public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-          setJobOutputToSpecctraSes(job);
+          setJobOutput(job);
         }
       });
 
@@ -163,7 +163,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         job.routerSettings.maxPasses = 0;
         BatchAutorouter batchRouter = new BatchAutorouter(job);
         batchRouter.runBatchLoop();
-        setJobOutputToSpecctraSes(job);
+        setJobOutput(job);
       } finally {
         job.routerSettings.maxPasses = originalMaxPasses;
       }
@@ -177,7 +177,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       optimizer.addBoardUpdatedEventListener(new BoardUpdatedEventListener() {
         @Override
         public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-          setJobOutputToSpecctraSes(job);
+          setJobOutput(job);
         }
       });
       optimizer.runBatchLoop();
@@ -247,16 +247,28 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     }
   }
 
-  private void setJobOutputToSpecctraSes(RoutingJob job) {
+  private void setJobOutput(RoutingJob job) {
     if (job.output == null) {
       job.output = new BoardFileDetails(job.board);
       job.output.addUpdatedEventListener(_ -> job.fireOutputUpdatedEvent());
-      job.output.format = FileFormat.SES;
-      job.output.setFilename(job.input.getFilenameWithoutExtension() + ".ses");
+      if (job.input != null && job.input.format == FileFormat.JSON) {
+        job.output.format = FileFormat.JSON;
+        job.output.setFilename(job.input.getFilenameWithoutExtension() + ".json");
+      } else {
+        job.output.format = FileFormat.SES;
+        job.output.setFilename(job.input.getFilenameWithoutExtension() + ".ses");
+      }
     }
 
-    // save the result to the output field as a Specctra SES file
-    if (job.output.format == FileFormat.SES) {
+    // save the result to the output field
+    if (job.output.format == FileFormat.JSON) {
+      try {
+        String jsonStr = app.freerouting.io.kicad.KiCadJsonWriter.write(job.board, job.name);
+        job.output.setData(jsonStr.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+      } catch (Exception e) {
+        FRLogger.error("Couldn't save the JSON output into the job object.", e);
+      }
+    } else if (job.output.format == FileFormat.SES) {
       HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
       boardManager.replaceRoutingBoard(job.board);
 
@@ -266,7 +278,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           job.output.setData(baos.toByteArray());
         }
       } catch (Exception e) {
-        FRLogger.error("Couldn't save the output into the job object.", e);
+        FRLogger.error("Couldn't save the SES output into the job object.", e);
       }
     }
   }

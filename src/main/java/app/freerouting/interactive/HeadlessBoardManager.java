@@ -18,6 +18,7 @@ import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.io.specctra.parser.DsnFile;
+import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -513,10 +514,75 @@ public class HeadlessBoardManager implements BoardManager {
 
       return (dsnResult instanceof DsnReadResult.OutlineMissing)
           ? DsnFile.ReadResult.OUTLINE_MISSING
-          : DsnFile.ReadResult.OK;
+          : dsnResult instanceof DsnReadResult.Success
+              ? DsnFile.ReadResult.OK
+              : DsnFile.ReadResult.ERROR;
 
     } catch (Exception e) {
       routingJob.logError("There was an error while reading DSN file.", e);
+      return DsnFile.ReadResult.ERROR;
+    }
+  }
+
+  /**
+   * Loads a board design from a KiCad JSON format file/stream.
+   *
+   * @param inputStream the input stream containing KiCad JSON data (will be closed after reading)
+   * @param boardObservers optional observers for board item changes (can be null)
+   * @param identificationNumberGenerator optional ID generator for board items (can be null)
+   * @return the read result indicating success, warnings, or errors
+   */
+  public DsnFile.ReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
+      IdentificationNumberGenerator identificationNumberGenerator) {
+    if (inputStream == null) {
+      return DsnFile.ReadResult.ERROR;
+    }
+
+    try (java.io.Reader reader = new java.io.InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
+      DsnReadResult dsnResult = KiCadJsonReader.readBoard(reader, boardObservers, identificationNumberGenerator);
+
+      if (dsnResult instanceof DsnReadResult.Success success) {
+        this.board = (RoutingBoard) success.board();
+      } else if (dsnResult instanceof DsnReadResult.OutlineMissing outlineMissing) {
+        this.board = (RoutingBoard) outlineMissing.board();
+      } else {
+        if (dsnResult instanceof DsnReadResult.IoError ioError) {
+          routingJob.logError("There was an IO error while reading KiCad JSON file.", ioError.cause());
+        } else if (dsnResult instanceof DsnReadResult.ParseError parseError) {
+          routingJob.logError("There was a parse error while reading KiCad JSON file at '" + parseError.location() + "': " + parseError.detail(), null);
+        }
+        return DsnFile.ReadResult.ERROR;
+      }
+
+      // Apply board-specific optimisations to RouterSettings after board is loaded
+      if (this.board != null && this.routingJob != null) {
+        int boardLayerCount = this.board.get_layer_count();
+        if (this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
+          this.routingJob.routerSettings.setLayerCount(boardLayerCount);
+        }
+        this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
+        applyCopperToEdgeClearanceOverride();
+      }
+
+      if (this.board != null) {
+        var boardStats = new BoardStatistics(this.board);
+        FRAnalytics.fileLoaded("KICAD_JSON", GSON.toJson(boardStats));
+        this.board.reduce_nets_of_route_items();
+        originalBoardChecksum = calculateCrc32();
+        FRAnalytics.boardLoaded(
+            this.board.communication.specctra_parser_info.host_cad,
+            this.board.communication.specctra_parser_info.host_version,
+            this.board.get_layer_count(),
+            this.board.components.count(),
+            this.board.rules.nets.max_net_no());
+      }
+
+      return (dsnResult instanceof DsnReadResult.OutlineMissing)
+          ? DsnFile.ReadResult.OUTLINE_MISSING
+          : DsnFile.ReadResult.OK;
+
+    } catch (Exception e) {
+      routingJob.logError("There was an error while reading KiCad JSON file.", e);
       return DsnFile.ReadResult.ERROR;
     }
   }

@@ -62,6 +62,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class BoardFrame extends WindowBase {
 
+  public static volatile BoardFrame activeFrame = null;
+
   /**
    * The windows above stored in an array
    */
@@ -73,7 +75,7 @@ public class BoardFrame extends WindowBase {
   /**
    * The current routing job (design) being edited.
    */
-  public final RoutingJob routingJob;
+  public RoutingJob routingJob;
   /**
    * The menubar of this frame.
    */
@@ -159,6 +161,7 @@ public class BoardFrame extends WindowBase {
    */
   BoardFrame(RoutingJob routingJob, BoardObservers boardObservers, GlobalSettings globalSettings, SettingsMerger settingsMerger) {
     super(800, 150);
+    activeFrame = this;
 
     this.routingJob = routingJob;
     this.settingsMerger = settingsMerger;
@@ -371,6 +374,39 @@ public class BoardFrame extends WindowBase {
 
     this.updateTexts();
     this.pack();
+  }
+
+  /**
+   * Loads a RoutingBoard natively (e.g. from an API session) without file transfer overhead,
+   * rendering it instantly in the GUI for real-time monitoring.
+   */
+  public void loadBoardNatively(RoutingBoard board, RoutingJob job) {
+    if (board == null) return;
+    this.routingJob = job;
+    board_panel.reset_board_handling(job);
+    board_panel.board_handling.replaceRoutingBoard(board);
+
+    // Close other child windows
+    for (int i = 0; i < this.permanent_subwindows.length; i++) {
+      if (this.permanent_subwindows[i] != null) {
+        this.permanent_subwindows[i].dispose();
+        this.permanent_subwindows[i] = null;
+      }
+    }
+
+    // Initialize standard state
+    int boardLayerCount = board.get_layer_count();
+    this.routingJob.routerSettings.setLayerCount(boardLayerCount);
+    this.routingJob.routerSettings.applyBoardSpecificOptimizations(board);
+
+    if (this.settingsMerger != null) {
+      this.routingJob.setSettings(this.settingsMerger.merge());
+    }
+
+    initialize_windows();
+    this.boardLoadedEventListeners.forEach(listener -> listener.accept(board));
+    this.refresh_windows();
+    this.repaint();
   }
 
   @Override

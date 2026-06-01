@@ -4,7 +4,6 @@ import static app.freerouting.management.gson.GsonProvider.GSON;
 
 import app.freerouting.api.BaseController;
 import app.freerouting.api.dto.BoardFilePayload;
-import app.freerouting.board.BoardLoader;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -13,6 +12,7 @@ import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.BoardLoader;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
