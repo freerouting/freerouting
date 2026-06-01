@@ -1,0 +1,194 @@
+# ---------------------------------------------------------------------------
+# test-kicad-plugin.yml — CI workflow for KiCad Freerouting plugin tests
+# ---------------------------------------------------------------------------
+# This workflow:
+#   1. Checks if KiCad 10+ is installed (via apt on Ubuntu)
+#   2. Starts KiCad's pcbnew inside Xvfb (virtual display)
+#   3. Loads a test fixture board
+#   4. Runs the plugin's IPC helpers
+#   5. Verifies results
+#   6. Passes or fails based on test outcomes
+#
+# The approach is based on:
+#   https://adamws.github.io/using-the-new-kicad-ipc-api-in-a-ci-environment/
+# ---------------------------------------------------------------------------
+
+name: Test KiCad Plugin
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - 'integrations/KiCad/**'
+      - '.github/workflows/test-kicad-plugin.yml'
+  pull_request:
+    paths:
+      - 'integrations/KiCad/**'
+      - '.github/workflows/test-kicad-plugin.yml'
+  workflow_dispatch:
+
+jobs:
+  # ------------------------------------------------------------------
+  # Job 1: Unit tests (no KiCad required)
+  # ------------------------------------------------------------------
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run unit tests
+        run: |
+          cd integrations/KiCad/kicad-freerouting
+          python -m pytest tests/ -v -m "not integration" --timeout=30
+
+  # ------------------------------------------------------------------
+  # Job 2: Integration tests (requires KiCad 10+)
+  # ------------------------------------------------------------------
+  integration-tests:
+    name: Integration Tests (KiCad ${{ matrix.kicad-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        kicad-version: ["10.0"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Xvfb and dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq \
+            xvfb \
+            libegl1 \
+            libgl1-mesa-glx \
+            libxkbcommon0 \
+            libxcb-xinerama0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-shape0 \
+            libdbus-1-3 \
+            libxcb-xfixes0
+
+      - name: Install KiCad ${{ matrix.kicad-version }}
+        run: |
+          # Add KiCad PPA for Ubuntu
+          sudo add-apt-repository -y ppa:kicad/kicad-${{ matrix.kicad-version }}-releases
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq kicad
+
+          # Verify installation
+          pcbnew --version || true
+          which pcbnew
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python test dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pytest pytest-timeout kicad-python PyVirtualDisplay protobuf pynng
+
+      - name: Run integration tests
+        env:
+          RUN_INTEGRATION_TESTS: "1"
+          KICAD_PCBNEW: "pcbnew"
+          KICAD_VERSION: "${{ matrix.kicad-version }}"
+          # Prevent KiCad from showing dialogs
+          KICAD_CONFIG_HOME: "/tmp/kicad-config"
+        run: |
+          cd integrations/KiCad/kicad-freerouting
+
+          # Run all tests including integration markers
+          python -m pytest tests/ -v --timeout=120 2>&1 | tee test-results.log
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-kicad-${{ matrix.kicad-version }}
+          path: integrations/KiCad/kicad-freerouting/tests/test-results.log
+          retention-days: 7
+
+  # ------------------------------------------------------------------
+  # Job 3: Plugin structure validation
+  # ------------------------------------------------------------------
+  structure-check:
+    name: Plugin Structure Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate all plugin modules compile
+        run: |
+          python -c "
+          import py_compile
+          from pathlib import Path
+
+          plugins_dir = Path('integrations/KiCad/kicad-freerouting/plugins')
+          files = sorted(plugins_dir.glob('*.py'))
+
+          for f in files:
+              try:
+                  py_compile.compile(str(f), doraise=True)
+                  print(f'  OK: {f.name}')
+              except py_compile.PyCompileError as e:
+                  print(f'  FAIL: {f.name}: {e}')
+                  raise
+
+          print(f'\nAll {len(files)} modules pass syntax check.')
+          "
+
+      - name: Check plugin.ini exists
+        run: |
+          test -f integrations/KiCad/kicad-freerouting/plugins/plugin.ini
+          echo "plugin.ini found"
+
+      - name: Verify module structure
+        run: |
+          python -c "
+          from pathlib import Path
+
+          plugins_dir = Path('integrations/KiCad/kicad-freerouting/plugins')
+          expected = [
+              '__init__.py', 'plugin.py', 'config.py', 'gui_helpers.py',
+              'java_utils.py', 'ipc_helpers.py', 'api_client.py',
+              'process_utils.py', 'router_dsn.py', 'router_ipc.py',
+          ]
+
+          missing = []
+          for name in expected:
+              if not (plugins_dir / name).is_file():
+                  missing.append(name)
+
+          if missing:
+              print(f'Missing modules: {missing}')
+              exit(1)
+
+          print(f'All {len(expected)} expected modules present.')
+          "
