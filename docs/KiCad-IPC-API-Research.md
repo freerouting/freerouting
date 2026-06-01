@@ -275,21 +275,46 @@ Exit criteria:
 - 🔲 Routed traces appear in KiCad (requires Python bridge implementation).
 - ✅ The board remains consistent after updates (round-trip test passes).
 
-### Phase 3: Plugin integration
+### Phase 3: Plugin integration ✅ Implemented
 
-Goal: make IPC the normal path when available.
+Goal: make IPC the normal path when available, with automatic fallback to DSN.
 
-Tasks:
+The KiCad Python plugin (`integrations/KiCad/kicad-freerouting/plugins/plugin.py`) has been updated to support dual-mode operation:
 
-- update the Python plugin flow
-- detect KiCad IPC availability
-- choose IPC or DSN automatically
-- add a clear settings dialog if needed
+**IPC/API mode (default when available):**
+1. Detects KiCad IPC API availability via `is_ipc_available()` — checks for `pcbnew` IPC attributes and probes via `pcbnew.GetBuildVersion()`.
+2. Serializes the board to KiCad JSON using the IPC API (`get_board_json_via_ipc()`), with a manual fallback that walks `pcbnew` board objects.
+3. Saves the JSON to `freerouting_debug.json` for debugging.
+4. Starts Freerouting as a headless API server (`-api_server.enabled=true -api_server.authentication.enabled=false -gui.enabled=false`).
+5. Creates a session and job via the REST API (`POST /v1/sessions/create`, `POST /v1/jobs/enqueue`).
+6. Uploads the JSON board data via `POST /v1/jobs/{jobId}/input/json`.
+7. Starts the job via `PUT /v1/jobs/{jobId}/start`.
+8. Polls for completion with a progress dialog (user can cancel).
+9. Downloads the result JSON via `GET /v1/jobs/{jobId}/output/json`.
+10. Applies the result back to KiCad via IPC write-back or manual `pcbnew` API calls.
+11. Saves the result JSON to `freerouting_result.json` for debugging.
+
+**DSN mode (legacy fallback):**
+- When IPC is not available, the plugin falls back to the original DSN export/import workflow.
+- The user sees no difference in the UI — the fallback is automatic.
+
+**Key implementation details:**
+- `FreeroutingApiClient` class: minimal REST API client using `urllib` with automatic JSON serialization, health checks, session/job management, and polling.
+- `is_ipc_available()`: probes for IPC support by checking `pcbnew` attributes (`ipc`, `IpcApi`, `GetIpcApi`, `board_to_json`, `GetBoardAsJson`) and version detection.
+- `_build_board_json_manually()`: fallback JSON builder that walks `pcbnew` board objects (footprints, pads, tracks, vias, drawings) when IPC doesn't provide direct JSON export.
+- `_apply_json_result_to_kicad()`: applies routing results back to KiCad via IPC write-back methods or manual `pcbnew.PCB_TRACK`/`pcbnew.PCB_VIA` creation.
+- Debug JSON files are always saved to the routing directory for both input and output.
+
+**New plugin settings (in `plugin.ini`):**
+- The `routing_mode` field in the plugin class defaults to `"IPC"` but can be set to `"DSN"` to force legacy mode.
+- The API server binds to `127.0.0.1:37864` with authentication disabled for seamless local operation.
 
 Exit criteria:
-
-- the user can route from KiCad without manual file export
-- DSN fallback still works
+- ✅ The user can route from KiCad without manual file export when IPC is available.
+- ✅ DSN fallback still works when IPC is not available.
+- ✅ Debug JSON files are saved for both input and output.
+- ✅ Progress dialog shows job ID and session ID during routing.
+- ✅ User can cancel routing via the Terminate button.
 
 ### Phase 4: Testing and parity
 

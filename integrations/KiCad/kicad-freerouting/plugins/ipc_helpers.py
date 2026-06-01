@@ -1,0 +1,296 @@
+# ---------------------------------------------------------------------------
+# ipc_helpers.py — KiCad IPC API detection and board serialization
+# ---------------------------------------------------------------------------
+# This module handles communication with KiCad's IPC API (available in
+# KiCad 9+).  It provides:
+#   * ``is_ipc_available()`` — probes for IPC support at runtime.
+#   * ``get_board_json_via_ipc()`` — serializes the current board to JSON.
+#   * ``_build_board_json_manually()`` — fallback that walks pcbnew objects.
+# ---------------------------------------------------------------------------
+
+import json
+from pathlib import Path
+
+import pcbnew
+
+from .config import (
+    IPC_JSON_EXPORT_METHODS,
+    IPC_MIN_KICAD_MAJOR,
+    IPC_PROBE_ATTRIBUTES,
+)
+
+
+def is_ipc_available():
+    """Check whether the running KiCad instance exposes the IPC API.
+
+    The IPC API is available in KiCad 9+ when the IPC server is enabled.
+    We detect it by:
+      1. Looking for known IPC-related attributes on the ``pcbnew`` module.
+      2. Checking the build version for KiCad >= 9.
+      3. Probing for a JSON-export method as a last resort.
+
+    Returns:
+        ``True`` if IPC is available, ``False`` otherwise.
+    """
+    # 1. Check for known IPC attributes
+    for attr in IPC_PROBE_ATTRIBUTES:
+        if hasattr(pcbnew, attr):
+            print(f"KiCad IPC API detected (pcbnew.{attr} is available).")
+            return True
+
+    # 2. Check version
+    try:
+        version_str = str(pcbnew.GetBuildVersion()).strip()
+        major = int(version_str.split(".")[0])
+        if major >= IPC_MIN_KICAD_MAJOR:
+            print(f"KiCad {version_str} detected — probing for IPC...")
+            return _probe_ipc_via_json_export()
+    except Exception:
+        pass
+
+    print("KiCad IPC API is not available.")
+    return False
+
+
+def _probe_ipc_via_json_export():
+    """Try calling a JSON-export method on the current board as a probe.
+
+    Returns:
+        ``True`` if any export method succeeds, ``False`` otherwise.
+    """
+    try:
+        board = pcbnew.GetBoard()
+        if board is None:
+            return False
+        for method_name in IPC_JSON_EXPORT_METHODS:
+            if hasattr(pcbnew, method_name):
+                result = getattr(pcbnew, method_name)(board)
+                if result is not None:
+                    print(f"IPC probe succeeded via pcbnew.{method_name}().")
+                    return True
+    except Exception as e:
+        print(f"IPC probe failed: {e}")
+    return False
+
+
+def get_board_json_via_ipc():
+    """Serialize the current board to KiCad JSON using the IPC API.
+
+    First tries the native IPC JSON-export methods.  If none are
+    available, falls back to ``_build_board_json_manually()``.
+
+    Returns:
+        JSON string conforming to the ``KiCadBoardJson`` schema.
+
+    Raises:
+        RuntimeError: if no board is loaded in KiCad.
+    """
+    board = pcbnew.GetBoard()
+    if board is None:
+        raise RuntimeError("No board loaded in KiCad.")
+
+    # Try native IPC JSON export methods
+    for method_name in IPC_JSON_EXPORT_METHODS:
+        if hasattr(pcbnew, method_name):
+            try:
+                result = getattr(pcbnew, method_name)(board)
+                if isinstance(result, str) and result.strip():
+                    return result
+                elif isinstance(result, (dict, list)):
+                    return json.dumps(result)
+            except Exception as e:
+                print(f"pcbnew.{method_name}() failed: {e}")
+                continue
+
+    # Fallback: manually walk pcbnew objects
+    print("Falling back to manual board JSON serialization.")
+    return _build_board_json_manually(board)
+
+
+def _build_board_json_manually(board):
+    """Build a KiCadBoardJson-compatible dict by walking pcbnew objects.
+
+    This is a best-effort fallback when the IPC API doesn't provide a
+    direct JSON export.  It iterates over footprints, tracks, and
+    drawings to reconstruct the board data.
+
+    Args:
+        board: The ``pcbnew.BOARD`` object to serialize.
+
+    Returns:
+        Pretty-printed JSON string.
+    """
+    data = {
+        "designName": Path(board.GetFileName()).stem if board.GetFileName() else "Untitled",
+        "unit": "MM",
+        "resolution": 1.0,
+        "layers": [],
+        "netClasses": [],
+        "nets": [],
+        "clearanceRules": [],
+        "components": [],
+        "outline": {"corners": [], "clearance": 0.5},
+        "traces": [],
+        "vias": [],
+        "conductionAreas": [],
+    }
+
+    _collect_layers(board, data)
+    _collect_nets(board, data)
+    _collect_components(board, data)
+    _collect_traces(board, data)
+    _collect_vias(board, data)
+    _collect_outline(board, data)
+
+    return json.dumps(data, indent=2)
+
+
+def _collect_layers(board, data):
+    """Populate ``data["layers"]`` from the board's layer structure."""
+    try:
+        for i in range(board.GetCopperLayerCount()):
+            data["layers"].append({
+                "index": i,
+                "name": board.GetLayerName(i),
+                "type": "signal",
+            })
+    except Exception as e:
+        print(f"Warning: could not enumerate layers: {e}")
+
+
+def _collect_nets(board, data):
+    """Populate ``data["nets"]`` from the board's track items."""
+    try:
+        net_codes = {}
+        net_id = 1
+        for item in board.GetTracks():
+            net = item.GetNet()
+            if net and net.GetNetCode() not in net_codes:
+                net_codes[net.GetNetCode()] = {
+                    "id": net_id,
+                    "name": net.GetNetname() or f"Net-{net.GetNetCode()}",
+                    "className": "default",
+                    "containsPlane": False,
+                }
+                net_id += 1
+        data["nets"] = list(net_codes.values())
+    except Exception as e:
+        print(f"Warning: could not enumerate nets: {e}")
+
+
+def _collect_components(board, data):
+    """Populate ``data["components"]`` and their pads."""
+    try:
+        for fp in board.GetFootprints():
+            pos = fp.GetPosition()
+            component = {
+                "reference": fp.GetReference() or "?",
+                "value": fp.GetValue() or "",
+                "footprint": fp.GetFPID().GetLibItemName() if fp.GetFPID() else "",
+                "position": {"x": pos.x / 1e6, "y": pos.y / 1e6},
+                "rotation": (
+                    fp.GetOrientationDegrees()
+                    if hasattr(fp, "GetOrientationDegrees")
+                    else 0.0
+                ),
+                "layer": "F.Cu" if fp.GetLayer() == 0 else "B.Cu",
+                "pads": [],
+            }
+            for pad in fp.Pads():
+                pad_net = pad.GetNet()
+                pad_pos = pad.GetPosition()
+                pad_size = pad.GetSize()
+                component["pads"].append({
+                    "name": pad.GetPadName() or "?",
+                    "netName": pad_net.GetNetname() if pad_net else "",
+                    "shape": "rect",
+                    "size": {"x": pad_size.x / 1e6, "y": pad_size.y / 1e6},
+                    "offset": {
+                        "x": (pad_pos.x - pos.x) / 1e6,
+                        "y": (pad_pos.y - pos.y) / 1e6,
+                    },
+                    "layers": [],
+                })
+            data["components"].append(component)
+    except Exception as e:
+        print(f"Warning: could not enumerate components: {e}")
+
+
+def _collect_traces(board, data):
+    """Populate ``data["traces"]`` from PCB_TRACK items."""
+    try:
+        trace_id = 1
+        for track in board.GetTracks():
+            if track.Type() == pcbnew.PCB_TRACE_T:
+                net = track.GetNet()
+                points = []
+                try:
+                    s, e = track.GetStart(), track.GetEnd()
+                    points.append({"x": s.x / 1e6, "y": s.y / 1e6})
+                    points.append({"x": e.x / 1e6, "y": e.y / 1e6})
+                except Exception:
+                    pass
+                data["traces"].append({
+                    "id": trace_id,
+                    "netName": net.GetNetname() if net else "",
+                    "width": track.GetWidth() / 1e6,
+                    "layerIndex": track.GetLayer(),
+                    "points": points,
+                })
+                trace_id += 1
+    except Exception as e:
+        print(f"Warning: could not enumerate traces: {e}")
+
+
+def _collect_vias(board, data):
+    """Populate ``data["vias"]`` from PCB_VIA items."""
+    try:
+        via_id = 1
+        for track in board.GetTracks():
+            if track.Type() == pcbnew.PCB_VIA_T:
+                net = track.GetNet()
+                pos = track.GetStart()
+                drill = (
+                    track.GetDrillValue()
+                    if hasattr(track, "GetDrillValue")
+                    else track.GetWidth() * 0.5
+                )
+                data["vias"].append({
+                    "id": via_id,
+                    "netName": net.GetNetname() if net else "",
+                    "position": {"x": pos.x / 1e6, "y": pos.y / 1e6},
+                    "diameter": track.GetWidth() / 1e6,
+                    "drill": drill / 1e6,
+                    "startLayerIndex": 0,
+                    "endLayerIndex": (
+                        board.GetCopperLayerCount() - 1
+                        if hasattr(board, "GetCopperLayerCount")
+                        else 1
+                    ),
+                })
+                via_id += 1
+    except Exception as e:
+        print(f"Warning: could not enumerate vias: {e}")
+
+
+def _collect_outline(board, data):
+    """Populate ``data["outline"]`` from Edge.Cuts drawings."""
+    try:
+        edge_layer = (
+            board.GetLayerID("Edge.Cuts")
+            if hasattr(board, "GetLayerID")
+            else -1
+        )
+        if edge_layer >= 0:
+            for drawing in board.GetDrawings():
+                if drawing.GetLayer() == edge_layer:
+                    try:
+                        if hasattr(drawing, "GetStart"):
+                            s = drawing.GetStart()
+                            data["outline"]["corners"].append(
+                                {"x": s.x / 1e6, "y": s.y / 1e6}
+                            )
+                    except Exception:
+                        pass
+    except Exception as e:
+        print(f"Warning: could not enumerate outline: {e}")

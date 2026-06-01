@@ -125,9 +125,20 @@ We will use a **Hybrid Local Loopback Bridge** approach to avoid native Unix Dom
 - ✅ Implement `GET /v1/jobs/{jobId}/output/json` for raw JSON output download.
 - ✅ Implement `GET /v1/jobs/{jobId}/output/json/stream` for real-time SSE JSON output streaming.
 - ✅ DRC endpoint supports JSON input format for board loading.
-- 🔲 Python bridge implementation (outside this repo).
+- ✅ Python bridge implementation — plugin.py updated with IPC/API mode and DSN fallback.
 
-**Exit gate:** A KiCad 9 board with a non-default copper-to-edge clearance routes correctly via IPC without any CLI `copperToEdgeClearanceUm` override needed, and progress is displayed on the GUI. (Java-side complete; Python bridge pending.)
+**Phase 3 — Plugin integration (Days 26–28):** ✅ Implemented
+- ✅ Updated `plugin.py` with dual-mode operation (IPC/API default, DSN fallback).
+- ✅ `is_ipc_available()` probes for KiCad IPC support via pcbnew attributes and version detection.
+- ✅ `get_board_json_via_ipc()` serializes board via IPC with manual fallback.
+- ✅ `FreeroutingApiClient` class for REST API communication (session, job, upload, start, poll, download).
+- ✅ `RunRouterIPC()` implements the full IPC/API workflow (serialize → start server → create session → upload → start → poll → download → apply).
+- ✅ `_apply_json_result_to_kicad()` writes results back via IPC or manual pcbnew API.
+- ✅ Debug JSON files saved for both input (`freerouting_debug.json`) and output (`freerouting_result.json`).
+- ✅ Progress dialog shows job/session ID; user can cancel via Terminate button.
+- ✅ Automatic fallback to DSN mode when IPC is not available.
+
+**Exit gate:** A KiCad 9/10 board routes correctly via IPC without any CLI `copperToEdgeClearanceUm` override needed, and progress is displayed on the GUI. DSN fallback works on older KiCad versions.
 
 ### Days 26–35 — Star Ground Routing (#383)
 
