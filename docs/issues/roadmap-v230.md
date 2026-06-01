@@ -107,19 +107,22 @@
 ### Days 16–25 — KiCad IPC API Integration
 KiCad's IPC API is gRPC-based and replaces the Specctra DSN file-exchange model. This eliminates the root cause of Issue #558 (copper-to-edge clearance not exported in DSN) for all KiCad users.
 
-**Phase 1 — Board read via IPC (Days 16–21):**
-- Add `kiCadIpcPort` / connection config to the KiCad plugin and Freerouting API.
-- Implement `IpcBoardReader` that maps KiCad IPC board model → internal `RoutingBoard`:
-  - Read copper layers, net classes, clearance rules (including copper-to-edge clearance — this is natively available via IPC).
-  - Read component footprints and pads.
-  - Copper pours / zones → `ConductionArea` model.
-- Unit tests using a mock gRPC server.
+We will use a **Hybrid Local Loopback Bridge** approach to avoid native Unix Domain Sockets (UDS) or Named Pipes in Java. The KiCad Python plugin acts as the bridge, connecting to KiCad IPC natively and communicating with Freerouting's REST API over localhost HTTP.
 
-**Phase 2 — Route result write back via IPC (Days 22–25):**
-- Implement `IpcRouteWriter` that maps `RoutingBoard` traces and vias → KiCad IPC `UpdateBoard` call.
-- Update KiCad plugin to use IPC round-trip when available (fall back to DSN if IPC not supported by the KiCad version).
+**Phase 1 — Board read via IPC & JSON Loader (Days 16–21):**
+- Define the **KiCad JSON schema** for board data (layers, nets, pads, tracks, vias, zones, rules).
+- Implement `KiCadJsonReader` in Freerouting to deserialize the JSON stream into a `RoutingBoard`.
+- Measure and log the performance penalty of JSON serialization/deserialization to evaluate overhead and aid in debugging.
+- Implement a new API endpoint `PUT /v1/sessions/{sessionId}/monitor` to set an API session as the **"currently monitored" session**.
+- If the Freerouting GUI is enabled, bind the monitored session's board and real-time routing progress to the active GUI visualizer.
+- Unit tests using a mock JSON payload.
 
-**Exit gate:** A KiCad 9 board with a non-default copper-to-edge clearance routes correctly via IPC without any CLI `copperToEdgeClearanceUm` override needed.
+**Phase 2 — Route result write back via IPC & Streaming API (Days 22–25):**
+- Expose routed traces and vias in a JSON format via the REST API.
+- Use streaming API endpoints (SSE/WebSockets) to send real-time progress and incremental updates.
+- Python bridge receives updates and writes them back to KiCad via KiCad IPC.
+
+**Exit gate:** A KiCad 9 board with a non-default copper-to-edge clearance routes correctly via IPC without any CLI `copperToEdgeClearanceUm` override needed, and progress is displayed on the GUI.
 
 ### Days 26–35 — Star Ground Routing (#383)
 

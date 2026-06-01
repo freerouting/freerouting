@@ -141,28 +141,28 @@ The new work should be limited to IPC integration and the KiCad side bridge.
 
 ## Best implementation approach
 
-The best approach is a two layer design.
+The best approach is a two layer design using a **Hybrid Local Loopback Bridge** to avoid the complexity of native Unix Domain Sockets (UDS) or Named Pipes in Java.
 
-### Layer 1: KiCad side bridge
+### Layer 1: KiCad side bridge (Python Plugin)
 
 Use a small KiCad plugin or executable plugin that:
+- Detects whether KiCad IPC is available.
+- Connects to the running KiCad session via native IPC (Unix Domain Sockets on Linux/macOS, Named Pipes on Windows).
+- Reads board data and rules from KiCad.
+- Serializes the KiCad board data into a standardized **KiCad JSON format**.
+- Starts Freerouting with the API server enabled (binding to `127.0.0.1` with authentication disabled for seamless local operation).
+- POSTs the KiCad JSON board data to Freerouting's REST API.
+- Listens to Freerouting's streaming API endpoints (SSE/WebSockets) for real-time routing progress and updates.
+- Relays routed traces and vias back to KiCad via KiCad's IPC API.
 
-- detects whether IPC is available
-- connects to the running KiCad session
-- reads board data and rules
-- starts Freerouting
-- relays progress and updates
+### Layer 2: Freerouting core integration (Java REST API)
 
-This is the most practical first step because the official KiCad IPC docs are centered on add-on development, not on a standalone Java client.
-
-### Layer 2: Freerouting core integration
-
-Keep the Java routing engine focused on routing.
-Add a small IPC aware input and output layer that:
-
-- converts KiCad session data into RoutingBoard
-- converts routed traces and vias back into KiCad updates
-- handles errors and reconnects cleanly
+Keep the Java routing engine focused on routing and decoupled from KiCad's specific IPC transport layer:
+- Implement a **KiCad JSON parser/loader** in Freerouting to deserialize the KiCad JSON board data directly into a `RoutingBoard`.
+- Measure and log the performance penalty of JSON serialization/deserialization to evaluate overhead and aid in debugging.
+- Expose a new API endpoint (e.g., `PUT /v1/sessions/{sessionId}/monitor`) to set an API session as the **"currently monitored" session**.
+- If the Freerouting GUI is enabled, the "currently monitored" session's board and real-time routing progress will be displayed on the GUI, giving plugin users the same level of visual feedback they are used to.
+- Stream route results and progress updates back to the Python bridge via existing or new streaming API endpoints.
 
 ## Should DSN and IPC run in parallel?
 
@@ -234,39 +234,34 @@ What should be new:
 
 ## What to build first
 
-### Phase 1: Read only IPC bridge
+### Phase 1: Read only IPC bridge & JSON Loader
 
-Goal: prove that Freerouting can read a KiCad board from the live session.
-
-Tasks:
-
-- add IPC bridge scaffolding
-- connect to the live KiCad session
-- read board layers, nets, pads, tracks, vias, zones, and rules
-- map KiCad data into RoutingBoard
-- create tests with a mocked bridge
-
-Exit criteria:
-
-- board load works
-- routing core sees the same board data as DSN mode
-- existing tests still pass
-
-### Phase 2: Write back support
-
-Goal: push routed traces and vias back to KiCad.
+Goal: prove that Freerouting can read a KiCad board from the live session via the Python bridge and JSON serialization.
 
 Tasks:
-
-- send route results back into KiCad
-- batch updates to reduce churn
-- keep progress updates simple and stable
-- handle reconnect and error cases
+- Define the **KiCad JSON schema** for board data (layers, nets, pads, tracks, vias, zones, rules).
+- Implement `KiCadJsonReader` in Freerouting to deserialize the JSON stream into a `RoutingBoard`.
+- Measure and log the performance penalty of JSON serialization/deserialization.
+- Implement the **"currently monitored" session API endpoint** to bind the API session to the active GUI visualizer.
+- Create tests with a mocked JSON payload.
 
 Exit criteria:
+- Board load works via JSON POST.
+- If GUI is enabled, the loaded board is displayed and progress is visible.
+- Existing tests still pass.
 
-- routed traces appear in KiCad
-- the board remains consistent after updates
+### Phase 2: Write back support & Streaming API
+
+Goal: push routed traces and vias back to KiCad via the Python bridge.
+
+Tasks:
+- Expose routed traces and vias in a JSON format via the REST API.
+- Use streaming API endpoints (SSE/WebSockets) to send real-time progress and incremental updates.
+- Python bridge receives updates and writes them back to KiCad via KiCad IPC.
+
+Exit criteria:
+- Routed traces appear in KiCad.
+- The board remains consistent after updates.
 
 ### Phase 3: Plugin integration
 
