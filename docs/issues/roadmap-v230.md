@@ -109,20 +109,25 @@ KiCad's IPC API is gRPC-based and replaces the Specctra DSN file-exchange model.
 
 We will use a **Hybrid Local Loopback Bridge** approach to avoid native Unix Domain Sockets (UDS) or Named Pipes in Java. The KiCad Python plugin acts as the bridge, connecting to KiCad IPC natively and communicating with Freerouting's REST API over localhost HTTP.
 
-**Phase 1 — Board read via IPC & JSON Loader (Days 16–21):**
-- Define the **KiCad JSON schema** for board data (layers, nets, pads, tracks, vias, zones, rules).
-- Implement `KiCadJsonReader` in Freerouting to deserialize the JSON stream into a `RoutingBoard`.
-- Measure and log the performance penalty of JSON serialization/deserialization to evaluate overhead and aid in debugging.
-- Implement a new API endpoint `PUT /v1/sessions/{sessionId}/monitor` to set an API session as the **"currently monitored" session**.
-- If the Freerouting GUI is enabled, bind the monitored session's board and real-time routing progress to the active GUI visualizer.
-- Unit tests using a mock JSON payload.
+**Phase 1 — Board read via IPC & JSON Loader (Days 16–21):** ✅ Implemented
+- ✅ Define the **KiCad JSON schema** for board data (`KiCadBoardJson` DTO with layers, nets, pads, tracks, vias, zones, rules).
+- ✅ Implement `KiCadJsonReader` in Freerouting to deserialize the JSON stream into a `RoutingBoard`.
+- ✅ Implement `KiCadJsonWriter` to serialize a `RoutingBoard` back to KiCad JSON.
+- ✅ Measure and log the performance penalty of JSON serialization/deserialization.
+- ✅ Implement `HeadlessBoardManager.loadFromKiCadJson()` and `GuiBoardManager.loadFromKiCadJson()`.
+- ✅ Integrate JSON format into `BoardLoader` and `RoutingJobSchedulerActionThread.setJobOutput()`.
+- ✅ Add `FileFormat.JSON` enum value and auto-detection.
+- ✅ Implement `PUT /v1/sessions/{sessionId}/monitor` to bind a session's board to the GUI visualizer.
+- ✅ Implement `POST /v1/jobs/{jobId}/input/json` for raw JSON input upload.
+- ✅ Unit tests using a mock JSON payload (`KiCadJsonReaderTest`, 7 tests including round-trip).
 
-**Phase 2 — Route result write back via IPC & Streaming API (Days 22–25):**
-- Expose routed traces and vias in a JSON format via the REST API.
-- Use streaming API endpoints (SSE/WebSockets) to send real-time progress and incremental updates.
-- Python bridge receives updates and writes them back to KiCad via KiCad IPC.
+**Phase 2 — Route result write back via IPC & Streaming API (Days 22–25):** ✅ Implemented
+- ✅ Implement `GET /v1/jobs/{jobId}/output/json` for raw JSON output download.
+- ✅ Implement `GET /v1/jobs/{jobId}/output/json/stream` for real-time SSE JSON output streaming.
+- ✅ DRC endpoint supports JSON input format for board loading.
+- 🔲 Python bridge implementation (outside this repo).
 
-**Exit gate:** A KiCad 9 board with a non-default copper-to-edge clearance routes correctly via IPC without any CLI `copperToEdgeClearanceUm` override needed, and progress is displayed on the GUI.
+**Exit gate:** A KiCad 9 board with a non-default copper-to-edge clearance routes correctly via IPC without any CLI `copperToEdgeClearanceUm` override needed, and progress is displayed on the GUI. (Java-side complete; Python bridge pending.)
 
 ### Days 26–35 — Star Ground Routing (#383)
 

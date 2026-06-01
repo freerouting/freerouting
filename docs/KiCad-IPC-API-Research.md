@@ -234,34 +234,46 @@ What should be new:
 
 ## What to build first
 
-### Phase 1: Read only IPC bridge & JSON Loader
+### Phase 1: Read only IPC bridge & JSON Loader ✅ Implemented
 
 Goal: prove that Freerouting can read a KiCad board from the live session via the Python bridge and JSON serialization.
 
 Tasks:
-- Define the **KiCad JSON schema** for board data (layers, nets, pads, tracks, vias, zones, rules).
-- Implement `KiCadJsonReader` in Freerouting to deserialize the JSON stream into a `RoutingBoard`.
-- Measure and log the performance penalty of JSON serialization/deserialization.
-- Implement the **"currently monitored" session API endpoint** to bind the API session to the active GUI visualizer.
-- Create tests with a mocked JSON payload.
+- ✅ Define the **KiCad JSON schema** for board data (layers, nets, pads, tracks, vias, zones, rules) — `KiCadBoardJson` DTO.
+- ✅ Implement `KiCadJsonReader` in Freerouting to deserialize the JSON stream into a `RoutingBoard`.
+- ✅ Implement `KiCadJsonWriter` to serialize a `RoutingBoard` back to KiCad JSON.
+- ✅ Measure and log the performance penalty of JSON serialization/deserialization.
+- ✅ Implement the **"currently monitored" session API endpoint** (`PUT /v1/sessions/{sessionId}/monitor`) to bind the API session to the active GUI visualizer.
+- ✅ Implement `HeadlessBoardManager.loadFromKiCadJson()` and `GuiBoardManager.loadFromKiCadJson()`.
+- ✅ Integrate JSON format into `BoardLoader` and `RoutingJobSchedulerActionThread.setJobOutput()`.
+- ✅ Add `FileFormat.JSON` enum value and auto-detection in `RoutingJob.getFileFormat()`.
+- ✅ Create tests with a mocked JSON payload — `KiCadJsonReaderTest` (7 tests including round-trip).
+
+New API endpoints for the IPC bridge:
+- `POST /v1/jobs/{jobId}/input/json` — upload raw KiCad JSON (not Base64-encoded) for efficient IPC bridge workflow.
+- `GET /v1/jobs/{jobId}/output/json` — download routing output as raw KiCad JSON (not Base64-encoded).
+- `GET /v1/jobs/{jobId}/output/json/stream` — real-time SSE stream of KiCad JSON output (500ms polling, CRC32 change detection).
+- `PUT /v1/sessions/{sessionId}/monitor` — bind a session's board to the GUI visualizer for real-time monitoring.
 
 Exit criteria:
-- Board load works via JSON POST.
-- If GUI is enabled, the loaded board is displayed and progress is visible.
-- Existing tests still pass.
+- ✅ Board load works via JSON POST.
+- ✅ If GUI is enabled, the loaded board is displayed and progress is visible.
+- ✅ Existing tests still pass.
 
-### Phase 2: Write back support & Streaming API
+### Phase 2: Write back support & Streaming API ✅ Implemented
 
 Goal: push routed traces and vias back to KiCad via the Python bridge.
 
 Tasks:
-- Expose routed traces and vias in a JSON format via the REST API.
-- Use streaming API endpoints (SSE/WebSockets) to send real-time progress and incremental updates.
-- Python bridge receives updates and writes them back to KiCad via KiCad IPC.
+- ✅ Expose routed traces and vias in a JSON format via the REST API (`KiCadJsonWriter` + `/output/json` endpoint).
+- ✅ Use streaming API endpoints (SSE) to send real-time progress and incremental updates (`/output/json/stream`).
+- ✅ DRC endpoint supports JSON input format for board loading.
+- 🔲 Python bridge receives updates and writes them back to KiCad via KiCad IPC (Python-side work, outside this repo).
 
 Exit criteria:
-- Routed traces appear in KiCad.
-- The board remains consistent after updates.
+- ✅ Routed traces available in JSON format for KiCad consumption.
+- 🔲 Routed traces appear in KiCad (requires Python bridge implementation).
+- ✅ The board remains consistent after updates (round-trip test passes).
 
 ### Phase 3: Plugin integration
 
