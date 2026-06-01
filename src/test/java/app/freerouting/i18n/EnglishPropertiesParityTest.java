@@ -1,6 +1,7 @@
-// Use this to test for missing keys in all .propertie files
-// For individual testing use ./gradlew cleanTest test --tests app.freerouting.i18n.EnglishPropertiesParityTest --rerun-tasks
-// It will output a report to build/reports/i18n/EnglishPropertiesParityReport.txt and a JSON summary to build/reports/i18n/EnglishPropertiesParityReport.json
+// Use this to test for missing keys in all .properties files
+// For individual testing use:
+// ./gradlew cleanTest test --tests app.freerouting.i18n.EnglishPropertiesParityTest --rerun-tasks
+// Reports are in build/reports/i18n/*Report.txt and build/reports/i18n/*Report.json
 
 package app.freerouting.i18n;
 
@@ -41,16 +42,25 @@ class EnglishPropertiesParityTest {
       "(?m)^\\s*(?:private|protected|public)?\\s*(?:static\\s+)?(?:final\\s+)?([A-Z][A-Za-z0-9_$.<>]*)\\s+([a-z_][A-Za-z0-9_]*)\\s*(?:[=;])");
       private static final Pattern ENUM_ARRAY_DECLARATION_PATTERN = Pattern.compile(
         "(?m)^\\s*(?:final\\s+)?([A-Z][A-Za-z0-9_$.<>]*)\\[\\]\\s+([a-z_][A-Za-z0-9_]*)\\s*=\\s*[^;]*\\.values\\(\\)\\s*;");
-    private static final Pattern ENUM_DECLARATION_PATTERN = Pattern.compile("(?s)\\benum\\s+%s\\s*\\{(.*?)\\}");
   private static final Pattern SEGMENTED_BUTTONS_PATTERN = Pattern.compile("new\\s+SegmentedButtons\\s*\\((.*?)\\)", Pattern.DOTALL);
   private static final Pattern QUOTED_STRING_PATTERN = Pattern.compile("\"([^\"]+)\"");
   private static final Map<String, String> BUNDLE_ALIASES = Map.of(
       "app.freerouting.gui.AirLine", "app.freerouting.interactive.RatsNest",
       "app.freerouting.drc.AirLine", "app.freerouting.interactive.RatsNest",
       "app.freerouting.rules.NetClasses", "app.freerouting.gui.WindowNetClasses");
-  private static final Path REPORT_PATH = Paths.get("build/reports/i18n/EnglishPropertiesParityReport.txt");
-  private static final Path REPORT_JSON = Paths.get("build/reports/i18n/EnglishPropertiesParityReport.json");
-  private static boolean reportInitialized;
+  private static final Path REPORT_PATH_1 = Paths.get(
+      "build/reports/i18n/CodeKeysExistInEnglishBundlesReport.txt");
+  private static final Path REPORT_JSON_1 = Paths.get(
+      "build/reports/i18n/CodeKeysExistInEnglishBundlesReport.json");
+  private static final Path REPORT_PATH_2 = Paths.get(
+      "build/reports/i18n/LocaleBundlesCoverEnglishBundlesReport.txt");
+  private static final Path REPORT_JSON_2 = Paths.get(
+      "build/reports/i18n/LocaleBundlesCoverEnglishBundlesReport.json");
+  private static final Path REPORT_PATH_3 = Paths.get(
+      "build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.txt");
+  private static final Path REPORT_JSON_3 = Paths.get(
+      "build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.json");
+  private static Map<String, Path> sourceFilesCache;
 
   @Test
   @Order(1)
@@ -76,7 +86,8 @@ class EnglishPropertiesParityTest {
       }
     }
 
-    writeReport("Source keys missing from English bundles", missingReports, REPORT_PATH, true);
+    writeReport("Source keys missing from English bundles", missingReports,
+        REPORT_PATH_1, REPORT_JSON_1);
   }
 
   @Test
@@ -116,7 +127,8 @@ class EnglishPropertiesParityTest {
       }
     }
 
-    writeReport("Locale bundles missing English keys", missingReports, REPORT_PATH, false);
+    writeReport("Locale bundles missing English keys", missingReports,
+        REPORT_PATH_2, REPORT_JSON_2);
   }
 
   @Test
@@ -158,7 +170,8 @@ class EnglishPropertiesParityTest {
       }
     }
 
-    writeReport("English bundles missing keys present in locales", missingReports, REPORT_PATH, false);
+    writeReport("English bundles missing keys present in locales", missingReports,
+        REPORT_PATH_3, REPORT_JSON_3);
   }
 
   private static Map<String, Set<String>> collectSourceKeysByBundle() throws IOException {
@@ -225,7 +238,7 @@ class EnglishPropertiesParityTest {
       }
     }
 
-    keys.addAll(resolveDynamicEnumKeys(javaFile, source));
+    keys.addAll(resolveDynamicEnumKeys(source));
 
     for (String bundleOwner : bundleOwners) {
       keysByBundle.computeIfAbsent(bundleOwner, ignored -> new LinkedHashSet<>()).addAll(keys);
@@ -268,7 +281,7 @@ class EnglishPropertiesParityTest {
     return textManagerVariables;
   }
 
-  private static Set<String> resolveDynamicEnumKeys(Path javaFile, String source) throws IOException {
+  private static Set<String> resolveDynamicEnumKeys(String source) throws IOException {
     Set<String> keys = new LinkedHashSet<>();
     Map<String, String> fieldTypes = resolveFieldTypes(source);
     Map<String, String> enumArrayTypes = resolveEnumArrayTypes(source);
@@ -285,7 +298,7 @@ class EnglishPropertiesParityTest {
       if (expression.contains(".values()")) {
         String enumType = expression.substring(0, expression.indexOf(".values()"));
         enumType = enumType.substring(enumType.lastIndexOf('.') + 1);
-        keys.addAll(resolveEnumConstants(javaFile, source, enumType));
+        keys.addAll(resolveEnumConstants(source, enumType));
         continue;
       }
 
@@ -298,7 +311,7 @@ class EnglishPropertiesParityTest {
         enumType = enumArrayTypes.get(expression);
       }
       if (enumType != null) {
-        keys.addAll(resolveEnumConstants(javaFile, source, enumType));
+        keys.addAll(resolveEnumConstants(source, enumType));
       }
     }
 
@@ -327,7 +340,7 @@ class EnglishPropertiesParityTest {
     return enumArrayTypes;
   }
 
-  private static Set<String> resolveEnumConstants(Path javaFile, String source, String enumType) throws IOException {
+  private static Set<String> resolveEnumConstants(String source, String enumType) throws IOException {
     Set<String> constants = new LinkedHashSet<>();
     String enumBody = findEnumBody(source, enumType);
 
@@ -345,6 +358,7 @@ class EnglishPropertiesParityTest {
 
     int endOfConstants = enumBody.indexOf(';');
     String constantSection = endOfConstants >= 0 ? enumBody.substring(0, endOfConstants) : enumBody;
+    constantSection = constantSection.replaceAll("//.*", "").replaceAll("(?s)/\\*.*?\\*/", "");
     for (String rawConstant : constantSection.split(",")) {
       String constant = rawConstant.trim();
       if (constant.isEmpty()) {
@@ -367,18 +381,37 @@ class EnglishPropertiesParityTest {
   }
 
   private static String findEnumBody(String source, String enumType) {
-    Pattern enumPattern = Pattern.compile(String.format(ENUM_DECLARATION_PATTERN.pattern(), Pattern.quote(enumType)), Pattern.DOTALL);
+    Pattern enumPattern = Pattern.compile(String.format("(?s)\\benum\\s+%s\\s*\\{", Pattern.quote(enumType)));
     Matcher matcher = enumPattern.matcher(source);
     if (matcher.find()) {
-      return matcher.group(1);
+      int start = matcher.end();
+      int depth = 1;
+      for (int i = start; i < source.length(); i++) {
+        char c = source.charAt(i);
+        if (c == '{') {
+          depth++;
+        } else if (c == '}') {
+          depth--;
+          if (depth == 0) {
+            return source.substring(start, i);
+          }
+        }
+      }
     }
     return null;
   }
 
   private static Path findSourceFileBySimpleName(String fileName) throws IOException {
-    try (var paths = Files.walk(JAVA_SOURCE_ROOT)) {
-      return paths.filter(path -> path.getFileName().toString().equals(fileName)).findFirst().orElse(null);
+    synchronized (EnglishPropertiesParityTest.class) {
+      if (sourceFilesCache == null) {
+        sourceFilesCache = new java.util.HashMap<>();
+        try (var paths = Files.walk(JAVA_SOURCE_ROOT)) {
+          paths.filter(path -> path.toString().endsWith(".java"))
+               .forEach(path -> sourceFilesCache.put(path.getFileName().toString(), path));
+        }
+      }
     }
+    return sourceFilesCache.get(fileName);
   }
 
   private static boolean isIconKey(String key) {
@@ -477,18 +510,13 @@ class EnglishPropertiesParityTest {
     return builder.toString().trim();
   }
 
-  private static void writeReport(String heading, List<String> reports, Path reportPath, boolean includeSourceSection)
+  private static synchronized void writeReport(String heading, List<String> reports, Path reportPath, Path reportJsonPath)
       throws IOException {
-    synchronized (EnglishPropertiesParityTest.class) {
-      if (!reportInitialized) {
-        Files.createDirectories(reportPath.getParent());
-        Files.deleteIfExists(reportPath);
-        Files.deleteIfExists(REPORT_JSON);
-        reportInitialized = true;
-      }
-    }
+    Files.createDirectories(reportPath.getParent());
+    Files.deleteIfExists(reportPath);
+    Files.deleteIfExists(reportJsonPath);
 
-    // Append a human-friendly section
+    // Write a human-friendly section
     StringBuilder builder = new StringBuilder();
     builder.append("== ").append(heading).append(" ==").append(System.lineSeparator());
     builder.append("count: ").append(reports.size()).append(System.lineSeparator());
@@ -502,34 +530,20 @@ class EnglishPropertiesParityTest {
     builder.append(System.lineSeparator());
 
     Files.writeString(reportPath, builder.toString(), java.nio.file.StandardOpenOption.CREATE,
-        java.nio.file.StandardOpenOption.APPEND);
+        java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
 
-    // Also append machine-readable JSON summary
+    // Also write machine-readable JSON summary
     Map<String, Object> summary = new java.util.LinkedHashMap<>();
     summary.put("heading", heading);
     summary.put("count", reports.size());
     summary.put("items", reports);
 
-    // Merge into existing JSON file or create a fresh array
-    List<Map<String, Object>> jsonArray = new ArrayList<>();
-    if (Files.exists(REPORT_JSON)) {
-      String existing = Files.readString(REPORT_JSON);
-      try {
-        var parsed = new com.google.gson.Gson().fromJson(existing, java.util.List.class);
-        if (parsed != null) {
-          jsonArray.addAll(parsed);
-        }
-      } catch (Exception e) {
-        // ignore parse errors and overwrite
-      }
-    }
-    jsonArray.add(summary);
-    String jsonOut = new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(jsonArray);
-    Files.writeString(REPORT_JSON, jsonOut, java.nio.file.StandardOpenOption.CREATE,
+    String jsonOut = new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(summary);
+    Files.writeString(reportJsonPath, jsonOut, java.nio.file.StandardOpenOption.CREATE,
         java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
 
     FRLogger.info("Wrote i18n parity report to " + reportPath.toAbsolutePath());
-    FRLogger.info("Wrote i18n parity JSON to " + REPORT_JSON.toAbsolutePath());
+    FRLogger.info("Wrote i18n parity JSON to " + reportJsonPath.toAbsolutePath());
   }
 
   private static void appendReportBlock(StringBuilder builder, String report) {
