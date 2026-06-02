@@ -5,8 +5,9 @@
 # subprocess:
 #   * ``ProcessDialog`` — a wx dialog with a Terminate button that lets
 #     the user cancel a long-running operation.
-#   * ``ProcessThread`` — a daemon thread that runs a subprocess and
-#     captures stdout/stderr for error reporting.
+#   * ``ProcessThread`` — a daemon thread that runs a subprocess, letting
+#     stdout/stderr flow through to the console so the user can see
+#     Freerouting's log output in the terminal window.
 # ---------------------------------------------------------------------------
 
 import platform
@@ -78,15 +79,15 @@ class ProcessDialog(wx.Dialog):
 class ProcessThread(threading.Thread):
     """Run an external command in a daemon thread.
 
-    Captures stdout/stderr and provides ``show_error()`` to display
-    a diagnostic dialog if the process fails.
+    The subprocess inherits the parent's stdout/stderr so that
+    Freerouting's console output is visible in the terminal window.
+    ``show_error()`` can still display a diagnostic dialog if the
+    process fails to start or exits with a non-zero code.
 
     Attributes:
         command: The command list passed to ``Popen``.
         process: The ``subprocess.Popen`` instance (or ``None``).
         error: Exception object if the process could not be started.
-        stdout: Captured standard output.
-        stderr: Captured standard error.
     """
 
     def __init__(self, command, on_complete=None):
@@ -96,21 +97,16 @@ class ProcessThread(threading.Thread):
         self.on_complete = on_complete
         self.process = None
         self.error = None
-        self.stdout = None
-        self.stderr = None
 
     # -- public API -------------------------------------------------------
 
     def run(self):
-        """Execute the command and capture output."""
+        """Execute the command."""
         try:
             self.process = subprocess.Popen(
                 self.command,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
             )
-            self.stdout, self.stderr = self.process.communicate()
+            self.process.wait()
         except FileNotFoundError:
             self.error = (
                 f"Command not found: {self.command[0]}. "
@@ -173,7 +169,4 @@ class ProcessThread(threading.Thread):
                 {cmd_str}
                 ---
                 exit code: {self.process.returncode}
-                --- stdout ---
-                {self.stdout or "N/A"}
-                --- stderr  ---
-                {self.stderr or "N/A"}"""))
+                (console output was shown in the terminal window)"""))

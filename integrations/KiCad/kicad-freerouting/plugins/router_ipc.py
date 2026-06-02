@@ -109,9 +109,6 @@ class IpcRouter:
         try:
             self._api_process = subprocess.Popen(
                 self.plugin.module_command,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
             )
         except Exception as e:
             wx_show_error(f"Failed to start Freerouting API server:\n{e}")
@@ -124,12 +121,9 @@ class IpcRouter:
                 print("Freerouting API server is ready.")
                 return True
             if self._api_process.poll() is not None:
-                stderr = self._api_process.stderr.read() if self._api_process.stderr else ""
                 wx_show_error(textwrap.dedent(f"""
                     Freerouting API server exited prematurely
                     (exit code {self._api_process.returncode}).
-                    stderr:
-                    {stderr}
                 """))
                 return False
 
