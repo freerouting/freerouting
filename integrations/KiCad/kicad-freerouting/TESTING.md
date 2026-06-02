@@ -11,12 +11,12 @@ by the KiCad community (see
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    Test Runner (pytest)                  │
+│                    Test Runner (pytest)                 │
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
 │  ┌──────────────┐    ┌─────────────────────────────┐    │
-│  │  Unit Tests   │    │   Integration Tests          │    │
-│  │  (no KiCad)   │    │   (requires KiCad 10+ + Xvfb)│    │
+│  │  Unit Tests  │    │  Integration Tests          │    │
+│  │  (no KiCad)  │    │  (requires KiCad 10+ + Xvfb)│    │
 │  └──────────────┘    └─────────────────────────────┘    │
 │                              │                          │
 │                              ▼                          │
@@ -31,8 +31,8 @@ by the KiCad community (see
 │                    │  GUI process)    │                 │
 │                    └────────┬─────────┘                 │
 │                             │                           │
-│                    IPC socket/pipe                       │
-│                    (api.sock)                            │
+│                    IPC socket/pipe                      │
+│                    (api.sock)                           │
 │                             │                           │
 │                             ▼                           │
 │                    ┌──────────────────┐                 │
