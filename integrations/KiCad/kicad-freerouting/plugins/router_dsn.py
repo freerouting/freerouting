@@ -13,7 +13,6 @@ import textwrap
 import pcbnew
 
 from .gui_helpers import wx_show_error, wx_safe_invoke
-from .java_utils import detect_os_architecture, get_local_java_executable_path
 from .process_utils import ProcessDialog, ProcessThread
 
 
@@ -53,11 +52,6 @@ class DsnRouter:
         self.plugin.module_file = module_file
         self.plugin.module_path = here_path / module_file
 
-        # Resolve Java
-        os_name, _ = detect_os_architecture()
-        local_java = get_local_java_executable_path(os_name)
-        if local_java:
-            self.plugin.java_path = local_java
 
         # Set up routing directory (handle spaces in path)
         from pathlib import Path

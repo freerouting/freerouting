@@ -19,7 +19,6 @@ from .api_client import FreeroutingApiClient
 from .config import API_JOB_TIMEOUT, API_POLL_INTERVAL, API_SERVER_STARTUP_TIMEOUT
 from .gui_helpers import wx_show_error
 from .ipc_helpers import get_board_json_via_ipc
-from .java_utils import detect_os_architecture, get_local_java_executable_path
 from .process_utils import ProcessDialog
 
 
@@ -64,15 +63,7 @@ class IpcRouter:
         # Step 2: Save debug JSON
         self._save_debug(board_json, self.plugin.json_debug_path)
 
-        # Step 3: Ensure Java is available
-        os_name, _ = detect_os_architecture()
-        if not self.plugin.java_path:
-            self.plugin.java_path = get_local_java_executable_path(os_name)
-        if not self.plugin.java_path:
-            wx_show_error("Java 25+ is required but could not be found.")
-            return False
-
-        # Step 4: Build API server command and start it
+        # Step 3: Build API server command and start it
         self._build_api_command()
         if not self._start_api_server():
             return False
