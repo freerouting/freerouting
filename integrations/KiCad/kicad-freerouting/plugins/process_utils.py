@@ -121,6 +121,12 @@ class StatusIndicator(wx.Panel):
             self._timer.Stop()
             self._symbol_label.SetLabel(_SYMBOLS[status])
             self._symbol_label.SetForegroundColour(_COLORS[status])
+        # Force an immediate repaint so the change is visible right away,
+        # even when the caller is about to do blocking work on the main thread.
+        self._symbol_label.Refresh()
+        self._symbol_label.Update()
+        self.Refresh()
+        self.Update()
 
 
 class ProcessDialog(wx.Dialog):
@@ -134,9 +140,10 @@ class ProcessDialog(wx.Dialog):
     The order of indicators is:
       1. Detecting Java 25+ JRE
       2. Checking if KiCad IPC API is available
-      3. Sending board to Freerouting
-      4. Auto-router is running
-      5. Receiving the results
+      3. Starting up Freerouting API server
+      4. Sending board to Freerouting
+      5. Auto-router is running
+      6. Receiving the results
 
     Attributes:
         result_button: Modal result ID when the user presses Terminate.
@@ -169,6 +176,9 @@ class ProcessDialog(wx.Dialog):
 
         self.ipc_indicator = StatusIndicator(self, "Checking if KiCad IPC API is available", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.ipc_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
+
+        self.api_indicator = StatusIndicator(self, "Starting up Freerouting API", STATUS_UNDETERMINED)
+        indicator_sizer.Add(self.api_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
 
         self.sending_indicator = StatusIndicator(self, "Sending board to Freerouting", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.sending_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
@@ -217,6 +227,10 @@ class ProcessDialog(wx.Dialog):
     def set_ipc_status(self, status):
         """Update the IPC API indicator."""
         self.ipc_indicator.set_status(status)
+
+    def set_api_status(self, status):
+        """Update the 'Starting up Freerouting API' indicator."""
+        self.api_indicator.set_status(status)
 
     def set_sending_status(self, status):
         """Update the 'Sending board to Freerouting' indicator."""

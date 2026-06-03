@@ -163,9 +163,10 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         check_thread.start()
 
         # Wait for the thread, pumping events so the dialog renders/animates
+        import time as _time
         while check_thread.is_alive():
             pump_events()
-            check_thread.join(timeout=0.05)
+            _time.sleep(0.05)
 
         pump_events()
 
@@ -193,7 +194,39 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             router = DsnRouter(self)
 
         # ============================================================
-        # Stage 3-5: Execute routing (each stage updates the dialog)
+        # Stage: Starting up Freerouting API server
+        # (only for IPC mode — DSN mode does not use the REST API)
+        # ============================================================
+        if isinstance(router, IpcRouter):
+            dialog.set_api_status(STATUS_IN_PROGRESS)
+            pump_events()
+
+            client = FreeroutingApiClient()
+            router._build_api_command()
+
+            if client.health_check():
+                # Already running — nothing to do
+                print("Freerouting API server is already running.")
+                dialog.set_api_status(STATUS_PASS)
+                pump_events()
+            else:
+                # Not running — start it and wait for it to become ready
+                print("Starting Freerouting API server...")
+                if not router._start_api_server():
+                    dialog.set_api_status(STATUS_FAIL)
+                    pump_events()
+                    dialog.Destroy()
+                    wx_show_error(
+                        "Could not start the Freerouting API server.\n"
+                        "Check that the Freerouting JAR is present and Java 25+ is installed."
+                    )
+                    self._cleanup()
+                    return
+                dialog.set_api_status(STATUS_PASS)
+                pump_events()
+
+        # ============================================================
+        # Stage 4-6: Execute routing (each stage updates the dialog)
         # ============================================================
         cancelled = False
         try:
@@ -246,11 +279,6 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             DEBUG_JSON_DIR.mkdir(parents=True, exist_ok=True)
             self._save_debug(board_json, DEBUG_JSON_DIR / DEBUG_INPUT_JSON_FILENAME)
 
-        # Start API server
-        router._build_api_command()
-        if not router._start_api_server():
-            dialog.set_sending_status(STATUS_FAIL)
-            return False
 
         # Create session, enqueue job, upload JSON
         session_id = client.create_session(host_name="KiCad")
