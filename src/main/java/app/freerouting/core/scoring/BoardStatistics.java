@@ -17,6 +17,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.gui.FileFormat;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.rules.BoardRules;
@@ -418,6 +419,36 @@ public class BoardStatistics implements Serializable {
         this.nets.totalCount = content.split("\\(net").length - 1;
         this.traces.totalCount = content.split("\\(wire").length - 1;
         this.vias.totalCount = content.split("\\(via").length - 1;
+      }
+    } else if (format == FileFormat.JSON) {
+      try {
+        String content = new String(data, StandardCharsets.UTF_8);
+        com.google.gson.JsonObject json = GsonProvider.GSON.fromJson(content, com.google.gson.JsonObject.class);
+        if (json != null) {
+          if (json.has("layers")) {
+            this.layers.totalCount = json.getAsJsonArray("layers").size();
+          }
+          if (json.has("components")) {
+            this.components.totalCount = json.getAsJsonArray("components").size();
+          }
+          if (json.has("netClasses")) {
+            this.nets.classCount = json.getAsJsonArray("netClasses").size();
+          }
+          if (json.has("nets")) {
+            this.nets.totalCount = json.getAsJsonArray("nets").size();
+          }
+          if (json.has("traces")) {
+            this.traces.totalCount = json.getAsJsonArray("traces").size();
+          }
+          if (json.has("vias")) {
+            this.vias.totalCount = json.getAsJsonArray("vias").size();
+          }
+          if (json.has("designName")) {
+            this.host = "KiCad JSON," + json.get("designName").getAsString();
+          }
+        }
+      } catch (Exception e) {
+        FRLogger.error("Failed to parse JSON statistics: " + e.getMessage(), e);
       }
     }
   }

@@ -143,6 +143,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     FileNameExtensionFilter frbFilter = new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
     fileChooser.addChoosableFileFilter(frbFilter);
 
+    // Add the file filter for KiCad JSON .JSON files
+    FileNameExtensionFilter jsonFilter = new FileNameExtensionFilter("KiCad JSON file (*.json)", "json");
+    fileChooser.addChoosableFileFilter(jsonFilter);
+
     // Set a file filter as the default one
     fileChooser.setFileFilter(dsnFilter);
 
@@ -410,6 +414,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
       this.output = new BoardFileDetails();
       this.output.addUpdatedEventListener(_ -> this.fireOutputUpdatedEvent());
       this.output.setFilename(changeFileExtension(input.getAbsolutePath(), SES_FILE_EXTENSION));
+    }
+
+    if (this.input.format == FileFormat.JSON) {
+      this.output = new BoardFileDetails();
+      this.output.addUpdatedEventListener(_ -> this.fireOutputUpdatedEvent());
+      this.output.setFilename(changeFileExtension(input.getAbsolutePath(), "json"));
     }
 
     if (this.input.format != FileFormat.UNKNOWN) {
