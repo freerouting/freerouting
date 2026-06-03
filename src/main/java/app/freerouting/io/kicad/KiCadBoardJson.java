@@ -73,6 +73,7 @@ public class KiCadBoardJson {
     public String shape;   // e.g. "rect", "circle", "oval"
     public Point2D size = new Point2D();
     public Point2D offset = new Point2D(); // Relative offset from component origin
+    public double drill;
     public List<String> layers = new ArrayList<>(); // Layers this pad exists on
   }
 

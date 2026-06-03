@@ -218,19 +218,43 @@ def _collect_components(board, data):
                 "layer": "F.Cu" if fp.GetLayer() == 0 else "B.Cu",
                 "pads": [],
             }
+            import math
+            fp_rot = component["rotation"]
+            rot_rad = -math.radians(fp_rot)
+            cos_rot = math.cos(rot_rad)
+            sin_rot = math.sin(rot_rad)
             for pad in fp.Pads():
                 pad_net = pad.GetNet()
                 pad_pos = pad.GetPosition()
                 pad_size = pad.GetSize()
+                dx = (pad_pos.x - pos.x) / 1e6
+                dy = (pad_pos.y - pos.y) / 1e6
+                local_dx = dx * cos_rot - dy * sin_rot
+                local_dy = dx * sin_rot + dy * cos_rot
+                
+                shape_val = pad.GetShape() if hasattr(pad, "GetShape") else -1
+                shape_str = "rect"
+                if hasattr(pcbnew, "PAD_SHAPE_CIRCLE") and shape_val == pcbnew.PAD_SHAPE_CIRCLE:
+                    shape_str = "circle"
+                elif hasattr(pcbnew, "PAD_SHAPE_OVAL") and shape_val == pcbnew.PAD_SHAPE_OVAL:
+                    shape_str = "oval"
+                
+                drill_val = 0.0
+                if hasattr(pad, "GetDrillSize"):
+                    drill_size = pad.GetDrillSize()
+                    if hasattr(drill_size, "x"):
+                        drill_val = drill_size.x / 1e6
+                
                 component["pads"].append({
                     "name": _to_str(pad.GetPadName()),
                     "netName": _to_str(pad_net.GetNetname()) if pad_net else "",
-                    "shape": "rect",
+                    "shape": shape_str,
                     "size": {"x": pad_size.x / 1e6, "y": pad_size.y / 1e6},
                     "offset": {
-                        "x": (pad_pos.x - pos.x) / 1e6,
-                        "y": (pad_pos.y - pos.y) / 1e6,
+                        "x": local_dx,
+                        "y": local_dy,
                     },
+                    "drill": drill_val,
                     "layers": [],
                 })
             data["components"].append(component)
