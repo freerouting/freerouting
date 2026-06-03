@@ -507,19 +507,16 @@ public class RouterSettings implements Serializable, Cloneable {
       FRLogger.debug("maxPasses set to 0 (no limit), using Integer.MAX_VALUE");
     }
 
-    // Validate maxThreads (0 means no limit - will be handled as max available)
-    int availableProcessors = Runtime.getRuntime().availableProcessors();
+// Validate maxThreads (0 means no limit - handled as max available during normalization)
+      int availableProcessors = Runtime.getRuntime().availableProcessors();
     if (this.maxThreads == null) {
-      this.maxThreads = defaultMaxThreads();
+    this.maxThreads = defaultMaxThreads();
     } else if (this.maxThreads < 0) {
-      FRLogger.warn("Invalid maxThreads value: " + this.maxThreads + ", using " + defaultMaxThreads());
-      this.maxThreads = defaultMaxThreads();
-    } else if (this.maxThreads == 0) {
-      this.maxThreads = availableProcessors;
-      FRLogger.debug("maxThreads set to 0 (no limit), using all available cores: " + this.maxThreads);
+    FRLogger.warn("Invalid maxThreads value: " + this.maxThreads + ", using " + defaultMaxThreads());
+    this.maxThreads = defaultMaxThreads();
     } else if (this.maxThreads > availableProcessors) {
-      FRLogger.warn("Invalid maxThreads value: " + this.maxThreads + ", capping at " + availableProcessors);
-      this.maxThreads = availableProcessors;
+    FRLogger.warn("Invalid maxThreads value: " + this.maxThreads + ", capping at " + availableProcessors);
+    this.maxThreads = availableProcessors;
     }
 
     // Validate trace_pull_tight_accuracy

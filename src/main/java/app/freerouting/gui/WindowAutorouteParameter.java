@@ -74,6 +74,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private boolean max_threads_input_completed = true;
   // Flag to prevent circular updates between GUI and settings
   private boolean isUpdatingFromSettings = false;
+  private static final long DEFAULT_TIMEOUT_SECONDS = 0L;
+  private static final long MAX_TIMEOUT_SECONDS = 86400L; // 24 hours
 
   /**
    * Creates a new instance of WindowAutorouteParameter
@@ -536,7 +538,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.via_cost_field.setValue(settings.get_via_costs());
     this.plane_via_cost_field.setValue(settings.get_plane_via_costs());
     this.start_ripup_costs.setValue(settings.get_start_ripup_costs());
-    this.max_passes_field.setValue(settings.maxPasses);
+    this.max_passes_field.setValue(settings.maxPasses != null && settings.maxPasses == Integer.MAX_VALUE ? 0 : settings.maxPasses);
     setJobTimeoutFields(settings.jobTimeoutString);
     this.max_threads_field.setValue(settings.maxThreads);
     for (int i = 0; i < preferred_direction_trace_cost_arr.length; i++) {
@@ -950,13 +952,15 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     return field;
   }
 
+  // Set timeout fields based on the provided timeout string (in format "HH:MM:SS" or seconds)
   private void setJobTimeoutFields(String timeoutString) {
     Long parsedSeconds = (timeoutString == null) ? null : TextManager.parseTimespanString(timeoutString);
-    long totalSeconds = (parsedSeconds == null) ? 12L * 60L * 60L : parsedSeconds;
+    long totalSeconds = (parsedSeconds == null) ? DEFAULT_TIMEOUT_SECONDS : parsedSeconds;
+  
     if (totalSeconds < 0) {
-      totalSeconds = 12L * 60L * 60L;
+      totalSeconds = DEFAULT_TIMEOUT_SECONDS;
     }
-    totalSeconds = Math.min(totalSeconds, 24L * 60L * 60L);
+    totalSeconds = Math.min(totalSeconds, MAX_TIMEOUT_SECONDS);
 
     long hours = totalSeconds / 3600L;
     long remainingSeconds = totalSeconds % 3600L;
