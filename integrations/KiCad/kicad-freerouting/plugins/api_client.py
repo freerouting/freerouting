@@ -11,6 +11,7 @@
 import urllib.error
 import urllib.parse
 import urllib.request
+import uuid
 
 from .config import (
     API_JOB_TIMEOUT,
@@ -30,9 +31,10 @@ class FreeroutingApiClient:
     the error to stdout.
     """
 
-    def __init__(self, base_url=DEFAULT_FR_API_BASE_URL, api_key=""):
+    def __init__(self, base_url=DEFAULT_FR_API_BASE_URL, api_key="", profile_id=None):
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key
+        self.profile_id = profile_id or str(uuid.uuid4())
         self._opener = self._build_opener()
 
     # ------------------------------------------------------------------
@@ -45,6 +47,7 @@ class FreeroutingApiClient:
             "Content-Type": "application/json",
             "Accept": "application/json",
             "Freerouting-Environment-Host": "KiCad/10",
+            "Freerouting-Profile-ID": self.profile_id,
         }
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"

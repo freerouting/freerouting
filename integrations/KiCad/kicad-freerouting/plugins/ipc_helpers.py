@@ -20,31 +20,53 @@ from .config import (
 )
 
 
-def is_ipc_available():
-    """Check whether the running KiCad instance exposes the IPC API.
+def _to_str(value):
+    """Convert a KiCad SWIG ``UTF8`` object to a Python ``str``.
 
-    The IPC API is available in KiCad 9+ when the IPC server is enabled.
-    We detect it by:
-      1. Looking for known IPC-related attributes on the ``pcbnew`` module.
-      2. Checking the build version for KiCad >= 9.
-      3. Probing for a JSON-export method as a last resort.
+    KiCad's SWIG bindings return ``UTF8`` objects (not Python ``str``)
+    from methods like ``net.GetNetname()``, ``board.GetLayerName()``,
+    etc.  These cannot be serialized by ``json.dumps()``.  This helper
+    safely converts any value to a plain Python ``str``, passing
+    already-native strings through unchanged.
+    """
+    if value is None:
+        return ""
+    return str(value)
+
+
+def is_ipc_available():
+    """Check whether we can serialize the board for IPC/API mode.
+
+    For a SWIG ActionPlugin running inside KiCad, the protobuf-based
+    IPC API methods (e.g. ``GetBoardAsJson``) are **not** exposed on the
+    ``pcbnew`` module — they are available only to external IPC clients
+    using the ``kicad-python`` package.  However, this plugin has direct
+    SWIG access to the board and can always fall back to manual
+    serialisation via ``_build_board_json_manually()``.  Therefore,
+    IPC/API mode is effectively always available when KiCad 9+ is
+    detected (the SWIG bindings are still present but deprecated).
 
     Returns:
-        ``True`` if IPC is available, ``False`` otherwise.
+        ``True`` if we can serialise the board (always True for a
+        SWIG ActionPlugin running inside KiCad 9+).
     """
-    # 1. Check for known IPC attributes
+    # 1. Check for native IPC-API methods (external-client use case)
     for attr in IPC_PROBE_ATTRIBUTES:
         if hasattr(pcbnew, attr):
             print(f"KiCad IPC API detected (pcbnew.{attr} is available).")
             return True
 
-    # 2. Check version
+    # 2. Check version — KiCad 9+ still has SWIG bindings, and our
+    #    manual fallback serialisation works on any version.
     try:
         version_str = str(pcbnew.GetBuildVersion()).strip()
         major = int(version_str.split(".")[0])
         if major >= IPC_MIN_KICAD_MAJOR:
-            print(f"KiCad {version_str} detected — probing for IPC...")
-            return _probe_ipc_via_json_export()
+            print(
+                f"KiCad {version_str} detected — "
+                "SWIG ActionPlugin mode, manual serialisation available."
+            )
+            return True
     except Exception:
         pass
 
@@ -151,7 +173,7 @@ def _collect_layers(board, data):
         for i in range(board.GetCopperLayerCount()):
             data["layers"].append({
                 "index": i,
-                "name": board.GetLayerName(i),
+                "name": _to_str(board.GetLayerName(i)),
                 "type": "signal",
             })
     except Exception as e:
@@ -168,7 +190,7 @@ def _collect_nets(board, data):
             if net and net.GetNetCode() not in net_codes:
                 net_codes[net.GetNetCode()] = {
                     "id": net_id,
-                    "name": net.GetNetname() or f"Net-{net.GetNetCode()}",
+                    "name": _to_str(net.GetNetname()) or f"Net-{net.GetNetCode()}",
                     "className": "default",
                     "containsPlane": False,
                 }
@@ -184,9 +206,9 @@ def _collect_components(board, data):
         for fp in board.GetFootprints():
             pos = fp.GetPosition()
             component = {
-                "reference": fp.GetReference() or "?",
-                "value": fp.GetValue() or "",
-                "footprint": fp.GetFPID().GetLibItemName() if fp.GetFPID() else "",
+                "reference": _to_str(fp.GetReference()),
+                "value": _to_str(fp.GetValue()),
+                "footprint": _to_str(fp.GetFPID().GetLibItemName()) if fp.GetFPID() else "",
                 "position": {"x": pos.x / 1e6, "y": pos.y / 1e6},
                 "rotation": (
                     fp.GetOrientationDegrees()
@@ -201,8 +223,8 @@ def _collect_components(board, data):
                 pad_pos = pad.GetPosition()
                 pad_size = pad.GetSize()
                 component["pads"].append({
-                    "name": pad.GetPadName() or "?",
-                    "netName": pad_net.GetNetname() if pad_net else "",
+                    "name": _to_str(pad.GetPadName()),
+                    "netName": _to_str(pad_net.GetNetname()) if pad_net else "",
                     "shape": "rect",
                     "size": {"x": pad_size.x / 1e6, "y": pad_size.y / 1e6},
                     "offset": {
@@ -232,7 +254,7 @@ def _collect_traces(board, data):
                     pass
                 data["traces"].append({
                     "id": trace_id,
-                    "netName": net.GetNetname() if net else "",
+                    "netName": _to_str(net.GetNetname()) if net else "",
                     "width": track.GetWidth() / 1e6,
                     "layerIndex": track.GetLayer(),
                     "points": points,
@@ -257,7 +279,7 @@ def _collect_vias(board, data):
                 )
                 data["vias"].append({
                     "id": via_id,
-                    "netName": net.GetNetname() if net else "",
+                    "netName": _to_str(net.GetNetname()) if net else "",
                     "position": {"x": pos.x / 1e6, "y": pos.y / 1e6},
                     "diameter": track.GetWidth() / 1e6,
                     "drill": drill / 1e6,

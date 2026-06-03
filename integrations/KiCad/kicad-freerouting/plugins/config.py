@@ -82,6 +82,18 @@ API_POLL_INTERVAL = 3.0
 API_JOB_TIMEOUT = 600
 
 # ------------------------------------------------------------------
+# Debug output
+# ------------------------------------------------------------------
+# When ``True``, the plugin saves the serialized board JSON and the
+# routing result JSON to the temp folder for debugging purposes.
+SAVE_DEBUG_JSON = True
+
+# Folder and filenames for debug JSON output.
+DEBUG_JSON_DIR = Path(tempfile.gettempdir()) / "freerouting"
+DEBUG_INPUT_JSON_FILENAME = "kicad_freerouting_input_board.json"
+DEBUG_OUTPUT_JSON_FILENAME = "kicad_freerouting_output_board.json"
+
+# ------------------------------------------------------------------
 # Routing modes
 # ------------------------------------------------------------------
 # "IPC" — use KiCad IPC + Freerouting REST API (preferred, requires KiCad 9+).
