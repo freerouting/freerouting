@@ -16,7 +16,10 @@ import time
 import pcbnew
 
 from .api_client import FreeroutingApiClient
-from .config import API_JOB_TIMEOUT, API_POLL_INTERVAL, API_SERVER_STARTUP_TIMEOUT
+from .config import (
+    API_JOB_TIMEOUT, API_POLL_INTERVAL, API_SERVER_STARTUP_TIMEOUT,
+    SAVE_DEBUG_JSON, DEBUG_JSON_DIR, DEBUG_INPUT_JSON_FILENAME, DEBUG_OUTPUT_JSON_FILENAME,
+)
 from .gui_helpers import wx_show_error
 from .ipc_helpers import get_board_json_via_ipc
 from .process_utils import ProcessDialog
@@ -60,8 +63,10 @@ class IpcRouter:
             """))
             return False  # Caller should fall back to DSN
 
-        # Step 2: Save debug JSON
-        self._save_debug(board_json, self.plugin.json_debug_path)
+        # Step 2: Save debug JSON (if enabled)
+        if SAVE_DEBUG_JSON:
+            DEBUG_JSON_DIR.mkdir(parents=True, exist_ok=True)
+            self._save_debug(board_json, DEBUG_JSON_DIR / DEBUG_INPUT_JSON_FILENAME)
 
         # Step 3: Build API server command and start it
         self._build_api_command()
@@ -84,10 +89,10 @@ class IpcRouter:
             str(self.plugin.java_path),
             "-jar",
             str(self.plugin.module_path),
-            "-api_server.enabled=true",
-            "-api_server.endpoints=http://127.0.0.1:37864",
-            "-api_server.authentication.enabled=false",
-            "-gui.enabled=false",
+            "--api_server.enabled=true",
+            "--api_server.endpoints=http://127.0.0.1:37864",
+            "--api_server.authentication.enabled=false",
+            "--gui.enabled=false",
         ]
 
     def _start_api_server(self):
@@ -226,8 +231,9 @@ class IpcRouter:
             wx_show_error("Routing completed but no output was returned.")
             return False
 
-        # Save result JSON for debugging
-        self._save_debug(output_json, self.plugin.routing_dir / "freerouting_result.json")
+        # Save result JSON for debugging (if enabled)
+        if SAVE_DEBUG_JSON:
+            self._save_debug(output_json, DEBUG_JSON_DIR / DEBUG_OUTPUT_JSON_FILENAME)
 
         # Apply result back to KiCad
         print("Applying routing result to KiCad...")

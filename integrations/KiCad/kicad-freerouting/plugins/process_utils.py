@@ -49,29 +49,25 @@ _COLORS = {
 class StatusIndicator(wx.Panel):
     """A small read-only indicator showing in-progress / pass / fail status.
 
-    Displays a Unicode symbol (↻ spinner, ✓ check, ✗ X, ○ pending) next to
-    a label.  The symbols are rendered as text so they look correct on both
-    light and dark themes.  When set to ``STATUS_IN_PROGRESS``, a built-in
-    timer animates the spinner by rotating through Unicode arrow characters.
+    Displays a Unicode symbol next to a label.  The symbols are rendered as
+    text so they look correct on both light and dark themes.  When set to
+    ``STATUS_IN_PROGRESS``, a built-in timer animates the spinner by cycling
+    through Unicode arrow characters.
 
     Attributes:
         label: The display label for this indicator.
     """
 
-    # Spinner animation characters (rotating arrows)
+    # Spinner animation: 8 positions of a clockwise rotating arrow
     _SPIN_CHARS = [
-        "\u21BB",  # ↻
-        "\u21C0",  # ⇀
-        "\u21C1",  # ⇁
-        "\u21C2",  # ⇂
-        "\u21C3",  # ⇃
-        "\u21B7",  # ↷
-        "\u21BA",  # ↺
-        "\u21B9",  # ↹
-        "\u21C4",  # ⇄
-        "\u21C5",  # ⇅
-        "\u21C6",  # ⇆
-        "\u21C7",  # ⇇
+        "\u2191",  # ↑ up arrow
+        "\u2197",  # ↗ up-right arrow
+        "\u2192",  # → right arrow
+        "\u2198",  # ↘ down-right arrow
+        "\u2193",  # ↓ down arrow
+        "\u2199",  # ↙ down-left arrow
+        "\u2190",  # ← left arrow
+        "\u2196",  # ↖ up-left arrow
     ]
 
     def __init__(self, parent, label, status=STATUS_UNDETERMINED):
@@ -85,13 +81,16 @@ class StatusIndicator(wx.Panel):
         colour = _COLORS[status]
         self._symbol_label = wx.StaticText(self, wx.ID_ANY, symbol)
         font = self._symbol_label.GetFont()
-        font.SetPointSize(font.GetPointSize() + 2)
+        font.SetPointSize(font.GetPointSize() + 4)
         font.SetWeight(wx.FONTWEIGHT_BOLD)
         self._symbol_label.SetFont(font)
         self._symbol_label.SetForegroundColour(colour)
+        # Prevent parent dialog from overriding our foreground colour
+        self._symbol_label.SetBackgroundColour(wx.NullColour)
         self._sizer.Add(self._symbol_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
 
         self._label = wx.StaticText(self, wx.ID_ANY, label)
+        self._label.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOWTEXT))
         self._sizer.Add(self._label, 0, wx.ALIGN_CENTER_VERTICAL)
 
         self.SetSizer(self._sizer)
@@ -117,7 +116,7 @@ class StatusIndicator(wx.Panel):
             self._spin_phase = 0
             self._symbol_label.SetLabel(self._SPIN_CHARS[0])
             self._symbol_label.SetForegroundColour(_COLORS[STATUS_IN_PROGRESS])
-            self._timer.Start(100)
+            self._timer.Start(120)
         else:
             self._timer.Stop()
             self._symbol_label.SetLabel(_SYMBOLS[status])
@@ -153,7 +152,12 @@ class ProcessDialog(wx.Dialog):
             pos=wx.DefaultPosition, size=wx.Size(-1, -1),
             style=wx.CAPTION,
         )
-        self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
+
+        # Use system colours so the dialog works on both light and dark themes
+        win_bg = wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW)
+        win_fg = wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOWTEXT)
+        self.SetBackgroundColour(win_bg)
+        self.SetForegroundColour(win_fg)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -180,6 +184,7 @@ class ProcessDialog(wx.Dialog):
         # --- message text (optional) ---
         if text:
             self.text = wx.StaticText(self, wx.ID_ANY, text, wx.DefaultPosition, wx.DefaultSize, 0)
+            self.text.SetForegroundColour(win_fg)
             self.text.Wrap(-1)
             sizer.Add(self.text, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 10)
 
@@ -192,8 +197,13 @@ class ProcessDialog(wx.Dialog):
         sizer.Add(self.bttn, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5)
 
         self.SetSizer(sizer)
-        self.Layout()
         sizer.Fit(self)
+        # Enforce a minimum size so all indicators and the button are visible
+        min_size = self.GetBestSize()
+        min_size.SetHeight(max(min_size.GetHeight(), 300))
+        min_size.SetWidth(max(min_size.GetWidth(), 300))
+        self.SetMinSize(min_size)
+        self.SetSize(min_size)
         self.Centre(wx.BOTH)
 
         self.bttn.Bind(wx.EVT_BUTTON, self._on_click)
@@ -223,6 +233,23 @@ class ProcessDialog(wx.Dialog):
     def terminate(self):
         """Close the dialog with the "programmatic termination" result."""
         self.EndModal(self.result_terminate)
+
+    def show_and_paint(self):
+        """Show the dialog and force an immediate synchronous paint.
+
+        Call this instead of ``Show()`` when the caller will immediately
+        start a background thread and pump events.  Without this, the
+        dialog window appears blank/white until the first ``ProcessPendingEvents``
+        call returns, because the OS paint message is still queued.
+        """
+        self.Show()
+        self.Raise()
+        self.Update()    # flush pending layout synchronously
+        self.Refresh()   # mark the window dirty
+        # One round-trip through the event loop to dispatch the paint event
+        app = wx.GetApp()
+        if app:
+            app.ProcessPendingEvents()
 
     # -- internal ---------------------------------------------------------
 

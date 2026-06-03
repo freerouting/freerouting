@@ -27,12 +27,16 @@ from pathlib import Path
 import pcbnew
 import wx
 
-from .config import DEFAULT_ROUTING_MODE, API_POLL_INTERVAL, API_JOB_TIMEOUT
+from .config import (
+    DEFAULT_ROUTING_MODE, API_POLL_INTERVAL, API_JOB_TIMEOUT,
+    SAVE_DEBUG_JSON, DEBUG_JSON_DIR, DEBUG_INPUT_JSON_FILENAME, DEBUG_OUTPUT_JSON_FILENAME,
+)
 from .gui_helpers import has_pcbnew_api, wx_show_error, wx_safe_invoke
 from .ipc_helpers import is_ipc_available, get_board_json_via_ipc
 from .process_utils import ProcessDialog, STATUS_UNDETERMINED, STATUS_IN_PROGRESS, STATUS_PASS, STATUS_FAIL
 from .router_dsn import DsnRouter
 from .router_ipc import IpcRouter
+from .api_client import FreeroutingApiClient
 
 
 class FreeroutingPlugin(pcbnew.ActionPlugin):
@@ -117,9 +121,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         for f in (self.temp_input, self.module_output):
             f.unlink(missing_ok=True)
 
-        # --- Show the progress dialog (modeless so timers/CallAfter work) ---
+        # --- Show the progress dialog and force an immediate paint ---
         dialog = ProcessDialog(None)
-        dialog.Show()
+        dialog.show_and_paint()   # renders fully before background thread starts
 
         app = wx.GetApp() or wx.App()
 
@@ -127,18 +131,47 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             """Process pending wx events so the dialog stays responsive."""
             app.ProcessPendingEvents()
 
-        # ============================================================
-        # Stage 1: Detect Java 25+ JRE
-        # ============================================================
+        # Use a background thread for pre-flight checks so the dialog stays responsive
+        check_results = {"java_path": "", "java_ok": False, "ipc_ok": False}
+
+        def run_checks():
+            from .java_utils import detect_os_architecture, get_local_java_executable_path
+            os_name, _ = detect_os_architecture()
+
+            # Java check
+            path = get_local_java_executable_path(os_name)
+            ok = bool(path)
+            check_results["java_path"] = path
+            check_results["java_ok"] = ok
+            def update_java():
+                dialog.set_java_status(STATUS_PASS if ok else STATUS_FAIL)
+            wx.CallAfter(update_java)
+
+            # IPC check
+            ipc = (self.routing_mode == "IPC" and is_ipc_available())
+            check_results["ipc_ok"] = ipc
+            def update_ipc():
+                dialog.set_ipc_status(STATUS_PASS if ipc else STATUS_FAIL)
+            wx.CallAfter(update_ipc)
+
+        # Start with spinner for both checks
         dialog.set_java_status(STATUS_IN_PROGRESS)
+        dialog.set_ipc_status(STATUS_IN_PROGRESS)
         pump_events()
 
-        from .java_utils import detect_os_architecture, get_local_java_executable_path
-        os_name, _ = detect_os_architecture()
-        java_path = get_local_java_executable_path(os_name)
-        java_ok = bool(java_path)
-        dialog.set_java_status(STATUS_PASS if java_ok else STATUS_FAIL)
+        check_thread = threading.Thread(target=run_checks, daemon=True)
+        check_thread.start()
+
+        # Wait for the thread, pumping events so the dialog renders/animates
+        while check_thread.is_alive():
+            pump_events()
+            check_thread.join(timeout=0.05)
+
         pump_events()
+
+        java_ok = check_results["java_ok"]
+        java_path = check_results["java_path"]
+        ipc_ok = check_results["ipc_ok"]
 
         if not java_ok:
             dialog.Destroy()
@@ -147,16 +180,6 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             return
 
         self.java_path = java_path
-
-        # ============================================================
-        # Stage 2: Check KiCad IPC API
-        # ============================================================
-        dialog.set_ipc_status(STATUS_IN_PROGRESS)
-        pump_events()
-
-        ipc_ok = (self.routing_mode == "IPC" and is_ipc_available())
-        dialog.set_ipc_status(STATUS_PASS if ipc_ok else STATUS_FAIL)
-        pump_events()
 
         # Determine routing mode
         if ipc_ok:
@@ -219,7 +242,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             """))
             return False
 
-        self._save_debug(board_json, self.json_debug_path)
+        if SAVE_DEBUG_JSON:
+            DEBUG_JSON_DIR.mkdir(parents=True, exist_ok=True)
+            self._save_debug(board_json, DEBUG_JSON_DIR / DEBUG_INPUT_JSON_FILENAME)
 
         # Start API server
         router._build_api_command()
@@ -312,8 +337,8 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             wx_show_error("Routing completed but no output was returned.")
             return False
 
-        # Save result JSON for debugging
-        self._save_debug(output_json, self.routing_dir / "freerouting_result.json")
+        if SAVE_DEBUG_JSON:
+            self._save_debug(output_json, DEBUG_JSON_DIR / DEBUG_OUTPUT_JSON_FILENAME)
 
         # Apply result back to KiCad
         print("Applying routing result to KiCad...")
