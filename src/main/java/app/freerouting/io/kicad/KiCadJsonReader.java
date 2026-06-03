@@ -1,18 +1,39 @@
 package app.freerouting.io.kicad;
 
-import app.freerouting.board.*;
-import app.freerouting.core.*;
+import app.freerouting.board.AngleRestriction;
+import app.freerouting.board.BoardObserverAdaptor;
+import app.freerouting.board.BoardObservers;
+import app.freerouting.board.Communication;
+import app.freerouting.board.Component;
+import app.freerouting.board.FixedState;
+import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.Layer;
+import app.freerouting.board.LayerStructure;
+import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.Unit;
 import app.freerouting.core.Package;
+import app.freerouting.core.Packages;
+import app.freerouting.core.Padstack;
+import app.freerouting.core.Padstacks;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.geometry.planar.*;
-import app.freerouting.io.BoardReadResult;
+import app.freerouting.geometry.planar.Area;
+import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.IntVector;
+import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.PolygonShape;
+import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.io.BoardMetadata;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
-import app.freerouting.rules.*;
-
-import java.io.IOException;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.ClearanceMatrix;
+import app.freerouting.rules.Net;
+import app.freerouting.rules.NetClass;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,7 +78,7 @@ public final class KiCadJsonReader {
 
       long parseEndTime = System.nanoTime();
       double parseMs = (parseEndTime - startTime) / 1_000_000.0;
-      FRLogger.info(String.format("KiCad JSON Deserialization performance: parsed in %.2f ms", parseMs));
+      FRLogger.debug(String.format("KiCad JSON Deserialization performance: parsed in %.2f ms", parseMs));
 
       // 2. Set up units and scaling
       Unit userUnit = Unit.MM;
@@ -324,7 +345,7 @@ public final class KiCadJsonReader {
 
       long endTime = System.nanoTime();
       double durationMs = (endTime - startTime) / 1_000_000.0;
-      FRLogger.info(String.format("KiCad JSON Loader performance: built RoutingBoard in %.2f ms (parsing + structure mapping)", durationMs));
+      FRLogger.debug(String.format("KiCad JSON Loader performance: built RoutingBoard in %.2f ms (parsing + structure mapping)", durationMs));
 
       // Build metadata for the board
       BoardMetadata metadata = new BoardMetadata(

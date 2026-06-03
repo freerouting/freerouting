@@ -1,4 +1,5 @@
-Constructor <app.freerouting.management.RoutingJobScheduler.<init>()> gets field <app.freerouting.gui.FileFormat.DSN> in (RoutingJobScheduler.java:79)
+Constructor <app.freerouting.management.RoutingJobScheduler.<init>()> gets field <app.freerouting.gui.FileFormat.DSN> in (RoutingJobScheduler.java:82)
+Constructor <app.freerouting.management.RoutingJobScheduler.<init>()> gets field <app.freerouting.gui.FileFormat.JSON> in (RoutingJobScheduler.java:79)
 Method <app.freerouting.api.v1.JobControllerV1.downloadOutputJson(java.lang.String)> gets field <app.freerouting.gui.FileFormat.JSON> in (JobControllerV1.java:797)
 Method <app.freerouting.api.v1.JobControllerV1.getDrcReport(java.lang.String)> gets field <app.freerouting.gui.FileFormat.JSON> in (JobControllerV1.java:1196)
 Method <app.freerouting.api.v1.JobControllerV1.uploadInputJson(java.lang.String, java.lang.String)> gets field <app.freerouting.gui.FileFormat.JSON> in (JobControllerV1.java:604)
