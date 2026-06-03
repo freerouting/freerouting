@@ -289,9 +289,10 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         client.set_monitored_session(session_id)
 
+        filename = self.board.GetFileName()
         job_name = (
-            self.board.GetFileName().stem
-            if self.board.GetFileName()
+            Path(filename).stem
+            if filename
             else "KiCad_Job"
         )
         job_id = client.enqueue_job(session_id, job_name=job_name)

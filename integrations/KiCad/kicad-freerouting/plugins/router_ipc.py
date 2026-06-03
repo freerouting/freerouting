@@ -13,6 +13,8 @@ import textwrap
 import threading
 import time
 
+from pathlib import Path
+
 import pcbnew
 
 from .api_client import FreeroutingApiClient
@@ -150,9 +152,10 @@ class IpcRouter:
         client.set_monitored_session(session_id)
 
         # Enqueue job
+        filename = self.plugin.board.GetFileName()
         job_name = (
-            self.plugin.board.GetFileName().stem
-            if self.plugin.board.GetFileName()
+            Path(filename).stem
+            if filename
             else "KiCad_Job"
         )
         print(f"Enqueuing job '{job_name}'...")

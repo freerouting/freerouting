@@ -128,7 +128,7 @@ class FreeroutingApiClient:
         Returns:
             Job ID string, or ``None`` on failure.
         """
-        payload = {"sessionId": session_id, "name": job_name}
+        payload = {"session_id": session_id, "name": job_name}
         status, body = self._request(
             "POST", "/v1/jobs/enqueue",
             data=__import__("json").dumps(payload),
