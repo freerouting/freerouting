@@ -344,82 +344,85 @@ public class BoardStatistics implements Serializable {
    *               the moment.
    */
   public BoardStatistics(byte[] data, FileFormat format) {
+    if (data == null || format == null) {
+      return;
+    }
     // set the statistical data based on the file content
-    if ((format == FileFormat.SES) || (format == FileFormat.DSN)) {
+    if (format == FileFormat.SES) {
       // read the content as text
       String content = new String(data, StandardCharsets.UTF_8);
 
-      if (format == FileFormat.SES) {
-        // to get the affected layers, we need to all "(path {layer}" occurrences, and
-        // count the different layers
-        // find all occurrences of "(path " substring, and collect these lines in to a
-        // list
-        String[] lines = content.split("\\(path ");
+      // to get the affected layers, we need to all "(path {layer}" occurrences, and
+      // count the different layers
+      // find all occurrences of "(path " substring, and collect these lines in to a
+      // list
+      String[] lines = content.split("\\(path ");
 
-        // create a list to store the layer names
-        List<String> layers = new ArrayList<>();
-        // iterate over the lines
-        for (int i = 0; i < lines.length; i++) {
-          String line = lines[i];
-          String[] words = line.split(" ");
+      // create a list to store the layer names
+      List<String> layers = new ArrayList<>();
+      // iterate over the lines
+      for (int i = 0; i < lines.length; i++) {
+        String line = lines[i];
+        String[] words = line.split(" ");
 
-          if ((i > 0) && (words.length >= 2)) {
-            // get the layer name
-            String layer = words[0];
-            // add the layer name to the list
-            if (!layers.contains(layer)) {
-              layers.add(layer);
-            }
-
+        if ((i > 0) && (words.length >= 2)) {
+          // get the layer name
+          String layer = words[0];
+          // add the layer name to the list
+          if (!layers.contains(layer)) {
+            layers.add(layer);
           }
+
         }
+      }
 
-        // get the number of components and nets in the SES file
-        this.layers.totalCount = layers.size();
-        this.components.totalCount = content.split("\\(component").length - 1;
-        this.nets.totalCount = content.split("\\(net").length - 1;
-        this.traces.totalCount = content.split("\\(wire").length - 1;
-        this.vias.totalCount = content.split("\\(via").length - 1;
-      } else if (format == FileFormat.DSN) {
-        // extract the host from the DSN file
-        String[] lines = content.split("\n");
-        String host_cad = null;
-        String host_version = null;
-        for (String line : lines) {
-          String value = null;
+      // get the number of components and nets in the SES file
+      this.layers.totalCount = layers.size();
+      this.components.totalCount = content.split("\\(component").length - 1;
+      this.nets.totalCount = content.split("\\(net").length - 1;
+      this.traces.totalCount = content.split("\\(wire").length - 1;
+      this.vias.totalCount = content.split("\\(via").length - 1;
+    } else if (format == FileFormat.DSN) {
+      // read the content as text
+      String content = new String(data, StandardCharsets.UTF_8);
+      // extract the host from the DSN file
+      String[] lines = content.split("\n");
+      String host_cad = null;
+      String host_version = null;
+      for (String line : lines) {
+        String value = null;
 
-          line = line.trim();
-          if (line.startsWith("(host_cad")) {
-            value = line
-                .substring(9, line.length() - 1)
-                .trim();
-            host_cad = TextManager.removeQuotes(value);
-          } else if (line.startsWith("(host_version")) {
-            value = line
-                .substring(13, line.length() - 1)
-                .trim();
-            host_version = TextManager.removeQuotes(value);
-          }
-
-          if ((host_cad != null) && (host_version != null)) {
-            break;
-          }
+        line = line.trim();
+        if (line.startsWith("(host_cad")) {
+          value = line
+              .substring(9, line.length() - 1)
+              .trim();
+          host_cad = TextManager.removeQuotes(value);
+        } else if (line.startsWith("(host_version")) {
+          value = line
+              .substring(13, line.length() - 1)
+              .trim();
+          host_version = TextManager.removeQuotes(value);
         }
 
         if ((host_cad != null) && (host_version != null)) {
-          this.host = host_cad + "," + host_version;
-        } else if (host_cad != null) {
-          this.host = host_cad;
+          break;
         }
-
-        // get the number of layers and nets in the DSN file
-        this.layers.totalCount = content.split("\\(layer").length - 1;
-        this.components.totalCount = content.split("\\(component").length - 1;
-        this.nets.classCount = content.split("\\(class").length - 1;
-        this.nets.totalCount = content.split("\\(net").length - 1;
-        this.traces.totalCount = content.split("\\(wire").length - 1;
-        this.vias.totalCount = content.split("\\(via").length - 1;
       }
+
+      if ((host_cad != null) && (host_version != null)) {
+        this.host = host_cad + "," + host_version;
+      } else if (host_cad != null) {
+        this.host = host_cad;
+      }
+
+      // get the number of layers and nets in the DSN file
+      this.layers.totalCount = content.split("\\(layer").length - 1;
+      this.components.totalCount = content.split("\\(component").length - 1;
+      this.nets.classCount = content.split("\\(class").length - 1;
+      this.nets.totalCount = content.split("\\(net").length - 1;
+      this.traces.totalCount = content.split("\\(wire").length - 1;
+      this.vias.totalCount = content.split("\\(via").length - 1;
     } else if (format == FileFormat.JSON) {
       try {
         String content = new String(data, StandardCharsets.UTF_8);
