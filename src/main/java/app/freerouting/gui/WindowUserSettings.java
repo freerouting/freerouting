@@ -89,20 +89,29 @@ public class WindowUserSettings extends WindowBase {
     gbc.ipadx = 0;
     
     // Ghost placeholder text field (disappears on click without needing deletion)
-    JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEmail) {
-      @Override
-      protected void paintComponent(Graphics g) {
+final String placeholder = tm.getText("email_placeholder");
+
+JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEmail) {
+    @Override
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
         if (getText().isEmpty() && !isFocusOwner()) {
-          Graphics2D g2 = (Graphics2D) g.create();
-          g2.setColor(Color.GRAY);
-          int x = getInsets().left;
-          int y = g.getFontMetrics().getAscent() + getInsets().top + ((getHeight() - getInsets().top - getInsets().bottom - g.getFontMetrics().getHeight()) / 2);
-          g2.drawString(tm.getText("email_placeholder"), x, y);
-          g2.dispose();
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setColor(Color.GRAY);
+            
+            // Cache the FontMetrics calculation locally
+            var fm = g2.getFontMetrics();
+            
+            int x = getInsets().left;
+            int y = fm.getAscent() + getInsets().top + ((getHeight() - getInsets().top - getInsets().bottom - fm.getHeight()) / 2);
+            
+            // Draw the pre-loaded string
+            g2.drawString(placeholder, x, y);
+            g2.dispose();
         }
-      }
-    };
+    }
+};
     emailField.addFocusListener(new FocusAdapter() {
       @Override
       public void focusGained(FocusEvent e) { emailField.repaint(); }
@@ -274,12 +283,15 @@ public class WindowUserSettings extends WindowBase {
       String mailtoUri = "mailto:info@freerouting.app?subject=My%20success%20story%20with%20Freerouting";
       String gmailUri  = "https://mail.google.com/mail/?view=cm&to=info%40freerouting.app&su=My%20success%20story%20with%20Freerouting";
       try {
+        // Prefer Desktop.mail(); on Windows it may fail if no default client is set
         Desktop.getDesktop().mail(new URI(mailtoUri));
       } catch (Exception ex1) {
         try {
+          // Fall back to Gmail compose URL in the default browser
           Desktop.getDesktop().browse(new URI(gmailUri));
         } catch (Exception ex2) {
           try {
+            // Last resort: invoke the Windows shell directly
             Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "", gmailUri});
           } catch (Exception ex3) {
             FRLogger.error("Failed to open email link", ex3);

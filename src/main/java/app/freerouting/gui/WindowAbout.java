@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.logger.FRLogger;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.FlowLayout;
@@ -76,7 +77,8 @@ public class WindowAbout extends BoardSavableSubWindow {
   /**
    * Helper method to create a clickable hyperlink JLabel.
    */
-  private JLabel createHyperlinkLabel(final String urlText) {
+  private JLabel createHyperlinkLabel(String url) {
+    final String urlText = url.trim();
     JLabel label = new JLabel("<html><a href=''>" + urlText + "</a></html>");
     label.setToolTipText("Open " + urlText + " in your browser"); 
     
@@ -90,7 +92,7 @@ public class WindowAbout extends BoardSavableSubWindow {
           try {
             Desktop.getDesktop().browse(new URI(urlText));
           } catch (Exception ex) {
-            System.err.println("Could not open link: " + ex.getMessage());
+            FRLogger.error("Could not open link: " + urlText, ex);
           }
         }
       });
