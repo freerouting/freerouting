@@ -234,11 +234,15 @@ public class BoardFrame extends WindowBase {
           && (routingJob.input.format != FileFormat.UNKNOWN)) {
         switch (routingJob.input.format) {
           case DSN:
-            this.load(routingJob.input.getData(), true, null, routingJob);
+            this.load(routingJob.input.getData(), FileFormat.DSN, null, routingJob);
             FRAnalytics.buttonClicked("fileio_loaddsn", this.routingJob.getInputFileDetails());
             break;
+          case JSON:
+            this.load(routingJob.input.getData(), FileFormat.JSON, null, routingJob);
+            FRAnalytics.buttonClicked("fileio_loadjson", this.routingJob.getInputFileDetails());
+            break;
           case FRB:
-            this.load(routingJob.input.getData(), false, null, routingJob);
+            this.load(routingJob.input.getData(), FileFormat.FRB, null, routingJob);
             FRAnalytics.buttonClicked("fileio_loadfrb", this.routingJob.getInputFileDetails());
             break;
           default:
@@ -419,10 +423,10 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Reads an existing board design from file. If isSpecctraDsn, the design is
-   * read from a specctra dsn file. Returns false, if the file is invalid.
+   * Reads an existing board design from file. If format is DSN or JSON, the design is
+   * read from a specctra dsn / kicad json file. Returns false, if the file is invalid.
    */
-  boolean load(InputStream inputStream, boolean isSpecctraDsn, JTextField p_message_field, RoutingJob routingJob) {
+  boolean load(InputStream inputStream, FileFormat format, JTextField p_message_field, RoutingJob routingJob) {
     Point viewport_position = null;
     DsnFile.ReadResult read_result = null;
 
@@ -435,9 +439,14 @@ public class BoardFrame extends WindowBase {
       }
     }
 
-    if (isSpecctraDsn) {
-      read_result = board_panel.board_handling.loadFromSpecctraDsn(inputStream, this.board_observers,
-          new ItemIdentificationNumberGenerator());
+    if (format == FileFormat.DSN || format == FileFormat.JSON) {
+      if (format == FileFormat.JSON) {
+        read_result = board_panel.board_handling.loadFromKiCadJson(inputStream, this.board_observers,
+            new ItemIdentificationNumberGenerator());
+      } else {
+        read_result = board_panel.board_handling.loadFromSpecctraDsn(inputStream, this.board_observers,
+            new ItemIdentificationNumberGenerator());
+      }
 
       // If the file was read successfully, initialize the windows
       if (read_result == DsnFile.ReadResult.OK) {
@@ -512,12 +521,13 @@ public class BoardFrame extends WindowBase {
       return false;
     }
 
-    return update_gui(isSpecctraDsn, read_result, viewport_position, p_message_field);
+    return update_gui(format, read_result, viewport_position, p_message_field);
   }
 
-  private boolean update_gui(boolean isSpecctraDsn, DsnFile.ReadResult read_result, Point viewport_position,
+  private boolean update_gui(FileFormat format, DsnFile.ReadResult read_result, Point viewport_position,
       JTextField p_message_field) {
-    if (isSpecctraDsn) {
+    boolean isTextDsnOrJson = (format == FileFormat.DSN || format == FileFormat.JSON);
+    if (isTextDsnOrJson) {
       if (read_result != DsnFile.ReadResult.OK) {
         if (p_message_field != null) {
           if (read_result == DsnFile.ReadResult.OUTLINE_MISSING) {
@@ -542,7 +552,7 @@ public class BoardFrame extends WindowBase {
     this.setToolbarModeSelectionPanelValue(board_panel.board_handling.get_interactive_state());
     this.setToolbarUnitSelectionPanelValue(board_panel.board_handling.coordinate_transform.user_unit);
     this.setVisible(true);
-    if (isSpecctraDsn) {
+    if (isTextDsnOrJson) {
       // Read the default gui settings, if gui default file exists.
       InputStream input_stream = null;
       boolean defaults_file_found;
