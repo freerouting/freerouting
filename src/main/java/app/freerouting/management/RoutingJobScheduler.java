@@ -148,6 +148,7 @@ public class RoutingJobScheduler {
       }
     });
 
+    loopThread.setDaemon(true);
     loopThread.start();
 
   }

@@ -13,7 +13,7 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.RatsNest;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
@@ -328,7 +328,9 @@ public class BatchAutorouterThread extends StoppableThread {
     routerCounters.rippedCount = ripped_item_count;
     routerCounters.failedToBeRoutedCount = not_routed;
     routerCounters.routedCount = routed;
-    routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
+    DesignRulesChecker drc = new DesignRulesChecker(board, null);
+    drc.calculateAllIncompletes();
+    routerCounters.incompleteCount = drc.getIncompleteCount();
 
     progressThrottler.reset();
     this.fireBoardUpdatedEvent(stats, routerCounters, board);
@@ -409,7 +411,9 @@ public class BatchAutorouterThread extends StoppableThread {
           routerCounters.rippedCount = ripped_item_count;
           routerCounters.failedToBeRoutedCount = not_routed;
           routerCounters.routedCount = routed;
-          routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
+          DesignRulesChecker drc2 = new DesignRulesChecker(board, null);
+          drc2.calculateAllIncompletes();
+          routerCounters.incompleteCount = drc2.getIncompleteCount();
           this.fireBoardUpdatedEvent(boardStatistics, routerCounters, board);
           PerformanceProfiler.end("stats_update");
         }
@@ -429,7 +433,9 @@ public class BatchAutorouterThread extends StoppableThread {
     routerCounters.rippedCount = ripped_item_count;
     routerCounters.failedToBeRoutedCount = not_routed;
     routerCounters.routedCount = routed;
-    routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
+    DesignRulesChecker drc3 = new DesignRulesChecker(board, null);
+    drc3.calculateAllIncompletes();
+    routerCounters.incompleteCount = drc3.getIncompleteCount();
     this.fireBoardUpdatedEvent(finalStats, routerCounters, board);
 
     return this.board;
