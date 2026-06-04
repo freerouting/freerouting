@@ -12,6 +12,7 @@ import textwrap
 
 import pcbnew
 
+from .config import LOG_DIR
 from .gui_helpers import wx_show_error, wx_safe_invoke
 from .process_utils import ProcessDialog, ProcessThread
 
@@ -101,6 +102,8 @@ class DsnRouter:
 
     def _build_command(self):
         """Build the command line for running Freerouting in DSN mode."""
+        LOG_DIR.mkdir(parents=True, exist_ok=True)
+
         self.plugin.module_command = [
             str(self.plugin.java_path),
             "-jar",
@@ -111,6 +114,7 @@ class DsnRouter:
             str(self.plugin.module_output),
             "-host",
             str(self.plugin.host),
+            f"--logging.file.location={LOG_DIR}",
         ]
 
     def run(self):

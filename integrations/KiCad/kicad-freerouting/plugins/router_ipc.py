@@ -21,6 +21,7 @@ from .api_client import FreeroutingApiClient
 from .config import (
     API_JOB_TIMEOUT, API_POLL_INTERVAL, API_SERVER_STARTUP_TIMEOUT,
     SAVE_DEBUG_JSON, DEBUG_JSON_DIR, DEBUG_INPUT_JSON_FILENAME, DEBUG_OUTPUT_JSON_FILENAME,
+    LOG_DIR,
 )
 from .gui_helpers import wx_show_error
 from .ipc_helpers import get_board_json_via_ipc
@@ -87,6 +88,8 @@ class IpcRouter:
 
     def _build_api_command(self):
         """Build the command to start Freerouting as a headless API server."""
+        LOG_DIR.mkdir(parents=True, exist_ok=True)
+
         self.plugin.module_command = [
             str(self.plugin.java_path),
             "-jar",
@@ -95,6 +98,7 @@ class IpcRouter:
             "--api_server.endpoints=http://127.0.0.1:37864",
             "--api_server.authentication.enabled=false",
             "--gui.enabled=false",
+            f"--logging.file.location={LOG_DIR}",
         ]
 
     def _start_api_server(self):

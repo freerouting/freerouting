@@ -76,7 +76,7 @@ API_REQUEST_TIMEOUT = 30
 API_SERVER_STARTUP_TIMEOUT = 30
 
 # Interval (seconds) between job-status polls while waiting for completion.
-API_POLL_INTERVAL = 3.0
+API_POLL_INTERVAL = 1.0
 
 # Maximum time (seconds) to wait for a job before giving up.
 API_JOB_TIMEOUT = 600
@@ -89,9 +89,10 @@ API_JOB_TIMEOUT = 600
 SAVE_DEBUG_JSON = True
 
 # Folder and filenames for debug JSON output.
-DEBUG_JSON_DIR = Path(tempfile.gettempdir()) / "freerouting"
-DEBUG_INPUT_JSON_FILENAME = "kicad_freerouting_input_board.json"
-DEBUG_OUTPUT_JSON_FILENAME = "kicad_freerouting_output_board.json"
+LOG_DIR = Path(tempfile.gettempdir()) / "freerouting" / "kicad"
+DEBUG_JSON_DIR = LOG_DIR
+DEBUG_INPUT_JSON_FILENAME = "freerouting_input_board.json"
+DEBUG_OUTPUT_JSON_FILENAME = "freerouting_output_board.json"
 
 # ------------------------------------------------------------------
 # Routing modes
