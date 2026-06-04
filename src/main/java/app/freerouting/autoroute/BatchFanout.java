@@ -11,6 +11,8 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 
+import app.freerouting.core.ProgressThrottler;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
@@ -71,7 +73,8 @@ public class BatchFanout {
   private final int totalSmdPinCount;
   private int lastNotRoutedCount;
   private int extraViasTotal;
-  private long lastProgressUpdateTimestamp;
+  private final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
+
 
   private BatchFanout(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread) {
     this.thread = p_thread;
@@ -134,6 +137,10 @@ public class BatchFanout {
         || Boolean.TRUE.equals(this.settings.fanout.ripupAllowed);
     // Negative ripup costs signal "no ripup" to RoutingBoard.fanout()
     int effectiveRipupCosts = ripupAllowed ? ripup_costs : -1;
+
+    this.progressThrottler.reset();
+    publishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
+        insert_error_count, 0, new EscapeStatistics(this.totalSmdPinCount, 0, 0.0), false, passStart);
 
     for (Component curr_component : this.sorted_components) {
       for (Component.Pin curr_pin : curr_component.smd_pins) {
@@ -210,11 +217,9 @@ public class BatchFanout {
   private void maybePublishProgress(FanoutProgressListener progressListener, int passNo, int ripupCosts, int pinsToGo,
       int routedCount, int notRoutedCount, int insertErrorCount, int extraViasThisPass, boolean passCompleted,
       long passStart) {
-    long now = System.currentTimeMillis();
-    if (passCompleted || now - lastProgressUpdateTimestamp >= 250) {
-      lastProgressUpdateTimestamp = now;
+    if (passCompleted || progressThrottler.shouldUpdate()) {
       // Mid-pass interim updates use a lightweight empty escape statistics placeholder
-      // to avoid the cost of a full escape scan on every 250 ms tick.
+      // to avoid the cost of a full escape scan on every tick.
       EscapeStatistics interimEscape = new EscapeStatistics(this.totalSmdPinCount, 0, 0.0);
       publishProgress(progressListener, passNo, ripupCosts, pinsToGo, routedCount, notRoutedCount, insertErrorCount,
           extraViasThisPass, interimEscape, passCompleted, passStart);

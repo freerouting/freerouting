@@ -68,7 +68,7 @@ public class BoardStatistics implements Serializable {
    * Creates a new BoardFileStatistics object from a RoutingBoard object.
    */
   public BoardStatistics(BasicBoard board) {
-    this(board, null);
+    this(board, null, true);
   }
 
   /**
@@ -76,6 +76,14 @@ public class BoardStatistics implements Serializable {
    * defines the preferred unit for the statistics.
    */
   public BoardStatistics(BasicBoard board, Unit unit) {
+    this(board, unit, true);
+  }
+
+  /**
+   * Creates a new BoardFileStatistics object from a RoutingBoard object,
+   * defines the preferred unit, and allows skipping the clearance checks.
+   */
+  public BoardStatistics(BasicBoard board, Unit unit, boolean includeClearanceViolations) {
     var bb = board.get_bounding_box();
 
     this.host = board.communication.specctra_parser_info.host_cad + ","
@@ -297,12 +305,11 @@ public class BoardStatistics implements Serializable {
       }
     }
 
-    // Clearance violations
-    // Use the comprehensive DRC check that iterates all board item pairs,
-    // rather than the partial board.get_outline().clearance_violation_count()
-    // which only considers violations from the BoardOutline's perspective.
-    // See: docs/issues/roadmap-v230.md item #1 and AGENTS.md DRC architecture notes.
-    this.clearanceViolations.totalCount = drc.getAllClearanceViolations().size();
+    if (includeClearanceViolations) {
+      this.clearanceViolations.totalCount = drc.getAllClearanceViolations().size();
+    } else {
+      this.clearanceViolations.totalCount = 0;
+    }
 
     // Convert all length values from board.communication.unit to the preferred unit
     if (unit == null) {
