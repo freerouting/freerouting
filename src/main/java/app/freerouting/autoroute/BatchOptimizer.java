@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import app.freerouting.core.ProgressThrottler;
+
 /**
  * Optimizes routes using a single thread on a board that has completed
  * auto-routing.
@@ -30,6 +32,7 @@ public class BatchOptimizer extends NamedAlgorithm {
   protected boolean use_increased_ripup_costs;
   // the minimum cumulative trace length that was reached during the optimization
   protected double min_cumulative_trace_length = 0.0;
+  protected final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   protected RoutingJob job;
 
   /**
@@ -92,6 +95,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     BoardStatistics boardStatisticsBefore = board.get_statistics();
     RouterCounters routerCounters = new RouterCounters();
     routerCounters.passCount = p_pass_no;
+    progressThrottler.reset();
     this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCounters, this.board);
 
     this.sorted_route_items = new ReadSortedRouteItems();
@@ -111,14 +115,17 @@ public class BatchOptimizer extends NamedAlgorithm {
       if (curr_item == null) {
         break;
       }
-      if (opt_route_item(curr_item, p_with_preferred_directions, false).improved()) {
-        BoardStatistics boardStatisticsAfter = board.get_statistics();
-        this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, board);
+      ItemRouteResult result = opt_route_item(curr_item, p_with_preferred_directions, false);
+      if (result.improved()) {
+        if (progressThrottler.shouldUpdate()) {
+          BoardStatistics boardStatisticsAfter = board.get_statistics();
+          this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, board);
+        }
 
         route_improved = (float) (boardStatisticsBefore.items.viaCount != 0
             && boardStatisticsBefore.traces.totalLength != 0
-                ? 1.0 - ((((float) boardStatisticsAfter.items.viaCount / boardStatisticsBefore.items.viaCount)
-                    + (boardStatisticsAfter.traces.totalLength / boardStatisticsBefore.traces.totalLength)) / 2)
+                ? 1.0 - ((((float) result.via_count() / boardStatisticsBefore.items.viaCount)
+                    + (result.trace_length() / boardStatisticsBefore.traces.totalLength)) / 2)
                 : 0);
       }
     }
@@ -131,6 +138,7 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     double routeoptimizer_pass_duration = FRLogger.traceExit(optimizationPassId);
     BoardStatistics boardStatisticsAfter = new BoardStatistics(this.board);
+    this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, this.board);
     job.logInfo("Optimizer pass #" + p_pass_no + " was completed in "
         + FRLogger.formatDuration(routeoptimizer_pass_duration) + " with the score of " + FRLogger.formatScore(
             boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring),
@@ -157,10 +165,12 @@ public class BatchOptimizer extends NamedAlgorithm {
     }
 
     // calculate the statistics for the board before the routing
-    BoardStatistics boardStatisticsBefore = routingBoard.get_statistics();
+    BoardStatistics boardStatisticsBefore = new BoardStatistics(routingBoard, null, false);
     RouterCounters routerCountersBefore = new RouterCounters();
     routerCountersBefore.incompleteCount = new RatsNest(routingBoard).incomplete_count();
-    this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCountersBefore, routingBoard);
+    if (progressThrottler.shouldUpdate()) {
+      this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCountersBefore, routingBoard);
+    }
 
     // collect the items to be re-routed
     Set<Item> ripped_items = new TreeSet<>();
@@ -225,10 +235,12 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     // check the result by generating the statistics for the board again after the
     // routing
-    BoardStatistics boardStatisticsAfter = routingBoard.get_statistics();
+    BoardStatistics boardStatisticsAfter = new BoardStatistics(routingBoard, null, false);
     RouterCounters routerCountersAfter = new RouterCounters();
     routerCountersAfter.incompleteCount = new RatsNest(routingBoard).incomplete_count();
-    this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCountersAfter, routingBoard);
+    if (progressThrottler.shouldUpdate()) {
+      this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCountersAfter, routingBoard);
+    }
 
     // check if the board was improved
     ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), boardStatisticsBefore.items.viaCount,

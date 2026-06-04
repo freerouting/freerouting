@@ -226,7 +226,8 @@ public class PolylineTrace extends Trace implements Serializable {
         other_trace = trace;
         if (other_trace.get_layer() == get_layer() && other_trace.nets_equal(this)
             && other_trace.get_half_width() == get_half_width()
-            && other_trace.get_fixed_state() == this.get_fixed_state()) {
+            && other_trace.get_fixed_state() == this.get_fixed_state()
+            && !other_trace.isDeletionForbidden() && !this.isDeletionForbidden()) {
           if (start_corner.equals(other_trace.last_corner())) {
             trace_found = true;
             break;
@@ -342,7 +343,8 @@ public class PolylineTrace extends Trace implements Serializable {
         other_trace = trace;
         if (other_trace.get_layer() == get_layer() && other_trace.nets_equal(this)
             && other_trace.get_half_width() == get_half_width()
-            && other_trace.get_fixed_state() == this.get_fixed_state()) {
+            && other_trace.get_fixed_state() == this.get_fixed_state()
+            && !other_trace.isDeletionForbidden() && !this.isDeletionForbidden()) {
           if (end_corner.equals(other_trace.first_corner())) {
             trace_found = true;
             break;

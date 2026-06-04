@@ -52,7 +52,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     }
 
     // Start a new thread that will monitor the job thread
-    new Thread(() -> {
+    Thread monitorThread = new Thread(() -> {
       while ((job != null) && (job.thread != null)) {
 
         try {
@@ -86,7 +86,9 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           }
         }
       }
-    }).start();
+    });
+    monitorThread.setDaemon(true);
+    monitorThread.start();
 
     // start the routing task if needed
     if (job.routerSettings.getRunRouter()) {

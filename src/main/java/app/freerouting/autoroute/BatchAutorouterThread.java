@@ -13,7 +13,7 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.RatsNest;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
@@ -26,6 +26,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import app.freerouting.core.ProgressThrottler;
+
 /**
  * Handles the sequencing of the auto-router passes.
  */
@@ -35,6 +37,7 @@ public class BatchAutorouterThread extends StoppableThread {
 
   protected final transient List<BoardUpdatedEventListener> boardUpdatedEventListeners = new ArrayList<>();
 
+  private final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   private final RoutingBoard board;
   private final boolean remove_unconnected_vias;
   private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
@@ -325,8 +328,11 @@ public class BatchAutorouterThread extends StoppableThread {
     routerCounters.rippedCount = ripped_item_count;
     routerCounters.failedToBeRoutedCount = not_routed;
     routerCounters.routedCount = routed;
-    routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
+    DesignRulesChecker drc = new DesignRulesChecker(board, null);
+    drc.calculateAllIncompletes();
+    routerCounters.incompleteCount = drc.getIncompleteCount();
 
+    progressThrottler.reset();
     this.fireBoardUpdatedEvent(stats, routerCounters, board);
 
     // Let's go through all items to route
@@ -396,17 +402,21 @@ public class BatchAutorouterThread extends StoppableThread {
         --items_to_go_count;
         ripped_item_count += ripped_item_list.size();
 
-        PerformanceProfiler.start("stats_update");
-        BoardStatistics boardStatistics = board.get_statistics();
-        routerCounters.passCount = passNo;
-        routerCounters.queuedToBeRoutedCount = items_to_go_count;
-        routerCounters.skippedCount = skipped;
-        routerCounters.rippedCount = ripped_item_count;
-        routerCounters.failedToBeRoutedCount = not_routed;
-        routerCounters.routedCount = routed;
-        routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
-        this.fireBoardUpdatedEvent(boardStatistics, routerCounters, board);
-        PerformanceProfiler.end("stats_update");
+        if (progressThrottler.shouldUpdate()) {
+          PerformanceProfiler.start("stats_update");
+          BoardStatistics boardStatistics = board.get_statistics();
+          routerCounters.passCount = passNo;
+          routerCounters.queuedToBeRoutedCount = items_to_go_count;
+          routerCounters.skippedCount = skipped;
+          routerCounters.rippedCount = ripped_item_count;
+          routerCounters.failedToBeRoutedCount = not_routed;
+          routerCounters.routedCount = routed;
+          DesignRulesChecker drc2 = new DesignRulesChecker(board, null);
+          drc2.calculateAllIncompletes();
+          routerCounters.incompleteCount = drc2.getIncompleteCount();
+          this.fireBoardUpdatedEvent(boardStatistics, routerCounters, board);
+          PerformanceProfiler.end("stats_update");
+        }
       }
     }
 
@@ -415,6 +425,18 @@ public class BatchAutorouterThread extends StoppableThread {
     } else {
       remove_tails(Item.StopConnectionOption.FANOUT_VIA);
     }
+
+    BoardStatistics finalStats = board.get_statistics();
+    routerCounters.passCount = passNo;
+    routerCounters.queuedToBeRoutedCount = items_to_go_count;
+    routerCounters.skippedCount = skipped;
+    routerCounters.rippedCount = ripped_item_count;
+    routerCounters.failedToBeRoutedCount = not_routed;
+    routerCounters.routedCount = routed;
+    DesignRulesChecker drc3 = new DesignRulesChecker(board, null);
+    drc3.calculateAllIncompletes();
+    routerCounters.incompleteCount = drc3.getIncompleteCount();
+    this.fireBoardUpdatedEvent(finalStats, routerCounters, board);
 
     return this.board;
   }
