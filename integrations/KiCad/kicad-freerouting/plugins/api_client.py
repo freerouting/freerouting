@@ -12,6 +12,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
+import logging
 
 from .config import (
     API_JOB_TIMEOUT,
@@ -19,6 +20,9 @@ from .config import (
     API_REQUEST_TIMEOUT,
     DEFAULT_FR_API_BASE_URL,
 )
+
+logger = logging.getLogger("freerouting")
+
 
 
 class FreeroutingApiClient:
@@ -106,7 +110,7 @@ class FreeroutingApiClient:
                 return data.get("sessionId") or data.get("id") or data.get("session_id")
             except __import__("json").JSONDecodeError:
                 return body.strip().strip('"')
-        print(f"Failed to create session: HTTP {status} — {body}")
+        logger.error(f"Failed to create session: HTTP {status} — {body}")
         return None
 
     def set_monitored_session(self, session_id):
@@ -139,7 +143,7 @@ class FreeroutingApiClient:
                 return data.get("id") or data.get("jobId") or data.get("job_id")
             except __import__("json").JSONDecodeError:
                 return body.strip().strip('"')
-        print(f"Failed to enqueue job: HTTP {status} — {body}")
+        logger.error(f"Failed to enqueue job: HTTP {status} — {body}")
         return None
 
     def upload_json_input(self, job_id, json_str):
@@ -151,7 +155,7 @@ class FreeroutingApiClient:
         status, body = self._request("POST", f"/v1/jobs/{job_id}/input/json", data=json_str)
         if status == 200:
             return True
-        print(f"Failed to upload JSON input: HTTP {status} — {body}")
+        logger.error(f"Failed to upload JSON input: HTTP {status} — {body}")
         return False
 
     def start_job(self, job_id):
@@ -163,7 +167,7 @@ class FreeroutingApiClient:
         status, body = self._request("PUT", f"/v1/jobs/{job_id}/start")
         if status == 200:
             return True
-        print(f"Failed to start job: HTTP {status} — {body}")
+        logger.error(f"Failed to start job: HTTP {status} — {body}")
         return False
 
     def cancel_job(self, job_id):
@@ -200,7 +204,7 @@ class FreeroutingApiClient:
         )
         if status in (200, 202):
             return body
-        print(f"Failed to download JSON output: HTTP {status} — {body}")
+        logger.error(f"Failed to download JSON output: HTTP {status} — {body}")
         return None
 
     # ------------------------------------------------------------------
@@ -226,21 +230,21 @@ class FreeroutingApiClient:
         while True:
             elapsed = _time.time() - start
             if elapsed > timeout:
-                print(f"Job {job_id} timed out after {timeout}s.")
+                logger.error(f"Job {job_id} timed out after {timeout}s.")
                 return False, None
 
             info = self.get_job_status(job_id)
             if info is None:
-                print(f"Could not get job status for {job_id}.")
+                logger.error(f"Could not get job status for {job_id}.")
                 return False, None
 
             state = info.get("state", "UNKNOWN")
-            print(f"  Job {job_id} state: {state} ({elapsed:.0f}s elapsed)")
+            logger.info(f"  Job {job_id} state: {state} ({elapsed:.0f}s elapsed)")
 
             if state in ("COMPLETED", "FINISHED", "DONE"):
                 return True, self.download_json_output(job_id)
             elif state in ("TERMINATED", "CANCELLED", "TIMED_OUT", "INVALID", "ERROR"):
-                print(f"Job {job_id} ended with state: {state}")
+                logger.error(f"Job {job_id} ended with state: {state}")
                 return False, None
 
             _time.sleep(poll_interval)

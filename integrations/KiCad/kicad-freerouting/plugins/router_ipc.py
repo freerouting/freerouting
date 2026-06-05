@@ -12,12 +12,16 @@ import subprocess
 import textwrap
 import threading
 import time
+import logging
 
 from pathlib import Path
 
 import pcbnew
 
 from .api_client import FreeroutingApiClient
+
+logger = logging.getLogger("freerouting")
+
 from .config import (
     API_JOB_TIMEOUT, API_POLL_INTERVAL, API_SERVER_STARTUP_TIMEOUT,
     SAVE_DEBUG_JSON, DEBUG_JSON_DIR, DEBUG_INPUT_JSON_FILENAME, DEBUG_OUTPUT_JSON_FILENAME,
@@ -54,10 +58,12 @@ class IpcRouter:
             ``True`` if routing completed and results were applied.
         """
         # Step 1: Serialize board to JSON
-        print("Serializing board to JSON via KiCad IPC API...")
+        logger.info("Serializing board to JSON via KiCad IPC API...")
         try:
             board_json = get_board_json_via_ipc()
+            logger.info("Serialization succeeded.")
         except Exception as e:
+            logger.error(f"Failed to serialize board to JSON via IPC: {e}", exc_info=True)
             wx_show_error(textwrap.dedent(f"""
                 Failed to serialize board to JSON via IPC:
                 {e}
@@ -79,6 +85,7 @@ class IpcRouter:
         try:
             return self._run_workflow(board_json)
         except Exception as e:
+            logger.error(f"IPC routing workflow failed: {e}", exc_info=True)
             wx_show_error(f"IPC routing workflow failed:\n{e}")
             return False
 
@@ -100,6 +107,7 @@ class IpcRouter:
             "--gui.enabled=false",
             f"--logging.file.location={LOG_DIR}",
         ]
+        logger.info(f"Built API server command: {' '.join(self.plugin.module_command)}")
 
     def _start_api_server(self):
         """Launch the Freerouting API server and wait for it to be ready.
@@ -107,12 +115,13 @@ class IpcRouter:
         Returns:
             ``True`` if the server started successfully.
         """
-        print("Starting Freerouting API server...")
+        logger.info("Starting Freerouting API server...")
         try:
             self._api_process = subprocess.Popen(
                 self.plugin.module_command,
             )
         except Exception as e:
+            logger.error(f"Failed to start Freerouting API server: {e}", exc_info=True)
             wx_show_error(f"Failed to start Freerouting API server:\n{e}")
             return False
 
@@ -120,15 +129,17 @@ class IpcRouter:
         for attempt in range(API_SERVER_STARTUP_TIMEOUT):
             time.sleep(1)
             if client.health_check():
-                print("Freerouting API server is ready.")
+                logger.info("Freerouting API server is ready.")
                 return True
             if self._api_process.poll() is not None:
+                logger.error(f"Freerouting API server exited prematurely (exit code {self._api_process.returncode}).")
                 wx_show_error(textwrap.dedent(f"""
                     Freerouting API server exited prematurely
                     (exit code {self._api_process.returncode}).
                 """))
                 return False
 
+        logger.error("Freerouting API server did not become ready in time.")
         wx_show_error("Freerouting API server did not become ready in time.")
         self._api_process.terminate()
         return False
@@ -146,11 +157,11 @@ class IpcRouter:
         client = FreeroutingApiClient()
 
         # Create session
-        print("Creating Freerouting session...")
+        logger.info("Creating Freerouting session...")
         session_id = client.create_session(host_name="KiCad")
         if not session_id:
             raise RuntimeError("Failed to create session.")
-        print(f"Session: {session_id}")
+        logger.info(f"Session created: {session_id}")
 
         # Bind to GUI visualizer (best-effort)
         client.set_monitored_session(session_id)
@@ -162,19 +173,19 @@ class IpcRouter:
             if filename
             else "KiCad_Job"
         )
-        print(f"Enqueuing job '{job_name}'...")
+        logger.info(f"Enqueuing job '{job_name}'...")
         job_id = client.enqueue_job(session_id, job_name=job_name)
         if not job_id:
             raise RuntimeError("Failed to enqueue job.")
-        print(f"Job: {job_id}")
+        logger.info(f"Job enqueued: {job_id}")
 
         # Upload JSON
-        print("Uploading board JSON...")
+        logger.info("Uploading board JSON...")
         if not client.upload_json_input(job_id, board_json):
             raise RuntimeError("Failed to upload JSON input.")
 
         # Start job
-        print("Starting routing job...")
+        logger.info("Starting routing job...")
         if not client.start_job(job_id):
             raise RuntimeError("Failed to start job.")
 
@@ -202,6 +213,7 @@ class IpcRouter:
         result = {"success": False, "output_json": None, "cancelled": False}
 
         def poll():
+            logger.info("Starting background poll thread in router_ipc...")
             try:
                 ok, output = client.wait_for_job_completion(
                     job_id,
@@ -210,7 +222,9 @@ class IpcRouter:
                 )
                 result["success"] = ok
                 result["output_json"] = output
+                logger.info(f"Background poll finished. success={ok}")
             except Exception as e:
+                logger.error(f"Error in poll thread: {e}", exc_info=True)
                 result["success"] = False
                 result["error"] = str(e)
             finally:
@@ -225,16 +239,18 @@ class IpcRouter:
         poll_thread.join(timeout=15)
 
         if modal_result == dialog.result_button:
-            print("Routing cancelled by user.")
+            logger.warning("Routing cancelled by user.")
             client.cancel_job(job_id)
             return False
 
         if not result["success"]:
+            logger.error(f"Routing failed: {result.get('error', 'Unknown error')}")
             wx_show_error(f"Routing failed:\n{result.get('error', 'Unknown error')}")
             return False
 
         output_json = result["output_json"]
         if not output_json:
+            logger.error("Routing completed but no output JSON was returned.")
             wx_show_error("Routing completed but no output was returned.")
             return False
 
@@ -243,12 +259,12 @@ class IpcRouter:
             self._save_debug(output_json, DEBUG_JSON_DIR / DEBUG_OUTPUT_JSON_FILENAME)
 
         # Apply result back to KiCad
-        print("Applying routing result to KiCad...")
+        logger.info("Applying routing result to KiCad...")
         try:
             self._apply_result_to_kicad(output_json)
-            print("Routing result applied successfully.")
+            logger.info("Routing result applied successfully.")
         except Exception as e:
-            print(f"Warning: could not apply result: {e}")
+            logger.error(f"Warning: could not apply result: {e}", exc_info=True)
             wx_show_error(textwrap.dedent(f"""
                 Routing completed, but the result could not be applied
                 to KiCad automatically.  The result JSON has been saved to:
@@ -281,16 +297,27 @@ class IpcRouter:
         for method_name in ("ApplyBoardJson", "import_json", "ImportBoardJson"):
             if hasattr(pcbnew, method_name):
                 try:
+                    logger.info(f"Trying pcbnew.{method_name}(board, json_str)...")
                     getattr(pcbnew, method_name)(board, json_str)
+                    logger.info(f"pcbnew.{method_name}(board, json_str) succeeded.")
                     return
+                except TypeError:
+                    try:
+                        logger.info(f"Trying pcbnew.{method_name}(json_str) fallback...")
+                        getattr(pcbnew, method_name)(json_str)
+                        logger.info(f"pcbnew.{method_name}(json_str) succeeded.")
+                        return
+                    except Exception as e:
+                        logger.error(f"pcbnew.{method_name}(json_str) failed: {e}", exc_info=True)
                 except Exception as e:
-                    print(f"pcbnew.{method_name}() failed: {e}")
+                    logger.error(f"pcbnew.{method_name}(board, json_str) failed: {e}", exc_info=True)
 
         # Fallback: manual trace/via creation
         self._apply_traces_and_vias(board, board_data)
 
     def _apply_traces_and_vias(self, board, data):
         """Manually create traces and vias from JSON data via pcbnew API."""
+        logger.info("Falling back to manual trace/via creation in router_ipc.")
         # Build net name → net code mapping
         net_map = {}
         for net in data.get("nets", []):
@@ -298,6 +325,14 @@ class IpcRouter:
             nid = net.get("id", 0)
             if name and nid:
                 net_map[name] = nid
+
+        has_commit = hasattr(pcbnew, "BOARD_COMMIT")
+        if has_commit:
+            commit = pcbnew.BOARD_COMMIT()
+            logger.info("Using BOARD_COMMIT for manual trace/via application in router_ipc.")
+        else:
+            commit = None
+            logger.info("BOARD_COMMIT not available, applying changes directly in router_ipc.")
 
         # Traces
         for trace in data.get("traces", []):
@@ -319,8 +354,10 @@ class IpcRouter:
                     t.SetLayer(layer)
                     t.SetNet(net)
                     board.Add(t)
+                    if commit:
+                        commit.Add(t)
             except Exception as e:
-                print(f"Warning: could not apply trace: {e}")
+                logger.error(f"Warning: could not apply trace: {e}", exc_info=True)
 
         # Vias
         for via in data.get("vias", []):
@@ -338,8 +375,21 @@ class IpcRouter:
                 v.SetDrill(int(via.get("drill", 0.4) * 1e6))
                 v.SetNet(net)
                 board.Add(v)
+                if commit:
+                    commit.Add(v)
             except Exception as e:
-                print(f"Warning: could not apply via: {e}")
+                logger.error(f"Warning: could not apply via: {e}", exc_info=True)
+
+        if commit:
+            try:
+                commit.Push()
+                logger.info("BOARD_COMMIT pushed successfully in router_ipc.")
+            except Exception as e:
+                logger.error(f"BOARD_COMMIT Push failed, trying commit.Push(board): {e}")
+                try:
+                    commit.Push(board)
+                except Exception as e2:
+                    logger.error(f"commit.Push(board) failed too: {e2}", exc_info=True)
 
         try:
             pcbnew.Refresh()
@@ -356,6 +406,6 @@ class IpcRouter:
         try:
             with open(path, "w", encoding="utf-8") as f:
                 f.write(content)
-            print(f"Debug file saved to: {path}")
+            logger.info(f"Debug file saved to: {path}")
         except Exception as e:
-            print(f"Warning: could not save debug file: {e}")
+            logger.error(f"Warning: could not save debug file: {e}", exc_info=True)

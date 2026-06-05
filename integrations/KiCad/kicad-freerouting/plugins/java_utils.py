@@ -16,7 +16,10 @@ import subprocess
 import textwrap
 import urllib.error
 import urllib.request
+import logging
 from pathlib import Path
+
+logger = logging.getLogger("freerouting")
 
 from .config import (
     ADOPTIUM_API_URL,
@@ -84,9 +87,9 @@ def get_java_version(java_path):
             if v.split(".")[0].isdigit():
                 return v
     except (FileNotFoundError, subprocess.CalledProcessError) as e:
-        print(f"Error getting Java version from {java_path}: {e}")
+        logger.error(f"Error getting Java version from {java_path}: {e}")
     except Exception as e:
-        print(f"Unexpected error getting Java version: {e}")
+        logger.error(f"Unexpected error getting Java version: {e}")
     return "0.0.0.0"
 
 
@@ -110,7 +113,7 @@ def get_local_java_executable_path(os_name):
     if java_exe:
         major = int(get_java_version(java_exe).split(".")[0])
         if major >= JAVA_MIN_MAJOR_VERSION:
-            print(f"Found Java in system PATH ({java_exe}).")
+            logger.info(f"Found Java in system PATH ({java_exe}).")
             return java_exe
 
     # 2. Temp folder (previously downloaded)
@@ -126,7 +129,7 @@ def get_local_java_executable_path(os_name):
         else (),
     )
     if java_found_exes:
-        print(f"Found a downloaded JRE ({java_found_exes[0]}).")
+        logger.info(f"Found a downloaded JRE ({java_found_exes[0]}).")
         return java_found_exes[0]
 
     # 3. macOS Homebrew
@@ -135,7 +138,7 @@ def get_local_java_executable_path(os_name):
         if hb.is_file():
             major = int(get_java_version(str(hb)).split(".")[0])
             if major >= JAVA_MIN_MAJOR_VERSION:
-                print(f"Found Homebrew Java ({hb}).")
+                logger.info(f"Found Homebrew Java ({hb}).")
                 return str(hb)
 
     # 4. JAVA_HOME
@@ -147,7 +150,7 @@ def get_local_java_executable_path(os_name):
         if exe.is_file():
             major = int(get_java_version(str(exe)).split(".")[0])
             if major >= JAVA_MIN_MAJOR_VERSION:
-                print(f"Found Java via JAVA_HOME ({exe}).")
+                logger.info(f"Found Java via JAVA_HOME ({exe}).")
                 return str(exe)
 
     return ""
@@ -170,7 +173,7 @@ def check_latest_jre_version(os_name, architecture):
             info = json.loads(response.read())[0]
         return info["version"]["semver"], info["binary"]["package"]["link"]
     except (urllib.error.URLError, json.JSONDecodeError, IndexError) as e:
-        print(f"Could not retrieve latest JRE info from Adoptium API: {e}")
+        logger.error(f"Could not retrieve latest JRE info from Adoptium API: {e}")
         return None, None
 
 
@@ -186,13 +189,13 @@ def install_java_jre_25():
         Path to the installed ``java`` executable, or ``""`` on failure.
     """
     os_name, arch = detect_os_architecture()
-    print(f"Operating System: {os_name}, Architecture: {arch}")
+    logger.info(f"Operating System: {os_name}, Architecture: {arch}")
 
     local_java = get_local_java_executable_path(os_name)
     jre_ver, jre_url = check_latest_jre_version(os_name, arch)
 
     if jre_ver is None or jre_url is None:
-        print("Could not get latest JRE version info.")
+        logger.warning("Could not get latest JRE version info.")
         return local_java
 
     expected = JRE_TEMP_FOLDER / f"jdk-{jre_ver}-jre" / "bin" / "java"
@@ -200,23 +203,23 @@ def install_java_jre_25():
         expected = expected.with_suffix(".exe")
 
     if Path(local_java) == expected:
-        print(f"Already have the latest JRE ({jre_ver}).")
+        logger.info(f"Already have the latest JRE ({jre_ver}).")
         return local_java
 
     if local_java and int(get_java_version(local_java).split(".")[0]) >= JAVA_MIN_MAJOR_VERSION:
-        print(f"Found suitable Java ({local_java}), skipping download.")
+        logger.info(f"Found suitable Java ({local_java}), skipping download.")
         return local_java
 
     JRE_TEMP_FOLDER.mkdir(parents=True, exist_ok=True)
 
-    print(f"Downloading Java JRE from {jre_url}")
+    logger.info(f"Downloading Java JRE from {jre_url}")
     try:
         file_name = urllib.request.urlretrieve(
             jre_url, reporthook=download_with_progress_hook
         )[0]
-        print("\nDownload complete.")
+        logger.info("Download complete.")
     except urllib.error.URLError as e:
-        print(f"\nFailed to download: {e}")
+        logger.error(f"Failed to download: {e}")
         wx_show_error(textwrap.dedent(f"""
             Failed to download Java JRE from:
             {jre_url}
@@ -226,15 +229,15 @@ def install_java_jre_25():
         """))
         return ""
 
-    print("Extracting...")
+    logger.info("Extracting...")
     try:
         subprocess.run(
             ["tar", "-xf", file_name, "-C", str(JRE_TEMP_FOLDER)],
             check=True,
         )
-        print("Extraction complete.")
+        logger.info("Extraction complete.")
     except (FileNotFoundError, subprocess.CalledProcessError) as e:
-        print(f"Failed to extract: {e}")
+        logger.error(f"Failed to extract: {e}")
         wx_show_error(textwrap.dedent(f"""
             Failed to extract the downloaded JRE:
             {Path(file_name).name}
@@ -247,9 +250,9 @@ def install_java_jre_25():
 
     result = get_local_java_executable_path(os_name)
     if Path(result).is_file():
-        print(f"Java JRE installed at {result}")
+        logger.info(f"Java JRE installed at {result}")
     else:
-        print(f"JRE installation path not found: {result}")
+        logger.error(f"JRE installation path not found: {result}")
         wx_show_error("JRE extraction seemed to succeed but the executable was not found.")
         return ""
 

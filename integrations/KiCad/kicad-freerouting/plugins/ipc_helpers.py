@@ -9,9 +9,12 @@
 # ---------------------------------------------------------------------------
 
 import json
+import logging
 from pathlib import Path
 
 import pcbnew
+
+logger = logging.getLogger("freerouting")
 
 from .config import (
     IPC_JSON_EXPORT_METHODS,
@@ -53,7 +56,7 @@ def is_ipc_available():
     # 1. Check for native IPC-API methods (external-client use case)
     for attr in IPC_PROBE_ATTRIBUTES:
         if hasattr(pcbnew, attr):
-            print(f"KiCad IPC API detected (pcbnew.{attr} is available).")
+            logger.info(f"KiCad IPC API detected (pcbnew.{attr} is available).")
             return True
 
     # 2. Check version — KiCad 9+ still has SWIG bindings, and our
@@ -62,7 +65,7 @@ def is_ipc_available():
         version_str = str(pcbnew.GetBuildVersion()).strip()
         major = int(version_str.split(".")[0])
         if major >= IPC_MIN_KICAD_MAJOR:
-            print(
+            logger.info(
                 f"KiCad {version_str} detected — "
                 "SWIG ActionPlugin mode, manual serialisation available."
             )
@@ -70,7 +73,7 @@ def is_ipc_available():
     except Exception:
         pass
 
-    print("KiCad IPC API is not available.")
+    logger.info("KiCad IPC API is not available.")
     return False
 
 
@@ -88,10 +91,10 @@ def _probe_ipc_via_json_export():
             if hasattr(pcbnew, method_name):
                 result = getattr(pcbnew, method_name)(board)
                 if result is not None:
-                    print(f"IPC probe succeeded via pcbnew.{method_name}().")
+                    logger.info(f"IPC probe succeeded via pcbnew.{method_name}().")
                     return True
     except Exception as e:
-        print(f"IPC probe failed: {e}")
+        logger.error(f"IPC probe failed: {e}", exc_info=True)
     return False
 
 
@@ -121,11 +124,11 @@ def get_board_json_via_ipc():
                 elif isinstance(result, (dict, list)):
                     return json.dumps(result)
             except Exception as e:
-                print(f"pcbnew.{method_name}() failed: {e}")
+                logger.error(f"pcbnew.{method_name}() failed: {e}", exc_info=True)
                 continue
 
     # Fallback: manually walk pcbnew objects
-    print("Falling back to manual board JSON serialization.")
+    logger.info("Falling back to manual board JSON serialization.")
     return _build_board_json_manually(board)
 
 
@@ -177,7 +180,7 @@ def _collect_layers(board, data):
                 "type": "signal",
             })
     except Exception as e:
-        print(f"Warning: could not enumerate layers: {e}")
+        logger.warning(f"Warning: could not enumerate layers: {e}", exc_info=True)
 
 
 def _collect_nets(board, data):
@@ -197,7 +200,7 @@ def _collect_nets(board, data):
                 net_id += 1
         data["nets"] = list(net_codes.values())
     except Exception as e:
-        print(f"Warning: could not enumerate nets: {e}")
+        logger.warning(f"Warning: could not enumerate nets: {e}", exc_info=True)
 
 
 def _collect_components(board, data):
@@ -259,7 +262,7 @@ def _collect_components(board, data):
                 })
             data["components"].append(component)
     except Exception as e:
-        print(f"Warning: could not enumerate components: {e}")
+        logger.warning(f"Warning: could not enumerate components: {e}", exc_info=True)
 
 
 def _collect_traces(board, data):
@@ -285,7 +288,7 @@ def _collect_traces(board, data):
                 })
                 trace_id += 1
     except Exception as e:
-        print(f"Warning: could not enumerate traces: {e}")
+        logger.warning(f"Warning: could not enumerate traces: {e}", exc_info=True)
 
 
 def _collect_vias(board, data):
@@ -316,7 +319,7 @@ def _collect_vias(board, data):
                 })
                 via_id += 1
     except Exception as e:
-        print(f"Warning: could not enumerate vias: {e}")
+        logger.warning(f"Warning: could not enumerate vias: {e}", exc_info=True)
 
 
 def _collect_outline(board, data):
@@ -339,4 +342,4 @@ def _collect_outline(board, data):
                     except Exception:
                         pass
     except Exception as e:
-        print(f"Warning: could not enumerate outline: {e}")
+        logger.warning(f"Warning: could not enumerate outline: {e}", exc_info=True)

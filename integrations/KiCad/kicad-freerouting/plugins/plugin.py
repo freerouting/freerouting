@@ -30,6 +30,7 @@ import wx
 from .config import (
     DEFAULT_ROUTING_MODE, API_POLL_INTERVAL, API_JOB_TIMEOUT,
     SAVE_DEBUG_JSON, DEBUG_JSON_DIR, DEBUG_INPUT_JSON_FILENAME, DEBUG_OUTPUT_JSON_FILENAME,
+    LOG_DIR,
 )
 from .gui_helpers import has_pcbnew_api, wx_show_error, wx_safe_invoke
 from .ipc_helpers import is_ipc_available, get_board_json_via_ipc
@@ -37,6 +38,38 @@ from .process_utils import ProcessDialog, STATUS_UNDETERMINED, STATUS_IN_PROGRES
 from .router_dsn import DsnRouter
 from .router_ipc import IpcRouter
 from .api_client import FreeroutingApiClient
+
+import logging
+
+def _setup_logger():
+    try:
+        LOG_DIR.mkdir(parents=True, exist_ok=True)
+        log_file = LOG_DIR / "freerouting_kicad_plugin.log"
+        
+        logger = logging.getLogger("freerouting")
+        logger.setLevel(logging.DEBUG)
+        
+        if not logger.handlers:
+            fh = logging.FileHandler(log_file, mode='a', encoding='utf-8')
+            fh.setLevel(logging.DEBUG)
+            
+            formatter = logging.Formatter('%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s')
+            fh.setFormatter(formatter)
+            logger.addHandler(fh)
+            
+            ch = logging.StreamHandler()
+            ch.setLevel(logging.DEBUG)
+            ch.setFormatter(formatter)
+            logger.addHandler(ch)
+            
+        logger.info("Logging configured successfully in plugin.py.")
+        return logger
+    except Exception as e:
+        print(f"Failed to setup logging: {e}")
+        return logging.getLogger("freerouting")
+
+logger = _setup_logger()
+
 
 
 class FreeroutingPlugin(pcbnew.ActionPlugin):
@@ -87,15 +120,18 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
     def _run_steps(self):
         """Prepare the environment, run pre-flight checks, and dispatch to the appropriate router."""
+        logger.info("Starting _run_steps...")
         board = pcbnew.GetBoard()
         board_path = Path(board.GetFileName())
         dirpath = board_path.parent
+        logger.info(f"Loaded board: {board_path.name}")
 
         # Load plugin configuration
         here_path = Path(__file__).parent
         config = configparser.ConfigParser()
         config.read(here_path / "plugin.ini")
         module_file = config["artifact"]["location"]
+        logger.info(f"Freerouting jar configured at: {module_file}")
 
         # Set common attributes needed by both routers
         self.board = board
@@ -108,7 +144,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         import tempfile
         if " " in str(dirpath):
             self.routing_dir = Path(tempfile.mkdtemp(prefix="freerouting_"))
-            print(f"Using temp routing dir: {self.routing_dir}")
+            logger.info(f"Using temp routing dir due to spaces in path: {self.routing_dir}")
         else:
             self.routing_dir = dirpath
 
@@ -124,6 +160,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         # --- Show the progress dialog and force an immediate paint ---
         dialog = ProcessDialog(None)
         dialog.show_and_paint()   # renders fully before background thread starts
+        logger.info("Progress dialog displayed.")
 
         app = wx.GetApp() or wx.App()
 
@@ -135,6 +172,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         check_results = {"java_path": "", "java_ok": False, "ipc_ok": False}
 
         def run_checks():
+            logger.info("Background thread checking Java and IPC availability...")
             from .java_utils import detect_os_architecture, get_local_java_executable_path
             os_name, _ = detect_os_architecture()
 
@@ -143,6 +181,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             ok = bool(path)
             check_results["java_path"] = path
             check_results["java_ok"] = ok
+            logger.info(f"Java version check: ok={ok}, path={path}")
             def update_java():
                 dialog.set_java_status(STATUS_PASS if ok else STATUS_FAIL)
             wx.CallAfter(update_java)
@@ -150,6 +189,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             # IPC check
             ipc = (self.routing_mode == "IPC" and is_ipc_available())
             check_results["ipc_ok"] = ipc
+            logger.info(f"IPC capability check: ok={ipc}")
             def update_ipc():
                 dialog.set_ipc_status(STATUS_PASS if ipc else STATUS_FAIL)
             wx.CallAfter(update_ipc)
@@ -175,6 +215,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         ipc_ok = check_results["ipc_ok"]
 
         if not java_ok:
+            logger.error("Java 25+ JRE check failed.")
             dialog.Destroy()
             wx_show_error("Java 25+ is required but could not be found.\nPlease install Java 25 or later.")
             self._cleanup()
@@ -184,13 +225,13 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         # Determine routing mode
         if ipc_ok:
-            print("=== Routing mode: IPC/API ===")
+            logger.info("=== Routing mode: IPC/API ===")
             router = IpcRouter(self)
         else:
             if self.routing_mode == "IPC":
-                print("IPC not available, falling back to DSN mode.")
+                logger.warning("IPC not available, falling back to DSN mode.")
             else:
-                print("=== Routing mode: DSN (legacy) ===")
+                logger.info("=== Routing mode: DSN (legacy) ===")
             router = DsnRouter(self)
 
         # ============================================================
@@ -206,13 +247,14 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
             if client.health_check():
                 # Already running — nothing to do
-                print("Freerouting API server is already running.")
+                logger.info("Freerouting API server is already running.")
                 dialog.set_api_status(STATUS_PASS)
                 pump_events()
             else:
                 # Not running — start it and wait for it to become ready
-                print("Starting Freerouting API server...")
+                logger.info("Starting Freerouting API server...")
                 if not router._start_api_server():
+                    logger.error("Could not start Freerouting API server.")
                     dialog.set_api_status(STATUS_FAIL)
                     pump_events()
                     dialog.Destroy()
@@ -229,15 +271,42 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         # Stage 4-6: Execute routing (each stage updates the dialog)
         # ============================================================
         cancelled = False
+        success = False
+        output_data = None
         try:
             if isinstance(router, IpcRouter):
-                cancelled = self._run_ipc_stages(router, dialog, pump_events)
+                cancelled, success, output_data = self._run_ipc_stages(router, dialog, pump_events)
             else:
-                cancelled = self._run_dsn_stages(router, dialog, pump_events)
+                cancelled, success = self._run_dsn_stages(router, dialog, pump_events)
         except Exception as e:
+            logger.error(f"Routing stages failed with exception: {e}", exc_info=True)
             wx_show_error(f"Routing failed:\n{e}")
         finally:
+            logger.info("Destroying ProcessDialog before applying results.")
             dialog.Destroy()
+
+        # Apply results back to KiCad AFTER progress dialog is destroyed!
+        if success and not cancelled:
+            if isinstance(router, IpcRouter):
+                logger.info("Applying routing result to KiCad (IPC mode)...")
+                try:
+                    self._apply_result_to_kicad(output_data)
+                    logger.info("Routing result applied successfully.")
+                except Exception as e:
+                    logger.error(f"Could not apply result: {e}", exc_info=True)
+                    wx_show_error(textwrap.dedent(f"""
+                        Routing completed, but the result could not be applied
+                        to KiCad automatically.  The result JSON has been saved to:
+                        {self.routing_dir / "freerouting_result.json"}
+
+                        Error: {e}
+                    """))
+            else:
+                logger.info("Importing Specctra SES file into KiCad (DSN mode)...")
+                if not router.import_ses():
+                    logger.error("Failed to import Specctra SES file.")
+        else:
+            logger.info(f"Routing finished: success={success}, cancelled={cancelled}")
 
         # Clean up temp directory if one was created
         self._cleanup()
@@ -255,8 +324,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         """Execute the IPC/API routing workflow with status updates.
 
         Returns:
-            ``True`` if the user cancelled.
+            ``(cancelled, success, output_json)``
         """
+        logger.info("Executing IPC stages...")
         client = FreeroutingApiClient()
 
         # --- Stage 3: Sending board to Freerouting ---
@@ -264,28 +334,30 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         pump_events()
 
         # Serialize board to JSON
-        print("Serializing board to JSON via KiCad IPC API...")
+        logger.info("Serializing board to JSON via KiCad IPC API...")
         try:
             board_json = get_board_json_via_ipc()
+            logger.info("Board serialized successfully.")
         except Exception as e:
+            logger.error(f"Failed to serialize board to JSON via IPC: {e}", exc_info=True)
             dialog.set_sending_status(STATUS_FAIL)
             wx_show_error(textwrap.dedent(f"""
                 Failed to serialize board to JSON via IPC:
                 {e}
             """))
-            return False
+            return False, False, None
 
         if SAVE_DEBUG_JSON:
             DEBUG_JSON_DIR.mkdir(parents=True, exist_ok=True)
             self._save_debug(board_json, DEBUG_JSON_DIR / DEBUG_INPUT_JSON_FILENAME)
 
-
         # Create session, enqueue job, upload JSON
         session_id = client.create_session(host_name="KiCad")
         if not session_id:
+            logger.error("Failed to create Freerouting session.")
             dialog.set_sending_status(STATUS_FAIL)
             wx_show_error("Failed to create Freerouting session.")
-            return False
+            return False, False, None
 
         client.set_monitored_session(session_id)
 
@@ -297,19 +369,22 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         )
         job_id = client.enqueue_job(session_id, job_name=job_name)
         if not job_id:
+            logger.error("Failed to enqueue routing job.")
             dialog.set_sending_status(STATUS_FAIL)
             wx_show_error("Failed to enqueue routing job.")
-            return False
+            return False, False, None
 
         if not client.upload_json_input(job_id, board_json):
+            logger.error("Failed to upload board JSON.")
             dialog.set_sending_status(STATUS_FAIL)
             wx_show_error("Failed to upload board JSON.")
-            return False
+            return False, False, None
 
         if not client.start_job(job_id):
+            logger.error("Failed to start routing job.")
             dialog.set_sending_status(STATUS_FAIL)
             wx_show_error("Failed to start routing job.")
-            return False
+            return False, False, None
 
         dialog.set_sending_status(STATUS_PASS)
         pump_events()
@@ -321,6 +396,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         result = {"success": False, "output_json": None, "cancelled": False}
 
         def poll():
+            logger.info("Starting background poll thread...")
             try:
                 ok, output = client.wait_for_job_completion(
                     job_id,
@@ -329,7 +405,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 )
                 result["success"] = ok
                 result["output_json"] = output
+                logger.info(f"Background poll finished. success={ok}")
             except Exception as e:
+                logger.error(f"Error in poll thread: {e}", exc_info=True)
                 result["success"] = False
                 result["error"] = str(e)
             finally:
@@ -343,15 +421,16 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         poll_thread.join(timeout=15)
 
         if modal_result == dialog.result_button:
-            print("Routing cancelled by user.")
+            logger.warning("Routing cancelled by user.")
             client.cancel_job(job_id)
             dialog.set_routing_status(STATUS_FAIL)
-            return True
+            return True, False, None
 
         if not result["success"]:
+            logger.error(f"Routing job failed: {result.get('error', 'Unknown error')}")
             dialog.set_routing_status(STATUS_FAIL)
             wx_show_error(f"Routing failed:\n{result.get('error', 'Unknown error')}")
-            return False
+            return False, False, None
 
         dialog.set_routing_status(STATUS_PASS)
         pump_events()
@@ -362,46 +441,34 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         output_json = result["output_json"]
         if not output_json:
+            logger.error("Routing completed but no output JSON was returned.")
             dialog.set_receiving_status(STATUS_FAIL)
             wx_show_error("Routing completed but no output was returned.")
-            return False
+            return False, False, None
 
         if SAVE_DEBUG_JSON:
             self._save_debug(output_json, DEBUG_JSON_DIR / DEBUG_OUTPUT_JSON_FILENAME)
 
-        # Apply result back to KiCad
-        print("Applying routing result to KiCad...")
-        try:
-            self._apply_result_to_kicad(output_json)
-            print("Routing result applied successfully.")
-            dialog.set_receiving_status(STATUS_PASS)
-        except Exception as e:
-            print(f"Warning: could not apply result: {e}")
-            dialog.set_receiving_status(STATUS_FAIL)
-            wx_show_error(textwrap.dedent(f"""
-                Routing completed, but the result could not be applied
-                to KiCad automatically.  The result JSON has been saved to:
-                {self.routing_dir / "freerouting_result.json"}
-
-                Error: {e}
-            """))
+        dialog.set_receiving_status(STATUS_PASS)
         pump_events()
 
-        return False
+        return False, True, output_json
 
     def _run_dsn_stages(self, router, dialog, pump_events):
         """Execute the DSN routing workflow with status updates.
 
         Returns:
-            ``True`` if the user cancelled.
+            ``(cancelled, success)``
         """
+        logger.info("Executing DSN stages...")
         # --- Stage 3: Sending board to Freerouting ---
         dialog.set_sending_status(STATUS_IN_PROGRESS)
         pump_events()
 
         if not router.prepare(self.board, self.dirpath, self.here_path, self.java_path, self.module_file):
+            logger.error("Failed to prepare DSN router.")
             dialog.set_sending_status(STATUS_FAIL)
-            return False
+            return False, False
 
         dialog.set_sending_status(STATUS_PASS)
         pump_events()
@@ -414,6 +481,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         from .process_utils import ProcessThread
 
         def on_complete():
+            logger.info("ProcessThread completed. Terminating dialog...")
             wx_safe_invoke(dialog.terminate)
 
         invoker = ProcessThread(self.module_command, on_complete)
@@ -423,15 +491,16 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         invoker.join(timeout=10)
 
         if modal_result == dialog.result_button:
-            print("Routing cancelled by user.")
+            logger.warning("Routing cancelled by user.")
             invoker.terminate()
             dialog.set_routing_status(STATUS_FAIL)
-            return True
+            return True, False
 
         if not invoker.has_ok():
+            logger.error(f"Routing process failed. Return code: {invoker.process.returncode if invoker.process else 'None'}")
             dialog.set_routing_status(STATUS_FAIL)
             invoker.show_error()
-            return False
+            return False, False
 
         dialog.set_routing_status(STATUS_PASS)
         pump_events()
@@ -440,14 +509,11 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         dialog.set_receiving_status(STATUS_IN_PROGRESS)
         pump_events()
 
-        if not router.import_ses():
-            dialog.set_receiving_status(STATUS_FAIL)
-            return False
-
+        # We will do import_ses after the dialog is closed, but mark progress here
         dialog.set_receiving_status(STATUS_PASS)
         pump_events()
 
-        return False
+        return False, True
 
     @staticmethod
     def _save_debug(content, path):
@@ -455,9 +521,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         try:
             with open(path, "w", encoding="utf-8") as f:
                 f.write(content)
-            print(f"Debug file saved to: {path}")
+            logger.info(f"Debug file saved to: {path}")
         except Exception as e:
-            print(f"Warning: could not save debug file: {e}")
+            logger.error(f"Warning: could not save debug file: {e}", exc_info=True)
 
     @staticmethod
     def _apply_result_to_kicad(json_str):
@@ -472,18 +538,37 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         for method_name in ("ApplyBoardJson", "import_json", "ImportBoardJson"):
             if hasattr(pcbnew, method_name):
                 try:
+                    logger.info(f"Trying pcbnew.{method_name}(board, json_str)...")
                     getattr(pcbnew, method_name)(board, json_str)
+                    logger.info(f"pcbnew.{method_name}(board, json_str) succeeded.")
                     return
+                except TypeError:
+                    try:
+                        logger.info(f"Trying pcbnew.{method_name}(json_str) fallback...")
+                        getattr(pcbnew, method_name)(json_str)
+                        logger.info(f"pcbnew.{method_name}(json_str) succeeded.")
+                        return
+                    except Exception as e:
+                        logger.error(f"pcbnew.{method_name}(json_str) failed: {e}", exc_info=True)
                 except Exception as e:
-                    print(f"pcbnew.{method_name}() failed: {e}")
+                    logger.error(f"pcbnew.{method_name}(board, json_str) failed: {e}", exc_info=True)
 
         # Fallback: manual trace/via creation
+        logger.info("Falling back to manual trace/via creation.")
         net_map = {}
         for net in board_data.get("nets", []):
             name = net.get("name", "")
             nid = net.get("id", 0)
             if name and nid:
                 net_map[name] = nid
+
+        has_commit = hasattr(pcbnew, "BOARD_COMMIT")
+        if has_commit:
+            commit = pcbnew.BOARD_COMMIT()
+            logger.info("Using BOARD_COMMIT for manual trace/via application.")
+        else:
+            commit = None
+            logger.info("BOARD_COMMIT not available, applying changes directly.")
 
         for trace in board_data.get("traces", []):
             try:
@@ -504,8 +589,10 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                     t.SetLayer(layer)
                     t.SetNet(net)
                     board.Add(t)
+                    if commit:
+                        commit.Add(t)
             except Exception as e:
-                print(f"Warning: could not apply trace: {e}")
+                logger.error(f"Warning: could not apply trace: {e}", exc_info=True)
 
         for via in board_data.get("vias", []):
             try:
@@ -522,8 +609,21 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 v.SetDrill(int(via.get("drill", 0.4) * 1e6))
                 v.SetNet(net)
                 board.Add(v)
+                if commit:
+                    commit.Add(v)
             except Exception as e:
-                print(f"Warning: could not apply via: {e}")
+                logger.error(f"Warning: could not apply via: {e}", exc_info=True)
+
+        if commit:
+            try:
+                commit.Push()
+                logger.info("BOARD_COMMIT pushed successfully.")
+            except Exception as e:
+                logger.error(f"BOARD_COMMIT Push failed, trying commit.Push(board): {e}")
+                try:
+                    commit.Push(board)
+                except Exception as e2:
+                    logger.error(f"commit.Push(board) failed too: {e2}", exc_info=True)
 
         try:
             pcbnew.Refresh()
