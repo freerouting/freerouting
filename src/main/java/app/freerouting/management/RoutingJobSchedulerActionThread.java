@@ -197,6 +197,11 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         job.state = RoutingJobState.COMPLETED;
       }
     }
+
+    long durationMs = java.time.Duration.between(job.startedAt, job.finishedAt).toMillis();
+    double durationSec = durationMs / 1000.0;
+    job.logInfo("Job '" + job.shortName + "' finished with state: " + job.state.toString() +
+        " (elapsed: " + String.format("%.2f", durationSec) + "s, finished at UTC: " + job.finishedAt.toString() + ").");
   }
 
   private void monitorCpuAndMemoryUsage(RoutingJob job) {
