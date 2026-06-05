@@ -326,6 +326,13 @@ class IpcRouter:
             if name and nid:
                 net_map[name] = nid
 
+        def lookup_net(board, net_code):
+            if hasattr(board, "GetNetByNetCode"):
+                return board.GetNetByNetCode(net_code)
+            elif hasattr(board, "FindNet"):
+                return board.FindNet(net_code)
+            return None
+
         has_commit = hasattr(pcbnew, "BOARD_COMMIT")
         if has_commit:
             commit = pcbnew.BOARD_COMMIT()
@@ -340,7 +347,7 @@ class IpcRouter:
                 net_code = net_map.get(trace.get("netName", ""))
                 if net_code is None:
                     continue
-                net = board.GetNetByNetCode(net_code)
+                net = lookup_net(board, net_code)
                 if net is None:
                     continue
                 width = int(trace.get("width", 0.25) * 1e6)
@@ -365,7 +372,7 @@ class IpcRouter:
                 net_code = net_map.get(via.get("netName", ""))
                 if net_code is None:
                     continue
-                net = board.GetNetByNetCode(net_code)
+                net = lookup_net(board, net_code)
                 if net is None:
                     continue
                 pos = via.get("position", {})
