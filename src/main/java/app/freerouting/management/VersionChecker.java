@@ -17,7 +17,11 @@ public class VersionChecker implements Runnable {
   private static String CURRENT_VERSION = "v1.0";  // replace with your current version
 
   public VersionChecker(String version) {
-    CURRENT_VERSION = version;
+    if (version.startsWith("v")) {
+      CURRENT_VERSION = version;
+    } else {
+      CURRENT_VERSION = "v" + version;
+    }
   }
 
   @Override
