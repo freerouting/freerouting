@@ -318,6 +318,10 @@ class IpcRouter:
     def _apply_traces_and_vias(self, board, data):
         """Manually create traces and vias from JSON data via pcbnew API."""
         logger.info("Falling back to manual trace/via creation in router_ipc.")
+        unit = data.get("unit", "MM").upper()
+        scale = 1e6 if unit == "MM" else 1.0
+        logger.info(f"Dynamic coordinate scaling set to: {scale} (unit: {unit}) in router_ipc")
+
         # Build net name → net code mapping
         net_map = {}
         for net in data.get("nets", []):
@@ -350,13 +354,13 @@ class IpcRouter:
                 net = lookup_net(board, net_code)
                 if net is None:
                     continue
-                width = int(trace.get("width", 0.25) * 1e6)
+                width = int(trace.get("width", 0.25) * scale)
                 layer = trace.get("layerIndex", 0)
                 points = trace.get("points", [])
                 for i in range(len(points) - 1):
                     t = pcbnew.PCB_TRACK(board)
-                    t.SetStart(pcbnew.VECTOR2I(int(points[i]["x"] * 1e6), int(points[i]["y"] * 1e6)))
-                    t.SetEnd(pcbnew.VECTOR2I(int(points[i + 1]["x"] * 1e6), int(points[i + 1]["y"] * 1e6)))
+                    t.SetStart(pcbnew.VECTOR2I(int(points[i]["x"] * scale), int(points[i]["y"] * scale)))
+                    t.SetEnd(pcbnew.VECTOR2I(int(points[i + 1]["x"] * scale), int(points[i + 1]["y"] * scale)))
                     t.SetWidth(width)
                     t.SetLayer(layer)
                     t.SetNet(net)
@@ -377,9 +381,9 @@ class IpcRouter:
                     continue
                 pos = via.get("position", {})
                 v = pcbnew.PCB_VIA(board)
-                v.SetPosition(pcbnew.VECTOR2I(int(pos.get("x", 0) * 1e6), int(pos.get("y", 0) * 1e6)))
-                v.SetWidth(int(via.get("diameter", 0.8) * 1e6))
-                v.SetDrill(int(via.get("drill", 0.4) * 1e6))
+                v.SetPosition(pcbnew.VECTOR2I(int(pos.get("x", 0) * scale), int(pos.get("y", 0) * scale)))
+                v.SetWidth(int(via.get("diameter", 0.8) * scale))
+                v.SetDrill(int(via.get("drill", 0.4) * scale))
                 v.SetNet(net)
                 board.Add(v)
                 if commit:
