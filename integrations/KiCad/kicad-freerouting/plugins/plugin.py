@@ -556,8 +556,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         # Fallback: manual trace/via creation
         logger.info("Falling back to manual trace/via creation.")
         unit = board_data.get("unit", "MM").upper()
-        scale = 1e6 if unit == "MM" else 1.0
-        logger.info(f"Dynamic coordinate scaling set to: {scale} (unit: {unit})")
+        resolution = float(board_data.get("resolution", 1.0))
+        scale = (1e6 / resolution) if unit == "MM" else 1.0
+        logger.info(f"Dynamic coordinate scaling set to: {scale} (unit: {unit}, resolution: {resolution})")
 
         net_map = {}
         for net in board_data.get("nets", []):

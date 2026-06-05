@@ -317,10 +317,10 @@ class IpcRouter:
 
     def _apply_traces_and_vias(self, board, data):
         """Manually create traces and vias from JSON data via pcbnew API."""
-        logger.info("Falling back to manual trace/via creation in router_ipc.")
         unit = data.get("unit", "MM").upper()
-        scale = 1e6 if unit == "MM" else 1.0
-        logger.info(f"Dynamic coordinate scaling set to: {scale} (unit: {unit}) in router_ipc")
+        resolution = float(data.get("resolution", 1.0))
+        scale = (1e6 / resolution) if unit == "MM" else 1.0
+        logger.info(f"Dynamic coordinate scaling set to: {scale} (unit: {unit}, resolution: {resolution}) in router_ipc")
 
         # Build net name → net code mapping
         net_map = {}
