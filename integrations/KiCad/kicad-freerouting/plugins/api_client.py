@@ -222,6 +222,7 @@ class FreeroutingApiClient:
             ``(success, output_json)`` tuple.
         """
         import time as _time
+        from datetime import datetime, timezone
 
         poll_interval = poll_interval or API_POLL_INTERVAL
         timeout = timeout or API_JOB_TIMEOUT
@@ -230,21 +231,26 @@ class FreeroutingApiClient:
         while True:
             elapsed = _time.time() - start
             if elapsed > timeout:
-                logger.error(f"Job {job_id} timed out after {timeout}s.")
+                end_utc = datetime.now(timezone.utc).isoformat()
+                logger.error(f"Job {job_id} timed out after {timeout}s (elapsed: {elapsed:.2f}s, finished at UTC: {end_utc}).")
                 return False, None
 
             info = self.get_job_status(job_id)
             if info is None:
-                logger.error(f"Could not get job status for {job_id}.")
+                end_utc = datetime.now(timezone.utc).isoformat()
+                logger.error(f"Could not get job status for {job_id} (elapsed: {elapsed:.2f}s, finished at UTC: {end_utc}).")
                 return False, None
 
             state = info.get("state", "UNKNOWN")
             logger.info(f"  Job {job_id} state: {state} ({elapsed:.0f}s elapsed)")
 
             if state in ("COMPLETED", "FINISHED", "DONE"):
+                end_utc = datetime.now(timezone.utc).isoformat()
+                logger.info(f"Job {job_id} completed successfully (elapsed: {elapsed:.2f}s, finished at UTC: {end_utc}).")
                 return True, self.download_json_output(job_id)
             elif state in ("TERMINATED", "CANCELLED", "TIMED_OUT", "INVALID", "ERROR"):
-                logger.error(f"Job {job_id} ended with state: {state}")
+                end_utc = datetime.now(timezone.utc).isoformat()
+                logger.error(f"Job {job_id} ended with state: {state} (elapsed: {elapsed:.2f}s, finished at UTC: {end_utc}).")
                 return False, None
 
             _time.sleep(poll_interval)
