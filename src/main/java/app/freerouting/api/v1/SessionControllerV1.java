@@ -184,7 +184,7 @@ public class SessionControllerV1 extends BaseController {
     RoutingJob targetJob = null;
     synchronized (RoutingJobScheduler.getInstance().jobs) {
       for (RoutingJob job : RoutingJobScheduler.getInstance().jobs) {
-        if (job != null && job.sessionId.equals(session.id)) {
+        if (job != null && session.id.equals(job.sessionId)) {
           targetJob = job;
           break;
         }

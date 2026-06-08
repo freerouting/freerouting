@@ -117,7 +117,8 @@ public final class KiCadJsonWriter {
     BoardOutline outline = board.get_outline();
     if (outline != null) {
       boardJson.outline = new KiCadBoardJson.OutlineJson();
-      boardJson.outline.clearance = outline.clearance_class_no() / scaleFactor;
+      int clearanceClassNo = outline.clearance_class_no();
+      boardJson.outline.clearance = board.rules.clearance_matrix.get_value(clearanceClassNo, clearanceClassNo, 0, false) / scaleFactor;
       for (int i = 0; i < outline.shape_count(); i++) {
         PolylineShape polyShape = outline.get_shape(i);
         if (polyShape != null) {

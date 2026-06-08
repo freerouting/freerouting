@@ -110,8 +110,8 @@ def kicad_process():
     proc = subprocess.Popen(
         [KICAD_PCBNEW],
         env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
     )
 
     # Wait for KiCad to start and the IPC socket to appear

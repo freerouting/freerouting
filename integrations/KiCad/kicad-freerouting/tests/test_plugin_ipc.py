@@ -55,7 +55,7 @@ class TestKiCadInstallation:
             )
             output = result.stdout + result.stderr
             # KiCad prints something like "KiCad 10.0.0"
-            assert "10." in output or "11." in output or "9." in output, (
+            assert "10." in output or "11." in output, (
                 f"KiCad version not detected in output: {output[:200]}"
             )
         except (subprocess.TimeoutExpired, FileNotFoundError):
@@ -278,7 +278,7 @@ class TestJavaUtils:
             from plugins.java_utils import detect_os_architecture
             os_name, arch = detect_os_architecture()
             assert os_name in ("windows", "linux", "mac")
-            assert arch in ("x64", "x86")
+            assert arch in ("x64", "x86", "aarch64")
         finally:
             sys.path.pop(0)
 

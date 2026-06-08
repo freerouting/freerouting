@@ -847,6 +847,9 @@ public class BoardFrame extends WindowBase {
    */
   @Override
   public void dispose() {
+    if (activeFrame == this) {
+      activeFrame = null;
+    }
     for (int i = 0; i < this.permanent_subwindows.length; i++) {
       if (this.permanent_subwindows[i] != null) {
         this.permanent_subwindows[i].dispose();

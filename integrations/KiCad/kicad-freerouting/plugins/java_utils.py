@@ -41,7 +41,7 @@ def detect_os_architecture():
     Returns:
         tuple: ``(os_name, architecture)`` where os_name is one of
         ``"windows"``, ``"linux"``, ``"mac"`` and architecture is
-        ``"x64"`` or ``"x86"``.
+        ``"x64"``, ``"x86"``, or ``"aarch64"``.
     """
     os_name = platform.system().lower()
     architecture = platform.machine().lower()
@@ -52,6 +52,8 @@ def detect_os_architecture():
         architecture = "x86"
     elif architecture == "x86_64":
         architecture = "x64"
+    elif architecture in ("arm64", "aarch64"):
+        architecture = "aarch64"
 
     if os_name == "darwin":
         os_name = "mac"

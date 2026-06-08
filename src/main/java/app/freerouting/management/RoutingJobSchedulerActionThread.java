@@ -258,12 +258,13 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     if (job.output == null) {
       job.output = new BoardFileDetails(job.board);
       job.output.addUpdatedEventListener(_ -> job.fireOutputUpdatedEvent());
+      String outputBaseName = (job.input != null) ? job.input.getFilenameWithoutExtension() : job.name;
       if (job.input != null && job.input.format == FileFormat.JSON) {
         job.output.format = FileFormat.JSON;
-        job.output.setFilename(job.input.getFilenameWithoutExtension() + ".json");
+        job.output.setFilename(outputBaseName + ".json");
       } else {
         job.output.format = FileFormat.SES;
-        job.output.setFilename(job.input.getFilenameWithoutExtension() + ".ses");
+        job.output.setFilename(outputBaseName + ".ses");
       }
     }
 
