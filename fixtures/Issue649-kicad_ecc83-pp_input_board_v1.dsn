@@ -1,4 +1,4 @@
-(pcb "C:\Work\freerouting\fixtures\ecc83-pp.dsn"
+(pcb "Issue649-kicad_ecc83-pp_input_board_v1.dsn"
   (parser
     (string_quote ")
     (space_in_quoted_tokens on)
