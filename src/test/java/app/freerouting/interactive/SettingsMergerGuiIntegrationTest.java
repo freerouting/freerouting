@@ -167,6 +167,49 @@ class SettingsMergerGuiIntegrationTest {
         assertTrue(merged.automatic_neckdown,
                 "InteractiveSettings.automatic_neckdown=true must be reflected by merge()");
     }
+
+    /**
+     * Reproduces the issue where CLI settings override GUI modifications at startup,
+     * but the user should be able to override them on the GUI.
+     */
+    @Test
+    void settingsMerge_cliOverridesGuiAtStartupButGuiShouldOverrideCliLater() {
+        // Prepare base settings where first layer is routable, second layer is routable
+        RouterSettings baseSettings = new RouterSettings();
+        baseSettings.setLayerCount(2);
+        baseSettings.layers[0].routable = true;
+        baseSettings.layers[1].routable = true;
+
+        // CLI Source disables the first layer: --router.layers.routable=false,true
+        RouterSettings cliSettings = new RouterSettings();
+        cliSettings.setLayerCount(2);
+        cliSettings.layers[0].routable = false;
+        cliSettings.layers[1].routable = true;
+        app.freerouting.settings.SettingsSource cliSource = new app.freerouting.settings.sources.CliSettings(new String[]{"--router.layers.routable=false,true"});
+
+        // Gui Settings initially contains the active settings (which got the merged startup settings from CLI)
+        RouterSettings guiActiveSettings = new RouterSettings();
+        guiActiveSettings.setLayerCount(2);
+        guiActiveSettings.layers[0].routable = false;
+        guiActiveSettings.layers[1].routable = true;
+        InteractiveSettings interactiveSettings = InteractiveSettings.reset(board, guiActiveSettings);
+
+        // Merger setup: defaults (0), GuiSettings (65), CliSettings (60)
+        SettingsMerger merger = new SettingsMerger(new DefaultSettings(), cliSource, interactiveSettings);
+
+        // Assert startup state matches CLI: first layer is disabled
+        RouterSettings startupMerged = merger.merge();
+        assertFalse(startupMerged.layers[0].routable, "At startup, first layer must be disabled (CLI wins)");
+
+        // Now, user overrides the first layer checkbox on GUI: changes it to enabled (true)
+        guiActiveSettings.layers[0].routable = true;
+
+        // Perform merge before starting router
+        RouterSettings postGuiChangeMerged = merger.merge();
+
+        // The merged settings should respect the GUI change (routable = true), overriding the CLI setting
+        assertTrue(postGuiChangeMerged.layers[0].routable, "GUI change must override the CLI setting");
+    }
 }
 
 
