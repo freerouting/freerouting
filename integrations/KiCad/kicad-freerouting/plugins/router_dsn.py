@@ -100,17 +100,17 @@ class DsnRouter:
         """Export the board to a temporary DSN file via pcbnew."""
         logger.info("Exporting board to DSN via pcbnew.ExportSpecctraDSN...")
         try:
-            logger.info("Trying pcbnew.ExportSpecctraDSN(board, filename)...")
-            ok = pcbnew.ExportSpecctraDSN(self.plugin.board, str(self.plugin.temp_input))
+            logger.info("Trying standard pcbnew.ExportSpecctraDSN(filename)...")
+            ok = pcbnew.ExportSpecctraDSN(str(self.plugin.temp_input))
         except TypeError:
             try:
-                logger.info("Trying pcbnew.ExportSpecctraDSN(filename) fallback...")
-                ok = pcbnew.ExportSpecctraDSN(str(self.plugin.temp_input))
+                logger.info("Trying pcbnew.ExportSpecctraDSN(board, filename) fallback...")
+                ok = pcbnew.ExportSpecctraDSN(self.plugin.board, str(self.plugin.temp_input))
             except Exception as e:
-                logger.error(f"Failed pcbnew.ExportSpecctraDSN(filename): {e}", exc_info=True)
+                logger.error(f"Failed pcbnew.ExportSpecctraDSN(board, filename): {e}", exc_info=True)
                 ok = False
         except Exception as e:
-            logger.error(f"Failed pcbnew.ExportSpecctraDSN(board, filename): {e}", exc_info=True)
+            logger.error(f"Failed pcbnew.ExportSpecctraDSN(filename): {e}", exc_info=True)
             ok = False
 
         if ok and self.plugin.temp_input.is_file():
@@ -212,17 +212,17 @@ class DsnRouter:
 
         logger.info("Importing Specctra SES into KiCad...")
         try:
-            logger.info("Trying pcbnew.ImportSpecctraSES(board, filename)...")
-            ok = pcbnew.ImportSpecctraSES(self.plugin.board, str(self.plugin.module_output))
+            logger.info("Trying standard pcbnew.ImportSpecctraSES(filename)...")
+            ok = pcbnew.ImportSpecctraSES(str(self.plugin.module_output))
         except TypeError:
             try:
-                logger.info("Trying pcbnew.ImportSpecctraSES(filename) fallback...")
-                ok = pcbnew.ImportSpecctraSES(str(self.plugin.module_output))
+                logger.info("Trying pcbnew.ImportSpecctraSES(board, filename) fallback...")
+                ok = pcbnew.ImportSpecctraSES(self.plugin.board, str(self.plugin.module_output))
             except Exception as e:
-                logger.error(f"Failed pcbnew.ImportSpecctraSES(filename): {e}", exc_info=True)
+                logger.error(f"Failed pcbnew.ImportSpecctraSES(board, filename): {e}", exc_info=True)
                 ok = False
         except Exception as e:
-            logger.error(f"Failed pcbnew.ImportSpecctraSES(board, filename): {e}", exc_info=True)
+            logger.error(f"Failed pcbnew.ImportSpecctraSES(filename): {e}", exc_info=True)
             ok = False
 
         if ok:
