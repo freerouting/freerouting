@@ -404,7 +404,12 @@ public class BoardFrame extends WindowBase {
     this.routingJob.routerSettings.applyBoardSpecificOptimizations(board);
 
     if (this.settingsMerger != null) {
-      this.routingJob.setSettings(this.settingsMerger.merge());
+      var mergedSettings = this.settingsMerger.merge();
+      this.routingJob.setSettings(mergedSettings);
+      var interactiveSettings = board_panel.board_handling.getInteractiveSettings();
+      if (interactiveSettings != null) {
+        interactiveSettings.setSettings(mergedSettings);
+      }
     }
 
     initialize_windows();
@@ -468,7 +473,12 @@ public class BoardFrame extends WindowBase {
         // tries to read fields like scoring.via_costs.  Without this step the windows would
         // NPE on the first access to any nullable RouterSettings field.
         if (this.settingsMerger != null) {
-          this.routingJob.setSettings(this.settingsMerger.merge());
+          var mergedSettings = this.settingsMerger.merge();
+          this.routingJob.setSettings(mergedSettings);
+          var interactiveSettings = board_panel.board_handling.getInteractiveSettings();
+          if (interactiveSettings != null) {
+            interactiveSettings.setSettings(mergedSettings);
+          }
         }
 
         initialize_windows();

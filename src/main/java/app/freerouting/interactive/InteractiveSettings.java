@@ -79,36 +79,62 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
    * @param board the routing board to bind the settings to on first creation
    * @return the singleton {@link InteractiveSettings} instance
    */
-  public static InteractiveSettings getOrCreate(RoutingBoard board) {
+  /**
+   * Returns the singleton, creating it (bound to {@code board}) if not yet initialised.
+   *
+   * <p>In headless mode this method is never called; use
+   * {@link BoardManager#getInteractiveSettings()} to safely obtain the instance (returns
+   * {@code null} when headless).
+   *
+   * @param board the routing board to bind the settings to on first creation
+   * @param routerSettings the active job settings to bind to the GUI
+   * @return the singleton {@link InteractiveSettings} instance
+   */
+  public static InteractiveSettings getOrCreate(RoutingBoard board, RouterSettings routerSettings) {
     if (instance == null) {
       synchronized (InteractiveSettings.class) {
         if (instance == null) {
-          instance = new InteractiveSettings(board);
+          instance = new InteractiveSettings(board, routerSettings);
         }
       }
+    } else {
+      instance.setSettings(routerSettings);
     }
     return instance;
   }
 
   /**
+   * Returns the singleton, creating it (bound to {@code board}) if not yet initialised.
+   *
+   * @param board the routing board to bind the settings to on first creation
+   * @return the singleton {@link InteractiveSettings} instance
+   */
+  public static InteractiveSettings getOrCreate(RoutingBoard board) {
+    return getOrCreate(board, null);
+  }
+
+  /**
    * Discards the current singleton and creates a fresh one bound to {@code board}.
    *
-   * <p>Must be called whenever a new design is loaded into the GUI session (DSN or binary load),
-   * because the new board may have a different layer count, net list, or design rules than the
-   * previous one. An {@code InteractiveSettings} constructed for the old board is invalid for the
-   * new one.
-   *
-   * <p>After this call all {@code PropertyChangeListener} panels must be re-registered on the new
-   * instance. {@link GuiBoardManager#refreshGuiFromSettings()} is the canonical place to do this.
+   * @param board the newly loaded {@link RoutingBoard}; must not be {@code null}
+   * @param routerSettings the active job settings to bind to the GUI
+   * @return the new singleton instance
+   */
+  public static InteractiveSettings reset(RoutingBoard board, RouterSettings routerSettings) {
+    synchronized (InteractiveSettings.class) {
+      instance = new InteractiveSettings(board, routerSettings);
+      return instance;
+    }
+  }
+
+  /**
+   * Discards the current singleton and creates a fresh one bound to {@code board}.
    *
    * @param board the newly loaded {@link RoutingBoard}; must not be {@code null}
    * @return the new singleton instance
    */
   public static InteractiveSettings reset(RoutingBoard board) {
-    synchronized (InteractiveSettings.class) {
-      instance = new InteractiveSettings(board);
-      return instance;
-    }
+    return reset(board, null);
   }
 
   /**
@@ -261,6 +287,14 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   }
 
   /**
+   * Creates a new interactive settings variable bound to the active job settings.
+   */
+  public InteractiveSettings(RoutingBoard p_board, RouterSettings p_settings) {
+    this(p_board);
+    setSettings(p_settings);
+  }
+
+  /**
    * Copy constructor
    */
   public InteractiveSettings(InteractiveSettings p_settings) {
@@ -297,24 +331,20 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
    * instance.
    *
    * <p>This override ensures that the {@link app.freerouting.settings.SettingsMerger} always reads
-   * up-to-date GUI state at priority 50 rather than a stale static snapshot. It is called on every
+   * up-to-date GUI state at priority 65 rather than a stale static snapshot. It is called on every
    * {@code merge()} invocation (e.g. when the user starts the autorouter, saves settings, or the
    * toolbar rebuilds settings).
-   *
-   * <p>Only fields that {@code InteractiveSettings} actually owns are populated; fields that belong
-   * exclusively to other settings sources (e.g. {@code maxPasses}, {@code maxThreads}) are left
-   * {@code null} so the merger correctly resolves them from their authoritative sources.
-   *
-   * <p>Currently mapped fields:
-   * <ul>
-   *   <li>{@link RouterSettings#trace_pull_tight_accuracy} ← {@link #trace_pull_tight_accuracy}</li>
-   *   <li>{@link RouterSettings#automatic_neckdown} ← {@link #automatic_neckdown}</li>
-   * </ul>
    *
    * @return a new {@link RouterSettings} containing the current GUI-controlled values
    */
   @Override
   public RouterSettings getSettings() {
+    RouterSettings baseSettings = super.getSettings();
+    if (baseSettings != null) {
+      baseSettings.trace_pull_tight_accuracy = this.get_trace_pull_tight_accuracy();
+      baseSettings.automatic_neckdown = this.get_automatic_neckdown();
+      return baseSettings;
+    }
     RouterSettings snapshot = new RouterSettings();
     snapshot.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     snapshot.automatic_neckdown = this.automatic_neckdown;
