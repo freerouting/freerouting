@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.logger.FRLogger;
 import java.awt.Cursor;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -44,6 +45,8 @@ public class WindowAbout extends BoardSavableSubWindow {
     window_panel.add(createMixedTextPanel(tm.getText("homepage")), gridbag_constraints);
     window_panel.add(createMixedTextPanel(tm.getText("support")), gridbag_constraints);
 
+    this.setResizable(false);
+    this.setMinimumSize(new Dimension(450, 220));
     this.pack();
   }
 
