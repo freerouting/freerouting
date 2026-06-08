@@ -285,31 +285,35 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             logger.info("Destroying ProcessDialog before applying results.")
             dialog.Destroy()
 
-        # Apply results back to KiCad AFTER progress dialog is destroyed!
-        if success and not cancelled:
-            if isinstance(router, IpcRouter):
-                logger.info("Applying routing result to KiCad (IPC mode)...")
-                try:
-                    self._apply_result_to_kicad(output_data)
-                    logger.info("Routing result applied successfully.")
-                except Exception as e:
-                    logger.error(f"Could not apply result: {e}", exc_info=True)
-                    wx_show_error(textwrap.dedent(f"""
-                        Routing completed, but the result could not be applied
-                        to KiCad automatically.  The result JSON has been saved to:
-                        {self.routing_dir / "freerouting_result.json"}
+        def apply_results_deferred():
+            try:
+                # Apply results back to KiCad AFTER progress dialog is destroyed and event loop finishes cleanup
+                if success and not cancelled:
+                    if isinstance(router, IpcRouter):
+                        logger.info("Applying routing result to KiCad (IPC mode)...")
+                        try:
+                            self._apply_result_to_kicad(output_data)
+                            logger.info("Routing result applied successfully.")
+                        except Exception as e:
+                            logger.error(f"Could not apply result: {e}", exc_info=True)
+                            wx_show_error(textwrap.dedent(f"""
+                                Routing completed, but the result could not be applied
+                                to KiCad automatically.  The result JSON has been saved to:
+                                {self.routing_dir / "freerouting_result.json"}
 
-                        Error: {e}
-                    """))
-            else:
-                logger.info("Importing Specctra SES file into KiCad (DSN mode)...")
-                if not router.import_ses():
-                    logger.error("Failed to import Specctra SES file.")
-        else:
-            logger.info(f"Routing finished: success={success}, cancelled={cancelled}")
+                                Error: {e}
+                            """))
+                    else:
+                        logger.info("Importing Specctra SES file into KiCad (DSN mode)...")
+                        if not router.import_ses():
+                            logger.error("Failed to import Specctra SES file.")
+                else:
+                    logger.info(f"Routing finished: success={success}, cancelled={cancelled}")
+            finally:
+                # Clean up temp directory if one was created
+                self._cleanup()
 
-        # Clean up temp directory if one was created
-        self._cleanup()
+        wx.CallAfter(apply_results_deferred)
 
     def _cleanup(self):
         """Remove the temporary routing directory if one was created."""
