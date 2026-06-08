@@ -227,8 +227,24 @@ class DsnRouter:
 
         if ok:
             logger.info("SES import succeeded.")
-            self.plugin.module_input.unlink(missing_ok=True)
-            self.plugin.module_output.unlink(missing_ok=True)
+            try:
+                if hasattr(pcbnew, "UpdateUserInterface"):
+                    pcbnew.UpdateUserInterface()
+                pcbnew.Refresh()
+                logger.info("KiCad UI refreshed after DSN import.")
+            except Exception as e:
+                logger.warning(f"Could not refresh KiCad UI: {e}")
+
+            try:
+                self.plugin.module_input.unlink(missing_ok=True)
+            except Exception as e:
+                logger.warning(f"Could not delete input DSN file: {e}")
+
+            try:
+                self.plugin.module_output.unlink(missing_ok=True)
+            except Exception as e:
+                logger.warning(f"Could not delete output SES file: {e}")
+
             return True
         logger.error("Failed to invoke pcbnew.ImportSpecctraSES")
         wx_show_error("Failed to invoke pcbnew.ImportSpecctraSES")
