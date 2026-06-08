@@ -202,11 +202,15 @@ public class RouterSettings implements Serializable, Cloneable {
     }
 
     for (int i = 0; i < layer_count; i++) {
-      layers[i].routable = p_board.layer_structure.arr[i].is_signal;
+      if (layers[i].routable == null) {
+        layers[i].routable = p_board.layer_structure.arr[i].is_signal;
+      }
       if (p_board.layer_structure.arr[i].is_signal) {
         curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
       }
-      layers[i].preferredDirectionHorizontal = curr_preferred_direction_is_horizontal;
+      if (layers[i].preferredDirectionHorizontal == null) {
+        layers[i].preferredDirectionHorizontal = curr_preferred_direction_is_horizontal;
+      }
       scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost;
       scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
       if (curr_preferred_direction_is_horizontal) {
