@@ -101,13 +101,13 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public void setMaxThreads(Integer value) {
     Integer oldValue = this.maxThreads;
-    this.maxThreads = value;
+    this.maxThreads = normalizeMaxThreads(value);
     if (pcs != null) {
-      pcs.firePropertyChange("maxThreads", oldValue, value);
+      pcs.firePropertyChange("maxThreads", oldValue, this.maxThreads);
     }
     // Also update optimizer's maxThreads to keep them in sync
     if (this.optimizer != null) {
-      this.optimizer.maxThreads = value;
+      this.optimizer.maxThreads = this.maxThreads;
     }
   }
 
@@ -524,16 +524,16 @@ public class RouterSettings implements Serializable, Cloneable {
       FRLogger.debug("maxPasses set to 0 (no limit), using Integer.MAX_VALUE");
     }
 
-    // Validate maxThreads (0 means no limit - will be handled as max available)
-    int availableProcessors = Runtime.getRuntime().availableProcessors();
-    if (this.maxThreads < 0 || this.maxThreads > availableProcessors) {
-      FRLogger.warn("Invalid maxThreads value: " + this.maxThreads + ", using "
-          + Math.max(1, availableProcessors - 1));
-      this.maxThreads = Math.max(1, availableProcessors - 1);
-    } else if (this.maxThreads == 0) {
-      // 0 means no limit, use all available processors minus 1
-      this.maxThreads = Math.max(1, availableProcessors - 1);
-      FRLogger.debug("maxThreads set to 0 (no limit), using " + this.maxThreads + " threads");
+// Validate maxThreads (0 means no limit - handled as max available during normalization)
+      int availableProcessors = Runtime.getRuntime().availableProcessors();
+    if (this.maxThreads == null) {
+    this.maxThreads = defaultMaxThreads();
+    } else if (this.maxThreads < 0) {
+    FRLogger.warn("Invalid maxThreads value: " + this.maxThreads + ", using " + defaultMaxThreads());
+    this.maxThreads = defaultMaxThreads();
+    } else if (this.maxThreads > availableProcessors) {
+    FRLogger.warn("Invalid maxThreads value: " + this.maxThreads + ", capping at " + availableProcessors);
+    this.maxThreads = availableProcessors;
     }
 
     // Validate trace_pull_tight_accuracy
@@ -542,5 +542,23 @@ public class RouterSettings implements Serializable, Cloneable {
           + ", using default 500");
       this.trace_pull_tight_accuracy = 500;
     }
+  }
+
+  private static int defaultMaxThreads() {
+    return Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+  }
+
+  private static int normalizeMaxThreads(Integer value) {
+    int availableProcessors = Runtime.getRuntime().availableProcessors();
+    if (value == null) {
+      return defaultMaxThreads();
+    }
+    if (value < 0) {
+      return defaultMaxThreads();
+    }
+    if (value == 0) {
+      return availableProcessors;
+    }
+    return Math.min(value, availableProcessors);
   }
 }

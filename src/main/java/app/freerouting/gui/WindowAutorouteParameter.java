@@ -3,11 +3,18 @@ package app.freerouting.gui;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.interactive.GuiBoardManager;
+import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.RouterSettings;
+import java.awt.Component;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.KeyboardFocusManager;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.FocusAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -18,11 +25,14 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 /**
  * Window handling parameters of the automatic routing.
@@ -44,7 +54,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final JFormattedTextField plane_via_cost_field;
   private final JFormattedTextField start_ripup_costs;
   private final JFormattedTextField max_passes_field;
-  private final JFormattedTextField job_timeout_field;
+  private final JPanel job_timeout_panel;
+  private final JFormattedTextField job_timeout_hours_field;
+  private final JFormattedTextField job_timeout_minutes_field;
+  private final JFormattedTextField job_timeout_seconds_field;
+  private final JLabel job_timeout_preview_label;
   private final JFormattedTextField max_threads_field;
   private final JComboBox<String> settings_autorouter_algorithm_combo_box;
   private final String algorithm_current;
@@ -57,10 +71,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private boolean plane_via_cost_input_completed = true;
   private boolean start_ripup_cost_input_completed = true;
   private boolean max_passes_input_completed = true;
-  private boolean job_timeout_input_completed = true;
   private boolean max_threads_input_completed = true;
   // Flag to prevent circular updates between GUI and settings
   private boolean isUpdatingFromSettings = false;
+  private static final long DEFAULT_TIMEOUT_SECONDS = 0L;
+  private static final long MAX_TIMEOUT_SECONDS = 86400L; // 24 hours
 
   /**
    * Creates a new instance of WindowAutorouteParameter
@@ -210,12 +225,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = 2;
     JLabel via_cost_label = new JLabel(tm.getText("via_costs"));
+    via_cost_label.setToolTipText(tm.getText("via_costs_tooltip"));
     gridbag.setConstraints(via_cost_label, gridbag_constraints);
     main_panel.add(via_cost_label);
 
     NumberFormat number_format = NumberFormat.getIntegerInstance(p_board_frame.get_locale());
     this.via_cost_field = new JFormattedTextField(number_format);
     this.via_cost_field.setColumns(3);
+    this.via_cost_field.setToolTipText(tm.getText("via_costs_tooltip"));
     this.via_cost_field.addKeyListener(new WindowAutorouteParameter.ViaCostFieldKeyListener());
     this.via_cost_field.addFocusListener(new WindowAutorouteParameter.ViaCostFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -229,9 +246,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = 2;
     JLabel plane_via_cost_label = new JLabel(tm.getText("plane_via_costs"));
+    plane_via_cost_label.setToolTipText(tm.getText("plane_via_costs_tooltip"));
     gridbag.setConstraints(plane_via_cost_label, gridbag_constraints);
     main_panel.add(plane_via_cost_label);
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    plane_via_cost_field.setToolTipText(tm.getText("plane_via_costs_tooltip"));
     gridbag.setConstraints(plane_via_cost_field, gridbag_constraints);
     main_panel.add(plane_via_cost_field);
 
@@ -240,11 +259,13 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = 2;
     JLabel start_ripup_costs_label = new JLabel();
     start_ripup_costs_label.setText(tm.getText("start_ripup_costs"));
+    start_ripup_costs_label.setToolTipText(tm.getText("start_ripup_costs_tooltip"));
     gridbag.setConstraints(start_ripup_costs_label, gridbag_constraints);
     main_panel.add(start_ripup_costs_label);
 
     start_ripup_costs = new JFormattedTextField(number_format);
     start_ripup_costs.setColumns(3);
+    start_ripup_costs.setToolTipText(tm.getText("start_ripup_costs_tooltip"));
     this.start_ripup_costs.addKeyListener(new WindowAutorouteParameter.StartRipupCostFieldKeyListener());
     this.start_ripup_costs.addFocusListener(new WindowAutorouteParameter.StartRipupCostFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -255,41 +276,75 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = 2;
     JLabel max_passes_label = new JLabel(tm.getText("max_passes"));
+    max_passes_label.setToolTipText(tm.getText("max_passes_tooltip"));
     gridbag.setConstraints(max_passes_label, gridbag_constraints);
     main_panel.add(max_passes_label);
 
     max_passes_field = new JFormattedTextField(number_format);
     max_passes_field.setColumns(5);
+    max_passes_field.setToolTipText(tm.getText("max_passes_tooltip"));
     this.max_passes_field.addKeyListener(new WindowAutorouteParameter.MaxPassesFieldKeyListener());
     this.max_passes_field.addFocusListener(new WindowAutorouteParameter.MaxPassesFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(max_passes_field, gridbag_constraints);
     main_panel.add(max_passes_field);
 
-    // add label and text field for job timeout
+    // add label and structured fields for job timeout
 
     gridbag_constraints.gridwidth = 2;
     JLabel job_timeout_label = new JLabel(tm.getText("job_timeout"));
+    job_timeout_label.setToolTipText(tm.getText("job_timeout_tooltip"));
     gridbag.setConstraints(job_timeout_label, gridbag_constraints);
     main_panel.add(job_timeout_label);
 
-    job_timeout_field = new JFormattedTextField();
-    job_timeout_field.setColumns(10);
-    this.job_timeout_field.addKeyListener(new WindowAutorouteParameter.JobTimeoutFieldKeyListener());
-    this.job_timeout_field.addFocusListener(new WindowAutorouteParameter.JobTimeoutFieldFocusListener());
+    NumberFormat timeout_number_format = new DecimalFormat("00");
+
+    this.job_timeout_panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    this.job_timeout_panel.setOpaque(false);
+    this.job_timeout_panel.setToolTipText(tm.getText("job_timeout_tooltip"));
+
+    this.job_timeout_hours_field = createTimeoutField(timeout_number_format, 2, tm.getText("job_timeout_tooltip"));
+    this.job_timeout_minutes_field = createTimeoutField(timeout_number_format, 2, tm.getText("job_timeout_tooltip"));
+    this.job_timeout_seconds_field = createTimeoutField(timeout_number_format, 2, tm.getText("job_timeout_tooltip"));
+
+    Dimension timeoutFieldSize = this.job_timeout_hours_field.getPreferredSize();
+    this.job_timeout_hours_field.setPreferredSize(timeoutFieldSize);
+    this.job_timeout_minutes_field.setPreferredSize(timeoutFieldSize);
+    this.job_timeout_seconds_field.setPreferredSize(timeoutFieldSize);
+    this.job_timeout_hours_field.setMinimumSize(timeoutFieldSize);
+    this.job_timeout_minutes_field.setMinimumSize(timeoutFieldSize);
+    this.job_timeout_seconds_field.setMinimumSize(timeoutFieldSize);
+    this.job_timeout_hours_field.setMaximumSize(timeoutFieldSize);
+    this.job_timeout_minutes_field.setMaximumSize(timeoutFieldSize);
+    this.job_timeout_seconds_field.setMaximumSize(timeoutFieldSize);
+
+    this.job_timeout_panel.add(this.job_timeout_hours_field);
+    this.job_timeout_panel.add(new JLabel(":"));
+    this.job_timeout_panel.add(this.job_timeout_minutes_field);
+    this.job_timeout_panel.add(new JLabel(":"));
+    this.job_timeout_panel.add(this.job_timeout_seconds_field);
+
+    this.job_timeout_preview_label = new JLabel();
+    this.job_timeout_preview_label.setForeground(new Color(128, 128, 128));
+    this.job_timeout_preview_label.setBorder(new EmptyBorder(0, 8, 0, 0));
+    this.job_timeout_preview_label.setToolTipText(tm.getText("job_timeout_tooltip"));
+    this.job_timeout_panel.add(this.job_timeout_preview_label);
+
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(job_timeout_field, gridbag_constraints);
-    main_panel.add(job_timeout_field);
+    gridbag.setConstraints(job_timeout_panel, gridbag_constraints);
+    main_panel.add(job_timeout_panel);
 
     // add label and number field for max threads
 
     gridbag_constraints.gridwidth = 2;
     JLabel max_threads_label = new JLabel(tm.getText("max_threads"));
+    max_threads_label.setToolTipText(tm.getText("max_threads_tooltip"));
     gridbag.setConstraints(max_threads_label, gridbag_constraints);
     main_panel.add(max_threads_label);
 
     max_threads_field = new JFormattedTextField(number_format);
     max_threads_field.setColumns(3);
+    max_threads_field.setToolTipText(tm.getText("max_threads_tooltip"));
     this.max_threads_field.addKeyListener(new WindowAutorouteParameter.MaxThreadsFieldKeyListener());
     this.max_threads_field.addFocusListener(new WindowAutorouteParameter.MaxThreadsFieldFocusListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -302,6 +357,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     settings_autorouter_algorithm_combo_box = new JComboBox<>();
     settings_autorouter_algorithm_combo_box.addItem(this.algorithm_current);
     settings_autorouter_algorithm_combo_box.addItem(this.algorithm_v19);
+    settings_autorouter_algorithm_combo_box.setToolTipText(tm.getText("algorithm_tooltip"));
     settings_autorouter_algorithm_combo_box.addActionListener(new WindowAutorouteParameter.AlgorithmListener());
     settings_autorouter_algorithm_combo_box
         .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_algorithm_combo_box",
@@ -312,6 +368,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = 2;
     JLabel algorithm_label = new JLabel();
     algorithm_label.setText(tm.getText("algorithm"));
+    algorithm_label.setToolTipText(tm.getText("algorithm_tooltip"));
     gridbag.setConstraints(algorithm_label, gridbag_constraints);
     main_panel.add(algorithm_label);
 
@@ -415,7 +472,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           break;
         case "jobTimeoutString":
           if (newValue != null) {
-            job_timeout_field.setValue(newValue);
+            setJobTimeoutFields(newValue.toString());
           }
           break;
         case "enabled":
@@ -481,8 +538,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.via_cost_field.setValue(settings.get_via_costs());
     this.plane_via_cost_field.setValue(settings.get_plane_via_costs());
     this.start_ripup_costs.setValue(settings.get_start_ripup_costs());
-    this.max_passes_field.setValue(settings.maxPasses);
-    this.job_timeout_field.setValue(settings.jobTimeoutString);
+    this.max_passes_field.setValue(settings.maxPasses != null && settings.maxPasses == Integer.MAX_VALUE ? 0 : settings.maxPasses);
+    setJobTimeoutFields(settings.jobTimeoutString);
     this.max_threads_field.setValue(settings.maxThreads);
     for (int i = 0; i < preferred_direction_trace_cost_arr.length; i++) {
       this.preferred_direction_trace_cost_arr[i]
@@ -848,8 +905,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         int input_value;
         if (input instanceof Number number) {
           input_value = number.intValue();
-          if (input_value < 1) {
-            input_value = 1;
+          if (input_value < 0) {
+            input_value = 0;
           }
           if (input_value > 9999) {
             input_value = 9999;
@@ -873,69 +930,128 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class JobTimeoutFieldKeyListener extends KeyAdapter {
-
-    @Override
-    public void keyTyped(KeyEvent p_evt) {
-      if (p_evt.getKeyChar() == '\n') {
-        String old_value = board_handling.getCurrentRoutingJob().routerSettings.jobTimeoutString;
-        Object input = job_timeout_field.getValue();
-        String input_value = normalizeTimeoutInput(input, old_value);
-        // Use setter to fire property change event
-        isUpdatingFromSettings = true;
-        try {
-          board_handling.getCurrentRoutingJob().routerSettings.setJobTimeoutString(input_value);
-        } finally {
-          isUpdatingFromSettings = false;
-        }
-        job_timeout_field.setValue(input_value);
-        job_timeout_input_completed = true;
-      } else {
-        job_timeout_input_completed = false;
+  private JFormattedTextField createTimeoutField(NumberFormat numberFormat, int columns, String tooltipText) {
+    JFormattedTextField field = new JFormattedTextField(numberFormat);
+    field.setColumns(columns);
+    field.setHorizontalAlignment(JFormattedTextField.RIGHT);
+    field.setToolTipText(tooltipText);
+    field.addFocusListener(new FocusAdapter() {
+      @Override
+      public void focusGained(FocusEvent event) {
+        field.selectAll();
       }
+
+      @Override
+      public void focusLost(FocusEvent event) {
+        if (!isTimeoutEditorFocused()) {
+          commitJobTimeoutEdit();
+        }
+      }
+    });
+    field.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyTyped(KeyEvent event) {
+        if (event.getKeyChar() == '\n') {
+          commitJobTimeoutEdit();
+        }
+      }
+    });
+    return field;
+  }
+
+  // Set timeout fields based on the provided timeout string (in format "HH:MM:SS" or seconds)
+  private void setJobTimeoutFields(String timeoutString) {
+    Long parsedSeconds = (timeoutString == null) ? null : TextManager.parseTimespanString(timeoutString);
+    long totalSeconds = (parsedSeconds == null) ? DEFAULT_TIMEOUT_SECONDS : parsedSeconds;
+  
+    if (totalSeconds < 0) {
+      totalSeconds = DEFAULT_TIMEOUT_SECONDS;
+    }
+    totalSeconds = Math.min(totalSeconds, MAX_TIMEOUT_SECONDS);
+
+    long hours = totalSeconds / 3600L;
+    long remainingSeconds = totalSeconds % 3600L;
+    long minutes = remainingSeconds / 60L;
+    long seconds = remainingSeconds % 60L;
+
+    this.job_timeout_hours_field.setValue(hours);
+    this.job_timeout_minutes_field.setValue(minutes);
+    this.job_timeout_seconds_field.setValue(seconds);
+    this.job_timeout_preview_label.setText(formatJobTimeoutSummary(totalSeconds));
+  }
+
+  private void commitJobTimeoutEdit() {
+    String oldValue = board_handling.getCurrentRoutingJob().routerSettings.jobTimeoutString;
+    String newValue = buildJobTimeoutString();
+    if (newValue == null) {
+      newValue = oldValue;
+    }
+
+    isUpdatingFromSettings = true;
+    try {
+      board_handling.getCurrentRoutingJob().routerSettings.setJobTimeoutString(newValue);
+    } finally {
+      isUpdatingFromSettings = false;
+    }
+
+    setJobTimeoutFields(newValue);
+  }
+
+  private String buildJobTimeoutString() {
+    try {
+      long hours = readTimeoutPart(job_timeout_hours_field);
+      long minutes = readTimeoutPart(job_timeout_minutes_field);
+      long seconds = readTimeoutPart(job_timeout_seconds_field);
+
+      long totalSeconds = (hours * 3600L) + (minutes * 60L) + seconds;
+      totalSeconds = Math.max(0L, Math.min(totalSeconds, 24L * 60L * 60L));
+
+      long formattedHours = totalSeconds / 3600L;
+      long remainder = totalSeconds % 3600L;
+      long formattedMinutes = remainder / 60L;
+      long formattedSeconds = remainder % 60L;
+
+      return String.format(Locale.ROOT, "%02d:%02d:%02d", formattedHours, formattedMinutes, formattedSeconds);
+    } catch (NumberFormatException ex) {
+      return null;
     }
   }
 
-  private class JobTimeoutFieldFocusListener implements FocusListener {
+  private String formatJobTimeoutSummary(long totalSeconds) {
+    long hours = totalSeconds / 3600L;
+    long remainingSeconds = totalSeconds % 3600L;
+    long minutes = remainingSeconds / 60L;
+    long seconds = remainingSeconds % 60L;
 
-    @Override
-    public void focusLost(FocusEvent p_evt) {
-      if (!job_timeout_input_completed) {
-        // Save the value when focus is lost
-        String old_value = board_handling.getCurrentRoutingJob().routerSettings.jobTimeoutString;
+    StringBuilder summary = new StringBuilder();
+    appendTimeoutUnit(summary, hours, "h");
+    appendTimeoutUnit(summary, minutes, "m");
+    appendTimeoutUnit(summary, seconds, "s");
 
-        // Commit the edit to ensure getValue() returns the typed value
-        try {
-          job_timeout_field.commitEdit();
-        } catch (java.text.ParseException e) {
-          // If parse fails, revert to old value
-          job_timeout_field.setValue(old_value);
-        }
+    return summary.length() == 0 ? "0s" : summary.toString();
+  }
 
-        Object input = job_timeout_field.getValue();
-        String input_value;
-        if (input instanceof String str) {
-          input_value = str;
-          if (!input_value.matches("^(\\d+\\.)?\\d{1,2}:\\d{2}:\\d{2}$")) {
-            input_value = old_value;
-          }
-        } else {
-          input_value = old_value;
-        }
-        isUpdatingFromSettings = true;
-        try {
-          board_handling.getCurrentRoutingJob().routerSettings.setJobTimeoutString(input_value);
-        } finally {
-          isUpdatingFromSettings = false;
-        }
-        job_timeout_field.setValue(input_value);
-        job_timeout_input_completed = true;
-      }
+  private void appendTimeoutUnit(StringBuilder summary, long value, String unit) {
+    if (value <= 0) {
+      return;
     }
-
-    @Override
-    public void focusGained(FocusEvent p_evt) {
+    if (!summary.isEmpty()) {
+      summary.append(' ');
     }
+    summary.append(value).append(unit);
+  }
+
+  private long readTimeoutPart(JFormattedTextField field) {
+    String text = field.getText();
+    if ((text == null) || text.isBlank()) {
+      return 0L;
+    }
+    return Long.parseLong(text.trim());
+  }
+
+  private boolean isTimeoutEditorFocused() {
+    Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+    return (focusOwner != null) && SwingUtilities.isDescendingFrom(focusOwner, job_timeout_panel);
   }
 
   private class MaxThreadsFieldKeyListener extends KeyAdapter {
