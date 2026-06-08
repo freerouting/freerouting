@@ -4,6 +4,8 @@ import static app.freerouting.management.gson.GsonProvider.GSON;
 
 import app.freerouting.api.BaseController;
 import app.freerouting.core.Session;
+import app.freerouting.core.RoutingJob;
+import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.analytics.FRAnalytics;
@@ -161,5 +163,49 @@ public class SessionControllerV1 extends BaseController {
     var response = GSON.toJson(logs);
     FRAnalytics.apiEndpointCalled("GET v1/sessions/" + sessionId + "/logs", "", response, userId);
     return Response.ok(response).build();
+  }
+
+  @Operation(summary = "Set session as currently monitored", description = "Binds the specified active API session and its board to the visible GUI visualizer for real-time routing display.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Session monitor status set successfully"),
+      @ApiResponse(responseCode = "404", description = "Session or active job board not found")
+  })
+  @jakarta.ws.rs.PUT
+  @Path("/{sessionId}/monitor")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response monitorSession(
+      @Parameter(description = "Unique identifier of the session", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("sessionId") String sessionId) {
+    UUID userId = AuthenticateUser();
+    Session session = SessionManager.getInstance().getSession(sessionId, userId);
+    if (session == null) {
+      return Response.status(Response.Status.NOT_FOUND).entity("{\"error\":\"Session not found\"}").build();
+    }
+
+    RoutingJob targetJob = null;
+    synchronized (RoutingJobScheduler.getInstance().jobs) {
+      for (RoutingJob job : RoutingJobScheduler.getInstance().jobs) {
+        if (job != null && session.id.equals(job.sessionId)) {
+          targetJob = job;
+          break;
+        }
+      }
+    }
+
+    if (targetJob == null || targetJob.board == null) {
+      return Response.status(Response.Status.NOT_FOUND).entity("{\"error\":\"Active routing job or board not found for this session\"}").build();
+    }
+
+    final RoutingJob jobToLoad = targetJob;
+    final app.freerouting.board.RoutingBoard boardToLoad = targetJob.board;
+
+    if (app.freerouting.gui.BoardFrame.activeFrame != null) {
+      javax.swing.SwingUtilities.invokeLater(() -> {
+        app.freerouting.gui.BoardFrame.activeFrame.loadBoardNatively(boardToLoad, jobToLoad);
+      });
+      FRAnalytics.apiEndpointCalled("PUT v1/sessions/" + sessionId + "/monitor", "", "{\"monitored\":true}", userId);
+      return Response.ok("{\"success\":true,\"message\":\"Session is now actively monitored in GUI\"}").build();
+    }
+
+    return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"GUI is not running, cannot monitor session visually\"}").build();
   }
 }

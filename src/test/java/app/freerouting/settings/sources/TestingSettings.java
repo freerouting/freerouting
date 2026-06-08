@@ -18,6 +18,8 @@ public class TestingSettings implements SettingsSource {
         // (RouterSettings constructor initializes them)
         this.settings.optimizer = null;
         this.settings.scoring = null;
+        // Keep legacy fixture expectations stable unless a test explicitly opts in.
+        this.settings.copperToEdgeClearanceUm = 0.0;
     }
 
     public void setMaxItems(int maxItems) {
@@ -34,6 +36,17 @@ public class TestingSettings implements SettingsSource {
         if (this.settings.jobTimeoutString == null) {
             this.settings.jobTimeoutString = jobTimeoutString;
         }
+    }
+
+    public void setFanoutEnabled(boolean enabled) {
+        if (this.settings.fanout == null) {
+            this.settings.fanout = new app.freerouting.settings.FanoutSettings();
+        }
+        this.settings.fanout.enabled = enabled;
+    }
+
+    public void setCopperToEdgeClearanceUm(double copperToEdgeClearanceUm) {
+        this.settings.copperToEdgeClearanceUm = copperToEdgeClearanceUm;
     }
 
     @Override

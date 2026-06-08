@@ -84,6 +84,8 @@ To access full functionality, request access on the [Freerouting website](https:
 
 Please note that the Freerouting API and [its documentation](docs/API/API_v1.md) are in beta and may change.
 
+The official Freerouting client SDK currently supports Python (maintained in the separate `freerouting-python-client` repository). This repository also provides OpenAPI-based SDK generation scripts in `scripts/sdk/` for JavaScript, C#, and C++ scaffolding, including `scripts/sdk/regenerate-all.ps1` for one-command scaffold refreshes.
+
 You can also **self-host the Freerouting API** on your own machine or server. See the [Self-Hosting Guide](docs/self-hosting.md) for step-by-step instructions using Docker or a plain Java JRE.
 
 ## Running Freerouting using Java JRE

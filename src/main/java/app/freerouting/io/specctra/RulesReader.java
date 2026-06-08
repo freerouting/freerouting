@@ -2,7 +2,7 @@ package app.freerouting.io.specctra;
 
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BasicBoard;
-import app.freerouting.io.specctra.parser.CoordinateTransform;
+import app.freerouting.io.CoordinateTransform;
 import app.freerouting.io.specctra.parser.IJFlexScanner;
 import app.freerouting.io.specctra.parser.Keyword;
 import app.freerouting.io.specctra.parser.LayerStructure;

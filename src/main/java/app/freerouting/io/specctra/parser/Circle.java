@@ -3,6 +3,7 @@ package app.freerouting.io.specctra.parser;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.io.CoordinateTransform;
 import java.io.IOException;
 
 /**

@@ -20,9 +20,6 @@ import app.freerouting.board.Unit;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.io.specctra.parser.DsnFile;
-import app.freerouting.io.specctra.parser.SessionToEagle;
-import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -30,6 +27,10 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
+import app.freerouting.interactive.commands.InteractiveCommand;
+import app.freerouting.io.specctra.DsnWriter;
+import app.freerouting.io.specctra.parser.DsnFile;
+import app.freerouting.io.specctra.parser.SessionToEagle;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
@@ -1807,11 +1808,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     if (interactive_state != null && graphics_context != null) {
       FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-      InteractiveState return_state = interactive_state.left_button_clicked(location);
-      if (return_state != interactive_state && return_state != null) {
-        set_interactive_state(return_state);
-        repaint();
-      }
+      InteractiveState return_state = execute_state_command(interactive_state.left_button_clicked_command(location));
+      apply_interactive_state_change(return_state, true, false);
     }
   }
 
@@ -1848,7 +1846,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
         return;
       }
 
-      InteractiveState return_state = interactive_state.mouse_moved();
+      InteractiveState return_state = execute_state_command(interactive_state.mouse_moved_command());
       Set<Item> hover_item = pick_items(this.current_mouse_position);
       if (hover_item.size() == 1) {
         String hover_info = hover_item
@@ -1863,10 +1861,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
       // performance in interactive route.
       // If a repaint is necessary, it should be done in the individual mouse_moved
       // method of the class derived from InteractiveState
-      if (return_state != this.interactive_state) {
-        set_interactive_state(return_state);
-        repaint();
-      }
+      apply_interactive_state_change(return_state, true, false);
     }
   }
 
@@ -1884,7 +1879,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public void mouse_pressed(Point2D p_point) {
     if (interactive_state != null && graphics_context != null) {
       this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
-      set_interactive_state(interactive_state.mouse_pressed(this.current_mouse_position));
+      InteractiveState return_state = execute_state_command(interactive_state.mouse_pressed_command(this.current_mouse_position));
+      apply_interactive_state_change(return_state, false, false);
     }
   }
 
@@ -1904,11 +1900,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public void mouse_dragged(Point2D p_point) {
     if (interactive_state != null && graphics_context != null) {
       this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
-      InteractiveState return_state = interactive_state.mouse_dragged(this.current_mouse_position);
-      if (return_state != interactive_state) {
-        set_interactive_state(return_state);
-        repaint();
-      }
+      InteractiveState return_state = execute_state_command(interactive_state.mouse_dragged_command(this.current_mouse_position));
+      apply_interactive_state_change(return_state, true, false);
     }
   }
 
@@ -1925,11 +1918,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void button_released() {
     if (interactive_state != null) {
-      InteractiveState return_state = interactive_state.button_released();
-      if (return_state != interactive_state) {
-        set_interactive_state(return_state);
-        repaint();
-      }
+      InteractiveState return_state = execute_state_command(interactive_state.button_released_command());
+      apply_interactive_state_change(return_state, true, false);
     }
   }
 
@@ -1952,11 +1942,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public void mouse_wheel_moved(Point2D p_point, int p_rotation) {
     if (interactive_state != null && graphics_context != null) {
       this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
-      InteractiveState return_state = interactive_state.mouse_wheel_moved(p_rotation);
-      if (return_state != interactive_state) {
-        set_interactive_state(return_state);
-        repaint();
-      }
+      InteractiveState return_state = execute_state_command(interactive_state.mouse_wheel_moved_command(p_rotation));
+      apply_interactive_state_change(return_state, true, false);
     }
   }
 
@@ -1980,12 +1967,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
       // no interactive action when logfile is running
       return;
     }
-    InteractiveState return_state = interactive_state.key_typed(p_key_char);
-    if (return_state != null && return_state != interactive_state) {
-      set_interactive_state(return_state);
-      panel.board_frame.setToolbarModeSelectionPanelValue(get_interactive_state());
-      repaint();
-    }
+    InteractiveState return_state = execute_state_command(interactive_state.key_typed_command(p_key_char));
+    apply_interactive_state_change(return_state, true, true);
   }
 
   /**
@@ -2005,13 +1988,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
 
-    InteractiveState new_state = interactive_state.complete();
-    {
-      if (new_state != interactive_state) {
-        set_interactive_state(new_state);
-        repaint();
-      }
-    }
+    InteractiveState new_state = execute_state_command(interactive_state.complete_command());
+    apply_interactive_state_change(new_state, true, false);
   }
 
   /**
@@ -2032,13 +2010,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
 
-    InteractiveState new_state = interactive_state.cancel();
-    {
-      if (new_state != interactive_state) {
-        set_interactive_state(new_state);
-        repaint();
-      }
-    }
+    InteractiveState new_state = execute_state_command(interactive_state.cancel_command());
+    apply_interactive_state_change(new_state, true, false);
   }
 
   /**
@@ -2284,6 +2257,39 @@ public class GuiBoardManager extends HeadlessBoardManager {
     // create_board() would normally set up, but which are bypassed when loading
     // directly from a DSN file via DsnReader. Always recreate on a successful load
     // because the new design may have different dimensions, layer count, or units.
+    if (result != DsnFile.ReadResult.ERROR && this.board != null) {
+      double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
+      this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
+          this.board.communication.unit);
+      Dimension panel_size = (panel != null) ? panel.getPreferredSize() : new Dimension(800, 600);
+      this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
+          this.board.layer_structure, this.locale);
+
+      this.set_layer(0);
+      // Defer GUI refresh until surrounding load flow has recreated frame-managed subwindows.
+      javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
+    }
+
+    return result;
+  }
+
+  @Override
+  public DsnFile.ReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
+      IdentificationNumberGenerator identificationNumberGenerator) {
+    var result = super.loadFromKiCadJson(inputStream, boardObservers, identificationNumberGenerator);
+
+    if (this.board != null) {
+      // Always reset: a new DSN load may introduce a different layer count or design rules,
+      // making any previously-constructed InteractiveSettings invalid for this board.
+      this.interactiveSettings = InteractiveSettings.reset(this.board);
+      this.initialize_manual_trace_half_widths();
+
+      // Register the singleton as the live GuiSettings source (priority 50) in the merger so
+      // that every subsequent merge() call reflects the current interactive GUI state.
+      this.settingsMerger.addOrReplaceSources(this.interactiveSettings);
+    }
+
+    // Initialize the GUI-specific graphics context and coordinate transform
     if (result != DsnFile.ReadResult.ERROR && this.board != null) {
       double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
       this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
@@ -3038,6 +3044,42 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public InteractiveState get_interactive_state() {
     return this.interactive_state;
+  }
+
+  /**
+   * Executes a command produced by an interactive state.
+   *
+   * <p>When the command is null, cannot execute, or returns null, the current state is kept.
+   */
+  private InteractiveState execute_state_command(InteractiveCommand command) {
+    if (command == null || !command.canExecute()) {
+      return this.interactive_state;
+    }
+    InteractiveState nextState = command.execute();
+    return nextState != null ? nextState : this.interactive_state;
+  }
+
+  /**
+   * Applies a state transition and optional side effects in one place.
+   */
+  private void apply_interactive_state_change(InteractiveState nextState, boolean repaintAfterChange,
+      boolean updateToolbarSelection) {
+    if (nextState == null || nextState == this.interactive_state) {
+      return;
+    }
+    set_interactive_state(nextState);
+    if (updateToolbarSelection) {
+      update_toolbar_selection_panel();
+    }
+    if (repaintAfterChange) {
+      repaint();
+    }
+  }
+
+  private void update_toolbar_selection_panel() {
+    if (panel != null && panel.board_frame != null) {
+      panel.board_frame.setToolbarModeSelectionPanelValue(get_interactive_state());
+    }
   }
 
   /**

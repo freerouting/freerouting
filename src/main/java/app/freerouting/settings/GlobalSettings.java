@@ -55,6 +55,8 @@ public class GlobalSettings implements Serializable {
   public final FeatureFlagsSettings featureFlags = new FeatureFlagsSettings();
   @SerializedName("api_server")
   public final ApiServerSettings apiServerSettings = new ApiServerSettings();
+  @SerializedName("mcp_server")
+  public final McpServerSettings mcpServerSettings = new McpServerSettings();
   @SerializedName("statistics")
   public final StatisticsSettings statistics = new StatisticsSettings();
   @SerializedName("logging")
@@ -503,6 +505,12 @@ public class GlobalSettings implements Serializable {
                 }
                 initialInputFile = file;
                 hasDsn = true;
+              } else if (lowerFile.endsWith(".json")) {
+                if (hasDsn) {
+                  FRLogger.warn("Multiple input files (DSN/JSON) provided in -de argument. Only the last one will be used.");
+                }
+                initialInputFile = file;
+                hasDsn = true;
               } else if (lowerFile.endsWith(".ses")) {
                 if (hasSes) {
                   FRLogger.warn("Multiple SES files provided in -de argument. Only the last one will be used.");
@@ -516,7 +524,7 @@ public class GlobalSettings implements Serializable {
                 initialRulesFile = file;
                 hasRules = true;
               } else {
-                FRLogger.warn("Unknown file type in -de argument: " + file + ". Expected .dsn, .ses, or .rules");
+                FRLogger.warn("Unknown file type in -de argument: " + file + ". Expected .dsn, .json, .ses, or .rules");
               }
             }
 

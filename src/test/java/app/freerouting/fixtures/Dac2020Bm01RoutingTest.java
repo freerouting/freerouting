@@ -12,14 +12,12 @@ public class Dac2020Bm01RoutingTest extends RoutingFixtureTest {
 
   @Test
   public void testIssue508_BM01_first_2_nets_only() {
-    // Set console logging level to TRACE for detailed output
-    System.setProperty("freerouting.logging.console.level", "TRACE");
-    FRLogger.granularTraceEnabled = true;
+    // Set console logging level to INFO for quick test
+    System.setProperty("freerouting.logging.console.level", "INFO");
+    FRLogger.granularTraceEnabled = false;
 
-    // Enable detailed logging and filter to Net #98 and #99
-    Freerouting.globalSettings.debugSettings.enableDetailedLogging = true;
-//    Freerouting.globalSettings.debugSettings.filterByNet.add("98");
-//    Freerouting.globalSettings.debugSettings.filterByNet.add("99");
+    // Disable detailed logging
+    Freerouting.globalSettings.debugSettings.enableDetailedLogging = false;
 
     // Create testing settings
     TestingSettings testSettingsSource = new TestingSettings();

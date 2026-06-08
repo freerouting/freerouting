@@ -1,7 +1,7 @@
 package app.freerouting.board;
 
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.io.specctra.parser.CoordinateTransform;
+import app.freerouting.io.CoordinateTransform;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;

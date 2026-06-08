@@ -28,7 +28,7 @@ class GlobalSettingsTest {
 
                 settings.applyCommandLineArguments(args);
 
-                assertEquals(10, settings.routerSettings.maxPasses);
+                assertEquals(10, settings.getMaxPasses());
                 assertEquals("/tmp", settings.guiSettings.inputDirectory);
 
                 assertFalse(settings.logging.file.enabled);
@@ -90,7 +90,7 @@ class GlobalSettingsTest {
 
                 settings.applyCommandLineArguments(args);
 
-                assertEquals(20, settings.routerSettings.maxPasses);
+                assertEquals(20, settings.getMaxPasses());
                 assertEquals(0, FRLogger.getLogEntries().getWarningCount());
         }
 

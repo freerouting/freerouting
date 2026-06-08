@@ -6,19 +6,22 @@ import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
-import app.freerouting.io.specctra.DsnReadResult;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.io.specctra.parser.DsnFile;
+import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import java.io.ByteArrayInputStream;
@@ -74,6 +77,8 @@ import java.io.OutputStream;
  * @see RoutingJob
  */
 public class HeadlessBoardManager implements BoardManager {
+
+  private static final String BOARD_EDGE_CLEARANCE_CLASS_NAME = "board_edge";
 
 
   /**
@@ -269,6 +274,75 @@ public class HeadlessBoardManager implements BoardManager {
     }
     this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules,
         p_board_communication);
+    applyCopperToEdgeClearanceOverride();
+  }
+
+  private void applyCopperToEdgeClearanceOverride() {
+    if (this.board == null || this.routingJob == null || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.copperToEdgeClearanceUm == null) {
+      return;
+    }
+
+    double configuredClearanceUm = this.routingJob.routerSettings.copperToEdgeClearanceUm;
+    if (configuredClearanceUm < 0) {
+      FRLogger.warn("Ignoring router.copper_to_edge_clearance_um because it is negative: " + configuredClearanceUm);
+      return;
+    }
+    if (this.board.rules == null || this.board.rules.clearance_matrix == null) {
+      FRLogger.warn("Ignoring router.copper_to_edge_clearance_um because board rules are unavailable.");
+      return;
+    }
+
+    var outline = this.board.get_outline();
+    if (outline == null) {
+      FRLogger.warn("Ignoring router.copper_to_edge_clearance_um because the board outline is unavailable.");
+      return;
+    }
+
+    int defaultAreaClassNo = this.board.rules.get_default_net_class().default_item_clearance_classes
+        .get(DefaultItemClearanceClasses.ItemClass.AREA);
+    boolean usesFallbackOutlineClass = outline.clearance_class_no() == defaultAreaClassNo;
+    boolean usesDefaultEdgeClearanceValue = Math.abs(configuredClearanceUm
+        - DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM) < 1e-9;
+    // Keep explicit DSN outline-clearance classes untouched when only the global default is active.
+    if (usesDefaultEdgeClearanceValue && !usesFallbackOutlineClass) {
+      return;
+    }
+
+    int boardResolution = Math.max(1, this.board.communication.resolution);
+    int configuredClearanceBoardUnits = (int) Math.round(
+        Unit.scale(configuredClearanceUm * boardResolution, Unit.UM, this.board.communication.unit));
+
+    var matrix = this.board.rules.clearance_matrix;
+    int boardEdgeClassNo = matrix.get_no(BOARD_EDGE_CLEARANCE_CLASS_NAME);
+    if (boardEdgeClassNo < 0) {
+      matrix.append_class(BOARD_EDGE_CLEARANCE_CLASS_NAME);
+      boardEdgeClassNo = matrix.get_no(BOARD_EDGE_CLEARANCE_CLASS_NAME);
+    }
+    if (boardEdgeClassNo < 0) {
+      FRLogger.warn("Unable to create/find the board_edge clearance class for copper-to-edge override.");
+      return;
+    }
+
+    for (int layer = 0; layer < matrix.get_layer_count(); layer++) {
+      for (int classNo = 1; classNo < matrix.get_class_count(); classNo++) {
+        matrix.set_value(boardEdgeClassNo, classNo, layer, configuredClearanceBoardUnits);
+        matrix.set_value(classNo, boardEdgeClassNo, layer, configuredClearanceBoardUnits);
+      }
+    }
+
+
+    if (this.board.search_tree_manager != null) {
+      this.board.search_tree_manager.remove(outline);
+    }
+    outline.set_clearance_class_no(boardEdgeClassNo);
+    outline.clear_derived_data();
+    if (this.board.search_tree_manager != null) {
+      this.board.search_tree_manager.insert(outline);
+    }
+
+    FRLogger.info("Applied copper-to-edge clearance override: " + configuredClearanceUm + " um ("
+        + configuredClearanceBoardUnits + " board units).");
   }
 
   /**
@@ -399,17 +473,17 @@ public class HeadlessBoardManager implements BoardManager {
       String inputFilename = (this.routingJob != null && this.routingJob.input != null)
           ? this.routingJob.input.getFilename()
           : null;
-      DsnReadResult dsnResult = DsnReader.readBoard(inputStream, boardObservers, identificationNumberGenerator, inputFilename);
+      BoardReadResult dsnResult = DsnReader.readBoard(inputStream, boardObservers, identificationNumberGenerator, inputFilename);
 
-      if (dsnResult instanceof DsnReadResult.Success success) {
+      if (dsnResult instanceof BoardReadResult.Success success) {
         this.board = (RoutingBoard) success.board();
-      } else if (dsnResult instanceof DsnReadResult.OutlineMissing outlineMissing) {
+      } else if (dsnResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
         this.board = (RoutingBoard) outlineMissing.board();
       } else {
         // ParseError or IoError — no board was constructed
-        if (dsnResult instanceof DsnReadResult.IoError ioError) {
+        if (dsnResult instanceof BoardReadResult.IoError ioError) {
           routingJob.logError("There was an IO error while reading DSN file.", ioError.cause());
-        } else if (dsnResult instanceof DsnReadResult.ParseError parseError) {
+        } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
           routingJob.logError("There was a parse error while reading DSN file at '" + parseError.location() + "': " + parseError.detail(), null);
         }
         return DsnFile.ReadResult.ERROR;
@@ -422,6 +496,7 @@ public class HeadlessBoardManager implements BoardManager {
           this.routingJob.routerSettings.setLayerCount(boardLayerCount);
         }
         this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
+        applyCopperToEdgeClearanceOverride();
       }
 
       if (this.board != null) {
@@ -437,12 +512,77 @@ public class HeadlessBoardManager implements BoardManager {
             this.board.rules.nets.max_net_no());
       }
 
-      return (dsnResult instanceof DsnReadResult.OutlineMissing)
+      return (dsnResult instanceof BoardReadResult.OutlineMissing)
+          ? DsnFile.ReadResult.OUTLINE_MISSING
+          : dsnResult instanceof BoardReadResult.Success
+              ? DsnFile.ReadResult.OK
+              : DsnFile.ReadResult.ERROR;
+
+    } catch (Exception e) {
+      routingJob.logError("There was an error while reading DSN file.", e);
+      return DsnFile.ReadResult.ERROR;
+    }
+  }
+
+  /**
+   * Loads a board design from a KiCad JSON format file/stream.
+   *
+   * @param inputStream the input stream containing KiCad JSON data (will be closed after reading)
+   * @param boardObservers optional observers for board item changes (can be null)
+   * @param identificationNumberGenerator optional ID generator for board items (can be null)
+   * @return the read result indicating success, warnings, or errors
+   */
+  public DsnFile.ReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
+      IdentificationNumberGenerator identificationNumberGenerator) {
+    if (inputStream == null) {
+      return DsnFile.ReadResult.ERROR;
+    }
+
+    try (java.io.Reader reader = new java.io.InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
+      BoardReadResult dsnResult = KiCadJsonReader.readBoard(reader, boardObservers, identificationNumberGenerator);
+
+      if (dsnResult instanceof BoardReadResult.Success success) {
+        this.board = (RoutingBoard) success.board();
+      } else if (dsnResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
+        this.board = (RoutingBoard) outlineMissing.board();
+      } else {
+        if (dsnResult instanceof BoardReadResult.IoError ioError) {
+          routingJob.logError("There was an IO error while reading KiCad JSON file.", ioError.cause());
+        } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
+          routingJob.logError("There was a parse error while reading KiCad JSON file at '" + parseError.location() + "': " + parseError.detail(), null);
+        }
+        return DsnFile.ReadResult.ERROR;
+      }
+
+      // Apply board-specific optimisations to RouterSettings after board is loaded
+      if (this.board != null && this.routingJob != null) {
+        int boardLayerCount = this.board.get_layer_count();
+        if (this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
+          this.routingJob.routerSettings.setLayerCount(boardLayerCount);
+        }
+        this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
+        applyCopperToEdgeClearanceOverride();
+      }
+
+      if (this.board != null) {
+        var boardStats = new BoardStatistics(this.board);
+        FRAnalytics.fileLoaded("KICAD_JSON", GSON.toJson(boardStats));
+        this.board.reduce_nets_of_route_items();
+        originalBoardChecksum = calculateCrc32();
+        FRAnalytics.boardLoaded(
+            this.board.communication.specctra_parser_info.host_cad,
+            this.board.communication.specctra_parser_info.host_version,
+            this.board.get_layer_count(),
+            this.board.components.count(),
+            this.board.rules.nets.max_net_no());
+      }
+
+      return (dsnResult instanceof BoardReadResult.OutlineMissing)
           ? DsnFile.ReadResult.OUTLINE_MISSING
           : DsnFile.ReadResult.OK;
 
     } catch (Exception e) {
-      routingJob.logError("There was an error while reading DSN file.", e);
+      routingJob.logError("There was an error while reading KiCad JSON file.", e);
       return DsnFile.ReadResult.ERROR;
     }
   }

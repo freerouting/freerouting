@@ -528,7 +528,12 @@ public class DesignRulesChecker {
     this.max_connections = net_item_lists
         .stream()
         .filter(list -> !list.isEmpty())
-        .mapToInt(list -> list.size() - 1)
+        .mapToInt(list -> {
+          long endpointCount = list.stream()
+              .filter(item -> item instanceof Pin || item instanceof ConductionArea)
+              .count();
+          return (int) Math.max(0, endpointCount - 1);
+        })
         .sum();
 
     int totalItems = net_item_lists

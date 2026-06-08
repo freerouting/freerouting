@@ -5,6 +5,7 @@ import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.geometry.planar.Simplex;
+import app.freerouting.io.CoordinateTransform;
 import java.io.IOException;
 
 /**

@@ -12,6 +12,7 @@ import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.sources.ApiSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.io.specctra.SesImportSummary;
@@ -74,53 +75,69 @@ public class RoutingJobScheduler {
                     continue;
                   }
 
+                  boolean isDsn = job.input.format == FileFormat.DSN;
+                  boolean isJson = job.input.format == FileFormat.JSON;
+
                   // load the board from the input into a RoutingBoard object
-                  if (job.input.format == FileFormat.DSN) {
+                  if (isDsn || isJson) {
                     try {
-                    HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-                    boardManager.loadFromSpecctraDsn(job.input.getData(), null,
-                        new ItemIdentificationNumberGenerator());
-                    job.board = boardManager.get_routing_board();
-
-                    var settingsMerger = globalSettings.settingsMergerProtype.clone();
-
-                    settingsMerger.addOrReplaceSources(
-                        new DsnFileSettings(job.input.getData(), job.input.getFilename()));
-
-                    // Apply the final merged settings to the job and optimize them for the board
-                    job.routerSettings = settingsMerger.merge();
-                    job.routerSettings.applyBoardSpecificOptimizations(job.board);
-
-                    // Load SES file if specified
-                    if (globalSettings.design_session_filename != null) {
-                      try {
-                        java.io.File sesFile = new java.io.File(globalSettings.design_session_filename);
-                        if (sesFile.exists()) {
-                          FRLogger.info("Loading SES file: " + globalSettings.design_session_filename);
-                          java.io.FileInputStream sesStream = new java.io.FileInputStream(sesFile);
-                          SesImportSummary summary = SesReader.read(sesStream, job.board);
-                          FRLogger.info("SES file loaded: " + summary.wiresImported() + " wires, "
-                              + summary.viasImported() + " vias imported"
-                              + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
-                        } else {
-                          FRLogger.warn("SES file not found: " + globalSettings.design_session_filename);
-                        }
-                      } catch (Exception e) {
-                        FRLogger.error("Failed to load SES file", e);
+                      HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
+                      if (isDsn) {
+                        boardManager.loadFromSpecctraDsn(job.input.getData(), null,
+                            new ItemIdentificationNumberGenerator());
+                      } else {
+                        boardManager.loadFromKiCadJson(job.input.getData(), null,
+                            new ItemIdentificationNumberGenerator());
                       }
-                    }
+                      job.board = boardManager.get_routing_board();
 
-                    // All pre-checks look fine, start the routing process on a new thread
-                    StoppableThread routerThread = new RoutingJobSchedulerActionThread(job);
-                    job.thread = routerThread;
-                    job.thread.start();
-                    job.state = RoutingJobState.RUNNING;
+                      var settingsMerger = globalSettings.settingsMergerProtype.clone();
+
+                      if (isDsn) {
+                        settingsMerger.addOrReplaceSources(
+                            new DsnFileSettings(job.input.getData(), job.input.getFilename()));
+                      }
+
+                      // Keep per-job overrides (e.g. tests toggling fanout/optimizer) by
+                      // applying the job's current settings as highest-priority API settings.
+                      if (job.routerSettings != null) {
+                        settingsMerger.addOrReplaceSources(new ApiSettings(job.routerSettings));
+                      }
+
+                      // Apply the final merged settings to the job and optimize them for the board
+                      job.routerSettings = settingsMerger.merge();
+                      job.routerSettings.applyBoardSpecificOptimizations(job.board);
+
+                      // Load SES file if specified
+                      if (globalSettings.design_session_filename != null) {
+                        try {
+                          java.io.File sesFile = new java.io.File(globalSettings.design_session_filename);
+                          if (sesFile.exists()) {
+                            FRLogger.info("Loading SES file: " + globalSettings.design_session_filename);
+                            java.io.FileInputStream sesStream = new java.io.FileInputStream(sesFile);
+                            SesImportSummary summary = SesReader.read(sesStream, job.board);
+                            FRLogger.info("SES file loaded: " + summary.wiresImported() + " wires, "
+                                + summary.viasImported() + " vias imported"
+                                + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
+                          } else {
+                            FRLogger.warn("SES file not found: " + globalSettings.design_session_filename);
+                          }
+                        } catch (Exception e) {
+                          FRLogger.error("Failed to load SES file", e);
+                        }
+                      }
+
+                      // All pre-checks look fine, start the routing process on a new thread
+                      StoppableThread routerThread = new RoutingJobSchedulerActionThread(job);
+                      job.thread = routerThread;
+                      job.thread.start();
+                      job.state = RoutingJobState.RUNNING;
                     } catch (Exception e) {
                       FRLogger.error("Failed to set up routing job '" + job.id + "', it will be terminated.", e);
                       job.state = RoutingJobState.TERMINATED;
                     }
                   } else {
-                    FRLogger.warn("Only DSN format is supported as an input.");
+                    FRLogger.warn("Only DSN and JSON formats are supported as an input.");
                     job.state = RoutingJobState.INVALID;
                     continue;
                   }
@@ -141,6 +158,7 @@ public class RoutingJobScheduler {
       }
     });
 
+    loopThread.setDaemon(true);
     loopThread.start();
 
   }

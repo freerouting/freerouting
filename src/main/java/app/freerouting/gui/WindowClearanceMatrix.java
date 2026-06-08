@@ -254,19 +254,51 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     this.board_frame.refresh_windows();
   }
 
-  /**
-   * Returns true, if p_string is a legal class name.
-   */
-  private boolean is_legal_class_name(String p_string) {
-    if (p_string.isEmpty()) {
+  static boolean isLegalClassName(String value) {
+    if (value == null || value.isEmpty()) {
       return false;
     }
-    for (int i = 0; i < reserved_name_chars.length; i++) {
-      if (p_string.contains(reserved_name_chars[i])) {
+    for (String reservedNameChar : reserved_name_chars) {
+      if (value.contains(reservedNameChar)) {
         return false;
       }
     }
     return true;
+  }
+
+  static Float parseClearanceTableValue(Object value) {
+    if (value instanceof Number number) {
+      return number.floatValue();
+    }
+    if (value instanceof String stringValue) {
+      try {
+        return Float.parseFloat(stringValue);
+      } catch (Exception e) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  static void applyClearanceValue(ClearanceMatrix matrix, int rowClassNo, int columnClassNo, int layerNo,
+      int boardValue) {
+    if (layerNo == ComboBoxLayer.ALL_LAYER_INDEX) {
+      matrix.set_value(rowClassNo, columnClassNo, boardValue);
+      matrix.set_value(columnClassNo, rowClassNo, boardValue);
+    } else if (layerNo == ComboBoxLayer.INNER_LAYER_INDEX) {
+      matrix.set_inner_value(rowClassNo, columnClassNo, boardValue);
+      matrix.set_inner_value(columnClassNo, rowClassNo, boardValue);
+    } else {
+      matrix.set_value(rowClassNo, columnClassNo, layerNo, boardValue);
+      matrix.set_value(columnClassNo, rowClassNo, layerNo, boardValue);
+    }
+  }
+
+  /**
+   * Returns true, if p_string is a legal class name.
+   */
+  private boolean is_legal_class_name(String p_string) {
+    return isLegalClassName(p_string);
   }
 
   private int max_name_length() {
@@ -349,22 +381,11 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     @Override
     public void setValueAt(Object p_value, int p_row, int p_col) {
-      Number number_value;
-      if (p_value instanceof Number number) {
-        // does ot work because of a localisation Bug in Java
-        number_value = number;
-      } else {
-        // Workaround because of a localisation Bug in Java
-        // The numbers are always displayed in the English Format.
-        if (!(p_value instanceof String)) {
-          return;
-        }
-        try {
-          number_value = Float.parseFloat((String) p_value);
-        } catch (Exception _) {
-          return;
-        }
+      Float parsedValue = parseClearanceTableValue(p_value);
+      if (parsedValue == null) {
+        return;
       }
+      Number number_value = parsedValue;
       int curr_row = p_row;
       int curr_column = p_col - 1;
 
@@ -411,19 +432,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
       int board_value = (int) Math.round(board_handling.coordinate_transform.user_to_board(number_value.doubleValue()));
       int layer_no = rules_clearance_layer_combo_box.get_selected_layer().index;
-      if (layer_no == ComboBoxLayer.ALL_LAYER_INDEX) {
-        // change the clearance on all layers
-        clearance_matrix.set_value(curr_row, curr_column, board_value);
-        clearance_matrix.set_value(curr_column, curr_row, board_value);
-      } else if (layer_no == ComboBoxLayer.INNER_LAYER_INDEX) {
-        // change the clearance on all inner layers
-        clearance_matrix.set_inner_value(curr_row, curr_column, board_value);
-        clearance_matrix.set_inner_value(curr_column, curr_row, board_value);
-      } else {
-        // change the clearance on layer with index layer_no
-        clearance_matrix.set_value(curr_row, curr_column, layer_no, board_value);
-        clearance_matrix.set_value(curr_column, curr_row, layer_no, board_value);
-      }
+      applyClearanceValue(clearance_matrix, curr_row, curr_column, layer_no, board_value);
       if (items_already_assigned) {
         // force reinserting all item into the searck tree, because their tree shapes may have
         // changed

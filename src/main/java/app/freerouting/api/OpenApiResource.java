@@ -1,5 +1,7 @@
 package app.freerouting.api;
 
+import app.freerouting.api.mcp.AgentCardController;
+import app.freerouting.api.v1.McpControllerV1;
 import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,6 +46,9 @@ public class OpenApiResource {
             // Configure OpenAPI scanner to find all JAX-RS resources
             SwaggerConfiguration config = new SwaggerConfiguration()
                     .resourcePackages(Set.of("app.freerouting.api"))
+                    .resourceClasses(Set.of(
+                            AgentCardController.class.getName(),
+                            McpControllerV1.class.getName()))
                     .prettyPrint(true);
 
             // Build OpenAPI context and get the spec
@@ -81,6 +86,9 @@ public class OpenApiResource {
             // Configure OpenAPI scanner
             SwaggerConfiguration config = new SwaggerConfiguration()
                     .resourcePackages(Set.of("app.freerouting.api"))
+                    .resourceClasses(Set.of(
+                            AgentCardController.class.getName(),
+                            McpControllerV1.class.getName()))
                     .prettyPrint(true);
 
             // Build OpenAPI context and get the spec

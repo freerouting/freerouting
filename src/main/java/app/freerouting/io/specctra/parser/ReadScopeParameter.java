@@ -10,6 +10,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.io.CoordinateTransform;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.settings.RouterSettings;

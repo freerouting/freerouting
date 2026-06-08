@@ -143,6 +143,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     FileNameExtensionFilter frbFilter = new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
     fileChooser.addChoosableFileFilter(frbFilter);
 
+    // Add the file filter for KiCad JSON .JSON files
+    FileNameExtensionFilter jsonFilter = new FileNameExtensionFilter("KiCad JSON file (*.json)", "json");
+    fileChooser.addChoosableFileFilter(jsonFilter);
+
     // Set a file filter as the default one
     fileChooser.setFileFilter(dsnFilter);
 
@@ -170,6 +174,20 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   public static FileFormat getFileFormat(byte[] content) {
+    if (content == null) {
+      return FileFormat.UNKNOWN;
+    }
+    // First, check if it's a JSON file (the first non-whitespace character is '{')
+    for (byte b : content) {
+      if (b == ' ' || b == '\t' || b == '\r' || b == '\n') {
+        continue;
+      }
+      if (b == '{') {
+        return FileFormat.JSON;
+      }
+      break;
+    }
+
     // Open the file as a binary file and read the first 6 bytes to determine the
     // file format
     try (InputStream fileInputStream = new ByteArrayInputStream(content)) {
@@ -227,6 +245,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         case BINARY_FILE_EXTENSION -> FileFormat.FRB;
         case "ses" -> FileFormat.SES;
         case "scr" -> FileFormat.SCR;
+        case "json" -> FileFormat.JSON;
         default -> FileFormat.UNKNOWN;
       };
     }
@@ -395,6 +414,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
       this.output = new BoardFileDetails();
       this.output.addUpdatedEventListener(_ -> this.fireOutputUpdatedEvent());
       this.output.setFilename(changeFileExtension(input.getAbsolutePath(), SES_FILE_EXTENSION));
+    }
+
+    if (this.input.format == FileFormat.JSON) {
+      this.output = new BoardFileDetails();
+      this.output.addUpdatedEventListener(_ -> this.fireOutputUpdatedEvent());
+      this.output.setFilename(changeFileExtension(input.getAbsolutePath(), "json"));
     }
 
     if (this.input.format != FileFormat.UNKNOWN) {

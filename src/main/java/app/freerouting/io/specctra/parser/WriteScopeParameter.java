@@ -3,6 +3,7 @@ package app.freerouting.io.specctra.parser;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.io.CoordinateTransform;
 import app.freerouting.settings.RouterSettings;
 
 /**

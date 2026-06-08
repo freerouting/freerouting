@@ -1,0 +1,703 @@
+{
+  "designName": "ecc83-pp",
+  "unit": "MM",
+  "resolution": 1.0,
+  "layers": [
+    {
+      "index": 0,
+      "name": "top_cu",
+      "type": "signal"
+    },
+    {
+      "index": 1,
+      "name": "F.Mask",
+      "type": "signal"
+    }
+  ],
+  "netClasses": [],
+  "nets": [],
+  "clearanceRules": [],
+  "components": [
+    {
+      "reference": "C1",
+      "value": "10uF",
+      "footprint": "CP_Radial_D10.0mm_P5.00mm",
+      "position": {
+        "x": 141.605,
+        "y": 99.695
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(P3-P1)",
+          "shape": "rect",
+          "size": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -5.0
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "C2",
+      "value": "680nF",
+      "footprint": "C_Disc_D4.7mm_W2.5mm_P5.00mm",
+      "position": {
+        "x": 137.16,
+        "y": 125.095
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(P2-P1)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        },
+        {
+          "name": "2",
+          "netName": "Net-(U1A-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -5.0
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "P5",
+      "value": "MOUNTING_HOLE",
+      "footprint": "MountingHole_3.2mm_M3_DIN965_Pad",
+      "position": {
+        "x": 125.095,
+        "y": 93.98
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "unconnected-(P5-Pad1)",
+          "shape": "rect",
+          "size": {
+            "x": 5.6,
+            "y": 5.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "P6",
+      "value": "MOUNTING_HOLE",
+      "footprint": "MountingHole_3.2mm_M3_DIN965_Pad",
+      "position": {
+        "x": 169.545,
+        "y": 93.98
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "unconnected-(P6-Pad1)",
+          "shape": "rect",
+          "size": {
+            "x": 5.6,
+            "y": 5.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "P7",
+      "value": "MOUNTING_HOLE",
+      "footprint": "MountingHole_3.2mm_M3_DIN965_Pad",
+      "position": {
+        "x": 169.545,
+        "y": 132.715
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "unconnected-(P7-Pad1)",
+          "shape": "rect",
+          "size": {
+            "x": 5.6,
+            "y": 5.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "R1",
+      "value": "1.5K",
+      "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 136.271,
+        "y": 107.95
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(U1A-G)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        },
+        {
+          "name": "2",
+          "netName": "Net-(U1A-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 7.62
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "R2",
+      "value": "1.5K",
+      "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 156.21,
+        "y": 95.885
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(U1B-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": 0.0
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "R4",
+      "value": "47K",
+      "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 164.465,
+        "y": 117.475
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(P1-PM)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 7.62
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "P2",
+      "value": "OUT",
+      "footprint": "Altech_AK300_1x02_P5.00mm_45-Degree",
+      "position": {
+        "x": 128.27,
+        "y": 112.776
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(P2-P1)",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 5.0
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "P3",
+      "value": "POWER",
+      "footprint": "Altech_AK300_1x02_P5.00mm_45-Degree",
+      "position": {
+        "x": 128.27,
+        "y": 100.711
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(P3-P1)",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 5.0
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "P4",
+      "value": "CONN_2",
+      "footprint": "Altech_AK300_1x02_P5.00mm_45-Degree",
+      "position": {
+        "x": 145.542,
+        "y": 131.191
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(P4-P1)",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        },
+        {
+          "name": "2",
+          "netName": "Net-(P4-PM)",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 5.0,
+            "y": 0.0
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "R3",
+      "value": "100K",
+      "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 133.985,
+        "y": 125.095
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(P2-P1)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": 0.0
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "U1",
+      "value": "ECC83",
+      "footprint": "Valve_ECC-83-1",
+      "position": {
+        "x": 149.225,
+        "y": 113.665
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(U1A-G)",
+          "shape": "rect",
+          "size": {
+            "x": 2.03,
+            "y": 2.03
+          },
+          "offset": {
+            "x": 3.45,
+            "y": 4.8
+          },
+          "layers": []
+        },
+        {
+          "name": "2",
+          "netName": "Net-(P1-PM)",
+          "shape": "rect",
+          "size": {
+            "x": 2.03,
+            "y": 2.03
+          },
+          "offset": {
+            "x": 5.6,
+            "y": 1.87
+          },
+          "layers": []
+        },
+        {
+          "name": "3",
+          "netName": "Net-(U1B-K)",
+          "shape": "rect",
+          "size": {
+            "x": 2.03,
+            "y": 2.03
+          },
+          "offset": {
+            "x": 5.6,
+            "y": -1.78
+          },
+          "layers": []
+        },
+        {
+          "name": "4",
+          "netName": "Net-(P4-PM)",
+          "shape": "rect",
+          "size": {
+            "x": 2.03,
+            "y": 2.03
+          },
+          "offset": {
+            "x": 3.45,
+            "y": -4.71
+          },
+          "layers": []
+        },
+        {
+          "name": "5",
+          "netName": "Net-(P4-PM)",
+          "shape": "rect",
+          "size": {
+            "x": 2.03,
+            "y": 2.03
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -5.85
+          },
+          "layers": []
+        },
+        {
+          "name": "6",
+          "netName": "Net-(P3-P1)",
+          "shape": "rect",
+          "size": {
+            "x": 2.03,
+            "y": 2.03
+          },
+          "offset": {
+            "x": -3.46,
+            "y": -4.71
+          },
+          "layers": []
+        },
+        {
+          "name": "7",
+          "netName": "Net-(U1A-G)",
+          "shape": "rect",
+          "size": {
+            "x": 2.03,
+            "y": 2.03
+          },
+          "offset": {
+            "x": -5.61,
+            "y": -1.78
+          },
+          "layers": []
+        },
+        {
+          "name": "8",
+          "netName": "Net-(U1A-K)",
+          "shape": "rect",
+          "size": {
+            "x": 2.03,
+            "y": 2.03
+          },
+          "offset": {
+            "x": -5.61,
+            "y": 1.83
+          },
+          "layers": []
+        },
+        {
+          "name": "9",
+          "netName": "Net-(P4-P1)",
+          "shape": "rect",
+          "size": {
+            "x": 2.03,
+            "y": 2.03
+          },
+          "offset": {
+            "x": -3.46,
+            "y": 4.8
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "P1",
+      "value": "IN",
+      "footprint": "Altech_AK300_1x02_P5.00mm_45-Degree",
+      "position": {
+        "x": 166.37,
+        "y": 105.41
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        },
+        {
+          "name": "2",
+          "netName": "Net-(P1-PM)",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -5.0
+          },
+          "layers": []
+        }
+      ]
+    },
+    {
+      "reference": "P8",
+      "value": "MOUNTING_HOLE",
+      "footprint": "MountingHole_3.2mm_M3_DIN965_Pad",
+      "position": {
+        "x": 125.095,
+        "y": 132.715
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "unconnected-(P8-Pad1)",
+          "shape": "rect",
+          "size": {
+            "x": 5.6,
+            "y": 5.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "layers": []
+        }
+      ]
+    }
+  ],
+  "outline": {
+    "corners": [
+      {
+        "x": 173.355,
+        "y": 90.17
+      },
+      {
+        "x": 121.285,
+        "y": 90.17
+      },
+      {
+        "x": 173.355,
+        "y": 90.17
+      },
+      {
+        "x": 121.285,
+        "y": 136.525
+      }
+    ],
+    "clearance": 0.5
+  },
+  "traces": [],
+  "vias": [],
+  "conductionAreas": []
+}

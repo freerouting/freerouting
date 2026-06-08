@@ -26,7 +26,7 @@ public class ForcedViaAlgo {
    * Checks, if a Via is possible at the input layer after evtl. shoving aside obstacle traces. p_room_shape is used for calculating the from_side.
    */
   public static ForcedPadAlgo.CheckDrillResult check_layer(double p_via_radius, int p_cl_class, boolean p_attach_smd_allowed, TileShape p_room_shape, Point p_location, int p_layer, int[] p_net_no_arr,
-      int p_max_recursion_depth, int p_max_via_recursion_depth, RoutingBoard p_board) {
+      int p_max_recursion_depth, int p_max_via_recursion_depth, RoutingBoard p_board, int p_trace_half_width, int p_trace_clearance_class) {
     if (p_via_radius <= 0) {
       return ForcedPadAlgo.CheckDrillResult.DRILLABLE;
     }
@@ -34,7 +34,8 @@ public class ForcedViaAlgo {
     if (!(p_location instanceof IntPoint)) {
       return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
     }
-    ConvexShape via_shape = new Circle((IntPoint) p_location, (int) Math.ceil(p_via_radius));
+    IntPoint intLocation = (IntPoint) p_location;
+    ConvexShape via_shape = new Circle(intLocation, (int) Math.ceil(p_via_radius));
 
     double check_radius = p_via_radius + 0.5 * p_board.clearance_value(p_cl_class, p_cl_class, p_layer) + p_board.get_min_trace_half_width();
 
@@ -53,13 +54,41 @@ public class ForcedViaAlgo {
       return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
     }
 
-    return forced_pad_algo.check_forced_pad(tile_shape, from_side, p_layer, p_net_no_arr, p_cl_class, p_attach_smd_allowed, null, p_max_recursion_depth, p_max_via_recursion_depth, false, null);
+    ForcedPadAlgo.CheckDrillResult viaResult = forced_pad_algo.check_forced_pad(tile_shape, from_side, p_layer, p_net_no_arr, p_cl_class, p_attach_smd_allowed, null, p_max_recursion_depth,
+        p_max_via_recursion_depth, false, null);
+    if (viaResult == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+      return viaResult;
+    }
+
+    if (p_trace_half_width <= 0) {
+      return viaResult;
+    }
+
+    Circle startTraceCircle = new Circle(intLocation, p_trace_half_width);
+    TileShape startTraceShape;
+    if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
+      startTraceShape = startTraceCircle.bounding_box();
+    } else {
+      startTraceShape = startTraceCircle.bounding_octagon();
+    }
+
+    ForcedPadAlgo.CheckDrillResult traceResult = forced_pad_algo.check_forced_pad(startTraceShape, from_side, p_layer, p_net_no_arr, p_trace_clearance_class, true, null,
+        p_max_recursion_depth, p_max_via_recursion_depth, false, null);
+    if (traceResult == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+      return traceResult;
+    }
+    if (viaResult == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD || traceResult == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
+      return ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD;
+    }
+    return ForcedPadAlgo.CheckDrillResult.DRILLABLE;
   }
 
   /**
    * Checks, if a Via is possible with the input parameter after evtl. shoving aside obstacle traces.
    */
-  public static boolean check(ViaInfo p_via_info, Point p_location, int[] p_net_no_arr, int p_max_recursion_depth, int p_max_via_recursion_depth, RoutingBoard p_board) {
+  public static boolean check(ViaInfo p_via_info, Point p_location, int[] p_net_no_arr, int p_max_recursion_depth,
+      int p_max_via_recursion_depth, RoutingBoard p_board, int[] p_trace_pen_halfwidth_arr,
+      int p_trace_clearance_class_no) {
     Vector translate_vector = p_location.difference_by(Point.ZERO);
     int calc_from_side_offset = p_board.get_min_trace_half_width();
     ForcedPadAlgo forced_pad_algo = new ForcedPadAlgo(p_board);
@@ -77,10 +106,28 @@ public class ForcedViaAlgo {
         tile_shape = curr_pad_shape.bounding_octagon();
       }
       CalcFromSide from_side = forced_pad_algo.calc_from_side(tile_shape, p_location, i, calc_from_side_offset, p_via_info.get_clearance_class());
-      if (forced_pad_algo.check_forced_pad(tile_shape, from_side, i, p_net_no_arr, p_via_info.get_clearance_class(), p_via_info.attach_smd_allowed(), null, p_max_recursion_depth,
+      if (forced_pad_algo.check_forced_pad(tile_shape, from_side, i, p_net_no_arr, p_via_info.get_clearance_class(),
+          p_via_info.attach_smd_allowed(), null, p_max_recursion_depth,
           p_max_via_recursion_depth, false, null) == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
         p_board.set_shove_failing_layer(i);
         return false;
+      }
+
+      if (p_trace_pen_halfwidth_arr != null && i < p_trace_pen_halfwidth_arr.length && p_trace_pen_halfwidth_arr[i] > 0
+          && p_location instanceof IntPoint tracePoint) {
+        Circle startTraceCircle = new Circle(tracePoint, p_trace_pen_halfwidth_arr[i]);
+        TileShape startTraceShape;
+        if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
+          startTraceShape = startTraceCircle.bounding_box();
+        } else {
+          startTraceShape = startTraceCircle.bounding_octagon();
+        }
+        if (forced_pad_algo.check_forced_pad(startTraceShape, from_side, i, p_net_no_arr, p_trace_clearance_class_no,
+            true, null, p_max_recursion_depth, p_max_via_recursion_depth, false, null)
+            == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+          p_board.set_shove_failing_layer(i);
+          return false;
+        }
       }
     }
     return true;

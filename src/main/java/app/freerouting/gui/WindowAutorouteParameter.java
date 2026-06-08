@@ -573,6 +573,51 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     super.parent_deiconified();
   }
 
+  static int normalizeIntInput(Object input, int oldValue, int minValue, int maxValue) {
+    if (!(input instanceof Number number)) {
+      return oldValue;
+    }
+    int parsedValue = number.intValue();
+    if (parsedValue < minValue) {
+      parsedValue = minValue;
+    }
+    if (parsedValue > maxValue) {
+      parsedValue = maxValue;
+    }
+    return parsedValue;
+  }
+
+  static double normalizePositiveDoubleInput(Object input, double oldValue) {
+    if (!(input instanceof Number number)) {
+      return oldValue;
+    }
+    double parsedValue = number.doubleValue();
+    return parsedValue > 0 ? parsedValue : oldValue;
+  }
+
+  static String normalizeTimeoutInput(Object input, String oldValue) {
+    if (!(input instanceof String stringValue)) {
+      return oldValue;
+    }
+    return stringValue.matches("^(\\d+\\.)?\\d{1,2}:\\d{2}:\\d{2}$") ? stringValue : oldValue;
+  }
+
+  static void applyViasAllowedSelection(RouterSettings settings, boolean selected) {
+    settings.setViasAllowed(selected);
+  }
+
+  static void applyAutorouteEnabledSelection(RouterSettings settings, boolean selected) {
+    settings.setEnabled(selected);
+  }
+
+  static void applyOptimizerEnabledSelection(RouterSettings settings, boolean selected) {
+    settings.setOptimizerEnabled(selected);
+  }
+
+  static void applyAlgorithmSelection(RouterSettings settings, boolean useV19) {
+    settings.setAlgorithm(useV19 ? RouterSettings.ALGORITHM_V19 : RouterSettings.ALGORITHM_CURRENT);
+  }
+
   private class LayerActiveListener implements ActionListener {
 
     private final int signal_layer_no;
@@ -613,7 +658,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       isUpdatingFromSettings = true;
       try {
-        board_handling.getCurrentRoutingJob().routerSettings.setViasAllowed(settings_autorouter_vias_allowed.isSelected());
+        applyViasAllowedSelection(board_handling.getCurrentRoutingJob().routerSettings,
+            settings_autorouter_vias_allowed.isSelected());
       } finally {
         isUpdatingFromSettings = false;
       }
@@ -627,7 +673,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       RouterSettings autoroute_settings = board_handling.getCurrentRoutingJob().routerSettings;
       isUpdatingFromSettings = true;
       try {
-        autoroute_settings.setEnabled(settings_autorouter_autoroute_pass_button.isSelected());
+        applyAutorouteEnabledSelection(autoroute_settings, settings_autorouter_autoroute_pass_button.isSelected());
       } finally {
         isUpdatingFromSettings = false;
       }
@@ -641,7 +687,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       RouterSettings autoroute_settings = board_handling.getCurrentRoutingJob().routerSettings;
       isUpdatingFromSettings = true;
       try {
-        autoroute_settings.setOptimizerEnabled(settings_autorouter_postroute_pass_button.isSelected());
+        applyOptimizerEnabledSelection(autoroute_settings, settings_autorouter_postroute_pass_button.isSelected());
       } finally {
         isUpdatingFromSettings = false;
       }
@@ -655,17 +701,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.getCurrentRoutingJob().routerSettings.get_via_costs();
         Object input = via_cost_field.getValue();
-        int input_value;
-        if (input instanceof Number number) {
-          input_value = number.intValue();
-          if (input_value <= 0) {
-            input_value = 1;
-            via_cost_field.setValue(input_value);
-          }
-        } else {
-          input_value = old_value;
-          via_cost_field.setValue(old_value);
-        }
+        int input_value = normalizeIntInput(input, old_value, 1, Integer.MAX_VALUE);
         board_handling.getCurrentRoutingJob().routerSettings.set_via_costs(input_value);
         via_cost_field.setValue(input_value);
         via_cost_input_completed = true;
@@ -722,17 +758,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.getCurrentRoutingJob().routerSettings.get_plane_via_costs();
         Object input = plane_via_cost_field.getValue();
-        int input_value;
-        if (input instanceof Number number) {
-          input_value = number.intValue();
-          if (input_value <= 0) {
-            input_value = 1;
-            plane_via_cost_field.setValue(input_value);
-          }
-        } else {
-          input_value = old_value;
-          plane_via_cost_field.setValue(old_value);
-        }
+        int input_value = normalizeIntInput(input, old_value, 1, Integer.MAX_VALUE);
         board_handling.getCurrentRoutingJob().routerSettings.set_plane_via_costs(input_value);
         plane_via_cost_field.setValue(input_value);
         plane_via_cost_input_completed = true;
@@ -789,15 +815,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.getCurrentRoutingJob().routerSettings.get_start_ripup_costs();
         Object input = start_ripup_costs.getValue();
-        int input_value;
-        if (input instanceof Number number) {
-          input_value = number.intValue();
-          if (input_value <= 0) {
-            input_value = 1;
-          }
-        } else {
-          input_value = old_value;
-        }
+        int input_value = normalizeIntInput(input, old_value, 1, Integer.MAX_VALUE);
         board_handling.getCurrentRoutingJob().routerSettings.set_start_ripup_costs(input_value);
         start_ripup_costs.setValue(input_value);
         start_ripup_cost_input_completed = true;
@@ -851,18 +869,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.getCurrentRoutingJob().routerSettings.maxPasses;
         Object input = max_passes_field.getValue();
-        int input_value;
-        if (input instanceof Number number) {
-          input_value = number.intValue();
-          if (input_value < 0) {
-            input_value = 0;
-          }
-          if (input_value > 9999) {
-            input_value = 9999;
-          }
-        } else {
-          input_value = old_value;
-        }
+        int input_value = normalizeIntInput(input, old_value, 1, 9999);
         // Use setter to fire property change event
         isUpdatingFromSettings = true;
         try {
@@ -1056,17 +1063,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         Object input = max_threads_field.getValue();
         int input_value;
         int max_available = Runtime.getRuntime().availableProcessors();
-        if (input instanceof Number number) {
-          input_value = number.intValue();
-          if (input_value < 1) {
-            input_value = 1;
-          }
-          if (input_value > max_available) {
-            input_value = max_available;
-          }
-        } else {
-          input_value = old_value;
-        }
+        input_value = normalizeIntInput(input, old_value, 1, max_available);
         // Use setter to fire property change event
         isUpdatingFromSettings = true;
         try {
@@ -1133,16 +1130,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       String oldAlgorithm = board_handling.getCurrentRoutingJob().routerSettings.algorithm;
-      String newAlgorithm;
-      if (settings_autorouter_algorithm_combo_box.getSelectedItem() == algorithm_v19) {
-        newAlgorithm = RouterSettings.ALGORITHM_V19;
-      } else {
-        newAlgorithm = RouterSettings.ALGORITHM_CURRENT;
-      }
+      boolean useV19 = settings_autorouter_algorithm_combo_box.getSelectedItem() == algorithm_v19;
+      String newAlgorithm = useV19 ? RouterSettings.ALGORITHM_V19 : RouterSettings.ALGORITHM_CURRENT;
       if (!oldAlgorithm.equals(newAlgorithm)) {
         isUpdatingFromSettings = true;
         try {
-          board_handling.getCurrentRoutingJob().routerSettings.setAlgorithm(newAlgorithm);
+          applyAlgorithmSelection(board_handling.getCurrentRoutingJob().routerSettings, useV19);
         } finally {
           isUpdatingFromSettings = false;
         }

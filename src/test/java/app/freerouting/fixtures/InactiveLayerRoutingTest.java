@@ -1,11 +1,11 @@
 package app.freerouting.fixtures;
 
-import app.freerouting.board.Trace;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import app.freerouting.core.RoutingJob;
 import app.freerouting.settings.sources.TestingSettings;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests related to GitHub Issue #230: "Auto-router uses inactive layers if via cost set to 45 or lower"
@@ -130,6 +130,7 @@ public class InactiveLayerRoutingTest extends RoutingFixtureTest {
   private RoutingJob job;
 
   @Test
+  @Tag("slow")
   void test_Issue_230_Wires_on_inactive_layers() {
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:05:00");

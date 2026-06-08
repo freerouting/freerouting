@@ -19,6 +19,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
 - **Architecture Reference:** The authoritative architecture overview lives in [`docs/architecture.md`](docs/architecture.md). It includes a Mermaid diagram of the full system, a package glossary, and navigation guidance. **Keep this file up-to-date whenever structural changes are made** — for example, when packages are added or reorganised, when a new interface (GUI mode, API version, CLI flag) is introduced, or when the boundary between the routing pipeline and the orchestration layer shifts. The in-repo diagram is the first document contributors read; a stale diagram misleads more than no diagram at all.
 - **Domain Orientation:** This is an **algorithmic-heavy** project. The complexity lies in spatial data structures, pathfinding (e.g., modified A*, Lee algorithm, maze routing), and geometric calculations.
 - **Separation of Concerns:** The **UI/Visualizer** and the **Routing Engine** are distinct domains. Always maintain a strict boundary between visual representation and core algorithmic logic. UI concerns should not bleed into the geometric models.
+- **Module Boundary Enforcement:** Architectural package boundaries are enforced by ArchUnit tests in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java` and `src/test/java/app/freerouting/io/SpecctraPackageArchTest.java`. Keep strict rules green. For known legacy boundary debt, use frozen rules (`FreezingArchRule`) and never relax strict rules to hide regressions.
 - **Repository Package Boundaries:** Keep routing/data logic in `src/main/java/app/freerouting/{autoroute,board,geometry,drc,core,rules}`; keep UI/editor flow in `src/main/java/app/freerouting/{gui,interactive,boardgraphics}`; keep REST/API server concerns in `src/main/java/app/freerouting/{api,management}`; keep file-format I/O in `src/main/java/app/freerouting/io/{specctra,specctra/parser}` — the public entry points live in `io.specctra` and grammar internals in `io.specctra.parser`.
 - **Coding Standards:** Adhere strictly to Clean Code principles and standard Java naming conventions (e.g., CamelCase for classes/methods). Prioritize readability and maintainability without sacrificing the algorithmic performance. 
 - **Legacy Reference Implementation:** The source code of the original v1.9 implementation is available in the `src_v19/` directory. It serves as a reference and benchmark baseline that we can comare against when refactoring or optimizing routing logic. Use it to understand the original algorithmic decisions and to ensure that any new implementation maintains or improves upon the original performance and correctness. The source code should be modified only when more gradual trace logging is needed to understand the original algorithm's behavior in specific scenarios. Do not refactor or optimize the v1.9 code directly; instead, use it as a reference for the current development branch.
@@ -54,7 +55,9 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
     - **Expected memory profile for a multi-pass routing job:** Working-set typically grows in a staircase pattern (each pass plateau, then a GC trim) up to a board-size-dependent peak, then drops sharply when the routing thread pool winds down and releases per-pass board state. The optimizer phase that follows normally runs at a significantly lower and flat memory footprint. Sustained growth *during* the optimizer (not routing) is the signal that indicates a genuine GC-root retention leak.
   - **Trace Length Optimization:** (Low priority) The total length of traces should be minimized while respecting design rules.
 - **Testing & Validation:** Always write comprehensive unit tests for any new routing logic or optimizations. Use the existing test suite as a reference and ensure that all tests pass before merging changes. For any new features or optimizations, add specific test cases that validate the expected behavior and performance improvements.
-  - **Running Tests:** If you implement a small change you can run only one unit test to do a quick check, preferably the `Issue508Test_BM01_first_2_nets` which is one of the quickest routing test. Use `./gradlew test` to run all unit tests and `./gradlew check` for the full integration testing suite, which includes tests based on actual PCB design files.
+  - **Running Tests:** If you implement a small change you can run only one unit test to do a quick check, preferably the `Issue508Test_BM01_first_2_nets` which is one of the quickest routing test. Use `./gradlew test` for the default (fast) unit-test set and `./gradlew check` for the full integration testing suite.
+  - **Slow-test tagging policy:** Tag long-running fixture/benchmark tests with `@Tag("slow")`. The default `test` task excludes these tests unless explicitly enabled (`-PincludeSlowTests=true`). Use `./gradlew testSlow` to run only slow tests, and `./gradlew testAll` to run both fast + slow sets before releases or merge-critical validation.
+  - **Timeout budget:** The Gradle unit-test task timeout is **30 minutes** to accommodate fanout-enabled routing fixtures on slower hardware.
   - **Large-board CI tests:** Boards with >500 nets can take several minutes per routing pass. Use `TestingSettings.setMaxItems(n)` (e.g. 100–200) to slice off a bounded chunk of work that runs in under 30 seconds while still exercising the target code path. Do **not** rely on a short `jobTimeoutString` alone — the timeout fires after the pass completes, so a single slow pass can still blow the budget.
   - **Full-scale OOM / stress tests** that cannot be bounded to CI time belong in `scripts/tests/` as standalone PowerShell scripts (see `run_test_Issue420_oom.ps1` as the reference pattern). These scripts build the executable JAR, run it headlessly with `-XX:+HeapDumpOnOutOfMemoryError`, sample the JVM working-set every 30 s via a `Start-Job` background sampler, and print a pass/fail summary with the memory trend at the end.
 - **GUI vs Headless Guard:** Before calling any method that accesses `interactiveSettings`, always check `getInteractiveSettings() != null` or restrict the call to `GuiBoardManager` only. Shared `interactive`-package code (e.g., routing states like `RouteState`, `DragState`) may access `hdlg.interactiveSettings` directly — ensure those code paths are only reachable when `hdlg` is a `GuiBoardManager` instance.
@@ -64,6 +67,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   - DSN fixture files live in `fixtures/`; reference them by filename (e.g., `"Issue508-DAC2020_bm01.dsn"`). The quickest fixture for smoke-checks is `Dac2020Bm01RoutingTest`.
   - Bound long-running routing tests with `TestingSettings.setMaxPasses(n)`, `setMaxItems(m)`, and `setJobTimeoutString("HH:MM:SS")` to keep CI fast.
 - **Issue Tracking:** Detailed per-issue specifications live in `docs/issues/`. Each file documents the problem, sub-issues (with ✅ when done), proposed/actual implementation, and acceptance criteria. Keep these files up-to-date as sub-issues are resolved so future agents have accurate context without re-reading the full conversation history.
+  - Architecture boundary debt is tracked in `docs/issues/Architecture-boundary-debt-tracker.md`. Update it whenever frozen ArchUnit baselines change or when a frozen rule is promoted to strict.
   - Temporary analysis artifacts (draft GitHub replies, one-off log extracts, heap-dump notes) should be written to `logs/<IssueNNN>/` — this directory is git-ignored and will not clutter the repository.
 - **Licensing:** This project is open-source under the **GPLv3** license. Ensure all dependencies and contributions respect this license.
 
@@ -75,11 +79,17 @@ This design has one critical invariant: **all fields in `RouterSettings` (and it
 
 The full priority ladder is documented in `docs/settings.md`. Key sources: `DefaultSettings` (0), `JsonFileSettings` (10), `DsnFileSettings` (20), `SesFileSettings` (30), `RulesFileSettings` (40), `GuiSettings` (50), `EnvironmentVariablesSource` (55), `CliSettings` (60), `ApiSettings` (70).
 
+- **Copper-to-edge default:** `RouterSettings.copperToEdgeClearanceUm` defaults to **500.0 µm (0.5 mm)** in `DefaultSettings`. Keep the field nullable (no initializer in `RouterSettings`) so higher-priority sources can still override it cleanly.
+- **Override-test guidance:** When writing tests for the edge-clearance override path, set `copperToEdgeClearanceUm` to a **non-default** value so the test verifies source precedence/override behavior, not just default propagation.
+
 # Workflow Commands
 
 Execute the following commands from the root directory using the Gradle Wrapper:
 
-- **Run Tests:** `./gradlew test` (or `./gradlew check` for full integration testing suite)
+- **Run Tests (fast/default):** `./gradlew test`
+- **Run Slow Tests Only:** `./gradlew testSlow`
+- **Run Fast + Slow Tests:** `./gradlew testAll`
+- **Run Full Verification Suite:** `./gradlew check`
 - **Build the Executable JAR:** `./gradlew executableJar` (Find the result in `build/libs/freerouting-current-executable.jar`)
 - **Build Both Current + v1.9 Executables:** `./gradlew buildBothVersions`
 - **Run Current Development Environment:** `./gradlew run`
@@ -184,6 +194,52 @@ GROUP BY api_method ORDER BY error_count DESC;
 | `management/analytics/BigQueryClient.java` | Singleton GCP BigQuery writer; `getInstance()` avoids per-request re-auth |
 | `api/ApiAnalyticsFilter.java` | JAX-RS dual filter; tracks all ≥ 400 responses centrally |
 | `api/FreeroutingApplication.java` | Registers `ApiAnalyticsFilter` alongside existing filters |
+
+# MCP Server Architecture
+
+Key facts and invariants for the dedicated MCP server implementation.
+
+## Server separation and settings
+
+- Freerouting runs MCP as a **separate server** with its own settings block: `mcp_server`.
+- `mcp_server` has independent lifecycle flags and network config: `enabled`, `running`, `http_allowed`, `endpoints`, `cors_origins`.
+- MCP authentication config is independent from REST API config: `mcp_server.authentication`.
+- MCP tools execute against the REST API using `mcp_server.target_api_base_url`.
+
+## Protocol surface (v2.3)
+
+- Public discovery endpoint: `GET /.well-known/agent.json` (A2A Agent Card).
+- JSON-RPC endpoint: `POST /v1/mcp` (`initialize`, `tools/list`, `tools/call`).
+- Realtime channels: `GET /v1/mcp/events` (SSE) and `GET /v1/mcp/ws` (WebSocket).
+- Tool inventory is generated from OpenAPI (`/openapi/openapi.json`) and exposes nearly all `/v1/*` routes except MCP routes themselves.
+
+## Target API guard
+
+- `mcp_server.target_api_base_url` must point to the REST API base URL.
+- It must never point to MCP routes (for example `/v1/mcp` or `/.well-known/*`), otherwise tool calls are rejected with a configuration error.
+
+## Authentication and headers
+
+- MCP request authentication uses the same header conventions as API requests:
+  - `Authorization: Bearer <API_KEY>` when auth is enabled.
+  - `Freerouting-Profile-ID` (or `Freerouting-Profile-Email`).
+  - `Freerouting-Environment-Host` in `<ToolName>/<Version>` format.
+- Keep API and MCP authentication paths independent; changing one must not silently change the other.
+
+## Operational hardening invariants
+
+- API and MCP both support configurable fixed-window rate limits:
+  - `api_server.rate_limit`
+  - `mcp_server.rate_limit`
+- MCP and REST responses include `X-Correlation-ID` for request tracing.
+- MCP tool bridge must forward `X-Correlation-ID` to underlying REST calls so logs can be cross-linked.
+
+## Required docs updates when MCP changes
+
+- Update `docs/API/MCP_setup.md` with concrete startup, verification, and troubleshooting steps.
+- Update `docs/API/API_v1.md` MCP endpoint tables/examples.
+- Update `docs/settings.md` whenever `mcp_server` fields change.
+- Update `docs/architecture.md` if package boundaries or data flow changes.
 
 # Docker Multi-Platform Build
 

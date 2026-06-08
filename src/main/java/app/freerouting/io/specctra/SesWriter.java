@@ -11,7 +11,7 @@ import app.freerouting.core.Package;
 import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
-import app.freerouting.io.specctra.parser.CoordinateTransform;
+import app.freerouting.io.CoordinateTransform;
 import app.freerouting.io.specctra.parser.Layer;
 import app.freerouting.io.specctra.parser.Parser;
 import app.freerouting.io.specctra.parser.Resolution;
@@ -429,4 +429,3 @@ public final class SesWriter {
     file.end_scope();
   }
 }
-

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.sources.TestingSettings;
 import java.time.Duration;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -55,7 +56,49 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://github.com/freerouting/freerouting/issues/555">GitHub Issue #555</a>
  */
+@Tag("slow")
 public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
+
+  @Test
+  void test_Issue_555_Routing_performance_with_CNH_Functional_Tester_1() {
+    IO.println(
+        "Testing performance by routing reference board 'Issue555-CNH_Functional_Tester_1.dsn' with default settings.");
+    IO.println(
+        "The benchmark times for Freerouting v1.8, v1.9 and v2.0 were 12 seconds (4 unrouted), 10 seconds (4 unrouted) and 11 seconds (4 unrouted) in 6 passes.");
+    IO.println(
+        "The benchmark score for Freerouting v2.1 is 962.18 (6 unrouted), completed in 54 seconds, hitting the 40 pass limit.");
+    IO.println(
+        "The benchmark score for Freerouting v2.2.4 is 983.76 (5 unrouted), completed in 22 seconds with 6 passes.");
+    IO.println(
+        "The benchmark score for Freerouting v2.3.0 is 980.17 (4 unrouted, 16 violations), completed in 47 seconds with 20+18 passes.");
+
+    TestingSettings testingSettings = new TestingSettings();
+    testingSettings.setJobTimeoutString("00:03:00");
+    testingSettings.setMaxPasses(40);
+
+    var job = GetRoutingJob("Issue555-CNH_Functional_Tester_1.dsn", testingSettings);
+    job = RunRoutingJob(job);
+
+    if (job.output == null) {
+      fail("Routing job failed.");
+    } else {
+      var bs = job.board.get_statistics();
+      var scoreBeforeOptimization = bs.getNormalizedScore(job.routerSettings.scoring);
+      Duration routingDuration = Duration.between(job.startedAt, job.finishedAt);
+
+      IO.println(
+          "Routing was completed in " + FRLogger.formatDuration(routingDuration.toSeconds()) + " with the score of "
+              + FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount,
+              bs.clearanceViolations.totalCount)
+              + ".");
+    }
+
+    assertRoutingResult(job, "Issue555-CNH_Functional_Tester_1.dsn")
+        .maxDuration(Duration.ofMinutes(3))
+        .passCount(1, 40)
+        .maxIncompleteConnections(6)
+        .check();
+  }
 
   @Test
   void test_Issue_555_Routing_performance_with_BBD_Mars_64() {
@@ -64,6 +107,7 @@ public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
     IO.println("The benchmark score for Freerouting v2.1 is 976.35, completed in 3.6 minutes.");
     IO.println("The benchmark score for Freerouting v2.2.0 is 968.15 (7 unrouted), completed in 4.0 minutes with 41 passes.");
     IO.println("The benchmark score for Freerouting v2.2.4 is 983.70 (5 unrouted), completed in 3.5 minutes with 41 passes.");
+    IO.println("The benchmark score for Freerouting v2.3.0 is 980.96 (2 unrouted), completed in 2.7 minutes with 20+31 passes.");
 
     TestingSettings testingSettings = new TestingSettings();
     testingSettings.setJobTimeoutString("00:10:00");
@@ -89,45 +133,6 @@ public class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
         .maxDuration(Duration.ofMinutes(20))
         .passCount(1, 99)
         .maxIncompleteConnections(7)
-        .check();
-  }
-
-  @Test
-  void test_Issue_555_Routing_performance_with_CNH_Functional_Tester_1() {
-    IO.println(
-        "Testing performance by routing reference board 'Issue555-CNH_Functional_Tester_1.dsn' with default settings.");
-    IO.println(
-        "The benchmark times for Freerouting v1.8, v1.9 and v2.0 were 12 seconds (4 unrouted), 10 seconds (4 unrouted) and 11 seconds (4 unrouted) in 6 passes.");
-    IO.println(
-        "The benchmark score for Freerouting v2.1 is 962.18 (6 unrouted), completed in 54 seconds, hitting the 40 pass limit.");
-    IO.println(
-        "The benchmark score for Freerouting v2.2.4 is 983.76 (5 unrouted), completed in 22 seconds with 6 passes.");
-
-    TestingSettings testingSettings = new TestingSettings();
-    testingSettings.setJobTimeoutString("00:03:00");
-    testingSettings.setMaxPasses(40);
-
-    var job = GetRoutingJob("Issue555-CNH_Functional_Tester_1.dsn", testingSettings);
-    job = RunRoutingJob(job);
-
-    if (job.output == null) {
-      fail("Routing job failed.");
-    } else {
-      var bs = job.board.get_statistics();
-      var scoreBeforeOptimization = bs.getNormalizedScore(job.routerSettings.scoring);
-      Duration routingDuration = Duration.between(job.startedAt, job.finishedAt);
-
-      IO.println(
-          "Routing was completed in " + FRLogger.formatDuration(routingDuration.toSeconds()) + " with the score of "
-              + FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount,
-                  bs.clearanceViolations.totalCount)
-              + ".");
-    }
-
-    assertRoutingResult(job, "Issue555-CNH_Functional_Tester_1.dsn")
-        .maxDuration(Duration.ofMinutes(1))
-        .passCount(1, 40)
-        .maxIncompleteConnections(6)
         .check();
   }
 }

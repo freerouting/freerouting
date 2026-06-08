@@ -538,6 +538,26 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     guiBoardManager.getInteractiveSettings().set_current_pull_tight_region_width(new_tidy_width);
   }
 
+  static void applyStitchRouteSelection(InteractiveSettings settings, boolean stitchRoute) {
+    settings.set_stitch_route(stitchRoute);
+  }
+
+  static void applyPushAndShoveSelection(InteractiveSettings settings, boolean pushEnabled) {
+    settings.set_push_enabled(pushEnabled);
+  }
+
+  static void applyIgnoreConductionSelection(GuiBoardManager boardManager, boolean ignoreConduction) {
+    boardManager.set_ignore_conduction(ignoreConduction);
+  }
+
+  static void applyClearanceCompensationSelection(GuiBoardManager boardManager, boolean compensationEnabled) {
+    boardManager.set_clearance_compensation(compensationEnabled);
+  }
+
+  static void applyPinExitEdgeToTurnDistance(GuiBoardManager boardManager, float value) {
+    boardManager.set_pin_edge_to_turn_dist(value);
+  }
+
   private class SnapAngle90Listener implements ActionListener {
 
     @Override
@@ -614,7 +634,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.getInteractiveSettings().set_stitch_route(false);
+      applyStitchRouteSelection(guiBoardManager.getInteractiveSettings(), false);
     }
   }
 
@@ -622,7 +642,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.getInteractiveSettings().set_stitch_route(true);
+      applyStitchRouteSelection(guiBoardManager.getInteractiveSettings(), true);
     }
   }
 
@@ -655,7 +675,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.getInteractiveSettings().set_push_enabled(settings_routing_shove_check_box.isSelected());
+      applyPushAndShoveSelection(guiBoardManager.getInteractiveSettings(), settings_routing_shove_check_box.isSelected());
       refresh();
     }
   }
@@ -673,7 +693,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.set_ignore_conduction(settings_routing_ignore_conduction_check_box.isSelected());
+      applyIgnoreConductionSelection(guiBoardManager, settings_routing_ignore_conduction_check_box.isSelected());
     }
   }
 
@@ -730,7 +750,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
           return;
         }
         float input_value = ((Number) input).floatValue();
-        guiBoardManager.set_pin_edge_to_turn_dist(input_value);
+        applyPinExitEdgeToTurnDistance(guiBoardManager, input_value);
         settings_routing_restrict_pin_exit_directions_check_box.setSelected(input_value > 0);
         refresh();
       } else {
@@ -803,7 +823,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.set_clearance_compensation(true);
+      applyClearanceCompensationSelection(guiBoardManager, true);
     }
   }
 
@@ -811,7 +831,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      guiBoardManager.set_clearance_compensation(false);
+      applyClearanceCompensationSelection(guiBoardManager, false);
     }
   }
 

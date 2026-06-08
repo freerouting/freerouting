@@ -2,6 +2,7 @@ package app.freerouting.interactive;
 
 import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.interactive.commands.InteractiveCommand;
 import app.freerouting.management.TextManager;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -52,6 +53,13 @@ public class InteractiveState {
     return this;
   }
 
+  /**
+   * Wraps {@link #left_button_clicked(FloatPoint)} into a command for easier event testing.
+   */
+  public InteractiveCommand left_button_clicked_command(FloatPoint p_location) {
+    return InteractiveCommand.from(() -> this.left_button_clicked(p_location));
+  }
+
   /*
    * Actions to be taken when a mouse button is released.
    * Default function to be overwritten in derived classes.
@@ -60,6 +68,13 @@ public class InteractiveState {
    */
   public InteractiveState button_released() {
     return this;
+  }
+
+  /**
+   * Wraps {@link #button_released()} into a command for easier event testing.
+   */
+  public InteractiveCommand button_released_command() {
+    return InteractiveCommand.from(this::button_released);
   }
 
   /**
@@ -75,6 +90,13 @@ public class InteractiveState {
   }
 
   /**
+   * Wraps {@link #mouse_moved()} into a command for easier event testing.
+   */
+  public InteractiveCommand mouse_moved_command() {
+    return InteractiveCommand.from(this::mouse_moved);
+  }
+
+  /**
    * Actions to be taken when the mouse moves with a button pressed down. Default
    * function to be overwritten in derived classes. Returns the return_state of
    * this state, if the state is left after the
@@ -82,6 +104,13 @@ public class InteractiveState {
    */
   public InteractiveState mouse_dragged(FloatPoint p_point) {
     return this;
+  }
+
+  /**
+   * Wraps {@link #mouse_dragged(FloatPoint)} into a command for easier event testing.
+   */
+  public InteractiveCommand mouse_dragged_command(FloatPoint p_point) {
+    return InteractiveCommand.from(() -> this.mouse_dragged(p_point));
   }
 
   /**
@@ -95,6 +124,13 @@ public class InteractiveState {
   }
 
   /**
+   * Wraps {@link #mouse_pressed(FloatPoint)} into a command for easier event testing.
+   */
+  public InteractiveCommand mouse_pressed_command(FloatPoint p_point) {
+    return InteractiveCommand.from(() -> this.mouse_pressed(p_point));
+  }
+
+  /**
    * Action to be taken, when the mouse wheel was turned.
    */
   public InteractiveState mouse_wheel_moved(int p_rotation) {
@@ -104,6 +140,13 @@ public class InteractiveState {
       hdlg.get_panel().zoom_with_mouse_wheel(screen_mouse_pos, p_rotation);
     }
     return this;
+  }
+
+  /**
+   * Wraps {@link #mouse_wheel_moved(int)} into a command for easier event testing.
+   */
+  public InteractiveCommand mouse_wheel_moved_command(int p_rotation) {
+    return InteractiveCommand.from(() -> this.mouse_wheel_moved(p_rotation));
   }
 
   /**
@@ -144,6 +187,13 @@ public class InteractiveState {
   }
 
   /**
+   * Wraps {@link #key_typed(char)} into a command for easier event testing.
+   */
+  public InteractiveCommand key_typed_command(char p_key_char) {
+    return InteractiveCommand.from(() -> this.key_typed(p_key_char));
+  }
+
+  /**
    * Action to be taken, when this state is completed and exited. Default function
    * to be overwritten in derived classes. Returns the return_state of this state.
    */
@@ -153,12 +203,26 @@ public class InteractiveState {
   }
 
   /**
+   * Wraps {@link #complete()} into a command for easier event testing.
+   */
+  public InteractiveCommand complete_command() {
+    return InteractiveCommand.from(this::complete);
+  }
+
+  /**
    * Actions to be taken, when this state gets cancelled. Default function to be
    * overwritten in derived classes. Returns the parent state of this state.
    */
   public InteractiveState cancel() {
 
     return this.return_state;
+  }
+
+  /**
+   * Wraps {@link #cancel()} into a command for easier event testing.
+   */
+  public InteractiveCommand cancel_command() {
+    return InteractiveCommand.from(this::cancel);
   }
 
   /**
