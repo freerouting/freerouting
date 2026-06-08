@@ -10,11 +10,15 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.net.URI;
@@ -29,12 +33,16 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
- * Startup window visible when the program is loading.
+ * A dialog window that allows users to configure their settings, including telemetry
+ * sharing and contact preferences, as well as view usage statistics and access the project's
+ * sponsorship options.
  */
 public class WindowUserSettings extends WindowBase {
 
   /**
-   * Creates a new instance of WindowMessage
+   * Creates and initializes a new user settings dialog window.
+   *
+   * @param p_board_frame the parent board frame, used to retrieve the active locale settings.
    */
   private WindowUserSettings(BoardFrame p_board_frame) {
     super(480, 355);
@@ -43,9 +51,9 @@ public class WindowUserSettings extends WindowBase {
 
     JDialog profileDialog = new JDialog((Frame) null, "User Settings", true);
     profileDialog.setTitle(tm.getText("title"));
-    profileDialog.setSize(480, 600);
-    profileDialog.setMinimumSize(new Dimension(480, 600));
-    profileDialog.setMaximumSize(new Dimension(480, 600));
+    profileDialog.setSize(480, 540);
+    profileDialog.setMinimumSize(new Dimension(480, 540));
+    profileDialog.setMaximumSize(new Dimension(480, 540));
     profileDialog.setResizable(false);
     profileDialog.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
@@ -83,8 +91,37 @@ public class WindowUserSettings extends WindowBase {
     gbc.gridwidth = 3;
     gbc.weightx = 1.0;
     gbc.ipadx = 0;
-    PlaceholderTextField emailField = new PlaceholderTextField(tm.getText("email_placeholder"));
-    emailField.setText(globalSettings.userProfileSettings.userEmail);
+
+    // Ghost placeholder text field (disappears on click without needing deletion)
+final String placeholder = tm.getText("email_placeholder");
+
+JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEmail) {
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (getText().isEmpty() && !isFocusOwner()) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setColor(Color.GRAY);
+
+            // Cache the FontMetrics calculation locally
+            var fm = g2.getFontMetrics();
+
+            int x = getInsets().left;
+            int y = fm.getAscent() + getInsets().top + ((getHeight() - getInsets().top - getInsets().bottom - fm.getHeight()) / 2);
+
+            // Draw the pre-loaded string
+            g2.drawString(placeholder, x, y);
+            g2.dispose();
+        }
+    }
+};
+    emailField.addFocusListener(new FocusAdapter() {
+      @Override
+      public void focusGained(FocusEvent e) { emailField.repaint(); }
+      @Override
+      public void focusLost(FocusEvent e) { emailField.repaint(); }
+    });
     profileDialog.add(emailField, gbc);
 
     // Email hint
@@ -142,19 +179,11 @@ public class WindowUserSettings extends WindowBase {
     // Enable the Update button if email or checkboxes change
     DocumentListener documentListener = new DocumentListener() {
       @Override
-      public void insertUpdate(DocumentEvent e) {
-        validateEmail(emailField, updateButton);
-      }
-
+      public void insertUpdate(DocumentEvent e) { validateEmail(emailField, updateButton); }
       @Override
-      public void removeUpdate(DocumentEvent e) {
-        validateEmail(emailField, updateButton);
-      }
-
+      public void removeUpdate(DocumentEvent e) { validateEmail(emailField, updateButton); }
       @Override
-      public void changedUpdate(DocumentEvent e) {
-        validateEmail(emailField, updateButton);
-      }
+      public void changedUpdate(DocumentEvent e) { validateEmail(emailField, updateButton); }
     };
     emailField.getDocument().addDocumentListener(documentListener);
 
@@ -246,43 +275,19 @@ public class WindowUserSettings extends WindowBase {
     JLabel sponsorMessage = new JLabel(tm.getText("sponsor_message"));
     profileDialog.add(sponsorMessage, gbc);
 
-    // Email me button (columns 0-1)
+    // Sponsor button
     gbc.gridy = 13;
     gbc.gridx = 0;
-    gbc.gridwidth = 2;
-    gbc.anchor = GridBagConstraints.CENTER;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    JButton emailButton = new JButton(tm.getText("email_button"));
-    emailButton.addActionListener(_ ->
-    {
-      String mailtoUri = "mailto:info@freerouting.app?subject=My%20success%20story%20with%20Freerouting";
-      String gmailUri  = "https://mail.google.com/mail/?view=cm&to=info%40freerouting.app&su=My%20success%20story%20with%20Freerouting";
-      try {
-        // Prefer Desktop.mail(); on Windows it may fail if no default client is set
-        Desktop.getDesktop().mail(new URI(mailtoUri));
-      } catch (Exception ex1) {
-        try {
-          // Fall back to Gmail compose URL in the default browser
-          Desktop.getDesktop().browse(new URI(gmailUri));
-        } catch (Exception ex2) {
-          try {
-            // Last resort: invoke the Windows shell directly
-            Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "", gmailUri});
-          } catch (Exception ex3) {
-            FRLogger.error("Failed to open email link", ex3);
-          }
-        }
-      }
-    });
-    profileDialog.add(emailButton, gbc);
-
-    // Sponsor button (columns 2-3)
-    gbc.gridy = 13;
-    gbc.gridx = 2;
-    gbc.gridwidth = 2;
-    gbc.anchor = GridBagConstraints.CENTER;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    JButton sponsorButton = new JButton(tm.getText("sponsor_button"));
+    gbc.gridwidth = 4;
+    gbc.weighty = 1.0;
+    gbc.anchor = GridBagConstraints.PAGE_END;
+    gbc.fill = GridBagConstraints.NONE;
+    JButton sponsorButton = new JButton(">  " + tm.getText("sponsor_button") + "  <");
+    sponsorButton.setFont(sponsorButton.getFont().deriveFont(java.awt.Font.BOLD, 14f));
+    sponsorButton.setForeground(new Color(200, 16, 46));
+    var sponsorButtonSize = new Dimension(220, sponsorButton.getPreferredSize().height + 4);
+    sponsorButton.setPreferredSize(sponsorButtonSize);
+    sponsorButton.setMaximumSize(sponsorButtonSize);
     sponsorButton.addActionListener(_ ->
     {
       try {
@@ -298,12 +303,21 @@ public class WindowUserSettings extends WindowBase {
   }
 
   /**
-   * Displays a window with the input message at the center of the screen.
+   * Displays the user settings dialog window, centered relative to the screen.
+   *
+   * @param p_board_frame the parent board frame.
+   * @return the created WindowUserSettings instance.
    */
   public static WindowUserSettings show(BoardFrame p_board_frame) {
     return new WindowUserSettings(p_board_frame);
   }
 
+  /**
+   * Validates the email address input and enables or disables the update/save button.
+   *
+   * @param emailField the text field containing the email input.
+   * @param updateButton the button to enable or disable based on validation status.
+   */
   private void validateEmail(JTextField emailField, JButton updateButton) {
     String email = emailField.getText();
     boolean isValid = email.isEmpty() || email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
