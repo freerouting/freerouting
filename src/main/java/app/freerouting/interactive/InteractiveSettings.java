@@ -341,9 +341,10 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   public RouterSettings getSettings() {
     RouterSettings baseSettings = super.getSettings();
     if (baseSettings != null) {
-      baseSettings.trace_pull_tight_accuracy = this.get_trace_pull_tight_accuracy();
-      baseSettings.automatic_neckdown = this.get_automatic_neckdown();
-      return baseSettings;
+      RouterSettings clone = baseSettings.clone();
+      clone.trace_pull_tight_accuracy = this.get_trace_pull_tight_accuracy();
+      clone.automatic_neckdown = this.get_automatic_neckdown();
+      return clone;
     }
     RouterSettings snapshot = new RouterSettings();
     snapshot.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;

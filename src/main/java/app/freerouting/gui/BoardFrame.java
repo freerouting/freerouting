@@ -408,7 +408,7 @@ public class BoardFrame extends WindowBase {
       this.routingJob.setSettings(mergedSettings);
       var interactiveSettings = board_panel.board_handling.getInteractiveSettings();
       if (interactiveSettings != null) {
-        interactiveSettings.setSettings(mergedSettings);
+        interactiveSettings.setSettings(this.routingJob.routerSettings);
       }
     }
 
@@ -477,7 +477,7 @@ public class BoardFrame extends WindowBase {
           this.routingJob.setSettings(mergedSettings);
           var interactiveSettings = board_panel.board_handling.getInteractiveSettings();
           if (interactiveSettings != null) {
-            interactiveSettings.setSettings(mergedSettings);
+            interactiveSettings.setSettings(this.routingJob.routerSettings);
           }
         }
 

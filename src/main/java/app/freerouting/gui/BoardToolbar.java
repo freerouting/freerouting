@@ -178,10 +178,10 @@ class BoardToolbar extends JPanel {
         return;
       }
       var mergedSettings = board_frame.board_panel.board_handling.settingsMerger.merge();
-      guiRoutingJob.routerSettings = mergedSettings;
+      guiRoutingJob.setSettings(mergedSettings);
       var interactiveSettings = board_frame.board_panel.board_handling.getInteractiveSettings();
       if (interactiveSettings != null) {
-        interactiveSettings.setSettings(mergedSettings);
+        interactiveSettings.setSettings(guiRoutingJob.routerSettings);
       }
       // The GUI-path settingsMerger does not include DsnFileSettings, so the merged
       // RouterSettings has layers == null (layer count 0).  Re-apply board-
