@@ -282,7 +282,7 @@ JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEm
     gbc.weighty = 1.0;
     gbc.anchor = GridBagConstraints.PAGE_END;
     gbc.fill = GridBagConstraints.NONE;
-    JButton sponsorButton = new JButton("❤ " + tm.getText("sponsor_button") + " ❤");
+    JButton sponsorButton = new JButton(">  " + tm.getText("sponsor_button") + "  <");
     sponsorButton.setFont(sponsorButton.getFont().deriveFont(java.awt.Font.BOLD, 14f));
     sponsorButton.setForeground(new Color(200, 16, 46));
     var sponsorButtonSize = new Dimension(220, sponsorButton.getPreferredSize().height + 4);

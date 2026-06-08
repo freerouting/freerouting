@@ -16,10 +16,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * Displays general information about the Freerouting software.
+ * A dialog window that displays general information about the Freerouting application,
+ * including its description, version, warranty information, and hyperlinks to its homepage and issue tracker.
  */
 public class WindowAbout extends BoardSavableSubWindow {
 
+  /**
+   * Creates and initializes a new "About" dialog window.
+   *
+   * @param p_locale the locale to determine the language of the displayed texts.
+   * @param freerouting_version the version string of the Freerouting application.
+   */
   public WindowAbout(Locale p_locale, String freerouting_version) {
     setLanguage(p_locale);
     this.setTitle(tm.getText("title"));
@@ -51,7 +58,10 @@ public class WindowAbout extends BoardSavableSubWindow {
   }
 
   /**
-   * Splits strings like "Latest release: https://..." into plain text and a clickable link.
+   * Splits a string containing a URL into plain text and a clickable hyperlink component.
+   *
+   * @param fullText the complete text string containing the label and the URL.
+   * @return a JPanel layout with the formatted text and hyperlink components.
    */
   private JPanel createMixedTextPanel(String fullText) {
     JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -78,7 +88,10 @@ public class WindowAbout extends BoardSavableSubWindow {
   }
 
   /**
-   * Helper method to create a clickable hyperlink JLabel.
+   * Creates a clickable JLabel component that behaves as a hyperlink to the specified URL.
+   *
+   * @param url the destination URL.
+   * @return a JLabel styled as a hyperlink.
    */
   private JLabel createHyperlinkLabel(String url) {
     final String urlText = url.trim();
