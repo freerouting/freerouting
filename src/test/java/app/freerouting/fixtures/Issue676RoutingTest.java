@@ -3,7 +3,7 @@ package app.freerouting.fixtures;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.specctra.DsnReader;
-import app.freerouting.io.specctra.DsnReadResult;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -136,8 +136,8 @@ public class Issue676RoutingTest extends RoutingFixtureTest {
       if (!file.exists()) {
         return null;
       }
-      DsnReadResult result = DsnReader.readBoard(new java.io.FileInputStream(file), null, null, FIXTURE);
-      if (result instanceof DsnReadResult.Success s && s.board() != null) {
+      BoardReadResult result = DsnReader.readBoard(new java.io.FileInputStream(file), null, null, FIXTURE);
+      if (result instanceof BoardReadResult.Success s && s.board() != null) {
         return (RoutingBoard) s.board();
       }
     } catch (Exception e) {

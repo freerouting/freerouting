@@ -29,7 +29,7 @@ By clearly documenting the intent of each package, we aim to:
 
 ### `app.freerouting.io`
 **Intent:** Abstract the parsing and serialization of external PCB design file formats. It isolates the complexity of third-party file formats from the internal board representation, ensuring that file I/O concerns never leak into routing, geometry, or GUI domains.
-*   **`.specctra`**: Public-facing typed API for the industry-standard Specctra DSN (design) and SES (session) formats. Entry points are `DsnReader`, `DsnWriter`, `SesReader`, `SesWriter`, `RulesReader`, and `RulesWriter`. Result types (`DsnReadResult`, `DsnMetadata`, `SesImportSummary`) are also defined here.
+*   **`.specctra`**: Public-facing typed API for the industry-standard Specctra DSN (design) and SES (session) formats. Entry points are `DsnReader`, `DsnWriter`, `SesReader`, `SesWriter`, `RulesReader`, and `RulesWriter`. Result types (`BoardReadResult`, `SesImportSummary`) are also defined here.
 *   **`.specctra.parser`**: Internal grammar and AST layer for the Specctra DSN/SES format. Contains scope keyword handlers (`Structure`, `Network`, `Wiring`, `Layer`, …), scanner infrastructure (`SpecctraDsnStreamReader`, `IJFlexScanner`), and backward-compatibility shims (`SpecctraSesFileWriter`, `SesFileReader`, `DsnFile`, `RulesFile`). Classes in this sub-package are not part of the public API and should only be imported by `io.specctra`.
 
 ### `app.freerouting.drc`

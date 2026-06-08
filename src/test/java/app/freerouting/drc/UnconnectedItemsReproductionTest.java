@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.Freerouting;
 import app.freerouting.board.*;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.management.BoardLoader;
 import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.settings.GlobalSettings;
 import java.util.Collection;

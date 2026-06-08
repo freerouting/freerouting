@@ -341,7 +341,7 @@ public class GuiManager {
 
         BoardFrame new_frame = new BoardFrame(routingJob, globalSettings, settingsMerger);
 
-        boolean read_ok = new_frame.load(input_stream, routingJob.input.format.equals(FileFormat.DSN), p_message_field,
+        boolean read_ok = new_frame.load(input_stream, routingJob.input.format, p_message_field,
                 routingJob);
         if (!read_ok) {
             return null;

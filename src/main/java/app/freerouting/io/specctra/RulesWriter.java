@@ -3,6 +3,7 @@ package app.freerouting.io.specctra;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.io.CoordinateTransform;
 import app.freerouting.io.specctra.parser.AutorouteSettings;
 import app.freerouting.io.specctra.parser.Library;
 import app.freerouting.io.specctra.parser.Network;
@@ -78,4 +79,3 @@ public final class RulesWriter {
     p_par.file.end_scope();
   }
 }
-

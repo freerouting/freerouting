@@ -2273,6 +2273,39 @@ public class GuiBoardManager extends HeadlessBoardManager {
     return result;
   }
 
+  @Override
+  public DsnFile.ReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
+      IdentificationNumberGenerator identificationNumberGenerator) {
+    var result = super.loadFromKiCadJson(inputStream, boardObservers, identificationNumberGenerator);
+
+    if (this.board != null) {
+      // Always reset: a new DSN load may introduce a different layer count or design rules,
+      // making any previously-constructed InteractiveSettings invalid for this board.
+      this.interactiveSettings = InteractiveSettings.reset(this.board);
+      this.initialize_manual_trace_half_widths();
+
+      // Register the singleton as the live GuiSettings source (priority 50) in the merger so
+      // that every subsequent merge() call reflects the current interactive GUI state.
+      this.settingsMerger.addOrReplaceSources(this.interactiveSettings);
+    }
+
+    // Initialize the GUI-specific graphics context and coordinate transform
+    if (result != DsnFile.ReadResult.ERROR && this.board != null) {
+      double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
+      this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
+          this.board.communication.unit);
+      Dimension panel_size = (panel != null) ? panel.getPreferredSize() : new Dimension(800, 600);
+      this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
+          this.board.layer_structure, this.locale);
+
+      this.set_layer(0);
+      // Defer GUI refresh until surrounding load flow has recreated frame-managed subwindows.
+      javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
+    }
+
+    return result;
+  }
+
   /**
    * Saves the currently edited board design to a binary format file.
    *

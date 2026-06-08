@@ -1,5 +1,6 @@
 package app.freerouting.io.specctra;
 
+import app.freerouting.io.BoardReadResult;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -11,21 +12,21 @@ class DsnReadResultTest {
 
   @Test
   void patternMatchExhaustive() {
-    DsnReadResult result = new DsnReadResult.ParseError("(pcb", "unexpected EOF");
+    BoardReadResult result = new BoardReadResult.ParseError("(pcb", "unexpected EOF");
 
     // Must compile — verifies sealed hierarchy is exhaustive
     String msg = switch (result) {
-      case DsnReadResult.Success _        -> "ok";
-      case DsnReadResult.OutlineMissing _ -> "outline";
-      case DsnReadResult.ParseError e     -> e.detail();
-      case DsnReadResult.IoError _        -> "io";
+      case BoardReadResult.Success _        -> "ok";
+      case BoardReadResult.OutlineMissing _ -> "outline";
+      case BoardReadResult.ParseError e     -> e.detail();
+      case BoardReadResult.IoError _        -> "io";
     };
     assertEquals("unexpected EOF", msg);
   }
 
   @Test
   void parseErrorAccessors() {
-    var error = new DsnReadResult.ParseError("(structure", "missing layer");
+    var error = new BoardReadResult.ParseError("(structure", "missing layer");
     assertEquals("(structure", error.location());
     assertEquals("missing layer", error.detail());
   }
@@ -33,19 +34,19 @@ class DsnReadResultTest {
   @Test
   void ioErrorWrapsException() {
     var cause = new IOException("disk full");
-    var ioError = new DsnReadResult.IoError(cause);
+    var ioError = new BoardReadResult.IoError(cause);
     assertSame(cause, ioError.cause());
   }
 
   @Test
   void successAndOutlineMissingHoldNullBoard() {
     // Board is allowed to be null at the data-model level (parser wires it later)
-    var success = new DsnReadResult.Success(null, null, List.of());
+    var success = new BoardReadResult.Success(null, null, List.of());
     assertNull(success.board());
     assertNull(success.metadata());
     assertTrue(success.warnings().isEmpty());
 
-    var missing = new DsnReadResult.OutlineMissing(null, null, List.of());
+    var missing = new BoardReadResult.OutlineMissing(null, null, List.of());
     assertNull(missing.board());
     assertNull(missing.metadata());
     assertTrue(missing.warnings().isEmpty());
@@ -54,30 +55,29 @@ class DsnReadResultTest {
   @Test
   void warningsAreExposed() {
     var warnings = List.of("Wiring: degenerate wire skipped", "Wiring: duplicate via skipped at (100, 200)");
-    var success = new DsnReadResult.Success(null, null, warnings);
+    var success = new BoardReadResult.Success(null, null, warnings);
     assertEquals(2, success.warnings().size());
     assertTrue(success.warnings().get(0).contains("degenerate wire"));
   }
 
   @Test
   void recordEquality() {
-    var a = new DsnReadResult.ParseError("(pcb", "unexpected EOF");
-    var b = new DsnReadResult.ParseError("(pcb", "unexpected EOF");
+    var a = new BoardReadResult.ParseError("(pcb", "unexpected EOF");
+    var b = new BoardReadResult.ParseError("(pcb", "unexpected EOF");
     assertEquals(a, b);
     assertEquals(a.hashCode(), b.hashCode());
   }
 
   @Test
   void instanceOfChecks() {
-    DsnReadResult success      = new DsnReadResult.Success(null, null, List.of());
-    DsnReadResult outlineMiss  = new DsnReadResult.OutlineMissing(null, null, List.of());
-    DsnReadResult parseErr     = new DsnReadResult.ParseError("x", "y");
-    DsnReadResult ioErr        = new DsnReadResult.IoError(new IOException());
+    BoardReadResult success      = new BoardReadResult.Success(null, null, List.of());
+    BoardReadResult outlineMiss  = new BoardReadResult.OutlineMissing(null, null, List.of());
+    BoardReadResult parseErr     = new BoardReadResult.ParseError("x", "y");
+    BoardReadResult ioErr        = new BoardReadResult.IoError(new IOException());
 
-    assertInstanceOf(DsnReadResult.Success.class,        success);
-    assertInstanceOf(DsnReadResult.OutlineMissing.class, outlineMiss);
-    assertInstanceOf(DsnReadResult.ParseError.class,     parseErr);
-    assertInstanceOf(DsnReadResult.IoError.class,        ioErr);
+    assertInstanceOf(BoardReadResult.Success.class,        success);
+    assertInstanceOf(BoardReadResult.OutlineMissing.class, outlineMiss);
+    assertInstanceOf(BoardReadResult.ParseError.class,     parseErr);
+    assertInstanceOf(BoardReadResult.IoError.class,        ioErr);
   }
 }
-

@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.BoardLoader;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.management.BoardLoader;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.Session;
 import app.freerouting.gui.FileFormat;

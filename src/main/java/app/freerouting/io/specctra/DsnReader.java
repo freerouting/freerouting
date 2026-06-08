@@ -5,6 +5,8 @@ import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.BoardMetadata;
 import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.io.specctra.parser.Keyword;
 import app.freerouting.io.specctra.parser.ReadScopeParameter;
@@ -19,7 +21,7 @@ import java.util.List;
 
 /**
  * Reads a Specctra DSN file and returns a fully constructed
- * {@link app.freerouting.board.BasicBoard} wrapped in a typed {@link DsnReadResult}.
+ * {@link app.freerouting.board.BasicBoard} wrapped in a typed {@link BoardReadResult}.
  *
  * <p>This class has <em>no</em> dependency on {@link app.freerouting.interactive.BoardManager},
  * {@link app.freerouting.core.RoutingJob}, or any GUI class. Board construction happens
@@ -41,14 +43,14 @@ public final class DsnReader {
    * @param inputStream source — closed by this method on completion
    * @param observers   nullable; passed through to board items for host-system embedding
    * @param idGenerator nullable; for consistent item identification in host-system embedding
-   * @return one of {@link DsnReadResult.Success}, {@link DsnReadResult.OutlineMissing},
-   *         {@link DsnReadResult.ParseError}, or {@link DsnReadResult.IoError}
+   * @return one of {@link BoardReadResult.Success}, {@link BoardReadResult.OutlineMissing},
+   *         {@link BoardReadResult.ParseError}, or {@link BoardReadResult.IoError}
    */
   /**
    * Convenience overload — equivalent to {@link #readBoard(InputStream, BoardObservers,
    * IdentificationNumberGenerator, String)} with {@code null} for the design-name hint.
    */
-  public static DsnReadResult readBoard(
+  public static BoardReadResult readBoard(
       InputStream inputStream,
       BoardObservers observers,
       IdentificationNumberGenerator idGenerator) {
@@ -65,17 +67,17 @@ public final class DsnReader {
    * @param idGenerator  nullable; for consistent item identification in host-system embedding
    * @param designName   optional caller-supplied filename (without path) to use in log messages;
    *                     when {@code null} or blank the pcb-name token from the DSN header is used
-   * @return one of {@link DsnReadResult.Success}, {@link DsnReadResult.OutlineMissing},
-   *         {@link DsnReadResult.ParseError}, or {@link DsnReadResult.IoError}
+   * @return one of {@link BoardReadResult.Success}, {@link BoardReadResult.OutlineMissing},
+   *         {@link BoardReadResult.ParseError}, or {@link BoardReadResult.IoError}
    */
-  public static DsnReadResult readBoard(
+  public static BoardReadResult readBoard(
       InputStream inputStream,
       BoardObservers observers,
       IdentificationNumberGenerator idGenerator,
       String designName) {
 
     if (inputStream == null) {
-      return new DsnReadResult.ParseError("(pcb", "inputStream must not be null");
+      return new BoardReadResult.ParseError("(pcb", "inputStream must not be null");
     }
 
     // Apply default implementations for nullable parameters so the board's
@@ -99,7 +101,7 @@ public final class DsnReader {
         token = scanner.next_token();
       } catch (IOException e) {
         closeQuietly(inputStream);
-        return new DsnReadResult.IoError(e);
+        return new BoardReadResult.IoError(e);
       }
       boolean ok = true;
       if (i == 0) {
@@ -116,7 +118,7 @@ public final class DsnReader {
       }
       if (!ok) {
         closeQuietly(inputStream);
-        return new DsnReadResult.ParseError(
+        return new BoardReadResult.ParseError(
             "(pcb",
             "Not a Specctra DSN file: expected '(pcb <name>' header");
       }
@@ -152,15 +154,15 @@ public final class DsnReader {
       if (!warnings.isEmpty()) {
         FRLogger.warn("DSN file '" + effectiveDesignName + "' was loaded with " + warnings.size() + " warning(s).");
       }
-      return new DsnReadResult.Success(board, null, warnings);
+      return new BoardReadResult.Success(board, null, warnings);
     } else if (!par.board_outline_ok) {
       List<String> warnings = par.getWarnings();
       if (!warnings.isEmpty()) {
         FRLogger.warn("DSN file '" + effectiveDesignName + "' was loaded with " + warnings.size() + " warning(s).");
       }
-      return new DsnReadResult.OutlineMissing(board, null, warnings);
+      return new BoardReadResult.OutlineMissing(board, null, warnings);
     } else {
-      return new DsnReadResult.ParseError("(pcb", "DSN structure parsing failed");
+      return new BoardReadResult.ParseError("(pcb", "DSN structure parsing failed");
     }
   }
 
@@ -178,14 +180,14 @@ public final class DsnReader {
    * <p>The stream is <em>closed</em> by this method on return (success or failure).
    *
    * @param inputStream source — closed by this method on completion
-   * @return {@link DsnReadResult.Success} with a populated {@link DsnMetadata} (board field may be
-   *         {@code null} if the DSN had no valid outline), {@link DsnReadResult.ParseError} for
-   *         malformed headers, or {@link DsnReadResult.IoError} for I/O failures during header
+   * @return {@link BoardReadResult.Success} with a populated {@link BoardMetadata} (board field may be
+   *         {@code null} if the DSN had no valid outline), {@link BoardReadResult.ParseError} for
+   *         malformed headers, or {@link BoardReadResult.IoError} for I/O failures during header
    *         scanning.
    */
-  public static DsnReadResult readMetadata(InputStream inputStream) {
+  public static BoardReadResult readMetadata(InputStream inputStream) {
     if (inputStream == null) {
-      return new DsnReadResult.ParseError("(pcb", "inputStream must not be null");
+      return new BoardReadResult.ParseError("(pcb", "inputStream must not be null");
     }
 
     BoardObservers observers = new BoardObserverAdaptor();
@@ -201,7 +203,7 @@ public final class DsnReader {
         token = scanner.next_token();
       } catch (IOException e) {
         closeQuietly(inputStream);
-        return new DsnReadResult.IoError(e);
+        return new BoardReadResult.IoError(e);
       }
       boolean ok = true;
       if (i == 0) {
@@ -212,7 +214,7 @@ public final class DsnReader {
       }
       if (!ok) {
         closeQuietly(inputStream);
-        return new DsnReadResult.ParseError(
+        return new BoardReadResult.ParseError(
             "(pcb",
             "Not a Specctra DSN file: expected '(pcb <name>' header");
       }
@@ -232,7 +234,7 @@ public final class DsnReader {
         nextToken = scanner.next_token();
       } catch (IOException e) {
         closeQuietly(inputStream);
-        return new DsnReadResult.IoError(e);
+        return new BoardReadResult.IoError(e);
       }
       if (nextToken == null || nextToken == Keyword.CLOSED_BRACKET) {
         break; // EOF or end of (pcb ...) scope
@@ -259,7 +261,7 @@ public final class DsnReader {
     closeQuietly(inputStream);
 
     // -----------------------------------------------------------------------
-    // Build DsnMetadata from the parsed fields.
+    // Build BoardMetadata from the parsed fields.
     // -----------------------------------------------------------------------
     int layerCount = 0;
     if (par.layer_structure != null) {
@@ -268,7 +270,7 @@ public final class DsnReader {
       layerCount = par.getBoard().get_layer_count();
     }
 
-    DsnMetadata metadata = new DsnMetadata(
+    BoardMetadata metadata = new BoardMetadata(
         par.host_cad,
         par.host_version,
         layerCount,
@@ -278,7 +280,7 @@ public final class DsnReader {
         par.autoroute_settings
     );
 
-    return new DsnReadResult.Success(par.getBoard(), metadata, par.getWarnings());
+    return new BoardReadResult.Success(par.getBoard(), metadata, par.getWarnings());
   }
 
   // -------------------------------------------------------------------------

@@ -109,20 +109,36 @@ KiCad's IPC API is gRPC-based and replaces the Specctra DSN file-exchange model.
 
 We will use a **Hybrid Local Loopback Bridge** approach to avoid native Unix Domain Sockets (UDS) or Named Pipes in Java. The KiCad Python plugin acts as the bridge, connecting to KiCad IPC natively and communicating with Freerouting's REST API over localhost HTTP.
 
-**Phase 1 — Board read via IPC & JSON Loader (Days 16–21):**
-- Define the **KiCad JSON schema** for board data (layers, nets, pads, tracks, vias, zones, rules).
-- Implement `KiCadJsonReader` in Freerouting to deserialize the JSON stream into a `RoutingBoard`.
-- Measure and log the performance penalty of JSON serialization/deserialization to evaluate overhead and aid in debugging.
-- Implement a new API endpoint `PUT /v1/sessions/{sessionId}/monitor` to set an API session as the **"currently monitored" session**.
-- If the Freerouting GUI is enabled, bind the monitored session's board and real-time routing progress to the active GUI visualizer.
-- Unit tests using a mock JSON payload.
+**Phase 1 — Board read via IPC & JSON Loader (Days 16–21):** ✅ Implemented
+- ✅ Define the **KiCad JSON schema** for board data (`KiCadBoardJson` DTO with layers, nets, pads, tracks, vias, zones, rules).
+- ✅ Implement `KiCadJsonReader` in Freerouting to deserialize the JSON stream into a `RoutingBoard`.
+- ✅ Implement `KiCadJsonWriter` to serialize a `RoutingBoard` back to KiCad JSON.
+- ✅ Measure and log the performance penalty of JSON serialization/deserialization.
+- ✅ Implement `HeadlessBoardManager.loadFromKiCadJson()` and `GuiBoardManager.loadFromKiCadJson()`.
+- ✅ Integrate JSON format into `BoardLoader` and `RoutingJobSchedulerActionThread.setJobOutput()`.
+- ✅ Add `FileFormat.JSON` enum value and auto-detection.
+- ✅ Implement `PUT /v1/sessions/{sessionId}/monitor` to bind a session's board to the GUI visualizer.
+- ✅ Implement `POST /v1/jobs/{jobId}/input/json` for raw JSON input upload.
+- ✅ Unit tests using a mock JSON payload (`KiCadJsonReaderTest`, 7 tests including round-trip).
 
-**Phase 2 — Route result write back via IPC & Streaming API (Days 22–25):**
-- Expose routed traces and vias in a JSON format via the REST API.
-- Use streaming API endpoints (SSE/WebSockets) to send real-time progress and incremental updates.
-- Python bridge receives updates and writes them back to KiCad via KiCad IPC.
+**Phase 2 — Route result write back via IPC & Streaming API (Days 22–25):** ✅ Implemented
+- ✅ Implement `GET /v1/jobs/{jobId}/output/json` for raw JSON output download.
+- ✅ Implement `GET /v1/jobs/{jobId}/output/json/stream` for real-time SSE JSON output streaming.
+- ✅ DRC endpoint supports JSON input format for board loading.
+- ✅ Python bridge implementation — plugin.py updated with IPC/API mode and DSN fallback.
 
-**Exit gate:** A KiCad 9 board with a non-default copper-to-edge clearance routes correctly via IPC without any CLI `copperToEdgeClearanceUm` override needed, and progress is displayed on the GUI.
+**Phase 3 — Plugin integration (Days 26–28):** ✅ Implemented
+- ✅ Updated `plugin.py` with dual-mode operation (IPC/API default, DSN fallback).
+- ✅ `is_ipc_available()` probes for KiCad IPC support via pcbnew attributes and version detection.
+- ✅ `get_board_json_via_ipc()` serializes board via IPC with manual fallback.
+- ✅ `FreeroutingApiClient` class for REST API communication (session, job, upload, start, poll, download).
+- ✅ `RunRouterIPC()` implements the full IPC/API workflow (serialize → start server → create session → upload → start → poll → download → apply).
+- ✅ `_apply_json_result_to_kicad()` writes results back via IPC or manual pcbnew API.
+- ✅ Debug JSON files saved for both input (`freerouting_debug.json`) and output (`freerouting_result.json`).
+- ✅ Progress dialog shows job/session ID; user can cancel via Terminate button.
+- ✅ Automatic fallback to DSN mode when IPC is not available.
+
+**Exit gate:** A KiCad 9/10 board routes correctly via IPC without any CLI `copperToEdgeClearanceUm` override needed, and progress is displayed on the GUI. DSN fallback works on older KiCad versions.
 
 ### Days 26–35 — Star Ground Routing (#383)
 

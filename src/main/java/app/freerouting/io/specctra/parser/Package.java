@@ -175,12 +175,14 @@ public class Package {
       write_package_keepout(p_package.via_keepout_arr[i], p_par, true);
     }
     // write the package outline.
-    for (int i = 0; i < p_package.outline.length; i++) {
-      p_par.file.start_scope();
-      p_par.file.write("outline");
-      Shape curr_outline = p_par.coordinate_transform.board_to_dsn_rel(p_package.outline[i], Layer.SIGNAL);
-      curr_outline.write_scope(p_par.file, p_par.identifier_type);
-      p_par.file.end_scope();
+    if (p_package.outline != null) {
+      for (int i = 0; i < p_package.outline.length; i++) {
+        p_par.file.start_scope();
+        p_par.file.write("outline");
+        Shape curr_outline = p_par.coordinate_transform.board_to_dsn_rel(p_package.outline[i], Layer.SIGNAL);
+        curr_outline.write_scope(p_par.file, p_par.identifier_type);
+        p_par.file.end_scope();
+      }
     }
     p_par.file.end_scope();
   }

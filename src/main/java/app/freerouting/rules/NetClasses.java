@@ -41,7 +41,7 @@ public class NetClasses implements Serializable {
   /**
    * Appends a new empty class with name p_name to the class array
    */
-  NetClass append(String p_name, LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, boolean p_is_ignored_by_autorouter) {
+  public NetClass append(String p_name, LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, boolean p_is_ignored_by_autorouter) {
     NetClass new_class = new NetClass(p_name, p_layer_structure, p_clearance_matrix, p_is_ignored_by_autorouter);
     class_arr.add(new_class);
     return new_class;
@@ -50,7 +50,7 @@ public class NetClasses implements Serializable {
   /**
    * Appends a new empty class to the class array. A name for the class is created internally
    */
-  NetClass append(LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix) {
+  public NetClass append(LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix) {
     String new_name;
     int index = 0;
     do {

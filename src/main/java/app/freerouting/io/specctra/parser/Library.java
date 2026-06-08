@@ -11,6 +11,7 @@ import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.io.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 import java.util.Arrays;
