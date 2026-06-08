@@ -11,36 +11,77 @@ public class ReflectionUtil {
   }
 
   public static void setFieldValue(Object obj, String propertyName, Object newValue)
-      throws NoSuchFieldException, IllegalAccessException {
+      throws Exception {
     String[] propertyPath = propertyName.split("[.:\\-]");
-    Object currentObject = obj;
-    Field field = null;
+    setPropertyRecursive(obj, propertyPath, 0, newValue);
+  }
 
-    // Navigate to the nested object
-    for (int i = 0; i < propertyPath.length - 1; i++) {
-      field = getFieldByNameOrSerializedName(currentObject.getClass(), propertyPath[i]);
-      field.setAccessible(true);
-      currentObject = field.get(currentObject);
+  private static void setPropertyRecursive(Object currentObject, String[] propertyPath, int pathIndex, Object newValue)
+      throws Exception {
+    if (currentObject == null) {
+      return;
     }
 
-    // Set the final field value
-    field = getFieldByNameOrSerializedName(currentObject.getClass(), propertyPath[propertyPath.length - 1]);
+    String currentName = propertyPath[pathIndex];
+    Field field = getFieldByNameOrSerializedName(currentObject.getClass(), currentName);
     field.setAccessible(true);
-    Object convertedValue = convertValue(field.getType(), newValue);
-    field.set(currentObject, convertedValue);
+
+    if (pathIndex == propertyPath.length - 1) {
+      // Leaf field - set the value
+      Object convertedValue = convertValue(field.getType(), newValue);
+      field.set(currentObject, convertedValue);
+      return;
+    }
+
+    // Intermediate field - check if it is an array
+    if (field.getType().isArray()) {
+      Class<?> componentType = field.getType().getComponentType();
+      // We are navigating through an array. The next part of the path is a property of the array element.
+      // E.g., layers.routable
+      // The newValue is expected to be a comma-separated list of values for each array element.
+      String[] valTokens = newValue.toString().split(",");
+      int size = valTokens.length;
+
+      Object array = field.get(currentObject);
+      if (array == null) {
+        array = java.lang.reflect.Array.newInstance(componentType, size);
+        field.set(currentObject, array);
+      }
+
+      int arrayLength = java.lang.reflect.Array.getLength(array);
+      int limit = Math.min(arrayLength, size);
+
+      for (int i = 0; i < limit; i++) {
+        Object element = java.lang.reflect.Array.get(array, i);
+        if (element == null) {
+          element = componentType.getDeclaredConstructor().newInstance();
+          java.lang.reflect.Array.set(array, i, element);
+        }
+        // Recursively set the property on the array element
+        setPropertyRecursive(element, propertyPath, pathIndex + 1, valTokens[i].trim());
+      }
+    } else {
+      // Normal object navigation
+      Object nestedObject = field.get(currentObject);
+      if (nestedObject == null) {
+        nestedObject = field.getType().getDeclaredConstructor().newInstance();
+        field.set(currentObject, nestedObject);
+      }
+      setPropertyRecursive(nestedObject, propertyPath, pathIndex + 1, newValue);
+    }
   }
 
   private static Field getFieldByNameOrSerializedName(Class<?> clazz, String name) throws NoSuchFieldException {
     for (Field field : clazz.getDeclaredFields()) {
-      if (field
-          .getName()
-          .equals(name)) {
+      SerializedName annotation = field.getAnnotation(SerializedName.class);
+      if (annotation != null && annotation.value().equals(name)) {
         return field;
       }
-      SerializedName annotation = field.getAnnotation(SerializedName.class);
-      if (annotation != null && annotation
-          .value()
-          .equals(name)) {
+      if (field.getName().equals(name)) {
+        // Enforce that new layer fields must only be identified by their SerializedName
+        if (annotation != null && (field.getName().equals("preferredDirectionHorizontal") || field.getName().equals("routable"))) {
+          continue;
+        }
         return field;
       }
     }
@@ -198,14 +239,21 @@ public class ReflectionUtil {
                 numberOfFieldsChanged++;
               }
             } else {
-              // The field is an array, so we need to copy its elements
+              // The field is an array of objects (like LayerSettings[])
               Object[] sourceArray = (Object[]) sourceValue;
-              Object[] targetArray = (Object[]) field.get(target);
-              if (targetArray == null) {
-                targetArray = new Object[sourceArray.length];
-                field.set(target, targetArray);
+              Class<?> componentType = field.getType().getComponentType();
+
+              // Create target array of the specific component type
+              Object[] targetArray = (Object[]) java.lang.reflect.Array.newInstance(componentType, sourceArray.length);
+
+              for (int i = 0; i < sourceArray.length; i++) {
+                if (sourceArray[i] != null) {
+                  Object targetElement = componentType.getDeclaredConstructor().newInstance();
+                  copyFields(sourceArray[i], targetElement);
+                  targetArray[i] = targetElement;
+                }
               }
-              System.arraycopy(sourceArray, 0, targetArray, 0, sourceArray.length);
+              field.set(target, targetArray);
               numberOfFieldsChanged += sourceArray.length;
             }
           } else {

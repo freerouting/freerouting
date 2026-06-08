@@ -30,8 +30,8 @@ public class RouterSettings implements Serializable, Cloneable {
   public Integer maxPasses;
   @SerializedName("max_items")
   public transient Integer maxItems;
-  public transient boolean[] isLayerActive;
-  public transient boolean[] isPreferredDirectionHorizontalOnLayer;
+  @SerializedName("layers")
+  public transient LayerSettings[] layers;
   public transient Boolean save_intermediate_stages = false;
   @SerializedName("ignore_net_classes")
   public transient String[] ignoreNetClasses;
@@ -179,11 +179,11 @@ public class RouterSettings implements Serializable, Cloneable {
     boolean curr_preferred_direction_is_horizontal = horizontal_width < vertical_width;
 
     // initialize the layer specific settings.
-    if (isLayerActive == null || isLayerActive.length != layer_count) {
-      isLayerActive = new boolean[layer_count];
-    }
-    if (isPreferredDirectionHorizontalOnLayer == null || isPreferredDirectionHorizontalOnLayer.length != layer_count) {
-      isPreferredDirectionHorizontalOnLayer = new boolean[layer_count];
+    if (layers == null || layers.length != layer_count) {
+      layers = new LayerSettings[layer_count];
+      for (int i = 0; i < layer_count; i++) {
+        layers[i] = new LayerSettings();
+      }
     }
     if (scoring.preferredDirectionTraceCost == null || scoring.preferredDirectionTraceCost.length != layer_count) {
       scoring.preferredDirectionTraceCost = new double[layer_count];
@@ -202,11 +202,11 @@ public class RouterSettings implements Serializable, Cloneable {
     }
 
     for (int i = 0; i < layer_count; i++) {
-      isLayerActive[i] = p_board.layer_structure.arr[i].is_signal;
+      layers[i].routable = p_board.layer_structure.arr[i].is_signal;
       if (p_board.layer_structure.arr[i].is_signal) {
         curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
       }
-      isPreferredDirectionHorizontalOnLayer[i] = curr_preferred_direction_is_horizontal;
+      layers[i].preferredDirectionHorizontal = curr_preferred_direction_is_horizontal;
       scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost;
       scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
       if (curr_preferred_direction_is_horizontal) {
@@ -232,11 +232,11 @@ public class RouterSettings implements Serializable, Cloneable {
    * @return The layer count
    */
   public int getLayerCount() {
-    if (isLayerActive == null) {
+    if (layers == null) {
       return 0;
     }
 
-    return isLayerActive.length;
+    return layers.length;
   }
 
   /**
@@ -247,8 +247,12 @@ public class RouterSettings implements Serializable, Cloneable {
    * immediately without a prior call to {@link #applyBoardSpecificOptimizations}.
    */
   public void setLayerCount(int layerCount) {
-    isLayerActive = new boolean[layerCount];
-    isPreferredDirectionHorizontalOnLayer = new boolean[layerCount];
+    if (layers == null || layers.length != layerCount) {
+      layers = new LayerSettings[layerCount];
+      for (int i = 0; i < layerCount; i++) {
+        layers[i] = new LayerSettings();
+      }
+    }
     if (scoring == null) {
       scoring = new RouterScoringSettings();
     }
@@ -258,8 +262,8 @@ public class RouterSettings implements Serializable, Cloneable {
     scoring.undesiredDirectionTraceCost = new double[layerCount];
 
     for (int i = 0; i < layerCount; i++) {
-      isLayerActive[i] = true;
-      isPreferredDirectionHorizontalOnLayer[i] = i % 2 == 1;
+      layers[i].routable = true;
+      layers[i].preferredDirectionHorizontal = i % 2 == 1;
       scoring.preferredDirectionTraceCost[i] = 1.0;
       scoring.undesiredDirectionTraceCost[i] = 1.0;
     }
@@ -280,9 +284,14 @@ public class RouterSettings implements Serializable, Cloneable {
     }
     result.algorithm = this.algorithm;
     result.jobTimeoutString = this.jobTimeoutString;
-    result.isLayerActive = (this.isLayerActive != null) ? this.isLayerActive.clone() : null;
-    result.isPreferredDirectionHorizontalOnLayer = (this.isPreferredDirectionHorizontalOnLayer != null)
-        ? this.isPreferredDirectionHorizontalOnLayer.clone() : null;
+    if (this.layers != null) {
+      result.layers = new LayerSettings[this.layers.length];
+      for (int i = 0; i < this.layers.length; i++) {
+        if (this.layers[i] != null) {
+          result.layers[i] = this.layers[i].clone();
+        }
+      }
+    }
     result.maxPasses = this.maxPasses;
     result.maxItems = this.maxItems;
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
@@ -365,7 +374,7 @@ public class RouterSettings implements Serializable, Cloneable {
           + (this.getLayerCount() - 1) + "]");
       return;
     }
-    isLayerActive[p_layer] = p_value;
+    layers[p_layer].routable = p_value;
   }
 
   public boolean get_layer_active(int p_layer) {
@@ -374,7 +383,7 @@ public class RouterSettings implements Serializable, Cloneable {
           + (this.getLayerCount() - 1) + "]");
       return false;
     }
-    return isLayerActive[p_layer];
+    return layers[p_layer].routable != null ? layers[p_layer].routable : true;
   }
 
   public void set_preferred_direction_is_horizontal(int p_layer, boolean p_value) {
@@ -383,7 +392,7 @@ public class RouterSettings implements Serializable, Cloneable {
           + (this.getLayerCount() - 1) + "]");
       return;
     }
-    isPreferredDirectionHorizontalOnLayer[p_layer] = p_value;
+    layers[p_layer].preferredDirectionHorizontal = p_value;
   }
 
   public boolean get_preferred_direction_is_horizontal(int p_layer) {
@@ -392,7 +401,7 @@ public class RouterSettings implements Serializable, Cloneable {
           + (this.getLayerCount() - 1) + "]");
       return false;
     }
-    return isPreferredDirectionHorizontalOnLayer[p_layer];
+    return layers[p_layer].preferredDirectionHorizontal != null ? layers[p_layer].preferredDirectionHorizontal : (p_layer % 2 == 1);
   }
 
   public void set_preferred_direction_trace_costs(int p_layer, double p_value) {
@@ -425,7 +434,7 @@ public class RouterSettings implements Serializable, Cloneable {
       return 0;
     }
     double result;
-    if (isPreferredDirectionHorizontalOnLayer[p_layer]) {
+    if (get_preferred_direction_is_horizontal(p_layer)) {
       result = scoring.preferredDirectionTraceCost[p_layer];
     } else {
       result = scoring.undesiredDirectionTraceCost[p_layer];
@@ -447,7 +456,7 @@ public class RouterSettings implements Serializable, Cloneable {
       return 0;
     }
     double result;
-    if (isPreferredDirectionHorizontalOnLayer[p_layer]) {
+    if (get_preferred_direction_is_horizontal(p_layer)) {
       result = scoring.undesiredDirectionTraceCost[p_layer];
     } else {
       result = scoring.preferredDirectionTraceCost[p_layer];

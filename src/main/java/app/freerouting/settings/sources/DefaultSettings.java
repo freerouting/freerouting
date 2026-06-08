@@ -87,7 +87,7 @@ public class DefaultSettings implements SettingsSource {
     @Override
     public RouterSettings getSettings() {
         // Create a RouterSettings object with all default values.
-        // Layer-count-dependent arrays (isLayerActive, isPreferredDirectionHorizontalOnLayer,
+        // Layer-count-dependent arrays (layers,
         // preferredDirectionTraceCost, undesiredDirectionTraceCost) are intentionally left null
         // here. Their actual sizes must come from the board file (via DsnFileSettings) and are
         // finalised by RouterSettings.applyBoardSpecificOptimizations() once the board is loaded.
@@ -108,7 +108,7 @@ public class DefaultSettings implements SettingsSource {
         settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
         settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
 
-        // isLayerActive and isPreferredDirectionHorizontalOnLayer are left null intentionally –
+        // layers is left null intentionally –
         // they will be populated by DsnFileSettings (from the DSN layer count) and then
         // overwritten with board-geometry-aware values by applyBoardSpecificOptimizations().
 

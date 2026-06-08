@@ -456,8 +456,8 @@ public class BoardFrame extends WindowBase {
         RoutingBoard board = board_panel.board_handling.get_routing_board();
         int boardLayerCount = board.get_layer_count();
 
-        if (this.routingJob.routerSettings.isLayerActive == null ||
-            this.routingJob.routerSettings.isLayerActive.length != boardLayerCount) {
+        if (this.routingJob.routerSettings.getLayerCount() == 0 ||
+            this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
           // Initialize layer arrays and apply board-specific optimizations
           this.routingJob.routerSettings.setLayerCount(boardLayerCount);
           this.routingJob.routerSettings.applyBoardSpecificOptimizations(board);

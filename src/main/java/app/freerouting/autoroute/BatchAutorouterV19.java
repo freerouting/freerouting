@@ -151,6 +151,19 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
      * This is the main entry point, matching the current router's interface.
      */
     public boolean runBatchLoop() {
+        boolean anyRoutable = false;
+        for (int i = 0; i < this.settings.getLayerCount(); i++) {
+            if (this.settings.get_layer_active(i)) {
+                anyRoutable = true;
+                break;
+            }
+        }
+        if (!anyRoutable) {
+            FRLogger.warn("Cannot start autorouter: all layers are disabled.");
+            this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.CANCELLED, 0, this.board.get_hash()));
+            throw new IllegalArgumentException("Cannot start autorouter: all layers are disabled.");
+        }
+
         this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
         // Capture initial state for session summary
