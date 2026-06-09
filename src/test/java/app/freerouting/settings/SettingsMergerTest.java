@@ -230,4 +230,39 @@ class SettingsMergerTest {
         assertNotNull(merged);
         assertFalse(merged.getRunRouter());
     }
+
+    @Test
+    void testCliRoutableLayersDoesNotDisableRouter() {
+        DefaultSettings defaults = new DefaultSettings();
+        CliSettings cli = new CliSettings(new String[] {
+            "-de", "fixtures/Issue508-DAC2020_bm05.dsn",
+            "--router.layers.routable=false,true"
+        });
+
+        RouterSettings merged = new SettingsMerger(defaults, cli).merge();
+
+        assertNotNull(merged);
+        assertTrue(merged.getRunRouter());
+    }
+
+    @Test
+    void testLayersArrayNotShrunkOnMerge() {
+        RouterSettings target = new RouterSettings();
+        target.setLayerCount(6);
+        target.layers[0].routable = true;
+        target.layers[1].routable = true;
+        target.layers[2].routable = true;
+
+        RouterSettings source = new RouterSettings();
+        source.setLayerCount(2);
+        source.layers[0].routable = false;
+        source.layers[1].routable = true;
+
+        app.freerouting.management.ReflectionUtil.copyFields(source, target);
+
+        assertEquals(6, target.getLayerCount());
+        assertFalse(target.layers[0].routable);
+        assertTrue(target.layers[1].routable);
+        assertTrue(target.layers[2].routable);
+    }
 }

@@ -46,6 +46,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final List<JComboBox<String>> settings_autorouter_combo_box_arr;
   private final JCheckBox settings_autorouter_vias_allowed;
 
+  private final JCheckBox settings_autorouter_fanout_button;
   private final JCheckBox settings_autorouter_autoroute_pass_button;
   private final JCheckBox settings_autorouter_postroute_pass_button;
   private final String horizontal;
@@ -140,7 +141,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       settings_autorouter_layer_active_arr[i].addActionListener(new LayerActiveListener(i));
       settings_autorouter_layer_active_arr[i]
           .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_layer_active_arr", null));
-      board_handling.getCurrentRoutingJob().routerSettings.set_layer_active(i, curr_layer.is_signal);
       settings_autorouter_layer_active_arr[i].setEnabled(curr_layer.is_signal);
       gridbag.setConstraints(settings_autorouter_layer_active_arr[i], gridbag_constraints);
       main_panel.add(settings_autorouter_layer_active_arr[i]);
@@ -188,15 +188,21 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     JLabel passes_label = new JLabel(tm.getText("passes"));
 
     gridbag_constraints.gridwidth = 2;
-    gridbag_constraints.gridheight = 2;
+    gridbag_constraints.gridheight = 3;
     gridbag.setConstraints(passes_label, gridbag_constraints);
     main_panel.add(passes_label);
 
+    this.settings_autorouter_fanout_button = new JCheckBox(tm.getText("fanout"));
+    this.settings_autorouter_fanout_button.setToolTipText(tm.getText("fanout_tooltip"));
     this.settings_autorouter_autoroute_pass_button = new JCheckBox(tm.getText("autoroute"));
     this.settings_autorouter_autoroute_pass_button.setToolTipText(tm.getText("autoroute_tooltip"));
     this.settings_autorouter_postroute_pass_button = new JCheckBox(tm.getText("postroute"));
     this.settings_autorouter_postroute_pass_button.setToolTipText(tm.getText("postroute_tooltip"));
 
+    settings_autorouter_fanout_button.addActionListener(new FanoutListener());
+    settings_autorouter_fanout_button
+        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_fanout_button",
+            settings_autorouter_fanout_button.getText()));
     settings_autorouter_autoroute_pass_button.addActionListener(new AutorouteListener());
     settings_autorouter_autoroute_pass_button
         .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_autoroute_pass_button",
@@ -206,12 +212,15 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
         .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_postroute_pass_button",
             settings_autorouter_postroute_pass_button.getText()));
 
+    settings_autorouter_fanout_button.setSelected(true);
     settings_autorouter_autoroute_pass_button.setSelected(true);
     settings_autorouter_postroute_pass_button.setSelected(false);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
 
+    gridbag.setConstraints(settings_autorouter_fanout_button, gridbag_constraints);
+    main_panel.add(settings_autorouter_fanout_button, gridbag_constraints);
     gridbag.setConstraints(settings_autorouter_autoroute_pass_button, gridbag_constraints);
     main_panel.add(settings_autorouter_autoroute_pass_button, gridbag_constraints);
     gridbag.setConstraints(settings_autorouter_postroute_pass_button, gridbag_constraints);
@@ -496,6 +505,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
             }
           }
           break;
+        case "fanout.enabled":
+          if (newValue instanceof Boolean) {
+            settings_autorouter_fanout_button.setSelected((Boolean) newValue);
+          }
+          break;
         case "optimizer.enabled":
           if (newValue instanceof Boolean) {
             settings_autorouter_postroute_pass_button.setSelected((Boolean) newValue);
@@ -516,6 +530,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     LayerStructure layer_structure = this.board_handling.get_routing_board().layer_structure;
 
     this.settings_autorouter_vias_allowed.setSelected(settings.get_vias_allowed());
+    this.settings_autorouter_fanout_button.setSelected(settings.getRunFanout());
     this.settings_autorouter_autoroute_pass_button.setSelected(settings.getRunRouter());
     this.settings_autorouter_postroute_pass_button.setSelected(settings.getRunOptimizer());
 
@@ -606,6 +621,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     settings.setViasAllowed(selected);
   }
 
+  static void applyFanoutEnabledSelection(RouterSettings settings, boolean selected) {
+    settings.setFanoutEnabled(selected);
+  }
+
   static void applyAutorouteEnabledSelection(RouterSettings settings, boolean selected) {
     settings.setEnabled(selected);
   }
@@ -660,6 +679,20 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       try {
         applyViasAllowedSelection(board_handling.getCurrentRoutingJob().routerSettings,
             settings_autorouter_vias_allowed.isSelected());
+      } finally {
+        isUpdatingFromSettings = false;
+      }
+    }
+  }
+
+  private class FanoutListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent p_evt) {
+      RouterSettings autoroute_settings = board_handling.getCurrentRoutingJob().routerSettings;
+      isUpdatingFromSettings = true;
+      try {
+        applyFanoutEnabledSelection(autoroute_settings, settings_autorouter_fanout_button.isSelected());
       } finally {
         isUpdatingFromSettings = false;
       }

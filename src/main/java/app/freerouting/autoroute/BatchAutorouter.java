@@ -748,6 +748,19 @@ public class BatchAutorouter extends NamedAlgorithm {
    * stopped by the user. Returns true if the board is completed.
    */
   public boolean runBatchLoop() {
+    boolean anyRoutable = false;
+    for (int i = 0; i < this.settings.getLayerCount(); i++) {
+      if (this.settings.get_layer_active(i)) {
+        anyRoutable = true;
+        break;
+      }
+    }
+    if (!anyRoutable) {
+      FRLogger.warn("Cannot start autorouter: all layers are disabled.");
+      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.CANCELLED, 0, this.board.get_hash()));
+      throw new IllegalArgumentException("Cannot start autorouter: all layers are disabled.");
+    }
+
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
     // Capture initial state for session summary
@@ -759,8 +772,8 @@ public class BatchAutorouter extends NamedAlgorithm {
     BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
 
     // Record configuration for profiler
-    if (this.settings.isLayerActive != null) {
-      int layerCount = this.settings.isLayerActive.length;
+    if (this.settings.getLayerCount() > 0) {
+      int layerCount = this.settings.getLayerCount();
       double[] prefCosts = new double[layerCount];
       double[] againstCosts = new double[layerCount];
       for (int i = 0; i < layerCount; i++) {
