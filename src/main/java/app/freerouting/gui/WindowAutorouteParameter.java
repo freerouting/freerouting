@@ -102,16 +102,19 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.insets = new Insets(1, 10, 1, 10);
 
     gridbag_constraints.gridwidth = 3;
-    JLabel layer_label = new JLabel(tm.getText("layer"));
+    JLabel layer_label = new JLabel();
+    tm.setText(layer_label, "layer");
     gridbag.setConstraints(layer_label, gridbag_constraints);
     main_panel.add(layer_label);
 
-    JLabel active_label = new JLabel(tm.getText("active"));
+    JLabel active_label = new JLabel();
+    tm.setText(active_label, "active");
     gridbag.setConstraints(active_label, gridbag_constraints);
     main_panel.add(active_label);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    JLabel preferred_direction_label = new JLabel(tm.getText("preferred_direction"));
+    JLabel preferred_direction_label = new JLabel();
+    tm.setText(preferred_direction_label, "preferred_direction");
     gridbag.setConstraints(preferred_direction_label, gridbag_constraints);
     main_panel.add(preferred_direction_label);
 
@@ -171,7 +174,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.fill = GridBagConstraints.NONE;
 
     gridbag_constraints.gridwidth = 2;
-    JLabel vias_allowed_label = new JLabel(tm.getText("vias_allowed"));
+    JLabel vias_allowed_label = new JLabel();
+    tm.setText(vias_allowed_label, "vias_allowed");
     gridbag.setConstraints(vias_allowed_label, gridbag_constraints);
     main_panel.add(vias_allowed_label);
 
@@ -192,19 +196,20 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     main_panel.add(separator, gridbag_constraints);
     gridbag_constraints.fill = GridBagConstraints.NONE;
 
-    JLabel passes_label = new JLabel(tm.getText("passes"));
+    JLabel passes_label = new JLabel();
+    tm.setText(passes_label, "passes");
 
     gridbag_constraints.gridwidth = 2;
     gridbag_constraints.gridheight = 3;
     gridbag.setConstraints(passes_label, gridbag_constraints);
     main_panel.add(passes_label);
 
-    this.settings_autorouter_fanout_button = new JCheckBox(tm.getText("fanout"));
-    this.settings_autorouter_fanout_button.setToolTipText(tm.getText("fanout_tooltip"));
-    this.settings_autorouter_autoroute_pass_button = new JCheckBox(tm.getText("autoroute"));
-    this.settings_autorouter_autoroute_pass_button.setToolTipText(tm.getText("autoroute_tooltip"));
-    this.settings_autorouter_postroute_pass_button = new JCheckBox(tm.getText("postroute"));
-    this.settings_autorouter_postroute_pass_button.setToolTipText(tm.getText("postroute_tooltip"));
+    this.settings_autorouter_fanout_button = new JCheckBox();
+    tm.setText(this.settings_autorouter_fanout_button, "fanout");
+    this.settings_autorouter_autoroute_pass_button = new JCheckBox();
+    tm.setText(this.settings_autorouter_autoroute_pass_button, "autoroute");
+    this.settings_autorouter_postroute_pass_button = new JCheckBox();
+    tm.setText(this.settings_autorouter_postroute_pass_button, "postroute");
 
     settings_autorouter_fanout_button.addActionListener(new FanoutListener());
     settings_autorouter_fanout_button
@@ -244,8 +249,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     // add label and number field for the via costs.
 
     gridbag_constraints.gridwidth = 2;
-    JLabel via_cost_label = new JLabel(tm.getText("via_costs"));
-    via_cost_label.setToolTipText(tm.getText("via_costs_tooltip"));
+    JLabel via_cost_label = new JLabel();
+    tm.setText(via_cost_label, "via_costs");
     gridbag.setConstraints(via_cost_label, gridbag_constraints);
     main_panel.add(via_cost_label);
 
@@ -267,8 +272,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.plane_via_cost_field.addFocusListener(new WindowAutorouteParameter.PlaneViaCostFieldFocusListener());
 
     gridbag_constraints.gridwidth = 2;
-    JLabel plane_via_cost_label = new JLabel(tm.getText("plane_via_costs"));
-    plane_via_cost_label.setToolTipText(tm.getText("plane_via_costs_tooltip"));
+    JLabel plane_via_cost_label = new JLabel();
+    tm.setText(plane_via_cost_label, "plane_via_costs");
     gridbag.setConstraints(plane_via_cost_label, gridbag_constraints);
     main_panel.add(plane_via_cost_label);
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -280,8 +285,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = 2;
     JLabel start_ripup_costs_label = new JLabel();
-    start_ripup_costs_label.setText(tm.getText("start_ripup_costs"));
-    start_ripup_costs_label.setToolTipText(tm.getText("start_ripup_costs_tooltip"));
+    tm.setText(start_ripup_costs_label, "start_ripup_costs");
     gridbag.setConstraints(start_ripup_costs_label, gridbag_constraints);
     main_panel.add(start_ripup_costs_label);
 
@@ -298,8 +302,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     // add label and number field for max passes
 
     gridbag_constraints.gridwidth = 2;
-    JLabel max_passes_label = new JLabel(tm.getText("max_passes"));
-    max_passes_label.setToolTipText(tm.getText("max_passes_tooltip"));
+    JLabel max_passes_label = new JLabel();
+    tm.setText(max_passes_label, "max_passes");
     gridbag.setConstraints(max_passes_label, gridbag_constraints);
     main_panel.add(max_passes_label);
 
@@ -316,8 +320,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     // add label and structured fields for job timeout
 
     gridbag_constraints.gridwidth = 2;
-    JLabel job_timeout_label = new JLabel(tm.getText("job_timeout"));
-    job_timeout_label.setToolTipText(tm.getText("job_timeout_tooltip"));
+    JLabel job_timeout_label = new JLabel();
+    tm.setText(job_timeout_label, "job_timeout");
     gridbag.setConstraints(job_timeout_label, gridbag_constraints);
     main_panel.add(job_timeout_label);
 
@@ -361,8 +365,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     // add label and number field for max threads
 
     gridbag_constraints.gridwidth = 2;
-    JLabel max_threads_label = new JLabel(tm.getText("max_threads"));
-    max_threads_label.setToolTipText(tm.getText("max_threads_tooltip"));
+    JLabel max_threads_label = new JLabel();
+    tm.setText(max_threads_label, "max_threads");
     gridbag.setConstraints(max_threads_label, gridbag_constraints);
     main_panel.add(max_threads_label);
 
@@ -392,8 +396,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = 2;
     JLabel algorithm_label = new JLabel();
-    algorithm_label.setText(tm.getText("algorithm"));
-    algorithm_label.setToolTipText(tm.getText("algorithm_tooltip"));
+    tm.setText(algorithm_label, "algorithm");
     gridbag.setConstraints(algorithm_label, gridbag_constraints);
     main_panel.add(algorithm_label);
 
@@ -411,29 +414,23 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     // add label and number field for the trace costs on each layer.
 
     gridbag_constraints.gridwidth = 3;
-    JLabel trace_costs_on_layer = new JLabel(tm.getText("trace_costs_on_layer"));
-    trace_costs_on_layer.setToolTipText(tm.getText("trace_costs_on_layer_tooltip"));
+    JLabel trace_costs_on_layer = new JLabel();
+    tm.setText(trace_costs_on_layer, "trace_costs_on_layer");
     gridbag.setConstraints(trace_costs_on_layer, gridbag_constraints);
     main_panel.add(trace_costs_on_layer);
 
     gridbag_constraints.gridwidth = 3;
-    JLabel pref_dir_label = new JLabel(tm.getText("in_preferred_direction"));
-    pref_dir_label.setPreferredSize(new Dimension(80, 40));
-    pref_dir_label.setToolTipText(tm.getText("in_preferred_direction_tooltip"));
+    javax.swing.JComponent pref_dir_label = createWordWrapLabel("in_preferred_direction", 80, 45);
     gridbag.setConstraints(pref_dir_label, gridbag_constraints);
     main_panel.add(pref_dir_label);
 
     gridbag_constraints.gridwidth = 3;
-    JLabel against_pref_dir_label = new JLabel(tm.getText("against_preferred_direction"));
-    against_pref_dir_label.setPreferredSize(new Dimension(80, 40));
-    against_pref_dir_label.setToolTipText(tm.getText("against_preferred_direction_tooltip"));
+    javax.swing.JComponent against_pref_dir_label = createWordWrapLabel("against_preferred_direction", 80, 45);
     gridbag.setConstraints(against_pref_dir_label, gridbag_constraints);
     main_panel.add(against_pref_dir_label);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    JLabel bend_cost_header = new JLabel(tm.getText("bend_cost"));
-    bend_cost_header.setPreferredSize(new Dimension(80, 40));
-    bend_cost_header.setToolTipText(tm.getText("bend_cost_tooltip"));
+    javax.swing.JComponent bend_cost_header = createWordWrapLabel("bend_cost", 80, 45);
     gridbag.setConstraints(bend_cost_header, gridbag_constraints);
     main_panel.add(bend_cost_header);
 
@@ -808,6 +805,23 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private boolean isTimeoutEditorFocused() {
     Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     return (focusOwner != null) && SwingUtilities.isDescendingFrom(focusOwner, job_timeout_panel);
+  }
+
+  private javax.swing.JComponent createWordWrapLabel(String key, int width, int height) {
+    javax.swing.JTextArea textArea = new javax.swing.JTextArea();
+    textArea.setLineWrap(true);
+    textArea.setWrapStyleWord(true);
+    textArea.setEditable(false);
+    textArea.setFocusable(false);
+    textArea.setOpaque(false); // Makes background transparent like a JLabel
+
+    // Copy native JLabel look and feel properties
+    textArea.setFont(javax.swing.UIManager.getFont("Label.font"));
+    textArea.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+
+    textArea.setPreferredSize(new java.awt.Dimension(width, height));
+    tm.setText(textArea, key);
+    return textArea;
   }
 
   private class LayerActiveListener implements ActionListener {
