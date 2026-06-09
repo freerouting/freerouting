@@ -153,6 +153,16 @@ public class RouterSettings implements Serializable, Cloneable {
     }
   }
 
+  public void setFanoutEnabled(Boolean value) {
+    Boolean oldValue = this.fanout != null ? this.fanout.enabled : null;
+    if (this.fanout != null) {
+      this.fanout.enabled = value;
+    }
+    if (pcs != null) {
+      pcs.firePropertyChange("fanout.enabled", oldValue, value);
+    }
+  }
+
   /**
    * Apply board-specific optimizations to RouterSettings based on board geometry
    * and layer structure.
@@ -180,9 +190,14 @@ public class RouterSettings implements Serializable, Cloneable {
 
     // initialize the layer specific settings.
     if (layers == null || layers.length != layer_count) {
+      LayerSettings[] oldLayers = layers;
       layers = new LayerSettings[layer_count];
       for (int i = 0; i < layer_count; i++) {
-        layers[i] = new LayerSettings();
+        if (oldLayers != null && i < oldLayers.length && oldLayers[i] != null) {
+          layers[i] = oldLayers[i];
+        } else {
+          layers[i] = new LayerSettings();
+        }
       }
     }
     if (scoring.preferredDirectionTraceCost == null || scoring.preferredDirectionTraceCost.length != layer_count) {
@@ -332,6 +347,10 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public boolean getRunOptimizer() {
     return optimizer != null && optimizer.enabled != null ? optimizer.enabled : false;
+  }
+
+  public boolean getRunFanout() {
+    return fanout != null && fanout.enabled != null ? fanout.enabled : true;
   }
 
   public void setRunOptimizer(boolean p_value) {
@@ -521,6 +540,8 @@ public class RouterSettings implements Serializable, Cloneable {
       pcs.firePropertyChange("maxThreads", null, this.maxThreads);
       pcs.firePropertyChange("jobTimeoutString", null, this.jobTimeoutString);
       pcs.firePropertyChange("enabled", null, this.enabled);
+      pcs.firePropertyChange("optimizer.enabled", null, this.optimizer != null ? this.optimizer.enabled : null);
+      pcs.firePropertyChange("fanout.enabled", null, this.fanout != null ? this.fanout.enabled : null);
     }
 
     return changedCount;
