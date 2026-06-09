@@ -154,10 +154,11 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public void setFanoutEnabled(Boolean value) {
-    Boolean oldValue = this.fanout != null ? this.fanout.enabled : null;
-    if (this.fanout != null) {
-      this.fanout.enabled = value;
+    if (this.fanout == null) {
+      this.fanout = new RouterFanoutSettings();
     }
+    Boolean oldValue = this.fanout.enabled;
+    this.fanout.enabled = value;
     if (pcs != null) {
       pcs.firePropertyChange("fanout.enabled", oldValue, value);
     }
