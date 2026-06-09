@@ -230,6 +230,9 @@ public class RouterSettings implements Serializable, Cloneable {
       } else if (layers[i].routable == null) {
         layers[i].routable = true;
       }
+      if (layers[i].bendCost == null) {
+        layers[i].bendCost = scoring.defaultBendCost != null ? scoring.defaultBendCost : 0.0;
+      }
       if (p_board.layer_structure.arr[i].is_signal) {
         curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
       }
@@ -293,6 +296,7 @@ public class RouterSettings implements Serializable, Cloneable {
     for (int i = 0; i < layerCount; i++) {
       layers[i].routable = true;
       layers[i].preferredDirectionHorizontal = i % 2 == 1;
+      layers[i].bendCost = 0.0;
       scoring.preferredDirectionTraceCost[i] = 1.0;
       scoring.undesiredDirectionTraceCost[i] = 1.0;
     }
@@ -423,6 +427,31 @@ public class RouterSettings implements Serializable, Cloneable {
       return true;
     }
     return layers[p_layer].routable != null ? layers[p_layer].routable : true;
+  }
+
+  public static final double MIN_BEND_COST = 0.0;
+  public static final double MAX_BEND_COST = 10.0;
+
+  public void set_bend_cost(int p_layer, double p_value) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+      FRLogger.warn("RouterSettings.set_bend_cost: p_layer out of range");
+      return;
+    }
+    if (layers[p_layer] == null) {
+      layers[p_layer] = new LayerSettings();
+    }
+    layers[p_layer].bendCost = Math.max(MIN_BEND_COST, Math.min(MAX_BEND_COST, p_value));
+  }
+
+  public double get_bend_cost(int p_layer) {
+    if (p_layer < 0 || p_layer >= this.getLayerCount()) {
+      FRLogger.warn("RouterSettings.get_bend_cost: p_layer out of range");
+      return 0.0;
+    }
+    if (layers[p_layer] == null || layers[p_layer].bendCost == null) {
+      return scoring.defaultBendCost != null ? scoring.defaultBendCost : 0.0;
+    }
+    return layers[p_layer].bendCost;
   }
 
   public void set_preferred_direction_is_horizontal(int p_layer, boolean p_value) {

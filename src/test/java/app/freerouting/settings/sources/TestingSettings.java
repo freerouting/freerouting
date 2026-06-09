@@ -22,6 +22,22 @@ public class TestingSettings implements SettingsSource {
         this.settings.copperToEdgeClearanceUm = 0.0;
     }
 
+    public void setBendCost(int layer, double bendCost) {
+        if (this.settings.layers == null) {
+            this.settings.setLayerCount(layer + 1);
+        } else if (layer >= this.settings.layers.length) {
+            this.settings.setLayerCount(layer + 1);
+        }
+        this.settings.set_bend_cost(layer, bendCost);
+    }
+
+    public void setDefaultBendCost(double defaultBendCost) {
+        if (this.settings.scoring == null) {
+            this.settings.scoring = new app.freerouting.settings.RouterScoringSettings();
+        }
+        this.settings.scoring.defaultBendCost = defaultBendCost;
+    }
+
     public void setMaxItems(int maxItems) {
         this.settings.maxItems = maxItems;
     }

@@ -66,8 +66,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final String algorithm_v19;
   private final JFormattedTextField[] preferred_direction_trace_cost_arr;
   private final JFormattedTextField[] against_preferred_direction_trace_cost_arr;
+  private final JFormattedTextField[] bend_cost_arr;
   private final boolean[] preferred_direction_trace_costs_input_completed;
   private final boolean[] against_preferred_direction_trace_costs_input_completed;
+  private final boolean[] bend_costs_input_completed;
   private boolean via_cost_input_completed = true;
   private boolean plane_via_cost_input_completed = true;
   private boolean start_ripup_cost_input_completed = true;
@@ -400,17 +402,24 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(pref_dir_label, gridbag_constraints);
     main_panel.add(pref_dir_label);
 
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     JLabel against_pref_dir_label = new JLabel(tm.getText("against_preferred_direction"));
     gridbag.setConstraints(against_pref_dir_label, gridbag_constraints);
     main_panel.add(against_pref_dir_label);
+
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    JLabel bend_cost_header = new JLabel(tm.getText("bend_cost"));
+    bend_cost_header.setToolTipText(tm.getText("bend_cost_tooltip"));
+    gridbag.setConstraints(bend_cost_header, gridbag_constraints);
+    main_panel.add(bend_cost_header);
 
     int signal_layer_count = layer_structure.signal_layer_count();
     signal_layer_name_arr = new JLabel[signal_layer_count];
     preferred_direction_trace_cost_arr = new JFormattedTextField[signal_layer_count];
     against_preferred_direction_trace_cost_arr = new JFormattedTextField[signal_layer_count];
+    bend_cost_arr = new JFormattedTextField[signal_layer_count];
     preferred_direction_trace_costs_input_completed = new boolean[signal_layer_count];
     against_preferred_direction_trace_costs_input_completed = new boolean[signal_layer_count];
+    bend_costs_input_completed = new boolean[signal_layer_count];
     number_format = NumberFormat.getInstance(p_board_frame.get_locale());
     number_format.setMaximumFractionDigits(2);
     final int TEXT_FIELD_LENGTH = 2;
@@ -436,11 +445,20 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           .addKeyListener(new WindowAutorouteParameter.AgainstPreferredDirectionTraceCostKeyListener(i));
       against_preferred_direction_trace_cost_arr[i]
           .addFocusListener(new WindowAutorouteParameter.AgainstPreferredDirectionTraceCostFocusListener(i));
-      gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(against_preferred_direction_trace_cost_arr[i], gridbag_constraints);
       main_panel.add(against_preferred_direction_trace_cost_arr[i]);
+      bend_cost_arr[i] = new JFormattedTextField(float_number_format);
+      bend_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
+      bend_cost_arr[i]
+          .addKeyListener(new WindowAutorouteParameter.BendCostKeyListener(i));
+      bend_cost_arr[i]
+          .addFocusListener(new WindowAutorouteParameter.BendCostFocusListener(i));
+      gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+      gridbag.setConstraints(bend_cost_arr[i], gridbag_constraints);
+      main_panel.add(bend_cost_arr[i]);
       preferred_direction_trace_costs_input_completed[i] = true;
       against_preferred_direction_trace_costs_input_completed[i] = true;
+      bend_costs_input_completed[i] = true;
     }
 
     JLabel applyValuesNote = new JLabel(tm.getText("apply_values_note"));
@@ -563,6 +581,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     for (int i = 0; i < against_preferred_direction_trace_cost_arr.length; i++) {
       this.against_preferred_direction_trace_cost_arr[i]
           .setValue(settings.get_against_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
+    }
+    for (int i = 0; i < bend_cost_arr.length; i++) {
+      this.bend_cost_arr[i]
+          .setValue(settings.get_bend_cost(layer_structure.get_layer_no(i)));
     }
 
     // Set algorithm selection
@@ -1279,6 +1301,87 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       if (!against_preferred_direction_trace_costs_input_completed[this.signal_layer_no]) {
         start_ripup_cost_input_completed = true;
         refresh();
+      }
+    }
+
+    @Override
+    public void focusGained(FocusEvent p_evt) {
+    }
+  }
+
+  private class BendCostKeyListener extends KeyAdapter {
+
+    private final int signal_layer_no;
+
+    public BendCostKeyListener(int p_layer_no) {
+      this.signal_layer_no = p_layer_no;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent p_evt) {
+      if (p_evt.getKeyChar() == '\n') {
+        int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
+        double old_value = board_handling.getCurrentRoutingJob().routerSettings
+            .get_bend_cost(curr_layer_no);
+        Object input = bend_cost_arr[this.signal_layer_no].getValue();
+        double input_value;
+        if (input instanceof Number number) {
+          input_value = number.doubleValue();
+          if (input_value < RouterSettings.MIN_BEND_COST || input_value > RouterSettings.MAX_BEND_COST) {
+            input_value = old_value;
+          }
+        } else {
+          input_value = old_value;
+        }
+        board_handling.getCurrentRoutingJob().routerSettings.set_bend_cost(curr_layer_no, input_value);
+        bend_cost_arr[this.signal_layer_no].setValue(input_value);
+        bend_costs_input_completed[this.signal_layer_no] = true;
+
+      } else {
+        bend_costs_input_completed[this.signal_layer_no] = false;
+      }
+    }
+  }
+
+  private class BendCostFocusListener implements FocusListener {
+
+    private final int signal_layer_no;
+
+    public BendCostFocusListener(int p_layer_no) {
+      this.signal_layer_no = p_layer_no;
+    }
+
+    @Override
+    public void focusLost(FocusEvent p_evt) {
+      if (!bend_costs_input_completed[this.signal_layer_no]) {
+        // Save the value when focus is lost
+        int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
+        double old_value = board_handling.getCurrentRoutingJob().routerSettings
+            .get_bend_cost(curr_layer_no);
+
+        // Commit the edit to ensure getValue() returns the typed value
+        try {
+          bend_cost_arr[this.signal_layer_no].commitEdit();
+        } catch (java.text.ParseException e) {
+          bend_cost_arr[this.signal_layer_no].setValue(old_value);
+        }
+
+        Object input = bend_cost_arr[this.signal_layer_no].getValue();
+        double input_value;
+        if (input instanceof Number number) {
+          input_value = number.doubleValue();
+          if (input_value < RouterSettings.MIN_BEND_COST) {
+            input_value = RouterSettings.MIN_BEND_COST;
+          }
+          if (input_value > RouterSettings.MAX_BEND_COST) {
+            input_value = RouterSettings.MAX_BEND_COST;
+          }
+        } else {
+          input_value = old_value;
+        }
+        board_handling.getCurrentRoutingJob().routerSettings.set_bend_cost(curr_layer_no, input_value);
+        bend_cost_arr[this.signal_layer_no].setValue(input_value);
+        bend_costs_input_completed[this.signal_layer_no] = true;
       }
     }
 
