@@ -302,11 +302,15 @@ public class GlobalSettings implements Serializable {
 
       // Apply all the loaded settings to the result if they are not null
       ReflectionUtil.copyFields(defaultSettings, loadedSettings);
-      loadedSettings.version = currentVersion;
-
+      
       if (isSaveNeeded) {
-        // TODO: insert per-version migration steps here when needed, e.g.:
-        //   migrateSettings(fileVersion, currentVersion, loadedSettings);
+        // Only run migration logic if an older file version exists and is older than the current version
+        if (fileVersion != null && compareVersionStrings(fileVersion, currentVersion) < 0) {
+          migrateSettings(fileVersion, currentVersion, loadedSettings);
+        }
+
+        loadedSettings.version = currentVersion;
+
         FRLogger.info("freerouting.json config version changed from '"
             + fileVersion + "' to '" + currentVersion + "' – re-saving configuration.");
         saveAsJson(loadedSettings);
@@ -316,6 +320,42 @@ public class GlobalSettings implements Serializable {
     return loadedSettings;
   }
 
+  /**
+   * Migrates settings from an older configuration version to the current version.
+   * Developers should add specific version-to-version data transformations here as the schema evolves.
+   * * <p><b>How to add a migration:</b></p>
+   * <ul>
+   * <li>Always use {@link #compareVersionStrings(String, String)} to check if the old version is strictly less than the version introducing the breaking change.</li>
+   * <li><b>Never use exact string equality</b> to check versions, because users might skip intermediate updates (e.g., jumping directly from 1.8.0 to 2.1.0).</li>
+   * <li>Apply the transformations directly to the {@code settings} object passed as a parameter.</li>
+   * </ul>
+   *
+   * @param oldVersion The version string from the loaded freerouting.json file (e.g., "1.9.0").
+   * @param newVersion The current release-safe version of the application (e.g., "2.0.0").
+   * @param settings   The GlobalSettings instance loaded from the file, ready to be mutated.
+   */
+  private static void migrateSettings(String oldVersion, String newVersion, GlobalSettings settings) {
+    FRLogger.info("Applying migration steps from version " + oldVersion + " to " + newVersion);
+
+    // Scaffold for future migrations. 
+    // EXAMPLE: Moving deprecated router settings to the new SettingsMerger structure when upgrading to 2.0.0.
+    // Notice how we check if oldVersion is LESS THAN (< 0) the version where the schema change was introduced.
+    // 
+    // if (compareVersionStrings(oldVersion, "2.0.0") < 0) {
+    //   FRLogger.info("Migrating legacy router settings to settingsMerger format...");
+    //|   // e.g., settings.settingsMergerProtype.applyLegacy(settings.routerSettings);
+    // }
+    
+    // Add new migrations below this line as the schema evolves.
+  }
+
+  /*
+   * Saves the settings to the default JSON settings file.
+   *
+   * <p>The {@code version} field is always normalised to the release-safe version...
+   */
+  public static void saveAsJson(GlobalSettings globalSettings) throws IOException {
+  
   /*
    * Saves the settings to the default JSON settings file.
    *
