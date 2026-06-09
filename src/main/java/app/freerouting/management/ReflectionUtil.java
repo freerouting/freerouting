@@ -243,18 +243,34 @@ public class ReflectionUtil {
               Object[] sourceArray = (Object[]) sourceValue;
               Class<?> componentType = field.getType().getComponentType();
 
-              // Create target array of the specific component type
-              Object[] targetArray = (Object[]) java.lang.reflect.Array.newInstance(componentType, sourceArray.length);
+              Object targetArrayObj = field.get(target);
+              int targetLength = targetArrayObj != null ? java.lang.reflect.Array.getLength(targetArrayObj) : 0;
 
-              for (int i = 0; i < sourceArray.length; i++) {
-                if (sourceArray[i] != null) {
-                  Object targetElement = componentType.getDeclaredConstructor().newInstance();
-                  copyFields(sourceArray[i], targetElement);
-                  targetArray[i] = targetElement;
+              if (targetLength >= sourceArray.length) {
+                // Merge source elements into existing target elements
+                Object[] targetObjArray = (Object[]) targetArrayObj;
+                for (int i = 0; i < sourceArray.length; i++) {
+                  if (sourceArray[i] != null) {
+                    if (targetObjArray[i] == null) {
+                      targetObjArray[i] = componentType.getDeclaredConstructor().newInstance();
+                    }
+                    copyFields(sourceArray[i], targetObjArray[i]);
+                  }
                 }
+                numberOfFieldsChanged += sourceArray.length;
+              } else {
+                // Allocate a new target array of the specific component type
+                Object[] targetArray = (Object[]) java.lang.reflect.Array.newInstance(componentType, sourceArray.length);
+                for (int i = 0; i < sourceArray.length; i++) {
+                  if (sourceArray[i] != null) {
+                    Object targetElement = componentType.getDeclaredConstructor().newInstance();
+                    copyFields(sourceArray[i], targetElement);
+                    targetArray[i] = targetElement;
+                  }
+                }
+                field.set(target, targetArray);
+                numberOfFieldsChanged += sourceArray.length;
               }
-              field.set(target, targetArray);
-              numberOfFieldsChanged += sourceArray.length;
             }
           } else {
             // The field is an object, so we need to copy its fields
