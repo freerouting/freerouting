@@ -251,6 +251,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     NumberFormat number_format = NumberFormat.getIntegerInstance(p_board_frame.get_locale());
     this.via_cost_field = new JFormattedTextField(number_format);
+    this.via_cost_field.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     this.via_cost_field.setColumns(3);
     this.via_cost_field.setToolTipText(tm.getText("via_costs_tooltip"));
     this.via_cost_field.addKeyListener(new WindowAutorouteParameter.ViaCostFieldKeyListener());
@@ -260,6 +261,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     main_panel.add(via_cost_field);
 
     this.plane_via_cost_field = new JFormattedTextField(number_format);
+    this.plane_via_cost_field.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     this.plane_via_cost_field.setColumns(3);
     this.plane_via_cost_field.addKeyListener(new WindowAutorouteParameter.PlaneViaCostFieldKeyListener());
     this.plane_via_cost_field.addFocusListener(new WindowAutorouteParameter.PlaneViaCostFieldFocusListener());
@@ -284,6 +286,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     main_panel.add(start_ripup_costs_label);
 
     start_ripup_costs = new JFormattedTextField(number_format);
+    start_ripup_costs.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     start_ripup_costs.setColumns(3);
     start_ripup_costs.setToolTipText(tm.getText("start_ripup_costs_tooltip"));
     this.start_ripup_costs.addKeyListener(new WindowAutorouteParameter.StartRipupCostFieldKeyListener());
@@ -301,6 +304,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     main_panel.add(max_passes_label);
 
     max_passes_field = new JFormattedTextField(number_format);
+    max_passes_field.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     max_passes_field.setColumns(5);
     max_passes_field.setToolTipText(tm.getText("max_passes_tooltip"));
     this.max_passes_field.addKeyListener(new WindowAutorouteParameter.MaxPassesFieldKeyListener());
@@ -363,6 +367,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     main_panel.add(max_threads_label);
 
     max_threads_field = new JFormattedTextField(number_format);
+    max_threads_field.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
     max_threads_field.setColumns(3);
     max_threads_field.setToolTipText(tm.getText("max_threads_tooltip"));
     this.max_threads_field.addKeyListener(new WindowAutorouteParameter.MaxThreadsFieldKeyListener());
@@ -413,21 +418,21 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = 3;
     JLabel pref_dir_label = new JLabel(tm.getText("in_preferred_direction"));
-    pref_dir_label.setPreferredSize(new Dimension(100, 40));
+    pref_dir_label.setPreferredSize(new Dimension(80, 40));
     pref_dir_label.setToolTipText(tm.getText("in_preferred_direction_tooltip"));
     gridbag.setConstraints(pref_dir_label, gridbag_constraints);
     main_panel.add(pref_dir_label);
 
     gridbag_constraints.gridwidth = 3;
     JLabel against_pref_dir_label = new JLabel(tm.getText("against_preferred_direction"));
-    against_pref_dir_label.setPreferredSize(new Dimension(100, 40));
+    against_pref_dir_label.setPreferredSize(new Dimension(80, 40));
     against_pref_dir_label.setToolTipText(tm.getText("against_preferred_direction_tooltip"));
     gridbag.setConstraints(against_pref_dir_label, gridbag_constraints);
     main_panel.add(against_pref_dir_label);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     JLabel bend_cost_header = new JLabel(tm.getText("bend_cost"));
-    bend_cost_header.setPreferredSize(new Dimension(100, 40));
+    bend_cost_header.setPreferredSize(new Dimension(80, 40));
     bend_cost_header.setToolTipText(tm.getText("bend_cost_tooltip"));
     gridbag.setConstraints(bend_cost_header, gridbag_constraints);
     main_panel.add(bend_cost_header);
@@ -452,6 +457,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       gridbag.setConstraints(signal_layer_name_arr[i], gridbag_constraints);
       main_panel.add(signal_layer_name_arr[i]);
       preferred_direction_trace_cost_arr[i] = new JFormattedTextField(float_number_format);
+      preferred_direction_trace_cost_arr[i].setHorizontalAlignment(javax.swing.JTextField.RIGHT);
       preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
       preferred_direction_trace_cost_arr[i].setPreferredSize(new Dimension(150, preferred_direction_trace_cost_arr[i].getPreferredSize().height));
       preferred_direction_trace_cost_arr[i]
@@ -461,6 +467,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       gridbag.setConstraints(preferred_direction_trace_cost_arr[i], gridbag_constraints);
       main_panel.add(preferred_direction_trace_cost_arr[i]);
       against_preferred_direction_trace_cost_arr[i] = new JFormattedTextField(float_number_format);
+      against_preferred_direction_trace_cost_arr[i].setHorizontalAlignment(javax.swing.JTextField.RIGHT);
       against_preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
       against_preferred_direction_trace_cost_arr[i].setPreferredSize(new Dimension(150, against_preferred_direction_trace_cost_arr[i].getPreferredSize().height));
       against_preferred_direction_trace_cost_arr[i]
@@ -470,6 +477,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       gridbag.setConstraints(against_preferred_direction_trace_cost_arr[i], gridbag_constraints);
       main_panel.add(against_preferred_direction_trace_cost_arr[i]);
       bend_cost_arr[i] = new JFormattedTextField(float_number_format);
+      bend_cost_arr[i].setHorizontalAlignment(javax.swing.JTextField.RIGHT);
       bend_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
       bend_cost_arr[i].setPreferredSize(new Dimension(150, bend_cost_arr[i].getPreferredSize().height));
       bend_cost_arr[i]
