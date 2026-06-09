@@ -177,11 +177,14 @@ class BoardToolbar extends JPanel {
         FRLogger.warn(tm.getText("warn_no_input_file"));
         return;
       }
-      var mergedSettings = board_frame.board_panel.board_handling.settingsMerger.merge();
-      guiRoutingJob.setSettings(mergedSettings);
-      var interactiveSettings = board_frame.board_panel.board_handling.getInteractiveSettings();
-      if (interactiveSettings != null) {
-        interactiveSettings.setSettings(guiRoutingJob.routerSettings);
+      var merger = board_frame.board_panel.board_handling.settingsMerger;
+      if (merger != null) {
+        var mergedSettings = merger.merge();
+        guiRoutingJob.setSettings(mergedSettings);
+        var interactiveSettings = board_frame.board_panel.board_handling.getInteractiveSettings();
+        if (interactiveSettings != null) {
+          interactiveSettings.setSettings(guiRoutingJob.routerSettings);
+        }
       }
       // The GUI-path settingsMerger does not include DsnFileSettings, so the merged
       // RouterSettings has layers == null (layer count 0).  Re-apply board-
