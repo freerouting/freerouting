@@ -78,8 +78,8 @@ public class ReflectionUtil {
         return field;
       }
       if (field.getName().equals(name)) {
-        // Enforce that new layer fields must only be identified by their SerializedName
-        if (annotation != null && field.getDeclaringClass() == app.freerouting.settings.LayerSettings.class && (field.getName().equals("preferredDirectionHorizontal") || field.getName().equals("routable"))) {
+        // Enforce that fields with a SerializedName must not be queried by their camelCase Java name
+        if (annotation != null && !name.equals(name.toLowerCase())) {
           continue;
         }
         return field;

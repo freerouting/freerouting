@@ -200,6 +200,13 @@ public class RouterSettings implements Serializable, Cloneable {
           layers[i] = new LayerSettings();
         }
       }
+    } else {
+      // Ensure no elements inside the layers array are null
+      for (int i = 0; i < layer_count; i++) {
+        if (layers[i] == null) {
+          layers[i] = new LayerSettings();
+        }
+      }
     }
     if (scoring.preferredDirectionTraceCost == null || scoring.preferredDirectionTraceCost.length != layer_count) {
       scoring.preferredDirectionTraceCost = new double[layer_count];
