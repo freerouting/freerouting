@@ -97,7 +97,7 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
           instance = new InteractiveSettings(board, routerSettings);
         }
       }
-    } else {
+    } else if (routerSettings != null) {
       instance.setSettings(routerSettings);
     }
     return instance;
@@ -714,4 +714,3 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
     this.read_only = false;
   }
 }
-

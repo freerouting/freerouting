@@ -155,7 +155,7 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public void setFanoutEnabled(Boolean value) {
     if (this.fanout == null) {
-      this.fanout = new RouterFanoutSettings();
+      this.fanout = new FanoutSettings();
     }
     Boolean oldValue = this.fanout.enabled;
     this.fanout.enabled = value;
@@ -218,8 +218,10 @@ public class RouterSettings implements Serializable, Cloneable {
     }
 
     for (int i = 0; i < layer_count; i++) {
-      if (layers[i].routable == null) {
-        layers[i].routable = p_board.layer_structure.arr[i].is_signal;
+      if (!p_board.layer_structure.arr[i].is_signal) {
+        layers[i].routable = false;
+      } else if (layers[i].routable == null) {
+        layers[i].routable = true;
       }
       if (p_board.layer_structure.arr[i].is_signal) {
         curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
@@ -398,6 +400,9 @@ public class RouterSettings implements Serializable, Cloneable {
           + (this.getLayerCount() - 1) + "]");
       return;
     }
+    if (layers[p_layer] == null) {
+      layers[p_layer] = new LayerSettings();
+    }
     layers[p_layer].routable = p_value;
   }
 
@@ -406,6 +411,9 @@ public class RouterSettings implements Serializable, Cloneable {
       FRLogger.warn("AutorouteSettings.get_layer_active: p_layer=" + p_layer + " out of range [0.."
           + (this.getLayerCount() - 1) + "]");
       return false;
+    }
+    if (layers[p_layer] == null) {
+      return true;
     }
     return layers[p_layer].routable != null ? layers[p_layer].routable : true;
   }
@@ -416,6 +424,9 @@ public class RouterSettings implements Serializable, Cloneable {
           + (this.getLayerCount() - 1) + "]");
       return;
     }
+    if (layers[p_layer] == null) {
+      layers[p_layer] = new LayerSettings();
+    }
     layers[p_layer].preferredDirectionHorizontal = p_value;
   }
 
@@ -424,6 +435,9 @@ public class RouterSettings implements Serializable, Cloneable {
       FRLogger.warn("AutorouteSettings.get_preferred_direction_is_horizontal: p_layer=" + p_layer + " out of range [0.."
           + (this.getLayerCount() - 1) + "]");
       return false;
+    }
+    if (layers[p_layer] == null) {
+      return (p_layer % 2 == 1);
     }
     return layers[p_layer].preferredDirectionHorizontal != null ? layers[p_layer].preferredDirectionHorizontal : (p_layer % 2 == 1);
   }

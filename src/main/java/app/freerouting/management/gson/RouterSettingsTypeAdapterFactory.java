@@ -13,8 +13,9 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 
 /**
- * Custom GSON TypeAdapter Factory to serialize and deserialize the transient
- * layers settings array within RouterSettings.
+ * Custom GSON TypeAdapter Factory that preserves default serialization behavior
+ * and extends deserialization to populate the transient layers settings array
+ * within RouterSettings.
  */
 public class RouterSettingsTypeAdapterFactory implements TypeAdapterFactory {
 
