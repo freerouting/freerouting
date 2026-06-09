@@ -13,12 +13,12 @@ public class RouterSettings implements Serializable, Cloneable {
   // Valid algorithm values
   public static final String ALGORITHM_CURRENT = "freerouting-router";
   public static final String ALGORITHM_V19 = "freerouting-router-v19";
-
+  public static final double MIN_BEND_COST = 0.0;
+  public static final double MAX_BEND_COST = 9.9;
   @SerializedName("enabled")
   public Boolean enabled;
   @SerializedName("algorithm")
   public String algorithm;
-
   /** Configuration for the SMD-pin fanout pre-pass. */
   @SerializedName("fanout")
   public FanoutSettings fanout;
@@ -74,6 +74,24 @@ public class RouterSettings implements Serializable, Cloneable {
     this();
     setLayerCount(p_board.get_layer_count());
     applyBoardSpecificOptimizations(p_board);
+  }
+
+  private static int defaultMaxThreads() {
+    return Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+  }
+
+  private static int normalizeMaxThreads(Integer value) {
+    int availableProcessors = Runtime.getRuntime().availableProcessors();
+    if (value == null) {
+      return defaultMaxThreads();
+    }
+    if (value < 0) {
+      return defaultMaxThreads();
+    }
+    if (value == 0) {
+      return availableProcessors;
+    }
+    return Math.min(value, availableProcessors);
   }
 
   // PropertyChangeListener support for bidirectional binding
@@ -153,17 +171,6 @@ public class RouterSettings implements Serializable, Cloneable {
     }
   }
 
-  public void setFanoutEnabled(Boolean value) {
-    if (this.fanout == null) {
-      this.fanout = new FanoutSettings();
-    }
-    Boolean oldValue = this.fanout.enabled;
-    this.fanout.enabled = value;
-    if (pcs != null) {
-      pcs.firePropertyChange("fanout.enabled", oldValue, value);
-    }
-  }
-
   /**
    * Apply board-specific optimizations to RouterSettings based on board geometry
    * and layer structure.
@@ -236,9 +243,8 @@ public class RouterSettings implements Serializable, Cloneable {
       if (p_board.layer_structure.arr[i].is_signal) {
         curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
       }
-      if (layers[i].preferredDirectionHorizontal == null) {
-        layers[i].preferredDirectionHorizontal = curr_preferred_direction_is_horizontal;
-      }
+      layers[i].preferredDirectionHorizontal = curr_preferred_direction_is_horizontal;
+
       scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost;
       scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
       if (curr_preferred_direction_is_horizontal) {
@@ -363,10 +369,6 @@ public class RouterSettings implements Serializable, Cloneable {
     return optimizer != null && optimizer.enabled != null ? optimizer.enabled : false;
   }
 
-  public boolean getRunFanout() {
-    return fanout != null && fanout.enabled != null ? fanout.enabled : true;
-  }
-
   public void setRunOptimizer(boolean p_value) {
     if (optimizer == null) {
       optimizer = new RouterOptimizerSettings();
@@ -374,11 +376,26 @@ public class RouterSettings implements Serializable, Cloneable {
     optimizer.enabled = p_value;
   }
 
+  public boolean getRunFanout() {
+    return fanout != null && fanout.enabled != null ? fanout.enabled : true;
+  }
+
   /**
    * Returns whether the fanout pre-pass should run.
    */
   public boolean isFanoutEnabled() {
     return fanout != null && Boolean.TRUE.equals(fanout.enabled);
+  }
+
+  public void setFanoutEnabled(Boolean value) {
+    if (this.fanout == null) {
+      this.fanout = new FanoutSettings();
+    }
+    Boolean oldValue = this.fanout.enabled;
+    this.fanout.enabled = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("fanout.enabled", oldValue, value);
+    }
   }
 
   public boolean get_vias_allowed() {
@@ -428,9 +445,6 @@ public class RouterSettings implements Serializable, Cloneable {
     }
     return layers[p_layer].routable != null ? layers[p_layer].routable : true;
   }
-
-  public static final double MIN_BEND_COST = 0.0;
-  public static final double MAX_BEND_COST = 10.0;
 
   public void set_bend_cost(int p_layer, double p_value) {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
@@ -627,23 +641,5 @@ public class RouterSettings implements Serializable, Cloneable {
           + ", using default 500");
       this.trace_pull_tight_accuracy = 500;
     }
-  }
-
-  private static int defaultMaxThreads() {
-    return Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-  }
-
-  private static int normalizeMaxThreads(Integer value) {
-    int availableProcessors = Runtime.getRuntime().availableProcessors();
-    if (value == null) {
-      return defaultMaxThreads();
-    }
-    if (value < 0) {
-      return defaultMaxThreads();
-    }
-    if (value == 0) {
-      return availableProcessors;
-    }
-    return Math.min(value, availableProcessors);
   }
 }
