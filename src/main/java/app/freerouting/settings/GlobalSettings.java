@@ -305,7 +305,7 @@ public class GlobalSettings implements Serializable {
       
       if (isSaveNeeded) {
         // Only run migration logic if an older file version exists and is older than the current version
-        if (fileVersion != null && compareVersionStrings(fileVersion, currentVersion) < 0) {
+        if (compareVersionStrings(fileVersion, currentVersion) < 0) {
           migrateSettings(fileVersion, currentVersion, loadedSettings);
         }
 
@@ -335,7 +335,7 @@ public class GlobalSettings implements Serializable {
    * @param settings   The GlobalSettings instance loaded from the file, ready to be mutated.
    */
   private static void migrateSettings(String oldVersion, String newVersion, GlobalSettings settings) {
-    FRLogger.info("Applying migration steps from version " + oldVersion + " to " + newVersion);
+    FRLogger.info("Applying migration steps from version " + (oldVersion != null ? oldVersion : "unknown/old") + " to " + newVersion);
 
     // Scaffold for future migrations. 
     // EXAMPLE: Moving deprecated router settings to the new SettingsMerger structure when upgrading to 2.0.0.
