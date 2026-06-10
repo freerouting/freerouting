@@ -59,6 +59,9 @@ public class RouterScoringSettings implements Serializable, Cloneable {
   // The penalty for a bend.
   @SerializedName("bend_penalty")
   public Float bendPenalty;
+  // Default bend cost/penalty per direction change on a layer.
+  @SerializedName("default_bend_cost")
+  public Double defaultBendCost;
 
   /**
    * Creates a deep copy of this RouterScoringSettings object.

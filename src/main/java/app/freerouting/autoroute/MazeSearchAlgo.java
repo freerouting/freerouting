@@ -685,7 +685,26 @@ public class MazeSearchAlgo {
     CompleteExpansionRoom next_room = p_door.other_room(p_from_element.next_room);
     int layer = p_from_element.next_room.get_layer();
     FloatPoint shape_entry_middle = p_shape_entry.a.middle_point(p_shape_entry.b);
-    double expansion_value = p_from_element.expansion_value + p_add_costs
+    
+    double bend_cost_penalty = 0.0;
+    if (ctrl.bendCosts[layer] > 0.0 && p_from_element.backtrack_door != null) {
+      FloatPoint from_mid = p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b);
+      // Build vectors prev→curr and curr→next to detect a direction change.
+      FloatPoint backtrack_cog = p_from_element.backtrack_door.get_shape().centre_of_gravity();
+      double prev_dx = from_mid.x - backtrack_cog.x;
+      double prev_dy = from_mid.y - backtrack_cog.y;
+      double next_dx = shape_entry_middle.x - from_mid.x;
+      double next_dy = shape_entry_middle.y - from_mid.y;
+      double cross_product = prev_dx * next_dy - prev_dy * next_dx;
+      double sq_len_prev = prev_dx * prev_dx + prev_dy * prev_dy;
+      double sq_len_next = next_dx * next_dx + next_dy * next_dy;
+      // Use a normalized threshold (sin² of angle > 0.01, approx. 5.7°) to be scale-independent.
+      if (sq_len_prev > 0.0 && sq_len_next > 0.0 && (cross_product * cross_product) > 0.01 * sq_len_prev * sq_len_next) {
+        bend_cost_penalty = ctrl.bendCosts[layer];
+      }
+    }
+
+    double expansion_value = p_from_element.expansion_value + p_add_costs + bend_cost_penalty
         + shape_entry_middle.weighted_distance(p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b),
             ctrl.trace_costs[layer].horizontal,
             ctrl.trace_costs[layer].vertical);

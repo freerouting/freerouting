@@ -24,6 +24,7 @@ public class AutorouteControl {
    * The horizontal and vertical trace costs on each layer
    */
   public final ExpansionCostFactor[] trace_costs;
+  public final double[] bendCosts;
   public final boolean with_neckdown;
   /**
    * Defines for each layer, if it may be used for routing.
@@ -123,7 +124,7 @@ public class AutorouteControl {
    * The minimal cost value of all cheap vias
    */
   double min_cheap_via_cost;
-
+ 
   /**
    * Creates a new instance of AutorouteControl for the input net
    */
@@ -131,7 +132,7 @@ public class AutorouteControl {
     this(p_board, p_settings, p_settings.get_trace_cost_arr());
     init_net(p_net_no, p_board, p_settings.get_via_costs());
   }
-
+ 
   /**
    * Creates a new instance of AutorouteControl for the input net
    */
@@ -139,7 +140,7 @@ public class AutorouteControl {
     this(p_board, p_settings, p_trace_cost_arr);
     init_net(p_net_no, p_board, p_via_costs);
   }
-
+ 
   /**
    * Creates a new instance of AutorouteControl
    */
@@ -152,7 +153,11 @@ public class AutorouteControl {
     vias_allowed = p_settings.get_vias_allowed();
     via_radius_arr = new double[layer_count];
     add_via_costs = new ViaCost[layer_count];
-
+    this.bendCosts = new double[layer_count];
+    for (int i = 0; i < layer_count; i++) {
+      this.bendCosts[i] = p_settings.get_bend_cost(i);
+    }
+ 
     for (int i = 0; i < layer_count; i++) {
       add_via_costs[i] = new ViaCost(layer_count);
       layer_active[i] = p_settings.get_layer_active(i);
@@ -176,7 +181,7 @@ public class AutorouteControl {
     attach_smd_allowed = false;
     via_lower_bound = 0;
     via_upper_bound = layer_count;
-
+ 
     ripup_allowed = false;
     ripup_costs = 1000;
     ripup_pass_no = 1;

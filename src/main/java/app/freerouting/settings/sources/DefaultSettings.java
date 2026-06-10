@@ -139,6 +139,7 @@ public class DefaultSettings implements SettingsSource {
         settings.scoring.unroutedNetPenalty = DEFAULT_UNROUTED_NET_PENALTY;
         settings.scoring.clearanceViolationPenalty = DEFAULT_CLEARANCE_VIOLATION_PENALTY;
         settings.scoring.bendPenalty = DEFAULT_BEND_PENALTY;
+        settings.scoring.defaultBendCost = 0.0;
 
         return settings;
     }

@@ -15,6 +15,14 @@ public class LayerSettings implements Serializable, Cloneable {
   public Boolean preferredDirectionHorizontal;
 
   /**
+   * Per-layer bend cost added to the maze expansion value each time the router
+   * changes direction on this layer. Null means "use the board default".
+   * Valid range when non-null: 0.0 (no penalty) to 9.9 (strongly avoids bends).
+   */
+  @SerializedName("bend_cost")
+  public Double bendCost;
+
+  /**
    * Default constructor required for reflection and serialization.
    */
   public LayerSettings() {
@@ -31,6 +39,15 @@ public class LayerSettings implements Serializable, Cloneable {
     this.preferredDirectionHorizontal = preferredDirectionHorizontal;
   }
 
+  /**
+   * Full constructor.
+   */
+  public LayerSettings(Boolean routable, Boolean preferredDirectionHorizontal, Double bendCost) {
+    this.routable = routable;
+    this.preferredDirectionHorizontal = preferredDirectionHorizontal;
+    this.bendCost = bendCost;
+  }
+
   @Override
   public LayerSettings clone() {
     try {
@@ -39,6 +56,7 @@ public class LayerSettings implements Serializable, Cloneable {
       LayerSettings copy = new LayerSettings();
       copy.routable = this.routable;
       copy.preferredDirectionHorizontal = this.preferredDirectionHorizontal;
+      copy.bendCost = this.bendCost;
       return copy;
     }
   }
@@ -52,12 +70,13 @@ public class LayerSettings implements Serializable, Cloneable {
       return false;
     }
     LayerSettings that = (LayerSettings) o;
-    return java.util.Objects.equals(routable, that.routable) &&
-        java.util.Objects.equals(preferredDirectionHorizontal, that.preferredDirectionHorizontal);
+    return java.util.Objects.equals(routable, that.routable)
+        && java.util.Objects.equals(preferredDirectionHorizontal, that.preferredDirectionHorizontal)
+        && java.util.Objects.equals(bendCost, that.bendCost);
   }
 
   @Override
   public int hashCode() {
-    return java.util.Objects.hash(routable, preferredDirectionHorizontal);
+    return java.util.Objects.hash(routable, preferredDirectionHorizontal, bendCost);
   }
 }

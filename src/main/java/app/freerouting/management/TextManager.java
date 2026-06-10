@@ -377,6 +377,11 @@ public class TextManager {
         // Set the tooltip text for the component
         component.setToolTipText(tooltip);
       }
+    } else if (component instanceof javax.swing.text.JTextComponent textComponent) {
+      textComponent.setText(text);
+      if (tooltip != null && !tooltip.isEmpty()) {
+        component.setToolTipText(tooltip);
+      }
     } else {
       // Handle other components like JLabel, JTextArea, etc.
       String componentType = component
