@@ -2,6 +2,7 @@ package app.freerouting.fixtures;
 
 import app.freerouting.core.RoutingJob;
 import app.freerouting.settings.sources.TestingSettings;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
@@ -32,6 +33,7 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
+  @Tag("slow")
   public void test_Issue_508_BM10() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);

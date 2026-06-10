@@ -24,8 +24,8 @@ import java.util.Map;
 /**
  * A client for Google BigQuery's API.
  *
- * <p>Please note that {@code identify}, {@code track}, and {@code users} tables are NOT updated in
- * BigQuery (unlike Segment).
+ * <p>Please note that {@code track} and {@code identify} events are written to their respective
+ * BigQuery tables ({@code application_started}, etc. and {@code identify}).
  *
  * <h2>Singleton lifecycle</h2>
  * Creating a BigQuery service involves network I/O (credential refresh against Google's token
@@ -143,10 +143,13 @@ public class BigQueryClient implements AnalyticsClient {
     payload.context.library = new Library();
     payload.context.library.name = LIBRARY_NAME;
     payload.context.library.version = LIBRARY_VERSION;
+    // Use "identifies" as the event name so sendPayloadAsync routes the row to the
+    // BigQuery `identifies` table — this follows the Segment convention and matches
+    // the existing table schema.
+    payload.event = "identifies";
     payload.traits = traits;
 
-    // NOTE: we ignore the identify event in BigQuery (because we have the tracked
-    // "application started" event instead).
+    sendPayloadAsync(payload);
   }
 
   @Override

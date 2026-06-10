@@ -1,7 +1,8 @@
 package app.freerouting.fixtures;
 
-import app.freerouting.settings.sources.TestingSettings;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.settings.sources.TestingSettings;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class Issue690RoutingTest extends RoutingFixtureTest {
@@ -18,6 +19,7 @@ public class Issue690RoutingTest extends RoutingFixtureTest {
     }
 
     @Test
+    @Tag("slow")
     void testIssue690KitDevColdfireXilinx() {
         TestingSettings ts = new TestingSettings();
         ts.setMaxPasses(1);

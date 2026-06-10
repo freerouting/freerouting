@@ -130,6 +130,9 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`plane_via_costs`**: Cost factor for using vias on plane layers.
 - **`start_ripup_costs`**: Cost factor for ripping up existing traces.
 - **`automatic_neckdown`**: Enables or disables automatic neckdown of traces.
+- **`layers`**: An array of layer-specific settings (transient, typically set via CLI or loaded from board files). Each element contains:
+    - **`routable`**: Boolean indicating if the layer is active/routable by the autorouter.
+    - **`preferred_direction_horizontal`**: Boolean indicating if the preferred direction on this layer is horizontal.
 
 #### **`usage_and_diagnostic_data` Section**
 

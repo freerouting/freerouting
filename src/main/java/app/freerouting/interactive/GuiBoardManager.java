@@ -1375,7 +1375,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
         p_board_communication);
 
     // Reset and rebind the GUI-session singleton for the newly created board.
-    this.interactiveSettings = InteractiveSettings.reset(this.board);
+    this.interactiveSettings = InteractiveSettings.reset(this.board, this.routingJob.routerSettings);
     this.initialize_manual_trace_half_widths();
 
     // create the interactive/GUI settings with default values
@@ -2245,7 +2245,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (this.board != null) {
       // Always reset: a new DSN load may introduce a different layer count or design rules,
       // making any previously-constructed InteractiveSettings invalid for this board.
-      this.interactiveSettings = InteractiveSettings.reset(this.board);
+      this.interactiveSettings = InteractiveSettings.reset(this.board, this.routingJob.routerSettings);
       this.initialize_manual_trace_half_widths();
 
       // Register the singleton as the live GuiSettings source (priority 50) in the merger so
@@ -2281,7 +2281,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (this.board != null) {
       // Always reset: a new DSN load may introduce a different layer count or design rules,
       // making any previously-constructed InteractiveSettings invalid for this board.
-      this.interactiveSettings = InteractiveSettings.reset(this.board);
+      this.interactiveSettings = InteractiveSettings.reset(this.board, this.routingJob.routerSettings);
       this.initialize_manual_trace_half_widths();
 
       // Register the singleton as the live GuiSettings source (priority 50) in the merger so

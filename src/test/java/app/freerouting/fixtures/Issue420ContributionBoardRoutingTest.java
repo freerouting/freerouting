@@ -8,6 +8,7 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.sources.TestingSettings;
 import java.time.Duration;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -50,6 +51,7 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
    * slow CI hardware, while still exercising the router on the large-board code path.
    */
   @Test
+  @Tag("slow")
   void routing_completesWithoutOutOfMemoryError() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(1);
@@ -83,6 +85,7 @@ public class Issue420ContributionBoardRoutingTest extends RoutingFixtureTest {
    * {@link OutOfMemoryError} (recorded as a test error) or the job will hit the timeout.
    */
   @Test
+  @Tag("slow")
   void optimizer_completesWithoutOutOfMemoryError() {
     // Route a limited number of items first so the optimizer has something to work with,
     // but the initial routing phase stays well under 1 minute.
