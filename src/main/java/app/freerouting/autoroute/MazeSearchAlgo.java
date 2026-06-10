@@ -689,45 +689,20 @@ public class MazeSearchAlgo {
     double bend_cost_penalty = 0.0;
     if (ctrl.bendCosts[layer] > 0.0 && p_from_element.backtrack_door != null) {
       FloatPoint from_mid = p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b);
-      // Construct a rough previous vector from backtrack to from
-      // We can approximate the grandparent's position using shape_entry from backtrack_door if we find it.
-      // But we can also look at the shape_entry of the previous element. Let's look up the backtrack_door's shape_entry.
-      // Wait, p_from_element has shape_entry, but where is the grandparent shape_entry? 
-      // In the search state, the backtrack_door has its backtrack_door etc. 
-      // But we can also get the grandparent from p_from_element if we could see its backtrack element.
-      // Let's get the backtrack_door's MazeSearchElement:
+      // Use the backtrack door's centre of gravity as an approximation of the grandparent position.
       MazeSearchElement backtrack_elem = p_from_element.backtrack_door.get_maze_search_element(p_from_element.section_no_of_backtrack_door);
       if (backtrack_elem != null && backtrack_elem.backtrack_door != null) {
-        // Let's approximate by checking collinearity of from_mid -> shape_entry_middle
-        // and the previous segment. We need the grandparent midpoint.
-        // Wait, does backtrack_door's section or shape entry have its midpoint?
-        // Let's look up the grandparent midpoint. 
-        // Can we get it by looking at the geometry of backtrack_door? Yes, we can find its shape midpoint or backtrack_door's shape midpoint.
-        // Better yet: we can check if the direction vector (from_mid -> shape_entry_middle) is collinear with the previous vector.
-        // What is the previous vector? If the backtrack_door itself is a drill (via), the layer changes, so it's a 3D bend, but we only penalize 2D bends on the same layer.
-        // If backtrack_door is an ExpansionDoor on the same layer, we can get its shape entry middle!
-        // Wait! The backtrack door is an ExpandableObject. If it's an ExpansionDoor, we can get its shape entry.
-        // But how do we get the actual FloatLine of the backtrack door's shape entry used during its expansion?
-        // Since we don't store the shape_entry FloatLine in MazeSearchElement, we can get the door's shape's center of gravity
-        // as a fallback, or we can look up the shape_entry line.
-        // Actually, let's look at get_shape().centre_of_gravity() of backtrack_door as the grandparent position!
-        // Yes! backtrack_door.get_shape().centre_of_gravity() is a very stable approximation of the grandparent position.
-        // Let's use:
-        // prev_pt = p_from_element.backtrack_door.get_shape().centre_of_gravity()
-        // curr_pt = from_mid
-        // next_pt = shape_entry_middle
-        // Let's check cross-product of (curr_pt - prev_pt) and (next_pt - curr_pt).
-        // If they are collinear, cross-product is 0 (or very close to 0 due to floating point).
-        // Since freerouting traces are usually orthogonal or octagonal, we can check if cross product is non-zero.
-        double prev_dx = from_mid.x - p_from_element.backtrack_door.get_shape().centre_of_gravity().x;
-        double prev_dy = from_mid.y - p_from_element.backtrack_door.get_shape().centre_of_gravity().y;
+        // Build vectors prev→curr and curr→next to detect a direction change.
+        FloatPoint backtrack_cog = p_from_element.backtrack_door.get_shape().centre_of_gravity();
+        double prev_dx = from_mid.x - backtrack_cog.x;
+        double prev_dy = from_mid.y - backtrack_cog.y;
         double next_dx = shape_entry_middle.x - from_mid.x;
         double next_dy = shape_entry_middle.y - from_mid.y;
-        // Cross product of 2D vectors:
         double cross_product = prev_dx * next_dy - prev_dy * next_dx;
-        // Check if there is a direction change (using a small tolerance to allow for floating point precision)
-        // Freerouting grids are discrete (usually integer micrometers), but floating point coordinates might have tiny differences.
-        if (Math.abs(cross_product) > 1.0) {
+        double sq_len_prev = prev_dx * prev_dx + prev_dy * prev_dy;
+        double sq_len_next = next_dx * next_dx + next_dy * next_dy;
+        // Use a normalized threshold (sin² of angle > 0.01, approx. 5.7°) to be scale-independent.
+        if (sq_len_prev > 0.0 && sq_len_next > 0.0 && (cross_product * cross_product) > 0.01 * sq_len_prev * sq_len_next) {
           bend_cost_penalty = ctrl.bendCosts[layer];
         }
       }

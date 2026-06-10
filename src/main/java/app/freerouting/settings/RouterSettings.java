@@ -238,12 +238,14 @@ public class RouterSettings implements Serializable, Cloneable {
         layers[i].routable = true;
       }
       if (layers[i].bendCost == null) {
-        layers[i].bendCost = scoring.defaultBendCost != null ? scoring.defaultBendCost : 0.0;
+        layers[i].bendCost = (scoring != null && scoring.defaultBendCost != null) ? scoring.defaultBendCost : 0.0;
       }
       if (p_board.layer_structure.arr[i].is_signal) {
         curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
       }
-      layers[i].preferredDirectionHorizontal = curr_preferred_direction_is_horizontal;
+      if (layers[i].preferredDirectionHorizontal == null) {
+        layers[i].preferredDirectionHorizontal = curr_preferred_direction_is_horizontal;
+      }
 
       scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost;
       scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
@@ -302,7 +304,7 @@ public class RouterSettings implements Serializable, Cloneable {
     for (int i = 0; i < layerCount; i++) {
       layers[i].routable = true;
       layers[i].preferredDirectionHorizontal = i % 2 == 1;
-      layers[i].bendCost = 0.0;
+      layers[i].bendCost = null;
       scoring.preferredDirectionTraceCost[i] = 1.0;
       scoring.undesiredDirectionTraceCost[i] = 1.0;
     }
@@ -463,7 +465,9 @@ public class RouterSettings implements Serializable, Cloneable {
       return 0.0;
     }
     if (layers[p_layer] == null || layers[p_layer].bendCost == null) {
-      return scoring.defaultBendCost != null ? scoring.defaultBendCost : 0.0;
+      return (scoring != null && scoring.defaultBendCost != null)
+          ? Math.max(MIN_BEND_COST, Math.min(MAX_BEND_COST, scoring.defaultBendCost))
+          : 0.0;
     }
     return layers[p_layer].bendCost;
   }

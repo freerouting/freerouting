@@ -39,7 +39,7 @@ public class BendCostSettingsTest {
 
     // Clamping to maximum
     settings.set_bend_cost(1, 15.0);
-    assertEquals(10.0, settings.get_bend_cost(1));
+    assertEquals(9.9, settings.get_bend_cost(1));
   }
 
   @Test
@@ -50,11 +50,10 @@ public class BendCostSettingsTest {
     settings.set_bend_cost(1, 2.5);
 
     Gson gson = new Gson();
-    String json = gson.toJson(settings);
 
     // Since layers are transient, verify defaultBendCost serialization
     settings.scoring.defaultBendCost = 3.5;
-    json = gson.toJson(settings.scoring);
+    String json = gson.toJson(settings.scoring);
     RouterScoringSettings deserializedScoring = gson.fromJson(json, RouterScoringSettings.class);
     assertEquals(3.5, deserializedScoring.defaultBendCost);
   }

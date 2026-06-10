@@ -799,7 +799,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     if ((text == null) || text.isBlank()) {
       return 0L;
     }
-    return Long.parseLong(text.trim());
+    try {
+      return Long.parseLong(text.trim());
+    } catch (NumberFormatException e) {
+      return 0L;
+    }
   }
 
   private boolean isTimeoutEditorFocused() {
@@ -1403,8 +1407,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           if (input_value < 0.0) {
             input_value = 0.0;
           }
-          if (input_value > 9.9) {
-            input_value = 9.9;
+          if (input_value > RouterSettings.MAX_BEND_COST) {
+            input_value = RouterSettings.MAX_BEND_COST;
           }
         } else {
           input_value = old_value;
