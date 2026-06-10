@@ -17,7 +17,7 @@ public class LayerSettings implements Serializable, Cloneable {
   /**
    * Per-layer bend cost added to the maze expansion value each time the router
    * changes direction on this layer. Null means "use the board default".
-   * Valid range when non-null: 0.0 (no penalty) to 10.0 (strongly avoids bends).
+   * Valid range when non-null: 0.0 (no penalty) to 9.9 (strongly avoids bends).
    */
   @SerializedName("bend_cost")
   public Double bendCost;
