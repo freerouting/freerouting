@@ -175,6 +175,10 @@ public class FRAnalytics {
     traits.put("anonymous", "true");
     traits.put("user_id", permanent_user_id);
     traits.put("user_email", permanent_user_email);
+    traits.put("first_seen", Instant.now().toString());
+    traits.put("client_version", globalSettings.version);
+    traits.put("os_name", System.getProperty("os.name"));
+    traits.put("os_version", System.getProperty("os.version"));
     // identifyUser(permanent_user_id, traits);
     identifyAnonymous(permanent_user_id, traits);
   }

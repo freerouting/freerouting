@@ -217,6 +217,26 @@ FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864
 
 > **Note:** Commas are the chosen delimiter because URL characters that would normally include a comma are percent-encoded by browsers/tools, so plain commas in the string unambiguously mark element boundaries.
 
+### Layer-specific settings (Arrays)
+
+Settings for individual board layers can be specified as a comma-separated list of values, where each value corresponds to a layer in order (from the top-most layer to the bottom-most):
+
+- **`--router.layers.routable=false,true`**: Sets which layers are active/routable (e.g. `false,true` disables layer 1 and enables layer 2).
+- **`--router.layers.preferred_direction_horizontal=true,false`**: Sets if the preferred direction on each layer is horizontal (`true`) or vertical (`false`).
+
+For example, to route a board using only the second (bottom) layer:
+
+```bash
+java -jar freerouting-2.2.2.jar -de MyBoard.dsn -do MyBoard.ses --router.layers.routable=false,true
+```
+
+The equivalent environment-variable syntax is:
+
+```bash
+FREEROUTING__ROUTER__LAYERS__ROUTABLE=false,true
+FREEROUTING__ROUTER__LAYERS__PREFERRED_DIRECTION_HORIZONTAL=true,false
+```
+
 ### API Server Settings
 
 | Setting | Type | Description |

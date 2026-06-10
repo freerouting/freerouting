@@ -31,8 +31,8 @@ import app.freerouting.settings.SettingsSource;
  */
 public class GuiSettings implements SettingsSource {
 
-    private static final int PRIORITY = 50;
-    private final RouterSettings settings;
+    private static final int PRIORITY = 65;
+    protected RouterSettings settings;
 
     /**
      * Creates a GuiSettings source with the specified settings.
@@ -41,6 +41,15 @@ public class GuiSettings implements SettingsSource {
      *                 fields non-null)
      */
     public GuiSettings(RouterSettings settings) {
+        this.settings = settings != null ? settings : new RouterSettings();
+    }
+
+    /**
+     * Updates the underlying settings object.
+     *
+     * @param settings the new settings
+     */
+    public void setSettings(RouterSettings settings) {
         this.settings = settings != null ? settings : new RouterSettings();
     }
 
