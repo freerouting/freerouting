@@ -786,6 +786,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       btn_ok.setFont(btn_ok.getFont().deriveFont(Font.BOLD));
       btn_ok.addActionListener(_ -> save());
       bottom_panel.add(btn_ok);
+      getRootPane().setDefaultButton(btn_ok);
 
       add(macro_panel, BorderLayout.NORTH);
 
@@ -817,14 +818,19 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       button.setHorizontalAlignment(SwingConstants.LEFT); button.addActionListener(this);
     }
     @Override public void actionPerformed(ActionEvent e) {
-      int row = table.getSelectedRow();
-      if (row < 0) return;
-      NetClass nc = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(row);
-      LayerRulesDialog dialog = new LayerRulesDialog(board_frame, nc, board_frame.board_panel.board_handling, tm);
-      dialog.pack();
+      int row = table.getEditingRow();  
+      if (row < 0) row = table.getSelectedRow();  
+      if (row < 0) return;  
+      int modelRow = table.convertRowIndexToModel(row);  
+      NetClass nc = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(modelRow);  
+      LayerRulesDialog dialog = new LayerRulesDialog(board_frame, nc, board_frame.board_panel.board_handling, tm);  
+      dialog.pack();  
       dialog.setLocationRelativeTo(null);
-      dialog.setVisible(true);
-      fireEditingStopped(); table_model.fireTableDataChanged(); board_frame.board_panel.repaint();
+      dialog.setResizable(false);
+      dialog.setVisible(true);  
+      fireEditingStopped();  
+      table_model.fireTableRowsUpdated(modelRow, modelRow);  
+      board_frame.board_panel.repaint();  
     }
     @Override public Component getTableCellEditorComponent(JTable t, Object v, boolean s, int r, int c) { button.setText(Objects.toString(v, "")); return button; }
     @Override public Object getCellEditorValue() { return button.getText(); }
