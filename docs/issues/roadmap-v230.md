@@ -34,7 +34,7 @@
 | 11 | KiCad IPC API — Phase 2 (route result write back via IPC) | ★★★★ | ★★★ | ★★ | 4 | 2 |
 | 12 | Python client update | ★★★ | ★★ | ★ | 2 | 2 |
 | 13 | Star Ground Routing (#383) — Phases 1–5 | ★★★ | ★★★★ | ★★ (opt-in) | 10 | 2 |
-| 14 | Single-Sided / Bend Cost (#156) | ★★★ | ★★★ | ★★ | 5 | 2 |
+| 14 | ✅ Single-Sided / Bend Cost (#156) | ★★★ | ★★★ | ★★ | 5 | 2 |
 | 15 | Unit test audit | ★★★ | ★★ | ★ | 2 | 3 |
 | 16 | TODO resolution | ★★ | ★★ | ★★ | 3 | 3 |
 | 17 | Optimizer benchmarking + docs | ★★★ | ★★ | ★ | 2 | 3 |
@@ -173,12 +173,13 @@ The feature is **opt-in** (`RouterSettings.starGroundNetNames` defaults to empty
 - `StarGroundRoutingTest`: assert each pin connects to the hub via (not to each other), 0 clearance violations, 0 incomplete connections.
 - Verify that `withFanout = false` on a non-star board is unaffected.
 
-### Days 36–38 — Single-Sided Fabrication / Bend Cost (#156)
+### Days 36–38 — Single-Sided Fabrication / Bend Cost (#156) ✅ Implemented
 
-- Add `public Double bendCostFactor` to `RouterSettings` (nullable, default `0.0` in `DefaultSettings`).
-- In `MazeSearchAlgo`, when `bendCostFactor > 0`: add `bendCostFactor * trace_width` to the expansion cost whenever a trace segment changes direction by more than a configurable threshold (default: 45°).
-- Document in `docs/settings.md`; expose via CLI and API.
-- Test: a simple L-shaped board where `bendCostFactor = 1.0` produces fewer turns on the restricted layer vs. `bendCostFactor = 0`.
+- ✅ Introduce per-layer bend cost support and apply it during maze expansion. `LayerSettings` gains a `bendCost` field, and `RouterScoringSettings` gets `defaultBendCost`.
+- ✅ `RouterSettings` exposes `get_bend_cost`/`set_bend_cost` with clamp range `[0.0, 9.9]`.
+- ✅ `MazeSearchAlgo` adds a bend cost penalty when the router changes direction using backtrack geometry and backtrack door centers-of-gravity.
+- ✅ Updated `WindowAutorouteParameter` UI and listeners to show, validate, and edit bend costs per layer.
+- ✅ Added tests (`BendCostRoutingTest`, `BendCostSettingsTest`) and helper methods in `TestingSettings` to configure bend costs for tests.
 
 ---
 
