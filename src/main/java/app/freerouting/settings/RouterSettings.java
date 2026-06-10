@@ -186,6 +186,22 @@ public class RouterSettings implements Serializable, Cloneable {
 
     int layer_count = p_board.get_layer_count();
 
+    // Track original values to log changes later
+    Boolean[] originalRoutable = new Boolean[layer_count];
+    Double[] originalBendCost = new Double[layer_count];
+    Boolean[] originalPrefHoriz = new Boolean[layer_count];
+    if (layers != null) {
+      for (int i = 0; i < Math.min(layers.length, layer_count); i++) {
+        if (layers[i] != null) {
+          originalRoutable[i] = layers[i].routable;
+          originalBendCost[i] = layers[i].bendCost;
+          originalPrefHoriz[i] = layers[i].preferredDirectionHorizontal;
+        }
+      }
+    }
+    double[] originalPrefCost = scoring.preferredDirectionTraceCost != null ? scoring.preferredDirectionTraceCost.clone() : null;
+    double[] originalUndesiredCost = scoring.undesiredDirectionTraceCost != null ? scoring.undesiredDirectionTraceCost.clone() : null;
+
     // additional costs against preferred direction with 1 digit behind the decimal
     // point.
     double horizontal_add_costs_against_preferred_dir = 0.1 * Math.round(10 * horizontal_width / vertical_width);
@@ -264,6 +280,41 @@ public class RouterSettings implements Serializable, Cloneable {
       scoring.undesiredDirectionTraceCost[0] += outer_add_costs;
       scoring.undesiredDirectionTraceCost[layer_count - 1] += outer_add_costs;
     }
+
+    // Log the changed parameters
+    StringBuilder summary = new StringBuilder("applyBoardSpecificOptimizations changed parameters:");
+    boolean changed = false;
+    for (int i = 0; i < layer_count; i++) {
+      StringBuilder layerChanges = new StringBuilder();
+
+      if (!java.util.Objects.equals(originalRoutable[i], layers[i].routable)) {
+        layerChanges.append(String.format(" routable: %s -> %s;", originalRoutable[i], layers[i].routable));
+      }
+      if (!java.util.Objects.equals(originalBendCost[i], layers[i].bendCost)) {
+        layerChanges.append(String.format(" bendCost: %s -> %s;", originalBendCost[i], layers[i].bendCost));
+      }
+      if (!java.util.Objects.equals(originalPrefHoriz[i], layers[i].preferredDirectionHorizontal)) {
+        layerChanges.append(String.format(" preferredDirectionHorizontal: %s -> %s;", originalPrefHoriz[i], layers[i].preferredDirectionHorizontal));
+      }
+
+      double oldPrefCost = (originalPrefCost != null && i < originalPrefCost.length) ? originalPrefCost[i] : 0.0;
+      if (oldPrefCost != scoring.preferredDirectionTraceCost[i]) {
+        layerChanges.append(String.format(" preferredDirectionTraceCost: %s -> %s;", oldPrefCost, scoring.preferredDirectionTraceCost[i]));
+      }
+
+      double oldUndesiredCost = (originalUndesiredCost != null && i < originalUndesiredCost.length) ? originalUndesiredCost[i] : 0.0;
+      if (oldUndesiredCost != scoring.undesiredDirectionTraceCost[i]) {
+        layerChanges.append(String.format(" undesiredDirectionTraceCost: %s -> %s;", oldUndesiredCost, scoring.undesiredDirectionTraceCost[i]));
+      }
+
+      if (layerChanges.length() > 0) {
+        summary.append("\n  Layer ").append(i).append(":").append(layerChanges);
+        changed = true;
+      }
+    }
+    if (changed) {
+      FRLogger.debug(summary.toString());
+    }
   }
 
   /**
@@ -303,7 +354,7 @@ public class RouterSettings implements Serializable, Cloneable {
 
     for (int i = 0; i < layerCount; i++) {
       layers[i].routable = true;
-      layers[i].preferredDirectionHorizontal = i % 2 == 1;
+      layers[i].preferredDirectionHorizontal = null;
       layers[i].bendCost = null;
       scoring.preferredDirectionTraceCost[i] = 1.0;
       scoring.undesiredDirectionTraceCost[i] = 1.0;
