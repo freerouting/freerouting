@@ -199,6 +199,9 @@ public class RouterSettings implements Serializable, Cloneable {
         }
       }
     }
+    if (scoring == null) {
+      scoring = new RouterScoringSettings();
+    }
     double[] originalPrefCost = scoring.preferredDirectionTraceCost != null ? scoring.preferredDirectionTraceCost.clone() : null;
     double[] originalUndesiredCost = scoring.undesiredDirectionTraceCost != null ? scoring.undesiredDirectionTraceCost.clone() : null;
 
@@ -395,18 +398,21 @@ public class RouterSettings implements Serializable, Cloneable {
     result.maxThreads = this.maxThreads;
 
     // Use proper clone() methods for nested objects
-    result.optimizer = this.optimizer.clone();
-    result.scoring = this.scoring.clone();
+    result.optimizer = this.optimizer != null ? this.optimizer.clone() : new RouterOptimizerSettings();
+    result.scoring = this.scoring != null ? this.scoring.clone() : new RouterScoringSettings();
     result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
 
     return result;
   }
 
   public int get_start_ripup_costs() {
-    return scoring.startRipupCosts;
+    return (scoring != null && scoring.startRipupCosts != null) ? scoring.startRipupCosts : 1;
   }
 
   public void set_start_ripup_costs(int p_value) {
+    if (scoring == null) {
+      scoring = new RouterScoringSettings();
+    }
     scoring.startRipupCosts = Math.max(p_value, 1);
   }
 
@@ -460,18 +466,24 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public int get_via_costs() {
-    return scoring.viaCosts;
+    return (scoring != null && scoring.viaCosts != null) ? scoring.viaCosts : 1;
   }
 
   public void set_via_costs(int p_value) {
+    if (scoring == null) {
+      scoring = new RouterScoringSettings();
+    }
     scoring.viaCosts = Math.max(p_value, 1);
   }
 
   public int get_plane_via_costs() {
-    return scoring.planeViaCosts;
+    return (scoring != null && scoring.planeViaCosts != null) ? scoring.planeViaCosts : 1;
   }
 
   public void set_plane_via_costs(int p_value) {
+    if (scoring == null) {
+      scoring = new RouterScoringSettings();
+    }
     scoring.planeViaCosts = Math.max(p_value, 1);
   }
 
@@ -552,6 +564,12 @@ public class RouterSettings implements Serializable, Cloneable {
       FRLogger.warn("AutorouteSettings.set_preferred_direction_trace_costs: p_layer out of range");
       return;
     }
+    if (scoring == null) {
+      scoring = new RouterScoringSettings();
+    }
+    if (scoring.preferredDirectionTraceCost == null || scoring.preferredDirectionTraceCost.length != this.getLayerCount()) {
+      scoring.preferredDirectionTraceCost = new double[this.getLayerCount()];
+    }
     scoring.preferredDirectionTraceCost[p_layer] = Math.max(p_value, 0.1);
   }
 
@@ -560,6 +578,9 @@ public class RouterSettings implements Serializable, Cloneable {
       FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
+    if (scoring == null || scoring.preferredDirectionTraceCost == null || p_layer >= scoring.preferredDirectionTraceCost.length) {
+      return 1.0;
+    }
     return scoring.preferredDirectionTraceCost[p_layer];
   }
 
@@ -567,6 +588,9 @@ public class RouterSettings implements Serializable, Cloneable {
     if (p_layer < 0 || p_layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
       return 0;
+    }
+    if (scoring == null || scoring.undesiredDirectionTraceCost == null || p_layer >= scoring.undesiredDirectionTraceCost.length) {
+      return 1.0;
     }
     return scoring.undesiredDirectionTraceCost[p_layer];
   }
@@ -590,6 +614,12 @@ public class RouterSettings implements Serializable, Cloneable {
       FRLogger.warn("AutorouteSettings.set_against_preferred_direction_trace_costs: p_layer out of range");
       return;
     }
+    if (scoring == null) {
+      scoring = new RouterScoringSettings();
+    }
+    if (scoring.undesiredDirectionTraceCost == null || scoring.undesiredDirectionTraceCost.length != this.getLayerCount()) {
+      scoring.undesiredDirectionTraceCost = new double[this.getLayerCount()];
+    }
     scoring.undesiredDirectionTraceCost[p_layer] = Math.max(p_value, 0.1);
   }
 
@@ -608,7 +638,7 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public AutorouteControl.ExpansionCostFactor[] get_trace_cost_arr() {
-    if (scoring.preferredDirectionTraceCost == null) {
+    if (scoring == null || scoring.preferredDirectionTraceCost == null) {
       return new AutorouteControl.ExpansionCostFactor[0];
     }
     AutorouteControl.ExpansionCostFactor[] result = new AutorouteControl.ExpansionCostFactor[scoring.preferredDirectionTraceCost.length];
