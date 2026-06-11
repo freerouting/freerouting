@@ -65,11 +65,12 @@ public class Components implements Serializable {
     return result;
   }
 
-  /**
-   * Returns the number of components on the board.
-   */
   public int count() {
     return component_arr.size();
+  }
+
+  public Iterable<Component> get_all() {
+    return component_arr;
   }
 
   /**

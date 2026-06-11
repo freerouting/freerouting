@@ -235,7 +235,7 @@ public class Component extends ScopeKeyword {
             return null;
           }
           place_keepout_infos.put(curr_keepout_info.name, curr_keepout_info);
-        } else if (next_token == Keyword.PN) {
+        } else if (next_token == Keyword.PN || (next_token instanceof String && ((String) next_token).equalsIgnoreCase("PN"))) {
           part_number = DsnFile.read_string_scope(p_scanner);
         } else {
           skip_scope(p_scanner);

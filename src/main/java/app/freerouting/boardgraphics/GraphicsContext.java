@@ -97,7 +97,7 @@ public class GraphicsContext implements Serializable {
     p_graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
   }
 
-  private static void set_translucency(Graphics2D p_g2, double p_factor) {
+  static void set_translucency(Graphics2D p_g2, double p_factor) {
     AlphaComposite curr_alpha_composite;
     if (p_factor >= 0) {
       curr_alpha_composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) p_factor);

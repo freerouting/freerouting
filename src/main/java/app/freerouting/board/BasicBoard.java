@@ -1133,6 +1133,37 @@ public class BasicBoard implements Serializable {
         }
       }
     }
+
+    // Draw component values on Front Fab (virtual index 4) / Back Fab (virtual index 5)
+    double intensityFront = p_graphics_context.get_virtual_layer_visibility(4);
+    double intensityBack = p_graphics_context.get_virtual_layer_visibility(5);
+    if (intensityFront > 0 || intensityBack > 0) {
+      java.awt.Graphics2D g2 = (java.awt.Graphics2D) p_graphics;
+      java.awt.Font originalFont = g2.getFont();
+      g2.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+      for (Component comp : components.get_all()) {
+        if (!comp.is_placed() || comp.get_part_number() == null || comp.get_part_number().isEmpty()) {
+          continue;
+        }
+        boolean isFront = comp.placed_on_front();
+        double intensity = isFront ? intensityFront : intensityBack;
+        if (intensity <= 0) {
+          continue;
+        }
+        java.awt.Color color = isFront ? p_graphics_context.other_color_table.get_fab_color(true) : p_graphics_context.other_color_table.get_fab_color(false);
+        if (color == null) {
+          continue;
+        }
+        g2.setColor(color);
+        g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, (float) intensity));
+        java.awt.geom.Point2D screenLoc = p_graphics_context.coordinate_transform.board_to_screen(comp.get_location().to_float());
+        java.awt.FontMetrics metrics = g2.getFontMetrics();
+        int textWidth = metrics.stringWidth(comp.get_part_number());
+        int textHeight = metrics.getAscent();
+        g2.drawString(comp.get_part_number(), (float) (screenLoc.getX() - textWidth / 2.0), (float) (screenLoc.getY() + textHeight / 2.0));
+      }
+      g2.setFont(originalFont);
+    }
   }
 
   /**
