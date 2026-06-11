@@ -15,25 +15,35 @@ import app.freerouting.rules.NetClass;
 import app.freerouting.rules.Nets;
 import app.freerouting.rules.ViaRule;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -47,7 +57,6 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private static final int WINDOW_OFFSET = 30;
   private final BoardFrame board_frame;
   private final JPanel main_panel;
-  private final ComboBoxLayer layer_combo_box;
   /**
    * The subwindows created inside this window
    */
@@ -75,7 +84,6 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
     this.cl_class_combo_box = new JComboBox<>();
     this.via_rule_combo_box = new JComboBox<>();
-    this.layer_combo_box = new ComboBoxLayer(routing_board.layer_structure, p_board_frame.get_locale());
     add_combobox_items();
 
     add_table();
@@ -123,6 +131,19 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     this.add(main_panel);
     this.pack();
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+  }
+
+  static boolean canRemoveNetClass(int rowCount, int selectedRow) {
+    return rowCount > 1 && selectedRow >= 0;
+  }
+
+  static void applyShoveFixedSelection(NetClass netClass, boolean shoveFixed) {
+    netClass.set_shove_fixed(shoveFixed);
+    netClass.set_pull_tight(!shoveFixed);
+  }
+
+  static void applyAutorouterIgnoreSelection(NetClass netClass, boolean ignoredByAutorouter) {
+    netClass.is_ignored_by_autorouter = ignoredByAutorouter;
   }
 
   @Override
@@ -192,10 +213,9 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         .getColumnModel()
         .getColumn(ColumnName.VIA_RULE.ordinal())
         .setCellEditor(new DefaultCellEditor(via_rule_combo_box));
-    this.table
-        .getColumnModel()
-        .getColumn(ColumnName.ON_LAYER.ordinal())
-        .setCellEditor(new DefaultCellEditor(layer_combo_box));
+
+    LayerRulesCellEditor layerEditor = new LayerRulesCellEditor();
+    this.table.getColumnModel().getColumn(ColumnName.ON_LAYER.ordinal()).setCellEditor(layerEditor);
   }
 
   private void add_combobox_items() {
@@ -220,17 +240,67 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     this.board_frame.refresh_windows();
   }
 
-  static boolean canRemoveNetClass(int rowCount, int selectedRow) {
-    return rowCount > 1 && selectedRow >= 0;
+  private String getLayerSummary(NetClass p_net_class) {
+    RoutingBoard board = board_frame.board_panel.board_handling.get_routing_board();
+    LayerStructure ls = board.layer_structure;
+    List<Integer> activeSignalLayers = new ArrayList<>();
+    List<Integer> allSignalLayers = new ArrayList<>();
+    List<String> activeLayerNames = new ArrayList<>();
+
+    for (int i = 0; i < ls.arr.length; i++) {
+      if (ls.arr[i].is_signal) {
+        allSignalLayers.add(i);
+        if (p_net_class.is_active_routing_layer(i)) {
+          activeSignalLayers.add(i);
+          activeLayerNames.add(ls.arr[i].name);
+        }
+      }
+    }
+
+    if (activeSignalLayers.isEmpty()) return tm.getText("layers_none");
+    if (activeSignalLayers.size() == allSignalLayers.size()) return tm.getText("layers_all");
+
+    if (activeSignalLayers.size() == 2 &&
+        activeSignalLayers.get(0).equals(allSignalLayers.get(0)) &&
+        activeSignalLayers.get(1).equals(allSignalLayers.get(allSignalLayers.size() - 1))) {
+      return tm.getText("layers_outer");
+    }
+
+    if (activeSignalLayers.size() == allSignalLayers.size() - 2 &&
+        !activeSignalLayers.contains(allSignalLayers.get(0)) &&
+        !activeSignalLayers.contains(allSignalLayers.get(allSignalLayers.size() - 1))) {
+      return tm.getText("layers_inner");
+    }
+
+    if (activeLayerNames.size() > 3) {
+      return tm.getText("layers_custom", Integer.toString(activeLayerNames.size()));
+    } else {
+      return String.join(", ", activeLayerNames);
+    }
   }
 
-  static void applyShoveFixedSelection(NetClass netClass, boolean shoveFixed) {
-    netClass.set_shove_fixed(shoveFixed);
-    netClass.set_pull_tight(!shoveFixed);
-  }
+  private String getTraceWidthSummary(NetClass p_net_class) {
+    RoutingBoard board = board_frame.board_panel.board_handling.get_routing_board();
+    LayerStructure ls = board.layer_structure;
+    CoordinateTransform ct = board_frame.board_panel.board_handling.coordinate_transform;
+    Integer commonHalfWidth = null;
+    boolean multiple = false;
 
-  static void applyAutorouterIgnoreSelection(NetClass netClass, boolean ignoredByAutorouter) {
-    netClass.is_ignored_by_autorouter = ignoredByAutorouter;
+    for (int i = 0; i < ls.arr.length; i++) {
+      if (ls.arr[i].is_signal && p_net_class.is_active_routing_layer(i)) {
+        int width = p_net_class.get_trace_half_width(i);
+        if (commonHalfWidth == null) {
+          commonHalfWidth = width;
+        } else if (width != commonHalfWidth) {
+          multiple = true;
+          break;
+        }
+      }
+    }
+
+    if (commonHalfWidth == null) return "0";
+    if (multiple) return tm.getText("width_multiple");
+    return String.format(Locale.ENGLISH, "%.4f", ct.board_to_user(commonHalfWidth * 2));
   }
 
   private enum ColumnName {
@@ -480,48 +550,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         this.data[i][ColumnName.MAX_TRACE_LENGTH.ordinal()] = (float) max_trace_length;
         this.data[i][ColumnName.IGNORED_BY_AUTOROUTER.ordinal()] = curr_net_class.is_ignored_by_autorouter;
         this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] = board_rules.clearance_matrix.get_name(curr_net_class.get_trace_clearance_class());
-        ComboBoxLayer.Layer combo_layer = layer_combo_box.get_selected_layer();
-        set_trace_width_field(i, combo_layer);
-        this.data[i][ColumnName.ON_LAYER.ordinal()] = combo_layer.name;
       }
-    }
-
-    void set_trace_width_field(int p_rule_no, ComboBoxLayer.Layer p_layer) {
-      float trace_width;
-      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-      BoardRules board_rules = board_handling.get_routing_board().rules;
-      NetClass curr_net_class = board_rules.net_classes.get(p_rule_no);
-      if (p_layer.index == ComboBoxLayer.ALL_LAYER_INDEX) {
-        // all layers
-        if (curr_net_class.trace_width_is_layer_dependent()) {
-          trace_width = (float) -1;
-        } else {
-          trace_width = (float) board_handling.coordinate_transform.board_to_user(2 * curr_net_class.get_trace_half_width(0));
-        }
-
-      } else if (p_layer.index == ComboBoxLayer.INNER_LAYER_INDEX) {
-        // all inner layers
-
-        if (curr_net_class.trace_width_is_inner_layer_dependent()) {
-          trace_width = (float) -1;
-        } else {
-          int first_inner_signal_layer_no = 1;
-          LayerStructure layer_structure = board_handling.get_routing_board().layer_structure;
-          while (!layer_structure.arr[first_inner_signal_layer_no].is_signal) {
-            ++first_inner_signal_layer_no;
-          }
-          if (first_inner_signal_layer_no < layer_structure.arr.length - 1) {
-
-            trace_width = (float) board_handling.coordinate_transform.board_to_user(2 * curr_net_class.get_trace_half_width(first_inner_signal_layer_no));
-          } else {
-            trace_width = (float) 0;
-          }
-        }
-      } else {
-        trace_width = (float) board_handling.coordinate_transform.board_to_user(2 * curr_net_class.get_trace_half_width(p_layer.index));
-      }
-      this.data[p_rule_no][ColumnName.TRACE_WIDTH.ordinal()] = trace_width;
-      fireTableCellUpdated(p_rule_no, ColumnName.TRACE_WIDTH.ordinal());
     }
 
     @Override
@@ -541,6 +570,13 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
     @Override
     public Object getValueAt(int p_row, int p_col) {
+      NetClass curr_net_class = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(p_row);
+      if (p_col == ColumnName.ON_LAYER.ordinal()) {
+        return getLayerSummary(curr_net_class);
+      }
+      if (p_col == ColumnName.TRACE_WIDTH.ordinal()) {
+        return getTraceWidthSummary(curr_net_class);
+      }
       return data[p_row][p_col];
     }
 
@@ -548,6 +584,9 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     public void setValueAt(Object p_value, int p_row, int p_col) {
       RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
       BoardRules board_rules = routing_board.rules;
+      if (p_col == ColumnName.ON_LAYER.ordinal() || p_col == ColumnName.TRACE_WIDTH.ordinal()) {
+        return;
+      }
       Object net_class_name = getValueAt(p_row, ColumnName.NAME.ordinal());
       if (!(net_class_name instanceof String)) {
         FRLogger.warn("EditNetRuLesVindow.setValueAt: String expected");
@@ -652,56 +691,6 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           }
         }
         net_rule.set_trace_clearance_class(new_cl_class_index);
-      } else if (p_col == ColumnName.TRACE_WIDTH.ordinal()) {
-        float curr_value = 0f;
-        if (p_value instanceof Float float1) {
-          curr_value = float1;
-        } else if (p_value instanceof String string) {
-          // Workaround because of a localisation Bug in Java
-          // The numbers are always displayed in the English Format.
-
-          try {
-            curr_value = Float.parseFloat(string);
-          } catch (Exception _) {
-            curr_value = 0f;
-          }
-        }
-        if (curr_value < 0) {
-          return;
-        }
-        int curr_half_width;
-        boolean is_active;
-        if (curr_value == 0) {
-          curr_half_width = 0;
-          is_active = false;
-        } else {
-          curr_half_width = (int) Math.round(board_frame.board_panel.board_handling.coordinate_transform.user_to_board(0.5 * curr_value));
-          if (curr_half_width <= 0) {
-            return;
-          }
-          is_active = true;
-        }
-        if (p_value instanceof String) {
-          p_value = String.valueOf(curr_value);
-        }
-        int layer_index = layer_combo_box.get_selected_layer().index;
-        NetClass curr_net_class = board_rules.net_classes.get(p_row);
-
-        if (layer_index == ComboBoxLayer.ALL_LAYER_INDEX) {
-          curr_net_class.set_trace_half_width(curr_half_width);
-          curr_net_class.set_all_layers_active(is_active);
-        } else if (layer_index == ComboBoxLayer.INNER_LAYER_INDEX) {
-          curr_net_class.set_trace_half_width_on_inner(curr_half_width);
-          curr_net_class.set_all_inner_layers_active(is_active);
-        } else {
-          curr_net_class.set_trace_half_width(layer_index, curr_half_width);
-          curr_net_class.set_active_routing_layer(layer_index, is_active);
-        }
-      } else if (p_col == ColumnName.ON_LAYER.ordinal()) {
-        if (!(p_value instanceof ComboBoxLayer.Layer)) {
-          return;
-        }
-        set_trace_width_field(p_row, (ComboBoxLayer.Layer) p_value);
       }
       this.data[p_row][p_col] = p_value;
       fireTableCellUpdated(p_row, p_col);
@@ -715,7 +704,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
     @Override
     public Class<?> getColumnClass(int p_col) {
+      if (p_col == ColumnName.ON_LAYER.ordinal() || p_col == ColumnName.TRACE_WIDTH.ordinal()) {
+        return String.class;
+      }
+      if (getRowCount() == 0) return Object.class;
       Object curr_entry = getValueAt(0, p_col);
+      if (curr_entry == null) return Object.class;
       Class<?> curr_class = curr_entry.getClass();
       // changed because of a localisation bug in Java
       if (curr_entry instanceof Float) {
@@ -723,5 +717,118 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       }
       return curr_class;
     }
+  }
+
+  private class LayerRulesDialog extends JDialog {
+    private final JCheckBox[] checkboxes;
+    private final NetClass netClass;
+    private final GuiBoardManager boardHandling;
+    private final List<Integer> allSignalLayers = new ArrayList<>();
+
+    public LayerRulesDialog(JFrame owner, NetClass p_netClass, GuiBoardManager p_boardHandling, app.freerouting.management.TextManager p_tm) {
+      super(owner, p_tm.getText("dialog_layer_rules_title"), true);
+      this.netClass = p_netClass;
+      this.boardHandling = p_boardHandling;
+      LayerStructure ls = boardHandling.get_routing_board().layer_structure;
+
+      setLayout(new BorderLayout(10, 10));
+      ((javax.swing.JComponent) getContentPane()).setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+      JPanel macro_panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 5));
+      JButton btnAll = new JButton(p_tm.getText("btn_all"));
+      JButton btnOuter = new JButton(p_tm.getText("btn_outer"));
+      JButton btnInner = new JButton(p_tm.getText("btn_inner"));
+      JButton btnClear = new JButton(p_tm.getText("btn_clear"));
+      macro_panel.add(btnAll); macro_panel.add(btnOuter); macro_panel.add(btnInner); macro_panel.add(btnClear);
+
+      JPanel check_grid_panel = new JPanel(new GridLayout(0, 2, 15, 8));
+      check_grid_panel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+      checkboxes = new JCheckBox[ls.arr.length];
+
+      for (int i = 0; i < ls.arr.length; i++) {
+        if (ls.arr[i].is_signal) {
+          allSignalLayers.add(i);
+          checkboxes[i] = new JCheckBox(ls.arr[i].name);
+          if (netClass.is_active_routing_layer(i)) {
+            checkboxes[i].setSelected(true);
+          }
+          check_grid_panel.add(checkboxes[i]);
+        }
+      }
+
+      int rows = (int) Math.ceil(allSignalLayers.size() / 2.0);
+      int dynamicHeight = Math.min(300, Math.max(80, rows * 35 + 20));
+
+      btnAll.addActionListener(_ -> { for (int idx : allSignalLayers) checkboxes[idx].setSelected(true); });
+      btnOuter.addActionListener(_ -> {
+        for (int idx : allSignalLayers) checkboxes[idx].setSelected(false);
+        if (!allSignalLayers.isEmpty()) {
+          checkboxes[allSignalLayers.get(0)].setSelected(true);
+          checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(true);
+        }
+      });
+      btnInner.addActionListener(_ -> {
+        for (int idx : allSignalLayers) checkboxes[idx].setSelected(true);
+        if (allSignalLayers.size() >= 2) {
+          checkboxes[allSignalLayers.get(0)].setSelected(false);
+          checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(false);
+        }
+      });
+      btnClear.addActionListener(_ -> { for (int idx : allSignalLayers) checkboxes[idx].setSelected(false); });
+
+      JPanel bottom_panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
+      JButton btn_ok = new JButton(p_tm.getText("button_ok"));
+      btn_ok.setPreferredSize(new Dimension(90, 28));
+      btn_ok.setFont(btn_ok.getFont().deriveFont(Font.BOLD));
+      btn_ok.addActionListener(_ -> save());
+      bottom_panel.add(btn_ok);
+      getRootPane().setDefaultButton(btn_ok);
+
+      add(macro_panel, BorderLayout.NORTH);
+
+      JPanel grid_wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
+      grid_wrapper.add(check_grid_panel);
+
+      JPanel scroll_content_holder = new JPanel(new BorderLayout());
+      scroll_content_holder.add(grid_wrapper, BorderLayout.NORTH);
+      JScrollPane scroll_pane = new JScrollPane(scroll_content_holder);
+      scroll_pane.setPreferredSize(new Dimension(380, dynamicHeight));
+
+      add(scroll_pane, BorderLayout.CENTER);
+      add(bottom_panel, BorderLayout.SOUTH);
+    }
+
+    private void save() {
+      for (int i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i] == null) continue;
+        netClass.set_active_routing_layer(i, checkboxes[i].isSelected());
+      }
+      dispose();
+    }
+  }
+
+  private class LayerRulesCellEditor extends javax.swing.AbstractCellEditor implements javax.swing.table.TableCellEditor, ActionListener {
+    private final JButton button = new JButton();
+    public LayerRulesCellEditor() {
+      button.setBorderPainted(false); button.setContentAreaFilled(false);
+      button.setHorizontalAlignment(SwingConstants.LEFT); button.addActionListener(this);
+    }
+    @Override public void actionPerformed(ActionEvent e) {
+      int row = table.getEditingRow();
+      if (row < 0) row = table.getSelectedRow();
+      if (row < 0) return;
+      int modelRow = table.convertRowIndexToModel(row);
+      NetClass nc = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(modelRow);
+      LayerRulesDialog dialog = new LayerRulesDialog(board_frame, nc, board_frame.board_panel.board_handling, tm);
+      dialog.pack();
+      dialog.setLocationRelativeTo(board_frame);
+      dialog.setResizable(false);
+      dialog.setVisible(true);
+      fireEditingStopped();
+      table_model.fireTableRowsUpdated(modelRow, modelRow);
+      board_frame.board_panel.repaint();
+    }
+    @Override public Component getTableCellEditorComponent(JTable t, Object v, boolean s, int r, int c) { button.setText(Objects.toString(v, "")); return button; }
+    @Override public Object getCellEditorValue() { return button.getText(); }
   }
 }
