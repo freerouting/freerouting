@@ -1327,6 +1327,9 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
         case 240:
           break;
         default:
+          if (yytext().equals("PN")) {
+            return Keyword.PN;
+          }
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             return null;

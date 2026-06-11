@@ -816,7 +816,7 @@ public class Network extends ScopeKeyword {
     double rotation_in_degree = p_location.rotation;
 
     app.freerouting.board.Component new_component = routing_board.components.add(p_location.name, component_location, rotation_in_degree, p_location.is_front, curr_front_package, curr_back_package,
-        p_location.position_fixed);
+        p_location.position_fixed, p_location.part_number);
 
     if (component_location == null) {
       return; // component is not yet placed.

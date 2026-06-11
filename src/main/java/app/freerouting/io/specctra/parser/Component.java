@@ -180,7 +180,7 @@ public class Component extends ScopeKeyword {
           location[i] = integer;
         } else if (next_token == CLOSED_BRACKET) {
           // component is not yet placed
-          return new ComponentPlacement.ComponentLocation(name, null, true, 0, false, pin_infos, keepout_infos, via_keepout_infos, place_keepout_infos);
+          return new ComponentPlacement.ComponentLocation(name, null, true, 0, false, pin_infos, keepout_infos, via_keepout_infos, place_keepout_infos, null);
         } else {
           FRLogger.warn("Component.read_place_scope: Double was expected as the second and third parameter of the component/place command at '" + p_scanner.get_scope_identifier() + "'");
           return null;
@@ -205,6 +205,7 @@ public class Component extends ScopeKeyword {
         return null;
       }
       boolean position_fixed = false;
+      String part_number = null;
       next_token = p_scanner.next_token();
       while (next_token == OPEN_BRACKET) {
         next_token = p_scanner.next_token();
@@ -234,6 +235,8 @@ public class Component extends ScopeKeyword {
             return null;
           }
           place_keepout_infos.put(curr_keepout_info.name, curr_keepout_info);
+        } else if (next_token == Keyword.PN) {
+          part_number = DsnFile.read_string_scope(p_scanner);
         } else {
           skip_scope(p_scanner);
         }
@@ -243,7 +246,7 @@ public class Component extends ScopeKeyword {
         FRLogger.warn("Component.read_place_scope: ) expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
-      return new ComponentPlacement.ComponentLocation(name, location, is_front, rotation, position_fixed, pin_infos, keepout_infos, via_keepout_infos, place_keepout_infos);
+      return new ComponentPlacement.ComponentLocation(name, location, is_front, rotation, position_fixed, pin_infos, keepout_infos, via_keepout_infos, place_keepout_infos, part_number);
     } catch (IOException e) {
       FRLogger.error("Component.read_scope: IO error scanning file", e);
       return null;

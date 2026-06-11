@@ -77,6 +77,7 @@ public class Keyword {
   public static final Keyword PREFERRED_DIRECTION_TRACE_COSTS = new Keyword("preferred_direction_trace_costs");
   public static final Keyword SNAP_ANGLE = new Keyword("snap_angle");
   public static final Keyword POLYGON = new Keyword("polygon");
+  public static final Keyword PN = new Keyword("PN");
   public static final Keyword POLYGON_PATH = new Keyword("polygon_path");
   public static final Keyword POLYLINE_PATH = new Keyword("polyline_path");
   public static final Keyword POSITION = new Keyword("position");

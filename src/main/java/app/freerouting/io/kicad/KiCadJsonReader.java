@@ -432,7 +432,8 @@ public final class KiCadJsonReader {
             isFront,
             componentPackage,
             componentPackage,
-            true
+            true,
+            comp.value
         );
 
         // Insert actual pin items mapped to nets
