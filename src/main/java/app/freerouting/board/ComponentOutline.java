@@ -99,12 +99,12 @@ public class ComponentOutline extends Item implements Serializable {
   @Override
   public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
     Color[] color_arr = new Color[this.board.layer_structure.arr.length];
-    Color front_draw_color = p_graphics_context.other_color_table.get_courtyard_color(true);
+    Color front_draw_color = p_graphics_context.other_color_table.get_silkscreen_color(true);
     for (int i = 0; i < color_arr.length - 1; i++) {
       color_arr[i] = front_draw_color;
     }
     if (color_arr.length > 1) {
-      color_arr[color_arr.length - 1] = p_graphics_context.other_color_table.get_courtyard_color(false);
+      color_arr[color_arr.length - 1] = p_graphics_context.other_color_table.get_silkscreen_color(false);
     }
     return color_arr;
   }
@@ -119,7 +119,7 @@ public class ComponentOutline extends Item implements Serializable {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
     }
-    int virtualLayerIdx = this.is_front ? 2 : 3;
+    int virtualLayerIdx = this.is_front ? 0 : 1;
     double virtualVisibility = p_graphics_context.get_virtual_layer_visibility(virtualLayerIdx);
     if (virtualVisibility <= 0) {
       return;

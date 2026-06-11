@@ -411,7 +411,10 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     if (visibility_factor < 0.001) {
       return;
     }
-    double intensity = p_intensity / Math.max(visibility_factor, 1);
+    double intensity = p_intensity;
+    if (!(this instanceof Pin)) {
+      intensity = p_intensity / Math.max(visibility_factor, 1);
+    }
     for (int i = 0; i <= to_layer - from_layer; i++) {
       Shape curr_shape = this.get_shape(i);
       if (curr_shape == null) {

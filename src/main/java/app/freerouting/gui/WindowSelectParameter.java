@@ -132,6 +132,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     GridBagConstraints lc = new GridBagConstraints();
     lc.anchor = GridBagConstraints.WEST;
     lc.insets = new Insets(1, 2, 1, 2);
+    lc.gridy = 0;
 
     LayerStructure layer_structure = this.board_handling.get_routing_board().layer_structure;
     int layer_count = layer_structure.arr.length;
@@ -299,7 +300,9 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   public void select(int p_signal_layer_no) {
     if (p_signal_layer_no >= 0 && p_signal_layer_no < settings_select_layer_name_arr.length) {
       settings_select_layer_name_arr[p_signal_layer_no].setSelected(true);
-      board_handling.graphics_context.set_fully_visible_layer(p_signal_layer_no);
+      if (board_handling.graphics_context != null) {
+        board_handling.graphics_context.set_fully_visible_layer(p_signal_layer_no);
+      }
       board_frame.board_panel.repaint();
     }
   }

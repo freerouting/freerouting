@@ -25,7 +25,8 @@ public class WindowObjectVisibility extends WindowVisibility {
 
     String title = tm.getText("title");
     String header_message = tm.getText("header_message");
-    String[] message_arr = new String[ObjectNames.values().length];
+    // Exclude DRILL_HOLES from the sliders
+    String[] message_arr = new String[ObjectNames.values().length - 1];
     for (int i = 0; i < message_arr.length; i++) {
       message_arr[i] = tm.getText(ObjectNames.values()[i].toString());
     }
@@ -40,14 +41,15 @@ public class WindowObjectVisibility extends WindowVisibility {
   @Override
   public void refresh() {
     ColorIntensityTable color_intensity_table = this.get_board_handling().graphics_context.color_intensity_table;
-    for (int i = 0; i < ObjectNames.values().length; i++) {
+    for (int i = 0; i < ObjectNames.values().length - 1; i++) {
       this.set_slider_value(i, color_intensity_table.get_value(i));
     }
   }
 
   @Override
   protected void set_changed_value(int p_index, double p_value) {
-
-    get_board_handling().graphics_context.color_intensity_table.set_value(p_index, p_value);
+    if (p_index >= 0 && p_index < ObjectNames.values().length - 1) {
+      get_board_handling().graphics_context.color_intensity_table.set_value(p_index, p_value);
+    }
   }
 }
