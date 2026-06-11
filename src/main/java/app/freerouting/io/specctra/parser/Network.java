@@ -940,9 +940,22 @@ public class Network extends ScopeKeyword {
       }
     }
     // insert the outline as component keepout
+    int courtyard_idx = -1;
+    if (curr_package.outline.length > 1) {
+      double max_area = -1;
+      for (int i = 0; i < curr_package.outline.length; i++) {
+        if (curr_package.outline[i] != null && curr_package.outline[i].bounding_box() != null) {
+          double area = curr_package.outline[i].bounding_box().area();
+          if (area > max_area) {
+            max_area = area;
+            courtyard_idx = i;
+          }
+        }
+      }
+    }
     for (int i = 0; i < curr_package.outline.length; i++) {
-
-      routing_board.insert_component_outline(curr_package.outline[i], p_location.is_front, component_translation, rotation_in_degree, new_component.no, fixed_state);
+      boolean is_courtyard = (i == courtyard_idx);
+      routing_board.insert_component_outline(curr_package.outline[i], p_location.is_front, component_translation, rotation_in_degree, new_component.no, is_courtyard, fixed_state);
     }
   }
 

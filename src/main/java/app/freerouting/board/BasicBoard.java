@@ -409,7 +409,7 @@ public class BasicBoard implements Serializable {
    * Inserts a component outline into the board.
    */
   public ComponentOutline insert_component_outline(Area p_area, boolean p_is_front, Vector p_translation,
-      double p_rotation_in_degree, int p_component_no, FixedState p_fixed_state) {
+      double p_rotation_in_degree, int p_component_no, boolean p_is_courtyard, FixedState p_fixed_state) {
     if (p_area == null) {
       FRLogger.warn("BasicBoard.insert_component_outline: p_area is null");
       return null;
@@ -419,7 +419,7 @@ public class BasicBoard implements Serializable {
       return null;
     }
     ComponentOutline outline = new ComponentOutline(p_area, p_is_front, p_translation, p_rotation_in_degree, 0,
-        p_component_no, p_fixed_state, this);
+        p_component_no, p_is_courtyard, p_fixed_state, this);
     insert_item(outline);
     return outline;
   }
@@ -1091,21 +1091,45 @@ public class BasicBoard implements Serializable {
       return;
     }
 
+    boolean frontSelected = p_graphics_context.is_front_selected();
+
     // draw all items on the board
     for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MIDDLE_DRAW_PRIORITY; curr_priority++) {
-      Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
-      for (;;) {
-        try {
-          Item curr_item = (Item) item_list.read_object(it);
-          if (curr_item == null) {
-            break;
+      for (int pass = 0; pass < 2; pass++) {
+        Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
+        for (;;) {
+          try {
+            Item curr_item = (Item) item_list.read_object(it);
+            if (curr_item == null) {
+              break;
+            }
+            if (curr_item.get_draw_priority() == curr_priority) {
+              boolean isFrontItem = true;
+              if (curr_item instanceof ComponentOutline co) {
+                isFrontItem = co.is_front();
+              } else if (curr_item instanceof ComponentObstacleArea coa) {
+                isFrontItem = coa.is_front();
+              } else if (curr_item instanceof Pin pin) {
+                isFrontItem = (pin.first_layer() == 0);
+              } else {
+                if (pass != 0) {
+                  continue;
+                }
+              }
+
+              if (curr_item instanceof ComponentOutline || curr_item instanceof ComponentObstacleArea || curr_item instanceof Pin) {
+                boolean shouldDrawInThisPass = (pass == 0 && isFrontItem != frontSelected) || (pass == 1 && isFrontItem == frontSelected);
+                if (!shouldDrawInThisPass) {
+                  continue;
+                }
+              }
+
+              curr_item.draw(p_graphics, p_graphics_context);
+            }
+          } catch (ConcurrentModificationException _) {
+            // may happen when window are changed interactively while running a logfile
+            return;
           }
-          if (curr_item.get_draw_priority() == curr_priority) {
-            curr_item.draw(p_graphics, p_graphics_context);
-          }
-        } catch (ConcurrentModificationException _) {
-          // may happen when window are changed interactively while running a logfile
-          return;
         }
       }
     }

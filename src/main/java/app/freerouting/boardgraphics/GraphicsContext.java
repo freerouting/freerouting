@@ -607,6 +607,20 @@ public class GraphicsContext implements Serializable {
     return fully_visible_layer;
   }
 
+  public int get_fully_visible_virtual_layer() {
+    return fully_visible_virtual_layer;
+  }
+
+  public boolean is_front_selected() {
+    if (fully_visible_virtual_layer != -1) {
+      return (fully_visible_virtual_layer % 2 == 0);
+    }
+    if (fully_visible_layer != -1) {
+      return fully_visible_layer < layer_visibility_arr.length / 2;
+    }
+    return true;
+  }
+
   public boolean get_virtual_layer_visible(int idx) {
     if (idx >= 0 && idx < virtual_layer_visibility_arr.length) {
       return virtual_layer_visibility_arr[idx];
@@ -618,10 +632,6 @@ public class GraphicsContext implements Serializable {
     if (idx >= 0 && idx < virtual_layer_visibility_arr.length) {
       virtual_layer_visibility_arr[idx] = visible;
     }
-  }
-
-  public int get_fully_visible_virtual_layer() {
-    return fully_visible_virtual_layer;
   }
 
   public void set_fully_visible_virtual_layer(int idx) {
