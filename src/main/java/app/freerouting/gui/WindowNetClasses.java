@@ -4,7 +4,6 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Item;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.board.Layer;
 import app.freerouting.board.ObjectInfoPanel.Printable;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.interactive.GuiBoardManager;
@@ -14,23 +13,24 @@ import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.Nets;
-import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ViaRule;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.DefaultCellEditor;
@@ -43,13 +43,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.BoxLayout;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
-import java.util.Locale;
-import java.util.Objects;
 
 /**
  * Edit window for the table of net rules.
@@ -135,6 +131,19 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     this.add(main_panel);
     this.pack();
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+  }
+
+  static boolean canRemoveNetClass(int rowCount, int selectedRow) {
+    return rowCount > 1 && selectedRow >= 0;
+  }
+
+  static void applyShoveFixedSelection(NetClass netClass, boolean shoveFixed) {
+    netClass.set_shove_fixed(shoveFixed);
+    netClass.set_pull_tight(!shoveFixed);
+  }
+
+  static void applyAutorouterIgnoreSelection(NetClass netClass, boolean ignoredByAutorouter) {
+    netClass.is_ignored_by_autorouter = ignoredByAutorouter;
   }
 
   @Override
@@ -231,19 +240,6 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     this.board_frame.refresh_windows();
   }
 
-  static boolean canRemoveNetClass(int rowCount, int selectedRow) {
-    return rowCount > 1 && selectedRow >= 0;
-  }
-
-  static void applyShoveFixedSelection(NetClass netClass, boolean shoveFixed) {
-    netClass.set_shove_fixed(shoveFixed);
-    netClass.set_pull_tight(!shoveFixed);
-  }
-
-  static void applyAutorouterIgnoreSelection(NetClass netClass, boolean ignoredByAutorouter) {
-    netClass.is_ignored_by_autorouter = ignoredByAutorouter;
-  }
-
   private String getLayerSummary(NetClass p_net_class) {
     RoutingBoard board = board_frame.board_panel.board_handling.get_routing_board();
     LayerStructure ls = board.layer_structure;
@@ -277,7 +273,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     }
 
     if (activeLayerNames.size() > 3) {
-      return tm.getText("layers_custom", activeLayerNames.size());
+      return tm.getText("layers_custom", Integer.toString(activeLayerNames.size()));
     } else {
       return String.join(", ", activeLayerNames);
     }
@@ -818,19 +814,19 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       button.setHorizontalAlignment(SwingConstants.LEFT); button.addActionListener(this);
     }
     @Override public void actionPerformed(ActionEvent e) {
-      int row = table.getEditingRow();  
-      if (row < 0) row = table.getSelectedRow();  
-      if (row < 0) return;  
-      int modelRow = table.convertRowIndexToModel(row);  
-      NetClass nc = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(modelRow);  
-      LayerRulesDialog dialog = new LayerRulesDialog(board_frame, nc, board_frame.board_panel.board_handling, tm);  
-      dialog.pack();  
+      int row = table.getEditingRow();
+      if (row < 0) row = table.getSelectedRow();
+      if (row < 0) return;
+      int modelRow = table.convertRowIndexToModel(row);
+      NetClass nc = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(modelRow);
+      LayerRulesDialog dialog = new LayerRulesDialog(board_frame, nc, board_frame.board_panel.board_handling, tm);
+      dialog.pack();
       dialog.setLocationRelativeTo(board_frame);
       dialog.setResizable(false);
-      dialog.setVisible(true);  
-      fireEditingStopped();  
-      table_model.fireTableRowsUpdated(modelRow, modelRow);  
-      board_frame.board_panel.repaint();  
+      dialog.setVisible(true);
+      fireEditingStopped();
+      table_model.fireTableRowsUpdated(modelRow, modelRow);
+      board_frame.board_panel.repaint();
     }
     @Override public Component getTableCellEditorComponent(JTable t, Object v, boolean s, int r, int c) { button.setText(Objects.toString(v, "")); return button; }
     @Override public Object getCellEditorValue() { return button.getText(); }
