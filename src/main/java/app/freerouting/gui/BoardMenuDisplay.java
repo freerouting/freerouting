@@ -39,7 +39,7 @@ public class BoardMenuDisplay extends JMenu {
     JMenuItem display_layer_visibility_menuitem = new JMenuItem();
     display_layer_visibility_menuitem.setText(display_menu.tm.getText("layer_visibility"));
     display_layer_visibility_menuitem.setToolTipText(display_menu.tm.getText("layer_visibility_tooltip"));
-    display_layer_visibility_menuitem.addActionListener(_ -> display_menu.board_frame.layer_visibility_window.setVisible(true));
+    display_layer_visibility_menuitem.addActionListener(_ -> display_menu.board_frame.select_parameter_window.setVisible(true));
     display_layer_visibility_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("display_layer_visibility_menuitem", display_layer_visibility_menuitem.getText()));
 
     display_menu.add(display_layer_visibility_menuitem);

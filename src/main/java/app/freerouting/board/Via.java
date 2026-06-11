@@ -179,12 +179,8 @@ public class Via extends DrillItem implements Serializable {
     if (this.net_count() == 0) {
       // display unconnected vias as obstacles
       result = p_graphics_context.get_obstacle_colors();
-
-    } else if (this.first_layer() >= this.last_layer()) {
-      // display vias with only one layer as pins
-      result = p_graphics_context.get_pin_colors();
     } else {
-      result = p_graphics_context.get_via_colors(this.is_user_fixed());
+      result = p_graphics_context.get_trace_colors(this.is_user_fixed());
     }
     return result;
   }

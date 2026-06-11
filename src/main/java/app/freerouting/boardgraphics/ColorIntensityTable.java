@@ -26,6 +26,7 @@ public class ColorIntensityTable implements Serializable {
     arr[ObjectNames.HILIGHT.ordinal()] = 0.8;
     arr[ObjectNames.INCOMPLETES.ordinal()] = 1.0;
     arr[ObjectNames.LENGTH_MATCHING_AREAS.ordinal()] = 0.1;
+    arr[ObjectNames.DRILL_HOLES.ordinal()] = 1.0;
   }
 
   /**
@@ -52,6 +53,6 @@ public class ColorIntensityTable implements Serializable {
   }
 
   public enum ObjectNames {
-    TRACES, VIAS, PINS, CONDUCTION_AREAS, KEEPOUTS, VIA_KEEPOUTS, PLACE_KEEPOUTS, COMPONENT_OUTLINES, HILIGHT, INCOMPLETES, LENGTH_MATCHING_AREAS
+    TRACES, VIAS, PINS, CONDUCTION_AREAS, KEEPOUTS, VIA_KEEPOUTS, PLACE_KEEPOUTS, COMPONENT_OUTLINES, HILIGHT, INCOMPLETES, LENGTH_MATCHING_AREAS, DRILL_HOLES
   }
 }

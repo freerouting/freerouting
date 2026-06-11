@@ -2,7 +2,9 @@ package app.freerouting.board;
 
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
+import app.freerouting.boardgraphics.ColorIntensityTable;
 import app.freerouting.core.Padstack;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -418,6 +420,19 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       Color color = p_color_arr[from_layer + i];
       double layer_intensity = intensity * p_graphics_context.get_layer_visibility(from_layer + i);
       p_graphics_context.fill_area(curr_shape, p_g, color, layer_intensity);
+    }
+
+    // Render drill hole for through-hole pins only (not vias)
+    if (this instanceof Pin && from_layer != to_layer) {
+      double drillRadius = get_padstack().get_drill_radius();
+      if (drillRadius > 0) {
+        Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
+        double drillIntensity = p_graphics_context.color_intensity_table.get_value(
+            ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal()) * p_intensity;
+        IntPoint centerPoint = get_center().to_float().round();
+        Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
+        p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
+      }
     }
   }
 

@@ -55,6 +55,55 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   }
 
   /**
+   * Returns the drill radius of this padstack in board units.
+   */
+  public double get_drill_radius() {
+    if (name != null) {
+      int colonIndex = name.indexOf(':');
+      if (colonIndex >= 0) {
+        int underscoreIndex = name.indexOf('_', colonIndex);
+        String drillStr;
+        if (underscoreIndex > colonIndex) {
+          drillStr = name.substring(colonIndex + 1, underscoreIndex);
+        } else {
+          drillStr = name.substring(colonIndex + 1);
+        }
+        try {
+          drillStr = drillStr.replaceAll("[^0-9.]", "");
+          double drillDia = Double.parseDouble(drillStr);
+          int lastUnderscore = name.lastIndexOf('_', colonIndex);
+          if (lastUnderscore >= 0) {
+            String outerStr = name.substring(lastUnderscore + 1, colonIndex).replaceAll("[^0-9.]", "");
+            double outerDia = Double.parseDouble(outerStr);
+            if (outerDia > 0) {
+              double actualOuterRadius = get_smallest_radius();
+              if (actualOuterRadius > 0) {
+                return actualOuterRadius * (drillDia / outerDia);
+              }
+            }
+          }
+        } catch (NumberFormatException e) {
+          // Ignore
+        }
+      }
+    }
+    return get_smallest_radius() * 0.45;
+  }
+
+  private double get_smallest_radius() {
+    double minRadius = Double.MAX_VALUE;
+    for (ConvexShape shape : shapes) {
+      if (shape != null) {
+        double radius = Math.min(shape.bounding_box().width(), shape.bounding_box().height()) / 2.0;
+        if (radius < minRadius) {
+          minRadius = radius;
+        }
+      }
+    }
+    return minRadius == Double.MAX_VALUE ? 0.0 : minRadius;
+  }
+
+  /**
    * Gets the shape of this padstack on layer p_layer
    */
   public ConvexShape get_shape(int p_layer) {

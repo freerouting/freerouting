@@ -54,7 +54,10 @@ public class GraphicsContext implements Serializable {
   /**
    * The layer, which is not automatically dimmed.
    */
-  private int fully_visible_layer;
+  private int fully_visible_layer = -1;
+
+  private boolean[] virtual_layer_visibility_arr = new boolean[]{true, true, true, true, true, true};
+  private int fully_visible_virtual_layer = -1;
 
   public GraphicsContext(IntBox p_design_bounds, Dimension p_panel_bounds, LayerStructure p_layer_structure, Locale p_locale) {
     coordinate_transform = new CoordinateTransform(p_design_bounds, p_panel_bounds);
@@ -80,6 +83,8 @@ public class GraphicsContext implements Serializable {
     this.other_color_table = new OtherColorTableModel(p_graphics_context.other_color_table);
     this.color_intensity_table = new ColorIntensityTable(p_graphics_context.color_intensity_table);
     this.layer_visibility_arr = p_graphics_context.copy_layer_visibility_arr();
+    this.virtual_layer_visibility_arr = p_graphics_context.virtual_layer_visibility_arr.clone();
+    this.fully_visible_virtual_layer = p_graphics_context.fully_visible_virtual_layer;
   }
 
   /**
@@ -593,6 +598,57 @@ public class GraphicsContext implements Serializable {
    */
   public void set_fully_visible_layer(int p_layer_no) {
     fully_visible_layer = p_layer_no;
+    if (p_layer_no != -1) {
+      fully_visible_virtual_layer = -1;
+    }
+  }
+
+  public int get_fully_visible_layer() {
+    return fully_visible_layer;
+  }
+
+  public boolean get_virtual_layer_visible(int idx) {
+    if (idx >= 0 && idx < virtual_layer_visibility_arr.length) {
+      return virtual_layer_visibility_arr[idx];
+    }
+    return true;
+  }
+
+  public void set_virtual_layer_visible(int idx, boolean visible) {
+    if (idx >= 0 && idx < virtual_layer_visibility_arr.length) {
+      virtual_layer_visibility_arr[idx] = visible;
+    }
+  }
+
+  public int get_fully_visible_virtual_layer() {
+    return fully_visible_virtual_layer;
+  }
+
+  public void set_fully_visible_virtual_layer(int idx) {
+    fully_visible_virtual_layer = idx;
+    if (idx != -1) {
+      fully_visible_layer = -1;
+    }
+  }
+
+  public double get_virtual_layer_visibility(int virtual_layer_idx) {
+    if (virtual_layer_idx < 0 || virtual_layer_idx >= virtual_layer_visibility_arr.length) {
+      return 1.0;
+    }
+    if (!virtual_layer_visibility_arr[virtual_layer_idx]) {
+      return 0.0;
+    }
+    if (fully_visible_layer != -1) {
+      return this.auto_layer_dim_factor;
+    }
+    if (fully_visible_virtual_layer != -1) {
+      if (fully_visible_virtual_layer == virtual_layer_idx) {
+        return 1.0;
+      } else {
+        return this.auto_layer_dim_factor;
+      }
+    }
+    return 1.0;
   }
 
   /**
@@ -600,7 +656,9 @@ public class GraphicsContext implements Serializable {
    */
   public double get_layer_visibility(int p_layer_no) {
     double result;
-    if (p_layer_no == this.fully_visible_layer) {
+    if (fully_visible_virtual_layer != -1) {
+      result = this.auto_layer_dim_factor * layer_visibility_arr[p_layer_no];
+    } else if (p_layer_no == this.fully_visible_layer) {
       result = layer_visibility_arr[p_layer_no];
     } else {
       result = this.auto_layer_dim_factor * layer_visibility_arr[p_layer_no];

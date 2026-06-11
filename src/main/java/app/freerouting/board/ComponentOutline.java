@@ -99,12 +99,12 @@ public class ComponentOutline extends Item implements Serializable {
   @Override
   public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
     Color[] color_arr = new Color[this.board.layer_structure.arr.length];
-    Color front_draw_color = p_graphics_context.get_component_color(true);
+    Color front_draw_color = p_graphics_context.other_color_table.get_courtyard_color(true);
     for (int i = 0; i < color_arr.length - 1; i++) {
       color_arr[i] = front_draw_color;
     }
     if (color_arr.length > 1) {
-      color_arr[color_arr.length - 1] = p_graphics_context.get_component_color(false);
+      color_arr[color_arr.length - 1] = p_graphics_context.other_color_table.get_courtyard_color(false);
     }
     return color_arr;
   }
@@ -119,8 +119,14 @@ public class ComponentOutline extends Item implements Serializable {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
     }
+    int virtualLayerIdx = this.is_front ? 2 : 3;
+    double virtualVisibility = p_graphics_context.get_virtual_layer_visibility(virtualLayerIdx);
+    if (virtualVisibility <= 0) {
+      return;
+    }
+
     Color color = p_color_arr[this.get_layer()];
-    double intensity = p_graphics_context.get_layer_visibility(this.get_layer()) * p_intensity;
+    double intensity = virtualVisibility * p_intensity;
 
     double draw_width = Math.min(this.board.communication.get_resolution(Unit.MIL), 100); // problem with low resolution on Kicad
     p_graphics_context.draw_boundary(this.get_area(), draw_width, color, p_g, intensity);
