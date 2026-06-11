@@ -34,7 +34,7 @@
 | 11 | KiCad IPC API — Phase 2 (route result write back via IPC) | ★★★★ | ★★★ | ★★ | 4 | 2 |
 | 12 | Python client update | ★★★ | ★★ | ★ | 2 | 2 |
 | 13 | Star Ground Routing (#383) — Phases 1–5 | ★★★ | ★★★★ | ★★ (opt-in) | 10 | 2 |
-| 14 | ✅ Single-Sided / Bend Cost (#156) | ★★★ | ★★★ | ★★ | 5 | 2 |
+| 14 | Single-Sided / Bend Cost (#156) | ★★★ | ★★★ | ★★ | 5 | 2 |
 | 15 | Unit test audit | ★★★ | ★★ | ★ | 2 | 3 |
 | 16 | TODO resolution | ★★ | ★★ | ★★ | 3 | 3 |
 | 17 | Optimizer benchmarking + docs | ★★★ | ★★ | ★ | 2 | 3 |
@@ -83,7 +83,15 @@
 - After board load in `HeadlessBoardManager`, if non-null: create `"board_edge"` clearance class, populate matrix, update `BoardOutline` clearance class, re-insert into search tree.
 - Update `DevBoardClearanceRoutingTest` to inject a **non-default** `copperToEdgeClearanceUm` value and assert the correct threshold is applied.
 
-### Day 12 — Sprint 1 validation
+### Days 12-13 — Visual Parity & Redesigned Layer Visibility Panel
+- Implement black drill-hole fill rendering on through-hole component pins (not vias) based on padstack drill size.
+- Add support for six virtual display layers: F/B Silkscreen, F/B Courtyard, F/B Fab with KiCad-matching default colors.
+- Redesign the bottom of `WindowSelectParameter` to replace the old radio-button signal layer list with a KiCad-style row-based Layer Panel.
+- Each layer row gets: a clickable color swatch, an eye show/hide toggle, a tooltip, and an active layer selection.
+- Implement active layer selection highlight and KiCad-style opacity dimming of all unrelated layers (cross-dimming between signal and virtual layers).
+- Delete `WindowLayerVisibility.java` and remove its menu item and allocation in `BoardFrame`.
+
+### Day 14 — Sprint 1 validation
 - `./gradlew check` — full suite must be green.
 - Run `compare-versions.ps1` on bm01, bm05, bm07, bm08.
 - Document any newly surfaced violations from the `BoardStatistics` DRC fix as known issues.
