@@ -825,7 +825,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       NetClass nc = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(modelRow);  
       LayerRulesDialog dialog = new LayerRulesDialog(board_frame, nc, board_frame.board_panel.board_handling, tm);  
       dialog.pack();  
-      dialog.setLocationRelativeTo(null);
+      dialog.setLocationRelativeTo(board_frame);
       dialog.setResizable(false);
       dialog.setVisible(true);  
       fireEditingStopped();  
