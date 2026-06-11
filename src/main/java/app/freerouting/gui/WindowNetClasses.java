@@ -277,7 +277,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     }
 
     if (activeLayerNames.size() > 3) {
-      return activeLayerNames.size() + " Layers (Custom)";
+      return tm.getText("layers_custom", activeLayerNames.size());
     } else {
       return String.join(", ", activeLayerNames);
     }
