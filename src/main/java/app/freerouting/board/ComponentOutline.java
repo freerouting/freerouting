@@ -128,8 +128,7 @@ public class ComponentOutline extends Item implements Serializable {
     Color color = p_color_arr[this.get_layer()];
     double intensity = virtualVisibility * p_intensity;
 
-    double draw_width = Math.min(this.board.communication.get_resolution(Unit.MIL), 100); // problem with low resolution on Kicad
-    p_graphics_context.draw_boundary(this.get_area(), draw_width, color, p_g, intensity);
+    p_graphics_context.fill_area(this.get_area(), p_g, color, intensity);
   }
 
   @Override

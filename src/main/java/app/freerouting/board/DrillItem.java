@@ -420,8 +420,12 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       if (curr_shape == null) {
         continue;
       }
+      double layer_vis = p_graphics_context.get_layer_visibility(from_layer + i);
+      if (layer_vis <= 0.001) {
+        continue;
+      }
       Color color = p_color_arr[from_layer + i];
-      double layer_intensity = intensity * p_graphics_context.get_layer_visibility(from_layer + i);
+      double layer_intensity = this instanceof Pin ? intensity : intensity * layer_vis;
       p_graphics_context.fill_area(curr_shape, p_g, color, layer_intensity);
     }
 

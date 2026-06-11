@@ -172,10 +172,16 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       layer_selection_group.add(btn);
 
       lc.gridx = 0;
+      lc.weightx = 0.0;
+      lc.insets = new Insets(1, 0, 1, 2);
       layers_panel.add(eye_cb, lc);
       lc.gridx = 1;
+      lc.weightx = 0.0;
+      lc.insets = new Insets(1, 2, 1, 2);
       layers_panel.add(swatch, lc);
       lc.gridx = 2;
+      lc.weightx = 1.0;
+      lc.insets = new Insets(1, 2, 1, 2);
       layers_panel.add(btn, lc);
       lc.gridy++;
     }
@@ -214,10 +220,16 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       layer_selection_group.add(btn);
 
       lc.gridx = 0;
+      lc.weightx = 0.0;
+      lc.insets = new Insets(1, 0, 1, 2);
       layers_panel.add(eye_cb, lc);
       lc.gridx = 1;
+      lc.weightx = 0.0;
+      lc.insets = new Insets(1, 2, 1, 2);
       layers_panel.add(swatch, lc);
       lc.gridx = 2;
+      lc.weightx = 1.0;
+      lc.insets = new Insets(1, 2, 1, 2);
       layers_panel.add(btn, lc);
       lc.gridy++;
     }
