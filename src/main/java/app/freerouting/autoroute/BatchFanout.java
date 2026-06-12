@@ -109,12 +109,18 @@ public class BatchFanout {
     int maxPasses = (p_settings.fanout != null && p_settings.fanout.maxPasses != null)
         ? p_settings.fanout.maxPasses : 20;
     int completedPasses = 0;
+    String lastBoardHash = p_board.get_hash();
     for (int i = 0; i < maxPasses; ++i) {
       int routed_count = fanout_instance.fanout_pass(i, progressListener);
       completedPasses++;
       if (routed_count == 0 && fanout_instance.lastNotRoutedCount == 0) {
         break;
       }
+      String currentBoardHash = p_board.get_hash();
+      if (currentBoardHash.equals(lastBoardHash)) {
+        break;
+      }
+      lastBoardHash = currentBoardHash;
     }
     EscapeStatistics finalEscape = fanout_instance.computeEscapeStatistics();
     long totalDurationMillis = Math.max(0, System.currentTimeMillis() - fanoutStart);
