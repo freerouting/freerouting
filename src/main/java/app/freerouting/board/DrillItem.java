@@ -2,7 +2,9 @@ package app.freerouting.board;
 
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
+import app.freerouting.boardgraphics.ColorIntensityTable;
 import app.freerouting.core.Padstack;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -394,6 +396,72 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   @Override
+  public void draw_layer(Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity, int p_layer_no) {
+    if (p_graphics_context == null || p_intensity <= 0) {
+      return;
+    }
+    int from_layer = first_layer();
+    int to_layer = last_layer();
+    if (p_layer_no < from_layer || p_layer_no > to_layer) {
+      return;
+    }
+    double visibility_factor = 0;
+    for (int i = from_layer; i <= to_layer; i++) {
+      visibility_factor += p_graphics_context.get_layer_visibility(i);
+    }
+
+    if (visibility_factor < 0.001) {
+      return;
+    }
+    double intensity = p_intensity;
+    if (!(this instanceof Pin)) {
+      intensity = p_intensity / Math.max(visibility_factor, 1);
+    }
+    Shape curr_shape = this.get_shape(p_layer_no - from_layer);
+    if (curr_shape == null) {
+      return;
+    }
+    double layer_vis = p_graphics_context.get_layer_visibility(p_layer_no);
+    if (layer_vis <= 0.001) {
+      return;
+    }
+    Color color = p_color_arr[p_layer_no];
+    double layer_intensity = this instanceof Pin ? intensity : intensity * layer_vis;
+    p_graphics_context.fill_area(curr_shape, p_g, color, layer_intensity);
+
+    // Render drill hole for through-hole pins only (not vias), and draw it only on the last physical layer step drawn to ensure it is on top of the pads
+    if (this instanceof Pin && from_layer != to_layer) {
+      int lastPhysicalLayer;
+      int activeLayer = p_graphics_context.get_fully_visible_layer();
+      if (activeLayer != -1) {
+        lastPhysicalLayer = activeLayer;
+      } else {
+        int activeVirtual = p_graphics_context.get_fully_visible_virtual_layer();
+        boolean isBack = false;
+        if (activeVirtual != -1) {
+          isBack = (activeVirtual % 2 != 0); // odd indices are Back (B.Silkscreen=1, B.Courtyard=3, B.Fab=5)
+        }
+        int layerCount = board.get_layer_count();
+        lastPhysicalLayer = isBack ? (layerCount - 1) : 0;
+      }
+      if (p_layer_no == lastPhysicalLayer) {
+        Padstack padstack = get_padstack();
+        if (padstack != null) {
+          double drillRadius = padstack.get_drill_radius();
+          if (drillRadius > 0) {
+            Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
+            double drillIntensity = p_graphics_context.color_intensity_table.get_value(
+                ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
+            IntPoint centerPoint = get_center().to_float().round();
+            Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
+            p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
+          }
+        }
+      }
+    }
+  }
+
+  @Override
   public void draw(Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
@@ -409,15 +477,38 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     if (visibility_factor < 0.001) {
       return;
     }
-    double intensity = p_intensity / Math.max(visibility_factor, 1);
+    double intensity = p_intensity;
+    if (!(this instanceof Pin)) {
+      intensity = p_intensity / Math.max(visibility_factor, 1);
+    }
     for (int i = 0; i <= to_layer - from_layer; i++) {
       Shape curr_shape = this.get_shape(i);
       if (curr_shape == null) {
         continue;
       }
+      double layer_vis = p_graphics_context.get_layer_visibility(from_layer + i);
+      if (layer_vis <= 0.001) {
+        continue;
+      }
       Color color = p_color_arr[from_layer + i];
-      double layer_intensity = intensity * p_graphics_context.get_layer_visibility(from_layer + i);
+      double layer_intensity = this instanceof Pin ? intensity : intensity * layer_vis;
       p_graphics_context.fill_area(curr_shape, p_g, color, layer_intensity);
+    }
+
+    // Render drill hole for through-hole pins only (not vias)
+    if (this instanceof Pin && from_layer != to_layer) {
+      Padstack padstack = get_padstack();
+      if (padstack != null) {
+        double drillRadius = padstack.get_drill_radius();
+        if (drillRadius > 0) {
+          Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
+          double drillIntensity = p_graphics_context.color_intensity_table.get_value(
+              ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
+          IntPoint centerPoint = get_center().to_float().round();
+          Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
+          p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
+        }
+      }
     }
   }
 

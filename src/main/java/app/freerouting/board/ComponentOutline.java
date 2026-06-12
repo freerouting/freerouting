@@ -24,21 +24,43 @@ public class ComponentOutline extends Item implements Serializable {
   private Vector translation;
   private double rotation_in_degree;
   private boolean is_front;
+  private boolean is_courtyard;
+  private boolean is_fabrication;
+  private boolean is_closed;
 
   /**
    * Creates a new instance of ComponentOutline
    */
-  public ComponentOutline(Area p_area, boolean p_is_front, Vector p_translation, double p_rotation_in_degree, int p_id_no, int p_component_no, FixedState p_fixed_state, BasicBoard p_board) {
+  public ComponentOutline(Area p_area, boolean p_is_front, Vector p_translation, double p_rotation_in_degree, int p_id_no, int p_component_no, boolean p_is_courtyard, boolean p_is_fabrication, boolean p_is_closed, FixedState p_fixed_state, BasicBoard p_board) {
     super(new int[0], 0, p_id_no, p_component_no, p_fixed_state, p_board);
     this.relative_area = p_area;
     this.is_front = p_is_front;
     this.translation = p_translation;
     this.rotation_in_degree = p_rotation_in_degree;
+    this.is_courtyard = p_is_courtyard;
+    this.is_fabrication = p_is_fabrication;
+    this.is_closed = p_is_closed;
   }
 
   @Override
   public Item copy(int p_id_no) {
-    return new ComponentOutline(this.relative_area, this.is_front, this.translation, this.rotation_in_degree, p_id_no, this.get_component_no(), this.get_fixed_state(), this.board);
+    return new ComponentOutline(this.relative_area, this.is_front, this.translation, this.rotation_in_degree, p_id_no, this.get_component_no(), this.is_courtyard, this.is_fabrication, this.is_closed, this.get_fixed_state(), this.board);
+  }
+
+  public boolean is_front() {
+    return this.is_front;
+  }
+
+  public boolean is_courtyard() {
+    return this.is_courtyard;
+  }
+
+  public boolean is_fabrication() {
+    return this.is_fabrication;
+  }
+
+  public boolean is_closed() {
+    return this.is_closed;
   }
 
   @Override
@@ -99,12 +121,23 @@ public class ComponentOutline extends Item implements Serializable {
   @Override
   public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
     Color[] color_arr = new Color[this.board.layer_structure.arr.length];
-    Color front_draw_color = p_graphics_context.get_component_color(true);
+    Color front_draw_color;
+    Color back_draw_color;
+    if (this.is_courtyard) {
+      front_draw_color = p_graphics_context.other_color_table.get_courtyard_color(true);
+      back_draw_color = p_graphics_context.other_color_table.get_courtyard_color(false);
+    } else if (this.is_fabrication) {
+      front_draw_color = p_graphics_context.other_color_table.get_fab_color(true);
+      back_draw_color = p_graphics_context.other_color_table.get_fab_color(false);
+    } else {
+      front_draw_color = p_graphics_context.other_color_table.get_silkscreen_color(true);
+      back_draw_color = p_graphics_context.other_color_table.get_silkscreen_color(false);
+    }
     for (int i = 0; i < color_arr.length - 1; i++) {
       color_arr[i] = front_draw_color;
     }
     if (color_arr.length > 1) {
-      color_arr[color_arr.length - 1] = p_graphics_context.get_component_color(false);
+      color_arr[color_arr.length - 1] = back_draw_color;
     }
     return color_arr;
   }
@@ -119,11 +152,28 @@ public class ComponentOutline extends Item implements Serializable {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
     }
-    Color color = p_color_arr[this.get_layer()];
-    double intensity = p_graphics_context.get_layer_visibility(this.get_layer()) * p_intensity;
+    int virtualLayerIdx;
+    if (this.is_courtyard) {
+      virtualLayerIdx = this.is_front ? 2 : 3;
+    } else if (this.is_fabrication) {
+      virtualLayerIdx = this.is_front ? 4 : 5;
+    } else {
+      virtualLayerIdx = this.is_front ? 0 : 1;
+    }
+    double virtualVisibility = p_graphics_context.get_virtual_layer_visibility(virtualLayerIdx);
+    if (virtualVisibility <= 0) {
+      return;
+    }
 
-    double draw_width = Math.min(this.board.communication.get_resolution(Unit.MIL), 100); // problem with low resolution on Kicad
-    p_graphics_context.draw_boundary(this.get_area(), draw_width, color, p_g, intensity);
+    Color color = p_color_arr[this.get_layer()];
+    double intensity = virtualVisibility * p_intensity;
+
+    if (this.is_courtyard || this.is_closed) {
+      double draw_width = Math.min(this.board.communication.get_resolution(Unit.MIL), 100);
+      p_graphics_context.draw_boundary(this.get_area(), draw_width, color, p_g, intensity);
+    } else {
+      p_graphics_context.fill_area(this.get_area(), p_g, color, intensity);
+    }
   }
 
   @Override

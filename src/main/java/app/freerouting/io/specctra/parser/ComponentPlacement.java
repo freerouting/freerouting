@@ -56,8 +56,10 @@ public class ComponentPlacement {
     public final Map<String, ItemClearanceInfo> via_keepout_infos;
     public final Map<String, ItemClearanceInfo> place_keepout_infos;
 
+    public final String part_number;
+
     ComponentLocation(String p_name, double[] p_coor, boolean p_is_front, double p_rotation, boolean p_position_fixed, Map<String, ItemClearanceInfo> p_pin_infos,
-        Map<String, ItemClearanceInfo> p_keepout_infos, Map<String, ItemClearanceInfo> p_via_keepout_infos, Map<String, ItemClearanceInfo> p_place_keepout_infos) {
+        Map<String, ItemClearanceInfo> p_keepout_infos, Map<String, ItemClearanceInfo> p_via_keepout_infos, Map<String, ItemClearanceInfo> p_place_keepout_infos, String p_part_number) {
       name = p_name;
       coor = p_coor;
       is_front = p_is_front;
@@ -67,6 +69,7 @@ public class ComponentPlacement {
       keepout_infos = p_keepout_infos;
       via_keepout_infos = p_via_keepout_infos;
       place_keepout_infos = p_place_keepout_infos;
+      part_number = p_part_number;
     }
   }
 

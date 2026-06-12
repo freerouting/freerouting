@@ -5,6 +5,7 @@ import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.management.TextManager;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Locale;
 
 /**
@@ -44,14 +45,45 @@ public class ComponentObstacleArea extends ObstacleArea {
     return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.COMPONENT_KEEPOUT);
   }
 
+  public boolean is_front() {
+    Component component = board.components.get(this.get_component_no());
+    return component == null || component.placed_on_front();
+  }
+
   @Override
   public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
-    return p_graphics_context.get_place_obstacle_colors();
+    Color[] color_arr = new Color[this.board.layer_structure.arr.length];
+    Color front_draw_color = p_graphics_context.other_color_table.get_courtyard_color(true);
+    for (int i = 0; i < color_arr.length - 1; i++) {
+      color_arr[i] = front_draw_color;
+    }
+    if (color_arr.length > 1) {
+      color_arr[color_arr.length - 1] = p_graphics_context.other_color_table.get_courtyard_color(false);
+    }
+    return color_arr;
   }
 
   @Override
   public double get_draw_intensity(GraphicsContext p_graphics_context) {
-    return p_graphics_context.get_place_obstacle_color_intensity();
+    return p_graphics_context.get_component_outline_color_intensity();
+  }
+
+  @Override
+  public void draw(Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
+    if (p_graphics_context == null || p_intensity <= 0) {
+      return;
+    }
+    int virtualLayerIdx = this.is_front() ? 2 : 3;
+    double virtualVisibility = p_graphics_context.get_virtual_layer_visibility(virtualLayerIdx);
+    if (virtualVisibility <= 0) {
+      return;
+    }
+
+    Color color = p_color_arr[this.get_layer()];
+    double intensity = virtualVisibility * p_intensity;
+
+    double draw_width = Math.min(this.board.communication.get_resolution(Unit.MIL), 100);
+    p_graphics_context.draw_boundary(this.get_area(), draw_width, color, p_g, intensity);
   }
 
   @Override

@@ -206,7 +206,6 @@ public class GUIDefaultsFile {
     out_file.write("windows");
     write_frame_scope(this.board_frame, "board_frame");
     write_frame_scope(this.board_frame.color_manager, "color_manager");
-    write_frame_scope(this.board_frame.layer_visibility_window, "layer_visibility");
     write_frame_scope(this.board_frame.object_visibility_window, "object_visibility");
     write_frame_scope(this.board_frame.display_misc_window, "display_miscellaneous");
 
@@ -265,7 +264,7 @@ public class GUIDefaultsFile {
       case BOARD_FRAME -> curr_frame = this.board_frame;
       case COLOR_MANAGER -> curr_frame = this.board_frame.color_manager;
       case OBJECT_VISIBILITY -> curr_frame = this.board_frame.object_visibility_window;
-      case LAYER_VISIBILITY -> curr_frame = this.board_frame.layer_visibility_window;
+      case LAYER_VISIBILITY -> curr_frame = null;
       case DISPLAY_MISCELLANEOUS -> curr_frame = this.board_frame.display_misc_window;
 
       case SELECT_PARAMETER -> curr_frame = this.board_frame.select_parameter_window;
@@ -288,13 +287,15 @@ public class GUIDefaultsFile {
         return false;
       }
     }
-    curr_frame.setVisible(is_visible);
-    if (p_frame == Keyword.BOARD_FRAME) {
-      curr_frame.setBounds(bounds);
-    } else {
-      // Set only the location.
-      // Do not change the size of the frame because it depends on the layer count.
-      curr_frame.setLocation(bounds.getLocation());
+    if (curr_frame != null) {
+      curr_frame.setVisible(is_visible);
+      if (p_frame == Keyword.BOARD_FRAME) {
+        curr_frame.setBounds(bounds);
+      } else {
+        // Set only the location.
+        // Do not change the size of the frame because it depends on the layer count.
+        curr_frame.setLocation(bounds.getLocation());
+      }
     }
     return true;
   }
@@ -313,6 +314,9 @@ public class GUIDefaultsFile {
   }
 
   private void write_frame_scope(JFrame p_frame, String p_frame_name) throws IOException {
+    if (p_frame == null) {
+      return;
+    }
     out_file.start_scope();
     out_file.write(p_frame_name);
     out_file.new_line();

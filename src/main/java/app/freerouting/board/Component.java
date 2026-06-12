@@ -51,11 +51,12 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
    * If false, the component will be placed on the back side of the board.
    */
   private boolean on_front;
+  private final String part_number;
 
   /**
    * Creates a new instance of Component with the input parameters. If p_on_front is false, the component will be placed on the back side.
    */
-  Component(String p_name, Point p_location, double p_rotation_in_degree, boolean p_on_front, Package p_package_front, Package p_package_back, int p_no, boolean p_position_fixed) {
+  Component(String p_name, Point p_location, double p_rotation_in_degree, boolean p_on_front, Package p_package_front, Package p_package_back, int p_no, boolean p_position_fixed, String p_part_number) {
     name = p_name;
     location = p_location;
     rotation_in_degree = p_rotation_in_degree;
@@ -70,6 +71,7 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
     lib_package_back = p_package_back;
     no = p_no;
     position_fixed = p_position_fixed;
+    part_number = p_part_number;
   }
 
   /**
@@ -168,12 +170,16 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
     return 1;
   }
 
+  public String get_part_number() {
+    return this.part_number;
+  }
+
   /**
    * Creates a copy of this component.
    */
   @Override
   public Component clone() {
-    Component result = new Component(name, location, rotation_in_degree, on_front, lib_package_front, lib_package_back, no, position_fixed);
+    Component result = new Component(name, location, rotation_in_degree, on_front, lib_package_front, lib_package_back, no, position_fixed, part_number);
     result.logical_part = this.logical_part;
     return result;
   }

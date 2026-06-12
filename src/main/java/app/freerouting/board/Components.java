@@ -25,9 +25,9 @@ public class Components implements Serializable {
    * Inserts a component into the list. The items of the component have to be inserted separately into the board. If p_on_front is false, the component will be placed on the back side, and
    * p_package_back is used instead of p_package_front.
    */
-  public Component add(String p_name, Point p_location, double p_rotation_in_degree, boolean p_on_front, Package p_package_front, Package p_package_back, boolean p_position_fixed) {
+  public Component add(String p_name, Point p_location, double p_rotation_in_degree, boolean p_on_front, Package p_package_front, Package p_package_back, boolean p_position_fixed, String p_part_number) {
 
-    Component new_component = new Component(p_name, p_location, p_rotation_in_degree, p_on_front, p_package_front, p_package_back, component_arr.size() + 1, p_position_fixed);
+    Component new_component = new Component(p_name, p_location, p_rotation_in_degree, p_on_front, p_package_front, p_package_back, component_arr.size() + 1, p_position_fixed, p_part_number);
     component_arr.add(new_component);
     undo_list.insert(new_component);
     return new_component;
@@ -39,7 +39,7 @@ public class Components implements Serializable {
    */
   public Component add(Point p_location, double p_rotation, boolean p_on_front, Package p_package) {
     String component_name = "Component#" + (component_arr.size() + 1);
-    return add(component_name, p_location, p_rotation, p_on_front, p_package, p_package, false);
+    return add(component_name, p_location, p_rotation, p_on_front, p_package, p_package, false, null);
   }
 
   /**
@@ -65,11 +65,12 @@ public class Components implements Serializable {
     return result;
   }
 
-  /**
-   * Returns the number of components on the board.
-   */
   public int count() {
     return component_arr.size();
+  }
+
+  public Iterable<Component> get_all() {
+    return component_arr;
   }
 
   /**

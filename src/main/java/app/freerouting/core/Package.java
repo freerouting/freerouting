@@ -26,6 +26,8 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
    * The outline of the component, which may be null.
    */
   public final Shape[] outline;
+  public final double[] outline_widths;
+  public final boolean[] outline_is_closed;
   public final Keepout[] keepout_arr;
   public final Keepout[] via_keepout_arr;
   public final Keepout[] place_keepout_arr;
@@ -42,12 +44,14 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
   /**
    * Creates a new instance of Package. p_package_list is the list of packages containing this package.
    */
-  public Package(String p_name, int p_no, Pin[] p_pin_arr, Shape[] p_outline, Keepout[] p_keepout_arr, Keepout[] p_via_keepout_arr, Keepout[] p_place_keepout_arr, boolean p_is_front,
+  public Package(String p_name, int p_no, Pin[] p_pin_arr, Shape[] p_outline, double[] p_outline_widths, boolean[] p_outline_is_closed, Keepout[] p_keepout_arr, Keepout[] p_via_keepout_arr, Keepout[] p_place_keepout_arr, boolean p_is_front,
       Packages p_package_list) {
     name = p_name;
     no = p_no;
     pin_arr = p_pin_arr;
     outline = p_outline;
+    outline_widths = p_outline_widths;
+    outline_is_closed = p_outline_is_closed;
     keepout_arr = p_keepout_arr;
     via_keepout_arr = p_via_keepout_arr;
     place_keepout_arr = p_place_keepout_arr;

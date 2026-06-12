@@ -433,7 +433,11 @@ public class Pin extends DrillItem implements Serializable {
   public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
     Color[] result;
     if (this.net_count() > 0) {
-      result = p_graphics_context.get_pin_colors();
+      if (first_layer() != last_layer()) {
+        result = p_graphics_context.get_trace_colors(this.is_user_fixed());
+      } else {
+        result = p_graphics_context.get_pin_colors();
+      }
     } else {
       // display unconnected pins as obstacles
       result = p_graphics_context.get_obstacle_colors();

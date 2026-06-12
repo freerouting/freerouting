@@ -409,7 +409,7 @@ public class BasicBoard implements Serializable {
    * Inserts a component outline into the board.
    */
   public ComponentOutline insert_component_outline(Area p_area, boolean p_is_front, Vector p_translation,
-      double p_rotation_in_degree, int p_component_no, FixedState p_fixed_state) {
+      double p_rotation_in_degree, int p_component_no, boolean p_is_courtyard, boolean p_is_fabrication, boolean p_is_closed, FixedState p_fixed_state) {
     if (p_area == null) {
       FRLogger.warn("BasicBoard.insert_component_outline: p_area is null");
       return null;
@@ -419,7 +419,7 @@ public class BasicBoard implements Serializable {
       return null;
     }
     ComponentOutline outline = new ComponentOutline(p_area, p_is_front, p_translation, p_rotation_in_degree, 0,
-        p_component_no, p_fixed_state, this);
+        p_component_no, p_is_courtyard, p_is_fabrication, p_is_closed, p_fixed_state, this);
     insert_item(outline);
     return outline;
   }
@@ -1086,13 +1086,146 @@ public class BasicBoard implements Serializable {
    * of p_layer_visibility is expected between 0 and 1
    * for each layer.
    */
+  public enum DominantSide {
+    FRONT, BACK, NONE
+  }
+
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
     if (p_graphics_context == null) {
       return;
     }
 
-    // draw all items on the board
-    for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MIDDLE_DRAW_PRIORITY; curr_priority++) {
+    // Determine the currently selected layer and virtual layer
+    int activeLayer = p_graphics_context.get_fully_visible_layer();
+    int activeVirtualLayer = p_graphics_context.get_fully_visible_virtual_layer();
+
+    DominantSide dominantSide = DominantSide.NONE;
+    if (activeVirtualLayer != -1) {
+      if (activeVirtualLayer % 2 == 0) {
+        dominantSide = DominantSide.FRONT;
+      } else {
+        dominantSide = DominantSide.BACK;
+      }
+    } else if (activeLayer != -1) {
+      int layerCount = get_layer_count();
+      if (activeLayer == 0) {
+        dominantSide = DominantSide.FRONT;
+      } else if (activeLayer == layerCount - 1) {
+        dominantSide = DominantSide.BACK;
+      } else {
+        dominantSide = DominantSide.NONE;
+      }
+    }
+
+    // Define layers sorting logic based on dominant side:
+    // If dominant side is Front: Back layer elements first, then Inner layers, then Front layer elements last.
+    // If dominant side is Back: Front layer elements first, then Inner layers, then Back layer elements last.
+    // If dominant side is None (Inner layer selected): other layers first, then the selected inner layer last.
+    int layerCount = get_layer_count();
+
+    // Create layer names and visual layer names mapping for logging
+    String selectedLayerName = "None";
+    if (activeVirtualLayer != -1) {
+      String[] virtualNames = {"F.Silkscreen", "B.Silkscreen", "F.Courtyard", "B.Courtyard", "F.Fab", "B.Fab"};
+      if (activeVirtualLayer >= 0 && activeVirtualLayer < virtualNames.length) {
+        selectedLayerName = virtualNames[activeVirtualLayer];
+      }
+    } else if (activeLayer >= 0 && activeLayer < layerCount) {
+      selectedLayerName = layer_structure.arr[activeLayer].name;
+    }
+
+    class RenderStep {
+      final boolean isVirtual;
+      final int index; // layer index (signal index or virtual index)
+      RenderStep(boolean isVirtual, int index) {
+        this.isVirtual = isVirtual;
+        this.index = index;
+      }
+      
+      @Override
+      public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RenderStep)) return false;
+        RenderStep other = (RenderStep) o;
+        return isVirtual == other.isVirtual && index == other.index;
+      }
+
+      @Override
+      public int hashCode() {
+        return java.util.Objects.hash(isVirtual, index);
+      }
+    }
+    
+    java.util.List<RenderStep> drawSteps = new java.util.ArrayList<>();
+    
+    if (dominantSide == DominantSide.BACK) {
+      // BACK dominant default order:
+      // F.Fab (v4), F.Courtyard (v2), F.Silkscreen (v0), top_cu (false, 0)
+      drawSteps.add(new RenderStep(true, 4));
+      drawSteps.add(new RenderStep(true, 2));
+      drawSteps.add(new RenderStep(true, 0));
+      drawSteps.add(new RenderStep(false, 0));
+      // Inner layers from top to bottom (index 1 to layerCount - 2)
+      for (int i = 1; i < layerCount - 1; i++) {
+        drawSteps.add(new RenderStep(false, i));
+      }
+      // B.Fab (v5), B.Courtyard (v3), B.Silkscreen (v1), bottom_cu
+      drawSteps.add(new RenderStep(true, 5));
+      drawSteps.add(new RenderStep(true, 3));
+      drawSteps.add(new RenderStep(true, 1));
+      if (layerCount > 1) {
+        drawSteps.add(new RenderStep(false, layerCount - 1));
+      }
+    } else {
+      // FRONT or NONE dominant default order:
+      // B.Fab (v5), B.Courtyard (v3), B.Silkscreen (v1), bottom_cu
+      drawSteps.add(new RenderStep(true, 5));
+      drawSteps.add(new RenderStep(true, 3));
+      drawSteps.add(new RenderStep(true, 1));
+      if (layerCount > 1) {
+        drawSteps.add(new RenderStep(false, layerCount - 1));
+      }
+      // Inner layers from bottom to top (index layerCount - 2 down to 1)
+      for (int i = layerCount - 2; i >= 1; i--) {
+        drawSteps.add(new RenderStep(false, i));
+      }
+      // F.Fab (v4), F.Courtyard (v2), F.Silkscreen (v0), top_cu
+      drawSteps.add(new RenderStep(true, 4));
+      drawSteps.add(new RenderStep(true, 2));
+      drawSteps.add(new RenderStep(true, 0));
+      drawSteps.add(new RenderStep(false, 0));
+    }
+
+    // Determine the selected step to prioritize at the end of the rendering order
+    RenderStep selectedStep = null;
+    if (activeVirtualLayer != -1) {
+      selectedStep = new RenderStep(true, activeVirtualLayer);
+    } else if (activeLayer != -1) {
+      selectedStep = new RenderStep(false, activeLayer);
+    }
+
+    if (selectedStep != null) {
+      drawSteps.remove(selectedStep);
+      drawSteps.add(selectedStep);
+    }
+
+    // Populate layerOrderNames for logging to match the actual drawSteps
+    java.util.List<String> renderingOrderNames = new java.util.ArrayList<>();
+    for (RenderStep step : drawSteps) {
+      if (step.isVirtual) {
+        String[] virtualNames = {"F.Silkscreen", "B.Silkscreen", "F.Courtyard", "B.Courtyard", "F.Fab", "B.Fab"};
+        renderingOrderNames.add(virtualNames[step.index]);
+      } else {
+        renderingOrderNames.add(layer_structure.arr[step.index].name);
+      }
+    }
+
+    FRLogger.debug(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
+        selectedLayerName, dominantSide, renderingOrderNames));
+
+    // Pre-collect all items once to avoid re-iterating item_list for every (priority × step)
+    java.util.List<Item> allItems = new java.util.ArrayList<>();
+    {
       Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
       for (;;) {
         try {
@@ -1100,14 +1233,85 @@ public class BasicBoard implements Serializable {
           if (curr_item == null) {
             break;
           }
-          if (curr_item.get_draw_priority() == curr_priority) {
-            curr_item.draw(p_graphics, p_graphics_context);
-          }
+          allItems.add(curr_item);
         } catch (ConcurrentModificationException _) {
-          // may happen when window are changed interactively while running a logfile
+          // may happen when windows are changed interactively while running a logfile
           return;
         }
       }
+    }
+
+    // Draw elements according to the calculated steps sequence
+    for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MAX_DRAW_PRIORITY; curr_priority++) {
+      for (RenderStep step : drawSteps) {
+        for (Item curr_item : allItems) {
+          if (curr_item.get_draw_priority() == curr_priority) {
+            if (step.isVirtual) {
+              // Virtual layer step: render ComponentOutline and ComponentObstacleArea (courtyard)
+              // items matching that virtual layer index
+              if (curr_item instanceof ComponentOutline co) {
+                int itemVirtualIdx;
+                if (co.is_courtyard()) {
+                  itemVirtualIdx = co.is_front() ? 2 : 3;
+                } else if (co.is_fabrication()) {
+                  itemVirtualIdx = co.is_front() ? 4 : 5;
+                } else {
+                  itemVirtualIdx = co.is_front() ? 0 : 1;
+                }
+                if (itemVirtualIdx == step.index) {
+                  curr_item.draw(p_graphics, p_graphics_context);
+                }
+              } else if (curr_item instanceof ComponentObstacleArea coa) {
+                // Courtyard keepout areas map to virtual courtyard layers (2=F.Courtyard, 3=B.Courtyard)
+                int itemVirtualIdx = coa.is_front() ? 2 : 3;
+                if (itemVirtualIdx == step.index) {
+                  curr_item.draw(p_graphics, p_graphics_context);
+                }
+              }
+            } else {
+              // Physical layer step: skip ComponentOutline and ComponentObstacleArea
+              // (they are rendered exclusively in their corresponding virtual layer steps)
+              if (!(curr_item instanceof ComponentOutline) && !(curr_item instanceof ComponentObstacleArea)) {
+                curr_item.draw_layer(p_graphics, p_graphics_context, step.index);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Draw component values on Front Fab (virtual index 4) / Back Fab (virtual index 5)
+    double intensityFront = p_graphics_context.get_virtual_layer_visibility(4);
+    double intensityBack = p_graphics_context.get_virtual_layer_visibility(5);
+    if (intensityFront > 0 || intensityBack > 0) {
+      java.awt.Graphics2D g2 = (java.awt.Graphics2D) p_graphics;
+      java.awt.Font originalFont = g2.getFont();
+      java.awt.Composite originalComposite = g2.getComposite();
+      g2.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+      for (Component comp : components.get_all()) {
+        if (!comp.is_placed() || comp.get_part_number() == null || comp.get_part_number().isEmpty()) {
+          continue;
+        }
+        boolean isFront = comp.placed_on_front();
+        double intensity = isFront ? intensityFront : intensityBack;
+        if (intensity <= 0) {
+          continue;
+        }
+        java.awt.Color color = isFront ? p_graphics_context.other_color_table.get_fab_color(true) : p_graphics_context.other_color_table.get_fab_color(false);
+        if (color == null) {
+          continue;
+        }
+        g2.setColor(color);
+        float alpha = (float) Math.max(0.0, Math.min(1.0, intensity));
+        g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, alpha));
+        java.awt.geom.Point2D screenLoc = p_graphics_context.coordinate_transform.board_to_screen(comp.get_location().to_float());
+        java.awt.FontMetrics metrics = g2.getFontMetrics();
+        int textWidth = metrics.stringWidth(comp.get_part_number());
+        int textHeight = metrics.getAscent();
+        g2.drawString(comp.get_part_number(), (float) (screenLoc.getX() - textWidth / 2.0), (float) (screenLoc.getY() + textHeight / 2.0));
+      }
+      g2.setFont(originalFont);
+      g2.setComposite(originalComposite);
     }
   }
 

@@ -32,6 +32,8 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
    * Pointer to the pacdstack list containing this padstack
    */
   private final Padstacks padstack_list;
+  /** Cached drill radius to avoid repeated regex parsing on every render call. */
+  private Double cachedDrillRadius = null;
 
   /**
    * Creates a new Padstack with shape p_shapes[i] on layer i (0 <= i < p_shapes.length). p_is_drilllable indicates, if vias of the own net are allowed to overlap with this padstack If
@@ -52,6 +54,64 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   @Override
   public int compareTo(Padstack p_other) {
     return this.name.compareToIgnoreCase(p_other.name);
+  }
+
+  /**
+   * Returns the drill radius of this padstack in board units.
+   * The result is cached after the first computation to avoid repeated regex parsing.
+   */
+  public double get_drill_radius() {
+    if (cachedDrillRadius != null) {
+      return cachedDrillRadius;
+    }
+    double result;
+    if (name != null) {
+      int colonIndex = name.indexOf(':');
+      if (colonIndex >= 0) {
+        int underscoreIndex = name.indexOf('_', colonIndex);
+        String drillStr;
+        if (underscoreIndex > colonIndex) {
+          drillStr = name.substring(colonIndex + 1, underscoreIndex);
+        } else {
+          drillStr = name.substring(colonIndex + 1);
+        }
+        try {
+          drillStr = drillStr.replaceAll("[^0-9.]", "");
+          double drillDia = Double.parseDouble(drillStr);
+          int lastUnderscore = name.lastIndexOf('_', colonIndex);
+          if (lastUnderscore >= 0) {
+            String outerStr = name.substring(lastUnderscore + 1, colonIndex).replaceAll("[^0-9.]", "");
+            double outerDia = Double.parseDouble(outerStr);
+            if (outerDia > 0) {
+              double actualOuterRadius = get_smallest_radius();
+              if (actualOuterRadius > 0) {
+                result = actualOuterRadius * (drillDia / outerDia);
+                cachedDrillRadius = result;
+                return cachedDrillRadius;
+              }
+            }
+          }
+        } catch (NumberFormatException e) {
+          // Ignore
+        }
+      }
+    }
+    result = get_smallest_radius() * 0.45;
+    cachedDrillRadius = result;
+    return cachedDrillRadius;
+  }
+
+  private double get_smallest_radius() {
+    double minRadius = Double.MAX_VALUE;
+    for (ConvexShape shape : shapes) {
+      if (shape != null) {
+        double radius = Math.min(shape.bounding_box().width(), shape.bounding_box().height()) / 2.0;
+        if (radius < minRadius) {
+          minRadius = radius;
+        }
+      }
+    }
+    return minRadius == Double.MAX_VALUE ? 0.0 : minRadius;
   }
 
   /**

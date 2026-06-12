@@ -816,7 +816,7 @@ public class Network extends ScopeKeyword {
     double rotation_in_degree = p_location.rotation;
 
     app.freerouting.board.Component new_component = routing_board.components.add(p_location.name, component_location, rotation_in_degree, p_location.is_front, curr_front_package, curr_back_package,
-        p_location.position_fixed);
+        p_location.position_fixed, p_location.part_number);
 
     if (component_location == null) {
       return; // component is not yet placed.
@@ -940,9 +940,39 @@ public class Network extends ScopeKeyword {
       }
     }
     // insert the outline as component keepout
-    for (int i = 0; i < curr_package.outline.length; i++) {
-
-      routing_board.insert_component_outline(curr_package.outline[i], p_location.is_front, component_translation, rotation_in_degree, new_component.no, fixed_state);
+    int courtyard_idx = -1;
+    if (curr_package.outline != null && curr_package.outline.length > 1) {
+      double max_area = -1;
+      for (int i = 0; i < curr_package.outline.length; i++) {
+        if (curr_package.outline[i] != null && curr_package.outline[i].bounding_box() != null) {
+          double area = curr_package.outline[i].bounding_box().area();
+          if (area > max_area) {
+            max_area = area;
+            courtyard_idx = i;
+          }
+        }
+      }
+    }
+    if (curr_package.outline != null) {
+      for (int i = 0; i < curr_package.outline.length; i++) {
+        boolean is_courtyard = (i == courtyard_idx);
+        if (curr_package.outline_widths != null && i < curr_package.outline_widths.length) {
+          if (curr_package.outline_widths[i] == 0.0) {
+            is_courtyard = true;
+          }
+        }
+        boolean is_fabrication = false;
+        if (!is_courtyard && curr_package.outline_widths != null && i < curr_package.outline_widths.length) {
+          if (curr_package.outline_widths[i] <= 110.0) {
+            is_fabrication = true;
+          }
+        }
+        boolean is_closed = false;
+        if (curr_package.outline_is_closed != null && i < curr_package.outline_is_closed.length) {
+          is_closed = curr_package.outline_is_closed[i];
+        }
+        routing_board.insert_component_outline(curr_package.outline[i], p_location.is_front, component_translation, rotation_in_degree, new_component.no, is_courtyard, is_fabrication, is_closed, fixed_state);
+      }
     }
   }
 
