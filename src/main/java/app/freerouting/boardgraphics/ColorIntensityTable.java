@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class ColorIntensityTable implements Serializable {
 
   private final double[] arr;
+  private transient boolean missing_serialized_data_logged;
 
   /**
    * Creates a new instance of ColorIntensityTable. The elements of p_intensities are expected between 0 and 1.
@@ -42,7 +43,7 @@ public class ColorIntensityTable implements Serializable {
       return 0;
     }
     if (p_no >= arr.length) {
-      FRLogger.warn("ColorIntensityTable.get_value: p_no missing in serialized data");
+      log_missing_serialized_data_once("get_value", p_no);
       return get_default_value(p_no);
     }
     return arr[p_no];
@@ -54,10 +55,17 @@ public class ColorIntensityTable implements Serializable {
       return;
     }
     if (p_no >= arr.length) {
-      FRLogger.warn("ColorIntensityTable.set_value: p_no missing in serialized data");
+      log_missing_serialized_data_once("set_value", p_no);
       return;
     }
     arr[p_no] = p_value;
+  }
+
+  private void log_missing_serialized_data_once(String methodName, int p_no) {
+    if (!missing_serialized_data_logged) {
+      FRLogger.warn("ColorIntensityTable." + methodName + ": p_no " + p_no + " missing in serialized data");
+      missing_serialized_data_logged = true;
+    }
   }
 
   private double get_default_value(int p_no) {

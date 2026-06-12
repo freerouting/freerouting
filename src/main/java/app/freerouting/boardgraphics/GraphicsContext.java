@@ -768,6 +768,7 @@ public class GraphicsContext implements Serializable {
     if (virtual_layer_visibility_arr == null || virtual_layer_visibility_arr.length != virtual_layer_count) {
       virtual_layer_visibility_arr = create_default_virtual_layer_visibility_arr();
     }
+    fully_visible_virtual_layer = get_fully_visible_virtual_layer();
     this.item_color_table = new ItemColorTableModel(p_stream);
     this.other_color_table = new OtherColorTableModel(p_stream);
   }
