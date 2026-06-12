@@ -25,22 +25,24 @@ public class ComponentOutline extends Item implements Serializable {
   private double rotation_in_degree;
   private boolean is_front;
   private boolean is_courtyard;
+  private boolean is_fabrication;
 
   /**
    * Creates a new instance of ComponentOutline
    */
-  public ComponentOutline(Area p_area, boolean p_is_front, Vector p_translation, double p_rotation_in_degree, int p_id_no, int p_component_no, boolean p_is_courtyard, FixedState p_fixed_state, BasicBoard p_board) {
+  public ComponentOutline(Area p_area, boolean p_is_front, Vector p_translation, double p_rotation_in_degree, int p_id_no, int p_component_no, boolean p_is_courtyard, boolean p_is_fabrication, FixedState p_fixed_state, BasicBoard p_board) {
     super(new int[0], 0, p_id_no, p_component_no, p_fixed_state, p_board);
     this.relative_area = p_area;
     this.is_front = p_is_front;
     this.translation = p_translation;
     this.rotation_in_degree = p_rotation_in_degree;
     this.is_courtyard = p_is_courtyard;
+    this.is_fabrication = p_is_fabrication;
   }
 
   @Override
   public Item copy(int p_id_no) {
-    return new ComponentOutline(this.relative_area, this.is_front, this.translation, this.rotation_in_degree, p_id_no, this.get_component_no(), this.is_courtyard, this.get_fixed_state(), this.board);
+    return new ComponentOutline(this.relative_area, this.is_front, this.translation, this.rotation_in_degree, p_id_no, this.get_component_no(), this.is_courtyard, this.is_fabrication, this.get_fixed_state(), this.board);
   }
 
   public boolean is_front() {
@@ -49,6 +51,10 @@ public class ComponentOutline extends Item implements Serializable {
 
   public boolean is_courtyard() {
     return this.is_courtyard;
+  }
+
+  public boolean is_fabrication() {
+    return this.is_fabrication;
   }
 
   @Override
@@ -114,6 +120,9 @@ public class ComponentOutline extends Item implements Serializable {
     if (this.is_courtyard) {
       front_draw_color = p_graphics_context.other_color_table.get_courtyard_color(true);
       back_draw_color = p_graphics_context.other_color_table.get_courtyard_color(false);
+    } else if (this.is_fabrication) {
+      front_draw_color = p_graphics_context.other_color_table.get_fab_color(true);
+      back_draw_color = p_graphics_context.other_color_table.get_fab_color(false);
     } else {
       front_draw_color = p_graphics_context.other_color_table.get_silkscreen_color(true);
       back_draw_color = p_graphics_context.other_color_table.get_silkscreen_color(false);
@@ -140,6 +149,8 @@ public class ComponentOutline extends Item implements Serializable {
     int virtualLayerIdx;
     if (this.is_courtyard) {
       virtualLayerIdx = this.is_front ? 2 : 3;
+    } else if (this.is_fabrication) {
+      virtualLayerIdx = this.is_front ? 4 : 5;
     } else {
       virtualLayerIdx = this.is_front ? 0 : 1;
     }

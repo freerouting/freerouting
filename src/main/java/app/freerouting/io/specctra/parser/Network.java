@@ -955,7 +955,18 @@ public class Network extends ScopeKeyword {
     }
     for (int i = 0; i < curr_package.outline.length; i++) {
       boolean is_courtyard = (i == courtyard_idx);
-      routing_board.insert_component_outline(curr_package.outline[i], p_location.is_front, component_translation, rotation_in_degree, new_component.no, is_courtyard, fixed_state);
+      if (curr_package.outline_widths != null && i < curr_package.outline_widths.length) {
+        if (curr_package.outline_widths[i] == 0.0) {
+          is_courtyard = true;
+        }
+      }
+      boolean is_fabrication = false;
+      if (!is_courtyard && curr_package.outline_widths != null && i < curr_package.outline_widths.length) {
+        if (curr_package.outline_widths[i] <= 110.0) {
+          is_fabrication = true;
+        }
+      }
+      routing_board.insert_component_outline(curr_package.outline[i], p_location.is_front, component_translation, rotation_in_degree, new_component.no, is_courtyard, is_fabrication, fixed_state);
     }
   }
 

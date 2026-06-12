@@ -409,7 +409,7 @@ public class BasicBoard implements Serializable {
    * Inserts a component outline into the board.
    */
   public ComponentOutline insert_component_outline(Area p_area, boolean p_is_front, Vector p_translation,
-      double p_rotation_in_degree, int p_component_no, boolean p_is_courtyard, FixedState p_fixed_state) {
+      double p_rotation_in_degree, int p_component_no, boolean p_is_courtyard, boolean p_is_fabrication, FixedState p_fixed_state) {
     if (p_area == null) {
       FRLogger.warn("BasicBoard.insert_component_outline: p_area is null");
       return null;
@@ -419,7 +419,7 @@ public class BasicBoard implements Serializable {
       return null;
     }
     ComponentOutline outline = new ComponentOutline(p_area, p_is_front, p_translation, p_rotation_in_degree, 0,
-        p_component_no, p_is_courtyard, p_fixed_state, this);
+        p_component_no, p_is_courtyard, p_is_fabrication, p_fixed_state, this);
     insert_item(outline);
     return outline;
   }
@@ -1276,6 +1276,8 @@ public class BasicBoard implements Serializable {
                   int itemVirtualIdx;
                   if (co.is_courtyard()) {
                     itemVirtualIdx = co.is_front() ? 2 : 3;
+                  } else if (co.is_fabrication()) {
+                    itemVirtualIdx = co.is_front() ? 4 : 5;
                   } else {
                     itemVirtualIdx = co.is_front() ? 0 : 1;
                   }

@@ -249,12 +249,18 @@ public class Library extends ScopeKeyword {
         pin_arr[i] = new app.freerouting.core.Package.Pin(pin_info.pin_name, board_padstack.no, rel_coor, pin_info.rotation);
       }
       app.freerouting.geometry.planar.Shape[] outline_arr = new app.freerouting.geometry.planar.Shape[curr_package.outline.size()];
+      double[] outline_widths = new double[curr_package.outline.size()];
 
       Iterator<Shape> it3 = curr_package.outline.iterator();
       for (int i = 0; i < outline_arr.length; i++) {
         Shape curr_shape = it3.next();
         if (curr_shape != null) {
           outline_arr[i] = curr_shape.transform_to_board_rel(p_par.coordinate_transform);
+          if (curr_shape instanceof Path path) {
+            outline_widths[i] = path.width;
+          } else {
+            outline_widths[i] = 0.0;
+          }
         } else {
           FRLogger.warn("Library.read_scope: outline shape is null at '" + p_par.scanner.get_scope_identifier() + "'");
         }
@@ -286,7 +292,7 @@ public class Library extends ScopeKeyword {
         Area curr_area = Shape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
         place_keepout_arr[i] = new app.freerouting.core.Package.Keepout(curr_keepout.area_name, curr_area, curr_layer.no);
       }
-      board.library.packages.add(curr_package.name, pin_arr, outline_arr, keepout_arr, via_keepout_arr, place_keepout_arr, curr_package.is_front);
+      board.library.packages.add(curr_package.name, pin_arr, outline_arr, outline_widths, keepout_arr, via_keepout_arr, place_keepout_arr, curr_package.is_front);
     }
     return true;
   }

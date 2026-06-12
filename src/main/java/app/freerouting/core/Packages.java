@@ -60,9 +60,9 @@ public class Packages implements Serializable {
   /**
    * Appends a new package with the input data to this object.
    */
-  public Package add(String p_name, Package.Pin[] p_pin_arr, Shape[] p_outline, Package.Keepout[] p_keepout_arr, Package.Keepout[] p_via_keepout_arr, Package.Keepout[] p_place_keepout_arr,
+  public Package add(String p_name, Package.Pin[] p_pin_arr, Shape[] p_outline, double[] p_outline_widths, Package.Keepout[] p_keepout_arr, Package.Keepout[] p_via_keepout_arr, Package.Keepout[] p_place_keepout_arr,
       boolean p_is_front) {
-    Package new_package = new Package(p_name, package_arr.size() + 1, p_pin_arr, p_outline, p_keepout_arr, p_via_keepout_arr, p_place_keepout_arr, p_is_front, this);
+    Package new_package = new Package(p_name, package_arr.size() + 1, p_pin_arr, p_outline, p_outline_widths, p_keepout_arr, p_via_keepout_arr, p_place_keepout_arr, p_is_front, this);
     package_arr.add(new_package);
     return new_package;
   }
@@ -73,6 +73,6 @@ public class Packages implements Serializable {
   public Package add(Package.Pin[] p_pin_arr) {
     String package_name = "Package#" + (package_arr.size() + 1);
 
-    return add(package_name, p_pin_arr, null, new Package.Keepout[0], new Package.Keepout[0], new Package.Keepout[0], true);
+    return add(package_name, p_pin_arr, null, null, new Package.Keepout[0], new Package.Keepout[0], new Package.Keepout[0], true);
   }
 }
