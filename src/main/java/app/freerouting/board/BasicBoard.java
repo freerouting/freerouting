@@ -1260,8 +1260,8 @@ public class BasicBoard implements Serializable {
         selectedLayerName, dominantSide, renderingOrderNames));
 
     // Draw elements according to the calculated steps sequence
-    for (RenderStep step : drawSteps) {
-      for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MAX_DRAW_PRIORITY; curr_priority++) {
+    for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MAX_DRAW_PRIORITY; curr_priority++) {
+      for (RenderStep step : drawSteps) {
         Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
         for (;;) {
           try {
@@ -1287,9 +1287,7 @@ public class BasicBoard implements Serializable {
                 // If it is a physical layer step, render traces/vias/pins/obstacles on this layer
                 // ComponentOutlines are virtual layers and drawn above, so skip them here
                 if (!(curr_item instanceof ComponentOutline)) {
-                  if (curr_item.is_on_layer(step.index)) {
-                    curr_item.draw(p_graphics, p_graphics_context);
-                  }
+                  curr_item.draw_layer(p_graphics, p_graphics_context, step.index);
                 }
               }
             }

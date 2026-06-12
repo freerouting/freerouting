@@ -396,6 +396,54 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   }
 
   @Override
+  public void draw_layer(Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity, int p_layer_no) {
+    if (p_graphics_context == null || p_intensity <= 0) {
+      return;
+    }
+    int from_layer = first_layer();
+    int to_layer = last_layer();
+    if (p_layer_no < from_layer || p_layer_no > to_layer) {
+      return;
+    }
+    double visibility_factor = 0;
+    for (int i = from_layer; i <= to_layer; i++) {
+      visibility_factor += p_graphics_context.get_layer_visibility(i);
+    }
+
+    if (visibility_factor < 0.001) {
+      return;
+    }
+    double intensity = p_intensity;
+    if (!(this instanceof Pin)) {
+      intensity = p_intensity / Math.max(visibility_factor, 1);
+    }
+    Shape curr_shape = this.get_shape(p_layer_no - from_layer);
+    if (curr_shape == null) {
+      return;
+    }
+    double layer_vis = p_graphics_context.get_layer_visibility(p_layer_no);
+    if (layer_vis <= 0.001) {
+      return;
+    }
+    Color color = p_color_arr[p_layer_no];
+    double layer_intensity = this instanceof Pin ? intensity : intensity * layer_vis;
+    p_graphics_context.fill_area(curr_shape, p_g, color, layer_intensity);
+
+    // Render drill hole for through-hole pins only (not vias), and draw it only on the last (to_layer) layer to avoid duplicates
+    if (this instanceof Pin && from_layer != to_layer && p_layer_no == to_layer) {
+      double drillRadius = get_padstack().get_drill_radius();
+      if (drillRadius > 0) {
+        Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
+        double drillIntensity = p_graphics_context.color_intensity_table.get_value(
+            ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal()) * p_intensity;
+        IntPoint centerPoint = get_center().to_float().round();
+        Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
+        p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
+      }
+    }
+  }
+
+  @Override
   public void draw(Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
