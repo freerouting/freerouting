@@ -1121,43 +1121,7 @@ public class BasicBoard implements Serializable {
     // If dominant side is Front: Back layer elements first, then Inner layers, then Front layer elements last.
     // If dominant side is Back: Front layer elements first, then Inner layers, then Back layer elements last.
     // If dominant side is None (Inner layer selected): other layers first, then the selected inner layer last.
-    
-    // To implement this, we associate a sorting value / layer rendering order list:
-    // We group layers into Front, Back, Inner.
-    // Let's print a DEBUG level log message confirming the order.
-    java.util.List<Integer> layerOrder = new java.util.ArrayList<>();
     int layerCount = get_layer_count();
-    
-    if (dominantSide == DominantSide.FRONT) {
-      // Back (layerCount - 1) -> Inner (1 to layerCount - 2) -> Front (0)
-      if (layerCount > 1) {
-        layerOrder.add(layerCount - 1);
-      }
-      for (int i = 1; i < layerCount - 1; i++) {
-        layerOrder.add(i);
-      }
-      layerOrder.add(0);
-    } else if (dominantSide == DominantSide.BACK) {
-      // Front (0) -> Inner (1 to layerCount - 2) -> Back (layerCount - 1)
-      layerOrder.add(0);
-      for (int i = 1; i < layerCount - 1; i++) {
-        layerOrder.add(i);
-      }
-      if (layerCount > 1) {
-        layerOrder.add(layerCount - 1);
-      }
-    } else {
-      // Dominant side is None (an inner layer is selected)
-      // Render all non-selected layers first, then the selected active layer last
-      for (int i = 0; i < layerCount; i++) {
-        if (i != activeLayer) {
-          layerOrder.add(i);
-        }
-      }
-      if (activeLayer >= 0 && activeLayer < layerCount) {
-        layerOrder.add(activeLayer);
-      }
-    }
 
     // Create layer names and visual layer names mapping for logging
     String selectedLayerName = "None";
@@ -1259,43 +1223,58 @@ public class BasicBoard implements Serializable {
     FRLogger.debug(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
         selectedLayerName, dominantSide, renderingOrderNames));
 
+    // Pre-collect all items once to avoid re-iterating item_list for every (priority × step)
+    java.util.List<Item> allItems = new java.util.ArrayList<>();
+    {
+      Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
+      for (;;) {
+        try {
+          Item curr_item = (Item) item_list.read_object(it);
+          if (curr_item == null) {
+            break;
+          }
+          allItems.add(curr_item);
+        } catch (ConcurrentModificationException _) {
+          // may happen when windows are changed interactively while running a logfile
+          return;
+        }
+      }
+    }
+
     // Draw elements according to the calculated steps sequence
     for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MAX_DRAW_PRIORITY; curr_priority++) {
       for (RenderStep step : drawSteps) {
-        Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
-        for (;;) {
-          try {
-            Item curr_item = (Item) item_list.read_object(it);
-            if (curr_item == null) {
-              break;
-            }
-            if (curr_item.get_draw_priority() == curr_priority) {
-              if (step.isVirtual) {
-                // If it is a virtual layer step, only render ComponentOutline items matching that virtual layer index
-                if (curr_item instanceof ComponentOutline co) {
-                  int itemVirtualIdx;
-                  if (co.is_courtyard()) {
-                    itemVirtualIdx = co.is_front() ? 2 : 3;
-                  } else if (co.is_fabrication()) {
-                    itemVirtualIdx = co.is_front() ? 4 : 5;
-                  } else {
-                    itemVirtualIdx = co.is_front() ? 0 : 1;
-                  }
-                  if (itemVirtualIdx == step.index) {
-                    curr_item.draw(p_graphics, p_graphics_context);
-                  }
+        for (Item curr_item : allItems) {
+          if (curr_item.get_draw_priority() == curr_priority) {
+            if (step.isVirtual) {
+              // Virtual layer step: render ComponentOutline and ComponentObstacleArea (courtyard)
+              // items matching that virtual layer index
+              if (curr_item instanceof ComponentOutline co) {
+                int itemVirtualIdx;
+                if (co.is_courtyard()) {
+                  itemVirtualIdx = co.is_front() ? 2 : 3;
+                } else if (co.is_fabrication()) {
+                  itemVirtualIdx = co.is_front() ? 4 : 5;
+                } else {
+                  itemVirtualIdx = co.is_front() ? 0 : 1;
                 }
-              } else {
-                // If it is a physical layer step, render traces/vias/pins/obstacles on this layer
-                // ComponentOutlines are virtual layers and drawn above, so skip them here
-                if (!(curr_item instanceof ComponentOutline)) {
-                  curr_item.draw_layer(p_graphics, p_graphics_context, step.index);
+                if (itemVirtualIdx == step.index) {
+                  curr_item.draw(p_graphics, p_graphics_context);
+                }
+              } else if (curr_item instanceof ComponentObstacleArea coa) {
+                // Courtyard keepout areas map to virtual courtyard layers (2=F.Courtyard, 3=B.Courtyard)
+                int itemVirtualIdx = coa.is_front() ? 2 : 3;
+                if (itemVirtualIdx == step.index) {
+                  curr_item.draw(p_graphics, p_graphics_context);
                 }
               }
+            } else {
+              // Physical layer step: skip ComponentOutline and ComponentObstacleArea
+              // (they are rendered exclusively in their corresponding virtual layer steps)
+              if (!(curr_item instanceof ComponentOutline) && !(curr_item instanceof ComponentObstacleArea)) {
+                curr_item.draw_layer(p_graphics, p_graphics_context, step.index);
+              }
             }
-          } catch (ConcurrentModificationException _) {
-            // may happen when window are changed interactively while running a logfile
-            return;
           }
         }
       }
@@ -1307,6 +1286,7 @@ public class BasicBoard implements Serializable {
     if (intensityFront > 0 || intensityBack > 0) {
       java.awt.Graphics2D g2 = (java.awt.Graphics2D) p_graphics;
       java.awt.Font originalFont = g2.getFont();
+      java.awt.Composite originalComposite = g2.getComposite();
       g2.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
       for (Component comp : components.get_all()) {
         if (!comp.is_placed() || comp.get_part_number() == null || comp.get_part_number().isEmpty()) {
@@ -1322,7 +1302,8 @@ public class BasicBoard implements Serializable {
           continue;
         }
         g2.setColor(color);
-        g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, (float) intensity));
+        float alpha = (float) Math.max(0.0, Math.min(1.0, intensity));
+        g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, alpha));
         java.awt.geom.Point2D screenLoc = p_graphics_context.coordinate_transform.board_to_screen(comp.get_location().to_float());
         java.awt.FontMetrics metrics = g2.getFontMetrics();
         int textWidth = metrics.stringWidth(comp.get_part_number());
@@ -1330,6 +1311,7 @@ public class BasicBoard implements Serializable {
         g2.drawString(comp.get_part_number(), (float) (screenLoc.getX() - textWidth / 2.0), (float) (screenLoc.getY() + textHeight / 2.0));
       }
       g2.setFont(originalFont);
+      g2.setComposite(originalComposite);
     }
   }
 

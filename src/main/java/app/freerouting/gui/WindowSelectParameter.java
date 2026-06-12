@@ -39,17 +39,9 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   private final JToggleButton settings_select_all_visible_button;
   private final JToggleButton settings_select_current_only_button;
 
-  private final String[] virtual_layer_names = {
-    "F.Silkscreen", "B.Silkscreen", "F.Courtyard", "B.Courtyard", "F.Fab", "B.Fab"
-  };
-  
-  private final String[] virtual_layer_tooltips = {
-    "Front silkscreen: component labels and reference designators (front side)",
-    "Back silkscreen: component labels and reference designators (back side)",
-    "Front courtyard: minimum keepout boundary around components (front side)",
-    "Back courtyard: minimum keepout boundary around components (back side)",
-    "Front fabrication: component body outlines for assembly drawings (front side)",
-    "Back fabrication: component body outlines for assembly drawings (back side)"
+  /** Resource-bundle keys for the six virtual layers, in order: F.Silk, B.Silk, F.CY, B.CY, F.Fab, B.Fab */
+  private static final String[] VIRTUAL_LAYER_KEYS = {
+    "F_Silkscreen", "B_Silkscreen", "F_Courtyard", "B_Courtyard", "F_Fab", "B_Fab"
   };
 
   /**
@@ -149,7 +141,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
       // Eye visibility toggle
       JCheckBox eye_cb = new JCheckBox();
-      eye_cb.setToolTipText("Toggle visibility of signal layer " + curr_layer.name);
+      eye_cb.setToolTipText(tm.getText("layer_eye_tooltip", curr_layer.name));
       eye_cb.setSelected(gc.get_raw_layer_visibility(i) > 0.0);
       eye_cb.addActionListener(new LayerEyeListener(i));
       settings_select_layer_eye_arr[i] = eye_cb;
@@ -160,7 +152,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
       // Active layer selection button
       JToggleButton btn = new JToggleButton(curr_layer.name);
-      btn.setToolTipText("Set active signal layer " + curr_layer.name);
+      btn.setToolTipText(tm.getText("layer_button_tooltip", curr_layer.name));
       btn.setEnabled(curr_layer.is_signal);
       btn.setMargin(new Insets(2, 5, 2, 5));
       if (!curr_layer.is_signal) {
@@ -191,11 +183,12 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     this.settings_virtual_layer_eye_arr = new JCheckBox[6];
 
     for (int i = 0; i < 6; i++) {
-      final int virtual_idx = i;
-      
+      String layerKey = VIRTUAL_LAYER_KEYS[i];
+      String layerName = tm.getText(layerKey);
+
       // Eye visibility toggle
       JCheckBox eye_cb = new JCheckBox();
-      eye_cb.setToolTipText("Toggle visibility of " + virtual_layer_names[i]);
+      eye_cb.setToolTipText(tm.getText("virtual_layer_eye_tooltip", layerName));
       eye_cb.setSelected(gc.get_virtual_layer_visible(i));
       eye_cb.addActionListener(new VirtualLayerEyeListener(i));
       settings_virtual_layer_eye_arr[i] = eye_cb;
@@ -212,8 +205,8 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       JLabel swatch = createSwatch(layerColor);
 
       // Active layer selection button
-      JToggleButton btn = new JToggleButton(virtual_layer_names[i]);
-      btn.setToolTipText(virtual_layer_tooltips[i]);
+      JToggleButton btn = new JToggleButton(layerName);
+      btn.setToolTipText(tm.getText(layerKey + "_tooltip"));
       btn.setMargin(new Insets(2, 5, 2, 5));
       btn.addActionListener(new VirtualLayerActiveListener(i));
       settings_virtual_layer_name_arr[i] = btn;

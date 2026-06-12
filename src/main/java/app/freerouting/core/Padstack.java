@@ -32,6 +32,8 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
    * Pointer to the pacdstack list containing this padstack
    */
   private final Padstacks padstack_list;
+  /** Cached drill radius to avoid repeated regex parsing on every render call. */
+  private Double cachedDrillRadius = null;
 
   /**
    * Creates a new Padstack with shape p_shapes[i] on layer i (0 <= i < p_shapes.length). p_is_drilllable indicates, if vias of the own net are allowed to overlap with this padstack If
@@ -56,8 +58,13 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
 
   /**
    * Returns the drill radius of this padstack in board units.
+   * The result is cached after the first computation to avoid repeated regex parsing.
    */
   public double get_drill_radius() {
+    if (cachedDrillRadius != null) {
+      return cachedDrillRadius;
+    }
+    double result;
     if (name != null) {
       int colonIndex = name.indexOf(':');
       if (colonIndex >= 0) {
@@ -78,7 +85,9 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
             if (outerDia > 0) {
               double actualOuterRadius = get_smallest_radius();
               if (actualOuterRadius > 0) {
-                return actualOuterRadius * (drillDia / outerDia);
+                result = actualOuterRadius * (drillDia / outerDia);
+                cachedDrillRadius = result;
+                return cachedDrillRadius;
               }
             }
           }
@@ -87,7 +96,9 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
         }
       }
     }
-    return get_smallest_radius() * 0.45;
+    result = get_smallest_radius() * 0.45;
+    cachedDrillRadius = result;
+    return cachedDrillRadius;
   }
 
   private double get_smallest_radius() {
