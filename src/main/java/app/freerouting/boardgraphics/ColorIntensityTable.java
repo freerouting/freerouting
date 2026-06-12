@@ -41,6 +41,10 @@ public class ColorIntensityTable implements Serializable {
       FRLogger.warn("ColorIntensityTable.get_value: p_no out of range");
       return 0;
     }
+    if (p_no >= arr.length) {
+      FRLogger.warn("ColorIntensityTable.get_value: p_no missing in serialized data");
+      return get_default_value(p_no);
+    }
     return arr[p_no];
   }
 
@@ -49,7 +53,18 @@ public class ColorIntensityTable implements Serializable {
       FRLogger.warn("ColorIntensityTable.set_value: p_no out of range");
       return;
     }
+    if (p_no >= arr.length) {
+      FRLogger.warn("ColorIntensityTable.set_value: p_no missing in serialized data");
+      return;
+    }
     arr[p_no] = p_value;
+  }
+
+  private double get_default_value(int p_no) {
+    if (p_no == ObjectNames.DRILL_HOLES.ordinal()) {
+      return 1.0;
+    }
+    return 0;
   }
 
   public enum ObjectNames {

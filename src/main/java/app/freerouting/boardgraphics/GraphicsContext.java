@@ -37,6 +37,7 @@ import java.util.Locale;
 public class GraphicsContext implements Serializable {
 
   private static final int update_offset = 10000;
+  private static final int virtual_layer_count = 6;
   private static final boolean show_line_segments = false;
   private static final boolean show_area_division = false;
   public transient ItemColorTableModel item_color_table;
@@ -56,7 +57,7 @@ public class GraphicsContext implements Serializable {
    */
   private int fully_visible_layer = -1;
 
-  private boolean[] virtual_layer_visibility_arr = new boolean[]{true, true, true, true, true, true};
+  private boolean[] virtual_layer_visibility_arr = create_default_virtual_layer_visibility_arr();
   private int fully_visible_virtual_layer = -1;
 
   public GraphicsContext(IntBox p_design_bounds, Dimension p_panel_bounds, LayerStructure p_layer_structure, Locale p_locale) {
@@ -83,8 +84,19 @@ public class GraphicsContext implements Serializable {
     this.other_color_table = new OtherColorTableModel(p_graphics_context.other_color_table);
     this.color_intensity_table = new ColorIntensityTable(p_graphics_context.color_intensity_table);
     this.layer_visibility_arr = p_graphics_context.copy_layer_visibility_arr();
-    this.virtual_layer_visibility_arr = p_graphics_context.virtual_layer_visibility_arr.clone();
+    this.virtual_layer_visibility_arr = p_graphics_context.get_virtual_layer_visibility_arr().clone();
     this.fully_visible_virtual_layer = p_graphics_context.fully_visible_virtual_layer;
+  }
+
+  private static boolean[] create_default_virtual_layer_visibility_arr() {
+    return new boolean[]{true, true, true, true, true, true};
+  }
+
+  private boolean[] get_virtual_layer_visibility_arr() {
+    if (virtual_layer_visibility_arr == null || virtual_layer_visibility_arr.length == 0) {
+      virtual_layer_visibility_arr = create_default_virtual_layer_visibility_arr();
+    }
+    return virtual_layer_visibility_arr;
   }
 
   /**
@@ -608,12 +620,17 @@ public class GraphicsContext implements Serializable {
   }
 
   public int get_fully_visible_virtual_layer() {
+    boolean[] visibilityArr = get_virtual_layer_visibility_arr();
+    if (fully_visible_virtual_layer < -1 || fully_visible_virtual_layer >= visibilityArr.length) {
+      return -1;
+    }
     return fully_visible_virtual_layer;
   }
 
   public boolean is_front_selected() {
-    if (fully_visible_virtual_layer != -1) {
-      return (fully_visible_virtual_layer % 2 == 0);
+    int selectedVirtualLayer = get_fully_visible_virtual_layer();
+    if (selectedVirtualLayer != -1) {
+      return (selectedVirtualLayer % 2 == 0);
     }
     if (fully_visible_layer != -1) {
       return fully_visible_layer < layer_visibility_arr.length / 2;
@@ -622,19 +639,25 @@ public class GraphicsContext implements Serializable {
   }
 
   public boolean get_virtual_layer_visible(int idx) {
-    if (idx >= 0 && idx < virtual_layer_visibility_arr.length) {
-      return virtual_layer_visibility_arr[idx];
+    boolean[] visibilityArr = get_virtual_layer_visibility_arr();
+    if (idx >= 0 && idx < visibilityArr.length) {
+      return visibilityArr[idx];
     }
     return true;
   }
 
   public void set_virtual_layer_visible(int idx, boolean visible) {
-    if (idx >= 0 && idx < virtual_layer_visibility_arr.length) {
-      virtual_layer_visibility_arr[idx] = visible;
+    boolean[] visibilityArr = get_virtual_layer_visibility_arr();
+    if (idx >= 0 && idx < visibilityArr.length) {
+      visibilityArr[idx] = visible;
     }
   }
 
   public void set_fully_visible_virtual_layer(int idx) {
+    boolean[] visibilityArr = get_virtual_layer_visibility_arr();
+    if (idx < -1 || idx >= visibilityArr.length) {
+      idx = -1;
+    }
     fully_visible_virtual_layer = idx;
     if (idx != -1) {
       fully_visible_layer = -1;
@@ -642,17 +665,19 @@ public class GraphicsContext implements Serializable {
   }
 
   public double get_virtual_layer_visibility(int virtual_layer_idx) {
-    if (virtual_layer_idx < 0 || virtual_layer_idx >= virtual_layer_visibility_arr.length) {
+    boolean[] visibilityArr = get_virtual_layer_visibility_arr();
+    if (virtual_layer_idx < 0 || virtual_layer_idx >= visibilityArr.length) {
       return 1.0;
     }
-    if (!virtual_layer_visibility_arr[virtual_layer_idx]) {
+    if (!visibilityArr[virtual_layer_idx]) {
       return 0.0;
     }
     if (fully_visible_layer != -1) {
       return this.auto_layer_dim_factor;
     }
-    if (fully_visible_virtual_layer != -1) {
-      if (fully_visible_virtual_layer == virtual_layer_idx) {
+    int selectedVirtualLayer = get_fully_visible_virtual_layer();
+    if (selectedVirtualLayer != -1) {
+      if (selectedVirtualLayer == virtual_layer_idx) {
         return 1.0;
       } else {
         return this.auto_layer_dim_factor;
@@ -740,6 +765,9 @@ public class GraphicsContext implements Serializable {
    */
   private void readObject(ObjectInputStream p_stream) throws IOException, ClassNotFoundException {
     p_stream.defaultReadObject();
+    if (virtual_layer_visibility_arr == null || virtual_layer_visibility_arr.length != virtual_layer_count) {
+      virtual_layer_visibility_arr = create_default_virtual_layer_visibility_arr();
+    }
     this.item_color_table = new ItemColorTableModel(p_stream);
     this.other_color_table = new OtherColorTableModel(p_stream);
   }
