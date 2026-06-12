@@ -445,14 +445,17 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
         lastPhysicalLayer = isBack ? (layerCount - 1) : 0;
       }
       if (p_layer_no == lastPhysicalLayer) {
-        double drillRadius = get_padstack().get_drill_radius();
-        if (drillRadius > 0) {
-          Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
-          double drillIntensity = p_graphics_context.color_intensity_table.get_value(
-              ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
-          IntPoint centerPoint = get_center().to_float().round();
-          Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
-          p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
+        Padstack padstack = get_padstack();
+        if (padstack != null) {
+          double drillRadius = padstack.get_drill_radius();
+          if (drillRadius > 0) {
+            Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
+            double drillIntensity = p_graphics_context.color_intensity_table.get_value(
+                ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
+            IntPoint centerPoint = get_center().to_float().round();
+            Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
+            p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
+          }
         }
       }
     }
@@ -494,14 +497,17 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
 
     // Render drill hole for through-hole pins only (not vias)
     if (this instanceof Pin && from_layer != to_layer) {
-      double drillRadius = get_padstack().get_drill_radius();
-      if (drillRadius > 0) {
-        Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
-        double drillIntensity = p_graphics_context.color_intensity_table.get_value(
-            ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
-        IntPoint centerPoint = get_center().to_float().round();
-        Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
-        p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
+      Padstack padstack = get_padstack();
+      if (padstack != null) {
+        double drillRadius = padstack.get_drill_radius();
+        if (drillRadius > 0) {
+          Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
+          double drillIntensity = p_graphics_context.color_intensity_table.get_value(
+              ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
+          IntPoint centerPoint = get_center().to_float().round();
+          Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
+          p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
+        }
       }
     }
   }

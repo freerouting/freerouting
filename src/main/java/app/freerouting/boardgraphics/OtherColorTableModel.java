@@ -66,7 +66,7 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
 
   private Color get_color_safe(ColumnNames col, Color defaultColor) {
     int idx = col.ordinal();
-    if (idx >= 0 && idx < data[0].length) {
+    if (data != null && data.length > 0 && data[0] != null && idx >= 0 && idx < data[0].length) {
       Color c = (Color) data[0][idx];
       if (c != null) {
         return c;
@@ -77,7 +77,7 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
 
   private void set_color_safe(ColumnNames col, Color p_color) {
     int idx = col.ordinal();
-    if (idx >= 0 && idx < data[0].length) {
+    if (data != null && data.length > 0 && data[0] != null && idx >= 0 && idx < data[0].length) {
       data[0][idx] = p_color;
     }
   }
