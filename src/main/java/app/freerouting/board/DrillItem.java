@@ -429,16 +429,31 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     double layer_intensity = this instanceof Pin ? intensity : intensity * layer_vis;
     p_graphics_context.fill_area(curr_shape, p_g, color, layer_intensity);
 
-    // Render drill hole for through-hole pins only (not vias), and draw it only on the last (to_layer) layer to avoid duplicates
-    if (this instanceof Pin && from_layer != to_layer && p_layer_no == to_layer) {
-      double drillRadius = get_padstack().get_drill_radius();
-      if (drillRadius > 0) {
-        Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
-        double drillIntensity = p_graphics_context.color_intensity_table.get_value(
-            ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal()) * p_intensity;
-        IntPoint centerPoint = get_center().to_float().round();
-        Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
-        p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
+    // Render drill hole for through-hole pins only (not vias), and draw it only on the last physical layer step drawn to ensure it is on top of the pads
+    if (this instanceof Pin && from_layer != to_layer) {
+      int lastPhysicalLayer;
+      int activeLayer = p_graphics_context.get_fully_visible_layer();
+      if (activeLayer != -1) {
+        lastPhysicalLayer = activeLayer;
+      } else {
+        int activeVirtual = p_graphics_context.get_fully_visible_virtual_layer();
+        boolean isBack = false;
+        if (activeVirtual != -1) {
+          isBack = (activeVirtual % 2 != 0); // odd indices are Back (B.Silkscreen=1, B.Courtyard=3, B.Fab=5)
+        }
+        int layerCount = board.get_layer_count();
+        lastPhysicalLayer = isBack ? (layerCount - 1) : 0;
+      }
+      if (p_layer_no == lastPhysicalLayer) {
+        double drillRadius = get_padstack().get_drill_radius();
+        if (drillRadius > 0) {
+          Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
+          double drillIntensity = p_graphics_context.color_intensity_table.get_value(
+              ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
+          IntPoint centerPoint = get_center().to_float().round();
+          Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
+          p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
+        }
       }
     }
   }
@@ -483,7 +498,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       if (drillRadius > 0) {
         Color drillColor = p_graphics_context.other_color_table.get_drill_hole_color();
         double drillIntensity = p_graphics_context.color_intensity_table.get_value(
-            ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal()) * p_intensity;
+            ColorIntensityTable.ObjectNames.DRILL_HOLES.ordinal());
         IntPoint centerPoint = get_center().to_float().round();
         Circle drillCircle = new Circle(centerPoint, (int) Math.round(drillRadius));
         p_graphics_context.fill_circle(drillCircle, p_g, drillColor, drillIntensity);
