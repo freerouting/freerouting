@@ -26,7 +26,6 @@ import app.freerouting.core.ProgressThrottler;
 public class BatchOptimizer extends NamedAlgorithm {
 
   protected static int MAX_AUTOROUTE_PASSES = 6;
-  protected static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
   protected ReadSortedRouteItems sorted_route_items;
   // in the first passes the ripup costs are increased for better performance.
   protected boolean use_increased_ripup_costs;
@@ -217,16 +216,19 @@ public class BatchOptimizer extends NamedAlgorithm {
     // calculate the ripup costs
     int ripup_costs = this.settings.get_start_ripup_costs();
     if (this.use_increased_ripup_costs) {
-      // TODO: move this fixed parameter (ADDITIONAL_RIPUP_COST_FACTOR_AT_START=10) to
-      // the router optimizer settings
-      ripup_costs *= ADDITIONAL_RIPUP_COST_FACTOR_AT_START;
+  // Use a fallback just in case the settings file was missing the value
+  int factor = (this.settings.optimizer.additionalRipupCostFactorAtStart != null) 
+               ? this.settings.optimizer.additionalRipupCostFactorAtStart 
+               : 10;
+  ripup_costs *= factor;
     }
 
     // reduce the ripup costs for traces
     if (p_item instanceof Trace) {
-      // taking less ripup costs seems to produce better results
-      // TODO: move this fixed parameter (0.6) to the router optimizer settings
-      ripup_costs = (int) Math.round(0.6 * (double) ripup_costs);
+  float traceFactor = (this.settings.optimizer.traceRipupCostFactor != null) 
+                      ? this.settings.optimizer.traceRipupCostFactor 
+                      : 0.6f;
+  ripup_costs = (int) Math.round(traceFactor * (double) ripup_costs);
     }
 
     // route the connections

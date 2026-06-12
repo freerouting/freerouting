@@ -17,6 +17,12 @@ public class RouterOptimizerSettings implements Serializable, Cloneable {
   public Integer maxThreads;
   @SerializedName("improvement_threshold")
   public Float optimizationImprovementThreshold;
+  @SerializedName("additional_ripup_cost_factor_at_start")
+  public Integer additionalRipupCostFactorAtStart = 10;
+  @SerializedName("trace_ripup_cost_factor")
+  public Float traceRipupCostFactor = 0.6f;
+  // -------------------------------
+
   public transient BoardUpdateStrategy boardUpdateStrategy;
   public transient String hybridRatio;
   public transient ItemSelectionStrategy itemSelectionStrategy;
