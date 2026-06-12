@@ -966,7 +966,11 @@ public class Network extends ScopeKeyword {
           is_fabrication = true;
         }
       }
-      routing_board.insert_component_outline(curr_package.outline[i], p_location.is_front, component_translation, rotation_in_degree, new_component.no, is_courtyard, is_fabrication, fixed_state);
+      boolean is_closed = false;
+      if (curr_package.outline_is_closed != null && i < curr_package.outline_is_closed.length) {
+        is_closed = curr_package.outline_is_closed[i];
+      }
+      routing_board.insert_component_outline(curr_package.outline[i], p_location.is_front, component_translation, rotation_in_degree, new_component.no, is_courtyard, is_fabrication, is_closed, fixed_state);
     }
   }
 

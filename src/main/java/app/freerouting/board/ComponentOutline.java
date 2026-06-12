@@ -26,11 +26,12 @@ public class ComponentOutline extends Item implements Serializable {
   private boolean is_front;
   private boolean is_courtyard;
   private boolean is_fabrication;
+  private boolean is_closed;
 
   /**
    * Creates a new instance of ComponentOutline
    */
-  public ComponentOutline(Area p_area, boolean p_is_front, Vector p_translation, double p_rotation_in_degree, int p_id_no, int p_component_no, boolean p_is_courtyard, boolean p_is_fabrication, FixedState p_fixed_state, BasicBoard p_board) {
+  public ComponentOutline(Area p_area, boolean p_is_front, Vector p_translation, double p_rotation_in_degree, int p_id_no, int p_component_no, boolean p_is_courtyard, boolean p_is_fabrication, boolean p_is_closed, FixedState p_fixed_state, BasicBoard p_board) {
     super(new int[0], 0, p_id_no, p_component_no, p_fixed_state, p_board);
     this.relative_area = p_area;
     this.is_front = p_is_front;
@@ -38,11 +39,12 @@ public class ComponentOutline extends Item implements Serializable {
     this.rotation_in_degree = p_rotation_in_degree;
     this.is_courtyard = p_is_courtyard;
     this.is_fabrication = p_is_fabrication;
+    this.is_closed = p_is_closed;
   }
 
   @Override
   public Item copy(int p_id_no) {
-    return new ComponentOutline(this.relative_area, this.is_front, this.translation, this.rotation_in_degree, p_id_no, this.get_component_no(), this.is_courtyard, this.is_fabrication, this.get_fixed_state(), this.board);
+    return new ComponentOutline(this.relative_area, this.is_front, this.translation, this.rotation_in_degree, p_id_no, this.get_component_no(), this.is_courtyard, this.is_fabrication, this.is_closed, this.get_fixed_state(), this.board);
   }
 
   public boolean is_front() {
@@ -55,6 +57,10 @@ public class ComponentOutline extends Item implements Serializable {
 
   public boolean is_fabrication() {
     return this.is_fabrication;
+  }
+
+  public boolean is_closed() {
+    return this.is_closed;
   }
 
   @Override
@@ -162,8 +168,12 @@ public class ComponentOutline extends Item implements Serializable {
     Color color = p_color_arr[this.get_layer()];
     double intensity = virtualVisibility * p_intensity;
 
-    double draw_width = Math.min(this.board.communication.get_resolution(Unit.MIL), 100);
-    p_graphics_context.draw_boundary(this.get_area(), draw_width, color, p_g, intensity);
+    if (this.is_courtyard || this.is_closed) {
+      double draw_width = Math.min(this.board.communication.get_resolution(Unit.MIL), 100);
+      p_graphics_context.draw_boundary(this.get_area(), draw_width, color, p_g, intensity);
+    } else {
+      p_graphics_context.fill_area(this.get_area(), p_g, color, intensity);
+    }
   }
 
   @Override
