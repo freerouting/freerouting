@@ -62,10 +62,10 @@ public class GuiManager {
                         "Freerouting/" + globalSettings.version);
         SessionManager
                 .getInstance()
-                .setGuiSession(guiSession.id);
+                .setGuiSession(guiSession.getId());
         SessionManager
                 .getInstance()
-                .setMonitoredSessionId(guiSession.id);
+                .setMonitoredSessionId(guiSession.getId());
 
         // Set default font for buttons and labels
         FontUIResource menuFont = (FontUIResource) UIManager.get("Menu.font");
@@ -95,7 +95,7 @@ public class GuiManager {
         if (globalSettings.initialInputFile != null) {
             // let's create a job in our session and queue it
             FRLogger.info("Opening '" + globalSettings.initialInputFile + "'...");
-            routingJob = new RoutingJob(guiSession.id);
+            routingJob = new RoutingJob(guiSession.getId());
 
             try {
                 routingJob.setInput(globalSettings.initialInputFile);
@@ -458,9 +458,10 @@ public class GuiManager {
         try {
             File rules_file = new File(p_parent_name, rules_file_name);
             FRLogger.info("Opening '" + rules_file_name + "'...");
-            InputStream input_stream = new FileInputStream(rules_file);
-            if (dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message)) {
-                return RulesReader.read(input_stream, p_design_name, p_board_handling.get_routing_board());
+            try (InputStream input_stream = new FileInputStream(rules_file)) {
+                if (dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message)) {
+                    return RulesReader.read(input_stream, p_design_name, p_board_handling.get_routing_board());
+                }
             }
         } catch (IOException _) {
             FRLogger.error("File '" + rules_file_name + "' was not found.", null);

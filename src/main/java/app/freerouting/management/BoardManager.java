@@ -18,12 +18,12 @@ import app.freerouting.settings.sources.GuiSettings;
  *
  * <p><strong>GUI / Headless duality:</strong>
  * <ul>
- *   <li>In <em>GUI mode</em> ({@link GuiBoardManager}) the {@link InteractiveSettings} singleton
+ *   <li>In <em>GUI mode</em> ({@link app.freerouting.interactive.GuiBoardManager}) the {@link app.freerouting.interactive.InteractiveSettings} singleton
  *       is always non-null and also acts as the {@link app.freerouting.settings.sources.GuiSettings}
- *       source (priority 50) registered in the
+ *       source (priority 65) registered in the
  *       {@link app.freerouting.settings.SettingsMerger} pipeline.
  *       Use {@link #getInteractiveSettings()} to obtain it.</li>
- *   <li>In <em>headless mode</em> ({@link HeadlessBoardManager}) there is no GUI; therefore
+ *   <li>In <em>headless mode</em> ({@link app.freerouting.management.HeadlessBoardManager}) there is no GUI; therefore
  *       {@link #getInteractiveSettings()} returns {@code null} and
  *       {@link #isInteractiveModeSupported()} returns {@code false}.</li>
  * </ul>
@@ -43,9 +43,9 @@ import app.freerouting.settings.sources.GuiSettings;
  *
  * <p><strong>Implementation Classes:</strong>
  * <ul>
- *   <li><strong>{@link GuiBoardManager}:</strong> Full-featured implementation with graphical
+ *   <li><strong>{@link app.freerouting.interactive.GuiBoardManager}:</strong> Full-featured implementation with graphical
  *       user interface support, handling user interaction, display updates, and visual feedback</li>
- *   <li><strong>{@link HeadlessBoardManager}:</strong> Lightweight implementation for
+ *   <li><strong>{@link app.freerouting.management.HeadlessBoardManager}:</strong> Lightweight implementation for
  *       batch processing, command-line tools, and automated routing without GUI overhead</li>
  * </ul>
  *
@@ -53,8 +53,8 @@ import app.freerouting.settings.sources.GuiSettings;
  * <pre>{@code
  * // Create appropriate manager based on mode
  * BoardManager manager = isGuiMode
- *     ? new GuiBoardManager(panel, settings, job, merger)
- *     : new HeadlessBoardManager(job);
+ *     ? new app.freerouting.interactive.GuiBoardManager(panel, settings, job, merger)
+ *     : new app.freerouting.management.HeadlessBoardManager(job);
  *
  * // Initialize board from design file
  * manager.loadFromSpecctraDsn(inputStream, observers, idGenerator);
@@ -68,10 +68,10 @@ import app.freerouting.settings.sources.GuiSettings;
  * }
  * }</pre>
  *
- * @see GuiBoardManager
- * @see HeadlessBoardManager
+ * @see app.freerouting.interactive.GuiBoardManager
+ * @see app.freerouting.management.HeadlessBoardManager
  * @see RoutingBoard
- * @see InteractiveSettings
+ * @see app.freerouting.interactive.InteractiveSettings
  */
 public interface BoardManager {
 
@@ -115,7 +115,7 @@ public interface BoardManager {
    * <p>The method copies trace half-widths for each layer from the default net class
    * to the manual trace width settings array.
    *
-   * @see InteractiveSettings#manual_trace_half_width_arr
+   * @see app.freerouting.interactive.InteractiveSettings#manual_trace_half_width_arr
    * @see app.freerouting.rules.NetClass#get_trace_half_width(int)
    */
   void initialize_manual_trace_half_widths();
@@ -169,15 +169,15 @@ public interface BoardManager {
   /**
    * Returns the interactive GUI settings singleton, or {@code null} when running headless.
    *
-   * <p>The returned {@link InteractiveSettings} instance is also the
+   * <p>The returned {@link app.freerouting.interactive.InteractiveSettings} instance is also the
    * {@link app.freerouting.settings.sources.GuiSettings} source registered in the
-   * {@link app.freerouting.settings.SettingsMerger} at priority 50. Callers must not
+   * {@link app.freerouting.settings.SettingsMerger} at priority 65. Callers must not
    * cache this reference; always obtain it through this accessor.
    *
    * <p>Check {@link #isInteractiveModeSupported()} before calling if you are unsure which
    * implementation is in use.
    *
-   * @return the singleton {@link InteractiveSettings}, or {@code null} in headless mode
+   * @return the singleton {@link app.freerouting.interactive.InteractiveSettings}, or {@code null} in headless mode
    */
   GuiSettings getInteractiveSettings();
 
@@ -185,7 +185,7 @@ public interface BoardManager {
    * Returns {@code true} if this manager runs with an active GUI and therefore guarantees that
    * {@link #getInteractiveSettings()} returns a non-null value after board initialisation.
    *
-   * <p>Defaults to {@code false}. Only {@link GuiBoardManager} overrides this to {@code true}.
+   * <p>Defaults to {@code false}. Only {@link app.freerouting.interactive.GuiBoardManager} overrides this to {@code true}.
    *
    * @return {@code true} when a GUI is active; {@code false} in headless mode
    */

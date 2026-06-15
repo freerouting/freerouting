@@ -19,7 +19,6 @@ import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.io.specctra.SesWriter;
-import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
@@ -66,8 +65,8 @@ import java.io.OutputStream;
  * <p><strong>Usage Example:</strong>
  * <pre>{@code
  * HeadlessBoardManager manager = new HeadlessBoardManager(routingJob);
- * DsnFile.ReadResult result = manager.loadFromSpecctraDsn(inputStream, observers, idGenerator);
- * if (result == DsnFile.ReadResult.OK) {
+ * BoardReadResult result = manager.loadFromSpecctraDsn(inputStream, observers, idGenerator);
+ * if (result instanceof BoardReadResult.Success) {
  *     // Perform routing operations
  *     manager.saveAsSpecctraSessionSes(outputStream, "design_name");
  * }
@@ -447,7 +446,7 @@ public class HeadlessBoardManager implements BoardManager {
    * </ul>
    *
    * <p><strong>Error Handling:</strong>
-   * Returns {@link DsnFile.ReadResult#ERROR} if:
+   * Returns subclass of {@link BoardReadResult} (like {@link app.freerouting.io.BoardReadResult.ParseError} or {@link app.freerouting.io.BoardReadResult.IoError}) if:
    * <ul>
    *   <li>Input stream is null or invalid</li>
    *   <li>DSN file is corrupted or malformed</li>
@@ -465,7 +464,6 @@ public class HeadlessBoardManager implements BoardManager {
    * @return the read result indicating success, warnings, or errors
    *
    * @see app.freerouting.io.specctra.DsnReader#readBoard
-   * @see DsnFile.ReadResult
    * @see BoardObservers
    */
   public BoardReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,

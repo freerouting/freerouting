@@ -46,4 +46,13 @@ public class Session implements Serializable {
   public void addJob(RoutingJob routingJob) {
     RoutingJobScheduler.getInstance().enqueueJob(routingJob);
   }
+
+  /**
+   * Gets the unique identifier of the session.
+   *
+   * @return The session ID.
+   */
+  public UUID getId() {
+    return this.id;
+  }
 }

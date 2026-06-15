@@ -27,18 +27,20 @@ class BoardHistoryTest {
   private RouterScoringSettings scoringSettings;
 
   @BeforeEach
-  void setUp() throws FileNotFoundException {
+  void setUp() throws Exception {
     // Load a simple board for testing
     HeadlessBoardManager boardManager1 = new HeadlessBoardManager(new RoutingJob());
-    FileInputStream inputStream1 = new FileInputStream("fixtures/empty_board.dsn");
-    BoardReadResult result1 = boardManager1.loadFromSpecctraDsn(inputStream1, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
-    board1 = boardManager1.get_routing_board();
+    try (FileInputStream inputStream1 = new FileInputStream("fixtures/empty_board.dsn")) {
+      BoardReadResult result1 = boardManager1.loadFromSpecctraDsn(inputStream1, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
+      board1 = boardManager1.get_routing_board();
+    }
 
     // Load a more complex board
     HeadlessBoardManager boardManager2 = new HeadlessBoardManager(new RoutingJob());
-    FileInputStream inputStream2 = new FileInputStream("fixtures/Issue159-setonix_2hp-pcb.dsn");
-    BoardReadResult result2 = boardManager2.loadFromSpecctraDsn(inputStream2, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
-    board2 = boardManager2.get_routing_board();
+    try (FileInputStream inputStream2 = new FileInputStream("fixtures/Issue159-setonix_2hp-pcb.dsn")) {
+      BoardReadResult result2 = boardManager2.loadFromSpecctraDsn(inputStream2, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
+      board2 = boardManager2.get_routing_board();
+    }
 
     SettingsMerger settingsMerger = new SettingsMerger();
     settingsMerger.addOrReplaceSources(new DefaultSettings());
