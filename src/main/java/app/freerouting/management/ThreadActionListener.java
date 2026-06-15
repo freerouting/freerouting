@@ -1,4 +1,4 @@
-package app.freerouting.interactive;
+package app.freerouting.management;
 
 public interface ThreadActionListener {
 

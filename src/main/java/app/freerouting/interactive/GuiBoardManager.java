@@ -1,5 +1,8 @@
 package app.freerouting.interactive;
 
+import app.freerouting.management.HeadlessBoardManager;
+import app.freerouting.management.BoardManager;
+
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.board.AngleRestriction;

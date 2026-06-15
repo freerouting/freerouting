@@ -23,6 +23,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
+import app.freerouting.management.ThreadActionListener;
 import app.freerouting.management.analytics.FRAnalytics;
 import com.sun.management.ThreadMXBean;
 import java.awt.Color;

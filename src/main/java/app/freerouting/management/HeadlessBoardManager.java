@@ -1,6 +1,8 @@
-package app.freerouting.interactive;
+package app.freerouting.management;
 
 import static app.freerouting.util.gson.GsonProvider.GSON;
+
+import app.freerouting.settings.sources.GuiSettings;
 
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
@@ -212,7 +214,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @return {@code null} always in headless mode
    */
   @Override
-  public InteractiveSettings getInteractiveSettings() {
+  public GuiSettings getInteractiveSettings() {
     return null;
   }
 
@@ -255,8 +257,12 @@ public class HeadlessBoardManager implements BoardManager {
    * @see InteractiveSettings
    */
   @Override
-  public void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure, PolylineShape[] p_outline_shapes,
-      String p_outline_clearance_class_name, BoardRules p_rules,
+  public void create_board(
+      IntBox p_bounding_box,
+      LayerStructure p_layer_structure,
+      PolylineShape[] p_outline_shapes,
+      String p_outline_clearance_class_name,
+      BoardRules p_rules,
       Communication p_board_communication) {
     if (this.board != null) {
       routingJob.logWarning(" BoardHandling.create_board: board already created");
@@ -458,11 +464,11 @@ public class HeadlessBoardManager implements BoardManager {
    * @param identificationNumberGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    *
-    * @see app.freerouting.io.specctra.DsnReader#readBoard
-    * @see DsnFile.ReadResult
-    * @see BoardObservers
-    */
-   public BoardReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
+   * @see app.freerouting.io.specctra.DsnReader#readBoard
+   * @see DsnFile.ReadResult
+   * @see BoardObservers
+   */
+  public BoardReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     if (inputStream == null) {
       return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));

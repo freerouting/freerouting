@@ -1,4 +1,4 @@
-package app.freerouting.interactive;
+package app.freerouting.management;
 
 import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
@@ -7,6 +7,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.settings.sources.GuiSettings;
 
 /**
  * Interface defining core board management operations for PCB routing applications.
@@ -178,7 +179,7 @@ public interface BoardManager {
    *
    * @return the singleton {@link InteractiveSettings}, or {@code null} in headless mode
    */
-  InteractiveSettings getInteractiveSettings();
+  GuiSettings getInteractiveSettings();
 
   /**
    * Returns {@code true} if this manager runs with an active GUI and therefore guarantees that
@@ -199,7 +200,7 @@ public interface BoardManager {
    * @deprecated Use {@link #getInteractiveSettings()} instead.
    */
   @Deprecated
-  default InteractiveSettings get_settings() {
+  default GuiSettings get_settings() {
     return getInteractiveSettings();
   }
 

@@ -10,6 +10,7 @@ import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
+import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.util.TextManager;

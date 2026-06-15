@@ -5,7 +5,7 @@ import app.freerouting.boardgraphics.ColorIntensityTable;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.interactive.InteractiveActionThread;
-import app.freerouting.interactive.ThreadActionListener;
+import app.freerouting.management.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.SessionManager;
 import app.freerouting.util.TextManager;

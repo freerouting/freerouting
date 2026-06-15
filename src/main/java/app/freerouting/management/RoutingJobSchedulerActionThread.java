@@ -12,7 +12,6 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.RoutingStage;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.io.FileFormat;
-import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import app.freerouting.settings.RouterSettings;

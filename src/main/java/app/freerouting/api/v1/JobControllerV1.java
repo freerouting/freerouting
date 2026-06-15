@@ -10,7 +10,7 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.io.FileFormat;
-import app.freerouting.interactive.HeadlessBoardManager;
+import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.management.RoutingJobScheduler;

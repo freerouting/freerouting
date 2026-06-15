@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.fixtures.RoutingFixtureTest;
-import app.freerouting.interactive.HeadlessBoardManager;
+import app.freerouting.management.HeadlessBoardManager;
 import org.junit.jupiter.api.Test;
 
 class RoutableLayersSafetyCheckTest extends RoutingFixtureTest {
