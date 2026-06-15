@@ -258,7 +258,7 @@ class SettingsMergerTest {
         source.layers[0].routable = false;
         source.layers[1].routable = true;
 
-        app.freerouting.management.ReflectionUtil.copyFields(source, target);
+        app.freerouting.util.ReflectionUtil.copyFields(source, target);
 
         assertEquals(6, target.getLayerCount());
         assertFalse(target.layers[0].routable);

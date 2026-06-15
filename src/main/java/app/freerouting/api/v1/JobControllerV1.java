@@ -1,6 +1,6 @@
 package app.freerouting.api.v1;
 
-import static app.freerouting.management.gson.GsonProvider.GSON;
+import static app.freerouting.util.gson.GsonProvider.GSON;
 
 import app.freerouting.api.BaseController;
 import app.freerouting.api.dto.BoardFilePayload;
@@ -9,15 +9,15 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.drc.DesignRulesChecker;
-import app.freerouting.gui.FileFormat;
-import app.freerouting.interactive.HeadlessBoardManager;
+import app.freerouting.io.FileFormat;
+import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.settings.RouterSettings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -1234,3 +1234,5 @@ public class JobControllerV1 extends BaseController {
         .build();
   }
 }
+
+

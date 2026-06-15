@@ -8,6 +8,7 @@ import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;

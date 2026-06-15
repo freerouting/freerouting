@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.management.HeadlessBoardManager;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -116,7 +117,7 @@ class InteractiveSettingsSingletonTest {
   @Test
   void headlessBoardManager_getSettings_returnsNull() {
     @SuppressWarnings("deprecation")
-    InteractiveSettings settings = headlessManager.get_settings();
+    app.freerouting.settings.sources.GuiSettings settings = headlessManager.get_settings();
     assertNull(settings,
         "HeadlessBoardManager.get_settings() must return null in headless mode");
   }

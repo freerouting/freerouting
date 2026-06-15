@@ -2,7 +2,7 @@ package app.freerouting.rules;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;

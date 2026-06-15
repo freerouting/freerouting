@@ -1,7 +1,7 @@
 package app.freerouting.settings.sources;
 
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.ReflectionUtil;
+import app.freerouting.util.ReflectionUtil;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
 import java.util.HashMap;
@@ -127,3 +127,4 @@ public class EnvironmentVariablesSource implements SettingsSource {
         return parsedVariables.size();
     }
 }
+

@@ -7,7 +7,7 @@ import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import java.awt.Color;

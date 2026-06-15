@@ -3,7 +3,7 @@ package app.freerouting.board;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.awt.Color;
 import java.util.Locale;
 

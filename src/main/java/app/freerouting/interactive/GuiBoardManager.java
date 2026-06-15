@@ -1,5 +1,8 @@
 package app.freerouting.interactive;
 
+import app.freerouting.management.HeadlessBoardManager;
+import app.freerouting.management.BoardManager;
+
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.board.AngleRestriction;
@@ -20,6 +23,7 @@ import app.freerouting.board.Unit;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -30,14 +34,13 @@ import app.freerouting.gui.ComboBoxLayer;
 import app.freerouting.interactive.commands.InteractiveCommand;
 import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.io.specctra.parser.DsnFile;
-import app.freerouting.io.specctra.parser.SessionToEagle;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.logger.TraceEvent;
 import app.freerouting.logger.TraceEventListener;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
@@ -2212,7 +2215,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (board_is_read_only) {
       return false;
     }
-    return SessionToEagle.get_instance(p_input_stream, p_output_stream, this.board);
+    return app.freerouting.io.specctra.SesReader.saveSpecctraSessionSesAsEagleScriptScr(p_input_stream, p_output_stream, this.board);
   }
 
   /**
@@ -2238,7 +2241,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see HeadlessBoardManager#loadFromSpecctraDsn
    */
   @Override
-  public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
+  public BoardReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     var result = super.loadFromSpecctraDsn(inputStream, boardObservers, identificationNumberGenerator);
 
@@ -2257,7 +2260,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     // create_board() would normally set up, but which are bypassed when loading
     // directly from a DSN file via DsnReader. Always recreate on a successful load
     // because the new design may have different dimensions, layer count, or units.
-    if (result != DsnFile.ReadResult.ERROR && this.board != null) {
+    if ((result instanceof BoardReadResult.Success || result instanceof BoardReadResult.OutlineMissing) && this.board != null) {
       double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
       this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
           this.board.communication.unit);
@@ -2274,7 +2277,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   @Override
-  public DsnFile.ReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
+  public BoardReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     var result = super.loadFromKiCadJson(inputStream, boardObservers, identificationNumberGenerator);
 
@@ -2290,7 +2293,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
 
     // Initialize the GUI-specific graphics context and coordinate transform
-    if (result != DsnFile.ReadResult.ERROR && this.board != null) {
+    if ((result instanceof BoardReadResult.Success || result instanceof BoardReadResult.OutlineMissing) && this.board != null) {
       double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
       this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
           this.board.communication.unit);

@@ -10,8 +10,8 @@ import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.io.specctra.parser.DsnFile;
-import app.freerouting.interactive.HeadlessBoardManager;
+import app.freerouting.io.BoardReadResult;
+import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.RouterScoringSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -27,18 +27,20 @@ class BoardHistoryTest {
   private RouterScoringSettings scoringSettings;
 
   @BeforeEach
-  void setUp() throws FileNotFoundException {
+  void setUp() throws Exception {
     // Load a simple board for testing
     HeadlessBoardManager boardManager1 = new HeadlessBoardManager(new RoutingJob());
-    FileInputStream inputStream1 = new FileInputStream("fixtures/empty_board.dsn");
-    DsnFile.ReadResult result1 = boardManager1.loadFromSpecctraDsn(inputStream1, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
-    board1 = boardManager1.get_routing_board();
+    try (FileInputStream inputStream1 = new FileInputStream("fixtures/empty_board.dsn")) {
+      BoardReadResult result1 = boardManager1.loadFromSpecctraDsn(inputStream1, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
+      board1 = boardManager1.get_routing_board();
+    }
 
     // Load a more complex board
     HeadlessBoardManager boardManager2 = new HeadlessBoardManager(new RoutingJob());
-    FileInputStream inputStream2 = new FileInputStream("fixtures/Issue159-setonix_2hp-pcb.dsn");
-    DsnFile.ReadResult result2 = boardManager2.loadFromSpecctraDsn(inputStream2, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
-    board2 = boardManager2.get_routing_board();
+    try (FileInputStream inputStream2 = new FileInputStream("fixtures/Issue159-setonix_2hp-pcb.dsn")) {
+      boardManager2.loadFromSpecctraDsn(inputStream2, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
+      board2 = boardManager2.get_routing_board();
+    }
 
     SettingsMerger settingsMerger = new SettingsMerger();
     settingsMerger.addOrReplaceSources(new DefaultSettings());

@@ -5,7 +5,7 @@ import app.freerouting.management.analytics.dto.Library;
 import app.freerouting.management.analytics.dto.Payload;
 import app.freerouting.management.analytics.dto.Properties;
 import app.freerouting.management.analytics.dto.Traits;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.gson.GsonProvider;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

@@ -725,7 +725,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     private final GuiBoardManager boardHandling;
     private final List<Integer> allSignalLayers = new ArrayList<>();
 
-    public LayerRulesDialog(JFrame owner, NetClass p_netClass, GuiBoardManager p_boardHandling, app.freerouting.management.TextManager p_tm) {
+    public LayerRulesDialog(JFrame owner, NetClass p_netClass, GuiBoardManager p_boardHandling, app.freerouting.util.TextManager p_tm) {
       super(owner, p_tm.getText("dialog_layer_rules_title"), true);
       this.netClass = p_netClass;
       this.boardHandling = p_boardHandling;

@@ -4,6 +4,7 @@ import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -145,7 +146,7 @@ class SettingsMergerGuiIntegrationTest {
      * {@link InteractiveSettings#getSettings()} — flows through the merger when set to
      * {@code true}.
      *
-     * <p><strong>Architectural note:</strong> {@link app.freerouting.management.ReflectionUtil#copyFields}
+     * <p><strong>Architectural note:</strong> {@link app.freerouting.util.ReflectionUtil#copyFields}
      * skips fields whose value equals the Java-language default for that type. For
      * {@code Boolean}, the skip-sentinel is {@code false}. This means
      * {@code InteractiveSettings.automatic_neckdown = false} <em>cannot</em> override a

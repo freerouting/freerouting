@@ -1,7 +1,7 @@
 package app.freerouting.management.analytics;
 
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.dto.Context;
 import app.freerouting.management.analytics.dto.Library;
 import app.freerouting.management.analytics.dto.Payload;

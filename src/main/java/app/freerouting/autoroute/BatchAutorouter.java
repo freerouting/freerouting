@@ -25,7 +25,7 @@ import app.freerouting.drc.AirLine;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
-import app.freerouting.interactive.RatsNest;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
@@ -447,15 +447,16 @@ public class BatchAutorouter extends NamedAlgorithm {
       routerCounters.rippedCount = ripped_item_count;
       routerCounters.failedToBeRoutedCount = not_routed;
       routerCounters.routedCount = routed;
-      RatsNest ratsNest = new RatsNest(board);
-      routerCounters.incompleteCount = ratsNest.incomplete_count();
+      DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
+      tempDrc.calculateAllIncompletes();
+      routerCounters.incompleteCount = tempDrc.getIncompleteCount();
 
       // Log incomplete details for debugging
       if (routerCounters.incompleteCount > 0) {
         job.logDebug("Pass #" + p_pass_no + ": " + routerCounters.incompleteCount + " incompletes across "
             + items_to_go_count + " items to route");
         for (int netNo = 1; netNo <= board.rules.nets.max_net_no(); netNo++) {
-          int netIncompletes = ratsNest.incomplete_count(netNo);
+          int netIncompletes = tempDrc.getIncompleteCount(netNo);
           if (netIncompletes > 0) {
             Net net = board.rules.nets.get(netNo);
             String netName = (net != null) ? net.name : "net#" + netNo;
@@ -536,23 +537,26 @@ public class BatchAutorouter extends NamedAlgorithm {
                   getImpactedPoints(rippedItem));
             }
           }
-          RatsNest tempRatsNest = new RatsNest(board);
-          int tempIncomp = tempRatsNest.incomplete_count();
-          int tempNetIncomp = tempRatsNest.incomplete_count(curr_item.get_net_no(i));
-          int netItemsAfter = board.get_connectable_items(curr_item.get_net_no(i)).size();
-          int maxItemId = board.communication.id_no_generator.max_generated_no();
-          FRLogger.trace(
-              "BatchAutorouter.autoroute_pass",
-              "compare_trace_route_item",
-              "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + autorouterResult.state
-                  + ", details=" + autorouterResult.details
-                  + ", incompletes=" + tempIncomp + ", netIncomplete=" + tempNetIncomp
-                  + ", ripped=" + ripped_item_list.size() + ", netItems="
-                  + netItemsBefore + "->" + netItemsAfter
-                  + ", maxItemId=" + maxItemId,
-              "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no() + ",Type="
-                  + curr_item.getClass().getSimpleName(),
-              getImpactedPoints(curr_item));
+          if (FRLogger.isTraceEnabled()) {
+            DesignRulesChecker innerDrc = new DesignRulesChecker(board, null);
+            innerDrc.calculateAllIncompletes();
+            int tempIncomp = innerDrc.getIncompleteCount();
+            int tempNetIncomp = innerDrc.getIncompleteCount(curr_item.get_net_no(i));
+            int netItemsAfter = board.get_connectable_items(curr_item.get_net_no(i)).size();
+            int maxItemId = board.communication.id_no_generator.max_generated_no();
+            FRLogger.trace(
+                "BatchAutorouter.autoroute_pass",
+                "compare_trace_route_item",
+                "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + autorouterResult.state
+                    + ", details=" + autorouterResult.details
+                    + ", incompletes=" + tempIncomp + ", netIncomplete=" + tempNetIncomp
+                    + ", ripped=" + ripped_item_list.size() + ", netItems="
+                    + netItemsBefore + "->" + netItemsAfter
+                    + ", maxItemId=" + maxItemId,
+                "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no() + ",Type="
+                    + curr_item.getClass().getSimpleName(),
+                getImpactedPoints(curr_item));
+          }
 
           if (curr_item.get_net_no(i) == 94) {
             FRLogger.trace(
@@ -633,13 +637,13 @@ public class BatchAutorouter extends NamedAlgorithm {
             routerCounters.rippedCount = ripped_item_count;
             routerCounters.failedToBeRoutedCount = not_routed;
             routerCounters.routedCount = routed;
-            routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
+            routerCounters.incompleteCount = calculateIncompleteCount(board);
             this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
           }
         }
       }
 
-      int incompletesBefore = new RatsNest(board).incomplete_count();
+      int incompletesBefore = calculateIncompleteCount(board);
       FRLogger.trace(
           "BatchAutorouter.autoroute_pass",
           "compare_trace_remove_tails",
@@ -653,7 +657,7 @@ public class BatchAutorouter extends NamedAlgorithm {
         remove_tails(Item.StopConnectionOption.FANOUT_VIA);
       }
 
-      int incompletesAfter = new RatsNest(board).incomplete_count();
+      int incompletesAfter = calculateIncompleteCount(board);
       FRLogger.trace(
           "BatchAutorouter.autoroute_pass",
           "compare_trace_remove_tails",
@@ -669,7 +673,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       routerCounters.rippedCount = ripped_item_count;
       routerCounters.failedToBeRoutedCount = not_routed;
       routerCounters.routedCount = routed;
-      routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
+      routerCounters.incompleteCount = calculateIncompleteCount(board);
       this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
 
       long passDuration = System.currentTimeMillis() - passStartTime;
@@ -765,8 +769,7 @@ public class BatchAutorouter extends NamedAlgorithm {
 
     // Capture initial state for session summary
     this.sessionStartTime = Instant.now();
-    RatsNest initialRatsNest = new RatsNest(this.board);
-    this.initialUnroutedCount = initialRatsNest.incomplete_count();
+    this.initialUnroutedCount = calculateIncompleteCount(this.board);
 
     boolean continueAutorouting = true;
     BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
@@ -976,10 +979,11 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
       job.logInfo(passCompletedMessage);
 
-      RatsNest ratsNest = new RatsNest(this.board);
+      DesignRulesChecker tempDrc = new DesignRulesChecker(this.board, null);
+      tempDrc.calculateAllIncompletes();
       StringBuilder perNetBreakdown = new StringBuilder();
       for (int netNo = 1; netNo <= this.board.rules.nets.max_net_no(); netNo++) {
-        int netIncomplete = ratsNest.incomplete_count(netNo);
+        int netIncomplete = tempDrc.getIncompleteCount(netNo);
         if (netIncomplete > 0) {
           FRLogger.trace(
               "BatchAutorouter.autoroute_pass",
@@ -995,7 +999,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
       FRLogger.trace("BatchAutorouter.autoroute_pass", "compare_unrouted_breakdown",
           "pass=" + currentPass
-              + ", total=" + ratsNest.incomplete_count()
+              + ", total=" + tempDrc.getIncompleteCount()
               + ", breakdown=" + perNetBreakdown,
           "",
           new Point[0]);
@@ -1149,8 +1153,10 @@ public class BatchAutorouter extends NamedAlgorithm {
     return !this.thread.is_stop_auto_router_requested();
   }
 
-  private String buildUnroutedConnectionsReport() {    RatsNest ratsNest = new RatsNest(this.board);
-    AirLine[] airlines = ratsNest.get_airlines();
+  private String buildUnroutedConnectionsReport() {
+    DesignRulesChecker tempDrc = new DesignRulesChecker(this.board, null);
+    tempDrc.calculateAllIncompletes();
+    AirLine[] airlines = tempDrc.getAllAirlines();
 
     if (airlines == null || airlines.length == 0) {
       return "  (no unrouted connections found)";
@@ -1585,5 +1591,11 @@ public class BatchAutorouter extends NamedAlgorithm {
       return new FloatPoint((first.x + last.x) / 2, (first.y + last.y) / 2);
     }
     return null;
+  }
+
+  private int calculateIncompleteCount(RoutingBoard board) {
+    DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
+    tempDrc.calculateAllIncompletes();
+    return tempDrc.getIncompleteCount();
   }
 }

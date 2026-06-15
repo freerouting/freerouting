@@ -3,7 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.commands.InteractiveCommand;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;

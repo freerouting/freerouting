@@ -1,4 +1,4 @@
-package app.freerouting.management;
+package app.freerouting.util;
 
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;

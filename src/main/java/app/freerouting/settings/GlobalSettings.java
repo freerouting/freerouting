@@ -5,10 +5,10 @@ import static app.freerouting.constants.Constants.FREEROUTING_VERSION;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.core.BoardFileDetails;
-import app.freerouting.gui.FileFormat;
+import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.ReflectionUtil;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.ReflectionUtil;
+import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.settings.sources.DefaultSettings;
 import com.google.gson.annotations.SerializedName;
 import java.io.IOException;
@@ -721,3 +721,4 @@ public class GlobalSettings implements Serializable {
     return routerSettings.optimizer.itemSelectionStrategy;
   }
 }
+

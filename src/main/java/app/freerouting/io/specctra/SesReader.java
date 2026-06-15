@@ -17,6 +17,7 @@ import app.freerouting.rules.Net;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Reads a Specctra session (.ses) file and imports the routing data (wires and vias) into a
@@ -377,6 +378,15 @@ public final class SesReader {
     } catch (IOException _) {
       // ignore — nothing useful to do here
     }
+  }
+
+  /**
+   * Transforms a Specctra session file into an Eagle script file.
+   */
+  public static boolean saveSpecctraSessionSesAsEagleScriptScr(
+      InputStream inputStream, OutputStream outputStream, BasicBoard board) {
+    return app.freerouting.io.specctra.parser.SessionToEagle.get_instance(
+        inputStream, outputStream, board);
   }
 }
 

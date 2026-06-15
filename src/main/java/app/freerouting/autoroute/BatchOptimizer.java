@@ -10,7 +10,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.RatsNest;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Iterator;
@@ -166,7 +166,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // calculate the statistics for the board before the routing
     BoardStatistics boardStatisticsBefore = new BoardStatistics(routingBoard, null, false);
     RouterCounters routerCountersBefore = new RouterCounters();
-    routerCountersBefore.incompleteCount = new RatsNest(routingBoard).incomplete_count();
+    routerCountersBefore.incompleteCount = calculateIncompleteCount(routingBoard);
     if (progressThrottler.shouldUpdate()) {
       this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCountersBefore, routingBoard);
     }
@@ -232,7 +232,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // routing
     BoardStatistics boardStatisticsAfter = new BoardStatistics(routingBoard, null, false);
     RouterCounters routerCountersAfter = new RouterCounters();
-    routerCountersAfter.incompleteCount = new RatsNest(routingBoard).incomplete_count();
+    routerCountersAfter.incompleteCount = calculateIncompleteCount(routingBoard);
     if (progressThrottler.shouldUpdate()) {
       this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCountersAfter, routingBoard);
     }
@@ -400,5 +400,11 @@ public class BatchOptimizer extends NamedAlgorithm {
     FloatPoint get_current_position() {
       return min_item_coor;
     }
+  }
+
+  private int calculateIncompleteCount(RoutingBoard board) {
+    DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
+    tempDrc.calculateAllIncompletes();
+    return tempDrc.getIncompleteCount();
   }
 }

@@ -16,10 +16,10 @@ import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Polyline;
-import app.freerouting.gui.FileFormat;
+import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.TextManager;
+import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.settings.RouterScoringSettings;
 import com.google.gson.annotations.SerializedName;
@@ -510,3 +510,4 @@ public class BoardStatistics implements Serializable {
     return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
   }
 }
+

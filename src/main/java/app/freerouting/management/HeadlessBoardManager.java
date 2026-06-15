@@ -1,6 +1,8 @@
-package app.freerouting.interactive;
+package app.freerouting.management;
 
-import static app.freerouting.management.gson.GsonProvider.GSON;
+import static app.freerouting.util.gson.GsonProvider.GSON;
+
+import app.freerouting.settings.sources.GuiSettings;
 
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
@@ -17,7 +19,6 @@ import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.io.specctra.SesWriter;
-import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
@@ -64,8 +65,8 @@ import java.io.OutputStream;
  * <p><strong>Usage Example:</strong>
  * <pre>{@code
  * HeadlessBoardManager manager = new HeadlessBoardManager(routingJob);
- * DsnFile.ReadResult result = manager.loadFromSpecctraDsn(inputStream, observers, idGenerator);
- * if (result == DsnFile.ReadResult.OK) {
+ * BoardReadResult result = manager.loadFromSpecctraDsn(inputStream, observers, idGenerator);
+ * if (result instanceof BoardReadResult.Success) {
  *     // Perform routing operations
  *     manager.saveAsSpecctraSessionSes(outputStream, "design_name");
  * }
@@ -212,7 +213,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @return {@code null} always in headless mode
    */
   @Override
-  public InteractiveSettings getInteractiveSettings() {
+  public GuiSettings getInteractiveSettings() {
     return null;
   }
 
@@ -255,8 +256,12 @@ public class HeadlessBoardManager implements BoardManager {
    * @see InteractiveSettings
    */
   @Override
-  public void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure, PolylineShape[] p_outline_shapes,
-      String p_outline_clearance_class_name, BoardRules p_rules,
+  public void create_board(
+      IntBox p_bounding_box,
+      LayerStructure p_layer_structure,
+      PolylineShape[] p_outline_shapes,
+      String p_outline_clearance_class_name,
+      BoardRules p_rules,
       Communication p_board_communication) {
     if (this.board != null) {
       routingJob.logWarning(" BoardHandling.create_board: board already created");
@@ -441,7 +446,7 @@ public class HeadlessBoardManager implements BoardManager {
    * </ul>
    *
    * <p><strong>Error Handling:</strong>
-   * Returns {@link DsnFile.ReadResult#ERROR} if:
+   * Returns subclass of {@link BoardReadResult} (like {@link app.freerouting.io.BoardReadResult.ParseError} or {@link app.freerouting.io.BoardReadResult.IoError}) if:
    * <ul>
    *   <li>Input stream is null or invalid</li>
    *   <li>DSN file is corrupted or malformed</li>
@@ -458,14 +463,13 @@ public class HeadlessBoardManager implements BoardManager {
    * @param identificationNumberGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    *
-    * @see app.freerouting.io.specctra.DsnReader#readBoard
-    * @see DsnFile.ReadResult
-    * @see BoardObservers
-    */
-   public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
+   * @see app.freerouting.io.specctra.DsnReader#readBoard
+   * @see BoardObservers
+   */
+  public BoardReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     if (inputStream == null) {
-      return DsnFile.ReadResult.ERROR;
+      return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
 
     try {
@@ -486,7 +490,7 @@ public class HeadlessBoardManager implements BoardManager {
         } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
           routingJob.logError("There was a parse error while reading DSN file at '" + parseError.location() + "': " + parseError.detail(), null);
         }
-        return DsnFile.ReadResult.ERROR;
+        return dsnResult;
       }
 
       // Apply board-specific optimisations to RouterSettings after board is loaded
@@ -512,15 +516,11 @@ public class HeadlessBoardManager implements BoardManager {
             this.board.rules.nets.max_net_no());
       }
 
-      return (dsnResult instanceof BoardReadResult.OutlineMissing)
-          ? DsnFile.ReadResult.OUTLINE_MISSING
-          : dsnResult instanceof BoardReadResult.Success
-              ? DsnFile.ReadResult.OK
-              : DsnFile.ReadResult.ERROR;
+      return dsnResult;
 
     } catch (Exception e) {
       routingJob.logError("There was an error while reading DSN file.", e);
-      return DsnFile.ReadResult.ERROR;
+      return new BoardReadResult.IoError(new java.io.IOException("Error reading DSN file", e));
     }
   }
 
@@ -532,10 +532,10 @@ public class HeadlessBoardManager implements BoardManager {
    * @param identificationNumberGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    */
-  public DsnFile.ReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
+  public BoardReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     if (inputStream == null) {
-      return DsnFile.ReadResult.ERROR;
+      return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
 
     try (java.io.Reader reader = new java.io.InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
@@ -551,7 +551,7 @@ public class HeadlessBoardManager implements BoardManager {
         } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
           routingJob.logError("There was a parse error while reading KiCad JSON file at '" + parseError.location() + "': " + parseError.detail(), null);
         }
-        return DsnFile.ReadResult.ERROR;
+        return dsnResult;
       }
 
       // Apply board-specific optimisations to RouterSettings after board is loaded
@@ -577,13 +577,11 @@ public class HeadlessBoardManager implements BoardManager {
             this.board.rules.nets.max_net_no());
       }
 
-      return (dsnResult instanceof BoardReadResult.OutlineMissing)
-          ? DsnFile.ReadResult.OUTLINE_MISSING
-          : DsnFile.ReadResult.OK;
+      return dsnResult;
 
     } catch (Exception e) {
       routingJob.logError("There was an error while reading KiCad JSON file.", e);
-      return DsnFile.ReadResult.ERROR;
+      return new BoardReadResult.IoError(new java.io.IOException("Error reading KiCad JSON file", e));
     }
   }
 

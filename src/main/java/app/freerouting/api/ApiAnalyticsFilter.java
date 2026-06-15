@@ -1,7 +1,7 @@
 package app.freerouting.api;
 
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.gson.GsonProvider;
 import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
@@ -128,4 +128,5 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
     }
   }
 }
+
 

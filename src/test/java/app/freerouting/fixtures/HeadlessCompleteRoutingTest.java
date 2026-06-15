@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.Freerouting;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
-import app.freerouting.interactive.HeadlessBoardManager;
+import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.BeforeEach;

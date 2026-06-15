@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import static app.freerouting.Freerouting.globalSettings;
 
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;

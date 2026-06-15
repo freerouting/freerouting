@@ -4,9 +4,9 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.core.events.BoardFileDetailsUpdatedEvent;
 import app.freerouting.core.events.BoardFileDetailsUpdatedEventListener;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.gui.FileFormat;
+import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -232,3 +232,4 @@ public class BoardFileDetails implements Serializable {
   }
 
 }
+

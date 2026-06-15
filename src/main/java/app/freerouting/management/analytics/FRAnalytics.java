@@ -5,7 +5,7 @@ import static app.freerouting.Freerouting.globalSettings;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.dto.Properties;
 import app.freerouting.management.analytics.dto.Traits;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.gson.GsonProvider;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Locale;

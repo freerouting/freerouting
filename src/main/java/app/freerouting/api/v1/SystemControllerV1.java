@@ -4,7 +4,7 @@ import app.freerouting.Freerouting;
 import app.freerouting.api.dto.SystemStatus;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -109,3 +109,4 @@ public class SystemControllerV1 {
   }
 
 }
+

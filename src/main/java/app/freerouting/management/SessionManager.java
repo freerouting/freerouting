@@ -18,6 +18,15 @@ public class SessionManager {
 
   private static final SessionManager instance = new SessionManager();
   private static final Map<String, Session> sessions = new HashMap<>();
+  private volatile UUID monitoredSessionId;
+
+  public UUID getMonitoredSessionId() {
+    return this.monitoredSessionId;
+  }
+
+  public void setMonitoredSessionId(UUID sessionId) {
+    this.monitoredSessionId = sessionId;
+  }
 
   private SessionManager() {
   }

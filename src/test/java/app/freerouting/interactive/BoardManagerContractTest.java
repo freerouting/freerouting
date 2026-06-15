@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.management.BoardManager;
+import app.freerouting.management.HeadlessBoardManager;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -62,7 +64,7 @@ class BoardManagerContractTest {
         new ItemIdentificationNumberGenerator());
 
     @SuppressWarnings("deprecation")
-    InteractiveSettings settings = manager.get_settings();
+    app.freerouting.settings.sources.GuiSettings settings = manager.get_settings();
     assertNull(settings,
         "Deprecated get_settings() must delegate to getInteractiveSettings() and return null in headless mode");
   }

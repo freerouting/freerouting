@@ -1,4 +1,4 @@
-package app.freerouting.management.gson;
+package app.freerouting.util.gson;
 
 import app.freerouting.settings.LayerSettings;
 import app.freerouting.settings.RouterSettings;

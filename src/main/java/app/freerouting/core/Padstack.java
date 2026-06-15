@@ -6,7 +6,7 @@ import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;

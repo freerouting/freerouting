@@ -13,7 +13,7 @@ import java.util.List;
  * Sources are sorted by ascending priority and applied one on top of another.
  * {@link DefaultSettings} (priority 0) always provides the initial base.
  * Every subsequent source calls {@link RouterSettings#applyNewValuesFrom}, which
- * delegates to {@link app.freerouting.management.ReflectionUtil#copyFields}.
+ * delegates to {@link app.freerouting.util.ReflectionUtil#copyFields}.
  * That method iterates the public, non-static fields of the incoming
  * {@code RouterSettings} object and copies a field into the target <em>only when
  * the source value is non-null and not equal to the field's Java default value</em>.

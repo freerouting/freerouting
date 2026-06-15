@@ -7,7 +7,7 @@ import app.freerouting.board.Via;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.rules.Net;
 import java.util.Collection;
 import java.util.Iterator;

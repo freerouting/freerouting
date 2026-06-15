@@ -1,4 +1,4 @@
-package app.freerouting.management.gson;
+package app.freerouting.util.gson;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

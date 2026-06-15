@@ -6,7 +6,7 @@ import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.rules.Net;
 import java.util.Collection;
 import java.util.List;

@@ -1,4 +1,4 @@
-package app.freerouting.management.gson;
+package app.freerouting.util.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

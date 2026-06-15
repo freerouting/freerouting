@@ -13,7 +13,7 @@ import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.RatsNest;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
@@ -168,8 +168,9 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
         // Capture initial state for session summary
         this.sessionStartTime = Instant.now();
-        RatsNest initialRatsNest = new RatsNest(this.board);
-        this.initialUnroutedCount = initialRatsNest.incomplete_count();
+        DesignRulesChecker tempDrc = new DesignRulesChecker(this.board, null);
+        tempDrc.calculateAllIncompletes();
+        this.initialUnroutedCount = tempDrc.getIncompleteCount();
 
         job.logInfo("Starting V1.9 router with " + this.initialUnroutedCount + " incomplete connections.");
 

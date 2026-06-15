@@ -1,6 +1,6 @@
 package app.freerouting.gui;
 
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;

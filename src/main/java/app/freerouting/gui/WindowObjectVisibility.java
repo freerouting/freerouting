@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.boardgraphics.ColorIntensityTable;
 import app.freerouting.boardgraphics.ColorIntensityTable.ObjectNames;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 
 /**
  * Interactive Frame to adjust the visibility of the individual board items

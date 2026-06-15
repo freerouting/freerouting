@@ -136,7 +136,7 @@ The Swing user interface: frames, dialogs, menus, panels, and rendering support.
 
 ### `app.freerouting.interactive`
 
-The editor interaction layer and GUI session state. This package bridges user actions to board mutations.
+The GUI-specific interactive editor state machine and GUI session state. This package bridges visual user actions and screen edits to board mutations.
 
 ### `app.freerouting.api`
 
@@ -144,7 +144,7 @@ HTTP API controllers, filters, and server-facing request handling. The concrete 
 
 ### `app.freerouting.management`
 
-Session management, job scheduling, analytics, Gson adapters, and service-layer coordination. The analytics code lives in `management.analytics`, and the JSON helpers live in `management.gson`.
+Headless board management (using `BoardManager` and `HeadlessBoardManager`), session management, job scheduling, analytics, Gson adapters, and service-layer coordination. The analytics code lives in `management.analytics`, and the JSON helpers live in `util.gson`.
 
 ### `app.freerouting.core`
 

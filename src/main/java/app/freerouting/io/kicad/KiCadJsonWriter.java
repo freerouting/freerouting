@@ -4,7 +4,7 @@ import app.freerouting.board.*;
 import app.freerouting.core.*;
 import app.freerouting.geometry.planar.*;
 import app.freerouting.rules.*;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.gson.GsonProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;

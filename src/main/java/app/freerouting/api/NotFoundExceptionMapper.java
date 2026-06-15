@@ -1,6 +1,6 @@
 package app.freerouting.api;
 
-import static app.freerouting.management.gson.GsonProvider.GSON;
+import static app.freerouting.util.gson.GsonProvider.GSON;
 
 import com.google.gson.JsonObject;
 import jakarta.ws.rs.NotFoundException;
@@ -34,3 +34,4 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
     return Response.status(Response.Status.NOT_FOUND).entity(prettyErrorMessage).build();
   }
 }
+

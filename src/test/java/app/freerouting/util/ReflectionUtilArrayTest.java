@@ -1,4 +1,4 @@
-package app.freerouting.management;
+package app.freerouting.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -77,3 +77,4 @@ class ReflectionUtilArrayTest {
     }
   }
 }
+
