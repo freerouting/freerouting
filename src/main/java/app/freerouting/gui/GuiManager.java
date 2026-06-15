@@ -463,8 +463,8 @@ public class GuiManager {
                     return RulesReader.read(input_stream, p_design_name, p_board_handling.get_routing_board());
                 }
             }
-        } catch (IOException _) {
-            FRLogger.error("File '" + rules_file_name + "' was not found.", null);
+        } catch (IOException e) {
+            FRLogger.error("Error reading rules file '" + rules_file_name + "'.", e);
         }
         return false;
     }
