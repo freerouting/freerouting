@@ -483,9 +483,6 @@ public class BatchAutorouter extends NamedAlgorithm {
           break;
         }
 
-        DesignRulesChecker innerDrc = new DesignRulesChecker(board, null);
-        innerDrc.calculateAllIncompletes();
-
         // Let's go through all nets of this item
         for (int i = 0; i < curr_item.net_count(); i++) {
           // If the user requested to stop the auto-router, we stop it
@@ -540,24 +537,26 @@ public class BatchAutorouter extends NamedAlgorithm {
                   getImpactedPoints(rippedItem));
             }
           }
-          DesignRulesChecker innerDrc = new DesignRulesChecker(board, null);
-          innerDrc.calculateAllIncompletes();
-          int tempIncomp = innerDrc.getIncompleteCount();
-          int tempNetIncomp = innerDrc.getIncompleteCount(curr_item.get_net_no(i));
-          int netItemsAfter = board.get_connectable_items(curr_item.get_net_no(i)).size();
-          int maxItemId = board.communication.id_no_generator.max_generated_no();
-          FRLogger.trace(
-              "BatchAutorouter.autoroute_pass",
-              "compare_trace_route_item",
-              "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + autorouterResult.state
-                  + ", details=" + autorouterResult.details
-                  + ", incompletes=" + tempIncomp + ", netIncomplete=" + tempNetIncomp
-                  + ", ripped=" + ripped_item_list.size() + ", netItems="
-                  + netItemsBefore + "->" + netItemsAfter
-                  + ", maxItemId=" + maxItemId,
-              "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no() + ",Type="
-                  + curr_item.getClass().getSimpleName(),
-              getImpactedPoints(curr_item));
+          if (FRLogger.isTraceEnabled()) {
+            DesignRulesChecker innerDrc = new DesignRulesChecker(board, null);
+            innerDrc.calculateAllIncompletes();
+            int tempIncomp = innerDrc.getIncompleteCount();
+            int tempNetIncomp = innerDrc.getIncompleteCount(curr_item.get_net_no(i));
+            int netItemsAfter = board.get_connectable_items(curr_item.get_net_no(i)).size();
+            int maxItemId = board.communication.id_no_generator.max_generated_no();
+            FRLogger.trace(
+                "BatchAutorouter.autoroute_pass",
+                "compare_trace_route_item",
+                "Routing " + curr_item.getClass().getSimpleName() + " -> result=" + autorouterResult.state
+                    + ", details=" + autorouterResult.details
+                    + ", incompletes=" + tempIncomp + ", netIncomplete=" + tempNetIncomp
+                    + ", ripped=" + ripped_item_list.size() + ", netItems="
+                    + netItemsBefore + "->" + netItemsAfter
+                    + ", maxItemId=" + maxItemId,
+                "Net #" + curr_item.get_net_no(i) + ",Item #" + curr_item.get_id_no() + ",Type="
+                    + curr_item.getClass().getSimpleName(),
+                getImpactedPoints(curr_item));
+          }
 
           if (curr_item.get_net_no(i) == 94) {
             FRLogger.trace(
