@@ -1,3 +1,0 @@
-Method <app.freerouting.api.v1.SessionControllerV1.monitorSession(java.lang.String)> calls method <app.freerouting.gui.BoardFrame.loadBoardNatively(app.freerouting.board.RoutingBoard, app.freerouting.core.RoutingJob)> in (SessionControllerV1.java:203)
-Method <app.freerouting.api.v1.SessionControllerV1.monitorSession(java.lang.String)> gets field <app.freerouting.gui.BoardFrame.activeFrame> in (SessionControllerV1.java:201)
-Method <app.freerouting.api.v1.SessionControllerV1.monitorSession(java.lang.String)> gets field <app.freerouting.gui.BoardFrame.activeFrame> in (SessionControllerV1.java:203)

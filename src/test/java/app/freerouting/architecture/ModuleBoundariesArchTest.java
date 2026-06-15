@@ -5,8 +5,6 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
-import com.tngtech.archunit.lang.ArchRule;
-import com.tngtech.archunit.library.freeze.FreezingArchRule;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -84,17 +82,16 @@ class ModuleBoundariesArchTest {
   }
 
   @Test
-  void coreBoardAutorouteMustNotDependOnGuiOrInteractive_frozen() {
+  void coreBoardAutorouteMustNotDependOnGuiOrInteractive() {
     JavaClasses classes = importMainClasses();
 
-    ArchRule rule = noClasses()
+    noClasses()
         .that()
         .resideInAnyPackage("app.freerouting.core..", "app.freerouting.board..", "app.freerouting.autoroute..")
         .should()
         .dependOnClassesThat()
-        .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.interactive..");
-
-    FreezingArchRule.freeze(rule).check(classes);
+        .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.interactive..")
+        .check(classes);
   }
 
   @Test
@@ -111,10 +108,10 @@ class ModuleBoundariesArchTest {
   }
 
   @Test
-  void coreShouldNotUseGuiBoardManagerDirectly_frozen() {
+  void coreShouldNotUseGuiBoardManagerDirectly() {
     JavaClasses classes = importMainClasses();
 
-    ArchRule rule = noClasses()
+    noClasses()
         .that()
         .resideInAPackage("app.freerouting.core..")
         .should()
@@ -123,24 +120,22 @@ class ModuleBoundariesArchTest {
         .orShould()
         .dependOnClassesThat()
         .haveFullyQualifiedName("app.freerouting.interactive.InteractiveState")
-        .because("core services should stay headless-ready and not require GUI manager types");
-
-    FreezingArchRule.freeze(rule).check(classes);
+        .because("core services should stay headless-ready and not require GUI manager types")
+        .check(classes);
   }
 
   @Test
-  void guiStateMachineShouldOnlyBeUsedFromGuiAndInteractiveLayers_frozen() {
+  void guiStateMachineShouldOnlyBeUsedFromGuiAndInteractiveLayers() {
     JavaClasses classes = importMainClasses();
 
-    ArchRule rule = noClasses()
+    noClasses()
         .that()
         .resideOutsideOfPackages("app.freerouting.gui..", "app.freerouting.interactive..")
         .should()
         .dependOnClassesThat()
         .resideInAPackage("app.freerouting.interactive..")
-        .because("interactive is a GUI-session state machine and should not leak to headless/service modules");
-
-    FreezingArchRule.freeze(rule).check(classes);
+        .because("interactive is a GUI-session state machine and should not leak to headless/service modules")
+        .check(classes);
   }
 
   @Test
