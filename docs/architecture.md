@@ -144,7 +144,7 @@ HTTP API controllers, filters, and server-facing request handling. The concrete 
 
 ### `app.freerouting.management`
 
-Headless board management (using `BoardManager` and `HeadlessBoardManager`), session management, job scheduling, analytics, Gson adapters, and service-layer coordination. The analytics code lives in `management.analytics`, and the JSON helpers live in `management.gson`.
+Headless board management (using `BoardManager` and `HeadlessBoardManager`), session management, job scheduling, analytics, Gson adapters, and service-layer coordination. The analytics code lives in `management.analytics`, and the JSON helpers live in `util.gson`.
 
 ### `app.freerouting.core`
 
