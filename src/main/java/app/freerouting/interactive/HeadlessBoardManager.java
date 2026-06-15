@@ -462,10 +462,10 @@ public class HeadlessBoardManager implements BoardManager {
     * @see DsnFile.ReadResult
     * @see BoardObservers
     */
-   public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
+   public BoardReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     if (inputStream == null) {
-      return DsnFile.ReadResult.ERROR;
+      return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
 
     try {
@@ -486,7 +486,7 @@ public class HeadlessBoardManager implements BoardManager {
         } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
           routingJob.logError("There was a parse error while reading DSN file at '" + parseError.location() + "': " + parseError.detail(), null);
         }
-        return DsnFile.ReadResult.ERROR;
+        return dsnResult;
       }
 
       // Apply board-specific optimisations to RouterSettings after board is loaded
@@ -512,15 +512,11 @@ public class HeadlessBoardManager implements BoardManager {
             this.board.rules.nets.max_net_no());
       }
 
-      return (dsnResult instanceof BoardReadResult.OutlineMissing)
-          ? DsnFile.ReadResult.OUTLINE_MISSING
-          : dsnResult instanceof BoardReadResult.Success
-              ? DsnFile.ReadResult.OK
-              : DsnFile.ReadResult.ERROR;
+      return dsnResult;
 
     } catch (Exception e) {
       routingJob.logError("There was an error while reading DSN file.", e);
-      return DsnFile.ReadResult.ERROR;
+      return new BoardReadResult.IoError(new java.io.IOException("Error reading DSN file", e));
     }
   }
 
@@ -532,10 +528,10 @@ public class HeadlessBoardManager implements BoardManager {
    * @param identificationNumberGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    */
-  public DsnFile.ReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
+  public BoardReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     if (inputStream == null) {
-      return DsnFile.ReadResult.ERROR;
+      return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
 
     try (java.io.Reader reader = new java.io.InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
@@ -551,7 +547,7 @@ public class HeadlessBoardManager implements BoardManager {
         } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
           routingJob.logError("There was a parse error while reading KiCad JSON file at '" + parseError.location() + "': " + parseError.detail(), null);
         }
-        return DsnFile.ReadResult.ERROR;
+        return dsnResult;
       }
 
       // Apply board-specific optimisations to RouterSettings after board is loaded
@@ -577,13 +573,11 @@ public class HeadlessBoardManager implements BoardManager {
             this.board.rules.nets.max_net_no());
       }
 
-      return (dsnResult instanceof BoardReadResult.OutlineMissing)
-          ? DsnFile.ReadResult.OUTLINE_MISSING
-          : DsnFile.ReadResult.OK;
+      return dsnResult;
 
     } catch (Exception e) {
       routingJob.logError("There was an error while reading KiCad JSON file.", e);
-      return DsnFile.ReadResult.ERROR;
+      return new BoardReadResult.IoError(new java.io.IOException("Error reading KiCad JSON file", e));
     }
   }
 

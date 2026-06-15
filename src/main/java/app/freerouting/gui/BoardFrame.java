@@ -8,7 +8,7 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.io.specctra.parser.DsnFile;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.RulesWriter;
 import app.freerouting.io.FileFormat;
 import app.freerouting.interactive.GuiBoardManager;
@@ -433,7 +433,7 @@ public class BoardFrame extends WindowBase {
    */
   boolean load(InputStream inputStream, FileFormat format, JTextField p_message_field, RoutingJob routingJob) {
     Point viewport_position = null;
-    DsnFile.ReadResult read_result = null;
+    BoardReadResult read_result = null;
 
     board_panel.reset_board_handling(routingJob);
     // close all previous windows
@@ -454,7 +454,7 @@ public class BoardFrame extends WindowBase {
       }
 
       // If the file was read successfully, initialize the windows
-      if (read_result == DsnFile.ReadResult.OK) {
+      if (read_result instanceof BoardReadResult.Success) {
         viewport_position = new Point(0, 0);
 
         // Initialize the RouterSettings layer count to match the loaded board
@@ -534,13 +534,13 @@ public class BoardFrame extends WindowBase {
     return update_gui(format, read_result, viewport_position, p_message_field);
   }
 
-  private boolean update_gui(FileFormat format, DsnFile.ReadResult read_result, Point viewport_position,
+  private boolean update_gui(FileFormat format, BoardReadResult read_result, Point viewport_position,
       JTextField p_message_field) {
     boolean isTextDsnOrJson = (format == FileFormat.DSN || format == FileFormat.JSON);
     if (isTextDsnOrJson) {
-      if (read_result != DsnFile.ReadResult.OK) {
+      if (!(read_result instanceof BoardReadResult.Success)) {
         if (p_message_field != null) {
-          if (read_result == DsnFile.ReadResult.OUTLINE_MISSING) {
+          if (read_result instanceof BoardReadResult.OutlineMissing) {
             p_message_field.setText(tm.getText("error_7"));
           } else {
             p_message_field.setText(tm.getText("error_6"));

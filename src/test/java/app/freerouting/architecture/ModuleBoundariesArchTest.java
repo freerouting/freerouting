@@ -145,17 +145,16 @@ class ModuleBoundariesArchTest {
   }
 
   @Test
-  void specctraParserInternalsShouldNotLeakOutsideIoSpecctra_frozen() {
+  void specctraParserInternalsShouldNotLeakOutsideIoSpecctra() {
     JavaClasses classes = importMainClasses();
 
-    ArchRule rule = noClasses()
+    noClasses()
         .that()
         .resideOutsideOfPackage("app.freerouting.io..")
         .should()
         .dependOnClassesThat()
         .resideInAPackage("app.freerouting.io.specctra.parser..")
-        .because("specctra parser internals are implementation details; only io packages (specctra, kicad) may access them");
-
-    FreezingArchRule.freeze(rule).check(classes);
+        .because("specctra parser internals are implementation details; only io packages (specctra, kicad) may access them")
+        .check(classes);
   }
 }
