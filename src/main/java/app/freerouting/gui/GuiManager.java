@@ -7,6 +7,12 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.management.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.io.specctra.RulesReader;
+import app.freerouting.interactive.GuiBoardManager;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.IOException;
 import app.freerouting.management.SessionManager;
 import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
@@ -414,7 +420,7 @@ public class GuiManager {
             File rules_file = new File(parent_folder_name, rules_file_name);
             if (rules_file.exists()) {
                 // load the .rules file
-                RoutingJob.read_rules_file(design_name, parent_folder_name, rules_file_name,
+                read_rules_file(design_name, parent_folder_name, rules_file_name,
                         new_frame.board_panel.board_handling, confirm_import_rules_message);
             }
 
@@ -441,5 +447,24 @@ public class GuiManager {
 
     public static void saveSettings() throws IOException {
         GlobalSettings.saveAsJson(Freerouting.globalSettings);
+    }
+
+    private static boolean read_rules_file(String p_design_name, String p_parent_name, String rules_file_name,
+        GuiBoardManager p_board_handling, String p_confirm_message) {
+
+        boolean dsn_file_generated_by_host = p_board_handling
+            .get_routing_board().communication.specctra_parser_info.dsn_file_generated_by_host;
+
+        try {
+            File rules_file = new File(p_parent_name, rules_file_name);
+            FRLogger.info("Opening '" + rules_file_name + "'...");
+            InputStream input_stream = new FileInputStream(rules_file);
+            if (dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message)) {
+                return RulesReader.read(input_stream, p_design_name, p_board_handling.get_routing_board());
+            }
+        } catch (IOException _) {
+            FRLogger.error("File '" + rules_file_name + "' was not found.", null);
+        }
+        return false;
     }
 }

@@ -7,8 +7,6 @@ import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
 import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.io.FileFormat;
-import app.freerouting.gui.WindowMessage;
-import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.settings.DesignRulesCheckerSettings;
@@ -154,24 +152,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return fileChooser.getSelectedFile();
   }
 
-  public static boolean read_rules_file(String p_design_name, String p_parent_name, String rules_file_name,
-      GuiBoardManager p_board_handling, String p_confirm_message) {
 
-    boolean dsn_file_generated_by_host = p_board_handling
-        .get_routing_board().communication.specctra_parser_info.dsn_file_generated_by_host;
-
-    try {
-      File rules_file = new File(p_parent_name, rules_file_name);
-      FRLogger.info("Opening '" + rules_file_name + "'...");
-      InputStream input_stream = new FileInputStream(rules_file);
-      if (dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message)) {
-        return RulesReader.read(input_stream, p_design_name, p_board_handling.get_routing_board());
-      }
-    } catch (IOException _) {
-      FRLogger.error("File '" + rules_file_name + "' was not found.", null);
-    }
-    return false;
-  }
 
   public static FileFormat getFileFormat(byte[] content) {
     if (content == null) {
