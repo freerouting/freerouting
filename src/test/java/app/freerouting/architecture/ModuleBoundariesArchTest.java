@@ -47,6 +47,27 @@ class ModuleBoundariesArchTest {
   }
 
   @Test
+  void settingsLoggerAndDebugMustStayIndependentFromUiAndApiLayers() {
+    JavaClasses classes = importMainClasses();
+
+    noClasses()
+        .that()
+        .resideInAnyPackage(
+            "app.freerouting.settings..",
+            "app.freerouting.logger..",
+            "app.freerouting.debug..")
+        .should()
+        .dependOnClassesThat()
+        .resideInAnyPackage(
+            "app.freerouting.gui..",
+            "app.freerouting.interactive..",
+            "app.freerouting.api..",
+            "app.freerouting.management..")
+        .check(classes);
+  }
+
+
+  @Test
   void apiAndManagementMustNotDependOnGuiBoardManagerOrInteractiveStateMachine() {
     JavaClasses classes = importMainClasses();
 

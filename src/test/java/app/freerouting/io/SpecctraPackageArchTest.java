@@ -35,7 +35,8 @@ class SpecctraPackageArchTest {
         .resideInAnyPackage(
             "app.freerouting.interactive..",
             "app.freerouting.gui..",
-            "app.freerouting.management.."
+            "app.freerouting.management..",
+            "app.freerouting.api.."
         )
         .check(classes);
   }
