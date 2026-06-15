@@ -38,7 +38,7 @@ class BoardHistoryTest {
     // Load a more complex board
     HeadlessBoardManager boardManager2 = new HeadlessBoardManager(new RoutingJob());
     try (FileInputStream inputStream2 = new FileInputStream("fixtures/Issue159-setonix_2hp-pcb.dsn")) {
-      BoardReadResult result2 = boardManager2.loadFromSpecctraDsn(inputStream2, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
+      boardManager2.loadFromSpecctraDsn(inputStream2, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
       board2 = boardManager2.get_routing_board();
     }
 
