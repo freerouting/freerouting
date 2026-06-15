@@ -57,6 +57,9 @@ public class GuiManager {
         SessionManager
                 .getInstance()
                 .setGuiSession(guiSession.id);
+        SessionManager
+                .getInstance()
+                .setMonitoredSessionId(guiSession.id);
 
         // Set default font for buttons and labels
         FontUIResource menuFont = (FontUIResource) UIManager.get("Menu.font");

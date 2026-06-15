@@ -98,17 +98,16 @@ class ModuleBoundariesArchTest {
   }
 
   @Test
-  void apiAndManagementShouldNotDependOnGuiEnumsOrTypes_frozen() {
+  void apiAndManagementShouldNotDependOnGuiEnumsOrTypes() {
     JavaClasses classes = importMainClasses();
 
-    ArchRule rule = noClasses()
+    noClasses()
         .that()
         .resideInAnyPackage("app.freerouting.api..", "app.freerouting.management..")
         .should()
         .dependOnClassesThat()
-        .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.boardgraphics..");
-
-    FreezingArchRule.freeze(rule).check(classes);
+        .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.boardgraphics..")
+        .check(classes);
   }
 
   @Test
