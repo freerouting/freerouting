@@ -11,7 +11,7 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;

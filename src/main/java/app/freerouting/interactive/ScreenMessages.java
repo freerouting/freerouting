@@ -4,7 +4,7 @@ import app.freerouting.board.Unit;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.text.NumberFormat;
 import java.util.Locale;
 import javax.swing.JLabel;

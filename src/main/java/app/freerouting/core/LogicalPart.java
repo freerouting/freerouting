@@ -2,7 +2,7 @@ package app.freerouting.core;
 
 import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Locale;
 

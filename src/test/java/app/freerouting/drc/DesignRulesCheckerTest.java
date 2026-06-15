@@ -11,7 +11,7 @@ import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.Session;
-import app.freerouting.gui.FileFormat;
+import app.freerouting.io.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.management.SessionManager;
 import app.freerouting.settings.GlobalSettings;

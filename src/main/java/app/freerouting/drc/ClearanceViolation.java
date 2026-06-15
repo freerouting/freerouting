@@ -3,7 +3,7 @@ package app.freerouting.drc;
 import app.freerouting.board.Item;
 import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.geometry.planar.ConvexShape;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.util.Locale;
 
 /**

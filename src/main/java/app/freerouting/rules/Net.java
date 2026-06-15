@@ -9,7 +9,7 @@ import app.freerouting.board.Pin;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;

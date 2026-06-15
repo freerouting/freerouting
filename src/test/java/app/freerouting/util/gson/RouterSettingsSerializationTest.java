@@ -1,4 +1,4 @@
-package app.freerouting.management.gson;
+package app.freerouting.util.gson;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,3 +55,4 @@ class RouterSettingsSerializationTest {
     assertFalse(deserializedFromApi.layers[1].preferredDirectionHorizontal);
   }
 }
+

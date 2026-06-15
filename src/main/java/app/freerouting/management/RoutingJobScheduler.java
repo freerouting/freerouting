@@ -7,10 +7,11 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.core.StoppableThread;
-import app.freerouting.gui.FileFormat;
+import app.freerouting.io.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.TextManager;
+import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.sources.ApiSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
@@ -428,3 +429,4 @@ public class RoutingJobScheduler {
     }
   }
 }
+

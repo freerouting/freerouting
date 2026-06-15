@@ -10,6 +10,7 @@ import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.io.specctra.RulesWriter;
+import app.freerouting.io.FileFormat;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.ScreenMessages;

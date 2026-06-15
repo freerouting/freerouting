@@ -11,7 +11,7 @@ import app.freerouting.board.Via;
 import app.freerouting.constants.Constants;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.DesignRulesCheckerSettings;
 import java.util.ArrayList;

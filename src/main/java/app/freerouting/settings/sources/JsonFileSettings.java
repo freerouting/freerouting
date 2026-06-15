@@ -1,7 +1,7 @@
 package app.freerouting.settings.sources;
 
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;

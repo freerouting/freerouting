@@ -145,7 +145,7 @@ class SettingsMergerGuiIntegrationTest {
      * {@link InteractiveSettings#getSettings()} — flows through the merger when set to
      * {@code true}.
      *
-     * <p><strong>Architectural note:</strong> {@link app.freerouting.management.ReflectionUtil#copyFields}
+     * <p><strong>Architectural note:</strong> {@link app.freerouting.util.ReflectionUtil#copyFields}
      * skips fields whose value equals the Java-language default for that type. For
      * {@code Boolean}, the skip-sentinel is {@code false}. This means
      * {@code InteractiveSettings.automatic_neckdown = false} <em>cannot</em> override a

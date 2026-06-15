@@ -1,6 +1,6 @@
 package app.freerouting.interactive;
 
-import static app.freerouting.management.gson.GsonProvider.GSON;
+import static app.freerouting.util.gson.GsonProvider.GSON;
 
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;

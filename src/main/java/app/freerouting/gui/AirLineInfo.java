@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.drc.AirLine;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.util.Locale;
 
 /**
@@ -32,3 +32,4 @@ public class AirLineInfo implements ObjectInfoPanel.Printable {
     }
 
 }
+

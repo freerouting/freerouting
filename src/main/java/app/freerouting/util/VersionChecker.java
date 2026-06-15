@@ -1,4 +1,4 @@
-package app.freerouting.management;
+package app.freerouting.util;
 
 import app.freerouting.logger.FRLogger;
 import com.google.gson.JsonObject;
@@ -107,4 +107,3 @@ public class VersionChecker implements Runnable {
     }
   }
 }
-

@@ -31,7 +31,7 @@ import app.freerouting.io.BoardMetadata;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.DefaultItemClearanceClasses;

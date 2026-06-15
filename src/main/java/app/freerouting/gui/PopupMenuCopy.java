@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import javax.swing.JMenuItem;
 

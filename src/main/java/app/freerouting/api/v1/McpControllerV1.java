@@ -7,7 +7,7 @@ import app.freerouting.api.mcp.OpenApiMcpToolRegistry;
 import app.freerouting.Freerouting;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

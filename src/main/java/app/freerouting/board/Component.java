@@ -6,7 +6,7 @@ import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Locale;
 

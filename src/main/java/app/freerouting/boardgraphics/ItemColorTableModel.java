@@ -1,7 +1,7 @@
 package app.freerouting.boardgraphics;
 
 import app.freerouting.board.LayerStructure;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;

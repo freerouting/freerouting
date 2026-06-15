@@ -2,7 +2,7 @@ package app.freerouting.management;
 
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.gui.FileFormat;
+import app.freerouting.io.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 

@@ -1,6 +1,6 @@
 package app.freerouting.settings;
 
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 

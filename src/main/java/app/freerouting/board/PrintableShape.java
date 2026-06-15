@@ -1,7 +1,7 @@
 package app.freerouting.board;
 
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;

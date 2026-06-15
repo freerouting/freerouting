@@ -37,7 +37,7 @@ import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.logger.TraceEvent;
 import app.freerouting.logger.TraceEventListener;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;

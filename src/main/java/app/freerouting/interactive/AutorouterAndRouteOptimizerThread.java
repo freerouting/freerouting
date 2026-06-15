@@ -20,9 +20,9 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.FileFormat;
+import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import com.sun.management.ThreadMXBean;
 import java.awt.Color;
@@ -795,3 +795,4 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
     }
   }
 }
+

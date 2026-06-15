@@ -3,7 +3,7 @@ package app.freerouting.settings;
 import app.freerouting.autoroute.AutorouteControl;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.ReflectionUtil;
+import app.freerouting.util.ReflectionUtil;
 import com.google.gson.annotations.SerializedName;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
