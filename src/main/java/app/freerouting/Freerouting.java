@@ -319,6 +319,7 @@ public class Freerouting {
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
+    jerseyServlet.setInitParameter("jersey.config.application.disableJsonBinding", "true");
 
     // Add Listeners
     context.addEventListener(new AppContextListener());
@@ -414,6 +415,7 @@ public class Freerouting {
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jakarta.ws.rs.Application", McpApplication.class.getName());
+    jerseyServlet.setInitParameter("jersey.config.application.disableJsonBinding", "true");
 
     context.addEventListener(new McpContextListener());
 

@@ -27,7 +27,15 @@ public class McpApiKeyValidationService {
     }
 
     ApiAuthenticationSettings authSettings = Freerouting.globalSettings.mcpServerSettings.authentication;
-    this.isEnabled = authSettings != null && Boolean.TRUE.equals(authSettings.isEnabled);
+    boolean mcpAuthEnabled = authSettings != null && Boolean.TRUE.equals(authSettings.isEnabled);
+
+    boolean apiAuthEnabled = false;
+    if (Freerouting.globalSettings.apiServerSettings != null
+        && Freerouting.globalSettings.apiServerSettings.authentication != null) {
+      apiAuthEnabled = Boolean.TRUE.equals(Freerouting.globalSettings.apiServerSettings.authentication.isEnabled);
+    }
+
+    this.isEnabled = mcpAuthEnabled && apiAuthEnabled;
 
     if (this.isEnabled && authSettings != null && authSettings.providers != null) {
       String[] providerNames = authSettings.providers.split(",");

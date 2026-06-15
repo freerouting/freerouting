@@ -5,6 +5,7 @@ import app.freerouting.api.CorrelationIdFilter;
 import app.freerouting.api.mcp.McpRealtimeBridge;
 import app.freerouting.api.mcp.OpenApiMcpToolRegistry;
 import app.freerouting.Freerouting;
+import app.freerouting.constants.Constants;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.gson.GsonProvider;
@@ -68,30 +69,34 @@ public class McpControllerV1 extends BaseController {
     String correlationId = CorrelationIdFilter.resolveOrCreate(
         headers.getHeaderString(CorrelationIdFilter.HEADER_NAME));
 
+    FRLogger.info("[mcp][cid=" + correlationId + "] request=" + requestBody);
+
     JsonObject request;
     try {
       request = JsonParser.parseString(requestBody).getAsJsonObject();
     } catch (Exception e) {
-      return Response.ok(error(null, -32700, "Invalid JSON"))
+      FRLogger.warn("[mcp][cid=" + correlationId + "] Failed to parse JSON-RPC request: " + e.getMessage());
+      return Response.ok(error(null, -32700, "Invalid JSON: " + e.getMessage()))
           .header(CorrelationIdFilter.HEADER_NAME, correlationId)
           .build();
     }
 
     JsonElement id = request.get("id");
+    String method = request.has("method") ? request.get("method").getAsString() : null;
+    JsonObject params = request.has("params") && request.get("params").isJsonObject()
+        ? request.getAsJsonObject("params")
+        : new JsonObject();
 
     UUID userId;
     try {
       userId = AuthenticateUser();
     } catch (Exception e) {
-      return Response.ok(error(id, -32602, "Authentication failed"))
+      FRLogger.warn("[mcp][cid=" + correlationId + "] Authentication failed for method '" + method + "': " + e.getMessage());
+      JsonObject errResponse = error(id, -32602, "Authentication failed: " + e.getMessage());
+      return Response.ok(errResponse.toString())
           .header(CorrelationIdFilter.HEADER_NAME, correlationId)
           .build();
     }
-
-    String method = request.has("method") ? request.get("method").getAsString() : null;
-    JsonObject params = request.has("params") && request.get("params").isJsonObject()
-        ? request.getAsJsonObject("params")
-        : new JsonObject();
 
     JsonObject response;
     try {
@@ -102,9 +107,11 @@ public class McpControllerV1 extends BaseController {
         case "tools/call" -> handleToolsCall(id, params, correlationId);
         default -> error(id, -32601, "Unknown method: " + method);
       };
+      FRLogger.info("[mcp][cid=" + correlationId + "] response=" + response.toString());
     } catch (Exception e) {
       FRLogger.error("MCP RPC execution failed", e);
       response = error(id, -32603, "Internal error");
+      FRLogger.info("[mcp][cid=" + correlationId + "] response (error)=" + response.toString());
     }
 
     FRAnalytics.apiEndpointCalled("POST v1/mcp", requestBody, response.toString(), userId);
@@ -133,10 +140,15 @@ public class McpControllerV1 extends BaseController {
     JsonObject capabilities = new JsonObject();
     capabilities.add("tools", new JsonObject());
 
+    JsonObject serverInfo = new JsonObject();
+    serverInfo.addProperty("name", "Freerouting MCP");
+    serverInfo.addProperty("version", Constants.FREEROUTING_VERSION);
+
     JsonObject result = new JsonObject();
-    result.addProperty("protocolVersion", "2025-03-26");
+    result.addProperty("protocolVersion", "2024-11-05");
     result.addProperty("serverName", "Freerouting MCP");
-    result.addProperty("serverVersion", "v2.3");
+    result.addProperty("serverVersion", Constants.FREEROUTING_VERSION);
+    result.add("serverInfo", serverInfo);
     result.add("capabilities", capabilities);
 
     return success(id, result);

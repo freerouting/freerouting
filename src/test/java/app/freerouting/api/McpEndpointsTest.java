@@ -99,6 +99,7 @@ class McpEndpointsTest {
     assertEquals("2.0", payload.get("jsonrpc").getAsString());
     assertTrue(payload.has("result"));
     assertEquals("Freerouting MCP", payload.getAsJsonObject("result").get("serverName").getAsString());
+    assertEquals("Freerouting MCP", payload.getAsJsonObject("result").getAsJsonObject("serverInfo").get("name").getAsString());
   }
 
   @Test

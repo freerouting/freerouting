@@ -11,6 +11,9 @@ public class McpServerSettings implements Serializable {
   @SerializedName("enabled")
   public Boolean isEnabled = false;
 
+  @SerializedName("stdio")
+  public Boolean isStdioMode = false;
+
   @SerializedName("running")
   public transient Boolean isRunning = false;
 
