@@ -25,8 +25,6 @@ import app.freerouting.core.ProgressThrottler;
  */
 public class BatchOptimizer extends NamedAlgorithm {
 
-  protected static int MAX_AUTOROUTE_PASSES = 6;
-  protected static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
   protected ReadSortedRouteItems sorted_route_items;
   // in the first passes the ripup costs are increased for better performance.
   protected boolean use_increased_ripup_costs;
@@ -69,6 +67,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
     while (((route_improved >= this.settings.optimizer.optimizationImprovementThreshold) || (route_improved < 0))
+        && (this.settings.optimizer.maxPasses == null || currentPass < this.settings.optimizer.maxPasses)
         && (!this.thread.isStopRequested())) {
       ++currentPass;
       String currentBoardHash = this.board.get_hash();
@@ -217,20 +216,16 @@ public class BatchOptimizer extends NamedAlgorithm {
     // calculate the ripup costs
     int ripup_costs = this.settings.get_start_ripup_costs();
     if (this.use_increased_ripup_costs) {
-      // TODO: move this fixed parameter (ADDITIONAL_RIPUP_COST_FACTOR_AT_START=10) to
-      // the router optimizer settings
-      ripup_costs *= ADDITIONAL_RIPUP_COST_FACTOR_AT_START;
+      ripup_costs *= this.settings.optimizer.additionalRipupCostFactorAtStart;
     }
 
     // reduce the ripup costs for traces
     if (p_item instanceof Trace) {
-      // taking less ripup costs seems to produce better results
-      // TODO: move this fixed parameter (0.6) to the router optimizer settings
-      ripup_costs = (int) Math.round(0.6 * (double) ripup_costs);
+      ripup_costs = (int) Math.round(this.settings.optimizer.traceRipupCostFactor * (double) ripup_costs);
     }
 
     // route the connections
-    BatchAutorouter.autoroute_passes_for_optimizing_item(job, MAX_AUTOROUTE_PASSES, ripup_costs,
+    BatchAutorouter.autoroute_passes_for_optimizing_item(job, this.settings.optimizer.maxAutoroutePasses, ripup_costs,
         settings.trace_pull_tight_accuracy, p_with_preferred_directions, routingBoard, settings);
 
     // check the result by generating the statistics for the board again after the
