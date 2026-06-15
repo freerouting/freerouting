@@ -540,6 +540,8 @@ public class BatchAutorouter extends NamedAlgorithm {
                   getImpactedPoints(rippedItem));
             }
           }
+          DesignRulesChecker innerDrc = new DesignRulesChecker(board, null);
+          innerDrc.calculateAllIncompletes();
           int tempIncomp = innerDrc.getIncompleteCount();
           int tempNetIncomp = innerDrc.getIncompleteCount(curr_item.get_net_no(i));
           int netItemsAfter = board.get_connectable_items(curr_item.get_net_no(i)).size();
