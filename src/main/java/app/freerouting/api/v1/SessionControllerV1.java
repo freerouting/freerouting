@@ -175,14 +175,14 @@ public class SessionControllerV1 extends BaseController {
   @Produces(MediaType.APPLICATION_JSON)
   public Response monitorSession(
       @Parameter(description = "Unique identifier of the session", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("sessionId") String sessionId) {
+    UUID userId = AuthenticateUser();
+
     var guiSettings = app.freerouting.Freerouting.globalSettings.guiSettings;
     if (!guiSettings.isEnabled || !guiSettings.isRunning) {
       return Response.status(Response.Status.BAD_REQUEST)
           .entity(GSON.toJson(java.util.Map.of("error", "GUI is not running, cannot monitor session visually")))
           .build();
     }
-
-    UUID userId = AuthenticateUser();
     Session session = SessionManager.getInstance().getSession(sessionId, userId);
     if (session == null) {
       return Response.status(Response.Status.NOT_FOUND).entity(GSON.toJson(java.util.Map.of("error", "Session not found"))).build();
