@@ -64,6 +64,8 @@ public class Freerouting {
   public static GlobalSettings globalSettings;
   private static Server apiServer; // API server instance
   private static Server mcpServer; // MCP server instance
+  private static java.io.PrintStream originalSystemOut;
+  public static String bridgeToken = java.util.UUID.randomUUID().toString();
 
   private static boolean InitializeCLI(GlobalSettings globalSettings) {
     if ((globalSettings.initialInputFile == null) || (globalSettings.initialOutputFile == null)) {
@@ -438,6 +440,65 @@ public class Freerouting {
     return mcpServer;
   }
 
+  public static void startMcpStdioBridge(java.io.PrintStream originalOut, Server server) {
+    Thread bridgeThread = new Thread(() -> {
+      try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(System.in, StandardCharsets.UTF_8))) {
+        int localPort = -1;
+        while (localPort <= 0) {
+          if (server != null && server.getConnectors().length > 0 && server.getConnectors()[0] instanceof ServerConnector connector) {
+            localPort = connector.getLocalPort();
+          }
+          if (localPort <= 0) {
+            try {
+              Thread.sleep(50);
+            } catch (InterruptedException _) {
+              Thread.currentThread().interrupt();
+              return;
+            }
+          }
+        }
+
+        java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
+        java.net.URI targetUri = java.net.URI.create("http://127.0.0.1:" + localPort + "/v1/mcp");
+        
+        String line;
+        while ((line = reader.readLine()) != null) {
+          if (line.trim().isEmpty()) {
+            continue;
+          }
+          try {
+            java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder(targetUri)
+                .header("Content-Type", "application/json")
+                .header("X-Internal-Bridge-Token", bridgeToken)
+                .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000000")
+                .header("Freerouting-Profile-Email", "mcp-stdio-client@local.freerouting.app")
+                .header("Freerouting-Environment-Host", "MCP-Client/1.0")
+                .POST(java.net.http.HttpRequest.BodyPublishers.ofString(line, StandardCharsets.UTF_8))
+                .build();
+            
+            java.net.http.HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+            String responseBody = response.body();
+            if (responseBody != null) {
+              String singleLineResponse = responseBody.replace("\r", "").replace("\n", "");
+              originalOut.println(singleLineResponse);
+              originalOut.flush();
+            }
+          } catch (Exception e) {
+            FRLogger.error("Error in MCP stdio bridge request forwarding", e);
+          }
+        }
+        FRLogger.info("MCP stdio bridge detected EOF, shutting down application.");
+        System.exit(0);
+      } catch (IOException e) {
+        FRLogger.error("Error reading from System.in in MCP stdio bridge", e);
+        System.exit(1);
+      }
+    }, "mcp-stdio-bridge");
+    bridgeThread.setDaemon(true);
+    bridgeThread.start();
+  }
+
+
   private static Set<String> splitCommaSeparated(String value) {
     return Arrays.stream(value.split(","))
         .map(String::trim)
@@ -480,6 +541,28 @@ public class Freerouting {
    * @param args
    */
   void main(String[] args) {
+    originalSystemOut = System.out;
+    boolean isStdioMode = false;
+    if (args.length > 0) {
+      for (String arg : args) {
+        if (arg.startsWith("--mcp_server.stdio=")) {
+          String val = arg.substring("--mcp_server.stdio=".length());
+          if ("true".equalsIgnoreCase(val) || "1".equals(val)) {
+            isStdioMode = true;
+          }
+        }
+      }
+    }
+    if (System.getenv("FREEROUTING__MCP_SERVER__STDIO") != null) {
+      String envVal = System.getenv("FREEROUTING__MCP_SERVER__STDIO");
+      if ("true".equalsIgnoreCase(envVal) || "1".equals(envVal)) {
+        isStdioMode = true;
+      }
+    }
+    if (isStdioMode) {
+      System.setOut(System.err);
+    }
+
     // CRITICAL: Set up logging configuration BEFORE any logging occurs
     // This must happen before FRLogger.traceEntry() or any other logging call
 
@@ -885,6 +968,10 @@ public class Freerouting {
       mcpServer = InitializeMCP(globalSettings.mcpServerSettings);
       globalSettings.mcpServerSettings.isEnabled = mcpServer != null;
       globalSettings.mcpServerSettings.isRunning = mcpServer != null;
+
+      if (mcpServer != null && Boolean.TRUE.equals(globalSettings.mcpServerSettings.isStdioMode)) {
+        startMcpStdioBridge(originalSystemOut, mcpServer);
+      }
     }
 
     // Initialize the GUI
