@@ -88,6 +88,14 @@ The official Freerouting client SDK currently supports Python (maintained in the
 
 You can also **self-host the Freerouting API** on your own machine or server. See the [Self-Hosting Guide](docs/self-hosting.md) for step-by-step instructions using Docker or a plain Java JRE.
 
+### Model Context Protocol (MCP)
+
+Freerouting supports the Model Context Protocol (MCP) to integrate directly with AI coding assistants (like Cursor, Cline, or Claude Desktop), allowing the AI to query system status and auto-route boards on your behalf.
+- **Online Quick Start (Public API)**: Runs instantly via `npx` without requiring a local Java installation.
+- **Offline Mode (Local Executable)**: Runs the entire routing engine locally on your machine for complete privacy.
+
+See the [MCP Setup Guide](docs/API/MCP_setup.md) for detailed configuration steps.
+
 ## Running Freerouting using Java JRE
 
 Installers are available for Windows x64, Linux x64, and macOS. For other systems, you can run the platform-independent `.jar` file if you have Java JRE installed.
