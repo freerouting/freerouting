@@ -959,7 +959,11 @@ public class Freerouting {
           || globalSettings.mcpServerSettings.targetApiBaseUrl.isBlank()
           || "http://127.0.0.1:37864".equals(globalSettings.mcpServerSettings.targetApiBaseUrl))) {
         if (apiServer.getConnectors().length > 0 && apiServer.getConnectors()[0] instanceof ServerConnector connector) {
-          globalSettings.mcpServerSettings.targetApiBaseUrl = "http://127.0.0.1:" + connector.getLocalPort();
+          int port = connector.getLocalPort();
+          if (port <= 0) {
+            port = connector.getPort();
+          }
+          globalSettings.mcpServerSettings.targetApiBaseUrl = "http://127.0.0.1:" + port;
         }
       }
     }
