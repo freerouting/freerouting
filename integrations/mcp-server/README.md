@@ -85,6 +85,20 @@ You can customize the behavior of the bridge using the following environment var
 
 ---
 
+## Programmatic Usage & Examples
+
+An example script illustrating how to orchestrate a complete routing job programmatically using JSON-RPC calls over HTTP can be found in [examples/route-example.js](examples/route-example.js).
+
+### Key Payload Naming Invariants
+
+If you are developing custom MCP client logic or instructing coding assistants, pay close attention to the following casing/field mappings required by the underlying GSON serialization:
+- **`enqueue_job`**: The session ID must be passed as `session_id` (snake_case) in the request body, not `sessionId` (camelCase).
+- **`upload_job_input_file`**: The base64-encoded board file data must be put into the `data` field in the request body, not `dataBase64`.
+- **`download_job_output_file`**: The returned payload contains the base64 output inside the `data` field, not `dataBase64`.
+
+---
+
 ## License
 
 GPL-3.0-only
+

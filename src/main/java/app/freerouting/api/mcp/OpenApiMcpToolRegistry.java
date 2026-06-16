@@ -142,13 +142,13 @@ public class OpenApiMcpToolRegistry {
     if (cleanPath.equals("/v1/system/status") && "GET".equalsIgnoreCase(method)) return "get_system_status";
     if (cleanPath.equals("/v1/system/environment") && "GET".equalsIgnoreCase(method)) return "get_system_environment";
     
-    if (cleanPath.equals("/v1/sessions") && "POST".equalsIgnoreCase(method)) return "create_session";
+    if (cleanPath.equals("/v1/sessions/create") && "POST".equalsIgnoreCase(method)) return "create_session";
     if (cleanPath.equals("/v1/sessions") && "GET".equalsIgnoreCase(method)) return "list_sessions";
     if (cleanPath.startsWith("/v1/sessions/") && cleanPath.endsWith("/logs") && "GET".equalsIgnoreCase(method)) return "get_session_logs";
     if (cleanPath.startsWith("/v1/sessions/") && cleanPath.endsWith("/monitor") && "PUT".equalsIgnoreCase(method)) return "monitor_session";
     if (cleanPath.startsWith("/v1/sessions/") && "GET".equalsIgnoreCase(method)) return "get_session_details";
     
-    if (cleanPath.equals("/v1/jobs") && "POST".equalsIgnoreCase(method)) return "enqueue_job";
+    if (cleanPath.equals("/v1/jobs/enqueue") && "POST".equalsIgnoreCase(method)) return "enqueue_job";
     if (cleanPath.startsWith("/v1/jobs/list/") && "GET".equalsIgnoreCase(method)) return "list_jobs";
     
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/drc") && "GET".equalsIgnoreCase(method)) return "get_job_drc_report";
