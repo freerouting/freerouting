@@ -9,9 +9,9 @@ import java.util.UUID;
 public class BoardFilePayload extends BoardFileDetails {
 
   @SerializedName("job_id")
-  @Schema(description = "Unique identifier for the routing job", example = "550e8400-e29b-41d4-a716-446655440000")
+  @Schema(name = "job_id", description = "Unique identifier for the routing job", example = "550e8400-e29b-41d4-a716-446655440000")
   public UUID jobId;
   @SerializedName("data")
-  @Schema(description = "Base64-encoded board file data (typically in Specctra DSN format)", example = "UENCIERlc2lnbiBGaWxlCg==")
+  @Schema(name = "data", description = "Base64-encoded board file data (typically in Specctra DSN format)", example = "UENCIERlc2lnbiBGaWxlCg==")
   public String dataBase64;
 }
