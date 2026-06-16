@@ -92,7 +92,9 @@ Add the following entry to your MCP configuration:
       "command": "java",
       "args": [
         "-jar",
-        "C:/path/to/freerouting-current-executable.jar",
+        "C:/path/to/freerouting-2.3.4.jar",
+        "--api_server.enabled=true",
+        "--api_server.authentication.enabled=false",
         "--mcp_server.enabled=true",
         "--mcp_server.stdio=true",
         "--gui.enabled=false"
@@ -110,7 +112,9 @@ Add the following entry to your MCP configuration:
       "command": "java",
       "args": [
         "-jar",
-        "C:/path/to/freerouting-current-executable.jar",
+        "C:/path/to/freerouting-2.3.4.jar",
+        "--api_server.enabled=true",
+        "--api_server.authentication.enabled=false",
         "--mcp_server.enabled=true",
         "--mcp_server.stdio=true",
         "--gui.enabled=false"
@@ -126,7 +130,7 @@ Add the following entry to your MCP configuration:
 Once connected, the MCP client should automatically discover the Freerouting tools. You can test the connection by asking your LLM client:
 > *"List the available Freerouting tools and retrieve the system status."*
 
-The LLM should call the `get_v1_system_status` tool and display system memory, CPU load, and routing capability details.
+The LLM should call the `get_system_status` tool and display system memory, CPU load, and routing capability details.
 
 ---
 
