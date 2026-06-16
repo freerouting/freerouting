@@ -58,6 +58,8 @@ public class OpenApiMcpToolRegistry {
         .buildContext(true)
         .read();
 
+    Map<String, Schema> componentsSchemas = openAPI.getComponents() != null ? openAPI.getComponents().getSchemas() : null;
+
     Map<String, ToolOperation> tools = new LinkedHashMap<>();
     if (openAPI == null || openAPI.getPaths() == null) {
       return new OpenApiMcpToolRegistry(tools);
@@ -85,7 +87,7 @@ public class OpenApiMcpToolRegistry {
         String toolName = buildToolName(method, path);
         List<Parameter> mergedParams = mergeParameters(pathItem.getParameters(), operation.getParameters());
 
-        JsonObject inputSchema = buildInputSchema(mergedParams, operation.getRequestBody());
+        JsonObject inputSchema = buildInputSchema(mergedParams, operation.getRequestBody(), componentsSchemas);
         JsonObject successSchema = buildSuccessSchema(operation);
         String summary = operation.getSummary() != null ? operation.getSummary() : (method + " " + path);
 
@@ -147,7 +149,7 @@ public class OpenApiMcpToolRegistry {
     return merged;
   }
 
-  private static JsonObject buildInputSchema(List<Parameter> parameters, RequestBody requestBody) {
+  private static JsonObject buildInputSchema(List<Parameter> parameters, RequestBody requestBody, Map<String, Schema> componentsSchemas) {
     JsonObject root = new JsonObject();
     root.addProperty("type", "object");
     JsonObject properties = new JsonObject();
@@ -164,6 +166,7 @@ public class OpenApiMcpToolRegistry {
       }
 
       JsonElement parameterSchema = toJsonSchema(parameter.getSchema());
+      parameterSchema = resolveRefs(parameterSchema, componentsSchemas, new java.util.HashSet<>());
       String in = parameter.getIn();
       if ("path".equalsIgnoreCase(in)) {
         pathProperties.add(parameter.getName(), parameterSchema);
@@ -208,6 +211,7 @@ public class OpenApiMcpToolRegistry {
 
     JsonElement bodySchema = getJsonRequestBodySchema(requestBody);
     if (bodySchema != null) {
+      bodySchema = resolveRefs(bodySchema, componentsSchemas, new java.util.HashSet<>());
       properties.add("body", bodySchema);
       if (requestBody != null && Boolean.TRUE.equals(requestBody.getRequired())) {
         required.add("body");
@@ -286,5 +290,43 @@ public class OpenApiMcpToolRegistry {
 
     String json = io.swagger.v3.core.util.Json.pretty(schema);
     return JsonParser.parseString(json);
+  }
+
+  private static JsonElement resolveRefs(JsonElement element, Map<String, Schema> componentsSchemas, Set<String> visited) {
+    if (element == null) {
+      return null;
+    }
+    if (element.isJsonObject()) {
+      JsonObject obj = element.getAsJsonObject();
+      if (obj.has("$ref")) {
+        String ref = obj.get("$ref").getAsString();
+        String prefix = "#/components/schemas/";
+        if (ref.startsWith(prefix)) {
+          String schemaName = ref.substring(prefix.length());
+          if (!visited.contains(schemaName) && componentsSchemas != null && componentsSchemas.containsKey(schemaName)) {
+            visited.add(schemaName);
+            Schema<?> referencedSchema = componentsSchemas.get(schemaName);
+            JsonElement referencedJson = toJsonSchema(referencedSchema);
+            JsonElement resolvedReferenced = resolveRefs(referencedJson, componentsSchemas, visited);
+            visited.remove(schemaName);
+            return resolvedReferenced;
+          }
+        }
+      }
+      
+      JsonObject newObj = new JsonObject();
+      for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
+        newObj.add(entry.getKey(), resolveRefs(entry.getValue(), componentsSchemas, visited));
+      }
+      return newObj;
+    } else if (element.isJsonArray()) {
+      JsonArray arr = element.getAsJsonArray();
+      JsonArray newArr = new JsonArray();
+      for (JsonElement item : arr) {
+        newArr.add(resolveRefs(item, componentsSchemas, visited));
+      }
+      return newArr;
+    }
+    return element;
   }
 }

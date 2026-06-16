@@ -82,6 +82,7 @@ public class McpControllerV1 extends BaseController {
     }
 
     JsonElement id = request.get("id");
+    boolean isNotification = (id == null || id.isJsonNull());
     String method = request.has("method") ? request.get("method").getAsString() : null;
     JsonObject params = request.has("params") && request.get("params").isJsonObject()
         ? request.getAsJsonObject("params")
@@ -92,6 +93,11 @@ public class McpControllerV1 extends BaseController {
       userId = AuthenticateUser();
     } catch (Exception e) {
       FRLogger.warn("[mcp][cid=" + correlationId + "] Authentication failed for method '" + method + "': " + e.getMessage());
+      if (isNotification) {
+        return Response.noContent()
+            .header(CorrelationIdFilter.HEADER_NAME, correlationId)
+            .build();
+      }
       JsonObject errResponse = error(id, -32602, "Authentication failed: " + e.getMessage());
       return Response.ok(errResponse.toString())
           .header(CorrelationIdFilter.HEADER_NAME, correlationId)
@@ -103,6 +109,10 @@ public class McpControllerV1 extends BaseController {
       FRLogger.info("[mcp][cid=" + correlationId + "] method=" + method);
       response = switch (method == null ? "" : method) {
         case "initialize" -> handleInitialize(id);
+        case "notifications/initialized" -> {
+          // MCP lifecycle notification: connection fully established.
+          yield success(id, new JsonObject());
+        }
         case "tools/list" -> handleToolsList(id);
         case "tools/call" -> handleToolsCall(id, params, correlationId);
         default -> error(id, -32601, "Unknown method: " + method);
@@ -115,6 +125,13 @@ public class McpControllerV1 extends BaseController {
     }
 
     FRAnalytics.apiEndpointCalled("POST v1/mcp", requestBody, response.toString(), userId);
+    
+    if (isNotification) {
+      return Response.noContent()
+          .header(CorrelationIdFilter.HEADER_NAME, correlationId)
+          .build();
+    }
+
     return Response.ok(response.toString())
         .header(CorrelationIdFilter.HEADER_NAME, correlationId)
         .build();
