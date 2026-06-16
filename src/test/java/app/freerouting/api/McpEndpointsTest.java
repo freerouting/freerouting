@@ -114,7 +114,7 @@ class McpEndpointsTest {
 
     JsonObject listPayload = JsonParser.parseString(listResponse.body()).getAsJsonObject();
     JsonArray tools = listPayload.getAsJsonObject("result").getAsJsonArray("tools");
-    assertTrue(containsTool(tools, "get_v1_system_status"), "tools/list should expose GET /v1/system/status");
+    assertTrue(containsTool(tools, "get_system_status"), "tools/list should expose get_system_status");
 
     JsonObject callRequest = new JsonObject();
     callRequest.addProperty("jsonrpc", "2.0");
@@ -122,7 +122,7 @@ class McpEndpointsTest {
     callRequest.addProperty("method", "tools/call");
 
     JsonObject params = new JsonObject();
-    params.addProperty("name", "get_v1_system_status");
+    params.addProperty("name", "get_system_status");
     params.add("arguments", new JsonObject());
     callRequest.add("params", params);
 
@@ -177,7 +177,7 @@ class McpEndpointsTest {
     callRequest.addProperty("method", "tools/call");
 
     JsonObject params = new JsonObject();
-    params.addProperty("name", "get_v1_system_status");
+    params.addProperty("name", "get_system_status");
     params.add("arguments", new JsonObject());
     callRequest.add("params", params);
 
