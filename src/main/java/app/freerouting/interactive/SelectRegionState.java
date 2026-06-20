@@ -17,32 +17,56 @@ public class SelectRegionState extends InteractiveState {
 
   @Override
   public InteractiveState button_released() {
-    hdlg.screen_messages.set_status_message("");
+    if (hdlg != null && hdlg.screen_messages != null) {
+      hdlg.screen_messages.set_status_message("");
+    }
     return complete();
   }
 
   @Override
   public InteractiveState mouse_dragged(FloatPoint p_point) {
+    // Early exit on null or redundant micro-movements
+    if (p_point == null || (corner2 != null && p_point.equals(corner2))) return this;
+
     if (corner1 == null) {
       corner1 = p_point;
-      hdlg.repaint();
+      if (hdlg != null) hdlg.repaint();
       return this;
     }
 
-    FloatPoint previous_corner2 = corner2;
+    var previous_corner2 = corner2;
     corner2 = p_point;
-    hdlg.repaint(rubber_band_dirty_rect(previous_corner2, corner2));
+    
+    if (hdlg != null) {
+      var dirtyRect = rubber_band_dirty_rect(previous_corner2, corner2);
+      // Fall back to full repaint if dirty rect calculation fails
+      if (dirtyRect != null) hdlg.repaint(dirtyRect);
+      else hdlg.repaint();
+    }
     return this;
   }
 
   private Rectangle rubber_band_dirty_rect(FloatPoint p_old_corner2, FloatPoint p_new_corner2) {
+    if (hdlg == null || hdlg.graphics_context == null || hdlg.graphics_context.coordinate_transform == null) return null;
+    
     var transform = hdlg.graphics_context.coordinate_transform;
-    Point2D sc_corner1 = transform.board_to_screen(corner1);
-    Rectangle dirty_rect = screen_rect(sc_corner1, transform.board_to_screen(p_new_corner2));
+    var sc_corner1 = transform.board_to_screen(corner1);
+    var sc_new_corner2 = transform.board_to_screen(p_new_corner2);
+    
+    // Fail gracefully if transforms fail
+    if (sc_corner1 == null || sc_new_corner2 == null) return null;
+    
+    var dirty_rect = screen_rect(sc_corner1, sc_new_corner2);
+    
     if (p_old_corner2 != null) {
-      dirty_rect = dirty_rect.union(screen_rect(sc_corner1, transform.board_to_screen(p_old_corner2)));
+      var sc_old_corner2 = transform.board_to_screen(p_old_corner2);
+      if (sc_old_corner2 != null) {
+        // Mutate in-place to avoid GC allocation during rapid drags
+        dirty_rect.add(screen_rect(sc_corner1, sc_old_corner2));
+      }
     }
-    dirty_rect.grow(3, 3); // margin for the rectangle's stroke
+    
+    dirty_rect.grow(3, 3); // stroke margin
     return dirty_rect;
   }
 
@@ -56,12 +80,14 @@ public class SelectRegionState extends InteractiveState {
 
   @Override
   public void draw(Graphics p_graphics) {
-    this.return_state.draw(p_graphics);
-    FloatPoint current_mouse_position = hdlg.get_current_mouse_position();
-    if (corner1 == null || current_mouse_position == null) {
-      return;
-    }
-    corner2 = current_mouse_position;
+    if (this.return_state != null) this.return_state.draw(p_graphics);
+    
+    if (hdlg == null || hdlg.graphics_context == null) return;
+    
+    var current_mouse = hdlg.get_current_mouse_position();
+    if (corner1 == null || current_mouse == null) return;
+    
+    corner2 = current_mouse;
     hdlg.graphics_context.draw_rectangle(corner1, corner2, 1, Color.white, p_graphics, 1);
   }
 }
