@@ -171,17 +171,21 @@ public class PolylineTrace extends Trace implements Serializable {
     if (!this.is_on_the_board()) {
       return false;
     }
-    boolean something_changed;
-    if (this.combine_at_start(true)) {
+    // Combine iteratively rather than recursively. Each successful
+    // combine_at_start / combine_at_end merges one adjacent trace into
+    // this one and the merged trace may then combine again at the same
+    // end, so the previous self-recursive implementation recursed once
+    // per merge. On a long chain of mergeable collinear segments (e.g.
+    // dense wiring imported from a DSN session) that recursion depth
+    // grows with the number of segments, and each frame also runs the
+    // expensive search-tree insert (calculate_tree_shapes ->
+    // Polyline.offset_shape), overflowing the stack with a
+    // StackOverflowError before any routing starts. A loop has identical
+    // per-merge behaviour (same combine order, same per-merge observer
+    // notification) but uses O(1) stack.
+    boolean something_changed = false;
+    while (this.combine_at_start(true) || this.combine_at_end(true)) {
       something_changed = true;
-      this.combine();
-    } else if (this.combine_at_end(true)) {
-      something_changed = true;
-      this.combine();
-    } else {
-      something_changed = false;
-    }
-    if (something_changed) {
       // let the observers synchronize the changes
       if ((board.communication != null) && (board.communication.observers != null)) {
         board.communication.observers.notify_changed(this);
