@@ -102,6 +102,81 @@ public class OpenApiMcpToolRegistry {
             operation.getRequestBody()));
       }
     }
+    // Register custom encode_base64 tool
+    JsonObject encodeInput = new JsonObject();
+    encodeInput.addProperty("type", "object");
+    JsonObject encodeInputProps = new JsonObject();
+    JsonObject encodeTextInput = new JsonObject();
+    encodeTextInput.addProperty("type", "string");
+    encodeTextInput.addProperty("description", "The UTF-8 text content to encode.");
+    encodeInputProps.add("text", encodeTextInput);
+    encodeInput.add("properties", encodeInputProps);
+    JsonArray encodeRequired = new JsonArray();
+    encodeRequired.add("text");
+    encodeInput.add("required", encodeRequired);
+    encodeInput.addProperty("additionalProperties", false);
+
+    JsonObject encodeOutput = new JsonObject();
+    encodeOutput.addProperty("type", "object");
+    JsonObject encodeOutputProps = new JsonObject();
+    JsonObject encodeBase64Output = new JsonObject();
+    encodeBase64Output.addProperty("type", "string");
+    encodeBase64Output.addProperty("description", "The resulting Base64 encoded string.");
+    encodeOutputProps.add("base64", encodeBase64Output);
+    encodeOutput.add("properties", encodeOutputProps);
+    JsonArray encodeOutRequired = new JsonArray();
+    encodeOutRequired.add("base64");
+    encodeOutput.add("required", encodeOutRequired);
+    encodeOutput.addProperty("additionalProperties", false);
+
+    tools.put("encode_base64", new ToolOperation(
+        "encode_base64",
+        "custom",
+        "custom",
+        "Encodes a UTF-8 text string (like a DSN, JSON, or RULES file content) into a Base64 string.",
+        encodeInput,
+        encodeOutput,
+        new ArrayList<>(),
+        null
+    ));
+
+    // Register custom decode_base64 tool
+    JsonObject decodeInput = new JsonObject();
+    decodeInput.addProperty("type", "object");
+    JsonObject decodeInputProps = new JsonObject();
+    JsonObject decodeBase64Input = new JsonObject();
+    decodeBase64Input.addProperty("type", "string");
+    decodeBase64Input.addProperty("description", "The Base64 string to decode.");
+    decodeInputProps.add("base64", decodeBase64Input);
+    decodeInput.add("properties", decodeInputProps);
+    JsonArray decodeRequired = new JsonArray();
+    decodeRequired.add("base64");
+    decodeInput.add("required", decodeRequired);
+    decodeInput.addProperty("additionalProperties", false);
+
+    JsonObject decodeOutput = new JsonObject();
+    decodeOutput.addProperty("type", "object");
+    JsonObject decodeOutputProps = new JsonObject();
+    JsonObject decodeTextOutput = new JsonObject();
+    decodeTextOutput.addProperty("type", "string");
+    decodeTextOutput.addProperty("description", "The resulting decoded UTF-8 text string.");
+    decodeOutputProps.add("text", decodeTextOutput);
+    decodeOutput.add("properties", decodeOutputProps);
+    JsonArray decodeOutRequired = new JsonArray();
+    decodeOutRequired.add("text");
+    decodeOutput.add("required", decodeOutRequired);
+    decodeOutput.addProperty("additionalProperties", false);
+
+    tools.put("decode_base64", new ToolOperation(
+        "decode_base64",
+        "custom",
+        "custom",
+        "Decodes a Base64 string (like routed SES or JSON output files) back into a UTF-8 text string.",
+        decodeInput,
+        decodeOutput,
+        new ArrayList<>(),
+        null
+    ));
 
     return new OpenApiMcpToolRegistry(tools);
   }

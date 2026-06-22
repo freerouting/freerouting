@@ -145,6 +145,85 @@ class McpEndpointsTest {
   }
 
   @Test
+  void customTools_encodeAndDecodeBase64_runLocally() throws Exception {
+    // 1. Verify tools exist in tools/list
+    JsonObject listRequest = new JsonObject();
+    listRequest.addProperty("jsonrpc", "2.0");
+    listRequest.addProperty("id", 10);
+    listRequest.addProperty("method", "tools/list");
+
+    HttpResponse<String> listResponse = httpClient.send(authenticatedMcpRequest(listRequest), HttpResponse.BodyHandlers.ofString());
+    assertEquals(200, listResponse.statusCode());
+
+    JsonObject listPayload = JsonParser.parseString(listResponse.body()).getAsJsonObject();
+    JsonArray tools = listPayload.getAsJsonObject("result").getAsJsonArray("tools");
+    assertTrue(containsTool(tools, "encode_base64"), "tools/list should expose encode_base64");
+    assertTrue(containsTool(tools, "decode_base64"), "tools/list should expose decode_base64");
+
+    // 2. Call encode_base64
+    JsonObject encodeRequest = new JsonObject();
+    encodeRequest.addProperty("jsonrpc", "2.0");
+    encodeRequest.addProperty("id", 11);
+    encodeRequest.addProperty("method", "tools/call");
+
+    JsonObject encodeParams = new JsonObject();
+    encodeParams.addProperty("name", "encode_base64");
+    JsonObject encodeArgs = new JsonObject();
+    encodeArgs.addProperty("text", "hello world");
+    encodeParams.add("arguments", encodeArgs);
+    encodeRequest.add("params", encodeParams);
+
+    HttpResponse<String> encodeResponse = httpClient.send(authenticatedMcpRequest(encodeRequest), HttpResponse.BodyHandlers.ofString());
+    assertEquals(200, encodeResponse.statusCode());
+
+    JsonObject encodePayload = JsonParser.parseString(encodeResponse.body()).getAsJsonObject();
+    assertTrue(encodePayload.has("result"));
+    assertFalse(encodePayload.getAsJsonObject("result").get("isError").getAsBoolean());
+
+    String encodeText = encodePayload.getAsJsonObject("result")
+        .getAsJsonArray("content")
+        .get(0)
+        .getAsJsonObject()
+        .get("text")
+        .getAsString();
+    JsonObject encodeResultBody = JsonParser.parseString(encodeText).getAsJsonObject();
+    assertEquals(200, encodeResultBody.get("status").getAsInt());
+    String base64Value = encodeResultBody.getAsJsonObject("body").get("base64").getAsString();
+    assertEquals("aGVsbG8gd29ybGQ=", base64Value);
+
+    // 3. Call decode_base64
+    JsonObject decodeRequest = new JsonObject();
+    decodeRequest.addProperty("jsonrpc", "2.0");
+    decodeRequest.addProperty("id", 12);
+    decodeRequest.addProperty("method", "tools/call");
+
+    JsonObject decodeParams = new JsonObject();
+    decodeParams.addProperty("name", "decode_base64");
+    JsonObject decodeArgs = new JsonObject();
+    decodeArgs.addProperty("base64", "aGVsbG8gd29ybGQ=");
+    decodeParams.add("arguments", decodeArgs);
+    decodeRequest.add("params", decodeParams);
+
+    HttpResponse<String> decodeResponse = httpClient.send(authenticatedMcpRequest(decodeRequest), HttpResponse.BodyHandlers.ofString());
+    assertEquals(200, decodeResponse.statusCode());
+
+    JsonObject decodePayload = JsonParser.parseString(decodeResponse.body()).getAsJsonObject();
+    assertTrue(decodePayload.has("result"));
+    assertFalse(decodePayload.getAsJsonObject("result").get("isError").getAsBoolean());
+
+    String decodeText = decodePayload.getAsJsonObject("result")
+        .getAsJsonArray("content")
+        .get(0)
+        .getAsJsonObject()
+        .get("text")
+        .getAsString();
+    JsonObject decodeResultBody = JsonParser.parseString(decodeText).getAsJsonObject();
+    assertEquals(200, decodeResultBody.get("status").getAsInt());
+    String textValue = decodeResultBody.getAsJsonObject("body").get("text").getAsString();
+    assertEquals("hello world", textValue);
+  }
+
+  @Test
   void agentCard_isPublicOnMcpServer() throws Exception {
     HttpRequest request = HttpRequest.newBuilder(mcpBaseUri.resolve("/.well-known/agent.json"))
         .GET()

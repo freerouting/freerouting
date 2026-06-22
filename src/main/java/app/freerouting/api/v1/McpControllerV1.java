@@ -198,6 +198,10 @@ public class McpControllerV1 extends BaseController {
       return error(id, -32601, "Unknown tool: " + toolName);
     }
 
+    if ("custom".equals(tool.method())) {
+      return handleCustomToolCall(id, toolName, arguments);
+    }
+
     HttpResponse<String> response;
     try {
       response = invokeTool(tool, arguments, correlationId);
@@ -367,6 +371,55 @@ public class McpControllerV1 extends BaseController {
 
     response.add("error", err);
     return response;
+  }
+
+  private JsonObject handleCustomToolCall(JsonElement id, String toolName, JsonObject arguments) {
+    JsonObject result = new JsonObject();
+    JsonArray content = new JsonArray();
+    JsonObject textObj = new JsonObject();
+    textObj.addProperty("type", "text");
+
+    JsonObject payload = new JsonObject();
+    JsonObject body = new JsonObject();
+
+    if ("encode_base64".equals(toolName)) {
+      if (!arguments.has("text") || arguments.get("text").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: text");
+      }
+      String text = arguments.get("text").getAsString();
+      String base64 = java.util.Base64.getEncoder().encodeToString(text.getBytes(StandardCharsets.UTF_8));
+      body.addProperty("base64", base64);
+    } else if ("decode_base64".equals(toolName)) {
+      if (!arguments.has("base64") || arguments.get("base64").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: base64");
+      }
+      String base64 = arguments.get("base64").getAsString();
+      try {
+        byte[] decodedBytes = java.util.Base64.getDecoder().decode(base64);
+        String decodedText = new String(decodedBytes, StandardCharsets.UTF_8);
+        body.addProperty("text", decodedText);
+      } catch (IllegalArgumentException e) {
+        return error(id, -32602, "Invalid base64 string: " + e.getMessage());
+      }
+    } else {
+      return error(id, -32601, "Unknown custom tool: " + toolName);
+    }
+
+    payload.addProperty("status", 200);
+    payload.addProperty("contentType", "application/json");
+    payload.add("body", body);
+
+    textObj.addProperty("text", GsonProvider.GSON.toJson(payload));
+    content.add(textObj);
+    result.add("content", content);
+    result.addProperty("isError", false);
+
+    JsonObject eventPayload = new JsonObject();
+    eventPayload.addProperty("tool", toolName);
+    eventPayload.addProperty("status", 200);
+    McpRealtimeBridge.broadcast("mcp.tool.called", eventPayload);
+
+    return success(id, result);
   }
 
   private static JsonElement nullId() {
