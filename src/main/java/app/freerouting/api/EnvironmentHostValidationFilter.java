@@ -67,6 +67,7 @@ public class EnvironmentHostValidationFilter implements ContainerRequestFilter {
     String p = path.startsWith("/") ? path.substring(1) : path;
     return p.startsWith("v1/system/")
         || p.startsWith("v1/analytics/")
+        || p.startsWith("v1/mcp")
         || p.startsWith("dev/")
         || p.startsWith(".well-known/")
         || p.startsWith("openapi/")

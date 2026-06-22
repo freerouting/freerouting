@@ -64,6 +64,8 @@ public class Freerouting {
   public static GlobalSettings globalSettings;
   private static Server apiServer; // API server instance
   private static Server mcpServer; // MCP server instance
+  private static java.io.PrintStream originalSystemOut;
+  public static String bridgeToken = java.util.UUID.randomUUID().toString();
 
   private static boolean InitializeCLI(GlobalSettings globalSettings) {
     if ((globalSettings.initialInputFile == null) || (globalSettings.initialOutputFile == null)) {
@@ -319,6 +321,7 @@ public class Freerouting {
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
+    jerseyServlet.setInitParameter("jersey.config.application.disableJsonBinding", "true");
 
     // Add Listeners
     context.addEventListener(new AppContextListener());
@@ -414,6 +417,7 @@ public class Freerouting {
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jakarta.ws.rs.Application", McpApplication.class.getName());
+    jerseyServlet.setInitParameter("jersey.config.application.disableJsonBinding", "true");
 
     context.addEventListener(new McpContextListener());
 
@@ -435,6 +439,96 @@ public class Freerouting {
 
     return mcpServer;
   }
+
+  public static void startMcpStdioBridge(java.io.PrintStream originalOut, Server server) {
+    Thread bridgeThread = new Thread(() -> {
+      try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(System.in, StandardCharsets.UTF_8))) {
+        int localPort = -1;
+        while (localPort <= 0) {
+          if (server != null && server.getConnectors().length > 0 && server.getConnectors()[0] instanceof ServerConnector connector) {
+            localPort = connector.getLocalPort();
+          }
+          if (localPort <= 0) {
+            try {
+              Thread.sleep(50);
+            } catch (InterruptedException _) {
+              Thread.currentThread().interrupt();
+              return;
+            }
+          }
+        }
+
+        String resolvedProfileId = System.getenv("FREEROUTING_PROFILE_ID");
+        if (resolvedProfileId == null || resolvedProfileId.isBlank()) {
+          resolvedProfileId = System.getenv("FREEROUTING__PROFILE__ID");
+        }
+        if ((resolvedProfileId == null || resolvedProfileId.isBlank()) && globalSettings != null && globalSettings.userProfileSettings != null) {
+          resolvedProfileId = globalSettings.userProfileSettings.userId;
+        }
+        if (resolvedProfileId == null || resolvedProfileId.isBlank()) {
+          resolvedProfileId = "00000000-0000-0000-0000-000000000000";
+        }
+
+        String resolvedProfileEmail = System.getenv("FREEROUTING_PROFILE_EMAIL");
+        if (resolvedProfileEmail == null || resolvedProfileEmail.isBlank()) {
+          resolvedProfileEmail = System.getenv("FREEROUTING__PROFILE__EMAIL");
+        }
+        if ((resolvedProfileEmail == null || resolvedProfileEmail.isBlank()) && globalSettings != null && globalSettings.userProfileSettings != null) {
+          resolvedProfileEmail = globalSettings.userProfileSettings.userEmail;
+        }
+
+        String resolvedHost = System.getenv("FREEROUTING_ENVIRONMENT_HOST");
+        if (resolvedHost == null || resolvedHost.isBlank()) {
+          resolvedHost = System.getenv("FREEROUTING__ENVIRONMENT__HOST");
+        }
+
+        java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
+        java.net.URI targetUri = java.net.URI.create("http://127.0.0.1:" + localPort + "/v1/mcp");
+        
+        String line;
+        while ((line = reader.readLine()) != null) {
+          if (line.trim().isEmpty()) {
+            continue;
+          }
+          try {
+            java.net.http.HttpRequest.Builder reqBuilder = java.net.http.HttpRequest.newBuilder(targetUri)
+                .header("Content-Type", "application/json")
+                .header("X-Internal-Bridge-Token", bridgeToken)
+                .header("Freerouting-Profile-ID", resolvedProfileId);
+
+            if (resolvedProfileEmail != null && !resolvedProfileEmail.isBlank()) {
+              reqBuilder.header("Freerouting-Profile-Email", resolvedProfileEmail);
+            }
+            if (resolvedHost != null && !resolvedHost.isBlank()) {
+              reqBuilder.header("Freerouting-Environment-Host", resolvedHost);
+            }
+
+            java.net.http.HttpRequest request = reqBuilder
+                .POST(java.net.http.HttpRequest.BodyPublishers.ofString(line, StandardCharsets.UTF_8))
+                .build();
+            
+            java.net.http.HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+            String responseBody = response.body();
+            if (responseBody != null) {
+              String singleLineResponse = responseBody.replace("\r", "").replace("\n", "");
+              originalOut.println(singleLineResponse);
+              originalOut.flush();
+            }
+          } catch (Exception e) {
+            FRLogger.error("Error in MCP stdio bridge request forwarding", e);
+          }
+        }
+        FRLogger.info("MCP stdio bridge detected EOF, shutting down application.");
+        System.exit(0);
+      } catch (IOException e) {
+        FRLogger.error("Error reading from System.in in MCP stdio bridge", e);
+        System.exit(1);
+      }
+    }, "mcp-stdio-bridge");
+    bridgeThread.setDaemon(true);
+    bridgeThread.start();
+  }
+
 
   private static Set<String> splitCommaSeparated(String value) {
     return Arrays.stream(value.split(","))
@@ -478,6 +572,28 @@ public class Freerouting {
    * @param args
    */
   void main(String[] args) {
+    originalSystemOut = System.out;
+    boolean isStdioMode = false;
+    if (args.length > 0) {
+      for (String arg : args) {
+        if (arg.startsWith("--mcp_server.stdio=")) {
+          String val = arg.substring("--mcp_server.stdio=".length());
+          if ("true".equalsIgnoreCase(val) || "1".equals(val)) {
+            isStdioMode = true;
+          }
+        }
+      }
+    }
+    if (System.getenv("FREEROUTING__MCP_SERVER__STDIO") != null) {
+      String envVal = System.getenv("FREEROUTING__MCP_SERVER__STDIO");
+      if ("true".equalsIgnoreCase(envVal) || "1".equals(envVal)) {
+        isStdioMode = true;
+      }
+    }
+    if (isStdioMode) {
+      System.setOut(System.err);
+    }
+
     // CRITICAL: Set up logging configuration BEFORE any logging occurs
     // This must happen before FRLogger.traceEntry() or any other logging call
 
@@ -705,6 +821,21 @@ public class Freerouting {
       globalSettings.logging.file.location = fileLoggingLocation;
     }
 
+    // Warn if mcp_server.stdio was set in freerouting.json but not via CLI/env.
+    // The stdout redirect must happen before logging is initialised, so the JSON setting
+    // is too late and is silently ignored.  Operators who set it only in JSON would get
+    // non-JSON protocol noise on stdout, breaking the MCP stdio transport.
+    if (!isStdioMode
+        && globalSettings != null
+        && globalSettings.mcpServerSettings != null
+        && Boolean.TRUE.equals(globalSettings.mcpServerSettings.isStdioMode)) {
+      FRLogger.warn("[startup] 'mcp_server.stdio=true' was found in freerouting.json but is being ignored. "
+          + "The stdio redirect must be requested before logging is initialised and therefore "
+          + "can only be set via the '--mcp_server.stdio=true' CLI argument or the "
+          + "'FREEROUTING__MCP_SERVER__STDIO=true' environment variable. "
+          + "The JSON setting has no effect and the MCP stdio transport will NOT work correctly.");
+    }
+
     if ((globalSettings == null) || !GlobalSettings.getReleaseSafeVersion().equals(globalSettings.version)) {
       // let's see if we can preserve the user ID
       String userId = globalSettings == null ? UUID.randomUUID().toString() : globalSettings.userProfileSettings.userId;
@@ -874,7 +1005,11 @@ public class Freerouting {
           || globalSettings.mcpServerSettings.targetApiBaseUrl.isBlank()
           || "http://127.0.0.1:37864".equals(globalSettings.mcpServerSettings.targetApiBaseUrl))) {
         if (apiServer.getConnectors().length > 0 && apiServer.getConnectors()[0] instanceof ServerConnector connector) {
-          globalSettings.mcpServerSettings.targetApiBaseUrl = "http://127.0.0.1:" + connector.getLocalPort();
+          int port = connector.getLocalPort();
+          if (port <= 0) {
+            port = connector.getPort();
+          }
+          globalSettings.mcpServerSettings.targetApiBaseUrl = "http://127.0.0.1:" + port;
         }
       }
     }
@@ -883,6 +1018,10 @@ public class Freerouting {
       mcpServer = InitializeMCP(globalSettings.mcpServerSettings);
       globalSettings.mcpServerSettings.isEnabled = mcpServer != null;
       globalSettings.mcpServerSettings.isRunning = mcpServer != null;
+
+      if (mcpServer != null && Boolean.TRUE.equals(globalSettings.mcpServerSettings.isStdioMode)) {
+        startMcpStdioBridge(originalSystemOut, mcpServer);
+      }
     }
 
     // Initialize the GUI

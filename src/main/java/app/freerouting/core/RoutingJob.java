@@ -12,6 +12,7 @@ import app.freerouting.logger.LogEntry;
 import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.settings.RouterSettings;
 import com.google.gson.annotations.SerializedName;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.ByteArrayInputStream;
@@ -41,8 +42,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   private static final String EAGLE_SCRIPT_FILE_EXTENSION = "scr";
 
   @SerializedName("id")
+  @Schema(name = "id", description = "Unique identifier for the routing job")
   public final UUID id = UUID.randomUUID();
   @SerializedName("created_at")
+  @Schema(name = "created_at", description = "Job creation timestamp")
   public final Instant createdAt = Instant.now();
   // events to signal input and output updates
   protected final transient List<RoutingJobUpdatedEventListener> settingsUpdatedEventListeners = new ArrayList<>();
@@ -50,33 +53,47 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   protected final transient List<RoutingJobUpdatedEventListener> outputUpdatedEventListeners = new ArrayList<>();
   protected final transient List<RoutingJobLogEntryAddedEventListener> logEntryAddedEventListeners = new ArrayList<>();
   @SerializedName("short_name")
+  @Schema(name = "short_name", description = "A short name for the job")
   public String shortName = "N/A";
   @SerializedName("name")
+  @Schema(description = "The name of the job")
   public String name;
   @SerializedName("started_at")
+  @Schema(name = "started_at", description = "Job start timestamp")
   public Instant startedAt;
   @SerializedName("finished_at")
+  @Schema(name = "finished_at", description = "Job completion timestamp")
   public Instant finishedAt;
   @SerializedName("state")
+  @Schema(description = "The current state of the job")
   public RoutingJobState state = RoutingJobState.INVALID;
   @SerializedName("stage")
+  @Schema(description = "The current stage of the job")
   public RoutingStage stage = RoutingStage.IDLE;
   @SerializedName("priority")
+  @Schema(description = "The priority of the job")
   public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
   @SerializedName("session_id")
+  @Schema(name = "session_id", description = "The session ID the job belongs to")
   public UUID sessionId;
   @SerializedName("input")
+  @Schema(description = "Details of the uploaded input design file")
   public BoardFileDetails input;
   @SerializedName("output")
+  @Schema(description = "Details of the routed output design file")
   public BoardFileDetails output;
 
   @SerializedName("drc")
+  @Schema(description = "Details of the design rules check output")
   public BoardFileDetails drc;
   @SerializedName("router_settings")
+  @Schema(name = "router_settings", description = "Router configuration settings")
   public RouterSettings routerSettings = new RouterSettings();
   @SerializedName("drc_settings")
+  @Schema(name = "drc_settings", description = "DRC configuration settings")
   public DesignRulesCheckerSettings drcSettings = new DesignRulesCheckerSettings();
   @SerializedName("resource_usage")
+  @Schema(name = "resource_usage", description = "Resource usage stats")
   public RouterJobResourceUsage resourceUsage = new RouterJobResourceUsage();
   public transient StoppableThread thread;
   public transient RoutingBoard board;
@@ -92,6 +109,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   }
 
   @SerializedName("current_pass")
+  @Schema(name = "current_pass", description = "Current routing pass")
   private int currentPass = 0;
 
   /**

@@ -301,16 +301,17 @@ public class GlobalSettings implements Serializable {
       boolean isSaveNeeded = !currentVersion.equals(fileVersion);
 
       // Apply all the loaded settings to the result if they are not null
-      ReflectionUtil.copyFields(defaultSettings, loadedSettings);
-      loadedSettings.version = currentVersion;
+      ReflectionUtil.copyFields(loadedSettings, defaultSettings);
+      defaultSettings.version = currentVersion;
 
       if (isSaveNeeded) {
         // TODO: insert per-version migration steps here when needed, e.g.:
-        //   migrateSettings(fileVersion, currentVersion, loadedSettings);
+        //   migrateSettings(fileVersion, currentVersion, defaultSettings);
         FRLogger.info("freerouting.json config version changed from '"
             + fileVersion + "' to '" + currentVersion + "' – re-saving configuration.");
-        saveAsJson(loadedSettings);
+        saveAsJson(defaultSettings);
       }
+      loadedSettings = defaultSettings;
     }
 
     return loadedSettings;

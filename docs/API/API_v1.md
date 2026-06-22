@@ -483,7 +483,7 @@ Operational controls:
 
 For complete setup instructions (configuration, startup commands, verification, and troubleshooting), see:
 
-- [`docs/API/MCP_setup.md`](MCP_setup.md)
+- [`docs/API/MCP.md`](MCP.md)
 
 ---
 

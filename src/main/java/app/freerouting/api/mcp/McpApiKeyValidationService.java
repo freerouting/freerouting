@@ -11,6 +11,8 @@ import java.util.List;
 
 /**
  * Authentication service for the dedicated MCP server.
+ * MCP authentication is controlled solely by {@code mcp_server.authentication.enabled} and is
+ * independent of the REST API authentication setting.
  */
 public class McpApiKeyValidationService {
 
@@ -27,7 +29,9 @@ public class McpApiKeyValidationService {
     }
 
     ApiAuthenticationSettings authSettings = Freerouting.globalSettings.mcpServerSettings.authentication;
-    this.isEnabled = authSettings != null && Boolean.TRUE.equals(authSettings.isEnabled);
+    boolean mcpAuthEnabled = authSettings != null && Boolean.TRUE.equals(authSettings.isEnabled);
+
+    this.isEnabled = mcpAuthEnabled;
 
     if (this.isEnabled && authSettings != null && authSettings.providers != null) {
       String[] providerNames = authSettings.providers.split(",");
