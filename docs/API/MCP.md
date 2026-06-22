@@ -64,7 +64,9 @@ This option runs the entire routing engine **locally on your machine**. All PCB 
 Click **+ New MCP Server** and enter:
 - **Name**: `freerouting-mcp`
 - **Type**: `command`
-- **Command**: `java -jar C:/path/to/freerouting-current-executable.jar --api_server.enabled=true --api_server.authentication.enabled=false --mcp_server.enabled=true --mcp_server.stdio=true --gui.enabled=false`
+- **Command**: `java -jar C:/path/to/freerouting-current-executable.jar --api_server.enabled=true --api_server.authentication.enabled=false --mcp_server.enabled=true --mcp_server.authentication.enabled=false --mcp_server.stdio=true --gui.enabled=false`
+
+> **Note:** `--mcp_server.stdio=true` must be passed as a CLI argument (or set via the `FREEROUTING__MCP_SERVER__STDIO=true` environment variable). Setting `mcp_server.stdio` only in `freerouting.json` has no effect because the stdout redirect must happen before logging is initialised — if you do so, a warning will be printed to the log.
 
 ##### Cline / Roo Cline (`cline_mcp_settings.json`)
 ```json
@@ -78,6 +80,7 @@ Click **+ New MCP Server** and enter:
         "--api_server.enabled=true",
         "--api_server.authentication.enabled=false",
         "--mcp_server.enabled=true",
+        "--mcp_server.authentication.enabled=false",
         "--mcp_server.stdio=true",
         "--gui.enabled=false"
       ]
@@ -127,7 +130,7 @@ graph TD
 - **Benefit**: The MCP server handles file system reading and Base64 encoding in-memory locally. The file content is never loaded into the LLM's context window, preserving tokens and improving speed.
 
 ##### Option B: Manual Base64 Upload (Alternative)
-- **Encode**: You MUST use the local `encode_base64` tool to convert your plain-text board file (typically a `.dsn` Specctra file) into a Base64-encoded string. **Do NOT execute external shell commands (like PowerShell or `base64`) for this.**
+- **Encode**: It is recommended to use the local `encode_base64` tool to convert your plain-text board file (typically a `.dsn` Specctra file) into a Base64-encoded string. Prefer this over running external shell commands (like PowerShell or `base64`).
 - **Upload**: Call `upload_job_input_file` with the `jobId` and the generated Base64 string under `body.data`.
 
 #### Step 3.5 (Optional): Update Settings (`update_job_settings`)
@@ -148,7 +151,7 @@ graph TD
 
 ##### Option B: Manual Base64 Download (Alternative)
 - **Download**: Once status is `COMPLETED`, call `download_job_output_file` to retrieve the routed Specctra SES layout. It is returned as a Base64-encoded string.
-- **Decode**: You MUST use the local `decode_base64` tool to convert the Base64 string back into a plain-text Specctra SES format to write to disk. **Do NOT run external shell commands to decode this file.**
+- **Decode**: It is recommended to use the local `decode_base64` tool to convert the Base64 string back into a plain-text Specctra SES format to write to disk, rather than running external shell commands.
 
 ---
 

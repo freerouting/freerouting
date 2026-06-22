@@ -80,8 +80,8 @@ You can customize the behavior of the bridge using the following environment var
 | `FREEROUTING_API_KEY` | Your Freerouting API authorization token (Bearer) | (Required) |
 | `FREEROUTING_API_URL` | Endpoint to target | `https://api.freerouting.app/v1/mcp` |
 | `FREEROUTING_PROFILE_ID` | Custom user profile UUID | (Generated dummy UUID) |
-| `FREEROUTING_PROFILE_EMAIL` | Custom identifier email | `mcp-npx-client@local.freerouting.app` |
-| `FREEROUTING_ENVIRONMENT_HOST` | Client identification | `MCP-NPX-Client/1.0` |
+| `FREEROUTING_PROFILE_EMAIL` | Custom identifier email | (Optional; header omitted if not set) |
+| `FREEROUTING_ENVIRONMENT_HOST` | Client identification string sent in the `Freerouting-Environment-Host` header | (Optional; the server auto-detects the value when the header is absent) |
 
 ---
 

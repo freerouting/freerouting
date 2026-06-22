@@ -35,13 +35,13 @@ public class McpApiKeyValidationServiceTest {
   }
 
   @Test
-  void testAuthenticationDisabledWhenApiDisabled() {
+  void testAuthenticationEnabledWhenOnlyMcpEnabled() {
+    // MCP auth is independent of REST API auth; enabling only MCP auth is sufficient.
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
     Freerouting.globalSettings.mcpServerSettings.authentication.isEnabled = true;
     McpApiKeyValidationService service = McpApiKeyValidationService.getInstance();
 
-    assertFalse(service.isAuthenticationEnabled());
-    assertTrue(service.validateApiKey("any-key"));
+    assertTrue(service.isAuthenticationEnabled());
   }
 
   @Test

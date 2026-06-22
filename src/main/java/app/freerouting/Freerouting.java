@@ -821,6 +821,21 @@ public class Freerouting {
       globalSettings.logging.file.location = fileLoggingLocation;
     }
 
+    // Warn if mcp_server.stdio was set in freerouting.json but not via CLI/env.
+    // The stdout redirect must happen before logging is initialised, so the JSON setting
+    // is too late and is silently ignored.  Operators who set it only in JSON would get
+    // non-JSON protocol noise on stdout, breaking the MCP stdio transport.
+    if (!isStdioMode
+        && globalSettings != null
+        && globalSettings.mcpServerSettings != null
+        && Boolean.TRUE.equals(globalSettings.mcpServerSettings.isStdioMode)) {
+      FRLogger.warn("[startup] 'mcp_server.stdio=true' was found in freerouting.json but is being ignored. "
+          + "The stdio redirect must be requested before logging is initialised and therefore "
+          + "can only be set via the '--mcp_server.stdio=true' CLI argument or the "
+          + "'FREEROUTING__MCP_SERVER__STDIO=true' environment variable. "
+          + "The JSON setting has no effect and the MCP stdio transport will NOT work correctly.");
+    }
+
     if ((globalSettings == null) || !GlobalSettings.getReleaseSafeVersion().equals(globalSettings.version)) {
       // let's see if we can preserve the user ID
       String userId = globalSettings == null ? UUID.randomUUID().toString() : globalSettings.userProfileSettings.userId;

@@ -451,7 +451,7 @@ public class JobControllerV1 extends BaseController {
    * Upload the input of the job, typically in Specctra DSN format. Note: the input file limit depends on the server configuration, but it is at least 1MB and typically 30MBs if hosted by ASP.NET Core
    * web server.
    */
-  @Operation(summary = "Upload job input file", description = "Uploads the input PCB design file for a routing job, typically in Specctra DSN format. The file must be Base64-encoded. IMPORTANT: You MUST use the local 'encode_base64' tool to perform this conversion instead of running terminal commands (like powershell or base64). Note: File size limit depends on server configuration (typically 1-30MB).")
+  @Operation(summary = "Upload job input file", description = "Uploads the input PCB design file for a routing job, typically in Specctra DSN format. The file must be Base64-encoded. For MCP/LLM clients, it is recommended to use the local 'encode_base64' tool to perform this conversion rather than running terminal commands (like powershell or base64). Note: File size limit depends on server configuration (typically 1-30MB).")
   @RequestBody(description = "Board file payload with Base64-encoded data", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BoardFilePayload.class)))
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Input uploaded successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
@@ -631,7 +631,7 @@ public class JobControllerV1 extends BaseController {
   @Operation(summary = "Download job output file", description = "Downloads the output file of a routing job in Specctra SES format. "
       + "If the job is completed, returns the final output. "
       + "If the job is still running or paused, returns the partial output generated so far (202 Accepted). "
-      + "The file is returned as Base64-encoded data. IMPORTANT: You MUST use the local 'decode_base64' tool to decode this output into a text/SES file; do NOT run external terminal shell commands (like powershell or base64) to perform base64 decoding.")
+      + "The file is returned as Base64-encoded data. For MCP/LLM clients, it is recommended to use the local 'decode_base64' tool to decode this output into a text/SES file rather than running external terminal shell commands (like powershell or base64) to perform base64 decoding.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Output downloaded successfully (job completed)", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BoardFilePayload.class))),
       @ApiResponse(responseCode = "202", description = "Partial output returned (job still in progress)", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BoardFilePayload.class))),
