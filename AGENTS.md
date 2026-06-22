@@ -236,7 +236,7 @@ Key facts and invariants for the dedicated MCP server implementation.
 
 ## Required docs updates when MCP changes
 
-- Update `docs/API/MCP_setup.md` with concrete startup, verification, and troubleshooting steps.
+- Update `docs/API/MCP.md` with concrete startup, verification, and troubleshooting steps.
 - Update `docs/API/API_v1.md` MCP endpoint tables/examples.
 - Update `docs/settings.md` whenever `mcp_server` fields change.
 - Update `docs/architecture.md` if package boundaries or data flow changes.

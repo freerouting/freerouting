@@ -94,7 +94,7 @@ Freerouting supports the Model Context Protocol (MCP) to integrate directly with
 - **Online Quick Start (Public API)**: Runs instantly via `npx` without requiring a local Java installation.
 - **Offline Mode (Local Executable)**: Runs the entire routing engine locally on your machine for complete privacy.
 
-See the [MCP Setup Guide](docs/API/MCP_setup.md) for detailed configuration steps.
+See the [MCP Guide](docs/API/MCP.md) for detailed configuration steps.
 
 ## Running Freerouting using Java JRE
 

@@ -211,7 +211,7 @@ public class McpControllerV1 extends BaseController {
     }
 
     if ("custom".equals(tool.method())) {
-      return handleCustomToolCall(id, toolName, arguments);
+      return handleCustomToolCall(id, toolName, arguments, correlationId);
     }
 
     HttpResponse<String> response;
@@ -414,7 +414,7 @@ public class McpControllerV1 extends BaseController {
     return response;
   }
 
-  private JsonObject handleCustomToolCall(JsonElement id, String toolName, JsonObject arguments) {
+  private JsonObject handleCustomToolCall(JsonElement id, String toolName, JsonObject arguments, String correlationId) {
     JsonObject result = new JsonObject();
     JsonArray content = new JsonArray();
     JsonObject textObj = new JsonObject();
@@ -422,6 +422,7 @@ public class McpControllerV1 extends BaseController {
 
     JsonObject payload = new JsonObject();
     JsonObject body = new JsonObject();
+    boolean isError = false;
 
     if ("encode_base64".equals(toolName)) {
       if (!arguments.has("text") || arguments.get("text").isJsonNull()) {
@@ -430,6 +431,9 @@ public class McpControllerV1 extends BaseController {
       String text = arguments.get("text").getAsString();
       String base64 = java.util.Base64.getEncoder().encodeToString(text.getBytes(StandardCharsets.UTF_8));
       body.addProperty("base64", base64);
+      payload.addProperty("status", 200);
+      payload.addProperty("contentType", "application/json");
+      payload.add("body", body);
     } else if ("decode_base64".equals(toolName)) {
       if (!arguments.has("base64") || arguments.get("base64").isJsonNull()) {
         return error(id, -32602, "Missing required parameter: base64");
@@ -439,25 +443,104 @@ public class McpControllerV1 extends BaseController {
         byte[] decodedBytes = java.util.Base64.getDecoder().decode(base64);
         String decodedText = new String(decodedBytes, StandardCharsets.UTF_8);
         body.addProperty("text", decodedText);
+        payload.addProperty("status", 200);
+        payload.addProperty("contentType", "application/json");
+        payload.add("body", body);
       } catch (IllegalArgumentException e) {
         return error(id, -32602, "Invalid base64 string: " + e.getMessage());
+      }
+    } else if ("upload_job_input_from_local_file".equals(toolName)) {
+      if (!arguments.has("jobId") || arguments.get("jobId").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: jobId");
+      }
+      if (!arguments.has("filePath") || arguments.get("filePath").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: filePath");
+      }
+      String jobId = arguments.get("jobId").getAsString();
+      String filePath = arguments.get("filePath").getAsString();
+
+      try {
+        byte[] fileBytes = java.nio.file.Files.readAllBytes(java.nio.file.Path.of(filePath));
+        String base64Data = java.util.Base64.getEncoder().encodeToString(fileBytes);
+
+        URI uri = buildUriWithQuery("/v1/jobs/" + jobId + "/input", new JsonObject());
+        JsonObject requestBodyObj = new JsonObject();
+        requestBodyObj.addProperty("job_id", jobId);
+        requestBodyObj.addProperty("data", base64Data);
+
+        HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
+        forwardHeaders(builder, correlationId);
+        builder.header("Content-Type", MediaType.APPLICATION_JSON);
+        builder.POST(HttpRequest.BodyPublishers.ofString(requestBodyObj.toString(), StandardCharsets.UTF_8));
+
+        HttpResponse<String> response = HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        payload.addProperty("status", response.statusCode());
+        payload.addProperty("contentType", "application/json");
+        isError = response.statusCode() >= 400;
+        if (isError) {
+          payload.add("body", tryParseJson(response.body()));
+        } else {
+          body.addProperty("message", "Successfully uploaded input from file: " + filePath);
+          payload.add("body", body);
+        }
+      } catch (Exception e) {
+        return error(id, -32603, "Failed to upload local file input: " + e.getMessage());
+      }
+    } else if ("download_job_output_to_local_file".equals(toolName)) {
+      if (!arguments.has("jobId") || arguments.get("jobId").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: jobId");
+      }
+      if (!arguments.has("filePath") || arguments.get("filePath").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: filePath");
+      }
+      String jobId = arguments.get("jobId").getAsString();
+      String filePath = arguments.get("filePath").getAsString();
+
+      try {
+        URI uri = buildUriWithQuery("/v1/jobs/" + jobId + "/output", new JsonObject());
+        HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
+        forwardHeaders(builder, correlationId);
+        builder.GET();
+
+        HttpResponse<String> response = HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        payload.addProperty("status", response.statusCode());
+        payload.addProperty("contentType", "application/json");
+        isError = response.statusCode() >= 400;
+
+        if (isError) {
+          payload.add("body", tryParseJson(response.body()));
+        } else if (response.statusCode() == 204) {
+          body.addProperty("message", "Job is in progress but no output data is available yet.");
+          payload.add("body", body);
+        } else {
+          JsonObject respObj = JsonParser.parseString(response.body()).getAsJsonObject();
+          String base64Data = respObj.get("data").getAsString();
+          byte[] sesBytes = java.util.Base64.getDecoder().decode(base64Data);
+
+          java.nio.file.Path outputPath = java.nio.file.Path.of(filePath);
+          if (outputPath.getParent() != null) {
+            java.nio.file.Files.createDirectories(outputPath.getParent());
+          }
+          java.nio.file.Files.write(outputPath, sesBytes);
+
+          body.addProperty("message", "Successfully downloaded output and saved to: " + filePath);
+          payload.add("body", body);
+        }
+      } catch (Exception e) {
+        return error(id, -32603, "Failed to download output to local file: " + e.getMessage());
       }
     } else {
       return error(id, -32601, "Unknown custom tool: " + toolName);
     }
 
-    payload.addProperty("status", 200);
-    payload.addProperty("contentType", "application/json");
-    payload.add("body", body);
-
     textObj.addProperty("text", GsonProvider.GSON.toJson(payload));
     content.add(textObj);
     result.add("content", content);
-    result.addProperty("isError", false);
+    result.addProperty("isError", isError);
 
     JsonObject eventPayload = new JsonObject();
     eventPayload.addProperty("tool", toolName);
-    eventPayload.addProperty("status", 200);
+    eventPayload.addProperty("status", payload.get("status").getAsInt());
     McpRealtimeBridge.broadcast("mcp.tool.called", eventPayload);
 
     return success(id, result);

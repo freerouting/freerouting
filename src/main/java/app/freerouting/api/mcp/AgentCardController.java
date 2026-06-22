@@ -99,7 +99,7 @@ public class AgentCardController {
 
     JsonObject documentation = new JsonObject();
     documentation.addProperty("mcpSetup",
-        "https://github.com/freerouting/freerouting/blob/master/docs/API/MCP_setup.md");
+        "https://github.com/freerouting/freerouting/blob/master/docs/API/MCP.md");
     documentation.addProperty("apiV1",
         "https://github.com/freerouting/freerouting/blob/master/docs/API/API_v1.md");
     documentation.addProperty("openApi", base + "/openapi/openapi.json");

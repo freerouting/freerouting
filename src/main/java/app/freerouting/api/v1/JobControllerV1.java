@@ -84,7 +84,7 @@ public class JobControllerV1 extends BaseController {
    * {@code PUT /v1/jobs/{jobId}/start}.
    * </p>
    */
-  @Operation(summary = "Enqueue new routing job", description = "Creates and enqueues a new PCB routing job within a session. The job must have both input file and settings uploaded before it can be started.")
+  @Operation(summary = "Enqueue new routing job", description = "Creates and enqueues a new PCB routing job within a session. This is Step 2 of the routing pipeline. Next, call upload_job_input_file using the returned jobId.")
   @RequestBody(description = "Routing job configuration", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class)))
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Job enqueued successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
@@ -202,7 +202,7 @@ public class JobControllerV1 extends BaseController {
    * Returns detailed status and statistics for a single routing job, including
    * board statistics if routing has already started.
    */
-  @Operation(summary = "Get job details", description = "Retrieves detailed status and statistics of a routing job, including progress information if the job has started.")
+  @Operation(summary = "Get job details", description = "Retrieves detailed status and progress of a routing job. When polling this endpoint, use an interval of 2 to 5 seconds to prevent server overload. For more real-time feedback, you can stream logs using stream_job_logs.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Job details retrieved successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
       @ApiResponse(responseCode = "404", description = "Job not found", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "{}"))),
@@ -255,7 +255,7 @@ public class JobControllerV1 extends BaseController {
    * or completed job returns HTTP 400.
    * </p>
    */
-  @Operation(summary = "Start routing job", description = "Starts or continues a queued routing job. The job must have both input file and settings uploaded before it can be started.")
+  @Operation(summary = "Start routing job", description = "Starts or continues a queued routing job. This is Step 4 of the routing pipeline. Next, poll the status using get_job_details until it is COMPLETED.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Job started successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
       @ApiResponse(responseCode = "404", description = "Job not found"),
@@ -379,7 +379,7 @@ public class JobControllerV1 extends BaseController {
    * present in the JSON are applied via the settings merger pipeline.
    * </p>
    */
-  @Operation(summary = "Update job settings", description = "Updates the router settings for a queued job. The job must be in QUEUED state and not yet started.")
+  @Operation(summary = "Update job settings", description = "Updates the router settings for a queued job. This is optional Step 3.5 before starting. Next, call start_job.")
   @RequestBody(description = "Router settings configuration", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RouterSettings.class)))
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Settings updated successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
@@ -451,7 +451,7 @@ public class JobControllerV1 extends BaseController {
    * Upload the input of the job, typically in Specctra DSN format. Note: the input file limit depends on the server configuration, but it is at least 1MB and typically 30MBs if hosted by ASP.NET Core
    * web server.
    */
-  @Operation(summary = "Upload job input file", description = "Uploads the input PCB design file for a routing job, typically in Specctra DSN format. The file must be Base64-encoded. Note: File size limit depends on server configuration (typically 1-30MB).")
+  @Operation(summary = "Upload job input file", description = "Uploads the input PCB design file for a routing job, typically in Specctra DSN format. The file must be Base64-encoded. IMPORTANT: You MUST use the local 'encode_base64' tool to perform this conversion instead of running terminal commands (like powershell or base64). Note: File size limit depends on server configuration (typically 1-30MB).")
   @RequestBody(description = "Board file payload with Base64-encoded data", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BoardFilePayload.class)))
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Input uploaded successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
@@ -631,7 +631,7 @@ public class JobControllerV1 extends BaseController {
   @Operation(summary = "Download job output file", description = "Downloads the output file of a routing job in Specctra SES format. "
       + "If the job is completed, returns the final output. "
       + "If the job is still running or paused, returns the partial output generated so far (202 Accepted). "
-      + "The file is returned as Base64-encoded data.")
+      + "The file is returned as Base64-encoded data. IMPORTANT: You MUST use the local 'decode_base64' tool to decode this output into a text/SES file; do NOT run external terminal shell commands (like powershell or base64) to perform base64 decoding.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Output downloaded successfully (job completed)", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BoardFilePayload.class))),
       @ApiResponse(responseCode = "202", description = "Partial output returned (job still in progress)", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BoardFilePayload.class))),

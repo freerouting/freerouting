@@ -294,6 +294,132 @@ class McpEndpointsTest {
     assertEquals("ClaudeDesktop/4.6.1", detected);
   }
 
+  @Test
+  void customTools_fileUploadAndDownload_runLocally() throws Exception {
+    boolean originalAuthEnabled = Freerouting.globalSettings.apiServerSettings.authentication.isEnabled;
+    Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
+    app.freerouting.api.security.ApiKeyValidationService.resetForTesting();
+
+    java.nio.file.Path tempInput = null;
+    java.nio.file.Path tempOutput = null;
+
+    try {
+      // Find valid empty_board.dsn test file
+      java.nio.file.Path sourceDsn = java.nio.file.Path.of("fixtures/empty_board.dsn");
+      if (!java.nio.file.Files.exists(sourceDsn)) {
+        sourceDsn = java.nio.file.Path.of("../fixtures/empty_board.dsn");
+      }
+      if (!java.nio.file.Files.exists(sourceDsn)) {
+        sourceDsn = java.nio.file.Path.of("C:/Work/freerouting/fixtures/empty_board.dsn");
+      }
+
+      tempInput = java.nio.file.Files.createTempFile("freerouting-test-input", ".dsn");
+      java.nio.file.Files.copy(sourceDsn, tempInput, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+      // We need a session and job first to upload input to
+      String sessionId = createTestSession();
+      String jobId = enqueueTestJob(sessionId);
+
+      // Call upload_job_input_from_local_file
+      JsonObject uploadRequest = new JsonObject();
+      uploadRequest.addProperty("jsonrpc", "2.0");
+      uploadRequest.addProperty("id", 20);
+      uploadRequest.addProperty("method", "tools/call");
+
+      JsonObject uploadParams = new JsonObject();
+      uploadParams.addProperty("name", "upload_job_input_from_local_file");
+      JsonObject uploadArgs = new JsonObject();
+      uploadArgs.addProperty("jobId", jobId);
+      uploadArgs.addProperty("filePath", tempInput.toAbsolutePath().toString());
+      uploadParams.add("arguments", uploadArgs);
+      uploadRequest.add("params", uploadParams);
+
+      HttpResponse<String> uploadResponse = httpClient.send(authenticatedMcpRequest(uploadRequest), HttpResponse.BodyHandlers.ofString());
+      assertEquals(200, uploadResponse.statusCode());
+
+      JsonObject uploadPayload = JsonParser.parseString(uploadResponse.body()).getAsJsonObject();
+      assertFalse(uploadPayload.getAsJsonObject("result").get("isError").getAsBoolean());
+
+      // 2. Call download_job_output_to_local_file (expecting 400 because job has not completed/run)
+      tempOutput = java.nio.file.Path.of(System.getProperty("java.io.tmpdir")).resolve("freerouting-test-output-" + System.currentTimeMillis() + ".ses");
+
+      JsonObject downloadRequest = new JsonObject();
+      downloadRequest.addProperty("jsonrpc", "2.0");
+      downloadRequest.addProperty("id", 21);
+      downloadRequest.addProperty("method", "tools/call");
+
+      JsonObject downloadParams = new JsonObject();
+      downloadParams.addProperty("name", "download_job_output_to_local_file");
+      JsonObject downloadArgs = new JsonObject();
+      downloadArgs.addProperty("jobId", jobId);
+      downloadArgs.addProperty("filePath", tempOutput.toAbsolutePath().toString());
+      downloadParams.add("arguments", downloadArgs);
+      downloadRequest.add("params", downloadParams);
+
+      HttpResponse<String> downloadResponse = httpClient.send(authenticatedMcpRequest(downloadRequest), HttpResponse.BodyHandlers.ofString());
+      assertEquals(200, downloadResponse.statusCode());
+
+      JsonObject downloadPayload = JsonParser.parseString(downloadResponse.body()).getAsJsonObject();
+      String downloadText = downloadPayload.getAsJsonObject("result")
+          .getAsJsonArray("content")
+          .get(0)
+          .getAsJsonObject()
+          .get("text")
+          .getAsString();
+      JsonObject downloadResultBody = JsonParser.parseString(downloadText).getAsJsonObject();
+      assertEquals(400, downloadResultBody.get("status").getAsInt());
+    } finally {
+      if (tempInput != null) {
+        java.nio.file.Files.deleteIfExists(tempInput);
+      }
+      if (tempOutput != null) {
+        java.nio.file.Files.deleteIfExists(tempOutput);
+      }
+      Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = originalAuthEnabled;
+      app.freerouting.api.security.ApiKeyValidationService.resetForTesting();
+    }
+  }
+
+  private String createTestSession() throws Exception {
+    JsonObject request = new JsonObject();
+    request.addProperty("jsonrpc", "2.0");
+    request.addProperty("id", 50);
+    request.addProperty("method", "tools/call");
+
+    JsonObject params = new JsonObject();
+    params.addProperty("name", "create_session");
+    params.add("arguments", new JsonObject());
+    request.add("params", params);
+
+    HttpResponse<String> response = httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
+    JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
+    String text = payload.getAsJsonObject("result").getAsJsonArray("content").get(0).getAsJsonObject().get("text").getAsString();
+    JsonObject body = JsonParser.parseString(text).getAsJsonObject().getAsJsonObject("body");
+    return body.get("id").getAsString();
+  }
+
+  private String enqueueTestJob(String sessionId) throws Exception {
+    JsonObject request = new JsonObject();
+    request.addProperty("jsonrpc", "2.0");
+    request.addProperty("id", 51);
+    request.addProperty("method", "tools/call");
+
+    JsonObject params = new JsonObject();
+    params.addProperty("name", "enqueue_job");
+    JsonObject args = new JsonObject();
+    JsonObject bodyObj = new JsonObject();
+    bodyObj.addProperty("session_id", sessionId);
+    args.add("body", bodyObj);
+    params.add("arguments", args);
+    request.add("params", params);
+
+    HttpResponse<String> response = httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
+    JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
+    String text = payload.getAsJsonObject("result").getAsJsonArray("content").get(0).getAsJsonObject().get("text").getAsString();
+    JsonObject body = JsonParser.parseString(text).getAsJsonObject().getAsJsonObject("body");
+    return body.get("id").getAsString();
+  }
+
   private HttpRequest authenticatedMcpRequest(JsonObject requestBody) {
     return HttpRequest.newBuilder(mcpBaseUri.resolve("/v1/mcp"))
         .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
