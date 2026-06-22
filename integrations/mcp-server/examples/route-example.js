@@ -72,13 +72,10 @@ async function main() {
   const defaultOutputPath = dsnPath.replace(/\.dsn$/i, '.ses');
   const outputPath = args[1] ? path.resolve(args[1]) : defaultOutputPath;
 
-  console.log(`Reading DSN file: ${dsnPath}`);
   if (!fs.existsSync(dsnPath)) {
     console.error(`Error: File not found at ${dsnPath}`);
     process.exit(1);
   }
-  const dsnContent = fs.readFileSync(dsnPath);
-  const dsnBase64 = dsnContent.toString('base64');
 
   console.log('Handshaking with MCP server...');
   const initRes = await sendJsonRpc({
@@ -117,15 +114,10 @@ async function main() {
   const jobId = jobInfo.body.id;
   console.log(`Job enqueued: ${jobId}`);
 
-  console.log('3. Uploading DSN file...');
-  // Note: key must be 'data' (matching the SerializedName("data") annotation on the backend DTO)
-  await callTool('upload_job_input_file', {
-    path: { jobId: jobId },
-    body: {
-      data: dsnBase64,
-      filename: path.basename(dsnPath),
-      format: 'DSN'
-    }
+  console.log('3. Uploading DSN file directly from filesystem...');
+  await callTool('upload_job_input_from_local_file', {
+    jobId: jobId,
+    filePath: dsnPath
   });
   console.log('DSN uploaded successfully.');
 
@@ -152,15 +144,11 @@ async function main() {
     }
   }
 
-  console.log('6. Job completed! Downloading output file...');
-  const downloadRes = await callTool('download_job_output_file', {
-    path: { jobId: jobId }
+  console.log('6. Job completed! Saving output directly to filesystem...');
+  await callTool('download_job_output_to_local_file', {
+    jobId: jobId,
+    filePath: outputPath
   });
-  
-  const downloadInfo = JSON.parse(downloadRes.content[0].text);
-  const outputBase64 = downloadInfo.body.data;
-  const outputContent = Buffer.from(outputBase64, 'base64');
-  fs.writeFileSync(outputPath, outputContent);
   console.log(`Successfully routed and saved SES file to: ${outputPath}`);
 }
 
