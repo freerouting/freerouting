@@ -271,6 +271,29 @@ class McpEndpointsTest {
     assertTrue(payload.getAsJsonObject("error").get("message").getAsString().contains("target_api_base_url"));
   }
 
+  @Test
+  void initialize_extractsClientInfo_andCachesIt() throws Exception {
+    JsonObject initializeRequest = new JsonObject();
+    initializeRequest.addProperty("jsonrpc", "2.0");
+    initializeRequest.addProperty("id", 101);
+    initializeRequest.addProperty("method", "initialize");
+
+    JsonObject params = new JsonObject();
+    JsonObject clientInfo = new JsonObject();
+    clientInfo.addProperty("name", "ClaudeDesktop");
+    clientInfo.addProperty("version", "4.6.1");
+    params.add("clientInfo", clientInfo);
+    initializeRequest.add("params", params);
+
+    HttpResponse<String> response = httpClient.send(authenticatedMcpRequest(initializeRequest), HttpResponse.BodyHandlers.ofString());
+    assertEquals(200, response.statusCode());
+
+    java.lang.reflect.Field field = app.freerouting.api.v1.McpControllerV1.class.getDeclaredField("detectedClientInfo");
+    field.setAccessible(true);
+    String detected = (String) field.get(null);
+    assertEquals("ClaudeDesktop/4.6.1", detected);
+  }
+
   private HttpRequest authenticatedMcpRequest(JsonObject requestBody) {
     return HttpRequest.newBuilder(mcpBaseUri.resolve("/v1/mcp"))
         .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))

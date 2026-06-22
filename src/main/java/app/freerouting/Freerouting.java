@@ -458,6 +458,30 @@ public class Freerouting {
           }
         }
 
+        String resolvedProfileId = System.getenv("FREEROUTING_PROFILE_ID");
+        if (resolvedProfileId == null || resolvedProfileId.isBlank()) {
+          resolvedProfileId = System.getenv("FREEROUTING__PROFILE__ID");
+        }
+        if ((resolvedProfileId == null || resolvedProfileId.isBlank()) && globalSettings != null && globalSettings.userProfileSettings != null) {
+          resolvedProfileId = globalSettings.userProfileSettings.userId;
+        }
+        if (resolvedProfileId == null || resolvedProfileId.isBlank()) {
+          resolvedProfileId = "00000000-0000-0000-0000-000000000000";
+        }
+
+        String resolvedProfileEmail = System.getenv("FREEROUTING_PROFILE_EMAIL");
+        if (resolvedProfileEmail == null || resolvedProfileEmail.isBlank()) {
+          resolvedProfileEmail = System.getenv("FREEROUTING__PROFILE__EMAIL");
+        }
+        if ((resolvedProfileEmail == null || resolvedProfileEmail.isBlank()) && globalSettings != null && globalSettings.userProfileSettings != null) {
+          resolvedProfileEmail = globalSettings.userProfileSettings.userEmail;
+        }
+
+        String resolvedHost = System.getenv("FREEROUTING_ENVIRONMENT_HOST");
+        if (resolvedHost == null || resolvedHost.isBlank()) {
+          resolvedHost = System.getenv("FREEROUTING__ENVIRONMENT__HOST");
+        }
+
         java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
         java.net.URI targetUri = java.net.URI.create("http://127.0.0.1:" + localPort + "/v1/mcp");
         
@@ -467,12 +491,19 @@ public class Freerouting {
             continue;
           }
           try {
-            java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder(targetUri)
+            java.net.http.HttpRequest.Builder reqBuilder = java.net.http.HttpRequest.newBuilder(targetUri)
                 .header("Content-Type", "application/json")
                 .header("X-Internal-Bridge-Token", bridgeToken)
-                .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000000")
-                .header("Freerouting-Profile-Email", "mcp-stdio-client@local.freerouting.app")
-                .header("Freerouting-Environment-Host", "MCP-Client/1.0")
+                .header("Freerouting-Profile-ID", resolvedProfileId);
+
+            if (resolvedProfileEmail != null && !resolvedProfileEmail.isBlank()) {
+              reqBuilder.header("Freerouting-Profile-Email", resolvedProfileEmail);
+            }
+            if (resolvedHost != null && !resolvedHost.isBlank()) {
+              reqBuilder.header("Freerouting-Environment-Host", resolvedHost);
+            }
+
+            java.net.http.HttpRequest request = reqBuilder
                 .POST(java.net.http.HttpRequest.BodyPublishers.ofString(line, StandardCharsets.UTF_8))
                 .build();
             

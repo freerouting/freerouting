@@ -50,6 +50,7 @@ import java.util.UUID;
 public class McpControllerV1 extends BaseController {
 
   private static final String JSONRPC_VERSION = "2.0";
+  private static volatile String detectedClientInfo = "MCP-Client/1.0";
 
   @Context
   private Application application;
@@ -108,7 +109,7 @@ public class McpControllerV1 extends BaseController {
     try {
       FRLogger.info("[mcp][cid=" + correlationId + "] method=" + method);
       response = switch (method == null ? "" : method) {
-        case "initialize" -> handleInitialize(id);
+        case "initialize" -> handleInitialize(id, params);
         case "notifications/initialized" -> {
           // MCP lifecycle notification: connection fully established.
           yield success(id, new JsonObject());
@@ -153,7 +154,18 @@ public class McpControllerV1 extends BaseController {
     McpRealtimeBridge.broadcast("mcp.sse.connected", hello);
   }
 
-  private JsonObject handleInitialize(JsonElement id) {
+  private JsonObject handleInitialize(JsonElement id, JsonObject params) {
+    if (params != null && params.has("clientInfo")) {
+      try {
+        JsonObject clientInfo = params.getAsJsonObject("clientInfo");
+        String name = clientInfo.has("name") ? clientInfo.get("name").getAsString() : "Unknown";
+        String version = clientInfo.has("version") ? clientInfo.get("version").getAsString() : "1.0";
+        detectedClientInfo = name + "/" + version;
+      } catch (Exception e) {
+        FRLogger.warn("Failed to parse clientInfo from initialize params: " + e.getMessage());
+      }
+    }
+
     JsonObject capabilities = new JsonObject();
     capabilities.add("tools", new JsonObject());
 
@@ -260,9 +272,25 @@ public class McpControllerV1 extends BaseController {
   private void forwardHeaders(HttpRequest.Builder builder, String correlationId) {
     // Forward only identity/auth headers required by the REST API contract.
     copyHeader("Authorization", builder);
-    copyHeader("Freerouting-Profile-ID", builder);
-    copyHeader("Freerouting-Profile-Email", builder);
-    copyHeader("Freerouting-Environment-Host", builder);
+    copyHeaderOrEnvFallback("Freerouting-Profile-ID", "FREEROUTING_PROFILE_ID", "FREEROUTING__PROFILE__ID", builder);
+    copyHeaderOrEnvFallback("Freerouting-Profile-Email", "FREEROUTING_PROFILE_EMAIL", "FREEROUTING__PROFILE__EMAIL", builder);
+
+    // Resolve Freerouting-Environment-Host dynamically
+    String envHost = headers.getHeaderString("Freerouting-Environment-Host");
+    if (envHost == null || envHost.isBlank()) {
+      envHost = System.getenv("FREEROUTING_ENVIRONMENT_HOST");
+    }
+    if (envHost == null || envHost.isBlank()) {
+      envHost = System.getenv("FREEROUTING__ENVIRONMENT__HOST");
+    }
+    if (envHost == null || envHost.isBlank()) {
+      envHost = McpControllerV1.detectedClientInfo;
+    }
+    if (envHost == null || envHost.isBlank()) {
+      envHost = "MCP-Client/1.0";
+    }
+    builder.header("Freerouting-Environment-Host", envHost);
+
     builder.header(CorrelationIdFilter.HEADER_NAME, correlationId);
   }
 
@@ -270,6 +298,19 @@ public class McpControllerV1 extends BaseController {
     String value = headers.getHeaderString(name);
     if (value != null && !value.isBlank()) {
       builder.header(name, value);
+    }
+  }
+
+  private void copyHeaderOrEnvFallback(String headerName, String envVarNameSingle, String envVarNameDouble, HttpRequest.Builder builder) {
+    String value = headers.getHeaderString(headerName);
+    if (value == null || value.isBlank()) {
+      value = System.getenv(envVarNameSingle);
+    }
+    if (value == null || value.isBlank()) {
+      value = System.getenv(envVarNameDouble);
+    }
+    if (value != null && !value.isBlank()) {
+      builder.header(headerName, value);
     }
   }
 

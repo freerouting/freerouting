@@ -135,9 +135,33 @@ The LLM should call the `get_system_status` tool and display system memory, CPU 
 ---
 
 ## 4. Customizing Environment Variables (Advanced)
-The NPX bridge supports the following environment variables for advanced custom setups (e.g. self-hosting):
-- `FREEROUTING_API_URL`: Points the bridge to a different base URL (default: `https://api.freerouting.app/v1/mcp`).
-- `FREEROUTING_API_KEY`: The API token used for Bearer Authentication.
-- `FREEROUTING_PROFILE_ID`: Custom user profile UUID (default: dummy UUID).
-- `FREEROUTING_PROFILE_EMAIL`: Custom identifier email.
-- `FREEROUTING_ENVIRONMENT_HOST`: Identifier for the client tool (default: `MCP-NPX-Client/1.0`).
+
+Both the NPX bridge and the Local Java MCP server support environment variables to configure authentication and user profile details.
+
+### Underscore Configurations
+To prevent confusion, both **single underscore** (convention in Python CLI) and **double underscore** (standard configuration structure hierarchy within the Java application) variables are supported:
+- Profile ID: `FREEROUTING_PROFILE_ID` or `FREEROUTING__PROFILE__ID`
+- Profile Email: `FREEROUTING_PROFILE_EMAIL` or `FREEROUTING__PROFILE__EMAIL`
+- Environment Host: `FREEROUTING_ENVIRONMENT_HOST` or `FREEROUTING__ENVIRONMENT__HOST`
+- API Key: `FREEROUTING_API_KEY` (NPX mode only)
+- API URL: `FREEROUTING_API_URL` (NPX mode only, default is `https://api.freerouting.app/v1/mcp`)
+
+### Precedence and Default Behaviors
+
+#### Profile ID (`Freerouting-Profile-ID`)
+1. Resolves first to environment variables if provided.
+2. If not defined:
+   - **NPX Mode**: Checks `~/.freerouting/profile_id` on the user's home directory. If it doesn't exist, a new GUID is generated once and saved there to persist across sessions.
+   - **Local Self-Hosted Mode**: Resolves to the local `userId` stored in `freerouting.json`.
+3. Defaults to `00000000-0000-0000-0000-000000000000` if resolving fails.
+
+#### Profile Email (`Freerouting-Profile-Email`)
+1. Resolves first to environment variables if provided.
+2. If not defined:
+   - **Local Self-Hosted Mode**: Resolves to the local `userEmail` stored in `freerouting.json`.
+   - **NPX Mode**: The header is omitted.
+
+#### Environment Host (`Freerouting-Environment-Host`)
+1. Resolves first to environment variables if provided.
+2. If not defined, it is **dynamically detected** from the MCP client's `initialize` handshake details (e.g. `Cursor/0.45.0` or `Roo-Cline/3.2.0`), working seamlessly in both modes.
+3. Falls back to `MCP-Client/1.0`.
