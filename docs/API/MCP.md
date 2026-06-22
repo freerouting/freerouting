@@ -183,3 +183,61 @@ To prevent confusion, both **single underscore** (convention in Python CLI) and 
 1. Resolves first to environment variables if provided.
 2. If not defined, it is **dynamically detected** from the MCP client's `initialize` handshake details (e.g. `Cursor/0.45.0` or `Roo-Cline/3.2.0`), working seamlessly in both modes.
 3. Falls back to `MCP-Client/1.0`.
+
+---
+
+## 4. Example User Prompts for LLMs
+
+Below are several example prompts you can use to instruct an LLM connected via the Freerouting MCP server to perform auto-routing with varying parameters:
+
+### Example 1: Basic Routing
+> **Prompt**: "Could you route the board `fixtures/Issue313-FastTest.dsn` using Freerouting MCP and save the output as `fixtures/Issue313-FastTest.ses`?"
+>
+> *How the LLM executes this:* 
+> 1. Call `create_session` and `enqueue_job`.
+> 2. Call `upload_job_input_from_local_file` pointing to the absolute path of `fixtures/Issue313-FastTest.dsn`.
+> 3. Call `start_job`.
+> 4. Poll `get_job_details` every 3 seconds until completed.
+> 5. Call `download_job_output_to_local_file` to save the results directly to `fixtures/Issue313-FastTest.ses`.
+
+### Example 2: Bounded Passes, Timeout, and Optimizer Disabled
+> **Prompt**: "Could you route the board `fixtures/Issue313-FastTest.dsn`? Limit the number of passes to 2, disable the optimizer, and set the job timeout to 5 minutes."
+>
+> *How the LLM executes this:*
+> 1. Create a session and enqueue a job.
+> 2. Call `upload_job_input_from_local_file` to upload the design.
+> 3. Call `update_job_settings` with the following parameters:
+>    ```json
+>    {
+>      "jobId": "<jobId>",
+>      "settings": {
+>        "maxPasses": 2,
+>        "jobTimeoutString": "00:05:00",
+>        "optimizerSettings": {
+>          "enabled": false
+>        }
+>      }
+>    }
+>    ```
+> 4. Start the job and poll `get_job_details` at 2-5 second intervals.
+> 5. Download the result to local disk via `download_job_output_to_local_file`.
+
+### Example 3: Customized Clearance and Multi-pass Optimization
+> **Prompt**: "Route the board at `C:/Work/my_board.dsn`. Set the copper-to-edge clearance to 400 micrometers, run 10 passes, and save the routed output to `C:/Work/my_board.ses`."
+>
+> *How the LLM executes this:*
+> 1. Create a session and enqueue a job.
+> 2. Call `upload_job_input_from_local_file` with the path.
+> 3. Call `update_job_settings` with:
+>    ```json
+>    {
+>      "jobId": "<jobId>",
+>      "settings": {
+>        "copperToEdgeClearanceUm": 400.0,
+>        "maxPasses": 10
+>      }
+>    }
+>    ```
+> 4. Start and poll the job.
+> 5. Download output via `download_job_output_to_local_file` to `C:/Work/my_board.ses`.
+
