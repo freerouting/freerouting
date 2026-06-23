@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Freerouting - Automatic PCB Routing Tool</title>
+    <meta content="Freerouting is an open-source, fully-automated PCB routing software designed for engineers, PCB designers, and hobbyists."
+          name="description">
+    <meta content="PCB, routing, software, open-source, Freerouting, PCB design" name="keywords">
+    <meta content="Freerouting Team" name="author">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link href="freerouting_icon_256x256_v3.ico" rel="icon" type="image/x-icon">
+    <style>
+        @font-face {
+            font-family: 'NotoSansItalic';
+            src: url('NotoSans-Italic-VariableFont.ttf') format('truetype');
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1em;
+            background-color: rgb(1, 58, 32);
+            color: rgb(232, 204, 135);
+        }
+        a {
+            color: rgb(232, 204, 135);
+            text-decoration: underline;
+        }
+        a:hover {
+            color: rgb(200, 176, 116);
+        }
+        .header, .footer {
+            text-align: center;
+            padding: 2em 0;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: nowrap;
+            margin: 0 auto;
+            max-width: 900px;
+        }
+
+        .header img {
+            width: 25%;
+            height: auto;
+            margin-right: 5%;
+        }
+
+        .header h1 {
+            font-size: 6.5vw;
+            font-weight: 100;
+            margin: 0 0 0.25em 0;
+            font-family: 'NotoSansItalic', Arial, sans-serif;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .btn {
+            background-color: rgb(232, 204, 135);
+            color: rgb(1, 58, 32);
+            padding: 0.75em 1.5em;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 0.5em;
+            display: inline-block;
+        }
+        .btn:hover {
+            color: rgb(1, 58, 32);
+            background-color: rgb(200, 176, 116);
+        }
+        .section {
+            margin: 2em 0;
+        }
+        .section h2 {
+            font-size: 1.8em;
+            margin-bottom: 0.5em;
+            color: rgb(232, 204, 135);
+        }
+        .section p, .features ul {
+            margin: 1em 0;
+        }
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+        .features ul li {
+            margin: 0.5em 0;
+        }
+        .screenshot img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JCLE6RZE0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-4JCLE6RZE0');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a, .btn').forEach(function(element) {
+                element.addEventListener('click', function() {
+                    gtag('event', 'click_' + element.id, {
+                        'event_category': 'engagement',
+                        'event_label': element.href || element.textContent
+                    });
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-container">
+        <img alt="Freerouting logo" src="logo_transparent.png">
+        <h1>freerouting</h1>
+    </div>
+    <p>The Open-Source, Automatic PCB Routing Tool</p>
+    <a class="btn" href="https://github.com/freerouting/freerouting/releases" id="download">
+        <i class="fas fa-download"></i> Download Freerouting
+    </a>
+    <a class="btn" href="https://forms.gle/EqbxFZMSQiSsR4WM8" id="api_access">
+        <i class="fas fa-network-wired"></i> Request API Access
+    </a>
+    <a class="btn" href="https://github.com/freerouting/freerouting" id="github">
+        <i class="fab fa-github"></i> View on GitHub
+    </a>
+</header>
+
+<main>
+    <section class="section">
+        <h2>About Freerouting</h2>
+        <p>Freerouting is an open-source, fully-automated PCB routing software designed for engineers, PCB designers,
+            and hobbyists. It simplifies the complex and time-consuming process of routing printed circuit boards,
+            making it faster and easier to create intricate and high-quality designs.</p>
+    </section>
+
+    <section class="benchmarks">
+        <h2>Benchmarks</h2>
+		<table>
+		</table>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>
+        Freerouting is an open-source project maintained by <a href="https://github.com/sponsors/andrasfuchs"
+                                                               id="sponsors_footer">Andras Fuchs</a>.<br/>
+        Contributions, feedback, and support are always welcome.<br/>
+        Visit the <a href="https://github.com/freerouting/freerouting" id="github_footer">GitHub repository</a>
+        to learn more.
+    </p>
+</footer>
+
+</body>
+</html>
