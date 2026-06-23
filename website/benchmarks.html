@@ -10,93 +10,7 @@
     <meta content="Freerouting Team" name="author">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <link href="freerouting_icon_256x256_v3.ico" rel="icon" type="image/x-icon">
-    <style>
-        @font-face {
-            font-family: 'NotoSansItalic';
-            src: url('NotoSans-Italic-VariableFont.ttf') format('truetype');
-        }
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 1em;
-            background-color: rgb(1, 58, 32);
-            color: rgb(232, 204, 135);
-        }
-        a {
-            color: rgb(232, 204, 135);
-            text-decoration: underline;
-        }
-        a:hover {
-            color: rgb(200, 176, 116);
-        }
-        .header, .footer {
-            text-align: center;
-            padding: 2em 0;
-        }
-
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: nowrap;
-            margin: 0 auto;
-            max-width: 900px;
-        }
-
-        .header img {
-            width: 25%;
-            height: auto;
-            margin-right: 5%;
-        }
-
-        .header h1 {
-            font-size: 6.5vw;
-            font-weight: 100;
-            margin: 0 0 0.25em 0;
-            font-family: 'NotoSansItalic', Arial, sans-serif;
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-        .btn {
-            background-color: rgb(232, 204, 135);
-            color: rgb(1, 58, 32);
-            padding: 0.75em 1.5em;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin: 0.5em;
-            display: inline-block;
-        }
-        .btn:hover {
-            color: rgb(1, 58, 32);
-            background-color: rgb(200, 176, 116);
-        }
-        .section {
-            margin: 2em 0;
-        }
-        .section h2 {
-            font-size: 1.8em;
-            margin-bottom: 0.5em;
-            color: rgb(232, 204, 135);
-        }
-        .section p, .features ul {
-            margin: 1em 0;
-        }
-        .features ul {
-            list-style: none;
-            padding: 0;
-        }
-        .features ul li {
-            margin: 0.5em 0;
-        }
-        .screenshot img {
-            width: 100%;
-            height: auto;
-        }
-    </style>
+    <link href="style.css" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JCLE6RZE0"></script>
     <script>
@@ -148,86 +62,86 @@
     <section class="benchmarks">
         <h2>Benchmarks</h2>
         <!-- BENCHMARK_TABLE_START -->
-<div class='benchmark-container' style='font-family: sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; color: rgb(232, 204, 135); background-color: rgb(1, 58, 32); border-radius: 8px;'>
-  <h2 style='text-align: center; border-bottom: 2px solid rgb(232, 204, 135); padding-bottom: 10px;'>Freerouting Benchmark Results</h2>
-  <div class='fixture-section' style='margin-top: 30px; margin-bottom: 30px;'>
-    <h3 style='color: rgb(232, 204, 135); border-bottom: 1px solid rgba(232,204,135,0.3); padding-bottom: 5px;'>DAC2020_boards / DAC2020_bm07.dsn</h3>
-    <p style='font-size: 0.9em; opacity: 0.8;'>Layers: 2 | Nets: 52 | Components: 13 | Area: 0.1 cmÂ²</p>
-    <table style='width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em;'>
+<div class='benchmark-container'>
+  <h2 class='benchmark-title'>Freerouting Benchmark Results</h2>
+  <div class='fixture-section'>
+    <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm07.dsn</h3>
+    <p class='fixture-meta'>Layers: 2 | Nets: 52 | Components: 13 | Area: 0.1 cmÂ²</p>
+    <table class='benchmark-table'>
       <thead>
-        <tr style='background-color: rgba(232, 204, 135, 0.1); text-align: left;'>
-          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Version</th>
-          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Mode</th>
-          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Fanout</th>
-          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Router Time</th>
-          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Passes</th>
-          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Unrouted (DRC)</th>
-          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Violations (DRC)</th>
-          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Score (DRC)</th>
-          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Peak Heap</th>
-          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Warn/Err</th>
+        <tr class='header-row'>
+          <th>Version</th>
+          <th>Mode</th>
+          <th class='text-right'>Fanout</th>
+          <th class='text-right'>Router Time</th>
+          <th class='text-right'>Passes</th>
+          <th class='text-right'>Unrouted (DRC)</th>
+          <th class='text-right'>Violations (DRC)</th>
+          <th class='text-right'>Score (DRC)</th>
+          <th class='text-right'>Peak Heap</th>
+          <th class='text-right'>Warn/Err</th>
         </tr>
       </thead>
       <tbody>
-        <tr style='border-bottom: 1px solid rgba(232, 204, 135, 0.15);'>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1.9.0</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>GUI</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>4.29s</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>8</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>999,97</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>439.2 MB</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2 / 0</td>
+        <tr class='data-row'>
+          <td>1.9.0</td>
+          <td>GUI</td>
+          <td class='text-right'>N/A</td>
+          <td class='text-right'>4.29s</td>
+          <td class='text-right'>8</td>
+          <td class='text-right'>0</td>
+          <td class='text-right'>0</td>
+          <td class='text-right'>999,97</td>
+          <td class='text-right'>464 MB</td>
+          <td class='text-right'>2 / 0</td>
         </tr>
-        <tr style='border-bottom: 1px solid rgba(232, 204, 135, 0.15);'>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2.0.1</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>GUI</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>3.93s</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>6</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1096.5 MB</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1 / 16</td>
+        <tr class='data-row'>
+          <td>2.0.1</td>
+          <td>CLI</td>
+          <td class='text-right'>N/A</td>
+          <td class='text-right'>N/A</td>
+          <td class='text-right'>7</td>
+          <td class='text-right'>1</td>
+          <td class='text-right'>0</td>
+          <td class='text-right'>988,34</td>
+          <td class='text-right'>0 MB</td>
+          <td class='text-right'>1 / 32</td>
         </tr>
-        <tr style='border-bottom: 1px solid rgba(232, 204, 135, 0.15);'>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2.1.0</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>GUI</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>7.06s</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>12</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>991,30</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1126.1 MB</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2 / 10</td>
+        <tr class='data-row'>
+          <td>2.1.0</td>
+          <td>CLI</td>
+          <td class='text-right'>N/A</td>
+          <td class='text-right'>N/A</td>
+          <td class='text-right'>202</td>
+          <td class='text-right'>0</td>
+          <td class='text-right'>0</td>
+          <td class='text-right'>N/A</td>
+          <td class='text-right'>0 MB</td>
+          <td class='text-right'>1 / 10</td>
         </tr>
-        <tr style='border-bottom: 1px solid rgba(232, 204, 135, 0.15);'>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2.2.4</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>GUI</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>8</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1516.2 MB</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2 / 0</td>
+        <tr class='data-row'>
+          <td>2.2.4</td>
+          <td>CLI</td>
+          <td class='text-right'>N/A</td>
+          <td class='text-right'>4.69s</td>
+          <td class='text-right'>8</td>
+          <td class='text-right'>0</td>
+          <td class='text-right'>0</td>
+          <td class='text-right'>999,96</td>
+          <td class='text-right'>1585.6 MB</td>
+          <td class='text-right'>3 / 0</td>
         </tr>
-        <tr style='border-bottom: 1px solid rgba(232, 204, 135, 0.15);'>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>s2026.06.23</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>GUI</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>84/87 (96.6%)</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>15.77s</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>18</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>3</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>965,08</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1113.2 MB</td>
-          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1 / 0</td>
+        <tr class='data-row'>
+          <td>s2026.06.23</td>
+          <td>CLI</td>
+          <td class='text-right'>84/87 (96.6%)</td>
+          <td class='text-right'>16.11s</td>
+          <td class='text-right'>18</td>
+          <td class='text-right'>3</td>
+          <td class='text-right'>0</td>
+          <td class='text-right'>965,08</td>
+          <td class='text-right'>1379.6 MB</td>
+          <td class='text-right'>0 / 0</td>
         </tr>
       </tbody>
     </table>
