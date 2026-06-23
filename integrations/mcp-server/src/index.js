@@ -11,6 +11,19 @@ const crypto = require('crypto');
 const API_URL = process.env.FREEROUTING_API_URL || 'https://api.freerouting.app/v1/mcp';
 const httpModule = API_URL.startsWith('https') ? https : http;
 
+const LOG_FILE = path.join(__dirname, '..', '..', '..', 'logs', 'mcp-debug.log');
+const IS_DEBUG_ENABLED = process.env.FREEROUTING_MCP_DEBUG === 'true' || process.env.FREEROUTING_MCP_DEBUG === '1';
+
+function logDebug(msg) {
+  if (!IS_DEBUG_ENABLED) return;
+  try {
+    fs.appendFileSync(LOG_FILE, `[${new Date().toISOString()}] ${msg}\n`, 'utf8');
+  } catch (e) {
+    // Ignore log errors
+  }
+}
+
+
 function getOrCreateProfileId() {
   const envId = process.env.FREEROUTING_PROFILE_ID || process.env.FREEROUTING__PROFILE__ID;
   if (envId) {
@@ -46,7 +59,9 @@ function sendError(rpcId, code, message) {
       message: message
     }
   };
-  console.log(JSON.stringify(errResponse));
+  const responseStr = JSON.stringify(errResponse);
+  logDebug(`<-- ERROR RESPONSE: ${responseStr}`);
+  console.log(responseStr);
 }
 
 function sendToolResponse(rpcId, status, body, isError) {
@@ -65,7 +80,9 @@ function sendToolResponse(rpcId, status, body, isError) {
       isError: isError
     }
   };
-  console.log(JSON.stringify(rpcResponse));
+  const responseStr = JSON.stringify(rpcResponse);
+  logDebug(`<-- TOOL RESPONSE: ${responseStr}`);
+  console.log(responseStr);
 }
 
 function handleLocalUpload(rpcId, jobId, filePath) {
@@ -220,6 +237,7 @@ const rl = readline.createInterface({
 
 rl.on('line', (line) => {
   if (!line.trim()) return;
+  logDebug(`--> INPUT STDIN: ${line}`);
 
   let requestObj = null;
   try {
@@ -260,6 +278,9 @@ rl.on('line', (line) => {
     headers['Authorization'] = 'Bearer ' + process.env.FREEROUTING_API_KEY;
   }
 
+  logDebug(`HTTP Request URL: ${API_URL}`);
+  logDebug(`HTTP Request Headers: ${JSON.stringify(headers)}`);
+
   const req = httpModule.request(API_URL, {
     method: 'POST',
     headers: headers
@@ -283,19 +304,27 @@ rl.on('line', (line) => {
         // Not valid JSON
       }
 
+      logDebug(`HTTP Response Raw Data: ${trimmed}`);
+
       if (isValidRpc) {
         const singleLine = trimmed.replace(/\r/g, '').replace(/\n/g, '');
+        logDebug(`<-- FORWARDED RESPONSE: ${singleLine}`);
         console.log(singleLine);
       } else {
-        let errMsg = `HTTP ${res.statusCode} ${res.statusMessage || ''}`.trim();
-        if (parsed && typeof parsed === 'object' && typeof parsed.error === 'string') {
-          errMsg = parsed.error;
-        } else if (trimmed) {
-          if (trimmed.length < 200 && !trimmed.startsWith('<')) {
-            errMsg = trimmed;
+        // Only send an error response if this was a request (not a notification)
+        if (requestObj && requestObj.id !== undefined && requestObj.id !== null) {
+          let errMsg = `HTTP ${res.statusCode} ${res.statusMessage || ''}`.trim();
+          if (parsed && typeof parsed === 'object' && typeof parsed.error === 'string') {
+            errMsg = parsed.error;
+          } else if (trimmed) {
+            if (trimmed.length < 200 && !trimmed.startsWith('<')) {
+              errMsg = trimmed;
+            }
           }
+          sendError(requestObj.id, -32603, errMsg);
+        } else {
+          logDebug(`Ignored non-RPC/204 response for notification: HTTP ${res.statusCode}`);
         }
-        sendError(requestObj ? requestObj.id : null, -32603, errMsg);
       }
     });
   });
