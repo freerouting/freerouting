@@ -65,6 +65,12 @@ public class DrcReport {
   @SerializedName("schematic_parity")
   public final List<Object> schematic_parity;
 
+  /**
+   * Quality score of the board
+   */
+  @SerializedName("quality_score")
+  public Double quality_score = null;
+
   public DrcReport(String coordinateUnits, String source, String version) {
     this.coordinate_units = coordinateUnits;
     this.source = source;
