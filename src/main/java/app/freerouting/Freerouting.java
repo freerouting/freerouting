@@ -13,8 +13,6 @@ import app.freerouting.gui.GuiManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.management.SessionManager;
-import app.freerouting.util.TextManager;
-import app.freerouting.util.VersionChecker;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
@@ -25,6 +23,8 @@ import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.EnvironmentVariablesSource;
 import app.freerouting.settings.sources.JsonFileSettings;
+import app.freerouting.util.TextManager;
+import app.freerouting.util.VersionChecker;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -62,10 +62,10 @@ public class Freerouting {
   public static final String VERSION_NUMBER_STRING = "v" + Constants.FREEROUTING_VERSION + " (build-date: "
       + Constants.FREEROUTING_BUILD_DATE + ")";
   public static GlobalSettings globalSettings;
+  public static String bridgeToken = java.util.UUID.randomUUID().toString();
   private static Server apiServer; // API server instance
   private static Server mcpServer; // MCP server instance
   private static java.io.PrintStream originalSystemOut;
-  public static String bridgeToken = java.util.UUID.randomUUID().toString();
 
   private static boolean InitializeCLI(GlobalSettings globalSettings) {
     if ((globalSettings.initialInputFile == null) || (globalSettings.initialOutputFile == null)) {
@@ -151,10 +151,6 @@ public class Freerouting {
             + "║  If you would like to support the project, please consider       ║" + nl
             + "║  sponsoring me at https://github.com/sponsors/andrasfuchs        ║" + nl
             + "║  Even a small monthly donation is greatly appreciated!           ║" + nl
-            + "║                                                                  ║" + nl
-            + "║  You can also fuel my passion by sharing your success stories    ║" + nl
-            + "║  with Freerouting — send them to info@freerouting.app            ║" + nl
-            + "║  I would love to read every one of them!                         ║" + nl
             + "╚══════════════════════════════════════════════════════════════════╝"
         );
       }
@@ -484,7 +480,7 @@ public class Freerouting {
 
         java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
         java.net.URI targetUri = java.net.URI.create("http://127.0.0.1:" + localPort + "/v1/mcp");
-        
+
         String line;
         while ((line = reader.readLine()) != null) {
           if (line.trim().isEmpty()) {
@@ -506,7 +502,7 @@ public class Freerouting {
             java.net.http.HttpRequest request = reqBuilder
                 .POST(java.net.http.HttpRequest.BodyPublishers.ofString(line, StandardCharsets.UTF_8))
                 .build();
-            
+
             java.net.http.HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
             String responseBody = response.body();
             if (responseBody != null) {
