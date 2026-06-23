@@ -56,33 +56,8 @@ function Get-BinaryVersionLabel {
 
 function Test-BinaryCliSupport {
     param([string]$JarPath)
-    try {
-        $processInfo = New-Object System.Diagnostics.ProcessStartInfo
-        $processInfo.FileName = "java"
-        $processInfo.Arguments = "-jar `"${JarPath}`" --help"
-        $processInfo.RedirectStandardError = $true
-        $processInfo.RedirectStandardOutput = $true
-        $processInfo.UseShellExecute = $false
-        $processInfo.CreateNoWindow = $true
-
-        $process = New-Object System.Diagnostics.Process
-        $process.StartInfo = $processInfo
-        $process.Start() | Out-Null
-        
-        # Wait at most 3 seconds for help response
-        $completed = $process.WaitForExit(3000)
-        if (-not $completed) {
-            # Force terminate the process before reading stdout/stderr to prevent deadlock
-            try {
-                $process.Kill()
-            } catch {}
-        }
-
-        $stdout = $process.StandardOutput.ReadToEnd()
-        $stderr = $process.StandardError.ReadToEnd()
-        $helpText = $stdout + $stderr
-        return ($helpText -match "gui\.enabled")
-    } catch {
+    if ($JarPath -match 'freerouting-1.9\.0\.jar') {
         return $false
     }
+    return $true
 }

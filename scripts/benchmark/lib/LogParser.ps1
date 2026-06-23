@@ -133,7 +133,7 @@ function Get-PhaseMetrics {
     }
 
     # Fanout session summary
-    $RE_FANOUT = 'Fanout session ([\w ]+): started with (\d+) total SMD pins, completed in ([^,]+), escaped pins: (\d+)/(\d+) \(([\d.]+)%\), using ([\d.]+) total CPU seconds, ([\d.]+) GB total allocated, and ([\d.]+) MB peak heap usage\.'
+    $RE_FANOUT = 'Fanout session ([\w ]+): started with (\d+) total SMD pins, completed in ([^,]+), escaped pins: (\d+)/(\d+) \(([\d.,]+)%\), using ([\d.,]+) total CPU seconds, ([\d.,]+) GB total allocated, and ([\d.,]+) MB peak heap usage\.'
     foreach ($line in $lines) {
         if ($line -match $RE_FANOUT) {
             $fanout.log_found = $true
@@ -141,15 +141,15 @@ function Get-PhaseMetrics {
             $fanout.duration_seconds = ConvertFrom-FrDuration $matches[3]
             $fanout.escaped_pin_count = [int]$matches[4]
             $fanout.not_routed_pin_count = [int]$matches[5] - [int]$matches[4]
-            $fanout.escape_rate_pct = [double]$matches[6]
-            $fanout.cpu_seconds = [double]$matches[7]
-            $fanout.total_allocated_gb = [double]$matches[8]
-            $fanout.peak_heap_mb = [double]$matches[9]
+            $fanout.escape_rate_pct = [double]($matches[6].Replace(',', '.'))
+            $fanout.cpu_seconds = [double]($matches[7].Replace(',', '.'))
+            $fanout.total_allocated_gb = [double]($matches[8].Replace(',', '.'))
+            $fanout.peak_heap_mb = [double]($matches[9].Replace(',', '.'))
         }
     }
 
     # Autorouter session summary
-    $RE_ROUTER = 'Auto-router session ([\w ]+): started with (\d+) unrouted nets, completed in ([^,]+), final score: ([^,]+), using ([\d.]+) total CPU seconds, ([\d.]+) GB total allocated, and ([\d.]+) MB peak heap usage\.'
+    $RE_ROUTER = 'Auto-router session ([\w ]+): started with (\d+) unrouted nets, completed in ([^,]+), final score: ([^,]+), using ([\d.,]+) total CPU seconds, ([\d.,]+) GB total allocated, and ([\d.,]+) MB peak heap usage\.'
     foreach ($line in $lines) {
         if ($line -match $RE_ROUTER) {
             $autorouter.log_found = $true
@@ -162,9 +162,9 @@ function Get-PhaseMetrics {
             $autorouter.final_unrouted = $scoreParsed.Unrouted
             $autorouter.final_violations = $scoreParsed.Violations
 
-            $autorouter.cpu_seconds = [double]$matches[5]
-            $autorouter.total_allocated_gb = [double]$matches[6]
-            $autorouter.peak_heap_mb = [double]$matches[7]
+            $autorouter.cpu_seconds = [double]($matches[5].Replace(',', '.'))
+            $autorouter.total_allocated_gb = [double]($matches[6].Replace(',', '.'))
+            $autorouter.peak_heap_mb = [double]($matches[7].Replace(',', '.'))
         }
     }
 

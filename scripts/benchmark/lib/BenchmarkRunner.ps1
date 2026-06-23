@@ -122,5 +122,6 @@ function Invoke-BenchmarkRun {
         Crashed           = $crashed
         OomDetected       = $oomDetected
         TimedOut          = $timedOut
+        RunMode           = if ($SupportsCliMode) { "CLI" } else { "GUI" }
     }
 }

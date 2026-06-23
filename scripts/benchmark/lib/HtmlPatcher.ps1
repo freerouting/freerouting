@@ -68,16 +68,22 @@ function Update-BenchmarksHtml {
 
         foreach ($run in $sortedRuns) {
             $ver = $run.binary.version_label
-            $mode = $run.run_mode
+            $mode = if ($run.run_mode) { $run.run_mode } else { "N/A" }
             $fanoutVal = "N/A"
-            if ($run.phases.fanout.log_found -and $run.phases.fanout.smd_pin_count -gt 0) {
-                $fanoutVal = "$($run.phases.fanout.escaped_pin_count)/$($run.phases.fanout.smd_pin_count)"
+            if ($run.phases.fanout.log_found) {
+                $esc = $run.phases.fanout.escaped_pin_count
+                $tot = $run.phases.fanout.smd_pin_count
+                $pct = $run.phases.fanout.escape_rate_pct
+                if ($tot -gt 0 -and $esc -ne $null) {
+                    $fanoutVal = "$esc/$tot ($pct%)"
+                }
             }
             $routerTime = if ($run.phases.autorouter.duration_seconds -ne $null) { "$($run.phases.autorouter.duration_seconds)s" } else { "N/A" }
             $passes = if ($run.phases.autorouter.passes_completed -ne $null) { $run.phases.autorouter.passes_completed } else { "N/A" }
-            $unrouted = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } else { 0 }
-            $violations = if ($run.drc.final_violations -ne $null) { $run.drc.final_violations } else { 0 }
-            $score = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score.ToString("F2") } else { "N/A" }
+            $unrouted = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { 0 }
+            $violations = if ($run.drc.final_violations -ne $null) { $run.drc.final_violations } elseif ($run.quality.clearance_violations -ne $null) { $run.quality.clearance_violations } else { 0 }
+            $scoreVal = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score } elseif ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { $null }
+            $score = if ($scoreVal -ne $null) { $scoreVal.ToString("F2") } else { "N/A" }
             $heap = if ($run.quality.peak_heap_mb -ne $null) { "$($run.quality.peak_heap_mb) MB" } else { "N/A" }
             $warns = if ($run.log_analysis.warn_count -ne $null) { $run.log_analysis.warn_count } else { 0 }
             $errs = if ($run.log_analysis.error_count -ne $null) { $run.log_analysis.error_count } else { 0 }
