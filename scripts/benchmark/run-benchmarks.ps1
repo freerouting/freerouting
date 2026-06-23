@@ -1,326 +1,234 @@
-# Compare Freerouting Versions Script
-# Runs both current and v1.9 executables with identical arguments
-#
-# Usage:
-#   .\compare-versions.ps1
-#   .\compare-versions.ps1 -de "$PSScriptRoot\..\..\fixtures\Issue508-DAC2020_bm01.dsn"
-#   .\compare-versions.ps1 -DebugFilterByNet "Net-(C7-Pad2)"
-#   .\compare-versions.ps1 -LogNameSuffix "max42"
-
 param(
-    [string]$de = "$PSScriptRoot\..\..\fixtures\Issue555-BBD_Mars-64.dsn",
-    [string]$do = "$PSScriptRoot\..\..\fixtures\Issue555-BBD_Mars-64.ses",
-    [string]$LoggingLocation = "$PSScriptRoot\..\..\logs\",
-    [string]$LoggingLevel = "TRACE",
-    [string]$LoggingPattern = "%msg%n",
-    [int]$max_passes = 0,
-    [int]$max_items = 0,
-    [int]$max_threads = 1,
-    [string]$job_timeout = "00:30:00",
-    [Alias("debug.filter_by_net")]
-    [string]$DebugFilterByNet = "",
-    [string]$LogNameSuffix = ""
+    [string]  $BinariesDir    = "$PSScriptRoot\binaries",
+    [string]  $FixturesDir    = "$PSScriptRoot\fixtures",
+    [string]  $ResultsDir     = "$PSScriptRoot\results",
+    [string]  $LogsDir        = "$PSScriptRoot\logs",
+    [string]  $OutputsDir     = "$PSScriptRoot\outputs",
+    [string]  $WebsiteHtml    = "$PSScriptRoot\..\..\website\benchmarks.html",
+    [int]     $MaxPasses      = 500,
+    [string]  $MaxTime        = "00:30:00",
+    [int]     $MaxThreads     = 1,
+    [string]  $HeapMax        = "8g",
+    [string]  $LogLevel       = "INFO",
+    [bool]    $FanoutEnabled  = $true,
+    [bool]    $RouterEnabled  = $true,
+    [switch]  $Force,
+    [switch]  $ReportOnly,
+    [string]  $FilterFixture  = "*",
+    [string]  $FilterBinary   = "*"
 )
 
-# Colors for output
-$ErrorColor = "Red"
-$SuccessColor = "Green"
-$InfoColor = "Cyan"
-$WarningColor = "Yellow"
+# 1. Force Pager cat
+$env:PAGER = "cat"
 
-Write-Host "`n==================================================" -ForegroundColor $InfoColor
-Write-Host "  Freerouting Version Comparison Test" -ForegroundColor $InfoColor
-Write-Host "==================================================" -ForegroundColor $InfoColor
+# 2. Imports all modular scripts
+$libDir = Join-Path $PSScriptRoot "lib"
+Get-ChildItem $libDir -Filter "*.ps1" | ForEach-Object {
+    Write-Output "Importing module: $($_.Name)"
+    . $_.FullName
+}
 
-# Check if input file exists
-if (-not (Test-Path $de)) {
-    Write-Host "ERROR: Input file not found: $de" -ForegroundColor $ErrorColor
+# Ensure folders exist
+$null = New-Item -ItemType Directory -Force -Path $ResultsDir -ErrorAction SilentlyContinue
+$null = New-Item -ItemType Directory -Force -Path $LogsDir -ErrorAction SilentlyContinue
+$null = New-Item -ItemType Directory -Force -Path $OutputsDir -ErrorAction SilentlyContinue
+
+$JsonPath = Join-Path $ResultsDir "benchmarks.json"
+$MdPath = Join-Path $ResultsDir "benchmarks.md"
+$CsvPath = Join-Path $ResultsDir "benchmarks.csv"
+$ChartDataPath = Join-Path $ResultsDir "benchmarks-chart-data.json"
+
+# Load current cache
+$store = Load-BenchmarksJson $JsonPath
+$rawJson = $store.RawData
+$cache = $store.Cache
+
+if ($ReportOnly) {
+    Write-Output "Report-only mode. Generating reports from cached data..."
+    Export-MarkdownReport $cache $MdPath $CsvPath $ChartDataPath
+    Update-BenchmarksHtml $cache $WebsiteHtml
+    Write-Output "Done!"
+    exit 0
+}
+
+# Discover files
+$binaries = Get-ChildItem $BinariesDir -Filter "*.jar" | Where-Object { $_.Name -like $FilterBinary }
+$fixtures = Get-ChildItem $FixturesDir -Recurse -Filter "*.dsn" | Where-Object { $_.Name -like $FilterFixture }
+
+if ($binaries.Count -eq 0) {
+    Write-Error "No Freerouting binaries found in: $BinariesDir"
+    exit 1
+}
+if ($fixtures.Count -eq 0) {
+    Write-Error "No DSN fixtures found in: $FixturesDir"
     exit 1
 }
 
-# Get absolute paths
-$InputFileAbs = Resolve-Path $de
-$OutputFileAbs = $do
-
-# Rebuild executables
-Write-Host "Building executables..." -ForegroundColor $InfoColor
-Push-Location "$PSScriptRoot\..\.."
-& .\gradlew.bat buildBothVersions
-$GradleExitCode = $LASTEXITCODE
-Pop-Location
-if ($GradleExitCode -ne 0) {
-    Write-Host "ERROR: Gradle build failed." -ForegroundColor $ErrorColor
-    exit 1
+# Identify current binary for DRC check (use current jar)
+$binaryCurrent = $binaries | Where-Object { $_.Name -match "current" } | Select-Object -First 1
+if (-not $binaryCurrent) {
+    $binaryCurrent = $binaries | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    Write-Warning "freerouting-current.jar not found. Using $($binaryCurrent.Name) for post-route DRC checks."
 }
 
-# JAR files
-$CurrentJar = "$PSScriptRoot\..\..\build\libs\freerouting-current-executable.jar"
-$V19Jar = "$PSScriptRoot\..\..\build\libs\freerouting-1.9.0-executable.jar"
+# Gathers system info
+$sysInfo = Get-SystemInfo
+Write-Output "System: $($sysInfo.cpu_name) ($($sysInfo.cpu_physical_cores) Cores, $($sysInfo.total_ram_gb) GB RAM)"
 
-# Check if JARs exist
-if (-not (Test-Path $CurrentJar)) {
-    Write-Host "ERROR: Current JAR not found. Run: .\gradlew.bat executableJar" -ForegroundColor $ErrorColor
-    exit 1
-}
-if (-not (Test-Path $V19Jar)) {
-    Write-Host "ERROR: V1.9 JAR not found. Run: .\gradlew.bat executableV19Jar" -ForegroundColor $ErrorColor
-    exit 1
-}
-
-# Create log directory
-$LogBaseDir = "$PSScriptRoot\..\..\logs"
-New-Item -ItemType Directory -Force -Path $LogBaseDir | Out-Null
-
-Write-Host "`nConfiguration:" -ForegroundColor $InfoColor
-Write-Host "  Input File:  $de"         -ForegroundColor White
-Write-Host "  Output File: $do"         -ForegroundColor White
-Write-Host "  Log Level:   $LoggingLevel" -ForegroundColor White
-Write-Host "  Max Passes:  $max_passes" -ForegroundColor White
-Write-Host "  Max Items:   $max_items" -ForegroundColor White
-Write-Host "  Max Threads: $max_threads" -ForegroundColor White
-Write-Host "  Timeout:     $job_timeout" -ForegroundColor White
-if (-not [string]::IsNullOrWhiteSpace($DebugFilterByNet)) {
-    Write-Host "  Net Filter:  $DebugFilterByNet" -ForegroundColor White
+# Settings object
+$settingsObj = [PSCustomObject]@{
+    max_passes        = $MaxPasses
+    max_time          = $MaxTime
+    max_threads       = $MaxThreads
+    heap_max          = $HeapMax
+    log_level         = $LogLevel
+    fanout_enabled    = $FanoutEnabled
+    router_enabled    = $RouterEnabled
+    optimizer_enabled = $true
 }
 
-# Log Files (run-specific names avoid lock conflicts from diff tools/open handles)
-$RunSuffix = if ([string]::IsNullOrWhiteSpace($LogNameSuffix)) {
-    "run-$($max_items)-$((Get-Date).ToString('yyyyMMdd-HHmmss'))-$PID"
-} else {
-    $LogNameSuffix
-}
-$CurrentLogFile = Join-Path $LogBaseDir "freerouting-current-$RunSuffix.log"
-$V19LogFile = Join-Path $LogBaseDir "freerouting-v190-$RunSuffix.log"
-$CurrentLogFileCanonical = Join-Path $LogBaseDir "freerouting-current.log"
-$V19LogFileCanonical = Join-Path $LogBaseDir "freerouting-v190.log"
+# CLI Probe Cache
+$cliSupportCache = @{}
 
-# Calculate Output Files
-$OutputDirectory = Split-Path $OutputFileAbs -Parent
-$OutputBaseName = [System.IO.Path]::GetFileNameWithoutExtension($OutputFileAbs)
-$OutputExtension = [System.IO.Path]::GetExtension($OutputFileAbs)
+$totalCombinations = $binaries.Count * $fixtures.Count
+$runIdx = 0
 
-$CurrentOutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-current$($OutputExtension)"
-$V19OutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-v190$($OutputExtension)"
+Write-Output "Starting benchmark runs ($totalCombinations combinations)..."
 
-$BaseArgs = @(
-    "-de", "`"$InputFileAbs`""
-    "--router.optimizer.enabled=false"
-    "--gui.enabled=false"
-    "--api_server.enabled=false"
-    "--debug.enable_detailed_logging=true"
-    "--router.job_timeout=`"$job_timeout`""
-    "--router.max_passes=$max_passes"
-    "--router.max_items=$max_items"
-    "--router.max_threads=$max_threads"
-    "--logging.file.level=$LoggingLevel"
-    "--logging.file.pattern=$LoggingPattern"
-    "--logging.console.level=INFO"
-)
+$rollingDurations = @()
 
-if (-not [string]::IsNullOrWhiteSpace($DebugFilterByNet)) {
-    $BaseArgs += "--debug.filter_by_net=$DebugFilterByNet"
-}
-
-function Sync-CanonicalLog {
-    param(
-        [string]$Source,
-        [string]$Canonical
-    )
-
-    if (-not (Test-Path $Source)) {
-        return
-    }
-
-    try {
-        Copy-Item $Source $Canonical -Force -ErrorAction Stop
-    }
-    catch {
-        Write-Host "WARNING: Could not sync '$Source' to '$Canonical'. $_" -ForegroundColor $WarningColor
-    }
-}
-
-# Function to parse log results
-function Parse-LogResults {
-    param (
-        [string]$LogPath
-    )
+foreach ($binary in $binaries) {
+    $verLabel = Get-BinaryVersionLabel $binary
     
-    $Result = @{
-        AutoRouterTime = "N/A"
-        Unrouted       = "0"
-        PeakHeap       = "N/A"
-        Passes         = "0"
-        FoundSummary   = $false
+    # CLI support probe
+    if (-not $cliSupportCache.ContainsKey($binary.FullName)) {
+        $cliSupportCache[$binary.FullName] = Test-BinaryCliSupport $binary.FullName
     }
-    
-    if (Test-Path $LogPath) {
-        $Content = Get-Content $LogPath -Tail 1000
-        # Look for the session summary line
-        # Pattern: Auto-router session.*completed.*
-        $SummaryLine = $Content | Where-Object { $_ -match "Auto-router session.*completed" } | Select-Object -Last 1
+    $supportsCli = $cliSupportCache[$binary.FullName]
+
+    foreach ($fixture in $fixtures) {
+        $runIdx++
+        $fixtureGroup = Split-Path (Split-Path $fixture.FullName -Parent) -Leaf
+        $fixtureStem = $fixture.BaseName
         
-        # Extract max pass number
-        # Look for lines like "Pass 1  :" or "Pass #2"
-        # Since we only read the last 1000 lines, we might miss early passes, but we should see the final ones.
-        $PassLines = $Content | Where-Object { $_ -match "Pass (\d+)\s+:" }
-        if ($PassLines) {
-            $LastPassLine = $PassLines | Select-Object -Last 1
-            if ($LastPassLine -match "Pass (\d+)\s+:") {
-                $Result.Passes = $matches[1]
-            }
+        # Calculate ETA
+        $etaStr = "Estimating..."
+        if ($rollingDurations.Count -gt 0) {
+            $avgSec = ($rollingDurations | Measure-Object -Average).Average
+            $remaining = $totalCombinations - $runIdx + 1
+            $etaSec = $avgSec * $remaining
+            $ts = [timespan]::FromSeconds($etaSec)
+            $etaStr = "$([math]::Floor($ts.TotalHours))h $($ts.Minutes)m $($ts.Seconds)s remaining"
         }
+
+        # Form unique base name with folder name, fixture file name, version
+        $timestamp = (Get-Date -Format "yyyyMMdd-HHmmss")
+        $baseName = "${fixtureGroup}--${fixtureStem}--${verLabel}--${timestamp}"
+
+        $cacheKey = Get-BenchmarkCacheKey $binary $fixture $settingsObj
+
+        Write-Output "[$runIdx/$totalCombinations] $verLabel x $fixtureGroup/$($fixture.Name) (ETA: $etaStr)"
         
-        if ($SummaryLine) {
-            $Result.FoundSummary = $true
-            
-            # Extract Duration: completed in (.*?), final score
-            if ($SummaryLine -match "completed in (.*?), final score") {
-                $Result.AutoRouterTime = $matches[1]
-            }
-            
-            # Extract Unrouted: (\d+) unrouted
-            if ($SummaryLine -match "\((\d+) unrouted\)") {
-                $Result.Unrouted = $matches[1]
-            }
-            
-            # Extract Peak Heap: and (.*?) MB peak heap usage
-            if ($SummaryLine -match "and (.*?) MB peak heap usage") {
-                $Result.PeakHeap = $matches[1]
-            }
+        if ($cache.ContainsKey($cacheKey) -and -not $Force) {
+            Write-Output "  -> [SKIP] Cache hit found"
+            continue
         }
+
+        # DSN text parse
+        $fixtureMeta = Get-DsnMetadata $fixture.FullName
+        
+        $runStartTime = Get-Date
+        
+        # Invoke benchmark
+        Write-Output "  -> Running..."
+        $runResult = Invoke-BenchmarkRun $binary $fixture $baseName $LogsDir $OutputsDir $settingsObj $supportsCli
+        
+        $runEndTime = Get-Date
+        $runSecs = ($runEndTime - $runStartTime).TotalSeconds
+        $rollingDurations += $runSecs
+        if ($rollingDurations.Count -gt 5) {
+            $rollingDurations = $rollingDurations[($rollingDurations.Count - 5)..($rollingDurations.Count - 1)]
+        }
+
+        # Invoke DRC using current version on outputs
+        Write-Output "  -> Running DRC check..."
+        $drcResult = Invoke-DrcCheck $binaryCurrent $fixture $runResult.OutputFile $OutputsDir $baseName
+
+        # Parse metrics from logs
+        $logMetrics = Get-PhaseMetrics $runResult.LogFile $verLabel
+
+        # Build run record
+        $runObj = [PSCustomObject]@{
+            cache_key = $cacheKey
+            run_at    = (Get-Date -UFormat "%Y-%m-%dT%H:%M:%SZ")
+            run_mode  = $runResult.RunMode
+            system    = $sysInfo
+            binary    = [PSCustomObject]@{
+                filename      = $binary.Name
+                version_label = $verLabel
+                sha256        = (Get-FileHash $binary.FullName -Algorithm SHA256).Hash
+                size_bytes    = $binary.Length
+            }
+            fixture   = [PSCustomObject]@{
+                filename            = $fixture.Name
+                group               = $fixtureGroup
+                relative_path       = "$fixtureGroup/$($fixture.Name)"
+                size_bytes          = $fixture.Length
+                sha256              = (Get-FileHash $fixture.FullName -Algorithm SHA256).Hash
+                host_cad            = $fixtureMeta.host_cad
+                host_version        = $fixtureMeta.host_version
+                layer_count         = $fixtureMeta.layer_count
+                net_count           = $fixtureMeta.net_count
+                component_count     = $fixtureMeta.component_count
+                smd_pin_count       = if ($logMetrics.fanout.smd_pin_count -ne $null) { $logMetrics.fanout.smd_pin_count } else { 0 }
+                board_width_mm      = $fixtureMeta.board_width_mm
+                board_height_mm     = $fixtureMeta.board_height_mm
+                board_area_cm2      = $fixtureMeta.board_area_cm2
+            }
+            settings  = $settingsObj
+            phases    = [PSCustomObject]@{
+                fanout     = $logMetrics.fanout
+                autorouter = $logMetrics.autorouter
+                optimizer  = $logMetrics.optimizer
+            }
+            quality   = [PSCustomObject]@{
+                total_nets             = $fixtureMeta.net_count
+                initial_unrouted       = $logMetrics.autorouter.initial_unrouted_count
+                final_unrouted         = $logMetrics.autorouter.final_unrouted
+                routing_completion_pct = if ($logMetrics.autorouter.initial_unrouted_count -gt 0) { [math]::Round(100.0 * ($logMetrics.autorouter.initial_unrouted_count - $logMetrics.autorouter.final_unrouted) / $logMetrics.autorouter.initial_unrouted_count, 1) } else { 100.0 }
+                clearance_violations   = $logMetrics.autorouter.final_violations
+                quality_score          = $logMetrics.autorouter.final_score
+                total_cpu_seconds      = [double]$logMetrics.autorouter.cpu_seconds + [double]$logMetrics.fanout.cpu_seconds + [double]$logMetrics.optimizer.cpu_seconds
+                total_allocated_gb     = [double]$logMetrics.autorouter.total_allocated_gb + [double]$logMetrics.fanout.total_allocated_gb + [double]$logMetrics.optimizer.total_allocated_gb
+                peak_heap_mb           = [math]::Max([double]$logMetrics.autorouter.peak_heap_mb, [math]::Max([double]$logMetrics.fanout.peak_heap_mb, [double]$logMetrics.optimizer.peak_heap_mb))
+                wall_clock_seconds     = $runResult.WallClockSeconds
+            }
+            drc       = $drcResult
+            log_analysis = [PSCustomObject]@{
+                warn_count  = $logMetrics.warn_count
+                error_count = $logMetrics.error_count
+            }
+            exit      = [PSCustomObject]@{
+                code         = $runResult.ExitCode
+                crashed      = $runResult.Crashed
+                oom_detected = $runResult.OomDetected
+                timed_out    = $runResult.TimedOut
+            }
+            log_file  = $runResult.LogFile
+        }
+
+        # Update cache
+        $cache[$cacheKey] = $runObj
+
+        # Save JSON atomically
+        Save-BenchmarksJson $rawJson $cache $JsonPath
+        
+        Write-Output "  -> Done! [Unrouted: $($runObj.quality.final_unrouted) (DRC: $($runObj.drc.final_unrouted)), Violations: $($runObj.quality.clearance_violations) (DRC: $($runObj.drc.final_violations)), Score: $($runObj.quality.quality_score) (DRC: $($runObj.drc.final_quality_score))]"
     }
-    
-    return $Result
 }
 
-# Function to run version and capture results
-function Invoke-Version {
-    param(
-        [string]$VersionName,
-        [string]$JarPath,
-        [string]$LogPath,
-        [string]$OutputFile,
-        [string]$Color
-    )
-
-    Write-Host "`n--------------------------------------------------" -ForegroundColor $Color
-    Write-Host "  Running $VersionName" -ForegroundColor $Color
-    Write-Host "--------------------------------------------------" -ForegroundColor $Color
-
-    # Remove previous run-specific file if present.
-    if (Test-Path $LogPath) {
-        try {
-            Remove-Item $LogPath -Force -ErrorAction Stop
-        }
-        catch {
-            Write-Host "WARNING: Could not remove existing log '$LogPath'. $_" -ForegroundColor $WarningColor
-        }
-    }
-
-    $env:FREEROUTING_LOG_DIR = $LogBaseDir
-
-    # Construct flat argument list with specific log location and output file
-    $ProcessArgs = @("-jar", $JarPath) + $BaseArgs + @("--logging.file.location=$LogPath", "-do", "`"$OutputFile`"")
-
-    Write-Host "Command: java $ProcessArgs" -ForegroundColor Gray
-    Write-Host "Log Target:    $LogPath"    -ForegroundColor Gray
-    Write-Host "Output Target: $OutputFile" -ForegroundColor Gray
-
-    $StartTime = Get-Date
-
-    try {
-        $Process = Start-Process -FilePath "java" `
-            -ArgumentList $ProcessArgs `
-            -Wait -PassThru -NoNewWindow
-
-        $EndTime = Get-Date
-        $Duration = $EndTime - $StartTime
-
-        if ($Process.ExitCode -eq 0) {
-            Write-Host "$VersionName completed successfully" -ForegroundColor $SuccessColor
-        }
-        else {
-            Write-Host "✗ $VersionName exited with code $($Process.ExitCode)" -ForegroundColor $WarningColor
-        }
-
-        Write-Host "  Duration: $($Duration.ToString('mm\:ss\.fff'))" -ForegroundColor White
-
-        # Check if log file exists (Java should have written it directly)
-        if (Test-Path $LogPath) {
-            $LogSize = (Get-Item $LogPath).Length
-            $FormattedSize = [math]::Round($LogSize / 1MB, 2)
-            Write-Host "  Log Saved: $LogPath ($FormattedSize MB)" -ForegroundColor White
-        }
-        else {
-            Write-Host "  WARNING: Log file not found at $LogPath" -ForegroundColor $WarningColor
-        }
-        
-        $LogResults = Parse-LogResults -LogPath $LogPath
-
-        return @{
-            VersionName    = $VersionName
-            ExitCode       = $Process.ExitCode
-            Duration       = $Duration
-            LogFile        = $LogPath
-            AutoRouterTime = $LogResults.AutoRouterTime
-            Unrouted       = $LogResults.Unrouted
-            PeakHeap       = $LogResults.PeakHeap
-            Passes         = $LogResults.Passes
-        }
-    }
-    catch {
-        Write-Host "✗ Error running $VersionName : $_" -ForegroundColor $ErrorColor
-        return $null
-    }
-}
-
-# Run Current Version
-$CurrentResult = Invoke-Version -VersionName "Current Version" `
-    -JarPath $CurrentJar `
-    -LogPath $CurrentLogFile `
-    -OutputFile $CurrentOutputFile `
-    -Color $InfoColor
-
-# Run V1.9 Version
-$V19Result = Invoke-Version -VersionName "V1.9 Version" `
-    -JarPath $V19Jar `
-    -LogPath $V19LogFile `
-    -OutputFile $V19OutputFile `
-    -Color $SuccessColor
-
-# Best-effort compatibility sync for tooling that expects canonical filenames.
-Sync-CanonicalLog -Source $CurrentLogFile -Canonical $CurrentLogFileCanonical
-Sync-CanonicalLog -Source $V19LogFile -Canonical $V19LogFileCanonical
-
-# Summary
-Write-Host "`n==================================================" -ForegroundColor $InfoColor
-Write-Host "  Comparison Summary" -ForegroundColor $InfoColor
-Write-Host "==================================================" -ForegroundColor $InfoColor
-
-Write-Host "`nSettings" -ForegroundColor Cyan
-Write-Host "  Log Level:   $LoggingLevel"
-Write-Host "  Max Passes:  $max_passes"
-Write-Host "  Max Items:   $max_items"
-Write-Host "  Max Threads: $max_threads"
-Write-Host "  Timeout:     $job_timeout"
-
-if ($CurrentResult -and $V19Result) {
-    $Results = @($CurrentResult, $V19Result)
-
-    foreach ($Res in $Results) {
-        if ($Res) {
-            Write-Host "`n$($Res.VersionName)" -ForegroundColor Cyan
-            Write-Host "  Router Time:    $($Res.AutoRouterTime)"
-            Write-Host "  Process Time:   $($Res.Duration.ToString('mm\:ss\.fff'))"
-            Write-Host "  Passes:         $($Res.Passes)"
-            Write-Host "  Unrouted Items: $($Res.Unrouted)"
-            Write-Host "  Peak Heap:      $($Res.PeakHeap) MB"
-        }
-    }
-
-    Write-Host "`nCompare logs:" -ForegroundColor $InfoColor
-    Write-Host "  code --diff `"$($CurrentResult.LogFile)`" `"$($V19Result.LogFile)`"" -ForegroundColor Yellow
-    Write-Host "`nCanonical log aliases (best-effort):" -ForegroundColor $InfoColor
-    Write-Host "  $CurrentLogFileCanonical" -ForegroundColor Gray
-    Write-Host "  $V19LogFileCanonical" -ForegroundColor Gray
-}
+# 6. Generate final reports
+Write-Output "Regenerating benchmark reports..."
+Export-MarkdownReport $cache $MdPath $CsvPath $ChartDataPath
+Update-BenchmarksHtml $cache $WebsiteHtml
+Write-Output "Benchmark Suite Execution Complete!"
