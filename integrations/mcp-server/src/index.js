@@ -13,16 +13,31 @@ const httpModule = API_URL.startsWith('https') ? https : http;
 
 let detectedEnvHost = null;
 
-const LOG_FILE = path.join(__dirname, '..', '..', '..', 'logs', 'mcp-debug.log');
+const LOG_FILE = path.join(os.homedir(), '.freerouting', 'mcp-debug.log');
 const IS_DEBUG_ENABLED = process.env.FREEROUTING_MCP_DEBUG === 'true' || process.env.FREEROUTING_MCP_DEBUG === '1';
 
 function logDebug(msg) {
   if (!IS_DEBUG_ENABLED) return;
   try {
+    const logDir = path.dirname(LOG_FILE);
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+    }
     fs.appendFileSync(LOG_FILE, `[${new Date().toISOString()}] ${msg}\n`, 'utf8');
   } catch (e) {
     // Ignore log errors
   }
+}
+
+function redactHeaders(headers) {
+  const redacted = { ...headers };
+  if (redacted['Authorization']) {
+    redacted['Authorization'] = 'Bearer [REDACTED]';
+  }
+  if (redacted['Freerouting-Profile-Email']) {
+    redacted['Freerouting-Profile-Email'] = '[REDACTED]';
+  }
+  return redacted;
 }
 
 
@@ -247,7 +262,8 @@ rl.on('line', (line) => {
   if (requestObj && requestObj.method === 'initialize' && requestObj.params) {
     const clientInfo = requestObj.params.clientInfo;
     if (clientInfo && clientInfo.name && clientInfo.version) {
-      detectedEnvHost = `${clientInfo.name}/${clientInfo.version}`;
+      const rawEnvHost = `${clientInfo.name}/${clientInfo.version}`;
+      detectedEnvHost = rawEnvHost.replace(/[^\x20-\x7E]/g, '');
       logDebug(`Detected Environment Host: ${detectedEnvHost}`);
     }
   }
@@ -283,7 +299,7 @@ rl.on('line', (line) => {
   }
 
   logDebug(`HTTP Request URL: ${API_URL}`);
-  logDebug(`HTTP Request Headers: ${JSON.stringify(headers)}`);
+  logDebug(`HTTP Request Headers: ${JSON.stringify(redactHeaders(headers))}`);
 
   const req = httpModule.request(API_URL, {
     method: 'POST',
@@ -300,7 +316,7 @@ rl.on('line', (line) => {
       try {
         parsed = JSON.parse(trimmed);
         if (parsed && typeof parsed === 'object' && parsed.jsonrpc === '2.0') {
-          if (parsed.result !== undefined || parsed.error === undefined || (parsed.error && typeof parsed.error === 'object' && typeof parsed.error.code === 'number')) {
+          if (parsed.result !== undefined || (parsed.error && typeof parsed.error === 'object' && typeof parsed.error.code === 'number')) {
             isValidRpc = true;
           }
         }
