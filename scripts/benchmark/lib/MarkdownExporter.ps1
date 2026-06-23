@@ -142,8 +142,10 @@ function Export-MarkdownReport {
 
             [void]$sb.AppendLine("### Fixture: [$($metadata.filename)](../fixtures/$($metadata.relative_path))")
             [void]$sb.AppendLine()
-            [void]$sb.AppendLine("Size: $([math]::Round($metadata.size_bytes / 1KB, 1)) kB · Layers: $($metadata.layer_count) · Nets: $($metadata.net_count) · Components: $($metadata.component_count)")
-            [void]$sb.AppendLine("Dimensions: $($metadata.board_width_mm) x $($metadata.board_height_mm) mm ($($metadata.board_area_cm2) cm²)")
+            $dot = [char]183
+            $sup2 = [char]178
+            [void]$sb.AppendLine("Size: $([math]::Round($metadata.size_bytes / 1KB, 1)) kB $dot Layers: $($metadata.layer_count) $dot Nets: $($metadata.net_count) $dot Components: $($metadata.component_count)")
+            [void]$sb.AppendLine("Dimensions: $($metadata.board_width_mm) x $($metadata.board_height_mm) mm ($($metadata.board_area_cm2) cm$sup2)")
             [void]$sb.AppendLine("CAD: $($metadata.host_cad) (v$($metadata.host_version))")
             [void]$sb.AppendLine()
 

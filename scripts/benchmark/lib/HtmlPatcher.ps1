@@ -18,31 +18,31 @@ function Update-BenchmarksHtml {
 
     # Build premium styled HTML
     $sb = [System.Text.StringBuilder]::new()
-    [void]$sb.AppendLine("<div class='benchmark-container' style='font-family: sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; color: rgb(232, 204, 135); background-color: rgb(1, 58, 32); border-radius: 8px;'>")
-    [void]$sb.AppendLine("  <h2 style='text-align: center; border-bottom: 2px solid rgb(232, 204, 135); padding-bottom: 10px;'>Freerouting Benchmark Results</h2>")
+    [void]$sb.AppendLine("<div class='benchmark-container'>")
+    [void]$sb.AppendLine("  <h2 class='benchmark-title'>Freerouting Benchmark Results</h2>")
     
     foreach ($g in $grouped) {
         $first = $g.Group[0]
         $fixName = $first.fixture.filename
         $fixGroup = $first.fixture.group
 
-        [void]$sb.AppendLine("  <div class='fixture-section' style='margin-top: 30px; margin-bottom: 30px;'>")
-        [void]$sb.AppendLine("    <h3 style='color: rgb(232, 204, 135); border-bottom: 1px solid rgba(232,204,135,0.3); padding-bottom: 5px;'>$fixGroup / $fixName</h3>")
-        [void]$sb.AppendLine("    <p style='font-size: 0.9em; opacity: 0.8;'>Layers: $($first.fixture.layer_count) | Nets: $($first.fixture.net_count) | Components: $($first.fixture.component_count) | Area: $($first.fixture.board_area_cm2) cm²</p>")
+        [void]$sb.AppendLine("  <div class='fixture-section'>")
+        [void]$sb.AppendLine("    <h3 class='fixture-title'>$fixGroup / $fixName</h3>")
+        [void]$sb.AppendLine("    <p class='fixture-meta'>Layers: $($first.fixture.layer_count) | Nets: $($first.fixture.net_count) | Components: $($first.fixture.component_count) | Area: $($first.fixture.board_area_cm2) cm²</p>")
         
-        [void]$sb.AppendLine("    <table style='width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em;'>")
+        [void]$sb.AppendLine("    <table class='benchmark-table'>")
         [void]$sb.AppendLine("      <thead>")
-        [void]$sb.AppendLine("        <tr style='background-color: rgba(232, 204, 135, 0.1); text-align: left;'>")
-        [void]$sb.AppendLine("          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Version</th>")
-        [void]$sb.AppendLine("          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Mode</th>")
-        [void]$sb.AppendLine("          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Fanout</th>")
-        [void]$sb.AppendLine("          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Router Time</th>")
-        [void]$sb.AppendLine("          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Passes</th>")
-        [void]$sb.AppendLine("          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Unrouted (DRC)</th>")
-        [void]$sb.AppendLine("          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Violations (DRC)</th>")
-        [void]$sb.AppendLine("          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Score (DRC)</th>")
-        [void]$sb.AppendLine("          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Peak Heap</th>")
-        [void]$sb.AppendLine("          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Warn/Err</th>")
+        [void]$sb.AppendLine("        <tr class='header-row'>")
+        [void]$sb.AppendLine("          <th>Version</th>")
+        [void]$sb.AppendLine("          <th>Mode</th>")
+        [void]$sb.AppendLine("          <th class='text-right'>Fanout</th>")
+        [void]$sb.AppendLine("          <th class='text-right'>Router Time</th>")
+        [void]$sb.AppendLine("          <th class='text-right'>Passes</th>")
+        [void]$sb.AppendLine("          <th class='text-right'>Unrouted (DRC)</th>")
+        [void]$sb.AppendLine("          <th class='text-right'>Violations (DRC)</th>")
+        [void]$sb.AppendLine("          <th class='text-right'>Score (DRC)</th>")
+        [void]$sb.AppendLine("          <th class='text-right'>Peak Heap</th>")
+        [void]$sb.AppendLine("          <th class='text-right'>Warn/Err</th>")
         [void]$sb.AppendLine("        </tr>")
         [void]$sb.AppendLine("      </thead>")
         [void]$sb.AppendLine("      <tbody>")
@@ -88,17 +88,17 @@ function Update-BenchmarksHtml {
             $warns = if ($run.log_analysis.warn_count -ne $null) { $run.log_analysis.warn_count } else { 0 }
             $errs = if ($run.log_analysis.error_count -ne $null) { $run.log_analysis.error_count } else { 0 }
 
-            [void]$sb.AppendLine("        <tr style='border-bottom: 1px solid rgba(232, 204, 135, 0.15);'>")
-            [void]$sb.AppendLine("          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>$ver</td>")
-            [void]$sb.AppendLine("          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>$mode</td>")
-            [void]$sb.AppendLine("          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>$fanoutVal</td>")
-            [void]$sb.AppendLine("          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>$routerTime</td>")
-            [void]$sb.AppendLine("          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>$passes</td>")
-            [void]$sb.AppendLine("          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>$unrouted</td>")
-            [void]$sb.AppendLine("          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>$violations</td>")
-            [void]$sb.AppendLine("          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>$score</td>")
-            [void]$sb.AppendLine("          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>$heap</td>")
-            [void]$sb.AppendLine("          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>$warns / $errs</td>")
+            [void]$sb.AppendLine("        <tr class='data-row'>")
+            [void]$sb.AppendLine("          <td>$ver</td>")
+            [void]$sb.AppendLine("          <td>$mode</td>")
+            [void]$sb.AppendLine("          <td class='text-right'>$fanoutVal</td>")
+            [void]$sb.AppendLine("          <td class='text-right'>$routerTime</td>")
+            [void]$sb.AppendLine("          <td class='text-right'>$passes</td>")
+            [void]$sb.AppendLine("          <td class='text-right'>$unrouted</td>")
+            [void]$sb.AppendLine("          <td class='text-right'>$violations</td>")
+            [void]$sb.AppendLine("          <td class='text-right'>$score</td>")
+            [void]$sb.AppendLine("          <td class='text-right'>$heap</td>")
+            [void]$sb.AppendLine("          <td class='text-right'>$warns / $errs</td>")
             [void]$sb.AppendLine("        </tr>")
         }
         [void]$sb.AppendLine("      </tbody>")
