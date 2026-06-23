@@ -269,8 +269,34 @@ rl.on('line', (line) => {
       data += chunk;
     });
     res.on('end', () => {
-      const singleLine = data.replace(/\r/g, '').replace(/\n/g, '');
-      console.log(singleLine);
+      const trimmed = data.trim();
+      let parsed = null;
+      let isValidRpc = false;
+      try {
+        parsed = JSON.parse(trimmed);
+        if (parsed && typeof parsed === 'object' && parsed.jsonrpc === '2.0') {
+          if (parsed.result !== undefined || parsed.error === undefined || (parsed.error && typeof parsed.error === 'object' && typeof parsed.error.code === 'number')) {
+            isValidRpc = true;
+          }
+        }
+      } catch (e) {
+        // Not valid JSON
+      }
+
+      if (isValidRpc) {
+        const singleLine = trimmed.replace(/\r/g, '').replace(/\n/g, '');
+        console.log(singleLine);
+      } else {
+        let errMsg = `HTTP ${res.statusCode} ${res.statusMessage || ''}`.trim();
+        if (parsed && typeof parsed === 'object' && typeof parsed.error === 'string') {
+          errMsg = parsed.error;
+        } else if (trimmed) {
+          if (trimmed.length < 200 && !trimmed.startsWith('<')) {
+            errMsg = trimmed;
+          }
+        }
+        sendError(requestObj ? requestObj.id : null, -32603, errMsg);
+      }
     });
   });
 
