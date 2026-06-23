@@ -1,22 +1,29 @@
-| Filename                             	| File size 	| Nets to route 	| Freerouting version 	| Unrouted nets 	| Clearance violations 	| Passes to complete 	| Time to complete 	| Total allocation 	| Quality score 	| Last run at              	|
-|--------------------------------------	|-----------	|---------------	|---------------------	|---------------	|----------------------	|--------------------	|------------------	|------------------	|---------------	|---------------------	|
-| Issue508-DAC2020_bm01.dsn            	| 31 kB     	| 195           	| v1.9 (GUI)          	| 0             	| ?                    	| 214                	| 45 seconds       	| N/A              	| N/A           	|                     	|
-| Issue508-DAC2020_bm01.dsn            	| 31 kB     	| 195           	| v2.2 (CLI)          	| 45            	| 0                    	| 36                 	| 5+ minutes       	| 228585 MB        	| 922,89        	| 2026-01-13          	|
-| Issue508-DAC2020_bm01.dsn            	| 31 kB     	| 195           	| v2.2 (CLI)          	| 42            	| 0                    	| 111                	| 5+ minutes       	| 322231 MB        	| 937.72        	| 2026-01-16          	|
-| Issue508-DAC2020_bm01.dsn            	| 31 kB     	| 195           	| v2.2 (GUI)          	| 42            	| 0                    	| 97                 	| 5+ minutes       	| ?                	| 937.72        	| 2026-01-16          	|
-| Issue508-DAC2020_bm02.dsn            	| ?         	| ?             	| v1.9                	| 0             	| ?                    	| ?                  	| ?                	| N/A              	| N/A           	|                     	|
-| Issue508-DAC2020_bm04.dsn            	| ?         	| ?             	| v1.9                	| 0             	| ?                    	| ?                  	| ?                	| N/A              	| N/A           	|                     	|
-| Issue508-DAC2020_bm05.dsn            	| ?         	| ?             	| v1.9                	| 46            	| ?                    	| ?                  	| ?                	| N/A              	| N/A           	|                     	|
-| Issue508-DAC2020_bm05.dsn            	| 17 kB     	| 107           	| v2.2                	| 51            	| 0                    	| 244                	| 5+ minutes       	| 242909 MB        	| 806,92        	| 2026-01-13 13:41:49 	|
-| Issue508-DAC2020_bm06.dsn            	| ?         	| ?             	| v1.9                	| 9             	| ?                    	| ?                  	| ?                	| N/A              	| N/A           	|                     	|
-| Issue508-DAC2020_bm06.dsn            	| 23 kB     	| 98            	| v2.2                	| 8             	| 0                    	| 500+               	| 3m 24s           	| 172840 MB        	| 973,07        	| 2026-01-13 13:46:53 	|
-| Issue508-DAC2020_bm07.dsn            	| 15 kB     	| 86            	| v1.9                	| 0             	| ?                    	| 4                  	| 2 seconds        	| N/A              	| N/A           	|                     	|
-| Issue508-DAC2020_bm07.dsn            	| 15 kB     	| 86            	| v2.2                	| 0             	| 0                    	| 24                 	| 10 seconds       	| 5557 MB          	| 990,75        	| 2026-01-13 13:26:00 	|
-| Issue508-DAC2020_bm08.dsn            	| ?         	| ?             	| v1.9                	| 0             	| ?                    	| ?                  	| ?                	| N/A              	| N/A           	|                     	|
-| Issue508-DAC2020_bm08.dsn            	| 6 kB      	| 25            	| v2.2                	| 0             	| 0                    	| 4                  	| 1 second         	| 0 MB             	| 996,40        	| 2026-01-13 13:33:05 	|
-| Issue508-DAC2020_bm09.dsn            	| ?         	| ?             	| v1.9                	| 1             	| ?                    	| ?                  	| ?                	| N/A              	| N/A           	|                     	|
-| Issue508-DAC2020_bm10.dsn            	| ?         	| ?             	| v1.9                	| 0             	| ?                    	| ?                  	| ?                	| N/A              	| N/A           	|                     	|
-| Issue508-DAC2020_bm11.dsn            	| ?         	| ?             	| v1.9                	| 14            	| ?                    	| ?                  	| ?                	| N/A              	| N/A           	|                     	|
-| Issue555-BBD_Mars-64.dsn             	| 54 kB     	| 106           	| v2.2                	| 46            	| 0                    	| 28                 	| 5+ minutes       	| 269709 MB        	| 875,60        	| 2026-01-13 14:04:45 	|
-| Issue555-CNH_Functional_Tester_1.dsn 	| 164 kB    	| 145           	| v2.2                	| 6             	| 0                    	| 251                	| 5+ minutes       	| 127436 MB        	| 958,57        	| 2026-01-13 14:09:49 	|
-| Issue558-dev-board.dsn               	| 27 kB     	| 94            	| v2.2                	| 0             	| 0                    	| 11                 	| 8s               	| 4582 MB          	| 989,17        	| 2026-01-13 14:14:53 	|
+﻿# Freerouting Nightly Benchmarks Report
+Generated on: 2026-06-23 17:52:36
+
+This report lists the latest benchmark run results for each Freerouting version and fixture combination.
+
+## Summary Table (Best Results per Fixture)
+
+| Fixture Group                                | Fixture                                                         | Best Version | Unrouted (DRC) | Violations (DRC) | Score (DRC) | CPU Time | Peak Heap |
+| :--------------------------------------------- | :---------------------------------------------------------------- | :------------- | ---------------: | -----------------: | ------------: | ---------: | ----------: |
+| [DAC2020_boards](../fixtures/DAC2020_boards) | [DAC2020_bm07.dsn](../fixtures/DAC2020_boards/DAC2020_bm07.dsn) | **1.9.0**    |              0 |                0 |      999,97 |    3.41s |  439.2 MB |
+
+
+## Group: [DAC2020_boards](../fixtures/DAC2020_boards)
+
+### Fixture: [DAC2020_bm07.dsn](../fixtures/DAC2020_boards/DAC2020_bm07.dsn)
+
+Size: 14.9 kB Â· Layers: 2 Â· Nets: 52 Â· Components: 13
+Dimensions: 2.2 x 6 mm (0.1 cmÂ²)
+CAD: KiCad's Pcbnew (v9.0.6)
+
+| Version     | Mode | Fanout        | Fanout Time | Router Time | Optimizer Time | Passes | Unrouted (DRC) | Violations (DRC) | Score (DRC) | Peak Heap | Total Alloc | Warn/Err |
+| :------------ | :----- | --------------: | ------------: | ------------: | ---------------: | -------: | ---------------: | -----------------: | ------------: | ----------: | ------------: | ---------: |
+| 1.9.0       | GUI  |           N/A |         N/A |       4.29s |         34.76s |      8 |              0 |                0 |      999,97 |  439.2 MB |     1.71 GB |    2 / 0 |
+| 2.0.1       | GUI  |           N/A |         N/A |       3.93s |             0s |      6 |              0 |                0 |         N/A | 1096.5 MB |        0 GB |   1 / 16 |
+| 2.1.0       | GUI  |           N/A |         N/A |       7.06s |             0s |     12 |              0 |                0 |      991,30 | 1126.1 MB |        0 GB |   2 / 10 |
+| 2.2.4       | GUI  |           N/A |         N/A |         N/A |           2.3s |      8 |              0 |                0 |         N/A | 1516.2 MB |        0 GB |    2 / 0 |
+| s2026.06.23 | GUI  | 84/87 (96.6%) |       8.38s |      15.77s |          1.02s |     18 |        3 (↓🔻) |                0 |      965,08 | 1113.2 MB |    21.25 GB |    1 / 0 |
+
+

@@ -1,0 +1,13 @@
+﻿fixture_group,fixture_name,version,run_mode,fanout_success,router_passes,drc_unrouted,drc_violations,drc_score,wall_time,cpu_time,peak_heap_mb,warn_count,error_count
+DAC2020_boards,DAC2020_bm07.dsn,s2026.06.23,,,,,,,15.5623913,0,0,0,0
+DAC2020_boards,DAC2020_bm07.dsn,1.9.0,GUI,,8,0,0,999.966674804688,62.4633776,3.41,439.2,2,0
+DAC2020_boards,DAC2020_bm07.dsn,2.0.1,GUI,,6,0,0,,90.1303723,0,1096.5,1,16
+DAC2020_boards,DAC2020_bm07.dsn,2.0.1,,,,,,,15.724704,0,0,0,16
+DAC2020_boards,DAC2020_bm07.dsn,s2026.06.23,GUI,84/87,18,3,0,965.08,90.1282681,22.53,1113.2,1,0
+DAC2020_boards,DAC2020_bm07.dsn,s2026.06.23,,,,,,,90.31944159999999,0,0,1,0
+DAC2020_boards,DAC2020_bm07.dsn,2.2.4,GUI,,8,,,,90.1440811,0,1516.2,2,0
+DAC2020_boards,DAC2020_bm07.dsn,1.9.0,,,,,,,16.1098209,0,0,0,0
+DAC2020_boards,DAC2020_bm07.dsn,2.1.0,,,,,,,15.413579599999998,0,0,1,10
+DAC2020_boards,DAC2020_bm07.dsn,2.2.4,,,,,,,15.376192399999999,0,0,2,0
+DAC2020_boards,DAC2020_bm07.dsn,2.1.0,GUI,,12,0,0,991.3,90.1339249,0,1126.1,2,10
+DAC2020_boards,DAC2020_bm07.dsn,s2026.06.23,,/87,18,3,0,965.08,90.251994,13.53,915.1,1,0

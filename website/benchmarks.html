@@ -147,8 +147,94 @@
 
     <section class="benchmarks">
         <h2>Benchmarks</h2>
-		<table>
-		</table>
+        <!-- BENCHMARK_TABLE_START -->
+<div class='benchmark-container' style='font-family: sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; color: rgb(232, 204, 135); background-color: rgb(1, 58, 32); border-radius: 8px;'>
+  <h2 style='text-align: center; border-bottom: 2px solid rgb(232, 204, 135); padding-bottom: 10px;'>Freerouting Benchmark Results</h2>
+  <div class='fixture-section' style='margin-top: 30px; margin-bottom: 30px;'>
+    <h3 style='color: rgb(232, 204, 135); border-bottom: 1px solid rgba(232,204,135,0.3); padding-bottom: 5px;'>DAC2020_boards / DAC2020_bm07.dsn</h3>
+    <p style='font-size: 0.9em; opacity: 0.8;'>Layers: 2 | Nets: 52 | Components: 13 | Area: 0.1 cmÂ²</p>
+    <table style='width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em;'>
+      <thead>
+        <tr style='background-color: rgba(232, 204, 135, 0.1); text-align: left;'>
+          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Version</th>
+          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Mode</th>
+          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Fanout</th>
+          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Router Time</th>
+          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Passes</th>
+          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Unrouted (DRC)</th>
+          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Violations (DRC)</th>
+          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Score (DRC)</th>
+          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Peak Heap</th>
+          <th style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.3);'>Warn/Err</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style='border-bottom: 1px solid rgba(232, 204, 135, 0.15);'>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1.9.0</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>GUI</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>4.29s</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>8</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>999,97</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>439.2 MB</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2 / 0</td>
+        </tr>
+        <tr style='border-bottom: 1px solid rgba(232, 204, 135, 0.15);'>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2.0.1</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>GUI</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>3.93s</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>6</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1096.5 MB</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1 / 16</td>
+        </tr>
+        <tr style='border-bottom: 1px solid rgba(232, 204, 135, 0.15);'>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2.1.0</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>GUI</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>7.06s</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>12</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>991,30</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1126.1 MB</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2 / 10</td>
+        </tr>
+        <tr style='border-bottom: 1px solid rgba(232, 204, 135, 0.15);'>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2.2.4</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>GUI</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>8</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>N/A</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1516.2 MB</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>2 / 0</td>
+        </tr>
+        <tr style='border-bottom: 1px solid rgba(232, 204, 135, 0.15);'>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>s2026.06.23</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>GUI</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>84/87 (96.6%)</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>15.77s</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>18</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>3</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>0</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>965,08</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1113.2 MB</td>
+          <td style='padding: 8px; border: 1px solid rgba(232, 204, 135, 0.15);'>1 / 0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- BENCHMARK_TABLE_END -->
     </section>
 </main>
 
