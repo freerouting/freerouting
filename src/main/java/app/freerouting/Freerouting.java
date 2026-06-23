@@ -8,6 +8,8 @@ import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.drc.DesignRulesChecker;
+import app.freerouting.io.specctra.SesImportSummary;
+import app.freerouting.io.specctra.SesReader;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.GuiManager;
 import app.freerouting.logger.FRLogger;
@@ -187,6 +189,26 @@ public class Freerouting {
       System.exit(1);
     }
 
+    // Load SES file if specified for DRC
+    if (globalSettings.design_session_filename != null) {
+      try {
+        java.io.File sesFile = new java.io.File(globalSettings.design_session_filename);
+        if (sesFile.exists()) {
+          FRLogger.info("Loading SES file for DRC: " + globalSettings.design_session_filename);
+          try (java.io.FileInputStream sesStream = new java.io.FileInputStream(sesFile)) {
+            SesImportSummary summary = SesReader.read(sesStream, drcJob.board);
+            FRLogger.info("SES file loaded for DRC: " + summary.wiresImported() + " wires, "
+                + summary.viasImported() + " vias imported"
+                + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
+          }
+        } else {
+          FRLogger.warn("SES file for DRC not found: " + globalSettings.design_session_filename);
+        }
+      } catch (Exception e) {
+        FRLogger.error("Failed to load SES file for DRC", e);
+      }
+    }
+
     // Run DRC check
     DesignRulesChecker drcChecker = new DesignRulesChecker(drcJob.board, globalSettings.drcSettings);
 
@@ -195,7 +217,18 @@ public class Freerouting {
 
     // Generate DRC report
     String sourceFileName = new File(globalSettings.initialInputFile).getName();
-    String drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
+    app.freerouting.drc.DrcReport report = drcChecker.generateReport(sourceFileName, coordinateUnit);
+    
+    // Calculate final quality score for DRC report
+    try {
+      var routerSettings = globalSettings.settingsMergerProtype.merge();
+      var finalStats = drcJob.board.get_statistics();
+      report.quality_score = (double) finalStats.getNormalizedScore(routerSettings.scoring);
+    } catch (Exception e) {
+      FRLogger.warn("Failed to calculate quality score for DRC report: " + e.getMessage());
+    }
+    
+    String drcReportJson = app.freerouting.util.gson.GsonProvider.GSON.toJson(report);
 
     // Output the DRC report
     if (drcJob.drc != null) {
@@ -1035,8 +1068,7 @@ public class Freerouting {
     if (!globalSettings.guiSettings.isEnabled
         && !globalSettings.apiServerSettings.isRunning
         && !globalSettings.mcpServerSettings.isRunning) {
-      var mergedRouterSettings = globalSettings.settingsMergerProtype.merge();
-      if ((mergedRouterSettings.enabled != null && !mergedRouterSettings.enabled) && (globalSettings.drcSettings.enabled)) {
+      if (globalSettings.drc_report_file != null) {
         cliResult = InitializeDRC(globalSettings);
       } else {
         cliResult = InitializeCLI(globalSettings);
