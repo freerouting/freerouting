@@ -60,6 +60,9 @@ public class AppContextListener implements ServletContextListener {
       FRLogger.debug("Could not retrieve Jetty Server instance from ServletContext; using default URL.");
     }
 
+    // Eagerly initialize CPU load baseline measurement
+    app.freerouting.api.v1.SystemControllerV1.getCpuLoad();
+
     FRLogger.info("API web server started successfully at " + fullUrl + ". You can ping it at " + fullUrl + "/v1/system/status. Swagger UI is available at " + fullUrl + "/swagger-ui.");
 
     if (!ApiKeyValidationService.getInstance().isAuthenticationEnabled()) {
