@@ -11,6 +11,36 @@ const crypto = require('crypto');
 const API_URL = process.env.FREEROUTING_API_URL || 'https://api.freerouting.app/v1/mcp';
 const httpModule = API_URL.startsWith('https') ? https : http;
 
+let detectedEnvHost = null;
+
+const LOG_FILE = path.join(os.homedir(), '.freerouting', 'mcp-debug.log');
+const IS_DEBUG_ENABLED = process.env.FREEROUTING_MCP_DEBUG === 'true' || process.env.FREEROUTING_MCP_DEBUG === '1';
+
+function logDebug(msg) {
+  if (!IS_DEBUG_ENABLED) return;
+  try {
+    const logDir = path.dirname(LOG_FILE);
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+    }
+    fs.appendFileSync(LOG_FILE, `[${new Date().toISOString()}] ${msg}\n`, 'utf8');
+  } catch (e) {
+    // Ignore log errors
+  }
+}
+
+function redactHeaders(headers) {
+  const redacted = { ...headers };
+  if (redacted['Authorization']) {
+    redacted['Authorization'] = 'Bearer [REDACTED]';
+  }
+  if (redacted['Freerouting-Profile-Email']) {
+    redacted['Freerouting-Profile-Email'] = '[REDACTED]';
+  }
+  return redacted;
+}
+
+
 function getOrCreateProfileId() {
   const envId = process.env.FREEROUTING_PROFILE_ID || process.env.FREEROUTING__PROFILE__ID;
   if (envId) {
@@ -46,7 +76,9 @@ function sendError(rpcId, code, message) {
       message: message
     }
   };
-  console.log(JSON.stringify(errResponse));
+  const responseStr = JSON.stringify(errResponse);
+  logDebug(`<-- ERROR RESPONSE: ${responseStr}`);
+  console.log(responseStr);
 }
 
 function sendToolResponse(rpcId, status, body, isError) {
@@ -65,7 +97,9 @@ function sendToolResponse(rpcId, status, body, isError) {
       isError: isError
     }
   };
-  console.log(JSON.stringify(rpcResponse));
+  const responseStr = JSON.stringify(rpcResponse);
+  logDebug(`<-- TOOL RESPONSE: ${responseStr}`);
+  console.log(responseStr);
 }
 
 function handleLocalUpload(rpcId, jobId, filePath) {
@@ -97,10 +131,8 @@ function handleLocalUpload(rpcId, jobId, filePath) {
     if (email) {
       headers['Freerouting-Profile-Email'] = email;
     }
-    const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST;
-    if (envHost) {
-      headers['Freerouting-Environment-Host'] = envHost;
-    }
+    const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST || detectedEnvHost || 'MCP-Client/1.0';
+    headers['Freerouting-Environment-Host'] = envHost;
     if (process.env.FREEROUTING_API_KEY) {
       headers['Authorization'] = 'Bearer ' + process.env.FREEROUTING_API_KEY;
     }
@@ -148,10 +180,8 @@ function handleLocalDownload(rpcId, jobId, filePath) {
   if (email) {
     headers['Freerouting-Profile-Email'] = email;
   }
-  const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST;
-  if (envHost) {
-    headers['Freerouting-Environment-Host'] = envHost;
-  }
+  const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST || detectedEnvHost || 'MCP-Client/1.0';
+  headers['Freerouting-Environment-Host'] = envHost;
   if (process.env.FREEROUTING_API_KEY) {
     headers['Authorization'] = 'Bearer ' + process.env.FREEROUTING_API_KEY;
   }
@@ -220,12 +250,22 @@ const rl = readline.createInterface({
 
 rl.on('line', (line) => {
   if (!line.trim()) return;
+  logDebug(`--> INPUT STDIN: ${line}`);
 
   let requestObj = null;
   try {
     requestObj = JSON.parse(line);
   } catch (e) {
     // let it fail or let server handle
+  }
+
+  if (requestObj && requestObj.method === 'initialize' && requestObj.params) {
+    const clientInfo = requestObj.params.clientInfo;
+    if (clientInfo && clientInfo.name && clientInfo.version) {
+      const rawEnvHost = `${clientInfo.name}/${clientInfo.version}`;
+      detectedEnvHost = rawEnvHost.replace(/[^\x20-\x7E]/g, '');
+      logDebug(`Detected Environment Host: ${detectedEnvHost}`);
+    }
   }
 
   if (requestObj && requestObj.method === 'tools/call' && requestObj.params) {
@@ -251,14 +291,15 @@ rl.on('line', (line) => {
     headers['Freerouting-Profile-Email'] = email;
   }
 
-  const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST;
-  if (envHost) {
-    headers['Freerouting-Environment-Host'] = envHost;
-  }
+  const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST || detectedEnvHost || 'MCP-Client/1.0';
+  headers['Freerouting-Environment-Host'] = envHost;
 
   if (process.env.FREEROUTING_API_KEY) {
     headers['Authorization'] = 'Bearer ' + process.env.FREEROUTING_API_KEY;
   }
+
+  logDebug(`HTTP Request URL: ${API_URL}`);
+  logDebug(`HTTP Request Headers: ${JSON.stringify(redactHeaders(headers))}`);
 
   const req = httpModule.request(API_URL, {
     method: 'POST',
@@ -269,8 +310,42 @@ rl.on('line', (line) => {
       data += chunk;
     });
     res.on('end', () => {
-      const singleLine = data.replace(/\r/g, '').replace(/\n/g, '');
-      console.log(singleLine);
+      const trimmed = data.trim();
+      let parsed = null;
+      let isValidRpc = false;
+      try {
+        parsed = JSON.parse(trimmed);
+        if (parsed && typeof parsed === 'object' && parsed.jsonrpc === '2.0') {
+          if (parsed.result !== undefined || (parsed.error && typeof parsed.error === 'object' && typeof parsed.error.code === 'number')) {
+            isValidRpc = true;
+          }
+        }
+      } catch (e) {
+        // Not valid JSON
+      }
+
+      logDebug(`HTTP Response Raw Data: ${trimmed}`);
+
+      if (isValidRpc) {
+        const singleLine = trimmed.replace(/\r/g, '').replace(/\n/g, '');
+        logDebug(`<-- FORWARDED RESPONSE: ${singleLine}`);
+        console.log(singleLine);
+      } else {
+        // Only send an error response if this was a request (not a notification)
+        if (requestObj && requestObj.id !== undefined && requestObj.id !== null) {
+          let errMsg = `HTTP ${res.statusCode} ${res.statusMessage || ''}`.trim();
+          if (parsed && typeof parsed === 'object' && typeof parsed.error === 'string') {
+            errMsg = parsed.error;
+          } else if (trimmed) {
+            if (trimmed.length < 200 && !trimmed.startsWith('<')) {
+              errMsg = trimmed;
+            }
+          }
+          sendError(requestObj.id, -32603, errMsg);
+        } else {
+          logDebug(`Ignored non-RPC/204 response for notification: HTTP ${res.statusCode}`);
+        }
+      }
     });
   });
 
