@@ -1,7 +1,7 @@
 {
     "schema_version":  1,
-    "generated_at":  "2026-06-23T17:56:48Z",
-    "total_runs":  12,
+    "generated_at":  "2026-06-23T18:32:01Z",
+    "total_runs":  13,
     "runs":  [
                  {
                      "cache_key":  "D7FD0F63F52E6D74-2124E6DC82750FAA-04AB01EB",
@@ -327,6 +327,114 @@
                      "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--2.1.0--20260623-160850.log"
                  },
                  {
+                     "cache_key":  "CF25DC5FD98D93CD-2124E6DC82750FAA-C30D223A",
+                     "run_at":  "2026-06-23T16:17:42Z",
+                     "run_mode":  null,
+                     "system":  {
+                                    "cpu_name":  "AMD Ryzen 5 3600 6-Core Processor",
+                                    "cpu_physical_cores":  6,
+                                    "cpu_logical_cores":  12,
+                                    "total_ram_gb":  31.9
+                                },
+                     "binary":  {
+                                    "filename":  "freerouting-current.jar",
+                                    "version_label":  "s2026.06.23",
+                                    "sha256":  "CF25DC5FD98D93CD2E0EC603A73061F05D4B24847EF530149164D671F038A91A",
+                                    "size_bytes":  59623882
+                                },
+                     "fixture":  {
+                                     "filename":  "DAC2020_bm07.dsn",
+                                     "group":  "DAC2020_boards",
+                                     "relative_path":  "DAC2020_boards/DAC2020_bm07.dsn",
+                                     "size_bytes":  15248,
+                                     "sha256":  "2124E6DC82750FAAAFE89075B4F19C460BF351AD50FEBA97531F6388E0D19172",
+                                     "host_cad":  "KiCad\u0027s Pcbnew",
+                                     "host_version":  "9.0.6",
+                                     "layer_count":  2,
+                                     "net_count":  52,
+                                     "component_count":  13,
+                                     "smd_pin_count":  0,
+                                     "board_width_mm":  2.2,
+                                     "board_height_mm":  6,
+                                     "board_area_cm2":  0.1
+                                 },
+                     "settings":  {
+                                      "max_passes":  500,
+                                      "max_time":  "00:01:30",
+                                      "max_threads":  1,
+                                      "heap_max":  "8g",
+                                      "log_level":  "INFO",
+                                      "fanout_enabled":  true,
+                                      "router_enabled":  true,
+                                      "optimizer_enabled":  true
+                                  },
+                     "phases":  {
+                                    "fanout":  {
+                                                   "peak_heap_mb":  null,
+                                                   "not_routed_pin_count":  null,
+                                                   "duration_seconds":  null,
+                                                   "total_allocated_gb":  null,
+                                                   "smd_pin_count":  null,
+                                                   "log_found":  false,
+                                                   "escaped_pin_count":  null,
+                                                   "escape_rate_pct":  null,
+                                                   "cpu_seconds":  null
+                                               },
+                                    "autorouter":  {
+                                                       "initial_unrouted_count":  null,
+                                                       "peak_heap_mb":  null,
+                                                       "completion_reason":  null,
+                                                       "passes_completed":  null,
+                                                       "final_score":  null,
+                                                       "total_allocated_gb":  null,
+                                                       "duration_seconds":  null,
+                                                       "log_found":  false,
+                                                       "final_violations":  null,
+                                                       "final_unrouted":  null,
+                                                       "cpu_seconds":  null
+                                                   },
+                                    "optimizer":  {
+                                                      "log_found":  false,
+                                                      "cpu_seconds":  null,
+                                                      "passes_completed":  null,
+                                                      "total_allocated_gb":  null,
+                                                      "duration_seconds":  null,
+                                                      "peak_heap_mb":  null
+                                                  }
+                                },
+                     "quality":  {
+                                     "total_nets":  52,
+                                     "initial_unrouted":  null,
+                                     "final_unrouted":  null,
+                                     "routing_completion_pct":  100,
+                                     "clearance_violations":  null,
+                                     "quality_score":  null,
+                                     "total_cpu_seconds":  0,
+                                     "total_allocated_gb":  0,
+                                     "peak_heap_mb":  0,
+                                     "wall_clock_seconds":  90.31944159999999
+                                 },
+                     "drc":  {
+                                 "drc_binary_version":  "Unknown",
+                                 "drc_run_at":  "2026-06-23T16:17:42Z",
+                                 "final_unrouted":  null,
+                                 "final_violations":  null,
+                                 "final_quality_score":  null,
+                                 "error":  "SES file not found"
+                             },
+                     "log_analysis":  {
+                                          "warn_count":  1,
+                                          "error_count":  0
+                                      },
+                     "exit":  {
+                                  "code":  -1,
+                                  "crashed":  false,
+                                  "oom_detected":  false,
+                                  "timed_out":  true
+                              },
+                     "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--s2026.06.23--20260623-161611.log"
+                 },
+                 {
                      "cache_key":  "CF25DC5FD98D93CD-2124E6DC82750FAA-04AB01EB",
                      "run_at":  "2026-06-23T16:09:46Z",
                      "run_mode":  null,
@@ -650,114 +758,6 @@
                      "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--1.9.0--20260623-160810.log"
                  },
                  {
-                     "cache_key":  "F62E480AC3804D27-2124E6DC82750FAA-C30D223A",
-                     "run_at":  "2026-06-23T16:44:56Z",
-                     "run_mode":  null,
-                     "system":  {
-                                    "cpu_name":  "AMD Ryzen 5 3600 6-Core Processor",
-                                    "cpu_physical_cores":  6,
-                                    "cpu_logical_cores":  12,
-                                    "total_ram_gb":  31.9
-                                },
-                     "binary":  {
-                                    "filename":  "freerouting-current.jar",
-                                    "version_label":  "s2026.06.23",
-                                    "sha256":  "F62E480AC3804D279EB3D348EE6E75FD0A269DBE3D507378754262373B1D4907",
-                                    "size_bytes":  59623816
-                                },
-                     "fixture":  {
-                                     "filename":  "DAC2020_bm07.dsn",
-                                     "group":  "DAC2020_boards",
-                                     "relative_path":  "DAC2020_boards/DAC2020_bm07.dsn",
-                                     "size_bytes":  15248,
-                                     "sha256":  "2124E6DC82750FAAAFE89075B4F19C460BF351AD50FEBA97531F6388E0D19172",
-                                     "host_cad":  "KiCad\u0027s Pcbnew",
-                                     "host_version":  "9.0.6",
-                                     "layer_count":  2,
-                                     "net_count":  52,
-                                     "component_count":  13,
-                                     "smd_pin_count":  87,
-                                     "board_width_mm":  2.2,
-                                     "board_height_mm":  6,
-                                     "board_area_cm2":  0.1
-                                 },
-                     "settings":  {
-                                      "max_passes":  500,
-                                      "max_time":  "00:01:30",
-                                      "max_threads":  1,
-                                      "heap_max":  "8g",
-                                      "log_level":  "INFO",
-                                      "fanout_enabled":  true,
-                                      "router_enabled":  true,
-                                      "optimizer_enabled":  true
-                                  },
-                     "phases":  {
-                                    "fanout":  {
-                                                   "peak_heap_mb":  915.1,
-                                                   "not_routed_pin_count":  null,
-                                                   "duration_seconds":  null,
-                                                   "total_allocated_gb":  null,
-                                                   "smd_pin_count":  87,
-                                                   "log_found":  true,
-                                                   "escaped_pin_count":  null,
-                                                   "escape_rate_pct":  null,
-                                                   "cpu_seconds":  null
-                                               },
-                                    "autorouter":  {
-                                                       "initial_unrouted_count":  86,
-                                                       "peak_heap_mb":  434.99,
-                                                       "completion_reason":  "completed",
-                                                       "passes_completed":  18,
-                                                       "final_score":  965.08,
-                                                       "total_allocated_gb":  7.58,
-                                                       "duration_seconds":  28.62,
-                                                       "log_found":  true,
-                                                       "final_violations":  0,
-                                                       "final_unrouted":  3,
-                                                       "cpu_seconds":  13.53
-                                                   },
-                                    "optimizer":  {
-                                                      "log_found":  true,
-                                                      "cpu_seconds":  null,
-                                                      "passes_completed":  null,
-                                                      "total_allocated_gb":  null,
-                                                      "duration_seconds":  2.28,
-                                                      "peak_heap_mb":  915.1
-                                                  }
-                                },
-                     "quality":  {
-                                     "total_nets":  52,
-                                     "initial_unrouted":  86,
-                                     "final_unrouted":  3,
-                                     "routing_completion_pct":  96.5,
-                                     "clearance_violations":  0,
-                                     "quality_score":  965.08,
-                                     "total_cpu_seconds":  13.53,
-                                     "total_allocated_gb":  7.58,
-                                     "peak_heap_mb":  915.1,
-                                     "wall_clock_seconds":  90.251994
-                                 },
-                     "drc":  {
-                                 "drc_binary_version":  "Unknown",
-                                 "drc_run_at":  "2026-06-23T16:44:56Z",
-                                 "final_unrouted":  null,
-                                 "final_violations":  null,
-                                 "final_quality_score":  null,
-                                 "error":  "SES file not found"
-                             },
-                     "log_analysis":  {
-                                          "warn_count":  1,
-                                          "error_count":  0
-                                      },
-                     "exit":  {
-                                  "code":  -1,
-                                  "crashed":  false,
-                                  "oom_detected":  false,
-                                  "timed_out":  true
-                              },
-                     "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--s2026.06.23--20260623-164326.log"
-                 },
-                 {
                      "cache_key":  "6B19565F155BAD19-2124E6DC82750FAA-04AB01EB",
                      "run_at":  "2026-06-23T16:09:25Z",
                      "run_mode":  null,
@@ -867,8 +867,8 @@
                  },
                  {
                      "cache_key":  "6B19565F155BAD19-2124E6DC82750FAA-C30D223A",
-                     "run_at":  "2026-06-23T17:51:02Z",
-                     "run_mode":  "GUI",
+                     "run_at":  "2026-06-23T17:57:54Z",
+                     "run_mode":  "CLI",
                      "system":  {
                                     "cpu_name":  "AMD Ryzen 5 3600 6-Core Processor",
                                     "cpu_physical_cores":  6,
@@ -920,63 +920,62 @@
                                                    "cpu_seconds":  null
                                                },
                                     "autorouter":  {
-                                                       "initial_unrouted_count":  null,
-                                                       "peak_heap_mb":  null,
-                                                       "completion_reason":  null,
+                                                       "initial_unrouted_count":  86,
+                                                       "peak_heap_mb":  828.53,
+                                                       "completion_reason":  "completed",
                                                        "passes_completed":  8,
-                                                       "final_score":  null,
-                                                       "total_allocated_gb":  null,
-                                                       "duration_seconds":  null,
-                                                       "log_found":  false,
-                                                       "final_violations":  null,
-                                                       "final_unrouted":  null,
-                                                       "cpu_seconds":  null
+                                                       "final_score":  996.93,
+                                                       "total_allocated_gb":  1.83,
+                                                       "duration_seconds":  4.69,
+                                                       "log_found":  true,
+                                                       "final_violations":  0,
+                                                       "final_unrouted":  0,
+                                                       "cpu_seconds":  3.75
                                                    },
                                     "optimizer":  {
                                                       "log_found":  true,
                                                       "cpu_seconds":  null,
-                                                      "passes_completed":  null,
+                                                      "passes_completed":  7,
                                                       "total_allocated_gb":  null,
-                                                      "duration_seconds":  2.3,
-                                                      "peak_heap_mb":  1516.2
+                                                      "duration_seconds":  null,
+                                                      "peak_heap_mb":  1585.6
                                                   }
                                 },
                      "quality":  {
                                      "total_nets":  52,
-                                     "initial_unrouted":  null,
-                                     "final_unrouted":  null,
+                                     "initial_unrouted":  86,
+                                     "final_unrouted":  0,
                                      "routing_completion_pct":  100,
-                                     "clearance_violations":  null,
-                                     "quality_score":  null,
-                                     "total_cpu_seconds":  0,
-                                     "total_allocated_gb":  0,
-                                     "peak_heap_mb":  1516.2,
-                                     "wall_clock_seconds":  90.1440811
+                                     "clearance_violations":  0,
+                                     "quality_score":  996.93,
+                                     "total_cpu_seconds":  3.75,
+                                     "total_allocated_gb":  1.83,
+                                     "peak_heap_mb":  1585.6,
+                                     "wall_clock_seconds":  62.6030313
                                  },
                      "drc":  {
-                                 "drc_binary_version":  "Unknown",
-                                 "drc_run_at":  "2026-06-23T17:51:02Z",
-                                 "final_unrouted":  null,
-                                 "final_violations":  null,
-                                 "final_quality_score":  null,
-                                 "error":  "SES file not found"
+                                 "drc_binary_version":  "s2026.06.23",
+                                 "drc_run_at":  "2026-06-23T17:57:51Z",
+                                 "final_unrouted":  0,
+                                 "final_violations":  0,
+                                 "final_quality_score":  999.96197509765625
                              },
                      "log_analysis":  {
-                                          "warn_count":  2,
+                                          "warn_count":  3,
                                           "error_count":  0
                                       },
                      "exit":  {
-                                  "code":  -1,
-                                  "crashed":  false,
+                                  "code":  null,
+                                  "crashed":  true,
                                   "oom_detected":  false,
-                                  "timed_out":  true
+                                  "timed_out":  false
                               },
-                     "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--2.2.4--20260623-174932.log"
+                     "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--2.2.4--20260623-175648.log"
                  },
                  {
                      "cache_key":  "B3F5213293D6A27A-2124E6DC82750FAA-C30D223A",
-                     "run_at":  "2026-06-23T17:52:36Z",
-                     "run_mode":  "GUI",
+                     "run_at":  "2026-06-23T17:58:18Z",
+                     "run_mode":  "CLI",
                      "system":  {
                                     "cpu_name":  "AMD Ryzen 5 3600 6-Core Processor",
                                     "cpu_physical_cores":  6,
@@ -1017,10 +1016,10 @@
                                   },
                      "phases":  {
                                     "fanout":  {
-                                                   "peak_heap_mb":  462.5,
+                                                   "peak_heap_mb":  783.6,
                                                    "not_routed_pin_count":  3,
-                                                   "duration_seconds":  8.38,
-                                                   "total_allocated_gb":  8.14,
+                                                   "duration_seconds":  9.28,
+                                                   "total_allocated_gb":  8.67,
                                                    "smd_pin_count":  87,
                                                    "log_found":  true,
                                                    "escaped_pin_count":  84,
@@ -1029,24 +1028,24 @@
                                                },
                                     "autorouter":  {
                                                        "initial_unrouted_count":  86,
-                                                       "peak_heap_mb":  551.67,
+                                                       "peak_heap_mb":  779.75,
                                                        "completion_reason":  "completed",
                                                        "passes_completed":  18,
                                                        "final_score":  965.08,
-                                                       "total_allocated_gb":  13.11,
-                                                       "duration_seconds":  15.77,
+                                                       "total_allocated_gb":  13.72,
+                                                       "duration_seconds":  15.96,
                                                        "log_found":  true,
                                                        "final_violations":  0,
                                                        "final_unrouted":  3,
-                                                       "cpu_seconds":  14.34
+                                                       "cpu_seconds":  13.58
                                                    },
                                     "optimizer":  {
                                                       "log_found":  true,
                                                       "cpu_seconds":  null,
-                                                      "passes_completed":  null,
+                                                      "passes_completed":  2,
                                                       "total_allocated_gb":  null,
-                                                      "duration_seconds":  1.02,
-                                                      "peak_heap_mb":  1113.2
+                                                      "duration_seconds":  null,
+                                                      "peak_heap_mb":  1428.6
                                                   }
                                 },
                      "quality":  {
@@ -1056,30 +1055,136 @@
                                      "routing_completion_pct":  96.5,
                                      "clearance_violations":  0,
                                      "quality_score":  965.08,
-                                     "total_cpu_seconds":  22.53,
-                                     "total_allocated_gb":  21.25,
-                                     "peak_heap_mb":  1113.2,
-                                     "wall_clock_seconds":  90.1282681
+                                     "total_cpu_seconds":  21.77,
+                                     "total_allocated_gb":  22.39,
+                                     "peak_heap_mb":  1428.6,
+                                     "wall_clock_seconds":  20.8812167
                                  },
                      "drc":  {
-                                 "drc_binary_version":  "Unknown",
-                                 "drc_run_at":  "2026-06-23T17:52:36Z",
-                                 "final_unrouted":  null,
-                                 "final_violations":  null,
-                                 "final_quality_score":  null,
-                                 "error":  "SES file not found"
+                                 "drc_binary_version":  "s2026.06.23",
+                                 "drc_run_at":  "2026-06-23T17:58:15Z",
+                                 "final_unrouted":  3,
+                                 "final_violations":  0,
+                                 "final_quality_score":  965.07891845703125
                              },
                      "log_analysis":  {
-                                          "warn_count":  1,
+                                          "warn_count":  0,
                                           "error_count":  0
                                       },
                      "exit":  {
-                                  "code":  -1,
-                                  "crashed":  false,
+                                  "code":  null,
+                                  "crashed":  true,
                                   "oom_detected":  false,
-                                  "timed_out":  true
+                                  "timed_out":  false
                               },
-                     "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--s2026.06.23--20260623-175106.log"
+                     "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--s2026.06.23--20260623-175754.log"
+                 },
+                 {
+                     "cache_key":  "7523560E2E4A0A45-2124E6DC82750FAA-C30D223A",
+                     "run_at":  "2026-06-23T18:32:01Z",
+                     "run_mode":  "CLI",
+                     "system":  {
+                                    "cpu_name":  "AMD Ryzen 5 3600 6-Core Processor",
+                                    "cpu_physical_cores":  6,
+                                    "cpu_logical_cores":  12,
+                                    "total_ram_gb":  31.9
+                                },
+                     "binary":  {
+                                    "filename":  "freerouting-current.jar",
+                                    "version_label":  "s2026.06.23",
+                                    "sha256":  "7523560E2E4A0A4548D886CFC785E15B4954C27E163347DB7D2BE7F495D5BD39",
+                                    "size_bytes":  59623878
+                                },
+                     "fixture":  {
+                                     "filename":  "DAC2020_bm07.dsn",
+                                     "group":  "DAC2020_boards",
+                                     "relative_path":  "DAC2020_boards/DAC2020_bm07.dsn",
+                                     "size_bytes":  15248,
+                                     "sha256":  "2124E6DC82750FAAAFE89075B4F19C460BF351AD50FEBA97531F6388E0D19172",
+                                     "host_cad":  "KiCad\u0027s Pcbnew",
+                                     "host_version":  "9.0.6",
+                                     "layer_count":  2,
+                                     "net_count":  52,
+                                     "component_count":  13,
+                                     "smd_pin_count":  87,
+                                     "board_width_mm":  2.2,
+                                     "board_height_mm":  6,
+                                     "board_area_cm2":  0.1
+                                 },
+                     "settings":  {
+                                      "max_passes":  500,
+                                      "max_time":  "00:01:30",
+                                      "max_threads":  1,
+                                      "heap_max":  "8g",
+                                      "log_level":  "INFO",
+                                      "fanout_enabled":  true,
+                                      "router_enabled":  true,
+                                      "optimizer_enabled":  true
+                                  },
+                     "phases":  {
+                                    "fanout":  {
+                                                   "peak_heap_mb":  715.51,
+                                                   "not_routed_pin_count":  3,
+                                                   "duration_seconds":  8.81,
+                                                   "total_allocated_gb":  7.29,
+                                                   "smd_pin_count":  87,
+                                                   "log_found":  true,
+                                                   "escaped_pin_count":  84,
+                                                   "escape_rate_pct":  96.6,
+                                                   "cpu_seconds":  8
+                                               },
+                                    "autorouter":  {
+                                                       "initial_unrouted_count":  86,
+                                                       "peak_heap_mb":  749.38,
+                                                       "completion_reason":  "completed",
+                                                       "passes_completed":  18,
+                                                       "final_score":  965.08,
+                                                       "total_allocated_gb":  12.81,
+                                                       "duration_seconds":  16.11,
+                                                       "log_found":  true,
+                                                       "final_violations":  0,
+                                                       "final_unrouted":  3,
+                                                       "cpu_seconds":  14.86
+                                                   },
+                                    "optimizer":  {
+                                                      "log_found":  true,
+                                                      "cpu_seconds":  null,
+                                                      "passes_completed":  2,
+                                                      "total_allocated_gb":  null,
+                                                      "duration_seconds":  null,
+                                                      "peak_heap_mb":  1379.6
+                                                  }
+                                },
+                     "quality":  {
+                                     "total_nets":  52,
+                                     "initial_unrouted":  86,
+                                     "final_unrouted":  3,
+                                     "routing_completion_pct":  96.5,
+                                     "clearance_violations":  0,
+                                     "quality_score":  965.08,
+                                     "total_cpu_seconds":  22.86,
+                                     "total_allocated_gb":  20.1,
+                                     "peak_heap_mb":  1379.6,
+                                     "wall_clock_seconds":  20.992184299999998
+                                 },
+                     "drc":  {
+                                 "drc_binary_version":  "s2026.06.23",
+                                 "drc_run_at":  "2026-06-23T18:31:58Z",
+                                 "final_unrouted":  3,
+                                 "final_violations":  0,
+                                 "final_quality_score":  965.07891845703125
+                             },
+                     "log_analysis":  {
+                                          "warn_count":  0,
+                                          "error_count":  0
+                                      },
+                     "exit":  {
+                                  "code":  null,
+                                  "crashed":  true,
+                                  "oom_detected":  false,
+                                  "timed_out":  false
+                              },
+                     "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--s2026.06.23--20260623-183137.log"
                  },
                  {
                      "cache_key":  "2C07D58F75DAC037-2124E6DC82750FAA-C30D223A",
@@ -1190,8 +1295,8 @@
                      "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--2.1.0--20260623-175518.log"
                  },
                  {
-                     "cache_key":  "CF25DC5FD98D93CD-2124E6DC82750FAA-C30D223A",
-                     "run_at":  "2026-06-23T16:17:42Z",
+                     "cache_key":  "F62E480AC3804D27-2124E6DC82750FAA-C30D223A",
+                     "run_at":  "2026-06-23T16:44:56Z",
                      "run_mode":  null,
                      "system":  {
                                     "cpu_name":  "AMD Ryzen 5 3600 6-Core Processor",
@@ -1202,8 +1307,8 @@
                      "binary":  {
                                     "filename":  "freerouting-current.jar",
                                     "version_label":  "s2026.06.23",
-                                    "sha256":  "CF25DC5FD98D93CD2E0EC603A73061F05D4B24847EF530149164D671F038A91A",
-                                    "size_bytes":  59623882
+                                    "sha256":  "F62E480AC3804D279EB3D348EE6E75FD0A269DBE3D507378754262373B1D4907",
+                                    "size_bytes":  59623816
                                 },
                      "fixture":  {
                                      "filename":  "DAC2020_bm07.dsn",
@@ -1216,7 +1321,7 @@
                                      "layer_count":  2,
                                      "net_count":  52,
                                      "component_count":  13,
-                                     "smd_pin_count":  0,
+                                     "smd_pin_count":  87,
                                      "board_width_mm":  2.2,
                                      "board_height_mm":  6,
                                      "board_area_cm2":  0.1
@@ -1233,53 +1338,53 @@
                                   },
                      "phases":  {
                                     "fanout":  {
-                                                   "peak_heap_mb":  null,
+                                                   "peak_heap_mb":  915.1,
                                                    "not_routed_pin_count":  null,
                                                    "duration_seconds":  null,
                                                    "total_allocated_gb":  null,
-                                                   "smd_pin_count":  null,
-                                                   "log_found":  false,
+                                                   "smd_pin_count":  87,
+                                                   "log_found":  true,
                                                    "escaped_pin_count":  null,
                                                    "escape_rate_pct":  null,
                                                    "cpu_seconds":  null
                                                },
                                     "autorouter":  {
-                                                       "initial_unrouted_count":  null,
-                                                       "peak_heap_mb":  null,
-                                                       "completion_reason":  null,
-                                                       "passes_completed":  null,
-                                                       "final_score":  null,
-                                                       "total_allocated_gb":  null,
-                                                       "duration_seconds":  null,
-                                                       "log_found":  false,
-                                                       "final_violations":  null,
-                                                       "final_unrouted":  null,
-                                                       "cpu_seconds":  null
+                                                       "initial_unrouted_count":  86,
+                                                       "peak_heap_mb":  434.99,
+                                                       "completion_reason":  "completed",
+                                                       "passes_completed":  18,
+                                                       "final_score":  965.08,
+                                                       "total_allocated_gb":  7.58,
+                                                       "duration_seconds":  28.62,
+                                                       "log_found":  true,
+                                                       "final_violations":  0,
+                                                       "final_unrouted":  3,
+                                                       "cpu_seconds":  13.53
                                                    },
                                     "optimizer":  {
-                                                      "log_found":  false,
+                                                      "log_found":  true,
                                                       "cpu_seconds":  null,
                                                       "passes_completed":  null,
                                                       "total_allocated_gb":  null,
-                                                      "duration_seconds":  null,
-                                                      "peak_heap_mb":  null
+                                                      "duration_seconds":  2.28,
+                                                      "peak_heap_mb":  915.1
                                                   }
                                 },
                      "quality":  {
                                      "total_nets":  52,
-                                     "initial_unrouted":  null,
-                                     "final_unrouted":  null,
-                                     "routing_completion_pct":  100,
-                                     "clearance_violations":  null,
-                                     "quality_score":  null,
-                                     "total_cpu_seconds":  0,
-                                     "total_allocated_gb":  0,
-                                     "peak_heap_mb":  0,
-                                     "wall_clock_seconds":  90.31944159999999
+                                     "initial_unrouted":  86,
+                                     "final_unrouted":  3,
+                                     "routing_completion_pct":  96.5,
+                                     "clearance_violations":  0,
+                                     "quality_score":  965.08,
+                                     "total_cpu_seconds":  13.53,
+                                     "total_allocated_gb":  7.58,
+                                     "peak_heap_mb":  915.1,
+                                     "wall_clock_seconds":  90.251994
                                  },
                      "drc":  {
                                  "drc_binary_version":  "Unknown",
-                                 "drc_run_at":  "2026-06-23T16:17:42Z",
+                                 "drc_run_at":  "2026-06-23T16:44:56Z",
                                  "final_unrouted":  null,
                                  "final_violations":  null,
                                  "final_quality_score":  null,
@@ -1295,7 +1400,7 @@
                                   "oom_detected":  false,
                                   "timed_out":  true
                               },
-                     "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--s2026.06.23--20260623-161611.log"
+                     "log_file":  "C:\\Work\\freerouting\\scripts\\benchmark\\logs\\DAC2020_boards--DAC2020_bm07--s2026.06.23--20260623-164326.log"
                  }
              ]
 }
