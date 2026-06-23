@@ -11,6 +11,8 @@ const crypto = require('crypto');
 const API_URL = process.env.FREEROUTING_API_URL || 'https://api.freerouting.app/v1/mcp';
 const httpModule = API_URL.startsWith('https') ? https : http;
 
+let detectedEnvHost = null;
+
 const LOG_FILE = path.join(__dirname, '..', '..', '..', 'logs', 'mcp-debug.log');
 const IS_DEBUG_ENABLED = process.env.FREEROUTING_MCP_DEBUG === 'true' || process.env.FREEROUTING_MCP_DEBUG === '1';
 
@@ -114,10 +116,8 @@ function handleLocalUpload(rpcId, jobId, filePath) {
     if (email) {
       headers['Freerouting-Profile-Email'] = email;
     }
-    const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST;
-    if (envHost) {
-      headers['Freerouting-Environment-Host'] = envHost;
-    }
+    const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST || detectedEnvHost || 'MCP-Client/1.0';
+    headers['Freerouting-Environment-Host'] = envHost;
     if (process.env.FREEROUTING_API_KEY) {
       headers['Authorization'] = 'Bearer ' + process.env.FREEROUTING_API_KEY;
     }
@@ -165,10 +165,8 @@ function handleLocalDownload(rpcId, jobId, filePath) {
   if (email) {
     headers['Freerouting-Profile-Email'] = email;
   }
-  const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST;
-  if (envHost) {
-    headers['Freerouting-Environment-Host'] = envHost;
-  }
+  const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST || detectedEnvHost || 'MCP-Client/1.0';
+  headers['Freerouting-Environment-Host'] = envHost;
   if (process.env.FREEROUTING_API_KEY) {
     headers['Authorization'] = 'Bearer ' + process.env.FREEROUTING_API_KEY;
   }
@@ -246,6 +244,14 @@ rl.on('line', (line) => {
     // let it fail or let server handle
   }
 
+  if (requestObj && requestObj.method === 'initialize' && requestObj.params) {
+    const clientInfo = requestObj.params.clientInfo;
+    if (clientInfo && clientInfo.name && clientInfo.version) {
+      detectedEnvHost = `${clientInfo.name}/${clientInfo.version}`;
+      logDebug(`Detected Environment Host: ${detectedEnvHost}`);
+    }
+  }
+
   if (requestObj && requestObj.method === 'tools/call' && requestObj.params) {
     const toolName = requestObj.params.name;
     const args = requestObj.params.arguments || {};
@@ -269,10 +275,8 @@ rl.on('line', (line) => {
     headers['Freerouting-Profile-Email'] = email;
   }
 
-  const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST;
-  if (envHost) {
-    headers['Freerouting-Environment-Host'] = envHost;
-  }
+  const envHost = process.env.FREEROUTING_ENVIRONMENT_HOST || process.env.FREEROUTING__ENVIRONMENT__HOST || detectedEnvHost || 'MCP-Client/1.0';
+  headers['Freerouting-Environment-Host'] = envHost;
 
   if (process.env.FREEROUTING_API_KEY) {
     headers['Authorization'] = 'Bearer ' + process.env.FREEROUTING_API_KEY;
