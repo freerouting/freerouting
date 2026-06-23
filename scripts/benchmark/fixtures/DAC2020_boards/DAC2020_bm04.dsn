@@ -1,0 +1,778 @@
+(pcb C:\Users\danbo\Documents\Projects\Autorouter\Test_Cases\DAC_2020_Benchmarks_Without_Routing\bm4\bm4.unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "9.0.6")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Route2
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (layer Route3
+      (type signal)
+      (property
+        (index 2)
+      )
+    )
+    (layer Route4
+      (type signal)
+      (property
+        (index 3)
+      )
+    )
+    (layer Route5
+      (type signal)
+      (property
+        (index 4)
+      )
+    )
+    (layer Route6
+      (type signal)
+      (property
+        (index 5)
+      )
+    )
+    (layer Route7
+      (type signal)
+      (property
+        (index 6)
+      )
+    )
+    (layer Route8
+      (type signal)
+      (property
+        (index 7)
+      )
+    )
+    (layer Route9
+      (type signal)
+      (property
+        (index 8)
+      )
+    )
+    (layer Route10
+      (type signal)
+      (property
+        (index 9)
+      )
+    )
+    (layer Route11
+      (type signal)
+      (property
+        (index 10)
+      )
+    )
+    (layer Route12
+      (type signal)
+      (property
+        (index 11)
+      )
+    )
+    (layer Route13
+      (type signal)
+      (property
+        (index 12)
+      )
+    )
+    (layer Route14
+      (type signal)
+      (property
+        (index 13)
+      )
+    )
+    (layer Route15
+      (type signal)
+      (property
+        (index 14)
+      )
+    )
+    (layer Bottom
+      (type signal)
+      (property
+        (index 15)
+      )
+    )
+    (boundary
+      (path pcb 0  170459 -122542  126543 -122542  126543 -87464.9  170459 -87464.9
+            170459 -122542)
+    )
+    (via "Via[0-15]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "quadcopterJorge:ANTENNA-CHIP5"
+      (place U1 152425.400000 -90106.500000 front 0.000000)
+    )
+    (component "quadcopterJorge:BALUN-0805"
+      (place U2 154711.400000 -93916.500000 front -90.000000)
+    )
+    (component quadcopterJorge:C0805
+      (place U3 162331.400000 -95694.500000 front 90.000000)
+      (place U4 133807.200000 -105727.500000 front 0.000000)
+      (place U5 147802.600000 -95440.500000 front -90.000000)
+      (place U6 133807.200000 -108318.300000 front 0.000000)
+      (place U7 135407.400000 -95440.500000 front 0.000000)
+      (place U8 158521.400000 -96202.500000 front 90.000000)
+      (place U9 150850.600000 -96100.900000 front -90.000000)
+      (place U10 142773.400000 -95600.000000 front 90.000000)
+      (place U11 133807.200000 -110578.900000 front 0.000000)
+      (place U12 133807.200000 -103492.300000 front 0.000000)
+      (place U13 164490.400000 -109639.100000 front 0.000000)
+      (place U14 164515.800000 -106387.900000 front 0.000000)
+      (place U15 145313.400000 -95440.500000 front 90.000000)
+      (place U26 140487.400000 -96050.100000 front -90.000000)
+      (place U27 159560.000000 -115160.000000 front 90.000000)
+      (place U28 154787.600000 -115176.300000 front 90.000000)
+      (place U29 157200.600000 -115176.300000 front 90.000000)
+      (place U35 133756.400000 -101104.700000 front 0.000000)
+      (place U36 133705.600000 -98742.500000 front 0.000000)
+      (place U37 143916.400000 -107226.100000 front -90.000000)
+      (place U38 138455.400000 -109562.900000 front 0.000000)
+      (place U39 144703.800000 -101409.500000 front 0.000000)
+      (place U40 144703.800000 -99377.500000 front 0.000000)
+      (place U41 165303.200000 -119265.700000 front 90.000000)
+      (place U42 131610.000000 -89640.000000 front 90.000000)
+      (place U43 132410.200000 -119341.900000 front -90.000000)
+      (place U44 165328.600000 -90004.900000 front 90.000000)
+      (place U49 143814.800000 -114515.900000 front -90.000000)
+      (place U50 151130.000000 -114592.100000 front -90.000000)
+      (place U51 147497.800000 -114592.100000 front -90.000000)
+      (place U52 140081.000000 -114566.700000 front -90.000000)
+    )
+    (component "quadcopterJorge:CHIP-LED0805"
+      (place U16 159600.000000 -119100.000000 front 180.000000)
+      (place U17 157200.000000 -119100.000000 front 180.000000)
+      (place U18 154700.000000 -119100.000000 front 180.000000)
+    )
+    (component "quadcopterJorge:2X3-NS"
+      (place U19 166827.200000 -96507.300000 front 90.000000)
+    )
+    (component quadcopterJorge:1X02
+      (place U20 133400.800000 -113220.500000 front -90.000000)
+    )
+    (component quadcopterJorge:FTDI_BASIC
+      (place U21 129819.400000 -93586.300000 front -90.000000)
+      (place U58 168148.000000 -114769.900000 front 90.000000)
+    )
+    (component quadcopterJorge:653002114822
+      (place U22 168935.400000 -119570.500000 front -90.000000)
+      (place U23 128803.400000 -89852.500000 front -90.000000)
+      (place U24 128803.400000 -119570.500000 front 90.000000)
+      (place U25 168935.400000 -89852.500000 front -90.000000)
+    )
+    (component quadcopterJorge:TACTILE_SWITCH_SMD
+      (place U30 139522.200000 -90741.500000 front 180.000000)
+    )
+    (component "quadcopterJorge:SOT23-DBV"
+      (place U31 136550.400000 -115150.900000 front 0.000000)
+    )
+    (component "quadcopterJorge:QFN-64"
+      (place U32 154711.400000 -104635.300000 front -90.000000)
+    )
+    (component "quadcopterJorge:CRYSTAL-SMD-5X3"
+      (place U33 163576.000000 -114388.900000 front 0.000000)
+    )
+    (component "quadcopterJorge:LGA-24"
+      (place U34 139242.800000 -103898.700000 front 0.000000)
+    )
+    (component "quadcopterJorge:CONTROLLER_SOT95P237X112-3N"
+      (place U45 144119.600000 -118656.100000 front -90.000000)
+      (place U46 151511.000000 -118656.100000 front -90.000000)
+      (place U47 147828.000000 -118656.100000 front -90.000000)
+      (place U48 140360.400000 -118630.700000 front -90.000000)
+    )
+    (component quadcopterJorge:SOD323_ST
+      (place U53 163423.600000 -119367.300000 front 90.000000)
+      (place U54 134160.000000 -90060.000000 front 90.000000)
+      (place U55 134442.200000 -119418.100000 front -90.000000)
+      (place U56 163245.800000 -90385.900000 front 90.000000)
+    )
+    (component "quadcopterJorge:SWITCH-SPDT"
+      (place U57 129895.600000 -112737.900000 front 180.000000)
+    )
+  )
+  (library
+    (image "quadcopterJorge:ANTENNA-CHIP5"
+      (pin Rect[T]Pad_1016.000000x2540.000000_um (rotate 180) FEED -3302 0)
+      (pin Rect[T]Pad_1016.000000x2540.000000_um (rotate 180) NC 3302 0)
+    )
+    (image "quadcopterJorge:BALUN-0805"
+      (pin Rect[T]Pad_270.000000x400.000000_um 1 -650 -495)
+      (pin Rect[T]Pad_270.000000x400.000000_um 2 0 -495)
+      (pin Rect[T]Pad_270.000000x400.000000_um 3 650 -495)
+      (pin Rect[T]Pad_270.000000x400.000000_um 4 650 505)
+      (pin Rect[T]Pad_270.000000x400.000000_um 5 0 505)
+      (pin Rect[T]Pad_270.000000x400.000000_um 6 -650 505)
+    )
+    (image quadcopterJorge:C0805
+      (pin Rect[T]Pad_1300.000000x1500.000000_um 1 -950 0)
+      (pin Rect[T]Pad_1300.000000x1500.000000_um 2 950 0)
+    )
+    (image "quadcopterJorge:CHIP-LED0805"
+      (pin Rect[T]Pad_1200.000000x1200.000000_um A 0 -1050)
+      (pin Rect[T]Pad_1200.000000x1200.000000_um C 0 1050)
+    )
+    (image "quadcopterJorge:2X3-NS"
+      (pin Rect[A]Pad_1879.600000x1879.600000_um 1 -2540 -1270)
+      (pin Round[A]Pad_1879.600000_um 2 -2540 1270)
+      (pin Round[A]Pad_1879.600000_um 3 0 -1270)
+      (pin Round[A]Pad_1879.600000_um 4 0 1270)
+      (pin Round[A]Pad_1879.600000_um 5 2540 -1270)
+      (pin Round[A]Pad_1879.600000_um 6 2540 1270)
+    )
+    (image quadcopterJorge:1X02
+      (pin Round[A]Pad_1879.600000_um (rotate 90) 1 0 0)
+      (pin Round[A]Pad_1879.600000_um (rotate 90) 2 2540 0)
+    )
+    (image quadcopterJorge:FTDI_BASIC
+      (pin Round[A]Pad_1879.600000_um (rotate 90) CTS 10160 0)
+      (pin Round[A]Pad_1879.600000_um (rotate 90) DTR 0 0)
+      (pin Round[A]Pad_1879.600000_um (rotate 90) GND 12700 0)
+      (pin Round[A]Pad_1879.600000_um (rotate 90) RXI 2540 0)
+      (pin Round[A]Pad_1879.600000_um (rotate 90) TXO 5080 0)
+      (pin Round[A]Pad_1879.600000_um (rotate 90) VCC 7620 0)
+    )
+    (image quadcopterJorge:653002114822
+      (pin Round[A]Pad_1008.000000_um 1 625 0)
+      (pin Round[A]Pad_1008.000000_um 2 -625 0)
+    )
+    (image quadcopterJorge:TACTILE_SWITCH_SMD
+      (pin Rect[T]Pad_762.000000x1524.000000_um (rotate 90) 1 -2540 1905)
+      (pin Rect[T]Pad_762.000000x1524.000000_um (rotate 90) 2 2540 1905)
+      (pin Rect[T]Pad_762.000000x1524.000000_um (rotate 90) 3 -2540 -1905)
+      (pin Rect[T]Pad_762.000000x1524.000000_um (rotate 90) 4 2540 -1905)
+    )
+    (image "quadcopterJorge:SOT23-DBV"
+      (pin Rect[T]Pad_550.000000x1200.000000_um 1 -950 -1300)
+      (pin Rect[T]Pad_550.000000x1200.000000_um 2 0 -1300)
+      (pin Rect[T]Pad_550.000000x1200.000000_um 3 950 -1300)
+      (pin Rect[T]Pad_550.000000x1200.000000_um 4 950 1300)
+      (pin Rect[T]Pad_550.000000x1200.000000_um 5 -950 1300)
+    )
+    (image "quadcopterJorge:QFN-64"
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 1 -4881 3750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 2 -4881 3250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 3 -4881 2750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 4 -4881 2250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 5 -4881 1750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 6 -4881 1250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 7 -4881 750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 8 -4881 250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 9 -4881 -250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 10 -4881 -750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 11 -4881 -1250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 12 -4881 -1750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 13 -4881 -2250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 270) 14 -4881 -2750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 15 -4881 -3250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 16 -4881 -3750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 17 -3750 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 18 -3250 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 19 -2750 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 20 -2250 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 21 -1750 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 22 -1250 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 23 -750 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 24 -250 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 25 250 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 26 750 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 27 1250 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 180) 28 1750 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 29 2250 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 30 2750 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 31 3250 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 32 3750 -4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 33 4881 -3750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 34 4881 -3250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 35 4881 -2750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 36 4881 -2250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 37 4881 -1750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 38 4881 -1250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 39 4881 -750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 40 4881 -250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 41 4881 250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 42 4881 750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 43 4881 1250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 44 4881 1750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 45 4881 2250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 46 4881 2750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 47 4881 3250)
+      (pin Rect[T]Pad_280.000000x1562.000000_um (rotate 90) 48 4881 3750)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 49 3750 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 50 3250 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 51 2750 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 52 2250 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 53 1750 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 54 1250 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 55 750 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 56 250 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 57 -250 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 58 -750 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 59 -1250 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 60 -1750 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 61 -2250 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 62 -2750 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 63 -3250 4881)
+      (pin Rect[T]Pad_280.000000x1562.000000_um 64 -3750 4881)
+      (pin Rect[T]Pad_6451.600000x6451.600000_um (rotate 90) 65 0 0)
+    )
+    (image "quadcopterJorge:CRYSTAL-SMD-5X3"
+      (pin Rect[T]Pad_1900.000000x1100.000000_um 1 -1850 -1150)
+      (pin Rect[T]Pad_1900.000000x1100.000000_um 2 1850 -1150)
+      (pin Rect[T]Pad_1900.000000x1100.000000_um 3 1850 1150)
+      (pin Rect[T]Pad_1900.000000x1100.000000_um 4 -1850 1150)
+    )
+    (image "quadcopterJorge:LGA-24"
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 1 -2129 1250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 2 -2129 750)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 3 -2129 250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 4 -2129 -250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 5 -2129 -750)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 6 -2129 -1250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 7 -1250 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 8 -750 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 9 -250 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 10 250 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 11 750 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 12 1250 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 13 2129 -1250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 14 2129 -750)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 15 2129 -250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 16 2129 250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 17 2129 750)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 18 2129 1250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 19 1250 2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 20 750 2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 21 250 2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 22 -250 2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 23 -750 2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 24 -1250 2129)
+    )
+    (image "quadcopterJorge:CONTROLLER_SOT95P237X112-3N"
+      (pin Rect[T]Pad_1320.800000x558.800000_um 1 -1092.2 939.8)
+      (pin Rect[T]Pad_1320.800000x558.800000_um 2 -1092.2 -939.8)
+      (pin Rect[T]Pad_1320.800000x558.800000_um 3 1092.2 0)
+    )
+    (image quadcopterJorge:SOD323_ST
+      (pin Rect[T]Pad_800.000000x600.000000_um A 1250 0)
+      (pin Rect[T]Pad_800.000000x600.000000_um C -1250 0)
+    )
+    (image "quadcopterJorge:SWITCH-SPDT"
+      (pin Round[A]Pad_1879.600000_um 1 0 2540)
+      (pin Round[A]Pad_1879.600000_um 2 0 0)
+      (pin Round[A]Pad_1879.600000_um 3 0 -2540)
+    )
+    (padstack Round[A]Pad_1008.000000_um
+      (shape (circle Top 1008))
+      (shape (circle Route2 1008))
+      (shape (circle Route3 1008))
+      (shape (circle Route4 1008))
+      (shape (circle Route5 1008))
+      (shape (circle Route6 1008))
+      (shape (circle Route7 1008))
+      (shape (circle Route8 1008))
+      (shape (circle Route9 1008))
+      (shape (circle Route10 1008))
+      (shape (circle Route11 1008))
+      (shape (circle Route12 1008))
+      (shape (circle Route13 1008))
+      (shape (circle Route14 1008))
+      (shape (circle Route15 1008))
+      (shape (circle Bottom 1008))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1879.600000_um
+      (shape (circle Top 1879.6))
+      (shape (circle Route2 1879.6))
+      (shape (circle Route3 1879.6))
+      (shape (circle Route4 1879.6))
+      (shape (circle Route5 1879.6))
+      (shape (circle Route6 1879.6))
+      (shape (circle Route7 1879.6))
+      (shape (circle Route8 1879.6))
+      (shape (circle Route9 1879.6))
+      (shape (circle Route10 1879.6))
+      (shape (circle Route11 1879.6))
+      (shape (circle Route12 1879.6))
+      (shape (circle Route13 1879.6))
+      (shape (circle Route14 1879.6))
+      (shape (circle Route15 1879.6))
+      (shape (circle Bottom 1879.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_270.000000x400.000000_um
+      (shape (rect Top -135 -200 135 200))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_280.000000x1562.000000_um
+      (shape (rect Top -140 -781 140 781))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_290.000000x1208.000000_um
+      (shape (rect Top -145 -604 145 604))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_550.000000x1200.000000_um
+      (shape (rect Top -275 -600 275 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_6451.600000x6451.600000_um
+      (shape (rect Top -3225.8 -3225.8 3225.8 3225.8))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_762.000000x1524.000000_um
+      (shape (rect Top -381 -762 381 762))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x600.000000_um
+      (shape (rect Top -400 -300 400 300))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1016.000000x2540.000000_um
+      (shape (rect Top -508 -1270 508 1270))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x1200.000000_um
+      (shape (rect Top -600 -600 600 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1300.000000x1500.000000_um
+      (shape (rect Top -650 -750 650 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1320.800000x558.800000_um
+      (shape (rect Top -660.4 -279.4 660.4 279.4))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1879.600000x1879.600000_um
+      (shape (rect Top -939.8 -939.8 939.8 939.8))
+      (shape (rect Route2 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route3 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route4 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route5 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route6 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route7 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route8 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route9 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route10 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route11 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route12 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route13 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route14 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route15 -939.8 -939.8 939.8 939.8))
+      (shape (rect Bottom -939.8 -939.8 939.8 939.8))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1900.000000x1100.000000_um
+      (shape (rect Top -950 -550 950 550))
+      (attach off)
+    )
+    (padstack "Via[0-15]_600:300_um"
+      (shape (circle Top 600))
+      (shape (circle Route2 600))
+      (shape (circle Route3 600))
+      (shape (circle Route4 600))
+      (shape (circle Route5 600))
+      (shape (circle Route6 600))
+      (shape (circle Route7 600))
+      (shape (circle Route8 600))
+      (shape (circle Route9 600))
+      (shape (circle Route10 600))
+      (shape (circle Route11 600))
+      (shape (circle Route12 600))
+      (shape (circle Route13 600))
+      (shape (circle Route14 600))
+      (shape (circle Route15 600))
+      (shape (circle Bottom 600))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins U2-5 U3-2 U4-2 U5-2 U6-2 U10-2 U11-2 U12-2 U13-2 U14-2 U15-1 U16-C U17-C
+        U18-C U19-6 U20-1 U21-GND U30-3 U31-2 U32-7 U32-10 U32-11 U32-20 U32-24 U32-33
+        U32-35 U32-45 U32-55 U32-58 U32-61 U32-65 U34-2 U34-3 U34-4 U34-5 U34-6 U34-22
+        U34-23 U35-2 U36-2 U38-1 U45-2 U46-2 U47-2 U48-2 U49-2 U50-2 U51-2 U52-2 U58-GND)
+    )
+    (net 3.3V
+      (pins U4-1 U12-1 U21-VCC U26-2 U27-2 U31-5 U32-23 U32-34 U32-44 U32-54 U32-59
+        U34-15 U34-16 U34-17 U34-18 U35-1 U36-1 U39-2 U40-2 U58-VCC)
+    )
+    (net "Net-(U1-Pad64)"
+      (pins U32-64)
+    )
+    (net "Net-(U1-Pad63)"
+      (pins U32-63)
+    )
+    (net "Net-(U1-Pad62)"
+      (pins U32-62)
+    )
+    (net "Net-(C1-Pad1)"
+      (pins U3-1 U32-60)
+    )
+    (net "Net-(C5-Pad1)"
+      (pins U13-1 U32-57 U33-3)
+    )
+    (net "Net-(C6-Pad1)"
+      (pins U14-1 U32-56 U33-1)
+    )
+    (net "Net-(U1-Pad53)"
+      (pins U32-53)
+    )
+    (net "Net-(U1-Pad52)"
+      (pins U32-52)
+    )
+    (net "Net-(U1-Pad51)"
+      (pins U32-51)
+    )
+    (net /PE4
+      (pins U32-50 U45-1 U49-1)
+    )
+    (net /PE3
+      (pins U32-49 U48-1 U52-1)
+    )
+    (net "Net-(U1-Pad48)"
+      (pins U32-48)
+    )
+    (net /TX0
+      (pins U21-RXI U32-47)
+    )
+    (net /RX0
+      (pins U21-TXO U32-46)
+    )
+    (net /PB7
+      (pins U29-2 U32-43)
+    )
+    (net /PB6
+      (pins U28-2 U32-42)
+    )
+    (net /PB5
+      (pins U32-41 U46-1 U50-1)
+    )
+    (net /PB4
+      (pins U32-40 U47-1 U51-1)
+    )
+    (net /MISO
+      (pins U19-1 U32-39)
+    )
+    (net /MOSI
+      (pins U19-4 U32-38)
+    )
+    (net /SCK
+      (pins U19-3 U32-37)
+    )
+    (net "Net-(U1-Pad36)"
+      (pins U32-36)
+    )
+    (net "Net-(U1-Pad32)"
+      (pins U32-32)
+    )
+    (net "Net-(U1-Pad31)"
+      (pins U32-31)
+    )
+    (net "Net-(U1-Pad30)"
+      (pins U32-30)
+    )
+    (net "Net-(U1-Pad29)"
+      (pins U32-29)
+    )
+    (net /TX1
+      (pins U32-28 U58-RXI)
+    )
+    (net /RX1
+      (pins U32-27 U58-TXO)
+    )
+    (net /SDA
+      (pins U32-26 U34-24)
+    )
+    (net /SCL
+      (pins U32-25 U34-21)
+    )
+    (net "Net-(C2-Pad1)"
+      (pins U10-1 U32-21 U32-22)
+    )
+    (net "Net-(U1-Pad19)"
+      (pins U32-19)
+    )
+    (net "Net-(U1-Pad18)"
+      (pins U32-18)
+    )
+    (net "Net-(U1-Pad17)"
+      (pins U32-17)
+    )
+    (net "Net-(U1-Pad16)"
+      (pins U32-16)
+    )
+    (net "Net-(U1-Pad15)"
+      (pins U32-15)
+    )
+    (net "Net-(U1-Pad14)"
+      (pins U32-14)
+    )
+    (net "Net-(U1-Pad13)"
+      (pins U32-13)
+    )
+    (net /RESET
+      (pins U7-2 U19-5 U26-1 U30-1 U32-12)
+    )
+    (net "Net-(C17-Pad2)"
+      (pins U9-2 U32-9)
+    )
+    (net "Net-(C16-Pad1)"
+      (pins U8-1 U32-8)
+    )
+    (net "Net-(U1-Pad6)"
+      (pins U32-6)
+    )
+    (net "Net-(U1-Pad5)"
+      (pins U32-5)
+    )
+    (net "Net-(U1-Pad4)"
+      (pins U32-4)
+    )
+    (net "Net-(U1-Pad3)"
+      (pins U32-3)
+    )
+    (net "Net-(U1-Pad2)"
+      (pins U32-2)
+    )
+    (net "Net-(U1-Pad1)"
+      (pins U32-1)
+    )
+    (net "Net-(B1-Pad4)"
+      (pins U2-4 U9-1)
+    )
+    (net "Net-(B1-Pad3)"
+      (pins U2-3 U8-2)
+    )
+    (net "Net-(B1-Pad2)"
+      (pins U2-2 U5-1)
+    )
+    (net /RFANT
+      (pins U1-FEED U2-1 U15-2)
+    )
+    (net "Net-(J1-Pad2)"
+      (pins U19-2)
+    )
+    (net "Net-(JP9-PadCTS)"
+      (pins U21-CTS)
+    )
+    (net "Net-(C15-Pad1)"
+      (pins U7-1 U21-DTR)
+    )
+    (net "Net-(C7-Pad2)"
+      (pins U22-2 U41-2 U47-3 U53-A)
+    )
+    (net /VBAT
+      (pins U11-1 U22-1 U23-1 U24-1 U25-1 U31-1 U31-3 U41-1 U42-1 U43-1 U44-1 U53-C
+        U54-C U55-C U56-C U57-3)
+    )
+    (net "Net-(C8-Pad2)"
+      (pins U23-2 U42-2 U48-3 U54-A)
+    )
+    (net "Net-(C13-Pad2)"
+      (pins U24-2 U43-2 U45-3 U55-A)
+    )
+    (net "Net-(C14-Pad2)"
+      (pins U25-2 U44-2 U46-3 U56-A)
+    )
+    (net "Net-(JP3-Pad2)"
+      (pins U20-2 U57-2)
+    )
+    (net "Net-(C12-Pad1)"
+      (pins U6-1 U31-4)
+    )
+    (net "Net-(R10-Pad1)"
+      (pins U34-20 U40-1)
+    )
+    (net "Net-(R3-Pad1)"
+      (pins U34-19 U39-1)
+    )
+    (net "Net-(U4-Pad14)"
+      (pins U34-14)
+    )
+    (net "Net-(U4-Pad13)"
+      (pins U34-13)
+    )
+    (net "Net-(U4-Pad12)"
+      (pins U34-12)
+    )
+    (net "Net-(U4-Pad11)"
+      (pins U34-11)
+    )
+    (net "Net-(U4-Pad10)"
+      (pins U34-10)
+    )
+    (net "Net-(C25-Pad1)"
+      (pins U34-9 U37-1)
+    )
+    (net "Net-(C25-Pad2)"
+      (pins U34-8 U37-2)
+    )
+    (net "Net-(C26-Pad2)"
+      (pins U34-7 U38-2)
+    )
+    (net "Net-(U4-Pad1)"
+      (pins U34-1)
+    )
+    (net "Net-(S2-Pad1)"
+      (pins U57-1)
+    )
+    (net "Net-(JP2-PadCTS)"
+      (pins U58-CTS)
+    )
+    (net "Net-(JP2-PadDTR)"
+      (pins U58-DTR)
+    )
+    (net "Net-(BOT1-PadA)"
+      (pins U17-A U29-1)
+    )
+    (net "Net-(ARM1-PadA)"
+      (pins U18-A U28-1)
+    )
+    (net "Net-(PWR1-PadA)"
+      (pins U16-A U27-1)
+    )
+    (class kicad_default /MISO /MOSI /PB4 /PB5 /PB6 /PB7 /PE3 /PE4 /RESET
+      /RFANT /RX0 /RX1 /SCK /SCL /SDA /TX0 /TX1 /VBAT 3.3V GND "Net-(ARM1-PadA)"
+      "Net-(B1-Pad2)" "Net-(B1-Pad3)" "Net-(B1-Pad4)" "Net-(BOT1-PadA)" "Net-(C1-Pad1)"
+      "Net-(C12-Pad1)" "Net-(C13-Pad2)" "Net-(C14-Pad2)" "Net-(C15-Pad1)"
+      "Net-(C16-Pad1)" "Net-(C17-Pad2)" "Net-(C2-Pad1)" "Net-(C25-Pad1)" "Net-(C25-Pad2)"
+      "Net-(C26-Pad2)" "Net-(C5-Pad1)" "Net-(C6-Pad1)" "Net-(C7-Pad2)" "Net-(C8-Pad2)"
+      "Net-(J1-Pad2)" "Net-(JP2-PadCTS)" "Net-(JP2-PadDTR)" "Net-(JP3-Pad2)"
+      "Net-(JP9-PadCTS)" "Net-(PWR1-PadA)" "Net-(R10-Pad1)" "Net-(R3-Pad1)"
+      "Net-(S2-Pad1)" "Net-(U1-Pad1)" "Net-(U1-Pad13)" "Net-(U1-Pad14)" "Net-(U1-Pad15)"
+      "Net-(U1-Pad16)" "Net-(U1-Pad17)" "Net-(U1-Pad18)" "Net-(U1-Pad19)"
+      "Net-(U1-Pad2)" "Net-(U1-Pad29)" "Net-(U1-Pad3)" "Net-(U1-Pad30)" "Net-(U1-Pad31)"
+      "Net-(U1-Pad32)" "Net-(U1-Pad36)" "Net-(U1-Pad4)" "Net-(U1-Pad48)" "Net-(U1-Pad5)"
+      "Net-(U1-Pad51)" "Net-(U1-Pad52)" "Net-(U1-Pad53)" "Net-(U1-Pad6)" "Net-(U1-Pad62)"
+      "Net-(U1-Pad63)" "Net-(U1-Pad64)" "Net-(U4-Pad1)" "Net-(U4-Pad10)" "Net-(U4-Pad11)"
+      "Net-(U4-Pad12)" "Net-(U4-Pad13)" "Net-(U4-Pad14)"
+      (circuit
+        (use_via "Via[0-15]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)
