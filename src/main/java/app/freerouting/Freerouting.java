@@ -910,7 +910,7 @@ public class Freerouting {
     // Disable GUI if running in headless environment (no display server available)
     if (java.awt.GraphicsEnvironment.isHeadless()) {
       globalSettings.guiSettings.isEnabled = false;
-      FRLogger.debug("Headless environment detected. GUI disabled.");
+      FRLogger.info("Headless environment detected. GUI disabled.");
     }
 
     // Get some useful information if we are running in a GUI
