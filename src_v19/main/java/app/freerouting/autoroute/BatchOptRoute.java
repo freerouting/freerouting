@@ -12,6 +12,10 @@ import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.Unit;
+import app.freerouting.board.ClearanceViolation;
+import java.util.HashSet;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -90,11 +94,80 @@ public class BatchOptRoute {
     return result;
   }
 
+
+  private int calculateViolationsCount() {
+    Set<String> uniqueViolations = new HashSet<>();
+    Iterator<UndoableObjects.UndoableObjectNode> it = routing_board.item_list.start_read_object();
+    for (;;) {
+      UndoableObjects.Storable curr_ob = routing_board.item_list.read_object(it);
+      if (curr_ob == null) {
+        break;
+      }
+      if (curr_ob instanceof Item) {
+        Item curr_item = (Item) curr_ob;
+        Collection<ClearanceViolation> violations = curr_item.clearance_violations();
+        for (ClearanceViolation violation : violations) {
+          int idA = violation.first_item.get_id_no();
+          int idB = violation.second_item.get_id_no();
+          int minId = Math.min(idA, idB);
+          int maxId = Math.max(idA, idB);
+          String key = minId + "-" + maxId + "-" + violation.layer;
+          uniqueViolations.add(key);
+        }
+      }
+    }
+    return uniqueViolations.size();
+  }
+
+  private float calculateScore(RatsNest ratsNest) {
+    int maxConnections = 0;
+    for (int netNo = 1; netNo <= routing_board.rules.nets.max_net_no(); netNo++) {
+      maxConnections += Math.max(0, routing_board.connectable_item_count(netNo) - 1);
+    }
+    if (maxConnections <= 0) {
+      return 0.0f;
+    }
+
+    int incompleteCount = ratsNest.incomplete_count();
+    int uniqueViolations = calculateViolationsCount();
+    int totalBends = 0;
+    for (Trace trace : routing_board.get_traces()) {
+      if (trace instanceof PolylineTrace) {
+        totalBends += Math.max(0, ((PolylineTrace) trace).corner_count() - 2);
+      }
+    }
+
+    double boardUnitToMmFactor = Unit.scale(1.0, routing_board.communication.unit, Unit.MM)
+        / (routing_board.communication.resolution > 0 ? routing_board.communication.resolution : 1);
+    float traceLengthMm = (float) (routing_board.cumulative_trace_length() * boardUnitToMmFactor);
+    int viaCount = routing_board.get_vias().size();
+    float viaCosts = thread.hdlg.get_settings().autoroute_settings.get_via_costs();
+
+    float penalties = incompleteCount * 1_000_000.0f
+        + uniqueViolations * 1_000.0f
+        + totalBends * 10.0f;
+    float costs = traceLengthMm * 1.0f
+        + viaCount * viaCosts;
+
+    float score = 1000.0f * (1.0f - (penalties + costs) / (maxConnections * 1_000_000.0f));
+    return Math.max(0.0f, score);
+  }
+
   /** Optimize the route on the board. */
   public void optimize_board(
       boolean save_intermediate_stages,
       float optimization_improvement_threshold,
       InteractiveActionThread isStopRequested) {
+    long phaseStartTime = System.currentTimeMillis();
+    com.sun.management.ThreadMXBean threadMXBean = (com.sun.management.ThreadMXBean) java.lang.management.ManagementFactory.getThreadMXBean();
+    long startCpuTime = threadMXBean.getThreadCpuTime(Thread.currentThread().threadId());
+    long startAllocatedBytes = threadMXBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+
+    RatsNest ratsNestStart = new RatsNest(routing_board, thread.hdlg.get_locale());
+    float startScore = calculateScore(ratsNestStart);
+    int startIncomplete = ratsNestStart.incomplete_count();
+    int startViolations = calculateViolationsCount();
+
     if (routing_board.get_test_level() != TestLevel.RELEASE_VERSION) {
       FRLogger.warn(
           "Before optimize: Via count: "
@@ -110,7 +183,23 @@ public class BatchOptRoute {
         && (!isStopRequested.is_stop_requested())) {
       ++curr_pass_no;
       boolean with_preferred_directions = (curr_pass_no % 2 != 0); // to create more variations
+      
+      long passStartTime = System.currentTimeMillis();
       route_improved = opt_route_pass(curr_pass_no, with_preferred_directions);
+      long passDuration = System.currentTimeMillis() - passStartTime;
+
+      RatsNest ratsNestPass = new RatsNest(routing_board, thread.hdlg.get_locale());
+      float passScore = calculateScore(ratsNestPass);
+      int passIncomplete = ratsNestPass.incomplete_count();
+      int passViolations = calculateViolationsCount();
+
+      FRLogger.info(String.format(java.util.Locale.US,
+          "Optimizer pass #%d on board '%s' was completed in %.2f seconds with the score of %s.",
+          curr_pass_no,
+          routing_board.get_hash(),
+          passDuration / 1000.0,
+          FRLogger.formatScore(passScore, passIncomplete, passViolations)
+      ));
 
       if ((route_improved > optimization_improvement_threshold)
           && (save_intermediate_stages)) {
@@ -121,6 +210,30 @@ public class BatchOptRoute {
         this.thread.hdlg.get_panel().board_frame.save_intermediate_stage_file();
       }
     }
+
+    long phaseEndTime = System.currentTimeMillis();
+    long endCpuTime = threadMXBean.getThreadCpuTime(Thread.currentThread().threadId());
+    long endAllocatedBytes = threadMXBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+    double totalCpuTime = (endCpuTime - startCpuTime) / 1_000_000_000.0;
+    double totalAllocatedGb = (endAllocatedBytes - startAllocatedBytes) / 1024.0 / 1024.0 / 1024.0;
+    long peakHeap = java.lang.management.ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1024 / 1024;
+
+    RatsNest ratsNestEnd = new RatsNest(routing_board, thread.hdlg.get_locale());
+    float endScore = calculateScore(ratsNestEnd);
+    int endIncomplete = ratsNestEnd.incomplete_count();
+    int endViolations = calculateViolationsCount();
+
+    String optimizerCompletionStatus = isStopRequested.is_stop_requested() ? "interrupted:" : "completed:";
+    FRLogger.info(String.format(java.util.Locale.US,
+        "Optimizer phase %s started with score %s, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+        optimizerCompletionStatus,
+        FRLogger.formatScore(startScore, startIncomplete, startViolations),
+        (phaseEndTime - phaseStartTime) / 1000.0,
+        FRLogger.formatScore(endScore, endIncomplete, endViolations),
+        totalCpuTime,
+        totalAllocatedGb,
+        (double) peakHeap
+    ));
   }
 
   /**

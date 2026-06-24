@@ -11,8 +11,32 @@ import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import app.freerouting.board.Item;
+import app.freerouting.board.Trace;
+import app.freerouting.board.Via;
+
 /** Handles the sequencing of the fanout inside the batch autorouter. */
 public class BatchFanout {
+
+  public static class PassStatus {
+    public int routedCount = 0;
+    public int notRoutedCount = 0;
+    public int insertErrorCount = 0;
+  }
+
+  public static class EscapeStatistics {
+    private final int total;
+    private final int escaped;
+    private final double pct;
+    public EscapeStatistics(int total, int escaped, double pct) {
+      this.total = total;
+      this.escaped = escaped;
+      this.pct = pct;
+    }
+    public int total() { return total; }
+    public int escaped() { return escaped; }
+    public double pct() { return pct; }
+  }
 
   private final InteractiveActionThread thread;
   private final RoutingBoard routing_board;
@@ -32,23 +56,122 @@ public class BatchFanout {
     }
   }
 
-  public static void fanout_board(InteractiveActionThread p_thread) {
-    BatchFanout fanout_instance = new BatchFanout(p_thread);
-    final int MAX_PASS_COUNT = 20;
-    for (int i = 0; i < MAX_PASS_COUNT; ++i) {
-      int routed_count = fanout_instance.fanout_pass(i);
-      if (routed_count == 0) {
-        break;
+  private EscapeStatistics computeEscapeStatistics() {
+    int total = 0;
+    int escaped = 0;
+    for (Component component : this.sorted_components) {
+      for (Component.Pin pin : component.smd_pins) {
+        total++;
+        if (isPinEscaped(pin.board_pin)) {
+          escaped++;
+        }
       }
     }
+    double pct = total == 0 ? 0.0 : 100.0 * escaped / total;
+    return new EscapeStatistics(total, escaped, pct);
   }
 
-  /** Routes a fanout pass and returns the number of new fanouted SMD-pins in this pass. */
-  private int fanout_pass(int p_pass_no) {
+  private boolean isPinEscaped(app.freerouting.board.Pin pin) {
+    java.util.Collection<Item> contacts = pin.get_normal_contacts();
+    for (Item contact : contacts) {
+      if (contact instanceof Trace) {
+        Trace trace = (Trace) contact;
+        if (trace.clearance_violations().isEmpty()) {
+          return true;
+        }
+      } else if (contact instanceof Via) {
+        Via via = (Via) contact;
+        if (via.clearance_violations().isEmpty()) {
+          // Check if there's at least one trace connected to the via
+          java.util.Collection<Item> viaContacts = via.get_normal_contacts();
+          for (Item viaContact : viaContacts) {
+            if (viaContact instanceof Trace) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  public static void fanout_board(InteractiveActionThread p_thread) {
+    long phaseStartTime = System.currentTimeMillis();
+    com.sun.management.ThreadMXBean threadMXBean = (com.sun.management.ThreadMXBean) java.lang.management.ManagementFactory.getThreadMXBean();
+    long startCpuTime = threadMXBean.getThreadCpuTime(Thread.currentThread().threadId());
+    long startAllocatedBytes = threadMXBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+
+    BatchFanout fanout_instance = new BatchFanout(p_thread);
+    int totalSmdPins = 0;
+    for (Component c : fanout_instance.sorted_components) {
+      totalSmdPins += c.smd_pin_count;
+    }
+
+    final int MAX_PASS_COUNT = 20;
+    for (int i = 0; i < MAX_PASS_COUNT; ++i) {
+      long passStartTime = System.currentTimeMillis();
+      long passStartCpu = threadMXBean.getThreadCpuTime(Thread.currentThread().threadId());
+      long passStartAlloc = threadMXBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+      int viasBefore = fanout_instance.routing_board.get_vias().size();
+
+      PassStatus status = fanout_instance.fanout_pass(i);
+      
+      long passDuration = System.currentTimeMillis() - passStartTime;
+      long passEndCpu = threadMXBean.getThreadCpuTime(Thread.currentThread().threadId());
+      long passEndAlloc = threadMXBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+      double passCpuSec = (passEndCpu - passStartCpu) / 1_000_000_000.0;
+      long passAllocBytes = passEndAlloc - passStartAlloc;
+
+      int viasAfter = fanout_instance.routing_board.get_vias().size();
+      int extraVias = viasAfter - viasBefore;
+
+      if (status.routedCount == 0 && status.insertErrorCount == 0) {
+        break;
+      }
+
+      String boardHash = fanout_instance.routing_board.get_hash();
+
+      FRLogger.info(String.format(java.util.Locale.US,
+          "Fanout pass #%d on board '%s' completed in %.2f seconds with %d SMD pin%s fanouted, %d not routed, %d insert error%s, +%d extra via%s (%d SMD pin%s still to check in pass, ripup costs=%d).",
+          i + 1, boardHash,
+          passDuration / 1000.0,
+          status.routedCount, status.routedCount == 1 ? "" : "s",
+          status.notRoutedCount,
+          status.insertErrorCount, status.insertErrorCount == 1 ? "" : "s",
+          extraVias, extraVias == 1 ? "" : "s",
+          totalSmdPins - status.routedCount, (totalSmdPins - status.routedCount) == 1 ? "" : "s",
+          (p_thread.hdlg.get_settings().autoroute_settings.get_start_ripup_costs() * (i + 1))
+      ));
+    }
+
+    long phaseEndTime = System.currentTimeMillis();
+    long endCpuTime = threadMXBean.getThreadCpuTime(Thread.currentThread().threadId());
+    long endAllocatedBytes = threadMXBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+
+    double totalCpuTime = (endCpuTime - startCpuTime) / 1_000_000_000.0;
+    double totalAllocatedGb = (endAllocatedBytes - startAllocatedBytes) / 1024.0 / 1024.0 / 1024.0;
+    long peakHeap = java.lang.management.ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1024 / 1024;
+
+    EscapeStatistics finalEscape = fanout_instance.computeEscapeStatistics();
+    String fanoutCompletionStatus = p_thread.is_stop_auto_router_requested() ? "interrupted:" : "completed:";
+    FRLogger.info(String.format(java.util.Locale.US,
+        "Fanout phase %s started with %d total SMD pins, completed in %.2f seconds, escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+        fanoutCompletionStatus,
+        finalEscape.total(),
+        (phaseEndTime - phaseStartTime) / 1000.0,
+        finalEscape.escaped(),
+        finalEscape.total(),
+        finalEscape.pct(),
+        totalCpuTime,
+        totalAllocatedGb,
+        (double) peakHeap
+    ));
+  }
+
+  /** Routes a fanout pass and returns the status of new fanouted SMD-pins in this pass. */
+  private PassStatus fanout_pass(int p_pass_no) {
+    PassStatus status = new PassStatus();
     int components_to_go = this.sorted_components.size();
-    int routed_count = 0;
-    int not_routed_count = 0;
-    int insert_error_count = 0;
     int ripup_costs =
         this.thread.hdlg.get_settings().autoroute_settings.get_start_ripup_costs()
             * (p_pass_no + 1);
@@ -66,9 +189,9 @@ public class BatchFanout {
                 this.thread,
                 time_limit);
         switch (curr_result) {
-          case ROUTED       -> ++routed_count;
+          case ROUTED       -> ++status.routedCount;
           case NOT_ROUTED   -> {
-            ++not_routed_count;
+            ++status.notRoutedCount;
             // FANOUT_DIAG parity: log fanout failures for U27 pins matching current branch format
             app.freerouting.board.Component cmp = this.routing_board.components.get(curr_pin.board_pin.get_component_no());
             String pinLabel = (cmp != null && curr_pin.board_pin.name() != null)
@@ -79,13 +202,13 @@ public class BatchFanout {
                   + ", reason=Failed to route (v1.9)");
             }
           }
-          case INSERT_ERROR -> ++insert_error_count;
+          case INSERT_ERROR -> ++status.insertErrorCount;
         }
         if (curr_result != AutorouteEngine.AutorouteResult.NOT_ROUTED) {
           this.thread.hdlg.repaint();
         }
         if (this.thread.is_stop_requested()) {
-          return routed_count;
+          return status;
         }
       }
       --components_to_go;
@@ -95,13 +218,13 @@ public class BatchFanout {
           "fanout pass: "
               + (p_pass_no + 1)
               + ", routed: "
-              + routed_count
+              + status.routedCount
               + ", not routed: "
-              + not_routed_count
+              + status.notRoutedCount
               + ", errors: "
-              + insert_error_count);
+              + status.insertErrorCount);
     }
-    return routed_count;
+    return status;
   }
 
   private static class Component implements Comparable<Component> {
