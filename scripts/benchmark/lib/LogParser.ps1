@@ -73,6 +73,7 @@ function Get-PhaseMetrics {
         cpu_seconds = $null
         total_allocated_gb = $null
         peak_heap_mb = $null
+        passes_completed = $null
     }
 
     $autorouter = @{
@@ -130,6 +131,19 @@ function Get-PhaseMetrics {
             $fanout.smd_pin_count = [int]$matches[2]
             $fanout.log_found = $true
         }
+    }
+
+    # Fanout passes completed
+    $maxFanoutPass = 0
+    foreach ($line in $lines) {
+        if ($line -match 'Fanout pass #(\d+)') {
+            $passNum = [int]$matches[1]
+            if ($passNum -gt $maxFanoutPass) { $maxFanoutPass = $passNum }
+            $fanout.log_found = $true
+        }
+    }
+    if ($maxFanoutPass -gt 0) {
+        $fanout.passes_completed = $maxFanoutPass
     }
 
     # Fanout session summary

@@ -13,8 +13,8 @@ import app.freerouting.core.RoutingStage;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.TextManager;
 import app.freerouting.settings.RouterSettings;
+import app.freerouting.util.TextManager;
 import com.sun.management.ThreadMXBean;
 import java.io.ByteArrayOutputStream;
 import java.lang.management.ManagementFactory;
@@ -143,7 +143,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         }
 
         String sessionSummary = String.format(java.util.Locale.US,
-            "Auto-router session %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+            "Auto-router phase %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
             completionStatus,
             initialUnroutedCount,
             totalTime,

@@ -17,14 +17,14 @@ import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.ThreadActionListener;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import com.sun.management.ThreadMXBean;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -546,7 +546,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         }
 
         String sessionSummary = String.format(java.util.Locale.US,
-            "Auto-router session %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+            "Auto-router phase %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
             completionStatus,
             initialUnroutedCount,
             autoroutingSecondsToComplete,
@@ -796,4 +796,3 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
     }
   }
 }
-

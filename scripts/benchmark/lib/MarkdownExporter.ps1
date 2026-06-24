@@ -91,7 +91,7 @@ function Export-MarkdownReport {
     [void]$sb.AppendLine("## Summary Table (Best Results per Fixture)")
     [void]$sb.AppendLine()
 
-    $summaryHeaders = @("Fixture Group", "Fixture", "Best Version", "Unrouted (DRC)", "Violations (DRC)", "Score (DRC)", "CPU Time", "Peak Heap")
+    $summaryHeaders = @("Fixture Group", "Fixture", "Best Version", "Unrouted", "Violations", "Score", "CPU Time (s)", "Peak Heap (MB)")
     $summaryAlignments = @("L", "L", "L", "R", "R", "R", "R", "R")
     $summaryRows = [System.Collections.ArrayList]::new()
 
@@ -110,10 +110,10 @@ function Export-MarkdownReport {
             
             $unrouted = if ($bestRun.drc.final_unrouted -ne $null) { $bestRun.drc.final_unrouted } elseif ($bestRun.quality.final_unrouted -ne $null) { $bestRun.quality.final_unrouted } else { "N/A" }
             $violations = if ($bestRun.drc.final_violations -ne $null) { $bestRun.drc.final_violations } elseif ($bestRun.quality.clearance_violations -ne $null) { $bestRun.quality.clearance_violations } else { "N/A" }
-            $score = if ($bestRun.drc.final_quality_score -ne $null) { $bestRun.drc.final_quality_score.ToString("F2") } elseif ($bestRun.quality.quality_score -ne $null) { $bestRun.quality.quality_score.ToString("F2") } else { "N/A" }
+            $score = if ($bestRun.drc.final_quality_score -ne $null) { $bestRun.drc.final_quality_score.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } elseif ($bestRun.quality.quality_score -ne $null) { $bestRun.quality.quality_score.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
             
-            $cpu = if ($bestRun.quality.total_cpu_seconds -ne $null) { "$($bestRun.quality.total_cpu_seconds)s" } else { "N/A" }
-            $heap = if ($bestRun.quality.peak_heap_mb -ne $null) { "$($bestRun.quality.peak_heap_mb) MB" } else { "N/A" }
+            $cpu = if ($bestRun.quality.total_cpu_seconds -ne $null) { $bestRun.quality.total_cpu_seconds.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
+            $heap = if ($bestRun.quality.peak_heap_mb -ne $null) { [math]::Round($bestRun.quality.peak_heap_mb).ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
 
             # Create markdown links
             $groupLink = "[$groupName](../fixtures/$groupName)"
@@ -167,8 +167,8 @@ function Export-MarkdownReport {
                 return 0
             }
 
-            $tableHeaders = @("Version", "Mode", "Fanout", "Fanout Time", "Router Time", "Optimizer Time", "Passes", "Unrouted (DRC)", "Violations (DRC)", "Score (DRC)", "Peak Heap", "Total Alloc", "Warn/Err")
-            $tableAlignments = @("L", "L", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R")
+            $tableHeaders = @("Version", "Mode", "Fanout", "Fanout Time (s)", "Router Time (s)", "Optimizer Time (s)", "Total Time (s)", "Passes", "Unrouted", "Violations", "Score", "Peak Heap (MB)", "Total Alloc (GB)", "Warn/Err")
+            $tableAlignments = @("L", "L", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R")
             $tableRows = [System.Collections.ArrayList]::new()
 
             $prevUnrouted = $null
@@ -189,10 +189,23 @@ function Export-MarkdownReport {
                     }
                 }
 
-                $fanoutTime = if ($run.phases.fanout.duration_seconds -ne $null) { "$($run.phases.fanout.duration_seconds)s" } else { "N/A" }
-                $routerTime = if ($run.phases.autorouter.duration_seconds -ne $null) { "$($run.phases.autorouter.duration_seconds)s" } else { "N/A" }
-                $optTime = if ($run.phases.optimizer.duration_seconds -ne $null) { "$($run.phases.optimizer.duration_seconds)s" } else { "N/A" }
-                $passes = if ($run.phases.autorouter.passes_completed -ne $null) { $run.phases.autorouter.passes_completed } else { "N/A" }
+                $fanoutTime = if ($run.phases.fanout.duration_seconds -ne $null) { $run.phases.fanout.duration_seconds.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
+                $routerTime = if ($run.phases.autorouter.duration_seconds -ne $null) { $run.phases.autorouter.duration_seconds.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
+                $optTime = if ($run.phases.optimizer.duration_seconds -ne $null) { $run.phases.optimizer.duration_seconds.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
+                
+                # Compute total time
+                $hasTime = $false
+                $totalTimeVal = 0.0
+                if ($run.phases.fanout.duration_seconds -ne $null) { $totalTimeVal += $run.phases.fanout.duration_seconds; $hasTime = $true }
+                if ($run.phases.autorouter.duration_seconds -ne $null) { $totalTimeVal += $run.phases.autorouter.duration_seconds; $hasTime = $true }
+                if ($run.phases.optimizer.duration_seconds -ne $null) { $totalTimeVal += $run.phases.optimizer.duration_seconds; $hasTime = $true }
+                $totalTime = if ($hasTime) { $totalTimeVal.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
+
+                # Passes formatted as fanout+router+optimizer
+                $fanoutPasses = if ($run.phases.fanout.passes_completed -ne $null) { $run.phases.fanout.passes_completed } else { 0 }
+                $routerPasses = if ($run.phases.autorouter.passes_completed -ne $null) { $run.phases.autorouter.passes_completed } else { 0 }
+                $optimizerPasses = if ($run.phases.optimizer.passes_completed -ne $null) { $run.phases.optimizer.passes_completed } else { 0 }
+                $passes = "$fanoutPasses+$routerPasses+$optimizerPasses"
 
                 $unroutedVal = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { 0 }
                 $violationsVal = if ($run.drc.final_violations -ne $null) { $run.drc.final_violations } elseif ($run.quality.clearance_violations -ne $null) { $run.quality.clearance_violations } else { 0 }
@@ -205,16 +218,16 @@ function Export-MarkdownReport {
                 $violationsStr = "$violationsVal"
 
                 # Compute score cell string
-                $scoreStr = if ($scoreVal -ne $null) { $scoreVal.ToString("F2") } else { "N/A" }
-
-                $heap = if ($run.quality.peak_heap_mb -ne $null) { "$($run.quality.peak_heap_mb) MB" } else { "N/A" }
-                $alloc = if ($run.quality.total_allocated_gb -ne $null) { "$($run.quality.total_allocated_gb) GB" } else { "N/A" }
+                $scoreStr = if ($scoreVal -ne $null) { $scoreVal.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
+ 
+                $heap = if ($run.quality.peak_heap_mb -ne $null) { [math]::Round($run.quality.peak_heap_mb).ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
+                $alloc = if ($run.quality.total_allocated_gb -ne $null) { $run.quality.total_allocated_gb.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
 
                 $warns = if ($run.log_analysis.warn_count -ne $null) { $run.log_analysis.warn_count } else { 0 }
                 $errs = if ($run.log_analysis.error_count -ne $null) { $run.log_analysis.error_count } else { 0 }
                 $warnErrStr = "$warns / $errs"
 
-                $null = $tableRows.Add(@($ver, $mode, $fanoutVal, $fanoutTime, $routerTime, $optTime, $passes, $unroutedStr, $violationsStr, $scoreStr, $heap, $alloc, $warnErrStr))
+                $null = $tableRows.Add(@($ver, $mode, $fanoutVal, $fanoutTime, $routerTime, $optTime, $totalTime, $passes, $unroutedStr, $violationsStr, $scoreStr, $heap, $alloc, $warnErrStr))
 
                 $prevUnrouted = $unroutedVal
                 $prevViolations = $violationsVal

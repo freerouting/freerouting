@@ -22,10 +22,10 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.drc.AirLine;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
-import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
@@ -797,7 +797,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       float fanoutAllocatedMbStart = sampleCurrentThreadAllocatedMb();
       float fanoutPeakHeapMbAtStart = sampleHeapUsageMb();
       final float[] fanoutPeakHeapMbObserved = new float[] { fanoutPeakHeapMbAtStart };
-      job.logInfo("Starting fanout pre-pass on board '" + this.board.get_hash() + "' for "
+      job.logInfo("Fanout phase started on board '" + this.board.get_hash() + "' for "
           + this.board.get_smd_pins().size() + " SMD pin" + (this.board.get_smd_pins().size() == 1 ? "" : "s") + ".");
       BatchFanout.FanoutRunSummary fanoutSummary = BatchFanout.fanout_board(this.board, this.settings, this.thread,
           status -> {
@@ -852,7 +852,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       BatchFanout.EscapeStatistics finalEscape = fanoutSummary.escapeStatistics();
       String fanoutCompletionStatus = this.thread.is_stop_auto_router_requested() ? "interrupted:" : "completed:";
       String fanoutSummaryMessage = String.format(java.util.Locale.US,
-          "Fanout session %s started with %d total SMD pins, completed in %.2f seconds, escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+          "Fanout phase %s started with %d total SMD pins, completed in %.2f seconds, escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
           fanoutCompletionStatus,
           finalEscape.totalSmdPins(),
           fanoutSummary.totalDurationMillis() / 1000.0,

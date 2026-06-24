@@ -1,13 +1,13 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.BasicBoard;
+import app.freerouting.board.ClearanceViolation;
 import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.ClearanceViolation;
 import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Unit;
@@ -138,6 +138,16 @@ public class BatchAutorouter {
       --curr_pass_no;
     }
     return curr_pass_no;
+  }
+
+  private static Point[] getImpactedPoints(Item item) {
+    if (item instanceof Trace trace) {
+      return new Point[] {trace.first_corner(), trace.last_corner()};
+    }
+    if (item instanceof DrillItem drillItem) {
+      return new Point[] {drillItem.get_center()};
+    }
+    return new Point[0];
   }
 
   /**
@@ -294,7 +304,7 @@ public class BatchAutorouter {
         / 1024;
 
     FRLogger.info(String.format(
-        "Auto-router session completed: started with %d unrouted nets, completed in %s, final score: %s, using %s total CPU seconds, %s GB total allocated, and %d MB peak heap usage.",
+        "Auto-router phase completed: started with %d unrouted nets, completed in %s, final score: %s, using %s total CPU seconds, %s GB total allocated, and %d MB peak heap usage.",
         initialUnroutedCount,
         FRLogger.formatDuration(sessionDuration / 1000.0),
         FRLogger.formatScore(finalScore, finalUnrouted, finalViolations),
@@ -561,16 +571,6 @@ public class BatchAutorouter {
       this.air_line = null;
       return false;
     }
-  }
-
-  private static Point[] getImpactedPoints(Item item) {
-    if (item instanceof Trace trace) {
-      return new Point[] {trace.first_corner(), trace.last_corner()};
-    }
-    if (item instanceof DrillItem drillItem) {
-      return new Point[] {drillItem.get_center()};
-    }
-    return new Point[0];
   }
 
   private void remove_tails(Item.StopConnectionOption p_stop_connection_option) {

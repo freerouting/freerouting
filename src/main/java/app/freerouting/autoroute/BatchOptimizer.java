@@ -5,12 +5,13 @@ import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
+import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.drc.DesignRulesChecker;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import com.sun.management.ThreadMXBean;
 import java.lang.management.ManagementFactory;
@@ -19,20 +20,18 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import app.freerouting.core.ProgressThrottler;
-
 /**
  * Optimizes routes using a single thread on a board that has completed
  * auto-routing.
  */
 public class BatchOptimizer extends NamedAlgorithm {
 
+  protected final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   protected ReadSortedRouteItems sorted_route_items;
   // in the first passes the ripup costs are increased for better performance.
   protected boolean use_increased_ripup_costs;
   // the minimum cumulative trace length that was reached during the optimization
   protected double min_cumulative_trace_length = 0.0;
-  protected final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   protected RoutingJob job;
 
   /**
@@ -52,6 +51,36 @@ public class BatchOptimizer extends NamedAlgorithm {
       }
     }
     return true;
+  }
+
+  private static float sampleCurrentThreadCpuSeconds() {
+    try {
+      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      long cpuNanos = threadMxBean.getThreadCpuTime(Thread.currentThread().threadId());
+      return cpuNanos < 0 ? -1f : cpuNanos / 1_000_000_000.0f;
+    } catch (Throwable t) {
+      return -1f;
+    }
+  }
+
+  private static float sampleCurrentThreadAllocatedMb() {
+    try {
+      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      threadMxBean.setThreadAllocatedMemoryEnabled(true);
+      long allocatedBytes = threadMxBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+      return allocatedBytes < 0 ? -1f : allocatedBytes / (1024.0f * 1024.0f);
+    } catch (Throwable t) {
+      return -1f;
+    }
+  }
+
+  private static float sampleHeapUsageMb() {
+    try {
+      long heapUsed = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();
+      return heapUsed / (1024.0f * 1024.0f);
+    } catch (Throwable t) {
+      return 0f;
+    }
   }
 
   /**
@@ -110,7 +139,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     float finalScore = finalStats.getNormalizedScore(job.routerSettings.scoring);
     String completionStatus = this.thread.isStopRequested() ? "interrupted:" : "completed:";
     job.logInfo(String.format(java.util.Locale.US,
-        "Optimizer session %s started with score %s, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+        "Optimizer phase %s started with score %s, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
         completionStatus,
         FRLogger.formatScore(initialScore, initialIncomplete, initialViolations),
         sessionDurationSeconds,
@@ -340,6 +369,12 @@ public class BatchOptimizer extends NamedAlgorithm {
     return NamedAlgorithmType.OPTIMIZER;
   }
 
+  private int calculateIncompleteCount(RoutingBoard board) {
+    DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
+    tempDrc.calculateAllIncompletes();
+    return tempDrc.getIncompleteCount();
+  }
+
   /**
    * Reads the vias and traces on the board in ascending x order. Because the vias
    * and traces on the board change while optimizing the item list of the board is
@@ -439,42 +474,6 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     FloatPoint get_current_position() {
       return min_item_coor;
-    }
-  }
-
-  private int calculateIncompleteCount(RoutingBoard board) {
-    DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
-    tempDrc.calculateAllIncompletes();
-    return tempDrc.getIncompleteCount();
-  }
-
-  private static float sampleCurrentThreadCpuSeconds() {
-    try {
-      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
-      long cpuNanos = threadMxBean.getThreadCpuTime(Thread.currentThread().threadId());
-      return cpuNanos < 0 ? -1f : cpuNanos / 1_000_000_000.0f;
-    } catch (Throwable t) {
-      return -1f;
-    }
-  }
-
-  private static float sampleCurrentThreadAllocatedMb() {
-    try {
-      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
-      threadMxBean.setThreadAllocatedMemoryEnabled(true);
-      long allocatedBytes = threadMxBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
-      return allocatedBytes < 0 ? -1f : allocatedBytes / (1024.0f * 1024.0f);
-    } catch (Throwable t) {
-      return -1f;
-    }
-  }
-
-  private static float sampleHeapUsageMb() {
-    try {
-      long heapUsed = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();
-      return heapUsed / (1024.0f * 1024.0f);
-    } catch (Throwable t) {
-      return 0f;
     }
   }
 }

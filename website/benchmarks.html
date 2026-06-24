@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -66,19 +66,18 @@
   <h2 class='benchmark-title'>Freerouting Benchmark Results</h2>
   <div class='fixture-section'>
     <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm07.dsn</h3>
-    <p class='fixture-meta'>Layers: 2 | Nets: 52 | Components: 13 | Area: 0.1 cmÂ²</p>
+    <p class='fixture-meta'>Layers: 2 | Nets: 52 | Components: 13 | Area: 0.1 cm²</p>
     <table class='benchmark-table'>
       <thead>
         <tr class='header-row'>
           <th>Version</th>
           <th>Mode</th>
-          <th>Fanout</th>
-          <th>Router Time</th>
+          <th>Total Time (s)</th>
           <th>Passes</th>
-          <th>Unrouted (DRC)</th>
-          <th>Violations (DRC)</th>
-          <th>Score (DRC)</th>
-          <th>Peak Heap</th>
+          <th>Unrouted</th>
+          <th>Violations</th>
+          <th>Score</th>
+          <th>Peak Heap (MB)</th>
           <th>Warn/Err</th>
         </tr>
       </thead>
@@ -86,74 +85,68 @@
         <tr class='data-row'>
           <td>1.9.0</td>
           <td>GUI</td>
-          <td class='text-right'>N/A</td>
-          <td class='text-right'>3.9s</td>
-          <td class='text-right'>8</td>
+          <td class='text-right'>41.04</td>
+          <td class='text-right'>0+8+0</td>
           <td class='text-right'>0</td>
           <td class='text-right'>0</td>
-          <td class='text-right'>999,97</td>
-          <td class='text-right'>465.6 MB</td>
+          <td class='text-right'>999.97</td>
+          <td class='text-right'>453</td>
           <td class='text-right'>2 / 0</td>
         </tr>
         <tr class='data-row'>
           <td>2.0.1</td>
           <td>CLI</td>
           <td class='text-right'>N/A</td>
-          <td class='text-right'>N/A</td>
-          <td class='text-right'>7</td>
+          <td class='text-right'>0+7+0</td>
           <td class='text-right'>1</td>
           <td class='text-right'>0</td>
-          <td class='text-right'>988,34</td>
-          <td class='text-right'>1070.8 MB</td>
-          <td class='text-right'>1 / 35</td>
+          <td class='text-right'>988.34</td>
+          <td class='text-right'>1127</td>
+          <td class='text-right'>1 / 32</td>
         </tr>
         <tr class='data-row'>
           <td>2.1.0</td>
           <td>CLI</td>
           <td class='text-right'>N/A</td>
-          <td class='text-right'>N/A</td>
-          <td class='text-right'>807</td>
+          <td class='text-right'>0+811+3</td>
           <td class='text-right'>2</td>
           <td class='text-right'>0</td>
-          <td class='text-right'>976,70</td>
-          <td class='text-right'>1530.7 MB</td>
-          <td class='text-right'>1 / 23</td>
+          <td class='text-right'>976.70</td>
+          <td class='text-right'>1428</td>
+          <td class='text-right'>1 / 20</td>
         </tr>
         <tr class='data-row'>
           <td>2.2.4</td>
           <td>CLI</td>
-          <td class='text-right'>N/A</td>
-          <td class='text-right'>3.94s</td>
-          <td class='text-right'>8</td>
+          <td class='text-right'>56.37</td>
+          <td class='text-right'>0+8+7</td>
           <td class='text-right'>0</td>
           <td class='text-right'>0</td>
-          <td class='text-right'>999,96</td>
-          <td class='text-right'>1528.5 MB</td>
-          <td class='text-right'>4 / 0</td>
+          <td class='text-right'>999.96</td>
+          <td class='text-right'>1366</td>
+          <td class='text-right'>3 / 0</td>
         </tr>
         <tr class='data-row'>
           <td>s2026.06.23</td>
           <td>CLI</td>
-          <td class='text-right'>84/87 (96.6%)</td>
-          <td class='text-right'>16.11s</td>
-          <td class='text-right'>18</td>
+          <td class='text-right'>24.92</td>
+          <td class='text-right'>0+18+2</td>
           <td class='text-right'>3</td>
           <td class='text-right'>0</td>
-          <td class='text-right'>965,08</td>
-          <td class='text-right'>1379.6 MB</td>
+          <td class='text-right'>965.08</td>
+          <td class='text-right'>1380</td>
           <td class='text-right'>0 / 0</td>
         </tr>
         <tr class='data-row'>
           <td>s2026.06.24</td>
           <td>CLI</td>
-          <td class='text-right'>84/87 (96.6%)</td>
-          <td class='text-right'>15.73s</td>
-          <td class='text-right'>18</td>
+          <td class='text-right'>26.63</td>
+          <td class='text-right'>20+18+2</td>
           <td class='text-right'>3</td>
           <td class='text-right'>0</td>
-          <td class='text-right'>965,08</td>
-          <td class='text-right'>845.1 MB</td>
-          <td class='text-right'>1 / 0</td>
+          <td class='text-right'>965.08</td>
+          <td class='text-right'>776</td>
+          <td class='text-right'>0 / 0</td>
         </tr>
       </tbody>
     </table>

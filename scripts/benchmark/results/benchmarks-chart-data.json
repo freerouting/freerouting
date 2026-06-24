@@ -1,11 +1,11 @@
 ﻿[
     {
-        "cpu_time":  3.64,
-        "version":  "1.9.0",
-        "unrouted":  0,
+        "cpu_time":  0,
+        "version":  "2.1.0",
+        "unrouted":  2,
         "fixture":  "DAC2020_bm07.dsn",
-        "date":  "2026-06-23T17:55:08Z",
-        "score":  999.96667480468773
+        "date":  "2026-06-24T13:00:10Z",
+        "score":  976.70166015625
     },
     {
         "cpu_time":  0,
@@ -40,12 +40,20 @@
         "score":  965.07891845703125
     },
     {
-        "cpu_time":  3.59,
+        "cpu_time":  3.78,
         "version":  "1.9.0",
         "unrouted":  0,
         "fixture":  "DAC2020_bm07.dsn",
-        "date":  "2026-06-24T12:07:53Z",
-        "score":  999.96667480468761
+        "date":  "2026-06-24T12:55:44Z",
+        "score":  999.96667480468773
+    },
+    {
+        "cpu_time":  0,
+        "version":  "s2026.06.23",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:17:42Z",
+        "score":  0
     },
     {
         "cpu_time":  0,
@@ -56,12 +64,12 @@
         "score":  0
     },
     {
-        "cpu_time":  0,
-        "version":  "s2026.06.23",
+        "cpu_time":  3.64,
+        "version":  "1.9.0",
         "unrouted":  0,
         "fixture":  "DAC2020_bm07.dsn",
-        "date":  "2026-06-23T16:17:42Z",
-        "score":  0
+        "date":  "2026-06-23T17:55:08Z",
+        "score":  999.96667480468773
     },
     {
         "cpu_time":  0,
@@ -76,7 +84,7 @@
         "version":  "2.0.1",
         "unrouted":  1,
         "fixture":  "DAC2020_bm07.dsn",
-        "date":  "2026-06-24T12:08:02Z",
+        "date":  "2026-06-24T12:55:53Z",
         "score":  988.33636474609375
     },
     {
@@ -104,12 +112,12 @@
         "score":  999.96197509765636
     },
     {
-        "cpu_time":  2.88,
+        "cpu_time":  4.31,
         "version":  "2.2.4",
         "unrouted":  0,
         "fixture":  "DAC2020_bm07.dsn",
-        "date":  "2026-06-24T12:11:23Z",
-        "score":  999.96197509765625
+        "date":  "2026-06-24T13:01:13Z",
+        "score":  999.96197509765636
     },
     {
         "cpu_time":  21.77,
@@ -144,12 +152,12 @@
         "score":  0
     },
     {
-        "cpu_time":  0,
-        "version":  "2.1.0",
-        "unrouted":  2,
+        "cpu_time":  23.08,
+        "version":  "s2026.06.24",
+        "unrouted":  3,
         "fixture":  "DAC2020_bm07.dsn",
-        "date":  "2026-06-24T12:10:30Z",
-        "score":  976.7021484375
+        "date":  "2026-06-24T13:01:38Z",
+        "score":  965.07891845703125
     },
     {
         "cpu_time":  0,
