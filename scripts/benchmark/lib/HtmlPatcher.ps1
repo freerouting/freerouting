@@ -116,14 +116,14 @@ function Update-BenchmarksHtml {
     foreach ($line in $sb.ToString().Split("`n")) {
         $trimmed = $line.TrimEnd("`r")
         if ($trimmed.Length -gt 0) {
-            $indentedHtml += "    $trimmed`r`n"
+            $indentedHtml += "        $trimmed`r`n"
         }
     }
 
     $htmlContent = [System.IO.File]::ReadAllText($HtmlPath, [System.Text.Encoding]::UTF8)
     
     $pattern = '(?s)<!-- BENCHMARK_TABLE_START -->.*?<!-- BENCHMARK_TABLE_END -->'
-    $replacement = "<!-- BENCHMARK_TABLE_START -->`r`n$indentedHtml    <!-- BENCHMARK_TABLE_END -->"
+    $replacement = "<!-- BENCHMARK_TABLE_START -->`r`n$indentedHtml        <!-- BENCHMARK_TABLE_END -->"
     
     $patchedContent = [regex]::Replace($htmlContent, $pattern, $replacement)
 
