@@ -62,7 +62,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   private static final int STOP_AT_PASS_MODULO = 4;
   // Number of consecutive passes with no meaningful score improvement before
   // aborting (prevents endless looping when items cannot be routed)
-  private static final int STAGNATION_PASS_LIMIT = 10;
+  private static final int STAGNATION_PASS_LIMIT = 5;
   // Number of no-improvement passes before attempting a one-time fanout-tail cleanup.
   private static final int FANOUT_RECOVERY_STAGNATION_PASSES = 3;
   // Minimum score gain (on the 0–1000 normalized scale) that counts as a
