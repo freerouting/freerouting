@@ -18,7 +18,10 @@ function Update-BenchmarksHtml {
 
     # Build premium styled HTML
     $sb = [System.Text.StringBuilder]::new()
+    $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    $sysInfo = Get-SystemInfo
     [void]$sb.AppendLine("<div class='benchmark-container'>")
+    [void]$sb.AppendLine("  <div class='benchmark-report-info'>Generated on: $ts &middot; System: $($sysInfo.cpu_name) ($($sysInfo.cpu_physical_cores) Cores, $($sysInfo.total_ram_gb) GB RAM)</div>")
     
     foreach ($g in $grouped) {
         $first = $g.Group[0]
@@ -55,16 +58,7 @@ function Update-BenchmarksHtml {
             $latestRuns += $latest
         }
 
-        $sortedRuns = $latestRuns | Sort-Object -Property {
-            $ver = $_.binary.version_label
-            if ($ver -match '^s(\d+)\.(\d+)\.(\d+)') {
-                return 99999999 + [int]"$($matches[1])$($matches[2])$($matches[3])"
-            }
-            if ($ver -match '^(\d+)\.(\d+)\.(\d+)') {
-                return ([int]$matches[1] * 10000) + ([int]$matches[2] * 100) + [int]$matches[3]
-            }
-            return 0
-        }
+        $sortedRuns = $latestRuns | Sort-Object -Property { $_.binary.version_label }
 
         foreach ($run in $sortedRuns) {
             $ver = $run.binary.version_label
@@ -95,7 +89,7 @@ function Update-BenchmarksHtml {
             $unrouted = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { 0 }
             $violations = if ($run.drc.final_violations -ne $null) { $run.drc.final_violations } elseif ($run.quality.clearance_violations -ne $null) { $run.quality.clearance_violations } else { 0 }
             $scoreVal = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score } elseif ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { $null }
-            $score = if ($scoreVal -ne $null) { $scoreVal.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
+            $score = if ($scoreVal -ne $null) { $scoreVal.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
             $heap = if ($run.quality.peak_heap_mb -ne $null) { [math]::Round($run.quality.peak_heap_mb).ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
             $warns = if ($run.log_analysis.warn_count -ne $null) { $run.log_analysis.warn_count } else { 0 }
             $errs = if ($run.log_analysis.error_count -ne $null) { $run.log_analysis.error_count } else { 0 }

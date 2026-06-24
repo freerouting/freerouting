@@ -81,8 +81,10 @@ function Export-MarkdownReport {
 
     $sb = [System.Text.StringBuilder]::new()
     $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    $sysInfo = Get-SystemInfo
     [void]$sb.AppendLine("# Freerouting Nightly Benchmarks Report")
     [void]$sb.AppendLine("Generated on: $ts")
+    [void]$sb.AppendLine("System: $($sysInfo.cpu_name) ($($sysInfo.cpu_physical_cores) Cores, $($sysInfo.total_ram_gb) GB RAM)")
     [void]$sb.AppendLine()
     [void]$sb.AppendLine("This report lists the latest benchmark run results for each Freerouting version and fixture combination.")
     [void]$sb.AppendLine()
@@ -96,12 +98,22 @@ function Export-MarkdownReport {
     $summaryRows = [System.Collections.ArrayList]::new()
 
     foreach ($g in $grouped) {
-        $bestRun = $g.Group | Sort-Object -Property {
-            $unrouted = if ($_.drc.final_unrouted -ne $null) { $_.drc.final_unrouted } elseif ($_.quality.final_unrouted -ne $null) { $_.quality.final_unrouted } else { 99999 }
-            $violations = if ($_.drc.final_violations -ne $null) { $_.drc.final_violations } elseif ($_.quality.clearance_violations -ne $null) { $_.quality.clearance_violations } else { 99999 }
-            $score = if ($_.drc.final_quality_score -ne $null) { $_.drc.final_quality_score } elseif ($_.quality.quality_score -ne $null) { $_.quality.quality_score } else { 0.0 }
-            return ($unrouted * 1000000) + ($violations * 1000) - $score
-        } | Select-Object -First 1
+        $bestRun = $g.Group | Sort-Object -Property @{ Expression = {
+            if ($_.drc.final_unrouted -ne $null) { $_.drc.final_unrouted } elseif ($_.quality.final_unrouted -ne $null) { $_.quality.final_unrouted } else { 99999 }
+        }; Ascending = $true }, @{ Expression = {
+            if ($_.drc.final_violations -ne $null) { $_.drc.final_violations } elseif ($_.quality.clearance_violations -ne $null) { $_.quality.clearance_violations } else { 99999 }
+        }; Ascending = $true }, @{ Expression = {
+            if ($_.drc.final_quality_score -ne $null) { $_.drc.final_quality_score } elseif ($_.quality.quality_score -ne $null) { $_.quality.quality_score } else { 0.0 }
+        }; Descending = $true }, @{ Expression = {
+            $ver = $_.binary.version_label
+            if ($ver -match '^s(\d+)\.(\d+)\.(\d+)') {
+                return 99999999 + [int]"$($matches[1])$($matches[2])$($matches[3])"
+            }
+            if ($ver -match '^(\d+)\.(\d+)\.(\d+)') {
+                return ([int]$matches[1] * 10000) + ([int]$matches[2] * 100) + [int]$matches[3]
+            }
+            return 0
+        }; Descending = $true } | Select-Object -First 1
 
         if ($bestRun) {
             $groupName = $bestRun.fixture.group
@@ -110,7 +122,7 @@ function Export-MarkdownReport {
             
             $unrouted = if ($bestRun.drc.final_unrouted -ne $null) { $bestRun.drc.final_unrouted } elseif ($bestRun.quality.final_unrouted -ne $null) { $bestRun.quality.final_unrouted } else { "N/A" }
             $violations = if ($bestRun.drc.final_violations -ne $null) { $bestRun.drc.final_violations } elseif ($bestRun.quality.clearance_violations -ne $null) { $bestRun.quality.clearance_violations } else { "N/A" }
-            $score = if ($bestRun.drc.final_quality_score -ne $null) { $bestRun.drc.final_quality_score.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } elseif ($bestRun.quality.quality_score -ne $null) { $bestRun.quality.quality_score.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
+            $score = if ($bestRun.drc.final_quality_score -ne $null) { $bestRun.drc.final_quality_score.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } elseif ($bestRun.quality.quality_score -ne $null) { $bestRun.quality.quality_score.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
             
             $cpu = if ($bestRun.quality.total_cpu_seconds -ne $null) { $bestRun.quality.total_cpu_seconds.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
             $heap = if ($bestRun.quality.peak_heap_mb -ne $null) { [math]::Round($bestRun.quality.peak_heap_mb).ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
@@ -123,7 +135,8 @@ function Export-MarkdownReport {
         }
     }
     
-    [void]$sb.AppendLine((Format-MarkdownTable $summaryHeaders $summaryAlignments $summaryRows))
+    $sortedSummaryRows = $summaryRows | Sort-Object -Property { $_[0] }, { $_[1] }
+    [void]$sb.AppendLine((Format-MarkdownTable $summaryHeaders $summaryAlignments $sortedSummaryRows))
     [void]$sb.AppendLine()
 
     $upArrowGreen = "$([char]0x2191)$([char]::ConvertFromUtf32(0x1F7E2))" # ↑🟢
@@ -154,16 +167,7 @@ function Export-MarkdownReport {
                 $latestRuns += $latest
             }
 
-            $sortedRuns = $latestRuns | Sort-Object -Property {
-                $ver = $_.binary.version_label
-                if ($ver -match '^s(\d+)\.(\d+)\.(\d+)') {
-                    return 99999999 + [int]"$($matches[1])$($matches[2])$($matches[3])"
-                }
-                if ($ver -match '^(\d+)\.(\d+)\.(\d+)') {
-                    return ([int]$matches[1] * 10000) + ([int]$matches[2] * 100) + [int]$matches[3]
-                }
-                return 0
-            }
+            $sortedRuns = $latestRuns | Sort-Object -Property { $_.binary.version_label }
 
             $tableHeaders = @("Version", "Mode", "Fanout", "Fanout Time (s)", "Router Time (s)", "Optimizer Time (s)", "Total Time (s)", "Passes", "Unrouted", "Violations", "Score", "Peak Heap (MB)", "Total Alloc (GB)", "Warn/Err")
             $tableAlignments = @("L", "L", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R")
@@ -216,7 +220,7 @@ function Export-MarkdownReport {
                 $violationsStr = "$violationsVal"
 
                 # Compute score cell string
-                $scoreStr = if ($scoreVal -ne $null) { $scoreVal.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
+                $scoreStr = if ($scoreVal -ne $null) { $scoreVal.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
  
                 $heap = if ($run.quality.peak_heap_mb -ne $null) { [math]::Round($run.quality.peak_heap_mb).ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
                 $alloc = if ($run.quality.total_allocated_gb -ne $null) { $run.quality.total_allocated_gb.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }

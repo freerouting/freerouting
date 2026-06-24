@@ -133,3 +133,8 @@ a:hover {
     text-align: right;
 }
 
+.benchmark-report-info {
+    font-size: 0.95em;
+    opacity: 0.85;
+    font-style: italic;
+}
