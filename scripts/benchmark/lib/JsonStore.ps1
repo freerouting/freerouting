@@ -55,14 +55,10 @@ function Save-BenchmarksJson {
     $tempPath = "$JsonPath.tmp"
     try {
         $json = ConvertTo-Json $RawData -Depth 100
-        [System.IO.File]::WriteAllText($tempPath, $json)
-        if (Test-Path $tempPath) {
-            # Atomic rename
-            if (Test-Path $JsonPath) {
-                Remove-Item $JsonPath -Force
-            }
-            Move-Item -Path $tempPath -Destination $JsonPath -Force
-        }
+        $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+        [System.IO.File]::WriteAllText($tempPath, $json, $utf8NoBom)
+        # Overwrite destination atomically; keep old file in place until rename succeeds
+        Move-Item -Path $tempPath -Destination $JsonPath -Force
     } catch {
         Write-Error "Failed to write benchmarks.json atomically: $_"
     }

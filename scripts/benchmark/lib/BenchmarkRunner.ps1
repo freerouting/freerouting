@@ -60,7 +60,7 @@ function Invoke-BenchmarkRun {
     $jvmArgs += "-do"
     $jvmArgs += $outputFile
 
-    # Apply router/logger options only if it's not v1.9
+    # Router and logger options (supported by both v1.9 and current builds)
     $jvmArgs += "--router.max_passes=$($Settings.max_passes)"
     $jvmArgs += "--router.max_threads=$($Settings.max_threads)"
     $jvmArgs += "--router.job_timeout=`"$($Settings.max_time)`""

@@ -441,7 +441,7 @@ public class GlobalSettings implements Serializable {
   public void applyCommandLineArguments(String[] p_args) {
     for (int i = 0; i < p_args.length; i++) {
       try {
-        if (p_args[i].equalsIgnoreCase("-help") || p_args[i].equalsIgnoreCase("--help") || p_args[i].equals("-h")) {
+        if (p_args[i].equalsIgnoreCase("-help") || p_args[i].equalsIgnoreCase("--help") || p_args[i].equalsIgnoreCase("-h")) {
           show_help_option = true;
           continue;
         }

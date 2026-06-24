@@ -222,7 +222,10 @@ public class Freerouting {
     
     // Calculate final quality score for DRC report
     try {
-      var routerSettings = globalSettings.settingsMergerProtype.merge();
+      var settingsMerger = globalSettings.settingsMergerProtype.clone();
+      settingsMerger.addOrReplaceSources(
+          new DsnFileSettings(drcJob.input.getData(), drcJob.input.getFilename()));
+      var routerSettings = settingsMerger.merge();
       var finalStats = drcJob.board.get_statistics();
       report.quality_score = (double) finalStats.getNormalizedScore(routerSettings.scoring);
     } catch (Exception e) {
