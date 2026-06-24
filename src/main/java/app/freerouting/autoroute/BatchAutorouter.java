@@ -1291,6 +1291,20 @@ public class BatchAutorouter extends NamedAlgorithm {
         curr_via_costs = this.settings.get_via_costs();
       }
 
+      // Optimization: reduce via costs in early passes to encourage aggressive via placement.
+      // Early passes (1-4) use lower via cost, enabling more flexible routing with more vias.
+      // Later passes increase via cost to stabilize routing with fewer additional vias.
+      if (p_ripup_pass_no <= 4) {
+        // Early passes: 20-40% via cost reduction
+        double via_cost_factor = 1.0 - (0.4 * Math.max(0, 5 - p_ripup_pass_no) / 5.0);
+        curr_via_costs = (int) (curr_via_costs * via_cost_factor);
+      } else if (p_ripup_pass_no <= 8) {
+        // Mid passes: 10-20% via cost reduction
+        double via_cost_factor = 1.0 - (0.2 * Math.max(0, 9 - p_ripup_pass_no) / 5.0);
+        curr_via_costs = (int) (curr_via_costs * via_cost_factor);
+      }
+      // Late passes (9+): use normal via cost
+
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
       AutorouteControl autoroute_control = new AutorouteControl(this.board, p_route_net_no, settings, curr_via_costs,
