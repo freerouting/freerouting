@@ -1543,7 +1543,102 @@ public class BatchAutorouter extends NamedAlgorithm {
       job.logInfo("Power trunk: " + curr_net.name + " - routed " + routed +
                  "/" + escapeVias.size() + " escape vias" +
                  (failed > 0 ? ", failed: " + failed : ""));
+
+      // Phase 2: Identify exit vias and route to anchor points
+      if (failed > 0) {
+        route_power_trunk_phase2(net_no, escapeVias, curr_net.name);
+      }
     }
+  }
+
+  /**
+   * Phase 2 of power trunk routing: route from edge vias (exit points) to power anchors.
+   * Identifies escape via cluster boundaries and routes to main power distribution.
+   */
+  private void route_power_trunk_phase2(int p_net_no,
+      java.util.Set<app.freerouting.board.Via> p_escape_vias, String p_net_name) {
+    if (p_escape_vias.isEmpty()) return;
+
+    job.logInfo("Power trunk phase 2: " + p_net_name + " - routing escape via exits to anchors");
+
+    // Calculate centroid of escape via cluster
+    double cx = 0, cy = 0;
+    for (app.freerouting.board.Via via : p_escape_vias) {
+      app.freerouting.geometry.planar.FloatPoint center = via.get_center().to_float();
+      cx += center.x;
+      cy += center.y;
+    }
+    cx /= p_escape_vias.size();
+    cy /= p_escape_vias.size();
+    final double cluster_cx = cx, cluster_cy = cy;
+
+    // Find edge vias (furthest from cluster center = closest to main area)
+    java.util.List<app.freerouting.board.Via> edge_vias =
+        new java.util.ArrayList<>();
+    double max_dist = 0;
+    for (app.freerouting.board.Via via : p_escape_vias) {
+      double dist = via.get_center().to_float().distance(
+          new app.freerouting.geometry.planar.FloatPoint(cluster_cx, cluster_cy));
+      if (dist > max_dist * 0.7) { // Top 30% most distant = edges
+        edge_vias.add(via);
+        max_dist = Math.max(max_dist, dist);
+      }
+    }
+
+    if (edge_vias.isEmpty()) {
+      job.logInfo("Power trunk phase 2: " + p_net_name + " - no edge vias found");
+      return;
+    }
+
+    // Find power anchor points (traces/vias of same net outside escape cluster)
+    java.util.List<app.freerouting.board.Item> anchor_items = new java.util.ArrayList<>();
+    Collection<app.freerouting.board.Item> net_items = board.get_connectable_items(p_net_no);
+
+    for (app.freerouting.board.Item item : net_items) {
+      if (item instanceof app.freerouting.board.Trace trace) {
+        // Any trace outside cluster is anchor - use first corner as reference
+        app.freerouting.geometry.planar.FloatPoint trace_point = trace.first_corner().to_float();
+        double dist = trace_point.distance(
+            new app.freerouting.geometry.planar.FloatPoint(cluster_cx, cluster_cy));
+        if (dist > 20000) { // > 20mm from cluster = anchor
+          anchor_items.add(item);
+        }
+      } else if (item instanceof app.freerouting.board.Via via &&
+                 !p_escape_vias.contains(via)) {
+        // Non-escape vias are anchors
+        anchor_items.add(item);
+      }
+    }
+
+    if (anchor_items.isEmpty()) {
+      job.logInfo("Power trunk phase 2: " + p_net_name + " - no anchor points found");
+      return;
+    }
+
+    // Route from each edge via to nearest anchor with ultra-aggressive ripup
+    int connected = 0;
+    int failed = 0;
+    int ultra_aggressive_cost = Math.max(1, this.start_ripup_costs / 16); // 1/16 = extreme
+
+    for (app.freerouting.board.Via edge_via : edge_vias) {
+      // Try routing this edge via - should connect to anchors
+      app.freerouting.datastructures.TimeLimit time_limit =
+          new app.freerouting.datastructures.TimeLimit(45000); // 45 sec for anchors
+
+      app.freerouting.autoroute.AutorouteAttemptResult result =
+          board.autoroute(edge_via, this.settings, ultra_aggressive_cost, this.thread,
+              time_limit);
+
+      if (result.state == app.freerouting.autoroute.AutorouteAttemptState.ROUTED) {
+        connected++;
+      } else {
+        failed++;
+      }
+    }
+
+    job.logInfo("Power trunk phase 2: " + p_net_name + " - connected " + connected +
+               "/" + edge_vias.size() + " edge vias to " + anchor_items.size() + " anchors" +
+               (failed > 0 ? ", failed: " + failed : ""));
   }
 
   /**
