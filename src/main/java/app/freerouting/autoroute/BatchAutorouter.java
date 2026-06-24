@@ -1295,6 +1295,14 @@ public class BatchAutorouter extends NamedAlgorithm {
       // This encourages aggressive rework early when space is abundant, then gradually increases cost
       // to stabilize the board in later passes. Formula: base * (1.5 ^ (pass-1))
       autoroute_control.ripup_costs = (int) (this.start_ripup_costs * Math.pow(1.5, Math.max(0, p_ripup_pass_no - 1)));
+
+      // Escape via priority: reduce ripup costs for nets trapped in QFN/BGA escape corners.
+      // These nets benefit from aggressive early rework to find routes before later passes lock them in.
+      if (isEscapeViaNet(p_route_net_no)) {
+        // 50% reduction for escape via nets - encourages ripup and exploration
+        autoroute_control.ripup_costs = autoroute_control.ripup_costs / 2;
+      }
+
       autoroute_control.remove_unconnected_vias = this.remove_unconnected_vias;
 
       // Check if the item is already routed
@@ -1397,23 +1405,39 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Detects if a net is part of a high-pin-count escape via pattern (e.g., QFN-29 charger IC).
-   * These nets often get trapped in deadlocks due to competing escape via routing.
-   * Returns true if the net should receive priority/special handling.
+   * Detects if a net is part of a tight escape via pattern (e.g., QFN-29 charger IC escape corner).
+   * These nets get trapped in deadlocks due to competing escape via routing.
+   * Returns true if pins are in tight cluster (< 10mm apart).
    */
   private boolean isEscapeViaNet(int p_net_no) {
-    // Framework for escape via detection. To be fully implemented:
-    // 1. Get all pins connected to this net
-    // 2. Find which component(s) they belong to
-    // 3. Check if component has >20 SMD pins (high-density IC pattern)
-    // 4. Check if pins are in tight clusters (escape corner indicator)
-    // 5. Return true if this matches QFN/BGA escape via pattern
+    try {
+      // Get all pins connected to this net
+      java.util.List<FloatPoint> pin_locations = new java.util.ArrayList<>();
 
-    // TODO: Implement proper escape via detection by analyzing component density
-    // and pin clustering. For now, return false (no special handling).
-    // This is a hook for future optimization targeting boards like sensor_sub_lid
-    // which have BQ25798 QFN-29 charger ICs with tight escape vias.
-    return false;
+      for (Item item : board.get_connectable_items(p_net_no)) {
+        if (item instanceof Pin pin) {
+          pin_locations.add(pin.get_center().to_float());
+        }
+      }
+
+      // If net has multiple pins in tight cluster (< 10mm apart), it's likely an escape corner
+      if (pin_locations.size() >= 2) {
+        for (int i = 0; i < pin_locations.size(); i++) {
+          for (int j = i + 1; j < pin_locations.size(); j++) {
+            double distance = pin_locations.get(i).distance(pin_locations.get(j));
+            // 10mm in board units (1 unit = 1 micron, so 10mm = 10000 units)
+            if (distance < 10000) {
+              // Tight cluster = escape via pattern (QFN/BGA escape corner)
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    } catch (Exception e) {
+      // If detection fails, safely return false
+      return false;
+    }
   }
 
   /**
