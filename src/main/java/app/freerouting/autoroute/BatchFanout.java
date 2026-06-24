@@ -135,7 +135,8 @@ public class BatchFanout {
     int not_routed_count = 0;
     int insert_error_count = 0;
     int viasBeforePass = this.routing_board.get_vias().size();
-    int ripup_costs = this.settings.get_start_ripup_costs() * (p_pass_no + 1);
+    // Exponential ripup cost growth: 1.5 ^ pass_no encourages early rework, stabilizes later
+    int ripup_costs = (int) (this.settings.get_start_ripup_costs() * Math.pow(1.5, p_pass_no));
 
     long baseMillisPerPin = (this.settings.fanout != null && this.settings.fanout.maxMillisecondsPerPin != null)
         ? this.settings.fanout.maxMillisecondsPerPin : 10000L;

@@ -1291,7 +1291,10 @@ public class BatchAutorouter extends NamedAlgorithm {
       AutorouteControl autoroute_control = new AutorouteControl(this.board, p_route_net_no, settings, curr_via_costs,
           this.trace_cost_arr);
       autoroute_control.ripup_allowed = true;
-      autoroute_control.ripup_costs = this.start_ripup_costs * p_ripup_pass_no;
+      // Exponential ripup cost growth: early passes (1-3) are cheap, later passes get increasingly expensive.
+      // This encourages aggressive rework early when space is abundant, then gradually increases cost
+      // to stabilize the board in later passes. Formula: base * (1.5 ^ (pass-1))
+      autoroute_control.ripup_costs = (int) (this.start_ripup_costs * Math.pow(1.5, Math.max(0, p_ripup_pass_no - 1)));
       autoroute_control.remove_unconnected_vias = this.remove_unconnected_vias;
 
       // Check if the item is already routed
