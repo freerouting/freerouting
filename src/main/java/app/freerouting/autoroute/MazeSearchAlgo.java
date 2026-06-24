@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
@@ -48,8 +49,9 @@ public class MazeSearchAlgo {
   final AutorouteControl ctrl;
   /**
    * The queue of expanded elements used in this search algorithm.
+   * Using PriorityQueue instead of TreeSet to reduce allocation churn (array-based vs tree-based).
    */
-  final SortedSet<MazeListElement> maze_expansion_list;
+  final PriorityQueue<MazeListElement> maze_expansion_list;
 
   /**
    * Used for calculating of a good lower bound for the distance between a new
@@ -77,7 +79,7 @@ public class MazeSearchAlgo {
     random_generator.setSeed(
         p_ctrl.ripup_costs); // Keep v1.9 deterministic randomization across passes.
     this.search_tree = p_autoroute_engine.autoroute_search_tree;
-    maze_expansion_list = new TreeSet<>();
+    maze_expansion_list = new PriorityQueue<>();
     destination_distance = new DestinationDistance(ctrl.trace_costs, ctrl.layer_active, ctrl.min_normal_via_cost,
         ctrl.min_cheap_via_cost);
   }
