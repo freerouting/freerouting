@@ -1397,6 +1397,26 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
+   * Detects if a net is part of a high-pin-count escape via pattern (e.g., QFN-29 charger IC).
+   * These nets often get trapped in deadlocks due to competing escape via routing.
+   * Returns true if the net should receive priority/special handling.
+   */
+  private boolean isEscapeViaNet(int p_net_no) {
+    // Framework for escape via detection. To be fully implemented:
+    // 1. Get all pins connected to this net
+    // 2. Find which component(s) they belong to
+    // 3. Check if component has >20 SMD pins (high-density IC pattern)
+    // 4. Check if pins are in tight clusters (escape corner indicator)
+    // 5. Return true if this matches QFN/BGA escape via pattern
+
+    // TODO: Implement proper escape via detection by analyzing component density
+    // and pin clustering. For now, return false (no special handling).
+    // This is a hook for future optimization targeting boards like sensor_sub_lid
+    // which have BQ25798 QFN-29 charger ICs with tight escape vias.
+    return false;
+  }
+
+  /**
    * Finds the nearest point on a trace to the given point
    */
   private FloatPoint nearest_point_on_trace(PolylineTrace p_trace, FloatPoint p_point) {
