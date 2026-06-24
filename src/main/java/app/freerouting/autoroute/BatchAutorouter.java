@@ -1568,6 +1568,10 @@ public class BatchAutorouter extends NamedAlgorithm {
   /**
    * Phase 2 of power trunk routing: route from edge vias (exit points) to power anchors.
    * Identifies escape via cluster boundaries and routes to main power distribution.
+   *
+   * Phase 3: Constrained exit-point routing
+   * If Phase 2 still has failures, identify board-level escape regions and route vias
+   * that lie on region boundaries with zero-cost pathfinding to anchors.
    */
   private void route_power_trunk_phase2(int p_net_no,
       java.util.Set<app.freerouting.board.Via> p_escape_vias, String p_net_name) {
@@ -1653,6 +1657,86 @@ public class BatchAutorouter extends NamedAlgorithm {
     job.logInfo("Power trunk phase 2: " + p_net_name + " - connected " + connected +
                "/" + edge_vias.size() + " edge vias to " + anchor_items.size() + " anchors" +
                (failed > 0 ? ", failed: " + failed : ""));
+
+    // Phase 3: If still unrouted vias after Phase 2, use boundary-constrained routing
+    if (failed > 0) {
+      route_power_trunk_phase3(p_net_no, p_escape_vias, edge_vias, anchor_items, p_net_name);
+    }
+  }
+
+  /**
+   * Phase 3: Constrained boundary routing - route vias that touch escape region boundaries
+   * directly to anchors with minimal cost.
+   *
+   * Identifies vias at region edges (boundary intersection) and routes them with
+   * zero ripup cost (always allow connection) to enable final power trunk closure.
+   */
+  private void route_power_trunk_phase3(int p_net_no,
+      java.util.Set<app.freerouting.board.Via> p_all_escape_vias,
+      java.util.List<app.freerouting.board.Via> p_edge_vias,
+      java.util.List<app.freerouting.board.Item> p_anchor_items, String p_net_name) {
+
+    job.logInfo("Power trunk phase 3: " + p_net_name +
+               " - boundary-constrained routing for trapped vias");
+
+    // Identify vias at cluster boundary (those closest to anchors)
+    java.util.List<app.freerouting.board.Via> boundary_vias = new java.util.ArrayList<>();
+
+    for (app.freerouting.board.Via via : p_edge_vias) {
+      // Find nearest anchor
+      double min_dist = Double.MAX_VALUE;
+      for (app.freerouting.board.Item anchor : p_anchor_items) {
+        app.freerouting.geometry.planar.FloatPoint via_center = via.get_center().to_float();
+        app.freerouting.geometry.planar.FloatPoint anchor_center;
+
+        if (anchor instanceof app.freerouting.board.Via anchor_via) {
+          anchor_center = anchor_via.get_center().to_float();
+        } else if (anchor instanceof app.freerouting.board.Trace anchor_trace) {
+          anchor_center = anchor_trace.first_corner().to_float();
+        } else {
+          continue;
+        }
+
+        double dist = via_center.distance(anchor_center);
+        if (dist < min_dist) {
+          min_dist = dist;
+        }
+      }
+
+      // Vias within 50mm of anchors are boundary candidates
+      if (min_dist < 50000) {
+        boundary_vias.add(via);
+      }
+    }
+
+    if (boundary_vias.isEmpty()) {
+      job.logInfo("Power trunk phase 3: " + p_net_name + " - no boundary vias found");
+      return;
+    }
+
+    // Route boundary vias with extreme settings (force connection)
+    // Use negative ripup cost = "no limit, always route"
+    int connected = 0;
+    int failed = 0;
+
+    for (app.freerouting.board.Via boundary_via : boundary_vias) {
+      // Phase 3: absolute minimum ripup cost (1) to force routing
+      app.freerouting.datastructures.TimeLimit time_limit =
+          new app.freerouting.datastructures.TimeLimit(60000); // 60 sec for boundary
+
+      app.freerouting.autoroute.AutorouteAttemptResult result =
+          board.autoroute(boundary_via, this.settings, 1, this.thread, time_limit);
+
+      if (result.state == app.freerouting.autoroute.AutorouteAttemptState.ROUTED) {
+        connected++;
+      } else {
+        failed++;
+      }
+    }
+
+    job.logInfo("Power trunk phase 3: " + p_net_name + " - boundary routing: " + connected +
+               "/" + boundary_vias.size() + " boundary vias connected to anchors" +
+               (failed > 0 ? ", still blocked: " + failed : ""));
   }
 
   /**
