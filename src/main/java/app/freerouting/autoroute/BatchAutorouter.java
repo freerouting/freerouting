@@ -238,6 +238,33 @@ public class BatchAutorouter extends NamedAlgorithm {
     return false;
   }
 
+  /**
+   * Calculate routing priority for a net. Lower value = route first.
+   * Priority order: GND (0) > VCC (1) > high density (2-N) > low density (100+)
+   */
+  private int calculateNetPriority(Item p_item, int p_net_no) {
+    Net net = board.rules.nets.get(p_net_no);
+    if (net == null) {
+      return 100; // Unknown net, low priority
+    }
+
+    // GND net gets highest priority (0)
+    if (net.name != null && net.name.toUpperCase().contains("GND")) {
+      return 0;
+    }
+
+    // VCC/POWER nets get second priority (1)
+    String name = net.name.toUpperCase();
+    if (name.contains("VCC") || name.contains("POWER") || name.contains("VDD") || name.contains("VSS")) {
+      return 1;
+    }
+
+    // Regular nets: sort by pin count (density). More pins = higher priority.
+    // Negate pin count so higher densities sort first
+    int pin_count = board.connectable_item_count(p_net_no);
+    return Math.max(2, 200 - pin_count); // 200 - pin_count for density ordering
+  }
+
   private List<Item> getAutorouteItems(RoutingBoard board) {
     // Reuse instance collections to reduce memory allocation
     reusable_autoroute_item_list.clear();
@@ -470,11 +497,26 @@ public class BatchAutorouter extends NamedAlgorithm {
       // TODO: Start mutliple instances of the following part in parallel, wait for
       // the results and keep the best one
 
-      // Sort items by airline distance (shortest first) for deterministic routing
-      // This prioritizes local connections which typically route faster
-      // NOTE: Disabled in v2.3 because it negatively impacts convergence compared to
-      // v1.9 (natural order)
-      // autoroute_item_list.sort(Comparator.comparingDouble(this::calculateItemDistance));
+      // Sort items by net priority: GND first, then VCC, then by pin density.
+      // This reduces rip-ups by routing power/ground and dense nets while space is abundant.
+      autoroute_item_list.sort((item1, item2) -> {
+        // For items with multiple nets, find the best (lowest priority) net
+        int minPriority1 = Integer.MAX_VALUE;
+        for (int i = 0; i < item1.net_count(); i++) {
+          minPriority1 = Math.min(minPriority1, calculateNetPriority(item1, item1.get_net_no(i)));
+        }
+
+        int minPriority2 = Integer.MAX_VALUE;
+        for (int i = 0; i < item2.net_count(); i++) {
+          minPriority2 = Math.min(minPriority2, calculateNetPriority(item2, item2.get_net_no(i)));
+        }
+
+        if (minPriority1 != minPriority2) {
+          return Integer.compare(minPriority1, minPriority2);
+        }
+        // Tie-break by item ID for determinism
+        return Integer.compare(item1.get_id_no(), item2.get_id_no());
+      });
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list) {
