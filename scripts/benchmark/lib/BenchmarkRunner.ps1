@@ -71,7 +71,7 @@ function Invoke-BenchmarkRun {
                 $wsMB = [math]::Round($p.WorkingSet64 / 1MB, 1)
                 Add-Content $logFile "$ts  WorkingSet=${wsMB}MB"
             } catch {}
-            Start-Sleep 10
+            Start-Sleep 1
         }
     } -ArgumentList $memLog, $process.Id
 
@@ -79,8 +79,54 @@ function Invoke-BenchmarkRun {
     $maxTs = [timespan]::Parse($Settings.max_time)
     $timeoutMs = $maxTs.TotalMilliseconds
 
-    # Wait for completion with timeout
-    $completed = $process.WaitForExit($timeoutMs)
+    # Wait for completion with timeout while printing log lines dynamically
+    $lastLineCount = 0
+    $completed = $false
+    $timeoutElapsed = 0
+    $sleepIntervalMs = 250
+
+    while ($timeoutElapsed -lt $timeoutMs) {
+        if ($process.HasExited) {
+            $completed = $true
+            break
+        }
+        Start-Sleep -Milliseconds $sleepIntervalMs
+        $timeoutElapsed += $sleepIntervalMs
+
+        # Read and display new log lines
+        if (Test-Path $logFile) {
+            try {
+                $currentLines = Get-Content $logFile -ErrorAction SilentlyContinue
+                if ($currentLines) {
+                    $newLineCount = $currentLines.Count
+                    if ($newLineCount -gt $lastLineCount) {
+                        for ($i = $lastLineCount; $i -lt $newLineCount; $i++) {
+                            Write-Output "    $($currentLines[$i])"
+                        }
+                        $lastLineCount = $newLineCount
+                    }
+                }
+            } catch {
+                # Ignore concurrent access issues
+            }
+        }
+    }
+
+    # Print any remaining lines
+    if (Test-Path $logFile) {
+        try {
+            $currentLines = Get-Content $logFile -ErrorAction SilentlyContinue
+            if ($currentLines) {
+                $newLineCount = $currentLines.Count
+                if ($newLineCount -gt $lastLineCount) {
+                    for ($i = $lastLineCount; $i -lt $newLineCount; $i++) {
+                        Write-Output "    $($currentLines[$i])"
+                    }
+                }
+            }
+        } catch {}
+    }
+
     $endTime = Get-Date
     
     # Stop memory sampler

@@ -22,7 +22,7 @@ function Invoke-DrcCheck {
 
     $jvmArgs = @(
         "-jar", $BinaryCurrent.FullName,
-        "-de", $DsnFile.FullName, $SesFile.FullName,
+        "-de", "$($DsnFile.FullName)+$($SesFile.FullName)",
         "-drc", $drcReportFile,
         "--gui.enabled=false"
     )

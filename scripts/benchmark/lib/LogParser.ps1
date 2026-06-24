@@ -133,7 +133,7 @@ function Get-PhaseMetrics {
     }
 
     # Fanout session summary
-    $RE_FANOUT = 'Fanout session ([\w ]+): started with (\d+) total SMD pins, completed in ([^,]+), escaped pins: (\d+)/(\d+) \(([\d.,]+)%\), using ([\d.,]+) total CPU seconds, ([\d.,]+) GB total allocated, and ([\d.,]+) MB peak heap usage\.'
+    $RE_FANOUT = 'Fanout session ([\w ]+): started with (\d+) total SMD pins, completed in ([^,]+), escaped pins: (\d+)/(\d+) \(([\d.,]+)%\), using ([\d.,]+) total CPU seconds, ([\d.,]+) (?:MB|GB) total allocated, and ([\d.,]+) MB peak heap usage\.'
     foreach ($line in $lines) {
         if ($line -match $RE_FANOUT) {
             $fanout.log_found = $true
@@ -143,13 +143,15 @@ function Get-PhaseMetrics {
             $fanout.not_routed_pin_count = [int]$matches[5] - [int]$matches[4]
             $fanout.escape_rate_pct = [double]($matches[6].Replace(',', '.'))
             $fanout.cpu_seconds = [double]($matches[7].Replace(',', '.'))
-            $fanout.total_allocated_gb = [double]($matches[8].Replace(',', '.'))
+            # Normalize to MB (if old format was GB, convert; otherwise keep as-is)
+            $allocVal = [double]($matches[8].Replace(',', '.'))
+            $fanout.total_allocated_gb = if ($line.Contains('GB total allocated')) { $allocVal } else { [math]::Round($allocVal / 1024.0, 4) }
             $fanout.peak_heap_mb = [double]($matches[9].Replace(',', '.'))
         }
     }
 
     # Autorouter session summary
-    $RE_ROUTER = 'Auto-router session ([\w ]+): started with (\d+) unrouted nets, completed in ([^,]+), final score: ([^,]+), using ([\d.,]+) total CPU seconds, ([\d.,]+) GB total allocated, and ([\d.,]+) MB peak heap usage\.'
+    $RE_ROUTER = 'Auto-router session ([\w ]+): started with (\d+) unrouted nets, completed in ([^,]+), final score: ([^,]+), using ([\d.,]+) total CPU seconds, ([\d.,]+) (?:MB|GB) total allocated, and ([\d.,]+) MB peak heap usage\.'
     foreach ($line in $lines) {
         if ($line -match $RE_ROUTER) {
             $autorouter.log_found = $true
@@ -163,34 +165,72 @@ function Get-PhaseMetrics {
             $autorouter.final_violations = $scoreParsed.Violations
 
             $autorouter.cpu_seconds = [double]($matches[5].Replace(',', '.'))
-            $autorouter.total_allocated_gb = [double]($matches[6].Replace(',', '.'))
+            # Normalize to GB (if new format is MB, convert; if old format already GB, keep)
+            $allocVal = [double]($matches[6].Replace(',', '.'))
+            $autorouter.total_allocated_gb = if ($line.Contains('GB total allocated')) { $allocVal } else { [math]::Round($allocVal / 1024.0, 4) }
             $autorouter.peak_heap_mb = [double]($matches[7].Replace(',', '.'))
         }
     }
 
-    # Autorouter passes completed
+    # Autorouter passes completed + fallback duration sum
     $maxPass = 0
+    $passDurationSum = 0.0
+    $lastPassScore = $null
+    $lastPassUnrouted = $null
+    $lastPassViolations = $null
     foreach ($line in $lines) {
         if ($line -match 'Auto-router pass #(\d+) on board') {
             $passNum = [int]$matches[1]
             if ($passNum -gt $maxPass) { $maxPass = $passNum }
+            $autorouter.log_found = $true
+
+            # Try to extract pass duration in seconds (e.g. "completed in 4.29 seconds")
+            if ($line -match 'completed in ([\d.]+) seconds') {
+                $passDurationSum += [double]$matches[1]
+            }
+            # Extract final score from the pass line for fallback
+            if ($line -match 'score of ([\d.,]+(?:\s*\([^)]*\))?)') {
+                $parsed = ConvertFrom-FrScore $matches[1]
+                $lastPassScore = $parsed.Score
+                $lastPassUnrouted = $parsed.Unrouted
+                $lastPassViolations = $parsed.Violations
+            }
         }
     }
     if ($maxPass -gt 0) {
         $autorouter.passes_completed = $maxPass
     }
 
-    # Optimizer passes completed
+    # Optimizer passes completed + fallback duration sum
     $maxOptPass = 0
+    $optPassDurationSum = 0.0
     foreach ($line in $lines) {
-        if ($line -match 'Optimizer pass #(\d+) was completed') {
+        if ($line -match 'Optimizer pass #(\d+)') {
             $optPassNum = [int]$matches[1]
             if ($optPassNum -gt $maxOptPass) { $maxOptPass = $optPassNum }
             $optimizer.log_found = $true
+
+            # Try to extract pass duration in seconds
+            if ($line -match 'completed in ([\d.]+) seconds') {
+                $optPassDurationSum += [double]$matches[1]
+            }
         }
     }
     if ($maxOptPass -gt 0) {
         $optimizer.passes_completed = $maxOptPass
+    }
+
+    # Optimizer session summary (new structured format)
+    $RE_OPTIMIZER = 'Optimizer session ([\w ]+): started with score ([^,]+), completed in ([^,]+), final score: ([^,]+), using ([\d.,]+) total CPU seconds, ([\d.,]+) (?:MB|GB) total allocated, and ([\d.,]+) MB peak heap usage\.'
+    foreach ($line in $lines) {
+        if ($line -match $RE_OPTIMIZER) {
+            $optimizer.log_found = $true
+            $optimizer.duration_seconds = ConvertFrom-FrDuration $matches[3]
+            $optimizer.cpu_seconds = [double]($matches[5].Replace(',', '.'))
+            $allocVal = [double]($matches[6].Replace(',', '.'))
+            $optimizer.total_allocated_gb = if ($line.Contains('GB total allocated')) { $allocVal } else { [math]::Round($allocVal / 1024.0, 4) }
+            $optimizer.peak_heap_mb = [double]($matches[7].Replace(',', '.'))
+        }
     }
 
     # Fallback for older versions (2.0.1/2.1.0/2.2.4) that don't emit structured summaries
@@ -214,6 +254,17 @@ function Get-PhaseMetrics {
         }
     }
 
+    # When structured session summary missing, fall back to summed pass durations
+    if ($autorouter.log_found -and $autorouter.duration_seconds -eq $null -and $passDurationSum -gt 0) {
+        $autorouter.duration_seconds = [math]::Round($passDurationSum, 2)
+    }
+    # Fallback final score from last pass line
+    if ($autorouter.log_found -and $autorouter.final_score -eq $null -and $lastPassScore -ne $null) {
+        $autorouter.final_score = $lastPassScore
+        $autorouter.final_unrouted = $lastPassUnrouted
+        $autorouter.final_violations = $lastPassViolations
+    }
+
     if (-not $optimizer.log_found) {
         foreach ($line in $lines) {
             if ($line -match '(?:Route optimization|Optimization) was completed in ([\d.,]+)\s*seconds') {
@@ -222,6 +273,11 @@ function Get-PhaseMetrics {
                 $optimizer.duration_seconds = [double]$durStr
             }
         }
+    }
+
+    # When structured optimizer summary missing, fall back to summed pass durations
+    if ($optimizer.log_found -and $optimizer.duration_seconds -eq $null -and $optPassDurationSum -gt 0) {
+        $optimizer.duration_seconds = [math]::Round($optPassDurationSum, 2)
     }
 
     # Fallback memory extraction from the background sampler

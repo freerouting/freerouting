@@ -545,24 +545,24 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
           completionStatus = "completed with pass number limit hit:";
         }
 
-        String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, completed in %s, final score: %s, using %s total CPU seconds, %s GB total allocated, and %s MB peak heap usage.",
+        String sessionSummary = String.format(java.util.Locale.US,
+            "Auto-router session %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
             completionStatus,
             initialUnroutedCount,
-            FRLogger.formatDuration(autoroutingSecondsToComplete),
+            autoroutingSecondsToComplete,
             FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount,
                 bs.clearanceViolations.totalCount),
-            FRLogger.defaultFloatFormat.format(routingJob.resourceUsage.cpuTimeUsed),
-            FRLogger.defaultFloatFormat.format(routingJob.resourceUsage.maxMemoryUsed / 1024.0f),
-            FRLogger.defaultFloatFormat.format(routingJob.resourceUsage.peakMemoryUsed));
+            routingJob.resourceUsage.cpuTimeUsed,
+            routingJob.resourceUsage.maxMemoryUsed / 1024.0f,
+            routingJob.resourceUsage.peakMemoryUsed);
 
         routingJob.logInfo(sessionSummary);
       } else {
         // Fallback to simple logging if session info not available
-        routingJob.logInfo("Auto-routing was completed in " + FRLogger.formatDuration(autoroutingSecondsToComplete)
-            + " with the score of " + FRLogger.formatScore(scoreBeforeOptimization,
-                bs.connections.incompleteCount, bs.clearanceViolations.totalCount)
-            + ".");
+        routingJob.logInfo(String.format("Auto-routing was completed in %.2f seconds with the score of %s.",
+            autoroutingSecondsToComplete,
+            FRLogger.formatScore(scoreBeforeOptimization,
+                bs.connections.incompleteCount, bs.clearanceViolations.totalCount)));
       }
       FRAnalytics.autorouterFinished();
 

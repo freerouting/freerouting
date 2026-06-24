@@ -116,11 +116,12 @@ a:hover {
 }
 .benchmark-table tr.header-row {
     background-color: rgba(232, 204, 135, 0.1);
-    text-align: left;
+    text-align: center;
 }
 .benchmark-table th {
     padding: 8px;
     border: 1px solid rgba(232, 204, 135, 0.3);
+    text-align: center;
 }
 .benchmark-table tr.data-row {
     border-bottom: 1px solid rgba(232, 204, 135, 0.15);

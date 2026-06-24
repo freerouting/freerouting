@@ -36,9 +36,9 @@ function Format-MarkdownTable {
     for ($i = 0; $i -lt $colCount; $i++) {
         $align = $Alignments[$i]
         if ($align -eq 'R') {
-            $cell = ([string]::new('-', $widths[$i] + 1) + ":")
+            $cell = ([string]::new('-', $widths[$i] - 1) + ":")
         } else {
-            $cell = (":" + [string]::new('-', $widths[$i] + 1))
+            $cell = (":" + [string]::new('-', $widths[$i] - 1))
         }
         [void]$sb.Append(" $cell |")
     }
@@ -200,24 +200,12 @@ function Export-MarkdownReport {
 
                 # Compute unrouted cell string
                 $unroutedStr = "$unroutedVal"
-                if ($prevUnrouted -ne $null) {
-                    if ($unroutedVal -lt $prevUnrouted) { $unroutedStr += " ($upArrowGreen)" }
-                    elseif ($unroutedVal -gt $prevUnrouted) { $unroutedStr += " ($downArrowRed)" }
-                }
                 
                 # Compute violations cell string
                 $violationsStr = "$violationsVal"
-                if ($prevViolations -ne $null) {
-                    if ($violationsVal -lt $prevViolations) { $violationsStr += " ($upArrowGreen)" }
-                    elseif ($violationsVal -gt $prevViolations) { $violationsStr += " ($downArrowRed)" }
-                }
 
                 # Compute score cell string
                 $scoreStr = if ($scoreVal -ne $null) { $scoreVal.ToString("F2") } else { "N/A" }
-                if ($scoreVal -ne $null -and $prevScore -ne $null) {
-                    if ($scoreVal -gt $prevScore) { $scoreStr += " ($upArrowGreen)" }
-                    elseif ($scoreVal -lt $prevScore) { $scoreStr += " ($downArrowRed)" }
-                }
 
                 $heap = if ($run.quality.peak_heap_mb -ne $null) { "$($run.quality.peak_heap_mb) MB" } else { "N/A" }
                 $alloc = if ($run.quality.total_allocated_gb -ne $null) { "$($run.quality.total_allocated_gb) GB" } else { "N/A" }

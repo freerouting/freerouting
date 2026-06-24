@@ -177,6 +177,7 @@ public class Freerouting {
     RoutingJob drcJob = new RoutingJob(drcSession.id);
     drcJob.drc = globalSettings.drc_report_file;
     try {
+      FRLogger.info("Loading DSN file for DRC: " + globalSettings.initialInputFile);
       drcJob.setInput(globalSettings.initialInputFile);
     } catch (Exception e) {
       FRLogger.error("Couldn't load the input file '" + globalSettings.initialInputFile + "'", e);
