@@ -47,6 +47,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
     private final int trace_pull_tight_accuracy;
 
     protected RoutingJob job;
+    public boolean isOptimizerAutorouter = false;
 
     /** Used to draw the airline of the current routed incomplete. */
     private FloatLine air_line;
@@ -217,7 +218,9 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
             } else {
                 passCompletedMessage += ".";
             }
-            job.logInfo(passCompletedMessage);
+            if (!isOptimizerAutorouter) {
+                job.logInfo(passCompletedMessage);
+            }
 
             if (this.settings.save_intermediate_stages) {
                 fireBoardSnapshotEvent(this.board);

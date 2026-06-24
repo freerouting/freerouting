@@ -47,6 +47,8 @@ public class BatchAutorouter {
   private final HashSet<String> already_checked_board_hashes = new HashSet<>();
   private final LinkedList<Integer> diffBetweenBoards = new LinkedList<>();
   private boolean is_interrupted = false;
+  public boolean isOptimizerAutorouter = false;
+
   /** Used to draw the airline of the current routed incomplete. */
   private FloatLine air_line;
 
@@ -117,6 +119,7 @@ public class BatchAutorouter {
       RoutingBoard updated_routing_board) {
     BatchAutorouter router_instance = new BatchAutorouter(
         p_thread, true, p_with_preferred_directions, p_ripup_costs, updated_routing_board);
+    router_instance.isOptimizerAutorouter = true;
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
     while (still_unrouted_items
@@ -524,14 +527,16 @@ public class BatchAutorouter {
 
       String scoreStr = FRLogger.formatScore(score, incompleteCount, violations);
 
-      FRLogger.info(String.format(java.util.Locale.US,
-          "Auto-router pass #%d on board '%s' was completed in %.2f seconds with the score of %s, using %.2f CPU seconds and the job allocated %.2f GB of memory so far.",
-          p_pass_no,
-          routing_board.get_hash(),
-          passDuration / 1000.0,
-          scoreStr,
-          this.totalCpuTime,
-          this.totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0));
+      if (!isOptimizerAutorouter) {
+        FRLogger.info(String.format(java.util.Locale.US,
+            "Auto-router pass #%d on board '%s' was completed in %.2f seconds with the score of %s, using %.2f CPU seconds and the job allocated %.2f GB of memory so far.",
+            p_pass_no,
+            routing_board.get_hash(),
+            passDuration / 1000.0,
+            scoreStr,
+            this.totalCpuTime,
+            this.totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0));
+      }
 
       PerformanceProfiler.recordPass(p_pass_no, incompleteCount, passDuration, currentRipupCost);
 

@@ -98,6 +98,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   private Instant sessionStartTime;
   private long lastBoardUpdateTimestamp = 0;
 
+  public boolean isOptimizerAutorouter = false;
+
   public BatchAutorouter(RoutingJob job) {
     this(job.thread, job.board, job.routerSettings, !job.routerSettings.isFanoutEnabled(), true,
         job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
@@ -141,6 +143,7 @@ public class BatchAutorouter extends NamedAlgorithm {
     BatchAutorouter router_instance = new BatchAutorouter(job.thread, updated_routing_board, routerSettings, true,
         p_with_preferred_directions, p_ripup_costs, trace_pull_tight_accuracy);
     router_instance.job = job;
+    router_instance.isOptimizerAutorouter = true;
 
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
@@ -976,7 +979,9 @@ public class BatchAutorouter extends NamedAlgorithm {
       } else {
         passCompletedMessage += ".";
       }
-      job.logInfo(passCompletedMessage);
+      if (!isOptimizerAutorouter) {
+        job.logInfo(passCompletedMessage);
+      }
 
       DesignRulesChecker tempDrc = new DesignRulesChecker(this.board, null);
       tempDrc.calculateAllIncompletes();
