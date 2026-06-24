@@ -1332,6 +1332,10 @@ public class MazeSearchAlgo {
     if (!p_obstacle_item.is_routable()) {
       return -1;
     }
+    // Don't ripup protected (user-fixed) wiring - honors DSN "type protect" keyword
+    if (p_obstacle_item.is_user_fixed()) {
+      return -1;
+    }
     if (p_door_is_small) {
       // allow entering a via or trace, if its corresponding border segment is smaller
       // than the
