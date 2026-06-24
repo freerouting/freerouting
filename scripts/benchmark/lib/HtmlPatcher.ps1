@@ -14,12 +14,11 @@ function Update-BenchmarksHtml {
         $runs += $Cache[$key]
     }
 
-    $grouped = $runs | Group-Object -Property { $_.fixture.relative_path }
+    $grouped = $runs | Group-Object -Property { $_.fixture.relative_path } | Sort-Object -Property Name
 
     # Build premium styled HTML
     $sb = [System.Text.StringBuilder]::new()
     [void]$sb.AppendLine("<div class='benchmark-container'>")
-    [void]$sb.AppendLine("  <h2 class='benchmark-title'>Freerouting Benchmark Results</h2>")
     
     foreach ($g in $grouped) {
         $first = $g.Group[0]
@@ -28,7 +27,9 @@ function Update-BenchmarksHtml {
 
         [void]$sb.AppendLine("  <div class='fixture-section'>")
         [void]$sb.AppendLine("    <h3 class='fixture-title'>$fixGroup / $fixName</h3>")
-        [void]$sb.AppendLine("    <p class='fixture-meta'>Layers: $($first.fixture.layer_count) | Nets: $($first.fixture.net_count) | Components: $($first.fixture.component_count) | Area: $($first.fixture.board_area_cm2) cm$([char]178)</p>")
+        $sizeKb = [math]::Round($first.fixture.size_bytes / 1KB, 1)
+        $dot = " &middot; "
+        [void]$sb.AppendLine("    <p class='fixture-meta'>Size: $($sizeKb) kB $dot Layers: $($first.fixture.layer_count) $dot Nets: $($first.fixture.net_count) $dot Components: $($first.fixture.component_count) $dot Dimensions: $($first.fixture.board_width_mm) x $($first.fixture.board_height_mm) mm ($($first.fixture.board_area_cm2) cm$([char]178)) $dot CAD: $($first.fixture.host_cad) (v$($first.fixture.host_version))</p>")
         
         [void]$sb.AppendLine("    <table class='benchmark-table'>")
         [void]$sb.AppendLine("      <thead>")
@@ -117,10 +118,18 @@ function Update-BenchmarksHtml {
     }
     [void]$sb.AppendLine("</div>")
 
+    $indentedHtml = ""
+    foreach ($line in $sb.ToString().Split("`n")) {
+        $trimmed = $line.TrimEnd("`r")
+        if ($trimmed.Length -gt 0) {
+            $indentedHtml += "    $trimmed`r`n"
+        }
+    }
+
     $htmlContent = [System.IO.File]::ReadAllText($HtmlPath, [System.Text.Encoding]::UTF8)
     
     $pattern = '(?s)<!-- BENCHMARK_TABLE_START -->.*?<!-- BENCHMARK_TABLE_END -->'
-    $replacement = "<!-- BENCHMARK_TABLE_START -->`r`n$($sb.ToString())`r`n<!-- BENCHMARK_TABLE_END -->"
+    $replacement = "<!-- BENCHMARK_TABLE_START -->`r`n$indentedHtml    <!-- BENCHMARK_TABLE_END -->"
     
     $patchedContent = [regex]::Replace($htmlContent, $pattern, $replacement)
 

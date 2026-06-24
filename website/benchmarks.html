@@ -62,98 +62,160 @@
     <section class="benchmarks">
         <h2>Benchmarks</h2>
         <!-- BENCHMARK_TABLE_START -->
-<div class='benchmark-container'>
-  <h2 class='benchmark-title'>Freerouting Benchmark Results</h2>
-  <div class='fixture-section'>
-    <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm07.dsn</h3>
-    <p class='fixture-meta'>Layers: 2 | Nets: 52 | Components: 13 | Area: 13.2 cm²</p>
-    <table class='benchmark-table'>
-      <thead>
-        <tr class='header-row'>
-          <th>Version</th>
-          <th>Mode</th>
-          <th>Total Time (s)</th>
-          <th>Passes</th>
-          <th>Unrouted</th>
-          <th>Violations</th>
-          <th>Score</th>
-          <th>Peak Heap (MB)</th>
-          <th>Warn/Err</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class='data-row'>
-          <td>1.9.0</td>
-          <td>GUI</td>
-          <td class='text-right'>45.71</td>
-          <td class='text-right'>2+6+10</td>
-          <td class='text-right'>0</td>
-          <td class='text-right'>0</td>
-          <td class='text-right'>999.99</td>
-          <td class='text-right'>146</td>
-          <td class='text-right'>0 / 0</td>
-        </tr>
-        <tr class='data-row'>
-          <td>2.0.1</td>
-          <td>CLI</td>
-          <td class='text-right'>N/A</td>
-          <td class='text-right'>0+7+0</td>
-          <td class='text-right'>1</td>
-          <td class='text-right'>0</td>
-          <td class='text-right'>988.34</td>
-          <td class='text-right'>1127</td>
-          <td class='text-right'>1 / 32</td>
-        </tr>
-        <tr class='data-row'>
-          <td>2.1.0</td>
-          <td>CLI</td>
-          <td class='text-right'>N/A</td>
-          <td class='text-right'>0+811+3</td>
-          <td class='text-right'>2</td>
-          <td class='text-right'>0</td>
-          <td class='text-right'>976.70</td>
-          <td class='text-right'>1428</td>
-          <td class='text-right'>1 / 20</td>
-        </tr>
-        <tr class='data-row'>
-          <td>2.2.4</td>
-          <td>CLI</td>
-          <td class='text-right'>49.00</td>
-          <td class='text-right'>0+8+7</td>
-          <td class='text-right'>0</td>
-          <td class='text-right'>0</td>
-          <td class='text-right'>999.96</td>
-          <td class='text-right'>1584</td>
-          <td class='text-right'>3 / 0</td>
-        </tr>
-        <tr class='data-row'>
-          <td>s2026.06.23</td>
-          <td>CLI</td>
-          <td class='text-right'>24.92</td>
-          <td class='text-right'>0+18+2</td>
-          <td class='text-right'>3</td>
-          <td class='text-right'>0</td>
-          <td class='text-right'>965.08</td>
-          <td class='text-right'>1380</td>
-          <td class='text-right'>0 / 0</td>
-        </tr>
-        <tr class='data-row'>
-          <td>s2026.06.24</td>
-          <td>CLI</td>
-          <td class='text-right'>27.39</td>
-          <td class='text-right'>20+18+2</td>
-          <td class='text-right'>3</td>
-          <td class='text-right'>0</td>
-          <td class='text-right'>965.08</td>
-          <td class='text-right'>780</td>
-          <td class='text-right'>0 / 0</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- BENCHMARK_TABLE_END -->
+    <div class='benchmark-container'>
+      <div class='fixture-section'>
+        <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm01.dsn</h3>
+        <p class='fixture-meta'>Size: 30.5 kB  &middot;  Layers: 2  &middot;  Nets: 99  &middot;  Components: 20  &middot;  Dimensions: 101.6 x 53.3 mm (54.2 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+        <table class='benchmark-table'>
+          <thead>
+            <tr class='header-row'>
+              <th>Version</th>
+              <th>Mode</th>
+              <th>Total Time (s)</th>
+              <th>Passes</th>
+              <th>Unrouted</th>
+              <th>Violations</th>
+              <th>Score</th>
+              <th>Peak Heap (MB)</th>
+              <th>Warn/Err</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='data-row'>
+              <td>1.9.0</td>
+              <td>GUI</td>
+              <td class='text-right'>1258.60</td>
+              <td class='text-right'>20+10+18</td>
+              <td class='text-right'>0</td>
+              <td class='text-right'>87</td>
+              <td class='text-right'>910.75</td>
+              <td class='text-right'>354</td>
+              <td class='text-right'>42 / 0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class='fixture-section'>
+        <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm02.dsn</h3>
+        <p class='fixture-meta'>Size: 79.7 kB  &middot;  Layers: 2  &middot;  Nets: 34  &middot;  Components: 13  &middot;  Dimensions: 50.8 x 22.9 mm (11.6 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+        <table class='benchmark-table'>
+          <thead>
+            <tr class='header-row'>
+              <th>Version</th>
+              <th>Mode</th>
+              <th>Total Time (s)</th>
+              <th>Passes</th>
+              <th>Unrouted</th>
+              <th>Violations</th>
+              <th>Score</th>
+              <th>Peak Heap (MB)</th>
+              <th>Warn/Err</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='data-row'>
+              <td>1.9.0</td>
+              <td>GUI</td>
+              <td class='text-right'>36.11</td>
+              <td class='text-right'>20+4+13</td>
+              <td class='text-right'>0</td>
+              <td class='text-right'>0</td>
+              <td class='text-right'>999.99</td>
+              <td class='text-right'>124</td>
+              <td class='text-right'>0 / 0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class='fixture-section'>
+        <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm07.dsn</h3>
+        <p class='fixture-meta'>Size: 14.9 kB  &middot;  Layers: 2  &middot;  Nets: 52  &middot;  Components: 13  &middot;  Dimensions: 22 x 60 mm (13.2 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+        <table class='benchmark-table'>
+          <thead>
+            <tr class='header-row'>
+              <th>Version</th>
+              <th>Mode</th>
+              <th>Total Time (s)</th>
+              <th>Passes</th>
+              <th>Unrouted</th>
+              <th>Violations</th>
+              <th>Score</th>
+              <th>Peak Heap (MB)</th>
+              <th>Warn/Err</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='data-row'>
+              <td>1.9.0</td>
+              <td>GUI</td>
+              <td class='text-right'>41.47</td>
+              <td class='text-right'>2+5+10</td>
+              <td class='text-right'>0</td>
+              <td class='text-right'>0</td>
+              <td class='text-right'>999.99</td>
+              <td class='text-right'>154</td>
+              <td class='text-right'>0 / 0</td>
+            </tr>
+            <tr class='data-row'>
+              <td>2.0.1</td>
+              <td>CLI</td>
+              <td class='text-right'>N/A</td>
+              <td class='text-right'>0+7+0</td>
+              <td class='text-right'>1</td>
+              <td class='text-right'>0</td>
+              <td class='text-right'>988.34</td>
+              <td class='text-right'>1127</td>
+              <td class='text-right'>1 / 32</td>
+            </tr>
+            <tr class='data-row'>
+              <td>2.1.0</td>
+              <td>CLI</td>
+              <td class='text-right'>N/A</td>
+              <td class='text-right'>0+811+3</td>
+              <td class='text-right'>2</td>
+              <td class='text-right'>0</td>
+              <td class='text-right'>976.70</td>
+              <td class='text-right'>1428</td>
+              <td class='text-right'>1 / 20</td>
+            </tr>
+            <tr class='data-row'>
+              <td>2.2.4</td>
+              <td>CLI</td>
+              <td class='text-right'>49.10</td>
+              <td class='text-right'>0+8+7</td>
+              <td class='text-right'>0</td>
+              <td class='text-right'>0</td>
+              <td class='text-right'>999.99</td>
+              <td class='text-right'>1471</td>
+              <td class='text-right'>3 / 0</td>
+            </tr>
+            <tr class='data-row'>
+              <td>s2026.06.23</td>
+              <td>CLI</td>
+              <td class='text-right'>24.92</td>
+              <td class='text-right'>0+18+2</td>
+              <td class='text-right'>3</td>
+              <td class='text-right'>0</td>
+              <td class='text-right'>965.08</td>
+              <td class='text-right'>1380</td>
+              <td class='text-right'>0 / 0</td>
+            </tr>
+            <tr class='data-row'>
+              <td>s2026.06.24</td>
+              <td>CLI</td>
+              <td class='text-right'>25.69</td>
+              <td class='text-right'>20+18+2</td>
+              <td class='text-right'>3</td>
+              <td class='text-right'>0</td>
+              <td class='text-right'>965.11</td>
+              <td class='text-right'>788</td>
+              <td class='text-right'>0 / 0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- BENCHMARK_TABLE_END -->
     </section>
 </main>
 

@@ -85,7 +85,6 @@ a:hover {
     font-family: sans-serif;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
     color: rgb(232, 204, 135);
     background-color: rgb(1, 58, 32);
     border-radius: 8px;
@@ -96,7 +95,6 @@ a:hover {
     padding-bottom: 10px;
 }
 .fixture-section {
-    margin-top: 30px;
     margin-bottom: 30px;
 }
 .fixture-title {

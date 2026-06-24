@@ -76,8 +76,8 @@ function Export-MarkdownReport {
         $runs += $Cache[$key]
     }
 
-    $grouped = $runs | Group-Object -Property { $_.fixture.relative_path }
-    $groupedByFolder = $runs | Group-Object -Property { $_.fixture.group }
+    $grouped = $runs | Group-Object -Property { $_.fixture.relative_path } | Sort-Object -Property Name
+    $groupedByFolder = $runs | Group-Object -Property { $_.fixture.group } | Sort-Object -Property Name
 
     $sb = [System.Text.StringBuilder]::new()
     $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
@@ -135,7 +135,7 @@ function Export-MarkdownReport {
         [void]$sb.AppendLine("## Group: [$folderName](../fixtures/$folderName)")
         [void]$sb.AppendLine()
 
-        $fixturesInFolder = $folderGroup.Group | Group-Object -Property { $_.fixture.relative_path }
+        $fixturesInFolder = $folderGroup.Group | Group-Object -Property { $_.fixture.relative_path } | Sort-Object -Property Name
         foreach ($fixGroup in $fixturesInFolder) {
             $first = $fixGroup.Group[0]
             $metadata = $first.fixture
@@ -144,9 +144,7 @@ function Export-MarkdownReport {
             [void]$sb.AppendLine()
             $dot = [char]183
             $sup2 = [char]178
-            [void]$sb.AppendLine("Size: $([math]::Round($metadata.size_bytes / 1KB, 1)) kB $dot Layers: $($metadata.layer_count) $dot Nets: $($metadata.net_count) $dot Components: $($metadata.component_count)")
-            [void]$sb.AppendLine("Dimensions: $($metadata.board_width_mm) x $($metadata.board_height_mm) mm ($($metadata.board_area_cm2) cm$sup2)")
-            [void]$sb.AppendLine("CAD: $($metadata.host_cad) (v$($metadata.host_version))")
+            [void]$sb.AppendLine("Size: $([math]::Round($metadata.size_bytes / 1KB, 1)) kB $dot Layers: $($metadata.layer_count) $dot Nets: $($metadata.net_count) $dot Components: $($metadata.component_count) $dot Dimensions: $($metadata.board_width_mm) x $($metadata.board_height_mm) mm ($($metadata.board_area_cm2) cm$sup2) $dot CAD: $($metadata.host_cad) (v$($metadata.host_version))")
             [void]$sb.AppendLine()
 
             $latestRuns = @()
