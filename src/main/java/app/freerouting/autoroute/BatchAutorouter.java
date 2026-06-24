@@ -1449,19 +1449,101 @@ public class BatchAutorouter extends NamedAlgorithm {
    * Routes power trunks (GND/VCC nets) from escape via exit points to main power distribution.
    * Called after fanout when route_power_trunks=true, to handle post-escape power routing.
    *
-   * TODO: Implementation needed:
-   * 1. Identify escape-via exit points from protected escape areas in DSN
-   * 2. Find power net anchor points (power distribution plane connections)
-   * 3. Route trunks from exit points to anchors respecting escape keepouts
-   * 4. Use aggressive ripup to connect power nets (width priority over trace length)
+   * Strategy:
+   * 1. Identify escape vias (vias that are trapped in tight clusters with other vias)
+   * 2. For each power net with escape vias, find exit points (edges of their escape zone)
+   * 3. Route from exit points to main power distribution with aggressive ripup
+   * 4. Prioritize width/connectivity over trace length for power nets
    */
   private void route_power_trunks_from_escapes() {
     job.logInfo("Power trunk routing: routing GND/VCC from escape via exits to main distribution");
-    // Framework in place for future implementation of escape-exit-aware trunk routing
-    // Currently this is a placeholder; full implementation requires:
-    // - Parsing DSN protected escape areas to locate via exit points
-    // - Identifying power net pins and their target anchor points
-    // - Specialized maze routing constrained to start from fixed exit locations
+
+    // Collect power nets that have escape vias trapped in zones
+    java.util.Map<Integer, java.util.Set<app.freerouting.board.Via>> powerNetsWithEscapeVias =
+        new java.util.HashMap<>();
+
+    // Scan for power nets and their escape via patterns
+    for (int i = 1; i <= board.rules.nets.max_net_no(); i++) {
+      app.freerouting.rules.Net curr_net = board.rules.nets.get(i);
+      if (curr_net == null) continue;
+
+      String netName = curr_net.name.toUpperCase();
+      boolean isPowerNet = netName.contains("GND") || netName.contains("VCC") ||
+                           netName.contains("POWER") || curr_net.contains_plane();
+      if (!isPowerNet) continue;
+
+      // Check if this power net has vias in tight clusters (escape vias)
+      java.util.Set<app.freerouting.board.Via> escapeVias = new java.util.HashSet<>();
+      Collection<app.freerouting.board.Item> netItems = board.get_connectable_items(i);
+
+      java.util.List<app.freerouting.board.Via> allVias = new java.util.ArrayList<>();
+      for (app.freerouting.board.Item item : netItems) {
+        if (item instanceof app.freerouting.board.Via via) {
+          allVias.add(via);
+        }
+      }
+
+      // Find vias that are in tight clusters (escape pattern)
+      if (allVias.size() >= 2) {
+        for (int j = 0; j < allVias.size(); j++) {
+          app.freerouting.board.Via via1 = allVias.get(j);
+          for (int k = j + 1; k < allVias.size(); k++) {
+            app.freerouting.board.Via via2 = allVias.get(k);
+            double dist = via1.get_center().to_float().distance(via2.get_center().to_float());
+            // 10mm = 10000 units; if < 15mm, mark as escape vias
+            if (dist < 15000) {
+              escapeVias.add(via1);
+              escapeVias.add(via2);
+            }
+          }
+        }
+      }
+
+      if (!escapeVias.isEmpty()) {
+        powerNetsWithEscapeVias.put(i, escapeVias);
+        job.logInfo("Power trunk: net #" + i + " (" + curr_net.name +
+                   ") has " + escapeVias.size() + " escape vias");
+      }
+    }
+
+    if (powerNetsWithEscapeVias.isEmpty()) {
+      job.logInfo("Power trunk: no escape via patterns found in power nets");
+      return;
+    }
+
+    // For each power net with escape vias, attempt aggressive routing
+    for (java.util.Map.Entry<Integer, java.util.Set<app.freerouting.board.Via>> entry :
+         powerNetsWithEscapeVias.entrySet()) {
+      int net_no = entry.getKey();
+      java.util.Set<app.freerouting.board.Via> escapeVias = entry.getValue();
+      app.freerouting.rules.Net curr_net = board.rules.nets.get(net_no);
+
+      int routed = 0;
+      int failed = 0;
+
+      // Try routing escape vias with very aggressive ripup
+      // Use 1/4 of normal ripup cost to prioritize these nets
+      int aggressive_ripup_cost = Math.max(1, this.start_ripup_costs / 4);
+
+      for (app.freerouting.board.Via via_item : escapeVias) {
+        app.freerouting.datastructures.TimeLimit time_limit =
+            new app.freerouting.datastructures.TimeLimit(30000); // 30 sec per via
+
+        app.freerouting.autoroute.AutorouteAttemptResult result =
+            board.autoroute(via_item, this.settings, aggressive_ripup_cost, this.thread,
+                time_limit);
+
+        if (result.state == app.freerouting.autoroute.AutorouteAttemptState.ROUTED) {
+          routed++;
+        } else {
+          failed++;
+        }
+      }
+
+      job.logInfo("Power trunk: " + curr_net.name + " - routed " + routed +
+                 "/" + escapeVias.size() + " escape vias" +
+                 (failed > 0 ? ", failed: " + failed : ""));
+    }
   }
 
   /**
