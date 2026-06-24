@@ -57,25 +57,23 @@ function Invoke-BenchmarkRun {
     $jvmArgs += $outputFile
 
     # Apply router/logger options only if it's not v1.9
-    if ($Binary.Name -match 'freerouting-1.9.0.jar') {
-        # v1.9 supports only -de and -do basic args
-    } else {
-        $jvmArgs += "--router.max_passes=$($Settings.max_passes)"
-        $jvmArgs += "--router.max_threads=$($Settings.max_threads)"
-        $jvmArgs += "--router.job_timeout=`"$($Settings.max_time)`""
-        $jvmArgs += "--router.optimizer.enabled=$($Settings.optimizer_enabled.ToString().ToLower())"
-        $jvmArgs += "--router.fanout.enabled=$($Settings.fanout_enabled.ToString().ToLower())"
-        $jvmArgs += "--router.enabled=$($Settings.router_enabled.ToString().ToLower())"
-        
-        # Logging flags
-        $jvmArgs += "--logging.file.level=$($Settings.log_level)"
-        $jvmArgs += "--logging.file.location=`"$logFile`""
-        $jvmArgs += "--logging.console.level=INFO"
-        $jvmArgs += "--api_server.enabled=false"
-    }
+    $jvmArgs += "--router.max_passes=$($Settings.max_passes)"
+    $jvmArgs += "--router.max_threads=$($Settings.max_threads)"
+    $jvmArgs += "--router.job_timeout=`"$($Settings.max_time)`""
+    $jvmArgs += "--router.optimizer.enabled=$($Settings.optimizer_enabled.ToString().ToLower())"
+    $jvmArgs += "--router.fanout.enabled=$($Settings.fanout_enabled.ToString().ToLower())"
+    $jvmArgs += "--router.enabled=$($Settings.router_enabled.ToString().ToLower())"
+    
+    # Logging flags
+    $jvmArgs += "--logging.file.level=$($Settings.log_level)"
+    $jvmArgs += "--logging.file.location=`"$logFile`""
+    $jvmArgs += "--logging.console.level=INFO"
 
-    if ($SupportsCliMode) {
-        $jvmArgs += "--gui.enabled=false"
+    if ($Binary.Name -notmatch 'freerouting-1.9.0.jar') {
+        $jvmArgs += "--api_server.enabled=false"
+        if ($SupportsCliMode) {
+            $jvmArgs += "--gui.enabled=false"
+        }
     }
 
     $startTime = Get-Date
