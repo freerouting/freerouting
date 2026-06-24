@@ -15,8 +15,6 @@ import app.freerouting.settings.SettingsSource;
  */
 public class DefaultSettings implements SettingsSource {
 
-    private static final int PRIORITY = 0;
-
     // -----------------------------------------------------------------------
     // Scoring weight defaults
     // -----------------------------------------------------------------------
@@ -26,36 +24,32 @@ public class DefaultSettings implements SettingsSource {
      * This is intentionally the largest penalty so that routing completion
      * always dominates trace-length and via-count considerations.
      */
-    public static final float DEFAULT_UNROUTED_NET_PENALTY = 1000000.0f;
+    public static final float DEFAULT_UNROUTED_NET_PENALTY = 5_000_000.0f;
 
     /**
      * Penalty subtracted from the board score for each clearance (DRC) violation.
      * Should be large enough that the optimizer never accepts a routed board with
      * violations over an unrouted-but-clean board.
      */
-    public static final float DEFAULT_CLEARANCE_VIOLATION_PENALTY = 1000.0f;
-
+    public static final float DEFAULT_CLEARANCE_VIOLATION_PENALTY = 1_000_000.0f;
     /**
      * Penalty per bend (direction-change corner) in any trace.
      * Kept small so that bend reduction is a tie-breaker after completion and
      * clearance quality, not a primary objective.
      */
     public static final float DEFAULT_BEND_PENALTY = 10.0f;
-
     /**
      * Cost per via placed on a regular (non-plane) net.
      * Via costs drive the autorouter's layer-change decisions during maze search;
      * they also appear in the board score as an absolute cost term.
      */
     public static final int DEFAULT_VIA_COSTS = 50;
-
     /**
      * Reduced via cost for vias that connect to a copper pour / power plane.
      * Lower than {@link #DEFAULT_VIA_COSTS} to encourage short stubs into the
      * plane rather than long surface traces.
      */
     public static final int DEFAULT_PLANE_VIA_COSTS = 5;
-
     /**
      * Base ripup cost used at the start of each ripup-and-reroute pass.
      * This is multiplied by the pass number inside {@code BatchAutorouter}, so
@@ -64,7 +58,6 @@ public class DefaultSettings implements SettingsSource {
      * score formula.
      */
     public static final int DEFAULT_START_RIPUP_COSTS = 100;
-
     /**
      * Cost multiplier per millimetre of trace routed in the preferred direction
      * on a given layer.  A value of {@code 1.0} means "1 cost unit per mm".
@@ -72,7 +65,6 @@ public class DefaultSettings implements SettingsSource {
      * {@link app.freerouting.settings.RouterSettings#applyBoardSpecificOptimizations}.
      */
     public static final double DEFAULT_PREFERRED_DIRECTION_TRACE_COST = 1.0;
-
     /**
      * Cost multiplier per millimetre of trace routed against the preferred
      * direction.  Set to the same value as {@link #DEFAULT_PREFERRED_DIRECTION_TRACE_COST}
@@ -80,9 +72,9 @@ public class DefaultSettings implements SettingsSource {
      * top so cross-direction routing is naturally more expensive on rectangular boards.
      */
     public static final double DEFAULT_UNDESIRED_DIRECTION_TRACE_COST = 1.0;
-
     /** Default copper-to-board-edge clearance in micrometres (0.5 mm). */
     public static final double DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM = 500.0;
+    private static final int PRIORITY = 0;
 
     @Override
     public RouterSettings getSettings() {
