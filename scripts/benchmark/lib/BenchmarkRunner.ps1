@@ -1,3 +1,26 @@
+function Get-ContentShared {
+    param([string]$path)
+    try {
+        $resolvedPath = (Get-Item $path -ErrorAction SilentlyContinue).FullName
+        if (-not $resolvedPath) {
+            $resolvedPath = [System.IO.Path]::GetFullPath($path)
+        }
+        if (-not (Test-Path $resolvedPath)) { return $null }
+        $fileStream = New-Object System.IO.FileStream($resolvedPath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+        $reader = New-Object System.IO.StreamReader($fileStream)
+        $lines = [System.Collections.ArrayList]::new()
+        while (($line = $reader.ReadLine()) -ne $null) {
+            [void]$lines.Add($line)
+        }
+        $reader.Close()
+        $fileStream.Close()
+        return $lines
+    } catch {
+        Write-Warning "Get-ContentShared failed for $path : $_"
+        return $null
+    }
+}
+
 function Invoke-BenchmarkRun {
     param(
         [System.IO.FileInfo]$Binary,
@@ -54,12 +77,33 @@ function Invoke-BenchmarkRun {
         $jvmArgs += "--gui.enabled=false"
     }
 
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = "java"
+    
+    # Process arguments to handle spacing
+    $argsList = @()
+    foreach ($arg in $jvmArgs) {
+        if ($arg -match '\s') {
+            $argsList += "`"$arg`""
+        } else {
+            $argsList += $arg
+        }
+    }
+    $psi.Arguments = $argsList -join " "
+    
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+
+    $process = New-Object System.Diagnostics.Process
+    $process.StartInfo = $psi
+    
     $startTime = Get-Date
     
-    # Start process with standard output and error redirected separately to avoid PowerShell conflicts
-    $process = Start-Process -FilePath "java" -ArgumentList $jvmArgs -NoNewWindow -PassThru `
-        -RedirectStandardOutput $logFile -RedirectStandardError $errFile
-
+    # Start the process
+    $null = $process.Start()
+    
     # Launch background memory sampler
     $memJob = Start-Job -ScriptBlock {
         param($logFile, $pidVal)
@@ -75,60 +119,54 @@ function Invoke-BenchmarkRun {
         }
     } -ArgumentList $memLog, $process.Id
 
-    # Parse max time to milliseconds
-    $maxTs = [timespan]::Parse($Settings.max_time)
-    $timeoutMs = $maxTs.TotalMilliseconds
-
-    # Wait for completion with timeout while printing log lines dynamically
-    $lastLineCount = 0
-    $completed = $false
+    # Create the log file writer
+    $logStream = [System.IO.File]::CreateText($logFile)
+    
+    # Read output streams line-by-line in real-time
     $timeoutElapsed = 0
-    $sleepIntervalMs = 250
-
+    $timeoutMs = ([timespan]::Parse($Settings.max_time)).TotalMilliseconds
+    $sleepIntervalMs = 100
+    
+    $completed = $false
     while ($timeoutElapsed -lt $timeoutMs) {
         if ($process.HasExited) {
             $completed = $true
             break
         }
+        
+        # Read standard output lines
+        while ($process.StandardOutput.Peek() -ne -1) {
+            $line = $process.StandardOutput.ReadLine()
+            Write-Output "    $line"
+            $logStream.WriteLine($line)
+        }
+        
+        # Read standard error lines
+        while ($process.StandardError.Peek() -ne -1) {
+            $line = $process.StandardError.ReadLine()
+            Write-Output "    $line"
+            $logStream.WriteLine($line)
+        }
+        
         Start-Sleep -Milliseconds $sleepIntervalMs
         $timeoutElapsed += $sleepIntervalMs
-
-        # Read and display new log lines
-        if (Test-Path $logFile) {
-            try {
-                $currentLines = Get-Content $logFile -ErrorAction SilentlyContinue
-                if ($currentLines) {
-                    $newLineCount = $currentLines.Count
-                    if ($newLineCount -gt $lastLineCount) {
-                        for ($i = $lastLineCount; $i -lt $newLineCount; $i++) {
-                            Write-Output "    $($currentLines[$i])"
-                        }
-                        $lastLineCount = $newLineCount
-                    }
-                }
-            } catch {
-                # Ignore concurrent access issues
-            }
-        }
     }
 
-    # Print any remaining lines
-    if (Test-Path $logFile) {
-        try {
-            $currentLines = Get-Content $logFile -ErrorAction SilentlyContinue
-            if ($currentLines) {
-                $newLineCount = $currentLines.Count
-                if ($newLineCount -gt $lastLineCount) {
-                    for ($i = $lastLineCount; $i -lt $newLineCount; $i++) {
-                        Write-Output "    $($currentLines[$i])"
-                    }
-                }
-            }
-        } catch {}
+    # Process remaining output
+    while ($process.StandardOutput.Peek() -ne -1) {
+        $line = $process.StandardOutput.ReadLine()
+        Write-Output "    $line"
+        $logStream.WriteLine($line)
     }
-
-    $endTime = Get-Date
+    while ($process.StandardError.Peek() -ne -1) {
+        $line = $process.StandardError.ReadLine()
+        Write-Output "    $line"
+        $logStream.WriteLine($line)
+    }
     
+    $logStream.Close()
+    $endTime = Get-Date
+
     # Stop memory sampler
     Stop-Job $memJob -ErrorAction SilentlyContinue
     Remove-Job $memJob -ErrorAction SilentlyContinue
