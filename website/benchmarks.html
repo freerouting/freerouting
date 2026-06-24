@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Freerouting - Automatic PCB Routing Tool</title>
+    <meta content="Freerouting is an open-source, fully-automated PCB routing software designed for engineers, PCB designers, and hobbyists."
+          name="description">
+    <meta content="PCB, routing, software, open-source, Freerouting, PCB design" name="keywords">
+    <meta content="Freerouting Team" name="author">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link href="freerouting_icon_256x256_v3.ico" rel="icon" type="image/x-icon">
+    <link href="style.css" rel="stylesheet">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JCLE6RZE0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-4JCLE6RZE0');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a, .btn').forEach(function(element) {
+                element.addEventListener('click', function() {
+                    gtag('event', 'click_' + element.id, {
+                        'event_category': 'engagement',
+                        'event_label': element.href || element.textContent
+                    });
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-container">
+        <img alt="Freerouting logo" src="logo_transparent.png">
+        <h1>freerouting</h1>
+    </div>
+    <p>The Open-Source, Automatic PCB Routing Tool</p>
+    <a class="btn" href="https://github.com/freerouting/freerouting/releases" id="download">
+        <i class="fas fa-download"></i> Download Freerouting
+    </a>
+    <a class="btn" href="https://forms.gle/EqbxFZMSQiSsR4WM8" id="api_access">
+        <i class="fas fa-network-wired"></i> Request API Access
+    </a>
+    <a class="btn" href="https://github.com/freerouting/freerouting" id="github">
+        <i class="fab fa-github"></i> View on GitHub
+    </a>
+</header>
+
+<main>
+    <section class="section">
+        <h2>About Freerouting</h2>
+        <p>Freerouting is an open-source, fully-automated PCB routing software designed for engineers, PCB designers,
+            and hobbyists. It simplifies the complex and time-consuming process of routing printed circuit boards,
+            making it faster and easier to create intricate and high-quality designs.</p>
+    </section>
+
+    <section class="section">
+        <h2>Benchmarks</h2>
+        <!-- BENCHMARK_TABLE_START -->
+        <div class='benchmark-container'>
+          <div class='benchmark-report-info'>Generated on: 2026-06-24 17:09:45 &middot; System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)</div>
+          <div class='fixture-section'>
+            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm01.dsn</h3>
+            <p class='fixture-meta'>Size: 30.5 kB  &middot;  Layers: 2  &middot;  Nets: 99  &middot;  Components: 20  &middot;  Dimensions: 101.6 x 53.3 mm (54.2 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+            <table class='benchmark-table'>
+              <thead>
+                <tr class='header-row'>
+                  <th>Version</th>
+                  <th>Mode</th>
+                  <th>Total Time (s)</th>
+                  <th>Passes</th>
+                  <th>Unrouted</th>
+                  <th>Violations</th>
+                  <th>Score</th>
+                  <th>Peak Heap (MB)</th>
+                  <th>Warn/Err</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class='data-row'>
+                  <td>1.9.0</td>
+                  <td>GUI</td>
+                  <td class='text-right'>1258.60</td>
+                  <td class='text-right'>20+10+18</td>
+                  <td class='text-right'>0</td>
+                  <td class='text-right'>87</td>
+                  <td class='text-right'>911</td>
+                  <td class='text-right'>354</td>
+                  <td class='text-right'>42 / 0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class='fixture-section'>
+            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm02.dsn</h3>
+            <p class='fixture-meta'>Size: 79.7 kB  &middot;  Layers: 2  &middot;  Nets: 34  &middot;  Components: 13  &middot;  Dimensions: 50.8 x 22.9 mm (11.6 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+            <table class='benchmark-table'>
+              <thead>
+                <tr class='header-row'>
+                  <th>Version</th>
+                  <th>Mode</th>
+                  <th>Total Time (s)</th>
+                  <th>Passes</th>
+                  <th>Unrouted</th>
+                  <th>Violations</th>
+                  <th>Score</th>
+                  <th>Peak Heap (MB)</th>
+                  <th>Warn/Err</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class='data-row'>
+                  <td>1.9.0</td>
+                  <td>GUI</td>
+                  <td class='text-right'>36.11</td>
+                  <td class='text-right'>20+4+13</td>
+                  <td class='text-right'>0</td>
+                  <td class='text-right'>0</td>
+                  <td class='text-right'>1000</td>
+                  <td class='text-right'>124</td>
+                  <td class='text-right'>0 / 0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class='fixture-section'>
+            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm04.dsn</h3>
+            <p class='fixture-meta'>Size: 27 kB  &middot;  Layers: 16  &middot;  Nets: 80  &middot;  Components: 16  &middot;  Dimensions: 43.9 x 35.1 mm (15.4 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+            <table class='benchmark-table'>
+              <thead>
+                <tr class='header-row'>
+                  <th>Version</th>
+                  <th>Mode</th>
+                  <th>Total Time (s)</th>
+                  <th>Passes</th>
+                  <th>Unrouted</th>
+                  <th>Violations</th>
+                  <th>Score</th>
+                  <th>Peak Heap (MB)</th>
+                  <th>Warn/Err</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class='data-row'>
+                  <td>1.9.0</td>
+                  <td>GUI</td>
+                  <td class='text-right'>1814.95</td>
+                  <td class='text-right'>20+24+3</td>
+                  <td class='text-right'>2</td>
+                  <td class='text-right'>4</td>
+                  <td class='text-right'>980</td>
+                  <td class='text-right'>402</td>
+                  <td class='text-right'>2 / 0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class='fixture-section'>
+            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm07.dsn</h3>
+            <p class='fixture-meta'>Size: 14.9 kB  &middot;  Layers: 2  &middot;  Nets: 52  &middot;  Components: 13  &middot;  Dimensions: 22 x 60 mm (13.2 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+            <table class='benchmark-table'>
+              <thead>
+                <tr class='header-row'>
+                  <th>Version</th>
+                  <th>Mode</th>
+                  <th>Total Time (s)</th>
+                  <th>Passes</th>
+                  <th>Unrouted</th>
+                  <th>Violations</th>
+                  <th>Score</th>
+                  <th>Peak Heap (MB)</th>
+                  <th>Warn/Err</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class='data-row'>
+                  <td>1.9.0</td>
+                  <td>GUI</td>
+                  <td class='text-right'>41.47</td>
+                  <td class='text-right'>2+5+10</td>
+                  <td class='text-right'>0</td>
+                  <td class='text-right'>0</td>
+                  <td class='text-right'>1000</td>
+                  <td class='text-right'>154</td>
+                  <td class='text-right'>0 / 0</td>
+                </tr>
+                <tr class='data-row'>
+                  <td>2.0.1</td>
+                  <td>CLI</td>
+                  <td class='text-right'>N/A</td>
+                  <td class='text-right'>0+7+0</td>
+                  <td class='text-right'>1</td>
+                  <td class='text-right'>0</td>
+                  <td class='text-right'>988</td>
+                  <td class='text-right'>1127</td>
+                  <td class='text-right'>1 / 32</td>
+                </tr>
+                <tr class='data-row'>
+                  <td>2.1.0</td>
+                  <td>CLI</td>
+                  <td class='text-right'>N/A</td>
+                  <td class='text-right'>0+811+3</td>
+                  <td class='text-right'>2</td>
+                  <td class='text-right'>0</td>
+                  <td class='text-right'>977</td>
+                  <td class='text-right'>1428</td>
+                  <td class='text-right'>1 / 20</td>
+                </tr>
+                <tr class='data-row'>
+                  <td>2.2.4</td>
+                  <td>CLI</td>
+                  <td class='text-right'>49.10</td>
+                  <td class='text-right'>0+8+7</td>
+                  <td class='text-right'>0</td>
+                  <td class='text-right'>0</td>
+                  <td class='text-right'>1000</td>
+                  <td class='text-right'>1471</td>
+                  <td class='text-right'>3 / 0</td>
+                </tr>
+                <tr class='data-row'>
+                  <td>s2026.06.23</td>
+                  <td>CLI</td>
+                  <td class='text-right'>24.92</td>
+                  <td class='text-right'>0+18+2</td>
+                  <td class='text-right'>3</td>
+                  <td class='text-right'>0</td>
+                  <td class='text-right'>965</td>
+                  <td class='text-right'>1380</td>
+                  <td class='text-right'>0 / 0</td>
+                </tr>
+                <tr class='data-row'>
+                  <td>s2026.06.24</td>
+                  <td>CLI</td>
+                  <td class='text-right'>25.69</td>
+                  <td class='text-right'>20+18+2</td>
+                  <td class='text-right'>3</td>
+                  <td class='text-right'>0</td>
+                  <td class='text-right'>965</td>
+                  <td class='text-right'>788</td>
+                  <td class='text-right'>0 / 0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- BENCHMARK_TABLE_END -->
+    </section>
+</main>
+
+<footer class="footer">
+    <p>
+        Freerouting is an open-source project maintained by <a href="https://github.com/sponsors/andrasfuchs"
+                                                               id="sponsors_footer">Andras Fuchs</a>.<br/>
+        Contributions, feedback, and support are always welcome.<br/>
+        Visit the <a href="https://github.com/freerouting/freerouting" id="github_footer">GitHub repository</a>
+        to learn more.
+    </p>
+</footer>
+
+</body>
+</html>

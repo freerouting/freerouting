@@ -1,0 +1,172 @@
+(pcb C:\Users\danbo\Documents\Projects\Autorouter\Test_Cases\DAC_2020_Benchmarks_Without_Routing\bm8\bm8.unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "9.0.6")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Bottom
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  158750 -111938  138252 -111938  138252 -98069.4  158750 -98069.4
+            158750 -111938)
+    )
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "imu:LGA-24"
+      (place U5 145059.400000 -105206.800000 front -90.000000)
+    )
+    (component imu:C0805
+      (place U1 149606.000000 -100863.400000 front -90.000000)
+      (place U2 151866.600000 -100863.400000 front -90.000000)
+      (place U3 140563.600000 -105232.200000 front 90.000000)
+      (place U4 142798.800000 -100685.600000 front 180.000000)
+    )
+    (component imu:R0805
+      (place U6 149479.000000 -108610.400000 front -90.000000)
+      (place U7 151739.600000 -108585.000000 front -90.000000)
+    )
+    (component "imu:MA04-1"
+      (place U8 156083.000000 -104902.000000 front 90.000000)
+    )
+  )
+  (library
+    (image "imu:LGA-24"
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 1 -2129 1250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 2 -2129 750)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 3 -2129 250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 4 -2129 -250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 5 -2129 -750)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 90) 6 -2129 -1250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 7 -1250 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 8 -750 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 9 -250 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 10 250 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 11 750 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 180) 12 1250 -2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 13 2129 -1250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 14 2129 -750)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 15 2129 -250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 16 2129 250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 17 2129 750)
+      (pin Rect[T]Pad_290.000000x1208.000000_um (rotate 270) 18 2129 1250)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 19 1250 2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 20 750 2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 21 250 2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 22 -250 2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 23 -750 2129)
+      (pin Rect[T]Pad_290.000000x1208.000000_um 24 -1250 2129)
+    )
+    (image imu:C0805
+      (pin Rect[T]Pad_1300.000000x1500.000000_um 1 -950 0)
+      (pin Rect[T]Pad_1300.000000x1500.000000_um 2 950 0)
+    )
+    (image imu:R0805
+      (pin Rect[T]Pad_1300.000000x1500.000000_um 1 -850 0)
+      (pin Rect[T]Pad_1300.000000x1500.000000_um 2 850 0)
+    )
+    (image "imu:MA04-1"
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 1 -3810 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 2 -1270 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 3 1270 0)
+      (pin Oval[A]Pad_3048.000000x1524.000000_um (rotate 90) 4 3810 0)
+    )
+    (padstack Oval[A]Pad_3048.000000x1524.000000_um
+      (shape (path Top 1524  -762 0  762 0))
+      (shape (path Bottom 1524  -762 0  762 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_290.000000x1208.000000_um
+      (shape (rect Top -145 -604 145 604))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1300.000000x1500.000000_um
+      (shape (rect Top -650 -750 650 750))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle Top 600))
+      (shape (circle Bottom 600))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins U5-2 U5-3 U5-4 U5-5 U5-6 U5-22 U5-23 U1-2 U2-2 U4-1 U8-4)
+    )
+    (net VDD
+      (pins U5-15 U5-16 U5-17 U5-18 U1-1 U2-1 U6-2 U7-2 U8-1)
+    )
+    (net /SDA
+      (pins U5-24 U8-3)
+    )
+    (net /SCL
+      (pins U5-21 U8-2)
+    )
+    (net "Net-(R2-Pad1)"
+      (pins U5-20 U7-1)
+    )
+    (net "Net-(R1-Pad1)"
+      (pins U5-19 U6-1)
+    )
+    (net "Net-(U1-Pad14)"
+      (pins U5-14)
+    )
+    (net "Net-(U1-Pad13)"
+      (pins U5-13)
+    )
+    (net "Net-(U1-Pad12)"
+      (pins U5-12)
+    )
+    (net "Net-(U1-Pad11)"
+      (pins U5-11)
+    )
+    (net "Net-(U1-Pad10)"
+      (pins U5-10)
+    )
+    (net "Net-(C1-Pad1)"
+      (pins U5-9 U3-1)
+    )
+    (net "Net-(C1-Pad2)"
+      (pins U5-8 U3-2)
+    )
+    (net "Net-(C2-Pad2)"
+      (pins U5-7 U4-2)
+    )
+    (net "Net-(U1-Pad1)"
+      (pins U5-1)
+    )
+    (class kicad_default /SCL /SDA GND "Net-(C1-Pad1)" "Net-(C1-Pad2)" "Net-(C2-Pad2)"
+      "Net-(R1-Pad1)" "Net-(R2-Pad1)" "Net-(U1-Pad1)" "Net-(U1-Pad10)" "Net-(U1-Pad11)"
+      "Net-(U1-Pad12)" "Net-(U1-Pad13)" "Net-(U1-Pad14)" VDD
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

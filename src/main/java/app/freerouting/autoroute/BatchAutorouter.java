@@ -22,10 +22,10 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.drc.AirLine;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
-import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
@@ -98,6 +98,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   private Instant sessionStartTime;
   private long lastBoardUpdateTimestamp = 0;
 
+  private boolean isOptimizerAutorouter = false;
+
   public BatchAutorouter(RoutingJob job) {
     this(job.thread, job.board, job.routerSettings, !job.routerSettings.isFanoutEnabled(), true,
         job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
@@ -141,6 +143,7 @@ public class BatchAutorouter extends NamedAlgorithm {
     BatchAutorouter router_instance = new BatchAutorouter(job.thread, updated_routing_board, routerSettings, true,
         p_with_preferred_directions, p_ripup_costs, trace_pull_tight_accuracy);
     router_instance.job = job;
+    router_instance.isOptimizerAutorouter = true;
 
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
@@ -797,7 +800,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       float fanoutAllocatedMbStart = sampleCurrentThreadAllocatedMb();
       float fanoutPeakHeapMbAtStart = sampleHeapUsageMb();
       final float[] fanoutPeakHeapMbObserved = new float[] { fanoutPeakHeapMbAtStart };
-      job.logInfo("Starting fanout pre-pass on board '" + this.board.get_hash() + "' for "
+      job.logInfo("Fanout phase started on board '" + this.board.get_hash() + "' for "
           + this.board.get_smd_pins().size() + " SMD pin" + (this.board.get_smd_pins().size() == 1 ? "" : "s") + ".");
       BatchFanout.FanoutRunSummary fanoutSummary = BatchFanout.fanout_board(this.board, this.settings, this.thread,
           status -> {
@@ -816,17 +819,16 @@ public class BatchAutorouter extends NamedAlgorithm {
 
         if (status.passCompleted()) {
           String boardHash = this.board.get_hash();
-          String fanoutMessage = "Fanout pass #" + status.passNo() + " on board '" + boardHash
-              + "' completed in " + FRLogger.formatDuration(status.passDurationMillis() / 1000.0)
-              + " with " + status.routedCount() + " SMD pin"
-              + (status.routedCount() == 1 ? "" : "s") + " fanouted, "
-              + status.notRoutedCount() + " not routed, " + status.insertErrorCount() + " insert error"
-              + (status.insertErrorCount() == 1 ? "" : "s")
-              + ", +" + status.extraViasThisPass() + " extra via"
-              + (status.extraViasThisPass() == 1 ? "" : "s")
-              + " (" + status.pinsToGo() + " SMD pin"
-              + (status.pinsToGo() == 1 ? "" : "s") + " still to check in pass, ripup costs="
-              + status.ripupCosts() + ").";
+          String fanoutMessage = String.format(java.util.Locale.US,
+              "Fanout pass #%d on board '%s' completed in %.2f seconds with %d SMD pin%s fanouted, %d not routed, %d insert error%s, +%d extra via%s (%d SMD pin%s still to check in pass, ripup costs=%d).",
+              status.passNo(), boardHash,
+              status.passDurationMillis() / 1000.0,
+              status.routedCount(), status.routedCount() == 1 ? "" : "s",
+              status.notRoutedCount(),
+              status.insertErrorCount(), status.insertErrorCount() == 1 ? "" : "s",
+              status.extraViasThisPass(), status.extraViasThisPass() == 1 ? "" : "s",
+              status.pinsToGo(), status.pinsToGo() == 1 ? "" : "s",
+              status.ripupCosts());
           job.logInfo(fanoutMessage);
         }
       });
@@ -841,28 +843,28 @@ public class BatchAutorouter extends NamedAlgorithm {
         fanoutCpuSecondsUsed = Math.max(0f, getCpuSecondsSnapshot(job));
       }
 
-      float fanoutAllocatedGb;
+      float fanoutAllocatedMb;
       if (fanoutAllocatedMbStart >= 0f && fanoutAllocatedMbEnd >= fanoutAllocatedMbStart) {
-        fanoutAllocatedGb = (fanoutAllocatedMbEnd - fanoutAllocatedMbStart) / 1024.0f;
+        fanoutAllocatedMb = fanoutAllocatedMbEnd - fanoutAllocatedMbStart;
       } else {
-        fanoutAllocatedGb = Math.max(0f, getAllocatedMemoryMbSnapshot(job)) / 1024.0f;
+        fanoutAllocatedMb = Math.max(0f, getAllocatedMemoryMbSnapshot(job));
       }
 
       float fanoutPeakHeapMb = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
       fanoutPeakHeapMb = Math.max(fanoutPeakHeapMb, getPeakHeapMbSnapshot(job));
       BatchFanout.EscapeStatistics finalEscape = fanoutSummary.escapeStatistics();
       String fanoutCompletionStatus = this.thread.is_stop_auto_router_requested() ? "interrupted:" : "completed:";
-      String fanoutSummaryMessage = String.format(
-          "Fanout session %s started with %d total SMD pins, completed in %s, escaped pins: %d/%d (%.1f%%), using %s total CPU seconds, %s GB total allocated, and %s MB peak heap usage.",
+      String fanoutSummaryMessage = String.format(java.util.Locale.US,
+          "Fanout phase %s started with %d total SMD pins, completed in %.2f seconds, escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
           fanoutCompletionStatus,
           finalEscape.totalSmdPins(),
-          FRLogger.formatDuration(fanoutSummary.totalDurationMillis() / 1000.0),
+          fanoutSummary.totalDurationMillis() / 1000.0,
           finalEscape.escapedCount(),
           finalEscape.totalSmdPins(),
           finalEscape.escapedPercentage(),
-          FRLogger.defaultFloatFormat.format(fanoutCpuSecondsUsed),
-          FRLogger.defaultFloatFormat.format(fanoutAllocatedGb),
-          FRLogger.defaultFloatFormat.format(fanoutPeakHeapMb));
+          fanoutCpuSecondsUsed,
+          fanoutAllocatedMb / 1024.0f,
+          fanoutPeakHeapMb);
       job.logInfo(fanoutSummaryMessage);
     }
 
@@ -966,18 +968,20 @@ public class BatchAutorouter extends NamedAlgorithm {
       double autorouter_pass_duration = FRLogger
           .traceExit("BatchAutorouter.autoroute_pass #" + currentPass + " on board '" + currentBoardHash + "'");
 
-      String passCompletedMessage = "Auto-router pass #" + currentPass + " on board '" + currentBoardHash
-          + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration) + " with the score of "
-          + FRLogger.formatScore(boardScoreAfter, boardStatisticsAfter.connections.incompleteCount,
-              boardStatisticsAfter.clearanceViolations.totalCount);
+      String passCompletedMessage = String.format(java.util.Locale.US,
+          "Auto-router pass #%d on board '%s' was completed in %.2f seconds with the score of %s",
+          currentPass, currentBoardHash, autorouter_pass_duration,
+          FRLogger.formatScore(boardScoreAfter, boardStatisticsAfter.connections.incompleteCount,
+              boardStatisticsAfter.clearanceViolations.totalCount));
       if (job.resourceUsage.cpuTimeUsed > 0) {
-        passCompletedMessage += ", using " + FRLogger.defaultFloatFormat.format(job.resourceUsage.cpuTimeUsed)
-            + " CPU seconds and the job allocated "
-            + FRLogger.defaultFloatFormat.format(job.resourceUsage.maxMemoryUsed / 1024.0f) + " GB of memory so far.";
+        passCompletedMessage += String.format(java.util.Locale.US, ", using %.2f CPU seconds and the job allocated %.2f GB of memory so far.",
+            job.resourceUsage.cpuTimeUsed, job.resourceUsage.maxMemoryUsed / 1024.0f);
       } else {
         passCompletedMessage += ".";
       }
-      job.logInfo(passCompletedMessage);
+      if (!isOptimizerAutorouter) {
+        job.logInfo(passCompletedMessage);
+      }
 
       DesignRulesChecker tempDrc = new DesignRulesChecker(this.board, null);
       tempDrc.calculateAllIncompletes();

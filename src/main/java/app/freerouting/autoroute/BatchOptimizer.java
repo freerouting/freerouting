@@ -5,19 +5,20 @@ import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
+import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.drc.DesignRulesChecker;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
+import com.sun.management.ThreadMXBean;
+import java.lang.management.ManagementFactory;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-
-import app.freerouting.core.ProgressThrottler;
 
 /**
  * Optimizes routes using a single thread on a board that has completed
@@ -25,12 +26,12 @@ import app.freerouting.core.ProgressThrottler;
  */
 public class BatchOptimizer extends NamedAlgorithm {
 
+  protected final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   protected ReadSortedRouteItems sorted_route_items;
   // in the first passes the ripup costs are increased for better performance.
   protected boolean use_increased_ripup_costs;
   // the minimum cumulative trace length that was reached during the optimization
   protected double min_cumulative_trace_length = 0.0;
-  protected final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   protected RoutingJob job;
 
   /**
@@ -52,6 +53,36 @@ public class BatchOptimizer extends NamedAlgorithm {
     return true;
   }
 
+  private static float sampleCurrentThreadCpuSeconds() {
+    try {
+      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      long cpuNanos = threadMxBean.getThreadCpuTime(Thread.currentThread().threadId());
+      return cpuNanos < 0 ? -1f : cpuNanos / 1_000_000_000.0f;
+    } catch (Throwable t) {
+      return -1f;
+    }
+  }
+
+  private static float sampleCurrentThreadAllocatedMb() {
+    try {
+      ThreadMXBean threadMxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      threadMxBean.setThreadAllocatedMemoryEnabled(true);
+      long allocatedBytes = threadMxBean.getThreadAllocatedBytes(Thread.currentThread().threadId());
+      return allocatedBytes < 0 ? -1f : allocatedBytes / (1024.0f * 1024.0f);
+    } catch (Throwable t) {
+      return -1f;
+    }
+  }
+
+  private static float sampleHeapUsageMb() {
+    try {
+      long heapUsed = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();
+      return heapUsed / (1024.0f * 1024.0f);
+    } catch (Throwable t) {
+      return 0f;
+    }
+  }
+
   /**
    * Optimize the route on the board.
    */
@@ -63,6 +94,18 @@ public class BatchOptimizer extends NamedAlgorithm {
     double route_improved = -1;
     int currentPass = 0;
     use_increased_ripup_costs = true;
+
+    // Capture initial board state for session summary
+    BoardStatistics initialStats = board.get_statistics();
+    float initialScore = initialStats.getNormalizedScore(job.routerSettings.scoring);
+    int initialIncomplete = initialStats.connections.incompleteCount;
+    int initialViolations = initialStats.clearanceViolations.totalCount;
+
+    // Capture start-of-session resource usage baselines
+    long sessionStartMs = System.currentTimeMillis();
+    float cpuSecondsStart = sampleCurrentThreadCpuSeconds();
+    float allocMbStart = sampleCurrentThreadAllocatedMb();
+    float peakHeapMb = sampleHeapUsageMb();
 
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
@@ -76,10 +119,35 @@ public class BatchOptimizer extends NamedAlgorithm {
 
       boolean with_preferred_directions = currentPass % 2 != 0; // to create more variations
       route_improved = opt_route_pass(currentPass, with_preferred_directions);
+      peakHeapMb = Math.max(peakHeapMb, sampleHeapUsageMb());
     }
 
     this.fireTaskStateChangedEvent(
         new TaskStateChangedEvent(this, TaskState.FINISHED, currentPass, this.board.get_hash()));
+
+    // Session summary
+    double sessionDurationSeconds = (System.currentTimeMillis() - sessionStartMs) / 1000.0;
+    float cpuSecondsEnd = sampleCurrentThreadCpuSeconds();
+    float allocMbEnd = sampleCurrentThreadAllocatedMb();
+    float cpuSecondsUsed = (cpuSecondsStart >= 0f && cpuSecondsEnd >= cpuSecondsStart)
+        ? cpuSecondsEnd - cpuSecondsStart : Math.max(0f, cpuSecondsEnd);
+    float allocMbUsed = (allocMbStart >= 0f && allocMbEnd >= allocMbStart)
+        ? allocMbEnd - allocMbStart : Math.max(0f, allocMbEnd);
+    peakHeapMb = Math.max(peakHeapMb, sampleHeapUsageMb());
+
+    BoardStatistics finalStats = new BoardStatistics(this.board);
+    float finalScore = finalStats.getNormalizedScore(job.routerSettings.scoring);
+    String completionStatus = this.thread.isStopRequested() ? "interrupted:" : "completed:";
+    job.logInfo(String.format(java.util.Locale.US,
+        "Optimizer phase %s started with score %s, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+        completionStatus,
+        FRLogger.formatScore(initialScore, initialIncomplete, initialViolations),
+        sessionDurationSeconds,
+        FRLogger.formatScore(finalScore, finalStats.connections.incompleteCount,
+            finalStats.clearanceViolations.totalCount),
+        cpuSecondsUsed,
+        allocMbUsed / 1024.0f,
+        peakHeapMb));
   }
 
   /**
@@ -138,11 +206,12 @@ public class BatchOptimizer extends NamedAlgorithm {
     double routeoptimizer_pass_duration = FRLogger.traceExit(optimizationPassId);
     BoardStatistics boardStatisticsAfter = new BoardStatistics(this.board);
     this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, this.board);
-    job.logInfo("Optimizer pass #" + p_pass_no + " was completed in "
-        + FRLogger.formatDuration(routeoptimizer_pass_duration) + " with the score of " + FRLogger.formatScore(
+    job.logInfo(String.format(java.util.Locale.US,
+        "Optimizer pass #%d on board '%s' was completed in %.2f seconds with the score of %s.",
+        p_pass_no, this.board.get_hash(), routeoptimizer_pass_duration,
+        FRLogger.formatScore(
             boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring),
-            boardStatisticsAfter.connections.incompleteCount, boardStatisticsAfter.clearanceViolations.totalCount)
-        + ".");
+            boardStatisticsAfter.connections.incompleteCount, boardStatisticsAfter.clearanceViolations.totalCount)));
     return route_improved;
   }
 
@@ -300,6 +369,12 @@ public class BatchOptimizer extends NamedAlgorithm {
     return NamedAlgorithmType.OPTIMIZER;
   }
 
+  private int calculateIncompleteCount(RoutingBoard board) {
+    DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
+    tempDrc.calculateAllIncompletes();
+    return tempDrc.getIncompleteCount();
+  }
+
   /**
    * Reads the vias and traces on the board in ascending x order. Because the vias
    * and traces on the board change while optimizing the item list of the board is
@@ -400,11 +475,5 @@ public class BatchOptimizer extends NamedAlgorithm {
     FloatPoint get_current_position() {
       return min_item_coor;
     }
-  }
-
-  private int calculateIncompleteCount(RoutingBoard board) {
-    DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
-    tempDrc.calculateAllIncompletes();
-    return tempDrc.getIncompleteCount();
   }
 }

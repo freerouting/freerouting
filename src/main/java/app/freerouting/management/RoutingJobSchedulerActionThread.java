@@ -13,8 +13,8 @@ import app.freerouting.core.RoutingStage;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.TextManager;
 import app.freerouting.settings.RouterSettings;
+import app.freerouting.util.TextManager;
 import com.sun.management.ThreadMXBean;
 import java.io.ByteArrayOutputStream;
 import java.lang.management.ManagementFactory;
@@ -142,16 +142,16 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           }
         }
 
-        String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, completed in %s, final score: %s, using %s total CPU seconds, %s GB total allocated, and %s MB peak heap usage.",
+        String sessionSummary = String.format(java.util.Locale.US,
+            "Auto-router phase %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
             completionStatus,
             initialUnroutedCount,
-            FRLogger.formatDuration(totalTime),
+            totalTime,
             FRLogger.formatScore(finalStats.getNormalizedScore(job.routerSettings.scoring),
                 finalStats.connections.incompleteCount, finalStats.clearanceViolations.totalCount),
-            FRLogger.defaultFloatFormat.format(job.resourceUsage.cpuTimeUsed),
-            FRLogger.defaultFloatFormat.format(job.resourceUsage.maxMemoryUsed / 1024.0f),
-            FRLogger.defaultFloatFormat.format(job.resourceUsage.peakMemoryUsed));
+            job.resourceUsage.cpuTimeUsed,
+            job.resourceUsage.maxMemoryUsed / 1024.0f,
+            job.resourceUsage.peakMemoryUsed);
 
         job.logInfo(sessionSummary);
       }

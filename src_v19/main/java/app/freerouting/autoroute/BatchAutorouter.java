@@ -1,13 +1,13 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.BasicBoard;
+import app.freerouting.board.ClearanceViolation;
 import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.ClearanceViolation;
 import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Unit;
@@ -47,6 +47,8 @@ public class BatchAutorouter {
   private final HashSet<String> already_checked_board_hashes = new HashSet<>();
   private final LinkedList<Integer> diffBetweenBoards = new LinkedList<>();
   private boolean is_interrupted = false;
+  private boolean isOptimizerAutorouter = false;
+
   /** Used to draw the airline of the current routed incomplete. */
   private FloatLine air_line;
 
@@ -117,6 +119,7 @@ public class BatchAutorouter {
       RoutingBoard updated_routing_board) {
     BatchAutorouter router_instance = new BatchAutorouter(
         p_thread, true, p_with_preferred_directions, p_ripup_costs, updated_routing_board);
+    router_instance.isOptimizerAutorouter = true;
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
     while (still_unrouted_items
@@ -138,6 +141,16 @@ public class BatchAutorouter {
       --curr_pass_no;
     }
     return curr_pass_no;
+  }
+
+  private static Point[] getImpactedPoints(Item item) {
+    if (item instanceof Trace trace) {
+      return new Point[] {trace.first_corner(), trace.last_corner()};
+    }
+    if (item instanceof DrillItem drillItem) {
+      return new Point[] {drillItem.get_center()};
+    }
+    return new Point[0];
   }
 
   /**
@@ -289,18 +302,17 @@ public class BatchAutorouter {
     RatsNest finalRatsNest = new RatsNest(routing_board, hdlg.get_locale());
     int finalUnrouted = finalRatsNest.incomplete_count();
 
-    // Calculate peak heap usage (approximate)
-    long peakHeap = java.lang.management.ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1024
-        / 1024;
-
-    FRLogger.info(String.format(
-        "Auto-router session completed: started with %d unrouted nets, completed in %s, final score: %s, using %s total CPU seconds, %s GB total allocated, and %d MB peak heap usage.",
+    long peakHeap = java.lang.management.ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1024 / 1024;
+    String autorouterCompletionStatus = this.is_interrupted ? "interrupted:" : "completed:";
+    FRLogger.info(String.format(java.util.Locale.US,
+        "Auto-router phase %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+        autorouterCompletionStatus,
         initialUnroutedCount,
-        FRLogger.formatDuration(sessionDuration / 1000.0),
+        sessionDuration / 1000.0,
         FRLogger.formatScore(finalScore, finalUnrouted, finalViolations),
-        FRLogger.defaultFloatFormat.format(totalCpuTime),
-        FRLogger.defaultFloatFormat.format(totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0),
-        peakHeap));
+        totalCpuTime,
+        totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0,
+        (double) peakHeap));
 
     PerformanceProfiler.printResults();
     PerformanceProfiler.reset();
@@ -515,14 +527,16 @@ public class BatchAutorouter {
 
       String scoreStr = FRLogger.formatScore(score, incompleteCount, violations);
 
-      FRLogger.info(String.format(
-          "Auto-router pass #%d on board '%s' was completed in %s with the score of %s, using %s CPU seconds and the job allocated %s GB of memory so far.",
-          p_pass_no,
-          routing_board.get_hash(),
-          FRLogger.formatDuration(passDuration / 1000.0),
-          scoreStr,
-          FRLogger.defaultFloatFormat.format(this.totalCpuTime),
-          FRLogger.defaultFloatFormat.format(this.totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0)));
+      if (!isOptimizerAutorouter) {
+        FRLogger.info(String.format(java.util.Locale.US,
+            "Auto-router pass #%d on board '%s' was completed in %.2f seconds with the score of %s, using %.2f CPU seconds and the job allocated %.2f GB of memory so far.",
+            p_pass_no,
+            routing_board.get_hash(),
+            passDuration / 1000.0,
+            scoreStr,
+            this.totalCpuTime,
+            this.totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0));
+      }
 
       PerformanceProfiler.recordPass(p_pass_no, incompleteCount, passDuration, currentRipupCost);
 
@@ -561,16 +575,6 @@ public class BatchAutorouter {
       this.air_line = null;
       return false;
     }
-  }
-
-  private static Point[] getImpactedPoints(Item item) {
-    if (item instanceof Trace trace) {
-      return new Point[] {trace.first_corner(), trace.last_corner()};
-    }
-    if (item instanceof DrillItem drillItem) {
-      return new Point[] {drillItem.get_center()};
-    }
-    return new Point[0];
   }
 
   private void remove_tails(Item.StopConnectionOption p_stop_connection_option) {

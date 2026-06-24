@@ -104,7 +104,8 @@ $V19OutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-v190$($OutputExt
 
 $BaseArgs = @(
     "-de", "`"$InputFileAbs`""
-    "--router.optimizer.enabled=false"
+    "--router.fanout.enabled=true"
+    "--router.optimizer.enabled=true"
     "--gui.enabled=false"
     "--api_server.enabled=false"
     "--debug.enable_detailed_logging=true"

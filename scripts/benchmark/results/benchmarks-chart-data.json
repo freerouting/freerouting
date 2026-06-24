@@ -1,0 +1,226 @@
+[
+    {
+        "cpu_time":  0,
+        "version":  "2.0.1",
+        "unrouted":  1,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T12:55:53Z",
+        "score":  988.33636474609375
+    },
+    {
+        "cpu_time":  22.86,
+        "version":  "s2026.06.23",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T18:32:01Z",
+        "score":  965.07891845703125
+    },
+    {
+        "cpu_time":  24.74,
+        "version":  "s2026.06.24",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T12:11:47Z",
+        "score":  965.07891845703125
+    },
+    {
+        "cpu_time":  3.75,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T17:57:54Z",
+        "score":  999.96197509765636
+    },
+    {
+        "cpu_time":  0,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:08:27Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  1235.62,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm01.dsn",
+        "date":  "2026-06-24T16:10:48Z",
+        "score":  910.75341796875
+    },
+    {
+        "cpu_time":  1771.71,
+        "version":  "1.9.0",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm04.dsn",
+        "date":  "2026-06-24T16:42:00Z",
+        "score":  980.41247558593761
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.0.1",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:08:47Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.1.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T17:56:48Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  2.86,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T13:16:40Z",
+        "score":  999.96667480468773
+    },
+    {
+        "cpu_time":  21.77,
+        "version":  "s2026.06.23",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T17:58:18Z",
+        "score":  965.07891845703125
+    },
+    {
+        "cpu_time":  24.87,
+        "version":  "s2026.06.24",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T11:45:23Z",
+        "score":  965.07891845703125
+    },
+    {
+        "cpu_time":  3.64,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T17:55:08Z",
+        "score":  999.96667480468773
+    },
+    {
+        "cpu_time":  0,
+        "version":  "s2026.06.24",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T11:27:12Z",
+        "score":  965.07891845703125
+    },
+    {
+        "cpu_time":  41.66,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T15:46:01Z",
+        "score":  999.96221923828125
+    },
+    {
+        "cpu_time":  13.53,
+        "version":  "s2026.06.23",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:44:56Z",
+        "score":  965.08
+    },
+    {
+        "cpu_time":  0,
+        "version":  "s2026.06.23",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:09:46Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:09:25Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.1.0",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T13:00:10Z",
+        "score":  976.70166015625
+    },
+    {
+        "cpu_time":  25.09,
+        "version":  "s2026.06.24",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T13:18:01Z",
+        "score":  965.07891845703125
+    },
+    {
+        "cpu_time":  3.69,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T15:48:08Z",
+        "score":  999.99230957031227
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.1.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:09:06Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  35.25,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm02.dsn",
+        "date":  "2026-06-24T16:11:35Z",
+        "score":  999.99395751953125
+    },
+    {
+        "cpu_time":  23.91,
+        "version":  "s2026.06.24",
+        "unrouted":  3,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T15:48:32Z",
+        "score":  965.10882568359375
+    },
+    {
+        "cpu_time":  39.52,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T15:47:13Z",
+        "score":  999.99249267578125
+    },
+    {
+        "cpu_time":  0,
+        "version":  "s2026.06.23",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T16:17:42Z",
+        "score":  0
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.0.1",
+        "unrouted":  1,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-23T17:55:18Z",
+        "score":  988.33636474609375
+    },
+    {
+        "cpu_time":  43.92,
+        "version":  "1.9.0",
+        "unrouted":  0,
+        "fixture":  "DAC2020_bm07.dsn",
+        "date":  "2026-06-24T14:03:27Z",
+        "score":  999.99
+    }
+]

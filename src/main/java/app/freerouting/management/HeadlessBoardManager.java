@@ -2,8 +2,6 @@ package app.freerouting.management;
 
 import static app.freerouting.util.gson.GsonProvider.GSON;
 
-import app.freerouting.settings.sources.GuiSettings;
-
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
@@ -16,15 +14,16 @@ import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.io.specctra.SesWriter;
-import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
+import app.freerouting.settings.sources.DefaultSettings;
+import app.freerouting.settings.sources.GuiSettings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -346,7 +345,7 @@ public class HeadlessBoardManager implements BoardManager {
       this.board.search_tree_manager.insert(outline);
     }
 
-    FRLogger.info("Applied copper-to-edge clearance override: " + configuredClearanceUm + " um ("
+    FRLogger.debug("Applied copper-to-edge clearance override: " + configuredClearanceUm + " um ("
         + configuredClearanceBoardUnits + " board units).");
   }
 
