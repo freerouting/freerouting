@@ -22,6 +22,9 @@ public class RouterSettings implements Serializable, Cloneable {
   /** Configuration for the SMD-pin fanout pre-pass. */
   @SerializedName("fanout")
   public FanoutSettings fanout;
+  /** Enable power trunk routing after fanout escape vias are placed. */
+  @SerializedName("route_power_trunks")
+  public Boolean routePowerTrunksAfterFanout;
   @SerializedName("copper_to_edge_clearance_um")
   public Double copperToEdgeClearanceUm;
   @SerializedName("job_timeout")
@@ -401,6 +404,7 @@ public class RouterSettings implements Serializable, Cloneable {
     result.optimizer = this.optimizer != null ? this.optimizer.clone() : new RouterOptimizerSettings();
     result.scoring = this.scoring != null ? this.scoring.clone() : new RouterScoringSettings();
     result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
+    result.routePowerTrunksAfterFanout = this.routePowerTrunksAfterFanout;
 
     return result;
   }
@@ -454,6 +458,18 @@ public class RouterSettings implements Serializable, Cloneable {
     this.fanout.enabled = value;
     if (pcs != null) {
       pcs.firePropertyChange("fanout.enabled", oldValue, value);
+    }
+  }
+
+  public boolean isRoutePowerTrunksEnabled() {
+    return routePowerTrunksAfterFanout != null && Boolean.TRUE.equals(routePowerTrunksAfterFanout);
+  }
+
+  public void setRoutePowerTrunksEnabled(Boolean value) {
+    Boolean oldValue = this.routePowerTrunksAfterFanout;
+    this.routePowerTrunksAfterFanout = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("routePowerTrunks", oldValue, value);
     }
   }
 

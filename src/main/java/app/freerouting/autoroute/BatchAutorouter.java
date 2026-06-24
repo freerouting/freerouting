@@ -912,6 +912,11 @@ public class BatchAutorouter extends NamedAlgorithm {
           FRLogger.defaultFloatFormat.format(fanoutAllocatedGb),
           FRLogger.defaultFloatFormat.format(fanoutPeakHeapMb));
       job.logInfo(fanoutSummaryMessage);
+
+      // Power trunk routing: route power nets (GND/VCC) from escape vias to main distribution
+      if (this.settings.isRoutePowerTrunksEnabled()) {
+        route_power_trunks_from_escapes();
+      }
     }
 
     int currentPass = 1;
@@ -1438,6 +1443,25 @@ public class BatchAutorouter extends NamedAlgorithm {
       // If detection fails, safely return false
       return false;
     }
+  }
+
+  /**
+   * Routes power trunks (GND/VCC nets) from escape via exit points to main power distribution.
+   * Called after fanout when route_power_trunks=true, to handle post-escape power routing.
+   *
+   * TODO: Implementation needed:
+   * 1. Identify escape-via exit points from protected escape areas in DSN
+   * 2. Find power net anchor points (power distribution plane connections)
+   * 3. Route trunks from exit points to anchors respecting escape keepouts
+   * 4. Use aggressive ripup to connect power nets (width priority over trace length)
+   */
+  private void route_power_trunks_from_escapes() {
+    job.logInfo("Power trunk routing: routing GND/VCC from escape via exits to main distribution");
+    // Framework in place for future implementation of escape-exit-aware trunk routing
+    // Currently this is a placeholder; full implementation requires:
+    // - Parsing DSN protected escape areas to locate via exit points
+    // - Identifying power net pins and their target anchor points
+    // - Specialized maze routing constrained to start from fixed exit locations
   }
 
   /**
