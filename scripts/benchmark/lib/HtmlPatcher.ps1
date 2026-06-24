@@ -120,15 +120,15 @@ function Update-BenchmarksHtml {
         }
     }
 
-    $htmlContent = [System.IO.File]::ReadAllText($HtmlPath, [System.Text.Encoding]::UTF8)
+    $htmlContent = [System.IO.File]::ReadAllText($HtmlPath, [System.Text.UTF8Encoding]::new($false))
     
     $pattern = '(?s)<!-- BENCHMARK_TABLE_START -->.*?<!-- BENCHMARK_TABLE_END -->'
     $replacement = "<!-- BENCHMARK_TABLE_START -->`r`n$indentedHtml        <!-- BENCHMARK_TABLE_END -->"
     
     $patchedContent = [regex]::Replace($htmlContent, $pattern, $replacement)
-
+ 
     $tempHtml = "$HtmlPath.tmp"
-    [System.IO.File]::WriteAllText($tempHtml, $patchedContent, [System.Text.Encoding]::UTF8)
+    [System.IO.File]::WriteAllText($tempHtml, $patchedContent, [System.Text.UTF8Encoding]::new($false))
     if (Test-Path $tempHtml) {
         if (Test-Path $HtmlPath) {
             Remove-Item $HtmlPath -Force

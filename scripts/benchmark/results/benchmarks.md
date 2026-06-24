@@ -1,5 +1,5 @@
-﻿# Freerouting Nightly Benchmarks Report
-Generated on: 2026-06-24 16:35:46
+# Freerouting Nightly Benchmarks Report
+Generated on: 2026-06-24 17:09:44
 System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)
 
 This report lists the latest benchmark run results for each Freerouting version and fixture combination.
@@ -10,6 +10,7 @@ This report lists the latest benchmark run results for each Freerouting version 
 | :------------------------------------------- | :-------------------------------------------------------------- | :----------- | -------: | ---------: | ----: | -----------: | -------------: |
 | [DAC2020_boards](../fixtures/DAC2020_boards) | [DAC2020_bm01.dsn](../fixtures/DAC2020_boards/DAC2020_bm01.dsn) | **1.9.0**    |        0 |         87 |   911 |      1235.62 |            354 |
 | [DAC2020_boards](../fixtures/DAC2020_boards) | [DAC2020_bm02.dsn](../fixtures/DAC2020_boards/DAC2020_bm02.dsn) | **1.9.0**    |        0 |          0 |  1000 |        35.25 |            124 |
+| [DAC2020_boards](../fixtures/DAC2020_boards) | [DAC2020_bm04.dsn](../fixtures/DAC2020_boards/DAC2020_bm04.dsn) | **1.9.0**    |        2 |          4 |   980 |      1771.71 |            402 |
 | [DAC2020_boards](../fixtures/DAC2020_boards) | [DAC2020_bm07.dsn](../fixtures/DAC2020_boards/DAC2020_bm07.dsn) | **1.9.0**    |        0 |          0 |  1000 |        39.52 |            154 |
 
 
@@ -31,6 +32,15 @@ Size: 79.7 kB · Layers: 2 · Nets: 34 · Components: 13 · Dimensions: 50.8 x 2
 | Version | Mode | Fanout        | Fanout Time (s) | Router Time (s) | Optimizer Time (s) | Total Time (s) | Passes  | Unrouted | Violations | Score | Peak Heap (MB) | Total Alloc (GB) | Warn/Err |
 | :------ | :--- | ------------: | --------------: | --------------: | -----------------: | -------------: | ------: | -------: | ---------: | ----: | -------------: | ---------------: | -------: |
 | 1.9.0   | GUI  | 37/45 (82.2%) |            1.93 |            0.56 |              33.62 |          36.11 | 20+4+13 |        0 |          0 |  1000 |            124 |             34.9 |    0 / 0 |
+
+
+### Fixture: [DAC2020_bm04.dsn](../fixtures/DAC2020_boards/DAC2020_bm04.dsn)
+
+Size: 27 kB · Layers: 16 · Nets: 80 · Components: 16 · Dimensions: 43.9 x 35.1 mm (15.4 cm²) · CAD: KiCad's Pcbnew (v9.0.6)
+
+| Version | Mode | Fanout          | Fanout Time (s) | Router Time (s) | Optimizer Time (s) | Total Time (s) | Passes  | Unrouted | Violations | Score | Peak Heap (MB) | Total Alloc (GB) | Warn/Err |
+| :------ | :--- | --------------: | --------------: | --------------: | -----------------: | -------------: | ------: | -------: | ---------: | ----: | -------------: | ---------------: | -------: |
+| 1.9.0   | GUI  | 159/198 (80.3%) |            6.46 |          100.12 |            1708.37 |        1814.95 | 20+24+3 |        2 |          4 |   980 |            402 |           1309.7 |    2 / 0 |
 
 
 ### Fixture: [DAC2020_bm07.dsn](../fixtures/DAC2020_boards/DAC2020_bm07.dsn)

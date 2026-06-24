@@ -28,8 +28,8 @@ public class DefaultSettings implements SettingsSource {
 
     /**
      * Penalty subtracted from the board score for each clearance (DRC) violation.
-     * Should be large enough that the optimizer never accepts a routed board with
-     * violations over an unrouted-but-clean board.
+     * Set relative to the unrouted penalty to allow a balance where completing all nets
+     * with a few violations can be preferred over leaving nets unrouted.
      */
     public static final float DEFAULT_CLEARANCE_VIOLATION_PENALTY = 1_000_000.0f;
     /**

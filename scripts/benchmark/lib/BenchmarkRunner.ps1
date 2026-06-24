@@ -32,15 +32,19 @@ function Invoke-BenchmarkRun {
         [bool]$SupportsCliMode
     )
 
+    $isV19 = $Binary.Name -match 'freerouting-1.9.0.jar'
     $logFile = Join-Path $LogsDir "${BaseName}.log"
+    $stdoutFile = Join-Path $LogsDir "${BaseName}.stdout"
     $errFile = Join-Path $LogsDir "${BaseName}.err"
     $memLog = Join-Path $LogsDir "${BaseName}-memory.log"
     $outputFile = Join-Path $OutputsDir "${BaseName}.ses"
+    $liveLogFile = if ($isV19) { $stdoutFile } else { $logFile }
 
     # Clean previous output
-    if (Test-Path $outputFile) {
-        Remove-Item $outputFile -Force -ErrorAction SilentlyContinue
-    }
+    if (Test-Path $outputFile) { Remove-Item $outputFile -Force -ErrorAction SilentlyContinue }
+    if (Test-Path $logFile) { Remove-Item $logFile -Force -ErrorAction SilentlyContinue }
+    if (Test-Path $stdoutFile) { Remove-Item $stdoutFile -Force -ErrorAction SilentlyContinue }
+    if (Test-Path $errFile) { Remove-Item $errFile -Force -ErrorAction SilentlyContinue }
 
     $jvmArgs = @(
         "-Dsun.stdout.buffered=false",
@@ -80,7 +84,7 @@ function Invoke-BenchmarkRun {
 
     # Start process with standard output and error redirected separately to avoid PowerShell conflicts
     $process = Start-Process -FilePath "java" -ArgumentList $jvmArgs -NoNewWindow -PassThru `
-        -RedirectStandardOutput $logFile -RedirectStandardError $errFile
+        -RedirectStandardOutput $stdoutFile -RedirectStandardError $errFile
 
     # Launch background memory sampler
     $memJob = Start-Job -ScriptBlock {
@@ -116,9 +120,9 @@ function Invoke-BenchmarkRun {
         $timeoutElapsed += $sleepIntervalMs
 
         # Read and display new log lines
-        if (Test-Path $logFile) {
+        if (Test-Path $liveLogFile) {
             try {
-                $currentLines = Get-ContentShared $logFile
+                $currentLines = Get-ContentShared $liveLogFile
                 if ($currentLines) {
                     $newLineCount = $currentLines.Count
                     if ($newLineCount -gt $lastLineCount) {
@@ -135,9 +139,9 @@ function Invoke-BenchmarkRun {
     }
 
     # Print any remaining lines
-    if (Test-Path $logFile) {
+    if (Test-Path $liveLogFile) {
         try {
-            $currentLines = Get-ContentShared $logFile
+            $currentLines = Get-ContentShared $liveLogFile
             if ($currentLines) {
                 $newLineCount = $currentLines.Count
                 if ($newLineCount -gt $lastLineCount) {
@@ -161,6 +165,23 @@ function Invoke-BenchmarkRun {
         try {
             $process.Kill()
         } catch {}
+    }
+
+    # Copy/merge stdout to logFile
+    if ($isV19) {
+        if (Test-Path $stdoutFile) {
+            Move-Item -Path $stdoutFile -Destination $logFile -Force -ErrorAction SilentlyContinue
+        }
+    } else {
+        if (Test-Path $stdoutFile) {
+            try {
+                $stdoutLines = Get-Content $stdoutFile -ErrorAction SilentlyContinue
+                if ($stdoutLines) {
+                    $stdoutLines | Add-Content $logFile -ErrorAction SilentlyContinue
+                }
+                Remove-Item $stdoutFile -Force -ErrorAction SilentlyContinue
+            } catch {}
+        }
     }
 
     # Append standard error log to standard output log file

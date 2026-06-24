@@ -98,7 +98,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   private Instant sessionStartTime;
   private long lastBoardUpdateTimestamp = 0;
 
-  public boolean isOptimizerAutorouter = false;
+  private boolean isOptimizerAutorouter = false;
 
   public BatchAutorouter(RoutingJob job) {
     this(job.thread, job.board, job.routerSettings, !job.routerSettings.isFanoutEnabled(), true,

@@ -1,4 +1,4 @@
-﻿[
+[
     {
         "cpu_time":  0,
         "version":  "2.0.1",
@@ -46,6 +46,14 @@
         "fixture":  "DAC2020_bm01.dsn",
         "date":  "2026-06-24T16:10:48Z",
         "score":  910.75341796875
+    },
+    {
+        "cpu_time":  1771.71,
+        "version":  "1.9.0",
+        "unrouted":  2,
+        "fixture":  "DAC2020_bm04.dsn",
+        "date":  "2026-06-24T16:42:00Z",
+        "score":  980.41247558593761
     },
     {
         "cpu_time":  0,

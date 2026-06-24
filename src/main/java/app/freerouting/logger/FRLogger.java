@@ -79,7 +79,7 @@ public class FRLogger {
 
     // Always include unrouted and violations for a consistent, parseable format
     sb.append(" (");
-    sb.append(incomplete).append(incomplete == 1 ? " unrouted" : " unrouted");
+    sb.append(incomplete).append(" unrouted");
     sb.append(" and ");
     sb.append(violations).append(violations == 1 ? " violation" : " violations");
     sb.append(")");

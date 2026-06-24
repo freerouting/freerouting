@@ -47,7 +47,7 @@ public class BatchAutorouter {
   private final HashSet<String> already_checked_board_hashes = new HashSet<>();
   private final LinkedList<Integer> diffBetweenBoards = new LinkedList<>();
   private boolean is_interrupted = false;
-  public boolean isOptimizerAutorouter = false;
+  private boolean isOptimizerAutorouter = false;
 
   /** Used to draw the airline of the current routed incomplete. */
   private FloatLine air_line;

@@ -130,6 +130,9 @@ function Get-PhaseMetrics {
         if ($line -match "Starting fanout pre-pass on board '([^']+)' for (\d+) SMD pins?") {
             $fanout.smd_pin_count = [int]$matches[2]
             $fanout.log_found = $true
+        } elseif ($line -match "Fanout phase started on board '([^']+)' for (\d+) SMD pins?") {
+            $fanout.smd_pin_count = [int]$matches[2]
+            $fanout.log_found = $true
         }
     }
 

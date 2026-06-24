@@ -241,7 +241,7 @@ function Export-MarkdownReport {
         }
     }
 
-    [System.IO.File]::WriteAllText($MdPath, $sb.ToString(), [System.Text.Encoding]::UTF8)
+    [System.IO.File]::WriteAllText($MdPath, $sb.ToString(), [System.Text.UTF8Encoding]::new($false))
 
     # --- 3. CSV Export ---
     $csvHeaders = "fixture_group,fixture_name,version,run_mode,fanout_success,router_passes,drc_unrouted,drc_violations,drc_score,wall_time,cpu_time,peak_heap_mb,warn_count,error_count"
@@ -266,7 +266,7 @@ function Export-MarkdownReport {
         $line = "$($run.fixture.group),$($run.fixture.filename),$($run.binary.version_label),$($run.run_mode),$fanoutSuccess,$passes,$drcUnrouted,$drcViolations,$drcScore,$wall,$cpu,$heap,$warns,$errs"
         $csvLines += $line
     }
-    [System.IO.File]::WriteAllLines($CsvPath, $csvLines, [System.Text.Encoding]::UTF8)
+    [System.IO.File]::WriteAllLines($CsvPath, $csvLines, [System.Text.UTF8Encoding]::new($false))
 
     # --- 4. Chart Data JSON Export ---
     $chartData = @()
@@ -284,5 +284,5 @@ function Export-MarkdownReport {
         }
     }
     $chartJson = ConvertTo-Json $chartData -Depth 5
-    [System.IO.File]::WriteAllText($ChartDataPath, $chartJson, [System.Text.Encoding]::UTF8)
+    [System.IO.File]::WriteAllText($ChartDataPath, $chartJson, [System.Text.UTF8Encoding]::new($false))
 }
