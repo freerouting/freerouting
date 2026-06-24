@@ -145,7 +145,13 @@ public class BatchAutorouter extends NamedAlgorithm {
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
     while (still_unrouted_items && !job.thread.is_stop_auto_router_requested() && curr_pass_no <= p_max_pass_count) {
-      still_unrouted_items = router_instance.autoroute_pass(curr_pass_no);
+      // Phase 4: Use multi-threaded routing if multiple threads available
+      boolean useMultiThread = routerSettings.maxThreads != null && routerSettings.maxThreads > 1;
+      if (useMultiThread) {
+        still_unrouted_items = router_instance.autoroute_pass_multi_thread(curr_pass_no);
+      } else {
+        still_unrouted_items = router_instance.autoroute_pass(curr_pass_no);
+      }
       if (still_unrouted_items && !job.thread.is_stop_auto_router_requested() && updated_routing_board == null) {
       }
       ++curr_pass_no;
