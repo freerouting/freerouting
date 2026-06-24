@@ -109,6 +109,71 @@ public class DestinationDistance {
     return calculate(p_point.bounding_box(), p_layer);
   }
 
+  /**
+   * Fast Manhattan-based heuristic for A* (admissible, tighter than full calculation).
+   * Returns lower bound on remaining cost to destination using Manhattan distance.
+   */
+  public double calculateFastHeuristic(FloatPoint p_point, int p_layer) {
+    return calculateFastHeuristic(p_point.bounding_box(), p_layer);
+  }
+
+  public double calculateFastHeuristic(IntBox p_box, int p_layer) {
+    if (box_is_empty) {
+      return Integer.MAX_VALUE;
+    }
+
+    // Find minimum distance to destination box in x,y
+    double delta_x = 0;
+    double delta_y = 0;
+
+    if (p_layer == 0 && !component_side_box_is_empty) {
+      if (p_box.ll.x > component_side_box.ur.x) {
+        delta_x = p_box.ll.x - component_side_box.ur.x;
+      } else if (p_box.ur.x < component_side_box.ll.x) {
+        delta_x = component_side_box.ll.x - p_box.ur.x;
+      }
+      if (p_box.ll.y > component_side_box.ur.y) {
+        delta_y = p_box.ll.y - component_side_box.ur.y;
+      } else if (p_box.ur.y < component_side_box.ll.y) {
+        delta_y = component_side_box.ll.y - p_box.ur.y;
+      }
+    } else if (p_layer == layer_count - 1 && !solder_side_box_is_empty) {
+      if (p_box.ll.x > solder_side_box.ur.x) {
+        delta_x = p_box.ll.x - solder_side_box.ur.x;
+      } else if (p_box.ur.x < solder_side_box.ll.x) {
+        delta_x = solder_side_box.ll.x - p_box.ur.x;
+      }
+      if (p_box.ll.y > solder_side_box.ur.y) {
+        delta_y = p_box.ll.y - solder_side_box.ur.y;
+      } else if (p_box.ur.y < solder_side_box.ll.y) {
+        delta_y = solder_side_box.ll.y - p_box.ur.y;
+      }
+    } else if (!inner_side_box_is_empty) {
+      if (p_box.ll.x > inner_side_box.ur.x) {
+        delta_x = p_box.ll.x - inner_side_box.ur.x;
+      } else if (p_box.ur.x < inner_side_box.ll.x) {
+        delta_x = inner_side_box.ll.x - p_box.ur.x;
+      }
+      if (p_box.ll.y > inner_side_box.ur.y) {
+        delta_y = p_box.ll.y - inner_side_box.ur.y;
+      } else if (p_box.ur.y < inner_side_box.ll.y) {
+        delta_y = inner_side_box.ll.y - p_box.ur.y;
+      }
+    }
+
+    // Manhattan distance with minimum trace cost (admissible lower bound)
+    double manhattan_cost = (delta_x + delta_y) * min_component_solder_inner_trace_cost;
+
+    // If on different layer than destination, add one via cost (layer change required)
+    if ((p_layer == 0 && !component_side_box_is_empty && p_layer != 0)
+        || (p_layer == layer_count - 1 && !solder_side_box_is_empty && p_layer != layer_count - 1)
+        || (p_layer != 0 && p_layer != layer_count - 1 && !inner_side_box_is_empty)) {
+      manhattan_cost += min_normal_via_cost;
+    }
+
+    return manhattan_cost;
+  }
+
   public double calculate(IntBox p_box, int p_layer) {
     if (box_is_empty) {
       return Integer.MAX_VALUE;

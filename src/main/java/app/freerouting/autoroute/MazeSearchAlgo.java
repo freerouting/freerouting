@@ -710,7 +710,8 @@ public class MazeSearchAlgo {
         + shape_entry_middle.weighted_distance(p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b),
             ctrl.trace_costs[layer].horizontal,
             ctrl.trace_costs[layer].vertical);
-    double sorting_value = expansion_value + this.destination_distance.calculate(shape_entry_middle, layer);
+    // A* heuristic: use faster Manhattan-based lower bound instead of multi-path calculation
+    double sorting_value = expansion_value + this.destination_distance.calculateFastHeuristic(shape_entry_middle, layer);
     boolean room_ripped = p_add_costs > 0 && p_adjustment == MazeSearchElement.Adjustment.NONE
         || p_from_element.already_checked && p_from_element.room_ripped;
 
@@ -900,7 +901,7 @@ public class MazeSearchAlgo {
       new_section_no_of_backtrack_door = p_from_element.section_no_of_door;
       expansion_value += ctrl.min_normal_via_cost;
     }
-    double sorting_value = expansion_value + this.destination_distance.calculate(nearest_point, layer);
+    double sorting_value = expansion_value + this.destination_distance.calculateFastHeuristic(nearest_point, layer);
     MazeListElement new_element = new MazeListElement(
         p_drill,
         section_no,
@@ -936,7 +937,7 @@ public class MazeSearchAlgo {
     double sorting_value = expansion_value
         + nearest_point.weighted_distance(from_element_shape_entry_middle, ctrl.trace_costs[layer].horizontal,
             ctrl.trace_costs[layer].vertical)
-        + this.destination_distance.calculate(
+        + this.destination_distance.calculateFastHeuristic(
             nearest_point, layer);
     MazeListElement new_element = new MazeListElement(
         p_drill_page,
@@ -1135,7 +1136,7 @@ public class MazeSearchAlgo {
       }
       double expansion_value = p_list_element.expansion_value + ctrl.add_via_costs[from_layer].to_layer[to_layer];
       FloatPoint shape_entry_middle = p_list_element.shape_entry.a.middle_point(p_list_element.shape_entry.b);
-      double sorting_value = expansion_value + this.destination_distance.calculate(shape_entry_middle, to_layer);
+      double sorting_value = expansion_value + this.destination_distance.calculateFastHeuristic(shape_entry_middle, to_layer);
       int curr_room_index = to_layer - curr_drill.first_layer;
       MazeListElement new_element = new MazeListElement(
           curr_drill,
@@ -1272,7 +1273,7 @@ public class MazeSearchAlgo {
         connection_shape = connection_shape.intersection(curr_door.room.get_shape());
         FloatPoint curr_center = connection_shape.centre_of_gravity();
         FloatLine shape_entry = new FloatLine(curr_center, curr_center);
-        double sorting_value = this.destination_distance.calculate(curr_center, curr_room.get_layer());
+        double sorting_value = this.destination_distance.calculateFastHeuristic(curr_center, curr_room.get_layer());
         MazeListElement new_list_element = new MazeListElement(
             curr_door,
             0,
