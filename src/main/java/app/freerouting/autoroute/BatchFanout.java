@@ -151,6 +151,12 @@ public class BatchFanout {
 
     for (Component curr_component : this.sorted_components) {
       for (Component.Pin curr_pin : curr_component.smd_pins) {
+        // Skip pins already escaped - they don't need fanout in this pass
+        if (isPinEscaped(curr_pin.board_pin)) {
+          --pinsToGo;
+          continue;
+        }
+
         double max_milliseconds = baseMillisPerPin * (p_pass_no + 1);
         TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
         String fullPinName = curr_component.board_component.name + "-" + curr_pin.board_pin.name();
