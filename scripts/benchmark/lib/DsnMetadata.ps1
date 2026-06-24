@@ -88,10 +88,10 @@ function Convert-ToMM {
     switch ($unit) {
         "inch" { return ($val / $res) * 25.4 }
         "mil"  { return (($val / $res) / 1000.0) * 25.4 }
-        "um"   { return ($val / $res) / 1000.0 }
-        "microns" { return ($val / $res) / 1000.0 }
-        "mm"   { return ($val / $res) }
-        "cm"   { return ($val / $res) * 10.0 }
-        default { return ($val / $res) }
+        "um"   { return $val / 1000.0 }
+        "microns" { return $val / 1000.0 }
+        "mm"   { return $val }
+        "cm"   { return $val * 10.0 }
+        default { return $val / $res }
     }
 }
