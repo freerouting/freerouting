@@ -385,7 +385,10 @@ public class BoardFrame extends WindowBase {
    * rendering it instantly in the GUI for real-time monitoring.
    */
   public void loadBoardNatively(RoutingBoard board, RoutingJob job) {
-    if (board == null) return;
+    if (board == null) {
+      this.updateTexts();
+      return;
+    }
     this.routingJob = job;
     board_panel.reset_board_handling(job);
     board_panel.board_handling.replaceRoutingBoard(board);
@@ -415,15 +418,30 @@ public class BoardFrame extends WindowBase {
     initialize_windows();
     this.boardLoadedEventListeners.forEach(listener -> listener.accept(board));
     this.refresh_windows();
+    this.updateTexts();
     this.repaint();
   }
 
   @Override
   public void updateTexts() {
-    if ((this.routingJob == null) || (this.routingJob.output.getFile() == null)) {
-      this.setTitle(tm.getText("title", this.freerouting_version));
+    String boardName = null;
+    if (this.routingJob != null) {
+      if (this.routingJob.input != null) {
+        String filename = this.routingJob.input.getFilename();
+        if (filename != null && !filename.isBlank() && !filename.equals("tutorial_board.dsn") && !filename.equals("empty_board.dsn")) {
+          boardName = filename;
+        }
+      }
+      if (boardName == null && this.routingJob.name != null && !this.routingJob.name.isBlank() && !this.routingJob.name.startsWith("J-")) {
+        boardName = this.routingJob.name;
+      }
+    }
+
+    String appTitle = tm.getText("title", this.freerouting_version);
+    if (boardName != null && !boardName.isBlank()) {
+      this.setTitle(boardName + " - " + appTitle);
     } else {
-      this.setTitle(routingJob.input.getFilename() + " - " + tm.getText("title", this.freerouting_version));
+      this.setTitle(appTitle);
     }
   }
 
@@ -492,10 +510,12 @@ public class BoardFrame extends WindowBase {
       try {
         object_stream = new ObjectInputStream(inputStream);
       } catch (IOException _) {
+        this.updateTexts();
         return false;
       }
       boolean read_ok = board_panel.board_handling.loadFromBinary(object_stream);
       if (!read_ok) {
+        this.updateTexts();
         return false;
       }
 
@@ -511,6 +531,7 @@ public class BoardFrame extends WindowBase {
         frame_location = (Point) object_stream.readObject();
         frame_bounds = (Rectangle) object_stream.readObject();
       } catch (Exception _) {
+        this.updateTexts();
         return false;
       }
       this.setLocation(frame_location);
@@ -528,6 +549,7 @@ public class BoardFrame extends WindowBase {
     try {
       inputStream.close();
     } catch (IOException _) {
+      this.updateTexts();
       return false;
     }
 
@@ -546,6 +568,7 @@ public class BoardFrame extends WindowBase {
             p_message_field.setText(tm.getText("error_6"));
           }
         }
+        this.updateTexts();
         return false;
       }
     }
@@ -588,6 +611,7 @@ public class BoardFrame extends WindowBase {
       }
       this.zoom_all();
     }
+    this.updateTexts();
     return true;
   }
 
