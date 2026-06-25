@@ -232,4 +232,26 @@ public class CoordinateTransform implements Serializable {
     }
     return multiple;
   }
+
+  public boolean is_zoom_invariant_state_equal(CoordinateTransform other) {
+    if (other == null) {
+      return false;
+    }
+    return this.scale_factor == other.scale_factor
+        && this.rotation == other.rotation
+        && this.mirror_left_right == other.mirror_left_right
+        && this.mirror_top_bottom == other.mirror_top_bottom;
+  }
+
+  public boolean is_same_transform_state(CoordinateTransform other) {
+    if (other == null) {
+      return false;
+    }
+    return this.scale_factor == other.scale_factor
+        && this.display_x_offset == other.display_x_offset
+        && this.display_y_offset == other.display_y_offset
+        && this.rotation == other.rotation
+        && this.mirror_left_right == other.mirror_left_right
+        && this.mirror_top_bottom == other.mirror_top_bottom;
+  }
 }
