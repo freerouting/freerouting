@@ -800,8 +800,24 @@ public class BatchAutorouter extends NamedAlgorithm {
       float fanoutAllocatedMbStart = sampleCurrentThreadAllocatedMb();
       float fanoutPeakHeapMbAtStart = sampleHeapUsageMb();
       final float[] fanoutPeakHeapMbObserved = new float[] { fanoutPeakHeapMbAtStart };
-      job.logInfo("Fanout stage started on board '" + this.board.get_hash() + "' for "
-          + this.board.get_smd_pins().size() + " SMD pin" + (this.board.get_smd_pins().size() == 1 ? "" : "s") + ".");
+      // Count pins that actually need fanout. BatchFanout only processes SMD pins that
+      // belong to a net, so exclude netless pins from the total. Among net-connected
+      // pins, count those that are already fully connected (empty unconnected set).
+       int netConnectedSmdPins = 0;
+       int alreadyConnectedAtStart = 0;
+       for (app.freerouting.board.Pin pin : this.board.get_smd_pins()) {
+         if (pin.net_count() > 0) {
+           netConnectedSmdPins++;
+           if (pin.get_unconnected_set(pin.get_net_no(0)).isEmpty()) {
+             alreadyConnectedAtStart++;
+           }
+         }
+       }
+       int pinsToFanout = netConnectedSmdPins - alreadyConnectedAtStart;
+       job.logInfo("Fanout stage started on board '" + this.board.get_hash() + "' with "
+           + pinsToFanout + " of " + this.board.get_smd_pins().size() + " SMD pins needing fanout ("
+           + alreadyConnectedAtStart + " already connected, "
+           + (this.board.get_smd_pins().size() - netConnectedSmdPins) + " netless).");
       BatchFanout.FanoutRunSummary fanoutSummary = BatchFanout.fanout_board(this.board, this.settings, this.thread,
           status -> {
         fanoutPeakHeapMbObserved[0] = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
