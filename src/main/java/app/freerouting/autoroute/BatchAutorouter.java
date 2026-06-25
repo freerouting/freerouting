@@ -496,7 +496,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           if (this.settings.maxItems != null && this.totalItemsRouted >= this.settings.maxItems) {
             job.logInfo("Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
             // Call requestStop() (sets ALL) instead of request_stop_auto_router() (sets
-            // AUTO_ROUTER_ONLY) so the optimizer phase is also skipped.  maxItems is a
+            // AUTO_ROUTER_ONLY) so the optimization stage is also skipped.  maxItems is a
             // debugging/test ceiling meant to bound the entire routing job; running the
             // optimizer on a deliberately-incomplete board is not useful and prevents the
             // process from terminating promptly.
@@ -800,7 +800,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       float fanoutAllocatedMbStart = sampleCurrentThreadAllocatedMb();
       float fanoutPeakHeapMbAtStart = sampleHeapUsageMb();
       final float[] fanoutPeakHeapMbObserved = new float[] { fanoutPeakHeapMbAtStart };
-      job.logInfo("Fanout phase started on board '" + this.board.get_hash() + "' for "
+      job.logInfo("Fanout stage started on board '" + this.board.get_hash() + "' for "
           + this.board.get_smd_pins().size() + " SMD pin" + (this.board.get_smd_pins().size() == 1 ? "" : "s") + ".");
       BatchFanout.FanoutRunSummary fanoutSummary = BatchFanout.fanout_board(this.board, this.settings, this.thread,
           status -> {
@@ -855,7 +855,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       BatchFanout.EscapeStatistics finalEscape = fanoutSummary.escapeStatistics();
       String fanoutCompletionStatus = this.thread.is_stop_auto_router_requested() ? "interrupted:" : "completed:";
       String fanoutSummaryMessage = String.format(java.util.Locale.US,
-          "Fanout phase %s started with %d total SMD pins, completed in %.2f seconds, escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+          "Fanout stage %s started with %d total SMD pins, completed in %.2f seconds, escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
           fanoutCompletionStatus,
           finalEscape.totalSmdPins(),
           fanoutSummary.totalDurationMillis() / 1000.0,
@@ -867,6 +867,10 @@ public class BatchAutorouter extends NamedAlgorithm {
           fanoutPeakHeapMb);
       job.logInfo(fanoutSummaryMessage);
     }
+
+    int currentUnrouted = calculateIncompleteCount(this.board);
+    job.logInfo("Auto-routing stage started on board '" + this.board.get_hash() + "' for "
+        + currentUnrouted + " unrouted item" + (currentUnrouted == 1 ? "" : "s") + ".");
 
     int currentPass = 1;
     int consecutiveNoImprovementPasses = 0;
@@ -969,7 +973,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           .traceExit("BatchAutorouter.autoroute_pass #" + currentPass + " on board '" + currentBoardHash + "'");
 
       String passCompletedMessage = String.format(java.util.Locale.US,
-          "Auto-router pass #%d on board '%s' was completed in %.2f seconds with the score of %s",
+          "Auto-routing pass #%d on board '%s' was completed in %.2f seconds with the score of %s",
           currentPass, currentBoardHash, autorouter_pass_duration,
           FRLogger.formatScore(boardScoreAfter, boardStatisticsAfter.connections.incompleteCount,
               boardStatisticsAfter.clearanceViolations.totalCount));

@@ -150,7 +150,7 @@ function Get-PhaseMetrics {
     }
 
     # Fanout session/phase summary
-    $RE_FANOUT = 'Fanout (?:session|phase) ([\w ]+): started with (\d+) total SMD pins, completed in ([^,]+), escaped pins: (\d+)/(\d+) \(([\d.,]+)%\), using ([\d.,]+) total CPU seconds, ([\d.,]+) (?:MB|GB) total allocated, and ([\d.,]+) MB peak heap usage\.'
+    $RE_FANOUT = 'Fanout (?:session|phase|stage) ([\w ]+):? started with (\d+) total SMD pins, completed in ([^,]+), escaped pins: (\d+)/(\d+) \(([\d.,]+)%\), using ([\d.,]+) total CPU seconds, ([\d.,]+) (?:MB|GB) total allocated, and ([\d.,]+) MB peak heap usage\.'
     foreach ($line in $lines) {
         if ($line -match $RE_FANOUT) {
             $fanout.log_found = $true
@@ -168,7 +168,7 @@ function Get-PhaseMetrics {
     }
 
     # Autorouter session/phase summary
-    $RE_ROUTER = 'Auto-router (?:session|phase) ([\w ]+): started with (\d+) unrouted nets, completed in ([^,]+), final score: ([^,]+), using ([\d.,]+) total CPU seconds, ([\d.,]+) (?:MB|GB) total allocated, and ([\d.,]+) MB peak heap usage\.'
+    $RE_ROUTER = 'Auto-rout(?:er (?:session|phase)|ing stage) ([\w ]+):? started with (\d+) unrouted nets, completed in ([^,]+), final score: ([^,]+), using ([\d.,]+) total CPU seconds, ([\d.,]+) (?:MB|GB) total allocated, and ([\d.,]+) MB peak heap usage\.'
     foreach ($line in $lines) {
         if ($line -match $RE_ROUTER) {
             $autorouter.log_found = $true
@@ -196,7 +196,7 @@ function Get-PhaseMetrics {
     $lastPassUnrouted = $null
     $lastPassViolations = $null
     foreach ($line in $lines) {
-        if ($line -match 'Auto-router pass #(\d+) on board') {
+        if ($line -match 'Auto-rout(?:er|ing) pass #(\d+) on board') {
             $passNum = [int]$matches[1]
             if ($passNum -gt $maxPass) { $maxPass = $passNum }
             $autorouter.log_found = $true
@@ -238,7 +238,7 @@ function Get-PhaseMetrics {
     }
 
     # Optimizer session/phase summary (new structured format)
-    $RE_OPTIMIZER = 'Optimizer (?:session|phase) ([\w ]+): started with score ([^,]+), completed in ([^,]+), final score: ([^,]+), using ([\d.,]+) total CPU seconds, ([\d.,]+) (?:MB|GB) total allocated, and ([\d.,]+) MB peak heap usage\.'
+    $RE_OPTIMIZER = 'Optimiz(?:er (?:session|phase)|ation stage) ([\w ]+):? started with score ([^,]+), completed in ([^,]+), final score: ([^,]+), using ([\d.,]+) total CPU seconds, ([\d.,]+) (?:MB|GB) total allocated, and ([\d.,]+) MB peak heap usage\.'
     foreach ($line in $lines) {
         if ($line -match $RE_OPTIMIZER) {
             $optimizer.log_found = $true

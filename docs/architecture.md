@@ -298,6 +298,26 @@ For routing regressions, fixture tests are usually the most informative starting
 - Treat it as reference material rather than the primary implementation target.
 - Modify it only when you need additional trace logging for comparison work.
 
+## Terminology / Glossary
+
+To maintain clarity and consistency across the codebase, user interfaces, logs, and documentation, the following standardized terms are used:
+
+- **Session:**
+  - **User Session (API):** A logical workspace or connection context representing a client's work (e.g. via REST API or MCP server). It spans the lifetime of the client interaction and can contain multiple routing jobs.
+  - **Application Launches (GUI):** The number of times the Freerouting desktop application has been started, tracked in the user settings statistics.
+  - **Specctra Session File (.ses):** The standard industry-wide output file format containing routed tracks and vias for import back into CAD tools. This term is kept exact to align with external EDA standards.
+- **Job:**
+  - An asynchronous execution instance of the routing pipeline on a board design using specific settings. A job goes through distinct workflow stages and produces routed output files and logs.
+- **Routing Pipeline:**
+  - The complete sequence of processing stages that a board design undergoes: Input DSN parsing -> Fanout -> Auto-routing -> Optimization -> Output SES/SCR writing.
+- **Routing Stages:**
+  - High-level, distinct phases of the Routing Pipeline. The three primary stages are:
+    1. **Fanout Stage:** Generates escape vias/traces from dense pads (e.g. BGAs).
+    2. **Auto-routing Stage:** The main connection phase using maze routing. We refer to the process as **Auto-routing** and the underlying programmatic engine as the **Autorouter**.
+    3. **Optimization Stage:** Refines trace paths to reduce lengths and via counts. This is also referred to as the **Optimizer**. The term "Post-routing" or "Postroute" is deprecated.
+- **Pass:**
+  - A single iteration loop over all nets or items within a specific routing stage (e.g. an Auto-routing pass, or an Optimization pass).
+
 ## Suggested Reading Order
 
 1. [README.md](README.md) for the product overview.

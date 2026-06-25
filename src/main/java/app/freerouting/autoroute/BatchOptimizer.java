@@ -101,6 +101,9 @@ public class BatchOptimizer extends NamedAlgorithm {
     int initialIncomplete = initialStats.connections.incompleteCount;
     int initialViolations = initialStats.clearanceViolations.totalCount;
 
+    job.logInfo("Optimization stage started on board '" + this.board.get_hash() + "' with score "
+        + FRLogger.formatScore(initialScore, initialIncomplete, initialViolations) + ".");
+
     // Capture start-of-session resource usage baselines
     long sessionStartMs = System.currentTimeMillis();
     float cpuSecondsStart = sampleCurrentThreadCpuSeconds();
@@ -139,7 +142,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     float finalScore = finalStats.getNormalizedScore(job.routerSettings.scoring);
     String completionStatus = this.thread.isStopRequested() ? "interrupted:" : "completed:";
     job.logInfo(String.format(java.util.Locale.US,
-        "Optimizer phase %s started with score %s, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+        "Optimization stage %s started with score %s, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
         completionStatus,
         FRLogger.formatScore(initialScore, initialIncomplete, initialViolations),
         sessionDurationSeconds,

@@ -88,7 +88,7 @@ import java.util.Objects;
  * The thread registers listeners for:
  * <ul>
  *   <li>{@link BoardUpdatedEvent}: Triggered after each routing/optimization iteration</li>
- *   <li>{@link TaskStateChangedEvent}: Triggered when routing phases start/stop</li>
+ *   <li>{@link TaskStateChangedEvent}: Triggered when routing stages start/stop</li>
  * </ul>
  *
  * <p><strong>Output:</strong>
@@ -175,7 +175,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * <ul>
    *   <li>Board updates: Updates GUI statistics, score, and display</li>
    *   <li>SES generation: Saves routing results to job output</li>
-   *   <li>Task state changes: Updates status messages for phase transitions</li>
+   *   <li>Task state changes: Updates status messages for stage transitions</li>
    * </ul>
    *
    * <p><strong>Optimizer Setup:</strong>
@@ -360,7 +360,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    *       <li>Hide rats nest during routing</li>
    *     </ul>
    *   </li>
-   *   <li><strong>Autorouting Phase:</strong>
+   *   <li><strong>Auto-routing Stage:</strong>
    *     <ul>
    *       <li>Display status message</li>
    *       <li>Execute batch autorouting passes</li>
@@ -369,7 +369,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    *       <li>Send analytics event</li>
    *     </ul>
    *   </li>
-   *   <li><strong>Optimization Phase (if enabled):</strong>
+   *   <li><strong>Optimization Stage (if enabled):</strong>
    *     <ul>
    *       <li>Check if optimization is enabled and not interrupted</li>
    *       <li>Display optimization status message</li>
@@ -404,7 +404,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * <p><strong>GUI Updates:</strong>
    * Throughout execution:
    * <ul>
-   *   <li>Status messages show current phase (autorouting/optimizing)</li>
+   *   <li>Status messages show current stage (auto-routing/optimizing)</li>
    *   <li>Board statistics display via count, incomplete count, violations</li>
    *   <li>Board score updates in real-time</li>
    *   <li>Progress indicators through event listeners</li>
@@ -413,8 +413,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * <p><strong>Interruption Handling:</strong>
    * <ul>
    *   <li>Checks {@link #isStopRequested()} at key points</li>
-   *   <li>Allows clean exit from autorouting phase</li>
-   *   <li>Allows clean exit from optimization phase</li>
+   *   <li>Allows clean exit from auto-routing stage</li>
+   *   <li>Allows clean exit from optimization stage</li>
    *   <li>Sets job state to CANCELLED if interrupted</li>
    *   <li>Logs interruption status in messages</li>
    * </ul>
@@ -546,7 +546,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         }
 
         String sessionSummary = String.format(java.util.Locale.US,
-            "Auto-router phase %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+            "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
             completionStatus,
             initialUnroutedCount,
             autoroutingSecondsToComplete,
@@ -591,7 +591,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
           } else {
             curr_message = tm.getText("completed");
           }
-          String end_message = tm.getText("postroute") + " " + curr_message;
+          String end_message = tm.getText("optimization") + " " + curr_message;
           boardManager.screen_messages.set_status_message(end_message);
         }
 

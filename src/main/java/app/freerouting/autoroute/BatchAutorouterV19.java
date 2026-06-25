@@ -206,7 +206,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
             var boardStatistics = this.board.get_statistics();
             float boardScore = boardStatistics.getNormalizedScore(job.routerSettings.scoring);
 
-            String passCompletedMessage = "V1.9 Auto-router pass #" + currentPass + " on board '" + current_board_hash
+            String passCompletedMessage = "V1.9 Auto-routing pass #" + currentPass + " on board '" + current_board_hash
                     + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration) + " with the score of "
                     + FRLogger.formatScore(boardScore, boardStatistics.connections.incompleteCount,
                             boardStatistics.clearanceViolations.totalCount);

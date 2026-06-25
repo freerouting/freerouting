@@ -20,7 +20,7 @@ public class FanoutSettings implements Serializable, Cloneable {
   /**
    * Whether to run the fanout pre-pass at all.
    * When {@code false} the router skips fanout and begins the standard
-   * autoroute phase immediately.
+   * auto-routing stage immediately.
    */
   @SerializedName("enabled")
   public Boolean enabled;
