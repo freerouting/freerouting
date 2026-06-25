@@ -66,6 +66,15 @@ public class BasicBoard implements Serializable {
    * The layer structure of this board.
    */
   public final LayerStructure layer_structure;
+  private transient int revision = 0;
+
+  public int get_revision() {
+    return revision;
+  }
+
+  public void increment_revision() {
+    revision++;
+  }
   /**
    * For communication with a host system or host design file formats.
    */
@@ -520,6 +529,7 @@ public class BasicBoard implements Serializable {
     if ((communication != null) && (communication.observers != null)) {
       communication.observers.notify_deleted(p_item);
     }
+    increment_revision();
   }
 
   /**
@@ -1491,6 +1501,7 @@ public class BasicBoard implements Serializable {
       communication.observers.notify_new(p_item);
     }
     additional_update_after_change(p_item);
+    increment_revision();
   }
 
   /**

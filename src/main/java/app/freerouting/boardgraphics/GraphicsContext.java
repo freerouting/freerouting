@@ -278,8 +278,8 @@ public class GraphicsContext implements Serializable {
       return new java.awt.geom.Area(new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter));
     }
 
-    PolylineShape border = (PolylineShape) p_area.get_border();
-    if (!border.is_bounded()) {
+    Shape borderShape = p_area.get_border();
+    if (!(borderShape instanceof PolylineShape border) || !border.is_bounded()) {
       return null;
     }
     
@@ -328,6 +328,9 @@ public class GraphicsContext implements Serializable {
     double pitchPx = coordinate_transform.board_to_screen(p_pitch_board_units);
     if (pitchPx < 2.0) {
       return;
+    }
+    if (pitchPx > 1000.0) {
+      pitchPx = 1000.0;
     }
     int pInt = (int) Math.round(pitchPx);
     
@@ -419,31 +422,40 @@ public class GraphicsContext implements Serializable {
     }
 
     // Subtract foreign clearances
-    for (ClearanceItem item : p_clearances) {
-      fillArea.subtract(item.area);
+    if (p_clearances != null) {
+      for (ClearanceItem item : p_clearances) {
+        if (item != null && item.area != null) {
+          fillArea.subtract(item.area);
+        }
+      }
     }
 
     // Process thermal reliefs
-    for (ThermalReliefItem thermal : p_thermals) {
-      fillArea.subtract(thermal.clearanceArea);
+    if (p_thermals != null) {
+      for (ThermalReliefItem thermal : p_thermals) {
+        if (thermal == null || thermal.clearanceArea == null) {
+          continue;
+        }
+        fillArea.subtract(thermal.clearanceArea);
 
-      // Create 4 diagonal spokes at 45 degrees
-      double halfSpoke = thermal.spokeWidthPx / 2.0;
-      double r = thermal.expansionRadiusPx;
-      
-      // Rotated rectangles (NE-SW and NW-SE)
-      Rectangle2D.Double baseSpoke = new Rectangle2D.Double(thermal.cx - halfSpoke, thermal.cy - r, thermal.spokeWidthPx, 2 * r);
-      
-      AffineTransform rotP45 = AffineTransform.getRotateInstance(Math.PI / 4.0, thermal.cx, thermal.cy);
-      AffineTransform rotM45 = AffineTransform.getRotateInstance(-Math.PI / 4.0, thermal.cx, thermal.cy);
-      
-      java.awt.geom.Area spokes = new java.awt.geom.Area(rotP45.createTransformedShape(baseSpoke));
-      spokes.add(new java.awt.geom.Area(rotM45.createTransformedShape(baseSpoke)));
-      
-      // Restrict spokes to the clearance gap
-      spokes.intersect(thermal.clearanceArea);
-      
-      fillArea.add(spokes);
+        // Create 4 diagonal spokes at 45 degrees
+        double halfSpoke = thermal.spokeWidthPx / 2.0;
+        double r = thermal.expansionRadiusPx;
+        
+        // Rotated rectangles (NE-SW and NW-SE)
+        Rectangle2D.Double baseSpoke = new Rectangle2D.Double(thermal.cx - halfSpoke, thermal.cy - r, thermal.spokeWidthPx, 2 * r);
+        
+        AffineTransform rotP45 = AffineTransform.getRotateInstance(Math.PI / 4.0, thermal.cx, thermal.cy);
+        AffineTransform rotM45 = AffineTransform.getRotateInstance(-Math.PI / 4.0, thermal.cx, thermal.cy);
+        
+        java.awt.geom.Area spokes = new java.awt.geom.Area(rotP45.createTransformedShape(baseSpoke));
+        spokes.add(new java.awt.geom.Area(rotM45.createTransformedShape(baseSpoke)));
+        
+        // Restrict spokes to the clearance gap
+        spokes.intersect(thermal.clearanceArea);
+        
+        fillArea.add(spokes);
+      }
     }
 
     if (fillArea.isEmpty()) {

@@ -31,6 +31,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   private transient java.awt.geom.Area cached_fill_area = null;
   private transient app.freerouting.boardgraphics.CoordinateTransform cached_fill_transform = null;
+  private transient int cached_board_revision = -1;
 
   /**
    * Creates a new instance of ConductionArea
@@ -46,6 +47,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     super.clear_derived_data();
     this.cached_fill_area = null;
     this.cached_fill_transform = null;
+    this.cached_board_revision = -1;
   }
 
   @Override
@@ -63,15 +65,37 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     double fillOpacity = Math.min(layerVis * p_intensity * PLANE_FILL_SCALE, 1.0);
 
     double maxClearanceLookupBoard = 2000.0 * this.board.communication.get_resolution(Unit.UM);
+    if (this.board.rules != null && this.board.rules.clearance_matrix != null) {
+      double maxMatrixClearance = this.board.rules.clearance_matrix.max_value(this.clearance_class_no(), layerNo);
+      maxClearanceLookupBoard = Math.max(maxClearanceLookupBoard, maxMatrixClearance + 100.0 * this.board.communication.get_resolution(Unit.UM));
+    }
     boolean zoomedOut = p_graphics_context.coordinate_transform.board_to_screen(maxClearanceLookupBoard) < 1.5;
 
     if (zoomedOut) {
       p_graphics_context.fill_area(this.get_area(), p_g, color, fillOpacity);
     } else {
-      if (cached_fill_area == null || cached_fill_transform == null || !p_graphics_context.coordinate_transform.is_same_transform_state(cached_fill_transform)) {
+      boolean boardChanged = this.board.get_revision() != cached_board_revision;
+      boolean canTranslate = !boardChanged && cached_fill_area != null && cached_fill_transform != null
+          && p_graphics_context.coordinate_transform.is_zoom_invariant_state_equal(cached_fill_transform);
+
+      if (canTranslate && !p_graphics_context.coordinate_transform.is_same_transform_state(cached_fill_transform)) {
+        Point2D currentZero = p_graphics_context.coordinate_transform.board_to_screen(FloatPoint.ZERO);
+        Point2D cachedZero = cached_fill_transform.board_to_screen(FloatPoint.ZERO);
+        double tx = currentZero.getX() - cachedZero.getX();
+        double ty = currentZero.getY() - cachedZero.getY();
+        if (tx != 0 || ty != 0) {
+          cached_fill_area.transform(java.awt.geom.AffineTransform.getTranslateInstance(tx, ty));
+        }
+        cached_fill_transform = new app.freerouting.boardgraphics.CoordinateTransform(p_graphics_context.coordinate_transform);
+      }
+
+      if (cached_fill_area == null || cached_fill_transform == null || boardChanged || !p_graphics_context.coordinate_transform.is_same_transform_state(cached_fill_transform)) {
 
         java.awt.geom.Area fillArea = p_graphics_context.get_awt_area(this.get_area());
-        if (fillArea != null && !fillArea.isEmpty()) {
+        if (fillArea == null) {
+          fillArea = new java.awt.geom.Area();
+        }
+        if (!fillArea.isEmpty()) {
           // Bounding box of conduction area
           IntBox bbox = this.bounding_box();
           double spokeWidth = 400.0 * this.board.communication.get_resolution(Unit.UM);
@@ -197,6 +221,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         }
         cached_fill_area = fillArea;
         cached_fill_transform = new app.freerouting.boardgraphics.CoordinateTransform(p_graphics_context.coordinate_transform);
+        cached_board_revision = this.board.get_revision();
       }
 
       if (cached_fill_area != null && !cached_fill_area.isEmpty()) {
