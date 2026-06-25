@@ -46,9 +46,7 @@ public class RoutingJobScheduler {
         try {
           // loop through jobs with the READY_TO_START state, order them according to
           // their priority and start them up to the maximum number of parallel jobs
-          while (jobs
-              .stream()
-              .count() > 0) {
+          while (jobs.stream().count() > 0) {
             RoutingJob[] jobsArray;
             synchronized (jobs) {
               // Remove any null entries that could have been introduced by concurrent access
@@ -59,6 +57,7 @@ public class RoutingJobScheduler {
               jobsArray = jobs.toArray(RoutingJob[]::new);
             }
 
+            boolean startedAny = false;
             // start the jobs up to the maximum number of parallel jobs (and make a copy of
             // the list to avoid concurrent modification)
             for (RoutingJob job : jobsArray) {
@@ -132,6 +131,7 @@ public class RoutingJobScheduler {
                       job.thread = routerThread;
                       job.thread.start();
                       job.state = RoutingJobState.RUNNING;
+                      startedAny = true;
                     } catch (Exception e) {
                       FRLogger.error("Failed to set up routing job '" + job.id + "', it will be terminated.", e);
                       job.state = RoutingJobState.TERMINATED;
@@ -145,6 +145,10 @@ public class RoutingJobScheduler {
                   break;
                 }
               }
+            }
+
+            if (!startedAny) {
+              break;
             }
           }
 
