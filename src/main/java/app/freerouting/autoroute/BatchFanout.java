@@ -152,7 +152,8 @@ public class BatchFanout {
     for (Component curr_component : this.sorted_components) {
       for (Component.Pin curr_pin : curr_component.smd_pins) {
         // Skip pins already escaped - they don't need fanout in this pass
-        if (isPinEscaped(curr_pin.board_pin)) {
+        // This includes: connected traces/vias AND type-protect fixed escape wiring
+        if (isPinEscaped(curr_pin.board_pin) || hasProtectEscape(curr_pin.board_pin)) {
           --pinsToGo;
           continue;
         }
@@ -312,6 +313,22 @@ public class BatchFanout {
             }
           }
         }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Check if pin has type-protect fixed escape wiring (DSN "type protect" keyword).
+   * These pins already have routed escape copper and should not be re-fanouted.
+   * Protects against fanout oscillation on baked escape wiring.
+   */
+  private boolean hasProtectEscape(app.freerouting.board.Pin pin) {
+    Set<Item> contacts = pin.get_normal_contacts();
+    for (Item contact : contacts) {
+      // Check if contact is user-fixed (type protect wiring)
+      if (contact.is_user_fixed()) {
+        return true;
       }
     }
     return false;
