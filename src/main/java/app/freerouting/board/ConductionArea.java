@@ -26,19 +26,11 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   private static final double PLANE_FILL_SCALE = 2.5;
   private static final double PLANE_HATCH_OPACITY = 0.85;
-  private static final double HATCH_PITCH_BOARD_UNITS = 500.0;
 
   private boolean is_obstacle;
 
   private transient java.awt.geom.Area cached_fill_area = null;
   private transient app.freerouting.boardgraphics.CoordinateTransform cached_fill_transform = null;
-
-  @Override
-  public void clear_derived_data() {
-    super.clear_derived_data();
-    this.cached_fill_area = null;
-    this.cached_fill_transform = null;
-  }
 
   /**
    * Creates a new instance of ConductionArea
@@ -47,6 +39,13 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       String p_name, boolean p_is_obstacle, FixedState p_fixed_state, BasicBoard p_board) {
     super(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, p_net_no_arr, p_clearance_class, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
     is_obstacle = p_is_obstacle;
+  }
+
+  @Override
+  public void clear_derived_data() {
+    super.clear_derived_data();
+    this.cached_fill_area = null;
+    this.cached_fill_transform = null;
   }
 
   @Override
@@ -70,7 +69,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       p_graphics_context.fill_area(this.get_area(), p_g, color, fillOpacity);
     } else {
       if (cached_fill_area == null || cached_fill_transform == null || !p_graphics_context.coordinate_transform.is_same_transform_state(cached_fill_transform)) {
-        
+
         java.awt.geom.Area fillArea = p_graphics_context.get_awt_area(this.get_area());
         if (fillArea != null && !fillArea.isEmpty()) {
           // Bounding box of conduction area
@@ -215,8 +214,9 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       }
     }
 
-    // Hatch border
-    p_graphics_context.draw_plane_hatch(this.get_area(), p_g, color, layerVis * p_intensity * PLANE_HATCH_OPACITY, HATCH_PITCH_BOARD_UNITS);
+    // Hatch border (0.5 mm in board units)
+    double hatchPitch = 500.0 * this.board.communication.get_resolution(Unit.UM);
+    p_graphics_context.draw_plane_hatch(this.get_area(), p_g, color, layerVis * p_intensity * PLANE_HATCH_OPACITY, hatchPitch);
 
     // Border outline
     p_graphics_context.draw_boundary(this.get_area(), 0.0, color, p_g, layerVis);
@@ -321,7 +321,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   @Override
   public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
-    return p_graphics_context.get_conduction_colors();
+    return p_graphics_context.get_trace_colors(true);
   }
 
   @Override
