@@ -80,11 +80,13 @@ public class BatchFanout {
     this.thread = p_thread;
     this.routing_board = p_board;
     this.settings = p_settings;
+    String sortingOrder = (p_settings.fanout != null && p_settings.fanout.pinSortingOrder != null)
+        ? p_settings.fanout.pinSortingOrder : "outer_first";
     Collection<app.freerouting.board.Pin> board_smd_pin_list = routing_board.get_smd_pins();
     this.sorted_components = new TreeSet<>();
     for (int i = 1; i <= routing_board.components.count(); ++i) {
       app.freerouting.board.Component curr_board_component = routing_board.components.get(i);
-      Component curr_component = new Component(curr_board_component, board_smd_pin_list);
+      Component curr_component = new Component(curr_board_component, board_smd_pin_list, sortingOrder, routing_board);
       if (curr_component.smd_pin_count > 0) {
         sorted_components.add(curr_component);
       }
@@ -113,7 +115,7 @@ public class BatchFanout {
     for (int i = 0; i < maxPasses; ++i) {
       int routed_count = fanout_instance.fanout_pass(i, progressListener);
       completedPasses++;
-      if (routed_count == 0 && fanout_instance.lastNotRoutedCount == 0) {
+      if (routed_count == 0) {
         break;
       }
       String currentBoardHash = p_board.get_hash();
@@ -317,11 +319,15 @@ public class BatchFanout {
     final SortedSet<Pin> smd_pins;
     /** The center of gravity of all SMD pins of this component. */
     final FloatPoint gravity_center_of_smd_pins;
+    final String pinSortingOrder;
 
     Component(
         app.freerouting.board.Component p_board_component,
-        Collection<app.freerouting.board.Pin> p_board_smd_pin_list) {
+        Collection<app.freerouting.board.Pin> p_board_smd_pin_list,
+        String p_pin_sorting_order,
+        RoutingBoard p_routing_board) {
       this.board_component = p_board_component;
+      this.pinSortingOrder = p_pin_sorting_order;
 
       // calculate the center of gravity of all SMD pins of this component.
       Collection<app.freerouting.board.Pin> curr_pin_list =
@@ -350,7 +356,7 @@ public class BatchFanout {
       this.smd_pins = new TreeSet<>();
 
       for (app.freerouting.board.Pin curr_board_pin : curr_pin_list) {
-        this.smd_pins.add(new Pin(curr_board_pin));
+        this.smd_pins.add(new Pin(curr_board_pin, p_board_smd_pin_list, p_routing_board));
       }
     }
 
@@ -373,23 +379,79 @@ public class BatchFanout {
 
       final app.freerouting.board.Pin board_pin;
       final double distance_to_component_center;
+      final double distance_to_closest_on_net;
+      final int surroundings_density;
 
-      Pin(app.freerouting.board.Pin p_board_pin) {
+      Pin(app.freerouting.board.Pin p_board_pin, Collection<app.freerouting.board.Pin> p_board_smd_pin_list, RoutingBoard p_routing_board) {
         this.board_pin = p_board_pin;
         FloatPoint pin_location = p_board_pin.get_center().to_float();
         this.distance_to_component_center = pin_location.distance(gravity_center_of_smd_pins);
+
+        // distance_to_closest_on_net calculation
+        double minDistance = Double.MAX_VALUE;
+        int netNo = p_board_pin.net_count() > 0 ? p_board_pin.get_net_no(0) : 0;
+        if (netNo > 0) {
+          for (app.freerouting.board.Pin otherPin : p_routing_board.get_pins()) {
+            if (otherPin != p_board_pin && otherPin.contains_net(netNo)) {
+              double dist = pin_location.distance(otherPin.get_center().to_float());
+              if (dist < minDistance) {
+                minDistance = dist;
+              }
+            }
+          }
+        }
+        this.distance_to_closest_on_net = minDistance;
+
+        // surroundings_density calculation
+        double resolution = p_routing_board.communication.get_resolution(app.freerouting.board.Unit.UM);
+        double maxDist = 20000.0 * resolution; // 20.0 mm in coordinate units
+        int density = 0;
+        for (app.freerouting.board.Pin otherPin : p_board_smd_pin_list) {
+          if (otherPin != p_board_pin) {
+            double dist = pin_location.distance(otherPin.get_center().to_float());
+            if (dist <= maxDist) {
+              density++;
+            }
+          }
+        }
+        this.surroundings_density = density;
       }
 
       @Override
       public int compareTo(Pin p_other) {
-        int result;
-        double delta_dist =
-            this.distance_to_component_center - p_other.distance_to_component_center;
-        if (delta_dist > 0) {
-          result = -1;
-        } else if (delta_dist < 0) {
-          result = 1;
-        } else {
+        int result = 0;
+        if ("inner_first".equals(pinSortingOrder)) {
+          double delta_dist =
+              this.distance_to_component_center - p_other.distance_to_component_center;
+          if (delta_dist > 0) {
+            result = 1;
+          } else if (delta_dist < 0) {
+            result = -1;
+          }
+        } else if ("outer_first".equals(pinSortingOrder)) {
+          double delta_dist =
+              this.distance_to_component_center - p_other.distance_to_component_center;
+          if (delta_dist > 0) {
+            result = -1;
+          } else if (delta_dist < 0) {
+            result = 1;
+          }
+        } else if ("distance_to_closest_on_net".equals(pinSortingOrder)) {
+          double delta = this.distance_to_closest_on_net - p_other.distance_to_closest_on_net;
+          if (delta > 0) {
+            result = 1;
+          } else if (delta < 0) {
+            result = -1;
+          }
+        } else if ("surroundings_density".equals(pinSortingOrder)) {
+          int delta = p_other.surroundings_density - this.surroundings_density; // densest first
+          if (delta > 0) {
+            result = 1;
+          } else if (delta < 0) {
+            result = -1;
+          }
+        }
+        if (result == 0) {
           result = this.board_pin.pin_no - p_other.board_pin.pin_no;
         }
         return result;

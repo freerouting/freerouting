@@ -56,6 +56,29 @@ public class FanoutSettings implements Serializable, Cloneable {
   public Boolean ripupAllowed;
 
   /**
+   * The minimum physical escape wire length (in micrometers). Vias will not be placed
+   * closer than this distance from the starting pin center during fanout.
+   */
+  @SerializedName("min_escape_length_um")
+  public Double minEscapeLengthUm;
+
+  /**
+   * The maximum physical escape wire length (in micrometers). The search tree expansion
+   * and via placement during fanout will be restricted to this distance.
+   */
+  @SerializedName("max_escape_length_um")
+  public Double maxEscapeLengthUm;
+
+  /**
+   * The sorting order for SMD pins within a component.
+   * "inner_first" (v1.9 default) - pins closer to the component center first.
+   * "outer_first" - pins further from the component center first.
+   * "unsorted" - sorted by pin number only.
+   */
+  @SerializedName("pin_sorting_order")
+  public String pinSortingOrder;
+
+  /**
    * No-arg constructor required for deserialisation and {@link #clone()}.
    */
   public FanoutSettings() {

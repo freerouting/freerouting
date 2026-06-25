@@ -19,7 +19,9 @@ param(
     [string]$job_timeout = "00:30:00",
     [Alias("debug.filter_by_net")]
     [string]$DebugFilterByNet = "",
-    [string]$LogNameSuffix = ""
+    [string]$LogNameSuffix = "",
+    [switch]$DisableOptimizer,
+    [string]$PinSortingOrder = ""
 )
 
 # Colors for output
@@ -102,10 +104,11 @@ $OutputExtension = [System.IO.Path]::GetExtension($OutputFileAbs)
 $CurrentOutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-current$($OutputExtension)"
 $V19OutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-v190$($OutputExtension)"
 
+$OptimizerEnabled = if ($DisableOptimizer) { "false" } else { "true" }
 $BaseArgs = @(
     "-de", "`"$InputFileAbs`""
     "--router.fanout.enabled=true"
-    "--router.optimizer.enabled=true"
+    "--router.optimizer.enabled=$OptimizerEnabled"
     "--gui.enabled=false"
     "--api_server.enabled=false"
     "--debug.enable_detailed_logging=true"
@@ -117,6 +120,10 @@ $BaseArgs = @(
     "--logging.file.pattern=$LoggingPattern"
     "--logging.console.level=INFO"
 )
+
+if (-not [string]::IsNullOrWhiteSpace($PinSortingOrder)) {
+    $BaseArgs += "--router.fanout.pin_sorting_order=$PinSortingOrder"
+}
 
 if (-not [string]::IsNullOrWhiteSpace($DebugFilterByNet)) {
     $BaseArgs += "--debug.filter_by_net=$DebugFilterByNet"

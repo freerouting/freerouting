@@ -86,4 +86,11 @@ public class TestingSettings implements SettingsSource {
             this.settings.enabled = enabled;
         }
     }
+
+    public void setOptimizerEnabled(boolean enabled) {
+        if (this.settings.optimizer == null) {
+            this.settings.optimizer = new app.freerouting.settings.RouterOptimizerSettings();
+        }
+        this.settings.optimizer.enabled = enabled;
+    }
 }

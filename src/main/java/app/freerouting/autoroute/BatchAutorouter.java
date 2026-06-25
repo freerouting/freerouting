@@ -893,15 +893,14 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       String currentBoardHash = this.board.get_hash();
 
-      // Same-hash stop: if this board state has already been routed in a previous pass, no
-      // further progress is possible. Stop before wasting another pass.
-      if (alreadyRoutedBoardHashes.contains(currentBoardHash)) {
-        job.logInfo("Board state has not changed since pass #" + (currentPass - 1)
-            + " (hash " + currentBoardHash + "). The auto-router cannot make further progress; stopping.");
-        thread.request_stop_auto_router();
-        break;
-      }
-      alreadyRoutedBoardHashes.add(currentBoardHash);
+      // Same-hash stop disabled because ripup budgets and random seeds change per-pass, making progress possible in later passes.
+      // if (alreadyRoutedBoardHashes.contains(currentBoardHash)) {
+      //   job.logInfo("Board state has not changed since pass #" + (currentPass - 1)
+      //       + " (hash " + currentBoardHash + "). The auto-router cannot make further progress; stopping.");
+      //   thread.request_stop_auto_router();
+      //   break;
+      // }
+      // alreadyRoutedBoardHashes.add(currentBoardHash);
 
       if (currentPass > this.settings.maxPasses) {
         thread.request_stop_auto_router();

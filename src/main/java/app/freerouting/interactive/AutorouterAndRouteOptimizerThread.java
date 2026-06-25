@@ -510,6 +510,19 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         } else if (batchAutorouter instanceof BatchAutorouterV19) {
           ((BatchAutorouterV19) batchAutorouter).runBatchLoop();
         }
+      } else if (routingJob.routerSettings.isFanoutEnabled() && !this.is_stop_auto_router_requested()) {
+        // Run only the fanout pre-pass
+        Integer originalMaxPasses = routingJob.routerSettings.maxPasses;
+        try {
+          routingJob.routerSettings.maxPasses = 0;
+          if (batchAutorouter instanceof BatchAutorouter) {
+            ((BatchAutorouter) batchAutorouter).runBatchLoop();
+          } else if (batchAutorouter instanceof BatchAutorouterV19) {
+            ((BatchAutorouterV19) batchAutorouter).runBatchLoop();
+          }
+        } finally {
+          routingJob.routerSettings.maxPasses = originalMaxPasses;
+        }
       }
 
       boardManager.replaceRoutingBoard(routingJob.board);

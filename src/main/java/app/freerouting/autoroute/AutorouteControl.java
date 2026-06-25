@@ -71,6 +71,8 @@ public class AutorouteControl {
   public String fanout_start_pin_name;
   /** Source pin center for targeted fanout diagnostics. */
   public Point fanout_start_pin_center;
+  /** Source pin layer for targeted fanout diagnostics and limits. */
+  public int fanout_start_pin_layer = -1;
   /**
    * Normally true, if the autorouter contains no fanout pass
    */
@@ -165,6 +167,7 @@ public class AutorouteControl {
     is_fanout = false;
     fanout_start_pin_name = null;
     fanout_start_pin_center = null;
+    fanout_start_pin_layer = -1;
     remove_unconnected_vias = true;
     with_neckdown = p_settings.get_automatic_neckdown();
     tidy_region_width = Integer.MAX_VALUE;
