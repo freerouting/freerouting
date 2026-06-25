@@ -4,15 +4,13 @@ import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
+import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
-
-import app.freerouting.core.ProgressThrottler;
-
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
@@ -22,61 +20,15 @@ import java.util.TreeSet;
 /** Handles the sequencing of the fanout inside the batch autorouter. */
 public class BatchFanout {
 
-  @FunctionalInterface
-  public interface FanoutProgressListener {
-    void onProgress(FanoutPassStatus status);
-  }
-
-  /**
-   * Statistics about how many SMD pins were successfully escaped after a fanout pass.
-   * A pin is considered escaped when it has at least one Trace (wire) or Via directly connected
-   * to it (with no clearance violations on the trace/via), or a Via that itself has a Trace
-   * connected to it (also without clearance violations).
-   */
-  public record EscapeStatistics(
-      int totalSmdPins,
-      int escapedCount,
-      double escapedPercentage) {
-
-    @Override
-    public String toString() {
-      return String.format("%d/%d (%.1f%%)", escapedCount, totalSmdPins, escapedPercentage);
-    }
-  }
-
-  public record FanoutPassStatus(
-      int passNo,
-      int ripupCosts,
-      int totalPins,
-      int pinsToGo,
-      int routedCount,
-      int notRoutedCount,
-      int insertErrorCount,
-      int extraViasThisPass,
-      int extraViasTotal,
-      long passDurationMillis,
-      BoardStatistics boardStatistics,
-      boolean passCompleted,
-      EscapeStatistics escapeStatistics) {
-  }
-
-  public record FanoutRunSummary(
-      int completedPassCount,
-      long totalDurationMillis,
-      EscapeStatistics escapeStatistics) {
-  }
-
   private final StoppableThread thread;
   private final RoutingBoard routing_board;
   private final RouterSettings settings;
   private final SortedSet<Component> sorted_components;
   private final int totalSmdPinCount;
   private final int alreadyConnectedPinCount;
+  private final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   private int lastNotRoutedCount;
   private int extraViasTotal;
-  private final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
-
-
   private BatchFanout(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread) {
     this.thread = p_thread;
     this.routing_board = p_board;
@@ -174,7 +126,7 @@ public class BatchFanout {
             + ", pinsToFanout=" + (this.totalSmdPinCount - this.alreadyConnectedPinCount)
             + ", ripupCosts=" + effectiveRipupCosts
             + ", baseMillisPerPin=" + baseMillisPerPin,
-        null, new app.freerouting.geometry.planar.Point[0]);
+        "", new app.freerouting.geometry.planar.Point[0]);
 
     this.progressThrottler.reset();
     publishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
@@ -292,7 +244,7 @@ public class BatchFanout {
             + ", escaped=" + escapeStats.escapedCount()
             + "/" + escapeStats.totalSmdPins()
             + " (" + String.format("%.1f", escapeStats.escapedPercentage()) + "%)",
-        null, new app.freerouting.geometry.planar.Point[0]);
+        "", new app.freerouting.geometry.planar.Point[0]);
 
     if (progressListener == null) {
       FRLogger.info(
@@ -450,6 +402,50 @@ public class BatchFanout {
       }
     }
     return false;
+  }
+
+  @FunctionalInterface
+  public interface FanoutProgressListener {
+    void onProgress(FanoutPassStatus status);
+  }
+
+  /**
+   * Statistics about how many SMD pins were successfully escaped after a fanout pass.
+   * A pin is considered escaped when it has at least one Trace (wire) or Via directly connected
+   * to it (with no clearance violations on the trace/via), or a Via that itself has a Trace
+   * connected to it (also without clearance violations).
+   */
+  public record EscapeStatistics(
+      int totalSmdPins,
+      int escapedCount,
+      double escapedPercentage) {
+
+    @Override
+    public String toString() {
+      return String.format("%d/%d (%.1f%%)", escapedCount, totalSmdPins, escapedPercentage);
+    }
+  }
+
+  public record FanoutPassStatus(
+      int passNo,
+      int ripupCosts,
+      int totalPins,
+      int pinsToGo,
+      int routedCount,
+      int notRoutedCount,
+      int insertErrorCount,
+      int extraViasThisPass,
+      int extraViasTotal,
+      long passDurationMillis,
+      BoardStatistics boardStatistics,
+      boolean passCompleted,
+      EscapeStatistics escapeStatistics) {
+  }
+
+  public record FanoutRunSummary(
+      int completedPassCount,
+      long totalDurationMillis,
+      EscapeStatistics escapeStatistics) {
   }
 
   private static class Component implements Comparable<Component> {
