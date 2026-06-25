@@ -263,6 +263,206 @@ public class GraphicsContext implements Serializable {
     }
   }
 
+  private transient java.awt.TexturePaint cached_hatch_paint = null;
+  private transient double cached_hatch_pitch_px = -1.0;
+  private transient Color cached_hatch_color = null;
+
+  public java.awt.geom.Area get_awt_area(Area p_area) {
+    if (p_area == null || p_area.is_empty()) {
+      return null;
+    }
+    if (p_area instanceof Circle circle) {
+      Point2D center = coordinate_transform.board_to_screen(circle.center.to_float());
+      double radius = coordinate_transform.board_to_screen(circle.radius);
+      double diameter = 2 * radius;
+      return new java.awt.geom.Area(new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter));
+    }
+
+    PolylineShape border = (PolylineShape) p_area.get_border();
+    if (!border.is_bounded()) {
+      return null;
+    }
+    
+    java.awt.geom.Path2D.Double borderPath = new java.awt.geom.Path2D.Double();
+    int count = border.border_line_count();
+    if (count > 0) {
+      Point2D p0 = coordinate_transform.board_to_screen(border.corner_approx(0));
+      borderPath.moveTo(p0.getX(), p0.getY());
+      for (int i = 1; i < count; i++) {
+        Point2D pi = coordinate_transform.board_to_screen(border.corner_approx(i));
+        borderPath.lineTo(pi.getX(), pi.getY());
+      }
+      borderPath.closePath();
+    }
+    java.awt.geom.Area awtArea = new java.awt.geom.Area(borderPath);
+
+    Shape[] holes = p_area.get_holes();
+    for (Shape hole : holes) {
+      if (hole instanceof PolylineShape holePoly) {
+        int hCount = holePoly.border_line_count();
+        if (hCount > 0) {
+          java.awt.geom.Path2D.Double holePath = new java.awt.geom.Path2D.Double();
+          Point2D hp0 = coordinate_transform.board_to_screen(holePoly.corner_approx(0));
+          holePath.moveTo(hp0.getX(), hp0.getY());
+          for (int i = 1; i < hCount; i++) {
+            Point2D hpi = coordinate_transform.board_to_screen(holePoly.corner_approx(i));
+            holePath.lineTo(hpi.getX(), hpi.getY());
+          }
+          holePath.closePath();
+          awtArea.subtract(new java.awt.geom.Area(holePath));
+        }
+      } else if (hole instanceof Circle circle) {
+        Point2D center = coordinate_transform.board_to_screen(circle.center.to_float());
+        double radius = coordinate_transform.board_to_screen(circle.radius);
+        double diameter = 2 * radius;
+        awtArea.subtract(new java.awt.geom.Area(new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter)));
+      }
+    }
+    return awtArea;
+  }
+
+  public void draw_plane_hatch(Area p_area, Graphics p_g, Color p_color, double p_translucency_factor, double p_pitch_board_units) {
+    if (p_color == null || p_area == null || p_area.is_empty() || p_translucency_factor <= 0) {
+      return;
+    }
+    double pitchPx = coordinate_transform.board_to_screen(p_pitch_board_units);
+    if (pitchPx < 2.0) {
+      return;
+    }
+    int pInt = (int) Math.round(pitchPx);
+    
+    java.awt.geom.Area outerArea = get_awt_area(p_area);
+    if (outerArea == null || outerArea.isEmpty()) {
+      return;
+    }
+
+    java.awt.geom.Area borderBand = new java.awt.geom.Area(new BasicStroke((float)(2 * pitchPx), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER).createStrokedShape(outerArea));
+    borderBand.intersect(outerArea);
+
+    if (borderBand.isEmpty()) {
+      return;
+    }
+
+    Graphics2D g2 = (Graphics2D) p_g;
+    java.awt.Paint oldPaint = g2.getPaint();
+    java.awt.Composite oldComposite = g2.getComposite();
+
+    set_translucency(g2, p_translucency_factor);
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+    if (cached_hatch_paint == null || cached_hatch_pitch_px != pitchPx || !p_color.equals(cached_hatch_color)) {
+      java.awt.image.BufferedImage bi = new java.awt.image.BufferedImage(pInt, pInt, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+      Graphics2D g2t = bi.createGraphics();
+      g2t.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+      g2t.setColor(p_color);
+      g2t.setStroke(new BasicStroke(1.0f));
+      g2t.drawLine(0, pInt, pInt, 0);
+      g2t.drawLine(-1, pInt + 1, pInt + 1, -1);
+      g2t.dispose();
+      cached_hatch_paint = new java.awt.TexturePaint(bi, new Rectangle2D.Double(0, 0, pInt, pInt));
+      cached_hatch_pitch_px = pitchPx;
+      cached_hatch_color = p_color;
+    }
+
+    g2.setPaint(cached_hatch_paint);
+    g2.fill(borderBand);
+
+    g2.setPaint(oldPaint);
+    g2.setComposite(oldComposite);
+  }
+
+  public java.awt.geom.Area get_awt_area_from_shape(Shape p_shape) {
+    if (p_shape == null) {
+      return null;
+    }
+    if (p_shape instanceof Circle circle) {
+      Point2D center = coordinate_transform.board_to_screen(circle.center.to_float());
+      double radius = coordinate_transform.board_to_screen(circle.radius);
+      double diameter = 2 * radius;
+      return new java.awt.geom.Area(new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter));
+    }
+    if (p_shape instanceof PolylineShape poly) {
+      int count = poly.border_line_count();
+      if (count <= 0) {
+        return null;
+      }
+      java.awt.geom.Path2D.Double path = new java.awt.geom.Path2D.Double();
+      Point2D p0 = coordinate_transform.board_to_screen(poly.corner_approx(0));
+      path.moveTo(p0.getX(), p0.getY());
+      for (int i = 1; i < count; i++) {
+        Point2D pi = coordinate_transform.board_to_screen(poly.corner_approx(i));
+        path.lineTo(pi.getX(), pi.getY());
+      }
+      path.closePath();
+      return new java.awt.geom.Area(path);
+    }
+    return null;
+  }
+
+  public record ClearanceItem(java.awt.geom.Area area) {}
+  public record ThermalReliefItem(java.awt.geom.Area clearanceArea, double cx, double cy, double expansionRadiusPx, double spokeWidthPx) {}
+
+  public void fill_plane_area(
+      Area p_area,
+      Graphics p_g,
+      Color p_color,
+      double p_translucency_factor,
+      java.util.List<ClearanceItem> p_clearances,
+      java.util.List<ThermalReliefItem> p_thermals) {
+    if (p_color == null || p_area == null || p_area.is_empty() || p_translucency_factor <= 0) {
+      return;
+    }
+    
+    java.awt.geom.Area fillArea = get_awt_area(p_area);
+    if (fillArea == null || fillArea.isEmpty()) {
+      return;
+    }
+
+    // Subtract foreign clearances
+    for (ClearanceItem item : p_clearances) {
+      fillArea.subtract(item.area);
+    }
+
+    // Process thermal reliefs
+    for (ThermalReliefItem thermal : p_thermals) {
+      fillArea.subtract(thermal.clearanceArea);
+
+      // Create 4 diagonal spokes at 45 degrees
+      double halfSpoke = thermal.spokeWidthPx / 2.0;
+      double r = thermal.expansionRadiusPx;
+      
+      // Rotated rectangles (NE-SW and NW-SE)
+      Rectangle2D.Double baseSpoke = new Rectangle2D.Double(thermal.cx - halfSpoke, thermal.cy - r, thermal.spokeWidthPx, 2 * r);
+      
+      AffineTransform rotP45 = AffineTransform.getRotateInstance(Math.PI / 4.0, thermal.cx, thermal.cy);
+      AffineTransform rotM45 = AffineTransform.getRotateInstance(-Math.PI / 4.0, thermal.cx, thermal.cy);
+      
+      java.awt.geom.Area spokes = new java.awt.geom.Area(rotP45.createTransformedShape(baseSpoke));
+      spokes.add(new java.awt.geom.Area(rotM45.createTransformedShape(baseSpoke)));
+      
+      // Restrict spokes to the clearance gap
+      spokes.intersect(thermal.clearanceArea);
+      
+      fillArea.add(spokes);
+    }
+
+    if (fillArea.isEmpty()) {
+      return;
+    }
+
+    Graphics2D g2 = (Graphics2D) p_g;
+    java.awt.Paint oldPaint = g2.getPaint();
+    java.awt.Composite oldComposite = g2.getComposite();
+
+    g2.setColor(p_color);
+    set_translucency(g2, p_translucency_factor);
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    g2.fill(fillArea);
+
+    g2.setPaint(oldPaint);
+    g2.setComposite(oldComposite);
+  }
+
   /**
    * Draws the interior of a circle
    */
