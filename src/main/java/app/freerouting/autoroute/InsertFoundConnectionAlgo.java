@@ -45,24 +45,34 @@ public class InsertFoundConnectionAlgo {
     }
     int curr_layer = p_connection.target_layer;
     InsertFoundConnectionAlgo new_instance = new InsertFoundConnectionAlgo(p_board, p_ctrl);
+    boolean is_same_layer_fanout = p_ctrl.is_fanout && (p_connection.start_layer == p_connection.target_layer)
+        && p_connection.connection_items.stream().allMatch(item -> item.layer == p_connection.start_layer);
     for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
+      LocateFoundConnectionAlgoAnyAngle.ResultItem item_to_insert = curr_new_item;
+      if (is_same_layer_fanout && curr_new_item.layer == p_connection.start_layer) {
+        double resolution = p_board.communication.get_resolution(app.freerouting.board.Unit.UM);
+        double truncateLenUm = (p_ctrl.settings.fanout != null && p_ctrl.settings.fanout.minEscapeLengthUm != null)
+            ? p_ctrl.settings.fanout.minEscapeLengthUm : 500.0;
+        IntPoint[] truncated = truncateCorners(curr_new_item.corners, truncateLenUm, resolution);
+        item_to_insert = new LocateFoundConnectionAlgoAnyAngle.ResultItem(truncated, curr_new_item.layer);
+      }
       if (true) {
-        Point startCorner = curr_new_item.corners.length > 0 ? curr_new_item.corners[0] : null;
-        Point endCorner = curr_new_item.corners.length > 0
-            ? curr_new_item.corners[curr_new_item.corners.length - 1]
+        Point startCorner = item_to_insert.corners.length > 0 ? item_to_insert.corners[0] : null;
+        Point endCorner = item_to_insert.corners.length > 0
+            ? item_to_insert.corners[item_to_insert.corners.length - 1]
             : null;
         FRLogger.trace("compare_trace_connection_item_raw net=" + p_ctrl.net_no
-            + ", item_layer=" + curr_new_item.layer
-            + ", corner_count=" + curr_new_item.corners.length
+            + ", item_layer=" + item_to_insert.layer
+            + ", corner_count=" + item_to_insert.corners.length
             + ", start=" + formatPoint(startCorner)
             + ", end=" + formatPoint(endCorner));
       }
-      if (!new_instance.insert_via(curr_new_item.corners[0], curr_layer, curr_new_item.layer)) {
+      if (!new_instance.insert_via(item_to_insert.corners[0], curr_layer, item_to_insert.layer)) {
         FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
         return null;
       }
-      curr_layer = curr_new_item.layer;
-      if (!new_instance.insert_trace(curr_new_item)) {
+      curr_layer = item_to_insert.layer;
+      if (!new_instance.insert_trace(item_to_insert)) {
         FRLogger.debug("InsertFoundConnectionAlgo: insert trace failed for net #" + p_ctrl.net_no);
         return null;
       }
@@ -70,7 +80,7 @@ public class InsertFoundConnectionAlgo {
     if (!new_instance.insert_via(new_instance.last_corner, curr_layer, p_connection.start_layer)) {
       return null;
     }
-    if (p_connection.target_item instanceof PolylineTrace to_trace) {
+    if (!is_same_layer_fanout && p_connection.target_item instanceof PolylineTrace to_trace) {
       if (new_instance.first_corner != null) {
         p_board.connect_to_trace(new_instance.first_corner, to_trace, p_ctrl.trace_half_width[p_connection.start_layer], p_ctrl.trace_clearance_class_no);
       } else {
@@ -501,5 +511,38 @@ public class InsertFoundConnectionAlgo {
       return "(" + intPoint.x + "," + intPoint.y + ")";
     }
     return point.toString();
+  }
+
+  private static IntPoint[] truncateCorners(IntPoint[] corners, double truncateLenUm, double resolution) {
+    if (corners == null || corners.length < 2) {
+      return corners;
+    }
+    double maxLen = truncateLenUm * resolution;
+    double currentLen = 0.0;
+    java.util.List<IntPoint> newCorners = new java.util.ArrayList<>();
+    newCorners.add(corners[corners.length - 1]); // start at the pin
+    
+    for (int i = corners.length - 2; i >= 0; i--) {
+      IntPoint p1 = corners[i + 1];
+      IntPoint p2 = corners[i];
+      double dx = p2.x - p1.x;
+      double dy = p2.y - p1.y;
+      double dist = Math.sqrt(dx * dx + dy * dy);
+      if (currentLen + dist >= maxLen) {
+        // Cut the segment here
+        double ratio = (maxLen - currentLen) / dist;
+        int cutX = (int) Math.round(p1.x + ratio * dx);
+        int cutY = (int) Math.round(p1.y + ratio * dy);
+        newCorners.add(new IntPoint(cutX, cutY));
+        break;
+      } else {
+        newCorners.add(p2);
+        currentLen += dist;
+      }
+    }
+    
+    // Reverse newCorners to maintain the order (from target to start pin)
+    java.util.Collections.reverse(newCorners);
+    return newCorners.toArray(new IntPoint[0]);
   }
 }

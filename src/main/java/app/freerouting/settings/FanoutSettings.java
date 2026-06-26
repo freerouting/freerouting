@@ -70,6 +70,13 @@ public class FanoutSettings implements Serializable, Cloneable {
   public Double maxEscapeLengthUm;
 
   /**
+   * The diameter of vias used during the fanout/escape stage (in micrometers).
+   * Default is 250.0 (0.250 mm).
+   */
+  @SerializedName("via_diameter_um")
+  public Double viaDiameterUm;
+
+  /**
    * The sorting order for SMD pins within a component.
    * "inner_first" (v1.9 default) - pins closer to the component center first.
    * "outer_first" - pins further from the component center first.

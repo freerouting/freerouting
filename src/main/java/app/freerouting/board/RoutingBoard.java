@@ -1043,6 +1043,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         p_stoppable_thread, p_time_limit, false);
 
     AutorouteAttemptResult result = null;
+    ctrl_settings.vias_allowed = false;
     if (sorted_unconnected_list.size() <= 4) {
       if (!sorted_unconnected_list.isEmpty()) {
         // 1. Try to route to the closest target first
@@ -1061,6 +1062,30 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
           ctrl_settings, ripped_item_list, null);
     }
+
+    if (result == null || (result.state != AutorouteAttemptState.ROUTED && result.state != AutorouteAttemptState.ALREADY_CONNECTED)) {
+      ctrl_settings.vias_allowed = true;
+      ripped_item_list.clear();
+      if (sorted_unconnected_list.size() <= 4) {
+        if (!sorted_unconnected_list.isEmpty()) {
+          // 1. Try to route to the closest target first
+          Item closest_target = sorted_unconnected_list.get(0);
+          result = curr_autoroute_engine.autoroute_connection(pin_connected_set, Set.of(closest_target),
+              ctrl_settings, ripped_item_list, null); // null: costs not needed here
+
+          // 2. If that fails and we have other targets, fall back to searching the entire unconnected set at once
+          if (result.state != AutorouteAttemptState.ROUTED && result.state != AutorouteAttemptState.ALREADY_CONNECTED && sorted_unconnected_list.size() > 1) {
+            result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
+                ctrl_settings, ripped_item_list, null);
+          }
+        }
+      } else {
+        // For large nets (e.g. power/ground/busses), route to the entire unconnected set at once to avoid CPU thrashing
+        result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
+            ctrl_settings, ripped_item_list, null);
+      }
+    }
+
     if (result == null) {
       result = new AutorouteAttemptResult(AutorouteAttemptState.FAILED, "No target items to route connection.");
     }
@@ -1503,15 +1528,20 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * Returns the inserted {@link Via}, or {@code null} if a fixed obstacle on an inner layer
    * prevents valid placement (e.g. a foreign-net via or trace too close on layer 1+).
    */
-  public Via insertEscapeVia(Pin p_pin, app.freerouting.rules.ViaInfo p_via_info) {
+  public Via insertEscapeVia(Pin p_pin, app.freerouting.rules.ViaInfo p_via_info, RouterSettings routerSettings) {
     int pinNetNo = p_pin.get_net_no(0);
     int smdLayer = p_pin.first_layer();  // the SMD pad layer — clearance exception applies here
     int[] net_no_arr = new int[] { pinNetNo };
 
+    app.freerouting.core.Padstack padstack = p_via_info.get_padstack();
+    if (routerSettings.fanout != null && routerSettings.fanout.viaDiameterUm != null) {
+      padstack = getOrResizedFanoutPadstack(padstack, routerSettings.fanout.viaDiameterUm);
+    }
+
     // Use insert_escape_via() to get a Via marked with isEscapeVia=true and escapeViaSmdLayer.
     // The escape via uses attach_allowed=true so the maze search can use it as a start room.
     Via new_via = this.insert_escape_via(
-        p_via_info.get_padstack(), p_pin.get_center(), net_no_arr,
+        padstack, p_pin.get_center(), net_no_arr,
         p_pin.clearance_class_no(), FixedState.UNFIXED, smdLayer);
 
     // Validate clearance with layer-aware rules:
@@ -1555,11 +1585,38 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
 
     FRLogger.trace("RoutingBoard.insertEscapeVia", "escape_via_inserted",
-        "escape via placed at pin=" + p_pin + " padstack=" + p_via_info.get_name()
+        "escape via placed at pin=" + p_pin + " padstack=" + padstack.name
             + " layers=" + new_via.first_layer() + "-" + new_via.last_layer()
             + " smdLayer=" + smdLayer,
         p_pin.toString(), new app.freerouting.geometry.planar.Point[]{p_pin.get_center()});
     return new_via;
+  }
+
+  private app.freerouting.core.Padstack getOrResizedFanoutPadstack(app.freerouting.core.Padstack p_orig, double p_target_dia_um) {
+    double resolution = this.communication.get_resolution(app.freerouting.board.Unit.UM);
+    double target_dia = p_target_dia_um * resolution;
+    String new_name = p_orig.name + "_fanout_" + Math.round(p_target_dia_um);
+
+    // Check if it already exists
+    app.freerouting.core.Padstack existing = this.library.padstacks.get(new_name);
+    if (existing != null) {
+      return existing;
+    }
+
+    // Create new shapes
+    int layer_count = this.get_layer_count();
+    app.freerouting.geometry.planar.ConvexShape[] new_shapes = new app.freerouting.geometry.planar.ConvexShape[layer_count];
+    for (int l = 0; l < layer_count; l++) {
+      app.freerouting.geometry.planar.ConvexShape orig_shape = p_orig.get_shape(l);
+      if (orig_shape != null) {
+        double current_dia = orig_shape.min_width();
+        double offset_dist = (target_dia - current_dia) / 2.0;
+        new_shapes[l] = orig_shape.offset(offset_dist);
+      }
+    }
+
+    // Add to library
+    return this.library.padstacks.add(new_name, new_shapes, p_orig.attach_allowed, p_orig.placed_absolute);
   }
 }
 

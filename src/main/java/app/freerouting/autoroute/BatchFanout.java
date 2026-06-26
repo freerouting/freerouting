@@ -352,7 +352,7 @@ public class BatchFanout {
           }
 
           this.routing_board.start_marking_changed_area();
-          Via insertedVia = this.routing_board.insertEscapeVia(boardPin, viaInfo);
+          Via insertedVia = this.routing_board.insertEscapeVia(boardPin, viaInfo, this.settings);
           if (insertedVia == null) {
             FRLogger.info("BatchFanout.runEscapeViaPhase: Via insertion FAILED for pin " + pinName
                 + " targetLayer=" + targetLayer + " via=" + viaInfo.get_name() + " (foreign-net obstacle at pin center)");
