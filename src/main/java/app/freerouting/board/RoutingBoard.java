@@ -1517,6 +1517,77 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
+   * Returns a single-layer {@link ViaInfo} stub for the fanout wire-end landing pad on
+   * {@code p_layer}.  Fanout escape wires terminate in a via that exists only on the escape
+   * routing layer, not as a multi-layer through-hole spanning the whole stack.
+   */
+  public app.freerouting.rules.ViaInfo get_fanout_end_via_info(int p_net_no, int p_layer, RouterSettings routerSettings) {
+    app.freerouting.rules.Net net = this.rules.nets.get(p_net_no);
+    if (net == null) {
+      return null;
+    }
+    app.freerouting.rules.ViaRule net_via_rule = net.get_class().get_via_rule();
+    if (net_via_rule == null || net_via_rule.via_count() == 0) {
+      net_via_rule = this.rules.get_default_via_rule();
+    }
+    if (net_via_rule == null) {
+      return null;
+    }
+
+    app.freerouting.rules.ViaInfo shape_source = null;
+    for (int i = 0; i < net_via_rule.via_count(); i++) {
+      app.freerouting.rules.ViaInfo curr_via = net_via_rule.get_via(i);
+      if (curr_via.get_padstack().get_shape(p_layer) != null) {
+        shape_source = curr_via;
+        break;
+      }
+    }
+    if (shape_source == null) {
+      return null;
+    }
+
+    app.freerouting.core.Padstack source_pad = shape_source.get_padstack();
+    String via_name = shape_source.get_name().replaceAll("\\[\\d+-\\d+\\]", "[" + p_layer + "-" + p_layer + "]");
+    if (via_name.equals(shape_source.get_name())) {
+      via_name = shape_source.get_name() + "_fanout_end_" + p_layer;
+    }
+    String pad_name = source_pad.name.replaceAll("\\[\\d+-\\d+\\]", "[" + p_layer + "-" + p_layer + "]");
+    if (pad_name.equals(source_pad.name)) {
+      pad_name = source_pad.name + "_fanout_end_" + p_layer;
+    }
+
+    app.freerouting.core.Padstack end_padstack = this.library.padstacks.get(pad_name);
+    if (end_padstack == null) {
+      int boardLayers = source_pad.board_layer_count();
+      app.freerouting.geometry.planar.ConvexShape[] new_shapes = new app.freerouting.geometry.planar.ConvexShape[boardLayers];
+      app.freerouting.geometry.planar.ConvexShape layer_shape = source_pad.get_shape(p_layer);
+      if (routerSettings.fanout != null && routerSettings.fanout.viaDiameterUm != null) {
+        double resolution = this.communication.get_resolution(app.freerouting.board.Unit.UM);
+        double target_dia = routerSettings.fanout.viaDiameterUm * resolution;
+        double current_dia = layer_shape.min_width();
+        layer_shape = layer_shape.offset((target_dia - current_dia) / 2.0);
+      }
+      new_shapes[p_layer] = layer_shape;
+      end_padstack = this.library.padstacks.add(pad_name, new_shapes, source_pad.attach_allowed, source_pad.placed_absolute);
+    }
+
+    app.freerouting.rules.ViaInfo end_via = this.rules.via_infos.get(via_name);
+    if (end_via == null) {
+      end_via = new app.freerouting.rules.ViaInfo(
+          via_name,
+          end_padstack,
+          shape_source.get_clearance_class(),
+          shape_source.attach_smd_allowed(),
+          this.rules);
+      this.rules.via_infos.add(end_via);
+    }
+    if (!net_via_rule.contains(end_via)) {
+      net_via_rule.append_via(end_via);
+    }
+    return end_via;
+  }
+
+  /**
    * Inserts an escape via for the fanout escape phase at the center of the given SMD pin.
    * <p>
    * The escape via is a special {@link Via} ({@code isEscapeVia = true}) that sits directly
@@ -1619,4 +1690,4 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     return this.library.padstacks.add(new_name, new_shapes, p_orig.attach_allowed, p_orig.placed_absolute);
   }
 }
-
+
