@@ -1436,6 +1436,58 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         }
       }
     }
+
+    if (best_via != null) {
+      app.freerouting.core.Padstack pad = best_via.get_padstack();
+      if (pad.from_layer() < min_layer || pad.to_layer() > max_layer) {
+        int boardLayers = pad.board_layer_count();
+        app.freerouting.geometry.planar.ConvexShape[] new_shapes = new app.freerouting.geometry.planar.ConvexShape[boardLayers];
+        for (int i = min_layer; i <= max_layer; i++) {
+          new_shapes[i] = pad.get_shape(i);
+        }
+
+        String orig_name = best_via.get_name();
+        String new_name = orig_name.replaceAll("\\[\\d+-\\d+\\]", "[" + min_layer + "-" + max_layer + "]");
+        if (new_name.equals(orig_name)) {
+          new_name = orig_name + "_" + min_layer + "-" + max_layer;
+        }
+
+        String orig_pad_name = pad.name;
+        String new_pad_name = orig_pad_name.replaceAll("\\[\\d+-\\d+\\]", "[" + min_layer + "-" + max_layer + "]");
+        if (new_pad_name.equals(orig_pad_name)) {
+          new_pad_name = orig_pad_name + "_" + min_layer + "-" + max_layer;
+        }
+
+        app.freerouting.core.Padstack restricted_padstack = this.library.padstacks.get(new_pad_name);
+        if (restricted_padstack == null) {
+          restricted_padstack = this.library.padstacks.add(
+              new_pad_name,
+              new_shapes,
+              pad.attach_allowed,
+              pad.placed_absolute
+          );
+        }
+
+        app.freerouting.rules.ViaInfo restricted_via = this.rules.via_infos.get(new_name);
+        if (restricted_via == null) {
+          restricted_via = new app.freerouting.rules.ViaInfo(
+              new_name,
+              restricted_padstack,
+              best_via.get_clearance_class(),
+              best_via.attach_smd_allowed(),
+              this.rules
+          );
+          this.rules.via_infos.add(restricted_via);
+        }
+
+        if (net_via_rule != null && !net_via_rule.contains(restricted_via)) {
+          net_via_rule.append_via(restricted_via);
+        }
+
+        return restricted_via;
+      }
+    }
+
     return best_via;
   }
 
