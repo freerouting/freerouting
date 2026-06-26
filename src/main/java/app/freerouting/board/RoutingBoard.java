@@ -982,6 +982,18 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     Set<Item> pin_connected_set = p_pin.get_connected_set(pin_net_no);
     for (Item curr_item : pin_connected_set) {
       if (curr_item.first_layer() != pin_layer || curr_item.last_layer() != pin_layer) {
+        if (curr_item instanceof Via via) {
+          boolean has_trace = false;
+          for (Item contact : via.get_normal_contacts()) {
+            if (contact instanceof Trace) {
+              has_trace = true;
+              break;
+            }
+          }
+          if (!has_trace) {
+            continue;
+          }
+        }
         return new AutorouteAttemptResult(AutorouteAttemptState.ALREADY_CONNECTED,
             "The pin '" + p_pin + "' is already connected.");
       }
@@ -1396,4 +1408,106 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
     }
   }
+
+  public app.freerouting.rules.ViaInfo get_via_info_for_layers(int p_net_no, int p_from_layer, int p_to_layer) {
+    app.freerouting.rules.Net net = this.rules.nets.get(p_net_no);
+    if (net == null) {
+      return null;
+    }
+    app.freerouting.rules.ViaRule net_via_rule = net.get_class().get_via_rule();
+    if (net_via_rule == null || net_via_rule.via_count() == 0) {
+      net_via_rule = this.rules.get_default_via_rule();
+    }
+    if (net_via_rule == null) {
+      return null;
+    }
+    int min_layer = Math.min(p_from_layer, p_to_layer);
+    int max_layer = Math.max(p_from_layer, p_to_layer);
+    app.freerouting.rules.ViaInfo best_via = null;
+    int best_span = Integer.MAX_VALUE;
+    for (int i = 0; i < net_via_rule.via_count(); i++) {
+      app.freerouting.rules.ViaInfo curr_via = net_via_rule.get_via(i);
+      app.freerouting.core.Padstack pad = curr_via.get_padstack();
+      if (pad.from_layer() <= min_layer && pad.to_layer() >= max_layer) {
+        int span = pad.to_layer() - pad.from_layer();
+        if (span < best_span) {
+          best_span = span;
+          best_via = curr_via;
+        }
+      }
+    }
+    return best_via;
+  }
+
+  /**
+   * Inserts an escape via for the fanout escape phase at the center of the given SMD pin.
+   * <p>
+   * The escape via is a special {@link Via} ({@code isEscapeVia = true}) that sits directly
+   * on the SMD pad copper. On the SMD layer, foreign-net items are <em>not</em> considered
+   * blocking obstacles because the via copper is geometrically contained within the SMD pad's
+   * own copper footprint — the pad is already placed at the design's SMD-to-SMD clearance.
+   * On all inner routing layers the full conductor-to-conductor clearance is enforced.
+   * <p>
+   * Returns the inserted {@link Via}, or {@code null} if a fixed obstacle on an inner layer
+   * prevents valid placement (e.g. a foreign-net via or trace too close on layer 1+).
+   */
+  public Via insertEscapeVia(Pin p_pin, app.freerouting.rules.ViaInfo p_via_info) {
+    int pinNetNo = p_pin.get_net_no(0);
+    int smdLayer = p_pin.first_layer();  // the SMD pad layer — clearance exception applies here
+    int[] net_no_arr = new int[] { pinNetNo };
+
+    // Use insert_escape_via() to get a Via marked with isEscapeVia=true and escapeViaSmdLayer.
+    // The escape via uses attach_allowed=true so the maze search can use it as a start room.
+    Via new_via = this.insert_escape_via(
+        p_via_info.get_padstack(), p_pin.get_center(), net_no_arr,
+        p_pin.clearance_class_no(), FixedState.UNFIXED, smdLayer);
+
+    // Validate clearance with layer-aware rules:
+    //   - Same-net items: always skip (the SMD pin itself shares the net).
+    //   - SMD layer: the escape via copper is INSIDE the SMD pad copper footprint.
+    //     Neighboring pads are already at their design SMD-to-SMD clearance relative to this pin;
+    //     placing a via inside the pad does not create new clearance violations on this layer.
+    //   - Inner layers: enforce full conductor clearance — reject fixed/immovable obstacles.
+    boolean has_inner_layer_violation = false;
+    for (app.freerouting.drc.ClearanceViolation violation : new_via.clearance_violations()) {
+      Item other = violation.second_item;
+
+      // (1) Skip same-net items (e.g. the SMD pin itself)
+      if (other.contains_net(pinNetNo)) {
+        continue;
+      }
+
+      // (2) SMD layer: accepted — via copper is inside the SMD pad, no new constraint added
+      if (violation.layer == smdLayer) {
+        FRLogger.trace("RoutingBoard.insertEscapeVia", "smd_layer_violation_accepted",
+            "pin=" + p_pin + " SMD-layer violation with " + other
+                + " accepted (escape via is inside SMD pad copper; SMD-to-SMD clearance applies)",
+            p_pin.toString(), new app.freerouting.geometry.planar.Point[]{p_pin.get_center()});
+        continue;
+      }
+
+      // (3) Inner layer: reject fixed/immovable foreign-net obstacles
+      if (other.is_user_fixed() || other.is_shove_fixed() || other.component_no > 0 || other instanceof BoardOutline) {
+        FRLogger.trace("RoutingBoard.insertEscapeVia", "inner_layer_fixed_violation",
+            "pin=" + p_pin + " inner-layer (layer=" + violation.layer
+                + ") violation with fixed obstacle: " + other,
+            p_pin.toString(), new app.freerouting.geometry.planar.Point[]{p_pin.get_center()});
+        has_inner_layer_violation = true;
+        break;
+      }
+    }
+
+    if (has_inner_layer_violation) {
+      this.remove_item(new_via);
+      return null;
+    }
+
+    FRLogger.trace("RoutingBoard.insertEscapeVia", "escape_via_inserted",
+        "escape via placed at pin=" + p_pin + " padstack=" + p_via_info.get_name()
+            + " layers=" + new_via.first_layer() + "-" + new_via.last_layer()
+            + " smdLayer=" + smdLayer,
+        p_pin.toString(), new app.freerouting.geometry.planar.Point[]{p_pin.get_center()});
+    return new_via;
+  }
 }
+

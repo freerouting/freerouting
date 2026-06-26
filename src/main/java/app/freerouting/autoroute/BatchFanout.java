@@ -96,6 +96,10 @@ public class BatchFanout {
       }
       lastBoardHash = currentBoardHash;
     }
+    EscapeStatistics initialEscape = fanout_instance.computeEscapeStatistics();
+    if (initialEscape.escapedCount() < initialEscape.totalSmdPins()) {
+      fanout_instance.runEscapeViaPhase();
+    }
     EscapeStatistics finalEscape = fanout_instance.computeEscapeStatistics();
     long totalDurationMillis = Math.max(0, System.currentTimeMillis() - fanoutStart);
     return new FanoutRunSummary(completedPasses, totalDurationMillis, finalEscape);
@@ -308,6 +312,97 @@ public class BatchFanout {
             boardStatistics,
             passCompleted,
             escapeStatistics));
+  }  private void runEscapeViaPhase() {
+    int totalEscalated = 0;
+    int successfullyEscalated = 0;
+
+    for (Component component : this.sorted_components) {
+      for (Component.Pin pin : component.smd_pins) {
+        if (this.thread.is_stop_auto_router_requested()) {
+          return;
+        }
+        if (isPinEscaped(pin.board_pin)) {
+          continue;
+        }
+
+        app.freerouting.board.Pin boardPin = pin.board_pin;
+        String pinName = component.board_component.name + "-" + boardPin.name();
+        int netNo = boardPin.net_count() > 0 ? boardPin.get_net_no(0) : 0;
+        if (netNo <= 0) {
+          continue;
+        }
+
+        int startLayer = boardPin.first_layer();
+        int boardLayers = this.routing_board.get_layer_count();
+        int step = (startLayer == 0) ? 1 : -1;
+
+        FRLogger.info("BatchFanout.runEscapeViaPhase: Escalate unescaped pin " + pinName + " at net " + netNo + " layer " + startLayer);
+
+        boolean pinEscaped = false;
+        for (int targetLayer = startLayer + step; targetLayer >= 0 && targetLayer < boardLayers; targetLayer += step) {
+          if (this.thread.is_stop_auto_router_requested()) {
+            return;
+          }
+          app.freerouting.rules.ViaInfo viaInfo = this.routing_board.get_via_info_for_layers(netNo, startLayer, targetLayer);
+          if (viaInfo == null) {
+            FRLogger.trace("BatchFanout.runEscapeViaPhase", "no_via_info",
+                "pin=" + pinName + ", net=" + netNo + ", startLayer=" + startLayer + ", targetLayer=" + targetLayer + " => no ViaInfo found",
+                pinName, new app.freerouting.geometry.planar.Point[]{boardPin.get_center()});
+            continue;
+          }
+
+          this.routing_board.start_marking_changed_area();
+          Via insertedVia = this.routing_board.insertEscapeVia(boardPin, viaInfo);
+          if (insertedVia == null) {
+            FRLogger.info("BatchFanout.runEscapeViaPhase: Via insertion FAILED for pin " + pinName
+                + " targetLayer=" + targetLayer + " via=" + viaInfo.get_name() + " (foreign-net obstacle at pin center)");
+            continue;
+          }
+          FRLogger.info("BatchFanout.runEscapeViaPhase: Via inserted for pin " + pinName
+              + " targetLayer=" + targetLayer + " via=" + viaInfo.get_name()
+              + " layers=" + insertedVia.first_layer() + "-" + insertedVia.last_layer());
+
+          long baseMillisPerPin = (this.settings.fanout != null && this.settings.fanout.maxMillisecondsPerPin != null)
+              ? this.settings.fanout.maxMillisecondsPerPin : 10000L;
+          TimeLimit timeLimit = new TimeLimit((int) baseMillisPerPin);
+
+          boolean ripupAllowed = (this.settings.fanout == null || this.settings.fanout.ripupAllowed == null)
+              || Boolean.TRUE.equals(this.settings.fanout.ripupAllowed);
+          int ripupCosts = ripupAllowed ? this.settings.get_start_ripup_costs() : -1;
+
+          AutorouteAttemptResult result = this.routing_board.fanout(boardPin, this.settings, ripupCosts, this.thread, timeLimit);
+          FRLogger.info("BatchFanout.runEscapeViaPhase: fanout() returned " + result.state
+              + " for pin " + pinName + " targetLayer=" + targetLayer
+              + (result.details != null && !result.details.isEmpty() ? " detail=" + result.details : ""));
+
+          if (result.state == AutorouteAttemptState.ROUTED) {
+            boolean escaped = isPinEscaped(boardPin);
+            FRLogger.info("BatchFanout.runEscapeViaPhase: isPinEscaped=" + escaped + " for pin " + pinName + " targetLayer=" + targetLayer);
+            if (escaped) {
+              FRLogger.info("BatchFanout.runEscapeViaPhase: Successfully escaped pin " + pinName + " on layer " + targetLayer + " using via: " + viaInfo.get_name());
+              pinEscaped = true;
+              successfullyEscalated++;
+              break;
+            }
+          } else if (result.state == AutorouteAttemptState.ALREADY_CONNECTED) {
+            // The pin is already connected to another layer/plane, so it does not need a new escape via.
+            FRLogger.info("BatchFanout.runEscapeViaPhase: Pin " + pinName + " is already connected on other layers/planes; removing temporary escape via.");
+            this.routing_board.remove_item(insertedVia);
+            pinEscaped = true;
+            successfullyEscalated++;
+            break;
+          }
+
+          FRLogger.info("BatchFanout.runEscapeViaPhase: Removing escape via for pin " + pinName + " targetLayer=" + targetLayer + " and trying next layer");
+          this.routing_board.remove_item(insertedVia);
+        }
+        totalEscalated++;
+      }
+    }
+
+    if (totalEscalated > 0) {
+      FRLogger.info("BatchFanout.runEscapeViaPhase: Total pins processed for escape via: " + totalEscalated + ", successfully escaped: " + successfullyEscalated);
+    }
   }
 
   /**
@@ -340,7 +435,7 @@ public class BatchFanout {
             if (contact instanceof Trace) {
               traceContacts++;
               if (!contact.clearance_violations().isEmpty()) tracesWithViolations++;
-            } else if (contact instanceof Via) {
+            } else if (contact instanceof Via via) {
               viaContacts++;
               if (!contact.clearance_violations().isEmpty()) {
                 viasWithViolations++;
@@ -378,7 +473,8 @@ public class BatchFanout {
    *   <li>A {@link Trace} (wire) is directly connected to the pin center with no clearance
    *       violations on that trace, <em>or</em></li>
    *   <li>A {@link Via} is directly connected to the pin center with no clearance violations
-   *       on the via, <em>and</em> that via has at least one {@link Trace} connected to it.</li>
+   *       on the via, <em>and</em> that via has at least one {@link Trace} connected to it, <em>or</em></li>
+   *   <li>The pin is directly connected to a {@link ConductionArea} (plane/pour).</li>
    * </ul>
    */
   private boolean isPinEscaped(app.freerouting.board.Pin pin) {
@@ -399,6 +495,9 @@ public class BatchFanout {
             }
           }
         }
+      } else if (contact instanceof app.freerouting.board.ConductionArea) {
+        // Directly connected to a conduction area (plane/pour)
+        return true;
       }
     }
     return false;
