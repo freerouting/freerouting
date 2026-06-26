@@ -385,12 +385,18 @@ public class BatchFanout {
               break;
             }
           } else if (result.state == AutorouteAttemptState.ALREADY_CONNECTED) {
-            // The pin is already connected to another layer/plane, so it does not need a new escape via.
-            FRLogger.info("BatchFanout.runEscapeViaPhase: Pin " + pinName + " is already connected on other layers/planes; removing temporary escape via.");
-            this.routing_board.remove_item(insertedVia);
-            pinEscaped = true;
-            successfullyEscalated++;
-            break;
+            boolean escaped = isPinEscaped(boardPin);
+            FRLogger.info("BatchFanout.runEscapeViaPhase: fanout() returned ALREADY_CONNECTED for pin " + pinName
+                + " targetLayer=" + targetLayer + ", isPinEscaped=" + escaped);
+            if (escaped) {
+              FRLogger.info("BatchFanout.runEscapeViaPhase: Successfully escaped pin " + pinName + " on layer " + targetLayer + " using via: " + viaInfo.get_name());
+              pinEscaped = true;
+              successfullyEscalated++;
+              break;
+            } else {
+              FRLogger.info("BatchFanout.runEscapeViaPhase: Pin " + pinName + " is not escaped despite ALREADY_CONNECTED; removing temporary escape via.");
+              this.routing_board.remove_item(insertedVia);
+            }
           }
 
           FRLogger.info("BatchFanout.runEscapeViaPhase: Removing escape via for pin " + pinName + " targetLayer=" + targetLayer + " and trying next layer");
@@ -448,18 +454,16 @@ public class BatchFanout {
               }
             }
           }
-          FRLogger.trace("BatchFanout.computeEscape", "pin_not_escaped",
-              "pin=" + pinName
-                  + ", net=" + netNo
-                  + ", center=" + boardPin.get_center()
-                  + ", layer=" + boardPin.first_layer()
-                  + ", contacts=" + contactCount
-                  + ", traces=" + traceContacts
-                  + " (withViolations=" + tracesWithViolations + ")"
-                  + ", vias=" + viaContacts
-                  + " (withViolations=" + viasWithViolations
-                  + ", noTraceAttached=" + viasWithoutTrace + ")",
-              pinName, new app.freerouting.geometry.planar.Point[]{boardPin.get_center()});
+          FRLogger.info("BatchFanout.computeEscape: pin_not_escaped: pin=" + pinName
+              + ", net=" + netNo
+              + ", center=" + boardPin.get_center()
+              + ", layer=" + boardPin.first_layer()
+              + ", contacts=" + contactCount
+              + ", traces=" + traceContacts
+              + " (withViolations=" + tracesWithViolations + ")"
+              + ", vias=" + viaContacts
+              + " (withViolations=" + viasWithViolations
+              + ", noTraceAttached=" + viasWithoutTrace + ")");
         }
       }
     }
@@ -486,11 +490,11 @@ public class BatchFanout {
           return true;
         }
       } else if (contact instanceof Via via) {
-        // Via planted on the pin — check the via is clean and has at least one trace attached
+        // Via planted on the pin — check the via is clean and has at least one trace or conduction area attached
         if (via.clearance_violations().isEmpty()) {
           Set<Item> viaContacts = via.get_normal_contacts();
           for (Item viaContact : viaContacts) {
-            if (viaContact instanceof Trace) {
+            if (viaContact instanceof Trace || viaContact instanceof app.freerouting.board.ConductionArea) {
               return true;
             }
           }

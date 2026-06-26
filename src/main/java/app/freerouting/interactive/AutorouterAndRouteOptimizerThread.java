@@ -552,30 +552,33 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         currentPassNo = 1; // Placeholder
       }
 
-      if (sessionStartTime != null) {
-        String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
-        if (currentPassNo > routingJob.routerSettings.maxPasses) {
-          completionStatus = "completed with pass number limit hit:";
+      boolean isRouterEnabled = routingJob.routerSettings.getRunRouter() && (routingJob.routerSettings.maxPasses == null || routingJob.routerSettings.maxPasses > 0);
+      if (isRouterEnabled) {
+        if (sessionStartTime != null) {
+          String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
+          if (currentPassNo > routingJob.routerSettings.maxPasses) {
+            completionStatus = "completed with pass number limit hit:";
+          }
+
+          String sessionSummary = String.format(java.util.Locale.US,
+              "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+              completionStatus,
+              initialUnroutedCount,
+              autoroutingSecondsToComplete,
+              FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount,
+                  bs.clearanceViolations.totalCount),
+              routingJob.resourceUsage.cpuTimeUsed,
+              routingJob.resourceUsage.maxMemoryUsed / 1024.0f,
+              routingJob.resourceUsage.peakMemoryUsed);
+
+          routingJob.logInfo(sessionSummary);
+        } else {
+          // Fallback to simple logging if session info not available
+          routingJob.logInfo(String.format("Auto-routing was completed in %.2f seconds with the score of %s.",
+              autoroutingSecondsToComplete,
+              FRLogger.formatScore(scoreBeforeOptimization,
+                  bs.connections.incompleteCount, bs.clearanceViolations.totalCount)));
         }
-
-        String sessionSummary = String.format(java.util.Locale.US,
-            "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
-            completionStatus,
-            initialUnroutedCount,
-            autoroutingSecondsToComplete,
-            FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount,
-                bs.clearanceViolations.totalCount),
-            routingJob.resourceUsage.cpuTimeUsed,
-            routingJob.resourceUsage.maxMemoryUsed / 1024.0f,
-            routingJob.resourceUsage.peakMemoryUsed);
-
-        routingJob.logInfo(sessionSummary);
-      } else {
-        // Fallback to simple logging if session info not available
-        routingJob.logInfo(String.format("Auto-routing was completed in %.2f seconds with the score of %s.",
-            autoroutingSecondsToComplete,
-            FRLogger.formatScore(scoreBeforeOptimization,
-                bs.connections.incompleteCount, bs.clearanceViolations.totalCount)));
       }
       FRAnalytics.autorouterFinished();
 

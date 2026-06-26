@@ -9,9 +9,9 @@ public class Dac2020Bm11FanoutTraceTest extends RoutingFixtureTest {
 
   @Test
   void testDAC2020Bm11FanoutTrace() {
-    // Enable TRACE-level console output and granular trace logging
-    System.setProperty("freerouting.logging.console.level", "TRACE");
-    FRLogger.granularTraceEnabled = true;
+    // Enable INFO-level console output to speed up test execution
+    System.setProperty("freerouting.logging.console.level", "INFO");
+    FRLogger.granularTraceEnabled = false;
 
     TestingSettings ts = new TestingSettings();
     ts.setMaxPasses(100);
