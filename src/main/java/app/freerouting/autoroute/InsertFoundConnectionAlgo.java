@@ -439,18 +439,12 @@ public class InsertFoundConnectionAlgo {
     }
     int[] net_no_arr = new int[1];
     net_no_arr[0] = ctrl.net_no;
-    ViaInfo via_info = null;
-    for (int i = 0; i < this.ctrl.via_rule.via_count(); i++) {
-      ViaInfo curr_via_info = this.ctrl.via_rule.get_via(i);
-      Padstack curr_via_padstack = curr_via_info.get_padstack();
-      if (curr_via_padstack.from_layer() > from_layer || curr_via_padstack.to_layer() < to_layer) {
-        continue;
-      }
-      if (ForcedViaAlgo.check(curr_via_info, p_location, net_no_arr, this.ctrl.max_shove_trace_recursion_depth,
+    ViaInfo via_info = this.board.get_via_info_for_layers(ctrl.net_no, from_layer, to_layer);
+    if (via_info != null) {
+      if (!ForcedViaAlgo.check(via_info, p_location, net_no_arr, this.ctrl.max_shove_trace_recursion_depth,
           this.ctrl.max_shove_via_recursion_depth, this.board, this.ctrl.trace_half_width,
           this.ctrl.trace_clearance_class_no)) {
-        via_info = curr_via_info;
-        break;
+        via_info = null;
       }
     }
     if (via_info == null) {

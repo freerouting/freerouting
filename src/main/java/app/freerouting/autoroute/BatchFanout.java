@@ -388,13 +388,24 @@ public class BatchFanout {
             boolean escaped = isPinEscaped(boardPin);
             FRLogger.info("BatchFanout.runEscapeViaPhase: fanout() returned ALREADY_CONNECTED for pin " + pinName
                 + " targetLayer=" + targetLayer + ", isPinEscaped=" + escaped);
+            if (!escaped) {
+              // Try to optimize changed area to shove violating items out of the way (use new int[0] to allow optimizing all nets)
+              int[] opt_net_no_arr = new int[0];
+              this.routing_board.opt_changed_area(opt_net_no_arr, null, this.settings.trace_pull_tight_accuracy, null, this.thread, 1000);
+              escaped = isPinEscaped(boardPin);
+              FRLogger.info("BatchFanout.runEscapeViaPhase: after opt_changed_area, isPinEscaped=" + escaped + " for pin " + pinName + " targetLayer=" + targetLayer);
+            }
             if (escaped) {
               FRLogger.info("BatchFanout.runEscapeViaPhase: Successfully escaped pin " + pinName + " on layer " + targetLayer + " using via: " + viaInfo.get_name());
               pinEscaped = true;
               successfullyEscalated++;
               break;
             } else {
-              FRLogger.info("BatchFanout.runEscapeViaPhase: Pin " + pinName + " is not escaped despite ALREADY_CONNECTED; removing temporary escape via.");
+              StringBuilder sb = new StringBuilder();
+              for (app.freerouting.drc.ClearanceViolation cv : insertedVia.clearance_violations()) {
+                sb.append(" [layer=").append(cv.layer).append(", other=").append(cv.second_item).append("]");
+              }
+              FRLogger.info("BatchFanout.runEscapeViaPhase: Pin " + pinName + " is not escaped despite ALREADY_CONNECTED; removing temporary escape via. Violations:" + sb.toString());
               this.routing_board.remove_item(insertedVia);
             }
           }
