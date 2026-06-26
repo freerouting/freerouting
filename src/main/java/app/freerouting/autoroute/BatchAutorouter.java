@@ -254,21 +254,45 @@ public class BatchAutorouter extends NamedAlgorithm {
       return 100; // Unknown net, low priority
     }
 
-    // GND net gets highest priority (0)
+    // Calculate trace width for this net (average of existing traces)
+    int max_width = getNetTraceWidth(p_net_no);
+
+    // GND net gets highest priority (0), with width sub-priority
     if (net.name != null && net.name.toUpperCase().contains("GND")) {
-      return 0;
+      // Wider GND traces: priority 0 + width factor (0.0-0.9)
+      // Narrower GND traces: priority 0.5-0.9
+      double width_factor = Math.min(0.9, max_width / 10000.0); // Normalize to 0-1 range
+      return (int) (width_factor * 10); // Sub-priority within GND tier
     }
 
-    // VCC/POWER nets get second priority (1)
+    // VCC/POWER nets get second priority (10), prioritize by width
     String name = net.name.toUpperCase();
     if (name.contains("VCC") || name.contains("POWER") || name.contains("VDD") || name.contains("VSS")) {
-      return 1;
+      double width_factor = Math.min(0.9, max_width / 10000.0);
+      return 10 + (int) (width_factor * 10); // 10-19 range, wider = lower priority number
     }
 
-    // Regular nets: sort by pin count (density). More pins = higher priority.
-    // Negate pin count so higher densities sort first
+    // Regular nets: sort by pin count (density) + width
+    // More pins = higher priority, wider traces = higher priority
     int pin_count = board.connectable_item_count(p_net_no);
-    return Math.max(2, 200 - pin_count); // 200 - pin_count for density ordering
+    double width_factor = Math.min(0.5, max_width / 20000.0); // Width contributes 0-5 points
+    return Math.max(20, (int) (200 - pin_count - (width_factor * 10)));
+  }
+
+  /**
+   * Get maximum trace width for net (in board units).
+   * Scans all traces on the net and returns the widest one.
+   */
+  private int getNetTraceWidth(int p_net_no) {
+    int max_width = 0;
+    Collection<Item> net_items = board.get_connectable_items(p_net_no);
+    for (Item item : net_items) {
+      if (item instanceof Trace trace) {
+        int trace_width = trace.get_half_width() * 2;
+        max_width = Math.max(max_width, trace_width);
+      }
+    }
+    return max_width;
   }
 
   private List<Item> getAutorouteItems(RoutingBoard board) {
