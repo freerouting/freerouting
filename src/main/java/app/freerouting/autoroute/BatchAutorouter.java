@@ -272,11 +272,19 @@ public class BatchAutorouter extends NamedAlgorithm {
       return 10 + (int) (width_factor * 10); // 10-19 range, wider = lower priority number
     }
 
+    // Signal integrity tier: critical nets (clock, reset, high-speed) get priority 20-29
+    // These route after power but before regular signals to minimize crosstalk
+    if (isCriticalSignal(name)) {
+      int pin_count = board.connectable_item_count(p_net_no);
+      double width_factor = Math.min(0.5, max_width / 20000.0);
+      return Math.max(20, 25 - (int) (width_factor * 5)); // 20-25 range
+    }
+
     // Regular nets: sort by pin count (density) + width
     // More pins = higher priority, wider traces = higher priority
     int pin_count = board.connectable_item_count(p_net_no);
     double width_factor = Math.min(0.5, max_width / 20000.0); // Width contributes 0-5 points
-    return Math.max(20, (int) (200 - pin_count - (width_factor * 10)));
+    return Math.max(30, (int) (200 - pin_count - (width_factor * 10)));
   }
 
   /**
@@ -293,6 +301,30 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
     }
     return max_width;
+  }
+
+  /**
+   * Identify critical signal nets (clock, reset, high-speed).
+   * These nets benefit from earlier routing to minimize crosstalk and jitter.
+   */
+  private boolean isCriticalSignal(String p_net_name) {
+    // Clock signals (CLK, CK, XTAL, OSC)
+    if (p_net_name.contains("CLK") || p_net_name.contains("CK") ||
+        p_net_name.contains("XTAL") || p_net_name.contains("OSC") ||
+        p_net_name.contains("CLOCK")) {
+      return true;
+    }
+    // Reset signals (RST, RESET, NRESET, RES)
+    if (p_net_name.contains("RST") || p_net_name.contains("RESET") ||
+        p_net_name.contains("RES")) {
+      return true;
+    }
+    // High-speed differential pairs (DP, DM, LVDS, DIFF)
+    if (p_net_name.contains("DP") || p_net_name.contains("DM") ||
+        p_net_name.contains("LVDS") || p_net_name.contains("DIFF")) {
+      return true;
+    }
+    return false;
   }
 
   private List<Item> getAutorouteItems(RoutingBoard board) {
@@ -1376,7 +1408,19 @@ public class BatchAutorouter extends NamedAlgorithm {
       calc_airline(route_start_set, route_dest_set);
 
       // Calculate the maximum time for this autoroute pass
-      double max_milliseconds = 100000 * Math.pow(2, p_ripup_pass_no - 1);
+      // Time limit tuning: generous early, strict late to force convergence
+      double max_milliseconds;
+      if (p_ripup_pass_no <= 3) {
+        // Early passes (1-3): generous time (100s-400s) - allow full exploration
+        max_milliseconds = 100000 * Math.pow(2, p_ripup_pass_no - 1);
+      } else if (p_ripup_pass_no <= 8) {
+        // Mid passes (4-8): moderate time (20s-60s) - balance speed and quality
+        max_milliseconds = 20000 + (p_ripup_pass_no - 3) * 10000;
+      } else {
+        // Late passes (9+): strict time (5s-15s) - force convergence
+        int late_pass_offset = Math.max(1, p_ripup_pass_no - 8);
+        max_milliseconds = Math.max(5000, 15000 - (late_pass_offset * 500));
+      }
       max_milliseconds = Math.min(max_milliseconds, Integer.MAX_VALUE);
       TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
 
