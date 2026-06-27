@@ -295,9 +295,20 @@ public class BatchAutorouter extends NamedAlgorithm {
       return 26; // Route differential pairs early to maintain tight coupling
     }
 
+    // Congestion prediction: high-density nets route first to reduce space contention
+    // Route dense nets early to prevent congestion lock-out in later passes
+    int item_count = board.connectable_item_count(p_net_no);
+    if (item_count > 50) {
+      // Very dense nets (50+ items): priority 27 (ultra-congested, route early)
+      return 27;
+    } else if (item_count > 30) {
+      // Dense nets (30-50 items): priority 28 (congested, route early)
+      return 28;
+    }
+
     // Regular nets: sort by pin count (density) + width
     // More pins = higher priority, wider traces = higher priority
-    int pin_count = board.connectable_item_count(p_net_no);
+    int pin_count = item_count;
     double width_factor = Math.min(0.5, max_width / 20000.0); // Width contributes 0-5 points
     return Math.max(30, (int) (200 - pin_count - (width_factor * 10)));
   }
