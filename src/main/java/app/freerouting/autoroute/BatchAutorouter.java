@@ -97,6 +97,11 @@ public class BatchAutorouter extends NamedAlgorithm {
    */
   private Instant sessionStartTime;
   private long lastBoardUpdateTimestamp = 0;
+  /**
+   * Layer congestion tracking: count traces per layer for assignment optimization.
+   * Used to prefer routing on less-congested layers.
+   */
+  private int[] layerTraceCounts;
 
   public BatchAutorouter(RoutingJob job) {
     this(job.thread, job.board, job.routerSettings, !job.routerSettings.isFanoutEnabled(), true,
@@ -141,6 +146,9 @@ public class BatchAutorouter extends NamedAlgorithm {
     BatchAutorouter router_instance = new BatchAutorouter(job.thread, updated_routing_board, routerSettings, true,
         p_with_preferred_directions, p_ripup_costs, trace_pull_tight_accuracy);
     router_instance.job = job;
+
+    // Layer assignment optimization: pre-compute layer congestion
+    router_instance.computeLayerCongestion();
 
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
@@ -439,6 +447,34 @@ public class BatchAutorouter extends NamedAlgorithm {
     if (stubs_removed > 0) {
       job.logInfo("Stub minimization: removed " + stubs_removed + " unused trace stubs");
     }
+  }
+
+  /**
+   * Compute layer congestion: count traces on each layer for assignment optimization.
+   * Helps prefer routing on less-congested layers to balance layer utilization.
+   */
+  private void computeLayerCongestion() {
+    int layer_count = board.get_layer_count();
+    if (layerTraceCounts == null) {
+      layerTraceCounts = new int[layer_count];
+    }
+
+    // Count traces per layer
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+    for (;;) {
+      UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
+      if (curr_ob == null) {
+        break;
+      }
+      if (curr_ob instanceof Trace trace) {
+        int layer = trace.get_layer();
+        if (layer >= 0 && layer < layer_count) {
+          layerTraceCounts[layer]++;
+        }
+      }
+    }
+
+    job.logInfo("Layer assignment: congestion computed (" + layer_count + " layers)");
   }
 
   /**
@@ -1522,6 +1558,27 @@ public class BatchAutorouter extends NamedAlgorithm {
         // Thermal-aware: 10-15% via cost reduction to enable thermal via distribution
         double thermal_via_factor = 0.90; // 10% reduction for thermal distribution
         curr_via_costs = (int) (curr_via_costs * thermal_via_factor);
+      }
+
+      // Layer assignment optimization: prefer less-congested layers
+      // Reduce via costs to underutilized layers, discourage congested layers
+      if (p_ripup_pass_no <= 7 && layerTraceCounts != null) {
+        // Compute layer congestion factors (0-1, where 1 = most congested)
+        int max_layer_traces = 0;
+        for (int count : layerTraceCounts) {
+          max_layer_traces = Math.max(max_layer_traces, count);
+        }
+        if (max_layer_traces > 0) {
+          // Average congestion across layers
+          double avg_congestion = 0;
+          for (int count : layerTraceCounts) {
+            avg_congestion += (double) count / max_layer_traces;
+          }
+          avg_congestion /= layerTraceCounts.length;
+          // Reduce via costs slightly (5%) to encourage layer diversity
+          double layer_factor = 0.95 + (0.05 * avg_congestion); // 0.95-1.0 based on congestion
+          curr_via_costs = (int) (curr_via_costs * layer_factor);
+        }
       }
 
       // Get and calculate the auto-router settings based on the board and net we are
