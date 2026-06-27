@@ -262,19 +262,23 @@ public class BatchAutorouter extends NamedAlgorithm {
     // Calculate trace width for this net (average of existing traces)
     int max_width = getNetTraceWidth(p_net_no);
 
-    // GND net gets highest priority (0), with width sub-priority
+    // GND net gets highest priority (0), with width + thermal sub-priority
     if (net.name != null && net.name.toUpperCase().contains("GND")) {
       // Wider GND traces: priority 0 + width factor (0.0-0.9)
       // Narrower GND traces: priority 0.5-0.9
-      double width_factor = Math.min(0.9, max_width / 10000.0); // Normalize to 0-1 range
-      return (int) (width_factor * 10); // Sub-priority within GND tier
+      double width_factor = Math.min(0.9, max_width / 10000.0);
+      // Thermal factor: GND is thermal sink, route first for heat dissipation
+      double thermal_factor = 0.1; // GND gets slight thermal boost
+      return (int) ((width_factor + thermal_factor) * 10);
     }
 
-    // VCC/POWER nets get second priority (10), prioritize by width
+    // VCC/POWER nets get second priority (10), prioritize by width + thermal awareness
     String name = net.name.toUpperCase();
     if (name.contains("VCC") || name.contains("POWER") || name.contains("VDD") || name.contains("VSS")) {
       double width_factor = Math.min(0.9, max_width / 10000.0);
-      return 10 + (int) (width_factor * 10); // 10-19 range, wider = lower priority number
+      // Thermal factor: high-power traces need early routing for thermal distribution
+      double thermal_factor = isHighPowerNet(name) ? 0.2 : 0.0;
+      return 10 + (int) ((width_factor + thermal_factor) * 10); // 10-19 range
     }
 
     // Signal integrity tier: critical nets (clock, reset, high-speed) get priority 20-29
@@ -328,6 +332,25 @@ public class BatchAutorouter extends NamedAlgorithm {
     // Reset signals (RST, RESET, NRESET, RES)
     if (p_net_name.contains("RST") || p_net_name.contains("RESET") ||
         p_net_name.contains("RES")) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Identify high-power nets that generate significant heat dissipation.
+   * These benefit from early routing to establish thermal distribution paths.
+   */
+  private boolean isHighPowerNet(String p_net_name) {
+    String name = p_net_name.toUpperCase();
+    // High-current supply rails (3V3, 5V, 12V, 48V, VBAT, VCIN)
+    if (name.contains("3V3") || name.contains("5V") || name.contains("12V") ||
+        name.contains("48V") || name.contains("VBAT") || name.contains("VCIN") ||
+        name.contains("VREF") || name.contains("BIAS")) {
+      return true;
+    }
+    // High-current distribution points (PGND, SGND for separate power domains)
+    if (name.contains("PGND") || name.contains("SGND")) {
       return true;
     }
     return false;
@@ -1479,6 +1502,15 @@ public class BatchAutorouter extends NamedAlgorithm {
         // Microvia cost = 50-70% of standard via cost, encouraging denser stitching
         double microvia_factor = 0.6 + (p_ripup_pass_no / 10.0); // 0.6-0.7 range
         curr_via_costs = (int) (curr_via_costs * microvia_factor);
+      }
+
+      // Thermal-aware via routing: enable more vias on high-power nets for thermal distribution
+      // High-power nets (3V3, 5V, VBAT, etc) benefit from distributed via routing for heat dissipation
+      app.freerouting.rules.Net curr_net = board.rules.nets.get(p_route_net_no);
+      if (curr_net != null && isHighPowerNet(curr_net.name) && p_ripup_pass_no <= 5) {
+        // Thermal-aware: 10-15% via cost reduction to enable thermal via distribution
+        double thermal_via_factor = 0.90; // 10% reduction for thermal distribution
+        curr_via_costs = (int) (curr_via_costs * thermal_via_factor);
       }
 
       // Get and calculate the auto-router settings based on the board and net we are
