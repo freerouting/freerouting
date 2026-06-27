@@ -1472,6 +1472,15 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
       // Late passes (9+): use normal via cost
 
+      // Microvia stitching optimization: reduce via costs in escape regions
+      // Use micro vias (smaller, denser) in escape clusters, standard vias in distribution
+      if (isEscapeViaNet(p_route_net_no) && p_ripup_pass_no <= 6) {
+        // In escape regions during early/mid passes: 30-50% via cost reduction (enable microvia placement)
+        // Microvia cost = 50-70% of standard via cost, encouraging denser stitching
+        double microvia_factor = 0.6 + (p_ripup_pass_no / 10.0); // 0.6-0.7 range
+        curr_via_costs = (int) (curr_via_costs * microvia_factor);
+      }
+
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
       AutorouteControl autoroute_control = new AutorouteControl(this.board, p_route_net_no, settings, curr_via_costs,
