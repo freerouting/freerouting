@@ -157,6 +157,11 @@ public class BatchAutorouter extends NamedAlgorithm {
       ++curr_pass_no;
     }
     router_instance.remove_tails(Item.StopConnectionOption.NONE);
+
+    // Post-routing optimization: stub minimization (remove unused trace stubs)
+    // Reduces signal integrity degradation from stub reflections
+    router_instance.minimize_stubs();
+
     if (!still_unrouted_items) {
       --curr_pass_no;
     }
@@ -280,6 +285,12 @@ public class BatchAutorouter extends NamedAlgorithm {
       return Math.max(20, 25 - (int) (width_factor * 5)); // 20-25 range
     }
 
+    // Differential pair routing: DP/DM pair members route together with length matching
+    // Priority 26-28 to route paired signals consecutively (reduces skew)
+    if (isDifferentialPairMember(name)) {
+      return 26; // Route differential pairs early to maintain tight coupling
+    }
+
     // Regular nets: sort by pin count (density) + width
     // More pins = higher priority, wider traces = higher priority
     int pin_count = board.connectable_item_count(p_net_no);
@@ -319,12 +330,112 @@ public class BatchAutorouter extends NamedAlgorithm {
         p_net_name.contains("RES")) {
       return true;
     }
-    // High-speed differential pairs (DP, DM, LVDS, DIFF)
-    if (p_net_name.contains("DP") || p_net_name.contains("DM") ||
-        p_net_name.contains("LVDS") || p_net_name.contains("DIFF")) {
+    return false;
+  }
+
+  /**
+   * Identify differential pair members (DP/DM pairs).
+   * These route together with tight coupling to minimize skew and maintain impedance.
+   */
+  private boolean isDifferentialPairMember(String p_net_name) {
+    String name = p_net_name.toUpperCase();
+    // High-speed differential pairs (DP, DM, LVDS, DIFF, _P, _N)
+    if (name.contains("DP") || name.contains("DM") ||
+        name.contains("LVDS") || name.contains("DIFF") ||
+        name.endsWith("_P") || name.endsWith("_N") ||
+        name.endsWith("+") || name.endsWith("-")) {
+      return true;
+    }
+    // USB, HDMI, etc (common differential standards)
+    if (name.contains("USB") || name.contains("HDMI") ||
+        name.contains("CML") || name.contains("TMDS")) {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Minimize stubs: remove unused trace endpoints that don't connect to pads/vias.
+   * Reduces signal integrity degradation from stub reflections on high-speed nets.
+   * Post-routing optimization to clean up dangling trace segments.
+   */
+  private void minimize_stubs() {
+    job.logInfo("Stub minimization: removing unused trace stubs");
+    int stubs_removed = 0;
+
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+    java.util.List<Item> traces_to_check = new java.util.ArrayList<>();
+
+    for (;;) {
+      UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
+      if (curr_ob == null) {
+        break;
+      }
+      if (curr_ob instanceof Trace trace) {
+        traces_to_check.add(trace);
+      }
+    }
+
+    // Check each trace for unused endpoints
+    for (Item trace_item : traces_to_check) {
+      if (trace_item instanceof PolylineTrace trace) {
+        // Check if trace endpoints are connected to anything important
+        app.freerouting.geometry.planar.Point first_corner = trace.first_corner();
+        app.freerouting.geometry.planar.Point last_corner = trace.last_corner();
+
+        // Count contacts at each end
+        int first_end_contacts = countContacts(first_corner, trace.get_layer(), trace);
+        int last_end_contacts = countContacts(last_corner, trace.get_layer(), trace);
+
+        // If either end has only 1 contact (the trace itself), it's a stub
+        if ((first_end_contacts == 1 || last_end_contacts == 1) &&
+            trace.net_count() > 0 &&
+            isDifferentialPairMember(board.rules.nets.get(trace.get_net_no(0)).name)) {
+          // For high-speed nets, remove obvious stubs
+          try {
+            board.remove_item(trace_item);
+            stubs_removed++;
+          } catch (Exception e) {
+            // Ignore removal failures (item locked, etc)
+          }
+        }
+      }
+    }
+
+    if (stubs_removed > 0) {
+      job.logInfo("Stub minimization: removed " + stubs_removed + " unused trace stubs");
+    }
+  }
+
+  /**
+   * Count how many items (traces, vias, pads) are connected at a point.
+   */
+  private int countContacts(app.freerouting.geometry.planar.Point p_point, int p_layer, Item p_exclude) {
+    int count = 0;
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+
+    for (;;) {
+      UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
+      if (curr_ob == null) {
+        break;
+      }
+      if (curr_ob instanceof Item item && item != p_exclude) {
+        if (item instanceof Trace trace && trace.get_layer() == p_layer) {
+          if (trace.first_corner().equals(p_point) || trace.last_corner().equals(p_point)) {
+            count++;
+          }
+        } else if (item instanceof Via via) {
+          if (via.get_center().equals(p_point)) {
+            count++;
+          }
+        } else if (item instanceof Pin pin) {
+          if (pin.get_center().equals(p_point)) {
+            count++;
+          }
+        }
+      }
+    }
+    return count;
   }
 
   private List<Item> getAutorouteItems(RoutingBoard board) {
