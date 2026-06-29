@@ -79,6 +79,7 @@ public class BatchFanout {
       StoppableThread p_thread,
       FanoutProgressListener progressListener) {
     BatchFanout fanout_instance = new BatchFanout(p_board, p_settings, p_thread);
+    FanoutDiagnostics.resetCounters();
     long fanoutStart = System.currentTimeMillis();
     int maxPasses = (p_settings.fanout != null && p_settings.fanout.maxPasses != null)
         ? p_settings.fanout.maxPasses : 20;
@@ -101,6 +102,7 @@ public class BatchFanout {
       fanout_instance.runEscapeViaPhase();
     }
     EscapeStatistics finalEscape = fanout_instance.computeEscapeStatistics();
+    FanoutDiagnostics.logSessionSummary();
     long totalDurationMillis = Math.max(0, System.currentTimeMillis() - fanoutStart);
     return new FanoutRunSummary(completedPasses, totalDurationMillis, finalEscape);
   }
@@ -167,12 +169,20 @@ public class BatchFanout {
         switch (curr_result.state) {
           case ROUTED       -> {
              ++routed_count;
+             boolean escapedAfterRoute = isPinEscaped(curr_pin.board_pin);
              FRLogger.trace("BatchFanout.fanout_pass", "pin_routed",
                  "pin=" + fullPinName
                      + ", net=" + netNo
                      + ", durationMs=" + pinDurationMs
-                     + ", targetCount=" + targetCount,
+                     + ", targetCount=" + targetCount
+                     + ", isPinEscaped=" + escapedAfterRoute,
                  fullPinName, new app.freerouting.geometry.planar.Point[]{curr_pin.board_pin.get_center()});
+             if (!escapedAfterRoute) {
+               FanoutDiagnostics.logInfo(fullPinName, netNo, "pass_routed_but_not_escaped",
+                   "pass=" + (p_pass_no + 1)
+                       + ", " + FanoutDiagnostics.describePinEscapeFailure(curr_pin.board_pin)
+                       + ", geometry=" + FanoutDiagnostics.describePinEscapeGeometry(curr_pin.board_pin, this.routing_board));
+             }
           }
           case ALREADY_CONNECTED -> {
             ++already_connected_count;
@@ -185,6 +195,7 @@ public class BatchFanout {
           }
           case FAILED       -> {
             ++not_routed_count;
+            FanoutDiagnostics.incrementFanoutPassFailed();
             FRLogger.trace("BatchFanout.fanout_pass", "pin_failed",
                 "pin=" + fullPinName
                     + ", net=" + netNo
@@ -378,6 +389,13 @@ public class BatchFanout {
           if (result.state == AutorouteAttemptState.ROUTED) {
             boolean escaped = isPinEscaped(boardPin);
             FRLogger.info("BatchFanout.runEscapeViaPhase: isPinEscaped=" + escaped + " for pin " + pinName + " targetLayer=" + targetLayer);
+            if (!escaped) {
+              FanoutDiagnostics.incrementRoutedButNotEscaped();
+              FanoutDiagnostics.logInfo(pinName, netNo, "routed_but_not_escaped",
+                  "targetLayer=" + targetLayer
+                      + ", " + FanoutDiagnostics.describePinEscapeFailure(boardPin)
+                      + ", geometry=" + FanoutDiagnostics.describePinEscapeGeometry(boardPin, this.routing_board));
+            }
             if (escaped) {
               FRLogger.info("BatchFanout.runEscapeViaPhase: Successfully escaped pin " + pinName + " on layer " + targetLayer + " using via: " + viaInfo.get_name());
               pinEscaped = true;
@@ -405,11 +423,17 @@ public class BatchFanout {
               for (app.freerouting.drc.ClearanceViolation cv : insertedVia.clearance_violations()) {
                 sb.append(" [layer=").append(cv.layer).append(", other=").append(cv.second_item).append("]");
               }
+              FanoutDiagnostics.logInfo(pinName, netNo, "already_connected_not_escaped",
+                  "targetLayer=" + targetLayer
+                      + ", " + FanoutDiagnostics.describePinEscapeFailure(boardPin)
+                      + ", geometry=" + FanoutDiagnostics.describePinEscapeGeometry(boardPin, this.routing_board)
+                      + ", viaViolations=" + sb);
               FRLogger.info("BatchFanout.runEscapeViaPhase: Pin " + pinName + " is not escaped despite ALREADY_CONNECTED; removing temporary escape via. Violations:" + sb.toString());
               this.routing_board.remove_item(insertedVia);
             }
           }
 
+          FanoutDiagnostics.incrementEscapeViaRollback();
           FRLogger.info("BatchFanout.runEscapeViaPhase: Removing escape via for pin " + pinName + " targetLayer=" + targetLayer + " and trying next layer");
           this.routing_board.remove_item(insertedVia);
         }

@@ -67,6 +67,10 @@ public class MazeSearchAlgo {
    */
   private ExpandableObject destination_door;
   private int section_no_of_destination_door;
+  private int mazeRejectedMaxLengthCount;
+  private int mazeRejectedMinLengthCount;
+  private boolean mazeLoggedFirstMaxReject;
+  private boolean mazeLoggedFirstMinReject;
 
   /**
    * Creates a new instance of MazeSearchAlgo
@@ -77,6 +81,7 @@ public class MazeSearchAlgo {
     random_generator.setSeed(
         p_ctrl.ripup_costs); // Keep v1.9 deterministic randomization across passes.
     this.search_tree = p_autoroute_engine.autoroute_search_tree;
+    MazeSearchAlgo outer = this;
     maze_expansion_list = new TreeSet<>() {
       @Override
       public boolean add(MazeListElement p_element) {
@@ -90,6 +95,14 @@ public class MazeSearchAlgo {
             app.freerouting.geometry.planar.FloatPoint entry_point = p_element.shape_entry.a.middle_point(p_element.shape_entry.b);
             double dist = entry_point.distance(pin_center_float);
             if (dist > maxLen * resolution) {
+              outer.mazeRejectedMaxLengthCount++;
+              if (!outer.mazeLoggedFirstMaxReject) {
+                outer.mazeLoggedFirstMaxReject = true;
+                FanoutDiagnostics.log(ctrl, "maze_rejected_max_length",
+                    "sample_dist=" + FanoutDiagnostics.formatLengthMm(dist, resolution)
+                        + ", maxLen=" + maxLen + "mm"
+                        + ", layer=" + ctrl.fanout_start_pin_layer);
+              }
               return false;
             }
           }
@@ -99,6 +112,14 @@ public class MazeSearchAlgo {
             double resolution = autoroute_engine.board.communication.get_resolution(app.freerouting.board.Unit.MM);
             double drillDist = drill.location.to_float().distance(pin_center_float);
             if (drillDist < minLen * resolution) {
+              outer.mazeRejectedMinLengthCount++;
+              if (!outer.mazeLoggedFirstMinReject) {
+                outer.mazeLoggedFirstMinReject = true;
+                FanoutDiagnostics.log(ctrl, "maze_rejected_min_length",
+                    "sample_drillDist=" + FanoutDiagnostics.formatLengthMm(drillDist, resolution)
+                        + ", minLen=" + minLen + "mm"
+                        + ", drill=" + drill.location);
+              }
               return false;
             }
           }
@@ -236,10 +257,20 @@ public class MazeSearchAlgo {
     while (occupy_next_element()) {
       continue;
     }
+    logMazeLengthRejectSummary();
     if (this.destination_door == null) {
       return null;
     }
     return new Result(this.destination_door, this.section_no_of_destination_door);
+  }
+
+  private void logMazeLengthRejectSummary() {
+    if (mazeRejectedMaxLengthCount == 0 && mazeRejectedMinLengthCount == 0) {
+      return;
+    }
+    FanoutDiagnostics.log(ctrl, "maze_length_reject_summary",
+        "maxLengthRejections=" + mazeRejectedMaxLengthCount
+            + ", minLengthRejections=" + mazeRejectedMinLengthCount);
   }
 
   /**
@@ -849,24 +880,15 @@ public class MazeSearchAlgo {
   }
 
   private boolean shouldTraceFanoutDiagnostics() {
-    return ctrl.is_fanout
-        && ctrl.fanout_start_pin_name != null
-        && ctrl.fanout_start_pin_name.startsWith("U27-");
+    return FanoutDiagnostics.isEnabled(ctrl);
   }
 
   private String fanoutDiagnosticLabel() {
-    return ctrl.fanout_start_pin_name == null ? "fanout-pin(net=" + ctrl.net_no + ")"
-        : ctrl.fanout_start_pin_name;
+    return FanoutDiagnostics.pinLabel(ctrl);
   }
 
   private void traceFanoutDiagnostic(String event, String message) {
-    if (!shouldTraceFanoutDiagnostics()) {
-      return;
-    }
-    FRLogger.trace("FANOUT_DIAG event=" + event
-        + ", pin=" + fanoutDiagnosticLabel()
-        + ", net=" + ctrl.net_no
-        + ", " + message);
+    FanoutDiagnostics.log(ctrl, event, message);
   }
 
   private void expand_to_drill(ExpansionDrill p_drill, MazeListElement p_from_element, int p_add_costs) {
