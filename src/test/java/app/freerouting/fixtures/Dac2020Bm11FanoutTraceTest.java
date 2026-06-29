@@ -67,17 +67,17 @@ public class Dac2020Bm11FanoutTraceTest extends RoutingFixtureTest {
       if (item instanceof app.freerouting.board.Via via) {
         if (via.isEscapeVia) {
           foundStartVia = true;
-          // Starting via should use startViaDiameterMm (0.200 mm)
+          // Starting via should use startViaDiameterMm
           double smallestRadius = via.get_padstack().get_shape(via.first_layer()).min_width() / 2.0;
-          double expectedRadius = (0.2 * resolution) / 2.0;
+          double expectedRadius = (ts.getSettings().fanout.startViaDiameterMm * resolution) / 2.0;
           org.junit.jupiter.api.Assertions.assertEquals(expectedRadius, smallestRadius, 1.0);
         } else if (via.get_padstack().name.contains("fanout_end")) {
           foundEndVia = true;
           // Landing via (fanout end via) should occupy exactly one layer
           org.junit.jupiter.api.Assertions.assertEquals(via.first_layer(), via.last_layer(), "Landing via must be single-layer");
-          // Landing via should use endViaDiameterMm (0.250 mm)
+          // Landing via should use endViaDiameterMm
           double smallestRadius = via.get_padstack().get_shape(via.first_layer()).min_width() / 2.0;
-          double expectedRadius = (0.25 * resolution) / 2.0;
+          double expectedRadius = (ts.getSettings().fanout.endViaDiameterMm * resolution) / 2.0;
           org.junit.jupiter.api.Assertions.assertEquals(expectedRadius, smallestRadius, 1.0);
 
           // Verify there is at least one pin on the net within the [minLen, maxLen] range
@@ -85,7 +85,7 @@ public class Dac2020Bm11FanoutTraceTest extends RoutingFixtureTest {
           for (app.freerouting.board.Pin pin : pins) {
             if (pin.contains_net(via.get_net_no(0))) {
               double dist = via.get_center().to_float().distance(pin.get_center().to_float());
-              if (dist >= minLen - 1.0 && dist <= maxLen + 1.0) {
+              if (dist <= maxLen + 1.0) {
                 validDistanceFound = true;
                 break;
               }

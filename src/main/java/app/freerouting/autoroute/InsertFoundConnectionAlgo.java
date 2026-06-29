@@ -650,16 +650,20 @@ public class InsertFoundConnectionAlgo {
       double dy = p2.y - p1.y;
       double dist = Math.sqrt(dx * dx + dy * dy);
       if (dist > 0.1) {
-        double needed = minLen - totalLen;
-        int extX = (int) Math.round(p2.x + (needed / dist) * dx);
-        int extY = (int) Math.round(p2.y + (needed / dist) * dy);
-        IntPoint extendedPoint = new IntPoint(extX, extY);
-        if (ForcedViaAlgo.check(via_info, extendedPoint, net_no_arr, ctrl.max_shove_trace_recursion_depth,
-            ctrl.max_shove_via_recursion_depth, board, ctrl.trace_half_width,
-            ctrl.trace_clearance_class_no)) {
-          return extendedPoint;
+        double step = 0.2 * board.communication.get_resolution(app.freerouting.board.Unit.MM);
+        for (double testLen = minLen; testLen <= maxLen; testLen += step) {
+          double needed = testLen - totalLen;
+          int extX = (int) Math.round(p2.x + (needed / dist) * dx);
+          int extY = (int) Math.round(p2.y + (needed / dist) * dy);
+          IntPoint extendedPoint = new IntPoint(extX, extY);
+          if (ForcedViaAlgo.check(via_info, extendedPoint, net_no_arr, ctrl.max_shove_trace_recursion_depth,
+              ctrl.max_shove_via_recursion_depth, board, ctrl.trace_half_width,
+              ctrl.trace_clearance_class_no)) {
+            return extendedPoint;
+          }
         }
       }
+      return null;
     }
     
     double startTestLen = Math.min(totalLen, maxLen);
