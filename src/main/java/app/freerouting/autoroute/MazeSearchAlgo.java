@@ -84,9 +84,9 @@ public class MazeSearchAlgo {
           app.freerouting.geometry.planar.FloatPoint pin_center_float = ctrl.fanout_start_pin_center.to_float();
           boolean onStartLayer = p_element.next_room != null && p_element.next_room.get_layer() == ctrl.fanout_start_pin_layer;
           if (onStartLayer) {
-            double maxLen = (ctrl.settings.fanout != null && ctrl.settings.fanout.maxEscapeLengthUm != null)
-                ? ctrl.settings.fanout.maxEscapeLengthUm : 3000.0;
-            double resolution = autoroute_engine.board.communication.get_resolution(app.freerouting.board.Unit.UM);
+            double maxLen = (ctrl.settings.fanout != null && ctrl.settings.fanout.maxEscapeLengthMm != null)
+                ? ctrl.settings.fanout.maxEscapeLengthMm : 3.0;
+            double resolution = autoroute_engine.board.communication.get_resolution(app.freerouting.board.Unit.MM);
             app.freerouting.geometry.planar.FloatPoint entry_point = p_element.shape_entry.a.middle_point(p_element.shape_entry.b);
             double dist = entry_point.distance(pin_center_float);
             if (dist > maxLen * resolution) {
@@ -94,9 +94,9 @@ public class MazeSearchAlgo {
             }
           }
           if (p_element.door instanceof ExpansionDrill drill) {
-            double minLen = (ctrl.settings.fanout != null && ctrl.settings.fanout.minEscapeLengthUm != null)
-                ? ctrl.settings.fanout.minEscapeLengthUm : 500.0;
-            double resolution = autoroute_engine.board.communication.get_resolution(app.freerouting.board.Unit.UM);
+            double minLen = (ctrl.settings.fanout != null && ctrl.settings.fanout.minEscapeLengthMm != null)
+                ? ctrl.settings.fanout.minEscapeLengthMm : 0.5;
+            double resolution = autoroute_engine.board.communication.get_resolution(app.freerouting.board.Unit.MM);
             double drillDist = drill.location.to_float().distance(pin_center_float);
             if (drillDist < minLen * resolution) {
               return false;

@@ -109,10 +109,10 @@ public class DefaultSettings implements SettingsSource {
         settings.fanout.maxPasses = 20;
         settings.fanout.maxMillisecondsPerPin = 10000L;
         settings.fanout.ripupAllowed = true;
-        settings.fanout.minEscapeLengthUm = 500.0;
-        settings.fanout.maxEscapeLengthUm = 5000.0;
-        settings.fanout.startViaDiameterUm = 200.0;
-        settings.fanout.endViaDiameterUm = 250.0;
+        settings.fanout.minEscapeLengthMm = 0.5;
+        settings.fanout.maxEscapeLengthMm = 5.0;
+        settings.fanout.startViaDiameterMm = 0.200;
+        settings.fanout.endViaDiameterMm = 0.250;
         settings.fanout.pinSortingOrder = "outer_first";
 
         // Optimizer defaults

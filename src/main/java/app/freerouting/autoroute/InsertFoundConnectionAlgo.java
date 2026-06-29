@@ -49,22 +49,24 @@ public class InsertFoundConnectionAlgo {
         && p_connection.connection_items.stream().allMatch(item -> item.layer == p_connection.start_layer);
     boolean is_fanout_drill_end = p_ctrl.is_fanout && p_connection.target_item == null;
     int connection_item_index = 0;
+    boolean landingViaSegmentProcessed = false;
+    boolean landingViaInserted = false;
     for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
       LocateFoundConnectionAlgoAnyAngle.ResultItem item_to_insert = curr_new_item;
-      if (p_ctrl.is_fanout && curr_new_item.layer == p_connection.start_layer) {
-        double resolution = p_board.communication.get_resolution(app.freerouting.board.Unit.UM);
-        double minEscapeLengthUm = (p_ctrl.settings.fanout != null && p_ctrl.settings.fanout.minEscapeLengthUm != null)
-            ? p_ctrl.settings.fanout.minEscapeLengthUm : 500.0;
-        double maxEscapeLengthUm = (p_ctrl.settings.fanout != null && p_ctrl.settings.fanout.maxEscapeLengthUm != null)
-            ? p_ctrl.settings.fanout.maxEscapeLengthUm : 5000.0;
-        double minLen = minEscapeLengthUm * resolution;
-        double maxLen = maxEscapeLengthUm * resolution;
 
-        if (is_same_layer_fanout) {
-          double targetLen = minLen;
-          IntPoint[] truncated = truncateCorners(curr_new_item.corners, targetLen);
-          item_to_insert = new LocateFoundConnectionAlgoAnyAngle.ResultItem(truncated, curr_new_item.layer);
-        } else if (p_ctrl.is_fanout && curr_layer != curr_new_item.layer) {
+      if (p_ctrl.is_fanout && curr_new_item.layer == p_connection.start_layer) {
+        double resolution = p_board.communication.get_resolution(app.freerouting.board.Unit.MM);
+        double minEscapeLengthMm = (p_ctrl.settings.fanout != null && p_ctrl.settings.fanout.minEscapeLengthMm != null)
+            ? p_ctrl.settings.fanout.minEscapeLengthMm : 0.5;
+        double maxEscapeLengthMm = (p_ctrl.settings.fanout != null && p_ctrl.settings.fanout.maxEscapeLengthMm != null)
+            ? p_ctrl.settings.fanout.maxEscapeLengthMm : 5.0;
+        double minLen = minEscapeLengthMm * resolution;
+        double maxLen = maxEscapeLengthMm * resolution;
+
+        boolean isLandingViaSegment = curr_layer != curr_new_item.layer && !landingViaSegmentProcessed;
+
+        if (isLandingViaSegment) {
+          landingViaSegmentProcessed = true;
           ViaInfo end_via_info = p_board.get_fanout_end_via_info(p_ctrl.net_no, curr_new_item.layer, p_ctrl.settings);
           if (end_via_info == null) {
             FRLogger.debug("InsertFoundConnectionAlgo: end via info not found for net #" + p_ctrl.net_no);
@@ -76,6 +78,10 @@ public class InsertFoundConnectionAlgo {
             viaLoc = curr_new_item.corners[0];
           }
           IntPoint[] truncated = truncateCornersAtPoint(curr_new_item.corners, viaLoc);
+          item_to_insert = new LocateFoundConnectionAlgoAnyAngle.ResultItem(truncated, curr_new_item.layer);
+        } else if (is_same_layer_fanout) {
+          double targetLen = minLen;
+          IntPoint[] truncated = truncateCorners(curr_new_item.corners, targetLen);
           item_to_insert = new LocateFoundConnectionAlgoAnyAngle.ResultItem(truncated, curr_new_item.layer);
         }
       }
@@ -91,16 +97,26 @@ public class InsertFoundConnectionAlgo {
             + ", start=" + formatPoint(startCorner)
             + ", end=" + formatPoint(endCorner));
       }
-      if (p_ctrl.is_fanout && item_to_insert.layer == p_connection.start_layer && curr_layer != item_to_insert.layer) {
-        // curr_layer comes from the ExpansionDrill section index and may differ from the trace
-        // layer; insert_via() would span too many layers.  Use a single-layer stub instead.
-        if (!new_instance.insert_fanout_end_via(item_to_insert.corners[0], item_to_insert.layer)) {
-          FRLogger.debug("InsertFoundConnectionAlgo: fanout end via failed for net #" + p_ctrl.net_no);
+      if (p_ctrl.is_fanout && curr_layer != item_to_insert.layer) {
+        if (!landingViaInserted) {
+          landingViaInserted = true;
+          // Landing via at the end of the escape wire
+          if (!new_instance.insert_fanout_end_via(item_to_insert.corners[0], item_to_insert.layer)) {
+            FRLogger.debug("InsertFoundConnectionAlgo: fanout end via failed for net #" + p_ctrl.net_no);
+            return null;
+          }
+        } else {
+          // Starting via or intermediate via
+          if (!new_instance.insert_via(item_to_insert.corners[0], curr_layer, item_to_insert.layer)) {
+            FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
+            return null;
+          }
+        }
+      } else if (curr_layer != item_to_insert.layer) {
+        if (!new_instance.insert_via(item_to_insert.corners[0], curr_layer, item_to_insert.layer)) {
+          FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
           return null;
         }
-      } else if (!new_instance.insert_via(item_to_insert.corners[0], curr_layer, item_to_insert.layer)) {
-        FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
-        return null;
       }
       curr_layer = item_to_insert.layer;
       if (!new_instance.insert_trace(item_to_insert)) {
@@ -627,13 +643,32 @@ public class InsertFoundConnectionAlgo {
       totalLen += corners[i].to_float().distance(corners[i+1].to_float());
     }
     
+    if (totalLen < minLen && corners.length >= 2) {
+      IntPoint p1 = corners[1];
+      IntPoint p2 = corners[0];
+      double dx = p2.x - p1.x;
+      double dy = p2.y - p1.y;
+      double dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > 0.1) {
+        double needed = minLen - totalLen;
+        int extX = (int) Math.round(p2.x + (needed / dist) * dx);
+        int extY = (int) Math.round(p2.y + (needed / dist) * dy);
+        IntPoint extendedPoint = new IntPoint(extX, extY);
+        if (ForcedViaAlgo.check(via_info, extendedPoint, net_no_arr, ctrl.max_shove_trace_recursion_depth,
+            ctrl.max_shove_via_recursion_depth, board, ctrl.trace_half_width,
+            ctrl.trace_clearance_class_no)) {
+          return extendedPoint;
+        }
+      }
+    }
+    
     double startTestLen = Math.min(totalLen, maxLen);
     if (startTestLen < minLen) {
       startTestLen = minLen;
     }
     
-    double resolution = board.communication.get_resolution(app.freerouting.board.Unit.UM);
-    double step = 200.0 * resolution; // test every 200 um
+    double resolution = board.communication.get_resolution(app.freerouting.board.Unit.MM);
+    double step = 0.2 * resolution; // test every 0.2 mm (200 um)
     
     for (double testLen = startTestLen; testLen >= minLen; testLen -= step) {
       Point p = getPointAtLength(corners, testLen);
@@ -703,7 +738,11 @@ public class InsertFoundConnectionAlgo {
     }
     
     if (!cutFound) {
-      newCorners.add(cutPoint);
+      if (newCorners.get(newCorners.size() - 1).equals(corners[0])) {
+        newCorners.set(newCorners.size() - 1, cutPoint);
+      } else {
+        newCorners.add(cutPoint);
+      }
     }
     
     java.util.Collections.reverse(newCorners);

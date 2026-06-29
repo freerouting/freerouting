@@ -585,10 +585,12 @@ public class Pin extends DrillItem implements Serializable {
 
     Component component = board.components.get(this.get_component_no());
     Padstack padstack = this.get_padstack();
-    String hover_info = tm.getText("pin") + " : " + tm.getText("component_2") + " " + component.name + " " + tm.getText("pin_2") + " " + component
-        .get_package()
-        .get_pin(this.pin_no).name + " " + tm.getText("padstack") + " " + padstack.name + " " + this.get_connectable_item_hover_info(p_locale);
-    return hover_info;
+    String component_name = component.name;
+    String pin_name = component.get_package().get_pin(this.pin_no).name;
+    String padstack_name = padstack.name;
+    String connInfo = this.get_connectable_item_hover_info(p_locale);
+
+    return tm.getText("pin_hover_info", component_name, pin_name, padstack_name, connInfo);
   }
 
   /**

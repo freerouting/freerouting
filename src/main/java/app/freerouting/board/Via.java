@@ -248,11 +248,12 @@ public class Via extends DrillItem implements Serializable {
   public String get_hover_info(Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    String hover_info =
-        tm.getText("via") + " " + tm.getText("padstack") + " : " + padstack.name + " " + tm.getText("layer") + " " + padstack.from_layer() + " " + tm.getText("to") + " " + tm.getText("layer") + " "
-            + padstack.to_layer() + " " + this.get_connectable_item_hover_info(p_locale);
+    String from_layer = this.board.layer_structure.arr[this.first_layer()].name;
+    String to_layer = this.board.layer_structure.arr[this.last_layer()].name;
+    String padstack_name = padstack.name;
+    String connInfo = this.get_connectable_item_hover_info(p_locale);
 
-    return hover_info;
+    return tm.getText("via_hover_info", padstack_name, from_layer, to_layer, connInfo);
   }
 
   @Override

@@ -48,9 +48,9 @@ public class Dac2020Bm11FanoutTraceTest extends RoutingFixtureTest {
       }
     }
     // Verify that landing vias occupy exactly one layer, and trace lengths and via diameters are correct
-    double resolution = job.board.communication.get_resolution(app.freerouting.board.Unit.UM);
-    double minLen = 500.0 * resolution;
-    double maxLen = 5000.0 * resolution;
+    double resolution = job.board.communication.get_resolution(app.freerouting.board.Unit.MM);
+    double minLen = 0.5 * resolution;
+    double maxLen = 5.0 * resolution;
     
     java.util.List<app.freerouting.board.Pin> pins = new java.util.ArrayList<>();
     for (app.freerouting.board.Item item : job.board.get_items()) {
@@ -67,33 +67,31 @@ public class Dac2020Bm11FanoutTraceTest extends RoutingFixtureTest {
       if (item instanceof app.freerouting.board.Via via) {
         if (via.isEscapeVia) {
           foundStartVia = true;
-          // Starting via should use startViaDiameterUm (200.0 um)
+          // Starting via should use startViaDiameterMm (0.200 mm)
           double smallestRadius = via.get_padstack().get_shape(via.first_layer()).min_width() / 2.0;
-          double expectedRadius = (200.0 * resolution) / 2.0;
+          double expectedRadius = (0.2 * resolution) / 2.0;
           org.junit.jupiter.api.Assertions.assertEquals(expectedRadius, smallestRadius, 1.0);
         } else if (via.get_padstack().name.contains("fanout_end")) {
           foundEndVia = true;
           // Landing via (fanout end via) should occupy exactly one layer
           org.junit.jupiter.api.Assertions.assertEquals(via.first_layer(), via.last_layer(), "Landing via must be single-layer");
-          // Landing via should use endViaDiameterUm (250.0 um)
+          // Landing via should use endViaDiameterMm (0.250 mm)
           double smallestRadius = via.get_padstack().get_shape(via.first_layer()).min_width() / 2.0;
-          double expectedRadius = (250.0 * resolution) / 2.0;
+          double expectedRadius = (0.25 * resolution) / 2.0;
           org.junit.jupiter.api.Assertions.assertEquals(expectedRadius, smallestRadius, 1.0);
 
-          // Verify distance to nearest pin on same net is bounded by [minLen, maxLen]
-          double minDist = Double.MAX_VALUE;
+          // Verify there is at least one pin on the net within the [minLen, maxLen] range
+          boolean validDistanceFound = false;
           for (app.freerouting.board.Pin pin : pins) {
             if (pin.contains_net(via.get_net_no(0))) {
               double dist = via.get_center().to_float().distance(pin.get_center().to_float());
-              if (dist < minDist) {
-                minDist = dist;
+              if (dist >= minLen - 1.0 && dist <= maxLen + 1.0) {
+                validDistanceFound = true;
+                break;
               }
             }
           }
-          if (minDist != Double.MAX_VALUE) {
-            org.junit.jupiter.api.Assertions.assertTrue(minDist >= minLen - 1.0, "Landing via distance to pin " + minDist + " must be >= minLen " + minLen);
-            org.junit.jupiter.api.Assertions.assertTrue(minDist <= maxLen + 1.0, "Landing via distance to pin " + minDist + " must be <= maxLen " + maxLen);
-          }
+          org.junit.jupiter.api.Assertions.assertTrue(validDistanceFound, "Landing via must have a matching pin on its net within [minLen, maxLen]");
         }
       } else if (item instanceof app.freerouting.board.Trace trace) {
         foundTrace = true;

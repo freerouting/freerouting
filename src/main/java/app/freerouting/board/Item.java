@@ -1099,13 +1099,15 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
   public String get_net_hover_info(Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    String net_hover_info = "";
+    StringBuilder sb = new StringBuilder();
     for (int i = 0; i < this.net_count(); i++) {
-      net_hover_info += tm.getText("net") + " : ";
+      if (i > 0) {
+        sb.append("<br>");
+      }
       Net curr_net = board.rules.nets.get(this.get_net_no(i));
-      net_hover_info += curr_net.name;
+      sb.append(tm.getText("net_hover_info", curr_net.name));
     }
-    return net_hover_info;
+    return sb.toString();
   }
 
   /**

@@ -1561,8 +1561,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
     app.freerouting.core.Padstack source_pad = shape_source.get_padstack();
     String suffix = "_fanout_end_" + p_layer;
-    if (routerSettings.fanout != null && routerSettings.fanout.endViaDiameterUm != null) {
-      suffix += "_" + Math.round(routerSettings.fanout.endViaDiameterUm);
+    if (routerSettings.fanout != null && routerSettings.fanout.endViaDiameterMm != null) {
+      suffix += "_" + Math.round(routerSettings.fanout.endViaDiameterMm * 1000.0);
     }
     String via_name = shape_source.get_name().replaceAll("\\[\\d+-\\d+\\]", "[" + p_layer + "-" + p_layer + "]");
     if (via_name.equals(shape_source.get_name())) {
@@ -1582,9 +1582,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       int boardLayers = source_pad.board_layer_count();
       app.freerouting.geometry.planar.ConvexShape[] new_shapes = new app.freerouting.geometry.planar.ConvexShape[boardLayers];
       app.freerouting.geometry.planar.ConvexShape layer_shape = source_pad.get_shape(p_layer);
-      if (routerSettings.fanout != null && routerSettings.fanout.endViaDiameterUm != null) {
-        double resolution = this.communication.get_resolution(app.freerouting.board.Unit.UM);
-        double target_dia = routerSettings.fanout.endViaDiameterUm * resolution;
+      if (routerSettings.fanout != null && routerSettings.fanout.endViaDiameterMm != null) {
+        double resolution = this.communication.get_resolution(app.freerouting.board.Unit.MM);
+        double target_dia = routerSettings.fanout.endViaDiameterMm * resolution;
         double current_dia = layer_shape.min_width();
         layer_shape = layer_shape.offset((target_dia - current_dia) / 2.0);
       }
@@ -1626,8 +1626,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     int[] net_no_arr = new int[] { pinNetNo };
 
     app.freerouting.core.Padstack padstack = p_via_info.get_padstack();
-    if (routerSettings.fanout != null && routerSettings.fanout.startViaDiameterUm != null) {
-      padstack = getOrResizedFanoutPadstack(padstack, routerSettings.fanout.startViaDiameterUm);
+    if (routerSettings.fanout != null && routerSettings.fanout.startViaDiameterMm != null) {
+      padstack = getOrResizedFanoutPadstack(padstack, routerSettings.fanout.startViaDiameterMm);
     }
 
     // Use insert_escape_via() to get a Via marked with isEscapeVia=true and escapeViaSmdLayer.
@@ -1684,10 +1684,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     return new_via;
   }
 
-  private app.freerouting.core.Padstack getOrResizedFanoutPadstack(app.freerouting.core.Padstack p_orig, double p_target_dia_um) {
-    double resolution = this.communication.get_resolution(app.freerouting.board.Unit.UM);
-    double target_dia = p_target_dia_um * resolution;
-    String new_name = p_orig.name + "_fanout_" + Math.round(p_target_dia_um);
+  private app.freerouting.core.Padstack getOrResizedFanoutPadstack(app.freerouting.core.Padstack p_orig, double p_target_dia_mm) {
+    double resolution = this.communication.get_resolution(app.freerouting.board.Unit.MM);
+    double target_dia = p_target_dia_mm * resolution;
+    String new_name = p_orig.name + "_fanout_" + Math.round(p_target_dia_mm * 1000.0);
 
     // Check if it already exists
     app.freerouting.core.Padstack existing = this.library.padstacks.get(new_name);
