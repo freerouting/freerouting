@@ -45,10 +45,41 @@ public class InsertFoundConnectionAlgo {
     }
     int curr_layer = p_connection.target_layer;
     InsertFoundConnectionAlgo new_instance = new InsertFoundConnectionAlgo(p_board, p_ctrl);
+    boolean is_same_layer_fanout = p_ctrl.is_fanout && (p_connection.start_layer == p_connection.target_layer)
+        && p_connection.connection_items.stream().allMatch(item -> item.layer == p_connection.start_layer);
     boolean is_fanout_drill_end = p_ctrl.is_fanout && p_connection.target_item == null;
     int connection_item_index = 0;
     for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
       LocateFoundConnectionAlgoAnyAngle.ResultItem item_to_insert = curr_new_item;
+      if (p_ctrl.is_fanout && curr_new_item.layer == p_connection.start_layer) {
+        double resolution = p_board.communication.get_resolution(app.freerouting.board.Unit.UM);
+        double minEscapeLengthUm = (p_ctrl.settings.fanout != null && p_ctrl.settings.fanout.minEscapeLengthUm != null)
+            ? p_ctrl.settings.fanout.minEscapeLengthUm : 500.0;
+        double maxEscapeLengthUm = (p_ctrl.settings.fanout != null && p_ctrl.settings.fanout.maxEscapeLengthUm != null)
+            ? p_ctrl.settings.fanout.maxEscapeLengthUm : 5000.0;
+        double minLen = minEscapeLengthUm * resolution;
+        double maxLen = maxEscapeLengthUm * resolution;
+
+        if (is_same_layer_fanout) {
+          double targetLen = minLen;
+          IntPoint[] truncated = truncateCorners(curr_new_item.corners, targetLen);
+          item_to_insert = new LocateFoundConnectionAlgoAnyAngle.ResultItem(truncated, curr_new_item.layer);
+        } else if (p_ctrl.is_fanout && curr_layer != curr_new_item.layer) {
+          ViaInfo end_via_info = p_board.get_fanout_end_via_info(p_ctrl.net_no, curr_new_item.layer, p_ctrl.settings);
+          if (end_via_info == null) {
+            FRLogger.debug("InsertFoundConnectionAlgo: end via info not found for net #" + p_ctrl.net_no);
+            return null;
+          }
+          Point viaLoc = findValidViaLocation(curr_new_item.corners, minLen, maxLen, p_board, p_ctrl, end_via_info);
+          if (viaLoc == null) {
+            FRLogger.debug("InsertFoundConnectionAlgo: no valid landing via location found within escape bounds for net #" + p_ctrl.net_no + ". Falling back to original via location.");
+            viaLoc = curr_new_item.corners[0];
+          }
+          IntPoint[] truncated = truncateCornersAtPoint(curr_new_item.corners, viaLoc);
+          item_to_insert = new LocateFoundConnectionAlgoAnyAngle.ResultItem(truncated, curr_new_item.layer);
+        }
+      }
+
       if (true) {
         Point startCorner = item_to_insert.corners.length > 0 ? item_to_insert.corners[0] : null;
         Point endCorner = item_to_insert.corners.length > 0
@@ -60,7 +91,7 @@ public class InsertFoundConnectionAlgo {
             + ", start=" + formatPoint(startCorner)
             + ", end=" + formatPoint(endCorner));
       }
-      if (is_fanout_drill_end && connection_item_index == 0 && curr_layer != item_to_insert.layer) {
+      if (p_ctrl.is_fanout && item_to_insert.layer == p_connection.start_layer && curr_layer != item_to_insert.layer) {
         // curr_layer comes from the ExpansionDrill section index and may differ from the trace
         // layer; insert_via() would span too many layers.  Use a single-layer stub instead.
         if (!new_instance.insert_fanout_end_via(item_to_insert.corners[0], item_to_insert.layer)) {
@@ -81,7 +112,7 @@ public class InsertFoundConnectionAlgo {
     if (!new_instance.insert_via(new_instance.last_corner, curr_layer, p_connection.start_layer)) {
       return null;
     }
-    if (p_connection.target_item instanceof PolylineTrace to_trace) {
+    if (!is_same_layer_fanout && p_connection.target_item instanceof PolylineTrace to_trace) {
       if (new_instance.first_corner != null) {
         p_board.connect_to_trace(new_instance.first_corner, to_trace, p_ctrl.trace_half_width[p_connection.start_layer], p_ctrl.trace_clearance_class_no);
       } else {
@@ -550,5 +581,148 @@ public class InsertFoundConnectionAlgo {
       return "(" + intPoint.x + "," + intPoint.y + ")";
     }
     return point.toString();
+  }
+
+  private static IntPoint[] truncateCorners(IntPoint[] corners, double targetLen) {
+    if (corners == null || corners.length < 2) {
+      return corners;
+    }
+    double currentLen = 0.0;
+    java.util.List<IntPoint> newCorners = new java.util.ArrayList<>();
+    newCorners.add(corners[corners.length - 1]); // start at the pin (end of array)
+    
+    for (int i = corners.length - 2; i >= 0; i--) {
+      IntPoint p1 = corners[i + 1];
+      IntPoint p2 = corners[i];
+      double dx = p2.x - p1.x;
+      double dy = p2.y - p1.y;
+      double dist = Math.sqrt(dx * dx + dy * dy);
+      if (currentLen + dist >= targetLen) {
+        // Cut the segment here
+        double ratio = (targetLen - currentLen) / dist;
+        int cutX = (int) Math.round(p1.x + ratio * dx);
+        int cutY = (int) Math.round(p1.y + ratio * dy);
+        newCorners.add(new IntPoint(cutX, cutY));
+        break;
+      } else {
+        newCorners.add(p2);
+        currentLen += dist;
+      }
+    }
+    
+    if (newCorners.size() == 1) {
+      return corners;
+    }
+    
+    // Reverse newCorners to maintain the order (from target/via to start pin)
+    java.util.Collections.reverse(newCorners);
+    return newCorners.toArray(new IntPoint[0]);
+  }
+
+  private static Point findValidViaLocation(IntPoint[] corners, double minLen, double maxLen, RoutingBoard board, AutorouteControl ctrl, ViaInfo via_info) {
+    int[] net_no_arr = new int[] { ctrl.net_no };
+    
+    double totalLen = 0.0;
+    for (int i = 0; i < corners.length - 1; i++) {
+      totalLen += corners[i].to_float().distance(corners[i+1].to_float());
+    }
+    
+    double startTestLen = Math.min(totalLen, maxLen);
+    if (startTestLen < minLen) {
+      startTestLen = minLen;
+    }
+    
+    double resolution = board.communication.get_resolution(app.freerouting.board.Unit.UM);
+    double step = 200.0 * resolution; // test every 200 um
+    
+    for (double testLen = startTestLen; testLen >= minLen; testLen -= step) {
+      Point p = getPointAtLength(corners, testLen);
+      if (p != null) {
+        if (ForcedViaAlgo.check(via_info, p, net_no_arr, ctrl.max_shove_trace_recursion_depth,
+            ctrl.max_shove_via_recursion_depth, board, ctrl.trace_half_width,
+            ctrl.trace_clearance_class_no)) {
+          return p;
+        }
+      }
+      if (testLen == minLen) {
+        break;
+      }
+      if (testLen - step < minLen) {
+        testLen = minLen + step;
+      }
+    }
+    
+    return null;
+  }
+
+  private static Point getPointAtLength(IntPoint[] corners, double targetLen) {
+    if (corners == null || corners.length == 0) {
+      return null;
+    }
+    if (corners.length == 1 || targetLen <= 0) {
+      return corners[corners.length - 1];
+    }
+    double currentLen = 0.0;
+    for (int i = corners.length - 2; i >= 0; i--) {
+      IntPoint p1 = corners[i + 1];
+      IntPoint p2 = corners[i];
+      double dx = p2.x - p1.x;
+      double dy = p2.y - p1.y;
+      double dist = Math.sqrt(dx * dx + dy * dy);
+      if (currentLen + dist >= targetLen) {
+        double ratio = (targetLen - currentLen) / dist;
+        int cutX = (int) Math.round(p1.x + ratio * dx);
+        int cutY = (int) Math.round(p1.y + ratio * dy);
+        return new IntPoint(cutX, cutY);
+      }
+      currentLen += dist;
+    }
+    return corners[0];
+  }
+
+  private static IntPoint[] truncateCornersAtPoint(IntPoint[] corners, Point targetPoint) {
+    if (corners == null || corners.length < 2 || !(targetPoint instanceof IntPoint cutPoint)) {
+      return corners;
+    }
+    
+    java.util.List<IntPoint> newCorners = new java.util.ArrayList<>();
+    newCorners.add(corners[corners.length - 1]); // pin
+    
+    boolean cutFound = false;
+    for (int i = corners.length - 2; i >= 0; i--) {
+      IntPoint p1 = corners[i + 1];
+      IntPoint p2 = corners[i];
+      
+      if (isPointOnSegment(cutPoint, p1, p2)) {
+        newCorners.add(cutPoint);
+        cutFound = true;
+        break;
+      } else {
+        newCorners.add(p2);
+      }
+    }
+    
+    if (!cutFound) {
+      newCorners.add(cutPoint);
+    }
+    
+    java.util.Collections.reverse(newCorners);
+    return newCorners.toArray(new IntPoint[0]);
+  }
+
+  private static boolean isPointOnSegment(IntPoint p, IntPoint a, IntPoint b) {
+    double crossProduct = (p.y - a.y) * (b.x - a.x) - (p.x - a.x) * (b.y - a.y);
+    if (Math.abs(crossProduct) > 1e-2) {
+      return false;
+    }
+    double dotProduct = (p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y);
+    if (dotProduct < 0) {
+      return false;
+    }
+    double squaredLength = (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y);
+    if (dotProduct > squaredLength) {
+      return false;
+    }
+    return true;
   }
 }

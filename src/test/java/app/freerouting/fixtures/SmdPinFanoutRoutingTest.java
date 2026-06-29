@@ -12,6 +12,9 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);
     testSettingsSource.setJobTimeoutString("00:02:00");
+    testSettingsSource.setFanoutEnabled(true);
+    testSettingsSource.getSettings().fanout.startViaDiameterUm = 250.0;
+    testSettingsSource.getSettings().fanout.endViaDiameterUm = 250.0;
 
     RoutingJob job = GetRoutingJob("Issue558-dev-board.dsn", testSettingsSource);
     RunRoutingJob(job);
@@ -25,6 +28,8 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
     testSettingsSource.setOptimizerEnabled(false);
     testSettingsSource.setFanoutEnabled(true);
     testSettingsSource.setJobTimeoutString("00:02:00");
+    testSettingsSource.getSettings().fanout.startViaDiameterUm = 250.0;
+    testSettingsSource.getSettings().fanout.endViaDiameterUm = 250.0;
 
     RoutingJob job = GetRoutingJob("Issue558-dev-board.dsn", testSettingsSource);
     RunRoutingJob(job);
@@ -41,6 +46,9 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);
     testSettingsSource.setJobTimeoutString("00:02:00");
+    testSettingsSource.setFanoutEnabled(true);
+    testSettingsSource.getSettings().fanout.startViaDiameterUm = 250.0;
+    testSettingsSource.getSettings().fanout.endViaDiameterUm = 250.0;
 
     RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm06.dsn", testSettingsSource);
     RunRoutingJob(job);
@@ -56,6 +64,9 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);
     testSettingsSource.setJobTimeoutString("00:02:00");
+    testSettingsSource.setFanoutEnabled(true);
+    testSettingsSource.getSettings().fanout.startViaDiameterUm = 250.0;
+    testSettingsSource.getSettings().fanout.endViaDiameterUm = 250.0;
 
     RoutingJob job = GetRoutingJob("Issue508-DAC2020_bm10.dsn", testSettingsSource);
     RunRoutingJob(job);
@@ -67,6 +78,9 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);
     testSettingsSource.setJobTimeoutString("00:01:00");
+    testSettingsSource.setFanoutEnabled(true);
+    testSettingsSource.getSettings().fanout.startViaDiameterUm = 250.0;
+    testSettingsSource.getSettings().fanout.endViaDiameterUm = 250.0;
 
     RoutingJob job = GetRoutingJob("SMD-routing-issue-demo.dsn", testSettingsSource);
     RunRoutingJob(job);

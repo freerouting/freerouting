@@ -981,6 +981,19 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     int pin_layer = p_pin.first_layer();
     Set<Item> pin_connected_set = p_pin.get_connected_set(pin_net_no);
     for (Item curr_item : pin_connected_set) {
+      if (curr_item instanceof Via via) {
+        boolean has_trace = false;
+        for (Item contact : via.get_normal_contacts()) {
+          if (contact instanceof Trace) {
+            has_trace = true;
+            break;
+          }
+        }
+        if (has_trace) {
+          return new AutorouteAttemptResult(AutorouteAttemptState.ALREADY_CONNECTED,
+              "The pin '" + p_pin + "' is already connected.");
+        }
+      }
       if (curr_item.first_layer() != pin_layer || curr_item.last_layer() != pin_layer) {
         if (curr_item instanceof Via via) {
           boolean has_trace = false;
@@ -1547,13 +1560,21 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
 
     app.freerouting.core.Padstack source_pad = shape_source.get_padstack();
+    String suffix = "_fanout_end_" + p_layer;
+    if (routerSettings.fanout != null && routerSettings.fanout.endViaDiameterUm != null) {
+      suffix += "_" + Math.round(routerSettings.fanout.endViaDiameterUm);
+    }
     String via_name = shape_source.get_name().replaceAll("\\[\\d+-\\d+\\]", "[" + p_layer + "-" + p_layer + "]");
     if (via_name.equals(shape_source.get_name())) {
-      via_name = shape_source.get_name() + "_fanout_end_" + p_layer;
+      via_name = shape_source.get_name() + suffix;
+    } else {
+      via_name = via_name + suffix;
     }
     String pad_name = source_pad.name.replaceAll("\\[\\d+-\\d+\\]", "[" + p_layer + "-" + p_layer + "]");
     if (pad_name.equals(source_pad.name)) {
-      pad_name = source_pad.name + "_fanout_end_" + p_layer;
+      pad_name = source_pad.name + suffix;
+    } else {
+      pad_name = pad_name + suffix;
     }
 
     app.freerouting.core.Padstack end_padstack = this.library.padstacks.get(pad_name);
@@ -1561,9 +1582,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       int boardLayers = source_pad.board_layer_count();
       app.freerouting.geometry.planar.ConvexShape[] new_shapes = new app.freerouting.geometry.planar.ConvexShape[boardLayers];
       app.freerouting.geometry.planar.ConvexShape layer_shape = source_pad.get_shape(p_layer);
-      if (routerSettings.fanout != null && routerSettings.fanout.viaDiameterUm != null) {
+      if (routerSettings.fanout != null && routerSettings.fanout.endViaDiameterUm != null) {
         double resolution = this.communication.get_resolution(app.freerouting.board.Unit.UM);
-        double target_dia = routerSettings.fanout.viaDiameterUm * resolution;
+        double target_dia = routerSettings.fanout.endViaDiameterUm * resolution;
         double current_dia = layer_shape.min_width();
         layer_shape = layer_shape.offset((target_dia - current_dia) / 2.0);
       }
@@ -1605,8 +1626,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     int[] net_no_arr = new int[] { pinNetNo };
 
     app.freerouting.core.Padstack padstack = p_via_info.get_padstack();
-    if (routerSettings.fanout != null && routerSettings.fanout.viaDiameterUm != null) {
-      padstack = getOrResizedFanoutPadstack(padstack, routerSettings.fanout.viaDiameterUm);
+    if (routerSettings.fanout != null && routerSettings.fanout.startViaDiameterUm != null) {
+      padstack = getOrResizedFanoutPadstack(padstack, routerSettings.fanout.startViaDiameterUm);
     }
 
     // Use insert_escape_via() to get a Via marked with isEscapeVia=true and escapeViaSmdLayer.
