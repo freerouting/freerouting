@@ -20,6 +20,68 @@ Without a fanout pass, the maze-search algorithm must solve both "escape from th
 
 ## Current State
 
+### Fanout escape-length plan (2026-06-29, `DAC2020_bm11.dsn`)
+
+Investigation and fix work for `[minEscapeLengthMm, maxEscapeLengthMm]` enforcement during fanout insertion. Tracked separately from the bm05 drill-page mismatch work below, but shares the same fanout pipeline.
+
+#### Problem statement
+
+Fanout was reporting `ROUTED` while `isPinEscaped()` returned false (`viaNoTrace=1`, `reason=no_contacts`), causing mass rollbacks and low escape rates. Separately, some visible traces (e.g. BAT_GND at 34 mm in the GUI) appear longer than `maxEscapeLengthMm`.
+
+#### Root causes identified
+
+| Issue | Effect |
+|---|---|
+| Length bounds applied only to the pin-layer stub, not the full pin→landing path | Landing vias placed at wrong geometry; pin→landing distance ignored on routing-layer segments |
+| Dangerous `corners[0]` fallback when no valid landing in range | Invalid inserts → `ROUTED` but not escaped |
+| Failed fanout attempts left ripped neighbour traces removed | Collateral “deleted routes”, success rate collapse |
+| `maxEscapeLengthMm` enforced only for drill-end fanout (`target_item == null`) | Paths routed to an existing target item skip `FanoutEscapePath` truncation entirely |
+| Maze vs insertion use different default fallbacks (3.0 mm vs 5.0 mm max) | Paths found by maze may be untrimmable at insert |
+| GUI trace “Length” may measure a **main-router** segment (via-to-via), not pin→landing escape stub | Apparent violations of max even when landing placement is correct |
+
+#### Completed ✅
+
+| Phase | Work | Key files |
+|---|---|---|
+| **A — Correct geometry** | `FanoutEscapePath`: cumulative pin-outward path, shortest valid landing in `[min, max]`, split at correct layer | `FanoutEscapePath.java`, `InsertFoundConnectionAlgo.java` |
+| **B — Safe failure** | Per-pin `generate_snapshot()` / `undo()` rollback; removed `corners[0]` fallback; `ROUTED` but not escaped → rollback | `BatchFanout.java` |
+| **E — Diagnostics** | `FANOUT_DIAG` events: `escape_path_plan`, `escape_path_landing`, `fanout_attempt_rollback`, session counters | `FanoutDiagnostics.java`, maze/insert integration |
+
+**bm11 result after A+B:** escape rate **157/157 (100%)**, `routedButNotEscaped=0`, `escapeViaRollbacks=0` (fixture run).
+
+#### Design decision — `maxEscapeLengthMm` removed (2026-06-29)
+
+**Removed entirely.** Only `minEscapeLengthMm` is enforced (hard). No upper bound on escape length.
+
+| Setting | Policy |
+|---|---|
+| `minEscapeLengthMm` | **Hard** — maze rejects drills closer than min; insertion extends/truncates to shortest valid point ≥ min; post-insert rollback if stub too short |
+| Pull-tight protection | **Not applied** — post-fanout shortening is acceptable |
+
+#### Completed since plan (2026-06-30) ✅
+
+- Skip already-escaped pins in `fanout_pass` (`isPinFullyEscaped`) — prevents extending escapes on every pass
+- `maxEscapeLengthMm` removed from settings, maze, and insertion
+- Min-only `FanoutEscapePath.planEscape` for all fanout paths (drill-end + connect-to-target)
+- Post-route validation: rollback if escape stub &lt; `minEscapeLengthMm`
+- All fanout diagnostics consolidated to `FRLogger.trace(..., "FANOUT_DIAG", ...)`
+
+#### Remaining work 🔲
+
+```
+1. bm05 drill-page compensated-tree fix + U27 parity (separate track)
+2. Fixture tests: assert per-pin escape stub ≥ minEscapeLengthMm on bm11
+3. Optional: cumulative pin→landing distance metric (not just trace.get_length())
+```
+
+#### Cancelled ❌
+
+| Phase | Reason |
+|---|---|
+| **D — Post-opt trace protection** | Pull-tight shortening after fanout is acceptable; no `minLen` guard on `PullTightAlgo` / `normalize_traces`. |
+
+---
+
 ### Recent developments (2026-05-20, latest iteration)
 
 #### v1.9 FANOUT_DIAG log parity
@@ -836,7 +898,13 @@ Remaining sequence:
 | `src/main/java/app/freerouting/autoroute/BatchAutorouter.java` | Modify | ✅ Done | Sub-issue #5: fanout pre-pass wired before main passes |
 | `src/main/java/app/freerouting/settings/RouterSettings.java` | Modify | ✅ Done | Sub-issue #3: `public Boolean withFanout;` |
 | `src/main/java/app/freerouting/settings/sources/DefaultSettings.java` | Modify | ✅ Done | Sub-issue #3: `withFanout = true` |
-| `src/main/java/app/freerouting/autoroute/MazeSearchAlgo.java` | Modify | ✅ Done | Added `first_room_mismatch_detail` per-page-scan event with full geometric context |
+| `src/main/java/app/freerouting/autoroute/FanoutEscapePath.java` | **New** | ✅ Done | Pin-outward combined path + landing plan (Phase A) |
+| `src/main/java/app/freerouting/autoroute/FanoutDiagnostics.java` | **New** | ✅ Done | Structured `FANOUT_DIAG` logging (Phase E) |
+| `src/main/java/app/freerouting/autoroute/InsertFoundConnectionAlgo.java` | Modify | 🟡 Partial | Phase A+B landing plan + no fallback; max-null policy 🔲 |
+| `src/main/java/app/freerouting/autoroute/BatchFanout.java` | Modify | ✅ Done | Transactional snapshot/undo per pin (Phase B) |
+| `src/main/java/app/freerouting/autoroute/MazeSearchAlgo.java` | Modify | 🟡 Partial | Length reject counters logged; shared min/max helper 🔲 |
+| `src/main/java/app/freerouting/settings/sources/DefaultSettings.java` | Modify | 🔲 Open | Consider `maxEscapeLengthMm = null` (min-only default) |
+| `src/test/java/app/freerouting/fixtures/Dac2020Bm11FanoutTraceTest.java` | Modify | 🔲 Open | Fix NPE; min-only / optional-max assertions |
 | `docs/settings.md` | Modify | 🔲 Open | Document `withFanout` setting (if missing/incomplete) |
 | `fixtures/SMD-routing-issue-demo.dsn` | **New** | ✅ Created | Minimal synthetic 2-layer all-SMD board (6-pin QFN + 0603s, 6 nets); proves bug with score `0.00` |
 | `src/test/java/app/freerouting/fixtures/Dac2020Bm05RoutingTest.java` | **New** | ✅ Created | Primary bm05 acceptance gate (4 escalating tests) |

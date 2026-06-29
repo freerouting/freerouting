@@ -6,6 +6,7 @@ import app.freerouting.autoroute.AutorouteControl;
 import app.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
 import app.freerouting.autoroute.AutorouteEngine;
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
+import app.freerouting.autoroute.FanoutDiagnostics;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.Stoppable;
@@ -31,8 +32,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -1036,6 +1040,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       return Double.compare(dist_sq1, dist_sq2);
     });
 
+    double maxFanoutConnectDistance = FanoutDiagnostics.resolveMinLenBoardUnits(routerSettings,
+        this.communication.get_resolution(app.freerouting.board.Unit.MM));
+    List<Item> fanout_connect_targets = filterFanoutConnectTargets(sorted_unconnected_list, pin_center,
+        maxFanoutConnectDistance);
+
     AutorouteControl ctrl_settings = new AutorouteControl(this, pin_net_no, routerSettings);
     ctrl_settings.is_fanout = true;
     Component pin_component = this.components.get(p_pin.get_component_no());
@@ -1046,7 +1055,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     ctrl_settings.fanout_start_pin_center = p_pin.get_center();
     ctrl_settings.fanout_start_pin_layer = p_pin.first_layer();
+    ctrl_settings.fanout_drill_only = fanout_connect_targets.isEmpty();
+    ctrl_settings.fanout_destination_items = fanout_connect_targets.isEmpty()
+        ? Set.of()
+        : new HashSet<>(fanout_connect_targets);
     ctrl_settings.remove_unconnected_vias = false;
+    ctrl_settings.vias_allowed = true;
     if (p_ripup_costs >= 0) {
       ctrl_settings.ripup_allowed = true;
       ctrl_settings.ripup_costs = p_ripup_costs;
@@ -1055,59 +1069,68 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     AutorouteEngine curr_autoroute_engine = init_autoroute(pin_net_no, ctrl_settings.trace_clearance_class_no,
         p_stoppable_thread, p_time_limit, false);
 
-    AutorouteAttemptResult result = null;
-    ctrl_settings.vias_allowed = false;
-    if (sorted_unconnected_list.size() <= 4) {
-      if (!sorted_unconnected_list.isEmpty()) {
-        // 1. Try to route to the closest target first
-        Item closest_target = sorted_unconnected_list.get(0);
-        result = curr_autoroute_engine.autoroute_connection(pin_connected_set, Set.of(closest_target),
-            ctrl_settings, ripped_item_list, null); // null: costs not needed here
-
-        // 2. If that fails and we have other targets, fall back to searching the entire unconnected set at once
-        if (result.state != AutorouteAttemptState.ROUTED && result.state != AutorouteAttemptState.ALREADY_CONNECTED && sorted_unconnected_list.size() > 1) {
-          result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
-              ctrl_settings, ripped_item_list, null);
-        }
-      }
-    } else {
-      // For large nets (e.g. power/ground/busses), route to the entire unconnected set at once to avoid CPU thrashing
-      result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
-          ctrl_settings, ripped_item_list, null);
-    }
-
-    if (result == null || (result.state != AutorouteAttemptState.ROUTED && result.state != AutorouteAttemptState.ALREADY_CONNECTED)) {
-      ctrl_settings.vias_allowed = true;
+    // Use the full unconnected set for maze distance guidance; fanout_destination_items still limits
+    // which TargetItemExpansionDoors may complete so distant pads are never connected during fanout.
+    List<Item> mazeRoutingTargets = fanout_connect_targets.isEmpty()
+        ? List.of()
+        : sorted_unconnected_list;
+    AutorouteAttemptResult result = attemptFanoutConnection(curr_autoroute_engine, pin_connected_set,
+        mazeRoutingTargets, ctrl_settings, ripped_item_list);
+    if ((result == null || (result.state != AutorouteAttemptState.ROUTED
+        && result.state != AutorouteAttemptState.ALREADY_CONNECTED)) && !fanout_connect_targets.isEmpty()) {
+      // Near-target connect failed — fall back to a drill-end escape stub instead of abandoning the pin.
+      ctrl_settings.fanout_drill_only = true;
+      ctrl_settings.fanout_destination_items = Set.of();
       ripped_item_list.clear();
-      if (sorted_unconnected_list.size() <= 4) {
-        if (!sorted_unconnected_list.isEmpty()) {
-          // 1. Try to route to the closest target first
-          Item closest_target = sorted_unconnected_list.get(0);
-          result = curr_autoroute_engine.autoroute_connection(pin_connected_set, Set.of(closest_target),
-              ctrl_settings, ripped_item_list, null); // null: costs not needed here
-
-          // 2. If that fails and we have other targets, fall back to searching the entire unconnected set at once
-          if (result.state != AutorouteAttemptState.ROUTED && result.state != AutorouteAttemptState.ALREADY_CONNECTED && sorted_unconnected_list.size() > 1) {
-            result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
-                ctrl_settings, ripped_item_list, null);
-          }
-        }
-      } else {
-        // For large nets (e.g. power/ground/busses), route to the entire unconnected set at once to avoid CPU thrashing
-        result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
-            ctrl_settings, ripped_item_list, null);
-      }
+      result = attemptFanoutConnection(curr_autoroute_engine, pin_connected_set, List.of(), ctrl_settings,
+          ripped_item_list);
     }
 
     if (result == null) {
       result = new AutorouteAttemptResult(AutorouteAttemptState.FAILED, "No target items to route connection.");
     }
-    if (result.state == AutorouteAttemptState.ROUTED) {
-      final int time_limit_to_prevent_endless_loop = 1000;
-      opt_changed_area(new int[0], null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
-          p_stoppable_thread, time_limit_to_prevent_endless_loop);
+    return result;
+  }
+
+  /**
+   * Fanout only connects to unconnected items within {@code minEscapeLengthMm} of the pin.
+   * Distant targets are left for the main router; an empty result triggers drill-end escape.
+   */
+  private static List<Item> filterFanoutConnectTargets(List<Item> sortedTargets, FloatPoint pinCenter,
+      double maxDistance) {
+    List<Item> result = new ArrayList<>();
+    double maxDistanceSq = maxDistance * maxDistance;
+    for (Item item : sortedTargets) {
+      IntBox box = item.bounding_box();
+      double cx = (box.ll.x + box.ur.x) / 2.0;
+      double cy = (box.ll.y + box.ur.y) / 2.0;
+      double dx = cx - pinCenter.x;
+      double dy = cy - pinCenter.y;
+      if (dx * dx + dy * dy <= maxDistanceSq + 1.0) {
+        result.add(item);
+      }
     }
     return result;
+  }
+
+  private static AutorouteAttemptResult attemptFanoutConnection(AutorouteEngine engine, Set<Item> pinConnectedSet,
+      List<Item> fanoutConnectTargets, AutorouteControl ctrl, SortedSet<Item> rippedItemList) {
+    if (fanoutConnectTargets.size() <= 4) {
+      if (!fanoutConnectTargets.isEmpty()) {
+        Item closestTarget = fanoutConnectTargets.getFirst();
+        AutorouteAttemptResult result = engine.autoroute_connection(pinConnectedSet, Set.of(closestTarget),
+            ctrl, rippedItemList, null);
+        if (result.state != AutorouteAttemptState.ROUTED && result.state != AutorouteAttemptState.ALREADY_CONNECTED
+            && fanoutConnectTargets.size() > 1) {
+          return engine.autoroute_connection(pinConnectedSet, new HashSet<>(fanoutConnectTargets), ctrl,
+              rippedItemList, null);
+        }
+        return result;
+      }
+      return engine.autoroute_connection(pinConnectedSet, Set.of(), ctrl, rippedItemList, null);
+    }
+    return engine.autoroute_connection(pinConnectedSet, new HashSet<>(fanoutConnectTargets), ctrl, rippedItemList,
+        null);
   }
 
   /**

@@ -74,6 +74,13 @@ public class AutorouteControl {
   /** Source pin layer for targeted fanout diagnostics and limits. */
   public int fanout_start_pin_layer = -1;
   /**
+   * When true, fanout completes only at {@link ExpansionDrill} destinations (escape stub),
+   * not at {@link TargetItemExpansionDoor}s.
+   */
+  public boolean fanout_drill_only;
+  /** Explicit fanout connect targets; other reachable net items must not complete the search. */
+  public java.util.Set<app.freerouting.board.Item> fanout_destination_items;
+  /**
    * Normally true, if the autorouter contains no fanout pass
    */
   public boolean remove_unconnected_vias;

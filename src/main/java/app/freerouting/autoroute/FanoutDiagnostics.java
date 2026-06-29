@@ -11,18 +11,22 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.RouterSettings;
 import java.util.Collection;
 import java.util.Set;
 
 /**
- * Structured diagnostic logging for fanout routing. All messages use the {@code FANOUT_DIAG}
- * prefix so they can be filtered from trace logs for post-run validation.
+ * Structured diagnostic logging and helpers for fanout routing. Messages use the {@code FANOUT_DIAG}
+ * operation tag and are emitted via {@link FRLogger#trace} so they can be filtered from trace logs.
  */
 public final class FanoutDiagnostics {
+
+  private static final String OPERATION_TAG = "FANOUT_DIAG";
 
   private static int escapeViaRollbackCount;
   private static int fanoutPassFailedCount;
   private static int routedButNotEscapedCount;
+  private static int belowMinEscapeLengthCount;
 
   private FanoutDiagnostics() {
   }
@@ -31,6 +35,7 @@ public final class FanoutDiagnostics {
     escapeViaRollbackCount = 0;
     fanoutPassFailedCount = 0;
     routedButNotEscapedCount = 0;
+    belowMinEscapeLengthCount = 0;
   }
 
   public static void incrementEscapeViaRollback() {
@@ -45,14 +50,20 @@ public final class FanoutDiagnostics {
     routedButNotEscapedCount++;
   }
 
+  public static void incrementBelowMinEscapeLength() {
+    belowMinEscapeLengthCount++;
+  }
+
   public static void logSessionSummary() {
-    if (escapeViaRollbackCount == 0 && fanoutPassFailedCount == 0 && routedButNotEscapedCount == 0) {
+    if (escapeViaRollbackCount == 0 && fanoutPassFailedCount == 0 && routedButNotEscapedCount == 0
+        && belowMinEscapeLengthCount == 0) {
       return;
     }
-    FRLogger.info("FANOUT_DIAG event=session_summary"
+    FRLogger.trace("FanoutDiagnostics", OPERATION_TAG, "event=session_summary"
         + ", escapeViaRollbacks=" + escapeViaRollbackCount
         + ", fanoutPassFailed=" + fanoutPassFailedCount
-        + ", routedButNotEscaped=" + routedButNotEscapedCount);
+        + ", routedButNotEscaped=" + routedButNotEscapedCount
+        + ", belowMinEscapeLength=" + belowMinEscapeLengthCount, "", new Point[0]);
   }
 
   public static boolean isEnabled(AutorouteControl ctrl) {
@@ -66,31 +77,83 @@ public final class FanoutDiagnostics {
     return ctrl.fanout_start_pin_name;
   }
 
-  public static void log(AutorouteControl ctrl, String event, String message) {
+  public static double resolveMinLenMm(RouterSettings settings) {
+    if (settings != null && settings.fanout != null && settings.fanout.minEscapeLengthMm != null) {
+      return settings.fanout.minEscapeLengthMm;
+    }
+    return 3.5;
+  }
+
+  public static double resolveMinLenBoardUnits(RouterSettings settings, double resolution) {
+    return resolveMinLenMm(settings) * resolution;
+  }
+
+  /**
+   * Emits a fanout diagnostic trace tied to the active autoroute pin context.
+   */
+  public static void trace(AutorouteControl ctrl, String method, String event, String message) {
     if (!isEnabled(ctrl)) {
       return;
     }
-    FRLogger.trace("FANOUT_DIAG event=" + event
+    FRLogger.trace(method, OPERATION_TAG, "event=" + event
         + ", pin=" + pinLabel(ctrl)
         + ", net=" + ctrl.net_no
-        + ", " + message);
+        + ", " + message, pinLabel(ctrl), pinCenterPoints(ctrl));
   }
 
-  public static void logInfo(AutorouteControl ctrl, String event, String message) {
-    if (!isEnabled(ctrl)) {
-      return;
-    }
-    FRLogger.info("FANOUT_DIAG event=" + event
-        + ", pin=" + pinLabel(ctrl)
-        + ", net=" + ctrl.net_no
-        + ", " + message);
-  }
-
-  public static void logInfo(String pinName, int netNo, String event, String message) {
-    FRLogger.info("FANOUT_DIAG event=" + event
+  /**
+   * Emits a fanout diagnostic trace for batch-level events (no active {@link AutorouteControl}).
+   */
+  public static void trace(String method, String pinName, int netNo, String event, String message, Point... points) {
+    FRLogger.trace(method, OPERATION_TAG, "event=" + event
         + ", pin=" + pinName
         + ", net=" + netNo
-        + ", " + message);
+        + ", " + message, pinName, points);
+  }
+
+  /**
+   * Returns the escape stub length in millimetres for a pin that has a direct trace exit, or
+   * {@code -1} when no measurable escape stub exists.
+   */
+  public static double measurePinEscapeLengthMm(Pin pin, RoutingBoard board) {
+    double resolution = board.communication.get_resolution(app.freerouting.board.Unit.MM);
+    if (resolution <= 0) {
+      return -1.0;
+    }
+    double bestMm = -1.0;
+    for (Item contact : pin.get_normal_contacts()) {
+      if (contact instanceof PolylineTrace trace) {
+        if (!trace.clearance_violations().isEmpty()) {
+          continue;
+        }
+        bestMm = Math.max(bestMm, trace.get_length() / resolution);
+      } else if (contact instanceof Via via) {
+        if (!via.clearance_violations().isEmpty()) {
+          continue;
+        }
+        for (Item viaContact : via.get_normal_contacts()) {
+          if (viaContact instanceof PolylineTrace viaTrace && viaContact.clearance_violations().isEmpty()) {
+            bestMm = Math.max(bestMm, viaTrace.get_length() / resolution);
+          }
+        }
+      }
+    }
+    return bestMm;
+  }
+
+  public static boolean meetsMinEscapeLength(Pin pin, RoutingBoard board, RouterSettings settings) {
+    double measuredMm = measurePinEscapeLengthMm(pin, board);
+    if (measuredMm < 0) {
+      return true;
+    }
+    return measuredMm + 1e-3 >= resolveMinLenMm(settings);
+  }
+
+  private static Point[] pinCenterPoints(AutorouteControl ctrl) {
+    if (ctrl == null || ctrl.fanout_start_pin_center == null) {
+      return new Point[0];
+    }
+    return new Point[] { ctrl.fanout_start_pin_center };
   }
 
   public static String formatPoint(Point point) {
@@ -167,9 +230,6 @@ public final class FanoutDiagnostics {
     return FRLogger.defaultFloatFormat.format(boardUnits / resolution) + "mm";
   }
 
-  /**
-   * Describes why {@link BatchFanout} would consider a pin not escaped.
-   */
   public static String describePinEscapeFailure(Pin pin) {
     Set<Item> contacts = pin.get_normal_contacts();
     if (contacts.isEmpty()) {
@@ -227,16 +287,17 @@ public final class FanoutDiagnostics {
     return sb.toString();
   }
 
-  /**
-   * Summarises escape-wire geometry on the board after a fanout attempt.
-   */
   public static String describePinEscapeGeometry(Pin pin, RoutingBoard board) {
     double resolution = board.communication.get_resolution(app.freerouting.board.Unit.MM);
     FloatPoint pinCenter = pin.get_center().to_float();
     StringBuilder sb = new StringBuilder();
     Set<Item> contacts = pin.get_normal_contacts();
     sb.append("pinCenter=").append(formatPoint(pin.get_center()))
-        .append(", pinLayer=").append(pin.first_layer());
+        .append(", pinLayer=").append(pin.first_layer())
+        .append(", measuredEscapeLen=")
+        .append(measurePinEscapeLengthMm(pin, board) < 0
+            ? "n/a"
+            : FRLogger.defaultFloatFormat.format(measurePinEscapeLengthMm(pin, board)) + "mm");
     for (Item contact : contacts) {
       if (contact instanceof Trace trace) {
         double traceLen = trace.get_length();
