@@ -63,13 +63,6 @@ public class FanoutSettings implements Serializable, Cloneable {
   public Double minEscapeLengthMm;
 
   /**
-   * The maximum physical escape wire length (in millimeters). The search tree expansion
-   * and via placement during fanout will be restricted to this distance.
-   */
-  @SerializedName("max_escape_length_mm")
-  public Double maxEscapeLengthMm;
-
-  /**
    * The diameter of starting/escape vias used inside the pins during the fanout/escape stage (in millimeters).
    * Default is 0.300 mm.
    */
