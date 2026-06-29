@@ -156,6 +156,7 @@ public class BatchFanout {
             fullPinName, new app.freerouting.geometry.planar.Point[]{curr_pin.board_pin.get_center()});
 
         this.routing_board.start_marking_changed_area();
+        this.routing_board.generate_snapshot();
         long pinStartNanos = System.nanoTime();
         AutorouteAttemptResult curr_result =
             this.routing_board.fanout(
@@ -165,21 +166,38 @@ public class BatchFanout {
                 this.thread,
                 time_limit);
         long pinDurationMs = (System.nanoTime() - pinStartNanos) / 1_000_000L;
+        boolean escapedAfterRoute = isPinEscaped(curr_pin.board_pin);
+        boolean keepAttempt = switch (curr_result.state) {
+          case ROUTED -> escapedAfterRoute;
+          case ALREADY_CONNECTED, NO_UNCONNECTED_NETS -> true;
+          default -> false;
+        };
+        if (keepAttempt) {
+          this.routing_board.pop_snapshot();
+        } else {
+          rollbackFanoutAttempt(fullPinName, netNo, curr_result.state.name());
+        }
 
         switch (curr_result.state) {
           case ROUTED       -> {
-             ++routed_count;
-             boolean escapedAfterRoute = isPinEscaped(curr_pin.board_pin);
+             if (keepAttempt) {
+               ++routed_count;
+             } else {
+               ++not_routed_count;
+             }
              FRLogger.trace("BatchFanout.fanout_pass", "pin_routed",
                  "pin=" + fullPinName
                      + ", net=" + netNo
                      + ", durationMs=" + pinDurationMs
                      + ", targetCount=" + targetCount
-                     + ", isPinEscaped=" + escapedAfterRoute,
+                     + ", isPinEscaped=" + escapedAfterRoute
+                     + ", kept=" + keepAttempt,
                  fullPinName, new app.freerouting.geometry.planar.Point[]{curr_pin.board_pin.get_center()});
              if (!escapedAfterRoute) {
+               FanoutDiagnostics.incrementRoutedButNotEscaped();
                FanoutDiagnostics.logInfo(fullPinName, netNo, "pass_routed_but_not_escaped",
                    "pass=" + (p_pass_no + 1)
+                       + ", rolledBack=true"
                        + ", " + FanoutDiagnostics.describePinEscapeFailure(curr_pin.board_pin)
                        + ", geometry=" + FanoutDiagnostics.describePinEscapeGeometry(curr_pin.board_pin, this.routing_board));
              }
@@ -363,8 +381,10 @@ public class BatchFanout {
           }
 
           this.routing_board.start_marking_changed_area();
+          this.routing_board.generate_snapshot();
           Via insertedVia = this.routing_board.insertEscapeVia(boardPin, viaInfo, this.settings);
           if (insertedVia == null) {
+            this.routing_board.pop_snapshot();
             FRLogger.info("BatchFanout.runEscapeViaPhase: Via insertion FAILED for pin " + pinName
                 + " targetLayer=" + targetLayer + " via=" + viaInfo.get_name() + " (foreign-net obstacle at pin center)");
             continue;
@@ -398,10 +418,12 @@ public class BatchFanout {
             }
             if (escaped) {
               FRLogger.info("BatchFanout.runEscapeViaPhase: Successfully escaped pin " + pinName + " on layer " + targetLayer + " using via: " + viaInfo.get_name());
+              this.routing_board.pop_snapshot();
               pinEscaped = true;
               successfullyEscalated++;
               break;
             }
+            rollbackFanoutAttempt(pinName, netNo, result.state.name());
           } else if (result.state == AutorouteAttemptState.ALREADY_CONNECTED) {
             boolean escaped = isPinEscaped(boardPin);
             FRLogger.info("BatchFanout.runEscapeViaPhase: fanout() returned ALREADY_CONNECTED for pin " + pinName
@@ -415,6 +437,7 @@ public class BatchFanout {
             }
             if (escaped) {
               FRLogger.info("BatchFanout.runEscapeViaPhase: Successfully escaped pin " + pinName + " on layer " + targetLayer + " using via: " + viaInfo.get_name());
+              this.routing_board.pop_snapshot();
               pinEscaped = true;
               successfullyEscalated++;
               break;
@@ -428,14 +451,16 @@ public class BatchFanout {
                       + ", " + FanoutDiagnostics.describePinEscapeFailure(boardPin)
                       + ", geometry=" + FanoutDiagnostics.describePinEscapeGeometry(boardPin, this.routing_board)
                       + ", viaViolations=" + sb);
-              FRLogger.info("BatchFanout.runEscapeViaPhase: Pin " + pinName + " is not escaped despite ALREADY_CONNECTED; removing temporary escape via. Violations:" + sb.toString());
-              this.routing_board.remove_item(insertedVia);
+              FRLogger.info("BatchFanout.runEscapeViaPhase: Pin " + pinName + " is not escaped despite ALREADY_CONNECTED; rolling back escape via attempt. Violations:" + sb);
             }
+            rollbackFanoutAttempt(pinName, netNo, result.state.name());
+          } else {
+            rollbackFanoutAttempt(pinName, netNo, result.state.name());
           }
 
           FanoutDiagnostics.incrementEscapeViaRollback();
-          FRLogger.info("BatchFanout.runEscapeViaPhase: Removing escape via for pin " + pinName + " targetLayer=" + targetLayer + " and trying next layer");
-          this.routing_board.remove_item(insertedVia);
+          FRLogger.info("BatchFanout.runEscapeViaPhase: Rolled back escape via attempt for pin " + pinName
+              + " targetLayer=" + targetLayer + ", trying next layer");
         }
         totalEscalated++;
       }
@@ -516,6 +541,13 @@ public class BatchFanout {
    *   <li>The pin is directly connected to a {@link ConductionArea} (plane/pour).</li>
    * </ul>
    */
+  private void rollbackFanoutAttempt(String pinName, int netNo, String reason) {
+    Set<Integer> changedNets = new java.util.TreeSet<>();
+    if (this.routing_board.undo(changedNets)) {
+      FanoutDiagnostics.logInfo(pinName, netNo, "fanout_attempt_rollback", "reason=" + reason);
+    }
+  }
+
   private boolean isPinEscaped(app.freerouting.board.Pin pin) {
     Set<Item> contacts = pin.get_normal_contacts();
     for (Item contact : contacts) {

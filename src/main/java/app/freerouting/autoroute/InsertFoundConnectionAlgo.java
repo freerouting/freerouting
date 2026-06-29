@@ -64,77 +64,39 @@ public class InsertFoundConnectionAlgo {
               + ", pinCenter=" + FanoutDiagnostics.formatPoint(p_ctrl.fanout_start_pin_center)
               + ", " + FanoutDiagnostics.formatConnectionItems(p_connection.connection_items));
     }
-    int connection_item_index = 0;
-    boolean landingViaSegmentProcessed = false;
-    boolean landingViaInserted = false;
-    for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
-      LocateFoundConnectionAlgoAnyAngle.ResultItem item_to_insert = curr_new_item;
+    double minEscapeLengthMm = (p_ctrl.settings.fanout != null && p_ctrl.settings.fanout.minEscapeLengthMm != null)
+        ? p_ctrl.settings.fanout.minEscapeLengthMm : 0.5;
+    double maxEscapeLengthMm = (p_ctrl.settings.fanout != null && p_ctrl.settings.fanout.maxEscapeLengthMm != null)
+        ? p_ctrl.settings.fanout.maxEscapeLengthMm : 5.0;
+    double minLen = minEscapeLengthMm * resolution;
+    double maxLen = maxEscapeLengthMm * resolution;
 
-      if (p_ctrl.is_fanout && curr_new_item.layer == p_connection.start_layer) {
-        double minEscapeLengthMm = (p_ctrl.settings.fanout != null && p_ctrl.settings.fanout.minEscapeLengthMm != null)
-            ? p_ctrl.settings.fanout.minEscapeLengthMm : 0.5;
-        double maxEscapeLengthMm = (p_ctrl.settings.fanout != null && p_ctrl.settings.fanout.maxEscapeLengthMm != null)
-            ? p_ctrl.settings.fanout.maxEscapeLengthMm : 5.0;
-        double minLen = minEscapeLengthMm * resolution;
-        double maxLen = maxEscapeLengthMm * resolution;
-
-        boolean isLandingViaSegment = curr_layer != curr_new_item.layer && !landingViaSegmentProcessed;
-
-        if (isLandingViaSegment) {
-          landingViaSegmentProcessed = true;
-          ViaInfo end_via_info = p_board.get_fanout_end_via_info(p_ctrl.net_no, curr_new_item.layer, p_ctrl.settings);
-          if (end_via_info == null) {
-            FRLogger.debug("InsertFoundConnectionAlgo: end via info not found for net #" + p_ctrl.net_no);
-            FanoutDiagnostics.log(p_ctrl, "landing_via_info_missing",
-                "segmentLayer=" + curr_new_item.layer);
-            return null;
-          }
-          double segmentLen = FanoutDiagnostics.polylineLengthFromPin(curr_new_item.corners, p_ctrl.fanout_start_pin_center);
-          FanoutDiagnostics.log(p_ctrl, "landing_via_search_start",
-              "segmentLayer=" + curr_new_item.layer
-                  + ", currLayer=" + curr_layer
-                  + ", segmentLen=" + FanoutDiagnostics.formatLengthMm(segmentLen, resolution)
-                  + ", minLen=" + FanoutDiagnostics.formatLengthMm(minLen, resolution)
-                  + ", maxLen=" + FanoutDiagnostics.formatLengthMm(maxLen, resolution)
-                  + ", originalViaLoc=" + FanoutDiagnostics.formatPoint(curr_new_item.corners[0])
-                  + ", viaInfo=" + end_via_info.get_name());
-          Point viaLoc = findValidViaLocation(curr_new_item.corners, minLen, maxLen, p_board, p_ctrl, end_via_info);
-          if (viaLoc == null) {
-            FRLogger.debug("InsertFoundConnectionAlgo: no valid landing via location found within escape bounds for net #" + p_ctrl.net_no + ". Falling back to original via location.");
-            FanoutDiagnostics.log(p_ctrl, "landing_via_fallback",
-                "reason=no_valid_location_in_bounds"
-                    + ", fallbackLoc=" + FanoutDiagnostics.formatPoint(curr_new_item.corners[0])
-                    + ", segmentLen=" + FanoutDiagnostics.formatLengthMm(segmentLen, resolution));
-            viaLoc = curr_new_item.corners[0];
-          }
-          FanoutDiagnostics.log(p_ctrl, "landing_via_chosen",
-              "viaLoc=" + FanoutDiagnostics.formatPoint(viaLoc)
-                  + ", segmentLayer=" + curr_new_item.layer
-                  + ", pinToViaDist=" + FanoutDiagnostics.formatLengthMm(
-                      p_ctrl.fanout_start_pin_center == null ? 0.0
-                          : p_ctrl.fanout_start_pin_center.to_float().distance(viaLoc.to_float()),
-                      resolution)
-                  + ", segmentLenBeforeTruncate=" + FanoutDiagnostics.formatLengthMm(segmentLen, resolution)
-                  + ", withinMin=" + (segmentLen >= minLen)
-                  + ", withinMax=" + (segmentLen <= maxLen));
-          IntPoint[] truncated = truncateCornersAtPoint(curr_new_item.corners, viaLoc);
-          double truncatedLen = FanoutDiagnostics.polylineLengthFromPin(truncated, p_ctrl.fanout_start_pin_center);
-          FanoutDiagnostics.log(p_ctrl, "landing_via_truncated",
-              "truncatedLen=" + FanoutDiagnostics.formatLengthMm(truncatedLen, resolution)
-                  + ", corners=" + truncated.length
-                  + ", path=" + FanoutDiagnostics.formatCorners(truncated));
-          item_to_insert = new LocateFoundConnectionAlgoAnyAngle.ResultItem(truncated, curr_new_item.layer);
-        } else if (is_same_layer_fanout) {
-          double targetLen = minLen;
-          IntPoint[] truncated = truncateCorners(curr_new_item.corners, targetLen);
-          double truncatedLen = FanoutDiagnostics.polylineLengthFromPin(truncated, p_ctrl.fanout_start_pin_center);
-          FanoutDiagnostics.log(p_ctrl, "same_layer_truncated",
-              "targetLen=" + FanoutDiagnostics.formatLengthMm(targetLen, resolution)
-                  + ", truncatedLen=" + FanoutDiagnostics.formatLengthMm(truncatedLen, resolution)
-                  + ", corners=" + truncated.length);
-          item_to_insert = new LocateFoundConnectionAlgoAnyAngle.ResultItem(truncated, curr_new_item.layer);
-        }
+    FanoutEscapePath.LandingPlan landingPlan = null;
+    java.util.List<LocateFoundConnectionAlgoAnyAngle.ResultItem> connectionItemsToInsert =
+        new java.util.ArrayList<>(p_connection.connection_items);
+    if (p_ctrl.is_fanout && is_fanout_drill_end) {
+      landingPlan = FanoutEscapePath.planLanding(
+          p_connection.connection_items, p_ctrl.fanout_start_pin_center, minLen, maxLen, p_board, p_ctrl);
+      if (landingPlan == null) {
+        FRLogger.debug("InsertFoundConnectionAlgo: no valid landing via location found within escape bounds for net #"
+            + p_ctrl.net_no);
+        return null;
       }
+      connectionItemsToInsert = landingPlan.truncatedItems();
+      FanoutDiagnostics.log(p_ctrl, "landing_via_chosen",
+          "viaLoc=" + FanoutDiagnostics.formatPoint(landingPlan.landingPoint())
+              + ", landingLayer=" + landingPlan.landingLayer()
+              + ", landingItemIndex=" + landingPlan.landingItemIndex()
+              + ", pinToViaDist=" + FanoutDiagnostics.formatLengthMm(landingPlan.landingLengthFromPin(), resolution)
+              + ", withinMin=" + (landingPlan.landingLengthFromPin() >= minLen)
+              + ", withinMax=" + (landingPlan.landingLengthFromPin() <= maxLen));
+    }
+
+    int connection_item_index = 0;
+    boolean landingViaInserted = false;
+    int itemIndex = 0;
+    for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : connectionItemsToInsert) {
+      LocateFoundConnectionAlgoAnyAngle.ResultItem item_to_insert = curr_new_item;
 
       if (true) {
         Point startCorner = item_to_insert.corners.length > 0 ? item_to_insert.corners[0] : null;
@@ -147,20 +109,17 @@ public class InsertFoundConnectionAlgo {
             + ", start=" + formatPoint(startCorner)
             + ", end=" + formatPoint(endCorner));
       }
-      if (p_ctrl.is_fanout && curr_layer != item_to_insert.layer) {
-        if (!landingViaInserted) {
-          landingViaInserted = true;
-          // Landing via at the end of the escape wire
-          if (!new_instance.insert_fanout_end_via(item_to_insert.corners[0], item_to_insert.layer)) {
-            FRLogger.debug("InsertFoundConnectionAlgo: fanout end via failed for net #" + p_ctrl.net_no);
-            return null;
-          }
-        } else {
-          // Starting via or intermediate via
-          if (!new_instance.insert_via(item_to_insert.corners[0], curr_layer, item_to_insert.layer)) {
-            FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
-            return null;
-          }
+      if (p_ctrl.is_fanout && is_fanout_drill_end && !landingViaInserted && landingPlan != null
+          && itemIndex == 0) {
+        landingViaInserted = true;
+        if (!new_instance.insert_fanout_end_via(landingPlan.landingPoint(), landingPlan.landingLayer())) {
+          FRLogger.debug("InsertFoundConnectionAlgo: fanout end via failed for net #" + p_ctrl.net_no);
+          return null;
+        }
+      } else if (p_ctrl.is_fanout && curr_layer != item_to_insert.layer) {
+        if (!new_instance.insert_via(item_to_insert.corners[0], curr_layer, item_to_insert.layer)) {
+          FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
+          return null;
         }
       } else if (curr_layer != item_to_insert.layer) {
         if (!new_instance.insert_via(item_to_insert.corners[0], curr_layer, item_to_insert.layer)) {
@@ -174,6 +133,7 @@ public class InsertFoundConnectionAlgo {
         return null;
       }
       connection_item_index++;
+      itemIndex++;
     }
     if (!new_instance.insert_via(new_instance.last_corner, curr_layer, p_connection.start_layer)) {
       return null;
@@ -642,200 +602,5 @@ public class InsertFoundConnectionAlgo {
       return "(" + intPoint.x + "," + intPoint.y + ")";
     }
     return point.toString();
-  }
-
-  private static IntPoint[] truncateCorners(IntPoint[] corners, double targetLen) {
-    if (corners == null || corners.length < 2) {
-      return corners;
-    }
-    double currentLen = 0.0;
-    java.util.List<IntPoint> newCorners = new java.util.ArrayList<>();
-    newCorners.add(corners[corners.length - 1]); // start at the pin (end of array)
-    
-    for (int i = corners.length - 2; i >= 0; i--) {
-      IntPoint p1 = corners[i + 1];
-      IntPoint p2 = corners[i];
-      double dx = p2.x - p1.x;
-      double dy = p2.y - p1.y;
-      double dist = Math.sqrt(dx * dx + dy * dy);
-      if (currentLen + dist >= targetLen) {
-        // Cut the segment here
-        double ratio = (targetLen - currentLen) / dist;
-        int cutX = (int) Math.round(p1.x + ratio * dx);
-        int cutY = (int) Math.round(p1.y + ratio * dy);
-        newCorners.add(new IntPoint(cutX, cutY));
-        break;
-      } else {
-        newCorners.add(p2);
-        currentLen += dist;
-      }
-    }
-    
-    if (newCorners.size() == 1) {
-      return corners;
-    }
-    
-    // Reverse newCorners to maintain the order (from target/via to start pin)
-    java.util.Collections.reverse(newCorners);
-    return newCorners.toArray(new IntPoint[0]);
-  }
-
-  private static Point findValidViaLocation(IntPoint[] corners, double minLen, double maxLen, RoutingBoard board, AutorouteControl ctrl, ViaInfo via_info) {
-    int[] net_no_arr = new int[] { ctrl.net_no };
-    double resolution = board.communication.get_resolution(app.freerouting.board.Unit.MM);
-
-    double totalLen = FanoutDiagnostics.polylineLengthFromPin(corners, ctrl.fanout_start_pin_center);
-    FanoutDiagnostics.log(ctrl, "via_location_search",
-        "mode=" + (totalLen < minLen ? "extend" : "truncate")
-            + ", totalLen=" + FanoutDiagnostics.formatLengthMm(totalLen, resolution)
-            + ", minLen=" + FanoutDiagnostics.formatLengthMm(minLen, resolution)
-            + ", maxLen=" + FanoutDiagnostics.formatLengthMm(maxLen, resolution));
-
-    if (totalLen < minLen && corners.length >= 2) {
-      IntPoint p1 = corners[1];
-      IntPoint p2 = corners[0];
-      double dx = p2.x - p1.x;
-      double dy = p2.y - p1.y;
-      double dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist > 0.1) {
-        double step = 0.2 * resolution;
-        int attempts = 0;
-        int passed = 0;
-        for (double testLen = minLen; testLen <= maxLen; testLen += step) {
-          attempts++;
-          double needed = testLen - totalLen;
-          int extX = (int) Math.round(p2.x + (needed / dist) * dx);
-          int extY = (int) Math.round(p2.y + (needed / dist) * dy);
-          IntPoint extendedPoint = new IntPoint(extX, extY);
-          boolean checkOk = ForcedViaAlgo.check(via_info, extendedPoint, net_no_arr, ctrl.max_shove_trace_recursion_depth,
-              ctrl.max_shove_via_recursion_depth, board, ctrl.trace_half_width,
-              ctrl.trace_clearance_class_no);
-          if (checkOk) {
-            passed++;
-            FanoutDiagnostics.log(ctrl, "via_location_found",
-                "strategy=extend, testLen=" + FanoutDiagnostics.formatLengthMm(testLen, resolution)
-                    + ", location=" + FanoutDiagnostics.formatPoint(extendedPoint)
-                    + ", attempts=" + attempts + ", passed=" + passed);
-            return extendedPoint;
-          }
-        }
-        FanoutDiagnostics.log(ctrl, "via_location_exhausted",
-            "strategy=extend, attempts=" + attempts + ", passed=" + passed);
-      }
-      return null;
-    }
-
-    double startTestLen = Math.min(totalLen, maxLen);
-    if (startTestLen < minLen) {
-      startTestLen = minLen;
-    }
-
-    double step = 0.2 * resolution;
-    int attempts = 0;
-    int passed = 0;
-
-    for (double testLen = startTestLen; testLen >= minLen; testLen -= step) {
-      attempts++;
-      Point p = getPointAtLength(corners, testLen);
-      if (p != null) {
-        boolean checkOk = ForcedViaAlgo.check(via_info, p, net_no_arr, ctrl.max_shove_trace_recursion_depth,
-            ctrl.max_shove_via_recursion_depth, board, ctrl.trace_half_width,
-            ctrl.trace_clearance_class_no);
-        if (checkOk) {
-          passed++;
-          FanoutDiagnostics.log(ctrl, "via_location_found",
-              "strategy=truncate, testLen=" + FanoutDiagnostics.formatLengthMm(testLen, resolution)
-                  + ", location=" + FanoutDiagnostics.formatPoint(p)
-                  + ", attempts=" + attempts + ", passed=" + passed);
-          return p;
-        }
-      }
-      if (testLen == minLen) {
-        break;
-      }
-      if (testLen - step < minLen) {
-        testLen = minLen + step;
-      }
-    }
-
-    FanoutDiagnostics.log(ctrl, "via_location_exhausted",
-        "strategy=truncate, attempts=" + attempts + ", passed=" + passed
-            + ", startTestLen=" + FanoutDiagnostics.formatLengthMm(startTestLen, resolution));
-    return null;
-  }
-
-  private static Point getPointAtLength(IntPoint[] corners, double targetLen) {
-    if (corners == null || corners.length == 0) {
-      return null;
-    }
-    if (corners.length == 1 || targetLen <= 0) {
-      return corners[corners.length - 1];
-    }
-    double currentLen = 0.0;
-    for (int i = corners.length - 2; i >= 0; i--) {
-      IntPoint p1 = corners[i + 1];
-      IntPoint p2 = corners[i];
-      double dx = p2.x - p1.x;
-      double dy = p2.y - p1.y;
-      double dist = Math.sqrt(dx * dx + dy * dy);
-      if (currentLen + dist >= targetLen) {
-        double ratio = (targetLen - currentLen) / dist;
-        int cutX = (int) Math.round(p1.x + ratio * dx);
-        int cutY = (int) Math.round(p1.y + ratio * dy);
-        return new IntPoint(cutX, cutY);
-      }
-      currentLen += dist;
-    }
-    return corners[0];
-  }
-
-  private static IntPoint[] truncateCornersAtPoint(IntPoint[] corners, Point targetPoint) {
-    if (corners == null || corners.length < 2 || !(targetPoint instanceof IntPoint cutPoint)) {
-      return corners;
-    }
-    
-    java.util.List<IntPoint> newCorners = new java.util.ArrayList<>();
-    newCorners.add(corners[corners.length - 1]); // pin
-    
-    boolean cutFound = false;
-    for (int i = corners.length - 2; i >= 0; i--) {
-      IntPoint p1 = corners[i + 1];
-      IntPoint p2 = corners[i];
-      
-      if (isPointOnSegment(cutPoint, p1, p2)) {
-        newCorners.add(cutPoint);
-        cutFound = true;
-        break;
-      } else {
-        newCorners.add(p2);
-      }
-    }
-    
-    if (!cutFound) {
-      if (newCorners.get(newCorners.size() - 1).equals(corners[0])) {
-        newCorners.set(newCorners.size() - 1, cutPoint);
-      } else {
-        newCorners.add(cutPoint);
-      }
-    }
-    
-    java.util.Collections.reverse(newCorners);
-    return newCorners.toArray(new IntPoint[0]);
-  }
-
-  private static boolean isPointOnSegment(IntPoint p, IntPoint a, IntPoint b) {
-    double crossProduct = (p.y - a.y) * (b.x - a.x) - (p.x - a.x) * (b.y - a.y);
-    if (Math.abs(crossProduct) > 1e-2) {
-      return false;
-    }
-    double dotProduct = (p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y);
-    if (dotProduct < 0) {
-      return false;
-    }
-    double squaredLength = (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y);
-    if (dotProduct > squaredLength) {
-      return false;
-    }
-    return true;
   }
 }
