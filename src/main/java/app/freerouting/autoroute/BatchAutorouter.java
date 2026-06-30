@@ -885,8 +885,11 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
 
     int currentUnrouted = calculateIncompleteCount(this.board);
-    job.logInfo("Auto-routing stage started on board '" + this.board.get_hash() + "' for "
-        + currentUnrouted + " unrouted item" + (currentUnrouted == 1 ? "" : "s") + ".");
+    boolean isRouterEnabled = this.settings.getRunRouter() && (this.settings.maxPasses == null || this.settings.maxPasses > 0);
+    if (isRouterEnabled) {
+      job.logInfo("Auto-routing stage started on board '" + this.board.get_hash() + "' for "
+          + currentUnrouted + " unrouted item" + (currentUnrouted == 1 ? "" : "s") + ".");
+    }
 
     int currentPass = 1;
     int consecutiveNoImprovementPasses = 0;

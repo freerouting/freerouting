@@ -490,9 +490,14 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
             .hide();
       }
 
+      boolean isRouterEnabled = routingJob.routerSettings.getRunRouter() && (routingJob.routerSettings.maxPasses == null || routingJob.routerSettings.maxPasses > 0);
       int threadCount = routingJob.routerSettings.maxThreads;
-      routingJob.logInfo("Starting routing of '" + routingJob.name + "' on "
-          + (threadCount == 1 ? "1 thread" : threadCount + " threads") + "...");
+      if (isRouterEnabled) {
+        routingJob.logInfo("Starting routing of '" + routingJob.name + "' on "
+            + (threadCount == 1 ? "1 thread" : threadCount + " threads") + "...");
+      } else if (routingJob.routerSettings.isFanoutEnabled()) {
+        routingJob.logInfo("Starting fanout of '" + routingJob.name + "'...");
+      }
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
 
       globalSettings.statistics.incrementJobsCompleted();
@@ -552,7 +557,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         currentPassNo = 1; // Placeholder
       }
 
-      boolean isRouterEnabled = routingJob.routerSettings.getRunRouter() && (routingJob.routerSettings.maxPasses == null || routingJob.routerSettings.maxPasses > 0);
       if (isRouterEnabled) {
         if (sessionStartTime != null) {
           String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
