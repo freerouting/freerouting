@@ -38,6 +38,26 @@ public class RoutingJobScheduler {
   public final LinkedList<RoutingJob> jobs = new LinkedList<>();
   private final int maxParallelJobs = 5;
 
+  // Retention limits for persisted job folders under <user-data>/data/<user>/.
+  // Without these the directory grows unbounded and concurrent runs exhaust the
+  // tmpfs inode pool backing java.io.tmpdir. Either limit triggers a purge.
+  // Override with FREEROUTING__DATA__RETENTION_HOURS / FREEROUTING__DATA__MAX_JOB_FOLDERS (0 = disabled).
+  private static final long retentionMillis = readLongEnv("FREEROUTING__DATA__RETENTION_HOURS", 24) * 3600_000L;
+  private static final int maxJobFoldersPerUser = (int) readLongEnv("FREEROUTING__DATA__MAX_JOB_FOLDERS", 100);
+
+  private static long readLongEnv(String name, long defaultValue) {
+    String v = System.getenv(name);
+    if (v == null || v.isBlank()) {
+      return defaultValue;
+    }
+    try {
+      return Long.parseLong(v.trim());
+    } catch (NumberFormatException e) {
+      FRLogger.warn("Invalid value '%s' for %s, using default %d.".formatted(v, name, defaultValue));
+      return defaultValue;
+    }
+  }
+
   // Private constructor to prevent instantiation
   private RoutingJobScheduler() {
     // start a loop to process the jobs on another thread
@@ -253,32 +273,41 @@ public class RoutingJobScheduler {
     // doesn't exist
     Files.createDirectories(userFolderPath);
 
+    // Purge old job folders before creating a new one so the data directory stays
+    // bounded and concurrent runs don't exhaust the filesystem's inodes.
+    purgeOldJobFolders(userFolderPath);
+
     // Check if we already have a directory that has a name with the ending of
-    // sessionFolder
-    Path sessionFolderPath = Files
-        .list(userFolderPath)
-        .filter(Files::isDirectory)
-        .filter(p -> p
-            .getFileName()
-            .toString()
-            .endsWith(sessionFolder))
-        .findFirst()
-        .orElse(null);
+    // sessionFolder. Streams over directories MUST be closed (try-with-resources),
+    // otherwise the directory file descriptor leaks under concurrency.
+    Path sessionFolderPath;
+    try (var dirs = Files.list(userFolderPath)) {
+      sessionFolderPath = dirs
+          .filter(Files::isDirectory)
+          .filter(p -> p
+              .getFileName()
+              .toString()
+              .endsWith(sessionFolder))
+          .findFirst()
+          .orElse(null);
+    }
 
     if (sessionFolderPath == null) {
       // List all directories in the user folder and check if they start with a number
       // If they do, then they are job folders, and we can get the highest number and
       // increment it
-      int jobFolderCount = Files
-          .list(userFolderPath)
-          .filter(Files::isDirectory)
-          .map(Path::getFileName)
-          .map(Path::toString)
-          .map(s -> s.split("_")[0])// Extract the numeric prefix before the underscore
-          .filter(s -> s.matches("\\d+"))// Ensure it is numeric
-          .mapToInt(Integer::parseInt)
-          .max()
-          .orElse(0);
+      int jobFolderCount;
+      try (var dirs = Files.list(userFolderPath)) {
+        jobFolderCount = dirs
+            .filter(Files::isDirectory)
+            .map(Path::getFileName)
+            .map(Path::toString)
+            .map(s -> s.split("_")[0])// Extract the numeric prefix before the underscore
+            .filter(s -> s.matches("\\d+"))// Ensure it is numeric
+            .mapToInt(Integer::parseInt)
+            .max()
+            .orElse(0);
+      }
 
       sessionFolderPath = userFolderPath.resolve("%04d".formatted(jobFolderCount + 1) + "_" + sessionFolder);
     }
@@ -316,6 +345,74 @@ public class RoutingJobScheduler {
       Files.write(outputFilePath, job.output
           .getData()
           .readAllBytes());
+    }
+  }
+
+  /**
+   * Deletes persisted job folders in {@code userFolderPath} that exceed the
+   * retention limits, keeping the data directory bounded so concurrent runs do
+   * not exhaust the filesystem's inodes. A folder is removed when it is older
+   * than {@link #retentionMillis} OR when it falls outside the newest
+   * {@link #maxJobFoldersPerUser} folders. Failures are logged, never thrown,
+   * because retention is best-effort and must not break job persistence.
+   *
+   * @param userFolderPath the per-user data directory to prune
+   */
+  private void purgeOldJobFolders(Path userFolderPath) {
+    if (retentionMillis <= 0 && maxJobFoldersPerUser <= 0) {
+      return; // retention disabled
+    }
+
+    List<Path> jobFolders;
+    try (var dirs = Files.list(userFolderPath)) {
+      jobFolders = dirs
+          .filter(Files::isDirectory)
+          // newest first, by name prefix (zero-padded incrementing counter)
+          .sorted((a, b) -> b.getFileName().toString().compareTo(a.getFileName().toString()))
+          .toList();
+    } catch (IOException e) {
+      FRLogger.warn("Failed to list job folders in '%s' for retention purge.".formatted(userFolderPath));
+      return;
+    }
+
+    long now = System.currentTimeMillis();
+    for (int i = 0; i < jobFolders.size(); i++) {
+      Path folder = jobFolders.get(i);
+      boolean overCount = maxJobFoldersPerUser > 0 && i >= maxJobFoldersPerUser;
+      boolean tooOld = false;
+      if (retentionMillis > 0) {
+        try {
+          tooOld = (now - Files.getLastModifiedTime(folder).toMillis()) > retentionMillis;
+        } catch (IOException e) {
+          // unreadable timestamp: leave it to the count limit
+          tooOld = false;
+        }
+      }
+      if (overCount || tooOld) {
+        deleteRecursively(folder);
+      }
+    }
+  }
+
+  /**
+   * Recursively deletes a directory tree, logging and swallowing any error so a
+   * single undeletable file does not abort the purge or job persistence.
+   *
+   * @param root the directory (or file) to delete
+   */
+  private void deleteRecursively(Path root) {
+    try (var paths = Files.walk(root)) {
+      paths
+          .sorted((a, b) -> b.getNameCount() - a.getNameCount()) // children before parents
+          .forEach(p -> {
+            try {
+              Files.deleteIfExists(p);
+            } catch (IOException e) {
+              FRLogger.warn("Failed to delete '%s' during retention purge.".formatted(p));
+            }
+          });
+    } catch (IOException e) {
+      FRLogger.warn("Failed to walk '%s' for retention purge.".formatted(root));
     }
   }
 
