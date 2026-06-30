@@ -185,7 +185,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
             String current_board_hash = this.board.get_hash();
 
-            if (currentPass > this.settings.maxPasses) {
+            if (this.settings.maxPasses != null && this.settings.maxPasses > 0 && currentPass > this.settings.maxPasses) {
                 thread.request_stop_auto_router();
                 break;
             }

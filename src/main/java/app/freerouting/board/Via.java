@@ -72,9 +72,18 @@ public class Via extends DrillItem implements Serializable {
     }
     java.util.Collection<app.freerouting.drc.ClearanceViolation> filteredViolations = new java.util.LinkedList<>();
     for (app.freerouting.drc.ClearanceViolation violation : rawViolations) {
-      if (violation.layer != this.escapeViaSmdLayer) {
-        filteredViolations.add(violation);
+      if (violation.layer == this.escapeViaSmdLayer) {
+        Item other = null;
+        if (violation.first_item == this) {
+          other = violation.second_item;
+        } else if (violation.second_item == this) {
+          other = violation.first_item;
+        }
+        if (other != null && other.shares_net(this)) {
+          continue;
+        }
       }
+      filteredViolations.add(violation);
     }
     return filteredViolations;
   }

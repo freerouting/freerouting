@@ -493,7 +493,7 @@ public class BatchAutorouter extends NamedAlgorithm {
             break;
           }
 
-          if (this.settings.maxItems != null && this.totalItemsRouted >= this.settings.maxItems) {
+          if (this.settings.maxItems != null && this.settings.maxItems > 0 && this.totalItemsRouted >= this.settings.maxItems) {
             job.logInfo("Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
             // Call requestStop() (sets ALL) instead of request_stop_auto_router() (sets
             // AUTO_ROUTER_ONLY) so the optimization stage is also skipped.  maxItems is a
@@ -885,11 +885,12 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
 
     int currentUnrouted = calculateIncompleteCount(this.board);
-    boolean isRouterEnabled = this.settings.getRunRouter() && (this.settings.maxPasses == null || this.settings.maxPasses > 0);
+    boolean isRouterEnabled = this.settings.getRunRouter() && (this.settings.maxPasses == null || this.settings.maxPasses >= 0);
     if (isRouterEnabled) {
       job.logInfo("Auto-routing stage started on board '" + this.board.get_hash() + "' for "
           + currentUnrouted + " unrouted item" + (currentUnrouted == 1 ? "" : "s") + ".");
     }
+    continueAutorouting = isRouterEnabled;
 
     int currentPass = 1;
     int consecutiveNoImprovementPasses = 0;
@@ -921,7 +922,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       // }
       // alreadyRoutedBoardHashes.add(currentBoardHash);
 
-      if (currentPass > this.settings.maxPasses) {
+      if (this.settings.maxPasses != null && this.settings.maxPasses > 0 && currentPass > this.settings.maxPasses) {
         thread.request_stop_auto_router();
         break;
       }

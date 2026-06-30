@@ -490,7 +490,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
             .hide();
       }
 
-      boolean isRouterEnabled = routingJob.routerSettings.getRunRouter() && (routingJob.routerSettings.maxPasses == null || routingJob.routerSettings.maxPasses > 0);
+      boolean isRouterEnabled = routingJob.routerSettings.getRunRouter() && (routingJob.routerSettings.maxPasses == null || routingJob.routerSettings.maxPasses >= 0);
       int threadCount = routingJob.routerSettings.maxThreads;
       if (isRouterEnabled) {
         routingJob.logInfo("Starting routing of '" + routingJob.name + "' on "
@@ -507,7 +507,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       boardManager.screen_messages.set_status_message(start_message);
 
       // Let's run the autorouter
-      if (routingJob.routerSettings.getRunRouter() && !this.is_stop_auto_router_requested()) {
+      if (isRouterEnabled && !this.is_stop_auto_router_requested()) {
         // Cast to access runBatchLoop() which exists on both BatchAutorouter and
         // BatchAutorouterV19
         if (batchAutorouter instanceof BatchAutorouter) {
@@ -560,7 +560,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       if (isRouterEnabled) {
         if (sessionStartTime != null) {
           String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
-          if (currentPassNo > routingJob.routerSettings.maxPasses) {
+          if (routingJob.routerSettings.maxPasses != null && routingJob.routerSettings.maxPasses > 0 && currentPassNo > routingJob.routerSettings.maxPasses) {
             completionStatus = "completed with pass number limit hit:";
           }
 

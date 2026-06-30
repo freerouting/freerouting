@@ -71,14 +71,14 @@ public class FanoutSettings implements Serializable, Cloneable {
 
   /**
    * The diameter of starting/escape vias used inside the pins during the fanout/escape stage (in millimeters).
-   * Default is 0.300 mm.
+   * Default is 0.250 mm.
    */
   @SerializedName("start_via_diameter_mm")
   public Double startViaDiameterMm;
 
   /**
    * The diameter of landing/end vias used at the end of escaping wires during the fanout/escape stage (in millimeters).
-   * Default is 0.350 mm.
+   * Default is 0.250 mm.
    */
   @SerializedName("end_via_diameter_mm")
   public Double endViaDiameterMm;

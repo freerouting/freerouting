@@ -96,7 +96,7 @@ public class BatchFanout {
       }
       lastBoardHash = currentBoardHash;
     }
-    BoardStatistics stats = new BoardStatistics(p_board);
+    BoardStatistics stats = new BoardStatistics(p_board, null, false);
     EscapeStatistics finalEscape = EscapeStatistics.fromBoardStatistics(stats);
     long totalDurationMillis = Math.max(0, System.currentTimeMillis() - fanoutStart);
     return new FanoutRunSummary(completedPasses, totalDurationMillis, finalEscape);
@@ -223,7 +223,7 @@ public class BatchFanout {
         maybePublishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
             insert_error_count, extraViasThisPass, false, passStart);
         if (this.thread.is_stop_auto_router_requested()) {
-          BoardStatistics passStats = new BoardStatistics(this.routing_board);
+          BoardStatistics passStats = new BoardStatistics(this.routing_board, null, false);
           EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
           publishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
               insert_error_count, extraViasThisPass, escapeStats, true, passStart);
@@ -233,7 +233,7 @@ public class BatchFanout {
     }
     int extraViasThisPass = Math.max(0, this.routing_board.get_vias().size() - viasBeforePass);
     this.extraViasTotal += extraViasThisPass;
-    BoardStatistics passStats = new BoardStatistics(this.routing_board);
+    BoardStatistics passStats = new BoardStatistics(this.routing_board, null, false);
     EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
 
     long passDurationMs = System.currentTimeMillis() - passStart;

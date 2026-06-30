@@ -49,20 +49,21 @@ Fanout was reporting `ROUTED` while `isPinEscaped()` returned false (`viaNoTrace
 
 **bm11 result after A+B:** escape rate **157/157 (100%)**, `routedButNotEscaped=0`, `escapeViaRollbacks=0` (fixture run).
 
-#### Design decision — `maxEscapeLengthMm` removed (2026-06-29)
+#### Design decision — `minEscapeLengthMm` and `maxEscapeLengthMm` (2026-06-30)
 
-**Removed entirely.** Only `minEscapeLengthMm` is enforced (hard). No upper bound on escape length.
+**Both are kept.** Both `minEscapeLengthMm` and `maxEscapeLengthMm` are enforced.
 
 | Setting | Policy |
 |---|---|
 | `minEscapeLengthMm` | **Hard** — maze rejects drills closer than min; insertion extends/truncates to shortest valid point ≥ min; post-insert rollback if stub too short |
+| `maxEscapeLengthMm` | **Hard** — maze rejects options exceeding max |
 | Pull-tight protection | **Not applied** — post-fanout shortening is acceptable |
 
 #### Completed since plan (2026-06-30) ✅
 
 - Skip already-escaped pins in `fanout_pass` (`isPinFullyEscaped`) — prevents extending escapes on every pass
-- `maxEscapeLengthMm` removed from settings, maze, and insertion
-- Min-only `FanoutEscapePath.planEscape` for all fanout paths (drill-end + connect-to-target)
+- Retain `maxEscapeLengthMm` in settings, maze, and insertion
+- Enforce both min and max constraints for all fanout paths (drill-end + connect-to-target)
 - Post-route validation: rollback if escape stub &lt; `minEscapeLengthMm`
 - All fanout diagnostics consolidated to `FRLogger.trace(..., "FANOUT_DIAG", ...)`
 

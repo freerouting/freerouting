@@ -91,7 +91,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     monitorThread.start();
 
     // start the routing task if needed
-    if (job.routerSettings.getRunRouter() && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses > 0)) {
+    if (job.routerSettings.getRunRouter() && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses >= 0)) {
       job.stage = RoutingStage.ROUTING;
 
       // Select router implementation based on algorithm setting
