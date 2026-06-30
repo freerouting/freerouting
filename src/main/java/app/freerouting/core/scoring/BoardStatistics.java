@@ -61,6 +61,8 @@ public class BoardStatistics implements Serializable {
   public BoardStatisticsVias vias = new BoardStatisticsVias();
   @SerializedName("clearance_violations")
   public BoardStatisticsClearanceViolations clearanceViolations = new BoardStatisticsClearanceViolations();
+  @SerializedName("fanout")
+  public BoardStatisticsFanout fanout = new BoardStatisticsFanout();
 
   public BoardStatistics() {
   }
@@ -339,6 +341,27 @@ public class BoardStatistics implements Serializable {
       this.traces.totalVerticalLength = (float) Unit.scale(this.traces.totalVerticalLength, fromUnit, toUnit);
       this.traces.totalAngledLength = (float) Unit.scale(this.traces.totalAngledLength, fromUnit, toUnit);
     }
+
+    // Calculate fanout statistics
+    java.util.Collection<Pin> smdPins = board.get_smd_pins();
+    int total = 0;
+    int escaped = 0;
+    int alreadyConnected = 0;
+    for (Pin pin : smdPins) {
+      if (pin.net_count() > 0) {
+        total++;
+        int netNo = pin.get_net_no(0);
+        if (pin.get_unconnected_set(netNo).isEmpty()) {
+          alreadyConnected++;
+        }
+        if (isPinEscaped(pin)) {
+          escaped++;
+        }
+      }
+    }
+    this.fanout.totalSmdPins = total;
+    this.fanout.pinsToEscape = total - alreadyConnected;
+    this.fanout.escapedCount = escaped;
   }
 
   /**
@@ -508,6 +531,38 @@ public class BoardStatistics implements Serializable {
       return 0f;
     }
     return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
+  }
+
+  public static class BoardStatisticsFanout implements Serializable {
+    @SerializedName("total_smd_pins")
+    public int totalSmdPins = 0;
+    @SerializedName("pins_to_escape")
+    public int pinsToEscape = 0;
+    @SerializedName("escaped_count")
+    public int escapedCount = 0;
+  }
+
+  public static boolean isPinEscaped(Pin pin) {
+    java.util.Set<Item> contacts = pin.get_normal_contacts();
+    for (Item contact : contacts) {
+      if (contact instanceof Trace trace) {
+        if (trace.clearance_violations().isEmpty()) {
+          return true;
+        }
+      } else if (contact instanceof Via via) {
+        if (via.clearance_violations().isEmpty()) {
+          java.util.Set<Item> viaContacts = via.get_normal_contacts();
+          for (Item viaContact : viaContacts) {
+            if (viaContact instanceof Trace || viaContact instanceof ConductionArea) {
+              return true;
+            }
+          }
+        }
+      } else if (contact instanceof ConductionArea) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 
