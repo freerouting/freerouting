@@ -1154,7 +1154,8 @@ public class BatchAutorouter extends NamedAlgorithm {
 
     job.board = this.board;
 
-    if (!(this.remove_unconnected_vias || continueAutorouting || this.thread.is_stop_auto_router_requested())) {
+    boolean wasRouterRun = this.settings.getRunRouter() && (this.settings.maxPasses == null || this.settings.maxPasses >= 0);
+    if (wasRouterRun && !(this.remove_unconnected_vias || continueAutorouting || this.thread.is_stop_auto_router_requested())) {
       // clean up the route if the board is completed and if fanout is used.
       remove_tails(Item.StopConnectionOption.NONE);
     }
