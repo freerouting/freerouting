@@ -490,9 +490,14 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
             .hide();
       }
 
+      boolean isRouterEnabled = routingJob.routerSettings.getRunRouter() && (routingJob.routerSettings.maxPasses == null || routingJob.routerSettings.maxPasses >= 0);
       int threadCount = routingJob.routerSettings.maxThreads;
-      routingJob.logInfo("Starting routing of '" + routingJob.name + "' on "
-          + (threadCount == 1 ? "1 thread" : threadCount + " threads") + "...");
+      if (isRouterEnabled) {
+        routingJob.logInfo("Starting routing of '" + routingJob.name + "' on "
+            + (threadCount == 1 ? "1 thread" : threadCount + " threads") + "...");
+      } else if (routingJob.routerSettings.isFanoutEnabled()) {
+        routingJob.logInfo("Starting fanout of '" + routingJob.name + "'...");
+      }
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
 
       globalSettings.statistics.incrementJobsCompleted();
@@ -502,7 +507,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       boardManager.screen_messages.set_status_message(start_message);
 
       // Let's run the autorouter
-      if (routingJob.routerSettings.getRunRouter() && !this.is_stop_auto_router_requested()) {
+      if (isRouterEnabled && !this.is_stop_auto_router_requested()) {
         // Cast to access runBatchLoop() which exists on both BatchAutorouter and
         // BatchAutorouterV19
         if (batchAutorouter instanceof BatchAutorouter) {
@@ -552,30 +557,32 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         currentPassNo = 1; // Placeholder
       }
 
-      if (sessionStartTime != null) {
-        String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
-        if (currentPassNo > routingJob.routerSettings.maxPasses) {
-          completionStatus = "completed with pass number limit hit:";
+      if (isRouterEnabled) {
+        if (sessionStartTime != null) {
+          String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
+          if (routingJob.routerSettings.maxPasses != null && routingJob.routerSettings.maxPasses > 0 && currentPassNo > routingJob.routerSettings.maxPasses) {
+            completionStatus = "completed with pass number limit hit:";
+          }
+
+          String sessionSummary = String.format(java.util.Locale.US,
+              "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+              completionStatus,
+              initialUnroutedCount,
+              autoroutingSecondsToComplete,
+              FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount,
+                  bs.clearanceViolations.totalCount),
+              routingJob.resourceUsage.cpuTimeUsed,
+              routingJob.resourceUsage.maxMemoryUsed / 1024.0f,
+              routingJob.resourceUsage.peakMemoryUsed);
+
+          routingJob.logInfo(sessionSummary);
+        } else {
+          // Fallback to simple logging if session info not available
+          routingJob.logInfo(String.format("Auto-routing was completed in %.2f seconds with the score of %s.",
+              autoroutingSecondsToComplete,
+              FRLogger.formatScore(scoreBeforeOptimization,
+                  bs.connections.incompleteCount, bs.clearanceViolations.totalCount)));
         }
-
-        String sessionSummary = String.format(java.util.Locale.US,
-            "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
-            completionStatus,
-            initialUnroutedCount,
-            autoroutingSecondsToComplete,
-            FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount,
-                bs.clearanceViolations.totalCount),
-            routingJob.resourceUsage.cpuTimeUsed,
-            routingJob.resourceUsage.maxMemoryUsed / 1024.0f,
-            routingJob.resourceUsage.peakMemoryUsed);
-
-        routingJob.logInfo(sessionSummary);
-      } else {
-        // Fallback to simple logging if session info not available
-        routingJob.logInfo(String.format("Auto-routing was completed in %.2f seconds with the score of %s.",
-            autoroutingSecondsToComplete,
-            FRLogger.formatScore(scoreBeforeOptimization,
-                bs.connections.incompleteCount, bs.clearanceViolations.totalCount)));
       }
       FRAnalytics.autorouterFinished();
 
@@ -668,7 +675,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       if (boardManager.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE) {
         int non45DegreeCount = boardManager.get_routing_board().getNon45DegreeTraceCount();
         if (non45DegreeCount > 1) {
-          routingJob.logWarning("after autoroute: " + non45DegreeCount + " traces not 45 degree");
+          routingJob.logWarning("Invalid traces after autoroute: " + non45DegreeCount + " traces not 45 degree");
         }
       }
     } catch (Exception e) {

@@ -493,7 +493,7 @@ public class BatchAutorouter extends NamedAlgorithm {
             break;
           }
 
-          if (this.settings.maxItems != null && this.totalItemsRouted >= this.settings.maxItems) {
+          if (this.settings.maxItems != null && this.settings.maxItems > 0 && this.totalItemsRouted >= this.settings.maxItems) {
             job.logInfo("Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
             // Call requestStop() (sets ALL) instead of request_stop_auto_router() (sets
             // AUTO_ROUTER_ONLY) so the optimization stage is also skipped.  maxItems is a
@@ -885,8 +885,12 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
 
     int currentUnrouted = calculateIncompleteCount(this.board);
-    job.logInfo("Auto-routing stage started on board '" + this.board.get_hash() + "' for "
-        + currentUnrouted + " unrouted item" + (currentUnrouted == 1 ? "" : "s") + ".");
+    boolean isRouterEnabled = this.settings.getRunRouter() && (this.settings.maxPasses == null || this.settings.maxPasses >= 0);
+    if (isRouterEnabled) {
+      job.logInfo("Auto-routing stage started on board '" + this.board.get_hash() + "' for "
+          + currentUnrouted + " unrouted item" + (currentUnrouted == 1 ? "" : "s") + ".");
+    }
+    continueAutorouting = isRouterEnabled;
 
     int currentPass = 1;
     int consecutiveNoImprovementPasses = 0;
@@ -918,7 +922,7 @@ public class BatchAutorouter extends NamedAlgorithm {
       // }
       // alreadyRoutedBoardHashes.add(currentBoardHash);
 
-      if (currentPass > this.settings.maxPasses) {
+      if (this.settings.maxPasses != null && this.settings.maxPasses > 0 && currentPass > this.settings.maxPasses) {
         thread.request_stop_auto_router();
         break;
       }
@@ -1150,7 +1154,8 @@ public class BatchAutorouter extends NamedAlgorithm {
 
     job.board = this.board;
 
-    if (!(this.remove_unconnected_vias || continueAutorouting || this.thread.is_stop_auto_router_requested())) {
+    boolean wasRouterRun = this.settings.getRunRouter() && (this.settings.maxPasses == null || this.settings.maxPasses >= 0);
+    if (wasRouterRun && !(this.remove_unconnected_vias || continueAutorouting || this.thread.is_stop_auto_router_requested())) {
       // clean up the route if the board is completed and if fanout is used.
       remove_tails(Item.StopConnectionOption.NONE);
     }

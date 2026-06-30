@@ -44,6 +44,13 @@ import java.util.TreeSet;
 public class BasicBoard implements Serializable {
 
   /**
+   * The maximum number of outer-loop iterations in {@link #normalize_traces}.
+   * Each legitimate split/combine operation converges the board toward a stable state, so a
+   * well-formed net needs at most a small multiple of its trace count.  If we exceed this bound
+   * we are almost certainly oscillating (split → combine → split …) and must break out.
+   */
+  private static final int MAX_NORMALIZE_ITERATIONS = 2000;
+  /**
    * List of items inserted into this board (e.g. trace classes). Traces are Item
    * classes that implement the Connectable interface.
    */
@@ -66,15 +73,6 @@ public class BasicBoard implements Serializable {
    * The layer structure of this board.
    */
   public final LayerStructure layer_structure;
-  private transient int revision = 0;
-
-  public int get_revision() {
-    return revision;
-  }
-
-  public void increment_revision() {
-    revision++;
-  }
   /**
    * For communication with a host system or host design file formats.
    */
@@ -87,6 +85,7 @@ public class BasicBoard implements Serializable {
    * Handles the search trees pointing into the items of this board
    */
   public transient SearchTreeManager search_tree_manager;
+  private transient int revision = 0;
   /**
    * the rectangle, where the graphics may be not up-to-date
    */
@@ -99,7 +98,6 @@ public class BasicBoard implements Serializable {
    * the smallest half width of all traces on the board
    */
   private int min_trace_half_width = 10000;
-
   /**
    * Creates a new instance of a routing Board with surrounding box p_bounding_box
    * Rules contains the restrictions to obey when inserting items. Among other
@@ -145,6 +143,31 @@ public class BasicBoard implements Serializable {
           .substring(1));
     }
     return stringBuffer.toString();
+  }
+
+  private static boolean is_item_activity_debug_candidate(Item p_item) {
+    IntBox bounds = p_item.bounding_box();
+    IntBox debugWindow = new IntBox(1620000, -1105000, 1930000, -1003000);
+    return bounds != null && bounds.intersects(debugWindow);
+  }
+
+  private static String first_net_or_none(Item p_item) {
+    return p_item.net_count() > 0 ? Integer.toString(p_item.get_net_no(0)) : "none";
+  }
+
+  private static String describe_bounds(IntBox p_bounds) {
+    if (p_bounds == null) {
+      return "null";
+    }
+    return "[(" + p_bounds.ll.x + "," + p_bounds.ll.y + ")..(" + p_bounds.ur.x + "," + p_bounds.ur.y + ")]";
+  }
+
+  public int get_revision() {
+    return revision;
+  }
+
+  public void increment_revision() {
+    revision++;
   }
 
   public byte[] serialize(boolean basicProfile) {
@@ -297,6 +320,37 @@ public class BasicBoard implements Serializable {
     int from_layer = p_padstack.from_layer();
     int to_layer = p_padstack.to_layer();
     for (int i = from_layer; i < to_layer; i++) {
+      for (int curr_net_no : p_net_no_arr) {
+        split_traces(p_center, i, curr_net_no);
+      }
+    }
+    return new_via;
+  }
+
+  /**
+   * Inserts a special escape via into the board for the fanout escalation phase.
+   * An escape via sits directly on top of an SMD pin to provide a layer transition
+   * to an inner routing layer. On the SMD layer it uses SMD-to-SMD clearance rules
+   * (because its copper is inside the SMD pad footprint); on inner layers it uses
+   * normal via clearance.
+   *
+   * @param p_padstack      The padstack describing the via geometry
+   * @param p_center        The center point (at the SMD pin center)
+   * @param p_net_no_arr    The net numbers
+   * @param p_clearance_class The clearance class to use
+   * @param p_fixed_state   The fixed state
+   * @param p_smd_layer     The SMD layer where the pin lives (clearance exception layer)
+   */
+  public Via insert_escape_via(Padstack p_padstack, Point p_center, int[] p_net_no_arr,
+      int p_clearance_class, FixedState p_fixed_state, int p_smd_layer) {
+    Via new_via = new Via(p_padstack, p_center, p_net_no_arr, p_clearance_class, 0, 0,
+        p_fixed_state, true, this);
+    new_via.isEscapeVia = true;
+    new_via.escapeViaSmdLayer = p_smd_layer;
+    insert_item(new_via);
+    int from_layer = p_padstack.from_layer();
+    int to_layer = p_padstack.to_layer();
+    for (int i = from_layer; i <= to_layer; i++) {
       for (int curr_net_no : p_net_no_arr) {
         split_traces(p_center, i, curr_net_no);
       }
@@ -816,14 +870,6 @@ public class BasicBoard implements Serializable {
   }
 
   /**
-   * The maximum number of outer-loop iterations in {@link #normalize_traces}.
-   * Each legitimate split/combine operation converges the board toward a stable state, so a
-   * well-formed net needs at most a small multiple of its trace count.  If we exceed this bound
-   * we are almost certainly oscillating (split → combine → split …) and must break out.
-   */
-  private static final int MAX_NORMALIZE_ITERATIONS = 2000;
-
-  /**
    * Normalizes the traces of this net
    */
   public boolean normalize_traces(int p_net_no) {
@@ -1090,16 +1136,6 @@ public class BasicBoard implements Serializable {
     return layer_structure.arr.length;
   }
 
-  /**
-   * Draws all items of the board on their visible layers. Called in the
-   * overwritten paintComponent method of a class derived from JPanel. The value
-   * of p_layer_visibility is expected between 0 and 1
-   * for each layer.
-   */
-  public enum DominantSide {
-    FRONT, BACK, NONE
-  }
-
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
     if (p_graphics_context == null) {
       return;
@@ -1151,7 +1187,7 @@ public class BasicBoard implements Serializable {
         this.isVirtual = isVirtual;
         this.index = index;
       }
-      
+
       @Override
       public boolean equals(Object o) {
         if (this == o) return true;
@@ -1165,9 +1201,9 @@ public class BasicBoard implements Serializable {
         return java.util.Objects.hash(isVirtual, index);
       }
     }
-    
+
     java.util.List<RenderStep> drawSteps = new java.util.ArrayList<>();
-    
+
     if (dominantSide == DominantSide.BACK) {
       // BACK dominant default order:
       // F.Fab (v4), F.Courtyard (v2), F.Silkscreen (v0), top_cu (false, 0)
@@ -1230,7 +1266,7 @@ public class BasicBoard implements Serializable {
       }
     }
 
-    FRLogger.debug(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
+    FRLogger.trace(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
         selectedLayerName, dominantSide, renderingOrderNames));
 
     // Pre-collect all items once to avoid re-iterating item_list for every (priority × step)
@@ -1511,23 +1547,6 @@ public class BasicBoard implements Serializable {
   public void additional_update_after_change(Item p_item) {
   }
 
-  private static boolean is_item_activity_debug_candidate(Item p_item) {
-    IntBox bounds = p_item.bounding_box();
-    IntBox debugWindow = new IntBox(1620000, -1105000, 1930000, -1003000);
-    return bounds != null && bounds.intersects(debugWindow);
-  }
-
-  private static String first_net_or_none(Item p_item) {
-    return p_item.net_count() > 0 ? Integer.toString(p_item.get_net_no(0)) : "none";
-  }
-
-  private static String describe_bounds(IntBox p_bounds) {
-    if (p_bounds == null) {
-      return "null";
-    }
-    return "[(" + p_bounds.ll.x + "," + p_bounds.ll.y + ")..(" + p_bounds.ur.x + "," + p_bounds.ur.y + ")]";
-  }
-
   /**
    * Restores the situation at the previous snapshot. Returns false, if no more
    * undo is possible. Puts the numbers of the changed nets into the set
@@ -1765,5 +1784,15 @@ public class BasicBoard implements Serializable {
       }
     }
     return count;
+  }
+
+  /**
+   * Draws all items of the board on their visible layers. Called in the
+   * overwritten paintComponent method of a class derived from JPanel. The value
+   * of p_layer_visibility is expected between 0 and 1
+   * for each layer.
+   */
+  public enum DominantSide {
+    FRONT, BACK, NONE
   }
 }

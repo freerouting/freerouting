@@ -96,7 +96,8 @@ public class BatchFanout {
       }
       lastBoardHash = currentBoardHash;
     }
-    EscapeStatistics finalEscape = fanout_instance.computeEscapeStatistics();
+    BoardStatistics stats = new BoardStatistics(p_board, null, false);
+    EscapeStatistics finalEscape = EscapeStatistics.fromBoardStatistics(stats);
     long totalDurationMillis = Math.max(0, System.currentTimeMillis() - fanoutStart);
     return new FanoutRunSummary(completedPasses, totalDurationMillis, finalEscape);
   }
@@ -222,7 +223,8 @@ public class BatchFanout {
         maybePublishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
             insert_error_count, extraViasThisPass, false, passStart);
         if (this.thread.is_stop_auto_router_requested()) {
-          EscapeStatistics escapeStats = computeEscapeStatistics();
+          BoardStatistics passStats = new BoardStatistics(this.routing_board, null, false);
+          EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
           publishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
               insert_error_count, extraViasThisPass, escapeStats, true, passStart);
           return routed_count;
@@ -231,7 +233,8 @@ public class BatchFanout {
     }
     int extraViasThisPass = Math.max(0, this.routing_board.get_vias().size() - viasBeforePass);
     this.extraViasTotal += extraViasThisPass;
-    EscapeStatistics escapeStats = computeEscapeStatistics();
+    BoardStatistics passStats = new BoardStatistics(this.routing_board, null, false);
+    EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
 
     long passDurationMs = System.currentTimeMillis() - passStart;
     FRLogger.trace("BatchFanout.fanout_pass", "pass_end",
@@ -310,99 +313,7 @@ public class BatchFanout {
             escapeStatistics));
   }
 
-  /**
-   * Computes escape statistics for all SMD pins currently in the sorted_components list.
-   * A pin is considered "escaped" when it has at least one Trace (wire) or Via directly
-   * connected to it at the pin's center — with no clearance violations on that trace/via —
-   * or when a Via connected to the pin itself has a Trace connected to it.
-   */
-  EscapeStatistics computeEscapeStatistics() {
-    int total = 0;
-    int escaped = 0;
-    for (Component component : this.sorted_components) {
-      for (Component.Pin pin : component.smd_pins) {
-        total++;
-        if (isPinEscaped(pin.board_pin)) {
-          escaped++;
-        } else {
-          // Log details about non-escaped pins to aid investigation of incomplete fanout
-          app.freerouting.board.Pin boardPin = pin.board_pin;
-          String pinName = component.board_component.name + "-" + boardPin.name();
-          int netNo = boardPin.net_count() > 0 ? boardPin.get_net_no(0) : 0;
-          Set<Item> contacts = boardPin.get_normal_contacts();
-          int contactCount = contacts.size();
-          int traceContacts = 0;
-          int viaContacts = 0;
-          int tracesWithViolations = 0;
-          int viasWithViolations = 0;
-          int viasWithoutTrace = 0;
-          for (Item contact : contacts) {
-            if (contact instanceof Trace) {
-              traceContacts++;
-              if (!contact.clearance_violations().isEmpty()) tracesWithViolations++;
-            } else if (contact instanceof Via) {
-              viaContacts++;
-              if (!contact.clearance_violations().isEmpty()) {
-                viasWithViolations++;
-              } else {
-                boolean hasTraceContact = false;
-                for (Item viaContact : contact.get_normal_contacts()) {
-                  if (viaContact instanceof Trace) { hasTraceContact = true; break; }
-                }
-                if (!hasTraceContact) viasWithoutTrace++;
-              }
-            }
-          }
-          FRLogger.trace("BatchFanout.computeEscape", "pin_not_escaped",
-              "pin=" + pinName
-                  + ", net=" + netNo
-                  + ", center=" + boardPin.get_center()
-                  + ", layer=" + boardPin.first_layer()
-                  + ", contacts=" + contactCount
-                  + ", traces=" + traceContacts
-                  + " (withViolations=" + tracesWithViolations + ")"
-                  + ", vias=" + viaContacts
-                  + " (withViolations=" + viasWithViolations
-                  + ", noTraceAttached=" + viasWithoutTrace + ")",
-              pinName, new app.freerouting.geometry.planar.Point[]{boardPin.get_center()});
-        }
-      }
-    }
-    double pct = total == 0 ? 0.0 : 100.0 * escaped / total;
-    return new EscapeStatistics(total, escaped, pct);
-  }
 
-  /**
-   * Returns {@code true} if the given SMD pin has a valid escape route:
-   * <ul>
-   *   <li>A {@link Trace} (wire) is directly connected to the pin center with no clearance
-   *       violations on that trace, <em>or</em></li>
-   *   <li>A {@link Via} is directly connected to the pin center with no clearance violations
-   *       on the via, <em>and</em> that via has at least one {@link Trace} connected to it.</li>
-   * </ul>
-   */
-  private boolean isPinEscaped(app.freerouting.board.Pin pin) {
-    Set<Item> contacts = pin.get_normal_contacts();
-    for (Item contact : contacts) {
-      if (contact instanceof Trace trace) {
-        // Direct wire exit from the pin — check no clearance violations on the trace itself
-        if (trace.clearance_violations().isEmpty()) {
-          return true;
-        }
-      } else if (contact instanceof Via via) {
-        // Via planted on the pin — check the via is clean and has at least one trace attached
-        if (via.clearance_violations().isEmpty()) {
-          Set<Item> viaContacts = via.get_normal_contacts();
-          for (Item viaContact : viaContacts) {
-            if (viaContact instanceof Trace) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-    return false;
-  }
 
   @FunctionalInterface
   public interface FanoutProgressListener {
@@ -419,6 +330,13 @@ public class BatchFanout {
       int totalSmdPins,
       int escapedCount,
       double escapedPercentage) {
+
+    public static EscapeStatistics fromBoardStatistics(BoardStatistics stats) {
+      double percentage = stats.fanout.totalSmdPins > 0
+          ? (stats.fanout.escapedCount * 100.0) / stats.fanout.totalSmdPins
+          : 0.0;
+      return new EscapeStatistics(stats.fanout.totalSmdPins, stats.fanout.escapedCount, percentage);
+    }
 
     @Override
     public String toString() {
