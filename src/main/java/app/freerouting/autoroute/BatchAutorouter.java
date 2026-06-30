@@ -884,12 +884,6 @@ public class BatchAutorouter extends NamedAlgorithm {
       job.logInfo(fanoutSummaryMessage);
     }
 
-    if (this.settings.maxPasses != null && this.settings.maxPasses <= 0) {
-      // Fanout-only mode or router disabled: do not run any autorouting passes and skip log output
-      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, 0, this.board.get_hash()));
-      return true;
-    }
-
     int currentUnrouted = calculateIncompleteCount(this.board);
     job.logInfo("Auto-routing stage started on board '" + this.board.get_hash() + "' for "
         + currentUnrouted + " unrouted item" + (currentUnrouted == 1 ? "" : "s") + ".");

@@ -67,8 +67,6 @@ public class MazeSearchAlgo {
    */
   private ExpandableObject destination_door;
   private int section_no_of_destination_door;
-  private int mazeRejectedMinLengthCount;
-  private boolean mazeLoggedFirstMinReject;
 
   /**
    * Creates a new instance of MazeSearchAlgo
@@ -79,10 +77,32 @@ public class MazeSearchAlgo {
     random_generator.setSeed(
         p_ctrl.ripup_costs); // Keep v1.9 deterministic randomization across passes.
     this.search_tree = p_autoroute_engine.autoroute_search_tree;
-    MazeSearchAlgo outer = this;
     maze_expansion_list = new TreeSet<>() {
       @Override
       public boolean add(MazeListElement p_element) {
+        if (ctrl.is_fanout && ctrl.fanout_start_pin_center != null) {
+          app.freerouting.geometry.planar.FloatPoint pin_center_float = ctrl.fanout_start_pin_center.to_float();
+          boolean onStartLayer = p_element.next_room != null && p_element.next_room.get_layer() == ctrl.fanout_start_pin_layer;
+          if (onStartLayer) {
+            double maxLen = (ctrl.settings.fanout != null && ctrl.settings.fanout.maxEscapeLengthMm != null)
+                ? ctrl.settings.fanout.maxEscapeLengthMm * 1000.0 : 3000.0;
+            double resolution = autoroute_engine.board.communication.get_resolution(app.freerouting.board.Unit.UM);
+            app.freerouting.geometry.planar.FloatPoint entry_point = p_element.shape_entry.a.middle_point(p_element.shape_entry.b);
+            double dist = entry_point.distance(pin_center_float);
+            if (dist > maxLen * resolution) {
+              return false;
+            }
+          }
+          if (p_element.door instanceof ExpansionDrill drill) {
+            double minLen = (ctrl.settings.fanout != null && ctrl.settings.fanout.minEscapeLengthMm != null)
+                ? ctrl.settings.fanout.minEscapeLengthMm * 1000.0 : 500.0;
+            double resolution = autoroute_engine.board.communication.get_resolution(app.freerouting.board.Unit.UM);
+            double drillDist = drill.location.to_float().distance(pin_center_float);
+            if (drillDist < minLen * resolution) {
+              return false;
+            }
+          }
+        }
         return super.add(p_element);
       }
     };
@@ -216,19 +236,10 @@ public class MazeSearchAlgo {
     while (occupy_next_element()) {
       continue;
     }
-    logMazeLengthRejectSummary();
     if (this.destination_door == null) {
       return null;
     }
     return new Result(this.destination_door, this.section_no_of_destination_door);
-  }
-
-  private void logMazeLengthRejectSummary() {
-    if (mazeRejectedMinLengthCount == 0) {
-      return;
-    }
-    FanoutDiagnostics.trace(ctrl, "MazeSearchAlgo.find_connection", "maze_length_reject_summary",
-        "minLengthRejections=" + mazeRejectedMinLengthCount);
   }
 
   /**
@@ -276,26 +287,18 @@ public class MazeSearchAlgo {
 
     if (list_element.door instanceof TargetItemExpansionDoor curr_door) {
       if (curr_door.is_destination_door()) {
-        if (ctrl.is_fanout && (ctrl.fanout_drill_only
-            || (ctrl.fanout_destination_items != null && !ctrl.fanout_destination_items.contains(curr_door.item)))) {
-          // Keep expanding: drill-only fanout, or an item not in the allowed near-target set.
-        } else {
-          // The destination is reached.
-          this.destination_door = curr_door;
-          this.section_no_of_destination_door = list_element.section_no_of_door;
-          return false;
-        }
-      }
-    }
-    if (ctrl.is_fanout && list_element.door instanceof ExpansionDrill) {
-      boolean completeAtDrill = list_element.backtrack_door instanceof ExpansionDrill
-          || ctrl.fanout_drill_only;
-      if (completeAtDrill) {
-        // algorithm completed after the first drill; min escape length is enforced in FanoutEscapePath.
-        this.destination_door = list_element.door;
+        // The destination is reached.
+        this.destination_door = curr_door;
         this.section_no_of_destination_door = list_element.section_no_of_door;
         return false;
       }
+    }
+    if (ctrl.is_fanout && list_element.door instanceof ExpansionDrill
+        && list_element.backtrack_door instanceof ExpansionDrill) {
+      // algorithm completed after the first drill;
+      this.destination_door = list_element.door;
+      this.section_no_of_destination_door = list_element.section_no_of_door;
+      return false;
     }
     if (ctrl.vias_allowed && list_element.door instanceof ExpansionDrill
         && !(list_element.backtrack_door instanceof ExpansionDrill)) {
@@ -846,15 +849,24 @@ public class MazeSearchAlgo {
   }
 
   private boolean shouldTraceFanoutDiagnostics() {
-    return FanoutDiagnostics.isEnabled(ctrl);
+    return ctrl.is_fanout
+        && ctrl.fanout_start_pin_name != null
+        && ctrl.fanout_start_pin_name.startsWith("U27-");
   }
 
   private String fanoutDiagnosticLabel() {
-    return FanoutDiagnostics.pinLabel(ctrl);
+    return ctrl.fanout_start_pin_name == null ? "fanout-pin(net=" + ctrl.net_no + ")"
+        : ctrl.fanout_start_pin_name;
   }
 
   private void traceFanoutDiagnostic(String event, String message) {
-    FanoutDiagnostics.trace(ctrl, "MazeSearchAlgo", event, message);
+    if (!shouldTraceFanoutDiagnostics()) {
+      return;
+    }
+    FRLogger.trace("FANOUT_DIAG event=" + event
+        + ", pin=" + fanoutDiagnosticLabel()
+        + ", net=" + ctrl.net_no
+        + ", " + message);
   }
 
   private void expand_to_drill(ExpansionDrill p_drill, MazeListElement p_from_element, int p_add_costs) {

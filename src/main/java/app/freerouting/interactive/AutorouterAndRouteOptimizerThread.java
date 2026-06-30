@@ -671,7 +671,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       if (boardManager.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE) {
         int non45DegreeCount = boardManager.get_routing_board().getNon45DegreeTraceCount();
         if (non45DegreeCount > 1) {
-          routingJob.logWarning("after autoroute: " + non45DegreeCount + " traces not 45 degree");
+          routingJob.logWarning("Invalid traces after autoroute: " + non45DegreeCount + " traces not 45 degree");
         }
       }
     } catch (Exception e) {

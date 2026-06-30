@@ -79,7 +79,6 @@ public class BatchFanout {
       StoppableThread p_thread,
       FanoutProgressListener progressListener) {
     BatchFanout fanout_instance = new BatchFanout(p_board, p_settings, p_thread);
-    FanoutDiagnostics.resetCounters();
     long fanoutStart = System.currentTimeMillis();
     int maxPasses = (p_settings.fanout != null && p_settings.fanout.maxPasses != null)
         ? p_settings.fanout.maxPasses : 20;
@@ -97,12 +96,7 @@ public class BatchFanout {
       }
       lastBoardHash = currentBoardHash;
     }
-    EscapeStatistics initialEscape = fanout_instance.computeEscapeStatistics();
-    if (initialEscape.escapedCount() < initialEscape.totalSmdPins()) {
-      fanout_instance.runEscapeViaPhase();
-    }
     EscapeStatistics finalEscape = fanout_instance.computeEscapeStatistics();
-    FanoutDiagnostics.logSessionSummary();
     long totalDurationMillis = Math.max(0, System.currentTimeMillis() - fanoutStart);
     return new FanoutRunSummary(completedPasses, totalDurationMillis, finalEscape);
   }
@@ -144,19 +138,6 @@ public class BatchFanout {
         TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
         String fullPinName = curr_component.board_component.name + "-" + curr_pin.board_pin.name();
         int netNo = curr_pin.board_pin.get_net_no(0);
-        app.freerouting.geometry.planar.Point pinCenter = curr_pin.board_pin.get_center();
-
-        if (isPinEscaped(curr_pin.board_pin)) {
-          FRLogger.trace("BatchFanout.fanout_pass", "FANOUT_DIAG",
-              "event=pin_already_escaped, pin=" + fullPinName
-                  + ", net=" + netNo
-                  + ", pass=" + (p_pass_no + 1)
-                  + ", " + FanoutDiagnostics.describePinEscapeGeometry(curr_pin.board_pin, this.routing_board),
-              fullPinName, new app.freerouting.geometry.planar.Point[]{pinCenter});
-          --pinsToGo;
-          continue;
-        }
-
         int targetCount = curr_pin.board_pin.get_unconnected_set(netNo).size();
 
         FRLogger.trace("BatchFanout.fanout_pass", "pin_start",
@@ -170,70 +151,24 @@ public class BatchFanout {
 
         this.routing_board.start_marking_changed_area();
         long pinStartNanos = System.nanoTime();
-        AutorouteAttemptResult curr_result = null;
-        boolean pinEscaped = false;
-        boolean keepAttempt = false;
-
-        this.routing_board.generate_snapshot();
-        curr_result = this.routing_board.fanout(
-            curr_pin.board_pin, this.settings, effectiveRipupCosts, this.thread, time_limit);
-        pinEscaped = isPinEscaped(curr_pin.board_pin);
-        keepAttempt = shouldKeepFanoutAttempt(curr_result, pinEscaped);
-
-        if (!keepAttempt) {
-          rollbackFanoutAttempt(fullPinName, netNo, curr_result.state.name());
-          FanoutEscalationResult escalation = tryFanoutWithEscapeVia(
-              curr_pin.board_pin, fullPinName, netNo, effectiveRipupCosts, time_limit, p_pass_no + 1, false, false);
-          if (escalation != null) {
-            curr_result = escalation.result();
-            pinEscaped = isPinEscaped(curr_pin.board_pin);
-            keepAttempt = escalation.keepAttempt();
-            if (keepAttempt) {
-              this.routing_board.pop_snapshot();
-            }
-          }
-        } else {
-          this.routing_board.pop_snapshot();
-        }
-
+        AutorouteAttemptResult curr_result =
+            this.routing_board.fanout(
+                curr_pin.board_pin,
+                this.settings,
+                effectiveRipupCosts,
+                this.thread,
+                time_limit);
         long pinDurationMs = (System.nanoTime() - pinStartNanos) / 1_000_000L;
-        if (curr_result.state == AutorouteAttemptState.ROUTED && pinEscaped
-            && !FanoutDiagnostics.meetsMinEscapeLength(curr_pin.board_pin, this.routing_board, this.settings)) {
-          FanoutDiagnostics.incrementBelowMinEscapeLength();
-          double measuredMm = FanoutDiagnostics.measurePinEscapeLengthMm(curr_pin.board_pin, this.routing_board);
-          FanoutDiagnostics.trace("BatchFanout.fanout_pass", fullPinName, netNo, "below_min_escape_length",
-              "pass=" + (p_pass_no + 1)
-                  + ", measuredMm=" + FRLogger.defaultFloatFormat.format(measuredMm)
-                  + ", minMm=" + FanoutDiagnostics.resolveMinLenMm(this.settings)
-                  + ", kept=true"
-                  + ", " + FanoutDiagnostics.describePinEscapeGeometry(curr_pin.board_pin, this.routing_board),
-              pinCenter);
-        }
 
         switch (curr_result.state) {
           case ROUTED       -> {
-             if (keepAttempt) {
-               ++routed_count;
-             } else {
-               ++not_routed_count;
-             }
+             ++routed_count;
              FRLogger.trace("BatchFanout.fanout_pass", "pin_routed",
                  "pin=" + fullPinName
                      + ", net=" + netNo
                      + ", durationMs=" + pinDurationMs
-                     + ", targetCount=" + targetCount
-                     + ", isPinEscaped=" + pinEscaped
-                     + ", kept=" + keepAttempt,
+                     + ", targetCount=" + targetCount,
                  fullPinName, new app.freerouting.geometry.planar.Point[]{curr_pin.board_pin.get_center()});
-             if (!pinEscaped) {
-               FanoutDiagnostics.incrementRoutedButNotEscaped();
-               FanoutDiagnostics.trace("BatchFanout.fanout_pass", fullPinName, netNo, "pass_routed_but_not_escaped",
-                   "pass=" + (p_pass_no + 1)
-                       + ", rolledBack=true"
-                       + ", " + FanoutDiagnostics.describePinEscapeFailure(curr_pin.board_pin)
-                       + ", geometry=" + FanoutDiagnostics.describePinEscapeGeometry(curr_pin.board_pin, this.routing_board),
-                   pinCenter);
-             }
           }
           case ALREADY_CONNECTED -> {
             ++already_connected_count;
@@ -246,7 +181,6 @@ public class BatchFanout {
           }
           case FAILED       -> {
             ++not_routed_count;
-            FanoutDiagnostics.incrementFanoutPassFailed();
             FRLogger.trace("BatchFanout.fanout_pass", "pin_failed",
                 "pin=" + fullPinName
                     + ", net=" + netNo
@@ -376,58 +310,6 @@ public class BatchFanout {
             escapeStatistics));
   }
 
-  private void runEscapeViaPhase() {
-    int totalEscalated = 0;
-    int successfullyEscalated = 0;
-
-    for (Component component : this.sorted_components) {
-      for (Component.Pin pin : component.smd_pins) {
-        if (this.thread.is_stop_auto_router_requested()) {
-          return;
-        }
-        if (isPinEscaped(pin.board_pin)) {
-          continue;
-        }
-
-        app.freerouting.board.Pin boardPin = pin.board_pin;
-        String pinName = component.board_component.name + "-" + boardPin.name();
-        int netNo = boardPin.net_count() > 0 ? boardPin.get_net_no(0) : 0;
-        if (netNo <= 0) {
-          continue;
-        }
-
-        FRLogger.trace("BatchFanout.runEscapeViaPhase", "FANOUT_DIAG",
-            "event=escalate_unescaped_pin, pin=" + pinName
-                + ", net=" + netNo
-                + ", startLayer=" + boardPin.first_layer()
-                + ", hasEscapeVia=" + hasActiveEscapeVia(boardPin)
-                + ", " + FanoutDiagnostics.describePinEscapeGeometry(boardPin, this.routing_board),
-            pinName, new app.freerouting.geometry.planar.Point[]{boardPin.get_center()});
-
-        boolean ripupAllowed = (this.settings.fanout == null || this.settings.fanout.ripupAllowed == null)
-            || Boolean.TRUE.equals(this.settings.fanout.ripupAllowed);
-        int ripupCosts = ripupAllowed ? this.settings.get_start_ripup_costs() : -1;
-        long baseMillisPerPin = (this.settings.fanout != null && this.settings.fanout.maxMillisecondsPerPin != null)
-            ? this.settings.fanout.maxMillisecondsPerPin : 10000L;
-        TimeLimit timeLimit = new TimeLimit((int) baseMillisPerPin);
-
-        FanoutEscalationResult escalation = tryFanoutWithEscapeVia(
-            boardPin, pinName, netNo, ripupCosts, timeLimit, 0, true, true);
-        totalEscalated++;
-        if (escalation != null && escalation.keepAttempt()) {
-          successfullyEscalated++;
-        }
-      }
-    }
-
-    if (totalEscalated > 0) {
-      FRLogger.trace("BatchFanout.runEscapeViaPhase", "FANOUT_DIAG",
-          "event=escape_via_phase_summary, totalEscalated=" + totalEscalated
-              + ", successfullyEscalated=" + successfullyEscalated,
-          "", new app.freerouting.geometry.planar.Point[0]);
-    }
-  }
-
   /**
    * Computes escape statistics for all SMD pins currently in the sorted_components list.
    * A pin is considered "escaped" when it has at least one Trace (wire) or Via directly
@@ -443,16 +325,45 @@ public class BatchFanout {
         if (isPinEscaped(pin.board_pin)) {
           escaped++;
         } else {
+          // Log details about non-escaped pins to aid investigation of incomplete fanout
           app.freerouting.board.Pin boardPin = pin.board_pin;
           String pinName = component.board_component.name + "-" + boardPin.name();
           int netNo = boardPin.net_count() > 0 ? boardPin.get_net_no(0) : 0;
-          FRLogger.trace("BatchFanout.computeEscapeStatistics", "FANOUT_DIAG",
-              "event=pin_not_escaped, pin=" + pinName
+          Set<Item> contacts = boardPin.get_normal_contacts();
+          int contactCount = contacts.size();
+          int traceContacts = 0;
+          int viaContacts = 0;
+          int tracesWithViolations = 0;
+          int viasWithViolations = 0;
+          int viasWithoutTrace = 0;
+          for (Item contact : contacts) {
+            if (contact instanceof Trace) {
+              traceContacts++;
+              if (!contact.clearance_violations().isEmpty()) tracesWithViolations++;
+            } else if (contact instanceof Via) {
+              viaContacts++;
+              if (!contact.clearance_violations().isEmpty()) {
+                viasWithViolations++;
+              } else {
+                boolean hasTraceContact = false;
+                for (Item viaContact : contact.get_normal_contacts()) {
+                  if (viaContact instanceof Trace) { hasTraceContact = true; break; }
+                }
+                if (!hasTraceContact) viasWithoutTrace++;
+              }
+            }
+          }
+          FRLogger.trace("BatchFanout.computeEscape", "pin_not_escaped",
+              "pin=" + pinName
                   + ", net=" + netNo
                   + ", center=" + boardPin.get_center()
                   + ", layer=" + boardPin.first_layer()
-                  + ", " + FanoutDiagnostics.describePinEscapeFailure(boardPin)
-                  + ", geometry=" + FanoutDiagnostics.describePinEscapeGeometry(boardPin, this.routing_board),
+                  + ", contacts=" + contactCount
+                  + ", traces=" + traceContacts
+                  + " (withViolations=" + tracesWithViolations + ")"
+                  + ", vias=" + viaContacts
+                  + " (withViolations=" + viasWithViolations
+                  + ", noTraceAttached=" + viasWithoutTrace + ")",
               pinName, new app.freerouting.geometry.planar.Point[]{boardPin.get_center()});
         }
       }
@@ -467,162 +378,9 @@ public class BatchFanout {
    *   <li>A {@link Trace} (wire) is directly connected to the pin center with no clearance
    *       violations on that trace, <em>or</em></li>
    *   <li>A {@link Via} is directly connected to the pin center with no clearance violations
-   *       on the via, <em>and</em> that via has at least one {@link Trace} connected to it, <em>or</em></li>
-   *   <li>The pin is directly connected to a {@link ConductionArea} (plane/pour).</li>
+   *       on the via, <em>and</em> that via has at least one {@link Trace} connected to it.</li>
    * </ul>
    */
-  private void rollbackFanoutAttempt(String pinName, int netNo, String reason) {
-    Set<Integer> changedNets = new java.util.TreeSet<>();
-    if (this.routing_board.undo(changedNets)) {
-      FanoutDiagnostics.trace("BatchFanout", pinName, netNo, "fanout_attempt_rollback", "reason=" + reason);
-    }
-  }
-
-  private record FanoutEscalationResult(AutorouteAttemptResult result, boolean keepAttempt) {
-  }
-
-  private static boolean shouldKeepFanoutAttempt(AutorouteAttemptResult result, boolean pinEscaped) {
-    return switch (result.state) {
-      case ROUTED -> pinEscaped;
-      case ALREADY_CONNECTED, NO_UNCONNECTED_NETS -> true;
-      default -> false;
-    };
-  }
-
-  private boolean hasActiveEscapeVia(app.freerouting.board.Pin pin) {
-    for (Item contact : pin.get_normal_contacts()) {
-      if (contact instanceof Via via && via.isEscapeVia) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private void removeEscapeViasOnPin(app.freerouting.board.Pin pin) {
-    for (Item contact : pin.get_normal_contacts()) {
-      if (contact instanceof Via via && via.isEscapeVia) {
-        this.routing_board.remove_item(via);
-      }
-    }
-  }
-
-  /**
-   * Inserts a persistent escape via (outside the undo snapshot) and retries fanout from inner layers.
-   * Failed stub inserts are rolled back while the escape via remains for later passes.
-   */
-  private FanoutEscalationResult tryFanoutWithEscapeVia(app.freerouting.board.Pin boardPin, String pinName,
-      int netNo, int ripupCosts, TimeLimit timeLimit, int passNo, boolean tryAllLayers, boolean allowForcedStub) {
-    FRLogger.trace("BatchFanout.tryFanoutWithEscapeVia", "FANOUT_DIAG",
-        "event=inline_escape_via_retry, pin=" + pinName
-            + ", net=" + netNo
-            + ", pass=" + passNo
-            + ", hasEscapeVia=" + hasActiveEscapeVia(boardPin)
-            + ", " + FanoutDiagnostics.describePinEscapeGeometry(boardPin, this.routing_board),
-        pinName, new app.freerouting.geometry.planar.Point[]{boardPin.get_center()});
-
-    FloatPoint componentGravity = getPinComponentGravity(boardPin);
-    int startLayer = boardPin.first_layer();
-    int boardLayers = this.routing_board.get_layer_count();
-    int step = (startLayer == 0) ? 1 : -1;
-
-    if (hasActiveEscapeVia(boardPin)) {
-      FanoutEscalationResult retry = tryFanoutAndForcedStub(
-          boardPin, pinName, netNo, ripupCosts, timeLimit, componentGravity, "existing_escape_via", allowForcedStub);
-      if (retry != null) {
-        return retry;
-      }
-      if (!tryAllLayers) {
-        return null;
-      }
-    }
-
-    int firstTarget = startLayer + step;
-    int lastTarget = tryAllLayers ? (step > 0 ? boardLayers - 1 : 0) : firstTarget;
-    if (firstTarget < 0 || firstTarget >= boardLayers) {
-      return null;
-    }
-    for (int targetLayer = firstTarget; step > 0 ? targetLayer <= lastTarget : targetLayer >= lastTarget;
-        targetLayer += step) {
-      if (this.thread.is_stop_auto_router_requested()) {
-        return null;
-      }
-      app.freerouting.rules.ViaInfo viaInfo =
-          this.routing_board.get_via_info_for_layers(netNo, startLayer, targetLayer);
-      if (viaInfo == null) {
-        continue;
-      }
-      removeEscapeViasOnPin(boardPin);
-      this.routing_board.start_marking_changed_area();
-      Via insertedVia = this.routing_board.insertEscapeVia(boardPin, viaInfo, this.settings);
-      if (insertedVia == null) {
-        continue;
-      }
-      FRLogger.trace("BatchFanout.tryFanoutWithEscapeVia", "FANOUT_DIAG",
-          "event=escape_via_inserted, pin=" + pinName
-              + ", net=" + netNo
-              + ", targetLayer=" + targetLayer
-              + ", via=" + viaInfo.get_name(),
-          pinName, new app.freerouting.geometry.planar.Point[]{boardPin.get_center()});
-
-      FanoutEscalationResult retry = tryFanoutAndForcedStub(
-          boardPin, pinName, netNo, ripupCosts, timeLimit, componentGravity, "targetLayer=" + targetLayer,
-          allowForcedStub);
-      if (retry != null) {
-        return retry;
-      }
-    }
-    return null;
-  }
-
-  private FanoutEscalationResult tryFanoutAndForcedStub(app.freerouting.board.Pin boardPin, String pinName,
-      int netNo, int ripupCosts, TimeLimit timeLimit, FloatPoint componentGravity, String context,
-      boolean allowForcedStub) {
-    if (this.thread.is_stop_auto_router_requested()) {
-      return null;
-    }
-    this.routing_board.start_marking_changed_area();
-    this.routing_board.generate_snapshot();
-    AutorouteAttemptResult result =
-        this.routing_board.fanout(boardPin, this.settings, ripupCosts, this.thread, timeLimit);
-    boolean pinEscaped = isPinEscaped(boardPin);
-    if (shouldKeepFanoutAttempt(result, pinEscaped)) {
-      return new FanoutEscalationResult(result, true);
-    }
-    rollbackFanoutAttempt(pinName, netNo, result.state.name());
-    FanoutDiagnostics.incrementEscapeViaRollback();
-
-    if (!allowForcedStub) {
-      return null;
-    }
-
-    this.routing_board.start_marking_changed_area();
-    this.routing_board.generate_snapshot();
-    if (FanoutForcedStub.tryInsertDrillEndStub(boardPin, this.routing_board, this.settings, componentGravity)) {
-      pinEscaped = isPinEscaped(boardPin);
-      if (pinEscaped) {
-        FRLogger.trace("BatchFanout.tryFanoutAndForcedStub", "FANOUT_DIAG",
-            "event=forced_stub_success, pin=" + pinName + ", net=" + netNo + ", context=" + context,
-            pinName, new app.freerouting.geometry.planar.Point[]{boardPin.get_center()});
-        return new FanoutEscalationResult(new AutorouteAttemptResult(AutorouteAttemptState.ROUTED), true);
-      }
-      rollbackFanoutAttempt(pinName, netNo, "forced_stub_not_escaped");
-    } else {
-      this.routing_board.pop_snapshot();
-    }
-    return null;
-  }
-
-  private FloatPoint getPinComponentGravity(app.freerouting.board.Pin boardPin) {
-    for (Component component : this.sorted_components) {
-      for (Component.Pin pin : component.smd_pins) {
-        if (pin.board_pin == boardPin) {
-          return component.gravity_center_of_smd_pins;
-        }
-      }
-    }
-    return null;
-  }
-
   private boolean isPinEscaped(app.freerouting.board.Pin pin) {
     Set<Item> contacts = pin.get_normal_contacts();
     for (Item contact : contacts) {

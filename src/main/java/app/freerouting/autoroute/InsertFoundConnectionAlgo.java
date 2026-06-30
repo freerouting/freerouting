@@ -45,105 +45,32 @@ public class InsertFoundConnectionAlgo {
     }
     int curr_layer = p_connection.target_layer;
     InsertFoundConnectionAlgo new_instance = new InsertFoundConnectionAlgo(p_board, p_ctrl);
-    boolean is_same_layer_fanout = p_ctrl.is_fanout && (p_connection.start_layer == p_connection.target_layer)
-        && p_connection.connection_items.stream().allMatch(item -> item.layer == p_connection.start_layer);
-    boolean is_fanout_drill_end = p_ctrl.is_fanout && p_connection.target_item == null;
-    double resolution = p_board.communication.get_resolution(app.freerouting.board.Unit.MM);
-    double minEscapeLengthMm = FanoutDiagnostics.resolveMinLenMm(p_ctrl.settings);
-    double minLen = minEscapeLengthMm * resolution;
-    if (FanoutDiagnostics.isEnabled(p_ctrl)) {
-      FanoutDiagnostics.trace(p_ctrl, "InsertFoundConnectionAlgo.get_instance", "connection_path",
-          "startLayer=" + p_connection.start_layer
-              + ", targetLayer=" + p_connection.target_layer
-              + ", sameLayerFanout=" + is_same_layer_fanout
-              + ", drillEnd=" + is_fanout_drill_end
-              + ", minEscapeLengthMm=" + minEscapeLengthMm
-              + ", pinCenter=" + FanoutDiagnostics.formatPoint(p_ctrl.fanout_start_pin_center)
-              + ", " + FanoutDiagnostics.formatConnectionItems(p_connection.connection_items));
-    }
-
-    FanoutEscapePath.EscapePlan escapePlan = null;
-    java.util.List<LocateFoundConnectionAlgoAnyAngle.ResultItem> connectionItemsToInsert =
-        new java.util.ArrayList<>(p_connection.connection_items);
-    if (p_ctrl.is_fanout) {
-      escapePlan = FanoutEscapePath.planEscape(
-          p_connection.connection_items, p_ctrl.fanout_start_pin_center, minLen, is_fanout_drill_end, p_board, p_ctrl);
-      if (escapePlan != null) {
-        connectionItemsToInsert = escapePlan.items();
-      } else if (is_fanout_drill_end) {
-        FRLogger.debug("InsertFoundConnectionAlgo: escape path planning failed for net #" + p_ctrl.net_no
-            + ", using natural drill path");
-      } else {
-        FRLogger.debug("InsertFoundConnectionAlgo: escape path planning failed for net #" + p_ctrl.net_no);
-        return null;
-      }
-      if (escapePlan != null && escapePlan.landing() != null) {
-        FanoutEscapePath.LandingPlan landing = escapePlan.landing();
-        FanoutDiagnostics.trace(p_ctrl, "InsertFoundConnectionAlgo.get_instance", "landing_via_chosen",
-            "viaLoc=" + FanoutDiagnostics.formatPoint(landing.landingPoint())
-                + ", landingLayer=" + landing.landingLayer()
-                + ", landingItemIndex=" + landing.landingItemIndex()
-                + ", pinToViaDist=" + FanoutDiagnostics.formatLengthMm(landing.landingLengthFromPin(), resolution)
-                + ", withinMin=" + (landing.landingLengthFromPin() >= minLen));
-      }
-    }
-
-    FanoutEscapePath.LandingPlan landingPlan = escapePlan != null ? escapePlan.landing() : null;
-
-    int connection_item_index = 0;
-    boolean landingViaInserted = false;
-    for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : connectionItemsToInsert) {
-      LocateFoundConnectionAlgoAnyAngle.ResultItem item_to_insert = curr_new_item;
-
+    for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
       if (true) {
-        Point startCorner = item_to_insert.corners.length > 0 ? item_to_insert.corners[0] : null;
-        Point endCorner = item_to_insert.corners.length > 0
-            ? item_to_insert.corners[item_to_insert.corners.length - 1]
+        Point startCorner = curr_new_item.corners.length > 0 ? curr_new_item.corners[0] : null;
+        Point endCorner = curr_new_item.corners.length > 0
+            ? curr_new_item.corners[curr_new_item.corners.length - 1]
             : null;
         FRLogger.trace("compare_trace_connection_item_raw net=" + p_ctrl.net_no
-            + ", item_layer=" + item_to_insert.layer
-            + ", corner_count=" + item_to_insert.corners.length
+            + ", item_layer=" + curr_new_item.layer
+            + ", corner_count=" + curr_new_item.corners.length
             + ", start=" + formatPoint(startCorner)
             + ", end=" + formatPoint(endCorner));
       }
-      if (p_ctrl.is_fanout && curr_layer != item_to_insert.layer) {
-        if (!new_instance.insert_via(item_to_insert.corners[0], curr_layer, item_to_insert.layer)) {
-          FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
-          return null;
-        }
-      } else if (curr_layer != item_to_insert.layer) {
-        if (!new_instance.insert_via(item_to_insert.corners[0], curr_layer, item_to_insert.layer)) {
-          FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
-          return null;
-        }
+      if (!new_instance.insert_via(curr_new_item.corners[0], curr_layer, curr_new_item.layer)) {
+        FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
+        return null;
       }
-      curr_layer = item_to_insert.layer;
-      if (!new_instance.insert_trace(item_to_insert)) {
+      curr_layer = curr_new_item.layer;
+      if (!new_instance.insert_trace(curr_new_item)) {
         FRLogger.debug("InsertFoundConnectionAlgo: insert trace failed for net #" + p_ctrl.net_no);
         return null;
       }
-      connection_item_index++;
     }
-    if (p_ctrl.is_fanout && is_fanout_drill_end) {
-      int landingLayer = landingPlan != null ? landingPlan.landingLayer() : curr_layer;
-      IntPoint landingPoint = landingPlan != null && landingPlan.landingPoint() instanceof IntPoint planned
-          ? planned
-          : new_instance.last_corner;
-      if (landingPoint != null
-          && new_instance.insert_drill_end_landing_via(landingPoint, landingLayer)) {
-        landingViaInserted = true;
-      } else {
-        FRLogger.debug("InsertFoundConnectionAlgo: drill-end landing via failed for net #" + p_ctrl.net_no);
-        return null;
-      }
-    } else if (!new_instance.insert_via(new_instance.last_corner, curr_layer, p_connection.start_layer)) {
+    if (!new_instance.insert_via(new_instance.last_corner, curr_layer, p_connection.start_layer)) {
       return null;
     }
-    if (p_ctrl.is_fanout && is_fanout_drill_end && !landingViaInserted) {
-      FRLogger.debug("InsertFoundConnectionAlgo: drill-end fanout missing landing via for net #" + p_ctrl.net_no);
-      return null;
-    }
-    if (!is_same_layer_fanout && p_connection.target_item instanceof PolylineTrace to_trace) {
+    if (p_connection.target_item instanceof PolylineTrace to_trace) {
       if (new_instance.first_corner != null) {
         p_board.connect_to_trace(new_instance.first_corner, to_trace, p_ctrl.trace_half_width[p_connection.start_layer], p_ctrl.trace_clearance_class_no);
       } else {
@@ -159,13 +86,6 @@ public class InsertFoundConnectionAlgo {
     }
 
     p_board.normalize_traces(p_ctrl.net_no);
-
-    if (FanoutDiagnostics.isEnabled(p_ctrl)) {
-      FanoutDiagnostics.trace(p_ctrl, "InsertFoundConnectionAlgo.get_instance", "insert_complete",
-          "firstCorner=" + formatPoint(new_instance.first_corner)
-              + ", lastCorner=" + formatPoint(new_instance.last_corner)
-              + ", itemsInserted=" + connection_item_index);
-    }
 
     return new_instance;
   }
@@ -232,12 +152,9 @@ public class InsertFoundConnectionAlgo {
       if (ok_point != null && ok_point != insert_polyline.last_corner() && ctrl.with_neckdown && curr_corner_arr.length == 2) {
         neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_trace.layer, start_pin, end_pin);
       }
-      if (!neckdown_inserted && ok_point != null && ok_point != insert_polyline.last_corner() && ctrl.is_fanout
-          && curr_corner_arr.length == 2) {
-        Point from_point = insert_polyline.first_corner();
-        Point to_point = insert_polyline.last_corner();
-        remove_fanout_partial_trace(from_point, p_trace.layer, net_no_arr);
-        micro_neckdown_inserted = insert_fanout_uniform_width_segment(from_point, to_point, p_trace.layer, net_no_arr);
+      if (!neckdown_inserted && ok_point != insert_polyline.last_corner() && ctrl.is_fanout && curr_corner_arr.length == 2) {
+        micro_neckdown_inserted = insert_fanout_micro_neckdown(ok_point, curr_corner_arr[1], p_trace.layer,
+            net_no_arr, start_pin, end_pin);
       }
       if (ok_point == insert_polyline.last_corner() || neckdown_inserted || micro_neckdown_inserted) {
         from_corner_no = i;
@@ -371,55 +288,50 @@ public class InsertFoundConnectionAlgo {
     return result;
   }
 
-  /**
-   * Inserts a fanout segment at one uniform trace width. Partial inserts at the net width are
-   * removed and retried so escape paths never mix wide and narrow segments on the same leg.
-   */
-  private boolean insert_fanout_uniform_width_segment(Point from_point, Point to_point, int layer, int[] net_no_arr) {
-    if (from_point == null || to_point == null || from_point.equals(to_point)) {
+  private boolean insert_fanout_micro_neckdown(Point ok_point, Point target_point, int layer, int[] net_no_arr,
+      Pin start_pin, Pin end_pin) {
+    Point from_point = ok_point != null ? ok_point : target_point;
+    if (from_point == null || target_point == null || from_point.equals(target_point)) {
       return false;
     }
     int base_half_width = ctrl.trace_half_width[layer];
     LinkedHashSet<Integer> candidate_half_widths = new LinkedHashSet<>();
-    candidate_half_widths.add(base_half_width);
+    if (start_pin != null && start_pin.is_on_layer(layer)) {
+      candidate_half_widths.add(start_pin.get_trace_neckdown_halfwidth(layer));
+    }
+    if (end_pin != null && end_pin.is_on_layer(layer)) {
+      candidate_half_widths.add(end_pin.get_trace_neckdown_halfwidth(layer));
+    }
     candidate_half_widths.add(Math.max(1, (base_half_width * 3) / 4));
     candidate_half_widths.add(Math.max(1, (base_half_width * 3) / 5));
     candidate_half_widths.add(Math.max(1, base_half_width / 2));
 
     for (int candidate_half_width : candidate_half_widths) {
-      if (candidate_half_width <= 0) {
+      if (candidate_half_width <= 0 || candidate_half_width >= base_half_width) {
         continue;
       }
-      Point candidate_ok_point = board.insert_forced_trace_segment(from_point, to_point, candidate_half_width,
+      Point candidate_ok_point = board.insert_forced_trace_segment(from_point, target_point, candidate_half_width,
           layer, net_no_arr, ctrl.trace_clearance_class_no, ctrl.max_shove_trace_recursion_depth,
           ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE,
           ctrl.pull_tight_accuracy, true, null);
-      if (candidate_ok_point != null && candidate_ok_point.equals(to_point)) {
-        traceFanoutDiagnostic("trace_insert_uniform_width_success",
+      if (candidate_ok_point == target_point) {
+        traceFanoutDiagnostic("trace_insert_micro_neckdown_success",
             "layer=" + layer
-                + ", half_width=" + candidate_half_width
+                + ", candidate_half_width=" + candidate_half_width
                 + ", base_half_width=" + base_half_width
                 + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
                 + ", from=" + formatPoint(from_point)
-                + ", to=" + formatPoint(to_point));
+                + ", to=" + formatPoint(target_point));
         return true;
       }
-      remove_fanout_partial_trace(from_point, layer, net_no_arr);
     }
-    traceFanoutDiagnostic("trace_insert_uniform_width_failed",
+    traceFanoutDiagnostic("trace_insert_micro_neckdown_failed",
         "layer=" + layer
             + ", base_half_width=" + base_half_width
             + ", trace_clearance_class=" + ctrl.trace_clearance_class_no
             + ", from=" + formatPoint(from_point)
-            + ", to=" + formatPoint(to_point));
+            + ", to=" + formatPoint(target_point));
     return false;
-  }
-
-  private void remove_fanout_partial_trace(Point from_point, int layer, int[] net_no_arr) {
-    Trace partial_trace = board.get_trace_tail(from_point, layer, net_no_arr);
-    if (partial_trace != null) {
-      board.remove_item(partial_trace);
-    }
   }
 
   boolean insert_neckdown(Point p_from_corner, Point p_to_corner, int p_layer, Pin p_start_pin, Pin p_end_pin) {
@@ -528,26 +440,17 @@ public class InsertFoundConnectionAlgo {
     int[] net_no_arr = new int[1];
     net_no_arr[0] = ctrl.net_no;
     ViaInfo via_info = null;
-    ViaInfo restricted_candidate = this.board.get_via_info_for_layers(ctrl.net_no, from_layer, to_layer);
-    if (restricted_candidate != null
-        && ForcedViaAlgo.check(restricted_candidate, p_location, net_no_arr, this.ctrl.max_shove_trace_recursion_depth,
-            this.ctrl.max_shove_via_recursion_depth, this.board, this.ctrl.trace_half_width,
-            this.ctrl.trace_clearance_class_no)) {
-      via_info = restricted_candidate;
-    }
-    if (via_info == null) {
-      for (int i = 0; i < this.ctrl.via_rule.via_count(); i++) {
-        ViaInfo curr_via_info = this.ctrl.via_rule.get_via(i);
-        Padstack curr_via_padstack = curr_via_info.get_padstack();
-        if (curr_via_padstack.from_layer() > from_layer || curr_via_padstack.to_layer() < to_layer) {
-          continue;
-        }
-        if (ForcedViaAlgo.check(curr_via_info, p_location, net_no_arr, this.ctrl.max_shove_trace_recursion_depth,
-            this.ctrl.max_shove_via_recursion_depth, this.board, this.ctrl.trace_half_width,
-            this.ctrl.trace_clearance_class_no)) {
-          via_info = curr_via_info;
-          break;
-        }
+    for (int i = 0; i < this.ctrl.via_rule.via_count(); i++) {
+      ViaInfo curr_via_info = this.ctrl.via_rule.get_via(i);
+      Padstack curr_via_padstack = curr_via_info.get_padstack();
+      if (curr_via_padstack.from_layer() > from_layer || curr_via_padstack.to_layer() < to_layer) {
+        continue;
+      }
+      if (ForcedViaAlgo.check(curr_via_info, p_location, net_no_arr, this.ctrl.max_shove_trace_recursion_depth,
+          this.ctrl.max_shove_via_recursion_depth, this.board, this.ctrl.trace_half_width,
+          this.ctrl.trace_clearance_class_no)) {
+        via_info = curr_via_info;
+        break;
       }
     }
     if (via_info == null) {
@@ -580,68 +483,20 @@ public class InsertFoundConnectionAlgo {
     return true;
   }
 
-  /**
-   * Inserts the single-layer landing via at the far end of a fanout escape wire.
-   */
-  private boolean insert_drill_end_landing_via(IntPoint preferredPoint, int layer) {
-    if (preferredPoint != null && insert_fanout_end_via(preferredPoint, layer)) {
-      return true;
-    }
-    if (last_corner != null && insert_fanout_end_via_with_fallback(last_corner, layer)) {
-      return true;
-    }
-    return preferredPoint != null && insert_fanout_end_via_with_fallback(preferredPoint, layer);
-  }
-
-  private boolean insert_fanout_end_via(Point p_location, int p_layer) {
-    ViaInfo via_info = this.board.get_fanout_end_via_info(ctrl.net_no, p_layer, ctrl.settings);
-    if (via_info == null) {
-      FRLogger.debug("InsertFoundConnectionAlgo: fanout end via info not found for net #" + ctrl.net_no
-          + " on layer " + p_layer);
-      return false;
-    }
-    int[] net_no_arr = new int[] { ctrl.net_no };
-    return ForcedViaAlgo.insert(via_info, p_location, net_no_arr, this.ctrl.trace_clearance_class_no,
-        this.ctrl.trace_half_width, this.ctrl.max_shove_trace_recursion_depth, this.ctrl.max_shove_via_recursion_depth,
-        this.board);
-  }
-
-  private boolean insert_fanout_end_via_with_fallback(IntPoint traceEnd, int layer) {
-    if (insert_fanout_end_via(traceEnd, layer)) {
-      return true;
-    }
-    if (insert_via(traceEnd, layer, ctrl.fanout_start_pin_layer)) {
-      return true;
-    }
-    double resolution = board.communication.get_resolution(app.freerouting.board.Unit.MM);
-    double step = 0.2 * resolution;
-    if (ctrl.fanout_start_pin_center == null) {
-      return false;
-    }
-    FloatPoint pinCenter = ctrl.fanout_start_pin_center.to_float();
-    FloatPoint end = traceEnd.to_float();
-    double dx = end.x - pinCenter.x;
-    double dy = end.y - pinCenter.y;
-    double dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist <= step) {
-      return false;
-    }
-    for (double offset = step; offset <= dist; offset += step) {
-      int tryX = (int) Math.round(end.x - (offset / dist) * dx);
-      int tryY = (int) Math.round(end.y - (offset / dist) * dy);
-      IntPoint tryPoint = new IntPoint(tryX, tryY);
-      if (insert_fanout_end_via(tryPoint, layer)) {
-        traceFanoutDiagnostic("drill_end_via_fallback",
-            "layer=" + layer + ", offsetMm=" + FanoutDiagnostics.formatLengthMm(offset, resolution)
-                + ", location=" + formatPoint(tryPoint));
-        return true;
-      }
-    }
-    return false;
+  private boolean shouldTraceFanoutDiagnostics() {
+    return ctrl.is_fanout
+        && ctrl.fanout_start_pin_name != null
+        && ctrl.fanout_start_pin_name.startsWith("U27-");
   }
 
   private void traceFanoutDiagnostic(String event, String message) {
-    FanoutDiagnostics.trace(ctrl, "InsertFoundConnectionAlgo", event, message);
+    if (!shouldTraceFanoutDiagnostics()) {
+      return;
+    }
+    FRLogger.trace("FANOUT_DIAG event=" + event
+        + ", pin=" + ctrl.fanout_start_pin_name
+        + ", net=" + ctrl.net_no
+        + ", " + message);
   }
 
   private static String formatPoint(Point point) {
