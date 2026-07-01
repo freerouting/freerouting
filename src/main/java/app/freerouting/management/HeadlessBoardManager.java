@@ -503,7 +503,7 @@ public class HeadlessBoardManager implements BoardManager {
       }
 
       if (this.board != null) {
-        var boardStats = new BoardStatistics(this.board);
+        var boardStats = new BoardStatistics(this.board, null, false);
         FRAnalytics.fileLoaded("DSN", GSON.toJson(boardStats));
         this.board.reduce_nets_of_route_items();
         originalBoardChecksum = calculateCrc32();
@@ -564,7 +564,7 @@ public class HeadlessBoardManager implements BoardManager {
       }
 
       if (this.board != null) {
-        var boardStats = new BoardStatistics(this.board);
+        var boardStats = new BoardStatistics(this.board, null, false);
         FRAnalytics.fileLoaded("KICAD_JSON", GSON.toJson(boardStats));
         this.board.reduce_nets_of_route_items();
         originalBoardChecksum = calculateCrc32();

@@ -58,10 +58,6 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   private transient Item shove_failing_obstacle;
   private transient int shove_failing_layer = -1;
 
-  /**
-   * Tracks routing failures for items on this board.
-   * Kept persistent to track failures across passes and threads.
-   */
   public final app.freerouting.autoroute.RoutingFailureLog failureLog;
 
   /**

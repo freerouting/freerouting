@@ -190,6 +190,13 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
       return null;
     }
     TileShape[] precalculated_tree_shapes = this.get_precalculated_tree_shapes(p_tree);
+    if (precalculated_tree_shapes == null || p_index < 0 || p_index >= precalculated_tree_shapes.length) {
+      this.clear_derived_data();
+      precalculated_tree_shapes = this.get_precalculated_tree_shapes(p_tree);
+    }
+    if (precalculated_tree_shapes == null || p_index < 0 || p_index >= precalculated_tree_shapes.length) {
+      return null;
+    }
     return precalculated_tree_shapes[p_index];
   }
 

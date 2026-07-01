@@ -653,7 +653,7 @@ public class RouterSettings implements Serializable, Cloneable {
    * lowered automatically to the pin with, if necessary.
    */
   public boolean get_automatic_neckdown() {
-    return this.automatic_neckdown;
+    return this.automatic_neckdown != null && this.automatic_neckdown;
   }
 
   /**

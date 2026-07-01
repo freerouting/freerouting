@@ -222,7 +222,7 @@ public class BatchFanout {
         int extraViasThisPass = Math.max(0, this.routing_board.get_vias().size() - viasBeforePass);
         maybePublishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
             insert_error_count, extraViasThisPass, false, passStart);
-        if (this.thread.is_stop_auto_router_requested()) {
+        if (this.thread != null && this.thread.is_stop_auto_router_requested()) {
           BoardStatistics passStats = new BoardStatistics(this.routing_board, null, false);
           EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
           publishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
@@ -294,7 +294,7 @@ public class BatchFanout {
     if (progressListener == null) {
       return;
     }
-    BoardStatistics boardStatistics = this.routing_board.get_statistics();
+    BoardStatistics boardStatistics = new BoardStatistics(this.routing_board, null, false);
     long duration = Math.max(0, System.currentTimeMillis() - passStart);
     progressListener.onProgress(
         new FanoutPassStatus(
