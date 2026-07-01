@@ -92,7 +92,7 @@ public class BatchOptimizer extends NamedAlgorithm {
         .get_vias()
         .size() + ", trace length: " + Math.round(board.cumulative_trace_length()));
 
-    double route_improved = -1;
+    double scoreImprovement = -1;
     int currentPass = 0;
     use_increased_ripup_costs = true;
 
@@ -113,18 +113,46 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
-    while (((route_improved >= this.settings.optimizer.optimizationImprovementThreshold) || (route_improved < 0))
-        && (this.settings.optimizer.maxPasses == null || currentPass < this.settings.optimizer.maxPasses)
+    while ((this.settings.optimizer.maxPasses == null || currentPass < this.settings.optimizer.maxPasses)
         && (this.settings.optimizer.maxItems == null || this.totalItemsOptimized < this.settings.optimizer.maxItems)
         && (!this.thread.isStopRequested())) {
       ++currentPass;
+
+      float scoreBeforePass = board.get_statistics().getNormalizedScore(job.routerSettings.scoring);
+
+      // Stop if potential improvement is less than threshold
+      if (scoreBeforePass * (1 + this.settings.optimizer.optimizationImprovementThreshold) >= 1000.0f) {
+        job.logInfo(String.format(java.util.Locale.US,
+            "Stopping optimizer because the current board score (%.2f) is already close to the maximum score (1000). Remaining potential improvement is less than the threshold (%.2f%%).",
+            scoreBeforePass, this.settings.optimizer.optimizationImprovementThreshold * 100));
+        break;
+      }
+
       String currentBoardHash = this.board.get_hash();
       job.setCurrentPass(currentPass);
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, currentBoardHash));
 
       boolean with_preferred_directions = currentPass % 2 != 0; // to create more variations
-      route_improved = opt_route_pass(currentPass, with_preferred_directions);
+      opt_route_pass(currentPass, with_preferred_directions);
       peakHeapMb = Math.max(peakHeapMb, sampleHeapUsageMb());
+
+      float scoreAfterPass = board.get_statistics().getNormalizedScore(job.routerSettings.scoring);
+      double passImprovement = scoreBeforePass > 0 ? (double) (scoreAfterPass - scoreBeforePass) / scoreBeforePass : 0;
+
+      if (this.use_increased_ripup_costs && scoreAfterPass <= scoreBeforePass) {
+        this.use_increased_ripup_costs = false;
+        // Keep the optimizer going to try with normal ripup costs
+        scoreImprovement = -1;
+      } else {
+        scoreImprovement = passImprovement;
+      }
+
+      if (scoreImprovement != -1 && scoreImprovement < this.settings.optimizer.optimizationImprovementThreshold) {
+        job.logInfo(String.format(java.util.Locale.US,
+            "Stopping optimizer because the improvement in this pass (%.4f%%) is below the threshold (%.2f%%).",
+            scoreImprovement * 100, this.settings.optimizer.optimizationImprovementThreshold * 100));
+        break;
+      }
     }
 
     this.fireTaskStateChangedEvent(
