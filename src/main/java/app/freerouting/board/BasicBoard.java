@@ -1391,7 +1391,8 @@ public class BasicBoard implements Serializable {
     long startGroup = System.nanoTime();
     // Group items by priority to optimize rendering loops
     int maxPriority = Drawable.MAX_DRAW_PRIORITY;
-    java.util.List<Item>[] itemsByPriority = new java.util.List[maxPriority + 1];
+    @SuppressWarnings("unchecked")
+    java.util.List<Item>[] itemsByPriority = (java.util.List<Item>[]) new java.util.List[maxPriority + 1];
     for (int i = 0; i <= maxPriority; i++) {
       itemsByPriority[i] = new java.util.ArrayList<>();
     }
@@ -1404,11 +1405,34 @@ public class BasicBoard implements Serializable {
     long endGroup = System.nanoTime();
 
     long startLoop = System.nanoTime();
+    
+    // Viewport culling bounds in board coordinates
+    java.awt.Rectangle clipRect = p_graphics.getClipBounds();
+    IntBox clipBox = clipRect != null ? p_graphics_context.coordinate_transform.screen_to_board(clipRect) : null;
+
+    long timeTrace = 0;
+    long timeVia = 0;
+    long timePin = 0;
+    long timeConduction = 0;
+    long timeOther = 0;
+    int countTrace = 0;
+    int countVia = 0;
+    int countPin = 0;
+    int countConduction = 0;
+    int countOther = 0;
+    int culledCount = 0;
+
     // Draw elements according to the calculated steps sequence
     for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= maxPriority; curr_priority++) {
       java.util.List<Item> priorityItems = itemsByPriority[curr_priority];
       for (RenderStep step : drawSteps) {
         for (Item curr_item : priorityItems) {
+          if (clipBox != null && !clipBox.intersects(curr_item.bounding_box())) {
+            culledCount++;
+            continue;
+          }
+
+          long itemStart = System.nanoTime();
           if (step.isVirtual) {
             // Virtual layer step: render ComponentOutline and ComponentObstacleArea (courtyard)
             // items matching that virtual layer index
@@ -1437,6 +1461,24 @@ public class BasicBoard implements Serializable {
             if (!(curr_item instanceof ComponentOutline) && !(curr_item instanceof ComponentObstacleArea)) {
               curr_item.draw_layer(p_graphics, p_graphics_context, step.index);
             }
+          }
+          long itemDur = System.nanoTime() - itemStart;
+
+          if (curr_item instanceof PolylineTrace) {
+            timeTrace += itemDur;
+            countTrace++;
+          } else if (curr_item instanceof Via) {
+            timeVia += itemDur;
+            countVia++;
+          } else if (curr_item instanceof Pin) {
+            timePin += itemDur;
+            countPin++;
+          } else if (curr_item instanceof ConductionArea) {
+            timeConduction += itemDur;
+            countConduction++;
+          } else {
+            timeOther += itemDur;
+            countOther++;
           }
         }
       }
@@ -1481,13 +1523,22 @@ public class BasicBoard implements Serializable {
 
     long drawEnd = System.nanoTime();
     FRLogger.debug(String.format(
-        "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms, loop=%.2f ms, texts=%.2f ms] (items: %d)",
+        "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms, loop=%.2f ms (culled: %d), texts=%.2f ms] (items: %d)",
         (drawEnd - drawStart) / 1_000_000.0,
         (endCollect - startCollect) / 1_000_000.0,
         (endGroup - startGroup) / 1_000_000.0,
         (endLoop - startLoop) / 1_000_000.0,
+        culledCount,
         (endText - startText) / 1_000_000.0,
         allItems.size()
+    ));
+    FRLogger.debug(String.format(
+        "  - Item drawing times: Trace=%.2f ms (%d), Via=%.2f ms (%d), Pin=%.2f ms (%d), Plane=%.2f ms (%d), Other=%.2f ms (%d)",
+        timeTrace / 1_000_000.0, countTrace,
+        timeVia / 1_000_000.0, countVia,
+        timePin / 1_000_000.0, countPin,
+        timeConduction / 1_000_000.0, countConduction,
+        timeOther / 1_000_000.0, countOther
     ));
   }
 
