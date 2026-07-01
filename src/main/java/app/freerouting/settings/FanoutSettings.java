@@ -100,6 +100,12 @@ public class FanoutSettings implements Serializable, Cloneable {
   public String pinSortingOrder;
 
   /**
+   * Whether to fallback to board-wide via rules if a net has no via rules defined or an empty via list during fanout.
+   */
+  @SerializedName("fallback_to_board_vias")
+  public Boolean fallbackToBoardVias;
+
+  /**
    * No-arg constructor required for deserialisation and {@link #clone()}.
    */
   public FanoutSettings() {

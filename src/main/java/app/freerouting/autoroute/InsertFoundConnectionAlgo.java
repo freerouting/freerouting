@@ -58,12 +58,10 @@ public class InsertFoundConnectionAlgo {
             + ", end=" + formatPoint(endCorner));
       }
       if (!new_instance.insert_via(curr_new_item.corners[0], curr_layer, curr_new_item.layer)) {
-        FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
         return null;
       }
       curr_layer = curr_new_item.layer;
       if (!new_instance.insert_trace(curr_new_item)) {
-        FRLogger.debug("InsertFoundConnectionAlgo: insert trace failed for net #" + p_ctrl.net_no);
         return null;
       }
     }
@@ -440,12 +438,14 @@ public class InsertFoundConnectionAlgo {
     int[] net_no_arr = new int[1];
     net_no_arr[0] = ctrl.net_no;
     ViaInfo via_info = null;
+    boolean found_suitable_span = false;
     for (int i = 0; i < this.ctrl.via_rule.via_count(); i++) {
       ViaInfo curr_via_info = this.ctrl.via_rule.get_via(i);
       Padstack curr_via_padstack = curr_via_info.get_padstack();
       if (curr_via_padstack.from_layer() > from_layer || curr_via_padstack.to_layer() < to_layer) {
         continue;
       }
+      found_suitable_span = true;
       if (ForcedViaAlgo.check(curr_via_info, p_location, net_no_arr, this.ctrl.max_shove_trace_recursion_depth,
           this.ctrl.max_shove_via_recursion_depth, this.board, this.ctrl.trace_half_width,
           this.ctrl.trace_clearance_class_no)) {
@@ -454,7 +454,11 @@ public class InsertFoundConnectionAlgo {
       }
     }
     if (via_info == null) {
-      FRLogger.debug("InsertFoundConnectionAlgo: via mask not found for net #" + ctrl.net_no);
+      if (!found_suitable_span) {
+        FRLogger.debug("InsertFoundConnectionAlgo: via mask not found for net #" + ctrl.net_no + " covering layers " + from_layer + " to " + to_layer);
+      } else {
+        FRLogger.debug("InsertFoundConnectionAlgo: via placement blocked by clearance/shove limits for net #" + ctrl.net_no);
+      }
       traceFanoutDiagnostic("via_mask_not_found",
           "from_layer=" + from_layer
               + ", to_layer=" + to_layer

@@ -1008,6 +1008,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
     AutorouteControl ctrl_settings = new AutorouteControl(this, pin_net_no, routerSettings);
     ctrl_settings.is_fanout = true;
+    if (Boolean.TRUE.equals(routerSettings.fanout.fallbackToBoardVias)) {
+      app.freerouting.rules.ViaRule combined_via_rule = new app.freerouting.rules.ViaRule(ctrl_settings.via_rule.name + "_fallback");
+      for (int i = 0; i < ctrl_settings.via_rule.via_count(); i++) {
+        combined_via_rule.append_via(ctrl_settings.via_rule.get_via(i));
+      }
+      if (!this.rules.via_rules.isEmpty()) {
+        app.freerouting.rules.ViaRule default_via_rule = this.rules.via_rules.firstElement();
+        for (int i = 0; i < default_via_rule.via_count(); i++) {
+          app.freerouting.rules.ViaInfo default_via = default_via_rule.get_via(i);
+          if (!combined_via_rule.contains(default_via)) {
+            combined_via_rule.append_via(default_via);
+          }
+        }
+      }
+      ctrl_settings.via_rule = combined_via_rule;
+      ctrl_settings.rebuild_via_info(this, routerSettings.get_via_costs(), pin_net_no);
+    }
     Component pin_component = this.components.get(p_pin.get_component_no());
     if (pin_component != null && p_pin.name() != null) {
       ctrl_settings.fanout_start_pin_name = pin_component.name + "-" + p_pin.name();

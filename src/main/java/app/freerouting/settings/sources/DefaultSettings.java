@@ -115,6 +115,7 @@ public class DefaultSettings implements SettingsSource {
         settings.fanout.endViaDiameterMm = 0.250;
         settings.fanout.pinSortingOrder = "outer_first";
         settings.fanout.maxItems = Integer.MAX_VALUE;
+        settings.fanout.fallbackToBoardVias = true;
 
         // Optimizer defaults
         settings.optimizer.enabled = false;

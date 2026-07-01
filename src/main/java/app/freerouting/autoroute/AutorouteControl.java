@@ -88,7 +88,7 @@ public class AutorouteControl {
   /**
    * The possible (partial) vias, which can be used by the autorouter
    */
-  ViaRule via_rule;
+  public ViaRule via_rule;
   /**
    * The array of possible via ranges used bei the autorouter
    */
@@ -214,12 +214,17 @@ public class AutorouteControl {
         layer_active[i] = false;
       }
     }
+    rebuild_via_info(p_board, p_via_costs, p_net_no);
+  }
+
+  public void rebuild_via_info(RoutingBoard p_board, int p_via_costs, int p_net_no) {
     if (via_rule.via_count() > 0) {
       this.via_clearance_class = via_rule.get_via(0).get_clearance_class();
     } else {
       this.via_clearance_class = 1;
     }
     this.via_info_arr = new ViaMask[via_rule.via_count()];
+    this.attach_smd_allowed = false;
     for (int i = 0; i < via_rule.via_count(); i++) {
       ViaInfo curr_via = via_rule.get_via(i);
       if (curr_via.attach_smd_allowed()) {
