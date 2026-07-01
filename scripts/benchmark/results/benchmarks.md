@@ -1,5 +1,5 @@
 # Freerouting Nightly Benchmarks Report
-Generated on: 2026-07-01 09:35:44
+Generated on: 2026-07-01 09:40:33
 System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)
 
 This report lists the latest benchmark run results for each Freerouting version and fixture combination.
@@ -28,7 +28,6 @@ This report lists the latest benchmark run results for each Freerouting version 
 | [KiCad_10_demos](../fixtures/KiCad_10_demos) | [multichannel_mixer.dsn](../fixtures/KiCad_10_demos/multichannel_mixer.dsn)                     | **1.9.0**       |       75 |          0 |   212 |         8.13 |            288 |
 | [KiCad_10_demos](../fixtures/KiCad_10_demos) | [pic_programmer.dsn](../fixtures/KiCad_10_demos/pic_programmer.dsn)                             | **s2026.06.30** |        0 |          1 |   998 |        13.03 |            244 |
 | [KiCad_10_demos](../fixtures/KiCad_10_demos) | [RoyalBlue54L-Feather.dsn](../fixtures/KiCad_10_demos/RoyalBlue54L-Feather.dsn)                 | **1.9.0**       |       67 |        571 |   890 |      1711.13 |            240 |
-| [KiCad_10_demos](../fixtures/KiCad_10_demos) | [sonde xilinx.dsn](../fixtures/KiCad_10_demos/sonde xilinx.dsn)                                 | **s2026.06.30** |      N/A |        N/A |   N/A |         0.00 |              0 |
 | [KiCad_10_demos](../fixtures/KiCad_10_demos) | [StickHub.dsn](../fixtures/KiCad_10_demos/StickHub.dsn)                                         | **s2026.06.24** |        1 |         13 |   984 |      1794.76 |            853 |
 | [KiCad_10_demos](../fixtures/KiCad_10_demos) | [video.dsn](../fixtures/KiCad_10_demos/video.dsn)                                               | **1.9.0**       |       74 |         96 |   982 |      1774.43 |           1082 |
 | [KiCad_10_demos](../fixtures/KiCad_10_demos) | [vme-wren.dsn](../fixtures/KiCad_10_demos/vme-wren.dsn)                                         | **2.2.4**       |     1243 |         79 |   155 |      1779.28 |           5354 |
@@ -279,18 +278,6 @@ Size: 101.7 kB · Layers: 8 · Nets: 95 · Components: 37 · Dimensions: 58.4 x 
 | 2.2.4       | CLI  |                N/A |             N/A |         1809.00 |                N/A |        1809.00 |   0+  5+  0 |       69 |        224 |   780 |           1125 |           1462.5 |    6 / 0 | TIMEOUT |
 | s2026.06.24 | CLI  |                N/A |             N/A |             N/A |                N/A |            N/A |   1+  0+  0 |        0 |          0 |   N/A |            988 |              0.0 |    2 / 0 | TIMEOUT |
 | s2026.06.30 | CLI  |                N/A |             N/A |             N/A |                N/A |            N/A |   1+  0+  0 |        0 |          0 |   N/A |            567 |              0.0 |    2 / 0 | TIMEOUT |
-
-
-### Fixture: [sonde xilinx.dsn](../fixtures/KiCad_10_demos/sonde xilinx.dsn)
-
-Size: 30.8 kB · Layers: 2 · Nets: 42 · Components: 10 · Dimensions: 80.4 x 43.2 mm (34.7 cm²) · CAD: KiCad's Pcbnew (v10.0.2)
-
-| Version     | Mode | Fanout             | Fanout Time (s) | Router Time (s) | Optimizer Time (s) | Total Time (s) | Passes      | Unrouted | Violations | Score | Peak Heap (MB) | Total Alloc (GB) | Warn/Err | Notes                             |
-| :---------- | :--- | -----------------: | --------------: | --------------: | -----------------: | -------------: | ----------: | -------: | ---------: | ----: | -------------: | ---------------: | -------: | :-------------------------------- |
-| 1.9.0       | GUI  |                N/A |             N/A |             N/A |                N/A |            N/A |   0+  0+  0 |        0 |          0 |   N/A |              0 |              0.0 |    1 / 4 | FileNotFoundException             |
-| 2.2.4       | CLI  |                N/A |             N/A |             N/A |                N/A |            N/A |   0+  0+  0 |        0 |          0 |   N/A |              0 |              0.0 |   10 / 6 | LOAD ERROR, FileNotFoundException |
-| s2026.06.24 | CLI  |                N/A |             N/A |             N/A |                N/A |            N/A |   0+  0+  0 |        0 |          0 |   N/A |              0 |              0.0 |    8 / 6 | LOAD ERROR, FileNotFoundException |
-| s2026.06.30 | CLI  |                N/A |             N/A |             N/A |                N/A |            N/A |   0+  0+  0 |        0 |          0 |   N/A |              0 |              0.0 |    8 / 6 | LOAD ERROR, FileNotFoundException |
 
 
 ### Fixture: [StickHub.dsn](../fixtures/KiCad_10_demos/StickHub.dsn)

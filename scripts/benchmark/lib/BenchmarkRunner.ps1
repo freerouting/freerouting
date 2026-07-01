@@ -51,14 +51,14 @@ function Invoke-BenchmarkRun {
         "-Xmx$($Settings.heap_max)",
         "-Xms256m",
         "-XX:+HeapDumpOnOutOfMemoryError",
-        "-XX:HeapDumpPath=$LogsDir",
-        "-jar", $Binary.FullName,
-        "-de", $Fixture.FullName
+        "-XX:HeapDumpPath=`"$LogsDir`"",
+        "-jar", ('"{0}"' -f $Binary.FullName),
+        "-de", ('"{0}"' -f $Fixture.FullName)
     )
 
     # CLI Output Target
     $jvmArgs += "-do"
-    $jvmArgs += $outputFile
+    $jvmArgs += ('"{0}"' -f $outputFile)
 
     # Router and logger options (supported by both v1.9 and current builds)
     $jvmArgs += "--router.max_passes=$($Settings.max_passes)"
