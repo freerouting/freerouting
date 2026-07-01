@@ -35,7 +35,7 @@ function ConvertFrom-FrScore {
         return [PSCustomObject]@{ Score = $score; Unrouted = $unrouted; Violations = $violations }
     }
 
-    $scoreStr = $scoreStr.Trim()
+    $scoreStr = $scoreStr.Trim().TrimEnd('.', ',')
 
     # Pattern: 500.00 (2 unrouted and 1 violation)
     if ($scoreStr -match '^([\d.]+)\s*\(\s*(\d+)\s+unrouted\s+and\s+(\d+)\s+violations?\s*\)') {
