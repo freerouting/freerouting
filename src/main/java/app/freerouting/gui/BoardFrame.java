@@ -351,8 +351,8 @@ public class BoardFrame extends WindowBase {
     // Screen messages are displayed in the status bar, below the canvas.
     this.screen_messages = new ScreenMessages(this.message_panel.errorLabel, this.message_panel.warningLabel,
         this.message_panel.statusMessage, this.message_panel.additionalMessage,
-        this.message_panel.currentLayer, this.message_panel.currentBoardScore, this.message_panel.mousePosition,
-        this.message_panel.unitLabel, this.locale);
+        this.message_panel.currentLayer, this.message_panel.currentBoardScore, this.message_panel.etaLabel,
+        this.message_panel.mousePosition, this.message_panel.unitLabel, this.locale);
 
     // The scroll pane for the canvas of the routing board.
     this.scroll_pane = new JScrollPane();

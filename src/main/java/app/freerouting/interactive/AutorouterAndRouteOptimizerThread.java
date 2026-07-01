@@ -14,9 +14,11 @@ import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.autoroute.events.TaskStateChangedEventListener;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.Unit;
+import app.freerouting.core.RoutingEtaCalculator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.core.scoring.RoutingEta;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.io.FileFormat;
@@ -152,6 +154,11 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
   private BatchOptimizer batchOptimizer;
 
   /**
+   * The ETA calculator instance for this routing session.
+   */
+  private final RoutingEtaCalculator etaCalculator;
+
+  /**
    * Creates a new autorouter and optimizer thread for GUI-based routing.
    *
    * <p>Initialization process:
@@ -199,6 +206,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
   protected AutorouterAndRouteOptimizerThread(GuiBoardManager p_board_handling, RoutingJob routingJob) {
     super(p_board_handling, routingJob);
 
+    this.etaCalculator = routingJob.etaCalculator;
+
     routingJob.thread = this;
     routingJob.board = p_board_handling.get_routing_board();
 
@@ -238,6 +247,33 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         boardManager.screen_messages.set_batch_autoroute_info(event.getRouterCounters());
         boardManager.screen_messages.set_board_score(boardScore, event.getBoardStatistics().connections.incompleteCount,
             event.getBoardStatistics().clearanceViolations.totalCount);
+
+        // Update ETA calculator with current progress
+        RoutingEta currentEta = null;
+        if (event.getRouterCounters() != null) {
+          double elapsedSeconds = routingJob.startedAt != null
+              ? java.time.Duration.between(routingJob.startedAt, java.time.Instant.now()).toMillis() / 1000.0
+              : 0;
+          // Detect phase transitions from RouterCounters.phase
+          String phase = event.getRouterCounters().phase;
+          if (phase != null) {
+            if ("fanout".equals(phase)) {
+              // Only call onFanoutStarted once per phase; subsequent events with
+              // phase="fanout" should just update the fanout rate, not reset it.
+              // We use a flag to avoid repeated resets.
+              if (!"fanout".equals(etaCalculator.getCurrentPhase())) {
+                etaCalculator.onFanoutStarted();
+              }
+            } else if ("autoroute".equals(phase)) {
+              if (!"autoroute".equals(etaCalculator.getCurrentPhase())) {
+                etaCalculator.onAutorouteStarted();
+              }
+            }
+          }
+          etaCalculator.update(elapsedSeconds, event.getRouterCounters(), event.getBoardStatistics());
+        }
+        currentEta = etaCalculator.getCurrentEta();
+        boardManager.screen_messages.set_routing_eta(currentEta);
         boardManager.repaint();
       }
     });
@@ -451,7 +487,22 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
   protected void thread_action() {
     routingJob.startedAt = Instant.now();
     routingJob.state = RoutingJobState.RUNNING;
-      boardManager.set_num_threads(routingJob.routerSettings.maxThreads);
+    boardManager.set_num_threads(routingJob.routerSettings.maxThreads);
+
+    // Initialize the ETA calculator with settings
+    etaCalculator.startRouting();
+    if (routingJob.routerSettings.maxPasses != null) {
+      etaCalculator.setMaxPasses(routingJob.routerSettings.maxPasses);
+    }
+    if (routingJob.routerSettings.optimizer.maxPasses != null) {
+      etaCalculator.setMaxOptimizerPasses(routingJob.routerSettings.optimizer.maxPasses);
+    }
+    etaCalculator.setThreadCount(routingJob.routerSettings.maxThreads);
+
+    // Set total connectable items so the item-count model works from pass 1
+    // Use the total number of nets as an approximate scaling factor
+    etaCalculator.setTotalConnectableItems(
+        routingJob.board != null ? routingJob.board.rules.nets.max_net_no() : 0);
 
     // Start a background thread that periodically samples CPU time, total allocated
     // memory, and peak heap usage — mirroring the headless RoutingJobSchedulerActionThread.
@@ -501,6 +552,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       String start_message = tm.getText("batch_autorouter") + " " + tm.getText("stop_message");
       boardManager.screen_messages.set_status_message(start_message);
 
+      // Determine if fanout will run (it happens inside runBatchLoop())
+      boolean fanoutWillRun = routingJob.routerSettings.isFanoutEnabled()
+          && !this.is_stop_auto_router_requested();
+      if (fanoutWillRun) {
+        etaCalculator.onFanoutStarted();
+      }
+
       // Let's run the autorouter
       if (routingJob.routerSettings.getRunRouter() && !this.is_stop_auto_router_requested()) {
         // Cast to access runBatchLoop() which exists on both BatchAutorouter and
@@ -510,7 +568,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         } else if (batchAutorouter instanceof BatchAutorouterV19) {
           ((BatchAutorouterV19) batchAutorouter).runBatchLoop();
         }
-      } else if (routingJob.routerSettings.isFanoutEnabled() && !this.is_stop_auto_router_requested()) {
+      } else if (fanoutWillRun) {
         // Run only the fanout pre-pass
         Integer originalMaxPasses = routingJob.routerSettings.maxPasses;
         try {
@@ -524,6 +582,11 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
           routingJob.routerSettings.maxPasses = originalMaxPasses;
         }
       }
+
+      // After runBatchLoop returns, we've finished autoroute (and possibly fanout).
+      // The ETA calculator should now know we're in the autoroute phase.
+      // If fanout ran, it will have fired events with phase="fanout" that we detect,
+      // but we also ensure the phase is properly set for subsequent optimizer phase.
 
       boardManager.replaceRoutingBoard(routingJob.board);
 
@@ -580,6 +643,15 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       FRAnalytics.autorouterFinished();
 
       Thread.sleep(100);
+
+      // Before optimizer starts, signal the ETA calculator
+      boolean optimizerWillRun = (boardManager.get_num_threads() > 0)
+          && (routingJob.routerSettings.optimizer.enabled)
+          && routingJob.routerSettings.getRunOptimizer()
+          && !this.isStopRequested();
+      if (optimizerWillRun) {
+        etaCalculator.onOptimizerStarted();
+      }
 
       // Let's run the optimizer if it's enabled
       int num_threads = boardManager.get_num_threads();
@@ -678,10 +750,18 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
     if (this.isStopRequested()) {
       routingJob.finishedAt = Instant.now();
       routingJob.state = RoutingJobState.CANCELLED;
+      etaCalculator.onRoutingStopped();
     } else {
       routingJob.finishedAt = Instant.now();
       routingJob.state = RoutingJobState.COMPLETED;
       globalSettings.statistics.incrementJobsCompleted();
+      // Check if all nets were routed
+      int incompleteCount = boardManager.get_ratsnest().incomplete_count();
+      if (incompleteCount == 0) {
+        etaCalculator.onRoutingCompleted();
+      } else {
+        etaCalculator.onRoutingStopped();
+      }
     }
 
     for (ThreadActionListener hl : this.listeners) {

@@ -26,6 +26,7 @@ class BoardPanelStatus extends JPanel {
   public final JLabel additionalMessage;
   public final JLabel currentLayer;
   public final JLabel currentBoardScore;
+  public final JLabel etaLabel;
   public final JLabel mousePosition;
   public final JLabel unitLabel;
   // An icon for errors and warnings
@@ -107,6 +108,15 @@ class BoardPanelStatus extends JPanel {
     currentBoardScore = new JLabel();
     tm.setText(currentBoardScore, "current_board_score");
     rightMessagePanel.add(currentBoardScore, BorderLayout.CENTER);
+
+    // Initialize ETA label
+    etaLabel = new JLabel();
+    etaLabel.setText("");
+    etaLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    etaLabel.setMaximumSize(new Dimension(180, 14));
+    etaLabel.setMinimumSize(new Dimension(100, 14));
+    etaLabel.setPreferredSize(new Dimension(140, 14));
+    rightMessagePanel.add(etaLabel, BorderLayout.CENTER);
 
     // Create cursor panel
     JPanel cursorPanel = new JPanel(new BorderLayout());
