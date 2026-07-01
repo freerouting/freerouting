@@ -178,6 +178,10 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     FRLogger.traceEntry(optimizationPassId);
 
+    int consecutiveFailures = 0;
+    int maxConsecutiveFailures = this.settings.optimizer.maxConsecutiveFailures != null
+        ? this.settings.optimizer.maxConsecutiveFailures : 50;
+
     while (true) {
       if (this.thread.isStopRequested()) {
         FRLogger.traceExit(optimizationPassId);
@@ -194,6 +198,7 @@ public class BatchOptimizer extends NamedAlgorithm {
       ItemRouteResult result = opt_route_item(curr_item, p_with_preferred_directions, false);
       this.totalItemsOptimized++;
       if (result.improved()) {
+        consecutiveFailures = 0;
         if (progressThrottler.shouldUpdate()) {
           BoardStatistics boardStatisticsAfter = board.get_statistics();
           this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, board);
@@ -204,6 +209,14 @@ public class BatchOptimizer extends NamedAlgorithm {
                 ? 1.0 - ((((float) result.via_count() / boardStatisticsBefore.items.viaCount)
                     + (result.trace_length() / boardStatisticsBefore.traces.totalLength)) / 2)
                 : 0);
+      } else {
+        consecutiveFailures++;
+        if (consecutiveFailures >= maxConsecutiveFailures) {
+          job.logInfo(String.format(java.util.Locale.US,
+              "Stopping optimization pass #%d early after %d consecutive items could not be improved.",
+              p_pass_no, consecutiveFailures));
+          break;
+        }
       }
     }
 

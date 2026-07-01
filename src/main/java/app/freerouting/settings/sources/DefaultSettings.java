@@ -130,6 +130,7 @@ public class DefaultSettings implements SettingsSource {
         settings.optimizer.additionalRipupCostFactorAtStart = 10;
         settings.optimizer.traceRipupCostFactor = 0.6f;
         settings.optimizer.maxAutoroutePasses = 6;
+        settings.optimizer.maxConsecutiveFailures = 50;
 
         // Scalar trace-cost defaults (layer-specific arrays are omitted for the same reason as
         // the layer arrays above – their sizes depend on the board).

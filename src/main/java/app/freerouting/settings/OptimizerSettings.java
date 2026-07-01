@@ -49,6 +49,12 @@ public class OptimizerSettings implements Serializable, Cloneable {
   public Float optimizationImprovementThreshold;
 
   /**
+   * The maximum number of consecutive item optimization failures allowed before aborting the current pass.
+   */
+  @SerializedName("max_consecutive_failures")
+  public Integer maxConsecutiveFailures;
+
+  /**
    * A multiplier applied to the base ripup cost at the start of optimization.
    * Higher values make ripping up existing traces more expensive, prioritizing routing speed.
    */
