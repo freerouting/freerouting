@@ -1,6 +1,8 @@
 package app.freerouting.settings.sources;
 
+import app.freerouting.settings.OptimizerSettings;
 import app.freerouting.settings.RouterSettings;
+import app.freerouting.settings.ScoringSettings;
 import app.freerouting.settings.SettingsSource;
 
 /**
@@ -33,7 +35,7 @@ public class TestingSettings implements SettingsSource {
 
     public void setDefaultBendCost(double defaultBendCost) {
         if (this.settings.scoring == null) {
-            this.settings.scoring = new app.freerouting.settings.RouterScoringSettings();
+            this.settings.scoring = new ScoringSettings();
         }
         this.settings.scoring.defaultBendCost = defaultBendCost;
     }
@@ -93,7 +95,7 @@ public class TestingSettings implements SettingsSource {
 
     public void setOptimizerEnabled(boolean enabled) {
         if (this.settings.optimizer == null) {
-            this.settings.optimizer = new app.freerouting.settings.RouterOptimizerSettings();
+            this.settings.optimizer = new OptimizerSettings();
         }
         this.settings.optimizer.enabled = enabled;
     }
@@ -114,14 +116,14 @@ public class TestingSettings implements SettingsSource {
 
     public void setOptimizerMaxPasses(int maxPasses) {
         if (this.settings.optimizer == null) {
-            this.settings.optimizer = new app.freerouting.settings.RouterOptimizerSettings();
+            this.settings.optimizer = new OptimizerSettings();
         }
         this.settings.optimizer.maxPasses = maxPasses;
     }
 
     public void setOptimizerMaxItems(int maxItems) {
         if (this.settings.optimizer == null) {
-            this.settings.optimizer = new app.freerouting.settings.RouterOptimizerSettings();
+            this.settings.optimizer = new OptimizerSettings();
         }
         this.settings.optimizer.maxItems = maxItems;
     }

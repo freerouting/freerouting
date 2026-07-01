@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.settings.RouterScoringSettings;
+import app.freerouting.settings.ScoringSettings;
 import app.freerouting.settings.sources.DefaultSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class ScoringWeightComparisonTest {
   private static final int VIA_COUNT = 15;
 
   private BoardStatistics stats;
-  private RouterScoringSettings defaultWeights;
+  private ScoringSettings defaultWeights;
 
   @BeforeEach
   void setUp() {
@@ -61,7 +61,7 @@ class ScoringWeightComparisonTest {
     stats.vias.buriedCount = 0;
 
     // Populate defaultWeights from the authoritative DefaultSettings constants.
-    defaultWeights = new RouterScoringSettings();
+    defaultWeights = new ScoringSettings();
     defaultWeights.unroutedNetPenalty = DefaultSettings.DEFAULT_UNROUTED_NET_PENALTY;
     defaultWeights.clearanceViolationPenalty = DefaultSettings.DEFAULT_CLEARANCE_VIOLATION_PENALTY;
     defaultWeights.bendPenalty = DefaultSettings.DEFAULT_BEND_PENALTY;
@@ -153,7 +153,7 @@ class ScoringWeightComparisonTest {
 
   @Test
   void breakdownThrowsWhenRequiredWeightIsNull() {
-    RouterScoringSettings incomplete = defaultWeights.clone();
+    ScoringSettings incomplete = defaultWeights.clone();
     incomplete.unroutedNetPenalty = null;
     assertThrows(IllegalArgumentException.class,
         () -> BoardScoreBreakdown.of(stats, incomplete));
@@ -189,7 +189,7 @@ class ScoringWeightComparisonTest {
   @Test
   void higherUnroutedPenaltyMakesUnroutedBoardScoreWorse() {
     // Candidate doubles the unrouted penalty.
-    RouterScoringSettings candidate = defaultWeights.clone();
+    ScoringSettings candidate = defaultWeights.clone();
     candidate.unroutedNetPenalty = defaultWeights.unroutedNetPenalty * 2;
 
     ScoringWeightComparison.Result result =
@@ -207,7 +207,7 @@ class ScoringWeightComparisonTest {
 
   @Test
   void lowerViaCostMakesViaCostTermSmaller() {
-    RouterScoringSettings candidate = defaultWeights.clone();
+    ScoringSettings candidate = defaultWeights.clone();
     candidate.viaCosts = defaultWeights.viaCosts / 2;
 
     ScoringWeightComparison.Result result =
@@ -223,7 +223,7 @@ class ScoringWeightComparisonTest {
   @Test
   void lowerViaCostImprovesCandidateScore() {
     // With fewer unrouted connections the via cost dominates; lowering it should raise the score.
-    RouterScoringSettings candidate = defaultWeights.clone();
+    ScoringSettings candidate = defaultWeights.clone();
     candidate.viaCosts = 1; // essentially free
 
     ScoringWeightComparison.Result result =
@@ -260,7 +260,7 @@ class ScoringWeightComparisonTest {
 
   @Test
   void reportStringContainsVerdict() {
-    RouterScoringSettings candidate = defaultWeights.clone();
+    ScoringSettings candidate = defaultWeights.clone();
     candidate.viaCosts = 1;
 
     ScoringWeightComparison.Result result =

@@ -1,9 +1,9 @@
 package app.freerouting.core.scoring;
 
-import app.freerouting.settings.RouterScoringSettings;
+import app.freerouting.settings.ScoringSettings;
 
 /**
- * Evaluates and compares two {@link RouterScoringSettings} configurations against the same
+ * Evaluates and compares two {@link ScoringSettings} configurations against the same
  * {@link BoardStatistics}, producing a human-readable report and a structured
  * {@link Result}.
  *
@@ -40,8 +40,8 @@ public final class ScoringWeightComparison {
    */
   public static Result compare(
       BoardStatistics stats,
-      RouterScoringSettings weightsA,
-      RouterScoringSettings weightsB) {
+      ScoringSettings weightsA,
+      ScoringSettings weightsB) {
 
     BoardScoreBreakdown breakdownA = BoardScoreBreakdown.of(stats, weightsA);
     BoardScoreBreakdown breakdownB = BoardScoreBreakdown.of(stats, weightsB);

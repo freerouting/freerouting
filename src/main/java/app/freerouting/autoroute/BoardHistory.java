@@ -3,7 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.settings.RouterScoringSettings;
+import app.freerouting.settings.ScoringSettings;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,17 +30,17 @@ public class BoardHistory {
 
   private final int maxHistorySize;
   private final List<BoardHistoryEntry> boards = Collections.synchronizedList(new ArrayList<>());
-  private final RouterScoringSettings scoringSettings;
+  private final ScoringSettings scoringSettings;
   private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
 
-  public BoardHistory(RouterScoringSettings scoringSettings) {
+  public BoardHistory(ScoringSettings scoringSettings) {
     this(scoringSettings, MAX_HISTORY_SIZE);
   }
 
   /**
    * Package-private constructor that allows a custom cap. Intended for unit tests only.
    */
-  BoardHistory(RouterScoringSettings scoringSettings, int maxHistorySize) {
+  BoardHistory(ScoringSettings scoringSettings, int maxHistorySize) {
     this.scoringSettings = scoringSettings;
     this.maxHistorySize = maxHistorySize;
   }
@@ -204,7 +204,7 @@ public class BoardHistory {
     public final float score;
     public int restoreCount;
 
-    public BoardHistoryEntry(RoutingBoard board, RouterScoringSettings scoringSettings) {
+    public BoardHistoryEntry(RoutingBoard board, ScoringSettings scoringSettings) {
       this.board = board.serialize(false);
       this.hash = board.get_hash();
       this.score = new BoardStatistics(board).getNormalizedScore(scoringSettings);

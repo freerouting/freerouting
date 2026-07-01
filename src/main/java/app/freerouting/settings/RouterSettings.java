@@ -49,9 +49,9 @@ public class RouterSettings implements Serializable, Cloneable {
   @SerializedName("automatic_neckdown")
   public Boolean automatic_neckdown;
   @SerializedName("optimizer")
-  public RouterOptimizerSettings optimizer;
+  public OptimizerSettings optimizer;
   @SerializedName("scoring")
-  public RouterScoringSettings scoring;
+  public ScoringSettings scoring;
   @SerializedName("max_threads")
   public Integer maxThreads;
   // PropertyChangeSupport for bidirectional binding with GUI
@@ -62,8 +62,8 @@ public class RouterSettings implements Serializable, Cloneable {
    * Initializes all fields with default values.
    */
   public RouterSettings() {
-    this.optimizer = new RouterOptimizerSettings();
-    this.scoring = new RouterScoringSettings();
+    this.optimizer = new OptimizerSettings();
+    this.scoring = new ScoringSettings();
     this.fanout = new FanoutSettings();
   }
 
@@ -200,7 +200,7 @@ public class RouterSettings implements Serializable, Cloneable {
       }
     }
     if (scoring == null) {
-      scoring = new RouterScoringSettings();
+      scoring = new ScoringSettings();
     }
     double[] originalPrefCost = scoring.preferredDirectionTraceCost != null ? scoring.preferredDirectionTraceCost.clone() : null;
     double[] originalUndesiredCost = scoring.undesiredDirectionTraceCost != null ? scoring.undesiredDirectionTraceCost.clone() : null;
@@ -348,7 +348,7 @@ public class RouterSettings implements Serializable, Cloneable {
       }
     }
     if (scoring == null) {
-      scoring = new RouterScoringSettings();
+      scoring = new ScoringSettings();
     }
     // Initialize per-layer cost arrays with a neutral default so callers can
     // write individual entries without waiting for applyBoardSpecificOptimizations.
@@ -398,8 +398,8 @@ public class RouterSettings implements Serializable, Cloneable {
     result.maxThreads = this.maxThreads;
 
     // Use proper clone() methods for nested objects
-    result.optimizer = this.optimizer != null ? this.optimizer.clone() : new RouterOptimizerSettings();
-    result.scoring = this.scoring != null ? this.scoring.clone() : new RouterScoringSettings();
+    result.optimizer = this.optimizer != null ? this.optimizer.clone() : new OptimizerSettings();
+    result.scoring = this.scoring != null ? this.scoring.clone() : new ScoringSettings();
     result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
 
     return result;
@@ -411,7 +411,7 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public void set_start_ripup_costs(int p_value) {
     if (scoring == null) {
-      scoring = new RouterScoringSettings();
+      scoring = new ScoringSettings();
     }
     scoring.startRipupCosts = Math.max(p_value, 1);
   }
@@ -430,7 +430,7 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public void setRunOptimizer(boolean p_value) {
     if (optimizer == null) {
-      optimizer = new RouterOptimizerSettings();
+      optimizer = new OptimizerSettings();
     }
     optimizer.enabled = p_value;
   }
@@ -471,7 +471,7 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public void set_via_costs(int p_value) {
     if (scoring == null) {
-      scoring = new RouterScoringSettings();
+      scoring = new ScoringSettings();
     }
     scoring.viaCosts = Math.max(p_value, 1);
   }
@@ -482,7 +482,7 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public void set_plane_via_costs(int p_value) {
     if (scoring == null) {
-      scoring = new RouterScoringSettings();
+      scoring = new ScoringSettings();
     }
     scoring.planeViaCosts = Math.max(p_value, 1);
   }
@@ -565,7 +565,7 @@ public class RouterSettings implements Serializable, Cloneable {
       return;
     }
     if (scoring == null) {
-      scoring = new RouterScoringSettings();
+      scoring = new ScoringSettings();
     }
     if (scoring.preferredDirectionTraceCost == null || scoring.preferredDirectionTraceCost.length != this.getLayerCount()) {
       scoring.preferredDirectionTraceCost = new double[this.getLayerCount()];
@@ -615,7 +615,7 @@ public class RouterSettings implements Serializable, Cloneable {
       return;
     }
     if (scoring == null) {
-      scoring = new RouterScoringSettings();
+      scoring = new ScoringSettings();
     }
     if (scoring.undesiredDirectionTraceCost == null || scoring.undesiredDirectionTraceCost.length != this.getLayerCount()) {
       scoring.undesiredDirectionTraceCost = new double[this.getLayerCount()];

@@ -18,10 +18,10 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.settings.ScoringSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
-import app.freerouting.rules.BoardRules;
-import app.freerouting.settings.RouterScoringSettings;
 import com.google.gson.annotations.SerializedName;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
@@ -491,62 +491,6 @@ public class BoardStatistics implements Serializable {
     }
   }
 
-  /**
-   * Returns a JSON representation of this object.
-   */
-  public String toString() {
-    return GsonProvider.GSON.toJson(this);
-  }
-
-  /**
-   * Calculates the score/cost of the board based on the given scoring settings.
-   * Higher score means better board.
-   */
-  public float calculateScore(RouterScoringSettings scoringSettings) {
-    float maximumScore = getMaximumScore(scoringSettings);
-    float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
-        + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
-        + this.bends.totalCount * scoringSettings.bendPenalty;
-    // Use the mm-normalised trace length so that the trace-cost term is comparable
-    // to the unroutedNetPenalty regardless of the DSN internal coordinate resolution.
-    // totalLength is in raw board units which vary wildly between DSN files
-    // (e.g. 1 nm for KiCad at resolution 1e6, vs 0.1 µm for EAGLE/benchmark boards),
-    // and would make the score collapse to 0 for high-resolution KiCad exports.
-    float traceLengthForCost = (this.traces.totalLengthMm != null)
-        ? this.traces.totalLengthMm
-        : this.traces.totalLength;
-    float costs = (float) (traceLengthForCost * scoringSettings.defaultPreferredDirectionTraceCost
-        + this.vias.totalCount * scoringSettings.viaCosts);
-
-    return maximumScore - penalties - costs;
-  }
-
-  public float getMaximumScore(RouterScoringSettings scoringSettings) {
-    return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
-  }
-
-  public float getNormalizedScore(RouterScoringSettings scoringSettings) {
-    float maximumScore = getMaximumScore(scoringSettings);
-    if (maximumScore <= 0f) {
-      // Guard against division by zero and negative maximum scores (e.g. boards with no
-      // connections, or boards where all nets are single-pin nets). Return 0 so that the
-      // score is a defined value and comparisons like "score > threshold" work predictably.
-      // This also prevents NaN propagation which could silently break stagnation detection
-      // (NaN comparisons always return false, causing stagnation counters to never advance).
-      return 0f;
-    }
-    return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
-  }
-
-  public static class BoardStatisticsFanout implements Serializable {
-    @SerializedName("total_smd_pins")
-    public int totalSmdPins = 0;
-    @SerializedName("pins_to_escape")
-    public int pinsToEscape = 0;
-    @SerializedName("escaped_count")
-    public int escapedCount = 0;
-  }
-
   public static boolean isPinEscaped(Pin pin) {
     java.util.Set<Item> contacts = pin.get_normal_contacts();
     for (Item contact : contacts) {
@@ -579,5 +523,60 @@ public class BoardStatistics implements Serializable {
     }
     return count;
   }
-}
 
+  /**
+   * Returns a JSON representation of this object.
+   */
+  public String toString() {
+    return GsonProvider.GSON.toJson(this);
+  }
+
+  /**
+   * Calculates the score/cost of the board based on the given scoring settings.
+   * Higher score means better board.
+   */
+  public float calculateScore(ScoringSettings scoringSettings) {
+    float maximumScore = getMaximumScore(scoringSettings);
+    float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
+        + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
+        + this.bends.totalCount * scoringSettings.bendPenalty;
+    // Use the mm-normalised trace length so that the trace-cost term is comparable
+    // to the unroutedNetPenalty regardless of the DSN internal coordinate resolution.
+    // totalLength is in raw board units which vary wildly between DSN files
+    // (e.g. 1 nm for KiCad at resolution 1e6, vs 0.1 µm for EAGLE/benchmark boards),
+    // and would make the score collapse to 0 for high-resolution KiCad exports.
+    float traceLengthForCost = (this.traces.totalLengthMm != null)
+        ? this.traces.totalLengthMm
+        : this.traces.totalLength;
+    float costs = (float) (traceLengthForCost * scoringSettings.defaultPreferredDirectionTraceCost
+        + this.vias.totalCount * scoringSettings.viaCosts);
+
+    return maximumScore - penalties - costs;
+  }
+
+  public float getMaximumScore(ScoringSettings scoringSettings) {
+    return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
+  }
+
+  public float getNormalizedScore(ScoringSettings scoringSettings) {
+    float maximumScore = getMaximumScore(scoringSettings);
+    if (maximumScore <= 0f) {
+      // Guard against division by zero and negative maximum scores (e.g. boards with no
+      // connections, or boards where all nets are single-pin nets). Return 0 so that the
+      // score is a defined value and comparisons like "score > threshold" work predictably.
+      // This also prevents NaN propagation which could silently break stagnation detection
+      // (NaN comparisons always return false, causing stagnation counters to never advance).
+      return 0f;
+    }
+    return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
+  }
+
+  public static class BoardStatisticsFanout implements Serializable {
+    @SerializedName("total_smd_pins")
+    public int totalSmdPins = 0;
+    @SerializedName("pins_to_escape")
+    public int pinsToEscape = 0;
+    @SerializedName("escaped_count")
+    public int escapedCount = 0;
+  }
+}
