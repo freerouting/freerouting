@@ -47,6 +47,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * The time limit in milliseconds for the pull tight algorithm
    */
   private static final int PULL_TIGHT_TIME_LIMIT = 2000;
+  public final app.freerouting.autoroute.RoutingFailureLog failureLog;
   /**
    * the area marked for optimizing the route
    */
@@ -57,8 +58,6 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   private transient AutorouteEngine autoroute_engine;
   private transient Item shove_failing_obstacle;
   private transient int shove_failing_layer = -1;
-
-  public final app.freerouting.autoroute.RoutingFailureLog failureLog;
 
   /**
    * Creates a new instance of a routing Board with surrounding box p_bounding_box
@@ -955,7 +954,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         ctrl_settings, ripped_item_list, null); // null: costs not needed here
     if (result.state == AutorouteAttemptState.ROUTED) {
       final int time_limit_to_prevent_endless_loop = 1000;
-      opt_changed_area(new int[0], null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
+      opt_changed_area(new int[]{route_net_no}, null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
           p_stoppable_thread, time_limit_to_prevent_endless_loop);
     }
     return result;
@@ -1026,6 +1025,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     AutorouteEngine curr_autoroute_engine = init_autoroute(pin_net_no, ctrl_settings.trace_clearance_class_no,
         p_stoppable_thread, p_time_limit, false);
 
+    long startRoute = System.nanoTime();
     AutorouteAttemptResult result = null;
     if (sorted_unconnected_list.size() <= 4) {
       if (!sorted_unconnected_list.isEmpty()) {
@@ -1048,9 +1048,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (result == null) {
       result = new AutorouteAttemptResult(AutorouteAttemptState.FAILED, "No target items to route connection.");
     }
+
     if (result.state == AutorouteAttemptState.ROUTED) {
       final int time_limit_to_prevent_endless_loop = 1000;
-      opt_changed_area(new int[0], null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
+      opt_changed_area(new int[]{pin_net_no}, null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
           p_stoppable_thread, time_limit_to_prevent_endless_loop);
     }
     return result;
