@@ -770,8 +770,10 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    * Draws this item on a specific layer only, with its draw colors from p_graphics_context.
    */
   public void draw_layer(Graphics p_g, GraphicsContext p_graphics_context, int p_layer_no) {
-    Color[] layer_colors = get_draw_colors(p_graphics_context);
-    draw_layer(p_g, p_graphics_context, layer_colors, get_draw_intensity(p_graphics_context), p_layer_no);
+    if (this.is_on_layer(p_layer_no)) {
+      Color[] layer_colors = get_draw_colors(p_graphics_context);
+      draw_layer(p_g, p_graphics_context, layer_colors, get_draw_intensity(p_graphics_context), p_layer_no);
+    }
   }
 
   /**

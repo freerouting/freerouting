@@ -1366,7 +1366,10 @@ public class BasicBoard implements Serializable {
     FRLogger.trace(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
         selectedLayerName, dominantSide, renderingOrderNames));
 
+    long drawStart = System.nanoTime();
+
     // Pre-collect all items once to avoid re-iterating item_list for every (priority × step)
+    long startCollect = System.nanoTime();
     java.util.List<Item> allItems = new java.util.ArrayList<>();
     {
       Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
@@ -1383,46 +1386,64 @@ public class BasicBoard implements Serializable {
         }
       }
     }
+    long endCollect = System.nanoTime();
 
+    long startGroup = System.nanoTime();
+    // Group items by priority to optimize rendering loops
+    int maxPriority = Drawable.MAX_DRAW_PRIORITY;
+    java.util.List<Item>[] itemsByPriority = new java.util.List[maxPriority + 1];
+    for (int i = 0; i <= maxPriority; i++) {
+      itemsByPriority[i] = new java.util.ArrayList<>();
+    }
+    for (Item curr_item : allItems) {
+      int p = curr_item.get_draw_priority();
+      if (p >= 0 && p <= maxPriority) {
+        itemsByPriority[p].add(curr_item);
+      }
+    }
+    long endGroup = System.nanoTime();
+
+    long startLoop = System.nanoTime();
     // Draw elements according to the calculated steps sequence
-    for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MAX_DRAW_PRIORITY; curr_priority++) {
+    for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= maxPriority; curr_priority++) {
+      java.util.List<Item> priorityItems = itemsByPriority[curr_priority];
       for (RenderStep step : drawSteps) {
-        for (Item curr_item : allItems) {
-          if (curr_item.get_draw_priority() == curr_priority) {
-            if (step.isVirtual) {
-              // Virtual layer step: render ComponentOutline and ComponentObstacleArea (courtyard)
-              // items matching that virtual layer index
-              if (curr_item instanceof ComponentOutline co) {
-                int itemVirtualIdx;
-                if (co.is_courtyard()) {
-                  itemVirtualIdx = co.is_front() ? 2 : 3;
-                } else if (co.is_fabrication()) {
-                  itemVirtualIdx = co.is_front() ? 4 : 5;
-                } else {
-                  itemVirtualIdx = co.is_front() ? 0 : 1;
-                }
-                if (itemVirtualIdx == step.index) {
-                  curr_item.draw(p_graphics, p_graphics_context);
-                }
-              } else if (curr_item instanceof ComponentObstacleArea coa) {
-                // Courtyard keepout areas map to virtual courtyard layers (2=F.Courtyard, 3=B.Courtyard)
-                int itemVirtualIdx = coa.is_front() ? 2 : 3;
-                if (itemVirtualIdx == step.index) {
-                  curr_item.draw(p_graphics, p_graphics_context);
-                }
+        for (Item curr_item : priorityItems) {
+          if (step.isVirtual) {
+            // Virtual layer step: render ComponentOutline and ComponentObstacleArea (courtyard)
+            // items matching that virtual layer index
+            if (curr_item instanceof ComponentOutline co) {
+              int itemVirtualIdx;
+              if (co.is_courtyard()) {
+                itemVirtualIdx = co.is_front() ? 2 : 3;
+              } else if (co.is_fabrication()) {
+                itemVirtualIdx = co.is_front() ? 4 : 5;
+              } else {
+                itemVirtualIdx = co.is_front() ? 0 : 1;
               }
-            } else {
-              // Physical layer step: skip ComponentOutline and ComponentObstacleArea
-              // (they are rendered exclusively in their corresponding virtual layer steps)
-              if (!(curr_item instanceof ComponentOutline) && !(curr_item instanceof ComponentObstacleArea)) {
-                curr_item.draw_layer(p_graphics, p_graphics_context, step.index);
+              if (itemVirtualIdx == step.index) {
+                curr_item.draw(p_graphics, p_graphics_context);
               }
+            } else if (curr_item instanceof ComponentObstacleArea coa) {
+              // Courtyard keepout areas map to virtual courtyard layers (2=F.Courtyard, 3=B.Courtyard)
+              int itemVirtualIdx = coa.is_front() ? 2 : 3;
+              if (itemVirtualIdx == step.index) {
+                curr_item.draw(p_graphics, p_graphics_context);
+              }
+            }
+          } else {
+            // Physical layer step: skip ComponentOutline and ComponentObstacleArea
+            // (they are rendered exclusively in their corresponding virtual layer steps)
+            if (!(curr_item instanceof ComponentOutline) && !(curr_item instanceof ComponentObstacleArea)) {
+              curr_item.draw_layer(p_graphics, p_graphics_context, step.index);
             }
           }
         }
       }
     }
+    long endLoop = System.nanoTime();
 
+    long startText = System.nanoTime();
     // Draw component values on Front Fab (virtual index 4) / Back Fab (virtual index 5)
     double intensityFront = p_graphics_context.get_virtual_layer_visibility(4);
     double intensityBack = p_graphics_context.get_virtual_layer_visibility(5);
@@ -1456,6 +1477,18 @@ public class BasicBoard implements Serializable {
       g2.setFont(originalFont);
       g2.setComposite(originalComposite);
     }
+    long endText = System.nanoTime();
+
+    long drawEnd = System.nanoTime();
+    FRLogger.debug(String.format(
+        "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms, loop=%.2f ms, texts=%.2f ms] (items: %d)",
+        (drawEnd - drawStart) / 1_000_000.0,
+        (endCollect - startCollect) / 1_000_000.0,
+        (endGroup - startGroup) / 1_000_000.0,
+        (endLoop - startLoop) / 1_000_000.0,
+        (endText - startText) / 1_000_000.0,
+        allItems.size()
+    ));
   }
 
   /**

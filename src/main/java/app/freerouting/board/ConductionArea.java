@@ -140,15 +140,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
                   continue;
                 }
 
-                java.awt.geom.Area shapeAwt = p_graphics_context.get_awt_area_from_shape(shape);
-                if (shapeAwt == null) {
+                Shape enlargedShape = shape.enlarge(clearanceDist);
+                java.awt.geom.Area clearanceAwt = p_graphics_context.get_awt_area_from_shape(enlargedShape);
+                if (clearanceAwt == null) {
                   continue;
-                }
-
-                double clearancePx = p_graphics_context.coordinate_transform.board_to_screen(clearanceDist);
-                java.awt.geom.Area clearanceAwt = new java.awt.geom.Area(shapeAwt);
-                if (clearancePx > 0) {
-                  clearanceAwt.add(new java.awt.geom.Area(new BasicStroke((float)(2 * clearancePx), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND).createStrokedShape(shapeAwt)));
                 }
 
                 IntBox itemBbox = drillItem.bounding_box();
@@ -176,13 +171,9 @@ public class ConductionArea extends ObstacleArea implements Connectable {
               if (currItem instanceof DrillItem drillItem) {
                 Shape shape = drillItem.get_shape_on_layer(layerNo);
                 if (shape != null) {
-                  java.awt.geom.Area shapeAwt = p_graphics_context.get_awt_area_from_shape(shape);
-                  if (shapeAwt != null) {
-                    double clearancePx = p_graphics_context.coordinate_transform.board_to_screen(clearanceDist);
-                    java.awt.geom.Area clearanceAwt = new java.awt.geom.Area(shapeAwt);
-                    if (clearancePx > 0) {
-                      clearanceAwt.add(new java.awt.geom.Area(new BasicStroke((float)(2 * clearancePx), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND).createStrokedShape(shapeAwt)));
-                    }
+                  Shape enlargedShape = shape.enlarge(clearanceDist);
+                  java.awt.geom.Area clearanceAwt = p_graphics_context.get_awt_area_from_shape(enlargedShape);
+                  if (clearanceAwt != null) {
                     foreignClearances.add(clearanceAwt);
                   }
                 }
@@ -192,13 +183,9 @@ public class ConductionArea extends ObstacleArea implements Connectable {
                   if (currItem.shape_layer(i) == layerNo) {
                     TileShape tileShape = currItem.get_tile_shape(i);
                     if (tileShape != null) {
-                      java.awt.geom.Area shapeAwt = p_graphics_context.get_awt_area_from_shape(tileShape);
-                      if (shapeAwt != null) {
-                        double clearancePx = p_graphics_context.coordinate_transform.board_to_screen(clearanceDist);
-                        java.awt.geom.Area clearanceAwt = new java.awt.geom.Area(shapeAwt);
-                        if (clearancePx > 0) {
-                          clearanceAwt.add(new java.awt.geom.Area(new BasicStroke((float)(2 * clearancePx), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND).createStrokedShape(shapeAwt)));
-                        }
+                      Shape enlargedShape = tileShape.enlarge(clearanceDist);
+                      java.awt.geom.Area clearanceAwt = p_graphics_context.get_awt_area_from_shape(enlargedShape);
+                      if (clearanceAwt != null) {
                         foreignClearances.add(clearanceAwt);
                       }
                     }
