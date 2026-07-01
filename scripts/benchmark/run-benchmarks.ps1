@@ -95,7 +95,55 @@ $runIdx = 0
 
 Write-Output "Starting benchmark runs ($totalCombinations combinations)..."
 
-$rollingDurations = @()
+# Pre-calculate which runs will actually be executed and their estimates
+$fixtureHistory = @{}
+foreach ($key in $cache.Keys) {
+    $run = $cache[$key]
+    if ($run.fixture -and $run.fixture.relative_path) {
+        $fPath = $run.fixture.relative_path
+        if (-not $fixtureHistory.ContainsKey($fPath)) {
+            $fixtureHistory[$fPath] = @()
+        }
+        $fixtureHistory[$fPath] += $run
+    }
+}
+
+$fixtureEstimates = @{}
+foreach ($fixture in $fixtures) {
+    $fGroup = Split-Path (Split-Path $fixture.FullName -Parent) -Leaf
+    $fPath = "$fGroup/$($fixture.Name)"
+    
+    $estimate = 60.0
+    if ($fixtureHistory.ContainsKey($fPath)) {
+        $latestRuns = $fixtureHistory[$fPath] | Sort-Object -Property run_at -Descending
+        $bestEstimateRun = $latestRuns | Select-Object -First 1
+        if ($bestEstimateRun.quality -and $bestEstimateRun.quality.wall_clock_seconds -ne $null) {
+            $estimate = [double]$bestEstimateRun.quality.wall_clock_seconds
+        }
+    }
+    $fixtureEstimates[$fPath] = $estimate
+}
+
+$pendingRuns = @()
+foreach ($binary in $binaries) {
+    foreach ($fixture in $fixtures) {
+        $cacheKey = Get-BenchmarkCacheKey $binary $fixture $settingsObj
+        if (-not $cache.ContainsKey($cacheKey) -or $Force) {
+            $fGroup = Split-Path (Split-Path $fixture.FullName -Parent) -Leaf
+            $fPath = "$fGroup/$($fixture.Name)"
+            $pendingRuns += [PSCustomObject]@{
+                CacheKey   = $cacheKey
+                EstimatedS = $fixtureEstimates[$fPath]
+            }
+        }
+    }
+}
+
+$totalPendingCount = $pendingRuns.Count
+$completedPendingCount = 0
+$totalPendingTimeEstimated = ($pendingRuns | Measure-Object -Property EstimatedS -Sum).Sum
+$completedPendingTimeEstimated = 0.0
+$actualTimeSpent = 0.0
 
 foreach ($binary in $binaries) {
     $verLabel = Get-BinaryVersionLabel $binary
@@ -110,14 +158,28 @@ foreach ($binary in $binaries) {
         $runIdx++
         $fixtureGroup = Split-Path (Split-Path $fixture.FullName -Parent) -Leaf
         $fixtureStem = $fixture.BaseName
-        
+        $cacheKey = Get-BenchmarkCacheKey $binary $fixture $settingsObj
+        $isCached = $cache.ContainsKey($cacheKey) -and -not $Force
+
         # Calculate ETA
-        $etaStr = "Estimating..."
-        if ($rollingDurations.Count -gt 0) {
-            $avgSec = ($rollingDurations | Measure-Object -Average).Average
-            $remaining = $totalCombinations - $runIdx + 1
-            $etaSec = $avgSec * $remaining
-            $ts = [timespan]::FromSeconds($etaSec)
+        $etaStr = "N/A"
+        $thisEstimate = 60.0
+        if (-not $isCached) {
+            $foundPending = $pendingRuns | Where-Object { $_.CacheKey -eq $cacheKey } | Select-Object -First 1
+            if ($foundPending) {
+                $thisEstimate = $foundPending.EstimatedS
+            }
+
+            # Remaining estimated time before executing this one
+            $remainingEst = $totalPendingTimeEstimated - $completedPendingTimeEstimated
+            if ($completedPendingCount -gt 0 -and $completedPendingTimeEstimated -gt 0) {
+                $speedFactor = $actualTimeSpent / $completedPendingTimeEstimated
+                $remainingSec = $remainingEst * $speedFactor
+            } else {
+                $remainingSec = $remainingEst
+            }
+
+            $ts = [timespan]::FromSeconds($remainingSec)
             $etaStr = "$([math]::Floor($ts.TotalHours))h $($ts.Minutes)m $($ts.Seconds)s remaining"
         }
 
@@ -125,14 +187,13 @@ foreach ($binary in $binaries) {
         $timestamp = (Get-Date -Format "yyyyMMdd-HHmmss")
         $baseName = "${fixtureGroup}--${fixtureStem}--${verLabel}--${timestamp}"
 
-        $cacheKey = Get-BenchmarkCacheKey $binary $fixture $settingsObj
-
-        Write-Output "[$runIdx/$totalCombinations] $verLabel x $fixtureGroup/$($fixture.Name) (ETA: $etaStr)"
-        
-        if ($cache.ContainsKey($cacheKey) -and -not $Force) {
+        if ($isCached) {
+            Write-Output "[$runIdx/$totalCombinations] $verLabel x $fixtureGroup/$($fixture.Name) (Cache Hit)"
             Write-Output "  -> [SKIP] Cache hit found"
             continue
         }
+
+        Write-Output "[$runIdx/$totalCombinations] $verLabel x $fixtureGroup/$($fixture.Name) (ETA: $etaStr)"
 
         # DSN text parse
         $fixtureMeta = Get-DsnMetadata $fixture.FullName
@@ -145,10 +206,6 @@ foreach ($binary in $binaries) {
         
         $runEndTime = Get-Date
         $runSecs = ($runEndTime - $runStartTime).TotalSeconds
-        $rollingDurations += $runSecs
-        if ($rollingDurations.Count -gt 5) {
-            $rollingDurations = $rollingDurations[($rollingDurations.Count - 5)..($rollingDurations.Count - 1)]
-        }
 
         # Invoke DRC using current version on outputs
         Write-Output "  -> Running DRC check..."
@@ -224,6 +281,11 @@ foreach ($binary in $binaries) {
 
         # Save JSON atomically
         Save-BenchmarksJson $rawJson $cache $JsonPath
+
+        # Update ETA tracking
+        $completedPendingCount++
+        $completedPendingTimeEstimated += $thisEstimate
+        $actualTimeSpent += $runResult.WallClockSeconds
         
         Write-Output "  -> Done! [Unrouted: $($runObj.quality.final_unrouted) (DRC: $($runObj.drc.final_unrouted)), Violations: $($runObj.quality.clearance_violations) (DRC: $($runObj.drc.final_violations)), Score: $($runObj.quality.quality_score) (DRC: $($runObj.drc.final_quality_score))]"
     }
