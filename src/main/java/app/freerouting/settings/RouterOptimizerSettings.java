@@ -29,6 +29,13 @@ public class RouterOptimizerSettings implements Serializable, Cloneable {
   public Integer maxPasses;
 
   /**
+   * The maximum number of item optimization attempts allowed.
+   * If this limit is reached, the optimization stage will stop early.
+   */
+  @SerializedName("max_items")
+  public Integer maxItems;
+
+  /**
    * The maximum number of threads to use for parallel route optimization.
    */
   @SerializedName("max_threads")

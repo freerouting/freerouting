@@ -33,6 +33,7 @@ public class BatchOptimizer extends NamedAlgorithm {
   // the minimum cumulative trace length that was reached during the optimization
   protected double min_cumulative_trace_length = 0.0;
   protected RoutingJob job;
+  protected int totalItemsOptimized = 0;
 
   /**
    * Creates a new instance of BatchOptRoute, which is used to optimize the board.
@@ -114,6 +115,7 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     while (((route_improved >= this.settings.optimizer.optimizationImprovementThreshold) || (route_improved < 0))
         && (this.settings.optimizer.maxPasses == null || currentPass < this.settings.optimizer.maxPasses)
+        && (this.settings.optimizer.maxItems == null || this.totalItemsOptimized < this.settings.optimizer.maxItems)
         && (!this.thread.isStopRequested())) {
       ++currentPass;
       String currentBoardHash = this.board.get_hash();
@@ -181,11 +183,16 @@ public class BatchOptimizer extends NamedAlgorithm {
         FRLogger.traceExit(optimizationPassId);
         return route_improved;
       }
+      if (this.settings.optimizer.maxItems != null && this.settings.optimizer.maxItems > 0 && this.totalItemsOptimized >= this.settings.optimizer.maxItems) {
+        job.logInfo("Max items limit reached (" + this.settings.optimizer.maxItems + "). Stopping optimizer.");
+        break;
+      }
       Item curr_item = sorted_route_items.next();
       if (curr_item == null) {
         break;
       }
       ItemRouteResult result = opt_route_item(curr_item, p_with_preferred_directions, false);
+      this.totalItemsOptimized++;
       if (result.improved()) {
         if (progressThrottler.shouldUpdate()) {
           BoardStatistics boardStatisticsAfter = board.get_statistics();

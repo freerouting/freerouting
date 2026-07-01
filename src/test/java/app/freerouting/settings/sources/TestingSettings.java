@@ -97,4 +97,32 @@ public class TestingSettings implements SettingsSource {
         }
         this.settings.optimizer.enabled = enabled;
     }
+
+    public void setFanoutMaxPasses(int maxPasses) {
+        if (this.settings.fanout == null) {
+            this.settings.fanout = new app.freerouting.settings.FanoutSettings();
+        }
+        this.settings.fanout.maxPasses = maxPasses;
+    }
+
+    public void setFanoutMaxItems(int maxItems) {
+        if (this.settings.fanout == null) {
+            this.settings.fanout = new app.freerouting.settings.FanoutSettings();
+        }
+        this.settings.fanout.maxItems = maxItems;
+    }
+
+    public void setOptimizerMaxPasses(int maxPasses) {
+        if (this.settings.optimizer == null) {
+            this.settings.optimizer = new app.freerouting.settings.RouterOptimizerSettings();
+        }
+        this.settings.optimizer.maxPasses = maxPasses;
+    }
+
+    public void setOptimizerMaxItems(int maxItems) {
+        if (this.settings.optimizer == null) {
+            this.settings.optimizer = new app.freerouting.settings.RouterOptimizerSettings();
+        }
+        this.settings.optimizer.maxItems = maxItems;
+    }
 }
