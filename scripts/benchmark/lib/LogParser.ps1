@@ -101,6 +101,8 @@ function Get-PhaseMetrics {
 
     $warnCount = 0
     $errorCount = 0
+    $loadError = $false
+    $exceptions = [System.Collections.Generic.HashSet[string]]::new()
 
     if (-not (Test-Path $LogPath)) {
         return @{
@@ -109,6 +111,8 @@ function Get-PhaseMetrics {
             optimizer = $optimizer
             warn_count = 0
             error_count = 0
+            load_error = $false
+            exceptions = @()
         }
     }
 
@@ -121,6 +125,18 @@ function Get-PhaseMetrics {
         }
         if ($line -match '\[ERROR\]|ERROR |\[severe\]|Exception\b') {
             $errorCount++
+        }
+        if ($line -match 'Failed to load board|Couldn''t read the input file|Couldn''t load the input file|Cannot load board') {
+            $loadError = $true
+        }
+        if ($line -match '\b([A-Z]\w*(?:Exception|Error))\b') {
+            $matchesObject = [regex]::Matches($line, '\b([A-Z]\w*(?:Exception|Error))\b')
+            foreach ($match in $matchesObject) {
+                $excName = $match.Groups[1].Value
+                if ($excName -ne "Exception" -and $excName -ne "Error") {
+                    [void]$exceptions.Add($excName)
+                }
+            }
         }
     }
 
@@ -330,6 +346,8 @@ function Get-PhaseMetrics {
         optimizer = $optimizer
         warn_count = $warnCount
         error_count = $errorCount
+        load_error = $loadError
+        exceptions = ($exceptions | Sort-Object)
     }
 }
 

@@ -207,6 +207,8 @@ foreach ($binary in $binaries) {
             log_analysis = [PSCustomObject]@{
                 warn_count  = $logMetrics.warn_count
                 error_count = $logMetrics.error_count
+                load_error  = $logMetrics.load_error
+                exceptions  = $logMetrics.exceptions
             }
             exit      = [PSCustomObject]@{
                 code         = $runResult.ExitCode

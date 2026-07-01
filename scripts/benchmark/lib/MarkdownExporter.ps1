@@ -21,6 +21,12 @@ function Format-MarkdownTable {
         }
     }
 
+    for ($i = 0; $i -lt $colCount; $i++) {
+        if ($Headers[$i] -eq "Fanout" -and $widths[$i] -lt 18) {
+            $widths[$i] = 18
+        }
+    }
+
     $sb = [System.Text.StringBuilder]::new()
     
     # Headers
@@ -169,8 +175,8 @@ function Export-MarkdownReport {
 
             $sortedRuns = $latestRuns | Sort-Object -Property { $_.binary.version_label }
 
-            $tableHeaders = @("Version", "Mode", "Fanout", "Fanout Time (s)", "Router Time (s)", "Optimizer Time (s)", "Total Time (s)", "Passes", "Unrouted", "Violations", "Score", "Peak Heap (MB)", "Total Alloc (GB)", "Warn/Err")
-            $tableAlignments = @("L", "L", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R")
+            $tableHeaders = @("Version", "Mode", "Fanout", "Fanout Time (s)", "Router Time (s)", "Optimizer Time (s)", "Total Time (s)", "Passes", "Unrouted", "Violations", "Score", "Peak Heap (MB)", "Total Alloc (GB)", "Warn/Err", "Notes")
+            $tableAlignments = @("L", "L", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "L")
             $tableRows = [System.Collections.ArrayList]::new()
 
             $prevUnrouted = $null
@@ -187,7 +193,10 @@ function Export-MarkdownReport {
                     $tot = $run.phases.fanout.smd_pin_count
                     $pct = $run.phases.fanout.escape_rate_pct
                     if ($tot -gt 0 -and $esc -ne $null) {
-                        $fanoutVal = "$esc/$tot ($pct%)"
+                        $escStr = "{0,4}" -f $esc
+                        $totStr = "{0,4}" -f $tot
+                        $pctStr = ([double]$pct).ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture).PadLeft(5)
+                        $fanoutVal = "$escStr/$totStr ($pctStr%)"
                     }
                 }
 
@@ -204,10 +213,13 @@ function Export-MarkdownReport {
                 $totalTime = if ($hasTime) { $totalTimeVal.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
 
                 # Passes formatted as fanout+router+optimizer
-                $fanoutPasses = if ($run.phases.fanout.passes_completed -ne $null) { $run.phases.fanout.passes_completed } else { 0 }
-                $routerPasses = if ($run.phases.autorouter.passes_completed -ne $null) { $run.phases.autorouter.passes_completed } else { 0 }
-                $optimizerPasses = if ($run.phases.optimizer.passes_completed -ne $null) { $run.phases.optimizer.passes_completed } else { 0 }
-                $passes = "$fanoutPasses+$routerPasses+$optimizerPasses"
+                $fanoutPassesVal = if ($run.phases.fanout.passes_completed -ne $null) { $run.phases.fanout.passes_completed } else { 0 }
+                $routerPassesVal = if ($run.phases.autorouter.passes_completed -ne $null) { $run.phases.autorouter.passes_completed } else { 0 }
+                $optimizerPassesVal = if ($run.phases.optimizer.passes_completed -ne $null) { $run.phases.optimizer.passes_completed } else { 0 }
+                $fPass = "{0,3}" -f $fanoutPassesVal
+                $rPass = "{0,3}" -f $routerPassesVal
+                $oPass = "{0,3}" -f $optimizerPassesVal
+                $passes = "$fPass+$rPass+$oPass"
 
                 $unroutedVal = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { 0 }
                 $violationsVal = if ($run.drc.final_violations -ne $null) { $run.drc.final_violations } elseif ($run.quality.clearance_violations -ne $null) { $run.quality.clearance_violations } else { 0 }
@@ -229,7 +241,50 @@ function Export-MarkdownReport {
                 $errs = if ($run.log_analysis.error_count -ne $null) { $run.log_analysis.error_count } else { 0 }
                 $warnErrStr = "$warns / $errs"
 
-                $null = $tableRows.Add(@($ver, $mode, $fanoutVal, $fanoutTime, $routerTime, $optTime, $totalTime, $passes, $unroutedStr, $violationsStr, $scoreStr, $heap, $alloc, $warnErrStr))
+                # Check / parse notes from cache, fallback to log if not cached yet
+                $loadError = $null
+                $exceptions = $null
+                if ($run.log_analysis.PSObject.Properties['load_error'] -ne $null) {
+                    $loadError = $run.log_analysis.load_error
+                }
+                if ($run.log_analysis.PSObject.Properties['exceptions'] -ne $null) {
+                    $exceptions = $run.log_analysis.exceptions
+                }
+
+                if (($loadError -eq $null -or $exceptions -eq $null) -and $run.log_file -and (Test-Path $run.log_file)) {
+                    $logMetrics = Get-PhaseMetrics $run.log_file $run.binary.version_label
+                    $loadError = $logMetrics.load_error
+                    $exceptions = $logMetrics.exceptions
+                    # Cache in-memory for the duration of this report run
+                    if ($run.log_analysis.PSObject.Properties['load_error'] -eq $null) {
+                        $run.log_analysis | Add-Member -NotePropertyName "load_error" -NotePropertyValue $loadError
+                    } else {
+                        $run.log_analysis.load_error = $loadError
+                    }
+                    if ($run.log_analysis.PSObject.Properties['exceptions'] -eq $null) {
+                        $run.log_analysis | Add-Member -NotePropertyName "exceptions" -NotePropertyValue $exceptions
+                    } else {
+                        $run.log_analysis.exceptions = $exceptions
+                    }
+                }
+
+                $notes = @()
+                if ($run.exit.timed_out -eq $true) {
+                    $notes += "TIMEOUT"
+                }
+                if ($loadError -eq $true) {
+                    $notes += "LOAD ERROR"
+                }
+                if ($exceptions) {
+                    foreach ($exc in $exceptions) {
+                        if ($notes -notcontains $exc) {
+                            $notes += $exc
+                        }
+                    }
+                }
+                $notesStr = if ($notes.Count -gt 0) { $notes -join ", " } else { "" }
+
+                $null = $tableRows.Add(@($ver, $mode, $fanoutVal, $fanoutTime, $routerTime, $optTime, $totalTime, $passes, $unroutedStr, $violationsStr, $scoreStr, $heap, $alloc, $warnErrStr, $notesStr))
 
                 $prevUnrouted = $unroutedVal
                 $prevViolations = $violationsVal
