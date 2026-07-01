@@ -156,7 +156,7 @@ public class BatchFanout {
           app.freerouting.rules.NetClass netClass = net.get_class();
           app.freerouting.rules.ViaRule viaRule = netClass != null ? netClass.get_via_rule() : null;
           boolean hasBoardVias = !this.routing_board.rules.via_rules.isEmpty() && this.routing_board.rules.via_rules.firstElement().via_count() > 0;
-          boolean fallbackAllowed = Boolean.TRUE.equals(this.settings.fanout.fallbackToBoardVias) && hasBoardVias;
+          boolean fallbackAllowed = this.settings.fanout != null && Boolean.TRUE.equals(this.settings.fanout.fallbackToBoardVias) && hasBoardVias;
           boolean canUseVias = (viaRule != null && viaRule.via_count() > 0) || fallbackAllowed;
           if (!canUseVias) {
             FRLogger.debug("BatchFanout: skipping pin " + fullPinName + " because its net class has no vias defined and fallback is disabled/unavailable.");

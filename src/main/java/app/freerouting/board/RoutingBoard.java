@@ -1008,7 +1008,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
     AutorouteControl ctrl_settings = new AutorouteControl(this, pin_net_no, routerSettings);
     ctrl_settings.is_fanout = true;
-    if (Boolean.TRUE.equals(routerSettings.fanout.fallbackToBoardVias)) {
+    if (routerSettings.fanout != null && Boolean.TRUE.equals(routerSettings.fanout.fallbackToBoardVias) && ctrl_settings.via_rule != null) {
       app.freerouting.rules.ViaRule combined_via_rule = new app.freerouting.rules.ViaRule(ctrl_settings.via_rule.name + "_fallback");
       for (int i = 0; i < ctrl_settings.via_rule.via_count(); i++) {
         combined_via_rule.append_via(ctrl_settings.via_rule.get_via(i));
@@ -1042,7 +1042,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     AutorouteEngine curr_autoroute_engine = init_autoroute(pin_net_no, ctrl_settings.trace_clearance_class_no,
         p_stoppable_thread, p_time_limit, false);
 
-    long startRoute = System.nanoTime();
+
     AutorouteAttemptResult result = null;
     if (sorted_unconnected_list.size() <= 4) {
       if (!sorted_unconnected_list.isEmpty()) {

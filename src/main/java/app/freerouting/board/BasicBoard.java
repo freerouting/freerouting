@@ -999,8 +999,9 @@ public class BasicBoard implements Serializable {
             try {
               curr_item = (Item) item_list.read_object(it2);
             } catch (java.util.ConcurrentModificationException _) {
-              something_changed = true;
-              break;
+              netTraces.clear();
+              it2 = item_list.start_read_object();
+              continue;
             }
             if (curr_item == null) {
               break;
