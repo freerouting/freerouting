@@ -33,6 +33,7 @@ public class BatchOptimizer extends NamedAlgorithm {
   // the minimum cumulative trace length that was reached during the optimization
   protected double min_cumulative_trace_length = 0.0;
   protected RoutingJob job;
+  protected int totalItemsOptimized = 0;
 
   /**
    * Creates a new instance of BatchOptRoute, which is used to optimize the board.
@@ -91,7 +92,7 @@ public class BatchOptimizer extends NamedAlgorithm {
         .get_vias()
         .size() + ", trace length: " + Math.round(board.cumulative_trace_length()));
 
-    double route_improved = -1;
+    double scoreImprovement = -1;
     int currentPass = 0;
     use_increased_ripup_costs = true;
 
@@ -112,17 +113,46 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
-    while (((route_improved >= this.settings.optimizer.optimizationImprovementThreshold) || (route_improved < 0))
-        && (this.settings.optimizer.maxPasses == null || currentPass < this.settings.optimizer.maxPasses)
+    while ((this.settings.optimizer.maxPasses == null || currentPass < this.settings.optimizer.maxPasses)
+        && (this.settings.optimizer.maxItems == null || this.totalItemsOptimized < this.settings.optimizer.maxItems)
         && (!this.thread.isStopRequested())) {
       ++currentPass;
+
+      float scoreBeforePass = board.get_statistics().getNormalizedScore(job.routerSettings.scoring);
+
+      // Stop if potential improvement is less than threshold
+      if (scoreBeforePass * (1 + this.settings.optimizer.optimizationImprovementThreshold) >= 1000.0f) {
+        job.logInfo(String.format(java.util.Locale.US,
+            "Stopping optimizer because the current board score (%.2f) is already close to the maximum score (1000). Remaining potential improvement is less than the threshold (%.2f%%).",
+            scoreBeforePass, this.settings.optimizer.optimizationImprovementThreshold * 100));
+        break;
+      }
+
       String currentBoardHash = this.board.get_hash();
       job.setCurrentPass(currentPass);
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, currentBoardHash));
 
       boolean with_preferred_directions = currentPass % 2 != 0; // to create more variations
-      route_improved = opt_route_pass(currentPass, with_preferred_directions);
+      opt_route_pass(currentPass, with_preferred_directions);
       peakHeapMb = Math.max(peakHeapMb, sampleHeapUsageMb());
+
+      float scoreAfterPass = board.get_statistics().getNormalizedScore(job.routerSettings.scoring);
+      double passImprovement = scoreBeforePass > 0 ? (double) (scoreAfterPass - scoreBeforePass) / scoreBeforePass : 0;
+
+      if (this.use_increased_ripup_costs && scoreAfterPass <= scoreBeforePass) {
+        this.use_increased_ripup_costs = false;
+        // Keep the optimizer going to try with normal ripup costs
+        scoreImprovement = -1;
+      } else {
+        scoreImprovement = passImprovement;
+      }
+
+      if (scoreImprovement != -1 && scoreImprovement < this.settings.optimizer.optimizationImprovementThreshold) {
+        job.logInfo(String.format(java.util.Locale.US,
+            "Stopping optimizer because the improvement in this pass (%.4f%%) is below the threshold (%.2f%%).",
+            scoreImprovement * 100, this.settings.optimizer.optimizationImprovementThreshold * 100));
+        break;
+      }
     }
 
     this.fireTaskStateChangedEvent(
@@ -176,17 +206,27 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     FRLogger.traceEntry(optimizationPassId);
 
+    int consecutiveFailures = 0;
+    int maxConsecutiveFailures = this.settings.optimizer.maxConsecutiveFailures != null
+        ? this.settings.optimizer.maxConsecutiveFailures : 50;
+
     while (true) {
       if (this.thread.isStopRequested()) {
         FRLogger.traceExit(optimizationPassId);
         return route_improved;
+      }
+      if (this.settings.optimizer.maxItems != null && this.settings.optimizer.maxItems > 0 && this.totalItemsOptimized >= this.settings.optimizer.maxItems) {
+        job.logInfo("Max items limit reached (" + this.settings.optimizer.maxItems + "). Stopping optimizer.");
+        break;
       }
       Item curr_item = sorted_route_items.next();
       if (curr_item == null) {
         break;
       }
       ItemRouteResult result = opt_route_item(curr_item, p_with_preferred_directions, false);
+      this.totalItemsOptimized++;
       if (result.improved()) {
+        consecutiveFailures = 0;
         if (progressThrottler.shouldUpdate()) {
           BoardStatistics boardStatisticsAfter = board.get_statistics();
           this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, board);
@@ -197,6 +237,14 @@ public class BatchOptimizer extends NamedAlgorithm {
                 ? 1.0 - ((((float) result.via_count() / boardStatisticsBefore.items.viaCount)
                     + (result.trace_length() / boardStatisticsBefore.traces.totalLength)) / 2)
                 : 0);
+      } else {
+        consecutiveFailures++;
+        if (consecutiveFailures >= maxConsecutiveFailures) {
+          job.logInfo(String.format(java.util.Locale.US,
+              "Stopping optimization pass #%d early after %d consecutive items could not be improved.",
+              p_pass_no, consecutiveFailures));
+          break;
+        }
       }
     }
 

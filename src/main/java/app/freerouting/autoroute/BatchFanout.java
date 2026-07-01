@@ -29,6 +29,7 @@ public class BatchFanout {
   private final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   private int lastNotRoutedCount;
   private int extraViasTotal;
+  public int totalItemsFanouted = 0;
   private BatchFanout(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread) {
     this.thread = p_thread;
     this.routing_board = p_board;
@@ -85,6 +86,9 @@ public class BatchFanout {
     int completedPasses = 0;
     String lastBoardHash = p_board.get_hash();
     for (int i = 0; i < maxPasses; ++i) {
+      if (p_settings.fanout != null && p_settings.fanout.maxItems != null && p_settings.fanout.maxItems > 0 && fanout_instance.totalItemsFanouted >= p_settings.fanout.maxItems) {
+        break;
+      }
       int routed_count = fanout_instance.fanout_pass(i, progressListener);
       completedPasses++;
       if (routed_count == 0) {
@@ -130,16 +134,36 @@ public class BatchFanout {
         "", new app.freerouting.geometry.planar.Point[0]);
 
     this.progressThrottler.reset();
+    BoardStatistics progressStats = new BoardStatistics(this.routing_board, null, false);
     publishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
-        insert_error_count, 0, new EscapeStatistics(this.totalSmdPinCount, 0, 0.0), false, passStart);
-
+        insert_error_count, 0, new EscapeStatistics(this.totalSmdPinCount, 0, 0.0), false, passStart, progressStats);
+    boolean maxLimitReached = false;
     for (Component curr_component : this.sorted_components) {
       for (Component.Pin curr_pin : curr_component.smd_pins) {
+        if (this.settings.fanout != null && this.settings.fanout.maxItems != null && this.settings.fanout.maxItems > 0 && this.totalItemsFanouted >= this.settings.fanout.maxItems) {
+          FRLogger.info("Max items limit reached (" + this.settings.fanout.maxItems + "). Stopping fanout.");
+          maxLimitReached = true;
+          break;
+        }
         double max_milliseconds = baseMillisPerPin * (p_pass_no + 1);
         TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
         String fullPinName = curr_component.board_component.name + "-" + curr_pin.board_pin.name();
         int netNo = curr_pin.board_pin.get_net_no(0);
         int targetCount = curr_pin.board_pin.get_unconnected_set(netNo).size();
+
+        app.freerouting.rules.Net net = this.routing_board.rules.nets.get(netNo);
+        if (net != null) {
+          app.freerouting.rules.NetClass netClass = net.get_class();
+          app.freerouting.rules.ViaRule viaRule = netClass != null ? netClass.get_via_rule() : null;
+          boolean hasBoardVias = !this.routing_board.rules.via_rules.isEmpty() && this.routing_board.rules.via_rules.firstElement().via_count() > 0;
+          boolean fallbackAllowed = this.settings.fanout != null && Boolean.TRUE.equals(this.settings.fanout.fallbackToBoardVias) && hasBoardVias;
+          boolean canUseVias = (viaRule != null && viaRule.via_count() > 0) || fallbackAllowed;
+          if (!canUseVias) {
+            FRLogger.debug("BatchFanout: skipping pin " + fullPinName + " because its net class has no vias defined and fallback is disabled/unavailable.");
+            --pinsToGo;
+            continue;
+          }
+        }
 
         FRLogger.trace("BatchFanout.fanout_pass", "pin_start",
             "pin=" + fullPinName
@@ -164,6 +188,7 @@ public class BatchFanout {
         switch (curr_result.state) {
           case ROUTED       -> {
              ++routed_count;
+             this.totalItemsFanouted++;
              FRLogger.trace("BatchFanout.fanout_pass", "pin_routed",
                  "pin=" + fullPinName
                      + ", net=" + netNo
@@ -182,6 +207,7 @@ public class BatchFanout {
           }
           case FAILED       -> {
             ++not_routed_count;
+            this.totalItemsFanouted++;
             FRLogger.trace("BatchFanout.fanout_pass", "pin_failed",
                 "pin=" + fullPinName
                     + ", net=" + netNo
@@ -194,6 +220,7 @@ public class BatchFanout {
           }
           case INSERT_ERROR -> {
             ++insert_error_count;
+            this.totalItemsFanouted++;
             FRLogger.trace("BatchFanout.fanout_pass", "pin_insert_error",
                 "pin=" + fullPinName
                     + ", net=" + netNo
@@ -221,14 +248,17 @@ public class BatchFanout {
         --pinsToGo;
         int extraViasThisPass = Math.max(0, this.routing_board.get_vias().size() - viasBeforePass);
         maybePublishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
-            insert_error_count, extraViasThisPass, false, passStart);
-        if (this.thread.is_stop_auto_router_requested()) {
+            insert_error_count, extraViasThisPass, false, passStart, progressStats);
+        if (this.thread != null && this.thread.is_stop_auto_router_requested()) {
           BoardStatistics passStats = new BoardStatistics(this.routing_board, null, false);
           EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
           publishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
-              insert_error_count, extraViasThisPass, escapeStats, true, passStart);
+              insert_error_count, extraViasThisPass, escapeStats, true, passStart, passStats);
           return routed_count;
         }
+      }
+      if (maxLimitReached) {
+        break;
       }
     }
     int extraViasThisPass = Math.max(0, this.routing_board.get_vias().size() - viasBeforePass);
@@ -271,30 +301,33 @@ public class BatchFanout {
     }
     this.lastNotRoutedCount = not_routed_count;
     publishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
-        insert_error_count, extraViasThisPass, escapeStats, true, passStart);
+        insert_error_count, extraViasThisPass, escapeStats, true, passStart, passStats);
 
     return routed_count;
   }
 
   private void maybePublishProgress(FanoutProgressListener progressListener, int passNo, int ripupCosts, int pinsToGo,
       int routedCount, int notRoutedCount, int insertErrorCount, int extraViasThisPass, boolean passCompleted,
-      long passStart) {
+      long passStart, BoardStatistics progressStats) {
     if (passCompleted || progressThrottler.shouldUpdate()) {
       // Mid-pass interim updates use a lightweight empty escape statistics placeholder
       // to avoid the cost of a full escape scan on every tick.
       EscapeStatistics interimEscape = new EscapeStatistics(this.totalSmdPinCount, 0, 0.0);
+      if (progressStats != null) {
+        progressStats.vias.totalCount = this.routing_board.get_vias().size();
+        progressStats.traces.totalCount = this.routing_board.get_traces().size();
+      }
       publishProgress(progressListener, passNo, ripupCosts, pinsToGo, routedCount, notRoutedCount, insertErrorCount,
-          extraViasThisPass, interimEscape, passCompleted, passStart);
+          extraViasThisPass, interimEscape, passCompleted, passStart, progressStats);
     }
   }
 
   private void publishProgress(FanoutProgressListener progressListener, int passNo, int ripupCosts, int pinsToGo,
       int routedCount, int notRoutedCount, int insertErrorCount, int extraViasThisPass,
-      EscapeStatistics escapeStatistics, boolean passCompleted, long passStart) {
+      EscapeStatistics escapeStatistics, boolean passCompleted, long passStart, BoardStatistics boardStatistics) {
     if (progressListener == null) {
       return;
     }
-    BoardStatistics boardStatistics = this.routing_board.get_statistics();
     long duration = Math.max(0, System.currentTimeMillis() - passStart);
     progressListener.onProgress(
         new FanoutPassStatus(

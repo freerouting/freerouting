@@ -114,11 +114,14 @@ public class DefaultSettings implements SettingsSource {
         settings.fanout.startViaDiameterMm = 0.250;
         settings.fanout.endViaDiameterMm = 0.250;
         settings.fanout.pinSortingOrder = "outer_first";
+        settings.fanout.maxItems = Integer.MAX_VALUE;
+        settings.fanout.fallbackToBoardVias = true;
 
         // Optimizer defaults
         settings.optimizer.enabled = false;
         settings.optimizer.algorithm = "freerouting-optimizer";
         settings.optimizer.maxPasses = 100;
+        settings.optimizer.maxItems = Integer.MAX_VALUE;
         settings.optimizer.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
         settings.optimizer.optimizationImprovementThreshold = 0.01f;
         settings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GREEDY;
@@ -127,6 +130,7 @@ public class DefaultSettings implements SettingsSource {
         settings.optimizer.additionalRipupCostFactorAtStart = 10;
         settings.optimizer.traceRipupCostFactor = 0.6f;
         settings.optimizer.maxAutoroutePasses = 6;
+        settings.optimizer.maxConsecutiveFailures = 50;
 
         // Scalar trace-cost defaults (layer-specific arrays are omitted for the same reason as
         // the layer arrays above – their sizes depend on the board).

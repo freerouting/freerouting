@@ -47,6 +47,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * The time limit in milliseconds for the pull tight algorithm
    */
   private static final int PULL_TIGHT_TIME_LIMIT = 2000;
+  public final app.freerouting.autoroute.RoutingFailureLog failureLog;
   /**
    * the area marked for optimizing the route
    */
@@ -57,12 +58,6 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   private transient AutorouteEngine autoroute_engine;
   private transient Item shove_failing_obstacle;
   private transient int shove_failing_layer = -1;
-
-  /**
-   * Tracks routing failures for items on this board.
-   * Kept persistent to track failures across passes and threads.
-   */
-  public final app.freerouting.autoroute.RoutingFailureLog failureLog;
 
   /**
    * Creates a new instance of a routing Board with surrounding box p_bounding_box
@@ -959,7 +954,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         ctrl_settings, ripped_item_list, null); // null: costs not needed here
     if (result.state == AutorouteAttemptState.ROUTED) {
       final int time_limit_to_prevent_endless_loop = 1000;
-      opt_changed_area(new int[0], null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
+      opt_changed_area(new int[]{route_net_no}, null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
           p_stoppable_thread, time_limit_to_prevent_endless_loop);
     }
     return result;
@@ -1013,6 +1008,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
     AutorouteControl ctrl_settings = new AutorouteControl(this, pin_net_no, routerSettings);
     ctrl_settings.is_fanout = true;
+    if (routerSettings.fanout != null && Boolean.TRUE.equals(routerSettings.fanout.fallbackToBoardVias) && ctrl_settings.via_rule != null) {
+      app.freerouting.rules.ViaRule combined_via_rule = new app.freerouting.rules.ViaRule(ctrl_settings.via_rule.name + "_fallback");
+      for (int i = 0; i < ctrl_settings.via_rule.via_count(); i++) {
+        combined_via_rule.append_via(ctrl_settings.via_rule.get_via(i));
+      }
+      if (!this.rules.via_rules.isEmpty()) {
+        app.freerouting.rules.ViaRule default_via_rule = this.rules.via_rules.firstElement();
+        for (int i = 0; i < default_via_rule.via_count(); i++) {
+          app.freerouting.rules.ViaInfo default_via = default_via_rule.get_via(i);
+          if (!combined_via_rule.contains(default_via)) {
+            combined_via_rule.append_via(default_via);
+          }
+        }
+      }
+      ctrl_settings.via_rule = combined_via_rule;
+      ctrl_settings.rebuild_via_info(this, routerSettings.get_via_costs(), pin_net_no);
+    }
     Component pin_component = this.components.get(p_pin.get_component_no());
     if (pin_component != null && p_pin.name() != null) {
       ctrl_settings.fanout_start_pin_name = pin_component.name + "-" + p_pin.name();
@@ -1029,6 +1041,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     SortedSet<Item> ripped_item_list = new TreeSet<>();
     AutorouteEngine curr_autoroute_engine = init_autoroute(pin_net_no, ctrl_settings.trace_clearance_class_no,
         p_stoppable_thread, p_time_limit, false);
+
 
     AutorouteAttemptResult result = null;
     if (sorted_unconnected_list.size() <= 4) {
@@ -1052,9 +1065,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (result == null) {
       result = new AutorouteAttemptResult(AutorouteAttemptState.FAILED, "No target items to route connection.");
     }
+
     if (result.state == AutorouteAttemptState.ROUTED) {
       final int time_limit_to_prevent_endless_loop = 1000;
-      opt_changed_area(new int[0], null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
+      opt_changed_area(new int[]{pin_net_no}, null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
           p_stoppable_thread, time_limit_to_prevent_endless_loop);
     }
     return result;

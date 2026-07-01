@@ -35,6 +35,13 @@ public class FanoutSettings implements Serializable, Cloneable {
   public Integer maxPasses;
 
   /**
+   * Maximum number of escape/fanout routing attempts allowed during the fanout stage.
+   * If this limit is reached, the fanout stage will stop early.
+   */
+  @SerializedName("max_items")
+  public Integer maxItems;
+
+  /**
    * Base time budget (in milliseconds) that each individual SMD pin may
    * consume in pass 1.  The budget scales linearly with the pass number so
    * that later, harder passes are given proportionally more time:
@@ -91,6 +98,12 @@ public class FanoutSettings implements Serializable, Cloneable {
    */
   @SerializedName("pin_sorting_order")
   public String pinSortingOrder;
+
+  /**
+   * Whether to fallback to board-wide via rules if a net has no via rules defined or an empty via list during fanout.
+   */
+  @SerializedName("fallback_to_board_vias")
+  public Boolean fallbackToBoardVias;
 
   /**
    * No-arg constructor required for deserialisation and {@link #clone()}.

@@ -339,13 +339,6 @@ public class GraphicsContext implements Serializable {
       return;
     }
 
-    java.awt.geom.Area borderBand = new java.awt.geom.Area(new BasicStroke((float)(2 * pitchPx), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER).createStrokedShape(outerArea));
-    borderBand.intersect(outerArea);
-
-    if (borderBand.isEmpty()) {
-      return;
-    }
-
     Graphics2D g2 = (Graphics2D) p_g;
     java.awt.Paint oldPaint = g2.getPaint();
     java.awt.Composite oldComposite = g2.getComposite();
@@ -367,9 +360,15 @@ public class GraphicsContext implements Serializable {
       cached_hatch_color = p_color;
     }
 
+    java.awt.Shape oldClip = g2.getClip();
+    java.awt.Stroke oldStroke = g2.getStroke();
+    g2.clip(outerArea);
     g2.setPaint(cached_hatch_paint);
-    g2.fill(borderBand);
+    g2.setStroke(new BasicStroke((float)(2 * pitchPx), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
+    g2.draw(outerArea);
 
+    g2.setStroke(oldStroke);
+    g2.setClip(oldClip);
     g2.setPaint(oldPaint);
     g2.setComposite(oldComposite);
   }

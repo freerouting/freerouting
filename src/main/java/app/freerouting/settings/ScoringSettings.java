@@ -21,7 +21,7 @@ import java.io.Serializable;
  *       it does <em>not</em> appear in the board-score formula.</li>
  * </ul>
  */
-public class RouterScoringSettings implements Serializable, Cloneable {
+public class ScoringSettings implements Serializable, Cloneable {
 
   // The cost of 1 mm of trace length if the trace is routed in the preferred
   // direction, defined for each layer.
@@ -70,9 +70,9 @@ public class RouterScoringSettings implements Serializable, Cloneable {
    * @return A new RouterScoringSettings instance with the same values
    */
   @Override
-  public RouterScoringSettings clone() {
+  public ScoringSettings clone() {
     try {
-      RouterScoringSettings result = (RouterScoringSettings) super.clone();
+      ScoringSettings result = (ScoringSettings) super.clone();
       // Clone array fields to ensure deep copy
       if (this.preferredDirectionTraceCost != null) {
         result.preferredDirectionTraceCost = this.preferredDirectionTraceCost.clone();

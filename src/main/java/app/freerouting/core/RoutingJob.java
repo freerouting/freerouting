@@ -422,10 +422,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     }
 
     if (this.input.format != FileFormat.UNKNOWN) {
-      this.input = new BoardFileDetails(inputFile);
-      this.input.addUpdatedEventListener(_ -> this.fireInputUpdatedEvent());
       this.name = input.getFilenameWithoutExtension();
-
     }
 
     fireInputUpdatedEvent();

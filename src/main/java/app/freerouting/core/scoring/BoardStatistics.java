@@ -18,10 +18,10 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.settings.ScoringSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
-import app.freerouting.rules.BoardRules;
-import app.freerouting.settings.RouterScoringSettings;
 import com.google.gson.annotations.SerializedName;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
@@ -408,35 +408,40 @@ public class BoardStatistics implements Serializable {
 
       // get the number of components and nets in the SES file
       this.layers.totalCount = layers.size();
-      this.components.totalCount = content.split("\\(component").length - 1;
-      this.nets.totalCount = content.split("\\(net").length - 1;
-      this.traces.totalCount = content.split("\\(wire").length - 1;
-      this.vias.totalCount = content.split("\\(via").length - 1;
+      this.components.totalCount = countOccurrences(content, "(component");
+      this.nets.totalCount = countOccurrences(content, "(net");
+      this.traces.totalCount = countOccurrences(content, "(wire");
+      this.vias.totalCount = countOccurrences(content, "(via");
     } else if (format == FileFormat.DSN) {
       // read the content as text
       String content = new String(data, StandardCharsets.UTF_8);
-      // extract the host from the DSN file
-      String[] lines = content.split("\n");
+      // extract the host from the DSN file without splitting the whole content by lines
       String host_cad = null;
       String host_version = null;
-      for (String line : lines) {
-        String value = null;
-
-        line = line.trim();
-        if (line.startsWith("(host_cad")) {
-          value = line
-              .substring(9, line.length() - 1)
-              .trim();
-          host_cad = TextManager.removeQuotes(value);
-        } else if (line.startsWith("(host_version")) {
-          value = line
-              .substring(13, line.length() - 1)
-              .trim();
-          host_version = TextManager.removeQuotes(value);
+      int parserIndex = content.indexOf("(parser");
+      if (parserIndex != -1) {
+        int searchLimit = content.indexOf(")", parserIndex);
+        if (searchLimit == -1) {
+          searchLimit = Math.min(content.length(), parserIndex + 1000);
+        } else {
+          searchLimit = Math.min(content.length(), searchLimit + 1);
         }
-
-        if ((host_cad != null) && (host_version != null)) {
-          break;
+        String parserScope = content.substring(parserIndex, searchLimit);
+        int hcIdx = parserScope.indexOf("(host_cad");
+        if (hcIdx != -1) {
+          int hcEnd = parserScope.indexOf(")", hcIdx);
+          if (hcEnd != -1) {
+            String val = parserScope.substring(hcIdx + 9, hcEnd).trim();
+            host_cad = TextManager.removeQuotes(val);
+          }
+        }
+        int hvIdx = parserScope.indexOf("(host_version");
+        if (hvIdx != -1) {
+          int hvEnd = parserScope.indexOf(")", hvIdx);
+          if (hvEnd != -1) {
+            String val = parserScope.substring(hvIdx + 13, hvEnd).trim();
+            host_version = TextManager.removeQuotes(val);
+          }
         }
       }
 
@@ -447,12 +452,12 @@ public class BoardStatistics implements Serializable {
       }
 
       // get the number of layers and nets in the DSN file
-      this.layers.totalCount = content.split("\\(layer").length - 1;
-      this.components.totalCount = content.split("\\(component").length - 1;
-      this.nets.classCount = content.split("\\(class").length - 1;
-      this.nets.totalCount = content.split("\\(net").length - 1;
-      this.traces.totalCount = content.split("\\(wire").length - 1;
-      this.vias.totalCount = content.split("\\(via").length - 1;
+      this.layers.totalCount = countOccurrences(content, "(layer");
+      this.components.totalCount = countOccurrences(content, "(component");
+      this.nets.classCount = countOccurrences(content, "(class");
+      this.nets.totalCount = countOccurrences(content, "(net");
+      this.traces.totalCount = countOccurrences(content, "(wire");
+      this.vias.totalCount = countOccurrences(content, "(via");
     } else if (format == FileFormat.JSON) {
       try {
         String content = new String(data, StandardCharsets.UTF_8);
@@ -486,62 +491,6 @@ public class BoardStatistics implements Serializable {
     }
   }
 
-  /**
-   * Returns a JSON representation of this object.
-   */
-  public String toString() {
-    return GsonProvider.GSON.toJson(this);
-  }
-
-  /**
-   * Calculates the score/cost of the board based on the given scoring settings.
-   * Higher score means better board.
-   */
-  public float calculateScore(RouterScoringSettings scoringSettings) {
-    float maximumScore = getMaximumScore(scoringSettings);
-    float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
-        + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
-        + this.bends.totalCount * scoringSettings.bendPenalty;
-    // Use the mm-normalised trace length so that the trace-cost term is comparable
-    // to the unroutedNetPenalty regardless of the DSN internal coordinate resolution.
-    // totalLength is in raw board units which vary wildly between DSN files
-    // (e.g. 1 nm for KiCad at resolution 1e6, vs 0.1 µm for EAGLE/benchmark boards),
-    // and would make the score collapse to 0 for high-resolution KiCad exports.
-    float traceLengthForCost = (this.traces.totalLengthMm != null)
-        ? this.traces.totalLengthMm
-        : this.traces.totalLength;
-    float costs = (float) (traceLengthForCost * scoringSettings.defaultPreferredDirectionTraceCost
-        + this.vias.totalCount * scoringSettings.viaCosts);
-
-    return maximumScore - penalties - costs;
-  }
-
-  public float getMaximumScore(RouterScoringSettings scoringSettings) {
-    return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
-  }
-
-  public float getNormalizedScore(RouterScoringSettings scoringSettings) {
-    float maximumScore = getMaximumScore(scoringSettings);
-    if (maximumScore <= 0f) {
-      // Guard against division by zero and negative maximum scores (e.g. boards with no
-      // connections, or boards where all nets are single-pin nets). Return 0 so that the
-      // score is a defined value and comparisons like "score > threshold" work predictably.
-      // This also prevents NaN propagation which could silently break stagnation detection
-      // (NaN comparisons always return false, causing stagnation counters to never advance).
-      return 0f;
-    }
-    return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
-  }
-
-  public static class BoardStatisticsFanout implements Serializable {
-    @SerializedName("total_smd_pins")
-    public int totalSmdPins = 0;
-    @SerializedName("pins_to_escape")
-    public int pinsToEscape = 0;
-    @SerializedName("escaped_count")
-    public int escapedCount = 0;
-  }
-
   public static boolean isPinEscaped(Pin pin) {
     java.util.Set<Item> contacts = pin.get_normal_contacts();
     for (Item contact : contacts) {
@@ -564,5 +513,70 @@ public class BoardStatistics implements Serializable {
     }
     return false;
   }
-}
 
+  private static int countOccurrences(String text, String target) {
+    int count = 0;
+    int index = 0;
+    while ((index = text.indexOf(target, index)) != -1) {
+      count++;
+      index += target.length();
+    }
+    return count;
+  }
+
+  /**
+   * Returns a JSON representation of this object.
+   */
+  public String toString() {
+    return GsonProvider.GSON.toJson(this);
+  }
+
+  /**
+   * Calculates the score/cost of the board based on the given scoring settings.
+   * Higher score means better board.
+   */
+  public float calculateScore(ScoringSettings scoringSettings) {
+    float maximumScore = getMaximumScore(scoringSettings);
+    float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
+        + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
+        + this.bends.totalCount * scoringSettings.bendPenalty;
+    // Use the mm-normalised trace length so that the trace-cost term is comparable
+    // to the unroutedNetPenalty regardless of the DSN internal coordinate resolution.
+    // totalLength is in raw board units which vary wildly between DSN files
+    // (e.g. 1 nm for KiCad at resolution 1e6, vs 0.1 µm for EAGLE/benchmark boards),
+    // and would make the score collapse to 0 for high-resolution KiCad exports.
+    float traceLengthForCost = (this.traces.totalLengthMm != null)
+        ? this.traces.totalLengthMm
+        : this.traces.totalLength;
+    float costs = (float) (traceLengthForCost * scoringSettings.defaultPreferredDirectionTraceCost
+        + this.vias.totalCount * scoringSettings.viaCosts);
+
+    return maximumScore - penalties - costs;
+  }
+
+  public float getMaximumScore(ScoringSettings scoringSettings) {
+    return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
+  }
+
+  public float getNormalizedScore(ScoringSettings scoringSettings) {
+    float maximumScore = getMaximumScore(scoringSettings);
+    if (maximumScore <= 0f) {
+      // Guard against division by zero and negative maximum scores (e.g. boards with no
+      // connections, or boards where all nets are single-pin nets). Return 0 so that the
+      // score is a defined value and comparisons like "score > threshold" work predictably.
+      // This also prevents NaN propagation which could silently break stagnation detection
+      // (NaN comparisons always return false, causing stagnation counters to never advance).
+      return 0f;
+    }
+    return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
+  }
+
+  public static class BoardStatisticsFanout implements Serializable {
+    @SerializedName("total_smd_pins")
+    public int totalSmdPins = 0;
+    @SerializedName("pins_to_escape")
+    public int pinsToEscape = 0;
+    @SerializedName("escaped_count")
+    public int escapedCount = 0;
+  }
+}

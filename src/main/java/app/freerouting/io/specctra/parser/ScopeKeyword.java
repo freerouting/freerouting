@@ -69,7 +69,6 @@ public class ScopeKeyword extends Keyword {
           if (!next_scope.read_scope(p_par)) {
             return false;
           }
-
         } else {
           // skip unknown scope
           skip_scope(p_par.scanner);

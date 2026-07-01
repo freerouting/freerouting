@@ -190,6 +190,13 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
       return null;
     }
     TileShape[] precalculated_tree_shapes = this.get_precalculated_tree_shapes(p_tree);
+    if (precalculated_tree_shapes == null || p_index < 0 || p_index >= precalculated_tree_shapes.length) {
+      this.clear_derived_data();
+      precalculated_tree_shapes = this.get_precalculated_tree_shapes(p_tree);
+    }
+    if (precalculated_tree_shapes == null || p_index < 0 || p_index >= precalculated_tree_shapes.length) {
+      return null;
+    }
     return precalculated_tree_shapes[p_index];
   }
 
@@ -763,8 +770,10 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    * Draws this item on a specific layer only, with its draw colors from p_graphics_context.
    */
   public void draw_layer(Graphics p_g, GraphicsContext p_graphics_context, int p_layer_no) {
-    Color[] layer_colors = get_draw_colors(p_graphics_context);
-    draw_layer(p_g, p_graphics_context, layer_colors, get_draw_intensity(p_graphics_context), p_layer_no);
+    if (this.is_on_layer(p_layer_no)) {
+      Color[] layer_colors = get_draw_colors(p_graphics_context);
+      draw_layer(p_g, p_graphics_context, layer_colors, get_draw_intensity(p_graphics_context), p_layer_no);
+    }
   }
 
   /**

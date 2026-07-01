@@ -875,7 +875,6 @@ public class BasicBoard implements Serializable {
   public boolean normalize_traces(int p_net_no) {
     boolean result = false;
     boolean something_changed = true;
-    Item curr_item;
     int iterationCount = 0;
     while (something_changed) {
       if (++iterationCount > MAX_NORMALIZE_ITERATIONS) {
@@ -893,11 +892,18 @@ public class BasicBoard implements Serializable {
         break;
       }
       something_changed = false;
+
+      // Collect traces for this net on this iteration to avoid ConcurrentModificationException
+      // on the board's item_list during iteration, and to avoid scanning the entire board repeatedly.
+      java.util.List<PolylineTrace> netTraces = new java.util.ArrayList<>();
       Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
       for (;;) {
+        Item curr_item;
         try {
           curr_item = (Item) item_list.read_object(it);
         } catch (ConcurrentModificationException _) {
+          // If the board's item list was modified during collection (should be rare during collection itself),
+          // set something_changed to true to retry from a fresh state.
           something_changed = true;
           break;
         }
@@ -906,12 +912,104 @@ public class BasicBoard implements Serializable {
         }
         if (curr_item.contains_net(p_net_no) && curr_item instanceof PolylineTrace curr_trace
             && curr_item.is_on_the_board()) {
+          netTraces.add(curr_trace);
+        }
+      }
+
+      if (something_changed) {
+        continue;
+      }
+
+      for (PolylineTrace curr_trace : netTraces) {
+        if (curr_trace.is_on_the_board()) {
           if (curr_trace.normalize(null)) {
             something_changed = true;
             result = true;
           } else if (!curr_trace.is_user_fixed() && this.remove_if_cycle(curr_trace)) {
             something_changed = true;
             result = true;
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Normalizes the traces of all nets on the board in a single optimized pass.
+   */
+  public boolean normalize_all_traces() {
+    boolean result = false;
+    // Group all PolylineTrace items by net
+    java.util.Map<Integer, java.util.List<PolylineTrace>> tracesByNet = new java.util.HashMap<>();
+    Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
+    for (;;) {
+      Item curr_item;
+      try {
+        curr_item = (Item) item_list.read_object(it);
+      } catch (java.util.ConcurrentModificationException _) {
+        // Retry collection if modified
+        tracesByNet.clear();
+        it = item_list.start_read_object();
+        continue;
+      }
+      if (curr_item == null) {
+        break;
+      }
+      if (curr_item instanceof PolylineTrace curr_trace && curr_item.is_on_the_board()) {
+        for (int netNo : curr_trace.net_no_arr) {
+          tracesByNet.computeIfAbsent(netNo, k -> new java.util.ArrayList<>()).add(curr_trace);
+        }
+      }
+    }
+
+    for (java.util.Map.Entry<Integer, java.util.List<PolylineTrace>> entry : tracesByNet.entrySet()) {
+      int netNo = entry.getKey();
+      java.util.List<PolylineTrace> netTraces = entry.getValue();
+      boolean something_changed = true;
+      int iterationCount = 0;
+      while (something_changed) {
+        if (++iterationCount > MAX_NORMALIZE_ITERATIONS) {
+          String netName = (rules != null && rules.nets != null && rules.nets.get(netNo) != null)
+              ? rules.nets.get(netNo).name : String.valueOf(netNo);
+          FRLogger.warn("BasicBoard.normalize_all_traces: reached " + MAX_NORMALIZE_ITERATIONS
+              + " iterations for net '" + netName + "' — stopping to prevent hang.");
+          break;
+        }
+        something_changed = false;
+
+        for (PolylineTrace curr_trace : netTraces) {
+          if (curr_trace.is_on_the_board()) {
+            if (curr_trace.normalize(null)) {
+              something_changed = true;
+              result = true;
+            } else if (!curr_trace.is_user_fixed() && this.remove_if_cycle(curr_trace)) {
+              something_changed = true;
+              result = true;
+            }
+          }
+        }
+
+        // If something changed, collect the traces for this net again
+        if (something_changed) {
+          netTraces.clear();
+          Iterator<UndoableObjects.UndoableObjectNode> it2 = item_list.start_read_object();
+          for (;;) {
+            Item curr_item;
+            try {
+              curr_item = (Item) item_list.read_object(it2);
+            } catch (java.util.ConcurrentModificationException _) {
+              netTraces.clear();
+              it2 = item_list.start_read_object();
+              continue;
+            }
+            if (curr_item == null) {
+              break;
+            }
+            if (curr_item.contains_net(netNo) && curr_item instanceof PolylineTrace curr_trace
+                && curr_item.is_on_the_board()) {
+              netTraces.add(curr_trace);
+            }
           }
         }
       }
@@ -1269,7 +1367,10 @@ public class BasicBoard implements Serializable {
     FRLogger.trace(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
         selectedLayerName, dominantSide, renderingOrderNames));
 
+    long drawStart = System.nanoTime();
+
     // Pre-collect all items once to avoid re-iterating item_list for every (priority × step)
+    long startCollect = System.nanoTime();
     java.util.List<Item> allItems = new java.util.ArrayList<>();
     {
       Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
@@ -1286,46 +1387,106 @@ public class BasicBoard implements Serializable {
         }
       }
     }
+    long endCollect = System.nanoTime();
+
+    long startGroup = System.nanoTime();
+    // Group items by priority to optimize rendering loops
+    int maxPriority = Drawable.MAX_DRAW_PRIORITY;
+    @SuppressWarnings("unchecked")
+    java.util.List<Item>[] itemsByPriority = (java.util.List<Item>[]) new java.util.List[maxPriority + 1];
+    for (int i = 0; i <= maxPriority; i++) {
+      itemsByPriority[i] = new java.util.ArrayList<>();
+    }
+    for (Item curr_item : allItems) {
+      int p = curr_item.get_draw_priority();
+      if (p >= 0 && p <= maxPriority) {
+        itemsByPriority[p].add(curr_item);
+      }
+    }
+    long endGroup = System.nanoTime();
+
+    long startLoop = System.nanoTime();
+    
+    // Viewport culling bounds in board coordinates
+    java.awt.Rectangle clipRect = p_graphics.getClipBounds();
+    IntBox clipBox = clipRect != null ? p_graphics_context.coordinate_transform.screen_to_board(clipRect) : null;
+
+    long timeTrace = 0;
+    long timeVia = 0;
+    long timePin = 0;
+    long timeConduction = 0;
+    long timeOther = 0;
+    int countTrace = 0;
+    int countVia = 0;
+    int countPin = 0;
+    int countConduction = 0;
+    int countOther = 0;
+    int culledCount = 0;
 
     // Draw elements according to the calculated steps sequence
-    for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MAX_DRAW_PRIORITY; curr_priority++) {
+    for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= maxPriority; curr_priority++) {
+      java.util.List<Item> priorityItems = itemsByPriority[curr_priority];
       for (RenderStep step : drawSteps) {
-        for (Item curr_item : allItems) {
-          if (curr_item.get_draw_priority() == curr_priority) {
-            if (step.isVirtual) {
-              // Virtual layer step: render ComponentOutline and ComponentObstacleArea (courtyard)
-              // items matching that virtual layer index
-              if (curr_item instanceof ComponentOutline co) {
-                int itemVirtualIdx;
-                if (co.is_courtyard()) {
-                  itemVirtualIdx = co.is_front() ? 2 : 3;
-                } else if (co.is_fabrication()) {
-                  itemVirtualIdx = co.is_front() ? 4 : 5;
-                } else {
-                  itemVirtualIdx = co.is_front() ? 0 : 1;
-                }
-                if (itemVirtualIdx == step.index) {
-                  curr_item.draw(p_graphics, p_graphics_context);
-                }
-              } else if (curr_item instanceof ComponentObstacleArea coa) {
-                // Courtyard keepout areas map to virtual courtyard layers (2=F.Courtyard, 3=B.Courtyard)
-                int itemVirtualIdx = coa.is_front() ? 2 : 3;
-                if (itemVirtualIdx == step.index) {
-                  curr_item.draw(p_graphics, p_graphics_context);
-                }
+        for (Item curr_item : priorityItems) {
+          if (clipBox != null && !clipBox.intersects(curr_item.bounding_box())) {
+            culledCount++;
+            continue;
+          }
+
+          long itemStart = System.nanoTime();
+          if (step.isVirtual) {
+            // Virtual layer step: render ComponentOutline and ComponentObstacleArea (courtyard)
+            // items matching that virtual layer index
+            if (curr_item instanceof ComponentOutline co) {
+              int itemVirtualIdx;
+              if (co.is_courtyard()) {
+                itemVirtualIdx = co.is_front() ? 2 : 3;
+              } else if (co.is_fabrication()) {
+                itemVirtualIdx = co.is_front() ? 4 : 5;
+              } else {
+                itemVirtualIdx = co.is_front() ? 0 : 1;
               }
-            } else {
-              // Physical layer step: skip ComponentOutline and ComponentObstacleArea
-              // (they are rendered exclusively in their corresponding virtual layer steps)
-              if (!(curr_item instanceof ComponentOutline) && !(curr_item instanceof ComponentObstacleArea)) {
-                curr_item.draw_layer(p_graphics, p_graphics_context, step.index);
+              if (itemVirtualIdx == step.index) {
+                curr_item.draw(p_graphics, p_graphics_context);
+              }
+            } else if (curr_item instanceof ComponentObstacleArea coa) {
+              // Courtyard keepout areas map to virtual courtyard layers (2=F.Courtyard, 3=B.Courtyard)
+              int itemVirtualIdx = coa.is_front() ? 2 : 3;
+              if (itemVirtualIdx == step.index) {
+                curr_item.draw(p_graphics, p_graphics_context);
               }
             }
+          } else {
+            // Physical layer step: skip ComponentOutline and ComponentObstacleArea
+            // (they are rendered exclusively in their corresponding virtual layer steps)
+            if (!(curr_item instanceof ComponentOutline) && !(curr_item instanceof ComponentObstacleArea)) {
+              curr_item.draw_layer(p_graphics, p_graphics_context, step.index);
+            }
+          }
+          long itemDur = System.nanoTime() - itemStart;
+
+          if (curr_item instanceof PolylineTrace) {
+            timeTrace += itemDur;
+            countTrace++;
+          } else if (curr_item instanceof Via) {
+            timeVia += itemDur;
+            countVia++;
+          } else if (curr_item instanceof Pin) {
+            timePin += itemDur;
+            countPin++;
+          } else if (curr_item instanceof ConductionArea) {
+            timeConduction += itemDur;
+            countConduction++;
+          } else {
+            timeOther += itemDur;
+            countOther++;
           }
         }
       }
     }
+    long endLoop = System.nanoTime();
 
+    long startText = System.nanoTime();
     // Draw component values on Front Fab (virtual index 4) / Back Fab (virtual index 5)
     double intensityFront = p_graphics_context.get_virtual_layer_visibility(4);
     double intensityBack = p_graphics_context.get_virtual_layer_visibility(5);
@@ -1359,6 +1520,27 @@ public class BasicBoard implements Serializable {
       g2.setFont(originalFont);
       g2.setComposite(originalComposite);
     }
+    long endText = System.nanoTime();
+
+    long drawEnd = System.nanoTime();
+    FRLogger.debug(String.format(
+        "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms, loop=%.2f ms (culled: %d), texts=%.2f ms] (items: %d)",
+        (drawEnd - drawStart) / 1_000_000.0,
+        (endCollect - startCollect) / 1_000_000.0,
+        (endGroup - startGroup) / 1_000_000.0,
+        (endLoop - startLoop) / 1_000_000.0,
+        culledCount,
+        (endText - startText) / 1_000_000.0,
+        allItems.size()
+    ));
+    FRLogger.debug(String.format(
+        "  - Item drawing times: Trace=%.2f ms (%d), Via=%.2f ms (%d), Pin=%.2f ms (%d), Plane=%.2f ms (%d), Other=%.2f ms (%d)",
+        timeTrace / 1_000_000.0, countTrace,
+        timeVia / 1_000_000.0, countVia,
+        timePin / 1_000_000.0, countPin,
+        timeConduction / 1_000_000.0, countConduction,
+        timeOther / 1_000_000.0, countOther
+    ));
   }
 
   /**

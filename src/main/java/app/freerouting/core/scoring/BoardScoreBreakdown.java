@@ -1,12 +1,12 @@
 package app.freerouting.core.scoring;
 
-import app.freerouting.settings.RouterScoringSettings;
+import app.freerouting.settings.ScoringSettings;
 
 /**
  * An immutable, per-component breakdown of a single board-score calculation.
  *
  * <p>Use {@link app.freerouting.core.scoring.ScoringWeightComparison} to produce instances, or call
- * {@link #of(BoardStatistics, RouterScoringSettings)} directly.
+ * {@link #of(BoardStatistics, ScoringSettings)} directly.
  *
  * <p>The score formula is:
  * <pre>
@@ -76,7 +76,7 @@ public final class BoardScoreBreakdown {
   public final float normalizedScore;
 
   /** The weight configuration used to compute this breakdown. */
-  public final RouterScoringSettings weights;
+  public final ScoringSettings weights;
 
   // Statistics used as input — kept for reference / formatted output.
   public final int maxConnections;
@@ -87,7 +87,7 @@ public final class BoardScoreBreakdown {
   public final int viaCount;
 
   private BoardScoreBreakdown(
-      RouterScoringSettings weights,
+      ScoringSettings weights,
       int maxConnections,
       int incompleteConnections,
       int clearanceViolations,
@@ -128,7 +128,7 @@ public final class BoardScoreBreakdown {
    * @throws NullPointerException     if either argument is null
    * @throws IllegalArgumentException if a required weight field is null
    */
-  public static BoardScoreBreakdown of(BoardStatistics stats, RouterScoringSettings weights) {
+  public static BoardScoreBreakdown of(BoardStatistics stats, ScoringSettings weights) {
     if (stats == null) {
       throw new NullPointerException("stats must not be null");
     }
@@ -147,24 +147,7 @@ public final class BoardScoreBreakdown {
         stats.vias.totalCount != null ? stats.vias.totalCount : 0);
   }
 
-  /**
-   * Returns a concise human-readable summary of this breakdown, useful for logging
-   * and test output.
-   */
-  public String toSummaryString() {
-    return String.format(
-        "score=%.1f/1000 (raw=%.0f/%.0f) | "
-            + "unrouted=%d×%.0f=%.0f | violations=%d×%.0f=%.0f | bends=%d×%.1f=%.0f | "
-            + "length=%.1fmm×%.2f=%.0f | vias=%d×%.0f=%.0f",
-        normalizedScore, rawScore, maximumScore,
-        incompleteConnections, weights.unroutedNetPenalty, unroutedConnectionsPenalty,
-        clearanceViolations, weights.clearanceViolationPenalty, clearanceViolationsPenalty,
-        bendCount, weights.bendPenalty, bendsPenalty,
-        totalTraceLengthMm, weights.defaultPreferredDirectionTraceCost, traceLengthCost,
-        viaCount, (double) weights.viaCosts, viasCost);
-  }
-
-  private static void validateWeights(RouterScoringSettings w) {
+  private static void validateWeights(ScoringSettings w) {
     if (w.unroutedNetPenalty == null) {
       throw new IllegalArgumentException("weights.unroutedNetPenalty must not be null");
     }
@@ -180,5 +163,22 @@ public final class BoardScoreBreakdown {
     if (w.viaCosts == null) {
       throw new IllegalArgumentException("weights.viaCosts must not be null");
     }
+  }
+
+  /**
+   * Returns a concise human-readable summary of this breakdown, useful for logging
+   * and test output.
+   */
+  public String toSummaryString() {
+    return String.format(
+        "score=%.1f/1000 (raw=%.0f/%.0f) | "
+            + "unrouted=%d×%.0f=%.0f | violations=%d×%.0f=%.0f | bends=%d×%.1f=%.0f | "
+            + "length=%.1fmm×%.2f=%.0f | vias=%d×%.0f=%.0f",
+        normalizedScore, rawScore, maximumScore,
+        incompleteConnections, weights.unroutedNetPenalty, unroutedConnectionsPenalty,
+        clearanceViolations, weights.clearanceViolationPenalty, clearanceViolationsPenalty,
+        bendCount, weights.bendPenalty, bendsPenalty,
+        totalTraceLengthMm, weights.defaultPreferredDirectionTraceCost, traceLengthCost,
+        viaCount, (double) weights.viaCosts, viasCost);
   }
 }
