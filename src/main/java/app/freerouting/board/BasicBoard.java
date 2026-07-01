@@ -875,7 +875,6 @@ public class BasicBoard implements Serializable {
   public boolean normalize_traces(int p_net_no) {
     boolean result = false;
     boolean something_changed = true;
-    Item curr_item;
     int iterationCount = 0;
     while (something_changed) {
       if (++iterationCount > MAX_NORMALIZE_ITERATIONS) {
@@ -893,11 +892,18 @@ public class BasicBoard implements Serializable {
         break;
       }
       something_changed = false;
+
+      // Collect traces for this net on this iteration to avoid ConcurrentModificationException
+      // on the board's item_list during iteration, and to avoid scanning the entire board repeatedly.
+      java.util.List<PolylineTrace> netTraces = new java.util.ArrayList<>();
       Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
       for (;;) {
+        Item curr_item;
         try {
           curr_item = (Item) item_list.read_object(it);
         } catch (ConcurrentModificationException _) {
+          // If the board's item list was modified during collection (should be rare during collection itself),
+          // set something_changed to true to retry from a fresh state.
           something_changed = true;
           break;
         }
@@ -906,12 +912,103 @@ public class BasicBoard implements Serializable {
         }
         if (curr_item.contains_net(p_net_no) && curr_item instanceof PolylineTrace curr_trace
             && curr_item.is_on_the_board()) {
+          netTraces.add(curr_trace);
+        }
+      }
+
+      if (something_changed) {
+        continue;
+      }
+
+      for (PolylineTrace curr_trace : netTraces) {
+        if (curr_trace.is_on_the_board()) {
           if (curr_trace.normalize(null)) {
             something_changed = true;
             result = true;
           } else if (!curr_trace.is_user_fixed() && this.remove_if_cycle(curr_trace)) {
             something_changed = true;
             result = true;
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Normalizes the traces of all nets on the board in a single optimized pass.
+   */
+  public boolean normalize_all_traces() {
+    boolean result = false;
+    // Group all PolylineTrace items by net
+    java.util.Map<Integer, java.util.List<PolylineTrace>> tracesByNet = new java.util.HashMap<>();
+    Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
+    for (;;) {
+      Item curr_item;
+      try {
+        curr_item = (Item) item_list.read_object(it);
+      } catch (java.util.ConcurrentModificationException _) {
+        // Retry collection if modified
+        tracesByNet.clear();
+        it = item_list.start_read_object();
+        continue;
+      }
+      if (curr_item == null) {
+        break;
+      }
+      if (curr_item instanceof PolylineTrace curr_trace && curr_item.is_on_the_board()) {
+        for (int netNo : curr_trace.net_no_arr) {
+          tracesByNet.computeIfAbsent(netNo, k -> new java.util.ArrayList<>()).add(curr_trace);
+        }
+      }
+    }
+
+    for (java.util.Map.Entry<Integer, java.util.List<PolylineTrace>> entry : tracesByNet.entrySet()) {
+      int netNo = entry.getKey();
+      java.util.List<PolylineTrace> netTraces = entry.getValue();
+      boolean something_changed = true;
+      int iterationCount = 0;
+      while (something_changed) {
+        if (++iterationCount > MAX_NORMALIZE_ITERATIONS) {
+          String netName = (rules != null && rules.nets != null && rules.nets.get(netNo) != null)
+              ? rules.nets.get(netNo).name : String.valueOf(netNo);
+          FRLogger.warn("BasicBoard.normalize_all_traces: reached " + MAX_NORMALIZE_ITERATIONS
+              + " iterations for net '" + netName + "' — stopping to prevent hang.");
+          break;
+        }
+        something_changed = false;
+
+        for (PolylineTrace curr_trace : netTraces) {
+          if (curr_trace.is_on_the_board()) {
+            if (curr_trace.normalize(null)) {
+              something_changed = true;
+              result = true;
+            } else if (!curr_trace.is_user_fixed() && this.remove_if_cycle(curr_trace)) {
+              something_changed = true;
+              result = true;
+            }
+          }
+        }
+
+        // If something changed, collect the traces for this net again
+        if (something_changed) {
+          netTraces.clear();
+          Iterator<UndoableObjects.UndoableObjectNode> it2 = item_list.start_read_object();
+          for (;;) {
+            Item curr_item;
+            try {
+              curr_item = (Item) item_list.read_object(it2);
+            } catch (java.util.ConcurrentModificationException _) {
+              something_changed = true;
+              break;
+            }
+            if (curr_item == null) {
+              break;
+            }
+            if (curr_item.contains_net(netNo) && curr_item instanceof PolylineTrace curr_trace
+                && curr_item.is_on_the_board()) {
+              netTraces.add(curr_trace);
+            }
           }
         }
       }

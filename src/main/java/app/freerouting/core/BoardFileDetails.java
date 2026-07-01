@@ -71,9 +71,10 @@ public class BoardFileDetails implements Serializable {
   public static CRC32 calculateCrc32(InputStream inputStream) {
     CRC32 crc = new CRC32();
     try {
-      int cnt;
-      while ((cnt = inputStream.read()) != -1) {
-        crc.update(cnt);
+      byte[] buffer = new byte[8192];
+      int bytesRead;
+      while ((bytesRead = inputStream.read(buffer)) != -1) {
+        crc.update(buffer, 0, bytesRead);
       }
     } catch (IOException e) {
       FRLogger.error(e.getLocalizedMessage(), e);
@@ -103,10 +104,9 @@ public class BoardFileDetails implements Serializable {
   public void setData(byte[] data) {
     this.dataBytes = data;
     this.size = data.length;
-    InputStream inputStream = new ByteArrayInputStream(this.dataBytes);
-    this.crc32 = BoardFileDetails
-        .calculateCrc32(inputStream)
-        .getValue();
+    CRC32 crc = new CRC32();
+    crc.update(data);
+    this.crc32 = crc.getValue();
 
     // read the file contents to determine the file format
     this.format = RoutingJob.getFileFormat(this.dataBytes);

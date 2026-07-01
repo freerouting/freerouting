@@ -408,35 +408,40 @@ public class BoardStatistics implements Serializable {
 
       // get the number of components and nets in the SES file
       this.layers.totalCount = layers.size();
-      this.components.totalCount = content.split("\\(component").length - 1;
-      this.nets.totalCount = content.split("\\(net").length - 1;
-      this.traces.totalCount = content.split("\\(wire").length - 1;
-      this.vias.totalCount = content.split("\\(via").length - 1;
+      this.components.totalCount = countOccurrences(content, "(component");
+      this.nets.totalCount = countOccurrences(content, "(net");
+      this.traces.totalCount = countOccurrences(content, "(wire");
+      this.vias.totalCount = countOccurrences(content, "(via");
     } else if (format == FileFormat.DSN) {
       // read the content as text
       String content = new String(data, StandardCharsets.UTF_8);
-      // extract the host from the DSN file
-      String[] lines = content.split("\n");
+      // extract the host from the DSN file without splitting the whole content by lines
       String host_cad = null;
       String host_version = null;
-      for (String line : lines) {
-        String value = null;
-
-        line = line.trim();
-        if (line.startsWith("(host_cad")) {
-          value = line
-              .substring(9, line.length() - 1)
-              .trim();
-          host_cad = TextManager.removeQuotes(value);
-        } else if (line.startsWith("(host_version")) {
-          value = line
-              .substring(13, line.length() - 1)
-              .trim();
-          host_version = TextManager.removeQuotes(value);
+      int parserIndex = content.indexOf("(parser");
+      if (parserIndex != -1) {
+        int searchLimit = content.indexOf(")", parserIndex);
+        if (searchLimit == -1) {
+          searchLimit = Math.min(content.length(), parserIndex + 1000);
+        } else {
+          searchLimit = Math.min(content.length(), searchLimit + 1);
         }
-
-        if ((host_cad != null) && (host_version != null)) {
-          break;
+        String parserScope = content.substring(parserIndex, searchLimit);
+        int hcIdx = parserScope.indexOf("(host_cad");
+        if (hcIdx != -1) {
+          int hcEnd = parserScope.indexOf(")", hcIdx);
+          if (hcEnd != -1) {
+            String val = parserScope.substring(hcIdx + 9, hcEnd).trim();
+            host_cad = TextManager.removeQuotes(val);
+          }
+        }
+        int hvIdx = parserScope.indexOf("(host_version");
+        if (hvIdx != -1) {
+          int hvEnd = parserScope.indexOf(")", hvIdx);
+          if (hvEnd != -1) {
+            String val = parserScope.substring(hvIdx + 13, hvEnd).trim();
+            host_version = TextManager.removeQuotes(val);
+          }
         }
       }
 
@@ -447,12 +452,12 @@ public class BoardStatistics implements Serializable {
       }
 
       // get the number of layers and nets in the DSN file
-      this.layers.totalCount = content.split("\\(layer").length - 1;
-      this.components.totalCount = content.split("\\(component").length - 1;
-      this.nets.classCount = content.split("\\(class").length - 1;
-      this.nets.totalCount = content.split("\\(net").length - 1;
-      this.traces.totalCount = content.split("\\(wire").length - 1;
-      this.vias.totalCount = content.split("\\(via").length - 1;
+      this.layers.totalCount = countOccurrences(content, "(layer");
+      this.components.totalCount = countOccurrences(content, "(component");
+      this.nets.classCount = countOccurrences(content, "(class");
+      this.nets.totalCount = countOccurrences(content, "(net");
+      this.traces.totalCount = countOccurrences(content, "(wire");
+      this.vias.totalCount = countOccurrences(content, "(via");
     } else if (format == FileFormat.JSON) {
       try {
         String content = new String(data, StandardCharsets.UTF_8);
@@ -563,6 +568,16 @@ public class BoardStatistics implements Serializable {
       }
     }
     return false;
+  }
+
+  private static int countOccurrences(String text, String target) {
+    int count = 0;
+    int index = 0;
+    while ((index = text.indexOf(target, index)) != -1) {
+      count++;
+      index += target.length();
+    }
+    return count;
   }
 }
 

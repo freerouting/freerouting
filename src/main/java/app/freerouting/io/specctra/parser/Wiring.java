@@ -313,14 +313,12 @@ public class Wiring extends ScopeKeyword {
       }
     }
     RoutingBoard board = p_par.board_handling.get_routing_board();
-    for (int i = 1; i <= board.rules.nets.max_net_no(); i++) {
-      try {
-        board.normalize_traces(i);
-      } catch (Exception e) {
-        String msg = "Wiring: normalization of net '" + board.rules.nets.get(i).name + "' failed";
-        FRLogger.debug(msg);
-        p_par.warnings.add(msg);
-      }
+    try {
+      board.normalize_all_traces();
+    } catch (Exception e) {
+      String msg = "Wiring: normalization of traces failed";
+      FRLogger.debug(msg);
+      p_par.warnings.add(msg);
     }
     return true;
   }
