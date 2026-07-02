@@ -101,11 +101,8 @@ def _probe_ipc_via_json_export():
 def get_board_json_via_ipc():
     """Serialize the current board to KiCad JSON using the IPC API.
 
-    First tries the native IPC JSON-export methods.  If none are
-    available, falls back to ``_build_board_json_manually()``.
-
     Returns:
-        JSON string conforming to the ``KiCadBoardJson`` schema.
+        JSON string conforming to the KiCadBoardJson schema.
 
     Raises:
         RuntimeError: if no board is loaded in KiCad.
@@ -114,21 +111,6 @@ def get_board_json_via_ipc():
     if board is None:
         raise RuntimeError("No board loaded in KiCad.")
 
-    # Try native IPC JSON export methods
-    for method_name in IPC_JSON_EXPORT_METHODS:
-        if hasattr(pcbnew, method_name):
-            try:
-                result = getattr(pcbnew, method_name)(board)
-                if isinstance(result, str) and result.strip():
-                    return result
-                elif isinstance(result, (dict, list)):
-                    return json.dumps(result)
-            except Exception as e:
-                logger.error(f"pcbnew.{method_name}() failed: {e}", exc_info=True)
-                continue
-
-    # Fallback: manually walk pcbnew objects
-    logger.info("Falling back to manual board JSON serialization.")
     return _build_board_json_manually(board)
 
 
@@ -160,45 +142,89 @@ def _build_board_json_manually(board):
         "conductionAreas": [],
     }
 
-    _collect_layers(board, data)
+    layer_id_to_index = {}
+    idx = 0
+    N = board.GetCopperLayerCount()
+    active_layers = []
+    if N == 1:
+        active_layers = [0]
+    elif N > 1:
+        active_layers = [0] + list(range(1, N - 1)) + [31]
+        
+    for layer_id in active_layers:
+        layer_id_to_index[layer_id] = idx
+        idx += 1
+
+    _collect_layers(board, data, layer_id_to_index)
+    _collect_net_classes(board, data)
     _collect_nets(board, data)
     _collect_components(board, data)
-    _collect_traces(board, data)
+    _collect_traces(board, data, layer_id_to_index)
     _collect_vias(board, data)
+    _collect_conduction_areas(board, data, layer_id_to_index)
     _collect_outline(board, data)
 
     return json.dumps(data, indent=2)
 
 
-def _collect_layers(board, data):
+def _collect_layers(board, data, layer_id_to_index):
     """Populate ``data["layers"]`` from the board's layer structure."""
     try:
-        for i in range(board.GetCopperLayerCount()):
+        for layer_id, idx in sorted(layer_id_to_index.items(), key=lambda x: x[1]):
             data["layers"].append({
-                "index": i,
-                "name": _to_str(board.GetLayerName(i)),
+                "index": idx,
+                "name": _to_str(board.GetLayerName(layer_id)),
                 "type": "signal",
             })
     except Exception as e:
         logger.warning(f"Warning: could not enumerate layers: {e}", exc_info=True)
 
 
-def _collect_nets(board, data):
-    """Populate ``data["nets"]`` from the board's track items."""
+def _collect_net_classes(board, data):
+    """Populate ``data["netClasses"]`` from the board's netclasses."""
     try:
-        net_codes = {}
-        net_id = 1
-        for item in board.GetTracks():
-            net = item.GetNet()
-            if net and net.GetNetCode() not in net_codes:
-                net_codes[net.GetNetCode()] = {
-                    "id": net_id,
-                    "name": _to_str(net.GetNetname()) or f"Net-{net.GetNetCode()}",
-                    "className": "default",
-                    "containsPlane": False,
+        netclasses = None
+        if hasattr(board, "GetNetClasses"):
+            netclasses = board.GetNetClasses()
+        elif hasattr(board, "GetAllNetClasses"):
+            netclasses = board.GetAllNetClasses()
+            
+        if netclasses:
+            for name, netclass in netclasses.items():
+                nc_data = {
+                    "name": _to_str(name),
+                    "clearance": (netclass.GetClearance() / 1e6) if hasattr(netclass, "GetClearance") else 0.2,
+                    "traceWidth": (netclass.GetTrackWidth() / 1e6) if hasattr(netclass, "GetTrackWidth") else 0.2,
+                    "viaDiameter": (netclass.GetViaDiameter() / 1e6) if hasattr(netclass, "GetViaDiameter") else 0.6,
+                    "viaDrill": (netclass.GetViaDrill() / 1e6) if hasattr(netclass, "GetViaDrill") else 0.3,
+                    "uviaDiameter": (netclass.GetMicroViaDiameter() / 1e6) if hasattr(netclass, "GetMicroViaDiameter") else 0.3,
+                    "uviaDrill": (netclass.GetMicroViaDrill() / 1e6) if hasattr(netclass, "GetMicroViaDrill") else 0.1,
                 }
-                net_id += 1
-        data["nets"] = list(net_codes.values())
+                data["netClasses"].append(nc_data)
+    except Exception as e:
+        logger.warning(f"Warning: could not enumerate netclasses: {e}", exc_info=True)
+
+
+def _collect_nets(board, data):
+    """Populate ``data["nets"]`` from the board's netinfo list."""
+    try:
+        nets = board.GetNets()
+        net_list = []
+        for net_code, net in nets.items():
+            if net_code <= 0:
+                continue
+            class_name = "Default"
+            if hasattr(net, "GetClassName"):
+                class_name = _to_str(net.GetClassName())
+            elif hasattr(net, "GetNetClass") and net.GetNetClass():
+                class_name = _to_str(net.GetNetClass().GetName())
+            net_list.append({
+                "id": net_code,
+                "name": _to_str(net.GetNetname()) or f"Net-{net_code}",
+                "className": class_name,
+                "containsPlane": False,
+            })
+        data["nets"] = net_list
     except Exception as e:
         logger.warning(f"Warning: could not enumerate nets: {e}", exc_info=True)
 
@@ -265,7 +291,7 @@ def _collect_components(board, data):
         logger.warning(f"Warning: could not enumerate components: {e}", exc_info=True)
 
 
-def _collect_traces(board, data):
+def _collect_traces(board, data, layer_id_to_index):
     """Populate ``data["traces"]`` from PCB_TRACK items."""
     try:
         trace_id = 1
@@ -279,11 +305,13 @@ def _collect_traces(board, data):
                     points.append({"x": e.x / 1e6, "y": e.y / 1e6})
                 except Exception:
                     pass
+                layer_id = track.GetLayer()
+                layer_idx = layer_id_to_index.get(layer_id, 0)
                 data["traces"].append({
                     "id": trace_id,
                     "netName": _to_str(net.GetNetname()) if net else "",
                     "width": track.GetWidth() / 1e6,
-                    "layerIndex": track.GetLayer(),
+                    "layerIndex": layer_idx,
                     "points": points,
                 })
                 trace_id += 1
@@ -320,6 +348,36 @@ def _collect_vias(board, data):
                 via_id += 1
     except Exception as e:
         logger.warning(f"Warning: could not enumerate vias: {e}", exc_info=True)
+
+
+def _collect_conduction_areas(board, data, layer_id_to_index):
+    """Populate ``data["conductionAreas"]`` from board.Zones()."""
+    try:
+        zone_id = 1
+        for zone in board.Zones():
+            layer_set = zone.GetLayerSet()
+            for layer_id, layer_idx in layer_id_to_index.items():
+                if layer_set.Contains(layer_id):
+                    net = zone.GetNet()
+                    outline = zone.Outline()
+                    if outline and outline.OutlineCount() > 0:
+                        for outline_idx in range(outline.OutlineCount()):
+                            poly = outline.Outline(outline_idx)
+                            points = []
+                            for pt_idx in range(poly.PointCount()):
+                                pt = poly.CPoint(pt_idx)
+                                points.append({"x": pt.x / 1e6, "y": pt.y / 1e6})
+                            
+                            data["conductionAreas"].append({
+                                "id": zone_id,
+                                "netName": _to_str(net.GetNetname()) if net else "",
+                                "layerIndex": layer_idx,
+                                "isObstacle": zone.GetIsKeepout() if hasattr(zone, "GetIsKeepout") else False,
+                                "polygon": points
+                            })
+                            zone_id += 1
+    except Exception as e:
+        logger.warning(f"Warning: could not enumerate conduction areas: {e}", exc_info=True)
 
 
 def _collect_outline(board, data):
