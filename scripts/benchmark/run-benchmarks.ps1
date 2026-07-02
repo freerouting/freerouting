@@ -85,8 +85,8 @@ $settingsObj = [PSCustomObject]@{
     fanout_enabled    = $FanoutEnabled
     router_enabled    = $RouterEnabled
     optimizer_enabled = $true
-    fanout_timeout    = "00:05:00"
-    optimizer_timeout = "00:05:00"
+    fanout_timeout    = "00:15:00"
+    optimizer_timeout = "00:10:00"
 }
 
 # CLI Probe Cache
