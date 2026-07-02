@@ -134,7 +134,7 @@ public class BoardFrame extends WindowBase {
   WindowUnconnectedRoute unconnected_route_window;
   WindowRouteStubs route_stubs_window;
   WindowComponents components_window;
-  WindowObjectVisibility object_visibility_window;
+  WindowVisibility visibility_window;
   WindowDisplayMisc display_misc_window;
 
   ColorManager color_manager;
@@ -952,8 +952,8 @@ public class BoardFrame extends WindowBase {
   private void allocate_permanent_subwindows() {
     this.color_manager = new ColorManager(this);
     this.permanent_subwindows[0] = this.color_manager;
-    this.object_visibility_window = WindowObjectVisibility.get_instance(this);
-    this.permanent_subwindows[1] = this.object_visibility_window;
+    this.visibility_window = new WindowVisibility(this);
+    this.permanent_subwindows[1] = this.visibility_window;
     this.permanent_subwindows[2] = null;
     this.display_misc_window = new WindowDisplayMisc(this);
     this.permanent_subwindows[3] = this.display_misc_window;
@@ -1027,7 +1027,7 @@ public class BoardFrame extends WindowBase {
     this.unconnected_route_window.setLocation(650, 30);
     this.route_stubs_window.setLocation(600, 30);
 
-    this.object_visibility_window.setLocation(0, 550);
+    this.visibility_window.setLocation(0, 450);
     this.display_misc_window.setLocation(0, 350);
     this.color_manager.setLocation(0, 600);
     this.about_window.setLocation(200, 200);
