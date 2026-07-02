@@ -206,8 +206,7 @@ public class GUIDefaultsFile {
     out_file.write("windows");
     write_frame_scope(this.board_frame, "board_frame");
     write_frame_scope(this.board_frame.color_manager, "color_manager");
-    write_frame_scope(this.board_frame.layer_visibility_window, "layer_visibility");
-    write_frame_scope(this.board_frame.object_visibility_window, "object_visibility");
+    write_frame_scope(this.board_frame.visibility_window, "object_visibility");
     write_frame_scope(this.board_frame.display_misc_window, "display_miscellaneous");
 
     write_frame_scope(this.board_frame.select_parameter_window, "select_parameter");
@@ -264,8 +263,7 @@ public class GUIDefaultsFile {
     switch (p_frame) {
       case BOARD_FRAME -> curr_frame = this.board_frame;
       case COLOR_MANAGER -> curr_frame = this.board_frame.color_manager;
-      case OBJECT_VISIBILITY -> curr_frame = this.board_frame.object_visibility_window;
-      case LAYER_VISIBILITY -> curr_frame = this.board_frame.layer_visibility_window;
+      case OBJECT_VISIBILITY, LAYER_VISIBILITY -> curr_frame = this.board_frame.visibility_window;
       case DISPLAY_MISCELLANEOUS -> curr_frame = this.board_frame.display_misc_window;
 
       case SELECT_PARAMETER -> curr_frame = this.board_frame.select_parameter_window;

@@ -28,21 +28,13 @@ public class BoardMenuDisplay extends JMenu {
     final BoardMenuDisplay display_menu = new BoardMenuDisplay(p_board_frame);
     display_menu.setText(display_menu.tm.getText("display"));
 
-    JMenuItem display_object_visibility_menuitem = new JMenuItem();
-    display_object_visibility_menuitem.setText(display_menu.tm.getText("object_visibility"));
-    display_object_visibility_menuitem.setToolTipText(display_menu.tm.getText("object_visibility_tooltip"));
-    display_object_visibility_menuitem.addActionListener(_ -> display_menu.board_frame.object_visibility_window.setVisible(true));
-    display_object_visibility_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("display_object_visibility_menuitem", display_object_visibility_menuitem.getText()));
+    JMenuItem display_visibility_menuitem = new JMenuItem();
+    display_visibility_menuitem.setText(display_menu.tm.getText("visibility"));
+    display_visibility_menuitem.setToolTipText(display_menu.tm.getText("visibility_tooltip"));
+    display_visibility_menuitem.addActionListener(_ -> display_menu.board_frame.visibility_window.setVisible(true));
+    display_visibility_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("display_visibility_menuitem", display_visibility_menuitem.getText()));
 
-    display_menu.add(display_object_visibility_menuitem);
-
-    JMenuItem display_layer_visibility_menuitem = new JMenuItem();
-    display_layer_visibility_menuitem.setText(display_menu.tm.getText("layer_visibility"));
-    display_layer_visibility_menuitem.setToolTipText(display_menu.tm.getText("layer_visibility_tooltip"));
-    display_layer_visibility_menuitem.addActionListener(_ -> display_menu.board_frame.layer_visibility_window.setVisible(true));
-    display_layer_visibility_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("display_layer_visibility_menuitem", display_layer_visibility_menuitem.getText()));
-
-    display_menu.add(display_layer_visibility_menuitem);
+    display_menu.add(display_visibility_menuitem);
 
     JMenuItem display_colors_menuitem = new JMenuItem();
     display_colors_menuitem.setText(display_menu.tm.getText("colors"));

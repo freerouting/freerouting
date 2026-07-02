@@ -21,8 +21,7 @@ public class FRAnalytics {
   private static final HashMap<String, String> appLocationTable = new HashMap<String, String>() {
     {
       put("app.freerouting.gui.BoardFrame", "app.freerouting.gui/Board");
-      put("app.freerouting.gui.WindowObjectVisibility", "app.freerouting.gui/Appearance/ObjectTransparency");
-      put("app.freerouting.gui.WindowLayerVisibility", "app.freerouting.gui/Appearance/LayerTransparency");
+      put("app.freerouting.gui.WindowVisibility", "app.freerouting.gui/Appearance/Visibility");
       put("app.freerouting.gui.ColorManager", "app.freerouting.gui/Appearance/Colors");
       put("app.freerouting.gui.WindowDisplayMisc", "app.freerouting.gui/Appearance/Misc");
       put("app.freerouting.gui.WindowSelectParameter", "app.freerouting.gui/Settings/Selection");
@@ -63,8 +62,7 @@ public class FRAnalytics {
       put("file_save_settings_menuitem", "app.freerouting.gui/Board/Menu/File/SaveGUISettings");
       put("file_write_session_file_menuitem", "app.freerouting.gui/Board/Menu/File/ExportAsSpecctra");
       put("file_write_eagle_session_script_menuitem", "app.freerouting.gui/Board/Menu/File/ExportAsEagleScript");
-      put("display_object_visibility_menuitem", "app.freerouting.gui/Board/Menu/Appearance/ObjectVisibility");
-      put("display_layer_visibility_menuitem", "app.freerouting.gui/Board/Menu/Appearance/LayerVisibility");
+      put("display_visibility_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Visibility");
       put("display_colors_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Colors");
       put("display_miscellaneous_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Miscellaneous");
       put("settings_selection_menuitem", "app.freerouting.gui/Board/Menu/Settings/Selection");
