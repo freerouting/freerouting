@@ -85,6 +85,8 @@ $settingsObj = [PSCustomObject]@{
     fanout_enabled    = $FanoutEnabled
     router_enabled    = $RouterEnabled
     optimizer_enabled = $true
+    fanout_timeout    = "00:05:00"
+    optimizer_timeout = "00:05:00"
 }
 
 # CLI Probe Cache
@@ -266,6 +268,7 @@ foreach ($binary in $binaries) {
                 error_count = $logMetrics.error_count
                 load_error  = $logMetrics.load_error
                 exceptions  = $logMetrics.exceptions
+                timed_out   = $logMetrics.timed_out
             }
             exit      = [PSCustomObject]@{
                 code         = $runResult.ExitCode

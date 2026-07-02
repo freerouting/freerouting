@@ -80,6 +80,11 @@ public class BatchAutorouter extends NamedAlgorithm {
   private final Set<Item> reusable_handled_items = new TreeSet<>();
   protected RoutingJob job;
   private int totalItemsRouted = 0;
+  private boolean fanoutTimedOut = false;
+
+  public boolean isFanoutTimedOut() {
+    return this.fanoutTimedOut;
+  }
   /**
    * Time when the routing session started.
    */
@@ -848,6 +853,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           job.logInfo(fanoutMessage);
         }
       });
+      this.fanoutTimedOut = fanoutSummary.isTimedOut();
 
       float fanoutCpuSecondsEnd = sampleCurrentThreadCpuSeconds();
       float fanoutAllocatedMbEnd = sampleCurrentThreadAllocatedMb();
@@ -869,7 +875,8 @@ public class BatchAutorouter extends NamedAlgorithm {
       float fanoutPeakHeapMb = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
       fanoutPeakHeapMb = Math.max(fanoutPeakHeapMb, getPeakHeapMbSnapshot(job));
       BatchFanout.EscapeStatistics finalEscape = fanoutSummary.escapeStatistics();
-      String fanoutCompletionStatus = this.thread.is_stop_auto_router_requested() ? "interrupted:" : "completed:";
+      String fanoutCompletionStatus = fanoutSummary.isTimedOut() ? "completed with timeout:"
+          : (this.thread.is_stop_auto_router_requested() ? "interrupted:" : "completed:");
       String fanoutSummaryMessage = String.format(java.util.Locale.US,
           "Fanout stage %s started with %d total SMD pins, completed in %.2f seconds, escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
           fanoutCompletionStatus,

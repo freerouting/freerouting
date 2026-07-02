@@ -476,20 +476,16 @@ public class GlobalSettings implements Serializable {
         } else if (p_args[i].startsWith("-de")) {
           // the design file(s) are provided - can be DSN, SES, and/or RULES files
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            // Collect all file arguments (they can be separated by + or spaces)
-            StringBuilder filesBuilder = new StringBuilder();
+            java.util.List<String> files = new java.util.ArrayList<>();
             int j = i + 1;
             while (j < p_args.length && !p_args[j].startsWith("-")) {
-              if (filesBuilder.length() > 0) {
-                filesBuilder.append(" ");
+              // Split each argument by '+' to support legacy concatenation (e.g. file1.dsn+file2.rules)
+              String[] parts = p_args[j].split("\\+");
+              for (String part : parts) {
+                files.add(part.trim());
               }
-              filesBuilder.append(p_args[j]);
               j++;
             }
-
-            // Split by + or space to get individual files
-            String filesString = filesBuilder.toString();
-            String[] files = filesString.split("[+\\s]+");
 
             // Track which file types we've seen to ensure only one of each
             boolean hasDsn = false;

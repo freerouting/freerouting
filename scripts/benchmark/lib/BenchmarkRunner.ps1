@@ -67,10 +67,16 @@ function Invoke-BenchmarkRun {
     $jvmArgs += "--router.optimizer.enabled=$($Settings.optimizer_enabled.ToString().ToLower())"
     $jvmArgs += "--router.fanout.enabled=$($Settings.fanout_enabled.ToString().ToLower())"
     $jvmArgs += "--router.enabled=$($Settings.router_enabled.ToString().ToLower())"
+    if ($Settings.fanout_timeout) {
+        $jvmArgs += "--router.fanout.timeout=`"$($Settings.fanout_timeout)`""
+    }
+    if ($Settings.optimizer_timeout) {
+        $jvmArgs += "--router.optimizer.timeout=`"$($Settings.optimizer_timeout)`""
+    }
     
     # Logging flags
     $jvmArgs += "--logging.file.level=$($Settings.log_level)"
-    $jvmArgs += "--logging.file.location=`"$logFile`""
+    $jvmArgs += ('--logging.file.location="{0}"' -f $logFile)
     $jvmArgs += "--logging.console.level=INFO"
 
     if ($Binary.Name -notmatch 'freerouting-1.9.0.jar') {

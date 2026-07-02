@@ -93,6 +93,13 @@ public class OptimizerSettings implements Serializable, Cloneable {
    */
   public transient ItemSelectionStrategy itemSelectionStrategy;
 
+  /**
+   * Timeout for the optimizer stage (e.g., "5m", "300s").
+   * Default is null (no timeout).
+   */
+  @SerializedName("timeout")
+  public String timeoutString;
+
   public OptimizerSettings() {
   }
 

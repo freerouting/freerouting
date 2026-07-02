@@ -104,24 +104,49 @@ function Export-MarkdownReport {
     $summaryRows = [System.Collections.ArrayList]::new()
 
     foreach ($g in $grouped) {
-        $bestRun = $g.Group | Sort-Object -Property @{ Expression = {
-            if ($_.drc.final_unrouted -ne $null) { $_.drc.final_unrouted } elseif ($_.quality.final_unrouted -ne $null) { $_.quality.final_unrouted } else { 99999 }
-        }; Ascending = $true }, @{ Expression = {
-            if ($_.drc.final_violations -ne $null) { $_.drc.final_violations } elseif ($_.quality.clearance_violations -ne $null) { $_.quality.clearance_violations } else { 99999 }
-        }; Ascending = $true }, @{ Expression = {
-            if ($_.drc.final_quality_score -ne $null) { $_.drc.final_quality_score } elseif ($_.quality.quality_score -ne $null) { $_.quality.quality_score } else { 0.0 }
-        }; Descending = $true }, @{ Expression = {
-            $ver = $_.binary.version_label
-            if ($ver -match '^s(\d+)\.(\d+)\.(\d+)') {
-                return 99999999 + [int]"$($matches[1])$($matches[2])$($matches[3])"
-            }
-            if ($ver -match '^(\d+)\.(\d+)\.(\d+)') {
-                return ([int]$matches[1] * 10000) + ([int]$matches[2] * 100) + [int]$matches[3]
-            }
-            return 0
-        }; Descending = $true } | Select-Object -First 1
+        $validRuns = $g.Group | Where-Object {
+            $run = $_
+            $isTimeout = $run.exit.timed_out -eq $true
+            $isLoadError = $false
 
-        if ($bestRun) {
+            $loadErrorVal = $run.log_analysis.load_error
+            $timedOutVal = $run.log_analysis.timed_out
+            if ($run.log_file -and (Test-Path $run.log_file) -and ($loadErrorVal -eq $null -or $timedOutVal -eq $null)) {
+                $logMetrics = Get-PhaseMetrics $run.log_file $run.binary.version_label
+                $loadErrorVal = $logMetrics.load_error
+                $timedOutVal = $logMetrics.timed_out
+            }
+
+            if ($timedOutVal -eq $true) { $isTimeout = $true }
+            if ($loadErrorVal -eq $true) { $isLoadError = $true }
+
+            $hasTime = $false
+            if ($run.phases.fanout.duration_seconds -ne $null) { $hasTime = $true }
+            if ($run.phases.autorouter.duration_seconds -ne $null) { $hasTime = $true }
+            if ($run.phases.optimizer.duration_seconds -ne $null) { $hasTime = $true }
+            if (-not $hasTime) { $isLoadError = $true }
+
+            -not $isTimeout -and -not $isLoadError
+        }
+
+        if ($validRuns) {
+            $bestRun = $validRuns | Sort-Object -Property @{ Expression = {
+                if ($_.drc.final_unrouted -ne $null) { $_.drc.final_unrouted } elseif ($_.quality.final_unrouted -ne $null) { $_.quality.final_unrouted } else { 99999 }
+            }; Ascending = $true }, @{ Expression = {
+                if ($_.drc.final_violations -ne $null) { $_.drc.final_violations } elseif ($_.quality.clearance_violations -ne $null) { $_.quality.clearance_violations } else { 99999 }
+            }; Ascending = $true }, @{ Expression = {
+                if ($_.drc.final_quality_score -ne $null) { $_.drc.final_quality_score } elseif ($_.quality.quality_score -ne $null) { $_.quality.quality_score } else { 0.0 }
+            }; Descending = $true }, @{ Expression = {
+                $ver = $_.binary.version_label
+                if ($ver -match '^s(\d+)\.(\d+)\.(\d+)') {
+                    return 99999999 + [int]"$($matches[1])$($matches[2])$($matches[3])"
+                }
+                if ($ver -match '^(\d+)\.(\d+)\.(\d+)') {
+                    return ([int]$matches[1] * 10000) + ([int]$matches[2] * 100) + [int]$matches[3]
+                }
+                return 0
+            }; Descending = $true } | Select-Object -First 1
+
             $groupName = $bestRun.fixture.group
             $filename = $bestRun.fixture.filename
             $version = $bestRun.binary.version_label
@@ -138,6 +163,13 @@ function Export-MarkdownReport {
             $fixtureLink = "[$filename](../fixtures/$($bestRun.fixture.relative_path))"
 
             $null = $summaryRows.Add(@($groupLink, $fixtureLink, "**$version**", $unrouted, $violations, $score, $cpu, $heap))
+        } else {
+            $firstRun = $g.Group[0]
+            $groupName = $firstRun.fixture.group
+            $filename = $firstRun.fixture.filename
+            $groupLink = "[$groupName](../fixtures/$groupName)"
+            $fixtureLink = "[$filename](../fixtures/$($firstRun.fixture.relative_path))"
+            $null = $summaryRows.Add(@($groupLink, $fixtureLink, "*All failed*", "N/A", "N/A", "N/A", "N/A", "N/A"))
         }
     }
     
@@ -244,17 +276,22 @@ function Export-MarkdownReport {
                 # Check / parse notes from cache, fallback to log if not cached yet
                 $loadError = $null
                 $exceptions = $null
+                $logTimedOut = $null
                 if ($run.log_analysis.PSObject.Properties['load_error'] -ne $null) {
                     $loadError = $run.log_analysis.load_error
                 }
                 if ($run.log_analysis.PSObject.Properties['exceptions'] -ne $null) {
                     $exceptions = $run.log_analysis.exceptions
                 }
+                if ($run.log_analysis.PSObject.Properties['timed_out'] -ne $null) {
+                    $logTimedOut = $run.log_analysis.timed_out
+                }
 
-                if (($loadError -eq $null -or $exceptions -eq $null) -and $run.log_file -and (Test-Path $run.log_file)) {
+                if (($loadError -eq $null -or $exceptions -eq $null -or $logTimedOut -eq $null) -and $run.log_file -and (Test-Path $run.log_file)) {
                     $logMetrics = Get-PhaseMetrics $run.log_file $run.binary.version_label
                     $loadError = $logMetrics.load_error
                     $exceptions = $logMetrics.exceptions
+                    $logTimedOut = $logMetrics.timed_out
                     # Cache in-memory for the duration of this report run
                     if ($run.log_analysis.PSObject.Properties['load_error'] -eq $null) {
                         $run.log_analysis | Add-Member -NotePropertyName "load_error" -NotePropertyValue $loadError
@@ -266,14 +303,23 @@ function Export-MarkdownReport {
                     } else {
                         $run.log_analysis.exceptions = $exceptions
                     }
+                    if ($run.log_analysis.PSObject.Properties['timed_out'] -eq $null) {
+                        $run.log_analysis | Add-Member -NotePropertyName "timed_out" -NotePropertyValue $logTimedOut
+                    } else {
+                        $run.log_analysis.timed_out = $logTimedOut
+                    }
                 }
 
                 $notes = @()
-                if ($run.exit.timed_out -eq $true) {
-                    $notes += "TIMEOUT"
-                }
-                if ($loadError -eq $true) {
+                if (-not $hasTime) {
                     $notes += "LOAD ERROR"
+                } else {
+                    if ($run.exit.timed_out -eq $true -or $logTimedOut -eq $true) {
+                        $notes += "TIMEOUT"
+                    }
+                    if ($loadError -eq $true) {
+                        $notes += "LOAD ERROR"
+                    }
                 }
                 if ($exceptions) {
                     foreach ($exc in $exceptions) {

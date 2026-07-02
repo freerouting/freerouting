@@ -37,6 +37,8 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
   @Override
   protected void thread_action() {
     job.startedAt = Instant.now();
+    boolean fanoutTimedOut = false;
+    boolean optimizerTimedOut = false;
     // Use ISO standard time format
     job.logInfo("Job '" + job.shortName + "' started at " + job.startedAt.toString() + ".");
 
@@ -114,6 +116,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
       // Call runBatchLoop
       batchRouter.runBatchLoop();
+      fanoutTimedOut = batchRouter.isFanoutTimedOut();
 
       // Log session summary
       Instant sessionStartTime = batchRouter.getSessionStartTime();
@@ -165,6 +168,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         job.routerSettings.maxPasses = 0;
         BatchAutorouter batchRouter = new BatchAutorouter(job);
         batchRouter.runBatchLoop();
+        fanoutTimedOut = batchRouter.isFanoutTimedOut();
         setJobOutput(job);
       } finally {
         job.routerSettings.maxPasses = originalMaxPasses;
@@ -183,6 +187,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         }
       });
       optimizer.runBatchLoop();
+      optimizerTimedOut = optimizer.isTimedOut();
       job.stage = RoutingStage.IDLE;
     }
 
@@ -200,7 +205,14 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
     long durationMs = java.time.Duration.between(job.startedAt, job.finishedAt).toMillis();
     double durationSec = durationMs / 1000.0;
-    job.logInfo("Job '" + job.shortName + "' finished with state: " + job.state.toString() +
+    StringBuilder details = new StringBuilder();
+    if (fanoutTimedOut) {
+      details.append(" (fanout stage timed out)");
+    }
+    if (optimizerTimedOut) {
+      details.append(" (optimizer stage timed out)");
+    }
+    job.logInfo("Job '" + job.shortName + "' finished with state: " + job.state.toString() + details.toString() +
         " (elapsed: " + FRLogger.formatDuration(durationSec) + ", finished at UTC: " + job.finishedAt.toString() + ").");
   }
 

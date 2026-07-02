@@ -119,6 +119,7 @@ function Get-PhaseMetrics {
     $lines = Get-Content $LogPath
 
     # 1. Warn / Error count
+    $logTimedOut = $false
     foreach ($line in $lines) {
         if ($line -match '\[WARN\]|WARN |\[warning\]') {
             $warnCount++
@@ -128,6 +129,9 @@ function Get-PhaseMetrics {
         }
         if ($line -match 'Failed to load board|Couldn''t read the input file|Couldn''t load the input file|Cannot load board') {
             $loadError = $true
+        }
+        if ($line -match 'timed_out|timed out|with timeout:') {
+            $logTimedOut = $true
         }
         if ($line -match '\b([A-Z]\w*(?:Exception|Error))\b') {
             $matchesObject = [regex]::Matches($line, '\b([A-Z]\w*(?:Exception|Error))\b')
@@ -348,6 +352,7 @@ function Get-PhaseMetrics {
         error_count = $errorCount
         load_error = $loadError
         exceptions = ($exceptions | Sort-Object)
+        timed_out = $logTimedOut
     }
 }
 

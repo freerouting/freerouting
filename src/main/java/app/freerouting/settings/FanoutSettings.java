@@ -106,6 +106,13 @@ public class FanoutSettings implements Serializable, Cloneable {
   public Boolean fallbackToBoardVias;
 
   /**
+   * Timeout for the fanout stage (e.g., "5m", "300s").
+   * Default is null (no timeout).
+   */
+  @SerializedName("timeout")
+  public String timeoutString;
+
+  /**
    * No-arg constructor required for deserialisation and {@link #clone()}.
    */
   public FanoutSettings() {

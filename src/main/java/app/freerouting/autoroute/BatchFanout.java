@@ -30,6 +30,9 @@ public class BatchFanout {
   private int lastNotRoutedCount;
   private int extraViasTotal;
   public int totalItemsFanouted = 0;
+  private Long deadlineMs = null;
+  private boolean isTimedOut = false;
+
   private BatchFanout(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread) {
     this.thread = p_thread;
     this.routing_board = p_board;
@@ -81,17 +84,31 @@ public class BatchFanout {
       FanoutProgressListener progressListener) {
     BatchFanout fanout_instance = new BatchFanout(p_board, p_settings, p_thread);
     long fanoutStart = System.currentTimeMillis();
+    if (p_settings.fanout != null && p_settings.fanout.timeoutString != null) {
+      Long timeoutSeconds = app.freerouting.util.TextManager.parseTimespanString(p_settings.fanout.timeoutString);
+      if (timeoutSeconds != null) {
+        fanout_instance.deadlineMs = fanoutStart + timeoutSeconds * 1000;
+      }
+    }
     int maxPasses = (p_settings.fanout != null && p_settings.fanout.maxPasses != null)
         ? p_settings.fanout.maxPasses : 20;
     int completedPasses = 0;
     String lastBoardHash = p_board.get_hash();
     for (int i = 0; i < maxPasses; ++i) {
+      if (fanout_instance.deadlineMs != null && System.currentTimeMillis() >= fanout_instance.deadlineMs) {
+        fanout_instance.isTimedOut = true;
+        FRLogger.info("Fanout stage timed out before starting pass #" + (i + 1));
+        break;
+      }
       if (p_settings.fanout != null && p_settings.fanout.maxItems != null && p_settings.fanout.maxItems > 0 && fanout_instance.totalItemsFanouted >= p_settings.fanout.maxItems) {
         break;
       }
       int routed_count = fanout_instance.fanout_pass(i, progressListener);
       completedPasses++;
       if (routed_count == 0) {
+        break;
+      }
+      if (fanout_instance.isTimedOut) {
         break;
       }
       String currentBoardHash = p_board.get_hash();
@@ -103,7 +120,7 @@ public class BatchFanout {
     BoardStatistics stats = new BoardStatistics(p_board, null, false);
     EscapeStatistics finalEscape = EscapeStatistics.fromBoardStatistics(stats);
     long totalDurationMillis = Math.max(0, System.currentTimeMillis() - fanoutStart);
-    return new FanoutRunSummary(completedPasses, totalDurationMillis, finalEscape);
+    return new FanoutRunSummary(completedPasses, totalDurationMillis, finalEscape, fanout_instance.isTimedOut);
   }
 
   /** Routes a fanout pass and returns the number of new fanouted SMD-pins in this pass. */
@@ -249,6 +266,15 @@ public class BatchFanout {
         int extraViasThisPass = Math.max(0, this.routing_board.get_vias().size() - viasBeforePass);
         maybePublishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
             insert_error_count, extraViasThisPass, false, passStart, progressStats);
+        if (this.deadlineMs != null && System.currentTimeMillis() >= this.deadlineMs) {
+          FRLogger.info("Fanout stage timed out.");
+          this.isTimedOut = true;
+          BoardStatistics passStats = new BoardStatistics(this.routing_board, null, false);
+          EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
+          publishProgress(progressListener, p_pass_no, ripup_costs, pinsToGo, routed_count, not_routed_count,
+              insert_error_count, extraViasThisPass, escapeStats, true, passStart, passStats);
+          return routed_count;
+        }
         if (this.thread != null && this.thread.is_stop_auto_router_requested()) {
           BoardStatistics passStats = new BoardStatistics(this.routing_board, null, false);
           EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
@@ -396,7 +422,8 @@ public class BatchFanout {
   public record FanoutRunSummary(
       int completedPassCount,
       long totalDurationMillis,
-      EscapeStatistics escapeStatistics) {
+      EscapeStatistics escapeStatistics,
+      boolean isTimedOut) {
   }
 
   private static class Component implements Comparable<Component> {

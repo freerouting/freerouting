@@ -34,6 +34,8 @@ public class BatchOptimizer extends NamedAlgorithm {
   protected double min_cumulative_trace_length = 0.0;
   protected RoutingJob job;
   protected int totalItemsOptimized = 0;
+  protected Long deadlineMs = null;
+  protected boolean isTimedOut = false;
 
   /**
    * Creates a new instance of BatchOptRoute, which is used to optimize the board.
@@ -43,6 +45,10 @@ public class BatchOptimizer extends NamedAlgorithm {
   public BatchOptimizer(RoutingJob job) {
     super(job.thread, job.board, job.routerSettings);
     this.job = job;
+  }
+
+  public boolean isTimedOut() {
+    return this.isTimedOut;
   }
 
   static boolean contains_only_unfixed_traces(Collection<Item> p_item_list) {
@@ -111,11 +117,23 @@ public class BatchOptimizer extends NamedAlgorithm {
     float allocMbStart = sampleCurrentThreadAllocatedMb();
     float peakHeapMb = sampleHeapUsageMb();
 
+    if (this.settings.optimizer != null && this.settings.optimizer.timeoutString != null) {
+      Long timeoutSeconds = app.freerouting.util.TextManager.parseTimespanString(this.settings.optimizer.timeoutString);
+      if (timeoutSeconds != null) {
+        this.deadlineMs = sessionStartMs + timeoutSeconds * 1000;
+      }
+    }
+
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
     while ((this.settings.optimizer.maxPasses == null || currentPass < this.settings.optimizer.maxPasses)
         && (this.settings.optimizer.maxItems == null || this.totalItemsOptimized < this.settings.optimizer.maxItems)
         && (!this.thread.isStopRequested())) {
+      if (this.deadlineMs != null && System.currentTimeMillis() >= this.deadlineMs) {
+        this.isTimedOut = true;
+        job.logInfo("Optimizer stage timed out before starting pass #" + (currentPass + 1));
+        break;
+      }
       ++currentPass;
 
       float scoreBeforePass = board.get_statistics().getNormalizedScore(job.routerSettings.scoring);
@@ -135,6 +153,10 @@ public class BatchOptimizer extends NamedAlgorithm {
       boolean with_preferred_directions = currentPass % 2 != 0; // to create more variations
       opt_route_pass(currentPass, with_preferred_directions);
       peakHeapMb = Math.max(peakHeapMb, sampleHeapUsageMb());
+
+      if (this.isTimedOut) {
+        break;
+      }
 
       float scoreAfterPass = board.get_statistics().getNormalizedScore(job.routerSettings.scoring);
       double passImprovement = scoreBeforePass > 0 ? (double) (scoreAfterPass - scoreBeforePass) / scoreBeforePass : 0;
@@ -170,7 +192,8 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     BoardStatistics finalStats = new BoardStatistics(this.board);
     float finalScore = finalStats.getNormalizedScore(job.routerSettings.scoring);
-    String completionStatus = this.thread.isStopRequested() ? "interrupted:" : "completed:";
+    String completionStatus = this.isTimedOut ? "completed with timeout:"
+        : (this.thread.isStopRequested() ? "interrupted:" : "completed:");
     job.logInfo(String.format(java.util.Locale.US,
         "Optimization stage %s started with score %s, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
         completionStatus,
@@ -211,6 +234,12 @@ public class BatchOptimizer extends NamedAlgorithm {
         ? this.settings.optimizer.maxConsecutiveFailures : 50;
 
     while (true) {
+      if (this.deadlineMs != null && System.currentTimeMillis() >= this.deadlineMs) {
+        job.logInfo("Optimizer stage timed out.");
+        this.isTimedOut = true;
+        FRLogger.traceExit(optimizationPassId);
+        return route_improved;
+      }
       if (this.thread.isStopRequested()) {
         FRLogger.traceExit(optimizationPassId);
         return route_improved;
