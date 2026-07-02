@@ -82,6 +82,8 @@ public class GlobalSettings implements Serializable {
   @SerializedName("version")
   public String version;
   public transient boolean show_help_option;
+  public transient String compareFile1;
+  public transient String compareFile2;
   // DRC report file details that we got from the command line arguments.
   public transient BoardFileDetails drc_report_file;
   /**
@@ -443,6 +445,14 @@ public class GlobalSettings implements Serializable {
       try {
         if (p_args[i].equalsIgnoreCase("-help") || p_args[i].equalsIgnoreCase("--help") || p_args[i].equalsIgnoreCase("-h")) {
           show_help_option = true;
+          continue;
+        }
+        if (p_args[i].startsWith("--compare-boards=")) {
+          String[] files = p_args[i].substring("--compare-boards=".length()).split(",");
+          if (files.length == 2) {
+            compareFile1 = files[0].trim();
+            compareFile2 = files[1].trim();
+          }
           continue;
         }
         if (p_args[i].startsWith("--")) {

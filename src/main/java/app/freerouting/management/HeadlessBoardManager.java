@@ -513,6 +513,32 @@ public class HeadlessBoardManager implements BoardManager {
             this.board.get_layer_count(),
             this.board.components.count(),
             this.board.rules.nets.max_net_no());
+
+        // Check if a counterpart file exists and compare
+        if (inputFilename != null) {
+          String counterpartPath = null;
+          if (inputFilename.toLowerCase().endsWith(".dsn")) {
+            counterpartPath = inputFilename.substring(0, inputFilename.length() - 4) + ".json";
+          } else if (inputFilename.toLowerCase().endsWith(".json")) {
+            counterpartPath = inputFilename.substring(0, inputFilename.length() - 5) + ".dsn";
+          }
+          if (counterpartPath != null) {
+            java.io.File counterpartFile = new java.io.File(counterpartPath);
+            if (counterpartFile.exists()) {
+              RoutingBoard counterpartBoard = loadBoardFromFileForComparison(counterpartFile);
+              if (counterpartBoard != null) {
+                app.freerouting.board.BoardComparator.ComparisonResult comparison =
+                    app.freerouting.board.BoardComparator.compare(this.board, counterpartBoard, 1e-3);
+                if (comparison.areEqual) {
+                  FRLogger.debug("Counterpart comparison: The loaded board and its counterpart '" + counterpartFile.getName() + "' are identical in representation.");
+                } else {
+                  FRLogger.warn("Counterpart comparison: Differences detected between loaded board and counterpart '" + counterpartFile.getName() + "'.");
+                  FRLogger.debug(comparison.report);
+                }
+              }
+            }
+          }
+        }
       }
 
       return dsnResult;
@@ -574,6 +600,35 @@ public class HeadlessBoardManager implements BoardManager {
             this.board.get_layer_count(),
             this.board.components.count(),
             this.board.rules.nets.max_net_no());
+
+        // Check if a counterpart file exists and compare
+        String inputFilename = (this.routingJob != null && this.routingJob.input != null)
+            ? this.routingJob.input.getFilename()
+            : null;
+        if (inputFilename != null) {
+          String counterpartPath = null;
+          if (inputFilename.toLowerCase().endsWith(".dsn")) {
+            counterpartPath = inputFilename.substring(0, inputFilename.length() - 4) + ".json";
+          } else if (inputFilename.toLowerCase().endsWith(".json")) {
+            counterpartPath = inputFilename.substring(0, inputFilename.length() - 5) + ".dsn";
+          }
+          if (counterpartPath != null) {
+            java.io.File counterpartFile = new java.io.File(counterpartPath);
+            if (counterpartFile.exists()) {
+              RoutingBoard counterpartBoard = loadBoardFromFileForComparison(counterpartFile);
+              if (counterpartBoard != null) {
+                app.freerouting.board.BoardComparator.ComparisonResult comparison =
+                    app.freerouting.board.BoardComparator.compare(this.board, counterpartBoard, 1e-3);
+                if (comparison.areEqual) {
+                  FRLogger.debug("Counterpart comparison: The loaded board and its counterpart '" + counterpartFile.getName() + "' are identical in representation.");
+                } else {
+                  FRLogger.warn("Counterpart comparison: Differences detected between loaded board and counterpart '" + counterpartFile.getName() + "'.");
+                  FRLogger.debug(comparison.report);
+                }
+              }
+            }
+          }
+        }
       }
 
       return dsnResult;
@@ -635,6 +690,31 @@ public class HeadlessBoardManager implements BoardManager {
     }
 
     return wasSaveSuccessful;
+  }
+
+  private static RoutingBoard loadBoardFromFileForComparison(java.io.File file) {
+    try (java.io.InputStream is = new java.io.FileInputStream(file)) {
+      if (file.getName().toLowerCase().endsWith(".json")) {
+        try (java.io.Reader r = new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
+          app.freerouting.io.BoardReadResult readResult = app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
+          if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+            return (RoutingBoard) success.board();
+          } else if (readResult instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+            return (RoutingBoard) outlineMissing.board();
+          }
+        }
+      } else {
+        app.freerouting.io.BoardReadResult readResult = app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
+        if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+          return (RoutingBoard) success.board();
+        } else if (readResult instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+          return (RoutingBoard) outlineMissing.board();
+        }
+      }
+    } catch (Exception e) {
+      FRLogger.error("Failed to load counterpart board: " + e.getMessage(), e);
+    }
+    return null;
   }
 
 }
