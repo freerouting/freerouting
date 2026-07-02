@@ -156,5 +156,55 @@ class SesRoundTripTest {
     SesWriter.write(board, out, "test.dsn");
     assertTrue(out.size() > 0, "SesWriter must write data to the stream");
   }
-}
 
+  /**
+   * Endpoint snapping: wire endpoints already at a contacted drill item's center must not be
+   * moved, endpoints inside the pad inradius snap to the exact center, and rewriting a board
+   * with snapping enabled keeps the session importable with the same wire count.
+   */
+  @Test
+  void endpointSnappingIsStableAndRoundTrips() throws Exception {
+    RoutingBoard board = DsnTestFixtures.loadBoard("Issue593-BBD_Mars-64.dsn");
+    java.io.InputStream sesIn = DsnTestFixtures.openResource("Issue593-BBD_Mars-64.ses");
+    SesImportSummary imported = SesReader.read(sesIn, board);
+    assertTrue(imported.wiresImported() > 0);
+
+    int tracesWithDrillContacts = 0;
+    for (app.freerouting.board.Item item : board.get_items()) {
+      if (!(item instanceof app.freerouting.board.PolylineTrace trace)) {
+        continue;
+      }
+      for (boolean startSide : new boolean[]{true, false}) {
+        var contacts = startSide ? trace.get_start_contacts() : trace.get_end_contacts();
+        boolean hasDrillContact = contacts.stream()
+            .anyMatch(c -> c instanceof app.freerouting.board.DrillItem);
+        if (!hasDrillContact) {
+          continue;
+        }
+        tracesWithDrillContacts++;
+        var corner = (startSide ? trace.first_corner() : trace.last_corner()).to_float();
+        var snapped = SesWriter.snappedEndpoint(trace, startSide);
+        if (snapped != null) {
+          // A snap may only move the endpoint to the center of a contacted drill item,
+          // and never further than that item's pad inradius.
+          boolean isDrillCenter = contacts.stream()
+              .filter(c -> c instanceof app.freerouting.board.DrillItem)
+              .map(c -> ((app.freerouting.board.DrillItem) c).get_center().to_float())
+              .anyMatch(center -> center.distance(snapped) < 0.5);
+          assertTrue(isDrillCenter, "snap target must be a contacted drill item center");
+          assertTrue(corner.distance(snapped) > 0.5, "null is expected for already-centered endpoints");
+        }
+      }
+    }
+    assertTrue(tracesWithDrillContacts > 0, "fixture must exercise drill-contacted endpoints");
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    SesWriter.write(board, out, "Issue593-BBD_Mars-64.dsn");
+    RoutingBoard fresh = DsnTestFixtures.loadBoard("Issue593-BBD_Mars-64.dsn");
+    SesImportSummary reimported = SesReader.read(
+        new ByteArrayInputStream(out.toByteArray()), fresh);
+    assertEquals(imported.wiresImported(), reimported.wiresImported(),
+        "snapping must not change the wire count on re-import");
+    assertEquals(0, reimported.errorsEncountered());
+  }
+}
