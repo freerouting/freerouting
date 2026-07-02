@@ -40,6 +40,12 @@ import java.lang.management.OperatingSystemMXBean;
 @Tag(name = "System", description = "System monitoring and environment information endpoints")
 public class SystemControllerV1 {
 
+  static {
+    // Eagerly call getCpuLoad to establish the baseline measurement for OperatingSystemMXBean,
+    // preventing the first API call from returning 0.0 or -1.0.
+    getCpuLoad();
+  }
+
   /**
    * Returns the current system-wide CPU load as a percentage in the range {@code [0, 100]}.
    *
@@ -54,7 +60,11 @@ public class SystemControllerV1 {
     try {
       OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
       if (osBean instanceof com.sun.management.OperatingSystemMXBean bean) {
-        return bean.getCpuLoad() * 100;
+        double load = bean.getCpuLoad();
+        if (load >= 0) {
+          // Round to 1 decimal place
+          return Math.round(load * 1000.0) / 10.0;
+        }
       }
     } catch (Throwable t) {
       // java.management or jdk.management module may not be available in minimal JRE builds
@@ -84,9 +94,9 @@ public class SystemControllerV1 {
     SystemStatus status = new SystemStatus();
     status.status = "OK";
     status.cpuLoad = getCpuLoad();
-    status.ramUsed = (int) (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
-    status.ramAvailable = (int) runtime.freeMemory() / 1024 / 1024;
-    status.storageAvailable = (int) GlobalSettings.getUserDataPath().toFile().getFreeSpace() / 1024 / 1024;
+    status.ramUsed = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024);
+    status.ramAvailable = (int) (runtime.freeMemory() / 1024 / 1024);
+    status.storageAvailable = (int) (GlobalSettings.getUserDataPath().toFile().getFreeSpace() / 1024 / 1024);
     status.sessionCount = SessionManager.getInstance().getActiveSessionsCount();
 
     var response = GsonProvider.GSON.toJson(status);

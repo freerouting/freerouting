@@ -47,6 +47,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
     private final int trace_pull_tight_accuracy;
 
     protected RoutingJob job;
+    private boolean isOptimizerAutorouter = false;
 
     /** Used to draw the airline of the current routed incomplete. */
     private FloatLine air_line;
@@ -184,7 +185,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
             String current_board_hash = this.board.get_hash();
 
-            if (currentPass > this.settings.maxPasses) {
+            if (this.settings.maxPasses != null && this.settings.maxPasses > 0 && currentPass > this.settings.maxPasses) {
                 thread.request_stop_auto_router();
                 break;
             }
@@ -205,7 +206,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
             var boardStatistics = this.board.get_statistics();
             float boardScore = boardStatistics.getNormalizedScore(job.routerSettings.scoring);
 
-            String passCompletedMessage = "V1.9 Auto-router pass #" + currentPass + " on board '" + current_board_hash
+            String passCompletedMessage = "V1.9 Auto-routing pass #" + currentPass + " on board '" + current_board_hash
                     + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration) + " with the score of "
                     + FRLogger.formatScore(boardScore, boardStatistics.connections.incompleteCount,
                             boardStatistics.clearanceViolations.totalCount);
@@ -217,7 +218,9 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
             } else {
                 passCompletedMessage += ".";
             }
-            job.logInfo(passCompletedMessage);
+            if (!isOptimizerAutorouter) {
+                job.logInfo(passCompletedMessage);
+            }
 
             if (this.settings.save_intermediate_stages) {
                 fireBoardSnapshotEvent(this.board);

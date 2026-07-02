@@ -12,11 +12,10 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.management.HeadlessBoardManager;
-import app.freerouting.settings.RouterScoringSettings;
+import app.freerouting.settings.ScoringSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +23,7 @@ class BoardHistoryTest {
 
   private RoutingBoard board1;
   private RoutingBoard board2;
-  private RouterScoringSettings scoringSettings;
+  private ScoringSettings scoringSettings;
 
   @BeforeEach
   void setUp() throws Exception {

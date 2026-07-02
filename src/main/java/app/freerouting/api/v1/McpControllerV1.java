@@ -5,6 +5,7 @@ import app.freerouting.api.CorrelationIdFilter;
 import app.freerouting.api.mcp.McpRealtimeBridge;
 import app.freerouting.api.mcp.OpenApiMcpToolRegistry;
 import app.freerouting.Freerouting;
+import app.freerouting.constants.Constants;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.gson.GsonProvider;
@@ -49,6 +50,7 @@ import java.util.UUID;
 public class McpControllerV1 extends BaseController {
 
   private static final String JSONRPC_VERSION = "2.0";
+  private static volatile String detectedClientInfo = "MCP-Client/1.0";
 
   @Context
   private Application application;
@@ -68,46 +70,69 @@ public class McpControllerV1 extends BaseController {
     String correlationId = CorrelationIdFilter.resolveOrCreate(
         headers.getHeaderString(CorrelationIdFilter.HEADER_NAME));
 
+    FRLogger.info("[mcp][cid=" + correlationId + "] request=" + requestBody);
+
     JsonObject request;
     try {
       request = JsonParser.parseString(requestBody).getAsJsonObject();
     } catch (Exception e) {
-      return Response.ok(error(null, -32700, "Invalid JSON"))
+      FRLogger.warn("[mcp][cid=" + correlationId + "] Failed to parse JSON-RPC request: " + e.getMessage());
+      return Response.ok(error(null, -32700, "Invalid JSON: " + e.getMessage()))
           .header(CorrelationIdFilter.HEADER_NAME, correlationId)
           .build();
     }
 
     JsonElement id = request.get("id");
-
-    UUID userId;
-    try {
-      userId = AuthenticateUser();
-    } catch (Exception e) {
-      return Response.ok(error(id, -32602, "Authentication failed"))
-          .header(CorrelationIdFilter.HEADER_NAME, correlationId)
-          .build();
-    }
-
+    boolean isNotification = (id == null || id.isJsonNull());
     String method = request.has("method") ? request.get("method").getAsString() : null;
     JsonObject params = request.has("params") && request.get("params").isJsonObject()
         ? request.getAsJsonObject("params")
         : new JsonObject();
 
+    UUID userId;
+    try {
+      userId = AuthenticateUser();
+    } catch (Exception e) {
+      FRLogger.warn("[mcp][cid=" + correlationId + "] Authentication failed for method '" + method + "': " + e.getMessage());
+      if (isNotification) {
+        return Response.noContent()
+            .header(CorrelationIdFilter.HEADER_NAME, correlationId)
+            .build();
+      }
+      JsonObject errResponse = error(id, -32602, "Authentication failed: " + e.getMessage());
+      return Response.ok(errResponse.toString())
+          .header(CorrelationIdFilter.HEADER_NAME, correlationId)
+          .build();
+    }
+
     JsonObject response;
     try {
       FRLogger.info("[mcp][cid=" + correlationId + "] method=" + method);
       response = switch (method == null ? "" : method) {
-        case "initialize" -> handleInitialize(id);
+        case "initialize" -> handleInitialize(id, params);
+        case "notifications/initialized" -> {
+          // MCP lifecycle notification: connection fully established.
+          yield success(id, new JsonObject());
+        }
         case "tools/list" -> handleToolsList(id);
         case "tools/call" -> handleToolsCall(id, params, correlationId);
         default -> error(id, -32601, "Unknown method: " + method);
       };
+      FRLogger.info("[mcp][cid=" + correlationId + "] response=" + response.toString());
     } catch (Exception e) {
       FRLogger.error("MCP RPC execution failed", e);
       response = error(id, -32603, "Internal error");
+      FRLogger.info("[mcp][cid=" + correlationId + "] response (error)=" + response.toString());
     }
 
     FRAnalytics.apiEndpointCalled("POST v1/mcp", requestBody, response.toString(), userId);
+    
+    if (isNotification) {
+      return Response.noContent()
+          .header(CorrelationIdFilter.HEADER_NAME, correlationId)
+          .build();
+    }
+
     return Response.ok(response.toString())
         .header(CorrelationIdFilter.HEADER_NAME, correlationId)
         .build();
@@ -129,14 +154,30 @@ public class McpControllerV1 extends BaseController {
     McpRealtimeBridge.broadcast("mcp.sse.connected", hello);
   }
 
-  private JsonObject handleInitialize(JsonElement id) {
+  private JsonObject handleInitialize(JsonElement id, JsonObject params) {
+    if (params != null && params.has("clientInfo")) {
+      try {
+        JsonObject clientInfo = params.getAsJsonObject("clientInfo");
+        String name = clientInfo.has("name") ? clientInfo.get("name").getAsString() : "Unknown";
+        String version = clientInfo.has("version") ? clientInfo.get("version").getAsString() : "1.0";
+        detectedClientInfo = name + "/" + version;
+      } catch (Exception e) {
+        FRLogger.warn("Failed to parse clientInfo from initialize params: " + e.getMessage());
+      }
+    }
+
     JsonObject capabilities = new JsonObject();
     capabilities.add("tools", new JsonObject());
 
+    JsonObject serverInfo = new JsonObject();
+    serverInfo.addProperty("name", "Freerouting MCP");
+    serverInfo.addProperty("version", Constants.FREEROUTING_VERSION);
+
     JsonObject result = new JsonObject();
-    result.addProperty("protocolVersion", "2025-03-26");
+    result.addProperty("protocolVersion", "2024-11-05");
     result.addProperty("serverName", "Freerouting MCP");
-    result.addProperty("serverVersion", "v2.3");
+    result.addProperty("serverVersion", Constants.FREEROUTING_VERSION);
+    result.add("serverInfo", serverInfo);
     result.add("capabilities", capabilities);
 
     return success(id, result);
@@ -167,6 +208,10 @@ public class McpControllerV1 extends BaseController {
 
     if (tool == null) {
       return error(id, -32601, "Unknown tool: " + toolName);
+    }
+
+    if ("custom".equals(tool.method())) {
+      return handleCustomToolCall(id, toolName, arguments, correlationId);
     }
 
     HttpResponse<String> response;
@@ -227,9 +272,25 @@ public class McpControllerV1 extends BaseController {
   private void forwardHeaders(HttpRequest.Builder builder, String correlationId) {
     // Forward only identity/auth headers required by the REST API contract.
     copyHeader("Authorization", builder);
-    copyHeader("Freerouting-Profile-ID", builder);
-    copyHeader("Freerouting-Profile-Email", builder);
-    copyHeader("Freerouting-Environment-Host", builder);
+    copyHeaderOrEnvFallback("Freerouting-Profile-ID", "FREEROUTING_PROFILE_ID", "FREEROUTING__PROFILE__ID", builder);
+    copyHeaderOrEnvFallback("Freerouting-Profile-Email", "FREEROUTING_PROFILE_EMAIL", "FREEROUTING__PROFILE__EMAIL", builder);
+
+    // Resolve Freerouting-Environment-Host dynamically
+    String envHost = headers.getHeaderString("Freerouting-Environment-Host");
+    if (envHost == null || envHost.isBlank()) {
+      envHost = System.getenv("FREEROUTING_ENVIRONMENT_HOST");
+    }
+    if (envHost == null || envHost.isBlank()) {
+      envHost = System.getenv("FREEROUTING__ENVIRONMENT__HOST");
+    }
+    if (envHost == null || envHost.isBlank()) {
+      envHost = McpControllerV1.detectedClientInfo;
+    }
+    if (envHost == null || envHost.isBlank()) {
+      envHost = "MCP-Client/1.0";
+    }
+    builder.header("Freerouting-Environment-Host", envHost);
+
     builder.header(CorrelationIdFilter.HEADER_NAME, correlationId);
   }
 
@@ -237,6 +298,19 @@ public class McpControllerV1 extends BaseController {
     String value = headers.getHeaderString(name);
     if (value != null && !value.isBlank()) {
       builder.header(name, value);
+    }
+  }
+
+  private void copyHeaderOrEnvFallback(String headerName, String envVarNameSingle, String envVarNameDouble, HttpRequest.Builder builder) {
+    String value = headers.getHeaderString(headerName);
+    if (value == null || value.isBlank()) {
+      value = System.getenv(envVarNameSingle);
+    }
+    if (value == null || value.isBlank()) {
+      value = System.getenv(envVarNameDouble);
+    }
+    if (value != null && !value.isBlank()) {
+      builder.header(headerName, value);
     }
   }
 
@@ -338,6 +412,138 @@ public class McpControllerV1 extends BaseController {
 
     response.add("error", err);
     return response;
+  }
+
+  private JsonObject handleCustomToolCall(JsonElement id, String toolName, JsonObject arguments, String correlationId) {
+    JsonObject result = new JsonObject();
+    JsonArray content = new JsonArray();
+    JsonObject textObj = new JsonObject();
+    textObj.addProperty("type", "text");
+
+    JsonObject payload = new JsonObject();
+    JsonObject body = new JsonObject();
+    boolean isError = false;
+
+    if ("encode_base64".equals(toolName)) {
+      if (!arguments.has("text") || arguments.get("text").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: text");
+      }
+      String text = arguments.get("text").getAsString();
+      String base64 = java.util.Base64.getEncoder().encodeToString(text.getBytes(StandardCharsets.UTF_8));
+      body.addProperty("base64", base64);
+      payload.addProperty("status", 200);
+      payload.addProperty("contentType", "application/json");
+      payload.add("body", body);
+    } else if ("decode_base64".equals(toolName)) {
+      if (!arguments.has("base64") || arguments.get("base64").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: base64");
+      }
+      String base64 = arguments.get("base64").getAsString();
+      try {
+        byte[] decodedBytes = java.util.Base64.getDecoder().decode(base64);
+        String decodedText = new String(decodedBytes, StandardCharsets.UTF_8);
+        body.addProperty("text", decodedText);
+        payload.addProperty("status", 200);
+        payload.addProperty("contentType", "application/json");
+        payload.add("body", body);
+      } catch (IllegalArgumentException e) {
+        return error(id, -32602, "Invalid base64 string: " + e.getMessage());
+      }
+    } else if ("upload_job_input_from_local_file".equals(toolName)) {
+      if (!arguments.has("jobId") || arguments.get("jobId").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: jobId");
+      }
+      if (!arguments.has("filePath") || arguments.get("filePath").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: filePath");
+      }
+      String jobId = arguments.get("jobId").getAsString();
+      String filePath = arguments.get("filePath").getAsString();
+
+      try {
+        byte[] fileBytes = java.nio.file.Files.readAllBytes(java.nio.file.Path.of(filePath));
+        String base64Data = java.util.Base64.getEncoder().encodeToString(fileBytes);
+
+        URI uri = buildUriWithQuery("/v1/jobs/" + jobId + "/input", new JsonObject());
+        JsonObject requestBodyObj = new JsonObject();
+        requestBodyObj.addProperty("job_id", jobId);
+        requestBodyObj.addProperty("data", base64Data);
+
+        HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
+        forwardHeaders(builder, correlationId);
+        builder.header("Content-Type", MediaType.APPLICATION_JSON);
+        builder.POST(HttpRequest.BodyPublishers.ofString(requestBodyObj.toString(), StandardCharsets.UTF_8));
+
+        HttpResponse<String> response = HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        payload.addProperty("status", response.statusCode());
+        payload.addProperty("contentType", "application/json");
+        isError = response.statusCode() >= 400;
+        if (isError) {
+          payload.add("body", tryParseJson(response.body()));
+        } else {
+          body.addProperty("message", "Successfully uploaded input from file: " + filePath);
+          payload.add("body", body);
+        }
+      } catch (Exception e) {
+        return error(id, -32603, "Failed to upload local file input: " + e.getMessage());
+      }
+    } else if ("download_job_output_to_local_file".equals(toolName)) {
+      if (!arguments.has("jobId") || arguments.get("jobId").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: jobId");
+      }
+      if (!arguments.has("filePath") || arguments.get("filePath").isJsonNull()) {
+        return error(id, -32602, "Missing required parameter: filePath");
+      }
+      String jobId = arguments.get("jobId").getAsString();
+      String filePath = arguments.get("filePath").getAsString();
+
+      try {
+        URI uri = buildUriWithQuery("/v1/jobs/" + jobId + "/output", new JsonObject());
+        HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
+        forwardHeaders(builder, correlationId);
+        builder.GET();
+
+        HttpResponse<String> response = HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        payload.addProperty("status", response.statusCode());
+        payload.addProperty("contentType", "application/json");
+        isError = response.statusCode() >= 400;
+
+        if (isError) {
+          payload.add("body", tryParseJson(response.body()));
+        } else if (response.statusCode() == 204) {
+          body.addProperty("message", "Job is in progress but no output data is available yet.");
+          payload.add("body", body);
+        } else {
+          JsonObject respObj = JsonParser.parseString(response.body()).getAsJsonObject();
+          String base64Data = respObj.get("data").getAsString();
+          byte[] sesBytes = java.util.Base64.getDecoder().decode(base64Data);
+
+          java.nio.file.Path outputPath = java.nio.file.Path.of(filePath);
+          if (outputPath.getParent() != null) {
+            java.nio.file.Files.createDirectories(outputPath.getParent());
+          }
+          java.nio.file.Files.write(outputPath, sesBytes);
+
+          body.addProperty("message", "Successfully downloaded output and saved to: " + filePath);
+          payload.add("body", body);
+        }
+      } catch (Exception e) {
+        return error(id, -32603, "Failed to download output to local file: " + e.getMessage());
+      }
+    } else {
+      return error(id, -32601, "Unknown custom tool: " + toolName);
+    }
+
+    textObj.addProperty("text", GsonProvider.GSON.toJson(payload));
+    content.add(textObj);
+    result.add("content", content);
+    result.addProperty("isError", isError);
+
+    JsonObject eventPayload = new JsonObject();
+    eventPayload.addProperty("tool", toolName);
+    eventPayload.addProperty("status", payload.get("status").getAsInt());
+    McpRealtimeBridge.broadcast("mcp.tool.called", eventPayload);
+
+    return success(id, result);
   }
 
   private static JsonElement nullId() {

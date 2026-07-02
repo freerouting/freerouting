@@ -19,6 +19,24 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
   }
 
   @Test
+  public void test_fanout_only_mode() {
+    TestingSettings testSettingsSource = new TestingSettings();
+    testSettingsSource.setEnabled(false);
+    testSettingsSource.setOptimizerEnabled(false);
+    testSettingsSource.setFanoutEnabled(true);
+    testSettingsSource.setJobTimeoutString("00:02:00");
+
+    RoutingJob job = GetRoutingJob("Issue558-dev-board.dsn", testSettingsSource);
+    RunRoutingJob(job);
+
+    org.junit.jupiter.api.Assertions.assertNotNull(job.board);
+    org.junit.jupiter.api.Assertions.assertEquals(0, job.getCurrentPass());
+
+    app.freerouting.core.scoring.BoardStatistics stats = new app.freerouting.core.scoring.BoardStatistics(job.board);
+    org.junit.jupiter.api.Assertions.assertTrue(stats.items.viaCount > 0);
+  }
+
+  @Test
   public void test_Issue_508_BM06() {
     TestingSettings testSettingsSource = new TestingSettings();
     testSettingsSource.setMaxPasses(10);

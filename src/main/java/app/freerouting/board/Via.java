@@ -28,6 +28,18 @@ public class Via extends DrillItem implements Serializable {
    * True, if coppersharing of this via with smd pins of the same net is allowed.
    */
   public final boolean attach_allowed;
+  /**
+   * True if this is an escape via inserted by the escalation fanout phase to provide
+   * a layer transition point from an SMD pin that could not be escaped on its primary layer.
+   * Escape vias use SMD-to-SMD clearance rules on their SMD layer rather than normal
+   * conductor-to-conductor clearance, because they sit inside the SMD pad copper footprint.
+   */
+  public boolean isEscapeVia = false;
+  /**
+   * The SMD layer (primary layer) on which this escape via connects to an SMD pin.
+   * Only relevant when isEscapeVia is true. -1 if not an escape via.
+   */
+  public int escapeViaSmdLayer = -1;
   private Padstack padstack;
   private transient Shape[] precalculated_shapes;
   /**
@@ -46,7 +58,34 @@ public class Via extends DrillItem implements Serializable {
 
   @Override
   public Item copy(int p_id_no) {
-    return new Via(padstack, get_center(), net_no_arr, clearance_class_no(), p_id_no, get_component_no(), get_fixed_state(), attach_allowed, board);
+    Via copy = new Via(padstack, get_center(), net_no_arr, clearance_class_no(), p_id_no, get_component_no(), get_fixed_state(), attach_allowed, board);
+    copy.isEscapeVia = this.isEscapeVia;
+    copy.escapeViaSmdLayer = this.escapeViaSmdLayer;
+    return copy;
+  }
+
+  @Override
+  public java.util.Collection<app.freerouting.drc.ClearanceViolation> clearance_violations() {
+    java.util.Collection<app.freerouting.drc.ClearanceViolation> rawViolations = super.clearance_violations();
+    if (!this.isEscapeVia || this.escapeViaSmdLayer < 0) {
+      return rawViolations;
+    }
+    java.util.Collection<app.freerouting.drc.ClearanceViolation> filteredViolations = new java.util.LinkedList<>();
+    for (app.freerouting.drc.ClearanceViolation violation : rawViolations) {
+      if (violation.layer == this.escapeViaSmdLayer) {
+        Item other = null;
+        if (violation.first_item == this) {
+          other = violation.second_item;
+        } else if (violation.second_item == this) {
+          other = violation.first_item;
+        }
+        if (other != null && other.shares_net(this)) {
+          continue;
+        }
+      }
+      filteredViolations.add(violation);
+    }
+    return filteredViolations;
   }
 
   @Override
@@ -218,11 +257,12 @@ public class Via extends DrillItem implements Serializable {
   public String get_hover_info(Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    String hover_info =
-        tm.getText("via") + " " + tm.getText("padstack") + " : " + padstack.name + " " + tm.getText("layer") + " " + padstack.from_layer() + " " + tm.getText("to") + " " + tm.getText("layer") + " "
-            + padstack.to_layer() + " " + this.get_connectable_item_hover_info(p_locale);
+    String from_layer = this.board.layer_structure.arr[this.first_layer()].name;
+    String to_layer = this.board.layer_structure.arr[this.last_layer()].name;
+    String padstack_name = padstack.name;
+    String connInfo = this.get_connectable_item_hover_info(p_locale);
 
-    return hover_info;
+    return tm.getText("via_hover_info", padstack_name, from_layer, to_layer, connInfo);
   }
 
   @Override

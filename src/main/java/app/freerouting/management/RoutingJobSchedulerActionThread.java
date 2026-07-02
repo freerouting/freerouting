@@ -13,8 +13,8 @@ import app.freerouting.core.RoutingStage;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.TextManager;
 import app.freerouting.settings.RouterSettings;
+import app.freerouting.util.TextManager;
 import com.sun.management.ThreadMXBean;
 import java.io.ByteArrayOutputStream;
 import java.lang.management.ManagementFactory;
@@ -37,6 +37,8 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
   @Override
   protected void thread_action() {
     job.startedAt = Instant.now();
+    boolean fanoutTimedOut = false;
+    boolean optimizerTimedOut = false;
     // Use ISO standard time format
     job.logInfo("Job '" + job.shortName + "' started at " + job.startedAt.toString() + ".");
 
@@ -91,7 +93,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     monitorThread.start();
 
     // start the routing task if needed
-    if (job.routerSettings.getRunRouter()) {
+    if (job.routerSettings.getRunRouter() && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses >= 0)) {
       job.stage = RoutingStage.ROUTING;
 
       // Select router implementation based on algorithm setting
@@ -114,6 +116,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
       // Call runBatchLoop
       batchRouter.runBatchLoop();
+      fanoutTimedOut = batchRouter.isFanoutTimedOut();
 
       // Log session summary
       Instant sessionStartTime = batchRouter.getSessionStartTime();
@@ -142,16 +145,16 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
           }
         }
 
-        String sessionSummary = String.format(
-            "Auto-router session %s started with %d unrouted nets, completed in %s, final score: %s, using %s total CPU seconds, %s GB total allocated, and %s MB peak heap usage.",
+        String sessionSummary = String.format(java.util.Locale.US,
+            "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
             completionStatus,
             initialUnroutedCount,
-            FRLogger.formatDuration(totalTime),
+            totalTime,
             FRLogger.formatScore(finalStats.getNormalizedScore(job.routerSettings.scoring),
                 finalStats.connections.incompleteCount, finalStats.clearanceViolations.totalCount),
-            FRLogger.defaultFloatFormat.format(job.resourceUsage.cpuTimeUsed),
-            FRLogger.defaultFloatFormat.format(job.resourceUsage.maxMemoryUsed / 1024.0f),
-            FRLogger.defaultFloatFormat.format(job.resourceUsage.peakMemoryUsed));
+            job.resourceUsage.cpuTimeUsed,
+            job.resourceUsage.maxMemoryUsed / 1024.0f,
+            job.resourceUsage.peakMemoryUsed);
 
         job.logInfo(sessionSummary);
       }
@@ -165,6 +168,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         job.routerSettings.maxPasses = 0;
         BatchAutorouter batchRouter = new BatchAutorouter(job);
         batchRouter.runBatchLoop();
+        fanoutTimedOut = batchRouter.isFanoutTimedOut();
         setJobOutput(job);
       } finally {
         job.routerSettings.maxPasses = originalMaxPasses;
@@ -183,6 +187,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         }
       });
       optimizer.runBatchLoop();
+      optimizerTimedOut = optimizer.isTimedOut();
       job.stage = RoutingStage.IDLE;
     }
 
@@ -200,7 +205,14 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
     long durationMs = java.time.Duration.between(job.startedAt, job.finishedAt).toMillis();
     double durationSec = durationMs / 1000.0;
-    job.logInfo("Job '" + job.shortName + "' finished with state: " + job.state.toString() +
+    StringBuilder details = new StringBuilder();
+    if (fanoutTimedOut) {
+      details.append(" (fanout stage timed out)");
+    }
+    if (optimizerTimedOut) {
+      details.append(" (optimizer stage timed out)");
+    }
+    job.logInfo("Job '" + job.shortName + "' finished with state: " + job.state.toString() + details.toString() +
         " (elapsed: " + FRLogger.formatDuration(durationSec) + ", finished at UTC: " + job.finishedAt.toString() + ").");
   }
 

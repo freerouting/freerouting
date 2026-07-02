@@ -18,10 +18,10 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.settings.ScoringSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
-import app.freerouting.rules.BoardRules;
-import app.freerouting.settings.RouterScoringSettings;
 import com.google.gson.annotations.SerializedName;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
@@ -61,6 +61,8 @@ public class BoardStatistics implements Serializable {
   public BoardStatisticsVias vias = new BoardStatisticsVias();
   @SerializedName("clearance_violations")
   public BoardStatisticsClearanceViolations clearanceViolations = new BoardStatisticsClearanceViolations();
+  @SerializedName("fanout")
+  public BoardStatisticsFanout fanout = new BoardStatisticsFanout();
 
   public BoardStatistics() {
   }
@@ -339,6 +341,27 @@ public class BoardStatistics implements Serializable {
       this.traces.totalVerticalLength = (float) Unit.scale(this.traces.totalVerticalLength, fromUnit, toUnit);
       this.traces.totalAngledLength = (float) Unit.scale(this.traces.totalAngledLength, fromUnit, toUnit);
     }
+
+    // Calculate fanout statistics
+    java.util.Collection<Pin> smdPins = board.get_smd_pins();
+    int total = 0;
+    int escaped = 0;
+    int alreadyConnected = 0;
+    for (Pin pin : smdPins) {
+      if (pin.net_count() > 0) {
+        total++;
+        int netNo = pin.get_net_no(0);
+        if (pin.get_unconnected_set(netNo).isEmpty()) {
+          alreadyConnected++;
+        }
+        if (isPinEscaped(pin)) {
+          escaped++;
+        }
+      }
+    }
+    this.fanout.totalSmdPins = total;
+    this.fanout.pinsToEscape = total - alreadyConnected;
+    this.fanout.escapedCount = escaped;
   }
 
   /**
@@ -385,35 +408,40 @@ public class BoardStatistics implements Serializable {
 
       // get the number of components and nets in the SES file
       this.layers.totalCount = layers.size();
-      this.components.totalCount = content.split("\\(component").length - 1;
-      this.nets.totalCount = content.split("\\(net").length - 1;
-      this.traces.totalCount = content.split("\\(wire").length - 1;
-      this.vias.totalCount = content.split("\\(via").length - 1;
+      this.components.totalCount = countOccurrences(content, "(component");
+      this.nets.totalCount = countOccurrences(content, "(net");
+      this.traces.totalCount = countOccurrences(content, "(wire");
+      this.vias.totalCount = countOccurrences(content, "(via");
     } else if (format == FileFormat.DSN) {
       // read the content as text
       String content = new String(data, StandardCharsets.UTF_8);
-      // extract the host from the DSN file
-      String[] lines = content.split("\n");
+      // extract the host from the DSN file without splitting the whole content by lines
       String host_cad = null;
       String host_version = null;
-      for (String line : lines) {
-        String value = null;
-
-        line = line.trim();
-        if (line.startsWith("(host_cad")) {
-          value = line
-              .substring(9, line.length() - 1)
-              .trim();
-          host_cad = TextManager.removeQuotes(value);
-        } else if (line.startsWith("(host_version")) {
-          value = line
-              .substring(13, line.length() - 1)
-              .trim();
-          host_version = TextManager.removeQuotes(value);
+      int parserIndex = content.indexOf("(parser");
+      if (parserIndex != -1) {
+        int searchLimit = content.indexOf(")", parserIndex);
+        if (searchLimit == -1) {
+          searchLimit = Math.min(content.length(), parserIndex + 1000);
+        } else {
+          searchLimit = Math.min(content.length(), searchLimit + 1);
         }
-
-        if ((host_cad != null) && (host_version != null)) {
-          break;
+        String parserScope = content.substring(parserIndex, searchLimit);
+        int hcIdx = parserScope.indexOf("(host_cad");
+        if (hcIdx != -1) {
+          int hcEnd = parserScope.indexOf(")", hcIdx);
+          if (hcEnd != -1) {
+            String val = parserScope.substring(hcIdx + 9, hcEnd).trim();
+            host_cad = TextManager.removeQuotes(val);
+          }
+        }
+        int hvIdx = parserScope.indexOf("(host_version");
+        if (hvIdx != -1) {
+          int hvEnd = parserScope.indexOf(")", hvIdx);
+          if (hvEnd != -1) {
+            String val = parserScope.substring(hvIdx + 13, hvEnd).trim();
+            host_version = TextManager.removeQuotes(val);
+          }
         }
       }
 
@@ -424,12 +452,12 @@ public class BoardStatistics implements Serializable {
       }
 
       // get the number of layers and nets in the DSN file
-      this.layers.totalCount = content.split("\\(layer").length - 1;
-      this.components.totalCount = content.split("\\(component").length - 1;
-      this.nets.classCount = content.split("\\(class").length - 1;
-      this.nets.totalCount = content.split("\\(net").length - 1;
-      this.traces.totalCount = content.split("\\(wire").length - 1;
-      this.vias.totalCount = content.split("\\(via").length - 1;
+      this.layers.totalCount = countOccurrences(content, "(layer");
+      this.components.totalCount = countOccurrences(content, "(component");
+      this.nets.classCount = countOccurrences(content, "(class");
+      this.nets.totalCount = countOccurrences(content, "(net");
+      this.traces.totalCount = countOccurrences(content, "(wire");
+      this.vias.totalCount = countOccurrences(content, "(via");
     } else if (format == FileFormat.JSON) {
       try {
         String content = new String(data, StandardCharsets.UTF_8);
@@ -463,6 +491,39 @@ public class BoardStatistics implements Serializable {
     }
   }
 
+  public static boolean isPinEscaped(Pin pin) {
+    java.util.Set<Item> contacts = pin.get_normal_contacts();
+    for (Item contact : contacts) {
+      if (contact instanceof Trace trace) {
+        if (trace.clearance_violations().isEmpty()) {
+          return true;
+        }
+      } else if (contact instanceof Via via) {
+        if (via.clearance_violations().isEmpty()) {
+          java.util.Set<Item> viaContacts = via.get_normal_contacts();
+          for (Item viaContact : viaContacts) {
+            if (viaContact instanceof Trace || viaContact instanceof ConductionArea) {
+              return true;
+            }
+          }
+        }
+      } else if (contact instanceof ConductionArea) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static int countOccurrences(String text, String target) {
+    int count = 0;
+    int index = 0;
+    while ((index = text.indexOf(target, index)) != -1) {
+      count++;
+      index += target.length();
+    }
+    return count;
+  }
+
   /**
    * Returns a JSON representation of this object.
    */
@@ -474,7 +535,7 @@ public class BoardStatistics implements Serializable {
    * Calculates the score/cost of the board based on the given scoring settings.
    * Higher score means better board.
    */
-  public float calculateScore(RouterScoringSettings scoringSettings) {
+  public float calculateScore(ScoringSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
     float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
         + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty
@@ -493,11 +554,11 @@ public class BoardStatistics implements Serializable {
     return maximumScore - penalties - costs;
   }
 
-  public float getMaximumScore(RouterScoringSettings scoringSettings) {
+  public float getMaximumScore(ScoringSettings scoringSettings) {
     return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
   }
 
-  public float getNormalizedScore(RouterScoringSettings scoringSettings) {
+  public float getNormalizedScore(ScoringSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
     if (maximumScore <= 0f) {
       // Guard against division by zero and negative maximum scores (e.g. boards with no
@@ -509,5 +570,13 @@ public class BoardStatistics implements Serializable {
     }
     return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
   }
-}
 
+  public static class BoardStatisticsFanout implements Serializable {
+    @SerializedName("total_smd_pins")
+    public int totalSmdPins = 0;
+    @SerializedName("pins_to_escape")
+    public int pinsToEscape = 0;
+    @SerializedName("escaped_count")
+    public int escapedCount = 0;
+  }
+}

@@ -77,7 +77,7 @@ public class SessionControllerV1 extends BaseController {
 
   @Operation(
       summary = "Create new session",
-      description = "Creates a new routing session for the authenticated user. The session will be associated with the user's ID and the specified host environment.",
+      description = "Creates a new routing session for the authenticated user. This is Step 1 of the routing pipeline. Next, call enqueue_job using the returned sessionId.",
       parameters = {
           @Parameter(
               name = "Freerouting-Environment-Host",

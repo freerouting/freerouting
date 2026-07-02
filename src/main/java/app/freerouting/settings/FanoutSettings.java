@@ -20,7 +20,7 @@ public class FanoutSettings implements Serializable, Cloneable {
   /**
    * Whether to run the fanout pre-pass at all.
    * When {@code false} the router skips fanout and begins the standard
-   * autoroute phase immediately.
+   * auto-routing stage immediately.
    */
   @SerializedName("enabled")
   public Boolean enabled;
@@ -33,6 +33,13 @@ public class FanoutSettings implements Serializable, Cloneable {
    */
   @SerializedName("max_passes")
   public Integer maxPasses;
+
+  /**
+   * Maximum number of escape/fanout routing attempts allowed during the fanout stage.
+   * If this limit is reached, the fanout stage will stop early.
+   */
+  @SerializedName("max_items")
+  public Integer maxItems;
 
   /**
    * Base time budget (in milliseconds) that each individual SMD pin may
@@ -54,6 +61,56 @@ public class FanoutSettings implements Serializable, Cloneable {
    */
   @SerializedName("ripup_allowed")
   public Boolean ripupAllowed;
+
+  /**
+   * The minimum physical escape wire length (in millimeters). Vias will not be placed
+   * closer than this distance from the starting pin center during fanout.
+   */
+  @SerializedName("min_escape_length_mm")
+  public Double minEscapeLengthMm;
+
+  /**
+   * The maximum physical escape wire length (in millimeters). The search tree expansion
+   * and via placement during fanout will be restricted to this distance.
+   */
+  @SerializedName("max_escape_length_mm")
+  public Double maxEscapeLengthMm;
+
+  /**
+   * The diameter of starting/escape vias used inside the pins during the fanout/escape stage (in millimeters).
+   * Default is 0.250 mm.
+   */
+  @SerializedName("start_via_diameter_mm")
+  public Double startViaDiameterMm;
+
+  /**
+   * The diameter of landing/end vias used at the end of escaping wires during the fanout/escape stage (in millimeters).
+   * Default is 0.250 mm.
+   */
+  @SerializedName("end_via_diameter_mm")
+  public Double endViaDiameterMm;
+
+  /**
+   * The sorting order for SMD pins within a component.
+   * "inner_first" (v1.9 default) - pins closer to the component center first.
+   * "outer_first" - pins further from the component center first.
+   * "unsorted" - sorted by pin number only.
+   */
+  @SerializedName("pin_sorting_order")
+  public String pinSortingOrder;
+
+  /**
+   * Whether to fallback to board-wide via rules if a net has no via rules defined or an empty via list during fanout.
+   */
+  @SerializedName("fallback_to_board_vias")
+  public Boolean fallbackToBoardVias;
+
+  /**
+   * Timeout for the fanout stage (e.g., "5m", "300s").
+   * Default is null (no timeout).
+   */
+  @SerializedName("timeout")
+  public String timeoutString;
 
   /**
    * No-arg constructor required for deserialisation and {@link #clone()}.

@@ -1,6 +1,8 @@
 package app.freerouting.settings.sources;
 
+import app.freerouting.settings.OptimizerSettings;
 import app.freerouting.settings.RouterSettings;
+import app.freerouting.settings.ScoringSettings;
 import app.freerouting.settings.SettingsSource;
 
 /**
@@ -33,7 +35,7 @@ public class TestingSettings implements SettingsSource {
 
     public void setDefaultBendCost(double defaultBendCost) {
         if (this.settings.scoring == null) {
-            this.settings.scoring = new app.freerouting.settings.RouterScoringSettings();
+            this.settings.scoring = new ScoringSettings();
         }
         this.settings.scoring.defaultBendCost = defaultBendCost;
     }
@@ -61,6 +63,10 @@ public class TestingSettings implements SettingsSource {
         this.settings.fanout.enabled = enabled;
     }
 
+    public void setRouterEnabled(boolean enabled) {
+        this.settings.enabled = enabled;
+    }
+
     public void setCopperToEdgeClearanceUm(double copperToEdgeClearanceUm) {
         this.settings.copperToEdgeClearanceUm = copperToEdgeClearanceUm;
     }
@@ -85,5 +91,40 @@ public class TestingSettings implements SettingsSource {
         if (this.settings.enabled == null) {
             this.settings.enabled = enabled;
         }
+    }
+
+    public void setOptimizerEnabled(boolean enabled) {
+        if (this.settings.optimizer == null) {
+            this.settings.optimizer = new OptimizerSettings();
+        }
+        this.settings.optimizer.enabled = enabled;
+    }
+
+    public void setFanoutMaxPasses(int maxPasses) {
+        if (this.settings.fanout == null) {
+            this.settings.fanout = new app.freerouting.settings.FanoutSettings();
+        }
+        this.settings.fanout.maxPasses = maxPasses;
+    }
+
+    public void setFanoutMaxItems(int maxItems) {
+        if (this.settings.fanout == null) {
+            this.settings.fanout = new app.freerouting.settings.FanoutSettings();
+        }
+        this.settings.fanout.maxItems = maxItems;
+    }
+
+    public void setOptimizerMaxPasses(int maxPasses) {
+        if (this.settings.optimizer == null) {
+            this.settings.optimizer = new OptimizerSettings();
+        }
+        this.settings.optimizer.maxPasses = maxPasses;
+    }
+
+    public void setOptimizerMaxItems(int maxItems) {
+        if (this.settings.optimizer == null) {
+            this.settings.optimizer = new OptimizerSettings();
+        }
+        this.settings.optimizer.maxItems = maxItems;
     }
 }

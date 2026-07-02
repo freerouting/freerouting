@@ -111,6 +111,32 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
     * `./scripts/sdk/generate-csharp-client.ps1`
     * `./scripts/sdk/generate-cpp-client.ps1`
 
+## How to update the MCP Server NPM package
+
+The `@freerouting/freerouting-mcp-server` package is stored under the `integrations/mcp-server` folder. 
+
+If you make modifications to the MCP node bridge client code:
+
+1. **Log in to NPM**:
+   Ensure you are logged into your npm account with access to the `@freerouting` scope:
+   ```bash
+   npm login
+   ```
+2. **Navigate to the directory**:
+   ```bash
+   cd integrations/mcp-server
+   ```
+3. **Increment the package version**:
+   Update the `"version"` field in `package.json` manually (e.g. from `1.0.0` to `1.0.1`), or use the npm version command:
+   ```bash
+   npm version patch
+   ```
+4. **Publish the package**:
+   ```bash
+   npm publish
+   ```
+   *(Note: The first time the package is published, you must run `npm publish --access public` due to the scoped package name).*
+
 ## Client API SDK strategy
 
 Freerouting keeps its official API clients in separate repositories from the core Java codebase.

@@ -71,6 +71,8 @@ public class AutorouteControl {
   public String fanout_start_pin_name;
   /** Source pin center for targeted fanout diagnostics. */
   public Point fanout_start_pin_center;
+  /** Source pin layer for targeted fanout diagnostics and limits. */
+  public int fanout_start_pin_layer = -1;
   /**
    * Normally true, if the autorouter contains no fanout pass
    */
@@ -86,7 +88,7 @@ public class AutorouteControl {
   /**
    * The possible (partial) vias, which can be used by the autorouter
    */
-  ViaRule via_rule;
+  public ViaRule via_rule;
   /**
    * The array of possible via ranges used bei the autorouter
    */
@@ -165,6 +167,7 @@ public class AutorouteControl {
     is_fanout = false;
     fanout_start_pin_name = null;
     fanout_start_pin_center = null;
+    fanout_start_pin_layer = -1;
     remove_unconnected_vias = true;
     with_neckdown = p_settings.get_automatic_neckdown();
     tidy_region_width = Integer.MAX_VALUE;
@@ -211,12 +214,17 @@ public class AutorouteControl {
         layer_active[i] = false;
       }
     }
+    rebuild_via_info(p_board, p_via_costs, p_net_no);
+  }
+
+  public void rebuild_via_info(RoutingBoard p_board, int p_via_costs, int p_net_no) {
     if (via_rule.via_count() > 0) {
       this.via_clearance_class = via_rule.get_via(0).get_clearance_class();
     } else {
       this.via_clearance_class = 1;
     }
     this.via_info_arr = new ViaMask[via_rule.via_count()];
+    this.attach_smd_allowed = false;
     for (int i = 0; i < via_rule.via_count(); i++) {
       ViaInfo curr_via = via_rule.get_via(i);
       if (curr_via.attach_smd_allowed()) {

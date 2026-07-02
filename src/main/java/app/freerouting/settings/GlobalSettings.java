@@ -301,16 +301,17 @@ public class GlobalSettings implements Serializable {
       boolean isSaveNeeded = !currentVersion.equals(fileVersion);
 
       // Apply all the loaded settings to the result if they are not null
-      ReflectionUtil.copyFields(defaultSettings, loadedSettings);
-      loadedSettings.version = currentVersion;
+      ReflectionUtil.copyFields(loadedSettings, defaultSettings);
+      defaultSettings.version = currentVersion;
 
       if (isSaveNeeded) {
         // TODO: insert per-version migration steps here when needed, e.g.:
-        //   migrateSettings(fileVersion, currentVersion, loadedSettings);
+        //   migrateSettings(fileVersion, currentVersion, defaultSettings);
         FRLogger.info("freerouting.json config version changed from '"
             + fileVersion + "' to '" + currentVersion + "' – re-saving configuration.");
-        saveAsJson(loadedSettings);
+        saveAsJson(defaultSettings);
       }
+      loadedSettings = defaultSettings;
     }
 
     return loadedSettings;
@@ -440,6 +441,10 @@ public class GlobalSettings implements Serializable {
   public void applyCommandLineArguments(String[] p_args) {
     for (int i = 0; i < p_args.length; i++) {
       try {
+        if (p_args[i].equalsIgnoreCase("-help") || p_args[i].equalsIgnoreCase("--help") || p_args[i].equalsIgnoreCase("-h")) {
+          show_help_option = true;
+          continue;
+        }
         if (p_args[i].startsWith("--")) {
           // it's a general settings value setter
           // Use split limit=2 so that values containing '=' (e.g. URLs with query strings)
@@ -471,20 +476,16 @@ public class GlobalSettings implements Serializable {
         } else if (p_args[i].startsWith("-de")) {
           // the design file(s) are provided - can be DSN, SES, and/or RULES files
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            // Collect all file arguments (they can be separated by + or spaces)
-            StringBuilder filesBuilder = new StringBuilder();
+            java.util.List<String> files = new java.util.ArrayList<>();
             int j = i + 1;
             while (j < p_args.length && !p_args[j].startsWith("-")) {
-              if (filesBuilder.length() > 0) {
-                filesBuilder.append(" ");
+              // Split each argument by '+' to support legacy concatenation (e.g. file1.dsn+file2.rules)
+              String[] parts = p_args[j].split("\\+");
+              for (String part : parts) {
+                files.add(part.trim());
               }
-              filesBuilder.append(p_args[j]);
               j++;
             }
-
-            // Split by + or space to get individual files
-            String filesString = filesBuilder.toString();
-            String[] files = filesString.split("[+\\s]+");
 
             // Track which file types we've seen to ensure only one of each
             boolean hasDsn = false;

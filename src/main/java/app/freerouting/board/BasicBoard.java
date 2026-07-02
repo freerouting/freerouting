@@ -44,6 +44,13 @@ import java.util.TreeSet;
 public class BasicBoard implements Serializable {
 
   /**
+   * The maximum number of outer-loop iterations in {@link #normalize_traces}.
+   * Each legitimate split/combine operation converges the board toward a stable state, so a
+   * well-formed net needs at most a small multiple of its trace count.  If we exceed this bound
+   * we are almost certainly oscillating (split → combine → split …) and must break out.
+   */
+  private static final int MAX_NORMALIZE_ITERATIONS = 2000;
+  /**
    * List of items inserted into this board (e.g. trace classes). Traces are Item
    * classes that implement the Connectable interface.
    */
@@ -78,6 +85,7 @@ public class BasicBoard implements Serializable {
    * Handles the search trees pointing into the items of this board
    */
   public transient SearchTreeManager search_tree_manager;
+  private transient int revision = 0;
   /**
    * the rectangle, where the graphics may be not up-to-date
    */
@@ -90,7 +98,6 @@ public class BasicBoard implements Serializable {
    * the smallest half width of all traces on the board
    */
   private int min_trace_half_width = 10000;
-
   /**
    * Creates a new instance of a routing Board with surrounding box p_bounding_box
    * Rules contains the restrictions to obey when inserting items. Among other
@@ -136,6 +143,31 @@ public class BasicBoard implements Serializable {
           .substring(1));
     }
     return stringBuffer.toString();
+  }
+
+  private static boolean is_item_activity_debug_candidate(Item p_item) {
+    IntBox bounds = p_item.bounding_box();
+    IntBox debugWindow = new IntBox(1620000, -1105000, 1930000, -1003000);
+    return bounds != null && bounds.intersects(debugWindow);
+  }
+
+  private static String first_net_or_none(Item p_item) {
+    return p_item.net_count() > 0 ? Integer.toString(p_item.get_net_no(0)) : "none";
+  }
+
+  private static String describe_bounds(IntBox p_bounds) {
+    if (p_bounds == null) {
+      return "null";
+    }
+    return "[(" + p_bounds.ll.x + "," + p_bounds.ll.y + ")..(" + p_bounds.ur.x + "," + p_bounds.ur.y + ")]";
+  }
+
+  public int get_revision() {
+    return revision;
+  }
+
+  public void increment_revision() {
+    revision++;
   }
 
   public byte[] serialize(boolean basicProfile) {
@@ -288,6 +320,37 @@ public class BasicBoard implements Serializable {
     int from_layer = p_padstack.from_layer();
     int to_layer = p_padstack.to_layer();
     for (int i = from_layer; i < to_layer; i++) {
+      for (int curr_net_no : p_net_no_arr) {
+        split_traces(p_center, i, curr_net_no);
+      }
+    }
+    return new_via;
+  }
+
+  /**
+   * Inserts a special escape via into the board for the fanout escalation phase.
+   * An escape via sits directly on top of an SMD pin to provide a layer transition
+   * to an inner routing layer. On the SMD layer it uses SMD-to-SMD clearance rules
+   * (because its copper is inside the SMD pad footprint); on inner layers it uses
+   * normal via clearance.
+   *
+   * @param p_padstack      The padstack describing the via geometry
+   * @param p_center        The center point (at the SMD pin center)
+   * @param p_net_no_arr    The net numbers
+   * @param p_clearance_class The clearance class to use
+   * @param p_fixed_state   The fixed state
+   * @param p_smd_layer     The SMD layer where the pin lives (clearance exception layer)
+   */
+  public Via insert_escape_via(Padstack p_padstack, Point p_center, int[] p_net_no_arr,
+      int p_clearance_class, FixedState p_fixed_state, int p_smd_layer) {
+    Via new_via = new Via(p_padstack, p_center, p_net_no_arr, p_clearance_class, 0, 0,
+        p_fixed_state, true, this);
+    new_via.isEscapeVia = true;
+    new_via.escapeViaSmdLayer = p_smd_layer;
+    insert_item(new_via);
+    int from_layer = p_padstack.from_layer();
+    int to_layer = p_padstack.to_layer();
+    for (int i = from_layer; i <= to_layer; i++) {
       for (int curr_net_no : p_net_no_arr) {
         split_traces(p_center, i, curr_net_no);
       }
@@ -520,6 +583,7 @@ public class BasicBoard implements Serializable {
     if ((communication != null) && (communication.observers != null)) {
       communication.observers.notify_deleted(p_item);
     }
+    increment_revision();
   }
 
   /**
@@ -806,20 +870,11 @@ public class BasicBoard implements Serializable {
   }
 
   /**
-   * The maximum number of outer-loop iterations in {@link #normalize_traces}.
-   * Each legitimate split/combine operation converges the board toward a stable state, so a
-   * well-formed net needs at most a small multiple of its trace count.  If we exceed this bound
-   * we are almost certainly oscillating (split → combine → split …) and must break out.
-   */
-  private static final int MAX_NORMALIZE_ITERATIONS = 2000;
-
-  /**
    * Normalizes the traces of this net
    */
   public boolean normalize_traces(int p_net_no) {
     boolean result = false;
     boolean something_changed = true;
-    Item curr_item;
     int iterationCount = 0;
     while (something_changed) {
       if (++iterationCount > MAX_NORMALIZE_ITERATIONS) {
@@ -837,11 +892,18 @@ public class BasicBoard implements Serializable {
         break;
       }
       something_changed = false;
+
+      // Collect traces for this net on this iteration to avoid ConcurrentModificationException
+      // on the board's item_list during iteration, and to avoid scanning the entire board repeatedly.
+      java.util.List<PolylineTrace> netTraces = new java.util.ArrayList<>();
       Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
       for (;;) {
+        Item curr_item;
         try {
           curr_item = (Item) item_list.read_object(it);
         } catch (ConcurrentModificationException _) {
+          // If the board's item list was modified during collection (should be rare during collection itself),
+          // set something_changed to true to retry from a fresh state.
           something_changed = true;
           break;
         }
@@ -850,12 +912,104 @@ public class BasicBoard implements Serializable {
         }
         if (curr_item.contains_net(p_net_no) && curr_item instanceof PolylineTrace curr_trace
             && curr_item.is_on_the_board()) {
+          netTraces.add(curr_trace);
+        }
+      }
+
+      if (something_changed) {
+        continue;
+      }
+
+      for (PolylineTrace curr_trace : netTraces) {
+        if (curr_trace.is_on_the_board()) {
           if (curr_trace.normalize(null)) {
             something_changed = true;
             result = true;
           } else if (!curr_trace.is_user_fixed() && this.remove_if_cycle(curr_trace)) {
             something_changed = true;
             result = true;
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Normalizes the traces of all nets on the board in a single optimized pass.
+   */
+  public boolean normalize_all_traces() {
+    boolean result = false;
+    // Group all PolylineTrace items by net
+    java.util.Map<Integer, java.util.List<PolylineTrace>> tracesByNet = new java.util.HashMap<>();
+    Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
+    for (;;) {
+      Item curr_item;
+      try {
+        curr_item = (Item) item_list.read_object(it);
+      } catch (java.util.ConcurrentModificationException _) {
+        // Retry collection if modified
+        tracesByNet.clear();
+        it = item_list.start_read_object();
+        continue;
+      }
+      if (curr_item == null) {
+        break;
+      }
+      if (curr_item instanceof PolylineTrace curr_trace && curr_item.is_on_the_board()) {
+        for (int netNo : curr_trace.net_no_arr) {
+          tracesByNet.computeIfAbsent(netNo, k -> new java.util.ArrayList<>()).add(curr_trace);
+        }
+      }
+    }
+
+    for (java.util.Map.Entry<Integer, java.util.List<PolylineTrace>> entry : tracesByNet.entrySet()) {
+      int netNo = entry.getKey();
+      java.util.List<PolylineTrace> netTraces = entry.getValue();
+      boolean something_changed = true;
+      int iterationCount = 0;
+      while (something_changed) {
+        if (++iterationCount > MAX_NORMALIZE_ITERATIONS) {
+          String netName = (rules != null && rules.nets != null && rules.nets.get(netNo) != null)
+              ? rules.nets.get(netNo).name : String.valueOf(netNo);
+          FRLogger.warn("BasicBoard.normalize_all_traces: reached " + MAX_NORMALIZE_ITERATIONS
+              + " iterations for net '" + netName + "' — stopping to prevent hang.");
+          break;
+        }
+        something_changed = false;
+
+        for (PolylineTrace curr_trace : netTraces) {
+          if (curr_trace.is_on_the_board()) {
+            if (curr_trace.normalize(null)) {
+              something_changed = true;
+              result = true;
+            } else if (!curr_trace.is_user_fixed() && this.remove_if_cycle(curr_trace)) {
+              something_changed = true;
+              result = true;
+            }
+          }
+        }
+
+        // If something changed, collect the traces for this net again
+        if (something_changed) {
+          netTraces.clear();
+          Iterator<UndoableObjects.UndoableObjectNode> it2 = item_list.start_read_object();
+          for (;;) {
+            Item curr_item;
+            try {
+              curr_item = (Item) item_list.read_object(it2);
+            } catch (java.util.ConcurrentModificationException _) {
+              netTraces.clear();
+              it2 = item_list.start_read_object();
+              continue;
+            }
+            if (curr_item == null) {
+              break;
+            }
+            if (curr_item.contains_net(netNo) && curr_item instanceof PolylineTrace curr_trace
+                && curr_item.is_on_the_board()) {
+              netTraces.add(curr_trace);
+            }
           }
         }
       }
@@ -1080,16 +1234,6 @@ public class BasicBoard implements Serializable {
     return layer_structure.arr.length;
   }
 
-  /**
-   * Draws all items of the board on their visible layers. Called in the
-   * overwritten paintComponent method of a class derived from JPanel. The value
-   * of p_layer_visibility is expected between 0 and 1
-   * for each layer.
-   */
-  public enum DominantSide {
-    FRONT, BACK, NONE
-  }
-
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
     if (p_graphics_context == null) {
       return;
@@ -1141,7 +1285,7 @@ public class BasicBoard implements Serializable {
         this.isVirtual = isVirtual;
         this.index = index;
       }
-      
+
       @Override
       public boolean equals(Object o) {
         if (this == o) return true;
@@ -1155,9 +1299,9 @@ public class BasicBoard implements Serializable {
         return java.util.Objects.hash(isVirtual, index);
       }
     }
-    
+
     java.util.List<RenderStep> drawSteps = new java.util.ArrayList<>();
-    
+
     if (dominantSide == DominantSide.BACK) {
       // BACK dominant default order:
       // F.Fab (v4), F.Courtyard (v2), F.Silkscreen (v0), top_cu (false, 0)
@@ -1220,10 +1364,13 @@ public class BasicBoard implements Serializable {
       }
     }
 
-    FRLogger.debug(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
+    FRLogger.trace(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
         selectedLayerName, dominantSide, renderingOrderNames));
 
+    long drawStart = System.nanoTime();
+
     // Pre-collect all items once to avoid re-iterating item_list for every (priority × step)
+    long startCollect = System.nanoTime();
     java.util.List<Item> allItems = new java.util.ArrayList<>();
     {
       Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
@@ -1240,46 +1387,106 @@ public class BasicBoard implements Serializable {
         }
       }
     }
+    long endCollect = System.nanoTime();
+
+    long startGroup = System.nanoTime();
+    // Group items by priority to optimize rendering loops
+    int maxPriority = Drawable.MAX_DRAW_PRIORITY;
+    @SuppressWarnings("unchecked")
+    java.util.List<Item>[] itemsByPriority = (java.util.List<Item>[]) new java.util.List[maxPriority + 1];
+    for (int i = 0; i <= maxPriority; i++) {
+      itemsByPriority[i] = new java.util.ArrayList<>();
+    }
+    for (Item curr_item : allItems) {
+      int p = curr_item.get_draw_priority();
+      if (p >= 0 && p <= maxPriority) {
+        itemsByPriority[p].add(curr_item);
+      }
+    }
+    long endGroup = System.nanoTime();
+
+    long startLoop = System.nanoTime();
+    
+    // Viewport culling bounds in board coordinates
+    java.awt.Rectangle clipRect = p_graphics.getClipBounds();
+    IntBox clipBox = clipRect != null ? p_graphics_context.coordinate_transform.screen_to_board(clipRect) : null;
+
+    long timeTrace = 0;
+    long timeVia = 0;
+    long timePin = 0;
+    long timeConduction = 0;
+    long timeOther = 0;
+    int countTrace = 0;
+    int countVia = 0;
+    int countPin = 0;
+    int countConduction = 0;
+    int countOther = 0;
+    int culledCount = 0;
 
     // Draw elements according to the calculated steps sequence
-    for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MAX_DRAW_PRIORITY; curr_priority++) {
+    for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= maxPriority; curr_priority++) {
+      java.util.List<Item> priorityItems = itemsByPriority[curr_priority];
       for (RenderStep step : drawSteps) {
-        for (Item curr_item : allItems) {
-          if (curr_item.get_draw_priority() == curr_priority) {
-            if (step.isVirtual) {
-              // Virtual layer step: render ComponentOutline and ComponentObstacleArea (courtyard)
-              // items matching that virtual layer index
-              if (curr_item instanceof ComponentOutline co) {
-                int itemVirtualIdx;
-                if (co.is_courtyard()) {
-                  itemVirtualIdx = co.is_front() ? 2 : 3;
-                } else if (co.is_fabrication()) {
-                  itemVirtualIdx = co.is_front() ? 4 : 5;
-                } else {
-                  itemVirtualIdx = co.is_front() ? 0 : 1;
-                }
-                if (itemVirtualIdx == step.index) {
-                  curr_item.draw(p_graphics, p_graphics_context);
-                }
-              } else if (curr_item instanceof ComponentObstacleArea coa) {
-                // Courtyard keepout areas map to virtual courtyard layers (2=F.Courtyard, 3=B.Courtyard)
-                int itemVirtualIdx = coa.is_front() ? 2 : 3;
-                if (itemVirtualIdx == step.index) {
-                  curr_item.draw(p_graphics, p_graphics_context);
-                }
+        for (Item curr_item : priorityItems) {
+          if (clipBox != null && !clipBox.intersects(curr_item.bounding_box())) {
+            culledCount++;
+            continue;
+          }
+
+          long itemStart = System.nanoTime();
+          if (step.isVirtual) {
+            // Virtual layer step: render ComponentOutline and ComponentObstacleArea (courtyard)
+            // items matching that virtual layer index
+            if (curr_item instanceof ComponentOutline co) {
+              int itemVirtualIdx;
+              if (co.is_courtyard()) {
+                itemVirtualIdx = co.is_front() ? 2 : 3;
+              } else if (co.is_fabrication()) {
+                itemVirtualIdx = co.is_front() ? 4 : 5;
+              } else {
+                itemVirtualIdx = co.is_front() ? 0 : 1;
               }
-            } else {
-              // Physical layer step: skip ComponentOutline and ComponentObstacleArea
-              // (they are rendered exclusively in their corresponding virtual layer steps)
-              if (!(curr_item instanceof ComponentOutline) && !(curr_item instanceof ComponentObstacleArea)) {
-                curr_item.draw_layer(p_graphics, p_graphics_context, step.index);
+              if (itemVirtualIdx == step.index) {
+                curr_item.draw(p_graphics, p_graphics_context);
+              }
+            } else if (curr_item instanceof ComponentObstacleArea coa) {
+              // Courtyard keepout areas map to virtual courtyard layers (2=F.Courtyard, 3=B.Courtyard)
+              int itemVirtualIdx = coa.is_front() ? 2 : 3;
+              if (itemVirtualIdx == step.index) {
+                curr_item.draw(p_graphics, p_graphics_context);
               }
             }
+          } else {
+            // Physical layer step: skip ComponentOutline and ComponentObstacleArea
+            // (they are rendered exclusively in their corresponding virtual layer steps)
+            if (!(curr_item instanceof ComponentOutline) && !(curr_item instanceof ComponentObstacleArea)) {
+              curr_item.draw_layer(p_graphics, p_graphics_context, step.index);
+            }
+          }
+          long itemDur = System.nanoTime() - itemStart;
+
+          if (curr_item instanceof PolylineTrace) {
+            timeTrace += itemDur;
+            countTrace++;
+          } else if (curr_item instanceof Via) {
+            timeVia += itemDur;
+            countVia++;
+          } else if (curr_item instanceof Pin) {
+            timePin += itemDur;
+            countPin++;
+          } else if (curr_item instanceof ConductionArea) {
+            timeConduction += itemDur;
+            countConduction++;
+          } else {
+            timeOther += itemDur;
+            countOther++;
           }
         }
       }
     }
+    long endLoop = System.nanoTime();
 
+    long startText = System.nanoTime();
     // Draw component values on Front Fab (virtual index 4) / Back Fab (virtual index 5)
     double intensityFront = p_graphics_context.get_virtual_layer_visibility(4);
     double intensityBack = p_graphics_context.get_virtual_layer_visibility(5);
@@ -1313,6 +1520,27 @@ public class BasicBoard implements Serializable {
       g2.setFont(originalFont);
       g2.setComposite(originalComposite);
     }
+    long endText = System.nanoTime();
+
+    long drawEnd = System.nanoTime();
+    FRLogger.debug(String.format(
+        "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms, loop=%.2f ms (culled: %d), texts=%.2f ms] (items: %d)",
+        (drawEnd - drawStart) / 1_000_000.0,
+        (endCollect - startCollect) / 1_000_000.0,
+        (endGroup - startGroup) / 1_000_000.0,
+        (endLoop - startLoop) / 1_000_000.0,
+        culledCount,
+        (endText - startText) / 1_000_000.0,
+        allItems.size()
+    ));
+    FRLogger.debug(String.format(
+        "  - Item drawing times: Trace=%.2f ms (%d), Via=%.2f ms (%d), Pin=%.2f ms (%d), Plane=%.2f ms (%d), Other=%.2f ms (%d)",
+        timeTrace / 1_000_000.0, countTrace,
+        timeVia / 1_000_000.0, countVia,
+        timePin / 1_000_000.0, countPin,
+        timeConduction / 1_000_000.0, countConduction,
+        timeOther / 1_000_000.0, countOther
+    ));
   }
 
   /**
@@ -1491,6 +1719,7 @@ public class BasicBoard implements Serializable {
       communication.observers.notify_new(p_item);
     }
     additional_update_after_change(p_item);
+    increment_revision();
   }
 
   /**
@@ -1498,23 +1727,6 @@ public class BasicBoard implements Serializable {
    * database if necessary.
    */
   public void additional_update_after_change(Item p_item) {
-  }
-
-  private static boolean is_item_activity_debug_candidate(Item p_item) {
-    IntBox bounds = p_item.bounding_box();
-    IntBox debugWindow = new IntBox(1620000, -1105000, 1930000, -1003000);
-    return bounds != null && bounds.intersects(debugWindow);
-  }
-
-  private static String first_net_or_none(Item p_item) {
-    return p_item.net_count() > 0 ? Integer.toString(p_item.get_net_no(0)) : "none";
-  }
-
-  private static String describe_bounds(IntBox p_bounds) {
-    if (p_bounds == null) {
-      return "null";
-    }
-    return "[(" + p_bounds.ll.x + "," + p_bounds.ll.y + ")..(" + p_bounds.ur.x + "," + p_bounds.ur.y + ")]";
   }
 
   /**
@@ -1754,5 +1966,15 @@ public class BasicBoard implements Serializable {
       }
     }
     return count;
+  }
+
+  /**
+   * Draws all items of the board on their visible layers. Called in the
+   * overwritten paintComponent method of a class derived from JPanel. The value
+   * of p_layer_visibility is expected between 0 and 1
+   * for each layer.
+   */
+  public enum DominantSide {
+    FRONT, BACK, NONE
   }
 }

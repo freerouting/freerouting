@@ -13,12 +13,12 @@ Tests were conducted on a desktop PC with the following specifications:
 **Freerouting v1.9**
 
 * **Interface:** GUI
-* **Settings:** Default (Route optimizer: **Off**)
+* **Settings:** Benchmark Settings (Fanout: **On**, Route optimizer: **On** - explicitly enabled to override application defaults)
 
 **Freerouting v2.2**
 
 * **Interface:** CLI
-* **Settings:** Default (Route optimizer: **Off**, API server: **Off**)
+* **Settings:** Benchmark Settings (Fanout: **On**, Route optimizer: **On**, API server: **Off**, MCP server: **Off** - explicitly configured to override application defaults)
 
 ### Command Line Execution
 
@@ -27,9 +27,11 @@ The following command line arguments were used for the v2.2 tests:
 ```bash
 -de .\tests\Issue508-DAC2020_bm01.dsn \
 -do .\tests\Issue508-DAC2020_bm01.ses \
---router.optimizer.enabled=false \
+--router.fanout.enabled=true \
+--router.optimizer.enabled=true \
 --gui.enabled=false \
 --api_server.enabled=false \
+--mcp_server.enabled=false \
 --router.max_passes=500 \
 --router.job_timeout="00:05:00"
 
@@ -48,7 +50,7 @@ The following command line arguments were used for the v2.2 tests:
 | Issue508-DAC2020_bm05.dsn            	| 17 kB     	| 107           	| v2.2                	| 51            	| 0                    	| 244                	| 5+ minutes       	| 242909 MB        	| 806,92        	| 2026-01-13 13:41:49 	|
 | Issue508-DAC2020_bm06.dsn            	| ?         	| ?             	| v1.9                	| 9             	| ?                    	| ?                  	| ?                	| N/A              	| N/A           	|                     	|
 | Issue508-DAC2020_bm06.dsn            	| 23 kB     	| 98            	| v2.2                	| 8             	| 0                    	| 500+               	| 3m 24s           	| 172840 MB        	| 973,07        	| 2026-01-13 13:46:53 	|
-| Issue508-DAC2020_bm07.dsn            	| 15 kB     	| 86            	| v1.9                	| 0             	| ?                    	| 4                  	| 2 seconds        	| N/A              	| N/A           	|                     	|
+| Issue508-DAC2020_bm07.dsn            	| 15 kB     	| 86            	| v1.9                	| 0             	| 87                   	| 4                  	| 2 seconds        	| N/A              	| 898.83        	|                     	|
 | Issue508-DAC2020_bm07.dsn            	| 15 kB     	| 86            	| v2.2                	| 0             	| 0                    	| 24                 	| 10 seconds       	| 5557 MB          	| 990,75        	| 2026-01-13 13:26:00 	|
 | Issue508-DAC2020_bm08.dsn            	| ?         	| ?             	| v1.9                	| 0             	| ?                    	| ?                  	| ?                	| N/A              	| N/A           	|                     	|
 | Issue508-DAC2020_bm08.dsn            	| 6 kB      	| 25            	| v2.2                	| 0             	| 0                    	| 4                  	| 1 second         	| 0 MB             	| 996,40        	| 2026-01-13 13:33:05 	|

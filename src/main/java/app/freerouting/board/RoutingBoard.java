@@ -47,6 +47,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * The time limit in milliseconds for the pull tight algorithm
    */
   private static final int PULL_TIGHT_TIME_LIMIT = 2000;
+  public final app.freerouting.autoroute.RoutingFailureLog failureLog;
   /**
    * the area marked for optimizing the route
    */
@@ -57,12 +58,6 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   private transient AutorouteEngine autoroute_engine;
   private transient Item shove_failing_obstacle;
   private transient int shove_failing_layer = -1;
-
-  /**
-   * Tracks routing failures for items on this board.
-   * Kept persistent to track failures across passes and threads.
-   */
-  public final app.freerouting.autoroute.RoutingFailureLog failureLog;
 
   /**
    * Creates a new instance of a routing Board with surrounding box p_bounding_box
@@ -959,7 +954,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         ctrl_settings, ripped_item_list, null); // null: costs not needed here
     if (result.state == AutorouteAttemptState.ROUTED) {
       final int time_limit_to_prevent_endless_loop = 1000;
-      opt_changed_area(new int[0], null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
+      opt_changed_area(new int[]{route_net_no}, null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
           p_stoppable_thread, time_limit_to_prevent_endless_loop);
     }
     return result;
@@ -991,8 +986,45 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       return new AutorouteAttemptResult(AutorouteAttemptState.NO_UNCONNECTED_NETS,
           "The pin '" + p_pin + "' is already connected.");
     }
+    app.freerouting.geometry.planar.FloatPoint pin_center = p_pin.get_center().to_float();
+    java.util.List<Item> sorted_unconnected_list = new java.util.ArrayList<>(unconnected_set);
+    sorted_unconnected_list.sort((item1, item2) -> {
+      app.freerouting.geometry.planar.IntBox box1 = item1.bounding_box();
+      double cx1 = (box1.ll.x + box1.ur.x) / 2.0;
+      double cy1 = (box1.ll.y + box1.ur.y) / 2.0;
+      double dx1 = cx1 - pin_center.x;
+      double dy1 = cy1 - pin_center.y;
+      double dist_sq1 = dx1 * dx1 + dy1 * dy1;
+
+      app.freerouting.geometry.planar.IntBox box2 = item2.bounding_box();
+      double cx2 = (box2.ll.x + box2.ur.x) / 2.0;
+      double cy2 = (box2.ll.y + box2.ur.y) / 2.0;
+      double dx2 = cx2 - pin_center.x;
+      double dy2 = cy2 - pin_center.y;
+      double dist_sq2 = dx2 * dx2 + dy2 * dy2;
+
+      return Double.compare(dist_sq1, dist_sq2);
+    });
+
     AutorouteControl ctrl_settings = new AutorouteControl(this, pin_net_no, routerSettings);
     ctrl_settings.is_fanout = true;
+    if (routerSettings.fanout != null && Boolean.TRUE.equals(routerSettings.fanout.fallbackToBoardVias) && ctrl_settings.via_rule != null) {
+      app.freerouting.rules.ViaRule combined_via_rule = new app.freerouting.rules.ViaRule(ctrl_settings.via_rule.name + "_fallback");
+      for (int i = 0; i < ctrl_settings.via_rule.via_count(); i++) {
+        combined_via_rule.append_via(ctrl_settings.via_rule.get_via(i));
+      }
+      if (!this.rules.via_rules.isEmpty()) {
+        app.freerouting.rules.ViaRule default_via_rule = this.rules.via_rules.firstElement();
+        for (int i = 0; i < default_via_rule.via_count(); i++) {
+          app.freerouting.rules.ViaInfo default_via = default_via_rule.get_via(i);
+          if (!combined_via_rule.contains(default_via)) {
+            combined_via_rule.append_via(default_via);
+          }
+        }
+      }
+      ctrl_settings.via_rule = combined_via_rule;
+      ctrl_settings.rebuild_via_info(this, routerSettings.get_via_costs(), pin_net_no);
+    }
     Component pin_component = this.components.get(p_pin.get_component_no());
     if (pin_component != null && p_pin.name() != null) {
       ctrl_settings.fanout_start_pin_name = pin_component.name + "-" + p_pin.name();
@@ -1000,6 +1032,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       ctrl_settings.fanout_start_pin_name = p_pin.toString();
     }
     ctrl_settings.fanout_start_pin_center = p_pin.get_center();
+    ctrl_settings.fanout_start_pin_layer = p_pin.first_layer();
     ctrl_settings.remove_unconnected_vias = false;
     if (p_ripup_costs >= 0) {
       ctrl_settings.ripup_allowed = true;
@@ -1008,11 +1041,34 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     SortedSet<Item> ripped_item_list = new TreeSet<>();
     AutorouteEngine curr_autoroute_engine = init_autoroute(pin_net_no, ctrl_settings.trace_clearance_class_no,
         p_stoppable_thread, p_time_limit, false);
-    AutorouteAttemptResult result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
-        ctrl_settings, ripped_item_list, null); // null: costs not needed here
+
+
+    AutorouteAttemptResult result = null;
+    if (sorted_unconnected_list.size() <= 4) {
+      if (!sorted_unconnected_list.isEmpty()) {
+        // 1. Try to route to the closest target first
+        Item closest_target = sorted_unconnected_list.get(0);
+        result = curr_autoroute_engine.autoroute_connection(pin_connected_set, Set.of(closest_target),
+            ctrl_settings, ripped_item_list, null); // null: costs not needed here
+
+        // 2. If that fails and we have other targets, fall back to searching the entire unconnected set at once
+        if (result.state != AutorouteAttemptState.ROUTED && result.state != AutorouteAttemptState.ALREADY_CONNECTED && sorted_unconnected_list.size() > 1) {
+          result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
+              ctrl_settings, ripped_item_list, null);
+        }
+      }
+    } else {
+      // For large nets (e.g. power/ground/busses), route to the entire unconnected set at once to avoid CPU thrashing
+      result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
+          ctrl_settings, ripped_item_list, null);
+    }
+    if (result == null) {
+      result = new AutorouteAttemptResult(AutorouteAttemptState.FAILED, "No target items to route connection.");
+    }
+
     if (result.state == AutorouteAttemptState.ROUTED) {
       final int time_limit_to_prevent_endless_loop = 1000;
-      opt_changed_area(new int[0], null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
+      opt_changed_area(new int[]{pin_net_no}, null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs,
           p_stoppable_thread, time_limit_to_prevent_endless_loop);
     }
     return result;

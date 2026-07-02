@@ -40,3 +40,5 @@ gha-creds-*.json
 # Agent files
 /.agent
 /.secrets
+/scripts/benchmark/logs
+/scripts/benchmark/outputs

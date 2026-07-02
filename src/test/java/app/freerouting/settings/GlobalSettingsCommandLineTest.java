@@ -80,6 +80,16 @@ class GlobalSettingsCommandLineTest {
     }
 
     @Test
+    void testFilenameWithSpaces() {
+        String[] args = { "-de", "sonde xilinx.dsn" };
+        settings.applyCommandLineArguments(args);
+
+        assertEquals("sonde xilinx.dsn", settings.initialInputFile);
+        assertNull(settings.design_session_filename);
+        assertNull(settings.initialRulesFile);
+    }
+
+    @Test
     void testMixedSeparators() {
         String[] args = { "-de", "myboard.dsn+myboard.ses", "myboard.rules" };
         settings.applyCommandLineArguments(args);

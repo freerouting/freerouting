@@ -120,7 +120,7 @@ public abstract class PullTightAlgo {
               if (this.split_traces_at_keep_point()) {
                 break;
               }
-            } else if (smoothen_end_corners_at_trace_1(curr_trace)) {
+            } else if (smoothen_end_corners_at_trace(curr_trace)) {
               something_changed = true;
               break; // because items may be removed
             }
@@ -345,6 +345,9 @@ public abstract class PullTightAlgo {
    * Smoothens acute angles with contact traces. Returns true, if something was changed.
    */
   boolean smoothen_end_corners_at_trace(PolylineTrace p_trace) {
+    if (this.only_net_no_arr.length > 0 && !p_trace.nets_equal(this.only_net_no_arr)) {
+      return false;
+    }
     curr_layer = p_trace.get_layer();
     curr_half_width = p_trace.get_half_width();
     curr_net_no_arr = p_trace.net_no_arr;

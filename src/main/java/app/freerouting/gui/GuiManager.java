@@ -130,7 +130,7 @@ public class GuiManager {
                 System.exit(1);
                 return false;
             }
-            var bs = new BoardStatistics(new_frame.board_panel.board_handling.get_routing_board());
+            var bs = new BoardStatistics(new_frame.board_panel.board_handling.get_routing_board(), null, false);
             new_frame.board_panel.board_handling.screen_messages.set_board_score(
                     bs.getNormalizedScore(routingJob.routerSettings.scoring), bs.connections.incompleteCount,
                     bs.clearanceViolations.totalCount);

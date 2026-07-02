@@ -46,6 +46,11 @@ public class McpApiKeyValidationFilter implements ContainerRequestFilter {
       return;
     }
 
+    String requestBridgeToken = requestContext.getHeaderString("X-Internal-Bridge-Token");
+    if (app.freerouting.Freerouting.bridgeToken != null && app.freerouting.Freerouting.bridgeToken.equals(requestBridgeToken)) {
+      return;
+    }
+
     McpApiKeyValidationService validationService = McpApiKeyValidationService.getInstance();
     if (!validationService.isAuthenticationEnabled()) {
       return;

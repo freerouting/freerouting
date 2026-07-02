@@ -190,6 +190,13 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
       return null;
     }
     TileShape[] precalculated_tree_shapes = this.get_precalculated_tree_shapes(p_tree);
+    if (precalculated_tree_shapes == null || p_index < 0 || p_index >= precalculated_tree_shapes.length) {
+      this.clear_derived_data();
+      precalculated_tree_shapes = this.get_precalculated_tree_shapes(p_tree);
+    }
+    if (precalculated_tree_shapes == null || p_index < 0 || p_index >= precalculated_tree_shapes.length) {
+      return null;
+    }
     return precalculated_tree_shapes[p_index];
   }
 
@@ -763,8 +770,10 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    * Draws this item on a specific layer only, with its draw colors from p_graphics_context.
    */
   public void draw_layer(Graphics p_g, GraphicsContext p_graphics_context, int p_layer_no) {
-    Color[] layer_colors = get_draw_colors(p_graphics_context);
-    draw_layer(p_g, p_graphics_context, layer_colors, get_draw_intensity(p_graphics_context), p_layer_no);
+    if (this.is_on_layer(p_layer_no)) {
+      Color[] layer_colors = get_draw_colors(p_graphics_context);
+      draw_layer(p_g, p_graphics_context, layer_colors, get_draw_intensity(p_graphics_context), p_layer_no);
+    }
   }
 
   /**
@@ -1099,13 +1108,15 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
   public String get_net_hover_info(Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    String net_hover_info = "";
+    StringBuilder sb = new StringBuilder();
     for (int i = 0; i < this.net_count(); i++) {
-      net_hover_info += tm.getText("net") + " : ";
+      if (i > 0) {
+        sb.append("<br>");
+      }
       Net curr_net = board.rules.nets.get(this.get_net_no(i));
-      net_hover_info += curr_net.name;
+      sb.append(tm.getText("net_hover_info", curr_net.name));
     }
-    return net_hover_info;
+    return sb.toString();
   }
 
   /**

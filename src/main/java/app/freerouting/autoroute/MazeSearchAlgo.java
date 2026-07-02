@@ -77,7 +77,35 @@ public class MazeSearchAlgo {
     random_generator.setSeed(
         p_ctrl.ripup_costs); // Keep v1.9 deterministic randomization across passes.
     this.search_tree = p_autoroute_engine.autoroute_search_tree;
-    maze_expansion_list = new TreeSet<>();
+    maze_expansion_list = new TreeSet<>() {
+      @Override
+      public boolean add(MazeListElement p_element) {
+        if (ctrl.is_fanout && ctrl.fanout_start_pin_center != null) {
+          app.freerouting.geometry.planar.FloatPoint pin_center_float = ctrl.fanout_start_pin_center.to_float();
+          boolean onStartLayer = p_element.next_room != null && p_element.next_room.get_layer() == ctrl.fanout_start_pin_layer;
+          if (onStartLayer) {
+            double maxLen = (ctrl.settings.fanout != null && ctrl.settings.fanout.maxEscapeLengthMm != null)
+                ? ctrl.settings.fanout.maxEscapeLengthMm * 1000.0 : 3000.0;
+            double resolution = autoroute_engine.board.communication.get_resolution(app.freerouting.board.Unit.UM);
+            app.freerouting.geometry.planar.FloatPoint entry_point = p_element.shape_entry.a.middle_point(p_element.shape_entry.b);
+            double dist = entry_point.distance(pin_center_float);
+            if (dist > maxLen * resolution) {
+              return false;
+            }
+          }
+          if (p_element.door instanceof ExpansionDrill drill) {
+            double minLen = (ctrl.settings.fanout != null && ctrl.settings.fanout.minEscapeLengthMm != null)
+                ? ctrl.settings.fanout.minEscapeLengthMm * 1000.0 : 500.0;
+            double resolution = autoroute_engine.board.communication.get_resolution(app.freerouting.board.Unit.UM);
+            double drillDist = drill.location.to_float().distance(pin_center_float);
+            if (drillDist < minLen * resolution) {
+              return false;
+            }
+          }
+        }
+        return super.add(p_element);
+      }
+    };
     destination_distance = new DestinationDistance(ctrl.trace_costs, ctrl.layer_active, ctrl.min_normal_via_cost,
         ctrl.min_cheap_via_cost);
   }

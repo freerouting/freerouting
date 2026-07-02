@@ -49,7 +49,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final JCheckBox settings_autorouter_vias_allowed;
   private final JCheckBox settings_autorouter_fanout_button;
   private final JCheckBox settings_autorouter_autoroute_pass_button;
-  private final JCheckBox settings_autorouter_postroute_pass_button;
+  private final JCheckBox settings_autorouter_optimization_button;
   private final String horizontal;
   private final String vertical;
   private final JFormattedTextField via_cost_field;
@@ -196,20 +196,20 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     main_panel.add(separator, gridbag_constraints);
     gridbag_constraints.fill = GridBagConstraints.NONE;
 
-    JLabel passes_label = new JLabel();
-    tm.setText(passes_label, "passes");
+    JLabel stages_label = new JLabel();
+    tm.setText(stages_label, "routing_stages");
 
     gridbag_constraints.gridwidth = 2;
     gridbag_constraints.gridheight = 3;
-    gridbag.setConstraints(passes_label, gridbag_constraints);
-    main_panel.add(passes_label);
+    gridbag.setConstraints(stages_label, gridbag_constraints);
+    main_panel.add(stages_label);
 
     this.settings_autorouter_fanout_button = new JCheckBox();
     tm.setText(this.settings_autorouter_fanout_button, "fanout");
     this.settings_autorouter_autoroute_pass_button = new JCheckBox();
     tm.setText(this.settings_autorouter_autoroute_pass_button, "autoroute");
-    this.settings_autorouter_postroute_pass_button = new JCheckBox();
-    tm.setText(this.settings_autorouter_postroute_pass_button, "postroute");
+    this.settings_autorouter_optimization_button = new JCheckBox();
+    tm.setText(this.settings_autorouter_optimization_button, "optimization");
 
     settings_autorouter_fanout_button.addActionListener(new FanoutListener());
     settings_autorouter_fanout_button
@@ -219,14 +219,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     settings_autorouter_autoroute_pass_button
         .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_autoroute_pass_button",
             settings_autorouter_autoroute_pass_button.getText()));
-    settings_autorouter_postroute_pass_button.addActionListener(new PostrouteListener());
-    settings_autorouter_postroute_pass_button
-        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_postroute_pass_button",
-            settings_autorouter_postroute_pass_button.getText()));
+    settings_autorouter_optimization_button.addActionListener(new OptimizationListener());
+    settings_autorouter_optimization_button
+        .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_optimization_button",
+            settings_autorouter_optimization_button.getText()));
 
     settings_autorouter_fanout_button.setSelected(true);
     settings_autorouter_autoroute_pass_button.setSelected(true);
-    settings_autorouter_postroute_pass_button.setSelected(false);
+    settings_autorouter_optimization_button.setSelected(false);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
@@ -235,8 +235,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     main_panel.add(settings_autorouter_fanout_button, gridbag_constraints);
     gridbag.setConstraints(settings_autorouter_autoroute_pass_button, gridbag_constraints);
     main_panel.add(settings_autorouter_autoroute_pass_button, gridbag_constraints);
-    gridbag.setConstraints(settings_autorouter_postroute_pass_button, gridbag_constraints);
-    main_panel.add(settings_autorouter_postroute_pass_button, gridbag_constraints);
+    gridbag.setConstraints(settings_autorouter_optimization_button, gridbag_constraints);
+    main_panel.add(settings_autorouter_optimization_button, gridbag_constraints);
 
     separator = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
 
@@ -603,7 +603,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           break;
         case "optimizer.enabled":
           if (newValue instanceof Boolean) {
-            settings_autorouter_postroute_pass_button.setSelected((Boolean) newValue);
+            settings_autorouter_optimization_button.setSelected((Boolean) newValue);
           }
           break;
       }
@@ -623,7 +623,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.settings_autorouter_vias_allowed.setSelected(settings.get_vias_allowed());
     this.settings_autorouter_fanout_button.setSelected(settings.getRunFanout());
     this.settings_autorouter_autoroute_pass_button.setSelected(settings.getRunRouter());
-    this.settings_autorouter_postroute_pass_button.setSelected(settings.getRunOptimizer());
+    this.settings_autorouter_optimization_button.setSelected(settings.getRunOptimizer());
 
     for (int i = 0; i < settings_autorouter_layer_active_arr.length; i++) {
       this.settings_autorouter_layer_active_arr[i].setSelected(settings.get_layer_active(i));
@@ -904,14 +904,14 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class PostrouteListener implements ActionListener {
+  private class OptimizationListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       RouterSettings autoroute_settings = board_handling.getCurrentRoutingJob().routerSettings;
       isUpdatingFromSettings = true;
       try {
-        applyOptimizerEnabledSelection(autoroute_settings, settings_autorouter_postroute_pass_button.isSelected());
+        applyOptimizerEnabledSelection(autoroute_settings, settings_autorouter_optimization_button.isSelected());
       } finally {
         isUpdatingFromSettings = false;
       }

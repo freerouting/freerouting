@@ -7,9 +7,9 @@ import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.TextManager;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
+import app.freerouting.util.TextManager;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.Collection;
@@ -427,12 +427,16 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   public String get_hover_info(Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    String hover_info = tm.getText("trace") + " " + tm.getText("on_layer") + " : "
-        + this.board.layer_structure.arr[this.layer].name + " " + tm.getText("width") + " : " + 2 * this.half_width
-        + " " + tm.getText(
-            "length")
-        + " : " + (int) this.get_length() + " " + this.get_connectable_item_hover_info(p_locale);
-    return hover_info;
+    double mmResolution = this.board.communication.get_resolution(Unit.MM);
+    double widthInMm = (2 * this.half_width) / mmResolution;
+    double lengthInMm = this.get_length() / mmResolution;
+
+    String layer_name = this.board.layer_structure.arr[this.layer].name;
+    String widthStr = String.format(p_locale, "%.4f", widthInMm);
+    String lengthStr = String.format(p_locale, "%.4f", lengthInMm);
+    String connInfo = this.get_connectable_item_hover_info(p_locale);
+
+    return tm.getText("trace_hover_info", layer_name, widthStr, lengthStr, connInfo);
   }
 
   @Override

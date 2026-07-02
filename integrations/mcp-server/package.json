@@ -1,0 +1,24 @@
+{
+  "name": "@freerouting/freerouting-mcp-server",
+  "version": "1.0.5",
+  "description": "Model Context Protocol bridge for the public Freerouting API",
+  "main": "src/index.js",
+  "bin": {
+    "freerouting-mcp-server": "./src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "keywords": [
+    "freerouting",
+    "mcp",
+    "model-context-protocol",
+    "pcb",
+    "autorouting"
+  ],
+  "author": "Freerouting Contributors",
+  "license": "GPL-3.0-only",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

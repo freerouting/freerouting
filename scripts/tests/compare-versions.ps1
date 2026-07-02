@@ -19,7 +19,9 @@ param(
     [string]$job_timeout = "00:30:00",
     [Alias("debug.filter_by_net")]
     [string]$DebugFilterByNet = "",
-    [string]$LogNameSuffix = ""
+    [string]$LogNameSuffix = "",
+    [switch]$DisableOptimizer,
+    [string]$PinSortingOrder = ""
 )
 
 # Colors for output
@@ -102,9 +104,11 @@ $OutputExtension = [System.IO.Path]::GetExtension($OutputFileAbs)
 $CurrentOutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-current$($OutputExtension)"
 $V19OutputFile = Join-Path $OutputDirectory "$($OutputBaseName)-v190$($OutputExtension)"
 
+$OptimizerEnabled = if ($DisableOptimizer) { "false" } else { "true" }
 $BaseArgs = @(
     "-de", "`"$InputFileAbs`""
-    "--router.optimizer.enabled=false"
+    "--router.fanout.enabled=true"
+    "--router.optimizer.enabled=$OptimizerEnabled"
     "--gui.enabled=false"
     "--api_server.enabled=false"
     "--debug.enable_detailed_logging=true"
@@ -116,6 +120,10 @@ $BaseArgs = @(
     "--logging.file.pattern=$LoggingPattern"
     "--logging.console.level=INFO"
 )
+
+if (-not [string]::IsNullOrWhiteSpace($PinSortingOrder)) {
+    $BaseArgs += "--router.fanout.pin_sorting_order=$PinSortingOrder"
+}
 
 if (-not [string]::IsNullOrWhiteSpace($DebugFilterByNet)) {
     $BaseArgs += "--debug.filter_by_net=$DebugFilterByNet"
@@ -154,18 +162,15 @@ function Parse-LogResults {
     }
     
     if (Test-Path $LogPath) {
-        $Content = Get-Content $LogPath -Tail 1000
-        # Look for the session summary line
-        # Pattern: Auto-router session.*completed.*
-        $SummaryLine = $Content | Where-Object { $_ -match "Auto-router session.*completed" } | Select-Object -Last 1
+        # Use Select-String to search the entire file efficiently instead of tailing
+        $SummaryMatches = Select-String -Path $LogPath -Pattern "Auto-rout(?:er session|er phase|ing stage).*(?:completed|interrupted)"
+        $SummaryLine = if ($SummaryMatches) { $SummaryMatches[-1].Line } else { $null }
         
         # Extract max pass number
-        # Look for lines like "Pass 1  :" or "Pass #2"
-        # Since we only read the last 1000 lines, we might miss early passes, but we should see the final ones.
-        $PassLines = $Content | Where-Object { $_ -match "Pass (\d+)\s+:" }
-        if ($PassLines) {
-            $LastPassLine = $PassLines | Select-Object -Last 1
-            if ($LastPassLine -match "Pass (\d+)\s+:") {
+        $PassMatches = Select-String -Path $LogPath -Pattern "(?:Auto-routing pass|Auto-router pass|Pass|pass)\s+#?(\d+)"
+        if ($PassMatches) {
+            $LastPassLine = $PassMatches[-1].Line
+            if ($LastPassLine -match "(?:Auto-routing pass|Auto-router pass|Pass|pass)\s+#?(\d+)") {
                 $Result.Passes = $matches[1]
             }
         }
@@ -173,18 +178,18 @@ function Parse-LogResults {
         if ($SummaryLine) {
             $Result.FoundSummary = $true
             
-            # Extract Duration: completed in (.*?), final score
-            if ($SummaryLine -match "completed in (.*?), final score") {
-                $Result.AutoRouterTime = $matches[1]
+            # Extract Duration: completed in (.*?),
+            if ($SummaryLine -match "completed in (.*?),") {
+                $Result.AutoRouterTime = $matches[1].Trim()
             }
             
             # Extract Unrouted: (\d+) unrouted
-            if ($SummaryLine -match "\((\d+) unrouted\)") {
+            if ($SummaryLine -match "\((\d+)\s+unrouted") {
                 $Result.Unrouted = $matches[1]
             }
             
-            # Extract Peak Heap: and (.*?) MB peak heap usage
-            if ($SummaryLine -match "and (.*?) MB peak heap usage") {
+            # Extract Peak Heap: (\d+(?:\.\d+)?)\s*MB peak heap
+            if ($SummaryLine -match "(\d+(?:\.\d+)?)\s*MB peak heap") {
                 $Result.PeakHeap = $matches[1]
             }
         }

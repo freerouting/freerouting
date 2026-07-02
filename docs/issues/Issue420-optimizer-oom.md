@@ -1,8 +1,8 @@
-# Issue #420 – OutOfMemoryError during post-route optimization on large boards
+# Issue #420 – OutOfMemoryError during route optimization on large boards
 
 ## Problem
 
-On boards with ~979 pins (≈1125 unrouted nets), enabling the post-route optimizer caused the JVM heap to grow without bound and eventually crash with `java.lang.OutOfMemoryError: Java heap space`, even when the user set `-Xmx20g` on a machine with 32 GB of RAM.
+On boards with ~979 pins (≈1125 unrouted nets), enabling the route optimizer caused the JVM heap to grow without bound and eventually crash with `java.lang.OutOfMemoryError: Java heap space`, even when the user set `-Xmx20g` on a machine with 32 GB of RAM.
 
 Secondary symptom reported: 100% CPU utilisation with the GUI becoming fully unresponsive, strongly suggesting the optimizer entered an infinite or near-infinite object-allocation loop.
 

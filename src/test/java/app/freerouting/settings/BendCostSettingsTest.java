@@ -54,7 +54,7 @@ public class BendCostSettingsTest {
     // Since layers are transient, verify defaultBendCost serialization
     settings.scoring.defaultBendCost = 3.5;
     String json = gson.toJson(settings.scoring);
-    RouterScoringSettings deserializedScoring = gson.fromJson(json, RouterScoringSettings.class);
+    ScoringSettings deserializedScoring = gson.fromJson(json, ScoringSettings.class);
     assertEquals(3.5, deserializedScoring.defaultBendCost);
   }
 
@@ -103,4 +103,3 @@ public class BendCostSettingsTest {
     assertNotNull(settings.scoring);
   }
 }
-

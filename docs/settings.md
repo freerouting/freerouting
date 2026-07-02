@@ -134,6 +134,25 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     - **`routable`**: Boolean indicating if the layer is active/routable by the autorouter.
     - **`preferred_direction_horizontal`**: Boolean indicating if the preferred direction on this layer is horizontal.
 
+##### **`fanout` Sub-section**
+
+Configures the SMD-pin fanout pre-pass stage.
+
+- **`enabled`**: Whether to run the fanout pre-pass at all. Default is `true`.
+- **`max_passes`**: Maximum number of fanout passes. Default is `20`.
+- **`max_milliseconds_per_pin`**: Base time budget in milliseconds per SMD pin in pass 1. Scales with pass number. Default is `10000`.
+- **`ripup_allowed`**: Whether fanout can rip up existing traces. Default is `true`.
+- **`min_escape_length_mm`**: The minimum physical escape trace length in millimeters. Default is `2.5`. Landing vias and escape stubs are not placed closer than this distance from the pin center.
+- **`max_escape_length_mm`**: The maximum physical escape trace length in millimeters. Default is `4.5`. Enforced directly during maze expansion.
+- **`start_via_diameter_mm`**: The diameter of starting/escape vias used inside the pins during the fanout/escape stage (in millimeters). Default is `0.25`.
+- **`end_via_diameter_mm`**: The diameter of landing/end vias used at the end of escaping wires during the fanout/escape stage (in millimeters). Default is `0.25`.
+- **`pin_sorting_order`**: Specifies the sorting order for pins within a component during fanout. Available strategies:
+    - `"outer_first"` (Default): Pins further from the component center are processed first. This helps escape periphery pins early.
+    - `"inner_first"`: Pins closer to the component center are processed first.
+    - `"distance_to_closest_on_net"`: Pins are sorted by their distance to the closest item on the same net. Pins with closer targets are processed first.
+    - `"surroundings_density"`: Measured by the count of SMD pins within a 20 mm proximity radius. Denser areas are processed first, allowing congested pins to escape before space is occupied.
+    - `"unsorted"`: Pins are processed by pin number sequence.
+
 #### **`usage_and_diagnostic_data` Section**
 
 - **`disable_analytics`**: Disables sending anonymous usage and diagnostic data.
