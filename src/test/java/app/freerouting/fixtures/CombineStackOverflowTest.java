@@ -54,8 +54,11 @@ public class CombineStackOverflowTest {
 
     Thread reader = new Thread(null, readTask, "combine-stackoverflow-reader", STACK_SIZE_BYTES);
     reader.start();
-    reader.join();
-
+    reader.join(30_000);
+    if (reader.isAlive()) {
+      reader.interrupt();
+      fail("Timed out while reading the DSN fixture; possible deadlock or infinite loop in DSN import.");
+    }
     if (error[0] instanceof StackOverflowError) {
       fail("PolylineTrace.combine() overflowed the stack while reading a long collinear trace. "
           + "The self-recursion in combine() must be converted to an iterative loop. Cause: "

@@ -184,7 +184,7 @@ public class PolylineTrace extends Trace implements Serializable {
     // per-merge behaviour (same combine order, same per-merge observer
     // notification) but uses O(1) stack.
     boolean something_changed = false;
-    while (this.combine_at_start(true) || this.combine_at_end(true)) {
+    while (this.is_on_the_board() && (this.combine_at_start(true) || this.combine_at_end(true))) {
       something_changed = true;
       // let the observers synchronize the changes
       if ((board.communication != null) && (board.communication.observers != null)) {
