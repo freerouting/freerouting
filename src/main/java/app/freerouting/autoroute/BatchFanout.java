@@ -92,7 +92,10 @@ public class BatchFanout {
     }
     int maxPasses = (p_settings.fanout != null && p_settings.fanout.maxPasses != null)
         ? p_settings.fanout.maxPasses : 20;
+    final int STAGNATION_PASS_LIMIT = 3;
     int completedPasses = 0;
+    long previousBoardState = Long.MIN_VALUE;
+    int identicalPasses = 0;
     String lastBoardHash = p_board.get_hash();
     for (int i = 0; i < maxPasses; ++i) {
       if (fanout_instance.deadlineMs != null && System.currentTimeMillis() >= fanout_instance.deadlineMs) {
@@ -107,6 +110,23 @@ public class BatchFanout {
       completedPasses++;
       if (routed_count == 0) {
         break;
+      }
+      // Oscillation detector, complementing the single-pass board-hash check below: a
+      // fanout cycle where pins keep ripping each other's escapes alternates between two
+      // board states, so consecutive hashes always differ — but the per-pass outcome
+      // (routed count + via count) repeats exactly while ripup costs escalate uselessly
+      // (observed: 14 identical passes on a dense SMD carrier).
+      long boardState = ((long) routed_count << 32) ^ p_board.get_vias().size();
+      if (boardState == previousBoardState) {
+        identicalPasses++;
+        if (identicalPasses >= STAGNATION_PASS_LIMIT) {
+          FRLogger.info("Fanout stopped after " + completedPasses + " passes: no progress for "
+              + STAGNATION_PASS_LIMIT + " consecutive passes.");
+          break;
+        }
+      } else {
+        identicalPasses = 0;
+        previousBoardState = boardState;
       }
       if (fanout_instance.isTimedOut) {
         break;
