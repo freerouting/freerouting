@@ -1,0 +1,128 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-07-01T07:37:47.55964119-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "DAC2020_bm07.unrouted.dsn",
+  "unconnected_items": [],
+  "violations": [
+    {
+      "description": "Clearance violation between Trace [/MISO] and Trace [VCC] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Trace [/MISO]",
+          "pos": {
+            "x": 147.80865,
+            "y": -99.04685
+          },
+          "uuid": "260"
+        },
+        {
+          "description": "Trace [VCC]",
+          "pos": {
+            "x": 147.8257,
+            "y": -104.57245
+          },
+          "uuid": "174"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Hole clearance violation between Trace [/MISO] and Via [VCC] (expected: 0.2000 mm, actual: 0.1566 mm)",
+      "items": [
+        {
+          "description": "Trace [/MISO]",
+          "pos": {
+            "x": 147.80865,
+            "y": -99.04685
+          },
+          "uuid": "260"
+        },
+        {
+          "description": "Via [VCC]",
+          "pos": {
+            "x": 149.9447,
+            "y": -96.46130000000001
+          },
+          "uuid": "194"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Clearance violation between Trace [/SCK] and Trace [VCC] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Trace [/SCK]",
+          "pos": {
+            "x": 147.2126,
+            "y": -97.92360000000001
+          },
+          "uuid": "255"
+        },
+        {
+          "description": "Trace [VCC]",
+          "pos": {
+            "x": 147.8257,
+            "y": -104.57245
+          },
+          "uuid": "174"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Hole clearance violation between Via [/D2] and Trace [VCC] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Via [/D2]",
+          "pos": {
+            "x": 144.2179,
+            "y": -102.1459
+          },
+          "uuid": "200"
+        },
+        {
+          "description": "Trace [VCC]",
+          "pos": {
+            "x": 147.8257,
+            "y": -104.57245
+          },
+          "uuid": "174"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Clearance violation between Trace [/D2] and Trace [VCC] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Trace [/D2]",
+          "pos": {
+            "x": 150.7545,
+            "y": -104.85475
+          },
+          "uuid": "198"
+        },
+        {
+          "description": "Trace [VCC]",
+          "pos": {
+            "x": 147.8257,
+            "y": -104.57245
+          },
+          "uuid": "174"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    }
+  ],
+  "schematic_parity": [],
+  "quality_score": 988.3618774414062
+}

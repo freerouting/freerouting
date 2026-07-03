@@ -42,7 +42,7 @@ public final class DsnTestFixtures {
    * @return the loaded routing board
    * @throws IOException if the file cannot be found or the DSN is invalid
    */
-  static RoutingBoard loadBoard(String filename) throws IOException {
+  public static RoutingBoard loadBoard(String filename) throws IOException {
     return loadBoardFromStream(openFixtureStream(filename));
   }
 

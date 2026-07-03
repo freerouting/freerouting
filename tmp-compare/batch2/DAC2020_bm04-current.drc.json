@@ -1,0 +1,1457 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-06-30T22:33:26.105677373-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "DAC2020_bm04.unrouted.dsn",
+  "unconnected_items": [
+    {
+      "description": "Unconnected items: Pin [GND] and Pin [GND] (65 total items in net)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 149.8304,
+            "y": -104.3853
+          },
+          "uuid": "138"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 150.371,
+            "y": -104.3853
+          },
+          "uuid": "253"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 150.86195,
+            "y": -102.4152
+          },
+          "uuid": "251"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 149.8304,
+            "y": -102.3853
+          },
+          "uuid": "134"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 150.32135,
+            "y": -102.3853
+          },
+          "uuid": "322"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 150.9116,
+            "y": -103.4152
+          },
+          "uuid": "252"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 150.5712,
+            "y": -117.56389999999999
+          },
+          "uuid": "212"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 137.9855,
+            "y": -117.44555
+          },
+          "uuid": "260"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 151.23860000000002,
+            "y": -110.70365
+          },
+          "uuid": "243"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 154.24915,
+            "y": -120.15
+          },
+          "uuid": "254"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 142.4966,
+            "y": -117.56389999999999
+          },
+          "uuid": "239"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 139.4206,
+            "y": -117.5385
+          },
+          "uuid": "218"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 150.5712,
+            "y": -117.08285000000001
+          },
+          "uuid": "298"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 154.16170000000002,
+            "y": -111.5304
+          },
+          "uuid": "233"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 139.71115,
+            "y": -117.5385
+          },
+          "uuid": "294"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 151.23860000000002,
+            "y": -110.80980000000001
+          },
+          "uuid": "246"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 149.3139,
+            "y": -115.81039999999999
+          },
+          "uuid": "266"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 150.86175,
+            "y": -117.56389999999999
+          },
+          "uuid": "262"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 143.1798,
+            "y": -117.56389999999999
+          },
+          "uuid": "209"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 136.5504,
+            "y": -116.90175
+          },
+          "uuid": "303"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 147.49779999999998,
+            "y": -115.78
+          },
+          "uuid": "268"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 151.1,
+            "y": -110.5975
+          },
+          "uuid": "245"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 150.9614,
+            "y": -109.5163
+          },
+          "uuid": "147"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 151.9315,
+            "y": -110.0569
+          },
+          "uuid": "320"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 151.9614,
+            "y": -109.5163
+          },
+          "uuid": "149"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 146.8882,
+            "y": -117.56389999999999
+          },
+          "uuid": "215"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 143.8148,
+            "y": -115.46589999999999
+          },
+          "uuid": "65"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 157.0231,
+            "y": -110.50855
+          },
+          "uuid": "232"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 151.29755,
+            "y": -114.28895
+          },
+          "uuid": "238"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 140.2041,
+            "y": -117.5385
+          },
+          "uuid": "247"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 150.9614,
+            "y": -110.0569
+          },
+          "uuid": "319"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 151.2544,
+            "y": -117.666
+          },
+          "uuid": "261"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 147.49779999999998,
+            "y": -116.25585000000001
+          },
+          "uuid": "267"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 133.40079999999998,
+            "y": -113.2205
+          },
+          "uuid": "84"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 159.6,
+            "y": -120.15
+          },
+          "uuid": "73"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 150.85060000000001,
+            "y": -116.54780000000001
+          },
+          "uuid": "299"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 143.4973,
+            "y": -116.5097
+          },
+          "uuid": "302"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 146.8882,
+            "y": -117.08285000000001
+          },
+          "uuid": "296"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 151.5701,
+            "y": -110.5975
+          },
+          "uuid": "244"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 143.1798,
+            "y": -117.08285000000001
+          },
+          "uuid": "300"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 147.193,
+            "y": -116.54780000000001
+          },
+          "uuid": "297"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 155.95,
+            "y": -120.15
+          },
+          "uuid": "258"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 142.3945,
+            "y": -117.56389999999999
+          },
+          "uuid": "270"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 153.35685,
+            "y": -119.4946
+          },
+          "uuid": "255"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.9614,
+            "y": -109.5163
+          },
+          "uuid": "159"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 140.1029,
+            "y": -117.5385
+          },
+          "uuid": "241"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 147.49779999999998,
+            "y": -115.5421
+          },
+          "uuid": "69"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 151.3565,
+            "y": -118.1463
+          },
+          "uuid": "257"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 141.2993,
+            "y": -117.5512
+          },
+          "uuid": "240"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 136.80245000000002,
+            "y": -115.3795
+          },
+          "uuid": "231"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 154.7,
+            "y": -120.15
+          },
+          "uuid": "77"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 142.88925,
+            "y": -117.56389999999999
+          },
+          "uuid": "269"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 143.8148,
+            "y": -115.94175
+          },
+          "uuid": "301"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 140.04135,
+            "y": -116.5276
+          },
+          "uuid": "295"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 140.081,
+            "y": -115.5167
+          },
+          "uuid": "71"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 151.13,
+            "y": -115.5725
+          },
+          "uuid": "265"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 146.8755,
+            "y": -117.666
+          },
+          "uuid": "237"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 151.13,
+            "y": -115.5421
+          },
+          "uuid": "67"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 152.13595,
+            "y": -118.68185000000001
+          },
+          "uuid": "256"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 136.5504,
+            "y": -116.45089999999999
+          },
+          "uuid": "111"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 151.3565,
+            "y": -117.7681
+          },
+          "uuid": "263"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 158.4,
+            "y": -120.15
+          },
+          "uuid": "259"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 151.13,
+            "y": -116.04835
+          },
+          "uuid": "264"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 157.2,
+            "y": -120.15
+          },
+          "uuid": "75"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 157.0848,
+            "y": -111.5008
+          },
+          "uuid": "321"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [3.3V] and Pin [3.3V] (41 total items in net)",
+      "items": [
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 145.6538,
+            "y": -101.96405
+          },
+          "uuid": "341"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 142.1681,
+            "y": -103.39869999999999
+          },
+          "uuid": "346"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 141.82465,
+            "y": -104.14869999999999
+          },
+          "uuid": "348"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 145.6538,
+            "y": -101.4095
+          },
+          "uuid": "53"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 142.2775,
+            "y": -103.89869999999999
+          },
+          "uuid": "349"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 142.96765,
+            "y": -98.66465
+          },
+          "uuid": "328"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 141.37179999999998,
+            "y": -103.64869999999999
+          },
+          "uuid": "199"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 149.30155,
+            "y": -103.8853
+          },
+          "uuid": "356"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 141.71525,
+            "y": -103.14869999999999
+          },
+          "uuid": "342"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 140.4874,
+            "y": -97.47595
+          },
+          "uuid": "336"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 141.37179999999998,
+            "y": -102.64869999999999
+          },
+          "uuid": "201"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 142.1681,
+            "y": -103.14869999999999
+          },
+          "uuid": "343"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 149.8304,
+            "y": -103.8853
+          },
+          "uuid": "137"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 140.4874,
+            "y": -97.0001
+          },
+          "uuid": "37"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 141.71525,
+            "y": -103.64869999999999
+          },
+          "uuid": "345"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 145.6538,
+            "y": -100.3935
+          },
+          "uuid": "330"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 143.96564999999998,
+            "y": -102.58364999999999
+          },
+          "uuid": "339"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 146.30725,
+            "y": -103.17205
+          },
+          "uuid": "329"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 147.8667,
+            "y": -103.85539999999999
+          },
+          "uuid": "357"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 142.1681,
+            "y": -103.64869999999999
+          },
+          "uuid": "347"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 141.37179999999998,
+            "y": -103.14869999999999
+          },
+          "uuid": "200"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 141.82465,
+            "y": -102.64869999999999
+          },
+          "uuid": "344"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 141.37179999999998,
+            "y": -104.14869999999999
+          },
+          "uuid": "198"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 142.1681,
+            "y": -102.89869999999999
+          },
+          "uuid": "340"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 145.6538,
+            "y": -99.3775
+          },
+          "uuid": "55"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 160.13375,
+            "y": -105.8853
+          },
+          "uuid": "325"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 168.148,
+            "y": -107.14989999999999
+          },
+          "uuid": "97"
+        },
+        {
+          "description": "Via [3.3V]",
+          "pos": {
+            "x": 160.87679999999997,
+            "y": -105.8853
+          },
+          "uuid": "326"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 160.77595000000002,
+            "y": -105.8853
+          },
+          "uuid": "323"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 153.9614,
+            "y": -108.43360000000001
+          },
+          "uuid": "352"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 157.4863,
+            "y": -107.0532
+          },
+          "uuid": "354"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 156.4614,
+            "y": -108.97494999999999
+          },
+          "uuid": "350"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 164.51239999999999,
+            "y": -106.5176
+          },
+          "uuid": "324"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 151.4614,
+            "y": -109.5163
+          },
+          "uuid": "148"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 159.0518,
+            "y": -105.8853
+          },
+          "uuid": "355"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 159.5924,
+            "y": -103.3853
+          },
+          "uuid": "173"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 151.4614,
+            "y": -108.97494999999999
+          },
+          "uuid": "353"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 163.8702,
+            "y": -105.2676
+          },
+          "uuid": "327"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 156.4614,
+            "y": -109.5163
+          },
+          "uuid": "158"
+        },
+        {
+          "description": "Trace [3.3V]",
+          "pos": {
+            "x": 156.4614,
+            "y": -108.32735000000001
+          },
+          "uuid": "351"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 159.5924,
+            "y": -105.8853
+          },
+          "uuid": "168"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [/MISO] and Pin [/MISO] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [/MISO]",
+          "pos": {
+            "x": 153.9614,
+            "y": -109.5163
+          },
+          "uuid": "153"
+        },
+        {
+          "description": "Pin [/MISO]",
+          "pos": {
+            "x": 168.09720000000002,
+            "y": -99.0473
+          },
+          "uuid": "78"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [/SDA] and Pin [/SDA] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [/SDA]",
+          "pos": {
+            "x": 137.9928,
+            "y": -101.7697
+          },
+          "uuid": "207"
+        },
+        {
+          "description": "Pin [/SDA]",
+          "pos": {
+            "x": 149.8304,
+            "y": -105.3853
+          },
+          "uuid": "140"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [Net-(C2-Pad1)] and Pin [Net-(C2-Pad1)] (6 total items in net)",
+      "items": [
+        {
+          "description": "Trace [Net-(C2-Pad1)]",
+          "pos": {
+            "x": 149.28904999999997,
+            "y": -102.8853
+          },
+          "uuid": "445"
+        },
+        {
+          "description": "Trace [Net-(C2-Pad1)]",
+          "pos": {
+            "x": 148.7477,
+            "y": -103.1353
+          },
+          "uuid": "446"
+        },
+        {
+          "description": "Pin [Net-(C2-Pad1)]",
+          "pos": {
+            "x": 149.8304,
+            "y": -103.3853
+          },
+          "uuid": "136"
+        },
+        {
+          "description": "Pin [Net-(C2-Pad1)]",
+          "pos": {
+            "x": 149.8304,
+            "y": -102.8853
+          },
+          "uuid": "135"
+        },
+        {
+          "description": "Trace [Net-(C2-Pad1)]",
+          "pos": {
+            "x": 149.28904999999997,
+            "y": -103.3853
+          },
+          "uuid": "444"
+        },
+        {
+          "description": "Pin [Net-(C2-Pad1)]",
+          "pos": {
+            "x": 142.77339999999998,
+            "y": -96.55
+          },
+          "uuid": "24"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [/RESET] and Pin [/RESET] (9 total items in net)",
+      "items": [
+        {
+          "description": "Pin [/RESET]",
+          "pos": {
+            "x": 140.4874,
+            "y": -95.10010000000001
+          },
+          "uuid": "36"
+        },
+        {
+          "description": "Trace [/RESET]",
+          "pos": {
+            "x": 136.83325,
+            "y": -95.4405
+          },
+          "uuid": "450"
+        },
+        {
+          "description": "Pin [/RESET]",
+          "pos": {
+            "x": 136.35739999999998,
+            "y": -95.4405
+          },
+          "uuid": "19"
+        },
+        {
+          "description": "Trace [/RESET]",
+          "pos": {
+            "x": 138.89825,
+            "y": -95.2703
+          },
+          "uuid": "451"
+        },
+        {
+          "description": "Trace [/RESET]",
+          "pos": {
+            "x": 140.74295,
+            "y": -93.39744999999999
+          },
+          "uuid": "449"
+        },
+        {
+          "description": "Pin [/RESET]",
+          "pos": {
+            "x": 142.06220000000002,
+            "y": -92.6465
+          },
+          "uuid": "106"
+        },
+        {
+          "description": "Trace [/RESET]",
+          "pos": {
+            "x": 141.53035,
+            "y": -92.6465
+          },
+          "uuid": "448"
+        },
+        {
+          "description": "Trace [/RESET]",
+          "pos": {
+            "x": 140.4874,
+            "y": -94.62425
+          },
+          "uuid": "447"
+        },
+        {
+          "description": "Pin [/RESET]",
+          "pos": {
+            "x": 152.9614,
+            "y": -99.7543
+          },
+          "uuid": "126"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [Net-(B1-Pad4)] and Pin [Net-(B1-Pad4)] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [Net-(B1-Pad4)]",
+          "pos": {
+            "x": 150.85060000000001,
+            "y": -95.1509
+          },
+          "uuid": "22"
+        },
+        {
+          "description": "Pin [Net-(B1-Pad4)]",
+          "pos": {
+            "x": 155.2164,
+            "y": -94.5665
+          },
+          "uuid": "7"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [/VBAT] and Pin [/VBAT] (32 total items in net)",
+      "items": [
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 130.52214999999998,
+            "y": -114.2949
+          },
+          "uuid": "485"
+        },
+        {
+          "description": "Pin [/VBAT]",
+          "pos": {
+            "x": 129.8956,
+            "y": -110.19789999999999
+          },
+          "uuid": "230"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 135.32215,
+            "y": -117.76035
+          },
+          "uuid": "512"
+        },
+        {
+          "description": "Pin [/VBAT]",
+          "pos": {
+            "x": 137.50039999999998,
+            "y": -116.45089999999999
+          },
+          "uuid": "112"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 132.38135,
+            "y": -110.57889999999999
+          },
+          "uuid": "505"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 134.74304999999998,
+            "y": -118.16810000000001
+          },
+          "uuid": "511"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 137.50039999999998,
+            "y": -116.00005
+          },
+          "uuid": "507"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 129.97605000000001,
+            "y": -118.6687
+          },
+          "uuid": "483"
+        },
+        {
+          "description": "Pin [/VBAT]",
+          "pos": {
+            "x": 132.8572,
+            "y": -110.57889999999999
+          },
+          "uuid": "26"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 130.90055,
+            "y": -110.38839999999999
+          },
+          "uuid": "506"
+        },
+        {
+          "description": "Pin [/VBAT]",
+          "pos": {
+            "x": 135.6004,
+            "y": -116.45089999999999
+          },
+          "uuid": "110"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 131.2536,
+            "y": -118.39189999999999
+          },
+          "uuid": "484"
+        },
+        {
+          "description": "Pin [/VBAT]",
+          "pos": {
+            "x": 134.4422,
+            "y": -118.16810000000001
+          },
+          "uuid": "225"
+        },
+        {
+          "description": "Via [/VBAT]",
+          "pos": {
+            "x": 131.14870000000002,
+            "y": -118.39189999999999
+          },
+          "uuid": "489"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 133.95204999999999,
+            "y": -118.28
+          },
+          "uuid": "499"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 136.5504,
+            "y": -115.5492
+          },
+          "uuid": "509"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 132.93605,
+            "y": -118.39189999999999
+          },
+          "uuid": "498"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 135.6004,
+            "y": -116.90175
+          },
+          "uuid": "510"
+        },
+        {
+          "description": "Pin [/VBAT]",
+          "pos": {
+            "x": 128.80339999999998,
+            "y": -118.9455
+          },
+          "uuid": "102"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 131.88435,
+            "y": -118.39189999999999
+          },
+          "uuid": "488"
+        },
+        {
+          "description": "Pin [/VBAT]",
+          "pos": {
+            "x": 132.4102,
+            "y": -118.39189999999999
+          },
+          "uuid": "60"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 135.6004,
+            "y": -116.00005
+          },
+          "uuid": "508"
+        },
+        {
+          "description": "Pin [/VBAT]",
+          "pos": {
+            "x": 163.4236,
+            "y": -120.6173
+          },
+          "uuid": "221"
+        },
+        {
+          "description": "Pin [/VBAT]",
+          "pos": {
+            "x": 165.3032,
+            "y": -120.2157
+          },
+          "uuid": "56"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 163.72445000000002,
+            "y": -120.6173
+          },
+          "uuid": "502"
+        },
+        {
+          "description": "Pin [/VBAT]",
+          "pos": {
+            "x": 168.9354,
+            "y": -120.1955
+          },
+          "uuid": "98"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 165.82905,
+            "y": -120.2157
+          },
+          "uuid": "493"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 166.4656,
+            "y": -120.2748
+          },
+          "uuid": "492"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 167.75585,
+            "y": -120.26469999999999
+          },
+          "uuid": "480"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 164.1384,
+            "y": -120.4165
+          },
+          "uuid": "504"
+        },
+        {
+          "description": "Trace [/VBAT]",
+          "pos": {
+            "x": 164.77735,
+            "y": -120.2157
+          },
+          "uuid": "503"
+        },
+        {
+          "description": "Via [/VBAT]",
+          "pos": {
+            "x": 166.57629999999997,
+            "y": -120.3339
+          },
+          "uuid": "494"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [Net-(C12-Pad1)] and Pin [Net-(C12-Pad1)] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [Net-(C12-Pad1)]",
+          "pos": {
+            "x": 137.50039999999998,
+            "y": -113.8509
+          },
+          "uuid": "113"
+        },
+        {
+          "description": "Pin [Net-(C12-Pad1)]",
+          "pos": {
+            "x": 132.8572,
+            "y": -108.31830000000001
+          },
+          "uuid": "16"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    }
+  ],
+  "violations": [
+    {
+      "description": "Hole clearance violation between Pin [/SDA] and Pin [Net-(U4-Pad1)] (expected: 0.2000 mm, actual: 0.1839 mm)",
+      "items": [
+        {
+          "description": "Pin [/SDA]",
+          "pos": {
+            "x": 137.9928,
+            "y": -101.7697
+          },
+          "uuid": "207"
+        },
+        {
+          "description": "Pin [Net-(U4-Pad1)]",
+          "pos": {
+            "x": 137.1138,
+            "y": -102.64869999999999
+          },
+          "uuid": "184"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [Net-(R3-Pad1)] and Pin [3.3V] (expected: 0.2000 mm, actual: 0.1839 mm)",
+      "items": [
+        {
+          "description": "Pin [Net-(R3-Pad1)]",
+          "pos": {
+            "x": 140.4928,
+            "y": -101.7697
+          },
+          "uuid": "202"
+        },
+        {
+          "description": "Pin [3.3V]",
+          "pos": {
+            "x": 141.37179999999998,
+            "y": -102.64869999999999
+          },
+          "uuid": "201"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [Net-(U4-Pad13)] and Pin [Net-(U4-Pad12)] (expected: 0.2000 mm, actual: 0.1839 mm)",
+      "items": [
+        {
+          "description": "Pin [Net-(U4-Pad13)]",
+          "pos": {
+            "x": 141.37179999999998,
+            "y": -105.14869999999999
+          },
+          "uuid": "196"
+        },
+        {
+          "description": "Pin [Net-(U4-Pad12)]",
+          "pos": {
+            "x": 140.4928,
+            "y": -106.0277
+          },
+          "uuid": "195"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [Net-(C26-Pad2)] and Pin [GND] (expected: 0.2000 mm, actual: 0.1839 mm)",
+      "items": [
+        {
+          "description": "Pin [Net-(C26-Pad2)]",
+          "pos": {
+            "x": 137.9928,
+            "y": -106.0277
+          },
+          "uuid": "190"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 137.1138,
+            "y": -105.14869999999999
+          },
+          "uuid": "189"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    }
+  ],
+  "schematic_parity": [],
+  "quality_score": 805.5886840820312
+}

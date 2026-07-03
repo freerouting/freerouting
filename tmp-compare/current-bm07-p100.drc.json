@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-07-01T08:20:52.247850433-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "Issue508-DAC2020_bm07.dsn",
+  "unconnected_items": [
+    {
+      "description": "Unconnected items: Pin [/DTR] and Pin [/DTR] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [/DTR]",
+          "pos": {
+            "x": 154.80110000000002,
+            "y": -76.8636
+          },
+          "uuid": "102"
+        },
+        {
+          "description": "Pin [/DTR]",
+          "pos": {
+            "x": 142.8811,
+            "y": -82.8636
+          },
+          "uuid": "2"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    }
+  ],
+  "violations": [],
+  "schematic_parity": [],
+  "quality_score": 988.3626708984375
+}

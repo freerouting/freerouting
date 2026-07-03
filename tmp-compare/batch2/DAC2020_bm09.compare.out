@@ -1,0 +1,56 @@
+Running current:
+  java  -jar  build/libs/freerouting-current-executable.jar  -de  fixtures/Issue508-DAC2020/DAC2020_bm09/DAC2020_bm09.unrouted.dsn  -do  tmp-compare/batch2/DAC2020_bm09-current.ses  --gui.enabled=false  --api_server.enabled=false  --mcp_server.enabled=false  --router.fanout.enabled=true  --router.optimizer.enabled=false  --router.max_passes=5  --router.max_threads=1  --router.job_timeout=00:02:00  --logging.console.level=INFO  -da
+2026-06-30 22:36:13.080 INFO   Freerouting v2.2.5-SNAPSHOT (build-date: 2026-06-30)
+2026-06-30 22:36:14.471 INFO   New version available: v2.2.4
+2026-06-30 22:36:14.674 INFO   [831829\962290] Job '831829\962290' started at 2026-07-01T05:36:14.674803440Z.
+2026-06-30 22:36:14.705 INFO   [831829\962290] Auto-routing stage started on board 'd9bcfe0989223db357bbee501c233ede' for 116 unrouted items.
+2026-06-30 22:36:18.322 INFO   [831829\962290] Auto-routing pass #1 on board 'd9bcfe0989223db357bbee501c233ede' was completed in 3.58 seconds with the score of 991.38 (1 unrouted and 0 violations), using 2.96 CPU seconds and the job allocated 1.64 GB of memory so far.
+2026-06-30 22:36:18.479 INFO   [831829\962290] Auto-routing pass #2 on board 'd9ff923134e77f37876810e83e6f2ef7' was completed in 0.11 seconds with the score of 991.38 (1 unrouted and 0 violations), using 2.96 CPU seconds and the job allocated 1.64 GB of memory so far.
+2026-06-30 22:36:18.632 INFO   [831829\962290] Auto-routing pass #3 on board 'd9ff923134e77f37876810e83e6f2ef7' was completed in 0.13 seconds with the score of 991.38 (1 unrouted and 0 violations), using 2.96 CPU seconds and the job allocated 1.64 GB of memory so far.
+2026-06-30 22:36:18.759 INFO   [831829\962290] Auto-routing pass #4 on board 'd9ff923134e77f37876810e83e6f2ef7' was completed in 0.11 seconds with the score of 991.38 (1 unrouted and 0 violations), using 3.96 CPU seconds and the job allocated 2.35 GB of memory so far.
+2026-06-30 22:36:18.907 INFO   [831829\962290] Auto-routing pass #5 on board 'd9ff923134e77f37876810e83e6f2ef7' was completed in 0.13 seconds with the score of 991.38 (1 unrouted and 0 violations), using 3.96 CPU seconds and the job allocated 2.35 GB of memory so far.
+2026-06-30 22:36:18.946 INFO   [831829\962290] Auto-routing stage completed: started with 116 unrouted nets, completed in 4.24 seconds, final score: 991.38 (1 unrouted and 0 violations), using 3.96 total CPU seconds, 2.35 GB total allocated, and 152.0 MB peak heap usage.
+2026-06-30 22:36:18.949 INFO   [831829\962290] Job '831829\962290' finished with state: COMPLETED (elapsed: 4.27 seconds, finished at UTC: 2026-07-01T05:36:18.949118315Z).
+Running v1.9:
+  xvfb-run  -a  java  -jar  build/libs/freerouting-1.9.0-executable.jar  -de  fixtures/Issue508-DAC2020/DAC2020_bm09/DAC2020_bm09.unrouted.dsn  -do  tmp-compare/batch2/DAC2020_bm09-v19.ses  --router.fanout.enabled=true  --router.optimizer.enabled=false  --router.max_passes=5  --router.max_threads=1  --router.job_timeout=00:02:00  --logging.console.level=INFO  -da
+2026-06-30 22:36:20.564 INFO   Freerouting v1.9.0 (build-date: 2026-06-30)
+2026-06-30 22:36:20.591 INFO   Settings were loaded from freerouting.json
+2026-06-30 22:36:21.602 INFO   Opening 'fixtures/Issue508-DAC2020/DAC2020_bm09/DAC2020_bm09.unrouted.dsn'...
+2026-06-30 22:36:22.007 INFO   New version available: v2.2.4
+2026-06-30 22:36:42.436 INFO   Starting auto-routing...
+2026-06-30 22:36:42.438 INFO   Fanout phase completed: started with 0 total SMD pins, completed in 0.00 seconds, escaped pins: 0/0 (0.0%), using 0.00 total CPU seconds, 0.00 GB total allocated, and 58.0 MB peak heap usage.
+2026-06-30 22:36:45.281 INFO   Auto-router pass #1 on board '07b3bde4e0ca52f3119833049ad6d062' was completed in 2.75 seconds with the score of 996.46 (1 unrouted), using 2.73 CPU seconds and the job allocated 1.80 GB of memory so far.
+2026-06-30 22:36:45.367 INFO   Auto-router pass #2 on board '07b3bde4e0ca52f3119833049ad6d062' was completed in 0.04 seconds with the score of 996.46 (1 unrouted), using 2.77 CPU seconds and the job allocated 1.83 GB of memory so far.
+2026-06-30 22:36:45.371 INFO   Auto-router phase completed: started with 116 unrouted nets, completed in 2.87 seconds, final score: 996.46 (1 unrouted), using 2.77 total CPU seconds, 1.83 GB total allocated, and 195.0 MB peak heap usage.
+2026-06-30 22:36:45.373 INFO   Auto-routing was completed in 2.94 seconds.
+2026-06-30 22:36:45.473 INFO   Starting route optimization on 1 thread...
+2026-06-30 22:36:45.476 INFO   Route optimization was completed in 0.00 seconds.
+2026-06-30 22:36:45.482 INFO   Saving 'tmp-compare/batch2/DAC2020_bm09-v19.ses'...
+Running DRC on current SES:
+2026-06-30 22:36:46.213 INFO   Freerouting v2.2.5-SNAPSHOT (build-date: 2026-06-30)
+2026-06-30 22:36:47.271 INFO   Loading DSN file for DRC: fixtures/Issue508-DAC2020/DAC2020_bm09/DAC2020_bm09.unrouted.dsn
+2026-06-30 22:36:47.461 INFO   New version available: v2.2.4
+2026-06-30 22:36:47.473 INFO   Loading SES file for DRC: tmp-compare/batch2/DAC2020_bm09-current.ses
+2026-06-30 22:36:47.516 INFO   SES file import complete: 167 wires, 0 vias imported
+2026-06-30 22:36:47.516 INFO   SES file loaded for DRC: 167 wires, 0 vias imported
+2026-06-30 22:36:47.595 INFO   DRC report written to: /home/dev/freerouting/tmp-compare/batch2/DAC2020_bm09-current.drc.json
+Running DRC on v1.9 SES:
+2026-06-30 22:36:48.809 INFO   Freerouting v2.2.5-SNAPSHOT (build-date: 2026-06-30)
+2026-06-30 22:36:49.867 INFO   Loading DSN file for DRC: fixtures/Issue508-DAC2020/DAC2020_bm09/DAC2020_bm09.unrouted.dsn
+2026-06-30 22:36:50.061 INFO   New version available: v2.2.4
+2026-06-30 22:36:50.063 INFO   Loading SES file for DRC: tmp-compare/batch2/DAC2020_bm09-v19.ses
+2026-06-30 22:36:50.103 INFO   SES file import complete: 167 wires, 0 vias imported
+2026-06-30 22:36:50.103 INFO   SES file loaded for DRC: 167 wires, 0 vias imported
+2026-06-30 22:36:50.179 INFO   DRC report written to: /home/dev/freerouting/tmp-compare/batch2/DAC2020_bm09-v19.drc.json
+
+Summary
+  current route: score=991.38 unrouted=1 violations=0
+  v1.9 route:    score=996.46
+  current DRC:   drc_violations=0 drc_unconnected=1 quality_score=991.3759765625
+  v1.9 DRC:      drc_violations=0 drc_unconnected=1 quality_score=991.3759765625
+
+Outputs
+  current SES: tmp-compare/batch2/DAC2020_bm09-current.ses
+  v1.9 SES:    tmp-compare/batch2/DAC2020_bm09-v19.ses
+  current DRC: tmp-compare/batch2/DAC2020_bm09-current.drc.json
+  v1.9 DRC:    tmp-compare/batch2/DAC2020_bm09-v19.drc.json

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-06-30T22:36:09.417273758-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "DAC2020_bm08.unrouted.dsn",
+  "unconnected_items": [],
+  "violations": [
+    {
+      "description": "Hole clearance violation between Pin [/SDA] and Pin [Net-(U1-Pad1)] (expected: 0.2000 mm, actual: 0.1839 mm)",
+      "items": [
+        {
+          "description": "Pin [/SDA]",
+          "pos": {
+            "x": 147.1884,
+            "y": -103.9568
+          },
+          "uuid": "25"
+        },
+        {
+          "description": "Pin [Net-(U1-Pad1)]",
+          "pos": {
+            "x": 146.30939999999998,
+            "y": -103.0778
+          },
+          "uuid": "2"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [Net-(R1-Pad1)] and Pin [VDD] (expected: 0.2000 mm, actual: 0.1839 mm)",
+      "items": [
+        {
+          "description": "Pin [Net-(R1-Pad1)]",
+          "pos": {
+            "x": 147.1884,
+            "y": -106.4568
+          },
+          "uuid": "20"
+        },
+        {
+          "description": "Pin [VDD]",
+          "pos": {
+            "x": 146.30939999999998,
+            "y": -107.3358
+          },
+          "uuid": "19"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [Net-(U1-Pad13)] and Pin [Net-(U1-Pad12)] (expected: 0.2000 mm, actual: 0.1839 mm)",
+      "items": [
+        {
+          "description": "Pin [Net-(U1-Pad13)]",
+          "pos": {
+            "x": 143.80939999999998,
+            "y": -107.3358
+          },
+          "uuid": "14"
+        },
+        {
+          "description": "Pin [Net-(U1-Pad12)]",
+          "pos": {
+            "x": 142.9304,
+            "y": -106.4568
+          },
+          "uuid": "13"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [Net-(C2-Pad2)] and Pin [GND] (expected: 0.2000 mm, actual: 0.1839 mm)",
+      "items": [
+        {
+          "description": "Pin [Net-(C2-Pad2)]",
+          "pos": {
+            "x": 142.9304,
+            "y": -103.9568
+          },
+          "uuid": "8"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 143.80939999999998,
+            "y": -103.0778
+          },
+          "uuid": "7"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    }
+  ],
+  "schematic_parity": [],
+  "quality_score": 967.9970703125
+}

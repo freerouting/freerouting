@@ -1,0 +1,5 @@
+case,current_violations,current_unconnected,current_score,v19_violations,v19_unconnected,v19_score,status
+Issue508-DAC2020_bm07,0,2,976.73486328125,1,0,999.9908447265625,regression
+Issue508-DAC2020_bm07,0,1,988.3626708984375,0,0,999.9912109375,regression
+Issue508-DAC2020_bm07,0,2,976.73486328125,1,0,999.9908447265625,regression
+Issue508-DAC2020_bm07,0,0,999.9903564453125,1,0,999.9908447265625,better

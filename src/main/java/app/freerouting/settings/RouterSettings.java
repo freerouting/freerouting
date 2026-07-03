@@ -24,6 +24,14 @@ public class RouterSettings implements Serializable, Cloneable {
   public FanoutSettings fanout;
   @SerializedName("copper_to_edge_clearance_um")
   public Double copperToEdgeClearanceUm;
+  /**
+   * When true, a routed connection whose newly inserted traces/vias carry clearance
+   * violations is ripped up again and counted as not routed for that pass, instead of
+   * being kept with the violations (v1 limitation: violations between two pre-existing
+   * foreign items pushed by a shove are not attributed to the new connection).
+   */
+  @SerializedName("strict_drc")
+  public Boolean strictDrc;
   @SerializedName("job_timeout")
   public String jobTimeoutString;
   @SerializedName("max_passes")
@@ -390,6 +398,7 @@ public class RouterSettings implements Serializable, Cloneable {
     result.maxPasses = this.maxPasses;
     result.maxItems = this.maxItems;
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
+    result.strictDrc = this.strictDrc;
     result.ignoreNetClasses = (this.ignoreNetClasses != null) ? this.ignoreNetClasses.clone() : null;
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     result.enabled = this.enabled;
@@ -403,6 +412,10 @@ public class RouterSettings implements Serializable, Cloneable {
     result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
 
     return result;
+  }
+
+  public boolean isStrictDrc() {
+    return Boolean.TRUE.equals(strictDrc);
   }
 
   public int get_start_ripup_costs() {

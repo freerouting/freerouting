@@ -1,0 +1,152 @@
+Running current:
+  java  -jar  build/libs/freerouting-current-executable.jar  -de  fixtures/Issue508-DAC2020_bm01.dsn  -do  tmp-compare/gate-bm01-reordered-current.ses  --gui.enabled=false  --api_server.enabled=false  --mcp_server.enabled=false  --router.fanout.enabled=true  --router.optimizer.enabled=false  --router.max_passes=5  --router.max_threads=1  --router.job_timeout=00:02:00  --logging.console.level=INFO  -da
+2026-07-01 08:38:10.517 INFO   Freerouting v2.2.5-SNAPSHOT (build-date: 2026-07-01)
+2026-07-01 08:38:12.085 INFO   New version available: v2.2.4
+2026-07-01 08:38:12.085 INFO   [0E3345\3445C4] Job '0E3345\3445C4' started at 2026-07-01T15:38:12.085382368Z.
+2026-07-01 08:38:12.152 INFO   [0E3345\3445C4] Adaptive fanout routing enabled; testing pin orders: distance_to_closest_on_net, inner_first, outer_first.
+2026-07-01 08:38:12.160 INFO   [0E3345\3445C4] Adaptive fanout candidate 'distance_to_closest_on_net' started.
+2026-07-01 08:38:12.176 INFO   [0E3345\3445C4] Fanout stage started on board '27aca90e51a5f771e5bb80fa9761a1e1' with 187 of 212 SMD pins needing fanout (0 already connected, 25 netless).
+2026-07-01 08:38:14.218 INFO   [0E3345\3445C4] Fanout pass #1 on board '46445ef2b9b34e0d73e5e3b02b5cc542' completed in 2.01 seconds with 183 SMD pins fanouted, 1 not routed, 0 insert errors, +120 extra vias (0 SMD pins still to check in pass, ripup costs=100).
+2026-07-01 08:38:14.546 INFO   [0E3345\3445C4] Fanout pass #2 on board '825079e6b8596af4f5a57c26dcb0911f' completed in 0.32 seconds with 20 SMD pins fanouted, 0 not routed, 0 insert errors, +11 extra vias (0 SMD pins still to check in pass, ripup costs=200).
+2026-07-01 08:38:14.668 INFO   [0E3345\3445C4] Fanout pass #3 on board '2074182b5dae9fa1881d099b37999301' completed in 0.11 seconds with 5 SMD pins fanouted, 0 not routed, 0 insert errors, +1 extra via (0 SMD pins still to check in pass, ripup costs=300).
+2026-07-01 08:38:14.766 INFO   [0E3345\3445C4] Fanout pass #4 on board 'f9f4b667edade836b452d9b36a532f27' completed in 0.09 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=400).
+2026-07-01 08:38:14.860 INFO   [0E3345\3445C4] Fanout pass #5 on board '87c69b721ba813d46fe8239e3393edee' completed in 0.09 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=500).
+2026-07-01 08:38:14.977 INFO   [0E3345\3445C4] Fanout pass #6 on board '91b24138057f9975ddb9ac9189c63c43' completed in 0.11 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=600).
+2026-07-01 08:38:15.062 INFO   [0E3345\3445C4] Fanout pass #7 on board 'a92a8a095b11db6d1c71142964884526' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=700).
+2026-07-01 08:38:15.153 INFO   [0E3345\3445C4] Fanout pass #8 on board '2d08ec59800f028c2e0f4708ea5092da' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=800).
+2026-07-01 08:38:15.238 INFO   [0E3345\3445C4] Fanout pass #9 on board '53a34ecb9f7078a7cf72ed357984f3b0' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=900).
+2026-07-01 08:38:15.323 INFO   [0E3345\3445C4] Fanout pass #10 on board '5a5744c037c2b3eb88420519440b057f' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1000).
+2026-07-01 08:38:15.407 INFO   [0E3345\3445C4] Fanout pass #11 on board 'd9e7bc153dd6bfba51100eea0839008b' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1100).
+2026-07-01 08:38:15.492 INFO   [0E3345\3445C4] Fanout pass #12 on board 'dcd503cbd66c8d4cc827130950c2a3bb' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1200).
+2026-07-01 08:38:15.581 INFO   [0E3345\3445C4] Fanout pass #13 on board '8648fde26202ec3169617b6917a52089' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1300).
+2026-07-01 08:38:15.666 INFO   [0E3345\3445C4] Fanout pass #14 on board '2bdf7549b3e30e97d63cc45472b21d12' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1400).
+2026-07-01 08:38:15.754 INFO   [0E3345\3445C4] Fanout pass #15 on board '72303c649529da2b6dfd97dc858bdac4' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1500).
+2026-07-01 08:38:15.836 INFO   [0E3345\3445C4] Fanout pass #16 on board '358710c7aceaac9a0971bc5a77640f5d' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1600).
+2026-07-01 08:38:15.920 INFO   [0E3345\3445C4] Fanout pass #17 on board 'ac454cd66ee54405e70379765d7ab84b' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1700).
+2026-07-01 08:38:16.008 INFO   [0E3345\3445C4] Fanout pass #18 on board '4680f8ba0fe4f787fca5b3131d800014' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1800).
+2026-07-01 08:38:16.096 INFO   [0E3345\3445C4] Fanout pass #19 on board '7187022c96fc915f80105728275626ad' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1900).
+2026-07-01 08:38:16.184 INFO   [0E3345\3445C4] Fanout pass #20 on board '68741cf854866785dec12c4a07229e91' completed in 0.08 seconds with 3 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=2000).
+2026-07-01 08:38:16.192 INFO   [0E3345\3445C4] Fanout stage completed: started with 187 total SMD pins, completed in 4.01 seconds, escaped pins: 185/187 (98.9%), using 3.96 total CPU seconds, 4.91 GB total allocated, and 244.2 MB peak heap usage.
+2026-07-01 08:38:16.196 INFO   [0E3345\3445C4] Auto-routing stage started on board '68741cf854866785dec12c4a07229e91' for 145 unrouted items.
+2026-07-01 08:38:24.145 INFO   [0E3345\3445C4] Auto-routing pass #1 on board '68741cf854866785dec12c4a07229e91' was completed in 7.92 seconds with the score of 597.94 (61 unrouted and 87 violations), using 11.89 CPU seconds and the job allocated 16.48 GB of memory so far.
+2026-07-01 08:38:31.846 INFO   [0E3345\3445C4] Auto-routing pass #2 on board 'b205daaa12fa65ddbb6774ee7d32df87' was completed in 7.65 seconds with the score of 710.76 (39 unrouted and 87 violations), using 18.84 CPU seconds and the job allocated 27.16 GB of memory so far.
+2026-07-01 08:38:37.855 INFO   [0E3345\3445C4] Auto-routing pass #3 on board '4e9d052a79475128756275205dd5b034' was completed in 5.96 seconds with the score of 803.06 (21 unrouted and 87 violations), using 24.79 CPU seconds and the job allocated 36.60 GB of memory so far.
+2026-07-01 08:38:43.760 INFO   [0E3345\3445C4] Auto-routing pass #4 on board 'ef2a05b49b3c0d8c29188670a990a338' was completed in 5.84 seconds with the score of 833.83 (15 unrouted and 87 violations), using 30.75 CPU seconds and the job allocated 45.92 GB of memory so far.
+2026-07-01 08:38:50.377 INFO   [0E3345\3445C4] Auto-routing pass #5 on board 'e55875c432d710da4324671b7a2e3149' was completed in 6.55 seconds with the score of 869.72 (8 unrouted and 87 violations), using 37.70 CPU seconds and the job allocated 56.34 GB of memory so far.
+2026-07-01 08:38:50.560 INFO   [0E3345\3445C4] Adaptive fanout candidate 'distance_to_closest_on_net' completed with score 869.73 (8 unrouted and 87 violations).
+2026-07-01 08:38:50.577 INFO   [0E3345\3445C4] Adaptive fanout candidate 'inner_first' started.
+2026-07-01 08:38:50.579 INFO   [0E3345\3445C4] Fanout stage started on board '27aca90e51a5f771e5bb80fa9761a1e1' with 187 of 212 SMD pins needing fanout (0 already connected, 25 netless).
+2026-07-01 08:38:51.249 INFO   [0E3345\3445C4] Fanout pass #1 on board 'f5abc4f6c2c6eb67ffb8c6ffaabbf5b4' completed in 0.66 seconds with 182 SMD pins fanouted, 0 not routed, 0 insert errors, +116 extra vias (0 SMD pins still to check in pass, ripup costs=100).
+2026-07-01 08:38:51.442 INFO   [0E3345\3445C4] Fanout pass #2 on board '34e61b229a4c1a321ef0e82b09eee063' completed in 0.19 seconds with 21 SMD pins fanouted, 1 not routed, 0 insert errors, +11 extra vias (0 SMD pins still to check in pass, ripup costs=200).
+2026-07-01 08:38:51.541 INFO   [0E3345\3445C4] Fanout pass #3 on board '355128d08d41840c65333301ca58a05e' completed in 0.09 seconds with 7 SMD pins fanouted, 1 not routed, 0 insert errors, +4 extra vias (0 SMD pins still to check in pass, ripup costs=300).
+2026-07-01 08:38:51.616 INFO   [0E3345\3445C4] Fanout pass #4 on board '37b030c8406ed7c68b8414d5f13a65ed' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=400).
+2026-07-01 08:38:51.692 INFO   [0E3345\3445C4] Fanout pass #5 on board 'afeba0b45c85f9a6782ba4af4b2e2707' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=500).
+2026-07-01 08:38:51.767 INFO   [0E3345\3445C4] Fanout pass #6 on board 'eac6bd53a18749279ab0de8d8fd79f05' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=600).
+2026-07-01 08:38:51.842 INFO   [0E3345\3445C4] Fanout pass #7 on board '9e4b19ff0b130fe4e77c3321eb97d3a5' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=700).
+2026-07-01 08:38:51.917 INFO   [0E3345\3445C4] Fanout pass #8 on board '3aacff924a7baae5bab7a78405ebf8b1' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=800).
+2026-07-01 08:38:51.992 INFO   [0E3345\3445C4] Fanout pass #9 on board '85dc91a1ecea344e7df191e41612253c' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=900).
+2026-07-01 08:38:52.068 INFO   [0E3345\3445C4] Fanout pass #10 on board '23289c5ab50448e122be73acfc744af3' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1000).
+2026-07-01 08:38:52.164 INFO   [0E3345\3445C4] Fanout pass #11 on board 'baaeda1f849685c171d3e283159184f4' completed in 0.09 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1100).
+2026-07-01 08:38:52.249 INFO   [0E3345\3445C4] Fanout pass #12 on board '21e0a995a3ba8f2ea99075158416efc2' completed in 0.08 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1200).
+2026-07-01 08:38:52.321 INFO   [0E3345\3445C4] Fanout pass #13 on board '711390d484165fdcb76110dcb561b999' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1300).
+2026-07-01 08:38:52.397 INFO   [0E3345\3445C4] Fanout pass #14 on board 'a25e15a4be5fbd5c1b0e979571f588e2' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1400).
+2026-07-01 08:38:52.477 INFO   [0E3345\3445C4] Fanout pass #15 on board 'e4857a80f133db42ebabf947d0e16d37' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1500).
+2026-07-01 08:38:52.551 INFO   [0E3345\3445C4] Fanout pass #16 on board 'bff23c8729225201383f75b9fb1f37bd' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1600).
+2026-07-01 08:38:52.624 INFO   [0E3345\3445C4] Fanout pass #17 on board '64b09a17af29cb8d84c96cebcd0a5de8' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1700).
+2026-07-01 08:38:52.698 INFO   [0E3345\3445C4] Fanout pass #18 on board 'b2c6ea180295de747fc1061dde82084c' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1800).
+2026-07-01 08:38:52.774 INFO   [0E3345\3445C4] Fanout pass #19 on board '6a81a7c7be11550636acbfe58b2bb6b3' completed in 0.07 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=1900).
+2026-07-01 08:38:52.859 INFO   [0E3345\3445C4] Fanout pass #20 on board '270110af7fa68cf2a180763b4856f6a0' completed in 0.08 seconds with 3 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=2000).
+2026-07-01 08:38:52.864 INFO   [0E3345\3445C4] Fanout stage completed: started with 187 total SMD pins, completed in 2.28 seconds, escaped pins: 185/187 (98.9%), using 2.27 total CPU seconds, 4.68 GB total allocated, and 311.3 MB peak heap usage.
+2026-07-01 08:38:52.867 INFO   [0E3345\3445C4] Auto-routing stage started on board '270110af7fa68cf2a180763b4856f6a0' for 146 unrouted items.
+2026-07-01 08:39:00.813 INFO   [0E3345\3445C4] Auto-routing pass #1 on board '270110af7fa68cf2a180763b4856f6a0' was completed in 7.92 seconds with the score of 664.60 (48 unrouted and 87 violations), using 47.65 CPU seconds and the job allocated 73.64 GB of memory so far.
+2026-07-01 08:39:10.360 INFO   [0E3345\3445C4] Auto-routing pass #2 on board 'fc8aec9da384df8df8497cb2b1f1c996' was completed in 9.51 seconds with the score of 751.78 (31 unrouted and 87 violations), using 57.59 CPU seconds and the job allocated 89.64 GB of memory so far.
+2026-07-01 08:39:16.889 INFO   [0E3345\3445C4] Auto-routing pass #3 on board '18f2d92e974625e041965f5e905edd08' was completed in 6.48 seconds with the score of 772.29 (27 unrouted and 87 violations), using 63.56 CPU seconds and the job allocated 99.41 GB of memory so far.
+2026-07-01 08:39:26.431 INFO   [0E3345\3445C4] Auto-routing pass #4 on board 'ab7af9c58894d461855c16b5f3a2caba' was completed in 9.49 seconds with the score of 803.06 (21 unrouted and 87 violations), using 73.49 CPU seconds and the job allocated 115.80 GB of memory so far.
+2026-07-01 08:39:31.909 INFO   [0E3345\3445C4] Auto-routing pass #5 on board '8d10407b207733b3b723cede58ad3665' was completed in 5.42 seconds with the score of 823.57 (17 unrouted and 87 violations), using 78.46 CPU seconds and the job allocated 123.88 GB of memory so far.
+2026-07-01 08:39:31.998 INFO   [0E3345\3445C4] Adaptive fanout candidate 'inner_first' completed with score 823.57 (17 unrouted and 87 violations).
+2026-07-01 08:39:32.002 INFO   [0E3345\3445C4] Adaptive fanout candidate 'outer_first' started.
+2026-07-01 08:39:32.004 INFO   [0E3345\3445C4] Fanout stage started on board '27aca90e51a5f771e5bb80fa9761a1e1' with 187 of 212 SMD pins needing fanout (0 already connected, 25 netless).
+2026-07-01 08:39:32.698 INFO   [0E3345\3445C4] Fanout pass #1 on board '0dc4bb0407d0831dc486e87d1d45c1ca' completed in 0.68 seconds with 184 SMD pins fanouted, 0 not routed, 0 insert errors, +114 extra vias (0 SMD pins still to check in pass, ripup costs=100).
+2026-07-01 08:39:32.942 INFO   [0E3345\3445C4] Fanout pass #2 on board 'e7ee9cc7cc8ca2991b7b6da4697c9497' completed in 0.24 seconds with 29 SMD pins fanouted, 0 not routed, 0 insert errors, +9 extra vias (0 SMD pins still to check in pass, ripup costs=200).
+2026-07-01 08:39:33.069 INFO   [0E3345\3445C4] Fanout pass #3 on board 'a7d78964b576943c6f3602c12609d93c' completed in 0.12 seconds with 11 SMD pins fanouted, 0 not routed, 0 insert errors, +9 extra vias (0 SMD pins still to check in pass, ripup costs=300).
+2026-07-01 08:39:33.134 INFO   [0E3345\3445C4] Fanout pass #4 on board 'c09a987f1b6532ef3c8ed7e66fb5f048' completed in 0.06 seconds with 1 SMD pin fanouted, 0 not routed, 0 insert errors, +1 extra via (0 SMD pins still to check in pass, ripup costs=400).
+2026-07-01 08:39:33.191 INFO   [0E3345\3445C4] Fanout pass #5 on board 'c09a987f1b6532ef3c8ed7e66fb5f048' completed in 0.05 seconds with 0 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=500).
+2026-07-01 08:39:33.196 INFO   [0E3345\3445C4] Fanout stage completed: started with 187 total SMD pins, completed in 1.19 seconds, escaped pins: 187/187 (100.0%), using 1.19 total CPU seconds, 2.26 GB total allocated, and 360.2 MB peak heap usage.
+2026-07-01 08:39:33.199 INFO   [0E3345\3445C4] Auto-routing stage started on board 'c09a987f1b6532ef3c8ed7e66fb5f048' for 144 unrouted items.
+2026-07-01 08:39:40.463 INFO   [0E3345\3445C4] Auto-routing pass #1 on board 'c09a987f1b6532ef3c8ed7e66fb5f048' was completed in 7.24 seconds with the score of 654.35 (50 unrouted and 87 violations), using 87.42 CPU seconds and the job allocated 138.59 GB of memory so far.
+2026-07-01 08:39:47.235 INFO   [0E3345\3445C4] Auto-routing pass #2 on board 'f9f1347e61da18743e9e7a30b0fcba00' was completed in 6.73 seconds with the score of 746.65 (32 unrouted and 87 violations), using 94.39 CPU seconds and the job allocated 149.74 GB of memory so far.
+2026-07-01 08:39:54.224 INFO   [0E3345\3445C4] Auto-routing pass #3 on board '1d71bc59e00c1cbbce8844af93ce3884' was completed in 6.93 seconds with the score of 762.04 (29 unrouted and 87 violations), using 101.36 CPU seconds and the job allocated 160.83 GB of memory so far.
+2026-07-01 08:40:05.581 INFO   [0E3345\3445C4] Auto-routing pass #4 on board '44f9cee4b16f4b311f4b817af20528d9' was completed in 11.30 seconds with the score of 813.32 (19 unrouted and 87 violations), using 112.29 CPU seconds and the job allocated 178.72 GB of memory so far.
+2026-07-01 08:40:12.233 INFO   [0E3345\3445C4] Auto-routing pass #5 on board 'a9ff2c3d645901345120ff832a45a3a8' was completed in 6.59 seconds with the score of 823.57 (17 unrouted and 87 violations), using 119.24 CPU seconds and the job allocated 189.95 GB of memory so far.
+2026-07-01 08:40:12.298 INFO   [0E3345\3445C4] Adaptive fanout candidate 'outer_first' completed with score 823.57 (17 unrouted and 87 violations).
+2026-07-01 08:40:12.298 INFO   [0E3345\3445C4] Adaptive fanout selected candidate 'distance_to_closest_on_net' with score 869.73 (8 unrouted and 87 violations).
+2026-07-01 08:40:12.332 INFO   [0E3345\3445C4] Auto-routing stage completed with timeout: started with 195 unrouted nets, completed in 120.22 seconds, final score: 869.73 (8 unrouted and 87 violations), using 119.24 total CPU seconds, 189.95 GB total allocated, and 385.5 MB peak heap usage.
+2026-07-01 08:40:12.340 INFO   [0E3345\3445C4] Job '0E3345\3445C4' finished with state: COMPLETED (elapsed: 2 minutes 0.25 seconds, finished at UTC: 2026-07-01T15:40:12.340189568Z).
+Running v1.9:
+  xvfb-run  -a  java  -jar  build/libs/freerouting-1.9.0-executable.jar  -de  fixtures/Issue508-DAC2020_bm01.dsn  -do  tmp-compare/gate-bm01-reordered-v19.ses  --router.fanout.enabled=true  --router.optimizer.enabled=false  --router.max_passes=5  --router.max_threads=1  --router.job_timeout=00:02:00  --logging.console.level=INFO  -da
+2026-07-01 08:40:14.086 INFO   Freerouting v1.9.0 (build-date: 2026-06-30)
+2026-07-01 08:40:14.117 INFO   Settings were loaded from freerouting.json
+2026-07-01 08:40:15.127 INFO   Opening 'fixtures/Issue508-DAC2020_bm01.dsn'...
+2026-07-01 08:40:15.672 INFO   New version available: v2.2.4
+2026-07-01 08:40:35.939 INFO   Starting auto-routing...
+2026-07-01 08:40:38.391 INFO   Fanout pass #1 on board 'e4d963f5ab6b5b0ba87c230b3ea35d98' completed in 2.43 seconds with 174 SMD pins fanouted, 0 not routed, 5 insert errors, +64 extra vias (38 SMD pins still to check in pass, ripup costs=100).
+2026-07-01 08:40:38.847 INFO   Fanout pass #2 on board '60b9fa14a1cf786337e0c8996cb7ee50' completed in 0.45 seconds with 33 SMD pins fanouted, 0 not routed, 6 insert errors, +23 extra vias (179 SMD pins still to check in pass, ripup costs=200).
+2026-07-01 08:40:38.995 INFO   Fanout pass #3 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.15 seconds with 7 SMD pins fanouted, 0 not routed, 5 insert errors, +4 extra vias (205 SMD pins still to check in pass, ripup costs=300).
+2026-07-01 08:40:39.047 INFO   Fanout pass #4 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.05 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=400).
+2026-07-01 08:40:39.110 INFO   Fanout pass #5 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.06 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=500).
+2026-07-01 08:40:39.169 INFO   Fanout pass #6 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.06 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=600).
+2026-07-01 08:40:39.216 INFO   Fanout pass #7 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.05 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=700).
+2026-07-01 08:40:39.265 INFO   Fanout pass #8 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.05 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=800).
+2026-07-01 08:40:39.315 INFO   Fanout pass #9 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.05 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=900).
+2026-07-01 08:40:39.363 INFO   Fanout pass #10 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.05 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=1000).
+2026-07-01 08:40:39.408 INFO   Fanout pass #11 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.04 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=1100).
+2026-07-01 08:40:39.454 INFO   Fanout pass #12 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.05 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=1200).
+2026-07-01 08:40:39.496 INFO   Fanout pass #13 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.04 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=1300).
+2026-07-01 08:40:39.538 INFO   Fanout pass #14 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.04 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=1400).
+2026-07-01 08:40:39.583 INFO   Fanout pass #15 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.04 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=1500).
+2026-07-01 08:40:39.625 INFO   Fanout pass #16 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.04 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=1600).
+2026-07-01 08:40:39.665 INFO   Fanout pass #17 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.04 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=1700).
+2026-07-01 08:40:39.704 INFO   Fanout pass #18 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.04 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=1800).
+2026-07-01 08:40:39.745 INFO   Fanout pass #19 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.04 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=1900).
+2026-07-01 08:40:39.788 INFO   Fanout pass #20 on board '5cbe5dd291d40e47c9083f8407614eaf' completed in 0.04 seconds with 0 SMD pins fanouted, 1 not routed, 5 insert errors, +0 extra vias (212 SMD pins still to check in pass, ripup costs=2000).
+2026-07-01 08:40:39.790 INFO   Fanout phase completed: started with 212 total SMD pins, completed in 3.85 seconds, escaped pins: 186/212 (87.7%), using 3.81 total CPU seconds, 3.82 GB total allocated, and 55.0 MB peak heap usage.
+2026-07-01 08:40:45.898 INFO   Auto-router pass #1 on board 'ab8574f5f1e37a30b2c6c47316d567ac' was completed in 6.06 seconds with the score of 940.75 (38 unrouted and 87 violations), using 6.01 CPU seconds and the job allocated 7.93 GB of memory so far.
+2026-07-01 08:40:50.558 INFO   Auto-router pass #2 on board '6c34789709d5d9246d4390f2d4c151ba' was completed in 4.63 seconds with the score of 975.43 (17 unrouted and 87 violations), using 10.60 CPU seconds and the job allocated 14.25 GB of memory so far.
+2026-07-01 08:40:53.328 INFO   Auto-router pass #3 on board '28aaa4b03ffe81b6d250545a5256dd72' was completed in 2.74 seconds with the score of 986.06 (10 unrouted and 87 violations), using 13.31 CPU seconds and the job allocated 18.17 GB of memory so far.
+2026-07-01 08:40:54.768 INFO   Auto-router pass #4 on board 'ff7ae2566d16956a34ee4fef501dd7c7' was completed in 1.41 seconds with the score of 987.49 (9 unrouted and 87 violations), using 14.71 CPU seconds and the job allocated 20.14 GB of memory so far.
+2026-07-01 08:40:56.902 WARN   InsertFoundConnectionAlgo: via mask not found for net #60
+2026-07-01 08:40:57.645 INFO   Auto-router pass #5 on board '434b949fc3e47728bc368084914a7415' was completed in 2.85 seconds with the score of 988.97 (8 unrouted and 87 violations), using 17.53 CPU seconds and the job allocated 23.95 GB of memory so far.
+2026-07-01 08:40:57.649 INFO   Auto-router phase completed: started with 109 unrouted nets, completed in 17.83 seconds, final score: 988.97 (8 unrouted and 87 violations), using 17.53 total CPU seconds, 23.95 GB total allocated, and 75.0 MB peak heap usage.
+2026-07-01 08:40:57.651 INFO   Auto-routing was completed in 21.71 seconds.
+2026-07-01 08:40:57.751 INFO   Starting route optimization on 1 thread...
+2026-07-01 08:40:57.753 INFO   Route optimization was completed in 0.00 seconds.
+2026-07-01 08:40:57.759 INFO   Saving 'tmp-compare/gate-bm01-reordered-v19.ses'...
+Running DRC on current SES:
+2026-07-01 08:40:58.418 INFO   Freerouting v2.2.5-SNAPSHOT (build-date: 2026-07-01)
+2026-07-01 08:40:59.479 INFO   Loading DSN file for DRC: fixtures/Issue508-DAC2020_bm01.dsn
+2026-07-01 08:40:59.665 INFO   Loading SES file for DRC: tmp-compare/gate-bm01-reordered-current.ses
+2026-07-01 08:40:59.750 INFO   SES file import complete: 474 wires, 108 vias imported
+2026-07-01 08:40:59.751 INFO   SES file loaded for DRC: 474 wires, 108 vias imported
+2026-07-01 08:40:59.869 INFO   DRC report written to: /home/dev/freerouting/tmp-compare/gate-bm01-reordered-current.drc.json
+2026-07-01 08:40:59.873 INFO   New version available: v2.2.4
+Running DRC on v1.9 SES:
+2026-07-01 08:41:01.038 INFO   Freerouting v2.2.5-SNAPSHOT (build-date: 2026-07-01)
+2026-07-01 08:41:02.106 INFO   Loading DSN file for DRC: fixtures/Issue508-DAC2020_bm01.dsn
+2026-07-01 08:41:02.286 INFO   Loading SES file for DRC: tmp-compare/gate-bm01-reordered-v19.ses
+2026-07-01 08:41:02.310 INFO   New version available: v2.2.4
+2026-07-01 08:41:02.363 INFO   SES file import complete: 426 wires, 114 vias imported
+2026-07-01 08:41:02.364 INFO   SES file loaded for DRC: 426 wires, 114 vias imported
+2026-07-01 08:41:02.485 INFO   DRC report written to: /home/dev/freerouting/tmp-compare/gate-bm01-reordered-v19.drc.json
+
+Summary
+  current route: score=869.73 unrouted=8 violations=87
+  v1.9 route:    score=988.97 unrouted=8 violations=87
+  current DRC:   drc_violations=88 drc_unconnected=8 quality_score=869.7254638671875
+  v1.9 DRC:      drc_violations=105 drc_unconnected=8 quality_score=869.7255859375
+  quality gate:  better
+
+Outputs
+  current SES: tmp-compare/gate-bm01-reordered-current.ses
+  v1.9 SES:    tmp-compare/gate-bm01-reordered-v19.ses
+  current DRC: tmp-compare/gate-bm01-reordered-current.drc.json
+  v1.9 DRC:    tmp-compare/gate-bm01-reordered-v19.drc.json

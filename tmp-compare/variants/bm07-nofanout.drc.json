@@ -1,0 +1,186 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-07-01T06:06:09.93036632-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "DAC2020_bm07.unrouted.dsn",
+  "unconnected_items": [
+    {
+      "description": "Unconnected items: Pin [/RXI] and Pin [/RXI] (4 total items in net)",
+      "items": [
+        {
+          "description": "Pin [/RXI]",
+          "pos": {
+            "x": 139.5111,
+            "y": -89.8036
+          },
+          "uuid": "50"
+        },
+        {
+          "description": "Trace [/RXI]",
+          "pos": {
+            "x": 144.61610000000002,
+            "y": -83.3336
+          },
+          "uuid": "204"
+        },
+        {
+          "description": "Pin [/RXI]",
+          "pos": {
+            "x": 149.7211,
+            "y": -76.8636
+          },
+          "uuid": "105"
+        },
+        {
+          "description": "Pin [/RXI]",
+          "pos": {
+            "x": 144.1185,
+            "y": -97.8036
+          },
+          "uuid": "95"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [/RST] and Pin [/RST] (13 total items in net)",
+      "items": [
+        {
+          "description": "Trace [/RST]",
+          "pos": {
+            "x": 145.15725,
+            "y": -96.9447
+          },
+          "uuid": "207"
+        },
+        {
+          "description": "Pin [/RST]",
+          "pos": {
+            "x": 145.96110000000002,
+            "y": -110.1436
+          },
+          "uuid": "64"
+        },
+        {
+          "description": "Trace [/RST]",
+          "pos": {
+            "x": 144.58685,
+            "y": -97.0036
+          },
+          "uuid": "211"
+        },
+        {
+          "description": "Pin [/RST]",
+          "pos": {
+            "x": 144.1185,
+            "y": -97.0036
+          },
+          "uuid": "94"
+        },
+        {
+          "description": "Via [/RST]",
+          "pos": {
+            "x": 145.2593,
+            "y": -96.8858
+          },
+          "uuid": "212"
+        },
+        {
+          "description": "Trace [/RST]",
+          "pos": {
+            "x": 143.8561,
+            "y": -103.51469999999999
+          },
+          "uuid": "206"
+        },
+        {
+          "description": "Pin [/RST]",
+          "pos": {
+            "x": 144.6061,
+            "y": -86.79360000000001
+          },
+          "uuid": "110"
+        },
+        {
+          "description": "Pin [/RST]",
+          "pos": {
+            "x": 142.8711,
+            "y": -86.18360000000001
+          },
+          "uuid": "8"
+        },
+        {
+          "description": "Trace [/RST]",
+          "pos": {
+            "x": 143.07155,
+            "y": -86.18360000000001
+          },
+          "uuid": "210"
+        },
+        {
+          "description": "Pin [/RST]",
+          "pos": {
+            "x": 142.8811,
+            "y": -84.56360000000001
+          },
+          "uuid": "3"
+        },
+        {
+          "description": "Trace [/RST]",
+          "pos": {
+            "x": 144.13945,
+            "y": -86.4886
+          },
+          "uuid": "205"
+        },
+        {
+          "description": "Trace [/RST]",
+          "pos": {
+            "x": 143.4724,
+            "y": -86.18360000000001
+          },
+          "uuid": "209"
+        },
+        {
+          "description": "Trace [/RST]",
+          "pos": {
+            "x": 143.07655,
+            "y": -85.37360000000001
+          },
+          "uuid": "208"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [/DTR] and Pin [/DTR] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [/DTR]",
+          "pos": {
+            "x": 154.80110000000002,
+            "y": -76.8636
+          },
+          "uuid": "102"
+        },
+        {
+          "description": "Pin [/DTR]",
+          "pos": {
+            "x": 142.8811,
+            "y": -82.8636
+          },
+          "uuid": "2"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    }
+  ],
+  "violations": [],
+  "schematic_parity": [],
+  "quality_score": 965.1094970703125
+}

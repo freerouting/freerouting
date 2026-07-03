@@ -1,0 +1,221 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-07-01T09:36:35.501044089-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "Issue508-DAC2020_bm06.dsn",
+  "unconnected_items": [
+    {
+      "description": "Unconnected items: Pin [Net-(IC1-Pad2)] and Pin [Net-(IC1-Pad2)] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [Net-(IC1-Pad2)]",
+          "pos": {
+            "x": 125.2861,
+            "y": -97.92360000000001
+          },
+          "uuid": "111"
+        },
+        {
+          "description": "Pin [Net-(IC1-Pad2)]",
+          "pos": {
+            "x": 137.18110000000001,
+            "y": -102.1636
+          },
+          "uuid": "53"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    }
+  ],
+  "violations": [
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.5611,
+            "y": -100.06960000000001
+          },
+          "uuid": "110"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 155.9461,
+            "y": -98.6186
+          },
+          "uuid": "109"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.5611,
+            "y": -100.06960000000001
+          },
+          "uuid": "110"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.3561,
+            "y": -98.6186
+          },
+          "uuid": "108"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.5611,
+            "y": -100.06960000000001
+          },
+          "uuid": "110"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.7661,
+            "y": -98.6186
+          },
+          "uuid": "107"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.5611,
+            "y": -100.06960000000001
+          },
+          "uuid": "110"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 157.17610000000002,
+            "y": -98.6186
+          },
+          "uuid": "106"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.5611,
+            "y": -100.06960000000001
+          },
+          "uuid": "110"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 155.9461,
+            "y": -101.5236
+          },
+          "uuid": "105"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.5611,
+            "y": -100.06960000000001
+          },
+          "uuid": "110"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.3561,
+            "y": -101.5236
+          },
+          "uuid": "104"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.5611,
+            "y": -100.06960000000001
+          },
+          "uuid": "110"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.7661,
+            "y": -101.5236
+          },
+          "uuid": "103"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.5611,
+            "y": -100.06960000000001
+          },
+          "uuid": "110"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 157.17610000000002,
+            "y": -101.5236
+          },
+          "uuid": "102"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    }
+  ],
+  "schematic_parity": [],
+  "quality_score": 973.4636840820312
+}

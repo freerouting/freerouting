@@ -1,0 +1,364 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-07-01T07:35:09.894456247-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "DAC2020_bm07.unrouted.dsn",
+  "unconnected_items": [
+    {
+      "description": "Unconnected items: Pin [GND] and Pin [GND] (43 total items in net)",
+      "items": [
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 140.6011,
+            "y": -127.6966
+          },
+          "uuid": "158"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 157.2911,
+            "y": -110.1036
+          },
+          "uuid": "33"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 144.6611,
+            "y": -128.3851
+          },
+          "uuid": "156"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 151.6261,
+            "y": -111.3936
+          },
+          "uuid": "149"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 147.1011,
+            "y": -89.43360000000001
+          },
+          "uuid": "5"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 145.0475,
+            "y": -109.15010000000001
+          },
+          "uuid": "148"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 145.80025,
+            "y": -124.19460000000001
+          },
+          "uuid": "153"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 145.96110000000002,
+            "y": -112.68360000000001
+          },
+          "uuid": "65"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 147.55610000000001,
+            "y": -91.27315
+          },
+          "uuid": "165"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 144.6611,
+            "y": -125.3756
+          },
+          "uuid": "155"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 144.6061,
+            "y": -82.29360000000001
+          },
+          "uuid": "108"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 142.1011,
+            "y": -76.8636
+          },
+          "uuid": "103"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 144.1436,
+            "y": -81.88945
+          },
+          "uuid": "162"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 143.68110000000001,
+            "y": -81.08445
+          },
+          "uuid": "161"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 145.8536,
+            "y": -86.33945
+          },
+          "uuid": "150"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 148.8111,
+            "y": -101.49064999999999
+          },
+          "uuid": "146"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 149.4111,
+            "y": -102.03739999999999
+          },
+          "uuid": "167"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 141.74110000000002,
+            "y": -127.6966
+          },
+          "uuid": "29"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 148.8111,
+            "y": -100.8962
+          },
+          "uuid": "70"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 148.8111,
+            "y": -101.13035
+          },
+          "uuid": "144"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 147.1011,
+            "y": -89.83445
+          },
+          "uuid": "164"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 148.0111,
+            "y": -101.72485
+          },
+          "uuid": "142"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 147.21110000000002,
+            "y": -100.8962
+          },
+          "uuid": "68"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 139.46110000000002,
+            "y": -127.6966
+          },
+          "uuid": "31"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 143.68110000000001,
+            "y": -80.28275
+          },
+          "uuid": "159"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 148.0111,
+            "y": -92.311
+          },
+          "uuid": "86"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 147.64025,
+            "y": -123.01360000000001
+          },
+          "uuid": "163"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 150.0111,
+            "y": -102.81775
+          },
+          "uuid": "166"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 144.6611,
+            "y": -129.0736
+          },
+          "uuid": "135"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 147.21110000000002,
+            "y": -101.36455000000001
+          },
+          "uuid": "168"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 150.0111,
+            "y": -103.3936
+          },
+          "uuid": "99"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 144.9511,
+            "y": -105.6166
+          },
+          "uuid": "27"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 144.6061,
+            "y": -82.76944999999999
+          },
+          "uuid": "151"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 143.68110000000001,
+            "y": -80.68360000000001
+          },
+          "uuid": "25"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 148.8111,
+            "y": -101.72485
+          },
+          "uuid": "145"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 146.0811,
+            "y": -103.72475
+          },
+          "uuid": "143"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 145.3111,
+            "y": -119.0296
+          },
+          "uuid": "152"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 142.8911,
+            "y": -78.37275
+          },
+          "uuid": "160"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 143.2011,
+            "y": -127.6966
+          },
+          "uuid": "157"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 148.3411,
+            "y": -123.01360000000001
+          },
+          "uuid": "124"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 144.6611,
+            "y": -126.5361
+          },
+          "uuid": "154"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 147.6111,
+            "y": -96.6036
+          },
+          "uuid": "147"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 139.5111,
+            "y": -87.26360000000001
+          },
+          "uuid": "49"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    }
+  ],
+  "violations": [],
+  "schematic_parity": [],
+  "quality_score": 988.3621826171875
+}

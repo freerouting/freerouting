@@ -1,0 +1,174 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-07-01T07:37:30.214302234-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "DAC2020_bm07.unrouted.dsn",
+  "unconnected_items": [],
+  "violations": [
+    {
+      "description": "Clearance violation between Trace [VCC] and Trace [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Trace [VCC]",
+          "pos": {
+            "x": 148.0111,
+            "y": -100.42785
+          },
+          "uuid": "195"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 148.0111,
+            "y": -96.6036
+          },
+          "uuid": "144"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Clearance violation between Trace [VCC] and Trace [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Trace [VCC]",
+          "pos": {
+            "x": 148.0111,
+            "y": -100.42785
+          },
+          "uuid": "195"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 147.6111,
+            "y": -99.9595
+          },
+          "uuid": "143"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Clearance violation between Trace [VCC] and Trace [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Trace [VCC]",
+          "pos": {
+            "x": 148.0111,
+            "y": -100.42785
+          },
+          "uuid": "195"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 148.4111,
+            "y": -99.9595
+          },
+          "uuid": "142"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Clearance violation between Trace [VCC] and Trace [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Trace [VCC]",
+          "pos": {
+            "x": 148.8111,
+            "y": -99.9595
+          },
+          "uuid": "182"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 148.8111,
+            "y": -100.42785
+          },
+          "uuid": "170"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Clearance violation between Trace [VCC] and Trace [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Trace [VCC]",
+          "pos": {
+            "x": 148.8111,
+            "y": -99.9595
+          },
+          "uuid": "182"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 148.0111,
+            "y": -96.6036
+          },
+          "uuid": "144"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Clearance violation between Trace [VCC] and Trace [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Trace [VCC]",
+          "pos": {
+            "x": 148.8111,
+            "y": -99.9595
+          },
+          "uuid": "182"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 147.6111,
+            "y": -99.9595
+          },
+          "uuid": "143"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Clearance violation between Trace [VCC] and Trace [GND] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "items": [
+        {
+          "description": "Trace [VCC]",
+          "pos": {
+            "x": 148.8111,
+            "y": -99.9595
+          },
+          "uuid": "182"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 148.4111,
+            "y": -99.9595
+          },
+          "uuid": "142"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    }
+  ],
+  "schematic_parity": [],
+  "quality_score": 983.7109375
+}

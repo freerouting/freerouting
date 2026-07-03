@@ -1317,6 +1317,8 @@ public class BatchAutorouter extends NamedAlgorithm {
       AutorouteEngine autoroute_engine = board.init_autoroute(p_route_net_no,
           autoroute_control.trace_clearance_class_no, this.thread, time_limit, this.retain_autoroute_database);
 
+      int maxItemIdBeforeRoute = board.communication.id_no_generator.max_generated_no();
+
       // Do the auto-routing between the two sets of items
       AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
           autoroute_control, p_ripped_item_list, p_ripup_costs);
@@ -1331,11 +1333,49 @@ public class BatchAutorouter extends NamedAlgorithm {
         FRLogger.trace("compare_trace_opt_changed_area_after net=" + p_route_net_no + ", maxItemId=" + maxItemIdAfterOpt + ", delta=" + (maxItemIdAfterOpt - maxItemIdBeforeOpt));
       }
 
+      if (autoroute_result.state == AutorouteAttemptState.ROUTED && this.settings.isStrictDrc()) {
+        AutorouteAttemptResult strict_result = enforceStrictDrc(board, p_route_net_no, maxItemIdBeforeRoute);
+        if (strict_result != null) {
+          return strict_result;
+        }
+      }
+
       return autoroute_result;
     } catch (Exception e) {
       FRLogger.error("Error during routing passes", e);
       return new AutorouteAttemptResult(AutorouteAttemptState.FAILED);
     }
+  }
+
+
+  /**
+   * Strict-DRC enforcement: if any trace/via inserted by the connection that just routed
+   * (item id above {@code p_max_item_id_before}) carries a clearance violation, rip the
+   * whole set of new items and report the connection FAILED, so the pass counts it as not
+   * routed and later passes (higher ripup costs) retry it. Returns null when the connection
+   * is clean and may be kept.
+   */
+  static AutorouteAttemptResult enforceStrictDrc(app.freerouting.board.RoutingBoard board,
+      int p_route_net_no, int p_max_item_id_before) {
+    List<Item> new_items = new ArrayList<>();
+    boolean has_violation = false;
+    for (Item curr_item : board.get_connectable_items(p_route_net_no)) {
+      if (curr_item.get_id_no() <= p_max_item_id_before
+          || !(curr_item instanceof Trace || curr_item instanceof app.freerouting.board.Via)) {
+        continue;
+      }
+      new_items.add(curr_item);
+      if (!has_violation && !curr_item.clearance_violations().isEmpty()) {
+        has_violation = true;
+      }
+    }
+    if (!has_violation) {
+      return null;
+    }
+    board.remove_items(new_items);
+    return new AutorouteAttemptResult(AutorouteAttemptState.FAILED,
+        "strict_drc: connection ripped because " + new_items.size()
+            + " new item(s) included clearance violations");
   }
 
   /**
