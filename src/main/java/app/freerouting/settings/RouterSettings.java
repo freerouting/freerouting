@@ -24,6 +24,8 @@ public class RouterSettings implements Serializable, Cloneable {
   public FanoutSettings fanout;
   @SerializedName("copper_to_edge_clearance_um")
   public Double copperToEdgeClearanceUm;
+  @SerializedName("hole_clearance_um")
+  public Double holeClearanceUm;
   @SerializedName("job_timeout")
   public String jobTimeoutString;
   @SerializedName("max_passes")
@@ -390,6 +392,7 @@ public class RouterSettings implements Serializable, Cloneable {
     result.maxPasses = this.maxPasses;
     result.maxItems = this.maxItems;
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
+    result.holeClearanceUm = this.holeClearanceUm;
     result.ignoreNetClasses = (this.ignoreNetClasses != null) ? this.ignoreNetClasses.clone() : null;
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     result.enabled = this.enabled;

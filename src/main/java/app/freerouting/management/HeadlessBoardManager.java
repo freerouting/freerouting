@@ -79,6 +79,7 @@ import java.io.OutputStream;
 public class HeadlessBoardManager implements BoardManager {
 
   private static final String BOARD_EDGE_CLEARANCE_CLASS_NAME = "board_edge";
+  private static final String HOLE_EDGE_CLEARANCE_CLASS_NAME = "hole_edge";
 
 
   /**
@@ -279,6 +280,107 @@ public class HeadlessBoardManager implements BoardManager {
     this.board = new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no, p_rules,
         p_board_communication);
     applyCopperToEdgeClearanceOverride();
+    applyHoleClearanceOverride();
+  }
+
+  private void applyHoleClearanceOverride() {
+    if (this.board == null || this.routingJob == null || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.holeClearanceUm == null) {
+      return;
+    }
+
+    double configuredClearanceUm = this.routingJob.routerSettings.holeClearanceUm;
+    if (configuredClearanceUm < 0) {
+      FRLogger.warn("Ignoring router.hole_clearance_um because it is negative: " + configuredClearanceUm);
+      return;
+    }
+    if (this.board.rules == null) {
+      FRLogger.warn("Ignoring router.hole_clearance_um because board rules are unavailable.");
+      return;
+    }
+
+    int boardResolution = Math.max(1, this.board.communication.resolution);
+    int configuredClearanceBoardUnits = (int) Math.round(
+        Unit.scale(configuredClearanceUm * boardResolution, Unit.UM, this.board.communication.unit));
+    boolean changed = configuredClearanceBoardUnits != this.board.rules.get_hole_clearance();
+    this.board.rules.set_hole_clearance(configuredClearanceBoardUnits);
+    int holeKeepouts = 0;
+    if (configuredClearanceBoardUnits > 0) {
+      holeKeepouts = assignHoleKeepoutClearanceClass(configuredClearanceBoardUnits);
+    }
+    if (changed || holeKeepouts > 0) {
+      // Tree shapes are precalculated at insert time; items loaded before the override
+      // (all of them, on a DSN load) must be re-inserted so their obstacle shapes include
+      // the drill-hole inflation. Otherwise DRC (default tree) under-reports and routing
+      // trees created later disagree with it.
+      this.board.search_tree_manager.reinsert_tree_items();
+    }
+
+    if (configuredClearanceBoardUnits > 0) {
+      FRLogger.info("Applied drill-hole clearance override: " + configuredClearanceUm + " um ("
+          + configuredClearanceBoardUnits + " board units)"
+          + (holeKeepouts > 0 ? ", " + holeKeepouts + " hole keepouts reclassified." : "."));
+    }
+  }
+
+  /**
+   * KiCad's DSN export represents non-plated holes as circular per-copper-layer package
+   * keepouts, which by default only get the generic AREA copper clearance. Assign those
+   * circle keepouts to a dedicated "hole_edge" clearance class so other-net copper keeps
+   * hole clearance (not just copper clearance) from the hole boundary. Returns the number
+   * of keepouts reclassified.
+   */
+  private int assignHoleKeepoutClearanceClass(int holeClearanceBoardUnits) {
+    var matrix = this.board.rules.clearance_matrix;
+    if (matrix == null) {
+      return 0;
+    }
+    java.util.List<app.freerouting.board.ObstacleArea> holeKeepouts = new java.util.ArrayList<>();
+    for (app.freerouting.board.Item item : this.board.get_items()) {
+      if (item.getClass() != app.freerouting.board.ObstacleArea.class) {
+        continue;
+      }
+      app.freerouting.board.ObstacleArea keepout = (app.freerouting.board.ObstacleArea) item;
+      // Package keepouts belong to a component; a circular one is a drilled hole in the
+      // footprint (the only way KiCad expresses NPTH in DSN).
+      if (keepout.get_component_no() > 0
+          && keepout.get_area() instanceof app.freerouting.geometry.planar.Circle) {
+        holeKeepouts.add(keepout);
+      }
+    }
+    if (holeKeepouts.isEmpty()) {
+      return 0;
+    }
+    int holeEdgeClassNo = matrix.get_no(HOLE_EDGE_CLEARANCE_CLASS_NAME);
+    if (holeEdgeClassNo < 0) {
+      matrix.append_class(HOLE_EDGE_CLEARANCE_CLASS_NAME);
+      holeEdgeClassNo = matrix.get_no(HOLE_EDGE_CLEARANCE_CLASS_NAME);
+    }
+    if (holeEdgeClassNo < 0) {
+      FRLogger.warn("Unable to create/find the hole_edge clearance class for the hole clearance override.");
+      return 0;
+    }
+    int defaultAreaClassNo = this.board.rules.get_default_net_class().default_item_clearance_classes
+        .get(DefaultItemClearanceClasses.ItemClass.AREA);
+    for (int layer = 0; layer < matrix.get_layer_count(); layer++) {
+      for (int classNo = 1; classNo < matrix.get_class_count(); classNo++) {
+        // Never reduce an existing requirement: hole clearance is a floor on top of the
+        // normal copper clearance the keepout would otherwise get.
+        int value = Math.max(holeClearanceBoardUnits,
+            matrix.get_value(defaultAreaClassNo, classNo, layer, false));
+        matrix.set_value(holeEdgeClassNo, classNo, layer, value);
+        matrix.set_value(classNo, holeEdgeClassNo, layer, value);
+      }
+    }
+    int reclassified = 0;
+    for (app.freerouting.board.ObstacleArea keepout : holeKeepouts) {
+      if (keepout.clearance_class_no() != holeEdgeClassNo) {
+        keepout.set_clearance_class_no(holeEdgeClassNo);
+        keepout.clear_derived_data();
+        reclassified++;
+      }
+    }
+    return reclassified;
   }
 
   private void applyCopperToEdgeClearanceOverride() {
@@ -500,6 +602,7 @@ public class HeadlessBoardManager implements BoardManager {
         }
         this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
         applyCopperToEdgeClearanceOverride();
+        applyHoleClearanceOverride();
       }
 
       if (this.board != null) {
@@ -561,6 +664,7 @@ public class HeadlessBoardManager implements BoardManager {
         }
         this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
         applyCopperToEdgeClearanceOverride();
+        applyHoleClearanceOverride();
       }
 
       if (this.board != null) {

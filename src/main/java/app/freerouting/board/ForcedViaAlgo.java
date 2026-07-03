@@ -93,24 +93,48 @@ public class ForcedViaAlgo {
     int calc_from_side_offset = p_board.get_min_trace_half_width();
     ForcedPadAlgo forced_pad_algo = new ForcedPadAlgo(p_board);
     Padstack via_padstack = p_via_info.get_padstack();
+    Shape hole_shape = hole_check_shape(via_padstack, p_location, p_board);
     for (int i = via_padstack.from_layer(); i <= via_padstack.to_layer(); i++) {
       Shape curr_pad_shape = via_padstack.get_shape(i);
+      int curr_clearance_class = p_via_info.get_clearance_class();
       if (curr_pad_shape == null) {
-        continue;
+        if (hole_shape == null) {
+          continue;
+        }
+        // The drill hole itself must keep hole clearance from copper on this layer.
+        curr_pad_shape = hole_shape;
+        curr_clearance_class = 0;
+      } else {
+        curr_pad_shape = (Shape) curr_pad_shape.translate_by(translate_vector);
       }
-      curr_pad_shape = (Shape) curr_pad_shape.translate_by(translate_vector);
       TileShape tile_shape;
       if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
         tile_shape = curr_pad_shape.bounding_box();
       } else {
         tile_shape = curr_pad_shape.bounding_octagon();
       }
-      CalcFromSide from_side = forced_pad_algo.calc_from_side(tile_shape, p_location, i, calc_from_side_offset, p_via_info.get_clearance_class());
-      if (forced_pad_algo.check_forced_pad(tile_shape, from_side, i, p_net_no_arr, p_via_info.get_clearance_class(),
+      CalcFromSide from_side = forced_pad_algo.calc_from_side(tile_shape, p_location, i, calc_from_side_offset, curr_clearance_class);
+      if (forced_pad_algo.check_forced_pad(tile_shape, from_side, i, p_net_no_arr, curr_clearance_class,
           p_via_info.attach_smd_allowed(), null, p_max_recursion_depth,
           p_max_via_recursion_depth, false, null) == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
         p_board.set_shove_failing_layer(i);
         return false;
+      }
+      if (curr_clearance_class != 0 && hole_shape != null) {
+        // The drill hole must ALSO keep hole clearance from other-net copper on layers where
+        // the pad exists — the pad check above only enforces the (smaller) copper clearance.
+        TileShape hole_tile;
+        if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
+          hole_tile = hole_shape.bounding_box();
+        } else {
+          hole_tile = hole_shape.bounding_octagon();
+        }
+        if (forced_pad_algo.check_forced_pad(hole_tile, from_side, i, p_net_no_arr, 0,
+            p_via_info.attach_smd_allowed(), null, p_max_recursion_depth,
+            p_max_via_recursion_depth, false, null) == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+          p_board.set_shove_failing_layer(i);
+          return false;
+        }
       }
 
       if (p_trace_pen_halfwidth_arr != null && i < p_trace_pen_halfwidth_arr.length && p_trace_pen_halfwidth_arr[i] > 0
@@ -144,12 +168,19 @@ public class ForcedViaAlgo {
     int calc_from_side_offset = p_board.get_min_trace_half_width();
     ForcedPadAlgo forced_pad_algo = new ForcedPadAlgo(p_board);
     Padstack via_padstack = p_via_info.get_padstack();
+    Shape hole_shape = hole_check_shape(via_padstack, p_location, p_board);
     for (int i = via_padstack.from_layer(); i <= via_padstack.to_layer(); i++) {
       Shape curr_pad_shape = via_padstack.get_shape(i);
+      int curr_clearance_class = p_via_info.get_clearance_class();
       if (curr_pad_shape == null) {
-        continue;
+        if (hole_shape == null) {
+          continue;
+        }
+        curr_pad_shape = hole_shape;
+        curr_clearance_class = 0;
+      } else {
+        curr_pad_shape = (Shape) curr_pad_shape.translate_by(translate_vector);
       }
-      curr_pad_shape = (Shape) curr_pad_shape.translate_by(translate_vector);
       TileShape tile_shape;
       Circle start_trace_circle;
       if (p_trace_pen_halfwidth_arr[i] > 0 && p_location instanceof IntPoint point) {
@@ -169,11 +200,24 @@ public class ForcedViaAlgo {
           start_trace_shape = start_trace_circle.bounding_octagon();
         }
       }
-      CalcFromSide from_side = forced_pad_algo.calc_from_side(tile_shape, p_location, i, calc_from_side_offset, p_via_info.get_clearance_class());
-      if (!forced_pad_algo.forced_pad(tile_shape, from_side, i, p_net_no_arr, p_via_info.get_clearance_class(), p_via_info.attach_smd_allowed(), null, p_max_recursion_depth,
+      CalcFromSide from_side = forced_pad_algo.calc_from_side(tile_shape, p_location, i, calc_from_side_offset, curr_clearance_class);
+      if (!forced_pad_algo.forced_pad(tile_shape, from_side, i, p_net_no_arr, curr_clearance_class, p_via_info.attach_smd_allowed(), null, p_max_recursion_depth,
           p_max_via_recursion_depth)) {
         p_board.set_shove_failing_layer(i);
         return false;
+      }
+      if (curr_clearance_class != 0 && hole_shape != null) {
+        TileShape hole_tile;
+        if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
+          hole_tile = hole_shape.bounding_box();
+        } else {
+          hole_tile = hole_shape.bounding_octagon();
+        }
+        if (!forced_pad_algo.forced_pad(hole_tile, from_side, i, p_net_no_arr, 0, p_via_info.attach_smd_allowed(), null, p_max_recursion_depth,
+            p_max_via_recursion_depth)) {
+          p_board.set_shove_failing_layer(i);
+          return false;
+        }
       }
       if (start_trace_shape != null) {
         // necessary in case start_trace_shape is bigger than tile_shape
@@ -185,6 +229,26 @@ public class ForcedViaAlgo {
     }
     p_board.insert_via(via_padstack, p_location, p_net_no_arr, p_via_info.get_clearance_class(), FixedState.UNFIXED, p_via_info.attach_smd_allowed());
     return true;
+  }
+
+
+  /**
+   * Hole-clearance substitute shape for a copper-less layer of a via padstack: the drill
+   * still passes through, so other copper must stay hole_clearance away from it. Returns
+   * null when the rule is off or no drill radius is known.
+   */
+  private static Shape hole_check_shape(Padstack p_padstack, Point p_location, RoutingBoard p_board) {
+    int hole_clearance = p_board.rules.get_hole_clearance();
+    if (hole_clearance <= 0 || !(p_location instanceof IntPoint center)) {
+      return null;
+    }
+    double drill_radius = p_padstack.get_drill_radius();
+    if (drill_radius <= 0) {
+      return null;
+    }
+    // Inflate by the hole clearance itself and check with the null clearance class (0), so
+    // the requirement is exact hole-to-copper spacing regardless of the neighbor's class.
+    return new Circle(center, (int) Math.ceil(drill_radius + hole_clearance + 10));
   }
 
   private static CalcFromSide calculate_from_side(FloatPoint p_via_location, TileShape p_via_shape, Simplex p_room_shape, double p_dist, boolean is_90_degree) {

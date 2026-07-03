@@ -51,6 +51,7 @@ public class BoardRules implements Serializable {
    */
   private double pin_edge_to_turn_dist;
   private boolean use_slow_autoroute_algorithm;
+  private int hole_clearance;
 
   /**
    * Creates a new instance of this class.
@@ -63,6 +64,7 @@ public class BoardRules implements Serializable {
 
     this.min_trace_half_width = 100000;
     this.max_trace_half_width = 100;
+    this.hole_clearance = 0;
   }
 
   /**
@@ -114,6 +116,14 @@ public class BoardRules implements Serializable {
    */
   public int get_max_trace_half_width() {
     return max_trace_half_width;
+  }
+
+  public int get_hole_clearance() {
+    return hole_clearance;
+  }
+
+  public void set_hole_clearance(int p_value) {
+    this.hole_clearance = Math.max(0, p_value);
   }
 
   /**
