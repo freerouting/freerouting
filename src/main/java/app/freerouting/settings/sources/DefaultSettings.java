@@ -102,6 +102,7 @@ public class DefaultSettings implements SettingsSource {
         settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
         settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
         settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;
+        settings.neckWidthUm = 0.0;
 
         // layers is left null intentionally –
         // they will be populated by DsnFileSettings (from the DSN layer count) and then

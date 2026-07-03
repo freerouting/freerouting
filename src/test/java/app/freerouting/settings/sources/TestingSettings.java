@@ -75,6 +75,10 @@ public class TestingSettings implements SettingsSource {
         this.settings.holeClearanceUm = holeClearanceUm;
     }
 
+    public void setNeckWidthUm(double neckWidthUm) {
+        this.settings.neckWidthUm = neckWidthUm;
+    }
+
     @Override
     public RouterSettings getSettings() {
         return settings;

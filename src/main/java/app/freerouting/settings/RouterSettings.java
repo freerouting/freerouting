@@ -26,6 +26,14 @@ public class RouterSettings implements Serializable, Cloneable {
   public Double copperToEdgeClearanceUm;
   @SerializedName("hole_clearance_um")
   public Double holeClearanceUm;
+  /**
+   * Opt-in width necking: when a connection fails at its net-class trace width, retry it
+   * once with all trace half-widths clamped to this width (in micrometers). Intended for
+   * fine-pitch regions where the class width physically cannot exit the pads; supply a
+   * legal manufacturable width (e.g. the project's densest net class). 0/absent = off.
+   */
+  @SerializedName("neck_width_um")
+  public Double neckWidthUm;
   @SerializedName("job_timeout")
   public String jobTimeoutString;
   @SerializedName("max_passes")
@@ -393,6 +401,7 @@ public class RouterSettings implements Serializable, Cloneable {
     result.maxItems = this.maxItems;
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.holeClearanceUm = this.holeClearanceUm;
+    result.neckWidthUm = this.neckWidthUm;
     result.ignoreNetClasses = (this.ignoreNetClasses != null) ? this.ignoreNetClasses.clone() : null;
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     result.enabled = this.enabled;
@@ -406,6 +415,11 @@ public class RouterSettings implements Serializable, Cloneable {
     result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
 
     return result;
+  }
+
+  /** Neck width in micrometers, or 0 when width necking is disabled. */
+  public double getNeckWidthUm() {
+    return (neckWidthUm != null && neckWidthUm > 0) ? neckWidthUm : 0;
   }
 
   public int get_start_ripup_costs() {
