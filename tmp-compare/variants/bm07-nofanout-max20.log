@@ -1,0 +1,32 @@
+2026-07-01 06:07:03.216 INFO   Freerouting v2.2.5-SNAPSHOT (build-date: 2026-06-30)
+2026-07-01 06:07:04.619 INFO   New version available: v2.2.4
+2026-07-01 06:07:04.734 INFO   [91E857\C6F4FC] Job '91E857\C6F4FC' started at 2026-07-01T13:07:04.734616638Z.
+2026-07-01 06:07:04.761 INFO   [91E857\C6F4FC] Auto-routing stage started on board '4c80e58c310bd4a2bb2f95181b12ef07' for 86 unrouted items.
+2026-07-01 06:07:06.242 INFO   [91E857\C6F4FC] Auto-routing pass #1 on board '4c80e58c310bd4a2bb2f95181b12ef07' was completed in 1.46 seconds with the score of 790.69 (18 unrouted and 0 violations), using 0.98 CPU seconds and the job allocated 0.52 GB of memory so far.
+2026-07-01 06:07:06.820 INFO   [91E857\C6F4FC] Auto-routing pass #2 on board 'c980f8845f8d22ec0f44fa99b50729a4' was completed in 0.56 seconds with the score of 918.60 (7 unrouted and 0 violations), using 1.96 CPU seconds and the job allocated 1.45 GB of memory so far.
+2026-07-01 06:07:07.327 INFO   [91E857\C6F4FC] Auto-routing pass #3 on board 'c5dfe4209200c356ba6872a4936bf38d' was completed in 0.48 seconds with the score of 941.85 (5 unrouted and 0 violations), using 1.96 CPU seconds and the job allocated 1.45 GB of memory so far.
+2026-07-01 06:07:07.591 INFO   [91E857\C6F4FC] Auto-routing pass #4 on board 'ea7b71d98d9ffc3dffca7d2cc0098cb0' was completed in 0.25 seconds with the score of 953.48 (4 unrouted and 0 violations), using 1.96 CPU seconds and the job allocated 1.45 GB of memory so far.
+2026-07-01 06:07:07.843 INFO   [91E857\C6F4FC] Auto-routing pass #5 on board '987be6a6011e6396e2b28fa86c1ea311' was completed in 0.24 seconds with the score of 965.11 (3 unrouted and 0 violations), using 2.95 CPU seconds and the job allocated 2.72 GB of memory so far.
+2026-07-01 06:07:07.991 INFO   [91E857\C6F4FC] Auto-routing pass #6 on board '5ba21f91796ea4d23ee16228fde9be76' was completed in 0.14 seconds with the score of 965.11 (3 unrouted and 0 violations), using 2.95 CPU seconds and the job allocated 2.72 GB of memory so far.
+2026-07-01 06:07:08.146 INFO   [91E857\C6F4FC] Auto-routing pass #7 on board 'f94809e20660b12a46aa6b6a6e988d2f' was completed in 0.14 seconds with the score of 965.11 (3 unrouted and 0 violations), using 2.95 CPU seconds and the job allocated 2.72 GB of memory so far.
+2026-07-01 06:07:08.293 INFO   [91E857\C6F4FC] Auto-routing pass #8 on board '8eeea3fd502a1fe3d0162bd870d3c457' was completed in 0.14 seconds with the score of 965.11 (3 unrouted and 0 violations), using 2.95 CPU seconds and the job allocated 2.72 GB of memory so far.
+2026-07-01 06:07:08.448 INFO   [91E857\C6F4FC] Auto-routing pass #9 on board 'bccc073768dec2911ce54a6eab8c1b79' was completed in 0.14 seconds with the score of 965.11 (3 unrouted and 0 violations), using 2.95 CPU seconds and the job allocated 2.72 GB of memory so far.
+2026-07-01 06:07:08.601 INFO   [91E857\C6F4FC] Auto-routing pass #10 on board 'cb595e4aacd46e8bccbfb5dad07f5241' was completed in 0.14 seconds with the score of 965.11 (3 unrouted and 0 violations), using 2.95 CPU seconds and the job allocated 2.72 GB of memory so far.
+2026-07-01 06:07:08.758 INFO   [91E857\C6F4FC] Auto-routing pass #11 on board '22034d4e771f9a58a02b1a92009e754b' was completed in 0.14 seconds with the score of 965.11 (3 unrouted and 0 violations), using 3.94 CPU seconds and the job allocated 4.35 GB of memory so far.
+2026-07-01 06:07:08.903 INFO   [91E857\C6F4FC] Auto-routing pass #12 on board '735df7c10c79f1e326bc38ee34b6f7de' was completed in 0.13 seconds with the score of 965.11 (3 unrouted and 0 violations), using 3.94 CPU seconds and the job allocated 4.35 GB of memory so far.
+2026-07-01 06:07:09.059 INFO   [91E857\C6F4FC] Auto-routing pass #13 on board '1d9e281bb4cc8189d66eb742b8b8c38d' was completed in 0.14 seconds with the score of 965.11 (3 unrouted and 0 violations), using 3.94 CPU seconds and the job allocated 4.35 GB of memory so far.
+2026-07-01 06:07:09.205 INFO   [91E857\C6F4FC] Auto-routing pass #14 on board '4cd579e42f7c21424b32b37f51ced252' was completed in 0.13 seconds with the score of 965.11 (3 unrouted and 0 violations), using 3.94 CPU seconds and the job allocated 4.35 GB of memory so far.
+2026-07-01 06:07:09.355 INFO   [91E857\C6F4FC] Auto-routing pass #15 on board '7f745c42af41843777f4dabc1554a585' was completed in 0.14 seconds with the score of 965.11 (3 unrouted and 0 violations), using 3.94 CPU seconds and the job allocated 4.35 GB of memory so far.
+2026-07-01 06:07:09.497 INFO   [91E857\C6F4FC] Auto-routing pass #16 on board '1af63f1009e7293ff9dbefc500ad907d' was completed in 0.13 seconds with the score of 965.11 (3 unrouted and 0 violations), using 3.94 CPU seconds and the job allocated 4.35 GB of memory so far.
+2026-07-01 06:07:09.646 INFO   [91E857\C6F4FC] Auto-routing pass #17 on board '0b9b0ee97d3fed4f64e21c385da260d1' was completed in 0.14 seconds with the score of 965.11 (3 unrouted and 0 violations), using 3.94 CPU seconds and the job allocated 4.35 GB of memory so far.
+2026-07-01 06:07:09.787 INFO   [91E857\C6F4FC] Auto-routing pass #18 on board 'a83fec3dfaec68dc33019547a02f7fc7' was completed in 0.13 seconds with the score of 965.11 (3 unrouted and 0 violations), using 4.94 CPU seconds and the job allocated 6.03 GB of memory so far.
+2026-07-01 06:07:09.790 INFO   [91E857\C6F4FC] The router's score (965.11) has not improved by more than 0.5 points in the last 10 passes (3 items still unconnected). Stopping the auto-router.
+The following connections could not be routed -- please review your design (e.g. check pad clearances, trace width rules, and available routing space):
+  Net '/RXI' (1 unrouted connection):
+    - U7-5  ->  U10-30
+  Net '/RST' (1 unrouted connection):
+    - via  ->  U13-B2
+  Net '/DTR' (1 unrouted connection):
+    - U12-DTR  ->  U3-1
+2026-07-01 06:07:09.800 INFO   [91E857\C6F4FC] Auto-routing stage completed: started with 86 unrouted nets, completed in 5.04 seconds, final score: 965.11 (3 unrouted and 0 violations), using 4.94 total CPU seconds, 6.03 GB total allocated, and 179.5 MB peak heap usage.
+2026-07-01 06:07:09.802 INFO   [91E857\C6F4FC] Job '91E857\C6F4FC' finished with state: COMPLETED (elapsed: 5.07 seconds, finished at UTC: 2026-07-01T13:07:09.802385225Z).

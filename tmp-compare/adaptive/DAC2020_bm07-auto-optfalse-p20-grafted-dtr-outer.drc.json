@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-07-01T07:25:34.368242136-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "DAC2020_bm07.unrouted.dsn",
+  "unconnected_items": [],
+  "violations": [
+    {
+      "description": "Hole clearance violation between Via [/DTR] and Trace [/RXI] (expected: 0.2000 mm, actual: 0.0835 mm)",
+      "items": [
+        {
+          "description": "Via [/DTR]",
+          "pos": {
+            "x": 149.0882,
+            "y": -79.5427
+          },
+          "uuid": "363"
+        },
+        {
+          "description": "Trace [/RXI]",
+          "pos": {
+            "x": 144.61610000000002,
+            "y": -83.3336
+          },
+          "uuid": "214"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    }
+  ],
+  "schematic_parity": [],
+  "quality_score": 997.66455078125
+}

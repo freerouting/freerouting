@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-07-01T07:11:46.962887299-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "DAC2020_bm09.unrouted.dsn",
+  "unconnected_items": [
+    {
+      "description": "Unconnected items: Pin [Net-(X1-Pad1)] and Pin [Net-(X1-Pad1)] (5 total items in net)",
+      "items": [
+        {
+          "description": "Pin [Net-(X1-Pad1)]",
+          "pos": {
+            "x": 129.5247,
+            "y": -135.8949
+          },
+          "uuid": "135"
+        },
+        {
+          "description": "Pin [Net-(X1-Pad1)]",
+          "pos": {
+            "x": 132.3647,
+            "y": -137.2849
+          },
+          "uuid": "130"
+        },
+        {
+          "description": "Trace [Net-(X1-Pad1)]",
+          "pos": {
+            "x": 130.32395,
+            "y": -136.5899
+          },
+          "uuid": "345"
+        },
+        {
+          "description": "Trace [Net-(X1-Pad1)]",
+          "pos": {
+            "x": 131.74395,
+            "y": -137.2849
+          },
+          "uuid": "344"
+        },
+        {
+          "description": "Pin [Net-(X1-Pad1)]",
+          "pos": {
+            "x": 132.3647,
+            "y": -128.9749
+          },
+          "uuid": "133"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    }
+  ],
+  "violations": [],
+  "schematic_parity": [],
+  "quality_score": 991.3759765625
+}

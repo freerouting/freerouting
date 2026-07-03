@@ -1,0 +1,3703 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-06-30T22:24:15.461554589-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "DAC2020_bm01.unrouted.dsn",
+  "unconnected_items": [
+    {
+      "description": "Unconnected items: Pin [GND] and Pin [GND] (118 total items in net)",
+      "items": [
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 184.31355,
+            "y": -115.0239
+          },
+          "uuid": "442"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 138.3411,
+            "y": -129.1336
+          },
+          "uuid": "86"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 176.03315,
+            "y": -105.99419999999999
+          },
+          "uuid": "441"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 115.2988,
+            "y": -111.2727
+          },
+          "uuid": "456"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.5011,
+            "y": -103.82719999999999
+          },
+          "uuid": "196"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 151.9803,
+            "y": -93.6523
+          },
+          "uuid": "472"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 115.11645,
+            "y": -112.2252
+          },
+          "uuid": "457"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 194.2211,
+            "y": -124.0536
+          },
+          "uuid": "314"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 170.0469,
+            "y": -109.2419
+          },
+          "uuid": "403"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 153.60905,
+            "y": -98.58460000000001
+          },
+          "uuid": "400"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 125.09410000000001,
+            "y": -115.41760000000001
+          },
+          "uuid": "110"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 145.5011,
+            "y": -111.85305
+          },
+          "uuid": "470"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 137.8136,
+            "y": -125.93475
+          },
+          "uuid": "455"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 145.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "166"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 172.7581,
+            "y": -94.5896
+          },
+          "uuid": "57"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 155.2378,
+            "y": -103.51689999999999
+          },
+          "uuid": "474"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 135.3321,
+            "y": -120.75160000000001
+          },
+          "uuid": "459"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 165.12365,
+            "y": -112.87410000000001
+          },
+          "uuid": "402"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 120.0141,
+            "y": -112.8776
+          },
+          "uuid": "127"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 161.1131,
+            "y": -94.2086
+          },
+          "uuid": "104"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 172.17589999999998,
+            "y": -94.58975
+          },
+          "uuid": "408"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 137.2861,
+            "y": -124.56160000000001
+          },
+          "uuid": "106"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 167.18804999999998,
+            "y": -97.2649
+          },
+          "uuid": "409"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 138.3411,
+            "y": -128.22075
+          },
+          "uuid": "454"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 149.11945,
+            "y": -99.89744999999999
+          },
+          "uuid": "406"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 163.4481,
+            "y": -113.2586
+          },
+          "uuid": "92"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 130.2131,
+            "y": -117.4496
+          },
+          "uuid": "446"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 163.32525,
+            "y": -103.19485
+          },
+          "uuid": "415"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 120.0141,
+            "y": -115.41760000000001
+          },
+          "uuid": "129"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 152.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "215"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 114.59795,
+            "y": -110.9726
+          },
+          "uuid": "465"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 135.3321,
+            "y": -122.0216
+          },
+          "uuid": "93"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 113.89710000000001,
+            "y": -110.9726
+          },
+          "uuid": "274"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 171.5937,
+            "y": -94.5899
+          },
+          "uuid": "461"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 114.9341,
+            "y": -112.8776
+          },
+          "uuid": "98"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 163.8681,
+            "y": -106.2736
+          },
+          "uuid": "7"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 166.3534,
+            "y": -94.91285
+          },
+          "uuid": "407"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 145.36425,
+            "y": -112.4967
+          },
+          "uuid": "405"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 119.96785000000001,
+            "y": -112.35125
+          },
+          "uuid": "428"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 136.3091,
+            "y": -123.2916
+          },
+          "uuid": "458"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 168.6179,
+            "y": -105.99419999999999
+          },
+          "uuid": "53"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 166.243,
+            "y": -106.1339
+          },
+          "uuid": "422"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 166.7992,
+            "y": -112.48960000000001
+          },
+          "uuid": "460"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 159.0101,
+            "y": -101.8165
+          },
+          "uuid": "401"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 143.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "233"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 155.2378,
+            "y": -103.67205
+          },
+          "uuid": "413"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 191.68110000000001,
+            "y": -124.0536
+          },
+          "uuid": "313"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 116.19095,
+            "y": -111.5728
+          },
+          "uuid": "445"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 118.50235,
+            "y": -111.69885000000001
+          },
+          "uuid": "444"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 151.9907,
+            "y": -94.48975
+          },
+          "uuid": "469"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 155.98775,
+            "y": -103.82719999999999
+          },
+          "uuid": "473"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 174.20745000000002,
+            "y": -105.99419999999999
+          },
+          "uuid": "427"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 155.3561,
+            "y": -103.82719999999999
+          },
+          "uuid": "414"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 135.3321,
+            "y": -119.4816
+          },
+          "uuid": "95"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 171.8691,
+            "y": -105.99419999999999
+          },
+          "uuid": "421"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 122.5541,
+            "y": -115.97439999999999
+          },
+          "uuid": "447"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 141.78425,
+            "y": -120.87405
+          },
+          "uuid": "404"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 120.0141,
+            "y": -114.14760000000001
+          },
+          "uuid": "448"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 143.0011,
+            "y": -95.80260000000001
+          },
+          "uuid": "416"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 148.1912,
+            "y": -102.60995
+          },
+          "uuid": "399"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 140.8811,
+            "y": -128.22075
+          },
+          "uuid": "439"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 192.9511,
+            "y": -124.0536
+          },
+          "uuid": "443"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 139.6111,
+            "y": -127.30789999999999
+          },
+          "uuid": "440"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 140.8811,
+            "y": -129.1336
+          },
+          "uuid": "87"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 175.1203,
+            "y": -105.99419999999999
+          },
+          "uuid": "52"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 145.2274,
+            "y": -112.6145
+          },
+          "uuid": "471"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 113.3891,
+            "y": -88.93260000000001
+          },
+          "uuid": "466"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 124.37110000000001,
+            "y": -81.78645
+          },
+          "uuid": "417"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 102.8661,
+            "y": -97.1986
+          },
+          "uuid": "438"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 106.38789999999999,
+            "y": -128.3716
+          },
+          "uuid": "70"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 113.06410000000001,
+            "y": -88.93260000000001
+          },
+          "uuid": "260"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 116.7299,
+            "y": -96.83335000000001
+          },
+          "uuid": "410"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 112.62365,
+            "y": -128.5496
+          },
+          "uuid": "424"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 107.9054,
+            "y": -116.205
+          },
+          "uuid": "426"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 101.5111,
+            "y": -87.5736
+          },
+          "uuid": "267"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 116.4971,
+            "y": -105.25760000000001
+          },
+          "uuid": "453"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 107.7942,
+            "y": -116.205
+          },
+          "uuid": "464"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 111.9641,
+            "y": -85.4456
+          },
+          "uuid": "113"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 104.2211,
+            "y": -94.8236
+          },
+          "uuid": "266"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 118.0601,
+            "y": -105.25760000000001
+          },
+          "uuid": "131"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 118.56015,
+            "y": -86.65745
+          },
+          "uuid": "449"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 117.2379,
+            "y": -89.48339999999999
+          },
+          "uuid": "433"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 116.31410000000001,
+            "y": -88.93260000000001
+          },
+          "uuid": "255"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 126.1491,
+            "y": -128.7276
+          },
+          "uuid": "51"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 123.35510000000001,
+            "y": -128.7276
+          },
+          "uuid": "462"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 112.5141,
+            "y": -86.6424
+          },
+          "uuid": "436"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 118.21289999999999,
+            "y": -89.48339999999999
+          },
+          "uuid": "432"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 115.6641,
+            "y": -95.55395
+          },
+          "uuid": "467"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 104.8893,
+            "y": -125.8697
+          },
+          "uuid": "425"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 103.3907,
+            "y": -123.3678
+          },
+          "uuid": "72"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 105.59245,
+            "y": -119.7864
+          },
+          "uuid": "420"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 113.7141,
+            "y": -88.93260000000001
+          },
+          "uuid": "259"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 116.9129,
+            "y": -93.74145
+          },
+          "uuid": "429"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 102.8661,
+            "y": -91.1986
+          },
+          "uuid": "434"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 106.7376,
+            "y": -86.5096
+          },
+          "uuid": "452"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 124.37110000000001,
+            "y": -80.87360000000001
+          },
+          "uuid": "22"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 125.09410000000001,
+            "y": -87.47760000000001
+          },
+          "uuid": "90"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 118.89089999999999,
+            "y": -101.9995
+          },
+          "uuid": "412"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 104.65265,
+            "y": -107.8893
+          },
+          "uuid": "419"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 120.5679,
+            "y": -92.55760000000001
+          },
+          "uuid": "430"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 118.44715,
+            "y": -88.40095
+          },
+          "uuid": "450"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 121.43060000000001,
+            "y": -84.07245
+          },
+          "uuid": "418"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 115.6641,
+            "y": -96.18260000000001
+          },
+          "uuid": "241"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 114.68910000000001,
+            "y": -88.38589999999999
+          },
+          "uuid": "437"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 122.9741,
+            "y": -92.55760000000001
+          },
+          "uuid": "67"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 120.56110000000001,
+            "y": -128.7276
+          },
+          "uuid": "49"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 121.86215,
+            "y": -88.01875
+          },
+          "uuid": "451"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 115.6641,
+            "y": -94.92530000000001
+          },
+          "uuid": "468"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 118.49010000000001,
+            "y": -85.4456
+          },
+          "uuid": "120"
+        },
+        {
+          "description": "Via [GND]",
+          "pos": {
+            "x": 117.7957,
+            "y": -98.7414
+          },
+          "uuid": "411"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 108.72625,
+            "y": -116.205
+          },
+          "uuid": "463"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 101.5111,
+            "y": -99.5736
+          },
+          "uuid": "268"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 109.43589999999999,
+            "y": -116.205
+          },
+          "uuid": "75"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 114.9341,
+            "y": -105.25760000000001
+          },
+          "uuid": "112"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 119.71025,
+            "y": -128.7276
+          },
+          "uuid": "423"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 118.1617,
+            "y": -91.29589999999999
+          },
+          "uuid": "431"
+        },
+        {
+          "description": "Trace [GND]",
+          "pos": {
+            "x": 113.06410000000001,
+            "y": -88.38589999999999
+          },
+          "uuid": "435"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 118.2641,
+            "y": -88.93260000000001
+          },
+          "uuid": "252"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [N$7] and Pin [N$7] (4 total items in net)",
+      "items": [
+        {
+          "description": "Pin [N$7]",
+          "pos": {
+            "x": 137.2861,
+            "y": -119.4816
+          },
+          "uuid": "96"
+        },
+        {
+          "description": "Trace [N$7]",
+          "pos": {
+            "x": 139.08360000000002,
+            "y": -117.7671
+          },
+          "uuid": "480"
+        },
+        {
+          "description": "Pin [N$7]",
+          "pos": {
+            "x": 140.8811,
+            "y": -116.05260000000001
+          },
+          "uuid": "74"
+        },
+        {
+          "description": "Pin [N$7]",
+          "pos": {
+            "x": 146.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "167"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [RESET] and Pin [RESET] (23 total items in net)",
+      "items": [
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 125.4515,
+            "y": -114.1369
+          },
+          "uuid": "493"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 131.79520000000002,
+            "y": -118.1692
+          },
+          "uuid": "494"
+        },
+        {
+          "description": "Pin [RESET]",
+          "pos": {
+            "x": 144.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "164"
+        },
+        {
+          "description": "Via [RESET]",
+          "pos": {
+            "x": 144.4256,
+            "y": -112.5799
+          },
+          "uuid": "500"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 130.7211,
+            "y": -128.22075
+          },
+          "uuid": "497"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 133.27429999999998,
+            "y": -124.7547
+          },
+          "uuid": "495"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 123.1401,
+            "y": -113.50725
+          },
+          "uuid": "492"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 123.1401,
+            "y": -114.77725
+          },
+          "uuid": "491"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 144.46335000000002,
+            "y": -112.4794
+          },
+          "uuid": "486"
+        },
+        {
+          "description": "Pin [RESET]",
+          "pos": {
+            "x": 130.7211,
+            "y": -129.1336
+          },
+          "uuid": "83"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 144.5011,
+            "y": -111.85305
+          },
+          "uuid": "499"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 140.12654999999998,
+            "y": -117.3907
+          },
+          "uuid": "487"
+        },
+        {
+          "description": "Via [RESET]",
+          "pos": {
+            "x": 127.76289999999999,
+            "y": -114.1369
+          },
+          "uuid": "496"
+        },
+        {
+          "description": "Pin [RESET]",
+          "pos": {
+            "x": 123.1401,
+            "y": -110.4392
+          },
+          "uuid": "124"
+        },
+        {
+          "description": "Pin [RESET]",
+          "pos": {
+            "x": 123.1401,
+            "y": -112.8776
+          },
+          "uuid": "107"
+        },
+        {
+          "description": "Pin [RESET]",
+          "pos": {
+            "x": 123.1401,
+            "y": -115.41760000000001
+          },
+          "uuid": "109"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 123.1401,
+            "y": -111.6584
+          },
+          "uuid": "498"
+        },
+        {
+          "description": "Pin [RESET]",
+          "pos": {
+            "x": 168.6179,
+            "y": -101.473
+          },
+          "uuid": "55"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 167.70505,
+            "y": -101.473
+          },
+          "uuid": "489"
+        },
+        {
+          "description": "Pin [RESET]",
+          "pos": {
+            "x": 175.1203,
+            "y": -101.473
+          },
+          "uuid": "54"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 171.8691,
+            "y": -101.473
+          },
+          "uuid": "490"
+        },
+        {
+          "description": "Pin [RESET]",
+          "pos": {
+            "x": 161.3281,
+            "y": -106.2736
+          },
+          "uuid": "6"
+        },
+        {
+          "description": "Trace [RESET]",
+          "pos": {
+            "x": 164.06015,
+            "y": -104.62164999999999
+          },
+          "uuid": "488"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [VIN] and Pin [VIN] (13 total items in net)",
+      "items": [
+        {
+          "description": "Trace [VIN]",
+          "pos": {
+            "x": 118.51795,
+            "y": -121.3786
+          },
+          "uuid": "505"
+        },
+        {
+          "description": "Trace [VIN]",
+          "pos": {
+            "x": 115.72395,
+            "y": -120.3296
+          },
+          "uuid": "504"
+        },
+        {
+          "description": "Trace [VIN]",
+          "pos": {
+            "x": 111.91765,
+            "y": -112.2299
+          },
+          "uuid": "507"
+        },
+        {
+          "description": "Pin [VIN]",
+          "pos": {
+            "x": 112.98010000000001,
+            "y": -115.41760000000001
+          },
+          "uuid": "126"
+        },
+        {
+          "description": "Trace [VIN]",
+          "pos": {
+            "x": 112.98010000000001,
+            "y": -114.14760000000001
+          },
+          "uuid": "503"
+        },
+        {
+          "description": "Trace [VIN]",
+          "pos": {
+            "x": 113.9766,
+            "y": -117.12275
+          },
+          "uuid": "502"
+        },
+        {
+          "description": "Pin [VIN]",
+          "pos": {
+            "x": 112.98010000000001,
+            "y": -112.8776
+          },
+          "uuid": "97"
+        },
+        {
+          "description": "Pin [VIN]",
+          "pos": {
+            "x": 114.9731,
+            "y": -120.3296
+          },
+          "uuid": "69"
+        },
+        {
+          "description": "Pin [VIN]",
+          "pos": {
+            "x": 109.43589999999999,
+            "y": -111.5822
+          },
+          "uuid": "77"
+        },
+        {
+          "description": "Pin [VIN]",
+          "pos": {
+            "x": 120.56110000000001,
+            "y": -122.42760000000001
+          },
+          "uuid": "48"
+        },
+        {
+          "description": "Trace [VIN]",
+          "pos": {
+            "x": 114.9731,
+            "y": -119.57875
+          },
+          "uuid": "501"
+        },
+        {
+          "description": "Trace [VIN]",
+          "pos": {
+            "x": 110.14555,
+            "y": -111.5822
+          },
+          "uuid": "506"
+        },
+        {
+          "description": "Pin [VIN]",
+          "pos": {
+            "x": 143.4211,
+            "y": -129.1336
+          },
+          "uuid": "88"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [ADC0] and Pin [ADC0] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [ADC0]",
+          "pos": {
+            "x": 144.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "231"
+        },
+        {
+          "description": "Pin [ADC0]",
+          "pos": {
+            "x": 148.5011,
+            "y": -129.1336
+          },
+          "uuid": "24"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [ADC1] and Pin [ADC1] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [ADC1]",
+          "pos": {
+            "x": 144.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "230"
+        },
+        {
+          "description": "Pin [ADC1]",
+          "pos": {
+            "x": 151.0411,
+            "y": -129.1336
+          },
+          "uuid": "25"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [+3V3] and Pin [+3V3] (13 total items in net)",
+      "items": [
+        {
+          "description": "Via [+3V3]",
+          "pos": {
+            "x": 118.76339999999999,
+            "y": -90.2107
+          },
+          "uuid": "552"
+        },
+        {
+          "description": "Pin [+3V3]",
+          "pos": {
+            "x": 118.9141,
+            "y": -88.93260000000001
+          },
+          "uuid": "251"
+        },
+        {
+          "description": "Trace [+3V3]",
+          "pos": {
+            "x": 115.38889999999999,
+            "y": -108.43260000000001
+          },
+          "uuid": "551"
+        },
+        {
+          "description": "Pin [+3V3]",
+          "pos": {
+            "x": 113.89710000000001,
+            "y": -108.43260000000001
+          },
+          "uuid": "272"
+        },
+        {
+          "description": "Trace [+3V3]",
+          "pos": {
+            "x": 118.83875,
+            "y": -89.57164999999999
+          },
+          "uuid": "550"
+        },
+        {
+          "description": "Trace [+3V3]",
+          "pos": {
+            "x": 114.3587,
+            "y": -85.8862
+          },
+          "uuid": "553"
+        },
+        {
+          "description": "Pin [+3V3]",
+          "pos": {
+            "x": 113.91810000000001,
+            "y": -85.4456
+          },
+          "uuid": "114"
+        },
+        {
+          "description": "Via [+3V3]",
+          "pos": {
+            "x": 115.504,
+            "y": -108.43260000000001
+          },
+          "uuid": "556"
+        },
+        {
+          "description": "Trace [+3V3]",
+          "pos": {
+            "x": 117.70985,
+            "y": -88.85185
+          },
+          "uuid": "549"
+        },
+        {
+          "description": "Trace [+3V3]",
+          "pos": {
+            "x": 114.96365,
+            "y": -99.01335
+          },
+          "uuid": "548"
+        },
+        {
+          "description": "Via [+3V3]",
+          "pos": {
+            "x": 114.7993,
+            "y": -86.3268
+          },
+          "uuid": "554"
+        },
+        {
+          "description": "Trace [+3V3]",
+          "pos": {
+            "x": 114.58545,
+            "y": -108.43260000000001
+          },
+          "uuid": "555"
+        },
+        {
+          "description": "Pin [+3V3]",
+          "pos": {
+            "x": 133.2611,
+            "y": -129.1336
+          },
+          "uuid": "84"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [ADC8] and Pin [ADC8] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [ADC8]",
+          "pos": {
+            "x": 148.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "223"
+        },
+        {
+          "description": "Pin [ADC8]",
+          "pos": {
+            "x": 171.3611,
+            "y": -129.1336
+          },
+          "uuid": "40"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [ADC11] and Pin [ADC11] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [ADC11]",
+          "pos": {
+            "x": 149.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "220"
+        },
+        {
+          "description": "Pin [ADC11]",
+          "pos": {
+            "x": 178.9811,
+            "y": -129.1336
+          },
+          "uuid": "43"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [ADC15] and Pin [ADC15] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [ADC15]",
+          "pos": {
+            "x": 151.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "216"
+        },
+        {
+          "description": "Pin [ADC15]",
+          "pos": {
+            "x": 189.1411,
+            "y": -129.1336
+          },
+          "uuid": "47"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [PE4] and Pin [PE4] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [PE4]",
+          "pos": {
+            "x": 140.5011,
+            "y": -99.82719999999999
+          },
+          "uuid": "140"
+        },
+        {
+          "description": "Pin [PE4]",
+          "pos": {
+            "x": 156.1211,
+            "y": -80.87360000000001
+          },
+          "uuid": "10"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [PE1] and Pin [PE1] (6 total items in net)",
+      "items": [
+        {
+          "description": "Trace [PE1]",
+          "pos": {
+            "x": 139.98775,
+            "y": -98.32719999999999
+          },
+          "uuid": "636"
+        },
+        {
+          "description": "Pin [PE1]",
+          "pos": {
+            "x": 140.5011,
+            "y": -98.32719999999999
+          },
+          "uuid": "137"
+        },
+        {
+          "description": "Pin [PE1]",
+          "pos": {
+            "x": 125.26010000000001,
+            "y": -107.7976
+          },
+          "uuid": "61"
+        },
+        {
+          "description": "Trace [PE1]",
+          "pos": {
+            "x": 132.24564999999998,
+            "y": -103.05
+          },
+          "uuid": "634"
+        },
+        {
+          "description": "Trace [PE1]",
+          "pos": {
+            "x": 139.3528,
+            "y": -98.3148
+          },
+          "uuid": "635"
+        },
+        {
+          "description": "Pin [PE1]",
+          "pos": {
+            "x": 158.6611,
+            "y": -80.87360000000001
+          },
+          "uuid": "9"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [RXD2] and Pin [RXD2] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [RXD2]",
+          "pos": {
+            "x": 140.5011,
+            "y": -102.82719999999999
+          },
+          "uuid": "146"
+        },
+        {
+          "description": "Pin [RXD2]",
+          "pos": {
+            "x": 173.9011,
+            "y": -80.87360000000001
+          },
+          "uuid": "36"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [TXD2] and Pin [TXD2] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [TXD2]",
+          "pos": {
+            "x": 140.5011,
+            "y": -103.32719999999999
+          },
+          "uuid": "147"
+        },
+        {
+          "description": "Pin [TXD2]",
+          "pos": {
+            "x": 171.3611,
+            "y": -80.87360000000001
+          },
+          "uuid": "37"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [PC3] and Pin [PC3] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [PC3]",
+          "pos": {
+            "x": 191.68110000000001,
+            "y": -98.65360000000001
+          },
+          "uuid": "282"
+        },
+        {
+          "description": "Pin [PC3]",
+          "pos": {
+            "x": 156.5011,
+            "y": -106.82719999999999
+          },
+          "uuid": "190"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    },
+    {
+      "description": "Unconnected items: Pin [PC7] and Pin [PC7] (2 total items in net)",
+      "items": [
+        {
+          "description": "Pin [PC7]",
+          "pos": {
+            "x": 191.68110000000001,
+            "y": -93.5736
+          },
+          "uuid": "286"
+        },
+        {
+          "description": "Pin [PC7]",
+          "pos": {
+            "x": 156.5011,
+            "y": -104.82719999999999
+          },
+          "uuid": "194"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    }
+  ],
+  "violations": [
+    {
+      "description": "Hole clearance violation between Pin [+5V] and Pin [GND] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [+5V]",
+          "pos": {
+            "x": 142.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "234"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 143.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "233"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [AREF] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 143.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "233"
+        },
+        {
+          "description": "Pin [AREF]",
+          "pos": {
+            "x": 143.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "232"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [AREF] and Pin [ADC0] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [AREF]",
+          "pos": {
+            "x": 143.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "232"
+        },
+        {
+          "description": "Pin [ADC0]",
+          "pos": {
+            "x": 144.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "231"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC0] and Pin [ADC1] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC0]",
+          "pos": {
+            "x": 144.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "231"
+        },
+        {
+          "description": "Pin [ADC1]",
+          "pos": {
+            "x": 144.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "230"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC1] and Pin [ADC2] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC1]",
+          "pos": {
+            "x": 144.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "230"
+        },
+        {
+          "description": "Pin [ADC2]",
+          "pos": {
+            "x": 145.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "229"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC2] and Pin [ADC3] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC2]",
+          "pos": {
+            "x": 145.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "229"
+        },
+        {
+          "description": "Pin [ADC3]",
+          "pos": {
+            "x": 145.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "228"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC3] and Pin [ADC4] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC3]",
+          "pos": {
+            "x": 145.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "228"
+        },
+        {
+          "description": "Pin [ADC4]",
+          "pos": {
+            "x": 146.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "227"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC4] and Pin [ADC5] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC4]",
+          "pos": {
+            "x": 146.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "227"
+        },
+        {
+          "description": "Pin [ADC5]",
+          "pos": {
+            "x": 146.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "226"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC5] and Pin [ADC6] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC5]",
+          "pos": {
+            "x": 146.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "226"
+        },
+        {
+          "description": "Pin [ADC6]",
+          "pos": {
+            "x": 147.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "225"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC6] and Pin [ADC7] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC6]",
+          "pos": {
+            "x": 147.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "225"
+        },
+        {
+          "description": "Pin [ADC7]",
+          "pos": {
+            "x": 147.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "224"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC7] and Pin [ADC8] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC7]",
+          "pos": {
+            "x": 147.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "224"
+        },
+        {
+          "description": "Pin [ADC8]",
+          "pos": {
+            "x": 148.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "223"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC8] and Pin [ADC9] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC8]",
+          "pos": {
+            "x": 148.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "223"
+        },
+        {
+          "description": "Pin [ADC9]",
+          "pos": {
+            "x": 148.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "222"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC9] and Pin [ADC10] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC9]",
+          "pos": {
+            "x": 148.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "222"
+        },
+        {
+          "description": "Pin [ADC10]",
+          "pos": {
+            "x": 149.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "221"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC10] and Pin [ADC11] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC10]",
+          "pos": {
+            "x": 149.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "221"
+        },
+        {
+          "description": "Pin [ADC11]",
+          "pos": {
+            "x": 149.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "220"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC11] and Pin [ADC12] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC11]",
+          "pos": {
+            "x": 149.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "220"
+        },
+        {
+          "description": "Pin [ADC12]",
+          "pos": {
+            "x": 150.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "219"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC12] and Pin [ADC13] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC12]",
+          "pos": {
+            "x": 150.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "219"
+        },
+        {
+          "description": "Pin [ADC13]",
+          "pos": {
+            "x": 150.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "218"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC13] and Pin [ADC14] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC13]",
+          "pos": {
+            "x": 150.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "218"
+        },
+        {
+          "description": "Pin [ADC14]",
+          "pos": {
+            "x": 151.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "217"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC14] and Pin [ADC15] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC14]",
+          "pos": {
+            "x": 151.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "217"
+        },
+        {
+          "description": "Pin [ADC15]",
+          "pos": {
+            "x": 151.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "216"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [ADC15] and Pin [GND] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [ADC15]",
+          "pos": {
+            "x": 151.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "216"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 152.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "215"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [+5V] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 152.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "215"
+        },
+        {
+          "description": "Pin [+5V]",
+          "pos": {
+            "x": 152.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "214"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [+5V] and Pin (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [+5V]",
+          "pos": {
+            "x": 152.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "214"
+        },
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 153.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "213"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin and Pin [PA0] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 153.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "213"
+        },
+        {
+          "description": "Pin [PA0]",
+          "pos": {
+            "x": 153.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "212"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PA0] and Pin [PA1] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PA0]",
+          "pos": {
+            "x": 153.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "212"
+        },
+        {
+          "description": "Pin [PA1]",
+          "pos": {
+            "x": 154.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "211"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PA1] and Pin [PA2] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PA1]",
+          "pos": {
+            "x": 154.0011,
+            "y": -95.32719999999999
+          },
+          "uuid": "211"
+        },
+        {
+          "description": "Pin [PA2]",
+          "pos": {
+            "x": 154.5011,
+            "y": -95.32719999999999
+          },
+          "uuid": "210"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PA3] and Pin [PA4] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PA3]",
+          "pos": {
+            "x": 156.5011,
+            "y": -97.32719999999999
+          },
+          "uuid": "209"
+        },
+        {
+          "description": "Pin [PA4]",
+          "pos": {
+            "x": 156.5011,
+            "y": -97.82719999999999
+          },
+          "uuid": "208"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PA4] and Pin [PA5] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PA4]",
+          "pos": {
+            "x": 156.5011,
+            "y": -97.82719999999999
+          },
+          "uuid": "208"
+        },
+        {
+          "description": "Pin [PA5]",
+          "pos": {
+            "x": 156.5011,
+            "y": -98.32719999999999
+          },
+          "uuid": "207"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PA5] and Pin [PA6] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PA5]",
+          "pos": {
+            "x": 156.5011,
+            "y": -98.32719999999999
+          },
+          "uuid": "207"
+        },
+        {
+          "description": "Pin [PA6]",
+          "pos": {
+            "x": 156.5011,
+            "y": -98.82719999999999
+          },
+          "uuid": "206"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PA6] and Pin [PA7] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PA6]",
+          "pos": {
+            "x": 156.5011,
+            "y": -98.82719999999999
+          },
+          "uuid": "206"
+        },
+        {
+          "description": "Pin [PA7]",
+          "pos": {
+            "x": 156.5011,
+            "y": -99.32719999999999
+          },
+          "uuid": "205"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PA7] and Pin [PG2] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PA7]",
+          "pos": {
+            "x": 156.5011,
+            "y": -99.32719999999999
+          },
+          "uuid": "205"
+        },
+        {
+          "description": "Pin [PG2]",
+          "pos": {
+            "x": 156.5011,
+            "y": -99.82719999999999
+          },
+          "uuid": "204"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PG2] and Pin (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PG2]",
+          "pos": {
+            "x": 156.5011,
+            "y": -99.82719999999999
+          },
+          "uuid": "204"
+        },
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 156.5011,
+            "y": -100.32719999999999
+          },
+          "uuid": "203"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin and Pin [TXD3] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 156.5011,
+            "y": -102.32719999999999
+          },
+          "uuid": "199"
+        },
+        {
+          "description": "Pin [TXD3]",
+          "pos": {
+            "x": 156.5011,
+            "y": -102.82719999999999
+          },
+          "uuid": "198"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [TXD3] and Pin [RXD3] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [TXD3]",
+          "pos": {
+            "x": 156.5011,
+            "y": -102.82719999999999
+          },
+          "uuid": "198"
+        },
+        {
+          "description": "Pin [RXD3]",
+          "pos": {
+            "x": 156.5011,
+            "y": -103.32719999999999
+          },
+          "uuid": "197"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [RXD3] and Pin [GND] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [RXD3]",
+          "pos": {
+            "x": 156.5011,
+            "y": -103.32719999999999
+          },
+          "uuid": "197"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.5011,
+            "y": -103.82719999999999
+          },
+          "uuid": "196"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [+5V] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 156.5011,
+            "y": -103.82719999999999
+          },
+          "uuid": "196"
+        },
+        {
+          "description": "Pin [+5V]",
+          "pos": {
+            "x": 156.5011,
+            "y": -104.32719999999999
+          },
+          "uuid": "195"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [+5V] and Pin [PC7] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [+5V]",
+          "pos": {
+            "x": 156.5011,
+            "y": -104.32719999999999
+          },
+          "uuid": "195"
+        },
+        {
+          "description": "Pin [PC7]",
+          "pos": {
+            "x": 156.5011,
+            "y": -104.82719999999999
+          },
+          "uuid": "194"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PC7] and Pin [PC6] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PC7]",
+          "pos": {
+            "x": 156.5011,
+            "y": -104.82719999999999
+          },
+          "uuid": "194"
+        },
+        {
+          "description": "Pin [PC6]",
+          "pos": {
+            "x": 156.5011,
+            "y": -105.32719999999999
+          },
+          "uuid": "193"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PC6] and Pin [PC5] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PC6]",
+          "pos": {
+            "x": 156.5011,
+            "y": -105.32719999999999
+          },
+          "uuid": "193"
+        },
+        {
+          "description": "Pin [PC5]",
+          "pos": {
+            "x": 156.5011,
+            "y": -105.82719999999999
+          },
+          "uuid": "192"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PC5] and Pin [PC4] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PC5]",
+          "pos": {
+            "x": 156.5011,
+            "y": -105.82719999999999
+          },
+          "uuid": "192"
+        },
+        {
+          "description": "Pin [PC4]",
+          "pos": {
+            "x": 156.5011,
+            "y": -106.32719999999999
+          },
+          "uuid": "191"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PC4] and Pin [PC3] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PC4]",
+          "pos": {
+            "x": 156.5011,
+            "y": -106.32719999999999
+          },
+          "uuid": "191"
+        },
+        {
+          "description": "Pin [PC3]",
+          "pos": {
+            "x": 156.5011,
+            "y": -106.82719999999999
+          },
+          "uuid": "190"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PC3] and Pin [PC2] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PC3]",
+          "pos": {
+            "x": 156.5011,
+            "y": -106.82719999999999
+          },
+          "uuid": "190"
+        },
+        {
+          "description": "Pin [PC2]",
+          "pos": {
+            "x": 156.5011,
+            "y": -107.32719999999999
+          },
+          "uuid": "189"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PC2] and Pin [PC1] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PC2]",
+          "pos": {
+            "x": 156.5011,
+            "y": -107.32719999999999
+          },
+          "uuid": "189"
+        },
+        {
+          "description": "Pin [PC1]",
+          "pos": {
+            "x": 156.5011,
+            "y": -107.82719999999999
+          },
+          "uuid": "188"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PC1] and Pin [PC0] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PC1]",
+          "pos": {
+            "x": 156.5011,
+            "y": -107.82719999999999
+          },
+          "uuid": "188"
+        },
+        {
+          "description": "Pin [PC0]",
+          "pos": {
+            "x": 156.5011,
+            "y": -108.32719999999999
+          },
+          "uuid": "187"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PC0] and Pin [PG1] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PC0]",
+          "pos": {
+            "x": 156.5011,
+            "y": -108.32719999999999
+          },
+          "uuid": "187"
+        },
+        {
+          "description": "Pin [PG1]",
+          "pos": {
+            "x": 156.5011,
+            "y": -108.82719999999999
+          },
+          "uuid": "186"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PG1] and Pin [PG0] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PG1]",
+          "pos": {
+            "x": 156.5011,
+            "y": -108.82719999999999
+          },
+          "uuid": "186"
+        },
+        {
+          "description": "Pin [PG0]",
+          "pos": {
+            "x": 156.5011,
+            "y": -109.32719999999999
+          },
+          "uuid": "185"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PD7] and Pin (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PD7]",
+          "pos": {
+            "x": 154.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "184"
+        },
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 154.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "183"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin and Pin [TXD1] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 153.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "181"
+        },
+        {
+          "description": "Pin [TXD1]",
+          "pos": {
+            "x": 152.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "180"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [TXD1] and Pin [RXD1] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [TXD1]",
+          "pos": {
+            "x": 152.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "180"
+        },
+        {
+          "description": "Pin [RXD1]",
+          "pos": {
+            "x": 152.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "179"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [RXD1] and Pin [SDA] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [RXD1]",
+          "pos": {
+            "x": 152.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "179"
+        },
+        {
+          "description": "Pin [SDA]",
+          "pos": {
+            "x": 151.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "178"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [SDA] and Pin [SCL] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [SDA]",
+          "pos": {
+            "x": 151.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "178"
+        },
+        {
+          "description": "Pin [SCL]",
+          "pos": {
+            "x": 151.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "177"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [SCL] and Pin [PL7] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [SCL]",
+          "pos": {
+            "x": 151.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "177"
+        },
+        {
+          "description": "Pin [PL7]",
+          "pos": {
+            "x": 150.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "176"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PL7] and Pin [PL6] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PL7]",
+          "pos": {
+            "x": 150.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "176"
+        },
+        {
+          "description": "Pin [PL6]",
+          "pos": {
+            "x": 150.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "175"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PL6] and Pin [PL5] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PL6]",
+          "pos": {
+            "x": 150.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "175"
+        },
+        {
+          "description": "Pin [PL5]",
+          "pos": {
+            "x": 149.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "174"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PL5] and Pin [PL4] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PL5]",
+          "pos": {
+            "x": 149.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "174"
+        },
+        {
+          "description": "Pin [PL4]",
+          "pos": {
+            "x": 149.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "173"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PL4] and Pin [PL3] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PL4]",
+          "pos": {
+            "x": 149.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "173"
+        },
+        {
+          "description": "Pin [PL3]",
+          "pos": {
+            "x": 148.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "172"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PL3] and Pin [PL2] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PL3]",
+          "pos": {
+            "x": 148.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "172"
+        },
+        {
+          "description": "Pin [PL2]",
+          "pos": {
+            "x": 148.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "171"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PL2] and Pin [PL1] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PL2]",
+          "pos": {
+            "x": 148.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "171"
+        },
+        {
+          "description": "Pin [PL1]",
+          "pos": {
+            "x": 147.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "170"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PL1] and Pin [PL0] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PL1]",
+          "pos": {
+            "x": 147.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "170"
+        },
+        {
+          "description": "Pin [PL0]",
+          "pos": {
+            "x": 147.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "169"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PL0] and Pin [N$6] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PL0]",
+          "pos": {
+            "x": 147.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "169"
+        },
+        {
+          "description": "Pin [N$6]",
+          "pos": {
+            "x": 146.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "168"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [N$6] and Pin [N$7] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [N$6]",
+          "pos": {
+            "x": 146.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "168"
+        },
+        {
+          "description": "Pin [N$7]",
+          "pos": {
+            "x": 146.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "167"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [N$7] and Pin [GND] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [N$7]",
+          "pos": {
+            "x": 146.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "167"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 145.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "166"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [+5V] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 145.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "166"
+        },
+        {
+          "description": "Pin [+5V]",
+          "pos": {
+            "x": 145.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "165"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [+5V] and Pin [RESET] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [+5V]",
+          "pos": {
+            "x": 145.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "165"
+        },
+        {
+          "description": "Pin [RESET]",
+          "pos": {
+            "x": 144.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "164"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [RESET] and Pin (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [RESET]",
+          "pos": {
+            "x": 144.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "164"
+        },
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 144.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "163"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin and Pin [PB7] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 143.0011,
+            "y": -111.32719999999999
+          },
+          "uuid": "161"
+        },
+        {
+          "description": "Pin [PB7]",
+          "pos": {
+            "x": 142.5011,
+            "y": -111.32719999999999
+          },
+          "uuid": "160"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PB6] and Pin [PB5] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PB6]",
+          "pos": {
+            "x": 140.5011,
+            "y": -109.32719999999999
+          },
+          "uuid": "159"
+        },
+        {
+          "description": "Pin [PB5]",
+          "pos": {
+            "x": 140.5011,
+            "y": -108.82719999999999
+          },
+          "uuid": "158"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PB5] and Pin [PB4] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PB5]",
+          "pos": {
+            "x": 140.5011,
+            "y": -108.82719999999999
+          },
+          "uuid": "158"
+        },
+        {
+          "description": "Pin [PB4]",
+          "pos": {
+            "x": 140.5011,
+            "y": -108.32719999999999
+          },
+          "uuid": "157"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PB4] and Pin [PB3] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PB4]",
+          "pos": {
+            "x": 140.5011,
+            "y": -108.32719999999999
+          },
+          "uuid": "157"
+        },
+        {
+          "description": "Pin [PB3]",
+          "pos": {
+            "x": 140.5011,
+            "y": -107.82719999999999
+          },
+          "uuid": "156"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PB3] and Pin [PB2] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PB3]",
+          "pos": {
+            "x": 140.5011,
+            "y": -107.82719999999999
+          },
+          "uuid": "156"
+        },
+        {
+          "description": "Pin [PB2]",
+          "pos": {
+            "x": 140.5011,
+            "y": -107.32719999999999
+          },
+          "uuid": "155"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PB2] and Pin [PB1] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PB2]",
+          "pos": {
+            "x": 140.5011,
+            "y": -107.32719999999999
+          },
+          "uuid": "155"
+        },
+        {
+          "description": "Pin [PB1]",
+          "pos": {
+            "x": 140.5011,
+            "y": -106.82719999999999
+          },
+          "uuid": "154"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PB1] and Pin [PB0] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PB1]",
+          "pos": {
+            "x": 140.5011,
+            "y": -106.82719999999999
+          },
+          "uuid": "154"
+        },
+        {
+          "description": "Pin [PB0]",
+          "pos": {
+            "x": 140.5011,
+            "y": -106.32719999999999
+          },
+          "uuid": "153"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PB0] and Pin [PH6] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PB0]",
+          "pos": {
+            "x": 140.5011,
+            "y": -106.32719999999999
+          },
+          "uuid": "153"
+        },
+        {
+          "description": "Pin [PH6]",
+          "pos": {
+            "x": 140.5011,
+            "y": -105.82719999999999
+          },
+          "uuid": "152"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PH6] and Pin [PH5] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PH6]",
+          "pos": {
+            "x": 140.5011,
+            "y": -105.82719999999999
+          },
+          "uuid": "152"
+        },
+        {
+          "description": "Pin [PH5]",
+          "pos": {
+            "x": 140.5011,
+            "y": -105.32719999999999
+          },
+          "uuid": "151"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PH5] and Pin [PH4] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PH5]",
+          "pos": {
+            "x": 140.5011,
+            "y": -105.32719999999999
+          },
+          "uuid": "151"
+        },
+        {
+          "description": "Pin [PH4]",
+          "pos": {
+            "x": 140.5011,
+            "y": -104.82719999999999
+          },
+          "uuid": "150"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PH4] and Pin [PH3] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PH4]",
+          "pos": {
+            "x": 140.5011,
+            "y": -104.82719999999999
+          },
+          "uuid": "150"
+        },
+        {
+          "description": "Pin [PH3]",
+          "pos": {
+            "x": 140.5011,
+            "y": -104.32719999999999
+          },
+          "uuid": "149"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PH3] and Pin (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PH3]",
+          "pos": {
+            "x": 140.5011,
+            "y": -104.32719999999999
+          },
+          "uuid": "149"
+        },
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 140.5011,
+            "y": -103.82719999999999
+          },
+          "uuid": "148"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin and Pin [TXD2] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 140.5011,
+            "y": -103.82719999999999
+          },
+          "uuid": "148"
+        },
+        {
+          "description": "Pin [TXD2]",
+          "pos": {
+            "x": 140.5011,
+            "y": -103.32719999999999
+          },
+          "uuid": "147"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [TXD2] and Pin [RXD2] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [TXD2]",
+          "pos": {
+            "x": 140.5011,
+            "y": -103.32719999999999
+          },
+          "uuid": "147"
+        },
+        {
+          "description": "Pin [RXD2]",
+          "pos": {
+            "x": 140.5011,
+            "y": -102.82719999999999
+          },
+          "uuid": "146"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [RXD2] and Pin [GND] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [RXD2]",
+          "pos": {
+            "x": 140.5011,
+            "y": -102.82719999999999
+          },
+          "uuid": "146"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 140.5011,
+            "y": -102.32719999999999
+          },
+          "uuid": "145"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [+5V] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 140.5011,
+            "y": -102.32719999999999
+          },
+          "uuid": "145"
+        },
+        {
+          "description": "Pin [+5V]",
+          "pos": {
+            "x": 140.5011,
+            "y": -101.82719999999999
+          },
+          "uuid": "144"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [+5V] and Pin (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [+5V]",
+          "pos": {
+            "x": 140.5011,
+            "y": -101.82719999999999
+          },
+          "uuid": "144"
+        },
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 140.5011,
+            "y": -101.32719999999999
+          },
+          "uuid": "143"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin and Pin [PE5] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 140.5011,
+            "y": -100.82719999999999
+          },
+          "uuid": "142"
+        },
+        {
+          "description": "Pin [PE5]",
+          "pos": {
+            "x": 140.5011,
+            "y": -100.32719999999999
+          },
+          "uuid": "141"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PE5] and Pin [PE4] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PE5]",
+          "pos": {
+            "x": 140.5011,
+            "y": -100.32719999999999
+          },
+          "uuid": "141"
+        },
+        {
+          "description": "Pin [PE4]",
+          "pos": {
+            "x": 140.5011,
+            "y": -99.82719999999999
+          },
+          "uuid": "140"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PE4] and Pin [PE3] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PE4]",
+          "pos": {
+            "x": 140.5011,
+            "y": -99.82719999999999
+          },
+          "uuid": "140"
+        },
+        {
+          "description": "Pin [PE3]",
+          "pos": {
+            "x": 140.5011,
+            "y": -99.32719999999999
+          },
+          "uuid": "139"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PE3] and Pin (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PE3]",
+          "pos": {
+            "x": 140.5011,
+            "y": -99.32719999999999
+          },
+          "uuid": "139"
+        },
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 140.5011,
+            "y": -98.82719999999999
+          },
+          "uuid": "138"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin and Pin [PE1] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 140.5011,
+            "y": -98.82719999999999
+          },
+          "uuid": "138"
+        },
+        {
+          "description": "Pin [PE1]",
+          "pos": {
+            "x": 140.5011,
+            "y": -98.32719999999999
+          },
+          "uuid": "137"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PE1] and Pin [PE0] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PE1]",
+          "pos": {
+            "x": 140.5011,
+            "y": -98.32719999999999
+          },
+          "uuid": "137"
+        },
+        {
+          "description": "Pin [PE0]",
+          "pos": {
+            "x": 140.5011,
+            "y": -97.82719999999999
+          },
+          "uuid": "136"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [PE0] and Pin [PG5] (expected: 0.2000 mm, actual: 0.1500 mm)",
+      "items": [
+        {
+          "description": "Pin [PE0]",
+          "pos": {
+            "x": 140.5011,
+            "y": -97.82719999999999
+          },
+          "uuid": "136"
+        },
+        {
+          "description": "Pin [PG5]",
+          "pos": {
+            "x": 140.5011,
+            "y": -97.32719999999999
+          },
+          "uuid": "135"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    }
+  ],
+  "schematic_parity": [],
+  "quality_score": 823.5745849609375
+}

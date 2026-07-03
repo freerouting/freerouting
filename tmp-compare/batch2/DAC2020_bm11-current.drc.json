@@ -1,0 +1,516 @@
+{
+  "$schema": "https://schemas.kicad.org/drc.v1.json",
+  "coordinate_units": "mm",
+  "date": "2026-06-30T22:38:42.265096399-07:00",
+  "kicad_version": "N/A",
+  "freerouting_version": "Freerouting 2.2.5-SNAPSHOT",
+  "source": "DAC2020_bm11.unrouted.dsn",
+  "unconnected_items": [
+    {
+      "description": "Unconnected items: Pin [/SDA] and Pin [/SDA] (13 total items in net)",
+      "items": [
+        {
+          "description": "Pin [/SDA]",
+          "pos": {
+            "x": 140.6201,
+            "y": -92.5036
+          },
+          "uuid": "131"
+        },
+        {
+          "description": "Pin [/SDA]",
+          "pos": {
+            "x": 156.5011,
+            "y": -102.1336
+          },
+          "uuid": "228"
+        },
+        {
+          "description": "Trace [/SDA]",
+          "pos": {
+            "x": 145.5011,
+            "y": -117.20465
+          },
+          "uuid": "539"
+        },
+        {
+          "description": "Trace [/SDA]",
+          "pos": {
+            "x": 140.50764999999998,
+            "y": -95.9927
+          },
+          "uuid": "537"
+        },
+        {
+          "description": "Pin [/SDA]",
+          "pos": {
+            "x": 145.5011,
+            "y": -116.7086
+          },
+          "uuid": "86"
+        },
+        {
+          "description": "Trace [/SDA]",
+          "pos": {
+            "x": 140.07875,
+            "y": -92.5036
+          },
+          "uuid": "534"
+        },
+        {
+          "description": "Trace [/SDA]",
+          "pos": {
+            "x": 148.9895,
+            "y": -100.8077
+          },
+          "uuid": "535"
+        },
+        {
+          "description": "Trace [/SDA]",
+          "pos": {
+            "x": 156.66965,
+            "y": -113.02860000000001
+          },
+          "uuid": "533"
+        },
+        {
+          "description": "Trace [/SDA]",
+          "pos": {
+            "x": 151.4461,
+            "y": -120.81214999999999
+          },
+          "uuid": "538"
+        },
+        {
+          "description": "Via [/SDA]",
+          "pos": {
+            "x": 145.5011,
+            "y": -117.7007
+          },
+          "uuid": "540"
+        },
+        {
+          "description": "Via [/SDA]",
+          "pos": {
+            "x": 141.4779,
+            "y": -99.4818
+          },
+          "uuid": "536"
+        },
+        {
+          "description": "Pin [/SDA]",
+          "pos": {
+            "x": 157.3911,
+            "y": -123.92360000000001
+          },
+          "uuid": "223"
+        },
+        {
+          "description": "Pin [/SDA]",
+          "pos": {
+            "x": 150.17610000000002,
+            "y": -101.5386
+          },
+          "uuid": "196"
+        }
+      ],
+      "severity": "warning",
+      "type": "unconnected_items"
+    }
+  ],
+  "violations": [
+    {
+      "description": "Hole clearance violation between Pin [3V3] and Pin [/SDA] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 150.17610000000002,
+            "y": -101.96860000000001
+          },
+          "uuid": "202"
+        },
+        {
+          "description": "Pin [/SDA]",
+          "pos": {
+            "x": 150.17610000000002,
+            "y": -101.5386
+          },
+          "uuid": "196"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [3V3] and Pin [/SCL] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 150.17610000000002,
+            "y": -101.96860000000001
+          },
+          "uuid": "202"
+        },
+        {
+          "description": "Pin [/SCL]",
+          "pos": {
+            "x": 150.17610000000002,
+            "y": -102.3986
+          },
+          "uuid": "195"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [3V3] and Pin [Net-(C19-Pad1)] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 150.0061,
+            "y": -103.1786
+          },
+          "uuid": "201"
+        },
+        {
+          "description": "Pin [Net-(C19-Pad1)]",
+          "pos": {
+            "x": 149.5761,
+            "y": -103.1786
+          },
+          "uuid": "179"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [3V3] and Pin [3V3] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 149.14610000000002,
+            "y": -103.1786
+          },
+          "uuid": "200"
+        },
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 148.7161,
+            "y": -103.1786
+          },
+          "uuid": "199"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [3V3] and Pin [Net-(C19-Pad1)] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 149.14610000000002,
+            "y": -103.1786
+          },
+          "uuid": "200"
+        },
+        {
+          "description": "Pin [Net-(C19-Pad1)]",
+          "pos": {
+            "x": 149.5761,
+            "y": -103.1786
+          },
+          "uuid": "179"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [3V3] and Pin [Net-(C18-Pad1)] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 148.7161,
+            "y": -103.1786
+          },
+          "uuid": "199"
+        },
+        {
+          "description": "Pin [Net-(C18-Pad1)]",
+          "pos": {
+            "x": 148.2861,
+            "y": -103.1786
+          },
+          "uuid": "180"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [3V3] and Pin [3V3] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 150.0061,
+            "y": -100.32860000000001
+          },
+          "uuid": "198"
+        },
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 149.5761,
+            "y": -100.32860000000001
+          },
+          "uuid": "181"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [3V3] and Pin [/SDA] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 150.17610000000002,
+            "y": -101.10860000000001
+          },
+          "uuid": "197"
+        },
+        {
+          "description": "Pin [/SDA]",
+          "pos": {
+            "x": 150.17610000000002,
+            "y": -101.5386
+          },
+          "uuid": "196"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 146.9961,
+            "y": -103.1786
+          },
+          "uuid": "194"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 147.42610000000002,
+            "y": -103.1786
+          },
+          "uuid": "185"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 146.8261,
+            "y": -102.3986
+          },
+          "uuid": "193"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 146.8261,
+            "y": -101.96860000000001
+          },
+          "uuid": "192"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 146.8261,
+            "y": -101.96860000000001
+          },
+          "uuid": "192"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 146.8261,
+            "y": -101.5386
+          },
+          "uuid": "191"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 146.8261,
+            "y": -101.5386
+          },
+          "uuid": "191"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 146.8261,
+            "y": -101.10860000000001
+          },
+          "uuid": "190"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin and Pin [3V3] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 147.42610000000002,
+            "y": -100.32860000000001
+          },
+          "uuid": "188"
+        },
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 146.9961,
+            "y": -100.32860000000001
+          },
+          "uuid": "183"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [GND] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 147.8561,
+            "y": -103.1786
+          },
+          "uuid": "186"
+        },
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 147.42610000000002,
+            "y": -103.1786
+          },
+          "uuid": "185"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [GND] and Pin [Net-(C18-Pad1)] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [GND]",
+          "pos": {
+            "x": 147.8561,
+            "y": -103.1786
+          },
+          "uuid": "186"
+        },
+        {
+          "description": "Pin [Net-(C18-Pad1)]",
+          "pos": {
+            "x": 148.2861,
+            "y": -103.1786
+          },
+          "uuid": "180"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin and Pin [3V3] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin",
+          "pos": {
+            "x": 148.7161,
+            "y": -100.32860000000001
+          },
+          "uuid": "184"
+        },
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 149.14610000000002,
+            "y": -100.32860000000001
+          },
+          "uuid": "182"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation between Pin [3V3] and Pin [3V3] (expected: 0.2000 mm, actual: 0.1600 mm)",
+      "items": [
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 149.14610000000002,
+            "y": -100.32860000000001
+          },
+          "uuid": "182"
+        },
+        {
+          "description": "Pin [3V3]",
+          "pos": {
+            "x": 149.5761,
+            "y": -100.32860000000001
+          },
+          "uuid": "181"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    }
+  ],
+  "schematic_parity": [],
+  "quality_score": 972.4912109375
+}

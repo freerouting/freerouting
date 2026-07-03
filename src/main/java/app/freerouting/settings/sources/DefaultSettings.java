@@ -99,6 +99,7 @@ public class DefaultSettings implements SettingsSource {
         settings.ignoreNetClasses = new String[0];
         settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
         settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
+        settings.strictDrc = false;
 
         // layers is left null intentionally –
         // they will be populated by DsnFileSettings (from the DSN layer count) and then
