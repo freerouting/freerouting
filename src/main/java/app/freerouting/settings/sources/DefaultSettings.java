@@ -74,6 +74,8 @@ public class DefaultSettings implements SettingsSource {
     public static final double DEFAULT_UNDESIRED_DIRECTION_TRACE_COST = 1.0;
     /** Default copper-to-board-edge clearance in micrometres (0.5 mm). */
     public static final double DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM = 500.0;
+    /** Default drill-hole-to-copper clearance in micrometres. Zero preserves legacy DSN behaviour. */
+    public static final double DEFAULT_HOLE_CLEARANCE_UM = 0.0;
     private static final int PRIORITY = 0;
 
     @Override
@@ -99,6 +101,7 @@ public class DefaultSettings implements SettingsSource {
         settings.ignoreNetClasses = new String[0];
         settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
         settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
+        settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;
 
         // layers is left null intentionally –
         // they will be populated by DsnFileSettings (from the DSN layer count) and then
