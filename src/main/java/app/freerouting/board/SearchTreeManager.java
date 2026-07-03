@@ -197,10 +197,23 @@ public class SearchTreeManager {
   }
 
   /**
-   * Reinsert all items into the search trees
+   * Reinsert all items into the search trees. Public because rule changes that affect
+   * precalculated tree shapes (e.g. the drill-hole clearance override, applied after the
+   * board is loaded) must refresh the shapes of already-inserted items.
    */
-  void reinsert_tree_items() {
+  public void reinsert_tree_items() {
     remove_all_board_items();
+    // Removing clears the tree entries but NOT the precalculated tree shapes cached on each
+    // item; without dropping those, re-insertion silently reuses the stale shapes and rule
+    // changes (e.g. the drill-hole clearance override) never reach the trees.
+    Iterator<UndoableObjects.UndoableObjectNode> it = this.board.item_list.start_read_object();
+    for (;;) {
+      Item curr_item = (Item) this.board.item_list.read_object(it);
+      if (curr_item == null) {
+        break;
+      }
+      curr_item.clear_derived_data();
+    }
     insert_all_board_items();
   }
 
