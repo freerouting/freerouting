@@ -71,6 +71,10 @@ public class TestingSettings implements SettingsSource {
         this.settings.copperToEdgeClearanceUm = copperToEdgeClearanceUm;
     }
 
+    public void setNeckWidthUm(double neckWidthUm) {
+        this.settings.neckWidthUm = neckWidthUm;
+    }
+
     @Override
     public RouterSettings getSettings() {
         return settings;
