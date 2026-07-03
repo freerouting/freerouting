@@ -325,8 +325,14 @@ public final class SesWriter {
     int cornerIndex = 0;
     int[] prevCoors = null;
     for (int i = 0; i < cornerArr.length; i++) {
-      double[] currFloatCoors =
-          coordinateTransform.board_to_dsn(cornerArr[i].to_float());
+      FloatPoint cornerPoint = cornerArr[i].to_float();
+      if (i == 0 || i == cornerArr.length - 1) {
+        FloatPoint snapped = snappedEndpoint(wire, i == 0);
+        if (snapped != null) {
+          cornerPoint = snapped;
+        }
+      }
+      double[] currFloatCoors = coordinateTransform.board_to_dsn(cornerPoint);
       int[] currCoors = new int[2];
       currCoors[0] = (int) Math.round(currFloatCoors[0]);
       currCoors[1] = (int) Math.round(currFloatCoors[1]);
@@ -344,6 +350,44 @@ public final class SesWriter {
     writePath(boardLayer.name, wireWidth, coors, identifierType, file);
     writeFixedState(file, wire.get_fixed_state());
     file.end_scope();
+  }
+
+  /**
+   * Returns the exact pad/via center to use for a wire endpoint, or null to keep the corner
+   * as-is. Trace endpoints can sit on the border of freerouting's octagon approximation of a
+   * pad — a point that is inside the approximation but outside the importing tool's real pad
+   * polygon, which then reports the net as unconnected. Snapping the endpoint to the contacted
+   * drill item's center (the same coordinate {@code writeVia} emits) removes those sub-pad
+   * gaps. Only snaps when the endpoint already lies within the pad inradius of the center, so
+   * the last segment cannot leave the pad or fold across a neighbor.
+   */
+  static FloatPoint snappedEndpoint(PolylineTrace wire, boolean startSide) {
+    Point corner = startSide ? wire.first_corner() : wire.last_corner();
+    FloatPoint cornerFloat = corner.to_float();
+    java.util.Set<Item> contacts = startSide ? wire.get_start_contacts() : wire.get_end_contacts();
+    int layer = wire.get_layer();
+    for (Item contact : contacts) {
+      if (!(contact instanceof app.freerouting.board.DrillItem drill)) {
+        continue;
+      }
+      if (layer < drill.first_layer() || layer > drill.last_layer()) {
+        continue;
+      }
+      app.freerouting.geometry.planar.Shape padShape = drill.get_shape(layer - drill.first_layer());
+      if (padShape == null) {
+        continue;
+      }
+      FloatPoint center = drill.get_center().to_float();
+      double centerDistance = cornerFloat.distance(center);
+      if (centerDistance <= 0.5) {
+        // Already at the center (within rounding) — nothing to fix.
+        return null;
+      }
+      if (centerDistance <= padShape.border_distance(center)) {
+        return center;
+      }
+    }
+    return null;
   }
 
   private static void writeVia(Via via, BasicBoard board, IdentifierType identifierType,
