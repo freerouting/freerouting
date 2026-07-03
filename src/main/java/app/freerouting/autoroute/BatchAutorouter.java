@@ -1331,11 +1331,77 @@ public class BatchAutorouter extends NamedAlgorithm {
         FRLogger.trace("compare_trace_opt_changed_area_after net=" + p_route_net_no + ", maxItemId=" + maxItemIdAfterOpt + ", delta=" + (maxItemIdAfterOpt - maxItemIdBeforeOpt));
       }
 
+      if ((autoroute_result.state == AutorouteAttemptState.FAILED
+          || autoroute_result.state == AutorouteAttemptState.INSERT_ERROR)
+          && this.settings.getNeckWidthUm() > 0) {
+        AutorouteAttemptResult necked_result = retryConnectionNecked(p_route_net_no, autoroute_control,
+            curr_via_costs, route_start_set, route_dest_set, p_ripped_item_list, p_ripup_costs,
+            p_ripup_pass_no, time_limit);
+        if (necked_result != null) {
+          return necked_result;
+        }
+      }
+
       return autoroute_result;
     } catch (Exception e) {
       FRLogger.error("Error during routing passes", e);
       return new AutorouteAttemptResult(AutorouteAttemptState.FAILED);
     }
+  }
+
+
+  /**
+   * Width-necking retry: when a connection failed at its net-class trace width and the
+   * neck_width_um setting is enabled, retry it ONCE with every layer's trace half-width
+   * clamped to the neck width. Fine-pitch pads whose pitch is below (class width +
+   * clearance) are unroutable at class width and fail as generic congestion; the operator
+   * supplies a legal manufacturable neck width (e.g. the project's densest net class).
+   * Returns the retry result when it routed, else null (keep the original failure).
+   */
+  private AutorouteAttemptResult retryConnectionNecked(int p_route_net_no,
+      AutorouteControl p_original_control, int p_via_costs, Set<Item> p_route_start_set,
+      Set<Item> p_route_dest_set, SortedSet<Item> p_ripped_item_list,
+      Map<Item, Integer> p_ripup_costs, int p_ripup_pass_no, TimeLimit p_time_limit) {
+    int boardResolution = Math.max(1, board.communication.resolution);
+    int neck_width = (int) Math.round(app.freerouting.board.Unit.scale(
+        this.settings.getNeckWidthUm() * boardResolution, app.freerouting.board.Unit.UM,
+        board.communication.unit));
+    int neck_half_width = Math.max(1, neck_width / 2);
+    boolean narrower_somewhere = false;
+    for (int i = 0; i < p_original_control.layer_count; i++) {
+      if (p_original_control.layer_active[i]
+          && p_original_control.trace_half_width[i] > neck_half_width) {
+        narrower_somewhere = true;
+        break;
+      }
+    }
+    if (!narrower_somewhere) {
+      return null;
+    }
+    AutorouteControl neck_control = new AutorouteControl(this.board, p_route_net_no, settings,
+        p_via_costs, this.trace_cost_arr);
+    neck_control.ripup_allowed = true;
+    neck_control.ripup_costs = this.start_ripup_costs * p_ripup_pass_no;
+    neck_control.remove_unconnected_vias = this.remove_unconnected_vias;
+    for (int i = 0; i < neck_control.layer_count; i++) {
+      int compensation = neck_control.compensated_trace_half_width[i] - neck_control.trace_half_width[i];
+      neck_control.trace_half_width[i] = Math.min(neck_control.trace_half_width[i], neck_half_width);
+      neck_control.compensated_trace_half_width[i] = neck_control.trace_half_width[i] + compensation;
+    }
+    AutorouteEngine neck_engine = board.init_autoroute(p_route_net_no,
+        neck_control.trace_clearance_class_no, this.thread, p_time_limit, this.retain_autoroute_database);
+    AutorouteAttemptResult neck_result = neck_engine.autoroute_connection(p_route_start_set,
+        p_route_dest_set, neck_control, p_ripped_item_list, p_ripup_costs);
+    if (neck_result.state != AutorouteAttemptState.ROUTED) {
+      return null;
+    }
+    board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, neck_control.trace_costs,
+        this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+    Net route_net = board.rules.nets.get(p_route_net_no);
+    FRLogger.info("Necked retry routed net '"
+        + (route_net != null ? route_net.name : "#" + p_route_net_no)
+        + "' at " + this.settings.getNeckWidthUm() + " um trace width.");
+    return neck_result;
   }
 
   /**
