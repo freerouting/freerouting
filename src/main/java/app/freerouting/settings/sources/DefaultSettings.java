@@ -103,6 +103,7 @@ public class DefaultSettings implements SettingsSource {
         settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
         settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;
         settings.neckWidthUm = 0.0;
+        settings.strictDrc = false;
 
         // layers is left null intentionally –
         // they will be populated by DsnFileSettings (from the DSN layer count) and then

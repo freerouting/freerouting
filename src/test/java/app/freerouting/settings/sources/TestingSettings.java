@@ -79,6 +79,10 @@ public class TestingSettings implements SettingsSource {
         this.settings.neckWidthUm = neckWidthUm;
     }
 
+    public void setStrictDrc(boolean strictDrc) {
+        this.settings.strictDrc = strictDrc;
+    }
+
     @Override
     public RouterSettings getSettings() {
         return settings;
