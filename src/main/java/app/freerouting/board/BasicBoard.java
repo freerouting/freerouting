@@ -85,6 +85,7 @@ public class BasicBoard implements Serializable {
    * Handles the search trees pointing into the items of this board
    */
   public transient SearchTreeManager search_tree_manager;
+  private transient Set<Integer> normalizeSuppressedNetNos = new HashSet<>();
   private transient int revision = 0;
   /**
    * the rectangle, where the graphics may be not up-to-date
@@ -873,6 +874,16 @@ public class BasicBoard implements Serializable {
    * Normalizes the traces of this net
    */
   public boolean normalize_traces(int p_net_no) {
+    if (normalizeSuppressedNetNos == null) {
+      normalizeSuppressedNetNos = new HashSet<>();
+    }
+    if (normalizeSuppressedNetNos.contains(p_net_no)) {
+      String netName = (rules != null && rules.nets != null && rules.nets.get(p_net_no) != null)
+          ? rules.nets.get(p_net_no).name : String.valueOf(p_net_no);
+      FRLogger.debug("BasicBoard.normalize_traces: skipping net '" + netName
+          + "' because normalization already hit the oscillation cap on this board candidate.");
+      return false;
+    }
     boolean result = false;
     boolean something_changed = true;
     int iterationCount = 0;
@@ -888,7 +899,9 @@ public class BasicBoard implements Serializable {
         FRLogger.warn("BasicBoard.normalize_traces: reached " + MAX_NORMALIZE_ITERATIONS
             + " iterations for net '" + netName + "' — stopping to prevent hang."
             + " The board geometry for this net may be oscillating (split/combine cycle);"
-            + " traces are kept as-is.");
+            + " traces are kept as-is and further normalization for this net is suppressed"
+            + " on this board candidate.");
+        normalizeSuppressedNetNos.add(p_net_no);
         break;
       }
       something_changed = false;
@@ -1908,6 +1921,7 @@ public class BasicBoard implements Serializable {
     p_stream.defaultReadObject();
     // insert the items on the board into the search trees
     search_tree_manager = new SearchTreeManager(this);
+    normalizeSuppressedNetNos = new HashSet<>();
     for (Item curr_item : this.get_items()) {
       curr_item.board = this;
       search_tree_manager.insert(curr_item);
