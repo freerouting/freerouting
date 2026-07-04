@@ -35,7 +35,7 @@ public class RoutingEta implements Serializable {
   @SerializedName("estimated_remaining_passes")
   public final int estimatedRemainingPasses;
 
-  /** Current phase description for display ("fanout", "autoroute", "optimizer", "completing"). */
+  /** Current phase description for display ("fanout", "autoroute", "optimizer", "completed", "stopped"). */
   @SerializedName("phase")
   public final String phase;
 
@@ -43,37 +43,22 @@ public class RoutingEta implements Serializable {
   @SerializedName("total_elapsed_seconds")
   public final double totalElapsedSeconds;
 
-  /** Number of incomplete connections remaining. */
+  /** Number of items still unrouted. */
   @SerializedName("incomplete_count")
   public final int incompleteCount;
 
-  /** Reason routing stopped, for display (e.g. "max passes reached", "stagnation", "user stop"). Null if not applicable. */
+  /** Optional message if routing was stopped early. */
   @SerializedName("stop_reason")
   public final String stopReason;
 
-  /**
-   * Human-readable progress fallback ("Pass 3/8 - 12 remaining") for use when confidence is
-   * too low to show a trustworthy time estimate. Null if not applicable (e.g. fanout/optimizer
-   * phases, or frozen terminal states).
-   */
-  @SerializedName("progress_text")
-  public String progressText;
+  /** Human-readable progress text used when confidence is LOW/NONE or in terminal states. */
+  public transient String progressText;
 
-  /** Lower bound of the statistical prediction band, in seconds. -1 if not available. */
-  @SerializedName("eta_seconds_low")
-  public double etaSecondsLow = -1;
-
-  /** Upper bound of the statistical prediction band, in seconds. -1 if not available. */
-  @SerializedName("eta_seconds_high")
-  public double etaSecondsHigh = -1;
+  public transient double etaSecondsLow = -1;
+  public transient double etaSecondsHigh = -1;
 
   public RoutingEta(double etaSeconds, Confidence confidence, int estimatedRemainingPasses,
-                    String phase, double totalElapsedSeconds, int incompleteCount) {
-    this(etaSeconds, confidence, estimatedRemainingPasses, phase, totalElapsedSeconds, incompleteCount, null);
-  }
-
-  public RoutingEta(double etaSeconds, Confidence confidence, int estimatedRemainingPasses,
-                    String phase, double totalElapsedSeconds, int incompleteCount, String stopReason) {
+      String phase, double totalElapsedSeconds, int incompleteCount, String stopReason) {
     this.etaSeconds = etaSeconds;
     this.confidence = confidence;
     this.estimatedRemainingPasses = estimatedRemainingPasses;
@@ -84,58 +69,36 @@ public class RoutingEta implements Serializable {
   }
 
   /**
-   * Returns a readable ETA string for display in the status bar.
+   * Generates the appropriate text for the UI Status Panel based on the current phase,
+   * confidence, and numerical range.
    */
   public String toDisplayString() {
-    // Pre-start state: no board is currently being routed. Distinct from
-    // "Estimating..." (routing in progress, not enough data yet) so a board
-    // change can't visually look like an in-progress or completed run.
-    if ("idle".equals(phase)) {
-      return "";
-    }
-
-    // Handle frozen terminal states
+    // 1. Hard terminal states always win over numeric ETAs.
     if ("completed".equals(phase)) {
-      return "Completed";
+      return "Completed.";
     }
     if ("stopped".equals(phase)) {
-      String reasonSuffix = (stopReason != null && !stopReason.isEmpty()) ? " — " + stopReason : "";
-      if (incompleteCount > 0) {
-        return "Stopped (" + incompleteCount + " unrouted)" + reasonSuffix;
-      }
-      return "Stopped" + reasonSuffix;
+      return "Stopped.";
     }
-
-    // Not enough data yet for a trustworthy time — show progress instead of a number.
-    if (confidence == Confidence.NONE) {
-      if (progressText != null && !progressText.isEmpty()) {
-        return progressText;
-      }
-      if (etaSeconds < 0) {
-        return "Estimating...";
-      }
-      return "ETA: ~" + formatDuration(etaSeconds);
-    }
-
-    // All done or finishing
-    if (incompleteCount == 0 && !"optimizer".equals(phase)) {
+    if ("completing".equals(phase)) {
       return "Completing...";
     }
 
-    // Low confidence: still show progress text if we have it, since a wide/uncertain
-    // band can be more honest than a single number the person will over-trust.
-    if (confidence == Confidence.LOW && progressText != null && !progressText.isEmpty()) {
-      return progressText;
+    // 2. Low confidence or explicit fallback text (like Fanout phase)
+    if (confidence == Confidence.NONE || confidence == Confidence.LOW) {
+      if (progressText != null && !progressText.isEmpty()) {
+        return progressText;
+      }
+      return "Calculating ETA...";
     }
 
-    // Medium/high confidence with a real statistical band: show the range instead of
-    // false precision on a single number.
+    // 3. Medium/high confidence with a real statistical band: show the range instead of false precision
     if (etaSecondsLow >= 0 && etaSecondsHigh > etaSecondsLow
         && (etaSecondsHigh - etaSecondsLow) > Math.max(5, etaSeconds * 0.15)) {
       return "ETA: " + formatDuration(etaSecondsLow) + " - " + formatDuration(etaSecondsHigh);
     }
 
-    // Show the ETA with appropriate precision based on confidence
+    // 4. High confidence single precise number
     return "ETA: " + formatDuration(etaSeconds);
   }
 
@@ -155,11 +118,11 @@ public class RoutingEta implements Serializable {
     }
     int minutes = (int) (etaSeconds / 60);
     int seconds = (int) (etaSeconds % 60);
-    if (minutes < 60) {
-      return minutes + "m " + seconds + "s";
-    }
-    int hours = minutes / 60;
-    minutes = minutes % 60;
-    return hours + "h " + minutes + "m";
+    return minutes + "m " + seconds + "s";
+  }
+
+  @Override
+  public String toString() {
+    return toDisplayString();
   }
 }

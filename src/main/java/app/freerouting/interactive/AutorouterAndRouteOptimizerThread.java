@@ -499,10 +499,10 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
     }
     etaCalculator.setThreadCount(routingJob.routerSettings.maxThreads);
 
-    // Set total connectable items so the item-count model works from pass 1
-    // Use the total number of nets as an approximate scaling factor
+    // Seed the ETA model with the actual fanout workload so the first estimate has a realistic
+    // board-size baseline instead of a rough net-count approximation.
     etaCalculator.setTotalConnectableItems(
-        routingJob.board != null ? routingJob.board.rules.nets.max_net_no() : 0);
+      routingJob.board != null ? routingJob.board.get_smd_pins().size() : 0);
 
     // Start a background thread that periodically samples CPU time, total allocated
     // memory, and peak heap usage — mirroring the headless RoutingJobSchedulerActionThread.
@@ -763,6 +763,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         etaCalculator.onRoutingStopped();
       }
     }
+
+    boardManager.screen_messages.set_routing_eta(etaCalculator.getCurrentEta());
 
     for (ThreadActionListener hl : this.listeners) {
       if (this.isStopRequested()) {

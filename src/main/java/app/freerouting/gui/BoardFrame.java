@@ -392,6 +392,10 @@ public class BoardFrame extends WindowBase {
     this.routingJob = job;
     board_panel.reset_board_handling(job);
     board_panel.board_handling.replaceRoutingBoard(board);
+    if (this.routingJob != null && this.routingJob.etaCalculator != null) {
+      this.routingJob.etaCalculator.resetForBoardSwap();
+      board_panel.board_handling.screen_messages.set_routing_eta(this.routingJob.etaCalculator.getCurrentEta());
+    }
 
     // Close other child windows
     for (int i = 0; i < this.permanent_subwindows.length; i++) {
@@ -504,6 +508,11 @@ public class BoardFrame extends WindowBase {
         // Raise an event to notify the observers that a new board has been loaded
         this.boardLoadedEventListeners
             .forEach(listener -> listener.accept(board_panel.board_handling.get_routing_board()));
+
+        if (this.routingJob != null && this.routingJob.etaCalculator != null) {
+          this.routingJob.etaCalculator.resetForBoardSwap();
+          board_panel.board_handling.screen_messages.set_routing_eta(this.routingJob.etaCalculator.getCurrentEta());
+        }
       }
     } else {
       ObjectInputStream object_stream;
