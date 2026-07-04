@@ -351,8 +351,8 @@ public class BoardFrame extends WindowBase {
     // Screen messages are displayed in the status bar, below the canvas.
     this.screen_messages = new ScreenMessages(this.message_panel.errorLabel, this.message_panel.warningLabel,
         this.message_panel.statusMessage, this.message_panel.additionalMessage,
-        this.message_panel.currentLayer, this.message_panel.currentBoardScore, this.message_panel.mousePosition,
-        this.message_panel.unitLabel, this.locale);
+        this.message_panel.currentLayer, this.message_panel.currentBoardScore, this.message_panel.etaLabel,
+        this.message_panel.mousePosition, this.message_panel.unitLabel, this.locale);
 
     // The scroll pane for the canvas of the routing board.
     this.scroll_pane = new JScrollPane();
@@ -392,6 +392,10 @@ public class BoardFrame extends WindowBase {
     this.routingJob = job;
     board_panel.reset_board_handling(job);
     board_panel.board_handling.replaceRoutingBoard(board);
+    if (this.routingJob != null && this.routingJob.etaCalculator != null) {
+      this.routingJob.etaCalculator.resetForBoardSwap();
+      board_panel.board_handling.screen_messages.set_routing_eta(this.routingJob.etaCalculator.getCurrentEta());
+    }
 
     // Close other child windows
     for (int i = 0; i < this.permanent_subwindows.length; i++) {
@@ -504,6 +508,11 @@ public class BoardFrame extends WindowBase {
         // Raise an event to notify the observers that a new board has been loaded
         this.boardLoadedEventListeners
             .forEach(listener -> listener.accept(board_panel.board_handling.get_routing_board()));
+
+        if (this.routingJob != null && this.routingJob.etaCalculator != null) {
+          this.routingJob.etaCalculator.resetForBoardSwap();
+          board_panel.board_handling.screen_messages.set_routing_eta(this.routingJob.etaCalculator.getCurrentEta());
+        }
       }
     } else {
       ObjectInputStream object_stream;
