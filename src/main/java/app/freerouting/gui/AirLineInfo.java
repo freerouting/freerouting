@@ -31,5 +31,9 @@ public class AirLineInfo implements ObjectInfoPanel.Printable {
         p_window.newline();
     }
 
-}
+    @Override
+    public String toString() {
+        return this.airline.toString();
+    }
 
+}
