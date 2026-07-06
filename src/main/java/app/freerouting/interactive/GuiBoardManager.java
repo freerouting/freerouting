@@ -2438,9 +2438,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (interactive_state instanceof MenuState) {
       set_interactive_state(InspectedItemState.get_instance(p_items, interactive_state, this));
     } else if (interactive_state instanceof InspectedItemState state) {
-      state
-          .get_item_list()
-          .addAll(p_items);
+      state.get_item_list().clear();
+      state.get_item_list().addAll(p_items);
       repaint();
     }
   }

@@ -16,6 +16,7 @@ import javax.swing.JTextField;
  */
 public abstract class WindowObjectListWithFilter extends WindowObjectList {
 
+  protected final JPanel input_panel;
   private final JTextField filter_string;
 
   /**
@@ -25,7 +26,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
 
-    JPanel input_panel = new JPanel();
+    this.input_panel = new JPanel();
     this.south_panel.add(input_panel, BorderLayout.SOUTH);
 
     JLabel filter_label = new JLabel(tm.getText("filter"));
@@ -34,6 +35,23 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
     this.filter_string = new JTextField(10);
     this.filter_string.setText("");
     input_panel.add(filter_string, BorderLayout.EAST);
+
+    this.filter_string.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+      @Override
+      public void insertUpdate(javax.swing.event.DocumentEvent e) {
+        recalculate();
+      }
+
+      @Override
+      public void removeUpdate(javax.swing.event.DocumentEvent e) {
+        recalculate();
+      }
+
+      @Override
+      public void changedUpdate(javax.swing.event.DocumentEvent e) {
+        recalculate();
+      }
+    });
   }
 
   /**
@@ -46,7 +64,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
     if (curr_filter_string.isEmpty()) {
       object_matches = true;
     } else {
-      object_matches = p_object.toString().contains(curr_filter_string);
+      object_matches = p_object.toString().toLowerCase().contains(curr_filter_string.toLowerCase());
     }
     if (object_matches) {
       super.add_to_list(p_object);
