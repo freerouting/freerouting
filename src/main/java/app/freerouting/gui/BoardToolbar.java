@@ -242,6 +242,8 @@ class BoardToolbar extends JPanel {
       RoutingBoard board = board_frame.board_panel.board_handling.get_routing_board();
       // delete all tracks and vias
       board.delete_all_tracks_and_vias();
+      // unfill conduction areas
+      board.unfill_conduction_areas();
       // update the board
       board_frame.board_panel.board_handling.replaceRoutingBoard(board);
       // create a deep copy of the routing board
