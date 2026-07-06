@@ -171,16 +171,29 @@ public final class KiCadJsonReader {
         boundingBoxOutline.add_point(new FloatPoint(1000, 1000));
         boundingBoxOutline.add_point(new FloatPoint(1000, 0));
       } else {
-        Point[] points = new Point[boardJson.outline.corners.size()];
-        for (int i = 0; i < boardJson.outline.corners.size(); i++) {
-          KiCadBoardJson.Point2D pt = boardJson.outline.corners.get(i);
+        List<KiCadBoardJson.Point2D> corners = new ArrayList<>(boardJson.outline.corners);
+        if (corners.size() > 2) {
+          // Sort corners by polar angle around centroid to ensure simple polygon construction
+          double sumX = 0;
+          double sumY = 0;
+          for (KiCadBoardJson.Point2D pt : corners) {
+            sumX += pt.x;
+            sumY += pt.y;
+          }
+          final double cx = sumX / corners.size();
+          final double cy = sumY / corners.size();
+          corners.sort((p1, p2) -> Double.compare(Math.atan2(p1.y - cy, p1.x - cx), Math.atan2(p2.y - cy, p2.x - cx)));
+        }
+        Point[] points = new Point[corners.size()];
+        for (int i = 0; i < corners.size(); i++) {
+          KiCadBoardJson.Point2D pt = corners.get(i);
           points[i] = new IntPoint((int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
           boundingBoxOutline.add_point(points[i].to_float());
         }
         outlineShapes.add(new PolygonShape(points));
       }
 
-      IntBox boundingBox = boundingBoxOutline.bounding_box();
+      IntBox boundingBox = boundingBoxOutline.bounding_box().offset(1000);
       int outlineClearanceNo = 1; // Default clearance class
 
       // 6. Communication object setup
@@ -417,7 +430,7 @@ public final class KiCadJsonReader {
           if (padstack == null) {
             padstack = padstacks.add(padstackName, shapeArr, isDrillable, false);
           }
-          IntVector relativeLoc = new IntVector(
+           IntVector relativeLoc = new IntVector(
               (int) Math.round(pad.offset.x * scaleFactor),
               (int) Math.round(-pad.offset.y * scaleFactor)
           );
