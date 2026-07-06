@@ -12,316 +12,6 @@
       "index": 1,
       "name": "bottom_copper",
       "type": "signal"
-    },
-    {
-      "index": 2,
-      "name": "In1.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 3,
-      "name": "In2.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 4,
-      "name": "In3.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 5,
-      "name": "In4.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 6,
-      "name": "In5.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 7,
-      "name": "In6.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 8,
-      "name": "In7.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 9,
-      "name": "In8.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 10,
-      "name": "In9.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 11,
-      "name": "In10.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 12,
-      "name": "In11.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 13,
-      "name": "In12.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 14,
-      "name": "In13.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 15,
-      "name": "In14.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 16,
-      "name": "In15.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 17,
-      "name": "In16.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 18,
-      "name": "In17.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 19,
-      "name": "In18.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 20,
-      "name": "In19.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 21,
-      "name": "In20.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 22,
-      "name": "In21.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 23,
-      "name": "In22.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 24,
-      "name": "In23.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 25,
-      "name": "In24.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 26,
-      "name": "In25.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 27,
-      "name": "In26.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 28,
-      "name": "In27.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 29,
-      "name": "In28.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 30,
-      "name": "In29.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 31,
-      "name": "In30.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 32,
-      "name": "In31.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 33,
-      "name": "In32.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 34,
-      "name": "In33.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 35,
-      "name": "In34.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 36,
-      "name": "In35.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 37,
-      "name": "In36.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 38,
-      "name": "In37.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 39,
-      "name": "In38.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 40,
-      "name": "In39.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 41,
-      "name": "In40.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 42,
-      "name": "In41.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 43,
-      "name": "In42.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 44,
-      "name": "In43.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 45,
-      "name": "In44.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 46,
-      "name": "In45.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 47,
-      "name": "In46.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 48,
-      "name": "In47.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 49,
-      "name": "In48.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 50,
-      "name": "In49.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 51,
-      "name": "In50.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 52,
-      "name": "In51.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 53,
-      "name": "In52.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 54,
-      "name": "In53.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 55,
-      "name": "In54.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 56,
-      "name": "In55.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 57,
-      "name": "In56.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 58,
-      "name": "In57.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 59,
-      "name": "In58.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 60,
-      "name": "In59.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 61,
-      "name": "In60.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 62,
-      "name": "In61.Cu",
-      "type": "signal"
-    },
-    {
-      "index": 63,
-      "name": "In62.Cu",
-      "type": "signal"
     }
   ],
   "netClasses": [
@@ -335,13 +25,1052 @@
       "uviaDrill": 0.1
     }
   ],
-  "nets": [],
+  "nets": [
+    {
+      "id": 1,
+      "name": "/8MH-OUT",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 2,
+      "name": "/ACK",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 3,
+      "name": "/AUTOFD-",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 4,
+      "name": "/BIT0",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 5,
+      "name": "/BIT1",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 6,
+      "name": "/BIT2",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 7,
+      "name": "/BIT3",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 8,
+      "name": "/BIT4",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 9,
+      "name": "/BIT5",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 10,
+      "name": "/BIT6",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 11,
+      "name": "/BIT7",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 12,
+      "name": "/BUST+",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 13,
+      "name": "/CLKLCA",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 14,
+      "name": "/CS1-",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 15,
+      "name": "/D0",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 16,
+      "name": "/D1",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 17,
+      "name": "/D2",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 18,
+      "name": "/D3",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 19,
+      "name": "/D4",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 20,
+      "name": "/D5",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 21,
+      "name": "/D6",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 22,
+      "name": "/D7",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 23,
+      "name": "/DIR",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 24,
+      "name": "/DONE",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 25,
+      "name": "/ENBBUF",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 26,
+      "name": "/ERROR-",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 27,
+      "name": "/INIT-",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 28,
+      "name": "/LED1",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 29,
+      "name": "/LED2",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 30,
+      "name": "/MA0",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 31,
+      "name": "/MA1",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 32,
+      "name": "/MA10",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 33,
+      "name": "/MA11",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 34,
+      "name": "/MA12",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 35,
+      "name": "/MA13",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 36,
+      "name": "/MA14",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 37,
+      "name": "/MA15",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 38,
+      "name": "/MA16",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 39,
+      "name": "/MA2",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 40,
+      "name": "/MA3",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 41,
+      "name": "/MA4",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 42,
+      "name": "/MA5",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 43,
+      "name": "/MA6",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 44,
+      "name": "/MA7",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 45,
+      "name": "/MA8",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 46,
+      "name": "/MA9",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 47,
+      "name": "/MATCHL",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 48,
+      "name": "/MD0",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 49,
+      "name": "/MD1",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 50,
+      "name": "/MD2",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 51,
+      "name": "/MD3",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 52,
+      "name": "/MD4",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 53,
+      "name": "/MD5",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 54,
+      "name": "/MD6",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 55,
+      "name": "/MD7",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 56,
+      "name": "/OE-",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 57,
+      "name": "/PC-A0",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 58,
+      "name": "/PC-A1",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 59,
+      "name": "/PC-A10",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 60,
+      "name": "/PC-A11",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 61,
+      "name": "/PC-A2",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 62,
+      "name": "/PC-A3",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 63,
+      "name": "/PC-A4",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 64,
+      "name": "/PC-A5",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 65,
+      "name": "/PC-A6",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 66,
+      "name": "/PC-A7",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 67,
+      "name": "/PC-A8",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 68,
+      "name": "/PC-A9",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 69,
+      "name": "/PC-AEN",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 70,
+      "name": "/PC-DB0",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 71,
+      "name": "/PC-DB1",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 72,
+      "name": "/PC-DB2",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 73,
+      "name": "/PC-DB3",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 74,
+      "name": "/PC-DB4",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 75,
+      "name": "/PC-DB5",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 76,
+      "name": "/PC-DB6",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 77,
+      "name": "/PC-DB7",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 78,
+      "name": "/PC-IOR",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 79,
+      "name": "/PC-IOW",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 80,
+      "name": "/PC-RD",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 81,
+      "name": "/PC-RST",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 82,
+      "name": "/PC-WR",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 83,
+      "name": "/PE+",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 84,
+      "name": "/PROG-",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 85,
+      "name": "/REF10",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 86,
+      "name": "/REF11",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 87,
+      "name": "/REF4",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 88,
+      "name": "/REF5",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 89,
+      "name": "/REF6",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 90,
+      "name": "/REF7",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 91,
+      "name": "/REF8",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 92,
+      "name": "/REF9",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 93,
+      "name": "/RSTL",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 94,
+      "name": "/SEL_LPT",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 95,
+      "name": "/SLCT+",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 96,
+      "name": "/SLCTIN-",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 97,
+      "name": "/STROBE",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 98,
+      "name": "/WR-",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 99,
+      "name": "/WR_REG",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 100,
+      "name": "GND",
+      "className": "Power",
+      "containsPlane": false
+    },
+    {
+      "id": 101,
+      "name": "VCC",
+      "className": "Power",
+      "containsPlane": false
+    },
+    {
+      "id": 102,
+      "name": "unconnected-(BUS1-INQ2-Pad4)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 103,
+      "name": "Net-(C3-Pad1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 104,
+      "name": "unconnected-(BUS1--5V-Pad5)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 105,
+      "name": "unconnected-(BUS1-DRQ2-Pad6)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 106,
+      "name": "unconnected-(BUS1--12V-Pad7)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 107,
+      "name": "unconnected-(BUS1-UNUSED-Pad8)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 108,
+      "name": "unconnected-(BUS1-+12V-Pad9)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 109,
+      "name": "unconnected-(BUS1-GND-Pad10)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 110,
+      "name": "unconnected-(BUS1-MEM-Pad11)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 111,
+      "name": "unconnected-(BUS1-MEM-Pad12)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 112,
+      "name": "unconnected-(BUS1-DACK3-Pad15)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 113,
+      "name": "unconnected-(BUS1-DRQ3-Pad16)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 114,
+      "name": "unconnected-(BUS1-DACK1-Pad17)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 115,
+      "name": "unconnected-(BUS1-DRQ1-Pad18)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 116,
+      "name": "unconnected-(BUS1-DACK0-Pad19)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 117,
+      "name": "unconnected-(BUS1-CLK-Pad20)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 118,
+      "name": "unconnected-(BUS1-IRQ7-Pad21)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 119,
+      "name": "unconnected-(BUS1-IRQ6-Pad22)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 120,
+      "name": "unconnected-(BUS1-IRQ5-Pad23)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 121,
+      "name": "unconnected-(BUS1-IRQ4-Pad24)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 122,
+      "name": "unconnected-(BUS1-IRQ3-Pad25)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 123,
+      "name": "unconnected-(BUS1-DACK2-Pad26)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 124,
+      "name": "unconnected-(BUS1-TC-Pad27)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 125,
+      "name": "unconnected-(BUS1-ALE-Pad28)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 126,
+      "name": "unconnected-(BUS1-OSC-Pad30)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 127,
+      "name": "unconnected-(BUS1-IO-Pad32)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 128,
+      "name": "unconnected-(BUS1-IO_READY-Pad41)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 129,
+      "name": "unconnected-(BUS1-BA19-Pad43)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 130,
+      "name": "unconnected-(BUS1-BA18-Pad44)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 131,
+      "name": "unconnected-(BUS1-BA17-Pad45)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 132,
+      "name": "unconnected-(BUS1-BA16-Pad46)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 133,
+      "name": "unconnected-(BUS1-BA15-Pad47)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 134,
+      "name": "unconnected-(BUS1-BA14-Pad48)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 135,
+      "name": "unconnected-(BUS1-BA13-Pad49)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 136,
+      "name": "unconnected-(BUS1-BA12-Pad50)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 137,
+      "name": "Net-(U9-P{slash}A3)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 138,
+      "name": "Net-(D1-A)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 139,
+      "name": "Net-(D2-A)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 140,
+      "name": "Net-(U5-CS2)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 141,
+      "name": "unconnected-(RR1-Pad10)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 142,
+      "name": "unconnected-(U3-Y7-Pad11)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 143,
+      "name": "Net-(U3-Y3)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 144,
+      "name": "Net-(U3-Y2)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 145,
+      "name": "Net-(U3-Y1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 146,
+      "name": "Net-(U3-Y0)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 147,
+      "name": "unconnected-(U8-I{slash}O8-Pad8)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 148,
+      "name": "unconnected-(U8-I{slash}O9-Pad9)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 149,
+      "name": "unconnected-(U8-I{slash}O10-Pad10)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 150,
+      "name": "unconnected-(U9-NC-PadA1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 151,
+      "name": "unconnected-(U9-NC-PadA2)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 152,
+      "name": "unconnected-(U9-NC-PadA3)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 153,
+      "name": "unconnected-(U9-NC-PadB1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 154,
+      "name": "unconnected-(U9-TCK-PadB4)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 155,
+      "name": "unconnected-(U9-TMS-PadB5)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 156,
+      "name": "unconnected-(U9-NC-PadB10)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 157,
+      "name": "unconnected-(U9-NC-PadB13)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 158,
+      "name": "unconnected-(U9-TDI-PadC5)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 159,
+      "name": "unconnected-(U9-NC-PadE2)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 160,
+      "name": "unconnected-(U9-NC-PadE3)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 161,
+      "name": "unconnected-(U9-NC-PadE11)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 162,
+      "name": "unconnected-(U9-NC-PadJ3)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 163,
+      "name": "unconnected-(U9-NC-PadJ11)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 164,
+      "name": "unconnected-(U9-NC-PadK12)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 165,
+      "name": "unconnected-(U9-NC-PadL5)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 166,
+      "name": "unconnected-(U9-P{slash}D2-PadL6)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 167,
+      "name": "unconnected-(U9-NC-PadL9)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 168,
+      "name": "unconnected-(U9-NC-PadM1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 169,
+      "name": "unconnected-(U9-TDO-PadM2)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 170,
+      "name": "unconnected-(U9-PGCK4{slash}A1-PadN1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 171,
+      "name": "unconnected-(U9-P{slash}RCLK{slash}BSY{slash}RDY-PadN3)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 172,
+      "name": "unconnected-(U9-P-PadN5)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 173,
+      "name": "unconnected-(U9-NC-PadN12)",
+      "className": "Default",
+      "containsPlane": false
+    }
+  ],
   "clearanceRules": [],
   "components": [
     {
       "reference": "R5",
       "value": "330",
-      "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+      "footprint": "interf_u:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
       "position": {
         "x": 171.958,
         "y": 42.037
@@ -362,7 +1091,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -377,14 +1109,17 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "C6",
       "value": "47uF",
-      "footprint": "CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
+      "footprint": "interf_u:CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
       "position": {
         "x": 159.385,
         "y": 111.76
@@ -405,7 +1140,10 @@
             "y": 0.0
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -420,14 +1158,17 @@
             "y": 0.0
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "C5",
       "value": "47uF",
-      "footprint": "CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
+      "footprint": "interf_u:CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
       "position": {
         "x": 86.995,
         "y": 113.03
@@ -448,7 +1189,10 @@
             "y": 0.0
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -463,14 +1207,17 @@
             "y": 9.18485099360515e-16
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "C4",
       "value": "47uF",
-      "footprint": "CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
+      "footprint": "interf_u:CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
       "position": {
         "x": 170.688,
         "y": 52.197
@@ -491,7 +1238,10 @@
             "y": -0.0
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -506,14 +1256,17 @@
             "y": 1.83697019872103e-15
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "C1",
       "value": "47uF",
-      "footprint": "CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
+      "footprint": "interf_u:CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
       "position": {
         "x": 83.185,
         "y": 83.82
@@ -534,7 +1287,10 @@
             "y": 0.0
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -549,14 +1305,17 @@
             "y": 0.0
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "C2",
       "value": "47pF",
-      "footprint": "C_Disc_D3.0mm_W2.0mm_P2.50mm",
+      "footprint": "interf_u:C_Disc_D3.0mm_W2.0mm_P2.50mm",
       "position": {
         "x": 121.305,
         "y": 91.44
@@ -577,7 +1336,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -592,14 +1354,17 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "C3",
       "value": "47pF",
-      "footprint": "C_Disc_D3.0mm_W2.0mm_P2.50mm",
+      "footprint": "interf_u:C_Disc_D3.0mm_W2.0mm_P2.50mm",
       "position": {
         "x": 121.305,
         "y": 99.06
@@ -620,7 +1385,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -635,14 +1403,17 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "JP1",
       "value": "CONN_8X2",
-      "footprint": "PinHeader_2x08_P2.54mm_Vertical",
+      "footprint": "interf_u:PinHeader_2x08_P2.54mm_Vertical",
       "position": {
         "x": 116.205,
         "y": 105.41
@@ -663,7 +1434,10 @@
             "y": 0.0
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -678,7 +1452,10 @@
             "y": 1.5553014349171386e-16
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "3",
@@ -693,7 +1470,10 @@
             "y": -2.54
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "4",
@@ -708,7 +1488,10 @@
             "y": -2.54
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "5",
@@ -723,7 +1506,10 @@
             "y": -5.08
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "6",
@@ -738,7 +1524,10 @@
             "y": -5.08
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "7",
@@ -753,7 +1542,10 @@
             "y": -7.62
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "8",
@@ -768,7 +1560,10 @@
             "y": -7.62
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "9",
@@ -783,7 +1578,10 @@
             "y": -10.16
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "10",
@@ -798,7 +1596,10 @@
             "y": -10.16
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "11",
@@ -813,7 +1614,10 @@
             "y": -12.7
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "12",
@@ -828,7 +1632,10 @@
             "y": -12.7
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "13",
@@ -843,7 +1650,10 @@
             "y": -15.24
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "14",
@@ -858,7 +1668,10 @@
             "y": -15.24
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "15",
@@ -873,7 +1686,10 @@
             "y": -17.78
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "16",
@@ -888,14 +1704,17 @@
             "y": -17.78
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "U1",
       "value": "74LS245",
-      "footprint": "DIP-20_W7.62mm",
+      "footprint": "interf_u:DIP-20_W7.62mm",
       "position": {
         "x": 151.765,
         "y": 124.46
@@ -916,7 +1735,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -931,7 +1753,10 @@
             "y": -2.54
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "3",
@@ -946,7 +1771,10 @@
             "y": -5.08
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "4",
@@ -961,7 +1789,10 @@
             "y": -7.62
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "5",
@@ -976,7 +1807,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "6",
@@ -991,7 +1825,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "7",
@@ -1006,7 +1843,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "8",
@@ -1021,7 +1861,10 @@
             "y": -17.78
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "9",
@@ -1036,7 +1879,10 @@
             "y": -20.32
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "10",
@@ -1051,7 +1897,10 @@
             "y": -22.86
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "11",
@@ -1066,7 +1915,10 @@
             "y": -22.86
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "12",
@@ -1081,7 +1933,10 @@
             "y": -20.32
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "13",
@@ -1096,7 +1951,10 @@
             "y": -17.78
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "14",
@@ -1111,7 +1969,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "15",
@@ -1126,7 +1987,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "16",
@@ -1141,7 +2005,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "17",
@@ -1156,7 +2023,10 @@
             "y": -7.620000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "18",
@@ -1171,7 +2041,10 @@
             "y": -5.080000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "19",
@@ -1186,7 +2059,10 @@
             "y": -2.5400000000000005
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "20",
@@ -1201,14 +2077,17 @@
             "y": -4.6659043047514155e-16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "U2",
       "value": "74LS688",
-      "footprint": "DIP-20_W7.62mm",
+      "footprint": "interf_u:DIP-20_W7.62mm",
       "position": {
         "x": 95.885,
         "y": 124.46
@@ -1229,7 +2108,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -1244,7 +2126,10 @@
             "y": -2.54
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "3",
@@ -1259,7 +2144,10 @@
             "y": -5.08
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "4",
@@ -1274,7 +2162,10 @@
             "y": -7.62
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "5",
@@ -1289,7 +2180,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "6",
@@ -1304,7 +2198,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "7",
@@ -1319,7 +2216,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "8",
@@ -1334,7 +2234,10 @@
             "y": -17.78
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "9",
@@ -1349,7 +2252,10 @@
             "y": -20.32
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "10",
@@ -1364,7 +2270,10 @@
             "y": -22.86
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "11",
@@ -1379,7 +2288,10 @@
             "y": -22.86
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "12",
@@ -1394,7 +2306,10 @@
             "y": -20.32
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "13",
@@ -1409,7 +2324,10 @@
             "y": -17.78
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "14",
@@ -1424,7 +2342,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "15",
@@ -1439,7 +2360,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "16",
@@ -1454,7 +2378,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "17",
@@ -1469,7 +2396,10 @@
             "y": -7.620000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "18",
@@ -1484,7 +2414,10 @@
             "y": -5.080000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "19",
@@ -1499,7 +2432,10 @@
             "y": -2.5400000000000005
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "20",
@@ -1514,14 +2450,17 @@
             "y": -4.6659043047514155e-16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "U3",
       "value": "74LS541",
-      "footprint": "DIP-20_W7.62mm",
+      "footprint": "interf_u:DIP-20_W7.62mm",
       "position": {
         "x": 123.825,
         "y": 124.46
@@ -1542,7 +2481,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -1557,7 +2499,10 @@
             "y": -2.54
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "3",
@@ -1572,7 +2517,10 @@
             "y": -5.08
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "4",
@@ -1587,7 +2535,10 @@
             "y": -7.62
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "5",
@@ -1602,7 +2553,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "6",
@@ -1617,7 +2571,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "7",
@@ -1632,7 +2589,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "8",
@@ -1647,7 +2607,10 @@
             "y": -17.78
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "9",
@@ -1662,7 +2625,10 @@
             "y": -20.32
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "10",
@@ -1677,7 +2643,10 @@
             "y": -22.86
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "11",
@@ -1692,7 +2661,10 @@
             "y": -22.86
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "12",
@@ -1707,7 +2679,10 @@
             "y": -20.32
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "13",
@@ -1722,7 +2697,10 @@
             "y": -17.78
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "14",
@@ -1737,7 +2715,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "15",
@@ -1752,7 +2733,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "16",
@@ -1767,7 +2751,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "17",
@@ -1782,7 +2769,10 @@
             "y": -7.620000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "18",
@@ -1797,7 +2787,10 @@
             "y": -5.080000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "19",
@@ -1812,7 +2805,10 @@
             "y": -2.5400000000000005
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "20",
@@ -1827,14 +2823,17 @@
             "y": -4.6659043047514155e-16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "U5",
       "value": "628128",
-      "footprint": "DIP-32_W15.24mm",
+      "footprint": "interf_u:DIP-32_W15.24mm",
       "position": {
         "x": 86.995,
         "y": 76.2
@@ -1855,7 +2854,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -1870,7 +2872,10 @@
             "y": -2.54
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "3",
@@ -1885,7 +2890,10 @@
             "y": -5.08
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "4",
@@ -1900,7 +2908,10 @@
             "y": -7.62
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "5",
@@ -1915,7 +2926,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "6",
@@ -1930,7 +2944,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "7",
@@ -1945,7 +2962,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "8",
@@ -1960,7 +2980,10 @@
             "y": -17.78
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "9",
@@ -1975,7 +2998,10 @@
             "y": -20.32
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "10",
@@ -1990,7 +3016,10 @@
             "y": -22.86
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "11",
@@ -2005,7 +3034,10 @@
             "y": -25.4
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "12",
@@ -2020,7 +3052,10 @@
             "y": -27.94
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "13",
@@ -2035,7 +3070,10 @@
             "y": -30.48
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "14",
@@ -2050,7 +3088,10 @@
             "y": -33.02
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "15",
@@ -2065,7 +3106,10 @@
             "y": -35.56
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "16",
@@ -2080,7 +3124,10 @@
             "y": -38.1
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "17",
@@ -2095,7 +3142,10 @@
             "y": -38.1
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "18",
@@ -2110,7 +3160,10 @@
             "y": -35.56
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "19",
@@ -2125,7 +3178,10 @@
             "y": -33.02
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "20",
@@ -2140,7 +3196,10 @@
             "y": -30.48
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "21",
@@ -2155,7 +3214,10 @@
             "y": -27.94
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "22",
@@ -2170,7 +3232,10 @@
             "y": -25.4
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "23",
@@ -2185,7 +3250,10 @@
             "y": -22.86
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "24",
@@ -2200,7 +3268,10 @@
             "y": -20.32
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "25",
@@ -2215,7 +3286,10 @@
             "y": -17.78
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "26",
@@ -2230,7 +3304,10 @@
             "y": -15.240000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "27",
@@ -2245,7 +3322,10 @@
             "y": -12.700000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "28",
@@ -2260,7 +3340,10 @@
             "y": -10.160000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "29",
@@ -2275,7 +3358,10 @@
             "y": -7.620000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "30",
@@ -2290,7 +3376,10 @@
             "y": -5.080000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "31",
@@ -2305,7 +3394,10 @@
             "y": -2.540000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "32",
@@ -2320,14 +3412,17 @@
             "y": -9.331808609502831e-16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "U8",
       "value": "EP600",
-      "footprint": "DIP-24_W7.62mm",
+      "footprint": "interf_u:DIP-24_W7.62mm",
       "position": {
         "x": 123.825,
         "y": 112.903
@@ -2348,7 +3443,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -2363,7 +3461,10 @@
             "y": -2.54
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "3",
@@ -2378,7 +3479,10 @@
             "y": -5.08
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "4",
@@ -2393,7 +3497,10 @@
             "y": -7.62
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "5",
@@ -2408,7 +3515,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "6",
@@ -2423,7 +3533,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "7",
@@ -2438,7 +3551,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "8",
@@ -2453,7 +3569,10 @@
             "y": -17.78
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "9",
@@ -2468,7 +3587,10 @@
             "y": -20.32
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "10",
@@ -2483,7 +3605,10 @@
             "y": -22.86
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "11",
@@ -2498,7 +3623,10 @@
             "y": -25.4
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "12",
@@ -2513,7 +3641,10 @@
             "y": -27.94
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "13",
@@ -2528,7 +3659,10 @@
             "y": -27.94
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "14",
@@ -2543,7 +3677,10 @@
             "y": -25.4
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "15",
@@ -2558,7 +3695,10 @@
             "y": -22.86
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "16",
@@ -2573,7 +3713,10 @@
             "y": -20.32
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "17",
@@ -2588,7 +3731,10 @@
             "y": -17.78
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "18",
@@ -2603,7 +3749,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "19",
@@ -2618,7 +3767,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "20",
@@ -2633,7 +3785,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "21",
@@ -2648,7 +3803,10 @@
             "y": -7.620000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "22",
@@ -2663,7 +3821,10 @@
             "y": -5.080000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "23",
@@ -2678,7 +3839,10 @@
             "y": -2.5400000000000005
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "24",
@@ -2693,14 +3857,17 @@
             "y": -4.6659043047514155e-16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "X1",
       "value": "8MHz",
-      "footprint": "Crystal_HC18-U_Horizontal",
+      "footprint": "interf_u:Crystal_HC18-U_Horizontal",
       "position": {
         "x": 113.665,
         "y": 92.71
@@ -2721,7 +3888,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -2736,14 +3906,17 @@
             "y": 3.0003846579110154e-16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "R4",
       "value": "330",
-      "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+      "footprint": "interf_u:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
       "position": {
         "x": 151.765,
         "y": 41.91
@@ -2764,7 +3937,10 @@
             "y": -0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -2779,14 +3955,17 @@
             "y": 9.331808609502831e-16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "D1",
       "value": "LED",
-      "footprint": "LED_D5.0mm",
+      "footprint": "interf_u:LED_D5.0mm",
       "position": {
         "x": 155.58,
         "y": 38.06
@@ -2807,7 +3986,10 @@
             "y": 0.0
           },
           "drill": 0.9,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -2822,14 +4004,17 @@
             "y": 0.0
           },
           "drill": 0.9,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "D2",
       "value": "LED",
-      "footprint": "LED_D5.0mm",
+      "footprint": "interf_u:LED_D5.0mm",
       "position": {
         "x": 165.71,
         "y": 38.08
@@ -2850,7 +4035,10 @@
             "y": 0.0
           },
           "drill": 0.9,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -2865,14 +4053,17 @@
             "y": 0.0
           },
           "drill": 0.9,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "P1",
       "value": "DB25FEMELLE",
-      "footprint": "DSUB-25_Female_Horizontal_P2.77x2.84mm_EdgePinOffset9.90mm_Housed_MountingHolesOffset11.32mm",
+      "footprint": "interf_u:DSUB-25_Female_Horizontal_P2.77x2.84mm_EdgePinOffset9.90mm_Housed_MountingHolesOffset11.32mm",
       "position": {
         "x": 182.1,
         "y": 72.4
@@ -2893,7 +4084,10 @@
             "y": -1.4199999999999975
           },
           "drill": 3.2,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "0",
@@ -2908,7 +4102,10 @@
             "y": -1.4200000000000004
           },
           "drill": 3.2,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "1",
@@ -2923,7 +4120,10 @@
             "y": 0.0
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -2938,7 +4138,10 @@
             "y": 1.6961358168190843e-16
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "3",
@@ -2953,7 +4156,10 @@
             "y": 3.3922716336381685e-16
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "4",
@@ -2968,7 +4174,10 @@
             "y": 5.088407450457253e-16
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "5",
@@ -2983,7 +4192,10 @@
             "y": 6.784543267276337e-16
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "6",
@@ -2998,7 +4210,10 @@
             "y": 8.480679084095421e-16
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "7",
@@ -3013,7 +4228,10 @@
             "y": 1.0176814900914506e-15
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "8",
@@ -3028,7 +4246,10 @@
             "y": 1.187295071773359e-15
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "9",
@@ -3043,7 +4264,10 @@
             "y": 1.3569086534552674e-15
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "10",
@@ -3058,7 +4282,10 @@
             "y": 1.5265222351371758e-15
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "11",
@@ -3073,7 +4300,10 @@
             "y": 1.6961358168190842e-15
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "12",
@@ -3088,7 +4318,10 @@
             "y": 1.8657493985009924e-15
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "13",
@@ -3103,7 +4336,10 @@
             "y": 2.0353629801829012e-15
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "14",
@@ -3118,7 +4354,10 @@
             "y": -2.84
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "15",
@@ -3133,7 +4372,10 @@
             "y": -2.8399999999999994
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "16",
@@ -3148,7 +4390,10 @@
             "y": -2.8399999999999994
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "17",
@@ -3163,7 +4408,10 @@
             "y": -2.8399999999999994
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "18",
@@ -3178,7 +4426,10 @@
             "y": -2.839999999999999
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "19",
@@ -3193,7 +4444,10 @@
             "y": -2.839999999999999
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "20",
@@ -3208,7 +4462,10 @@
             "y": -2.839999999999999
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "21",
@@ -3223,7 +4480,10 @@
             "y": -2.8399999999999985
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "22",
@@ -3238,7 +4498,10 @@
             "y": -2.8399999999999985
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "23",
@@ -3253,7 +4516,10 @@
             "y": -2.839999999999998
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "24",
@@ -3268,7 +4534,10 @@
             "y": -2.839999999999998
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "25",
@@ -3283,14 +4552,17 @@
             "y": -2.839999999999998
           },
           "drill": 1.0,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "RR1",
       "value": "9x1K",
-      "footprint": "R_Array_SIP10",
+      "footprint": "interf_u:R_Array_SIP10",
       "position": {
         "x": 95.885,
         "y": 113.03
@@ -3311,7 +4583,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -3326,7 +4601,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "3",
@@ -3341,7 +4619,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "4",
@@ -3356,7 +4637,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "5",
@@ -3371,7 +4655,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "6",
@@ -3386,7 +4673,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "7",
@@ -3401,7 +4691,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "8",
@@ -3416,7 +4709,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "9",
@@ -3431,7 +4727,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "10",
@@ -3446,14 +4745,17 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "U9",
       "value": "4003APG120",
-      "footprint": "PGA120",
+      "footprint": "interf_u:PGA120",
       "position": {
         "x": 158.115,
         "y": 82.55
@@ -3474,7 +4776,10 @@
             "y": 15.240000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A2",
@@ -3489,7 +4794,10 @@
             "y": 15.240000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A3",
@@ -3504,7 +4812,10 @@
             "y": 15.240000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A4",
@@ -3519,7 +4830,10 @@
             "y": 15.240000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A5",
@@ -3534,7 +4848,10 @@
             "y": 15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A6",
@@ -3549,7 +4866,10 @@
             "y": 15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A7",
@@ -3564,7 +4884,10 @@
             "y": 15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A8",
@@ -3579,7 +4902,10 @@
             "y": 15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A9",
@@ -3594,7 +4920,10 @@
             "y": 15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A10",
@@ -3609,7 +4938,10 @@
             "y": 15.239999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A11",
@@ -3624,7 +4956,10 @@
             "y": 15.239999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A12",
@@ -3639,7 +4974,10 @@
             "y": 15.239999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "A13",
@@ -3654,7 +4992,10 @@
             "y": 15.239999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B1",
@@ -3669,7 +5010,10 @@
             "y": 12.700000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B2",
@@ -3684,7 +5028,10 @@
             "y": 12.700000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B3",
@@ -3699,7 +5046,10 @@
             "y": 12.700000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B4",
@@ -3714,7 +5064,10 @@
             "y": 12.700000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B5",
@@ -3729,7 +5082,10 @@
             "y": 12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B6",
@@ -3744,7 +5100,10 @@
             "y": 12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B7",
@@ -3759,7 +5118,10 @@
             "y": 12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B8",
@@ -3774,7 +5136,10 @@
             "y": 12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B9",
@@ -3789,7 +5154,10 @@
             "y": 12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B10",
@@ -3804,7 +5172,10 @@
             "y": 12.699999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B11",
@@ -3819,7 +5190,10 @@
             "y": 12.699999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B12",
@@ -3834,7 +5208,10 @@
             "y": 12.699999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "B13",
@@ -3849,7 +5226,10 @@
             "y": 12.699999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C1",
@@ -3864,7 +5244,10 @@
             "y": 10.160000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C2",
@@ -3879,7 +5262,10 @@
             "y": 10.160000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C3",
@@ -3894,7 +5280,10 @@
             "y": 10.160000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C4",
@@ -3909,7 +5298,10 @@
             "y": 10.160000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C5",
@@ -3924,7 +5316,10 @@
             "y": 10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C6",
@@ -3939,7 +5334,10 @@
             "y": 10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C7",
@@ -3954,7 +5352,10 @@
             "y": 10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C8",
@@ -3969,7 +5370,10 @@
             "y": 10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C9",
@@ -3984,7 +5388,10 @@
             "y": 10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C10",
@@ -3999,7 +5406,10 @@
             "y": 10.159999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C11",
@@ -4014,7 +5424,10 @@
             "y": 10.159999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C12",
@@ -4029,7 +5442,10 @@
             "y": 10.159999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "C13",
@@ -4044,7 +5460,10 @@
             "y": 10.159999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "D1",
@@ -4059,7 +5478,10 @@
             "y": 7.620000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "D2",
@@ -4074,7 +5496,10 @@
             "y": 7.620000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "D3",
@@ -4089,7 +5514,10 @@
             "y": 7.620000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "D11",
@@ -4104,7 +5532,10 @@
             "y": 7.619999999999999
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "D12",
@@ -4119,7 +5550,10 @@
             "y": 7.619999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "D13",
@@ -4134,7 +5568,10 @@
             "y": 7.619999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "E1",
@@ -4149,7 +5586,10 @@
             "y": 5.080000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "E2",
@@ -4164,7 +5604,10 @@
             "y": 5.080000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "E3",
@@ -4179,7 +5622,10 @@
             "y": 5.080000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "E11",
@@ -4194,7 +5640,10 @@
             "y": 5.079999999999999
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "E12",
@@ -4209,7 +5658,10 @@
             "y": 5.079999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "E13",
@@ -4224,7 +5676,10 @@
             "y": 5.079999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "F1",
@@ -4239,7 +5694,10 @@
             "y": 2.540000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "F2",
@@ -4254,7 +5712,10 @@
             "y": 2.540000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "F3",
@@ -4269,7 +5730,10 @@
             "y": 2.5400000000000014
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "F11",
@@ -4284,7 +5748,10 @@
             "y": 2.5399999999999987
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "F12",
@@ -4299,7 +5766,10 @@
             "y": 2.5399999999999983
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "F13",
@@ -4314,7 +5784,10 @@
             "y": 2.5399999999999983
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "G1",
@@ -4329,7 +5802,10 @@
             "y": 1.8663617219005662e-15
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "G2",
@@ -4344,7 +5820,10 @@
             "y": 1.5553014349171384e-15
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "G3",
@@ -4359,7 +5838,10 @@
             "y": 1.2442411479337109e-15
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "G11",
@@ -4374,7 +5856,10 @@
             "y": -1.2442411479337109e-15
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "G12",
@@ -4389,7 +5874,10 @@
             "y": -1.5553014349171384e-15
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "G13",
@@ -4404,7 +5892,10 @@
             "y": -1.8663617219005662e-15
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "H1",
@@ -4419,7 +5910,10 @@
             "y": -2.5399999999999983
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "H2",
@@ -4434,7 +5928,10 @@
             "y": -2.5399999999999983
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "H3",
@@ -4449,7 +5946,10 @@
             "y": -2.5399999999999987
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "H11",
@@ -4464,7 +5964,10 @@
             "y": -2.5400000000000014
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "H12",
@@ -4479,7 +5982,10 @@
             "y": -2.540000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "H13",
@@ -4494,7 +6000,10 @@
             "y": -2.540000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "J1",
@@ -4509,7 +6018,10 @@
             "y": -5.079999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "J2",
@@ -4524,7 +6036,10 @@
             "y": -5.079999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "J3",
@@ -4539,7 +6054,10 @@
             "y": -5.079999999999999
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "J11",
@@ -4554,7 +6072,10 @@
             "y": -5.080000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "J12",
@@ -4569,7 +6090,10 @@
             "y": -5.080000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "J13",
@@ -4584,7 +6108,10 @@
             "y": -5.080000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "K1",
@@ -4599,7 +6126,10 @@
             "y": -7.619999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "K2",
@@ -4614,7 +6144,10 @@
             "y": -7.619999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "K3",
@@ -4629,7 +6162,10 @@
             "y": -7.619999999999999
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "K11",
@@ -4644,7 +6180,10 @@
             "y": -7.620000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "K12",
@@ -4659,7 +6198,10 @@
             "y": -7.620000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "K13",
@@ -4674,7 +6216,10 @@
             "y": -7.620000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L1",
@@ -4689,7 +6234,10 @@
             "y": -10.159999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L2",
@@ -4704,7 +6252,10 @@
             "y": -10.159999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L3",
@@ -4719,7 +6270,10 @@
             "y": -10.159999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L4",
@@ -4734,7 +6288,10 @@
             "y": -10.159999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L5",
@@ -4749,7 +6306,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L6",
@@ -4764,7 +6324,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L7",
@@ -4779,7 +6342,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L8",
@@ -4794,7 +6360,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L9",
@@ -4809,7 +6378,10 @@
             "y": -10.16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L10",
@@ -4824,7 +6396,10 @@
             "y": -10.160000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L11",
@@ -4839,7 +6414,10 @@
             "y": -10.160000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L12",
@@ -4854,7 +6432,10 @@
             "y": -10.160000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "L13",
@@ -4869,7 +6450,10 @@
             "y": -10.160000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M1",
@@ -4884,7 +6468,10 @@
             "y": -12.699999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M2",
@@ -4899,7 +6486,10 @@
             "y": -12.699999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M3",
@@ -4914,7 +6504,10 @@
             "y": -12.699999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M4",
@@ -4929,7 +6522,10 @@
             "y": -12.699999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M5",
@@ -4944,7 +6540,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M6",
@@ -4959,7 +6558,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M7",
@@ -4974,7 +6576,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M8",
@@ -4989,7 +6594,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M9",
@@ -5004,7 +6612,10 @@
             "y": -12.7
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M10",
@@ -5019,7 +6630,10 @@
             "y": -12.700000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M11",
@@ -5034,7 +6648,10 @@
             "y": -12.700000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M12",
@@ -5049,7 +6666,10 @@
             "y": -12.700000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "M13",
@@ -5064,7 +6684,10 @@
             "y": -12.700000000000001
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N1",
@@ -5079,7 +6702,10 @@
             "y": -15.239999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N2",
@@ -5094,7 +6720,10 @@
             "y": -15.239999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N3",
@@ -5109,7 +6738,10 @@
             "y": -15.239999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N4",
@@ -5124,7 +6756,10 @@
             "y": -15.239999999999998
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N5",
@@ -5139,7 +6774,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N6",
@@ -5154,7 +6792,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N7",
@@ -5169,7 +6810,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N8",
@@ -5184,7 +6828,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N9",
@@ -5199,7 +6846,10 @@
             "y": -15.24
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N10",
@@ -5214,7 +6864,10 @@
             "y": -15.240000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N11",
@@ -5229,7 +6882,10 @@
             "y": -15.240000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N12",
@@ -5244,7 +6900,10 @@
             "y": -15.240000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "N13",
@@ -5259,14 +6918,17 @@
             "y": -15.240000000000002
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "BUS1",
       "value": "BUSPC",
-      "footprint": "BUS_PC",
+      "footprint": "interf_u:BUS_PC",
       "position": {
         "x": 131.445,
         "y": 138.43
@@ -5287,7 +6949,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -5302,7 +6966,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "3",
@@ -5317,7 +6983,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "4",
@@ -5332,7 +7000,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "5",
@@ -5347,7 +7017,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "6",
@@ -5362,7 +7034,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "7",
@@ -5377,7 +7051,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "8",
@@ -5392,7 +7068,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "9",
@@ -5407,7 +7085,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "10",
@@ -5422,7 +7102,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "11",
@@ -5437,7 +7119,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "12",
@@ -5452,7 +7136,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "13",
@@ -5467,7 +7153,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "14",
@@ -5482,7 +7170,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "15",
@@ -5497,7 +7187,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "16",
@@ -5512,7 +7204,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "17",
@@ -5527,7 +7221,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "18",
@@ -5542,7 +7238,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "19",
@@ -5557,7 +7255,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "20",
@@ -5572,7 +7272,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "21",
@@ -5587,7 +7289,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "22",
@@ -5602,7 +7306,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "23",
@@ -5617,7 +7323,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "24",
@@ -5632,7 +7340,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "25",
@@ -5647,7 +7357,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "26",
@@ -5662,7 +7374,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "27",
@@ -5677,7 +7391,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "28",
@@ -5692,7 +7408,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "29",
@@ -5707,7 +7425,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "30",
@@ -5722,7 +7442,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "31",
@@ -5737,7 +7459,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "bottom_copper"
+          ]
         },
         {
           "name": "32",
@@ -5752,7 +7476,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "33",
@@ -5767,7 +7493,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "34",
@@ -5782,7 +7510,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "35",
@@ -5797,7 +7527,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "36",
@@ -5812,7 +7544,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "37",
@@ -5827,7 +7561,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "38",
@@ -5842,7 +7578,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "39",
@@ -5857,7 +7595,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "40",
@@ -5872,7 +7612,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "41",
@@ -5887,7 +7629,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "42",
@@ -5902,7 +7646,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "43",
@@ -5917,7 +7663,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "44",
@@ -5932,7 +7680,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "45",
@@ -5947,7 +7697,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "46",
@@ -5962,7 +7714,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "47",
@@ -5977,7 +7731,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "48",
@@ -5992,7 +7748,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "49",
@@ -6007,7 +7765,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "50",
@@ -6022,7 +7782,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "51",
@@ -6037,7 +7799,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "52",
@@ -6052,7 +7816,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "53",
@@ -6067,7 +7833,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "54",
@@ -6082,7 +7850,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "55",
@@ -6097,7 +7867,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "56",
@@ -6112,7 +7884,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "57",
@@ -6127,7 +7901,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "58",
@@ -6142,7 +7918,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "59",
@@ -6157,7 +7935,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "60",
@@ -6172,7 +7952,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "61",
@@ -6187,7 +7969,9 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         },
         {
           "name": "62",
@@ -6202,14 +7986,16 @@
             "y": 0.0
           },
           "drill": 0.0,
-          "layers": []
+          "layers": [
+            "top_copper"
+          ]
         }
       ]
     },
     {
       "reference": "R3",
       "value": "10K",
-      "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+      "footprint": "interf_u:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
       "position": {
         "x": 92.075,
         "y": 57.15
@@ -6230,7 +8016,10 @@
             "y": -0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -6245,14 +8034,17 @@
             "y": 9.331808609502831e-16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "R2",
       "value": "1K",
-      "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+      "footprint": "interf_u:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
       "position": {
         "x": 127.635,
         "y": 91.44
@@ -6273,7 +8065,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -6288,14 +8083,17 @@
             "y": 4.6659043047514155e-16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "R1",
       "value": "100K",
-      "footprint": "R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
+      "footprint": "interf_u:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal",
       "position": {
         "x": 117.475,
         "y": 99.06
@@ -6316,7 +8114,10 @@
             "y": 0.0
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         },
         {
           "name": "2",
@@ -6331,14 +8132,17 @@
             "y": -4.6659043047514155e-16
           },
           "drill": 0.8,
-          "layers": []
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
         }
       ]
     },
     {
       "reference": "G1",
       "value": "LOGO",
-      "footprint": "tux",
+      "footprint": "interf_u:tux",
       "position": {
         "x": 134.0,
         "y": 47.0

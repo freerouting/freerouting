@@ -409,8 +409,11 @@ public final class KiCadJsonReader {
           }
 
           boolean isDrillable = pad.drill > 0.0;
-          String padstackName = "padstack_" + (padstacks.count() + 1);
-          Padstack padstack = padstacks.add(padstackName, shapeArr, isDrillable, false);
+          String padstackName = getDescriptivePadstackName(pad, boardLayers, layerCount);
+          Padstack padstack = padstacks.get(padstackName);
+          if (padstack == null) {
+            padstack = padstacks.add(padstackName, shapeArr, isDrillable, false);
+          }
           IntVector relativeLoc = new IntVector(
               (int) Math.round(pad.offset.x * scaleFactor),
               (int) Math.round(-pad.offset.y * scaleFactor)
@@ -418,13 +421,59 @@ public final class KiCadJsonReader {
           packagePins.add(new Package.Pin(pad.name, padstack.no, relativeLoc, 0.0));
         }
 
-        Package componentPackage = packages.add(packagePins.toArray(new Package.Pin[0]));
+        boolean isFront = !"B.Cu".equalsIgnoreCase(comp.layer);
+        String basePackageName = comp.footprint;
+        if (basePackageName == null || basePackageName.isEmpty()) {
+          basePackageName = "Package";
+        }
+        Package.Pin[] newPinArr = packagePins.toArray(new Package.Pin[0]);
+        Package componentPackage = null;
+        int suffix = 0;
+        while (true) {
+          String testName = suffix == 0 ? basePackageName : basePackageName + "::" + suffix;
+          try {
+            Package existingPkg = packages.get(testName, isFront);
+            if (existingPkg == null || !existingPkg.name.equalsIgnoreCase(testName)) {
+              componentPackage = packages.add(
+                  testName,
+                  newPinArr,
+                  null,
+                  null,
+                  null,
+                  new Package.Keepout[0],
+                  new Package.Keepout[0],
+                  new Package.Keepout[0],
+                  isFront
+              );
+              break;
+            } else {
+              if (arePackagePinsIdentical(existingPkg, newPinArr)) {
+                componentPackage = existingPkg;
+                break;
+              }
+            }
+          } catch (Exception e) {
+            FRLogger.error("KiCadJsonReader package deduplication error, falling back", e);
+            componentPackage = packages.add(
+                comp.footprint != null ? comp.footprint : "Package",
+                newPinArr,
+                null,
+                null,
+                null,
+                new Package.Keepout[0],
+                new Package.Keepout[0],
+                new Package.Keepout[0],
+                isFront
+            );
+            break;
+          }
+          suffix++;
+        }
         IntPoint position = new IntPoint(
             (int) Math.round(comp.position.x * scaleFactor),
             (int) Math.round(-comp.position.y * scaleFactor)
         );
 
-        boolean isFront = !"B.Cu".equalsIgnoreCase(comp.layer);
         Component boardComp = board.components.add(
             comp.reference,
             position,
@@ -497,7 +546,13 @@ public final class KiCadJsonReader {
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
           shapeArr[li] = viaShape;
         }
-        Padstack viaPadstack = padstacks.add(shapeArr);
+        String viaPadstackName = String.format("Via[%d-%d]_%.0f:%.0f_um",
+            vj.startLayerIndex, vj.endLayerIndex,
+            vj.diameter * 1000.0, vj.drill * 1000.0);
+        Padstack viaPadstack = padstacks.get(viaPadstackName);
+        if (viaPadstack == null) {
+          viaPadstack = padstacks.add(viaPadstackName, shapeArr, true, false);
+        }
         board.insert_via(viaPadstack, center, netNoArr, 1, FixedState.USER_FIXED, true);
       }
 
@@ -555,5 +610,68 @@ public final class KiCadJsonReader {
           (int) Math.round(maxY)
       );
     }
+  }
+
+  private static String getDescriptivePadstackName(KiCadBoardJson.PadJson pad, Layer[] boardLayers, int layerCount) {
+    String shapeStr = "Round";
+    if (pad.shape != null) {
+      if (pad.shape.equalsIgnoreCase("circle") || pad.shape.equalsIgnoreCase("round")) {
+        shapeStr = "Round";
+      } else if (pad.shape.equalsIgnoreCase("rect") || pad.shape.equalsIgnoreCase("rectangle")) {
+        shapeStr = "Rect";
+      } else if (pad.shape.equalsIgnoreCase("oval")) {
+        shapeStr = "Oval";
+      } else {
+        shapeStr = pad.shape.substring(0, 1).toUpperCase() + pad.shape.substring(1).toLowerCase();
+      }
+    }
+    
+    String layerType = "A";
+    if (pad.layers != null && pad.layers.size() == 1) {
+      String lName = pad.layers.get(0);
+      if (boardLayers[0].name.equalsIgnoreCase(lName)) {
+        layerType = "T";
+      } else if (boardLayers[layerCount - 1].name.equalsIgnoreCase(lName)) {
+        layerType = "B";
+      }
+    }
+    
+    if (shapeStr.equals("Round")) {
+      return String.format("%s[%s]Pad_%.0f_um", shapeStr, layerType, pad.size.x * 1000.0);
+    } else {
+      return String.format("%s[%s]Pad_%.0fxf_%.0f_um", shapeStr, layerType, pad.size.x * 1000.0, pad.size.y * 1000.0).replace("xf_", "x");
+    }
+  }
+
+  private static boolean arePackagePinsIdentical(Package pkg1, Package.Pin[] p2) {
+    if (pkg1 == null || p2 == null) {
+      return (pkg1 == null) == (p2 == null);
+    }
+    if (pkg1.pin_count() != p2.length) {
+      return false;
+    }
+    for (int i = 0; i < p2.length; i++) {
+      Package.Pin pin1 = pkg1.get_pin(i);
+      Package.Pin pin2 = p2[i];
+      if (pin1 == null || pin2 == null) {
+        if (pin1 != pin2) return false;
+        continue;
+      }
+      if (!pin1.name.equals(pin2.name)) {
+        return false;
+      }
+      if (pin1.padstack_no != pin2.padstack_no) {
+        return false;
+      }
+      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relative_location.to_float();
+      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.relative_location.to_float();
+      if (Math.abs(loc1.x - loc2.x) > 0.001 || Math.abs(loc1.y - loc2.y) > 0.001) {
+        return false;
+      }
+      if (Math.abs(pin1.rotation_in_degree - pin2.rotation_in_degree) > 0.001) {
+        return false;
+      }
+    }
+    return true;
   }
 }

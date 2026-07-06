@@ -27,6 +27,9 @@ public class Packages implements Serializable {
    * Returns the package with the input name and the input side or null, if no such package exists.
    */
   public Package get(String p_name, boolean p_is_front) {
+    if (p_name == null) {
+      return null;
+    }
     Package other_side_package = null;
     for (Package curr_package : package_arr) {
       if (curr_package != null && curr_package.name.equalsIgnoreCase(p_name)) {
@@ -34,6 +37,17 @@ public class Packages implements Serializable {
           return curr_package;
         }
         other_side_package = curr_package;
+      }
+    }
+    String baseName = p_name.replaceAll("::\\d+$", "");
+    if (!baseName.equalsIgnoreCase(p_name)) {
+      for (Package curr_package : package_arr) {
+        if (curr_package != null && curr_package.name.equalsIgnoreCase(baseName)) {
+          if (curr_package.is_front == p_is_front) {
+            return curr_package;
+          }
+          other_side_package = curr_package;
+        }
       }
     }
     return other_side_package;

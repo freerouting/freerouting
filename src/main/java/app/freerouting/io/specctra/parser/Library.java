@@ -189,7 +189,8 @@ public class Library extends ScopeKeyword {
         padstack_shapes[shape_layer] = padstack_shape;
       }
     }
-    p_board_padstacks.add(padstack_name, padstack_shapes, is_drilllable, placed_absolute);
+    String cleanedName = padstack_name.replaceAll("\\.\\d+", "");
+    p_board_padstacks.add(cleanedName, padstack_shapes, is_drilllable, placed_absolute);
     return true;
   }
 
@@ -241,9 +242,10 @@ public class Library extends ScopeKeyword {
         int rel_x = (int) Math.round(p_par.coordinate_transform.dsn_to_board(pin_info.rel_coor[0]));
         int rel_y = (int) Math.round(p_par.coordinate_transform.dsn_to_board(pin_info.rel_coor[1]));
         Vector rel_coor = new IntVector(rel_x, rel_y);
-        Padstack board_padstack = board.library.padstacks.get(pin_info.padstack_name);
+        String cleanedLookupName = pin_info.padstack_name != null ? pin_info.padstack_name.replaceAll("\\.\\d+", "") : null;
+        Padstack board_padstack = board.library.padstacks.get(cleanedLookupName);
         if (board_padstack == null) {
-          FRLogger.warn("Library.read_scope: board padstack not found at '" + p_par.scanner.get_scope_identifier() + "'");
+          FRLogger.warn("Library.read_scope: board padstack '" + pin_info.padstack_name + "' (cleaned: '" + cleanedLookupName + "') not found at '" + p_par.scanner.get_scope_identifier() + "'");
           return false;
         }
         pin_arr[i] = new app.freerouting.core.Package.Pin(pin_info.pin_name, board_padstack.no, rel_coor, pin_info.rotation);
@@ -298,7 +300,27 @@ public class Library extends ScopeKeyword {
         Area curr_area = Shape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
         place_keepout_arr[i] = new app.freerouting.core.Package.Keepout(curr_keepout.area_name, curr_area, curr_layer.no);
       }
-      board.library.packages.add(curr_package.name, pin_arr, outline_arr, outline_widths, outline_is_closed, keepout_arr, via_keepout_arr, place_keepout_arr, curr_package.is_front);
+      String basePackageName = curr_package.name != null ? curr_package.name.replaceAll("::\\d+$", "") : "Package";
+      int suffix = 0;
+      while (true) {
+        String testName = suffix == 0 ? basePackageName : basePackageName + "::" + suffix;
+        try {
+          app.freerouting.core.Package existingPkg = board.library.packages.get(testName, curr_package.is_front);
+          if (existingPkg == null || !existingPkg.name.equalsIgnoreCase(testName)) {
+            board.library.packages.add(testName, pin_arr, outline_arr, outline_widths, outline_is_closed, keepout_arr, via_keepout_arr, place_keepout_arr, curr_package.is_front);
+            break;
+          } else {
+            if (arePackagePinsIdentical(existingPkg, pin_arr)) {
+              break;
+            }
+          }
+        } catch (Exception e) {
+          FRLogger.error("Library.read_scope package deduplication error, falling back", e);
+          board.library.packages.add(curr_package.name, pin_arr, outline_arr, outline_widths, outline_is_closed, keepout_arr, via_keepout_arr, place_keepout_arr, curr_package.is_front);
+          break;
+        }
+        suffix++;
+      }
     }
     return true;
   }
@@ -320,5 +342,37 @@ public class Library extends ScopeKeyword {
       curr_keepout.area_name = p_keepout_type + curr_name_index;
       ++curr_name_index;
     }
+  }
+
+  private static boolean arePackagePinsIdentical(app.freerouting.core.Package pkg1, app.freerouting.core.Package.Pin[] p2) {
+    if (pkg1 == null || p2 == null) {
+      return (pkg1 == null) == (p2 == null);
+    }
+    if (pkg1.pin_count() != p2.length) {
+      return false;
+    }
+    for (int i = 0; i < p2.length; i++) {
+      app.freerouting.core.Package.Pin pin1 = pkg1.get_pin(i);
+      app.freerouting.core.Package.Pin pin2 = p2[i];
+      if (pin1 == null || pin2 == null) {
+        if (pin1 != pin2) return false;
+        continue;
+      }
+      if (!pin1.name.equals(pin2.name)) {
+        return false;
+      }
+      if (pin1.padstack_no != pin2.padstack_no) {
+        return false;
+      }
+      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relative_location.to_float();
+      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.relative_location.to_float();
+      if (Math.abs(loc1.x - loc2.x) > 0.001 || Math.abs(loc1.y - loc2.y) > 0.001) {
+        return false;
+      }
+      if (Math.abs(pin1.rotation_in_degree - pin2.rotation_in_degree) > 0.001) {
+        return false;
+      }
+    }
+    return true;
   }
 }
