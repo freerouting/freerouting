@@ -9,6 +9,8 @@
 # ---------------------------------------------------------------------------
 
 import json
+import os
+import re
 import logging
 from pathlib import Path
 
@@ -144,20 +146,23 @@ def _build_board_json_manually(board):
 
     layer_id_to_index = {}
     idx = 0
-    N = board.GetCopperLayerCount()
-    active_layers = []
-    if N == 1:
-        active_layers = [0]
-    elif N > 1:
-        active_layers = [0] + list(range(1, N - 1)) + [31]
-        
-    for layer_id in active_layers:
-        layer_id_to_index[layer_id] = idx
-        idx += 1
+    layer_id_count = getattr(pcbnew, "PCB_LAYER_ID_COUNT", getattr(pcbnew, "LAYER_ID_COUNT", 128))
+    enabled_layers = board.GetEnabledLayers() if hasattr(board, "GetEnabledLayers") else None
+    for i in range(layer_id_count):
+        if enabled_layers is None or enabled_layers.Contains(i):
+            is_copper = False
+            if hasattr(pcbnew, "IsCopperLayer"):
+                is_copper = pcbnew.IsCopperLayer(i)
+            else:
+                is_copper = (i == 0 or i == 31 or (1 <= i < board.GetCopperLayerCount() - 1))
+            if is_copper:
+                layer_id_to_index[i] = idx
+                idx += 1
 
     _collect_layers(board, data, layer_id_to_index)
     _collect_net_classes(board, data)
     _collect_nets(board, data)
+    _collect_clearance_rules(board, data)
     _collect_components(board, data)
     _collect_traces(board, data, layer_id_to_index)
     _collect_vias(board, data)
@@ -183,6 +188,24 @@ def _collect_layers(board, data, layer_id_to_index):
 def _collect_net_classes(board, data):
     """Populate ``data["netClasses"]`` from the board's netclasses."""
     try:
+        netclasses_dict = {}
+        
+        # Try getting default netclass first
+        default_nc = None
+        design_settings = board.GetDesignSettings() if hasattr(board, "GetDesignSettings") else None
+        if design_settings:
+            for attr in ["GetDefaultNetClass", "GetDefault", "GetDefaultNetclass", "m_DefaultNetClass"]:
+                if hasattr(design_settings, attr):
+                    val = getattr(design_settings, attr)
+                    if callable(val):
+                        default_nc = val()
+                    else:
+                        default_nc = val
+                    break
+        if default_nc:
+            netclasses_dict[_to_str(default_nc.GetName())] = default_nc
+            
+        # Get other netclasses
         netclasses = None
         if hasattr(board, "GetNetClasses"):
             netclasses = board.GetNetClasses()
@@ -190,16 +213,27 @@ def _collect_net_classes(board, data):
             netclasses = board.GetAllNetClasses()
             
         if netclasses:
-            for name, netclass in netclasses.items():
-                nc_data = {
-                    "name": _to_str(name),
-                    "clearance": (netclass.GetClearance() / 1e6) if hasattr(netclass, "GetClearance") else 0.2,
-                    "traceWidth": (netclass.GetTrackWidth() / 1e6) if hasattr(netclass, "GetTrackWidth") else 0.2,
-                    "viaDiameter": (netclass.GetViaDiameter() / 1e6) if hasattr(netclass, "GetViaDiameter") else 0.6,
-                    "viaDrill": (netclass.GetViaDrill() / 1e6) if hasattr(netclass, "GetViaDrill") else 0.3,
-                    "uviaDiameter": (netclass.GetMicroViaDiameter() / 1e6) if hasattr(netclass, "GetMicroViaDiameter") else 0.3,
-                    "uviaDrill": (netclass.GetMicroViaDrill() / 1e6) if hasattr(netclass, "GetMicroViaDrill") else 0.1,
-                }
+            if hasattr(netclasses, "NetClasses"):
+                for name, netclass in netclasses.NetClasses().items():
+                    netclasses_dict[_to_str(name)] = netclass
+            elif hasattr(netclasses, "items"):
+                for name, netclass in netclasses.items():
+                    netclasses_dict[_to_str(name)] = netclass
+            elif hasattr(netclasses, "values"):
+                for netclass in netclasses.values():
+                    netclasses_dict[_to_str(netclass.GetName())] = netclass
+                    
+        for name, netclass in netclasses_dict.items():
+            nc_data = {
+                "name": _to_str(name),
+                "clearance": (netclass.GetClearance() / 1e6) if hasattr(netclass, "GetClearance") else 0.2,
+                "traceWidth": (netclass.GetTrackWidth() / 1e6) if hasattr(netclass, "GetTrackWidth") else 0.2,
+                "viaDiameter": (netclass.GetViaDiameter() / 1e6) if hasattr(netclass, "GetViaDiameter") else 0.6,
+                "viaDrill": (netclass.GetViaDrill() / 1e6) if hasattr(netclass, "GetViaDrill") else 0.3,
+                "uviaDiameter": (netclass.GetMicroViaDiameter() / 1e6) if hasattr(netclass, "GetMicroViaDiameter") else 0.3,
+                "uviaDrill": (netclass.GetMicroViaDrill() / 1e6) if hasattr(netclass, "GetMicroViaDrill") else 0.1,
+            }
+            if not any(nc["name"] == nc_data["name"] for nc in data["netClasses"]):
                 data["netClasses"].append(nc_data)
     except Exception as e:
         logger.warning(f"Warning: could not enumerate netclasses: {e}", exc_info=True)
@@ -208,9 +242,38 @@ def _collect_net_classes(board, data):
 def _collect_nets(board, data):
     """Populate ``data["nets"]`` from the board's netinfo list."""
     try:
-        nets = board.GetNets()
+        nets = None
+        if hasattr(board, "GetNetsByNetcode"):
+            nets = board.GetNetsByNetcode()
+        elif hasattr(board, "GetNetsByName"):
+            nets = board.GetNetsByName()
+        elif hasattr(board, "GetNets"):
+            nets = board.GetNets()
+        elif hasattr(board, "GetNetInfoList"):
+            nets = board.GetNetInfoList()
+            
+        if not nets:
+            return
+            
         net_list = []
-        for net_code, net in nets.items():
+        iterator = []
+        if hasattr(nets, "items"):
+            iterator = nets.items()
+        elif hasattr(nets, "values"):
+            iterator = [(n.GetNetCode() if hasattr(n, "GetNetCode") else 0, n) for n in nets.values()]
+        elif hasattr(nets, "NetsByNetcode"):
+            iterator = nets.NetsByNetcode().items()
+        elif hasattr(nets, "NetsByName"):
+            iterator = [(net.GetNetCode(), net) for net in nets.NetsByName().values()]
+        else:
+            try:
+                iterator = [(n.GetNetCode() if hasattr(n, "GetNetCode") else idx, n) for idx, n in enumerate(nets)]
+            except TypeError:
+                if hasattr(nets, "GetNetCount") and hasattr(nets, "GetNetItem"):
+                    iterator = [(i, nets.GetNetItem(i)) for i in range(nets.GetNetCount())]
+            
+        for key, net in iterator:
+            net_code = net.GetNetCode() if hasattr(net, "GetNetCode") else 0
             if net_code <= 0:
                 continue
             class_name = "Default"
@@ -227,6 +290,95 @@ def _collect_nets(board, data):
         data["nets"] = net_list
     except Exception as e:
         logger.warning(f"Warning: could not enumerate nets: {e}", exc_info=True)
+
+
+def _collect_clearance_rules(board, data):
+    """Populate ``data["clearanceRules"]`` by parsing custom design rules."""
+    try:
+        filename = board.GetFileName()
+        rules_text = ""
+        
+        # 1. Try reading custom rules from the .kicad_pcb file itself
+        if filename and os.path.exists(filename):
+            try:
+                with open(filename, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    rules_match = re.search(r'\(custom_rules\s+"((?:[^"\\]|\\.)*)"\)', content, re.DOTALL)
+                    if rules_match:
+                        rules_text = rules_match.group(1)
+                        rules_text = rules_text.replace('\\"', '"').replace('\\\\', '\\').replace('\\n', '\n')
+            except Exception as fe:
+                logger.warning(f"Could not read custom rules from .kicad_pcb file: {fe}")
+                
+        # 2. Fallback to .kicad_dru file
+        if not rules_text and filename:
+            dru_file = os.path.splitext(filename)[0] + ".kicad_dru"
+            if os.path.exists(dru_file):
+                try:
+                    with open(dru_file, 'r', encoding='utf-8') as f:
+                        rules_text = f.read()
+                except Exception:
+                    pass
+                    
+        # 3. Fallback to GetDesignSettings() properties
+        if not rules_text:
+            settings = board.GetDesignSettings() if hasattr(board, "GetDesignSettings") else None
+            if settings:
+                for attr in ["m_CustomRules", "CustomRules", "GetCustomRules", "GetCustomRulesText"]:
+                    if hasattr(settings, attr):
+                        val = getattr(settings, attr)
+                        if callable(val):
+                            rules_text = val()
+                        else:
+                            rules_text = val
+                        break
+        
+        if not rules_text:
+            return
+            
+        rule_pattern = re.compile(r'\(rule\s+"([^"]+)"\s*(.*?)\)', re.DOTALL)
+        clearance_pattern = re.compile(r'\(constraint\s+clearance\s+\(min\s+([\d.]+)(mm|mil|in|um)\)\)')
+        condition_pattern = re.compile(r'A\.NetClass\s*==\s*\'([^\']+)\'.*?B\.NetClass\s*==\s*\'([^\']+)\'')
+        condition_pattern_reverse = re.compile(r'B\.NetClass\s*==\s*\'([^\']+)\'.*?A\.NetClass\s*==\s*\'([^\']+)\'')
+        
+        for match in rule_pattern.finditer(rules_text):
+            rule_body = match.group(2)
+            
+            cl_match = clearance_pattern.search(rule_body)
+            if not cl_match:
+                continue
+            val_str = cl_match.group(1)
+            unit_str = cl_match.group(2)
+            
+            val = float(val_str)
+            if unit_str == "mil":
+                val = val * 0.0254
+            elif unit_str == "in":
+                val = val * 25.4
+            elif unit_str == "um":
+                val = val / 1000.0
+                
+            class_a = None
+            class_b = None
+            
+            cond_match = condition_pattern.search(rule_body)
+            if cond_match:
+                class_a = cond_match.group(1)
+                class_b = cond_match.group(2)
+            else:
+                cond_match_rev = condition_pattern_reverse.search(rule_body)
+                if cond_match_rev:
+                    class_b = cond_match_rev.group(1)
+                    class_a = cond_match_rev.group(2)
+                    
+            if class_a and class_b:
+                data["clearanceRules"].append({
+                    "classA": class_a,
+                    "classB": class_b,
+                    "clearance": val
+                })
+    except Exception as e:
+        logger.warning(f"Warning: could not parse custom design rules: {e}", exc_info=True)
 
 
 def _collect_components(board, data):
