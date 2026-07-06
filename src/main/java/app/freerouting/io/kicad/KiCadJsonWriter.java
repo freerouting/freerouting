@@ -123,7 +123,7 @@ public final class KiCadJsonWriter {
         PolylineShape polyShape = outline.get_shape(i);
         if (polyShape != null) {
           for (Point pt : polyShape.bounded_corners()) {
-            boardJson.outline.corners.add(new KiCadBoardJson.Point2D(pt.to_float().x / scaleFactor, pt.to_float().y / scaleFactor));
+            boardJson.outline.corners.add(new KiCadBoardJson.Point2D(pt.to_float().x / scaleFactor, -pt.to_float().y / scaleFactor));
           }
         }
       }
@@ -145,7 +145,7 @@ public final class KiCadJsonWriter {
           }
         }
         for (Point pt : polyTrace.polyline().corner_arr()) {
-          tJson.points.add(new KiCadBoardJson.Point2D(pt.to_float().x / scaleFactor, pt.to_float().y / scaleFactor));
+          tJson.points.add(new KiCadBoardJson.Point2D(pt.to_float().x / scaleFactor, -pt.to_float().y / scaleFactor));
         }
         boardJson.traces.add(tJson);
       }
@@ -164,7 +164,7 @@ public final class KiCadJsonWriter {
         }
       }
       Point center = via.get_center();
-      vJson.position = new KiCadBoardJson.Point2D(center.to_float().x / scaleFactor, center.to_float().y / scaleFactor);
+      vJson.position = new KiCadBoardJson.Point2D(center.to_float().x / scaleFactor, -center.to_float().y / scaleFactor);
 
       Padstack padstack = via.get_padstack();
       int firstLayer = 0;
@@ -203,7 +203,7 @@ public final class KiCadJsonWriter {
       aJson.layerIndex = area.get_layer();
       aJson.isObstacle = area.get_is_obstacle();
       for (FloatPoint pt : area.get_area().corner_approx_arr()) {
-        aJson.polygon.add(new KiCadBoardJson.Point2D(pt.x / scaleFactor, pt.y / scaleFactor));
+        aJson.polygon.add(new KiCadBoardJson.Point2D(pt.x / scaleFactor, -pt.y / scaleFactor));
       }
       boardJson.conductionAreas.add(aJson);
     }
