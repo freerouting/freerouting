@@ -345,7 +345,8 @@ public final class SesReader {
     }
 
     try {
-      Padstack viaPadstack = this.board.library.padstacks.get(padstackName);
+      String cleanedName = padstackName != null ? padstackName.replaceAll("\\.\\d+", "") : null;
+      Padstack viaPadstack = this.board.library.padstacks.get(cleanedName);
       if (viaPadstack == null) {
         FRLogger.warn("SesReader.processViaScope: via padstack not found: " + padstackName);
         return false;

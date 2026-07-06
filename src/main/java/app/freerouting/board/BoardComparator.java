@@ -278,6 +278,112 @@ public class BoardComparator {
       report.append(String.format("[-] Keepout/Obstacle Area count mismatch: Board 1 = %d, Board 2 = %d\n", obstCount1, obstCount2));
     }
 
+    // 6. Compare Padstack count and names
+    int padstackCount1 = board1.library.padstacks.count();
+    int padstackCount2 = board2.library.padstacks.count();
+    if (padstackCount1 != padstackCount2) {
+      equal = false;
+      report.append(String.format("[-] Padstack count mismatch: Board 1 = %d, Board 2 = %d\n", padstackCount1, padstackCount2));
+    } else {
+      report.append(String.format("[+] Padstack counts match: %d\n", padstackCount1));
+      for (int i = 1; i <= padstackCount1; i++) {
+        String name1 = board1.library.padstacks.get(i).name;
+        String name2 = board2.library.padstacks.get(i).name;
+        if (!Objects.equals(name1, name2)) {
+          equal = false;
+          report.append(String.format("[-] Padstack name mismatch at index %d: Board 1 = '%s', Board 2 = '%s'\n", i, name1, name2));
+        }
+      }
+    }
+
+    // 7. Compare Package count and names
+    int packageCount1 = board1.library.packages.count();
+    int packageCount2 = board2.library.packages.count();
+    if (packageCount1 != packageCount2) {
+      equal = false;
+      report.append(String.format("[-] Package count mismatch: Board 1 = %d, Board 2 = %d\n", packageCount1, packageCount2));
+    } else {
+      report.append(String.format("[+] Package counts match: %d\n", packageCount1));
+      for (int i = 1; i <= packageCount1; i++) {
+        String name1 = board1.library.packages.get(i).name;
+        String name2 = board2.library.packages.get(i).name;
+        if (!Objects.equals(name1, name2)) {
+          equal = false;
+          report.append(String.format("[-] Package name mismatch at index %d: Board 1 = '%s', Board 2 = '%s'\n", i, name1, name2));
+        }
+      }
+    }
+
+    // 8. Trace lengths match
+    double traceLength1 = 0.0;
+    for (app.freerouting.board.Item item : board1.get_items()) {
+      if (item instanceof app.freerouting.board.Trace trace) {
+        traceLength1 += trace.get_length() * scale1;
+      }
+    }
+    double traceLength2 = 0.0;
+    for (app.freerouting.board.Item item : board2.get_items()) {
+      if (item instanceof app.freerouting.board.Trace trace) {
+        traceLength2 += trace.get_length() * scale2;
+      }
+    }
+    if (Math.abs(traceLength1 - traceLength2) > epsilonMm) {
+      equal = false;
+      report.append(String.format("[-] Trace length sum mismatch: Board 1 = %.4f mm, Board 2 = %.4f mm\n", traceLength1, traceLength2));
+    } else {
+      report.append("[+] Trace length sums match.\n");
+    }
+
+    // 9. Nets and associated net classes match
+    if (netCount1 != netCount2) {
+      equal = false;
+      report.append(String.format("[-] Net count mismatch: Board 1 = %d, Board 2 = %d\n", netCount1, netCount2));
+    } else {
+      report.append(String.format("[+] Net counts match: %d\n", netCount1));
+      for (int i = 1; i <= netCount1; i++) {
+        app.freerouting.rules.Net net1 = board1.rules.nets.get(i);
+        app.freerouting.rules.Net net2 = board2.rules.nets.get(i);
+        if (net1 != null && net2 != null) {
+          if (!Objects.equals(net1.name, net2.name)) {
+            equal = false;
+            report.append(String.format("[-] Net name mismatch at index %d: Board 1 = '%s', Board 2 = '%s'\n", i, net1.name, net2.name));
+          }
+          String class1 = net1.get_class().get_name();
+          String class2 = net2.get_class().get_name();
+          if (!Objects.equals(class1, class2)) {
+            equal = false;
+            report.append(String.format("[-] Net class mismatch for net '%s': Board 1 = '%s', Board 2 = '%s'\n", net1.name, class1, class2));
+          }
+        }
+      }
+    }
+
+    // 10. Conduction zone shapes and fill status match
+    Collection<ConductionArea> conds1 = board1.get_conduction_areas();
+    Collection<ConductionArea> conds2 = board2.get_conduction_areas();
+    for (ConductionArea area1 : conds1) {
+      ConductionArea matchArea2 = null;
+      for (ConductionArea area2 : conds2) {
+        if (area2.get_layer() == area1.get_layer() &&
+            Math.abs(area2.bounding_box().ll.x * scale2 - area1.bounding_box().ll.x * scale1) < epsilonMm &&
+            Math.abs(area2.bounding_box().ll.y * scale2 - area1.bounding_box().ll.y * scale1) < epsilonMm) {
+          matchArea2 = area2;
+          break;
+        }
+      }
+      if (matchArea2 == null) {
+        equal = false;
+        report.append(String.format("[-] Conduction Area on layer %d at (%d,%d) in Board 1 has no match in Board 2.\n",
+            area1.get_layer(), area1.bounding_box().ll.x, area1.bounding_box().ll.y));
+      } else {
+        if (area1.get_is_filled() != matchArea2.get_is_filled()) {
+          equal = false;
+          report.append(String.format("[-] Conduction Area fill status mismatch on layer %d: Board 1 = %b, Board 2 = %b\n",
+              area1.get_layer(), area1.get_is_filled(), matchArea2.get_is_filled()));
+        }
+      }
+    }
+
     if (equal) {
       report.append("\n[+] Success: Boards are identical within the coordinate tolerance threshold.\n");
     } else {

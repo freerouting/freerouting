@@ -1051,7 +1051,8 @@ public class Network extends ScopeKeyword {
       int found_padstack_count = 0;
       for (int i = 0; i < via_padstacks.length; i++) {
         String curr_padstack_name = it.next();
-        Padstack curr_padstack = board.library.padstacks.get(curr_padstack_name);
+        String cleanedName = curr_padstack_name != null ? curr_padstack_name.replaceAll("\\.\\d+", "") : null;
+        Padstack curr_padstack = board.library.padstacks.get(cleanedName);
         if (curr_padstack != null) {
           via_padstacks[found_padstack_count] = curr_padstack;
           ++found_padstack_count;

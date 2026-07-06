@@ -100,7 +100,7 @@ public class Library extends ScopeKeyword {
     try {
       Object next_token = p_scanner.next_token();
       if (next_token instanceof String string) {
-        padstack_name = string;
+        padstack_name = string.replaceAll("\\.\\d+", "");
         p_scanner.set_scope_identifier(padstack_name);
       } else {
         FRLogger.warn("Library.read_padstack_scope: unexpected padstack identifier at '" + p_scanner.get_scope_identifier() + "'");
@@ -189,8 +189,7 @@ public class Library extends ScopeKeyword {
         padstack_shapes[shape_layer] = padstack_shape;
       }
     }
-    String cleanedName = padstack_name.replaceAll("\\.\\d+", "");
-    p_board_padstacks.add(cleanedName, padstack_shapes, is_drilllable, placed_absolute);
+    p_board_padstacks.add(padstack_name, padstack_shapes, is_drilllable, placed_absolute);
     return true;
   }
 
