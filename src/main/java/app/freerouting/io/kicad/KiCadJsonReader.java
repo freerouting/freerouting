@@ -30,6 +30,7 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.io.BoardMetadata;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.CoordinateTransform;
+import app.freerouting.io.KiCadNetClassNames;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.rules.BoardRules;
@@ -120,21 +121,29 @@ public final class KiCadJsonReader {
           new app.freerouting.io.specctra.parser.LayerStructure(layerStructure); // dummy or map layer names if needed
 
       // 4. Clearance Matrix
-      int clearanceClassCount = Math.max(2, boardJson.netClasses.size() + 2);
+      KiCadBoardJson.NetClassJson kiCadDefaultNetClass = findKiCadDefaultNetClass(boardJson.netClasses);
+      List<KiCadBoardJson.NetClassJson> additionalNetClasses = nonDefaultNetClasses(boardJson.netClasses);
+
+      int clearanceClassCount = Math.max(2, additionalNetClasses.size() + 2);
       String[] clearanceClassNames = new String[clearanceClassCount];
       clearanceClassNames[0] = "null";
       clearanceClassNames[1] = "default";
-      for (int i = 0; i < boardJson.netClasses.size(); i++) {
-        clearanceClassNames[i + 2] = boardJson.netClasses.get(i).name;
+      for (int i = 0; i < additionalNetClasses.size(); i++) {
+        clearanceClassNames[i + 2] = additionalNetClasses.get(i).name;
       }
 
       ClearanceMatrix clearanceMatrix = new ClearanceMatrix(clearanceClassCount, layerStructure, clearanceClassNames);
       int defaultClearance = (int) Math.round(Unit.scale(0.2, Unit.MM, userUnit) * scaleFactor); // fallback 0.2mm
       clearanceMatrix.set_default_value(defaultClearance);
 
-      // Populate clearance matrix from NetClasses and Custom Clearance Rules
-      for (int i = 0; i < boardJson.netClasses.size(); i++) {
-        KiCadBoardJson.NetClassJson nc = boardJson.netClasses.get(i);
+      if (kiCadDefaultNetClass != null && kiCadDefaultNetClass.clearance > 0) {
+        int defaultClVal = (int) Math.round(kiCadDefaultNetClass.clearance * scaleFactor);
+        clearanceMatrix.set_value(1, 1, defaultClVal);
+      }
+
+      // Populate clearance matrix from non-default NetClasses and Custom Clearance Rules
+      for (int i = 0; i < additionalNetClasses.size(); i++) {
+        KiCadBoardJson.NetClassJson nc = additionalNetClasses.get(i);
         int clNo = i + 2;
         int clVal = (int) Math.round(nc.clearance * scaleFactor);
         clearanceMatrix.set_value(clNo, clNo, clVal);
@@ -194,16 +203,17 @@ public final class KiCadJsonReader {
 
       // 8. Populate Net Classes & Netlist in Rules (now that board is fully linked)
       boardRules.create_default_net_class();
+      NetClass defaultNetClass = boardRules.get_default_net_class();
       Map<String, Integer> netClassIndexMap = new HashMap<>();
-      for (int i = 0; i < boardJson.netClasses.size(); i++) {
-        KiCadBoardJson.NetClassJson nc = boardJson.netClasses.get(i);
+      if (kiCadDefaultNetClass != null) {
+        applyKiCadNetClassParameters(defaultNetClass, kiCadDefaultNetClass, layerCount, scaleFactor, 1);
+      }
+
+      for (int i = 0; i < additionalNetClasses.size(); i++) {
+        KiCadBoardJson.NetClassJson nc = additionalNetClasses.get(i);
         int clNo = i + 2;
         NetClass boardNetClass = boardRules.net_classes.append(nc.name, layerStructure, clearanceMatrix, false);
-        int traceHalfWidth = (int) Math.round(nc.traceWidth * scaleFactor / 2.0);
-        for (int l = 0; l < layerCount; l++) {
-          boardNetClass.set_trace_half_width(l, traceHalfWidth);
-        }
-        boardNetClass.set_trace_clearance_class(clNo);
+        applyKiCadNetClassParameters(boardNetClass, nc, layerCount, scaleFactor, clNo);
         netClassIndexMap.put(nc.name, clNo);
       }
 
@@ -218,18 +228,14 @@ public final class KiCadJsonReader {
         defaultViaDrill = 400.0;
       }
 
-      NetClass defaultNetClass = boardRules.get_default_net_class();
       double defViaDia = defaultViaDiameter;
       double defViaDrill = defaultViaDrill;
-      for (KiCadBoardJson.NetClassJson nc : boardJson.netClasses) {
-        if ("default".equalsIgnoreCase(nc.name)) {
-          if (nc.viaDiameter > 0) {
-            defViaDia = nc.viaDiameter;
-          }
-          if (nc.viaDrill > 0) {
-            defViaDrill = nc.viaDrill;
-          }
-          break;
+      if (kiCadDefaultNetClass != null) {
+        if (kiCadDefaultNetClass.viaDiameter > 0) {
+          defViaDia = kiCadDefaultNetClass.viaDiameter;
+        }
+        if (kiCadDefaultNetClass.viaDrill > 0) {
+          defViaDrill = kiCadDefaultNetClass.viaDrill;
         }
       }
 
@@ -256,11 +262,8 @@ public final class KiCadJsonReader {
       boardRules.via_rules.add(defaultViaRule);
       defaultNetClass.set_via_rule(defaultViaRule);
 
-      for (int i = 0; i < boardJson.netClasses.size(); i++) {
-        KiCadBoardJson.NetClassJson nc = boardJson.netClasses.get(i);
-        if ("default".equalsIgnoreCase(nc.name)) {
-          continue;
-        }
+      for (int i = 0; i < additionalNetClasses.size(); i++) {
+        KiCadBoardJson.NetClassJson nc = additionalNetClasses.get(i);
         int clNo = i + 2;
         NetClass boardNetClass = boardRules.net_classes.get(clNo - 1);
 
@@ -297,7 +300,7 @@ public final class KiCadJsonReader {
       int maxNetNo = boardJson.nets.size();
       for (KiCadBoardJson.NetJson nj : boardJson.nets) {
         Net boardNet = boardRules.nets.add(nj.name, 1, nj.containsPlane);
-        int clNo = netClassIndexMap.getOrDefault(nj.className, 1);
+        int clNo = resolveNetClassIndex(netClassIndexMap, nj.className);
         boardNet.set_class(boardRules.net_classes.get(clNo - 1)); // NetClass array indices are 0-based
       }
 
@@ -673,5 +676,57 @@ public final class KiCadJsonReader {
       }
     }
     return true;
+  }
+
+  private static KiCadBoardJson.NetClassJson findKiCadDefaultNetClass(List<KiCadBoardJson.NetClassJson> netClasses) {
+    for (KiCadBoardJson.NetClassJson netClass : netClasses) {
+      if (KiCadNetClassNames.isKiCadDefaultNetClassName(netClass.name)) {
+        return netClass;
+      }
+    }
+    return null;
+  }
+
+  private static List<KiCadBoardJson.NetClassJson> nonDefaultNetClasses(List<KiCadBoardJson.NetClassJson> netClasses) {
+    List<KiCadBoardJson.NetClassJson> result = new ArrayList<>();
+    for (KiCadBoardJson.NetClassJson netClass : netClasses) {
+      if (!KiCadNetClassNames.isKiCadDefaultNetClassName(netClass.name)) {
+        result.add(netClass);
+      }
+    }
+    return result;
+  }
+
+  private static void applyKiCadNetClassParameters(
+      NetClass target,
+      KiCadBoardJson.NetClassJson source,
+      int layerCount,
+      double scaleFactor,
+      int clearanceClassNo) {
+    if (source.traceWidth > 0) {
+      int traceHalfWidth = (int) Math.round(source.traceWidth * scaleFactor / 2.0);
+      for (int layer = 0; layer < layerCount; layer++) {
+        target.set_trace_half_width(layer, traceHalfWidth);
+      }
+    }
+    if (source.clearance > 0) {
+      target.set_trace_clearance_class(clearanceClassNo);
+    }
+  }
+
+  private static int resolveNetClassIndex(Map<String, Integer> netClassIndexMap, String className) {
+    if (KiCadNetClassNames.isKiCadDefaultNetClassName(className)) {
+      return 1;
+    }
+    Integer classIndex = netClassIndexMap.get(className);
+    if (classIndex != null) {
+      return classIndex;
+    }
+    for (Map.Entry<String, Integer> entry : netClassIndexMap.entrySet()) {
+      if (entry.getKey().equalsIgnoreCase(className)) {
+        return entry.getValue();
+      }
+    }
+    return 1;
   }
 }

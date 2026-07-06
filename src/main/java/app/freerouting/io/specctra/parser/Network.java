@@ -13,6 +13,7 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.io.CoordinateTransform;
+import app.freerouting.io.KiCadNetClassNames;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
@@ -395,7 +396,9 @@ public class Network extends ScopeKeyword {
   }
 
   public static void insert_net_class(NetClass p_class, LayerStructure p_layer_structure, BasicBoard p_board, CoordinateTransform p_coordinate_transform, boolean p_via_at_smd_allowed) {
-    app.freerouting.rules.NetClass board_net_class = p_board.rules.append_net_class(p_class.name);
+    app.freerouting.rules.NetClass board_net_class = KiCadNetClassNames.isKiCadDefaultNetClassName(p_class.name)
+        ? p_board.rules.get_default_net_class()
+        : p_board.rules.append_net_class(p_class.name);
     if (p_class.trace_clearance_class != null) {
       int trace_clearance_class = p_board.rules.clearance_matrix.get_no(p_class.trace_clearance_class);
       if (trace_clearance_class >= 0) {
@@ -489,14 +492,14 @@ public class Network extends ScopeKeyword {
       BasicBoard routing_board = p_par.board_handling.get_routing_board();
       while (it1.hasNext()) {
         String first_name = it1.next();
-        app.freerouting.rules.NetClass first_class = routing_board.rules.net_classes.get(first_name);
+        app.freerouting.rules.NetClass first_class = KiCadNetClassNames.resolveNetClass(routing_board.rules, first_name);
         if (first_class == null) {
           FRLogger.warn("Network.insert_class_pairs: first class not found");
         } else {
           Iterator<String> it2 = it1;
           while (it2.hasNext()) {
             String second_name = it2.next();
-            app.freerouting.rules.NetClass second_class = routing_board.rules.net_classes.get(second_name);
+            app.freerouting.rules.NetClass second_class = KiCadNetClassNames.resolveNetClass(routing_board.rules, second_name);
             if (second_class == null) {
               FRLogger.warn("Network.insert_class_pairs: second class not found");
             } else {

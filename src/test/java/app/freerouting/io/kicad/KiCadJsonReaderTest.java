@@ -3,6 +3,7 @@ package app.freerouting.io.kicad;
 import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.io.BoardReadResult;
+import app.freerouting.rules.NetClass;
 import app.freerouting.settings.GlobalSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -230,6 +231,68 @@ class KiCadJsonReaderTest {
     
     // Verify NetClass via rule assignment
     assertNotNull(board.rules.net_classes.get("Power").get_via_rule());
+  }
+
+  @Test
+  void testParseKiCadJsonAppliesDefaultNetClassParameters() {
+    String json = "{\n"
+        + "  \"designName\": \"DefaultClassBoard\",\n"
+        + "  \"unit\": \"MM\",\n"
+        + "  \"resolution\": 1000.0,\n"
+        + "  \"layers\": [\n"
+        + "    {\"index\": 0, \"name\": \"F.Cu\", \"type\": \"signal\"},\n"
+        + "    {\"index\": 1, \"name\": \"B.Cu\", \"type\": \"signal\"}\n"
+        + "  ],\n"
+        + "  \"netClasses\": [\n"
+        + "    {\n"
+        + "      \"name\": \"Default\",\n"
+        + "      \"clearance\": 0.254,\n"
+        + "      \"traceWidth\": 0.4,\n"
+        + "      \"viaDiameter\": 1.4,\n"
+        + "      \"viaDrill\": 0.6,\n"
+        + "      \"netNames\": []\n"
+        + "    },\n"
+        + "    {\n"
+        + "      \"name\": \"Power\",\n"
+        + "      \"clearance\": 0.25,\n"
+        + "      \"traceWidth\": 0.5,\n"
+        + "      \"viaDiameter\": 1.6,\n"
+        + "      \"viaDrill\": 0.6,\n"
+        + "      \"netNames\": []\n"
+        + "    }\n"
+        + "  ],\n"
+        + "  \"nets\": [\n"
+        + "    {\"id\": 1, \"name\": \"SIG1\", \"className\": \"Default\", \"containsPlane\": false},\n"
+        + "    {\"id\": 2, \"name\": \"VCC\", \"className\": \"Power\", \"containsPlane\": false}\n"
+        + "  ],\n"
+        + "  \"outline\": {\n"
+        + "    \"corners\": [\n"
+        + "      {\"x\": 0.0, \"y\": 0.0},\n"
+        + "      {\"x\": 100.0, \"y\": 0.0},\n"
+        + "      {\"x\": 100.0, \"y\": 80.0},\n"
+        + "      {\"x\": 0.0, \"y\": 80.0}\n"
+        + "    ],\n"
+        + "    \"clearance\": 0.5\n"
+        + "  },\n"
+        + "  \"components\": []\n"
+        + "}";
+
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+
+    assertEquals(2, board.rules.net_classes.count());
+    assertNull(board.rules.net_classes.get("Default"));
+    assertNull(board.rules.net_classes.get("kicad_default"));
+
+    NetClass defaultClass = board.rules.get_default_net_class();
+    assertEquals("default", defaultClass.get_name());
+    assertEquals(200, defaultClass.get_trace_half_width(0));
+    assertEquals(1, defaultClass.get_trace_clearance_class());
+    assertEquals(254, board.rules.clearance_matrix.get_value(1, 1, 0, false));
+    assertEquals("default", board.rules.nets.get("SIG1", 1).get_class().get_name());
+    assertEquals("Power", board.rules.nets.get("VCC", 1).get_class().get_name());
+    assertEquals(2, board.library.via_padstack_count());
   }
 
   @Test

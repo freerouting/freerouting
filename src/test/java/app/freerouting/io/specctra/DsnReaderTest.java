@@ -96,6 +96,19 @@ class DsnReaderTest {
         "empty_board.dsn has a valid boundary and must succeed");
   }
 
+  @Test
+  void readBoardMergesKicadDefaultIntoFreeroutingDefault() {
+    InputStream in = DsnTestFixtures.openResource("Issue508-DAC2020_bm08.dsn");
+    BoardReadResult result = DsnReader.readBoard(in, null, null);
+
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+
+    assertNull(board.rules.net_classes.get("kicad_default"));
+    assertNotNull(board.rules.net_classes.get("default"));
+    assertEquals("default", board.rules.nets.get("/SCL", 1).get_class().get_name());
+  }
+
   // Sealed-switch exhaustiveness check (compile-time guarantee)
 
   @Test
