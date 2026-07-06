@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class BoardComparator {
@@ -194,45 +195,47 @@ public class BoardComparator {
       }
     }
 
-    // 6. Net Classes & Clearances
-    int netClassCount1 = board1.rules.net_classes.count();
-    int netClassCount2 = board2.rules.net_classes.count();
-    if (netClassCount1 != netClassCount2) {
+    // 6. Net Classes (order-independent: match by name)
+    Map<String, NetClass> netClassMap1 = buildNetClassMap(board1);
+    Map<String, NetClass> netClassMap2 = buildNetClassMap(board2);
+    if (netClassMap1.size() != netClassMap2.size()) {
       equal = false;
-      report.append(String.format("[-] Net class count mismatch: Board 1 = %d, Board 2 = %d\n", netClassCount1, netClassCount2));
+      report.append(String.format("[-] Net class count mismatch: Board 1 = %d, Board 2 = %d\n",
+          netClassMap1.size(), netClassMap2.size()));
+    } else {
+      report.append(String.format("[+] Net class counts match: %d\n", netClassMap1.size()));
     }
+    equal &= reportMissingKeys("Net class", netClassMap1.keySet(), netClassMap2.keySet(), report);
 
-    // 7. Nets
-    int netCount1 = board1.rules.nets.max_net_no();
-    int netCount2 = board2.rules.nets.max_net_no();
-    if (netCount1 != netCount2) {
+    // 7. Nets (order-independent: match by name)
+    Map<String, Net> netsMap1 = buildNetMap(board1);
+    Map<String, Net> netsMap2 = buildNetMap(board2);
+    if (netsMap1.size() != netsMap2.size()) {
       equal = false;
-      report.append(String.format("[-] Net count mismatch: Board 1 = %d, Board 2 = %d\n", netCount1, netCount2));
+      report.append(String.format("[-] Net count mismatch: Board 1 = %d, Board 2 = %d\n",
+          netsMap1.size(), netsMap2.size()));
+    } else {
+      report.append(String.format("[+] Net counts match: %d\n", netsMap1.size()));
     }
-
-    Map<String, Net> netsMap1 = new HashMap<>();
-    Map<String, Net> netsMap2 = new HashMap<>();
-    for (int i = 1; i <= netCount1; i++) {
-      Net n = board1.rules.nets.get(i);
-      if (n != null) netsMap1.put(n.name, n);
-    }
-    for (int i = 1; i <= netCount2; i++) {
-      Net n = board2.rules.nets.get(i);
-      if (n != null) netsMap2.put(n.name, n);
-    }
+    equal &= reportMissingKeys("Net", netsMap1.keySet(), netsMap2.keySet(), report);
 
     for (String netName : netsMap1.keySet()) {
       Net n1 = netsMap1.get(netName);
       Net n2 = netsMap2.get(netName);
       if (n2 == null) {
-        equal = false;
-        report.append(String.format("[-] Net '%s' is present in Board 1 but missing in Board 2\n", netName));
         continue;
       }
       if (n1.get_pins().size() != n2.get_pins().size()) {
         equal = false;
         report.append(String.format("[-] Net '%s' pin count mismatch: Board 1 = %d, Board 2 = %d\n",
             netName, n1.get_pins().size(), n2.get_pins().size()));
+      }
+      String class1 = n1.get_class().get_name();
+      String class2 = n2.get_class().get_name();
+      if (!Objects.equals(class1, class2)) {
+        equal = false;
+        report.append(String.format("[-] Net class mismatch for net '%s': Board 1 = '%s', Board 2 = '%s'\n",
+            netName, class1, class2));
       }
     }
 
@@ -278,41 +281,29 @@ public class BoardComparator {
       report.append(String.format("[-] Keepout/Obstacle Area count mismatch: Board 1 = %d, Board 2 = %d\n", obstCount1, obstCount2));
     }
 
-    // 6. Compare Padstack count and names
-    int padstackCount1 = board1.library.padstacks.count();
-    int padstackCount2 = board2.library.padstacks.count();
-    if (padstackCount1 != padstackCount2) {
+    // Compare Padstack names (order-independent)
+    Set<String> padstackNames1 = collectPadstackNames(board1);
+    Set<String> padstackNames2 = collectPadstackNames(board2);
+    if (padstackNames1.size() != padstackNames2.size()) {
       equal = false;
-      report.append(String.format("[-] Padstack count mismatch: Board 1 = %d, Board 2 = %d\n", padstackCount1, padstackCount2));
+      report.append(String.format("[-] Padstack count mismatch: Board 1 = %d, Board 2 = %d\n",
+          padstackNames1.size(), padstackNames2.size()));
     } else {
-      report.append(String.format("[+] Padstack counts match: %d\n", padstackCount1));
-      for (int i = 1; i <= padstackCount1; i++) {
-        String name1 = board1.library.padstacks.get(i).name;
-        String name2 = board2.library.padstacks.get(i).name;
-        if (!Objects.equals(name1, name2)) {
-          equal = false;
-          report.append(String.format("[-] Padstack name mismatch at index %d: Board 1 = '%s', Board 2 = '%s'\n", i, name1, name2));
-        }
-      }
+      report.append(String.format("[+] Padstack counts match: %d\n", padstackNames1.size()));
     }
+    equal &= reportMissingKeys("Padstack", padstackNames1, padstackNames2, report);
 
-    // 7. Compare Package count and names
-    int packageCount1 = board1.library.packages.count();
-    int packageCount2 = board2.library.packages.count();
-    if (packageCount1 != packageCount2) {
+    // Compare Package names (order-independent; front/back side disambiguates same name)
+    Set<String> packageKeys1 = collectPackageKeys(board1);
+    Set<String> packageKeys2 = collectPackageKeys(board2);
+    if (packageKeys1.size() != packageKeys2.size()) {
       equal = false;
-      report.append(String.format("[-] Package count mismatch: Board 1 = %d, Board 2 = %d\n", packageCount1, packageCount2));
+      report.append(String.format("[-] Package count mismatch: Board 1 = %d, Board 2 = %d\n",
+          packageKeys1.size(), packageKeys2.size()));
     } else {
-      report.append(String.format("[+] Package counts match: %d\n", packageCount1));
-      for (int i = 1; i <= packageCount1; i++) {
-        String name1 = board1.library.packages.get(i).name;
-        String name2 = board2.library.packages.get(i).name;
-        if (!Objects.equals(name1, name2)) {
-          equal = false;
-          report.append(String.format("[-] Package name mismatch at index %d: Board 1 = '%s', Board 2 = '%s'\n", i, name1, name2));
-        }
-      }
+      report.append(String.format("[+] Package counts match: %d\n", packageKeys1.size()));
     }
+    equal &= reportMissingKeys("Package", packageKeys1, packageKeys2, report);
 
     // 8. Trace lengths match
     double traceLength1 = 0.0;
@@ -334,31 +325,7 @@ public class BoardComparator {
       report.append("[+] Trace length sums match.\n");
     }
 
-    // 9. Nets and associated net classes match
-    if (netCount1 != netCount2) {
-      equal = false;
-      report.append(String.format("[-] Net count mismatch: Board 1 = %d, Board 2 = %d\n", netCount1, netCount2));
-    } else {
-      report.append(String.format("[+] Net counts match: %d\n", netCount1));
-      for (int i = 1; i <= netCount1; i++) {
-        app.freerouting.rules.Net net1 = board1.rules.nets.get(i);
-        app.freerouting.rules.Net net2 = board2.rules.nets.get(i);
-        if (net1 != null && net2 != null) {
-          if (!Objects.equals(net1.name, net2.name)) {
-            equal = false;
-            report.append(String.format("[-] Net name mismatch at index %d: Board 1 = '%s', Board 2 = '%s'\n", i, net1.name, net2.name));
-          }
-          String class1 = net1.get_class().get_name();
-          String class2 = net2.get_class().get_name();
-          if (!Objects.equals(class1, class2)) {
-            equal = false;
-            report.append(String.format("[-] Net class mismatch for net '%s': Board 1 = '%s', Board 2 = '%s'\n", net1.name, class1, class2));
-          }
-        }
-      }
-    }
-
-    // 10. Conduction zone shapes and fill status match
+    // Conduction zone shapes and fill status match
     Collection<ConductionArea> conds1 = board1.get_conduction_areas();
     Collection<ConductionArea> conds2 = board2.get_conduction_areas();
     for (ConductionArea area1 : conds1) {
@@ -396,5 +363,70 @@ public class BoardComparator {
   private static double getMmFactor(RoutingBoard board) {
     return app.freerouting.board.Unit.scale(1.0, board.communication.unit, app.freerouting.board.Unit.MM)
         / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+  }
+
+  private static Map<String, NetClass> buildNetClassMap(RoutingBoard board) {
+    Map<String, NetClass> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    for (int i = 0; i < board.rules.net_classes.count(); i++) {
+      NetClass netClass = board.rules.net_classes.get(i);
+      if (netClass != null) {
+        map.put(netClass.get_name(), netClass);
+      }
+    }
+    return map;
+  }
+
+  private static Map<String, Net> buildNetMap(RoutingBoard board) {
+    Map<String, Net> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    for (int i = 1; i <= board.rules.nets.max_net_no(); i++) {
+      Net net = board.rules.nets.get(i);
+      if (net != null) {
+        map.put(net.name, net);
+      }
+    }
+    return map;
+  }
+
+  private static Set<String> collectPadstackNames(RoutingBoard board) {
+    Set<String> names = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+    for (int i = 1; i <= board.library.padstacks.count(); i++) {
+      app.freerouting.core.Padstack padstack = board.library.padstacks.get(i);
+      if (padstack != null) {
+        names.add(padstack.name);
+      }
+    }
+    return names;
+  }
+
+  private static Set<String> collectPackageKeys(RoutingBoard board) {
+    Set<String> keys = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+    for (int i = 1; i <= board.library.packages.count(); i++) {
+      app.freerouting.core.Package pkg = board.library.packages.get(i);
+      if (pkg != null) {
+        keys.add(packageKey(pkg));
+      }
+    }
+    return keys;
+  }
+
+  private static String packageKey(app.freerouting.core.Package pkg) {
+    return pkg.name + (pkg.is_front ? ":front" : ":back");
+  }
+
+  private static boolean reportMissingKeys(String itemLabel, Set<String> keys1, Set<String> keys2, StringBuilder report) {
+    boolean matched = true;
+    for (String key : keys1) {
+      if (!keys2.contains(key)) {
+        matched = false;
+        report.append(String.format("[-] %s '%s' is present in Board 1 but missing in Board 2\n", itemLabel, key));
+      }
+    }
+    for (String key : keys2) {
+      if (!keys1.contains(key)) {
+        matched = false;
+        report.append(String.format("[-] %s '%s' is present in Board 2 but missing in Board 1\n", itemLabel, key));
+      }
+    }
+    return matched;
   }
 }
