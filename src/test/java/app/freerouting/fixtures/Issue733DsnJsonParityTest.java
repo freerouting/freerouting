@@ -59,9 +59,27 @@ public class Issue733DsnJsonParityTest {
 
   @Test
   @Disabled("Disabled due to known issue with DSN and JSON parity.")
-  void testDsnJsonParity() throws Exception {
+  void testDsnJsonParityKiCadInterf() throws Exception {
     File dsnFile = findFixtureFile("Issue733-kicad_interf_u_input_board.dsn");
     File jsonFile = findFixtureFile("Issue733-kicad_interf_u_input_board.json");
+
+    assertTrue(dsnFile.exists(), "DSN fixture file must exist");
+    assertTrue(jsonFile.exists(), "JSON fixture file must exist");
+
+    RoutingBoard dsnBoard = loadDsn(dsnFile);
+    RoutingBoard jsonBoard = loadJson(jsonFile);
+
+    BoardComparator.ComparisonResult result = BoardComparator.compare(dsnBoard, jsonBoard, 1e-3);
+    System.out.println(result.report);
+
+    assertTrue(result.areEqual, "Boards must be identical in representation:\n" + result.report);
+  }
+
+  @Test
+  @Disabled("Disabled due to known issue with DSN and JSON parity.")
+  void testDsnJsonParityKiCadComplexHierarchy() throws Exception {
+    File dsnFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_board.dsn");
+    File jsonFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_board.json");
 
     assertTrue(dsnFile.exists(), "DSN fixture file must exist");
     assertTrue(jsonFile.exists(), "JSON fixture file must exist");

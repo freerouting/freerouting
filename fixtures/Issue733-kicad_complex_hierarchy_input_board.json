@@ -1,0 +1,4223 @@
+{
+  "designName": "complex_hierarchy",
+  "unit": "MM",
+  "resolution": 1.0,
+  "layers": [
+    {
+      "index": 0,
+      "name": "top_copper",
+      "type": "signal"
+    },
+    {
+      "index": 1,
+      "name": "bottom_copper",
+      "type": "signal"
+    }
+  ],
+  "netClasses": [
+    {
+      "name": "power",
+      "clearance": 0.3,
+      "traceWidth": 0.6,
+      "viaDiameter": 1.651,
+      "viaDrill": 0.6,
+      "uviaDiameter": 0.3,
+      "uviaDrill": 0.1
+    }
+  ],
+  "nets": [
+    {
+      "id": 1,
+      "name": "-VAA",
+      "className": "power",
+      "containsPlane": false
+    },
+    {
+      "id": 2,
+      "name": "/12Vext",
+      "className": "power",
+      "containsPlane": false
+    },
+    {
+      "id": 3,
+      "name": "/ampli_ht_horizontal/PIEZO_IN",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 4,
+      "name": "/ampli_ht_horizontal/PIEZO_OUT",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 5,
+      "name": "/ampli_ht_horizontal/S_OUT+",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 6,
+      "name": "/ampli_ht_horizontal/Vpil_0_3,3V",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 7,
+      "name": "/ampli_ht_vertical/PIEZO_IN",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 8,
+      "name": "/ampli_ht_vertical/PIEZO_OUT",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 9,
+      "name": "/ampli_ht_vertical/S_OUT+",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 10,
+      "name": "/ampli_ht_vertical/Vpil_0_3,3V",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 11,
+      "name": "GND",
+      "className": "power",
+      "containsPlane": false
+    },
+    {
+      "id": 12,
+      "name": "HT",
+      "className": "power",
+      "containsPlane": false
+    },
+    {
+      "id": 13,
+      "name": "Net-(U102-CAP+)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 14,
+      "name": "Net-(U102-CAP-)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 15,
+      "name": "Net-(C201-Pad2)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 16,
+      "name": "Net-(C202-Pad1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 17,
+      "name": "Net-(U201B-+)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 18,
+      "name": "Net-(C204-Pad1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 19,
+      "name": "Net-(C301-Pad2)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 20,
+      "name": "Net-(C302-Pad1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 21,
+      "name": "Net-(U301B-+)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 22,
+      "name": "Net-(C304-Pad1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 23,
+      "name": "Net-(D201-K)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 24,
+      "name": "Net-(D202-K)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 25,
+      "name": "Net-(D203-K)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 26,
+      "name": "Net-(D203-A)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 27,
+      "name": "Net-(D204-K)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 28,
+      "name": "Net-(D301-K)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 29,
+      "name": "Net-(D302-K)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 30,
+      "name": "Net-(D303-A)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 31,
+      "name": "Net-(D303-K)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 32,
+      "name": "Net-(D304-K)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 33,
+      "name": "VCC",
+      "className": "power",
+      "containsPlane": false
+    },
+    {
+      "id": 34,
+      "name": "Net-(Q201-E)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 35,
+      "name": "Net-(Q202-E)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 36,
+      "name": "Net-(Q203-E)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 37,
+      "name": "Net-(Q204-E)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 38,
+      "name": "Net-(Q204-B)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 39,
+      "name": "Net-(Q301-E)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 40,
+      "name": "+12V",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 41,
+      "name": "Net-(Q302-E)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 42,
+      "name": "Net-(Q303-E)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 43,
+      "name": "Net-(Q304-B)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 44,
+      "name": "Net-(Q304-E)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 45,
+      "name": "Net-(R212-Pad2)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 46,
+      "name": "Net-(R213-Pad1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 47,
+      "name": "Net-(R312-Pad2)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 48,
+      "name": "Net-(R313-Pad1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 49,
+      "name": "Net-(U201A--)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 50,
+      "name": "Net-(U301A--)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 51,
+      "name": "unconnected-(U102-LV-Pad6)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 52,
+      "name": "unconnected-(U102-OSC-Pad7)",
+      "className": "Default",
+      "containsPlane": false
+    }
+  ],
+  "clearanceRules": [],
+  "components": [
+    {
+      "reference": "C104",
+      "value": "47uF/20V",
+      "footprint": "complex_hierarchy:CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
+      "position": {
+        "x": 126.619,
+        "y": 60.706
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "+12V",
+          "shape": "rect",
+          "size": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 1.0,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "oval",
+          "size": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "offset": {
+            "x": 15.0,
+            "y": 0.0
+          },
+          "drill": 1.0,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C101",
+      "value": "47uF/63V",
+      "footprint": "complex_hierarchy:CP_Axial_L11.0mm_D6.0mm_P18.00mm_Horizontal",
+      "position": {
+        "x": 121.793,
+        "y": 60.579
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "HT",
+          "shape": "rect",
+          "size": {
+            "x": 2.4,
+            "y": 2.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 1.2,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 2.4
+          },
+          "offset": {
+            "x": 18.0,
+            "y": 2.204364238465236e-15
+          },
+          "drill": 1.2,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C105",
+      "value": "10uF",
+      "footprint": "complex_hierarchy:CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
+      "position": {
+        "x": 139.7,
+        "y": 77.216
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(U102-CAP+)",
+          "shape": "rect",
+          "size": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 1.0,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(U102-CAP-)",
+          "shape": "oval",
+          "size": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "offset": {
+            "x": 15.0,
+            "y": 0.0
+          },
+          "drill": 1.0,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C103",
+      "value": "10uF",
+      "footprint": "complex_hierarchy:CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
+      "position": {
+        "x": 160.02,
+        "y": 78.359
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 1.0,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "-VAA",
+          "shape": "oval",
+          "size": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "offset": {
+            "x": -15.0,
+            "y": -9.18485099360515e-16
+          },
+          "drill": 1.0,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "Q201",
+      "value": "MPSA92",
+      "footprint": "complex_hierarchy:TO-92_HandSolder",
+      "position": {
+        "x": 131.445,
+        "y": 115.316
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q201-E)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D202-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 1.27,
+            "y": -1.27
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "Net-(D203-A)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 2.54,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "Q203",
+      "value": "MPSA92",
+      "footprint": "complex_hierarchy:TO-92_HandSolder",
+      "position": {
+        "x": 151.765,
+        "y": 123.825
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q203-E)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D204-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 1.2700000000000002,
+            "y": -1.2699999999999998
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 2.54,
+            "y": 3.110602869834277e-16
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "Q301",
+      "value": "MPSA92",
+      "footprint": "complex_hierarchy:TO-92_HandSolder",
+      "position": {
+        "x": 131.445,
+        "y": 88.646
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q301-E)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D302-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 1.27,
+            "y": -1.27
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "Net-(D303-A)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 2.54,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "Q302",
+      "value": "MPSA42",
+      "footprint": "complex_hierarchy:TO-92_HandSolder",
+      "position": {
+        "x": 150.495,
+        "y": 89.916
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q302-E)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D303-A)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 1.27,
+            "y": -1.27
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "HT",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 2.54,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "Q303",
+      "value": "MPSA92",
+      "footprint": "complex_hierarchy:TO-92_HandSolder",
+      "position": {
+        "x": 151.003,
+        "y": 100.965
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q303-E)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D304-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 1.2700000000000002,
+            "y": -1.2699999999999998
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 2.54,
+            "y": 3.110602869834277e-16
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "Q304",
+      "value": "MPSA42",
+      "footprint": "complex_hierarchy:TO-92_HandSolder",
+      "position": {
+        "x": 129.794,
+        "y": 96.52
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q304-E)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q304-B)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 1.27,
+            "y": -1.27
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "Net-(D304-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 2.54,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "RV201",
+      "value": "4,7K",
+      "footprint": "complex_hierarchy:Potentiometer_Bourns_3266W_Vertical",
+      "position": {
+        "x": 93.345,
+        "y": 125.476
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(R213-Pad1)",
+          "shape": "circle",
+          "size": {
+            "x": 1.44,
+            "y": 1.44
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(U201A--)",
+          "shape": "circle",
+          "size": {
+            "x": 1.44,
+            "y": 1.44
+          },
+          "offset": {
+            "x": -2.5400000000000005,
+            "y": 2.5399999999999996
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "/ampli_ht_vertical/S_OUT+",
+          "shape": "circle",
+          "size": {
+            "x": 1.44,
+            "y": 1.44
+          },
+          "offset": {
+            "x": -5.08,
+            "y": -6.221205739668554e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "RV301",
+      "value": "4,7K",
+      "footprint": "complex_hierarchy:Potentiometer_Bourns_3266W_Vertical",
+      "position": {
+        "x": 93.345,
+        "y": 100.076
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(R313-Pad1)",
+          "shape": "circle",
+          "size": {
+            "x": 1.44,
+            "y": 1.44
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(U301A--)",
+          "shape": "circle",
+          "size": {
+            "x": 1.44,
+            "y": 1.44
+          },
+          "offset": {
+            "x": -2.5400000000000005,
+            "y": 2.5399999999999996
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "/ampli_ht_horizontal/S_OUT+",
+          "shape": "circle",
+          "size": {
+            "x": 1.44,
+            "y": 1.44
+          },
+          "offset": {
+            "x": -5.08,
+            "y": -6.221205739668554e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "U101",
+      "value": "78L05",
+      "footprint": "complex_hierarchy:TO-92_HandSolder",
+      "position": {
+        "x": 124.206,
+        "y": 70.866
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "VCC",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": -1.27,
+            "y": 1.27
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "+12V",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": -2.54,
+            "y": -1.5553014349171386e-16
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R312",
+      "value": "1K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 126.111,
+        "y": 94.996
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q304-E)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(R312-Pad2)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R202",
+      "value": "22K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 109.855,
+        "y": 110.236
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(C201-Pad2)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(C202-Pad1)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R308",
+      "value": "1K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 125.603,
+        "y": 101.346
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q304-B)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R302",
+      "value": "22K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 110.617,
+        "y": 82.296
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(C301-Pad2)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(C302-Pad1)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R306",
+      "value": "47",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 173.355,
+        "y": 91.186
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_horizontal/PIEZO_OUT",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q302-E)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R305",
+      "value": "220K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 137.795,
+        "y": 81.026
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D302-K)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R304",
+      "value": "470",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 145.415,
+        "y": 86.106
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "HT",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q301-E)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R209",
+      "value": "220K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 156.21,
+        "y": 116.713
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_vertical/S_OUT+",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q203-E)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": -7.62,
+            "y": 4.6659043047514155e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R213",
+      "value": "4,7K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 102.87,
+        "y": 126.746
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(R213-Pad1)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -4.6659043047514155e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R211",
+      "value": "5,6K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 144.399,
+        "y": 126.873
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D204-K)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(C204-Pad1)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R212",
+      "value": "1K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 134.493,
+        "y": 120.142
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q204-E)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(R212-Pad2)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R208",
+      "value": "1K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 126.365,
+        "y": 128.016
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q204-B)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R203",
+      "value": "22K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 109.855,
+        "y": 112.776
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(U201B-+)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(C201-Pad2)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R303",
+      "value": "22K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 102.997,
+        "y": 84.963
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(U301B-+)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(C301-Pad2)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R313",
+      "value": "4,7K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 102.235,
+        "y": 102.616
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(R313-Pad1)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -4.6659043047514155e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R204",
+      "value": "470",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 146.685,
+        "y": 108.966
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "HT",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q201-E)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R205",
+      "value": "220K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 122.555,
+        "y": 115.316
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D202-K)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": -7.62,
+            "y": 4.6659043047514155e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R206",
+      "value": "47",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 173.355,
+        "y": 119.126
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_vertical/PIEZO_OUT",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q202-E)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R310",
+      "value": "220K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 161.29,
+        "y": 89.916
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_horizontal/S_OUT+",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q302-E)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": -7.62,
+            "y": 4.6659043047514155e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R307",
+      "value": "47",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 173.355,
+        "y": 97.536
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_horizontal/PIEZO_OUT",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q303-E)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R210",
+      "value": "220K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 160.02,
+        "y": 116.586
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_vertical/S_OUT+",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q202-E)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": -7.62,
+            "y": 4.6659043047514155e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R207",
+      "value": "47",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 173.355,
+        "y": 122.936
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_vertical/PIEZO_OUT",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q203-E)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R301",
+      "value": "1K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 110.363,
+        "y": 78.74
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(C302-Pad1)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "/ampli_ht_horizontal/PIEZO_IN",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R201",
+      "value": "1K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 109.855,
+        "y": 107.061
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(C202-Pad1)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "/ampli_ht_vertical/PIEZO_IN",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R309",
+      "value": "220K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 156.845,
+        "y": 89.916
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_horizontal/S_OUT+",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q303-E)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": -7.62,
+            "y": 4.6659043047514155e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R311",
+      "value": "5,6K",
+      "footprint": "complex_hierarchy:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal",
+      "position": {
+        "x": 141.605,
+        "y": 101.346
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D304-K)",
+          "shape": "circle",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(C304-Pad1)",
+          "shape": "oval",
+          "size": {
+            "x": 1.4,
+            "y": 1.4
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.7,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "U301",
+      "value": "LM358N",
+      "footprint": "complex_hierarchy:DIP-8_W7.62mm_LongPads",
+      "position": {
+        "x": 107.315,
+        "y": 96.266
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(R312-Pad2)",
+          "shape": "rect",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(U301A--)",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 1.5553014349171386e-16,
+            "y": -2.54
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "/ampli_ht_horizontal/Vpil_0_3,3V",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 3.110602869834277e-16,
+            "y": -5.08
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "4",
+          "netName": "-VAA",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 4.6659043047514155e-16,
+            "y": -7.62
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "5",
+          "netName": "Net-(U301B-+)",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.619999999999999,
+            "y": -7.620000000000001
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "6",
+          "netName": "/ampli_ht_horizontal/Vpil_0_3,3V",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -5.080000000000001
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "7",
+          "netName": "/ampli_ht_horizontal/Vpil_0_3,3V",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -2.5400000000000005
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "8",
+          "netName": "+12V",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -4.6659043047514155e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "U102",
+      "value": "ICL7660",
+      "footprint": "complex_hierarchy:DIP-8_W7.62mm_LongPads",
+      "position": {
+        "x": 145.415,
+        "y": 72.136
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "",
+          "shape": "rect",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(U102-CAP+)",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 1.5553014349171386e-16,
+            "y": -2.54
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "GND",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 3.110602869834277e-16,
+            "y": -5.08
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "4",
+          "netName": "Net-(U102-CAP-)",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 4.6659043047514155e-16,
+            "y": -7.62
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "5",
+          "netName": "-VAA",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.619999999999999,
+            "y": -7.620000000000001
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "6",
+          "netName": "unconnected-(U102-LV-Pad6)",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -5.080000000000001
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "7",
+          "netName": "unconnected-(U102-OSC-Pad7)",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -2.5400000000000005
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "8",
+          "netName": "VCC",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -4.6659043047514155e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "U201",
+      "value": "LM358N",
+      "footprint": "complex_hierarchy:DIP-8_W7.62mm_LongPads",
+      "position": {
+        "x": 107.315,
+        "y": 124.206
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(R212-Pad2)",
+          "shape": "rect",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(U201A--)",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 1.5553014349171386e-16,
+            "y": -2.54
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "/ampli_ht_vertical/Vpil_0_3,3V",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 3.110602869834277e-16,
+            "y": -5.08
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "4",
+          "netName": "-VAA",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 4.6659043047514155e-16,
+            "y": -7.62
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "5",
+          "netName": "Net-(U201B-+)",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.619999999999999,
+            "y": -7.620000000000001
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "6",
+          "netName": "/ampli_ht_vertical/Vpil_0_3,3V",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -5.080000000000001
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "7",
+          "netName": "/ampli_ht_vertical/Vpil_0_3,3V",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -2.5400000000000005
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "8",
+          "netName": "+12V",
+          "shape": "oval",
+          "size": {
+            "x": 2.4,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -4.6659043047514155e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C304",
+      "value": "820pF",
+      "footprint": "complex_hierarchy:C_Disc_D5.0mm_W2.5mm_P5.00mm",
+      "position": {
+        "x": 138.049,
+        "y": 104.14
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(C304-Pad1)",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 5.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C303",
+      "value": "4.7nF",
+      "footprint": "complex_hierarchy:C_Disc_D5.0mm_W2.5mm_P5.00mm",
+      "position": {
+        "x": 113.792,
+        "y": 84.836
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(U301B-+)",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 5.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C301",
+      "value": "15nF",
+      "footprint": "complex_hierarchy:C_Disc_D5.0mm_W2.5mm_P5.00mm",
+      "position": {
+        "x": 118.745,
+        "y": 81.407
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_horizontal/Vpil_0_3,3V",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(C301-Pad2)",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 5.0,
+            "y": 6.123233995736766e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C204",
+      "value": "820pF",
+      "footprint": "complex_hierarchy:C_Disc_D5.0mm_W2.5mm_P5.00mm",
+      "position": {
+        "x": 138.176,
+        "y": 130.048
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(C204-Pad1)",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 5.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C202",
+      "value": "150nF",
+      "footprint": "complex_hierarchy:C_Disc_D5.0mm_W2.5mm_P5.00mm",
+      "position": {
+        "x": 113.665,
+        "y": 106.045
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(C202-Pad1)",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 5.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C302",
+      "value": "150nF",
+      "footprint": "complex_hierarchy:C_Disc_D5.0mm_W2.5mm_P5.00mm",
+      "position": {
+        "x": 113.792,
+        "y": 77.978
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(C302-Pad1)",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 5.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C203",
+      "value": "4.7nF",
+      "footprint": "complex_hierarchy:C_Disc_D5.0mm_W2.5mm_P5.00mm",
+      "position": {
+        "x": 113.665,
+        "y": 112.776
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(U201B-+)",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 5.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C201",
+      "value": "15nF",
+      "footprint": "complex_hierarchy:C_Disc_D5.0mm_W2.5mm_P5.00mm",
+      "position": {
+        "x": 118.618,
+        "y": 109.474
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_vertical/Vpil_0_3,3V",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(C201-Pad2)",
+          "shape": "circle",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 5.0,
+            "y": 6.123233995736766e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D101",
+      "value": "1N4007",
+      "footprint": "complex_hierarchy:D_DO-41_SOD81_P12.70mm_Horizontal",
+      "position": {
+        "x": 116.078,
+        "y": 68.326
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "+12V",
+          "shape": "rect",
+          "size": {
+            "x": 2.2,
+            "y": 2.2
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 1.1,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "/12Vext",
+          "shape": "oval",
+          "size": {
+            "x": 2.2,
+            "y": 2.2
+          },
+          "offset": {
+            "x": 12.7,
+            "y": 1.5553014349171384e-15
+          },
+          "drill": 1.1,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D301",
+      "value": "1N4148",
+      "footprint": "complex_hierarchy:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "position": {
+        "x": 125.095,
+        "y": 78.867
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D301-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "HT",
+          "shape": "oval",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D203",
+      "value": "1N4148",
+      "footprint": "complex_hierarchy:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "position": {
+        "x": 144.78,
+        "y": 123.571
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D203-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D203-A)",
+          "shape": "oval",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -4.6659043047514155e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D201",
+      "value": "1N4148",
+      "footprint": "complex_hierarchy:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "position": {
+        "x": 127.635,
+        "y": 105.918
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D201-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "HT",
+          "shape": "oval",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D202",
+      "value": "1N4148",
+      "footprint": "complex_hierarchy:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "position": {
+        "x": 127.635,
+        "y": 108.966
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D202-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D201-K)",
+          "shape": "oval",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D304",
+      "value": "1N4148",
+      "footprint": "complex_hierarchy:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "position": {
+        "x": 141.605,
+        "y": 97.536
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D304-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D303-K)",
+          "shape": "oval",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -4.6659043047514155e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D302",
+      "value": "1N4148",
+      "footprint": "complex_hierarchy:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "position": {
+        "x": 132.715,
+        "y": 82.296
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D302-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D301-K)",
+          "shape": "oval",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 7.62,
+            "y": 9.331808609502831e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D204",
+      "value": "1N4148",
+      "footprint": "complex_hierarchy:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "position": {
+        "x": 140.97,
+        "y": 123.571
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D204-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D203-K)",
+          "shape": "oval",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -4.6659043047514155e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D303",
+      "value": "1N4148",
+      "footprint": "complex_hierarchy:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "position": {
+        "x": 145.415,
+        "y": 97.536
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(D303-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D303-A)",
+          "shape": "oval",
+          "size": {
+            "x": 1.6,
+            "y": 1.6
+          },
+          "offset": {
+            "x": -7.62,
+            "y": -4.6659043047514155e-16
+          },
+          "drill": 0.8,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "P101",
+      "value": "CONN_2",
+      "footprint": "complex_hierarchy:Altech_AK300_1x02_P5.00mm_45-Degree",
+      "position": {
+        "x": 94.9,
+        "y": 56.9
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "HT",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": -5.0,
+            "y": 3.061616997868383e-16
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "P102",
+      "value": "CONN_2",
+      "footprint": "complex_hierarchy:Altech_AK300_1x02_P5.00mm_45-Degree",
+      "position": {
+        "x": 94.8,
+        "y": 69.4
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/12Vext",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": -5.0,
+            "y": 3.061616997868383e-16
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "P201",
+      "value": "CONN_2",
+      "footprint": "complex_hierarchy:Altech_AK300_1x02_P5.00mm_45-Degree",
+      "position": {
+        "x": 94.615,
+        "y": 111.633
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_vertical/PIEZO_IN",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": -5.0,
+            "y": 3.061616997868383e-16
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "P202",
+      "value": "CONN_2",
+      "footprint": "complex_hierarchy:Altech_AK300_1x02_P5.00mm_45-Degree",
+      "position": {
+        "x": 181.1925,
+        "y": 112.4575
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_vertical/PIEZO_OUT",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": -5.0,
+            "y": -3.061616997868383e-16
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "P301",
+      "value": "CONN_2",
+      "footprint": "complex_hierarchy:Altech_AK300_1x02_P5.00mm_45-Degree",
+      "position": {
+        "x": 94.9,
+        "y": 85.0
+      },
+      "rotation": -90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_horizontal/PIEZO_IN",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": -5.0,
+            "y": 3.061616997868383e-16
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "P302",
+      "value": "CONN_2",
+      "footprint": "complex_hierarchy:Altech_AK300_1x02_P5.00mm_45-Degree",
+      "position": {
+        "x": 181.2,
+        "y": 86.3
+      },
+      "rotation": 90.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "/ampli_ht_horizontal/PIEZO_OUT",
+          "shape": "rect",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "circle",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": -5.0,
+            "y": -3.061616997868383e-16
+          },
+          "drill": 1.5,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "Q202",
+      "value": "MPSA42",
+      "footprint": "complex_hierarchy:TO-92_HandSolder",
+      "position": {
+        "x": 149.225,
+        "y": 115.062
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q202-E)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D203-A)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 1.27,
+            "y": -1.27
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "HT",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 2.54,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "Q204",
+      "value": "MPSA42",
+      "footprint": "complex_hierarchy:TO-92_HandSolder",
+      "position": {
+        "x": 130.556,
+        "y": 125.73
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(Q204-E)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(Q204-B)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 1.27,
+            "y": -1.27
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "Net-(D204-K)",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.8
+          },
+          "offset": {
+            "x": 2.54,
+            "y": 0.0
+          },
+          "drill": 0.75,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C102",
+      "value": "47uF",
+      "footprint": "complex_hierarchy:CP_Axial_L10.0mm_D4.5mm_P15.00mm_Horizontal",
+      "position": {
+        "x": 117.348,
+        "y": 73.406
+      },
+      "rotation": 180.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "VCC",
+          "shape": "rect",
+          "size": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.0
+          },
+          "drill": 1.0,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "oval",
+          "size": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "offset": {
+            "x": 15.0,
+            "y": 1.83697019872103e-15
+          },
+          "drill": 1.0,
+          "layers": [
+            "top_copper",
+            "bottom_copper"
+          ]
+        }
+      ]
+    }
+  ],
+  "outline": {
+    "corners": [
+      {
+        "x": 87.9,
+        "y": 131.826
+      },
+      {
+        "x": 188.595,
+        "y": 131.826
+      },
+      {
+        "x": 87.9,
+        "y": 51.8
+      },
+      {
+        "x": 188.595,
+        "y": 51.816
+      }
+    ],
+    "clearance": 0.5
+  },
+  "traces": [],
+  "vias": [],
+  "conductionAreas": []
+}
