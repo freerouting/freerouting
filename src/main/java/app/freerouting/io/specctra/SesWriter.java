@@ -155,8 +155,7 @@ public final class SesWriter {
     } else {
       file.write(" back ");
     }
-    int rotation = (int) Math.round(component.get_rotation_in_degree());
-    file.write(String.valueOf(rotation));
+    file.write(String.format("%.3f", component.get_rotation_in_degree()));
     if (component.position_fixed) {
       file.new_line();
       file.write(" (lock_type position)");
