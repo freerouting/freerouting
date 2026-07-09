@@ -507,6 +507,7 @@ public class HeadlessBoardManager implements BoardManager {
         FRAnalytics.fileLoaded("DSN", GSON.toJson(boardStats));
         this.board.reduce_nets_of_route_items();
         originalBoardChecksum = calculateCrc32();
+        validatePowerPlanes();
         FRAnalytics.boardLoaded(
             this.board.communication.specctra_parser_info.host_cad,
             this.board.communication.specctra_parser_info.host_version,
@@ -594,6 +595,7 @@ public class HeadlessBoardManager implements BoardManager {
         FRAnalytics.fileLoaded("KICAD_JSON", GSON.toJson(boardStats));
         this.board.reduce_nets_of_route_items();
         originalBoardChecksum = calculateCrc32();
+        validatePowerPlanes();
         FRAnalytics.boardLoaded(
             this.board.communication.specctra_parser_info.host_cad,
             this.board.communication.specctra_parser_info.host_version,
@@ -717,4 +719,104 @@ public class HeadlessBoardManager implements BoardManager {
     return null;
   }
 
-}
+  boolean conductionAreasOverlap(app.freerouting.board.ConductionArea ca1, app.freerouting.board.ConductionArea ca2) {
+    app.freerouting.geometry.planar.TileShape[] pieces1 = ca1.get_area().split_to_convex();
+    app.freerouting.geometry.planar.TileShape[] pieces2 = ca2.get_area().split_to_convex();
+    if (pieces1 == null || pieces2 == null) {
+      return false;
+    }
+    for (app.freerouting.geometry.planar.TileShape p1 : pieces1) {
+      for (app.freerouting.geometry.planar.TileShape p2 : pieces2) {
+        if (p1.intersects(p2)) {
+          app.freerouting.geometry.planar.TileShape intersection = p1.intersection(p2);
+          if (intersection != null && !intersection.is_empty() && intersection.dimension() == 2) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  String getConductionAreaNetNames(app.freerouting.board.ConductionArea ca) {
+    java.util.List<String> names = new java.util.ArrayList<>();
+    for (int i = 0; i < ca.net_count(); i++) {
+      int netNo = ca.get_net_no(i);
+      app.freerouting.rules.Net net = this.board.rules.nets.get(netNo);
+      if (net != null) {
+        names.add(net.name);
+      } else {
+        names.add(String.valueOf(netNo));
+      }
+    }
+    return String.join(", ", names);
+  }
+
+  void validatePowerPlanes() {
+    if (this.board == null) {
+      return;
+    }
+
+    boolean validationFailed = false;
+    java.util.List<String> violations = new java.util.ArrayList<>();
+
+    for (int i = 0; i < this.board.get_layer_count(); i++) {
+      app.freerouting.board.Layer layer = this.board.layer_structure.arr[i];
+      if (!layer.is_signal) {
+        final int layerNo = i;
+
+        // 1. Check for signal wires/traces
+        long traceCount = this.board.get_traces().stream()
+            .filter(trace -> trace.get_layer() == layerNo)
+            .count();
+        if (traceCount > 0) {
+          validationFailed = true;
+          violations.add("- Dedicated power layer '" + layer.name + "' contains " + traceCount + " signal wire(s)/trace(s).");
+        }
+
+        // 2. Check for at least one conduction area
+        java.util.List<app.freerouting.board.ConductionArea> layerAreas = this.board.get_conduction_areas().stream()
+            .filter(ca -> ca.get_layer() == layerNo)
+            .toList();
+        if (layerAreas.isEmpty()) {
+          validationFailed = true;
+          violations.add("- Dedicated power layer '" + layer.name + "' has no conduction areas defined.");
+        }
+
+        // 3. Check for overlapping conduction areas
+        for (int j = 0; j < layerAreas.size(); j++) {
+          for (int k = j + 1; k < layerAreas.size(); k++) {
+            if (conductionAreasOverlap(layerAreas.get(j), layerAreas.get(k))) {
+              validationFailed = true;
+              String nets1 = getConductionAreaNetNames(layerAreas.get(j));
+              String nets2 = getConductionAreaNetNames(layerAreas.get(k));
+              violations.add("- Dedicated power layer '" + layer.name + "' has overlapping conduction areas: "
+                  + "Area (ID " + layerAreas.get(j).get_id_no() + ", Net(s): [" + nets1 + "]) and "
+                  + "Area (ID " + layerAreas.get(k).get_id_no() + ", Net(s): [" + nets2 + "]) overlap.");
+            }
+          }
+        }
+      }
+    }
+
+    if (validationFailed) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Power-plane validation failed:\n");
+      for (String violation : violations) {
+        sb.append(violation).append("\n");
+      }
+      sb.append("\nProper Definition and Best Practices for Power Planes:\n")
+        .append("1. What Belongs on a Power Plane:\n")
+        .append("   - Solid Copper Pours: A single, uninterrupted sheet of copper assigned to one voltage (e.g., +3.3V).\n")
+        .append("   - Split Planes: Multiple distinct voltage zones divided by thin isolation gaps (puzzle pieces).\n")
+        .append("   - Vias and Anti-Pads: Plated holes passing through the board, surrounded by circular voids (anti-pads) to prevent shorting.\n")
+        .append("   - Thermal Reliefs: Spoked connections for vias or pins that connect to the plane, facilitating soldering.\n")
+        .append("2. Why Signal Wires/Traces are Banned:\n")
+        .append("   - Destroyed Return Paths: High-speed signals on adjacent layers couple to the solid plane below/above as return paths. Crossing a trace gap detours return currents, causing severe EMI and signal integrity issues.\n")
+        .append("   - Compromised Power Delivery: Power planes should provide the lowest impedance path. Routing traces chops up the copper, creating bottleneck restrictions and voltage drops.\n");
+
+      FRLogger.warn(sb.toString());
+    }
+  }
+
+}
