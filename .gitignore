@@ -16,7 +16,6 @@ bin/
 /scripts/build/runtime
 /scripts/build/Freerouting*
 
-/fixtures/*.ses
 /fixtures/*.bin
 /fixtures/**/*.zip
 

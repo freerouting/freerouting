@@ -60,8 +60,8 @@ public class Issue733DsnJsonParityTest {
   @Test
   @Disabled("Disabled due to known issue with DSN and JSON parity.")
   void testDsnJsonParityKiCadInterf() throws Exception {
-    File dsnFile = findFixtureFile("Issue733-kicad_interf_u_input_board.dsn");
-    File jsonFile = findFixtureFile("Issue733-kicad_interf_u_input_board.json");
+    File dsnFile = findFixtureFile("Issue733-kicad_interf_u_input_design.dsn");
+    File jsonFile = findFixtureFile("Issue733-kicad_interf_u_input_design.json");
 
     assertTrue(dsnFile.exists(), "DSN fixture file must exist");
     assertTrue(jsonFile.exists(), "JSON fixture file must exist");
@@ -78,8 +78,8 @@ public class Issue733DsnJsonParityTest {
   @Test
   @Disabled("Disabled due to known issue with DSN and JSON parity.")
   void testDsnJsonParityKiCadComplexHierarchy() throws Exception {
-    File dsnFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_board.dsn");
-    File jsonFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_board.json");
+    File dsnFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_design.dsn");
+    File jsonFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_design.json");
 
     assertTrue(dsnFile.exists(), "DSN fixture file must exist");
     assertTrue(jsonFile.exists(), "JSON fixture file must exist");
