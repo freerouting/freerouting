@@ -247,11 +247,190 @@ public class BoardComparator {
       report.append(String.format("[-] Trace count mismatch: Board 1 = %d, Board 2 = %d\n", tr1.size(), tr2.size()));
     }
 
+    // Detailed Trace Matching
+    boolean tracesAllMatched = true;
+    boolean[] matchedTr2 = new boolean[tr2.size()];
+    for (Trace t1 : tr1) {
+      if (!(t1 instanceof PolylineTrace pt1)) {
+        continue;
+      }
+      String netName1 = "";
+      if (pt1.net_count() > 0) {
+        Net net = board1.rules.nets.get(pt1.get_net_no(0));
+        if (net != null) {
+          netName1 = net.name;
+        }
+      }
+      double width1 = 2 * pt1.get_half_width() * scale1;
+
+      boolean foundMatch = false;
+      for (int i = 0; i < tr2.size(); i++) {
+        if (matchedTr2[i]) continue;
+        Trace t2 = tr2.get(i);
+        if (!(t2 instanceof PolylineTrace pt2)) {
+          continue;
+        }
+        if (pt1.get_layer() != pt2.get_layer()) {
+          continue;
+        }
+        String netName2 = "";
+        if (pt2.net_count() > 0) {
+          Net net = board2.rules.nets.get(pt2.get_net_no(0));
+          if (net != null) {
+            netName2 = net.name;
+          }
+        }
+        if (!netName1.equalsIgnoreCase(netName2)) {
+          continue;
+        }
+        double width2 = 2 * pt2.get_half_width() * scale2;
+        if (Math.abs(width1 - width2) > epsilonMm) {
+          continue;
+        }
+        if (polylinesMatch(pt1.polyline(), scale1, pt2.polyline(), scale2, epsilonMm)) {
+          foundMatch = true;
+          matchedTr2[i] = true;
+          break;
+        }
+      }
+      if (!foundMatch) {
+        tracesAllMatched = false;
+        Point startPt = pt1.polyline().first_corner();
+        double sx = startPt.to_float().x * scale1;
+        double sy = startPt.to_float().y * scale1;
+        report.append(String.format("[-] Trace in Board 1 on layer %d of net '%s' starting at (%.4f, %.4f) mm has no matching trace in Board 2.\n",
+            pt1.get_layer(), netName1, sx, sy));
+      }
+    }
+    for (int i = 0; i < tr2.size(); i++) {
+      if (!matchedTr2[i]) {
+        tracesAllMatched = false;
+        Trace t2 = tr2.get(i);
+        if (t2 instanceof PolylineTrace pt2) {
+          String netName2 = "";
+          if (pt2.net_count() > 0) {
+            Net net = board2.rules.nets.get(pt2.get_net_no(0));
+            if (net != null) {
+              netName2 = net.name;
+            }
+          }
+          Point startPt = pt2.polyline().first_corner();
+          double sx = startPt.to_float().x * scale2;
+          double sy = startPt.to_float().y * scale2;
+          report.append(String.format("[-] Trace in Board 2 on layer %d of net '%s' starting at (%.4f, %.4f) mm has no matching trace in Board 1.\n",
+              pt2.get_layer(), netName2, sx, sy));
+        }
+      }
+    }
+    if (!tracesAllMatched) {
+      equal = false;
+    }
+
     List<Via> vias1 = new ArrayList<>(board1.get_vias());
     List<Via> vias2 = new ArrayList<>(board2.get_vias());
     if (vias1.size() != vias2.size()) {
       equal = false;
       report.append(String.format("[-] Via count mismatch: Board 1 = %d, Board 2 = %d\n", vias1.size(), vias2.size()));
+    }
+
+    // Detailed Via Matching
+    boolean viasAllMatched = true;
+    boolean[] matchedVias2 = new boolean[vias2.size()];
+    for (Via v1 : vias1) {
+      String netName1 = "";
+      if (v1.net_count() > 0) {
+        Net net = board1.rules.nets.get(v1.get_net_no(0));
+        if (net != null) {
+          netName1 = net.name;
+        }
+      }
+      double cx1 = v1.get_center().to_float().x * scale1;
+      double cy1 = v1.get_center().to_float().y * scale1;
+
+      app.freerouting.core.Padstack pad1 = v1.get_padstack();
+      int firstLayer1 = 0;
+      while (firstLayer1 < board1.get_layer_count() && pad1.get_shape(firstLayer1) == null) {
+        firstLayer1++;
+      }
+      int lastLayer1 = board1.get_layer_count() - 1;
+      while (lastLayer1 >= 0 && pad1.get_shape(lastLayer1) == null) {
+        lastLayer1--;
+      }
+
+      double diameter1 = 0.0;
+      Shape shape1 = pad1.get_shape(firstLayer1);
+      if (shape1 != null) {
+        diameter1 = shape1.bounding_box().width() * scale1;
+      }
+
+      boolean foundMatch = false;
+      for (int i = 0; i < vias2.size(); i++) {
+        if (matchedVias2[i]) continue;
+        Via v2 = vias2.get(i);
+        double cx2 = v2.get_center().to_float().x * scale2;
+        double cy2 = v2.get_center().to_float().y * scale2;
+        if (Math.abs(cx1 - cx2) > epsilonMm || Math.abs(cy1 - cy2) > epsilonMm) {
+          continue;
+        }
+        String netName2 = "";
+        if (v2.net_count() > 0) {
+          Net net = board2.rules.nets.get(v2.get_net_no(0));
+          if (net != null) {
+            netName2 = net.name;
+          }
+        }
+        if (!netName1.equalsIgnoreCase(netName2)) {
+          continue;
+        }
+        app.freerouting.core.Padstack pad2 = v2.get_padstack();
+        int firstLayer2 = 0;
+        while (firstLayer2 < board2.get_layer_count() && pad2.get_shape(firstLayer2) == null) {
+          firstLayer2++;
+        }
+        int lastLayer2 = board2.get_layer_count() - 1;
+        while (lastLayer2 >= 0 && pad2.get_shape(lastLayer2) == null) {
+          lastLayer2--;
+        }
+        if (firstLayer1 != firstLayer2 || lastLayer1 != lastLayer2) {
+          continue;
+        }
+        double diameter2 = 0.0;
+        Shape shape2 = pad2.get_shape(firstLayer2);
+        if (shape2 != null) {
+          diameter2 = shape2.bounding_box().width() * scale2;
+        }
+        if (Math.abs(diameter1 - diameter2) > epsilonMm) {
+          continue;
+        }
+        foundMatch = true;
+        matchedVias2[i] = true;
+        break;
+      }
+      if (!foundMatch) {
+        viasAllMatched = false;
+        report.append(String.format("[-] Via in Board 1 at (%.4f, %.4f) mm on net '%s' has no matching via in Board 2.\n",
+            cx1, cy1, netName1));
+      }
+    }
+    for (int i = 0; i < vias2.size(); i++) {
+      if (!matchedVias2[i]) {
+        viasAllMatched = false;
+        Via v2 = vias2.get(i);
+        String netName2 = "";
+        if (v2.net_count() > 0) {
+          Net net = board2.rules.nets.get(v2.get_net_no(0));
+          if (net != null) {
+            netName2 = net.name;
+          }
+        }
+        double cx2 = v2.get_center().to_float().x * scale2;
+        double cy2 = v2.get_center().to_float().y * scale2;
+        report.append(String.format("[-] Via in Board 2 at (%.4f, %.4f) mm on net '%s' has no matching via in Board 1.\n",
+            cx2, cy2, netName2));
+      }
+    }
+    if (!viasAllMatched) {
+      equal = false;
     }
 
     // Compare conduction areas & obstacles count
@@ -428,5 +607,30 @@ public class BoardComparator {
       }
     }
     return matched;
+  }
+
+  private static boolean polylinesMatch(Polyline poly1, double scale1, Polyline poly2, double scale2, double epsilonMm) {
+    if (poly1.corner_count() != poly2.corner_count()) {
+      return false;
+    }
+    int count = poly1.corner_count();
+    boolean forwardMatch = true;
+    boolean reverseMatch = true;
+    for (int i = 0; i < count; i++) {
+      Point pt1 = poly1.corner_arr()[i];
+      // Check forward
+      Point pt2F = poly2.corner_arr()[i];
+      if (Math.abs(pt1.to_float().x * scale1 - pt2F.to_float().x * scale2) > epsilonMm ||
+          Math.abs(pt1.to_float().y * scale1 - pt2F.to_float().y * scale2) > epsilonMm) {
+        forwardMatch = false;
+      }
+      // Check reverse
+      Point pt2R = poly2.corner_arr()[count - 1 - i];
+      if (Math.abs(pt1.to_float().x * scale1 - pt2R.to_float().x * scale2) > epsilonMm ||
+          Math.abs(pt1.to_float().y * scale1 - pt2R.to_float().y * scale2) > epsilonMm) {
+        reverseMatch = false;
+      }
+    }
+    return forwardMatch || reverseMatch;
   }
 }
