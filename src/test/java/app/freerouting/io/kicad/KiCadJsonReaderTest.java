@@ -306,4 +306,69 @@ class KiCadJsonReaderTest {
     BoardReadResult result = KiCadJsonReader.readBoard(new StringReader("{invalid JSON"), null, null);
     assertInstanceOf(BoardReadResult.ParseError.class, result);
   }
+
+  @Test
+  void testImportSession() throws Exception {
+    String baseJson = "{\n"
+        + "  \"designName\": \"TestBoard\",\n"
+        + "  \"unit\": \"MM\",\n"
+        + "  \"resolution\": 1000.0,\n"
+        + "  \"layers\": [\n"
+        + "    {\"index\": 0, \"name\": \"F.Cu\", \"type\": \"signal\"},\n"
+        + "    {\"index\": 1, \"name\": \"B.Cu\", \"type\": \"signal\"}\n"
+        + "  ],\n"
+        + "  \"outline\": {\n"
+        + "    \"corners\": [\n"
+        + "      {\"x\": 0.0, \"y\": 0.0},\n"
+        + "      {\"x\": 100.0, \"y\": 0.0},\n"
+        + "      {\"x\": 100.0, \"y\": 80.0},\n"
+        + "      {\"x\": 0.0, \"y\": 80.0}\n"
+        + "    ],\n"
+        + "    \"clearance\": 0.5\n"
+        + "  },\n"
+        + "  \"nets\": [\n"
+        + "    {\"id\": 1, \"name\": \"VCC\"}\n"
+        + "  ]\n"
+        + "}";
+
+    BoardReadResult baseResult = KiCadJsonReader.readBoard(new StringReader(baseJson), null, null);
+    assertTrue(baseResult instanceof BoardReadResult.Success);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) baseResult).board();
+
+    assertEquals(0, board.get_traces().size());
+    assertEquals(0, board.get_vias().size());
+
+    String sessionJson = "{\n"
+        + "  \"unit\": \"MM\",\n"
+        + "  \"resolution\": 1000.0,\n"
+        + "  \"traces\": [\n"
+        + "    {\n"
+        + "      \"id\": 1,\n"
+        + "      \"netName\": \"VCC\",\n"
+        + "      \"width\": 0.3,\n"
+        + "      \"layerIndex\": 0,\n"
+        + "      \"points\": [\n"
+        + "        {\"x\": 5.0, \"y\": 10.0},\n"
+        + "        {\"x\": 10.0, \"y\": 10.0}\n"
+        + "      ]\n"
+        + "    }\n"
+        + "  ],\n"
+        + "  \"vias\": [\n"
+        + "    {\n"
+        + "      \"id\": 1,\n"
+        + "      \"netName\": \"VCC\",\n"
+        + "      \"position\": {\"x\": 15.0, \"y\": 15.0},\n"
+        + "      \"diameter\": 0.8,\n"
+        + "      \"drill\": 0.4,\n"
+        + "      \"startLayerIndex\": 0,\n"
+        + "      \"endLayerIndex\": 1\n"
+        + "    }\n"
+        + "  ]\n"
+        + "}";
+
+    KiCadJsonReader.importSession(new StringReader(sessionJson), board);
+
+    assertEquals(1, board.get_traces().size());
+    assertEquals(1, board.get_vias().size());
+  }
 }

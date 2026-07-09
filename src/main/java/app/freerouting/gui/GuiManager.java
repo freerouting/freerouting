@@ -357,24 +357,34 @@ public class GuiManager {
             return null;
         }
 
-        // Load SES file if specified (after DSN is loaded, before RULES)
-        if (globalSettings.design_session_filename != null && routingJob.input.format.equals(FileFormat.DSN)) {
+        // Load session file if specified (after design is loaded, before RULES)
+        if (globalSettings.design_session_filename != null && 
+                (routingJob.input.format.equals(FileFormat.DSN) || routingJob.input.format.equals(FileFormat.KICAD_DESIGN_JSON))) {
             try {
-                File sesFile = new File(globalSettings.design_session_filename);
-                if (sesFile.exists()) {
-                    FRLogger.info("Loading SES file: " + globalSettings.design_session_filename);
-                    FileInputStream sesStream = new FileInputStream(sesFile);
-                    SesImportSummary summary = SesReader.read(sesStream,
-                            new_frame.board_panel.board_handling.get_routing_board());
-                    FRLogger.info("SES file loaded: " + summary.wiresImported() + " wires, "
-                            + summary.viasImported() + " vias imported"
-                            + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
+                File sessionFile = new File(globalSettings.design_session_filename);
+                if (sessionFile.exists()) {
+                    if (globalSettings.design_session_filename.toLowerCase().endsWith(".json")) {
+                        FRLogger.info("Loading KiCad JSON session file: " + globalSettings.design_session_filename);
+                        try (java.io.FileReader jsonReader = new java.io.FileReader(sessionFile)) {
+                            app.freerouting.io.kicad.KiCadJsonReader.importSession(jsonReader,
+                                    new_frame.board_panel.board_handling.get_routing_board());
+                            FRLogger.info("KiCad JSON session file loaded successfully");
+                        }
+                    } else {
+                        FRLogger.info("Loading SES file: " + globalSettings.design_session_filename);
+                        FileInputStream sesStream = new FileInputStream(sessionFile);
+                        SesImportSummary summary = SesReader.read(sesStream,
+                                new_frame.board_panel.board_handling.get_routing_board());
+                        FRLogger.info("SES file loaded: " + summary.wiresImported() + " wires, "
+                                + summary.viasImported() + " vias imported"
+                                + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
+                    }
                     new_frame.refresh_windows(); // Refresh UI to show loaded routes
                 } else {
-                    FRLogger.warn("SES file not found: " + globalSettings.design_session_filename);
+                    FRLogger.warn("Session file not found: " + globalSettings.design_session_filename);
                 }
             } catch (Exception e) {
-                FRLogger.error("Failed to load SES file", e);
+                FRLogger.error("Failed to load session file", e);
             }
         }
 

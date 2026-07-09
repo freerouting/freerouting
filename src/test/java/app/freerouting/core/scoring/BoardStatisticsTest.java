@@ -23,7 +23,7 @@ class BoardStatisticsTest {
         + "}";
 
     byte[] data = jsonContent.getBytes(StandardCharsets.UTF_8);
-    BoardStatistics stats = new BoardStatistics(data, FileFormat.JSON);
+    BoardStatistics stats = new BoardStatistics(data, FileFormat.KICAD_DESIGN_JSON);
 
     assertNotNull(stats.layers);
     assertEquals(2, stats.layers.totalCount);

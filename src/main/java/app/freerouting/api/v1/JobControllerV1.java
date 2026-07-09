@@ -601,7 +601,7 @@ public class JobControllerV1 extends BaseController {
     }
 
     // Force the format to JSON (setInput may auto-detect, but be explicit)
-    job.input.format = FileFormat.JSON;
+    job.input.format = FileFormat.KICAD_DESIGN_JSON;
     if (job.input.getFilename().isEmpty()) {
       job.input.setFilename(job.name);
     }
@@ -794,7 +794,7 @@ public class JobControllerV1 extends BaseController {
     }
 
     // If the output is not JSON format, attempt to generate JSON from the board
-    if (job.output.format != FileFormat.JSON) {
+    if (job.output.format != FileFormat.KICAD_SESSION_JSON) {
       // If we have a board loaded, we can generate JSON on the fly
       if (job.board != null) {
         try {
@@ -1193,7 +1193,7 @@ public class JobControllerV1 extends BaseController {
       if (job.input != null) {
         try {
           HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-          if (job.input.format == FileFormat.JSON) {
+          if (job.input.format == FileFormat.KICAD_DESIGN_JSON) {
             boardManager.loadFromKiCadJson(job.input.getData(), null, new ItemIdentificationNumberGenerator());
           } else {
             boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());

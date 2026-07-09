@@ -517,11 +517,16 @@ public class GlobalSettings implements Serializable {
                 initialInputFile = file;
                 hasDsn = true;
               } else if (lowerFile.endsWith(".json")) {
-                if (hasDsn) {
-                  FRLogger.warn("Multiple input files (DSN/JSON) provided in -de argument. Only the last one will be used.");
+                if (!hasDsn) {
+                  initialInputFile = file;
+                  hasDsn = true;
+                } else {
+                  if (hasSes) {
+                    FRLogger.warn("Multiple session files (SES/JSON) provided in -de argument. Only the last one will be used.");
+                  }
+                  design_session_filename = file;
+                  hasSes = true;
                 }
-                initialInputFile = file;
-                hasDsn = true;
               } else if (lowerFile.endsWith(".ses")) {
                 if (hasSes) {
                   FRLogger.warn("Multiple SES files provided in -de argument. Only the last one will be used.");

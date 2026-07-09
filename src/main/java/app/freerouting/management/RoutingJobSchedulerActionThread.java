@@ -271,8 +271,8 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       job.output = new BoardFileDetails(job.board);
       job.output.addUpdatedEventListener(_ -> job.fireOutputUpdatedEvent());
       String outputBaseName = (job.input != null) ? job.input.getFilenameWithoutExtension() : job.name;
-      if (job.input != null && job.input.format == FileFormat.JSON) {
-        job.output.format = FileFormat.JSON;
+      if (job.input != null && job.input.format == FileFormat.KICAD_DESIGN_JSON) {
+        job.output.format = FileFormat.KICAD_SESSION_JSON;
         job.output.setFilename(outputBaseName + ".json");
       } else {
         job.output.format = FileFormat.SES;
@@ -281,7 +281,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     }
 
     // save the result to the output field
-    if (job.output.format == FileFormat.JSON) {
+    if (job.output.format == FileFormat.KICAD_SESSION_JSON) {
       try {
         String jsonStr = app.freerouting.io.kicad.KiCadJsonWriter.write(job.board, job.name);
         job.output.setData(jsonStr.getBytes(java.nio.charset.StandardCharsets.UTF_8));

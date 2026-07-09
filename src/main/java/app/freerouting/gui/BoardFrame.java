@@ -237,8 +237,8 @@ public class BoardFrame extends WindowBase {
             this.load(routingJob.input.getData(), FileFormat.DSN, null, routingJob);
             FRAnalytics.buttonClicked("fileio_loaddsn", this.routingJob.getInputFileDetails());
             break;
-          case JSON:
-            this.load(routingJob.input.getData(), FileFormat.JSON, null, routingJob);
+          case KICAD_DESIGN_JSON:
+            this.load(routingJob.input.getData(), FileFormat.KICAD_DESIGN_JSON, null, routingJob);
             FRAnalytics.buttonClicked("fileio_loadjson", this.routingJob.getInputFileDetails());
             break;
           case FRB:
@@ -276,6 +276,11 @@ public class BoardFrame extends WindowBase {
                 board_panel.board_handling);
           }
           FRAnalytics.buttonClicked("fileio_saveses", this.routingJob.getOutputFileDetails());
+          break;
+        case KICAD_SESSION_JSON:
+          // Save the file as a KiCad session JSON file
+          this.saveAsKiCadJson(this.routingJob.output.getFile(), this.routingJob.input.getFilename());
+          FRAnalytics.buttonClicked("fileio_savekicadjson", this.routingJob.getOutputFileDetails());
           break;
         case DSN:
           // Save the file as a Specctra DSN file
@@ -462,8 +467,8 @@ public class BoardFrame extends WindowBase {
       }
     }
 
-    if (format == FileFormat.DSN || format == FileFormat.JSON) {
-      if (format == FileFormat.JSON) {
+    if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
+      if (format == FileFormat.KICAD_DESIGN_JSON) {
         read_result = board_panel.board_handling.loadFromKiCadJson(inputStream, this.board_observers,
             new ItemIdentificationNumberGenerator());
       } else {
@@ -558,7 +563,7 @@ public class BoardFrame extends WindowBase {
 
   private boolean update_gui(FileFormat format, BoardReadResult read_result, Point viewport_position,
       JTextField p_message_field) {
-    boolean isTextDsnOrJson = (format == FileFormat.DSN || format == FileFormat.JSON);
+    boolean isTextDsnOrJson = (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON);
     if (isTextDsnOrJson) {
       if (!(read_result instanceof BoardReadResult.Success)) {
         if (p_message_field != null) {
@@ -707,6 +712,28 @@ public class BoardFrame extends WindowBase {
     return true;
   }
 
+  /**
+   * Writes a KiCad Session JSON File. Returns false if write operation fails.
+   */
+  public boolean saveAsKiCadJson(File outputFile, String designName) {
+    if (outputFile == null) {
+      return false;
+    }
+
+    FRLogger.info("Saving '" + outputFile.getPath() + "'...");
+    try (java.io.FileWriter writer = new java.io.FileWriter(outputFile)) {
+      String json = app.freerouting.io.kicad.KiCadJsonWriter.write(board_panel.board_handling.get_routing_board(), designName);
+      writer.write(json);
+    } catch (Exception e) {
+      FRLogger.error("Unable to write KiCad JSON file", e);
+      this.screen_messages.set_status_message(tm.getText("message_kicad_session_json_save_failed", outputFile.getPath()));
+      return false;
+    }
+
+    this.screen_messages.set_status_message(tm.getText("message_kicad_session_json_saved", outputFile.getPath()));
+    return true;
+  }
+
   public File showSaveAsDialog(String p_default_directory, BoardFileDetails output) {
     var p_parent = this;
 
@@ -737,6 +764,10 @@ public class BoardFrame extends WindowBase {
     FileNameExtensionFilter dsnFilter = new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
     fileChooser.addChoosableFileFilter(dsnFilter);
 
+    // Add the file filter for KiCad Session JSON files
+    FileNameExtensionFilter jsonSessionFilter = new FileNameExtensionFilter("KiCad Session JSON file (*.json)", "json");
+    fileChooser.addChoosableFileFilter(jsonSessionFilter);
+
     // Set the file filter based on the output file format
     switch (output.format) {
       case SES:
@@ -750,6 +781,9 @@ public class BoardFrame extends WindowBase {
         break;
       case DSN:
         fileChooser.setFileFilter(dsnFilter);
+        break;
+      case KICAD_SESSION_JSON:
+        fileChooser.setFileFilter(jsonSessionFilter);
         break;
       default:
         fileChooser.setFileFilter(sesFilter);

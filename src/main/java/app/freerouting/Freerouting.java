@@ -190,23 +190,31 @@ public class Freerouting {
       System.exit(1);
     }
 
-    // Load SES file if specified for DRC
+    // Load session file if specified for DRC
     if (globalSettings.design_session_filename != null) {
       try {
-        java.io.File sesFile = new java.io.File(globalSettings.design_session_filename);
-        if (sesFile.exists()) {
-          FRLogger.info("Loading SES file for DRC: " + globalSettings.design_session_filename);
-          try (java.io.FileInputStream sesStream = new java.io.FileInputStream(sesFile)) {
-            SesImportSummary summary = SesReader.read(sesStream, drcJob.board);
-            FRLogger.info("SES file loaded for DRC: " + summary.wiresImported() + " wires, "
-                + summary.viasImported() + " vias imported"
-                + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
+        java.io.File sessionFile = new java.io.File(globalSettings.design_session_filename);
+        if (sessionFile.exists()) {
+          if (globalSettings.design_session_filename.toLowerCase().endsWith(".json")) {
+            FRLogger.info("Loading KiCad JSON session file for DRC: " + globalSettings.design_session_filename);
+            try (java.io.FileReader jsonReader = new java.io.FileReader(sessionFile)) {
+              app.freerouting.io.kicad.KiCadJsonReader.importSession(jsonReader, drcJob.board);
+              FRLogger.info("KiCad JSON session file loaded for DRC successfully");
+            }
+          } else {
+            FRLogger.info("Loading SES file for DRC: " + globalSettings.design_session_filename);
+            try (java.io.FileInputStream sesStream = new java.io.FileInputStream(sessionFile)) {
+              SesImportSummary summary = SesReader.read(sesStream, drcJob.board);
+              FRLogger.info("SES file loaded for DRC: " + summary.wiresImported() + " wires, "
+                  + summary.viasImported() + " vias imported"
+                  + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
+            }
           }
         } else {
-          FRLogger.warn("SES file for DRC not found: " + globalSettings.design_session_filename);
+          FRLogger.warn("Session file for DRC not found: " + globalSettings.design_session_filename);
         }
       } catch (Exception e) {
-        FRLogger.error("Failed to load SES file for DRC", e);
+        FRLogger.error("Failed to load session file for DRC", e);
       }
     }
 

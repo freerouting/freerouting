@@ -596,6 +596,98 @@ public final class KiCadJsonReader {
   }
 
   /**
+   * Imports traces, vias, and conduction areas from a KiCad session JSON file onto an existing board.
+   */
+  public static void importSession(Reader reader, RoutingBoard board) throws Exception {
+    KiCadBoardJson boardJson = GsonProvider.GSON.fromJson(reader, KiCadBoardJson.class);
+    if (boardJson == null) {
+      throw new IllegalArgumentException("JSON session file payload is empty or invalid");
+    }
+
+    Unit userUnit = Unit.MM;
+    if (boardJson.unit == KiCadBoardJson.UnitJson.MIL) {
+      userUnit = Unit.MIL;
+    } else if (boardJson.unit == KiCadBoardJson.UnitJson.UM) {
+      userUnit = Unit.UM;
+    }
+
+    int resolution = (int) Math.max(1.0, boardJson.resolution);
+    if (boardJson.resolution == 1.0 && userUnit == Unit.MM) {
+      resolution = 10000;
+    }
+    double scaleFactor = resolution;
+
+    // 1. Conduction Areas
+    if (boardJson.conductionAreas != null) {
+      for (KiCadBoardJson.ConductionAreaJson zone : boardJson.conductionAreas) {
+        Net targetNet = board.rules.nets.get(zone.netName, 1);
+        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int[] netNoArr = netNo > 0 ? new int[]{netNo} : new int[0];
+
+        Point[] zonePoints = new Point[zone.polygon.size()];
+        for (int i = 0; i < zone.polygon.size(); i++) {
+          KiCadBoardJson.Point2D pt = zone.polygon.get(i);
+          zonePoints[i] = new IntPoint((int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
+        }
+        Area zoneArea = new PolygonShape(zonePoints);
+        board.insert_conduction_area(zoneArea, zone.layerIndex, netNoArr, 1, zone.isObstacle, FixedState.USER_FIXED);
+      }
+    }
+
+    // 2. Traces
+    if (boardJson.traces != null) {
+      for (KiCadBoardJson.TraceJson tr : boardJson.traces) {
+        Net targetNet = board.rules.nets.get(tr.netName, 1);
+        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int[] netNoArr = netNo > 0 ? new int[]{netNo} : new int[0];
+        int traceHalfWidth = (int) Math.round(tr.width * scaleFactor / 2.0);
+
+        Point[] points = new Point[tr.points.size()];
+        for (int i = 0; i < tr.points.size(); i++) {
+          KiCadBoardJson.Point2D pt = tr.points.get(i);
+          points[i] = new IntPoint((int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
+        }
+        board.insert_trace(points, tr.layerIndex, traceHalfWidth, netNoArr, 1, FixedState.USER_FIXED);
+      }
+    }
+
+    // 3. Vias
+    if (boardJson.vias != null) {
+      int layerCount = board.get_layer_count();
+      for (KiCadBoardJson.ViaJson vj : boardJson.vias) {
+        Net targetNet = board.rules.nets.get(vj.netName, 1);
+        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int[] netNoArr = netNo > 0 ? new int[]{netNo} : new int[0];
+
+        IntPoint center = new IntPoint((int) Math.round(vj.position.x * scaleFactor), (int) Math.round(-vj.position.y * scaleFactor));
+
+        ConvexShape[] shapeArr = new ConvexShape[layerCount];
+        double radius = vj.diameter * scaleFactor / 2.0;
+        ConvexShape viaShape = new IntBox(
+            (int) Math.round(-radius),
+            (int) Math.round(-radius),
+            (int) Math.round(radius),
+            (int) Math.round(radius)
+        ).to_Simplex();
+
+        for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
+          if (li >= 0 && li < layerCount) {
+            shapeArr[li] = viaShape;
+          }
+        }
+        String viaPadstackName = String.format("Via[%d-%d]_%.0f:%.0f_um",
+            vj.startLayerIndex, vj.endLayerIndex,
+            vj.diameter * 1000.0, vj.drill * 1000.0);
+        Padstack viaPadstack = board.library.padstacks.get(viaPadstackName);
+        if (viaPadstack == null) {
+          viaPadstack = board.library.padstacks.add(viaPadstackName, shapeArr, true, false);
+        }
+        board.insert_via(viaPadstack, center, netNoArr, 1, FixedState.USER_FIXED, true);
+      }
+    }
+  }
+
+  /**
    * Helper class to trace bounding outer box.
    */
   private static class PointOutline {
