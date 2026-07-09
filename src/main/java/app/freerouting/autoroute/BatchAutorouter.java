@@ -800,95 +800,99 @@ public class BatchAutorouter extends NamedAlgorithm {
 
     job.logDebug("Checking fanout pre-pass. settings.fanout.enabled=" + this.settings.isFanoutEnabled() + ", smd_pins=" + this.board.get_smd_pins().size());
     // Run SMD fanout pre-pass when the board has SMD pins and fanout is enabled
-    if (this.settings.isFanoutEnabled() && !this.board.get_smd_pins().isEmpty()) {
-      float fanoutCpuSecondsStart = sampleCurrentThreadCpuSeconds();
-      float fanoutAllocatedMbStart = sampleCurrentThreadAllocatedMb();
-      float fanoutPeakHeapMbAtStart = sampleHeapUsageMb();
-      final float[] fanoutPeakHeapMbObserved = new float[] { fanoutPeakHeapMbAtStart };
-      // Count pins that actually need fanout. BatchFanout only processes SMD pins that
-      // belong to a net, so exclude netless pins from the total. Among net-connected
-      // pins, count those that are already fully connected (empty unconnected set).
-       int netConnectedSmdPins = 0;
-       int alreadyConnectedAtStart = 0;
-       for (app.freerouting.board.Pin pin : this.board.get_smd_pins()) {
-         if (pin.net_count() > 0) {
-           netConnectedSmdPins++;
-           if (pin.get_unconnected_set(pin.get_net_no(0)).isEmpty()) {
-             alreadyConnectedAtStart++;
+    if (this.settings.isFanoutEnabled()) {
+      if (this.board.get_smd_pins().isEmpty()) {
+        job.logInfo("Fanout stage is enabled but skipped because the board has no SMD pins.");
+      } else {
+        float fanoutCpuSecondsStart = sampleCurrentThreadCpuSeconds();
+        float fanoutAllocatedMbStart = sampleCurrentThreadAllocatedMb();
+        float fanoutPeakHeapMbAtStart = sampleHeapUsageMb();
+        final float[] fanoutPeakHeapMbObserved = new float[] { fanoutPeakHeapMbAtStart };
+        // Count pins that actually need fanout. BatchFanout only processes SMD pins that
+        // belong to a net, so exclude netless pins from the total. Among net-connected
+        // pins, count those that are already fully connected (empty unconnected set).
+         int netConnectedSmdPins = 0;
+         int alreadyConnectedAtStart = 0;
+         for (app.freerouting.board.Pin pin : this.board.get_smd_pins()) {
+           if (pin.net_count() > 0) {
+             netConnectedSmdPins++;
+             if (pin.get_unconnected_set(pin.get_net_no(0)).isEmpty()) {
+               alreadyConnectedAtStart++;
+             }
            }
          }
-       }
-       int pinsToFanout = netConnectedSmdPins - alreadyConnectedAtStart;
-       job.logInfo("Fanout stage started on board '" + this.board.get_hash() + "' with "
-           + pinsToFanout + " of " + this.board.get_smd_pins().size() + " SMD pins needing fanout ("
-           + alreadyConnectedAtStart + " already connected, "
-           + (this.board.get_smd_pins().size() - netConnectedSmdPins) + " netless).");
-      BatchFanout.FanoutRunSummary fanoutSummary = BatchFanout.fanout_board(this.board, this.settings, this.thread,
-          status -> {
-        fanoutPeakHeapMbObserved[0] = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
-        RouterCounters fanoutCounters = new RouterCounters();
-        fanoutCounters.phase = "fanout";
-        fanoutCounters.passCount = status.passNo();
-        fanoutCounters.queuedToBeRoutedCount = status.pinsToGo();
-        fanoutCounters.routedCount = status.routedCount();
-        fanoutCounters.skippedCount = 0;
-        fanoutCounters.rippedCount = 0;
-        fanoutCounters.failedToBeRoutedCount = status.notRoutedCount() + status.insertErrorCount();
-        fanoutCounters.incompleteCount = status.boardStatistics().connections.incompleteCount;
-        fanoutCounters.fanoutExtraViasCount = status.extraViasThisPass();
-        this.fireBoardUpdatedEvent(status.boardStatistics(), fanoutCounters, this.board);
+         int pinsToFanout = netConnectedSmdPins - alreadyConnectedAtStart;
+         job.logInfo("Fanout stage started on board '" + this.board.get_hash() + "' with "
+             + pinsToFanout + " of " + this.board.get_smd_pins().size() + " SMD pins needing fanout ("
+             + alreadyConnectedAtStart + " already connected, "
+             + (this.board.get_smd_pins().size() - netConnectedSmdPins) + " netless).");
+        BatchFanout.FanoutRunSummary fanoutSummary = BatchFanout.fanout_board(this.board, this.settings, this.thread,
+            status -> {
+          fanoutPeakHeapMbObserved[0] = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
+          RouterCounters fanoutCounters = new RouterCounters();
+          fanoutCounters.phase = "fanout";
+          fanoutCounters.passCount = status.passNo();
+          fanoutCounters.queuedToBeRoutedCount = status.pinsToGo();
+          fanoutCounters.routedCount = status.routedCount();
+          fanoutCounters.skippedCount = 0;
+          fanoutCounters.rippedCount = 0;
+          fanoutCounters.failedToBeRoutedCount = status.notRoutedCount() + status.insertErrorCount();
+          fanoutCounters.incompleteCount = status.boardStatistics().connections.incompleteCount;
+          fanoutCounters.fanoutExtraViasCount = status.extraViasThisPass();
+          this.fireBoardUpdatedEvent(status.boardStatistics(), fanoutCounters, this.board);
 
-        if (status.passCompleted()) {
-          String boardHash = this.board.get_hash();
-          String fanoutMessage = String.format(java.util.Locale.US,
-              "Fanout pass #%d on board '%s' completed in %.2f seconds with %d SMD pin%s fanouted, %d not routed, %d insert error%s, +%d extra via%s (%d SMD pin%s still to check in pass, ripup costs=%d).",
-              status.passNo(), boardHash,
-              status.passDurationMillis() / 1000.0,
-              status.routedCount(), status.routedCount() == 1 ? "" : "s",
-              status.notRoutedCount(),
-              status.insertErrorCount(), status.insertErrorCount() == 1 ? "" : "s",
-              status.extraViasThisPass(), status.extraViasThisPass() == 1 ? "" : "s",
-              status.pinsToGo(), status.pinsToGo() == 1 ? "" : "s",
-              status.ripupCosts());
-          job.logInfo(fanoutMessage);
+          if (status.passCompleted()) {
+            String boardHash = this.board.get_hash();
+            String fanoutMessage = String.format(java.util.Locale.US,
+                "Fanout pass #%d on board '%s' completed in %.2f seconds with %d SMD pin%s fanouted, %d not routed, %d insert error%s, +%d extra via%s (%d SMD pin%s still to check in pass, ripup costs=%d).",
+                status.passNo(), boardHash,
+                status.passDurationMillis() / 1000.0,
+                status.routedCount(), status.routedCount() == 1 ? "" : "s",
+                status.notRoutedCount(),
+                status.insertErrorCount(), status.insertErrorCount() == 1 ? "" : "s",
+                status.extraViasThisPass(), status.extraViasThisPass() == 1 ? "" : "s",
+                status.pinsToGo(), status.pinsToGo() == 1 ? "" : "s",
+                status.ripupCosts());
+            job.logInfo(fanoutMessage);
+          }
+        });
+        this.fanoutTimedOut = fanoutSummary.isTimedOut();
+
+        float fanoutCpuSecondsEnd = sampleCurrentThreadCpuSeconds();
+        float fanoutAllocatedMbEnd = sampleCurrentThreadAllocatedMb();
+
+        float fanoutCpuSecondsUsed;
+        if (fanoutCpuSecondsStart >= 0f && fanoutCpuSecondsEnd >= fanoutCpuSecondsStart) {
+          fanoutCpuSecondsUsed = fanoutCpuSecondsEnd - fanoutCpuSecondsStart;
+        } else {
+          fanoutCpuSecondsUsed = Math.max(0f, getCpuSecondsSnapshot(job));
         }
-      });
-      this.fanoutTimedOut = fanoutSummary.isTimedOut();
 
-      float fanoutCpuSecondsEnd = sampleCurrentThreadCpuSeconds();
-      float fanoutAllocatedMbEnd = sampleCurrentThreadAllocatedMb();
+        float fanoutAllocatedMb;
+        if (fanoutAllocatedMbStart >= 0f && fanoutAllocatedMbEnd >= fanoutAllocatedMbStart) {
+          fanoutAllocatedMb = fanoutAllocatedMbEnd - fanoutAllocatedMbStart;
+        } else {
+          fanoutAllocatedMb = Math.max(0f, getAllocatedMemoryMbSnapshot(job));
+        }
 
-      float fanoutCpuSecondsUsed;
-      if (fanoutCpuSecondsStart >= 0f && fanoutCpuSecondsEnd >= fanoutCpuSecondsStart) {
-        fanoutCpuSecondsUsed = fanoutCpuSecondsEnd - fanoutCpuSecondsStart;
-      } else {
-        fanoutCpuSecondsUsed = Math.max(0f, getCpuSecondsSnapshot(job));
+        float fanoutPeakHeapMb = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
+        fanoutPeakHeapMb = Math.max(fanoutPeakHeapMb, getPeakHeapMbSnapshot(job));
+        BatchFanout.EscapeStatistics finalEscape = fanoutSummary.escapeStatistics();
+        String fanoutCompletionStatus = fanoutSummary.isTimedOut() ? "completed with timeout:"
+            : (this.thread.is_stop_auto_router_requested() ? "interrupted:" : "completed:");
+        String fanoutSummaryMessage = String.format(java.util.Locale.US,
+            "Fanout stage %s started with %d total SMD pins, completed in %.2f seconds, escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
+            fanoutCompletionStatus,
+            finalEscape.totalSmdPins(),
+            fanoutSummary.totalDurationMillis() / 1000.0,
+            finalEscape.escapedCount(),
+            finalEscape.totalSmdPins(),
+            finalEscape.escapedPercentage(),
+            fanoutCpuSecondsUsed,
+            fanoutAllocatedMb / 1024.0f,
+            fanoutPeakHeapMb);
+        job.logInfo(fanoutSummaryMessage);
       }
-
-      float fanoutAllocatedMb;
-      if (fanoutAllocatedMbStart >= 0f && fanoutAllocatedMbEnd >= fanoutAllocatedMbStart) {
-        fanoutAllocatedMb = fanoutAllocatedMbEnd - fanoutAllocatedMbStart;
-      } else {
-        fanoutAllocatedMb = Math.max(0f, getAllocatedMemoryMbSnapshot(job));
-      }
-
-      float fanoutPeakHeapMb = Math.max(fanoutPeakHeapMbObserved[0], sampleHeapUsageMb());
-      fanoutPeakHeapMb = Math.max(fanoutPeakHeapMb, getPeakHeapMbSnapshot(job));
-      BatchFanout.EscapeStatistics finalEscape = fanoutSummary.escapeStatistics();
-      String fanoutCompletionStatus = fanoutSummary.isTimedOut() ? "completed with timeout:"
-          : (this.thread.is_stop_auto_router_requested() ? "interrupted:" : "completed:");
-      String fanoutSummaryMessage = String.format(java.util.Locale.US,
-          "Fanout stage %s started with %d total SMD pins, completed in %.2f seconds, escaped pins: %d/%d (%.1f%%), using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB peak heap usage.",
-          fanoutCompletionStatus,
-          finalEscape.totalSmdPins(),
-          fanoutSummary.totalDurationMillis() / 1000.0,
-          finalEscape.escapedCount(),
-          finalEscape.totalSmdPins(),
-          finalEscape.escapedPercentage(),
-          fanoutCpuSecondsUsed,
-          fanoutAllocatedMb / 1024.0f,
-          fanoutPeakHeapMb);
-      job.logInfo(fanoutSummaryMessage);
     }
 
     int currentUnrouted = calculateIncompleteCount(this.board);
