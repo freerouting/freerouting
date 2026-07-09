@@ -1,0 +1,79 @@
+{
+  "designName": "corney_island_wireless",
+  "unit": "MM",
+  "resolution": 10000.0,
+  "layers": [
+    {
+      "index": 0,
+      "name": "F.Cu",
+      "type": "signal"
+    },
+    {
+      "index": 1,
+      "name": "B.Cu",
+      "type": "signal"
+    }
+  ],
+  "netClasses": [
+    {
+      "name": "default",
+      "clearance": 0.2,
+      "traceWidth": 0.3,
+      "viaDiameter": 0.8,
+      "viaDrill": 0.4,
+      "netNames": [
+        "C5",
+        "inner_bottom_B",
+        "inner_home_B",
+        "R2",
+        "R1"
+      ]
+    }
+  ],
+  "nets": [
+    {
+      "id": 1,
+      "name": "C5",
+      "className": "default",
+      "containsPlane": false
+    },
+    {
+      "id": 2,
+      "name": "inner_bottom_B",
+      "className": "default",
+      "containsPlane": false
+    },
+    {
+      "id": 3,
+      "name": "inner_home_B",
+      "className": "default",
+      "containsPlane": false
+    },
+    {
+      "id": 4,
+      "name": "R2",
+      "className": "default",
+      "containsPlane": false
+    },
+    {
+      "id": 5,
+      "name": "R1",
+      "className": "default",
+      "containsPlane": false
+    }
+  ],
+  "clearanceRules": [],
+  "components": [],
+  "outline": {
+    "corners": [
+      {
+        "x": 175.09,
+        "y": 66.41
+      }
+    ],
+    "clearance": 0.2
+  },
+  "traces": [],
+  "vias": [],
+  "conductionAreas": []
+}

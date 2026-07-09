@@ -472,10 +472,14 @@ public class HeadlessBoardManager implements BoardManager {
     }
 
     try {
-      // Use the new BoardManager-free reader; stream is closed inside readBoard.
       String inputFilename = (this.routingJob != null && this.routingJob.input != null)
           ? this.routingJob.input.getFilename()
           : null;
+      if (this.routingJob != null) {
+        this.routingJob.logInfo("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+      } else {
+        FRLogger.info("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+      }
       BoardReadResult dsnResult = DsnReader.readBoard(inputStream, boardObservers, identificationNumberGenerator, inputFilename);
 
       if (dsnResult instanceof BoardReadResult.Success success) {
@@ -564,6 +568,15 @@ public class HeadlessBoardManager implements BoardManager {
       return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
 
+    String inputFilename = (this.routingJob != null && this.routingJob.input != null)
+        ? this.routingJob.input.getFilename()
+        : null;
+    if (this.routingJob != null) {
+      this.routingJob.logInfo("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+    } else {
+      FRLogger.info("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+    }
+
     try (java.io.Reader reader = new java.io.InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
       BoardReadResult dsnResult = KiCadJsonReader.readBoard(reader, boardObservers, identificationNumberGenerator);
 
@@ -604,7 +617,7 @@ public class HeadlessBoardManager implements BoardManager {
             this.board.rules.nets.max_net_no());
 
         // Check if a counterpart file exists and compare
-        String inputFilename = (this.routingJob != null && this.routingJob.input != null)
+        inputFilename = (this.routingJob != null && this.routingJob.input != null)
             ? this.routingJob.input.getFilename()
             : null;
         if (inputFilename != null) {

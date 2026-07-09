@@ -1,0 +1,433 @@
+{
+  "designName": "corney_island_wireless",
+  "unit": "MM",
+  "resolution": 1.0,
+  "layers": [
+    {
+      "index": 0,
+      "name": "F.Cu",
+      "type": "signal"
+    },
+    {
+      "index": 1,
+      "name": "B.Cu",
+      "type": "signal"
+    }
+  ],
+  "netClasses": [],
+  "nets": [
+    {
+      "id": 1,
+      "name": "C5",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 2,
+      "name": "inner_bottom_B",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 3,
+      "name": "inner_home_B",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 4,
+      "name": "R2",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 5,
+      "name": "R1",
+      "className": "Default",
+      "containsPlane": false
+    }
+  ],
+  "clearanceRules": [],
+  "components": [
+    {
+      "reference": "D16",
+      "value": "",
+      "footprint": "ceoloide:diode_tht_sod123",
+      "position": {
+        "x": 202.4,
+        "y": 96.3
+      },
+      "rotation": 90.0,
+      "layer": "B.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "R2",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 1.2
+          },
+          "offset": {
+            "x": 1.65,
+            "y": 1.0103336092965664e-16
+          },
+          "drill": 0.0,
+          "layers": [
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "inner_bottom_B",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 1.2
+          },
+          "offset": {
+            "x": -1.65,
+            "y": -1.0103336092965664e-16
+          },
+          "drill": 0.0,
+          "layers": [
+            "B.Cu"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D17",
+      "value": "",
+      "footprint": "ceoloide:diode_tht_sod123",
+      "position": {
+        "x": 202.4,
+        "y": 77.3
+      },
+      "rotation": 90.0,
+      "layer": "B.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "R1",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 1.2
+          },
+          "offset": {
+            "x": 1.65,
+            "y": 1.0103336092965664e-16
+          },
+          "drill": 0.0,
+          "layers": [
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "inner_home_B",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 1.2
+          },
+          "offset": {
+            "x": -1.65,
+            "y": -1.0103336092965664e-16
+          },
+          "drill": 0.0,
+          "layers": [
+            "B.Cu"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "S16",
+      "value": "",
+      "footprint": "ceoloide:switch_mx",
+      "position": {
+        "x": 195.0,
+        "y": 97.625
+      },
+      "rotation": 0.0,
+      "layer": "B.Cu",
+      "pads": [
+        {
+          "name": "",
+          "netName": "",
+          "shape": "circle",
+          "size": {
+            "x": 1.9,
+            "y": 1.9
+          },
+          "offset": {
+            "x": -5.08,
+            "y": 0.0
+          },
+          "drill": 1.9,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "",
+          "netName": "",
+          "shape": "circle",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": -3.81,
+            "y": -2.54
+          },
+          "drill": 3.0,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "",
+          "netName": "",
+          "shape": "circle",
+          "size": {
+            "x": 4.1,
+            "y": 4.1
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 4.1,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "",
+          "netName": "",
+          "shape": "circle",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 2.54,
+            "y": -5.08
+          },
+          "drill": 3.0,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "",
+          "netName": "",
+          "shape": "circle",
+          "size": {
+            "x": 1.9,
+            "y": 1.9
+          },
+          "offset": {
+            "x": 5.08,
+            "y": 0.0
+          },
+          "drill": 1.9,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "1",
+          "netName": "C5",
+          "shape": "rect",
+          "size": {
+            "x": 2.55,
+            "y": 2.5
+          },
+          "offset": {
+            "x": -7.085,
+            "y": -2.54
+          },
+          "drill": 0.0,
+          "layers": [
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "inner_bottom_B",
+          "shape": "rect",
+          "size": {
+            "x": 2.55,
+            "y": 2.5
+          },
+          "offset": {
+            "x": 5.842,
+            "y": -5.08
+          },
+          "drill": 0.0,
+          "layers": [
+            "B.Cu"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "S17",
+      "value": "",
+      "footprint": "ceoloide:switch_mx",
+      "position": {
+        "x": 195.0,
+        "y": 78.625
+      },
+      "rotation": 0.0,
+      "layer": "B.Cu",
+      "pads": [
+        {
+          "name": "",
+          "netName": "",
+          "shape": "circle",
+          "size": {
+            "x": 1.9,
+            "y": 1.9
+          },
+          "offset": {
+            "x": -5.08,
+            "y": 0.0
+          },
+          "drill": 1.9,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "",
+          "netName": "",
+          "shape": "circle",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": -3.81,
+            "y": -2.54
+          },
+          "drill": 3.0,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "",
+          "netName": "",
+          "shape": "circle",
+          "size": {
+            "x": 4.1,
+            "y": 4.1
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "drill": 4.1,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "",
+          "netName": "",
+          "shape": "circle",
+          "size": {
+            "x": 3.0,
+            "y": 3.0
+          },
+          "offset": {
+            "x": 2.54,
+            "y": -5.08
+          },
+          "drill": 3.0,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "",
+          "netName": "",
+          "shape": "circle",
+          "size": {
+            "x": 1.9,
+            "y": 1.9
+          },
+          "offset": {
+            "x": 5.08,
+            "y": 0.0
+          },
+          "drill": 1.9,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "1",
+          "netName": "C5",
+          "shape": "rect",
+          "size": {
+            "x": 2.55,
+            "y": 2.5
+          },
+          "offset": {
+            "x": -7.085,
+            "y": -2.54
+          },
+          "drill": 0.0,
+          "layers": [
+            "B.Cu"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "inner_home_B",
+          "shape": "rect",
+          "size": {
+            "x": 2.55,
+            "y": 2.5
+          },
+          "offset": {
+            "x": 5.842,
+            "y": -5.08
+          },
+          "drill": 0.0,
+          "layers": [
+            "B.Cu"
+          ]
+        }
+      ]
+    }
+  ],
+  "outline": {
+    "corners": [
+      {
+        "x": 175.09,
+        "y": 66.41
+      }
+    ],
+    "clearance": 0.5
+  },
+  "traces": [],
+  "vias": [],
+  "conductionAreas": []
+}
