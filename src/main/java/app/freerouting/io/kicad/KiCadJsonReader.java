@@ -164,12 +164,103 @@ public final class KiCadJsonReader {
       // 5. Board Outline / Boundary Shape Creation
       PointOutline boundingBoxOutline = new PointOutline();
       List<PolylineShape> outlineShapes = new ArrayList<>();
-      if (boardJson.outline == null || boardJson.outline.corners.isEmpty()) {
-        // Create an empty bounding box fallback
-        boundingBoxOutline.add_point(new FloatPoint(0, 0));
-        boundingBoxOutline.add_point(new FloatPoint(0, 1000));
-        boundingBoxOutline.add_point(new FloatPoint(1000, 1000));
-        boundingBoxOutline.add_point(new FloatPoint(1000, 0));
+      boolean outlineGenerated = false;
+      if (boardJson.outline == null || boardJson.outline.corners.size() < 3) {
+        FRLogger.warn("Board Outline/Boundary is missing or empty in the JSON file. A supposed board edge around components with 5mm padding will be generated for routing.");
+        double minX = Double.MAX_VALUE;
+        double maxX = -Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+        double maxY = -Double.MAX_VALUE;
+
+        // Check components and pads
+        if (boardJson.components != null) {
+          for (KiCadBoardJson.ComponentJson comp : boardJson.components) {
+            if (comp.position != null) {
+              minX = Math.min(minX, comp.position.x);
+              maxX = Math.max(maxX, comp.position.x);
+              minY = Math.min(minY, comp.position.y);
+              maxY = Math.max(maxY, comp.position.y);
+            }
+            if (comp.pads != null) {
+              for (KiCadBoardJson.PadJson pad : comp.pads) {
+                if (pad.position != null) {
+                  minX = Math.min(minX, pad.position.x);
+                  maxX = Math.max(maxX, pad.position.x);
+                  minY = Math.min(minY, pad.position.y);
+                  maxY = Math.max(maxY, pad.position.y);
+                }
+              }
+            }
+          }
+        }
+
+        // Check vias
+        if (boardJson.vias != null) {
+          for (KiCadBoardJson.ViaJson via : boardJson.vias) {
+            if (via.position != null) {
+              minX = Math.min(minX, via.position.x);
+              maxX = Math.max(maxX, via.position.x);
+              minY = Math.min(minY, via.position.y);
+              maxY = Math.max(maxY, via.position.y);
+            }
+          }
+        }
+
+        // Check traces
+        if (boardJson.traces != null) {
+          for (KiCadBoardJson.TraceJson trace : boardJson.traces) {
+            if (trace.points != null) {
+              for (KiCadBoardJson.Point2D pt : trace.points) {
+                minX = Math.min(minX, pt.x);
+                maxX = Math.max(maxX, pt.x);
+                minY = Math.min(minY, pt.y);
+                maxY = Math.max(maxY, pt.y);
+              }
+            }
+          }
+        }
+
+        // Check conduction areas
+        if (boardJson.conductionAreas != null) {
+          for (KiCadBoardJson.ConductionAreaJson zone : boardJson.conductionAreas) {
+            if (zone.polygon != null) {
+              for (KiCadBoardJson.Point2D pt : zone.polygon) {
+                minX = Math.min(minX, pt.x);
+                maxX = Math.max(maxX, pt.x);
+                minY = Math.min(minY, pt.y);
+                maxY = Math.max(maxY, pt.y);
+              }
+            }
+          }
+        }
+
+        double padding = Unit.scale(5.0, Unit.MM, userUnit);
+
+        if (minX == Double.MAX_VALUE) {
+          // No items found on the board at all, fallback to a default 1000x1000 region in internal units
+          minX = 0;
+          maxX = 1000 / scaleFactor;
+          minY = -1000 / scaleFactor;
+          maxY = 0;
+        }
+
+        // Apply padding
+        minX -= padding;
+        maxX += padding;
+        minY -= padding;
+        maxY += padding;
+
+        Point[] points = new Point[4];
+        points[0] = new IntPoint((int) Math.round(minX * scaleFactor), (int) Math.round(-minY * scaleFactor));
+        points[1] = new IntPoint((int) Math.round(minX * scaleFactor), (int) Math.round(-maxY * scaleFactor));
+        points[2] = new IntPoint((int) Math.round(maxX * scaleFactor), (int) Math.round(-maxY * scaleFactor));
+        points[3] = new IntPoint((int) Math.round(maxX * scaleFactor), (int) Math.round(-minY * scaleFactor));
+
+        for (Point point : points) {
+          boundingBoxOutline.add_point(point.to_float());
+        }
+        outlineShapes.add(new PolygonShape(points));
+        outlineGenerated = true;
       } else {
         List<KiCadBoardJson.Point2D> corners = new ArrayList<>(boardJson.outline.corners);
         if (corners.size() > 2) {
@@ -587,7 +678,11 @@ public final class KiCadJsonReader {
           null
       );
 
-      return new BoardReadResult.Success(board, metadata, new ArrayList<>());
+      List<String> warnings = new ArrayList<>();
+      if (outlineGenerated) {
+        warnings.add("Board Outline/Boundary is missing or empty in the JSON file. A supposed board edge around components with 5mm padding was generated.");
+      }
+      return new BoardReadResult.Success(board, metadata, warnings);
 
     } catch (Throwable e) {
       FRLogger.warn("Failed to parse and read KiCad JSON board: " + e.getMessage());

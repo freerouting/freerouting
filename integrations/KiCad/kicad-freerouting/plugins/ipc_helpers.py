@@ -623,6 +623,26 @@ def _collect_conduction_areas(board, data, layer_id_to_index):
 
 def _collect_outline(board, data):
     """Populate ``data["outline"]`` from Edge.Cuts drawings."""
+    global _debug_logs
+    try:
+        # 1. Try using the native GetBoardPolygonOutlines method if available (KiCad 6+)
+        if hasattr(board, "GetBoardPolygonOutlines"):
+            outlines = pcbnew.SHAPE_POLY_SET()
+            board.GetBoardPolygonOutlines(outlines)
+            if outlines.OutlineCount() > 0:
+                debug_log(f"Found {outlines.OutlineCount()} outlines via GetBoardPolygonOutlines.")
+                outline = outlines.Outline(0)
+                for j in range(outline.PointCount()):
+                    pt = outline.CPoint(j)
+                    data["outline"]["corners"].append(
+                        {"x": pt.x / 1e6, "y": pt.y / 1e6}
+                    )
+                debug_log(f"Successfully collected {len(data['outline']['corners'])} outline corners via SHAPE_POLY_SET.")
+                return
+    except Exception as e:
+        debug_log(f"GetBoardPolygonOutlines failed, falling back to drawings scan: {e}")
+
+    # 2. Fallback to manual drawings iteration on Edge.Cuts
     try:
         edge_layer = (
             board.GetLayerID("Edge.Cuts")
@@ -630,15 +650,31 @@ def _collect_outline(board, data):
             else -1
         )
         if edge_layer >= 0:
+            corners = []
             for drawing in board.GetDrawings():
                 if drawing.GetLayer() == edge_layer:
+                    # If it's a shape (rectangle, polygon, circle etc.) with GetPolyShape
+                    if hasattr(drawing, "GetPolyShape"):
+                        try:
+                            poly = drawing.GetPolyShape()
+                            if poly and poly.OutlineCount() > 0:
+                                outline = poly.Outline(0)
+                                for j in range(outline.PointCount()):
+                                    pt = outline.CPoint(j)
+                                    corners.append({"x": pt.x / 1e6, "y": pt.y / 1e6})
+                                continue
+                        except Exception:
+                            pass
+
+                    # Otherwise handle standard drawings (e.g. line segments)
                     try:
                         if hasattr(drawing, "GetStart"):
                             s = drawing.GetStart()
-                            data["outline"]["corners"].append(
-                                {"x": s.x / 1e6, "y": s.y / 1e6}
-                            )
+                            corners.append({"x": s.x / 1e6, "y": s.y / 1e6})
                     except Exception:
                         pass
+
+            data["outline"]["corners"] = corners
+            debug_log(f"Collected {len(corners)} outline corners via drawings fallback.")
     except Exception as e:
         logger.warning(f"Warning: could not enumerate outline: {e}", exc_info=True)
