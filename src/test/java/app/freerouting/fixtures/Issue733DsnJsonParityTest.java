@@ -59,7 +59,7 @@ public class Issue733DsnJsonParityTest {
 
   @Test
   @Disabled("Disabled due to known issue with DSN and JSON parity.")
-  void testDsnJsonParityKiCadInterf() throws Exception {
+  void testDsnJsonInputParityKiCadInterf() throws Exception {
     File dsnFile = findFixtureFile("Issue733-kicad_interf_u_input_design.dsn");
     File jsonFile = findFixtureFile("Issue733-kicad_interf_u_input_design.json");
 
@@ -77,7 +77,7 @@ public class Issue733DsnJsonParityTest {
 
   @Test
   @Disabled("Disabled due to known issue with DSN and JSON parity.")
-  void testDsnJsonParityKiCadComplexHierarchy() throws Exception {
+  void testDsnJsonInputParityKiCadComplexHierarchy() throws Exception {
     File dsnFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_design.dsn");
     File jsonFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_design.json");
 
@@ -91,5 +91,34 @@ public class Issue733DsnJsonParityTest {
     System.out.println(result.report);
 
     assertTrue(result.areEqual, "Boards must be identical in representation:\n" + result.report);
+  }
+
+  @Test
+  void testSesJsonOutputParityKiCadComplexHierarchy() throws Exception {
+    File dsnFile = findFixtureFile("Issue733-kicad_complex_hierarchy_input_design.dsn");
+    File sesFile = findFixtureFile("Issue733-kicad_complex_hierarchy_output_session.ses");
+    File jsonSessionFile = findFixtureFile("Issue733-kicad_complex_hierarchy_output_session.json");
+
+    assertTrue(dsnFile.exists(), "DSN fixture file must exist");
+    assertTrue(sesFile.exists(), "SES fixture file must exist");
+    assertTrue(jsonSessionFile.exists(), "JSON session fixture file must exist");
+
+    // Load board from DSN for SES comparison
+    RoutingBoard boardWithSes = loadDsn(dsnFile);
+    try (FileInputStream sesStream = new FileInputStream(sesFile)) {
+      app.freerouting.io.specctra.SesReader.read(sesStream, boardWithSes);
+    }
+
+    // Load board from DSN for JSON comparison
+    RoutingBoard boardWithJson = loadDsn(dsnFile);
+    try (InputStreamReader jsonReader = new InputStreamReader(new FileInputStream(jsonSessionFile), StandardCharsets.UTF_8)) {
+      KiCadJsonReader.importSession(jsonReader, boardWithJson);
+    }
+
+    // Compare boards (SES is ground truth)
+    BoardComparator.ComparisonResult result = BoardComparator.compare(boardWithSes, boardWithJson, 1e-3);
+    System.out.println(result.report);
+
+    assertTrue(result.areEqual, "SES and JSON routed outputs must be identical in representation:\n" + result.report);
   }
 }

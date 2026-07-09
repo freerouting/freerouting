@@ -30,9 +30,12 @@ public final class KiCadJsonWriter {
    */
   public static String write(RoutingBoard board, String designName) {
     double scaleFactor = 10000.0; // default mapping factor for millimeters
-    if (board.communication != null && board.communication.coordinate_transform != null) {
-      scaleFactor = board.communication.coordinate_transform.dsn_to_board(1) / board.communication.resolution;
-      if (scaleFactor == 0.0) {
+    if (board.communication != null) {
+      if (board.communication.unit == Unit.MIL) {
+        scaleFactor = 254.0;
+      } else if (board.communication.unit == Unit.UM) {
+        scaleFactor = 10.0;
+      } else {
         scaleFactor = 10000.0;
       }
     }
@@ -40,7 +43,7 @@ public final class KiCadJsonWriter {
     KiCadBoardJson boardJson = new KiCadBoardJson();
     boardJson.designName = designName != null ? designName : "KiCad_Design";
     if (board.communication != null) {
-      boardJson.resolution = board.communication.resolution;
+      boardJson.resolution = scaleFactor;
       if (board.communication.unit == Unit.MIL) {
         boardJson.unit = KiCadBoardJson.UnitJson.MIL;
       } else if (board.communication.unit == Unit.UM) {
