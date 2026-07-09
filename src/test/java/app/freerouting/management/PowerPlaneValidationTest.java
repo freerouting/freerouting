@@ -26,6 +26,9 @@ public class PowerPlaneValidationTest {
     ClearanceMatrix clearanceMatrix = ClearanceMatrix.get_default_instance(layerStructure, 10);
     BoardRules boardRules = new BoardRules(layerStructure, clearanceMatrix);
     boardRules.create_default_net_class();
+    app.freerouting.rules.ViaRule dummyViaRule = new app.freerouting.rules.ViaRule("default_via_rule");
+    boardRules.via_rules.add(dummyViaRule);
+    boardRules.get_default_net_class().set_via_rule(dummyViaRule);
 
     Communication communication = new Communication();
 
@@ -128,5 +131,30 @@ public class PowerPlaneValidationTest {
     assertTrue(logs.contains("Power-plane validation failed"), "Overlapping conduction areas should trigger validation failure.");
     assertTrue(logs.contains("has overlapping conduction areas"), "Should mention overlapping conduction areas.");
     assertTrue(logs.contains("3.3V") && logs.contains("5V"), "Should list overlapping net names '3.3V' and '5V'. Logs:\n" + logs);
+  }
+
+  @Test
+  void testActiveLayerOverrideGuardOnPowerPlane() {
+    RoutingBoard board = createTestBoard(true); // Layer 1 (GND) is !is_signal
+    
+    app.freerouting.settings.RouterSettings settings = new app.freerouting.settings.sources.DefaultSettings().getSettings();
+    settings.setLayerCount(2);
+    // Explicitly set the plane layer as routable/active
+    settings.set_layer_active(1, true);
+    // Add net
+    Net gndNet = board.rules.nets.add("GND", 1, true);
+    
+    settings.applyBoardSpecificOptimizations(board);
+    // Force plane layer to active in settings after optimizations to test override guard
+    settings.set_layer_active(1, true);
+    
+    app.freerouting.autoroute.AutorouteControl control = new app.freerouting.autoroute.AutorouteControl(board, gndNet.net_number, settings);
+    
+    // Assert that the override guard forced it to false
+    assertFalse(control.layer_active[1], "Override guard should force plane layer active state to false.");
+    
+    String logs = FRLogger.getLogEntries().getAsString();
+    assertTrue(logs.contains("is a dedicated power plane and cannot be routed. Forcing active state to false."), 
+        "Override guard should log a warning message. Logs:\n" + logs);
   }
 }

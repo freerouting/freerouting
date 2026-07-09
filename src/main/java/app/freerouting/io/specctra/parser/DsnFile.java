@@ -101,6 +101,12 @@ public class DsnFile {
         curr_conduction_area.set_fixed_state(FixedState.USER_FIXED);
       }
     }
+    for (int i = 0; i < changed_layer_arr.length; i++) {
+      if (changed_layer_arr[i]) {
+        FRLogger.info("Layer '" + routing_board.layer_structure.arr[i].name 
+            + "' has been automatically configured as a dedicated power plane because it contains a large conduction area covering >50% of the board.");
+      }
+    }
     if (nothing_changed) {
       return false;
     }

@@ -88,6 +88,13 @@ public class BoardComparator {
           equal = false;
           report.append(String.format("[-] Layer %d name mismatch: Board 1 = '%s', Board 2 = '%s'\n", i, name1, name2));
         }
+        boolean isSignal1 = board1.layer_structure.arr[i].is_signal;
+        boolean isSignal2 = board2.layer_structure.arr[i].is_signal;
+        if (isSignal1 != isSignal2) {
+          equal = false;
+          report.append(String.format("[-] Layer %d type mismatch: Board 1 = %s, Board 2 = %s\n",
+              i, isSignal1 ? "signal" : "plane/other", isSignal2 ? "signal" : "plane/other"));
+        }
       }
     }
 
