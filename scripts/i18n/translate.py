@@ -18,6 +18,7 @@ Usage:
     python scripts/i18n/translate.py --locale fr --dry-run
     python scripts/i18n/translate.py --all
     python scripts/i18n/translate.py --locale de --input scripts/i18n/i18n-context.json
+    python scripts/i18n/translate.py --locale de --missing-only  # Only translate missing/stale keys
 """
 
 import argparse
@@ -290,19 +291,60 @@ def validate_html(english: str, translation: str) -> bool:
     return True
 
 
+def get_missing_keys(
+    context: Dict[str, Dict[str, Any]],
+    english_path: Path,
+    locale: str,
+) -> List[Tuple[str, str, Dict[str, Any]]]:
+    """
+    Get list of keys that need translation.
+    Returns list of (key, english_value, context) tuples for:
+    - Keys missing entirely from locale file
+    - Keys whose English value has changed (hash mismatch)
+    """
+    english_props = load_properties(english_path)
+    locale_path = locale_properties_path(english_path, locale)
+    existing_props = load_properties(locale_path)
+
+    # Build bundle prefix from path
+    rel = english_path.relative_to(RESOURCE_ROOT)
+    bundle_name = str(rel.with_suffix("")).replace("\\", "/").replace("/", ".")
+    bundle_name = bundle_name[:-3]  # remove "_en"
+
+    result: List[Tuple[str, str, Dict[str, Any]]] = []
+
+    for key, english_value in english_props.items():
+        qualified_key = f"{bundle_name}.{key}"
+        ctx = context.get(qualified_key, {})
+
+        # Skip icon-only keys (e.g., "{{icon:undo}}") — they are not translatable
+        if ICON_KEY_RE.match(english_value):
+            continue
+
+        existing_translation = existing_props.get(key)
+        stored_hash = ctx.get("english_hash", "") if ctx else ""
+        current_hash = hashlib.sha256(english_value.encode("utf-8")).hexdigest()
+
+        # Include key if: missing from locale, or English value changed (stale)
+        if not existing_translation or stored_hash != current_hash:
+            result.append((key, english_value, ctx))
+
+    return result
+
+
 def translate_bundle(
     context: Dict[str, Dict[str, Any]],
     english_path: Path,
     locale: str,
     dry_run: bool = False,
-) -> Dict[str, str]:
+    missing_only: bool = False,
+) -> Tuple[Dict[str, str], int, int, int]:
     """Translate all keys in a single bundle for a given locale."""
     english_props = load_properties(english_path)
     locale_path = locale_properties_path(english_path, locale)
     existing_props = load_properties(locale_path)
 
     # Build bundle prefix from path
-    # e.g., "gui/BoardMenuFile_en.properties" -> "gui.BoardMenuFile"
     rel = english_path.relative_to(RESOURCE_ROOT)
     bundle_name = str(rel.with_suffix("")).replace("\\", "/").replace("/", ".")
     bundle_name = bundle_name[:-3]  # remove "_en"
@@ -311,6 +353,10 @@ def translate_bundle(
     stale_count = 0
     fresh_count = 0
     unchanged_count = 0
+
+    # Get only missing/stale keys if missing_only mode
+    keys_to_translate = get_missing_keys(context, english_path, locale) if missing_only else None
+    keys_to_translate_set = {k for k, _, _ in keys_to_translate} if keys_to_translate else set()
 
     for key, english_value in english_props.items():
         qualified_key = f"{bundle_name}.{key}"
@@ -322,15 +368,18 @@ def translate_bundle(
             unchanged_count += 1
             continue
 
-        # If an existing translation exists and the English hash matches, keep it
-        existing_translation = existing_props.get(key)
-        if ctx and existing_translation:
-            stored_hash = ctx.get("english_hash", "")
-            current_hash = hashlib.sha256(english_value.encode("utf-8")).hexdigest()
-            if stored_hash == current_hash:
+        # If missing_only and this key is already up-to-date, copy existing translation
+        if missing_only and key not in keys_to_translate_set:
+            existing_translation = existing_props.get(key)
+            if existing_translation:
                 result[key] = existing_translation
                 unchanged_count += 1
                 continue
+
+        # Count as stale if existing but needs re-translation
+        existing_translation = existing_props.get(key)
+        if existing_translation and key in keys_to_translate_set:
+            stale_count += 1
 
         # Need to translate this key
         if dry_run:
@@ -339,9 +388,16 @@ def translate_bundle(
             fresh_count += 1
             continue
 
-        if not ctx:
-            print(f"  ⚠️  No context found for {qualified_key}, using raw translation")
-            ctx = {
+        # Find context for this key (from get_missing_keys or build default)
+        key_ctx = None
+        if keys_to_translate:
+            for k, ev, c in keys_to_translate:
+                if k == key:
+                    key_ctx = c
+                    break
+
+        if not key_ctx:
+            key_ctx = ctx if ctx else {
                 "bundle": bundle_name,
                 "bundle_desc": "UI component",
                 "key": key,
@@ -355,7 +411,10 @@ def translate_bundle(
                 "related_keys": [],
             }
 
-        prompt = build_prompt(key, ctx, locale)
+        if not ctx:
+            print(f"  ⚠️  No context found for {qualified_key}, using raw translation")
+
+        prompt = build_prompt(key, key_ctx, locale)
         print(f"  🔄 Translating: {key}...", end="", flush=True)
 
         translation = call_llm(prompt, locale)
@@ -367,9 +426,9 @@ def translate_bundle(
             print(" OK")
 
         # Validate placeholders and HTML
-        if ctx.get("has_placeholders"):
+        if key_ctx.get("has_placeholders"):
             validate_placeholders(english_value, translation)
-        if ctx.get("is_html"):
+        if key_ctx.get("is_html"):
             validate_html(english_value, translation)
 
         result[key] = translation
@@ -383,6 +442,7 @@ def translate_locale(
     context: Dict[str, Dict[str, Any]],
     locale: str,
     dry_run: bool = False,
+    missing_only: bool = False,
 ) -> int:
     """Translate all English bundles for a single locale."""
     print(f"\n🌍 Translating to locale: {locale.upper()}")
@@ -405,29 +465,20 @@ def translate_locale(
         bundle_name = english_path.stem.replace("_en", "")
         print(f"\n📦 Bundle: {bundle_name}")
 
-        if dry_run:
-            result, stale, fresh, unchanged = translate_bundle(
-                context, english_path, locale, dry_run=True
-            )
-            total_stale += stale
-            total_fresh += fresh
-            total_unchanged += unchanged
-            total_bundles += 1
-            continue
-
         result, stale, fresh, unchanged = translate_bundle(
-            context, english_path, locale, dry_run=False
+            context, english_path, locale, dry_run=dry_run, missing_only=missing_only
         )
-
-        # Write the locale properties file
-        locale_path = locale_properties_path(english_path, locale)
-        write_properties(locale_path, result)
-        print(f"  ✅ Wrote {len(result)} keys to {locale_path}")
 
         total_stale += stale
         total_fresh += fresh
         total_unchanged += unchanged
         total_bundles += 1
+
+        if not dry_run:
+            # Write the locale properties file
+            locale_path = locale_properties_path(english_path, locale)
+            write_properties(locale_path, result)
+            print(f"  ✅ Wrote {len(result)} keys to {locale_path}")
 
     print(f"\n📊 Translation Summary for {locale.upper()}:")
     print(f"   Bundles processed: {total_bundles}")
@@ -463,6 +514,11 @@ def main() -> None:
         action="store_true",
         help="Show what would be translated without calling the LLM API",
     )
+    parser.add_argument(
+        "--missing-only", "-m",
+        action="store_true",
+        help="Only translate keys missing or stale in locale files (skip already-translated keys)",
+    )
     args = parser.parse_args()
 
     if not args.locale and not args.all:
@@ -477,10 +533,13 @@ def main() -> None:
     context = load_context(args.input)
     print(f"📖 Loaded context for {len(context)} keys from {args.input}")
 
+    if args.missing_only:
+        print("🔍 Missing-only mode: only processing keys missing or with changed English values")
+
     locales = SUPPORTED_LOCALES if args.all else [args.locale]
 
     for locale in locales:
-        translate_locale(context, locale, dry_run=args.dry_run)
+        translate_locale(context, locale, dry_run=args.dry_run, missing_only=args.missing_only)
 
     if args.dry_run:
         print("\n⚠️  DRY-RUN completed. No translations were written.")
