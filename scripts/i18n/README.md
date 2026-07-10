@@ -54,7 +54,16 @@ python scripts/i18n/translate.py --locale fr --dry-run
 
 # Translate to all 12 locales
 python scripts/i18n/translate.py --all
+
+# Only translate missing or stale keys (efficient for incremental updates)
+python scripts/i18n/translate.py --locale de --missing-only
 ```
+
+The `--missing-only` flag is the recommended workflow for efficiency:
+- It skips keys that already have valid translations
+- It only processes keys missing from the locale file OR whose English source changed
+- This saves significant tokens when only a few keys need updating
+- Run `./gradlew test --tests EnglishPropertiesParityTest` first to see what's missing
 
 Each key is sent to the LLM with a context-augmented prompt like:
 
@@ -111,7 +120,7 @@ Set via environment variables:
 The pipeline is fully incremental. On subsequent runs:
 
 1. `extract-context.py` recomputes SHA-256 hashes of all English values
-2. `translate.py` compares hashes — only keys whose English value changed are re-translated
+2. `translate.py --missing-only` compares hashes — only keys whose English value changed are re-translated
 3. `validate.py` flags any keys whose hash doesn't match the stored value
 
 This means if a single English string like `message_18` changes from `"Pins not found"` to `"Pads not found"`, only that one key gets re-translated, not all 2000.
