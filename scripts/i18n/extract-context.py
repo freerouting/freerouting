@@ -64,19 +64,25 @@ def load_properties(path: Path) -> Dict[str, str]:
     """Load a .properties file, returning a dict of key->value."""
     result: Dict[str, str] = {}
     with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#") or line.startswith("!"):
-                continue
-            # Handle escaped line continuations
-            while line.endswith("\\") and not line.endswith("\\\\"):
-                line = line[:-1] + f.readline().strip()
-            if "=" in line:
-                key, _, value = line.partition("=")
-                result[key.strip()] = value.strip()
-            elif ":" in line:
-                key, _, value = line.partition(":")
-                result[key.strip()] = value.strip()
+        lines = f.readlines()
+        
+    i = 0
+    num_lines = len(lines)
+    while i < num_lines:
+        line = lines[i].strip()
+        i += 1
+        if not line or line.startswith("#") or line.startswith("!"):
+            continue
+        # Handle escaped line continuations
+        while line.endswith("\\") and not line.endswith("\\\\") and i < num_lines:
+            line = line[:-1] + lines[i].strip()
+            i += 1
+        if "=" in line:
+            key, _, value = line.partition("=")
+            result[key.strip()] = value.strip()
+        elif ":" in line:
+            key, _, value = line.partition(":")
+            result[key.strip()] = value.strip()
     return result
 
 

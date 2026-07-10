@@ -55,16 +55,24 @@ def load_properties(path: Path) -> Dict[str, str]:
     if not path.exists():
         return result
     with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#") or line.startswith("!"):
-                continue
-            if "=" in line:
-                key, _, value = line.partition("=")
-                result[key.strip()] = value.strip()
-            elif ":" in line:
-                key, _, value = line.partition(":")
-                result[key.strip()] = value.strip()
+        lines = f.readlines()
+
+    i = 0
+    num_lines = len(lines)
+    while i < num_lines:
+        line = lines[i].strip()
+        i += 1
+        if not line or line.startswith("#") or line.startswith("!"):
+            continue
+        while line.endswith("\\") and not line.endswith("\\\\") and i < num_lines:
+            line = line[:-1] + lines[i].strip()
+            i += 1
+        if "=" in line:
+            key, _, value = line.partition("=")
+            result[key.strip()] = value.strip()
+        elif ":" in line:
+            key, _, value = line.partition(":")
+            result[key.strip()] = value.strip()
     return result
 
 
@@ -165,14 +173,17 @@ def call_llm(prompt: str, locale: str) -> Optional[str]:
     """
     provider = os.environ.get("LLM_PROVIDER", "openai").lower()
     api_key = os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY", "")
-    model = os.environ.get("LLM_MODEL", "gpt-4o-mini")
-    base_url = os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1")
 
     if provider == "openai":
+        model = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+        base_url = os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1")
         return _call_openai(prompt, model, api_key, base_url)
     elif provider == "anthropic":
+        model = os.environ.get("LLM_MODEL", "claude-3-haiku-20240307")
         return _call_anthropic(prompt, model, api_key)
     elif provider == "ollama":
+        model = os.environ.get("LLM_MODEL", "llama3.2")
+        base_url = os.environ.get("LLM_BASE_URL", "http://localhost:11434")
         return _call_ollama(prompt, model, base_url)
     else:
         print(f"  ❌ Unknown LLM provider: {provider}", file=sys.stderr)
@@ -388,28 +399,20 @@ def translate_bundle(
             fresh_count += 1
             continue
 
-        # Find context for this key (from get_missing_keys or build default)
-        key_ctx = None
-        if keys_to_translate:
-            for k, ev, c in keys_to_translate:
-                if k == key:
-                    key_ctx = c
-                    break
-
-        if not key_ctx:
-            key_ctx = ctx if ctx else {
-                "bundle": bundle_name,
-                "bundle_desc": "UI component",
-                "key": key,
-                "english_value": english_value,
-                "ui_role": "label",
-                "grammatical_role": "fragment",
-                "has_placeholders": False,
-                "placeholders": [],
-                "is_html": False,
-                "max_length_hint": None,
-                "related_keys": [],
-            }
+               # Use the context from i18n-context.json or build a default
+        key_ctx = ctx if ctx else {
+            "bundle": bundle_name,
+            "bundle_desc": "UI component",
+            "key": key,
+            "english_value": english_value,
+            "ui_role": "label",
+            "grammatical_role": "fragment",
+            "has_placeholders": False,
+            "placeholders": [],
+            "is_html": False,
+            "max_length_hint": None,
+            "related_keys": [],
+        }
 
         if not ctx:
             print(f"  ⚠️  No context found for {qualified_key}, using raw translation")

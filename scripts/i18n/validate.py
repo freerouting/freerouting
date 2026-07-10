@@ -84,7 +84,7 @@ def validate_locale(
     locale: str,
     context: Dict[str, Dict[str, Any]],
     verbose: bool = False,
-) -> Tuple[int, int, int, int, int]:
+) -> Tuple[int, int, int, int, int, int]:
     """
     Validate all bundles for a single locale.
     Returns (total_keys, missing_keys, placeholder_violations, html_violations, orphan_keys).
@@ -110,9 +110,10 @@ def validate_locale(
         # Check missing keys
         for key in english_props:
             total_keys += 1
+            qualified_key = f"{bundle}.{key}"
             if key not in locale_props:
                 if verbose:
-                    print(f"  ❌ {bundle}.{key}: missing from {locale} bundle")
+                    print(f"  ❌ {qualified_key}: missing from {locale} bundle")
                 missing_keys += 1
                 continue
 
@@ -125,29 +126,28 @@ def validate_locale(
             missing_pl = eng_placeholders - loc_placeholders
             if missing_pl:
                 if verbose:
-                    print(f"  ⚠️  {bundle}.{key}: missing placeholders {missing_pl} in {locale}")
+                    print(f"  ⚠️  {qualified_key}: missing placeholders {missing_pl} in {locale}")
                 placeholder_violations += 1
 
             # Check HTML integrity
-            if key in HTML_KEYS or (key in context and context[key].get("is_html")):
+            if key in HTML_KEYS or (qualified_key in context and context[qualified_key].get("is_html")):
                 html_tags = re.findall(r"</?[a-z][a-z0-9]*\b[^>]*>", english_value)
                 for tag in html_tags:
                     if tag not in locale_value:
                         if verbose:
-                            print(f"  ⚠️  {bundle}.{key}: missing HTML tag '{tag}' in {locale}")
+                            print(f"  ⚠️  {qualified_key}: missing HTML tag '{tag}' in {locale}")
                         html_violations += 1
                         break
 
             # Check if English source changed (stale)
-            if context and bundle:
-                qualified_key = f"{bundle}.{key}"
+            if context:
                 ctx = context.get(qualified_key)
                 if ctx:
                     stored_hash = ctx.get("english_hash", "")
                     current_hash = hashlib.sha256(english_value.encode("utf-8")).hexdigest()
                     if stored_hash and stored_hash != current_hash:
                         if verbose:
-                            print(f"  ⚠️  {bundle}.{key}: English source changed (stale translation)")
+                            print(f"  ⚠️  {qualified_key}: English source changed (stale translation)")
                         stale_keys += 1
 
         # Check orphan keys (in locale but not in English)
