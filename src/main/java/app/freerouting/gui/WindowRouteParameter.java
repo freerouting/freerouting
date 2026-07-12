@@ -658,6 +658,46 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     return wrapper;
   }
 
+  /**
+   * Applies the stitch route selection to the given interactive settings.
+   * Used by unit tests to verify the stitch route behavior.
+   */
+  public static void applyStitchRouteSelection(InteractiveSettings p_interactive_settings, boolean p_value) {
+    p_interactive_settings.set_stitch_route(p_value);
+  }
+
+  /**
+   * Applies the push and shove selection to the given interactive settings.
+   * Used by unit tests to verify the push and shove behavior.
+   */
+  public static void applyPushAndShoveSelection(InteractiveSettings p_interactive_settings, boolean p_value) {
+    p_interactive_settings.set_push_enabled(p_value);
+  }
+
+  /**
+   * Applies the ignore conduction selection to the given board manager.
+   * Used by unit tests to verify the ignore conduction behavior.
+   */
+  public static void applyIgnoreConductionSelection(GuiBoardManager p_board_manager, boolean p_value) {
+    p_board_manager.set_ignore_conduction(p_value);
+  }
+
+  /**
+   * Applies the clearance compensation selection to the given board manager.
+   * Used by unit tests to verify the clearance compensation behavior.
+   */
+  public static void applyClearanceCompensationSelection(GuiBoardManager p_board_manager, boolean p_value) {
+    p_board_manager.set_clearance_compensation(p_value);
+  }
+
+  /**
+   * Applies the pin exit edge to turn distance to the given board manager.
+   * Used by unit tests to verify the pin exit edge to turn distance behavior.
+   */
+  public static void applyPinExitEdgeToTurnDistance(GuiBoardManager p_board_manager, float p_value) {
+    p_board_manager.set_pin_edge_to_turn_dist(p_value);
+  }
+
   private class SnapAngle90Listener implements ActionListener {
 
     @Override
