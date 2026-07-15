@@ -284,8 +284,8 @@ public class BoardFrame extends WindowBase {
           break;
         case FRB:
           // Save the file as a freerouting binary file
-          // TODO: it should be enough to save the binary data that we already have in the
-          // routingJob.output.data
+          // The binary data is captured into routingJob.output.data during serialization
+          // so it can be reused without re-serializing
           this.saveAsBinary(this.routingJob.output.getFile());
           FRAnalytics.buttonClicked("fileio_savefrb", this.routingJob.getOutputFileDetails());
           break;
@@ -655,28 +655,28 @@ public class BoardFrame extends WindowBase {
       return false;
     }
 
-    OutputStream output_stream;
     try {
       FRLogger.info("Saving '" + outputFile.getPath() + "'...");
 
-      output_stream = new FileOutputStream(outputFile);
-      saveAsBinary(output_stream);
-    } catch (IOException _) {
-      screen_messages.set_status_message(tm.getText("message_binary_file_save_failed", outputFile.getPath()));
-      return false;
+      // Serialize to a byte array first to capture the data
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      saveAsBinary(byteArrayOutputStream);
+
+      // Store the serialized data in routingJob.output
+      byte[] data = byteArrayOutputStream.toByteArray();
+      this.routingJob.output.setData(data);
+
+      // Write to the file
+      try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile)) {
+        fileOutputStream.write(data);
+      }
+
+      screen_messages.set_status_message(tm.getText("message_binary_file_saved", outputFile.getPath()));
+      return true;
     } catch (Exception _) {
       screen_messages.set_status_message(tm.getText("message_binary_file_save_failed", outputFile.getPath()));
       return false;
     }
-
-    // (4) Flush the binary file
-    try {
-      output_stream.close();
-    } catch (IOException _) {
-      screen_messages.set_status_message(tm.getText("message_binary_file_save_failed", outputFile.getPath()));
-      return false;
-    }
-    return true;
   }
 
   /**
