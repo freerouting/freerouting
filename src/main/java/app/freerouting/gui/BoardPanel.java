@@ -14,6 +14,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
+import java.awt.dnd.DropTarget;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -332,6 +333,9 @@ public class BoardPanel extends JPanel {
     board_handling.setBoardFrame(this.board_frame);
     setAutoscrolls(true);
     this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+
+    // Initialize drag-and-drop support for file loading
+    new DropTarget(this, new BoardPanelDropTargetListener(this));
   }
 
   /**

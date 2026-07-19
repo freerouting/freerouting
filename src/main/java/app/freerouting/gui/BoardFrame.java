@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -1059,6 +1060,83 @@ public class BoardFrame extends WindowBase {
 
   public void addReadOnlyEventListener(Consumer<RoutingBoard> listener) {
     boardSavedEventListeners.add(listener);
+  }
+
+  /**
+   * Loads a file that was dropped onto the board panel.
+   * Follows the same pattern as the File menu open operation.
+   *
+   * @param p_file The file to load (DSN or JSON format)
+   */
+  public void loadDroppedFile(File p_file) {
+    if (p_file == null) {
+      return;
+    }
+
+    FileFormat format = RoutingJob.getFileFormat(p_file.toPath());
+
+    if (format == FileFormat.UNKNOWN) {
+      // Try to detect format from content
+      try {
+        byte[] content = Files.readAllBytes(p_file.toPath());
+        format = RoutingJob.getFileFormat(content);
+      } catch (IOException e) {
+        FRLogger.error("Could not read dropped file for format detection", e);
+        return;
+      }
+    }
+
+    if (format != FileFormat.DSN && format != FileFormat.JSON) {
+      FRLogger.warn("Dropped file format not supported for Phase 1: " + format);
+      return;
+    }
+
+    // Clear any existing jobs for this session (single board support)
+    String sessionId = SessionManager.getInstance().getGuiSession().id.toString();
+    RoutingJobScheduler.getInstance().clearJobs(sessionId);
+
+    try {
+      routingJob.setInput(p_file);
+    } catch (Exception e) {
+      FRLogger.error("Error setting input for dropped file", e);
+      return;
+    }
+
+    // Set the input directory in the global settings
+    String oldInputDirectory = Freerouting.globalSettings.guiSettings.inputDirectory;
+    Freerouting.globalSettings.guiSettings.inputDirectory = routingJob.input.getDirectoryPath();
+
+    // Save the global settings to the configuration file if the input directory was changed
+    if (!oldInputDirectory.equals(Freerouting.globalSettings.guiSettings.inputDirectory)) {
+      try {
+        GlobalSettings.saveAsJson(Freerouting.globalSettings);
+      } catch (IOException e) {
+        FRLogger.error("Couldn't save the global settings to the configuration file", e);
+      }
+    }
+
+    // Load the file into the frame based on its recognized format
+    if (board_panel != null && board_panel.board_handling != null
+        && routingJob.input.format != FileFormat.UNKNOWN) {
+      // Read file content
+      byte[] fileContent;
+      try {
+        fileContent = Files.readAllBytes(p_file.toPath());
+      } catch (IOException e) {
+        FRLogger.error("Could not read dropped file content", e);
+        return;
+      }
+
+      InputStream inputStream = new ByteArrayInputStream(fileContent);
+
+      if (format == FileFormat.DSN) {
+        this.load(inputStream, FileFormat.DSN, null, routingJob);
+        FRAnalytics.buttonClicked("file_dropped_dsn", routingJob.getInputFileDetails());
+      } else if (format == FileFormat.JSON) {
+        this.load(inputStream, FileFormat.JSON, null, routingJob);
+        FRAnalytics.buttonClicked("file_dropped_json", routingJob.getInputFileDetails());
+      }
+    }
   }
 
   private class WindowStateListener extends WindowAdapter {
