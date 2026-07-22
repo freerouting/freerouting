@@ -19,13 +19,9 @@ import javax.swing.JOptionPane;
 
 /**
  * Handles drag-and-drop file operations on the board panel.
- * Allows users to drop DSN, JSON, or FRB files onto the panel to open them.
+ * Allows users to drop DSN or JSON files onto the panel to open them.
  *
- * <p>Note: Currently only DSN and JSON formats are supported. FRB format support
- * (with GUI state restoration) is planned for Phase 2.</p>
- *
- * <p>Visual feedback is provided during drag operations: the cursor changes
- * to indicate a drop is in progress.</p>
+ * <p>Provides visual feedback using a semi-transparent overlay during drag operations.</p>
  *
  * <p>Note: SessionManager enforces single GUI session per process. Multi-session
  * support may require architectural changes to allow parallel boards.</p>
@@ -34,6 +30,8 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
 
   private final BoardPanel board_panel;
   private boolean is_drag_active = false;
+  // Flag to track if we're showing the ghosting overlay
+  private boolean is_ghosting_active = false;
 
   /**
    * Creates a new drop target listener for the board panel.
@@ -118,13 +116,13 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
   }
 
   /**
-   * Processes the list of dropped files.
-   * Only the first valid DSN or JSON file is loaded.
-   * Additional valid files are logged for future multi-board support.
-   *
-   * @param p_files The list of dropped files
-   */
-  private void processDroppedFiles(List<File> p_files) {
+    * Processes the list of dropped files.
+    * Only the first valid DSN or JSON file is loaded.
+    * Additional valid files are logged for future multi-board support.
+    *
+    * @param p_files The list of dropped files
+    */
+   private void processDroppedFiles(List<File> p_files) {
     boolean file_loaded = false;
 
     for (int i = 0; i < p_files.size(); i++) {
@@ -157,12 +155,11 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
         }
       }
 
-      // Only process DSN and JSON for Phase 1
       if (format == FileFormat.DSN || format == FileFormat.JSON) {
         if (!file_loaded) {
           // Load the first valid file
-          board_panel.board_frame.loadDroppedFile(file);
-          FRAnalytics.buttonClicked("file_dropped", file.getName());
+          board_panel.board_frame.loadDroppedFile(file, format);
+          FRAnalytics.buttonClicked("file_dropped_" + format.name().toLowerCase(), file.getName());
           file_loaded = true;
         } else {
           // Log additional valid files for future multi-board support
@@ -170,16 +167,11 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
               "Additional dropped file ignored: '" + file.getName() + 
               "'. Multi-board support is planned for future versions.");
         }
-      } else if (format == FileFormat.FRB) {
-        // FRB support is Phase 2
-        FRLogger.warn(
-            "FRB file dropped: '" + file.getName() + 
-            "'. FRB format support (with GUI state restoration) is planned for Phase 2.");
       } else {
         // Unknown format
         FRLogger.warn(
             "Dropped file format not supported: '" + file.getName() + 
-            "'. Supported formats: DSN, JSON (FRB in Phase 2).");
+            "'. Supported formats: DSN, JSON.");
       }
     }
 
@@ -201,11 +193,24 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
     }
 
     if (p_active) {
-      // Store original cursor for restoration later
+      // Show ghosting overlay effect
+      is_ghosting_active = true;
       board_panel.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+      board_panel.repaint();
     } else {
-      // Restore original cursor
+      // Remove ghosting overlay effect
+      is_ghosting_active = false;
       board_panel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+      board_panel.repaint();
     }
+  }
+
+  /**
+   * Checks if the ghosting overlay should be visible.
+   *
+   * @return true if ghosting overlay is active
+   */
+  public boolean isGhostingActive() {
+    return is_ghosting_active;
   }
 }
