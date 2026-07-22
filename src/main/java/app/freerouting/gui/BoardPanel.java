@@ -7,13 +7,16 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import java.awt.AWTException;
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
+import java.awt.dnd.DropTarget;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -183,19 +186,26 @@ public class BoardPanel extends JPanel {
    */
   public PopupMenuDynamicRoute popup_menu_dynamic_route;
 
-  /**
-   * Popup menu for stitch routing operations.
-   *
-   * @see PopupMenuStitchRoute
-   */
-  public PopupMenuStitchRoute popup_menu_stitch_route;
+   /**
+    * Popup menu for stitch routing operations.
+    *
+    * @see PopupMenuStitchRoute
+    */
+   public PopupMenuStitchRoute popup_menu_stitch_route;
 
-  /**
-   * Popup menu for item selection and inspection operations.
-   *
-   * @see PopupMenuInspectedItems
-   */
-  public JPopupMenu popup_menu_select;
+   /**
+    * Popup menu for item selection and inspection operations.
+    *
+    * @see PopupMenuInspectedItems
+    */
+   public JPopupMenu popup_menu_select;
+
+   /**
+    * Drop target listener for handling drag-and-drop file operations.
+    *
+    * @see BoardPanelDropTargetListener
+    */
+   private BoardPanelDropTargetListener drop_target_listener;
 
   /**
    * Board handling instance managing interactive board operations.
@@ -332,6 +342,10 @@ public class BoardPanel extends JPanel {
     board_handling.setBoardFrame(this.board_frame);
     setAutoscrolls(true);
     this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+
+    // Initialize drag-and-drop support for file loading
+    drop_target_listener = new BoardPanelDropTargetListener(this);
+    new DropTarget(this, drop_target_listener);
   }
 
   /**
@@ -485,6 +499,7 @@ public class BoardPanel extends JPanel {
    * <ol>
    *   <li>Call super to paint the panel background</li>
    *   <li>Delegate board drawing to {@link GuiBoardManager#draw(Graphics)}</li>
+   *   <li>Draw drag-and-drop ghosting overlay if active</li>
    *   <li>Draw custom cursor overlay if enabled</li>
    * </ol>
    *
@@ -505,9 +520,31 @@ public class BoardPanel extends JPanel {
     if (board_handling != null) {
       board_handling.draw(p_g);
     }
+
+    // Draw ghosting overlay for drag-and-drop file operations
+    if (isGhostingActive()) {
+      Graphics2D g2d = (Graphics2D) p_g.create();
+      try {
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        g2d.setColor(new Color(128, 128, 128, 180));
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+      } finally {
+        g2d.dispose();
+      }
+    }
+
     if (this.custom_cursor != null) {
       this.custom_cursor.draw(p_g);
     }
+  }
+
+  /**
+   * Checks if the drag-and-drop ghosting overlay is currently visible.
+   *
+   * @return true if ghosting overlay is active
+   */
+  private boolean isGhostingActive() {
+    return drop_target_listener != null && drop_target_listener.isGhostingActive();
   }
 
   /**
