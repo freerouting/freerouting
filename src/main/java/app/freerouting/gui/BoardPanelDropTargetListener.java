@@ -110,8 +110,10 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
 
     } catch (Exception e) {
       FRLogger.error("Error processing dropped files", e);
-      JOptionPane.showMessageDialog(board_panel, "Error processing dropped file: " + e.getMessage(),
-          "Error", JOptionPane.ERROR_MESSAGE);
+      if (board_panel != null) {
+        JOptionPane.showMessageDialog(board_panel, "Error processing dropped file: " + e.getMessage(),
+            "Error", JOptionPane.ERROR_MESSAGE);
+      }
     }
   }
 
@@ -124,6 +126,11 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
     */
    private void processDroppedFiles(List<File> p_files) {
     boolean file_loaded = false;
+
+    if (board_panel == null || board_panel.board_frame == null) {
+      FRLogger.warn("Board frame is not available for loading dropped file");
+      return;
+    }
 
     for (int i = 0; i < p_files.size(); i++) {
       File file = p_files.get(i);
@@ -152,16 +159,16 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
           format = RoutingJob.getFileFormat(content);
         } catch (IOException e) {
           FRLogger.warn("Could not read file for format detection: " + file.getName());
+          continue;
         }
       }
 
-      if (format == FileFormat.DSN || format == FileFormat.JSON) {
-        if (!file_loaded) {
-          // Load the first valid file
-          board_panel.board_frame.loadDroppedFile(file, format);
-          FRAnalytics.buttonClicked("file_dropped_" + format.name().toLowerCase(), file.getName());
-          file_loaded = true;
-        } else {
+       if (format == FileFormat.DSN || format == FileFormat.JSON) {
+           if (!file_loaded) {
+           // Load the first valid file
+           board_panel.board_frame.loadDroppedFile(file, format);
+           file_loaded = true;
+           } else {
           // Log additional valid files for future multi-board support
           FRLogger.warn(
               "Additional dropped file ignored: '" + file.getName() + 
