@@ -273,7 +273,7 @@ public class BoardRules implements Serializable {
   }
 
   /**
-   * Returns the via rule wit name p_name, or null, if no such rule exists.
+   * Returns the via rule with name p_name, or null, if no such rule exists.
    */
   public ViaRule get_via_rule(String p_name) {
     for (ViaRule curr_rule : via_rules) {

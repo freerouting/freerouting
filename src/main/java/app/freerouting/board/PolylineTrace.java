@@ -635,7 +635,7 @@ public class PolylineTrace extends Trace implements Serializable {
    * Checks, if the intersection of the p_line_no-th line of this trace with
    * p_line is inside the pad of a pin. In this case the trace will be split only,
    * if the intersection is at the center of the
-   * pin. Extending the function to vias leaded to broken connection problems when
+   * pin. Extending the function to vias led to broken connection problems when
    * the autorouter connected to a trace.
    */
   private boolean split_inside_drill_pad_prohibited(int p_line_no, Line p_line) {
@@ -670,8 +670,8 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Splits this trace into two at p_point. Returns the 2 pieces of the splitted
-   * trace, or null if nothing was splitted because for example p_point is not
+   * Splits this trace into two at p_point. Returns the 2 pieces of the split
+   * trace, or null if nothing was split because for example p_point is not
    * located on a line segment of the p_polyline
    * of this trace.
    */
@@ -698,7 +698,7 @@ public class PolylineTrace extends Trace implements Serializable {
    * Splits this trace at the line with number p_line_no into two by inserting
    * p_endline as concluding line of the first split piece and as the start line
    * of the second split piece. Returns the 2
-   * pieces of the splitted trace, or null, if nothing was splitted.
+   * pieces of the split trace, or null, if nothing was split.
    */
   private PolylineTrace[] split(int p_line_no, Line p_new_end_line) {
     if (!this.is_on_the_board()) {

@@ -207,7 +207,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
 
   /**
    * Returns true, if p_point is contained in this shape with tolerance
-   * p_tolerance. p_tolerance is used when determing, if a point is on the left
+   * p_tolerance. p_tolerance is used when determining if a point is on the left
    * side of a border line. It is used there in
    * calculating a determinant and is not the distance of p_point to the border.
    */
@@ -226,7 +226,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
 
   /**
    * Returns Side.COLLINEAR if p_point is on the border of this shape with
-   * tolerance p_tolerance. p_tolerance is used when determing, if a point is on
+   * tolerance p_tolerance. p_tolerance is used when determining if a point is on
    * the right side of a border line. It is used there
    * in calculating a determinant and is not the distance of p_point to the
    * border. Otherwise, the function returns Side.ON_THE_LEFT if p_point is
@@ -549,7 +549,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
           double curr_dist = projection.distance_square(curr_corner);
           if (curr_dist > curr_max_dist) {
             curr_max_dist = curr_dist;
-            curr_translate_coor = projection.substract(curr_corner);
+            curr_translate_coor = projection.subtract(curr_corner);
           }
         }
       }

@@ -534,7 +534,7 @@ public class GraphicsContext implements Serializable {
   }
 
   /**
-   * Checks, if the distance of the point with coordinates p_x, p_y to p_rect ist at most p_dist.
+   * Checks, if the distance of the point with coordinates p_x, p_y to p_rect is at most p_dist.
    */
   private boolean point_near_rectangle(double p_x, double p_y, Rectangle p_rect, double p_dist) {
     if (p_x < p_rect.x - p_dist) {

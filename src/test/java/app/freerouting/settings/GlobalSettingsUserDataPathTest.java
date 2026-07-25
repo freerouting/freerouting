@@ -485,7 +485,7 @@ class GlobalSettingsUserDataPathTest {
         assertTrue(
                 java.util.Arrays.stream(FRLogger.getLogEntries().get())
                         .anyMatch(s -> s.contains("corrupt") || s.contains("cannot be parsed")),
-                "The warning must describe the JSON as corrupt or unparseable");
+                "The warning must describe the JSON as corrupt or unparsable");
     }
 
     @Test

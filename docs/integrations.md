@@ -55,7 +55,7 @@
 
 ## [Target 3001!](https://ibfriedrich.com/)
 
-1) Freerouting is accesible directly from the GUI menu in Actions / Automatisms and assistants / Autorouter / Freerouting autorouter...
+1) Freerouting is accessible directly from the GUI menu in Actions / Automatisms and assistants / Autorouter / Freerouting autorouter...
 <img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step1_OpenFreeroutingDialogWindow.png" alt="Open Freerouting dialog window" title="Open Freerouting dialog window" align="center">
 
 2) There you can select the signals (=nets) to be routed

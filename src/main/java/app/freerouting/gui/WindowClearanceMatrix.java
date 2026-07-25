@@ -169,6 +169,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
         .equalsIgnoreCase(p_board_frame
             .get_locale()
             .getLanguage())) {
+      // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
       JLabel bug_label = new JLabel("Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle als Punkt eingegeben werden!");
       result.add(bug_label, BorderLayout.SOUTH);
     }

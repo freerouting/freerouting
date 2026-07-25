@@ -444,7 +444,7 @@ public class SortedRoomNeighbours {
         Line middle_edge_line = null;
         int curr_touching_side_no = last_touching_side_no;
         boolean first_time = true;
-        // The loop goes backwards fromm the edge line of next_neighbour to the edge line of
+        // The loop goes backwards from the edge line of next_neighbour to the edge line of
         // prev_neighbour.
         for (; ; ) {
           boolean corner_cut_off = false;

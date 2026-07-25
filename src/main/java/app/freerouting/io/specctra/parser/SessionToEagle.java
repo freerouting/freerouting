@@ -182,7 +182,7 @@ public class SessionToEagle extends JFrame {
         }
       }
     }
-    // Wird nur einmal am Ende benoetigt!
+    // Wird nur einmal am End benoetigt!
     this.out_file.write("RATSNEST\n");
     return true;
   }
@@ -315,9 +315,8 @@ public class SessionToEagle extends JFrame {
       return false;
     }
     this.scanner.set_scope_identifier(net_name);
-
-    // Hier alle nicht gefixten Traces und Vias des Netz mit Namen net_name
-    // in der Eagle Datenhaltung loeschen.
+ 
+    // Delete all unfixed traces and vias for net net_name in Eagle's database.
 
     // read the wires and vias of this net
     for (; ; ) {

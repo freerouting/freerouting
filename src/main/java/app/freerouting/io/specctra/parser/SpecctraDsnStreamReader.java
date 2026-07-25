@@ -234,7 +234,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
   private static final int ZZ_PUSHBACK_2BIG = 2;
   /* error messages for the codes above */
   private static final String ZZ_ERROR_MSG[] = {
-      "Unkown internal scanner error",
+      "Unknown internal scanner error",
       "Error: could not match input",
       "Error: pushback value was too large"
   };
@@ -449,7 +449,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
   /**
    * Refills the input buffer.
    *
-   * @return <code>false</code>, iff there was new input.
+   * @return <code>false</code>, if there was new input.
    * @throws java.io.IOException if any I/O-Error occurs
    */
   private boolean zzRefill() throws IOException {
@@ -558,7 +558,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
   }
 
   /**
-   * Reports an error that occured while scanning.
+   * Reports an error that occurred while scanning.
    *
    * <p>In a wellformed scanner (no or only correct usage of yypushback(int) and a match-all
    * fallback rule) this method will only be called with things that "Can't Possibly Happen". If this method is called, something is seriously wrong (e.g. a JFlex bug producing a faulty scanner

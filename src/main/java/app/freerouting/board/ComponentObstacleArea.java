@@ -14,7 +14,7 @@ import java.util.Locale;
 public class ComponentObstacleArea extends ObstacleArea {
 
   /**
-   * Creates a new instance of ComponentObstacleArea If p_is_obstacle ist false, the new instance is not regarded as obstacle and used only for displaying on the screen.
+   * Creates a new instance of ComponentObstacleArea If p_is_obstacle is false, the new instance is not regarded as obstacle and used only for displaying on the screen.
    */
   ComponentObstacleArea(Area p_area, int p_layer, Vector p_translation, double p_rotation_in_degree, boolean p_side_changed, int p_clearance_type, int p_id_no, int p_component_no, String p_name,
       FixedState p_fixed_state, BasicBoard p_board) {

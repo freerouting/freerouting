@@ -472,7 +472,7 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns the box offseted by p_dist. If p_dist {@literal >} 0, the offset is to the outside, else to the inside.
+   * Returns the box offsetted by p_dist. If p_dist {@literal >} 0, the offset is to the outside, else to the inside.
    */
   @Override
   public IntBox offset(double p_dist) {
@@ -486,7 +486,7 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns the box, where the horizontal boundary is offseted by p_dist. If p_dist {@literal >} 0, the offset is to the outside, else to the inside.
+   * Returns the box, where the horizontal boundary is offsetted by p_dist. If p_dist {@literal >} 0, the offset is to the outside, else to the inside.
    */
   public IntBox horizontal_offset(double p_dist) {
     if (p_dist == 0 || is_empty()) {
@@ -499,7 +499,7 @@ public class IntBox extends RegularTileShape implements Serializable {
   }
 
   /**
-   * Returns the box, where the vertical boundary is offseted by p_dist. If p_dist {@literal >} 0, the offset is to the outside, else to the inside.
+   * Returns the box, where the vertical boundary is offsetted by p_dist. If p_dist {@literal >} 0, the offset is to the outside, else to the inside.
    */
   public IntBox vertical_offset(double p_dist) {
     if (p_dist == 0 || is_empty()) {

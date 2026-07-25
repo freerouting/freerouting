@@ -118,7 +118,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
         right_tangent_point = door_right_corner;
       }
       if (left_tangent_point != null && right_tangent_point != null && right_tangent_point.side_of(this.current_from_point, left_tangent_point) != Side.ON_THE_RIGHT) {
-        // The gap between  left_most_visible_point and right_most_visible_point ist to small
+        // The gap between  left_most_visible_point and right_most_visible_point is too small
         // for a trace with the current half width.
 
         double left_corner_distance = door_left_corner.distance(this.current_from_point);

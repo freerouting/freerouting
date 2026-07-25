@@ -35,7 +35,7 @@ public class BaseController {
    * <p>Resolution order:
    * <ol>
    *   <li>Parse {@code Freerouting-Profile-ID} header as a UUID.</li>
-   *   <li>If that header is absent or unparseable, fall back to
+   *   <li>If that header is absent or unparsable, fall back to
    *       {@code Freerouting-Profile-Email} (email-to-UUID look-up is not yet implemented).</li>
    * </ol>
    *

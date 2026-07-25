@@ -30,7 +30,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
   }
 
   /**
-   * Calculates, if the next 45-degree angle should be horizontal first when coming fromm p_from_point on p_from_door.
+   * Calculates, if the next 45-degree angle should be horizontal first when coming from p_from_point on p_from_door.
    */
   private static boolean calc_horizontal_first_from_door(ExpandableObject p_from_door, FloatPoint p_from_point, FloatPoint p_to_point) {
     TileShape door_shape = p_from_door.get_shape();
@@ -228,7 +228,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
   }
 
   /**
-   * Calculates, if the 45-degree angle to the next door shape should be horizontal first when coming fromm p_from_point.
+   * Calculates, if the 45-degree angle to the next door shape should be horizontal first when coming from p_from_point.
    */
   private boolean calc_horizontal_first_to_door(ExpandableObject p_to_door, FloatPoint p_from_point, FloatPoint p_to_point) {
     TileShape door_shape = p_to_door.get_shape();

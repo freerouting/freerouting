@@ -206,7 +206,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
   }
 
   /**
-   * Appends p_value to the text pane after transforming it to the user coordinate sytem. Returns false, if that was not possible.
+   * Appends p_value to the text pane after transforming it to the user coordinate system. Returns false, if that was not possible.
    */
   @Override
   public boolean append(double p_value) {
@@ -215,7 +215,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
   }
 
   /**
-   * Appends p_value to the text pane without transforming it to the user coordinate sytem. Returns false, if that was not possible.
+   * Appends p_value to the text pane without transforming it to the user coordinate system. Returns false, if that was not possible.
    */
   @Override
   public boolean append_without_transforming(double p_value) {
@@ -224,7 +224,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
   }
 
   /**
-   * Appends p_point to the text pane after transforming to the user coordinate sytem. Returns false, if that was not possible.
+   * Appends p_point to the text pane after transforming to the user coordinate system. Returns false, if that was not possible.
    */
   @Override
   public boolean append(FloatPoint p_point) {
@@ -233,7 +233,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
   }
 
   /**
-   * Appends p_shape to the text pane after transforming to the user coordinate sytem. Returns false, if that was not possible.
+   * Appends p_shape to the text pane after transforming to the user coordinate system. Returns false, if that was not possible.
    */
   @Override
   public boolean append(Shape p_shape, Locale p_locale) {
@@ -332,7 +332,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
      */
     private final String title;
     /**
-     * The objects, for which information is displayed in tne new window
+     * The objects, for which information is displayed in the new window
      */
     private final Collection<Printable> objects;
 

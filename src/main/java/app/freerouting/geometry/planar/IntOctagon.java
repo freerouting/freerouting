@@ -501,7 +501,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
     if (new_lx < diag_left_x)
     // the intersection of the lower left and the upper left border
-    // line is to the right of left x.  Ajust new_lx to diag_left_x.
+    // line is to the right of left x.  Adjust new_lx to diag_left_x.
     {
       new_lx = diag_left_x;
     }

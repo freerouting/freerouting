@@ -199,6 +199,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         .equalsIgnoreCase(board_frame
             .get_locale()
             .getLanguage())) {
+      // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
       JLabel bug_label = new JLabel("Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle zur Zeit als Punkt eingegeben werden!");
       this.center_panel.add(bug_label, BorderLayout.SOUTH);
     }

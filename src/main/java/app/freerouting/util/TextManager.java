@@ -147,8 +147,8 @@ public class TextManager {
    *
    * @param text               The text to shorten
    * @param peakCharacterCount The number of characters to keep at the beginning
-   *                           and end of the text Example: shortenString("This is
-   *                           a long text", 3) -> "Thi...ext" shortenString("This
+   *                           and end of the text Example: shortenString("Not a
+   *                           a small text", 3) -> "Not...ext" shortenString("This
    *                           is a long
    *                           text", 5) -> "This ... text" shortenString("This is
    *                           a long text", 10) -> "This is a long text"
