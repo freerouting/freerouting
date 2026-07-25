@@ -1,0 +1,100 @@
+---
+# Pre-commit hooks for Freerouting (Java project)
+# This configuration defines hooks that run automatically on git commit
+# to ensure code quality and consistency.
+exclude: ^(src_v19/|docs/(issues|reference)/|.*fixtures/|examples/|.*/results/|\.DS_Store$|.*\.run/|.*\.(hs|dsn|ses|TAG|http|gradle)$|.*/OFFSETS$)
+repos:
+  # Markdown formatting
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 1.0.0
+    hooks:
+      - id: mdformat
+        name: Format Markdown
+        stages: [manual]  # Disable for now in ci, local run
+        entry: mdformat
+        language: python
+        types: [markdown]
+        exclude: ^(\.agents/|AGENTS\.md$)
+        args: [--wrap, '80', --number]
+        additional_dependencies:
+          - mdformat-front-matters
+          - mdformat-toc
+          - mdformat-gfm
+
+  # General pre-commit hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: debug-statements
+        name: Check for debug statements
+        exclude: ^(docs/)
+      - id: end-of-file-fixer
+        name: Fix end of files
+        stages: [manual]  # Disable for now in ci, local run
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+        exclude: (^.*\.md$)
+      - id: check-json
+        name: Check JSON files
+        exclude: ^(docs/reference/)
+      - id: check-yaml
+        name: Check YAML files
+      - id: mixed-line-ending
+        name: Fix mixed line endings
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: check-case-conflict
+        name: Check for case conflicts
+      - id: check-toml
+        name: Check TOML files
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        name: ShellCheck
+        types: [shell]
+        exclude: ^(docs/reference/)
+        args: [-e, SC1090, -e, SC1091, -e, SC2148]
+
+  # Code spell checking
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.3
+    hooks:
+      - id: codespell
+        name: CodeSpell
+        exclude: ^(build/|\.gradle/|logs/|src/main/resources/app/freerouting/helpset/de/|src/main/resources/app/freerouting/helpset/es/|src/main/resources/app/freerouting/helpset/fr/|src_v19/main/resources/app/freerouting/helpset/de/|src_v19/main/resources/app/freerouting/helpset/es/|src_v19/main/resources/app/freerouting/helpset/fr/|.*\.dsn$|.*\.pdf$|.*\.flex$)
+        additional_dependencies:
+          - tomli
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+        name: YAML Lint
+        types: [yaml]
+        args: [--strict, -c, .yamllint.yaml]
+
+  # Java - Use Gradle Spotless (already configured in build.gradle)
+  - repo: local
+    hooks:
+      - id: spotless-apply
+        name: Spotless (Java)
+        entry: ./gradlew spotlessApply --no-daemon
+        language: system
+        types: [java]
+        pass_filenames: false
+        stages: [manual]
+      - id: extract-context
+        name: Extract Context Metadata
+        entry: python scripts/i18n/extract-context.py
+        language: system
+        pass_filenames: false
+        files: |
+          (?x)^(
+            .*_en\.properties$|
+            src/main/java/.*\.java$
+          )
+        stages: [pre-commit, pre-merge-commit]
