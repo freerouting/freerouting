@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class EnglishPropertiesParityTest {
@@ -37,16 +38,26 @@ class EnglishPropertiesParityTest {
   private static final Pattern THIS_CLASS_PATTERN = Pattern.compile("new\\s+TextManager\\s*\\(\\s*(?:this\\.)?getClass\\s*\\(");
   private static final Pattern GET_TEXT_PATTERN = Pattern.compile("\\bgetText\\(\\s*\"([^\"]+)\"");
     private static final Pattern DYNAMIC_GET_TEXT_PATTERN = Pattern.compile(
-      "\\bgetText\\(\\s*([A-Za-z_][A-Za-z0-9_$.\\[\\]\\s]*)\\.toString\\(\\)\\s*\\)");
+      "\\bgetText\\(\\s*(.+?)\\.toString\\(\\)\\s*\\)");
     private static final Pattern FIELD_DECLARATION_PATTERN = Pattern.compile(
       "(?m)^\\s*(?:private|protected|public)?\\s*(?:static\\s+)?(?:final\\s+)?([A-Z][A-Za-z0-9_$.<>]*)\\s+([a-z_][A-Za-z0-9_]*)\\s*(?:[=;])");
       private static final Pattern ENUM_ARRAY_DECLARATION_PATTERN = Pattern.compile(
         "(?m)^\\s*(?:final\\s+)?([A-Z][A-Za-z0-9_$.<>]*)\\[\\]\\s+([a-z_][A-Za-z0-9_]*)\\s*=\\s*[^;]*\\.values\\(\\)\\s*;");
+  private static final Pattern SET_LANGUAGE_PATTERN = Pattern.compile("\\bsetLanguage\\s*\\(");
+  private static final Pattern INHERITED_TM_USAGE_PATTERN = Pattern.compile("\\btm\\.(?:getText|setText)\\s*\\(");
+  private static final Pattern EXTENDS_INTERACTIVE_STATE_PATTERN = Pattern.compile(
+      "\\bextends\\s+(?:InteractiveState|\\w+State)\\b");
+  private static final Pattern LOCAL_ENUM_ARRAY_PATTERN = Pattern.compile(
+      "(?:final\\s+)?([A-Za-z_][A-Za-z0-9_.]*)\\[\\]\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*\\1\\.values\\(\\)\\s*;");
+  private static final Pattern TEXT_MANAGER_SUFFIX_USAGE_PATTERN = Pattern.compile(
+      "\\b([A-Za-z_][A-Za-z0-9_]*)tm\\.(?:getText|setText)\\s*\\(");
+  private static final Pattern CREATE_WORD_WRAP_LABEL_PATTERN = Pattern.compile(
+      "\\bcreateWordWrapLabel\\s*\\(\\s*\"([^\"]+)\"");
+  private static final Pattern STATIC_STRING_ARRAY_PATTERN = Pattern.compile(
+      "private\\s+static\\s+final\\s+String\\[\\]\\s+[A-Za-z_][A-Za-z0-9_]*\\s*=\\s*\\{([^}]+)\\}");
   private static final Pattern SEGMENTED_BUTTONS_PATTERN = Pattern.compile("new\\s+SegmentedButtons\\s*\\((.*?)\\)", Pattern.DOTALL);
   private static final Pattern QUOTED_STRING_PATTERN = Pattern.compile("\"([^\"]+)\"");
   private static final Map<String, String> BUNDLE_ALIASES = Map.of(
-      "app.freerouting.gui.AirLine", "app.freerouting.interactive.RatsNest",
-      "app.freerouting.drc.AirLine", "app.freerouting.interactive.RatsNest",
       "app.freerouting.rules.NetClasses", "app.freerouting.gui.WindowNetClasses");
   private static final Path REPORT_PATH_1 = Paths.get(
       "build/reports/i18n/CodeKeysExistInEnglishBundlesReport.txt");
@@ -60,6 +71,10 @@ class EnglishPropertiesParityTest {
       "build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.txt");
   private static final Path REPORT_JSON_3 = Paths.get(
       "build/reports/i18n/EnglishBundlesContainKeysPresentInLocalesReport.json");
+  private static final Path REPORT_PATH_4 = Paths.get(
+      "build/reports/i18n/EnglishBundlesContainUnusedKeysReport.txt");
+  private static final Path REPORT_JSON_4 = Paths.get(
+      "build/reports/i18n/EnglishBundlesContainUnusedKeysReport.json");
   private static Map<String, Path> sourceFilesCache;
 
   @Test
@@ -174,6 +189,71 @@ class EnglishPropertiesParityTest {
         REPORT_PATH_3, REPORT_JSON_3);
   }
 
+  @Test
+  @Order(4)
+  void englishBundlesDoNotContainUnusedKeys() throws IOException {
+    Map<String, Set<String>> sourceKeysByBundle = collectSourceKeysByBundle();
+    Map<String, Set<String>> englishKeysByBundle = loadEnglishKeysByBundle();
+    Set<String> commonEnglishKeys = loadPropertiesKeys(RESOURCE_ROOT.resolve("Common_en.properties"));
+
+    Set<String> allUsedKeys = new LinkedHashSet<>();
+    for (Set<String> keys : sourceKeysByBundle.values()) {
+      allUsedKeys.addAll(keys);
+    }
+    expandWithImplicitCompanionKeys(allUsedKeys, commonEnglishKeys);
+    for (Set<String> bundleEnglishKeys : englishKeysByBundle.values()) {
+      expandWithImplicitCompanionKeys(allUsedKeys, bundleEnglishKeys);
+    }
+
+    List<String> unusedReports = new ArrayList<>();
+    for (Map.Entry<String, Set<String>> entry : englishKeysByBundle.entrySet()) {
+      String bundle = entry.getKey();
+      Set<String> englishKeys = entry.getValue();
+      Set<String> usedKeys = bundle.endsWith(".Common")
+          ? allUsedKeys
+          : new LinkedHashSet<>(sourceKeysByBundle.getOrDefault(bundle, Set.of()));
+
+      Set<String> availableKeys = new LinkedHashSet<>(englishKeys);
+      expandWithImplicitCompanionKeys(usedKeys, availableKeys);
+
+      Set<String> unusedKeys = new TreeSet<>(englishKeys);
+      unusedKeys.removeAll(usedKeys);
+      unusedKeys.removeIf(EnglishPropertiesParityTest::isIconKey);
+
+      if (!unusedKeys.isEmpty()) {
+        unusedReports.add(formatBundleSection(bundle, "unused in English bundle (not referenced in Java)", unusedKeys));
+      }
+    }
+
+    writeReport("Unused keys in English bundles", unusedReports, REPORT_PATH_4, REPORT_JSON_4);
+
+    if (!unusedReports.isEmpty()) {
+      fail(buildFailureMessage(
+          "English bundles contain keys not referenced from Java source. "
+              + "See build/reports/i18n/EnglishBundlesContainUnusedKeysReport.txt",
+          unusedReports));
+    }
+  }
+
+  /**
+   * Keys derived at runtime from a base key (e.g. {@code save_tooltip} when {@code save} is passed to
+   * {@link app.freerouting.util.TextManager#setText}).
+   */
+  private static void expandWithImplicitCompanionKeys(Set<String> usedKeys, Set<String> availableKeys) {
+    Set<String> companions = new LinkedHashSet<>();
+    for (String key : usedKeys) {
+      addCompanionIfPresent(companions, availableKeys, key + "_tooltip");
+      addCompanionIfPresent(companions, availableKeys, key + "_hover_info");
+    }
+    usedKeys.addAll(companions);
+  }
+
+  private static void addCompanionIfPresent(Set<String> companions, Set<String> availableKeys, String candidate) {
+    if (availableKeys.contains(candidate)) {
+      companions.add(candidate);
+    }
+  }
+
   private static Map<String, Set<String>> collectSourceKeysByBundle() throws IOException {
     Map<String, Set<String>> keysByBundle = new TreeMap<>();
 
@@ -204,25 +284,7 @@ class EnglishPropertiesParityTest {
     Set<String> keys = new LinkedHashSet<>();
 
     for (String textManagerVariable : textManagerVariables) {
-      Matcher getTextMatcher = Pattern.compile(
-              "\\b(?:[A-Za-z_][A-Za-z0-9_]*\\.)*" + Pattern.quote(textManagerVariable) + "\\.getText\\(\\s*\"([^\"]+)\"")
-          .matcher(source);
-      while (getTextMatcher.find()) {
-        String key = getTextMatcher.group(1);
-        if (!isIconKey(key)) {
-          keys.add(key);
-        }
-      }
-
-      Matcher setTextMatcher = Pattern.compile(
-              "\\b(?:[A-Za-z_][A-Za-z0-9_]*\\.)*" + Pattern.quote(textManagerVariable) + "\\.setText\\(\\s*[^,]+,\\s*\"([^\"]+)\"")
-          .matcher(source);
-      while (setTextMatcher.find()) {
-        String key = setTextMatcher.group(1);
-        if (!isIconKey(key)) {
-          keys.add(key);
-        }
-      }
+      collectKeysForTextManagerVariable(source, textManagerVariable, keys);
     }
 
     Matcher segmentedButtonsMatcher = SEGMENTED_BUTTONS_PATTERN.matcher(source);
@@ -239,6 +301,14 @@ class EnglishPropertiesParityTest {
     }
 
     keys.addAll(resolveDynamicEnumKeys(source));
+    keys.addAll(resolveStaticStringArrayKeys(source));
+    keys.addAll(resolveCreateWordWrapLabelKeys(source));
+
+    Matcher textManagerSuffixMatcher = TEXT_MANAGER_SUFFIX_USAGE_PATTERN.matcher(source);
+    while (textManagerSuffixMatcher.find()) {
+      String textManagerVariable = textManagerSuffixMatcher.group(1) + "tm";
+      collectKeysForTextManagerVariable(source, textManagerVariable, keys);
+    }
 
     for (String bundleOwner : bundleOwners) {
       keysByBundle.computeIfAbsent(bundleOwner, ignored -> new LinkedHashSet<>()).addAll(keys);
@@ -257,6 +327,25 @@ class EnglishPropertiesParityTest {
 
     if (THIS_CLASS_PATTERN.matcher(source).find()) {
       bundleOwners.add(currentClassName);
+    }
+
+    if (SET_LANGUAGE_PATTERN.matcher(source).find() && INHERITED_TM_USAGE_PATTERN.matcher(source).find()) {
+      bundleOwners.add(currentClassName);
+    }
+
+    if (INHERITED_TM_USAGE_PATTERN.matcher(source).find()) {
+      bundleOwners.add(currentClassName);
+    }
+
+    if (source.contains("extends WindowObjectList")) {
+      bundleOwners.add("app.freerouting.gui.WindowObjectList");
+    }
+
+    if (EXTENDS_INTERACTIVE_STATE_PATTERN.matcher(source).find()
+        && INHERITED_TM_USAGE_PATTERN.matcher(source).find()
+        && currentClassName.startsWith("app.freerouting.interactive.")
+        && !currentClassName.equals("app.freerouting.interactive.InteractiveState")) {
+      bundleOwners.add("app.freerouting.interactive.InteractiveState");
     }
 
     Set<String> resolvedOwners = new LinkedHashSet<>();
@@ -278,13 +367,74 @@ class EnglishPropertiesParityTest {
       }
     }
 
+    if (INHERITED_TM_USAGE_PATTERN.matcher(source).find()) {
+      textManagerVariables.add("tm");
+    }
+
     return textManagerVariables;
+  }
+
+  private static void collectKeysForTextManagerVariable(String source, String textManagerVariable, Set<String> keys) {
+    Matcher getTextMatcher = Pattern.compile(
+            "\\b(?:[A-Za-z_][A-Za-z0-9_]*\\.)*" + Pattern.quote(textManagerVariable) + "\\.getText\\(\\s*\"([^\"]+)\"")
+        .matcher(source);
+    while (getTextMatcher.find()) {
+      String key = getTextMatcher.group(1);
+      if (!isIconKey(key)) {
+        keys.add(key);
+      }
+    }
+
+    Matcher setTextMatcher = Pattern.compile(
+            "\\b(?:[A-Za-z_][A-Za-z0-9_]*\\.)*" + Pattern.quote(textManagerVariable) + "\\.setText\\(\\s*[^,]+,\\s*\"([^\"]+)\"")
+        .matcher(source);
+    while (setTextMatcher.find()) {
+      String key = setTextMatcher.group(1);
+      if (!isIconKey(key)) {
+        keys.add(key);
+      }
+    }
+  }
+
+  private static Set<String> resolveCreateWordWrapLabelKeys(String source) {
+    Set<String> keys = new LinkedHashSet<>();
+    Matcher matcher = CREATE_WORD_WRAP_LABEL_PATTERN.matcher(source);
+    while (matcher.find()) {
+      keys.add(matcher.group(1));
+    }
+    return keys;
+  }
+
+  private static Set<String> resolveStaticStringArrayKeys(String source) {
+    Set<String> keys = new LinkedHashSet<>();
+    Matcher matcher = STATIC_STRING_ARRAY_PATTERN.matcher(source);
+    while (matcher.find()) {
+      Matcher quotedMatcher = QUOTED_STRING_PATTERN.matcher(matcher.group(1));
+      while (quotedMatcher.find()) {
+        keys.add(quotedMatcher.group(1));
+      }
+    }
+    return keys;
+  }
+
+  private static Map<String, String> resolveLocalEnumArrayTypes(String source) {
+    Map<String, String> localEnumArrayTypes = new TreeMap<>();
+    Matcher matcher = LOCAL_ENUM_ARRAY_PATTERN.matcher(source);
+    while (matcher.find()) {
+      String enumType = matcher.group(1);
+      if (enumType.contains(".")) {
+        enumType = enumType.substring(enumType.lastIndexOf('.') + 1);
+      }
+      localEnumArrayTypes.put(matcher.group(2), enumType);
+    }
+    return localEnumArrayTypes;
   }
 
   private static Set<String> resolveDynamicEnumKeys(String source) throws IOException {
     Set<String> keys = new LinkedHashSet<>();
     Map<String, String> fieldTypes = resolveFieldTypes(source);
     Map<String, String> enumArrayTypes = resolveEnumArrayTypes(source);
+    enumArrayTypes.putAll(resolveLocalEnumArrayTypes(source));
 
     Matcher dynamicMatcher = DYNAMIC_GET_TEXT_PATTERN.matcher(source);
     while (dynamicMatcher.find()) {
@@ -353,6 +503,10 @@ class EnglishPropertiesParityTest {
     }
 
     if (enumBody == null) {
+      enumBody = findEnumBodyInAnySourceFile(enumType);
+    }
+
+    if (enumBody == null) {
       return constants;
     }
 
@@ -396,6 +550,31 @@ class EnglishPropertiesParityTest {
             return source.substring(start, i);
           }
         }
+      }
+    }
+    return null;
+  }
+
+  private static String findEnumBodyInAnySourceFile(String enumType) throws IOException {
+    synchronized (EnglishPropertiesParityTest.class) {
+      if (sourceFilesCache == null) {
+        sourceFilesCache = new java.util.HashMap<>();
+        try (var paths = Files.walk(JAVA_SOURCE_ROOT)) {
+          paths.filter(path -> path.toString().endsWith(".java"))
+               .forEach(path -> sourceFilesCache.put(path.getFileName().toString(), path));
+        }
+      }
+    }
+
+    Pattern enumPattern = Pattern.compile(String.format("(?s)\\benum\\s+%s\\s*\\{", Pattern.quote(enumType)));
+    for (Path sourceFile : sourceFilesCache.values()) {
+      String enumSource = Files.readString(sourceFile);
+      if (!enumPattern.matcher(enumSource).find()) {
+        continue;
+      }
+      String enumBody = findEnumBody(enumSource, enumType);
+      if (enumBody != null) {
+        return enumBody;
       }
     }
     return null;

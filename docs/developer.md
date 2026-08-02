@@ -58,6 +58,16 @@ python scripts/i18n/validate.py --locale de
 ./gradlew test --tests app.freerouting.i18n.EnglishPropertiesParityTest
 ```
 
+After a Java refactor removes UI strings, prune stale keys from all locale bundles:
+
+```bash
+./gradlew test --tests app.freerouting.i18n.EnglishPropertiesParityTest.englishBundlesDoNotContainUnusedKeys
+python scripts/i18n/prune-unused-keys.py --apply
+python scripts/i18n/extract-context.py
+```
+
+Supported locales: **source** `en`; **targets** `ar`, `bn`, `de`, `es`, `fr`, `hi`, `ja`, `ko`, `pt`, `ru`, `zh`, `zh_tw`. PCB terminology glossaries exist for all of these under `scripts/i18n/glossary/`.
+
 CI runs `python scripts/i18n/extract-context.py --check` on pull requests to ensure committed context metadata matches the English sources (no API key required).
 
 ## How to create a new release

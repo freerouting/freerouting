@@ -19,6 +19,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from context_store import DEFAULT_CONTEXT_DIR, filter_bundles, load_context_dir  # noqa: E402
+from glossary import validate_glossaries  # noqa: E402
 from i18n_output import out, symbol  # noqa: E402
 from properties_io import (  # noqa: E402
     PLACEHOLDER_RE,
@@ -133,6 +134,13 @@ def main() -> None:
         help="Limit to bundle(s), e.g. gui.BoardMenuFile",
     )
     args = parser.parse_args()
+
+    glossary_errors = validate_glossaries()
+    if glossary_errors:
+        out(f"{symbol('fail')} Glossary validation failed:")
+        for error in glossary_errors:
+            out(f"  - {error}")
+        sys.exit(1)
 
     if not args.locale and not args.all:
         parser.error("Specify --locale or --all")

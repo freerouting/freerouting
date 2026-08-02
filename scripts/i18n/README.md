@@ -9,6 +9,7 @@ scripts/i18n/
 ├── extract-context.py      # Layer 1: scan English + Java → context/
 ├── translate.py            # Layer 2: LLM translation (batch + incremental)
 ├── validate.py             # Layer 3: parity / placeholder / HTML checks
+├── prune-unused-keys.py    # Remove keys not referenced from Java (all locales)
 ├── context/                # Per-bundle metadata (committed; no english_value stored)
 ├── glossary/               # Locale-specific PCB terminology (_default.json, de.json, …)
 ├── properties_io.py        # Shared .properties I/O
@@ -37,6 +38,7 @@ python scripts/i18n/translate.py --locale de --missing-only
 
 # Verify
 python scripts/i18n/validate.py --locale de
+./gradlew test --tests app.freerouting.i18n.EnglishPropertiesParityTest
 ```
 
 ## Workflow
@@ -91,6 +93,27 @@ python scripts/i18n/validate.py --all
 python scripts/i18n/validate.py --locale de --bundle gui.BoardMenuFile -v
 ```
 
+### 4. Prune unused English keys
+
+When Java code no longer references property keys (menu refactors, removed windows, etc.), remove stale entries from **all** locale files and context metadata:
+
+```bash
+# 1. Detect unused keys (writes build/reports/i18n/EnglishBundlesContainUnusedKeysReport.*)
+./gradlew test --tests app.freerouting.i18n.EnglishPropertiesParityTest.englishBundlesDoNotContainUnusedKeys
+
+# 2. Preview removals
+python scripts/i18n/prune-unused-keys.py
+
+# 3. Apply removals + refresh context
+python scripts/i18n/prune-unused-keys.py --apply
+python scripts/i18n/extract-context.py
+./gradlew test --tests app.freerouting.i18n.EnglishPropertiesParityTest
+```
+
+The pruner reads `build/reports/i18n/EnglishBundlesContainUnusedKeysReport.json`, deletes listed keys from every `*_{locale}.properties` file, updates `scripts/i18n/context/`, and removes **orphan bundles** that have no Java class in `src/main/java` (for example legacy `WindowSnapshot` resources).
+
+The parity test `englishBundlesDoNotContainUnusedKeys` fails CI if English bundles contain keys not referenced from Java source (with companion expansion for `_tooltip` / `_hover_info` keys).
+
 ## Configuration
 
 | Variable | Default | Description |
@@ -106,6 +129,7 @@ python scripts/i18n/validate.py --locale de --bundle gui.BoardMenuFile -v
 | Trigger | Action |
 |---|---|
 | English `*_en.properties` changed | `extract-context.py` → commit `context/` |
+| Java refactor removed UI strings | parity test → `prune-unused-keys.py --apply` → `extract-context.py` |
 | Fill locale gaps | `translate.py --locale xx --missing-only` |
 | Before merging translation PR | `validate.py --locale xx` |
 | New locale (once) | full `translate.py --locale xx`, then `--missing-only` |
@@ -131,13 +155,33 @@ Locale-specific PCB terms live in `scripts/i18n/glossary/`:
 
 | File | Purpose |
 |---|---|
-| `_default.json` | English definitions for all locales (50 Freerouting/Specctra terms) |
-| `de.json`, `fr.json`, … | Locale-specific translation guidance (overrides `_default`) |
+| `_default.json` | English definitions shared as fallback (50 Freerouting/Specctra terms) |
+| `{locale}.json` | Locale-specific translation guidance (overrides `_default` in LLM prompts) |
 
-Terms were mined from `*_en.properties` and Java UI strings (autorouter, net class, conduction area, push/shove, Specctra DSN/SES, etc.). Add `{locale}.json` when bootstrapping a new language.
+One `{locale}.json` exists for every shipped UI locale. `validate.py` fails if any glossary file is missing or lacks a term from `_default.json`.
+
+| Locale | File |
+|---|---|
+| Arabic | `ar.json` |
+| Bengali | `bn.json` |
+| German | `de.json` |
+| English | `en.json` |
+| Spanish | `es.json` |
+| French | `fr.json` |
+| Hindi | `hi.json` |
+| Japanese | `ja.json` |
+| Korean | `ko.json` |
+| Portuguese | `pt.json` |
+| Russian | `ru.json` |
+| Chinese (Simplified) | `zh.json` |
+| Chinese (Traditional) | `zh_tw.json` |
+
+Terms were mined from `*_en.properties` and Java UI strings (autorouter, net class, conduction area, push/shove, Specctra DSN/SES, etc.). Extend `_default.json` first, then add the same keys to every `{locale}.json` when introducing new PCB terminology.
 
 ## Supported locales
 
-`de`, `fr`, `ru`, `bn`, `hi`, `ko`, `ja`, `zh`, `zh_tw`, `ar`, `pt`, `es`
+**Source:** `en` (English `*_en.properties`)
+
+**Translation targets:** `ar`, `bn`, `de`, `es`, `fr`, `hi`, `ja`, `ko`, `pt`, `ru`, `zh`, `zh_tw`
 
 See also [docs/developer.md](../../docs/developer.md#translations-i18n).
