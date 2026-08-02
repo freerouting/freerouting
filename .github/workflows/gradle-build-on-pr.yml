@@ -23,5 +23,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Ensure Gradle wrapper is executable
+        if: runner.os != 'Windows'
+        run: chmod +x gradlew
+
       - name: Execute Gradle build
         run: ./gradlew build
