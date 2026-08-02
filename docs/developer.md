@@ -44,6 +44,33 @@ gradlew executableJar
 
 All four .jar files will be generated in the `build\libs` subfolder. You would typically run the `freerouting-current-executable.jar` file.
 
+## Translations (i18n)
+
+Freerouting ships UI strings as Java `.properties` bundles under `src/main/resources/app/freerouting/`. Maintainer tooling for LLM-assisted translation lives in [`scripts/i18n/README.md`](../scripts/i18n/README.md).
+
+Typical workflow after editing English strings:
+
+```bash
+pip install -r scripts/i18n/requirements.txt
+python scripts/i18n/extract-context.py          # refresh scripts/i18n/context/
+python scripts/i18n/translate.py --locale de --missing-only
+python scripts/i18n/validate.py --locale de
+./gradlew test --tests app.freerouting.i18n.EnglishPropertiesParityTest
+```
+
+After a Java refactor removes UI strings, review unused-key reports and prune stale keys from all locale bundles when you are confident they are truly unused:
+
+```bash
+./gradlew test --tests app.freerouting.i18n.EnglishPropertiesParityTest.englishBundlesDoNotContainUnusedKeys
+# Review build/reports/i18n/EnglishBundlesContainUnusedKeysReport.txt before applying:
+python scripts/i18n/prune-unused-keys.py --apply
+python scripts/i18n/extract-context.py
+```
+
+Supported locales: **source** `en`; **targets** `ar`, `bn`, `de`, `es`, `fr`, `hi`, `ja`, `ko`, `pt`, `ru`, `zh`, `zh_tw`. PCB terminology glossaries exist for all of these under `scripts/i18n/glossary/`.
+
+CI runs `python scripts/i18n/extract-context.py --check` on pull requests to ensure committed context metadata matches the English sources (no API key required).
+
 ## How to create a new release
 
 Creating a release takes about half an hour if everything goes according to the plan. Usually it doesn't, so free up ~3 hours for this.

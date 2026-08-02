@@ -1,0 +1,300 @@
+{
+  "BACKGROUND": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "ea2b8a878841df5955c78edc6cae47446483b86e3f5ccb04e1a8d940cf7e59fd",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "COMPONENT_BACK": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "b4412c9eaf0d494ae60302bd216a2c784005c364e635520fd121d203f53c85ef",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "COMPONENT_FRONT"
+    ],
+    "ui_role": "label"
+  },
+  "COMPONENT_FRONT": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "2b09b35a4b7c201f28057cdca053fa7c5cd3ffe14ff9d4900c4039d39d09d817",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "COMPONENT_BACK"
+    ],
+    "ui_role": "label"
+  },
+  "CONDUCTION_AREAS": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.ItemColorTableModel"
+    ],
+    "english_hash": "177feb5158a2e34553a083bb29fbfc8c049bc609e23765c54a1a976f81864f9a",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "FIXED_TRACES": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.ItemColorTableModel"
+    ],
+    "english_hash": "719bf8146636330167e2face62ca2663c37f5ee6acbe2c7183b1a9736748cf1f",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "FIXED_VIAS"
+    ],
+    "ui_role": "label"
+  },
+  "FIXED_VIAS": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.ItemColorTableModel"
+    ],
+    "english_hash": "fa954fe59aa9c1c0c24a13131f8991b979ecf5e5d8430f6299378a31d982e82d",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "FIXED_TRACES"
+    ],
+    "ui_role": "label"
+  },
+  "HIGHLIGHT": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "07ccd15df32aa7e2856680d68167316b03f621035036f97f7e6311acbb04a148",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "INCOMPLETES": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "0d653ff18135d53d846414c4ac42a9cc9156536a58ea043d9cbe46d51805f09e",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "KEEPOUTS": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.ItemColorTableModel"
+    ],
+    "english_hash": "4df5b65f6b1c7b8936dfc68b9a48ef4b5e1071cc58368818b6bd5c44cabc6396",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "LAYER": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.ItemColorTableModel"
+    ],
+    "english_hash": "ac9ffcb2bf47f9992ebd972f147f2264a054f4ff2d8e7219dba1e85be68b86ef",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "LENGTH_MATCHING_AREA": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "a3526739157ffde5b1d7b13c4b3d985cdc8aaadb7295c32b0917ce5a5dabe9a4",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "OUTLINE": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "eabbf3abaf8d98abb9763d83f29b04716524a9d697dfdd06ae3ed77bdd12c929",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "PINS": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.ItemColorTableModel"
+    ],
+    "english_hash": "64baafaacb1a6c1ad7ef320be35ff85041ab72cf61b8db9e739f9a4040048a92",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "PLACE_KEEPOUTS": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.ItemColorTableModel"
+    ],
+    "english_hash": "d3185c9367384fc6cd89d63f7b5b4a7fe6bfe44d7e3a5c53619cba4c99d19584",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "TRACES": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.ItemColorTableModel"
+    ],
+    "english_hash": "998741a58ed2b4117c46419e19e9f3cbb0b3f46bcf2a721ce1c57625e50ad0f4",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "VIAS": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.ItemColorTableModel"
+    ],
+    "english_hash": "051b49d84e7e67d2e5667f38d4eac43a3484ce13fd77fbab297ee35a2d0edf78",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "VIA_KEEPOUTS": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.ItemColorTableModel"
+    ],
+    "english_hash": "dcad809ee78339082edd4637dbf660401c81ee9b9e9512cff17b9f47009f3c2b",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "VIAS"
+    ],
+    "ui_role": "label"
+  },
+  "VIOLATIONS": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "3f75292067cb23efc6a84fe4be1cbc3b84485e8fdab47f52b5b4e0b67d673415",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  }
+}
