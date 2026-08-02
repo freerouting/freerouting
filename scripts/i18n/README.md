@@ -65,6 +65,8 @@ Produces one JSON file per bundle under `scripts/i18n/context/`:
 
 Also scans Java sources for `TextManager.getText("key")` usages.
 
+Context JSON is written with **deterministic ordering** (sorted property keys, sorted list fields, stable metadata field order via `sort_keys`) so git diffs show only lines that actually changed.
+
 ### 2. Translate
 
 ```bash

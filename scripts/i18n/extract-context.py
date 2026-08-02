@@ -168,7 +168,7 @@ def extract_all_context(context_dir: Path) -> Dict[str, Dict[str, Any]]:
                 continue
 
             qualified_key = f"{bundle}.{key}"
-            placeholders = extract_placeholders(value)
+            placeholders = sorted(extract_placeholders(value))
             current_hash = compute_hash(value)
             prev_entry = previous.get(qualified_key)
             if prev_entry is None:
@@ -176,7 +176,7 @@ def extract_all_context(context_dir: Path) -> Dict[str, Dict[str, Any]]:
             else:
                 needs_retranslation = prev_entry.get("english_hash") != current_hash
 
-            code_refs = bundle_java.get(key, [])
+            code_refs = sorted(bundle_java.get(key, []))
             related = infer_related_keys(all_bundle_keys, key)
 
             context[qualified_key] = {

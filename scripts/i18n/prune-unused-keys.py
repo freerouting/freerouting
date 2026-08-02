@@ -10,6 +10,9 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Set, Tuple
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from context_store import _compact_entry, write_json_deterministic
 from properties_io import (
     SUPPORTED_LOCALES,
     english_properties_path,
@@ -125,15 +128,14 @@ def prune_context_keys(bundle_class: str, keys_to_remove: Set[str], apply: bool)
     if not context_file.exists():
         return 0
 
-    data = json.loads(context_file.read_text(encoding="utf-8"))
-    keys = data.get("keys", {})
-    before = len(keys)
+    bundle_keys = json.loads(context_file.read_text(encoding="utf-8"))
+    before = len(bundle_keys)
     for key in keys_to_remove:
-        keys.pop(key, None)
-    after = len(keys)
+        bundle_keys.pop(key, None)
+    after = len(bundle_keys)
     if after != before and apply:
-        data["keys"] = keys
-        context_file.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        compact = {key: _compact_entry(meta) for key, meta in sorted(bundle_keys.items())}
+        write_json_deterministic(context_file, compact)
     return before - after
 
 
