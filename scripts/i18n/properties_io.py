@@ -10,9 +10,9 @@ RESOURCE_ROOT = Path("src/main/resources/app/freerouting")
 PLACEHOLDER_RE = __import__("re").compile(r"(%[sd]|%\.\d+f|%[df]|\{\{[^}]+\}\})")
 ICON_KEY_RE = __import__("re").compile(r"^\{\{icon:.+\}\}$")
 
+# Target locales for translation/validation (English "en" is the source bundle).
 SUPPORTED_LOCALES = [
-    "de", "fr", "ru", "bn", "hi", "ko", "ja",
-    "zh", "zh_tw", "ar", "pt", "es",
+    "ar", "bn", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh", "zh_tw",
 ]
 
 
