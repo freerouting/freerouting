@@ -16,7 +16,6 @@ Usage:
 """
 
 import argparse
-import hashlib
 import json
 import re
 import sys
@@ -41,16 +40,24 @@ def load_properties(path: Path) -> Dict[str, str]:
     if not path.exists():
         return result
     with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#") or line.startswith("!"):
-                continue
-            if "=" in line:
-                key, _, value = line.partition("=")
-                result[key.strip()] = value.strip()
-            elif ":" in line:
-                key, _, value = line.partition(":")
-                result[key.strip()] = value.strip()
+        lines = f.readlines()
+
+    i = 0
+    num_lines = len(lines)
+    while i < num_lines:
+        line = lines[i].strip()
+        i += 1
+        if not line or line.startswith("#") or line.startswith("!"):
+            continue
+        while line.endswith("\\") and not line.endswith("\\\\") and i < num_lines:
+            line = line[:-1] + lines[i].strip()
+            i += 1
+        if "=" in line:
+            key, _, value = line.partition("=")
+            result[key.strip()] = value.strip()
+        elif ":" in line:
+            key, _, value = line.partition(":")
+            result[key.strip()] = value.strip()
     return result
 
 
@@ -87,7 +94,7 @@ def validate_locale(
 ) -> Tuple[int, int, int, int, int, int]:
     """
     Validate all bundles for a single locale.
-    Returns (total_keys, missing_keys, placeholder_violations, html_violations, orphan_keys).
+    Returns (total_keys, missing_keys, placeholder_violations, html_violations, orphan_keys, stale_keys).
     """
     total_keys = 0
     missing_keys = 0
@@ -142,13 +149,10 @@ def validate_locale(
             # Check if English source changed (stale)
             if context:
                 ctx = context.get(qualified_key)
-                if ctx:
-                    stored_hash = ctx.get("english_hash", "")
-                    current_hash = hashlib.sha256(english_value.encode("utf-8")).hexdigest()
-                    if stored_hash and stored_hash != current_hash:
-                        if verbose:
-                            print(f"  ⚠️  {qualified_key}: English source changed (stale translation)")
-                        stale_keys += 1
+                if ctx and ctx.get("needs_retranslation", False):
+                    if verbose:
+                        print(f"  ⚠️  {qualified_key}: English source changed (stale translation)")
+                    stale_keys += 1
 
         # Check orphan keys (in locale but not in English)
         for key in locale_props:

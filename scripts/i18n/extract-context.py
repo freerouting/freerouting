@@ -197,8 +197,17 @@ def human_readable_bundle_desc(bundle_name: str) -> str:
     return "UI component"
 
 
+def load_previous_context(output_path: Path) -> Dict[str, Dict[str, Any]]:
+    """Load the previous context file for change detection."""
+    if not output_path.exists():
+        return {}
+    with open(output_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
 def extract_all_context(output_path: Path) -> Dict[str, Dict[str, Any]]:
     """Extract context metadata from all English properties files."""
+    previous = load_previous_context(output_path)
     context: Dict[str, Dict[str, Any]] = {}
     all_keys_by_bundle: Dict[str, List[str]] = {}
 
@@ -223,13 +232,20 @@ def extract_all_context(output_path: Path) -> Dict[str, Dict[str, Any]]:
 
             placeholders = extract_placeholders(value)
             html_flag = is_html(value)
+            current_hash = compute_hash(value)
+            prev_entry = previous.get(qualified_key)
+            if prev_entry is None:
+                needs_retranslation = False
+            else:
+                needs_retranslation = prev_entry.get("english_hash") != current_hash
 
             ctx: Dict[str, Any] = {
                 "bundle": bundle,
                 "bundle_desc": human_readable_bundle_desc(bundle),
                 "key": key,
                 "english_value": value,
-                "english_hash": compute_hash(value),
+                "english_hash": current_hash,
+                "needs_retranslation": needs_retranslation,
                 "ui_role": infer_ui_role(key),
                 "grammatical_role": infer_grammatical_role(value),
                 "has_placeholders": len(placeholders) > 0,

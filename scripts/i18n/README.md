@@ -115,15 +115,65 @@ Set via environment variables:
 | `LLM_MODEL` | `gpt-4o-mini` | Model name |
 | `LLM_BASE_URL` | `https://api.openai.com/v1` | Base URL for API |
 
+## Recommended Usage & Timing
+
+This pipeline is **maintainer tooling**, not part of the Gradle build. Run it when English strings change or when onboarding a new locale — not on every commit.
+
+### When to run each step
+
+| Trigger | Script | Frequency |
+|---|---|---|
+| English `*_en.properties` edited or new keys added | `extract-context.py` | **Every time** English source changes (before translating) |
+| New/changed English strings need locale coverage | `translate.py --missing-only` | After `extract-context.py`, per locale being updated |
+| Before merging translation PRs | `validate.py` | After `translate.py`, for each affected locale |
+| Full locale bootstrap (new language) | `translate.py --locale xx` (no `--missing-only`) | Once per new locale, then switch to `--missing-only` |
+| Quarterly hygiene / release prep | `validate.py --all` | Optional; catches drift across all 12 locales |
+
+### Standard incremental workflow (preferred)
+
+```bash
+# 1. Install deps (once)
+pip install -r scripts/i18n/requirements.txt
+
+# 2. After editing English strings — refresh context + mark changed keys
+python scripts/i18n/extract-context.py
+# Commit the updated i18n-context.json together with English + locale changes.
+
+# 3. Translate only what's missing or stale (saves LLM tokens)
+export LLM_API_KEY=sk-...
+python scripts/i18n/translate.py --locale de --missing-only
+
+# 4. Verify integrity
+python scripts/i18n/validate.py --locale de
+
+# 5. Optional: existing parity test
+./gradlew test --tests app.freerouting.i18n.EnglishPropertiesParityTest
+```
+
+### Incremental translation guarantees
+
+- **`--missing-only` is required** for day-to-day updates. Without it, `translate.py` re-calls the LLM for **every** key (~900+ per locale).
+- **`extract-context.py` compares against the previous `i18n-context.json`** and sets `needs_retranslation: true` only for keys whose English text changed.
+- **`translate.py --missing-only`** skips keys that already have a locale value **and** are not flagged `needs_retranslation`.
+- After a successful translation run, `translate.py` clears `needs_retranslation` in `i18n-context.json` so repeat runs do not re-translate the same keys.
+- Icon placeholders (`{{icon:…}}`) are never sent to the LLM.
+
+### What *not* to do
+
+- Do **not** run `translate.py --all` on a schedule — it is expensive and unnecessary unless rebuilding every locale from scratch.
+- Do **not** skip `extract-context.py` after English edits — stale detection depends on the committed context snapshot.
+- Do **not** run the full pipeline in CI by default (requires API keys and costs tokens). Use `validate.py` in CI if desired.
+
 ## Incremental Updates
 
 The pipeline is fully incremental. On subsequent runs:
 
-1. `extract-context.py` recomputes SHA-256 hashes of all English values
-2. `translate.py --missing-only` compares hashes — only keys whose English value changed are re-translated
-3. `validate.py` flags any keys whose hash doesn't match the stored value
+1. `extract-context.py` diffs against the previous `i18n-context.json` and flags changed keys with `needs_retranslation: true`
+2. `translate.py --missing-only` processes only missing keys and flagged stale keys
+3. `translate.py` clears `needs_retranslation` after successful translation
+4. `validate.py` reports any keys still flagged or missing
 
-This means if a single English string like `message_18` changes from `"Pins not found"` to `"Pads not found"`, only that one key gets re-translated, not all 2000.
+This means if a single English string changes, only that key (per locale) is re-translated — not all ~900 keys.
 
 ## Supported Locales
 
