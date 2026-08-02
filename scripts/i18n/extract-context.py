@@ -2,28 +2,45 @@
 """
 extract-context.py — Layer 1: Context Metadata Extraction
 
-Scans all *_en.properties files and Java source code to build
-i18n-context.json — a per-key context metadata file that provides
-LLMs with enough information to produce high-quality translations.
+Scans all *_en.properties files and Java source code to build per-bundle
+context JSON under scripts/i18n/context/.
 
 Usage:
-    python scripts/i18n/extract-context.py [--output scripts/i18n/i18n-context.json]
+    python scripts/i18n/extract-context.py
+    python scripts/i18n/extract-context.py --check
+    python scripts/i18n/extract-context.py --output scripts/i18n/context
 """
+
+from __future__ import annotations
 
 import argparse
 import hashlib
-import json
-import os
 import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-RESOURCE_ROOT = Path("src/main/resources/app/freerouting")
-JAVA_SOURCE_ROOT = Path("src/main/java")
-DEFAULT_OUTPUT = Path("scripts/i18n/i18n-context.json")
+# Allow imports from scripts/i18n/
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-# Regex patterns for inferring UI role from key name
+from context_store import (  # noqa: E402
+    DEFAULT_CONTEXT_DIR,
+    context_diff,
+    load_context_dir,
+    save_context_dir,
+)
+from i18n_output import out, symbol  # noqa: E402
+from java_scanner import scan_java_key_usages  # noqa: E402
+from properties_io import (  # noqa: E402
+    ICON_KEY_RE,
+    PLACEHOLDER_RE,
+    bundle_name_from_path,
+    english_properties_files,
+    load_properties,
+)
+
+JAVA_SOURCE_ROOT = Path("src/main/java")
+
 UI_ROLE_PATTERNS: List[Tuple[str, str]] = [
     (r"_tooltip$", "tooltip"),
     (r"_button$", "button_label"),
@@ -36,58 +53,10 @@ UI_ROLE_PATTERNS: List[Tuple[str, str]] = [
     (r"_info$", "info_label"),
 ]
 
-# Keys whose values are HTML
 HTML_KEYS: Set[str] = {"trace_hover_info", "pin_hover_info", "via_hover_info", "net_hover_info"}
-
-# Placeholder patterns
-PLACEHOLDER_RE = re.compile(r"(%[sd]|%\.\d+f|%[df]|\{\{[^}]+\}\})")
-
-# Keys that are icon-only references
-ICON_KEY_RE = re.compile(r"^\{\{icon:.+\}\}$")
-
-
-def bundle_name_from_path(path: Path) -> str:
-    """Convert a file path like .../gui/BoardMenuFile_en.properties to 'gui.BoardMenuFile'."""
-    rel = path.relative_to(RESOURCE_ROOT)
-    name = str(rel.with_suffix("")).replace("\\", "/").replace("/", ".")
-    if name.endswith("_en"):
-        name = name[:-3]
-    return name
-
-
-def english_properties_files() -> List[Path]:
-    """Return all *_en.properties files under RESOURCE_ROOT."""
-    return sorted(RESOURCE_ROOT.rglob("*_en.properties"))
-
-
-def load_properties(path: Path) -> Dict[str, str]:
-    """Load a .properties file, returning a dict of key->value."""
-    result: Dict[str, str] = {}
-    with open(path, "r", encoding="utf-8") as f:
-        lines = f.readlines()
-        
-    i = 0
-    num_lines = len(lines)
-    while i < num_lines:
-        line = lines[i].strip()
-        i += 1
-        if not line or line.startswith("#") or line.startswith("!"):
-            continue
-        # Handle escaped line continuations
-        while line.endswith("\\") and not line.endswith("\\\\") and i < num_lines:
-            line = line[:-1] + lines[i].strip()
-            i += 1
-        if "=" in line:
-            key, _, value = line.partition("=")
-            result[key.strip()] = value.strip()
-        elif ":" in line:
-            key, _, value = line.partition(":")
-            result[key.strip()] = value.strip()
-    return result
 
 
 def infer_ui_role(key: str) -> str:
-    """Infer the UI role from the key name using suffix/prefix patterns."""
     for pattern, role in UI_ROLE_PATTERNS:
         if re.search(pattern, key):
             return role
@@ -95,93 +64,74 @@ def infer_ui_role(key: str) -> str:
 
 
 def infer_grammatical_role(value: str) -> str:
-    """Infer grammatical role from the English value shape."""
     if len(value) < 5:
         return "fragment"
     if value[0].isupper() and value.endswith("."):
         return "full_sentence"
-    if value[0].isupper() and not value.endswith("."):
+    if value[0].isupper():
         return "noun_phrase"
-    # Starts with lowercase — likely verb phrase or fragment
     first_word = value.split()[0] if value.split() else ""
-    # Common verb indicators
-    verb_indicators = {"saves", "save", "write", "writes", "read", "reads",
-                       "show", "shows", "display", "displays", "set", "create",
-                       "creates", "delete", "deletes", "add", "adds", "remove",
-                       "removes", "open", "opens", "close", "closes", "export",
-                       "exports", "import", "imports", "generate", "start",
-                       "stop", "enable", "disable"}
+    verb_indicators = {
+        "saves", "save", "write", "writes", "read", "reads", "show", "shows",
+        "display", "displays", "set", "create", "creates", "delete", "deletes",
+        "add", "adds", "remove", "removes", "open", "opens", "close", "closes",
+        "export", "exports", "import", "imports", "generate", "start", "stop",
+        "enable", "disable",
+    }
     if first_word.lower() in verb_indicators:
         return "verb_phrase"
     return "fragment"
 
 
 def extract_placeholders(value: str) -> List[str]:
-    """Extract placeholder expressions from a value string."""
     return PLACEHOLDER_RE.findall(value)
 
 
-def is_html(value: str) -> bool:
-    """Check if a value is HTML content."""
-    return value.strip().startswith("<html") or value.strip().startswith("<html>")
+def is_html(key: str, value: str) -> bool:
+    return key in HTML_KEYS or value.strip().startswith("<html")
 
 
 def detect_max_length_hint(key: str) -> Optional[int]:
-    """Return a suggested max length hint based on key patterns."""
     if key.endswith("_tooltip"):
-        return None  # tooltips can be long
+        return None
     if key.endswith("_button") or key == "title":
         return 30
     if key.startswith("error_") or key.startswith("message_"):
-        return None  # messages can be full sentences
+        return None
     return None
 
 
 def infer_related_keys(all_keys: List[str], key: str) -> List[str]:
-    """Find related keys that share a common prefix."""
-    # Extract base prefix (before first underscore from the right,
-    # or the full key if no underscore)
+    related: Set[str] = set()
     parts = key.split("_")
-    if len(parts) <= 1:
-        return []
-    # Try prefixes of decreasing length
-    for i in range(len(parts) - 1, 0, -1):
-        prefix = "_".join(parts[:i])
-        related = [k for k in all_keys if k != key and k.startswith(prefix)]
-        if related:
-            return related
-    return []
+    if len(parts) > 1:
+        for i in range(len(parts) - 1, 0, -1):
+            prefix = "_".join(parts[:i])
+            prefix_matches = [k for k in all_keys if k != key and k.startswith(prefix)]
+            if prefix_matches:
+                related.update(prefix_matches)
+                break
+    return sorted(related)[:8]
 
 
 def compute_hash(value: str) -> str:
-    """Compute SHA-256 hash of a string value for change detection."""
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
 def get_java_class_for_bundle(bundle_name: str) -> Optional[str]:
-    """
-    Try to determine which Java class uses this bundle.
-    Maps "gui.BoardMenuFile" -> "app.freerouting.gui.BoardMenuFile"
-    """
-    # The bundle name after "app.freerouting." is the class path
     full_class = f"app.freerouting.{bundle_name}"
     java_path = JAVA_SOURCE_ROOT / f"{full_class.replace('.', '/')}.java"
     if java_path.exists():
         return full_class
-    # Try some common aliases
     known_aliases = {
         "gui.AirLine": "app.freerouting.interactive.RatsNest",
         "drc.AirLine": "app.freerouting.interactive.RatsNest",
         "rules.NetClasses": "app.freerouting.gui.WindowNetClasses",
     }
-    if bundle_name in known_aliases:
-        return known_aliases[bundle_name]
-    return None
+    return known_aliases.get(bundle_name)
 
 
 def human_readable_bundle_desc(bundle_name: str) -> str:
-    """Generate a human-readable bundle description for the LLM prompt."""
-    # Map known bundle prefixes to UI areas
     area_map = {
         "gui.": "GUI (graphical user interface)",
         "interactive.": "interactive routing session",
@@ -197,41 +147,28 @@ def human_readable_bundle_desc(bundle_name: str) -> str:
     return "UI component"
 
 
-def load_previous_context(output_path: Path) -> Dict[str, Dict[str, Any]]:
-    """Load the previous context file for change detection."""
-    if not output_path.exists():
-        return {}
-    with open(output_path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def extract_all_context(output_path: Path) -> Dict[str, Dict[str, Any]]:
-    """Extract context metadata from all English properties files."""
-    previous = load_previous_context(output_path)
+def extract_all_context(context_dir: Path) -> Dict[str, Dict[str, Any]]:
+    previous = load_context_dir(context_dir)
+    java_usages = scan_java_key_usages()
     context: Dict[str, Dict[str, Any]] = {}
     all_keys_by_bundle: Dict[str, List[str]] = {}
 
-    # First pass: load all keys per bundle
     for props_file in english_properties_files():
         bundle = bundle_name_from_path(props_file)
-        props = load_properties(props_file)
-        all_keys_by_bundle[bundle] = list(props.keys())
+        all_keys_by_bundle[bundle] = list(load_properties(props_file).keys())
 
-    # Second pass: build context per key
     for props_file in english_properties_files():
         bundle = bundle_name_from_path(props_file)
         props = load_properties(props_file)
+        bundle_java = java_usages.get(bundle, {})
         all_bundle_keys = all_keys_by_bundle.get(bundle, [])
 
         for key, value in props.items():
-            qualified_key = f"{bundle}.{key}"
-
-            # Skip icon-only keys
             if ICON_KEY_RE.match(value):
                 continue
 
+            qualified_key = f"{bundle}.{key}"
             placeholders = extract_placeholders(value)
-            html_flag = is_html(value)
             current_hash = compute_hash(value)
             prev_entry = previous.get(qualified_key)
             if prev_entry is None:
@@ -239,50 +176,47 @@ def extract_all_context(output_path: Path) -> Dict[str, Dict[str, Any]]:
             else:
                 needs_retranslation = prev_entry.get("english_hash") != current_hash
 
-            ctx: Dict[str, Any] = {
+            code_refs = bundle_java.get(key, [])
+            related = infer_related_keys(all_bundle_keys, key)
+
+            context[qualified_key] = {
                 "bundle": bundle,
                 "bundle_desc": human_readable_bundle_desc(bundle),
                 "key": key,
-                "english_value": value,
                 "english_hash": current_hash,
                 "needs_retranslation": needs_retranslation,
                 "ui_role": infer_ui_role(key),
                 "grammatical_role": infer_grammatical_role(value),
                 "has_placeholders": len(placeholders) > 0,
                 "placeholders": placeholders,
-                "is_html": html_flag,
+                "is_html": is_html(key, value),
                 "max_length_hint": detect_max_length_hint(key),
-                "related_keys": infer_related_keys(all_bundle_keys, key),
+                "related_keys": related,
                 "java_class": get_java_class_for_bundle(bundle),
+                "code_references": code_refs,
             }
-            context[qualified_key] = ctx
 
     return context
 
 
-def write_context(context: Dict[str, Dict[str, Any]], output_path: Path) -> None:
-    """Write context metadata to a JSON file."""
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(context, f, indent=2, ensure_ascii=False)
-    print(f"✅ Wrote context metadata for {len(context)} keys to {output_path}")
-
-
 def print_summary(context: Dict[str, Dict[str, Any]]) -> None:
-    """Print a summary of the extracted context."""
-    bundles = set(ctx["bundle"] for ctx in context.values())
-    ui_roles = set(ctx["ui_role"] for ctx in context.values())
-    gram_roles = set(ctx["grammatical_role"] for ctx in context.values())
-    with_placeholders = sum(1 for ctx in context.values() if ctx["has_placeholders"])
-    html_count = sum(1 for ctx in context.values() if ctx["is_html"])
+    bundles = {entry["bundle"] for entry in context.values()}
+    ui_roles = {entry["ui_role"] for entry in context.values()}
+    gram_roles = {entry["grammatical_role"] for entry in context.values()}
+    with_placeholders = sum(1 for entry in context.values() if entry["has_placeholders"])
+    html_count = sum(1 for entry in context.values() if entry["is_html"])
+    with_code = sum(1 for entry in context.values() if entry.get("code_references"))
+    flagged = sum(1 for entry in context.values() if entry.get("needs_retranslation"))
 
-    print(f"\n📊 Context Extraction Summary:")
-    print(f"   Total keys: {len(context)}")
-    print(f"   Bundles: {len(bundles)} ({', '.join(sorted(bundles))})")
-    print(f"   UI roles found: {', '.join(sorted(ui_roles))}")
-    print(f"   Grammatical roles: {', '.join(sorted(gram_roles))}")
-    print(f"   Keys with placeholders: {with_placeholders}")
-    print(f"   HTML-formatted keys: {html_count}")
+    out(f"\n{symbol('stats')} Context Extraction Summary:")
+    out(f"   Total keys: {len(context)}")
+    out(f"   Bundles: {len(bundles)}")
+    out(f"   UI roles: {', '.join(sorted(ui_roles))}")
+    out(f"   Grammatical roles: {', '.join(sorted(gram_roles))}")
+    out(f"   Keys with placeholders: {with_placeholders}")
+    out(f"   HTML-formatted keys: {html_count}")
+    out(f"   Keys with Java code references: {with_code}")
+    out(f"   Keys flagged needs_retranslation: {flagged}")
 
 
 def main() -> None:
@@ -292,14 +226,34 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=DEFAULT_OUTPUT,
-        help=f"Output path for context JSON (default: {DEFAULT_OUTPUT})",
+        default=DEFAULT_CONTEXT_DIR,
+        help=f"Output directory for per-bundle context JSON (default: {DEFAULT_CONTEXT_DIR})",
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Verify committed context matches current English sources (exit 1 if stale)",
     )
     args = parser.parse_args()
 
-    context = extract_all_context(args.output)
-    write_context(context, args.output)
-    print_summary(context)
+    computed = extract_all_context(args.output)
+
+    if args.check:
+        committed = load_context_dir(args.output)
+        diffs = context_diff(computed, committed)
+        if diffs:
+            out(f"{symbol('fail')} Context is stale — run extract-context.py and commit scripts/i18n/context/")
+            for line in diffs[:30]:
+                out(f"   - {line}")
+            if len(diffs) > 30:
+                out(f"   ... and {len(diffs) - 30} more")
+            sys.exit(1)
+        out(f"{symbol('ok')} Context is up to date ({len(computed)} keys)")
+        sys.exit(0)
+
+    save_context_dir(computed, args.output)
+    out(f"{symbol('ok')} Wrote context metadata for {len(computed)} keys to {args.output}")
+    print_summary(computed)
 
 
 if __name__ == "__main__":

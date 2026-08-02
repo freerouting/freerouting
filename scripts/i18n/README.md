@@ -2,179 +2,135 @@
 
 Improves translation quality by supplying **additional context** to LLMs during the translation workflow.
 
-## Problem
-
-When an LLM receives a bare key-value pair like `"file=File"`, it has no idea where this string appears, what UI role it plays, or what constraints it has. This produces inconsistent, grammatically wrong, or contextually inappropriate translations.
-
-## Solution
-
-Three Python scripts that extract per-key context metadata and use it to build context-augmented LLM prompts:
+## Layout
 
 ```
 scripts/i18n/
-├── extract-context.py    # Scans *_en.properties → i18n-context.json
-├── translate.py          # Reads context → calls LLM → writes locale files
-├── validate.py           # Post-translation integrity checks
-├── i18n-context.json     # Generated context metadata (committed to repo)
-├── requirements.txt      # Python dependencies
-└── README.md             # This file
+├── extract-context.py      # Layer 1: scan English + Java → context/
+├── translate.py            # Layer 2: LLM translation (batch + incremental)
+├── validate.py             # Layer 3: parity / placeholder / HTML checks
+├── context/                # Per-bundle metadata (committed; no english_value stored)
+├── glossary/               # Locale-specific PCB terminology (_default.json, de.json, …)
+├── properties_io.py        # Shared .properties I/O
+├── context_store.py        # Split context load/save/check
+├── java_scanner.py         # TextManager getText() scanning
+├── llm_client.py           # Retry/backoff + batch API calls
+├── prompt_builder.py       # Context-augmented prompts
+├── i18n_output.py          # Windows-safe console output
+├── requirements.txt
+└── README.md
+```
+
+English source strings always live in `src/main/resources/**/**_en.properties`. Context JSON stores metadata and change flags only.
+
+## Quick start
+
+```bash
+pip install -r scripts/i18n/requirements.txt
+
+# After editing English strings
+python scripts/i18n/extract-context.py
+
+# Incremental translation (recommended)
+export LLM_API_KEY=sk-...
+python scripts/i18n/translate.py --locale de --missing-only
+
+# Verify
+python scripts/i18n/validate.py --locale de
 ```
 
 ## Workflow
 
-### 1. Extract Context
+### 1. Extract context
 
 ```bash
 python scripts/i18n/extract-context.py
+python scripts/i18n/extract-context.py --check   # CI: fail if context is stale
 ```
 
-This scans all `*_en.properties` files and produces `i18n-context.json` with per-key metadata:
+Produces one JSON file per bundle under `scripts/i18n/context/`:
 
-| Context Field | Example |
+| Field | Purpose |
 |---|---|
-| `bundle` | `gui.BoardMenuFile` |
-| `bundle_desc` | `GUI (graphical user interface)` |
-| `ui_role` | `tooltip`, `button_label`, `dialog_title`, `message`, `label` |
-| `grammatical_role` | `verb_phrase`, `noun_phrase`, `full_sentence`, `fragment` |
-| `has_placeholders` | `true` / `false` |
-| `placeholders` | `["%s", "{{version}}"]` |
-| `is_html` | `true` / `false` |
-| `max_length_hint` | `30` (for buttons), `null` (for tooltips) |
-| `related_keys` | `["save", "save_tooltip", "save_message"]` |
-| `english_hash` | `sha256:...` (for change detection) |
+| `english_hash` | SHA-256 of English value (change detection) |
+| `needs_retranslation` | `true` when English changed since last commit |
+| `ui_role` | tooltip, button_label, dialog_title, … |
+| `grammatical_role` | verb_phrase, noun_phrase, full_sentence, fragment |
+| `placeholders` / `has_placeholders` | `%s`, `{{name}}`, etc. |
+| `is_html` | HTML preservation required |
+| `related_keys` | Same-prefix keys for consistency |
+| `code_references` | Java classes referencing this key (from source scan) |
+
+Also scans Java sources for `TextManager.getText("key")` usages.
 
 ### 2. Translate
 
 ```bash
-# Translate to German (requires LLM_API_KEY)
-python scripts/i18n/translate.py --locale de
-
-# Dry-run (shows what would be translated without calling the API)
-python scripts/i18n/translate.py --locale fr --dry-run
-
-# Translate to all 12 locales
-python scripts/i18n/translate.py --all
-
-# Only translate missing or stale keys (efficient for incremental updates)
+# Recommended: only missing + stale keys
 python scripts/i18n/translate.py --locale de --missing-only
+
+# Preview without API calls
+python scripts/i18n/translate.py --locale de --missing-only --dry-run
+
+# Single bundle while developing
+python scripts/i18n/translate.py --locale de --bundle gui.BoardMenuFile --missing-only
+
+# Full locale bootstrap (once per new language — expensive)
+python scripts/i18n/translate.py --locale pt
 ```
 
-The `--missing-only` flag is the recommended workflow for efficiency:
-- It skips keys that already have valid translations
-- It only processes keys missing from the locale file OR whose English source changed
-- This saves significant tokens when only a few keys need updating
-- Run `./gradlew test --tests EnglishPropertiesParityTest` first to see what's missing
+**Batch mode:** keys are sent to the LLM in batches (default 15, set `LLM_BATCH_SIZE=1` to force per-key). Failed batch parses fall back to single-key calls with retry/backoff.
 
-Each key is sent to the LLM with a context-augmented prompt like:
-
-```
-Translate the following UI string from English to DE.
-
-CONTEXT:
-  Bundle: gui.BoardMenuFile (GUI (graphical user interface))
-  UI Role: tooltip
-  Grammatical Role: verb_phrase
-  Placeholders: none
-  HTML: no
-  Related Keys: save, save_message, save_and_exit
-
-RULES:
-  - Preserve ALL placeholder tokens (%s, %d, {{...}}) exactly as shown
-  - Preserve ALL HTML tags (<html>, <b>, <br>) exactly as shown
-  - Respond with ONLY the translated text, no explanations
-
-ENGLISH: "saves the design to disk in the internal .bin file format"
-TRANSLATION (DE):
-```
+**Stale keys:** when `needs_retranslation` is set, the previous locale translation is included in the prompt as an outdated hint.
 
 ### 3. Validate
 
 ```bash
-# Validate German translations
 python scripts/i18n/validate.py --locale de
-
-# Validate all locales
 python scripts/i18n/validate.py --all
+python scripts/i18n/validate.py --locale de --bundle gui.BoardMenuFile -v
 ```
 
-Checks:
-- All keys present in `*_en.properties` also exist in `*_{locale}.properties`
-- Placeholder tokens (`%s`, `%d`, `{{...}}`) are preserved exactly
-- HTML tags are preserved in HTML-formatted keys
-- No orphan keys (keys in locale files that don't exist in English)
-- English hashes match (flags stale translations when source changed)
-
 ## Configuration
-
-Set via environment variables:
 
 | Variable | Default | Description |
 |---|---|---|
 | `LLM_PROVIDER` | `openai` | `openai`, `anthropic`, or `ollama` |
-| `LLM_API_KEY` | `OPENAI_API_KEY` | API key for the LLM provider |
-| `LLM_MODEL` | `gpt-4o-mini` | Model name |
-| `LLM_BASE_URL` | `https://api.openai.com/v1` | Base URL for API |
+| `LLM_API_KEY` | `OPENAI_API_KEY` | API key |
+| `LLM_MODEL` | provider-specific | `gpt-4o-mini` / `claude-3-haiku-20240307` / `llama3.2` |
+| `LLM_BASE_URL` | provider-specific | OpenAI or Ollama base URL |
+| `LLM_BATCH_SIZE` | `15` | Keys per LLM request (1–25) |
 
-## Recommended Usage & Timing
+## Recommended timing
 
-This pipeline is **maintainer tooling**, not part of the Gradle build. Run it when English strings change or when onboarding a new locale — not on every commit.
+| Trigger | Action |
+|---|---|
+| English `*_en.properties` changed | `extract-context.py` → commit `context/` |
+| Fill locale gaps | `translate.py --locale xx --missing-only` |
+| Before merging translation PR | `validate.py --locale xx` |
+| New locale (once) | full `translate.py --locale xx`, then `--missing-only` |
+| Release hygiene | `validate.py --all` |
+| Every PR (CI) | `extract-context.py --check` (no LLM, no API key) |
 
-### When to run each step
+### Incremental guarantees
 
-| Trigger | Script | Frequency |
-|---|---|---|
-| English `*_en.properties` edited or new keys added | `extract-context.py` | **Every time** English source changes (before translating) |
-| New/changed English strings need locale coverage | `translate.py --missing-only` | After `extract-context.py`, per locale being updated |
-| Before merging translation PRs | `validate.py` | After `translate.py`, for each affected locale |
-| Full locale bootstrap (new language) | `translate.py --locale xx` (no `--missing-only`) | Once per new locale, then switch to `--missing-only` |
-| Quarterly hygiene / release prep | `validate.py --all` | Optional; catches drift across all 12 locales |
+- **`--missing-only`** skips keys with an existing locale value that are not flagged `needs_retranslation`.
+- **`extract-context.py`** sets `needs_retranslation` by diffing against the committed `context/` snapshot.
+- **`translate.py`** clears the flag after successful translation and exits **non-zero** on LLM/validation failures.
+- Icon keys (`{{icon:…}}`) are never translated.
 
-### Standard incremental workflow (preferred)
+### Do not
 
-```bash
-# 1. Install deps (once)
-pip install -r scripts/i18n/requirements.txt
+- Run `translate.py --all --missing-only` on a schedule without English changes.
+- Skip `extract-context.py` after English edits.
+- Run LLM translation in CI (use `--check` and `validate.py` only).
 
-# 2. After editing English strings — refresh context + mark changed keys
-python scripts/i18n/extract-context.py
-# Commit the updated i18n-context.json together with English + locale changes.
+## Glossaries
 
-# 3. Translate only what's missing or stale (saves LLM tokens)
-export LLM_API_KEY=sk-...
-python scripts/i18n/translate.py --locale de --missing-only
+Locale-specific PCB terms live in `scripts/i18n/glossary/{locale}.json`, merged over `_default.json`. Add a file when bootstrapping a new locale for better technical consistency.
 
-# 4. Verify integrity
-python scripts/i18n/validate.py --locale de
-
-# 5. Optional: existing parity test
-./gradlew test --tests app.freerouting.i18n.EnglishPropertiesParityTest
-```
-
-### Incremental translation guarantees
-
-- **`--missing-only` is required** for day-to-day updates. Without it, `translate.py` re-calls the LLM for **every** key (~900+ per locale).
-- **`extract-context.py` compares against the previous `i18n-context.json`** and sets `needs_retranslation: true` only for keys whose English text changed.
-- **`translate.py --missing-only`** skips keys that already have a locale value **and** are not flagged `needs_retranslation`.
-- After a successful translation run, `translate.py` clears `needs_retranslation` in `i18n-context.json` so repeat runs do not re-translate the same keys.
-- Icon placeholders (`{{icon:…}}`) are never sent to the LLM.
-
-### What *not* to do
-
-- Do **not** run `translate.py --all` on a schedule — it is expensive and unnecessary unless rebuilding every locale from scratch.
-- Do **not** skip `extract-context.py` after English edits — stale detection depends on the committed context snapshot.
-- Do **not** run the full pipeline in CI by default (requires API keys and costs tokens). Use `validate.py` in CI if desired.
-
-## Incremental Updates
-
-The pipeline is fully incremental. On subsequent runs:
-
-1. `extract-context.py` diffs against the previous `i18n-context.json` and flags changed keys with `needs_retranslation: true`
-2. `translate.py --missing-only` processes only missing keys and flagged stale keys
-3. `translate.py` clears `needs_retranslation` after successful translation
-4. `validate.py` reports any keys still flagged or missing
-
-This means if a single English string changes, only that key (per locale) is re-translated — not all ~900 keys.
-
-## Supported Locales
+## Supported locales
 
 `de`, `fr`, `ru`, `bn`, `hi`, `ko`, `ja`, `zh`, `zh_tw`, `ar`, `pt`, `es`
+
+See also [docs/developer.md](../../docs/developer.md#translations-i18n).

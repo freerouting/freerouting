@@ -1,0 +1,13 @@
+{
+  "via": "Via (terme courant en français PCB) ou 'interconnexion'",
+  "trace": "Piste",
+  "net": "Net",
+  "padstack": "Empilement de pastilles (padstack)",
+  "clearance": "Clearance / espacement",
+  "fanout": "Fanout / éventail de pistes",
+  "ripup": "Suppression de piste (ripup)",
+  "ratsnest": "Rat's nest / fils air",
+  "keepout": "Zone interdite (keepout)",
+  "silkscreen": "Sérigraphie",
+  "courtyard": "Courtyard / zone de dégagement composant"
+}
