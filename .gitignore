@@ -37,3 +37,4 @@ gha-creds-*.json
 /.secrets
 /scripts/benchmark/logs
 /scripts/benchmark/outputs
+/scripts/i18n/__pycache__

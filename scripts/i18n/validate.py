@@ -2,100 +2,51 @@
 """
 validate.py — Layer 3: Post-Translation Validation
 
-After running translate.py, this script validates that:
-1. All keys present in *_en.properties also exist in *_{locale}.properties (parity)
-2. Placeholder tokens (%s, %d, {{...}}) are preserved exactly
-3. HTML tags are preserved in HTML-formatted keys
-4. No orphan keys exist (keys in locale files that don't exist in English)
-5. English hashes match (change detection: flag keys whose English source changed)
-
 Usage:
     python scripts/i18n/validate.py --locale de
     python scripts/i18n/validate.py --all
-    python scripts/i18n/validate.py --input scripts/i18n/i18n-context.json
+    python scripts/i18n/validate.py --locale de --bundle gui.BoardMenuFile -v
 """
 
+from __future__ import annotations
+
 import argparse
-import json
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
-RESOURCE_ROOT = Path("src/main/resources/app/freerouting")
-DEFAULT_CONTEXT = Path("scripts/i18n/i18n-context.json")
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-SUPPORTED_LOCALES = [
-    "de", "fr", "ru", "bn", "hi", "ko", "ja",
-    "zh", "zh_tw", "ar", "pt", "es"
-]
+from context_store import DEFAULT_CONTEXT_DIR, filter_bundles, load_context_dir  # noqa: E402
+from i18n_output import out, symbol  # noqa: E402
+from properties_io import (  # noqa: E402
+    PLACEHOLDER_RE,
+    SUPPORTED_LOCALES,
+    bundle_name_from_path,
+    english_properties_files,
+    load_properties,
+    locale_properties_path,
+)
 
-PLACEHOLDER_RE = re.compile(r"(%[sd]|%\.\d+f|%[df]|\{\{[^}]+\}\})")
 HTML_KEYS = {"trace_hover_info", "pin_hover_info", "via_hover_info", "net_hover_info"}
 
 
-def load_properties(path: Path) -> Dict[str, str]:
-    """Load a .properties file, returning a dict of key->value."""
-    result: Dict[str, str] = {}
-    if not path.exists():
-        return result
-    with open(path, "r", encoding="utf-8") as f:
-        lines = f.readlines()
-
-    i = 0
-    num_lines = len(lines)
-    while i < num_lines:
-        line = lines[i].strip()
-        i += 1
-        if not line or line.startswith("#") or line.startswith("!"):
-            continue
-        while line.endswith("\\") and not line.endswith("\\\\") and i < num_lines:
-            line = line[:-1] + lines[i].strip()
-            i += 1
-        if "=" in line:
-            key, _, value = line.partition("=")
-            result[key.strip()] = value.strip()
-        elif ":" in line:
-            key, _, value = line.partition(":")
-            result[key.strip()] = value.strip()
-    return result
-
-
-def load_context(path: Path) -> Dict[str, Dict[str, Any]]:
-    """Load the context metadata JSON file."""
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def english_properties_files() -> List[Path]:
-    """Return all *_en.properties files."""
-    return sorted(RESOURCE_ROOT.rglob("*_en.properties"))
-
-
-def locale_path_for(english_path: Path, locale: str) -> Path:
-    """Given an English properties file path, return the path for a locale."""
-    name = english_path.name.replace("_en.properties", f"_{locale}.properties")
-    return english_path.parent / name
-
-
-def bundle_name_from_path(path: Path) -> str:
-    """Convert path to bundle name (e.g., 'gui.BoardMenuFile')."""
-    rel = path.relative_to(RESOURCE_ROOT)
-    name = str(rel.with_suffix("")).replace("\\", "/").replace("/", ".")
-    if name.endswith("_en"):
-        name = name[:-3]
-    return name
+def bundles_to_validate(context: Dict[str, Dict[str, Any]], bundles: Optional[List[str]]) -> Set[str]:
+    if bundles:
+        return set(bundles)
+    return {entry["bundle"] for entry in context.values()} if context else {
+        bundle_name_from_path(p) for p in english_properties_files()
+    }
 
 
 def validate_locale(
     locale: str,
     context: Dict[str, Dict[str, Any]],
+    *,
+    bundles: Optional[List[str]] = None,
     verbose: bool = False,
 ) -> Tuple[int, int, int, int, int, int]:
-    """
-    Validate all bundles for a single locale.
-    Returns (total_keys, missing_keys, placeholder_violations, html_violations, orphan_keys, stale_keys).
-    """
     total_keys = 0
     missing_keys = 0
     placeholder_violations = 0
@@ -103,91 +54,83 @@ def validate_locale(
     orphan_keys = 0
     stale_keys = 0
 
+    allowed_bundles = bundles_to_validate(context, bundles)
+
     for english_path in english_properties_files():
         bundle = bundle_name_from_path(english_path)
+        if bundle not in allowed_bundles:
+            continue
+
         english_props = load_properties(english_path)
-        locale_file = locale_path_for(english_path, locale)
-        locale_props = load_properties(locale_file)
+        locale_props = load_properties(locale_properties_path(english_path, locale))
 
         if not locale_props and english_props:
-            print(f"\n  ⚠️  Bundle '{bundle}': No locale file found at {locale_file}")
+            out(f"\n  {symbol('warn')} Bundle '{bundle}': No locale file")
             missing_keys += len(english_props)
             continue
 
-        # Check missing keys
         for key in english_props:
             total_keys += 1
             qualified_key = f"{bundle}.{key}"
             if key not in locale_props:
                 if verbose:
-                    print(f"  ❌ {qualified_key}: missing from {locale} bundle")
+                    out(f"  {symbol('fail')} {qualified_key}: missing from {locale}")
                 missing_keys += 1
                 continue
 
             english_value = english_props[key]
             locale_value = locale_props[key]
 
-            # Check placeholders
-            eng_placeholders = set(PLACEHOLDER_RE.findall(english_value))
-            loc_placeholders = set(PLACEHOLDER_RE.findall(locale_value))
-            missing_pl = eng_placeholders - loc_placeholders
-            if missing_pl:
+            eng_ph = set(PLACEHOLDER_RE.findall(english_value))
+            loc_ph = set(PLACEHOLDER_RE.findall(locale_value))
+            missing_ph = eng_ph - loc_ph
+            if missing_ph:
                 if verbose:
-                    print(f"  ⚠️  {qualified_key}: missing placeholders {missing_pl} in {locale}")
+                    out(f"  {symbol('warn')} {qualified_key}: missing placeholders {missing_ph}")
                 placeholder_violations += 1
 
-            # Check HTML integrity
-            if key in HTML_KEYS or (qualified_key in context and context[qualified_key].get("is_html")):
+            ctx = context.get(qualified_key, {})
+            if key in HTML_KEYS or ctx.get("is_html"):
                 html_tags = re.findall(r"</?[a-z][a-z0-9]*\b[^>]*>", english_value)
                 for tag in html_tags:
                     if tag not in locale_value:
                         if verbose:
-                            print(f"  ⚠️  {qualified_key}: missing HTML tag '{tag}' in {locale}")
+                            out(f"  {symbol('warn')} {qualified_key}: missing HTML tag '{tag}'")
                         html_violations += 1
                         break
 
-            # Check if English source changed (stale)
-            if context:
-                ctx = context.get(qualified_key)
-                if ctx and ctx.get("needs_retranslation", False):
-                    if verbose:
-                        print(f"  ⚠️  {qualified_key}: English source changed (stale translation)")
-                    stale_keys += 1
+            if ctx.get("needs_retranslation", False):
+                if verbose:
+                    out(f"  {symbol('warn')} {qualified_key}: stale (English changed)")
+                stale_keys += 1
 
-        # Check orphan keys (in locale but not in English)
         for key in locale_props:
             if key not in english_props:
                 if verbose:
-                    print(f"  ⚠️  {bundle}.{key}: orphan key in {locale} (not in English bundle)")
+                    out(f"  {symbol('warn')} {bundle}.{key}: orphan key in {locale}")
                 orphan_keys += 1
 
     return total_keys, missing_keys, placeholder_violations, html_violations, orphan_keys, stale_keys
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Validate locale .properties files against English originals"
-    )
+    parser = argparse.ArgumentParser(description="Validate locale .properties files")
+    parser.add_argument("--locale", "-l", type=str, help="Target locale code")
+    parser.add_argument("--all", "-a", action="store_true", help="Validate all supported locales")
     parser.add_argument(
-        "--locale", "-l",
-        type=str,
-        help="Target locale code (e.g., de, fr)",
-    )
-    parser.add_argument(
-        "--all", "-a",
-        action="store_true",
-        help="Validate all supported locales",
-    )
-    parser.add_argument(
-        "--input", "-i",
+        "--input",
+        "-i",
         type=Path,
-        default=DEFAULT_CONTEXT,
-        help=f"Context metadata JSON file (default: {DEFAULT_CONTEXT})",
+        default=DEFAULT_CONTEXT_DIR,
+        help=f"Context directory (default: {DEFAULT_CONTEXT_DIR})",
     )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Print detailed violations")
     parser.add_argument(
-        "--verbose", "-v",
-        action="store_true",
-        help="Print detailed violation messages",
+        "--bundle",
+        "-b",
+        action="append",
+        dest="bundles",
+        help="Limit to bundle(s), e.g. gui.BoardMenuFile",
     )
     args = parser.parse_args()
 
@@ -196,47 +139,49 @@ def main() -> None:
 
     context: Dict[str, Dict[str, Any]] = {}
     if args.input.exists():
-        context = load_context(args.input)
-        print(f"📖 Loaded context for {len(context)} keys from {args.input}")
+        context = load_context_dir(args.input)
+        if args.bundles:
+            context = filter_bundles(context, args.bundles)
+        out(f"{symbol('info')} Loaded context for {len(context)} keys from {args.input}")
     else:
-        print(f"⚠️  Context file not found: {args.input}. Skipping hash validation.")
+        out(f"{symbol('warn')} Context not found: {args.input}. Skipping stale checks.")
 
     locales = SUPPORTED_LOCALES if args.all else [args.locale]
     all_passed = True
 
     for locale in locales:
-        print(f"\n{'='*60}")
-        print(f"  Validating locale: {locale.upper()}")
-        print(f"{'='*60}")
+        out(f"\n{'=' * 60}")
+        out(f"  Validating locale: {locale.upper()}")
+        out(f"{'=' * 60}")
 
-        total, missing, pl_violations, html_violations, orphans, stale = validate_locale(
-            locale, context, verbose=args.verbose
+        total, missing, pl_v, html_v, orphans, stale = validate_locale(
+            locale, context, bundles=args.bundles, verbose=args.verbose
         )
 
-        print(f"\n  📊 Results for {locale.upper()}:")
-        print(f"     Total keys checked: {total}")
-        print(f"     Missing keys: {missing}")
-        print(f"     Placeholder violations: {pl_violations}")
-        print(f"     HTML violations: {html_violations}")
-        print(f"     Orphan keys (not in English): {orphans}")
-        print(f"     Stale translations (source changed): {stale}")
+        out(f"\n  {symbol('stats')} Results for {locale.upper()}:")
+        out(f"     Total keys checked: {total}")
+        out(f"     Missing keys: {missing}")
+        out(f"     Placeholder violations: {pl_v}")
+        out(f"     HTML violations: {html_v}")
+        out(f"     Orphan keys: {orphans}")
+        out(f"     Stale translations: {stale}")
 
-        if missing > 0 or pl_violations > 0 or html_violations > 0:
-            print(f"  ❌ VALIDATION FAILED for {locale.upper()}")
+        if missing > 0 or pl_v > 0 or html_v > 0:
+            out(f"  {symbol('fail')} VALIDATION FAILED for {locale.upper()}")
             all_passed = False
         else:
-            print(f"  ✅ VALIDATION PASSED for {locale.upper()}")
+            out(f"  {symbol('ok')} VALIDATION PASSED for {locale.upper()}")
 
     if all_passed:
-        print(f"\n{'='*60}")
-        print("  ✅ ALL LOCALES VALIDATED SUCCESSFULLY")
-        print(f"{'='*60}")
+        out(f"\n{'=' * 60}")
+        out(f"  {symbol('ok')} ALL LOCALES VALIDATED SUCCESSFULLY")
+        out(f"{'=' * 60}")
         sys.exit(0)
-    else:
-        print(f"\n{'='*60}")
-        print("  ❌ SOME LOCALES HAVE ISSUES")
-        print(f"{'='*60}")
-        sys.exit(1)
+
+    out(f"\n{'=' * 60}")
+    out(f"  {symbol('fail')} SOME LOCALES HAVE ISSUES")
+    out(f"{'=' * 60}")
+    sys.exit(1)
 
 
 if __name__ == "__main__":

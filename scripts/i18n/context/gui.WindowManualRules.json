@@ -1,0 +1,76 @@
+{
+  "title": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [],
+    "bundle_desc": "GUI (graphical user interface)",
+    "java_class": "app.freerouting.gui.WindowManualRules",
+    "max_length_hint": 30,
+    "ui_role": "dialog_title",
+    "has_placeholders": false,
+    "english_hash": "dc2e4534815e7391b520b06183a15d3f6a85961da2b712ff5cf8d94d444fcbcf",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "noun_phrase"
+  },
+  "via_rule": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [],
+    "bundle_desc": "GUI (graphical user interface)",
+    "java_class": "app.freerouting.gui.WindowManualRules",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "302340746dcb26a45591132c2c1a03633b3e4619053e11c2d9bdcf113e03516f",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "trace_clearance_class": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [],
+    "bundle_desc": "GUI (graphical user interface)",
+    "java_class": "app.freerouting.gui.WindowManualRules",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "4b7635d8a4a851a0ec9fbeffb3448a955d26346e57d837636b67d5ccff72220f",
+    "related_keys": [
+      "trace_width"
+    ],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "trace_width": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [],
+    "bundle_desc": "GUI (graphical user interface)",
+    "java_class": "app.freerouting.gui.WindowManualRules",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "5e0c125b82c417e049f2cf6909a936b00920e61a721c1862a4e64a6d7030a0aa",
+    "related_keys": [
+      "trace_clearance_class"
+    ],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "on_layer": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [],
+    "bundle_desc": "GUI (graphical user interface)",
+    "java_class": "app.freerouting.gui.WindowManualRules",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "22c7026fbfa1ad98527848b008cf6a218cfd37b776ef26de2e2fdaada299aa8c",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  }
+}

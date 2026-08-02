@@ -1,0 +1,13 @@
+{
+  "via": "Via (often kept as 'Via' in German PCB tools) or 'Durchkontaktierung'",
+  "trace": "Leiterbahn",
+  "net": "Netz",
+  "padstack": "Padstack (keep English) or 'Pad- und Bohrungsdefinition'",
+  "clearance": "Abstand / Clearance",
+  "fanout": "Fanout (keep English) or 'Ausfanung'",
+  "ripup": "Auflösen (existing trace removal)",
+  "ratsnest": "Luftlinie / Ratsnest",
+  "keepout": "Sperrzone / Keep-out",
+  "silkscreen": "Siebdruck",
+  "courtyard": "Courtyard / Bestückungsraum"
+}

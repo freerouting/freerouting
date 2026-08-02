@@ -1,0 +1,84 @@
+{
+  "rules": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.gui.BoardMenuRules"
+    ],
+    "bundle_desc": "GUI (graphical user interface)",
+    "java_class": "app.freerouting.gui.BoardMenuRules",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "4228aeb07c410ffc9d15b458bf7c2bf8d9dfa7af632f2c339e69f8cb54654da3",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "noun_phrase"
+  },
+  "clearance_matrix": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.gui.BoardMenuRules"
+    ],
+    "bundle_desc": "GUI (graphical user interface)",
+    "java_class": "app.freerouting.gui.BoardMenuRules",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "3e358d5918ec1d9ce5f818e40352504e94a45589d5fc4df5c8c4ccfe75d605be",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "noun_phrase"
+  },
+  "vias": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.gui.BoardMenuRules"
+    ],
+    "bundle_desc": "GUI (graphical user interface)",
+    "java_class": "app.freerouting.gui.BoardMenuRules",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "051b49d84e7e67d2e5667f38d4eac43a3484ce13fd77fbab297ee35a2d0edf78",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "nets": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.gui.BoardMenuRules"
+    ],
+    "bundle_desc": "GUI (graphical user interface)",
+    "java_class": "app.freerouting.gui.BoardMenuRules",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "fe4b48433a7d485451ac87a293f2d0fd2aeb641dbb140fa9be0b6ea2d05ee16d",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "net_classes": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.gui.BoardMenuRules"
+    ],
+    "bundle_desc": "GUI (graphical user interface)",
+    "java_class": "app.freerouting.gui.BoardMenuRules",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "238a2fd317660fa9bd4deedceb2f5cf2c808b66c86c8a03516ce26aa3a9ebc31",
+    "related_keys": [
+      "nets"
+    ],
+    "needs_retranslation": false,
+    "grammatical_role": "noun_phrase"
+  }
+}

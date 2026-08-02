@@ -1,0 +1,13 @@
+{
+  "via": "a plated hole connecting layers (keep as 'via' or translate to the local PCB term)",
+  "trace": "a copper track/wire on the board",
+  "net": "an electrical connection between pins",
+  "padstack": "the hole + pad pattern for a component pin or via",
+  "clearance": "the minimum distance between two copper features",
+  "fanout": "short traces from BGA pads to vias on other layers",
+  "ripup": "removing an existing trace to reroute it",
+  "ratsnest": "the visual air-wire showing unconnected pins",
+  "keepout": "an area where traces/vias are not allowed",
+  "silkscreen": "the white text/outline layer on the PCB",
+  "courtyard": "the minimum keepout boundary around a component"
+}

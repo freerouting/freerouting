@@ -1,0 +1,221 @@
+{
+  "current_layer": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "301a2d763305375f6039ded373e95e6e51216ae0abd48b275a110a5b66d05bba",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "target_layer": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "bdcf79cd83c1ac8ea935f6af544fc7e4be5158b25dfa7335081f25333a403e2b",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "found": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "88c34fc241e3037337fcb87bc84d742b03ee6efd83779ca21bc7c9f259b0591a",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "failed": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "a6964edfab2c18eb95c09e496d064fef6c3d8fe189d290ec116b4a89884a8ce8",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "to_route": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "57981d4b11f33b9a6308f741f7724f367807cc0326a8946d2db8c392067e668c",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "ripped": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "826e33ce0683d1c5f9dce564482957bed445b9a3663058ff9b907374ba7634f4",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "connections_not_found": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "439f1944937c26f2480451446fa8fcc5254ecd093d3a179d3076e44549ef42ca",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "routed": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "de0d2817777f897260030c2305db1a7a1cf26a32d533ef112050aa2bda3c6ec6",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "fanout_pass": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "bf6c561f6b3216e75f9beb32ec97c36bb37614cebac2528b78c8df7d44d0c686",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "noun_phrase"
+  },
+  "components": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "7b12be43febc6e18259dd77c004315b4143d570234e0f15acf5f9d7b79c371b5",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "still": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "94e8566ddfc123edf115fcbb35a16973409d95e05e3deb7dc4a15a7af325a885",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "fragment"
+  },
+  "via_count": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "41f30a24313c121490f8403f9d3f10da95810bab9ba0569159cf86741bb05286",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "noun_phrase"
+  },
+  "trace_length": {
+    "is_html": false,
+    "placeholders": [],
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": false,
+    "english_hash": "3c653f43dac5dda14ead70c9e66a892361c32a628d70e18b7f5e6f48c120aec7",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "noun_phrase"
+  },
+  "score": {
+    "is_html": false,
+    "placeholders": [
+      "{{score}}",
+      "{{unrouted_count}}"
+    ],
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "bundle_desc": "interactive routing session",
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "ui_role": "label",
+    "has_placeholders": true,
+    "english_hash": "061d52d0bac1f89c80509cc538755cd5ee16c22a2dc38216e011dc38263984b8",
+    "related_keys": [],
+    "needs_retranslation": false,
+    "grammatical_role": "noun_phrase"
+  }
+}
