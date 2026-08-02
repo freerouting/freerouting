@@ -114,7 +114,7 @@ python scripts/i18n/extract-context.py
 
 The pruner reads `build/reports/i18n/EnglishBundlesContainUnusedKeysReport.json`, deletes listed keys from every `*_{locale}.properties` file, updates `scripts/i18n/context/`, and removes **orphan bundles** that have no Java class in `src/main/java` (for example legacy `WindowSnapshot` resources).
 
-The parity test `englishBundlesDoNotContainUnusedKeys` fails CI if English bundles contain keys not referenced from Java source (with companion expansion for `_tooltip` / `_hover_info` keys).
+The parity test `englishBundlesDoNotContainUnusedKeys` writes `build/reports/i18n/EnglishBundlesContainUnusedKeysReport.*` and logs a warning when unused keys are found. It does **not** fail CI — review the report manually before pruning (the scanner misses inherited-bundle and dynamic enum keys; blind `--apply` can remove still-used strings).
 
 ## Configuration
 

@@ -58,10 +58,11 @@ python scripts/i18n/validate.py --locale de
 ./gradlew test --tests app.freerouting.i18n.EnglishPropertiesParityTest
 ```
 
-After a Java refactor removes UI strings, prune stale keys from all locale bundles:
+After a Java refactor removes UI strings, review unused-key reports and prune stale keys from all locale bundles when you are confident they are truly unused:
 
 ```bash
 ./gradlew test --tests app.freerouting.i18n.EnglishPropertiesParityTest.englishBundlesDoNotContainUnusedKeys
+# Review build/reports/i18n/EnglishBundlesContainUnusedKeysReport.txt before applying:
 python scripts/i18n/prune-unused-keys.py --apply
 python scripts/i18n/extract-context.py
 ```
