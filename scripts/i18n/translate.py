@@ -55,6 +55,7 @@ def validate_placeholders(english: str, translation: str) -> bool:
     if extra:
         err(f"      {symbol('warn')} Extra placeholders in translation: {extra}")
         return False
+
     return True
 
 

@@ -30,6 +30,8 @@ ORPHAN_BUNDLES = {
     "app.freerouting.gui.WindowSnapshot",
     "app.freerouting.gui.WindowSnapshotSettings",
     "app.freerouting.gui.WindowNetSamples",
+    "app.freerouting.interactive.RatsNest",
+
 }
 
 

@@ -39,5 +39,6 @@ def out(message: str = "", *, file=None, end: str = "\n", flush: bool = False) -
     print(message, file=target, end=end, flush=flush)
 
 
+
 def err(message: str) -> None:
     print(message, file=sys.stderr)

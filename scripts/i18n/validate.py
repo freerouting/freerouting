@@ -92,6 +92,7 @@ def validate_locale(
                         out(f"  {symbol('warn')} {qualified_key}: missing placeholders {missing_ph}")
                     if extra_ph:
                         out(f"  {symbol('warn')} {qualified_key}: extra placeholders {extra_ph}")
+
                 placeholder_violations += 1
 
             ctx = context.get(qualified_key, {})
