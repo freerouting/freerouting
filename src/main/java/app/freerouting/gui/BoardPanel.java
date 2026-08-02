@@ -93,6 +93,14 @@ public class BoardPanel extends JPanel {
   private static final double c_zoom_factor = 2.0;
 
   /**
+   * Minimum interval (in milliseconds) between repaints triggered by mouse movement
+   * when the custom crosshair cursor is enabled. This throttles the repaint rate to
+   * prevent flooding the AWT event queue with full board redraws during rapid mouse
+   * motion (e.g. high-DPI mice generating 100+ events/second).
+   */
+  private static final long CURSOR_REPAINT_THROTTLE_MS = 16; // ~60 fps max
+
+  /**
    * Message display component showing status information and coordinates.
    *
    * <p>Displays:
@@ -246,6 +254,17 @@ public class BoardPanel extends JPanel {
    * @see #set_custom_crosshair_cursor(boolean)
    */
   private Cursor custom_cursor;
+
+  /**
+   * Timestamp (in milliseconds) of the last repaint triggered by cursor movement.
+   *
+   * <p>Used to throttle cursor-driven repaints. Only one repaint is issued per
+   * {@link #CURSOR_REPAINT_THROTTLE_MS} window; mouse-move events that arrive
+   * within the throttle window update the cursor position but do not immediately
+   * trigger a repaint. The final position will be painted on the next scheduled
+   * repaint.
+   */
+  private long lastCursorRepaintTime;
 
   /**
    * Creates a new BoardPanel within a GUI application context.
@@ -451,7 +470,14 @@ public class BoardPanel extends JPanel {
     }
     if (this.custom_cursor != null) {
       this.custom_cursor.set_location(p_evt.getPoint());
-      this.repaint();
+      // Throttle repaints to avoid flooding the AWT event queue with full board redraws
+      // during rapid mouse motion. High-DPI mice can generate 100+ events/second, and
+      // each repaint triggers a full board render + cursor overlay.
+      long now = System.currentTimeMillis();
+      if (now - this.lastCursorRepaintTime >= CURSOR_REPAINT_THROTTLE_MS) {
+        this.lastCursorRepaintTime = now;
+        this.repaint();
+      }
     }
   }
 
@@ -699,6 +725,12 @@ public class BoardPanel extends JPanel {
     double dy = new_cursor.getY() - p_location.getY();
     Point2D new_center = new Point2D.Double(old_center.getX() + dx, old_center.getY() + dy);
     Point2D adjustment_vector = set_viewport_center(new_center);
+    // Update the custom cursor position to match the new zoom level
+    if (this.custom_cursor != null) {
+      Point2D adjusted_new_cursor = new Point2D.Double(new_cursor.getX() + adjustment_vector.getX() + 0.5,
+          new_cursor.getY() + adjustment_vector.getY() + 0.5);
+      this.custom_cursor.set_location(adjusted_new_cursor);
+    }
     repaint();
     Point2D adjusted_new_cursor = new Point2D.Double(new_cursor.getX() + adjustment_vector.getX() + 0.5,
         new_cursor.getY() + adjustment_vector.getY() + 0.5);
