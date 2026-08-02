@@ -1,18 +1,18 @@
 {
   "command_line_help": {
-    "is_html": false,
-    "placeholders": [],
+    "bundle_desc": "main application",
     "code_references": [
       "app.freerouting.Freerouting"
     ],
-    "bundle_desc": "main application",
+    "english_hash": "685eebcbfc40dfe0ba4eee00986369db5d58f801cd2e90ba7a70fcef003e65e7",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
     "java_class": "app.freerouting.Freerouting",
     "max_length_hint": null,
-    "ui_role": "label",
-    "has_placeholders": false,
-    "english_hash": "685eebcbfc40dfe0ba4eee00986369db5d58f801cd2e90ba7a70fcef003e65e7",
-    "related_keys": [],
     "needs_retranslation": false,
-    "grammatical_role": "noun_phrase"
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
   }
 }

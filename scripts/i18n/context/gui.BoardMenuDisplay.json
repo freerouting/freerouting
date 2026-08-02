@@ -1,140 +1,140 @@
 {
-  "display": {
-    "is_html": false,
-    "placeholders": [],
-    "code_references": [
-      "app.freerouting.gui.BoardMenuDisplay"
-    ],
-    "bundle_desc": "GUI (graphical user interface)",
-    "java_class": "app.freerouting.gui.BoardMenuDisplay",
-    "max_length_hint": null,
-    "ui_role": "label",
-    "has_placeholders": false,
-    "english_hash": "3907fa7f80722a6fc58cd8c1bd30abf7638095d6774f183b6e831b7093957d1b",
-    "related_keys": [],
-    "needs_retranslation": false,
-    "grammatical_role": "noun_phrase"
-  },
-  "object_visibility": {
-    "is_html": false,
-    "placeholders": [],
-    "code_references": [
-      "app.freerouting.gui.BoardMenuDisplay"
-    ],
-    "bundle_desc": "GUI (graphical user interface)",
-    "java_class": "app.freerouting.gui.BoardMenuDisplay",
-    "max_length_hint": null,
-    "ui_role": "label",
-    "has_placeholders": false,
-    "english_hash": "9998a4ba72a3cb158590b989a9040ba548d0acefb1014edad39e0b8e84a4c02a",
-    "related_keys": [
-      "object_visibility_tooltip"
-    ],
-    "needs_retranslation": false,
-    "grammatical_role": "noun_phrase"
-  },
-  "object_visibility_tooltip": {
-    "is_html": false,
-    "placeholders": [],
-    "code_references": [
-      "app.freerouting.gui.BoardMenuDisplay"
-    ],
-    "bundle_desc": "GUI (graphical user interface)",
-    "java_class": "app.freerouting.gui.BoardMenuDisplay",
-    "max_length_hint": null,
-    "ui_role": "tooltip",
-    "has_placeholders": false,
-    "english_hash": "e92e8e5b6f9ff7312351bbd377fa6ada0fe74a446ed334eb43591af451e715a6",
-    "related_keys": [
-      "object_visibility"
-    ],
-    "needs_retranslation": false,
-    "grammatical_role": "fragment"
-  },
-  "layer_visibility": {
-    "is_html": false,
-    "placeholders": [],
-    "code_references": [
-      "app.freerouting.gui.BoardMenuDisplay"
-    ],
-    "bundle_desc": "GUI (graphical user interface)",
-    "java_class": "app.freerouting.gui.BoardMenuDisplay",
-    "max_length_hint": null,
-    "ui_role": "label",
-    "has_placeholders": false,
-    "english_hash": "aeeab4a983960671becc37f95288f44328b773c4df627cddea0eff177ecc9e88",
-    "related_keys": [
-      "layer_visibility_tooltip"
-    ],
-    "needs_retranslation": false,
-    "grammatical_role": "noun_phrase"
-  },
-  "layer_visibility_tooltip": {
-    "is_html": false,
-    "placeholders": [],
-    "code_references": [
-      "app.freerouting.gui.BoardMenuDisplay"
-    ],
-    "bundle_desc": "GUI (graphical user interface)",
-    "java_class": "app.freerouting.gui.BoardMenuDisplay",
-    "max_length_hint": null,
-    "ui_role": "tooltip",
-    "has_placeholders": false,
-    "english_hash": "ca9f0827ab826ba5f16e18e3bd55a32dc1055744243d89587ca5d1bf4f855603",
-    "related_keys": [
-      "layer_visibility"
-    ],
-    "needs_retranslation": false,
-    "grammatical_role": "fragment"
-  },
   "colors": {
-    "is_html": false,
-    "placeholders": [],
+    "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.BoardMenuDisplay"
     ],
-    "bundle_desc": "GUI (graphical user interface)",
+    "english_hash": "88c45d9e526c08dd7f8b9d1d3ab96a72d68205232090be5da57e05251bfea650",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuDisplay",
     "max_length_hint": null,
-    "ui_role": "label",
-    "has_placeholders": false,
-    "english_hash": "88c45d9e526c08dd7f8b9d1d3ab96a72d68205232090be5da57e05251bfea650",
-    "related_keys": [],
     "needs_retranslation": false,
-    "grammatical_role": "noun_phrase"
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
   },
   "colors_tooltip": {
-    "is_html": false,
-    "placeholders": [],
+    "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.BoardMenuDisplay"
     ],
-    "bundle_desc": "GUI (graphical user interface)",
+    "english_hash": "6fc22aa1e8710794a9f693f03d760b78b4b4e645f127620dada88216434b7669",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuDisplay",
     "max_length_hint": null,
-    "ui_role": "tooltip",
-    "has_placeholders": false,
-    "english_hash": "6fc22aa1e8710794a9f693f03d760b78b4b4e645f127620dada88216434b7669",
+    "needs_retranslation": false,
+    "placeholders": [],
     "related_keys": [
       "colors"
     ],
-    "needs_retranslation": false,
-    "grammatical_role": "fragment"
+    "ui_role": "tooltip"
   },
-  "miscellaneous": {
-    "is_html": false,
-    "placeholders": [],
+  "display": {
+    "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.BoardMenuDisplay"
     ],
-    "bundle_desc": "GUI (graphical user interface)",
+    "english_hash": "3907fa7f80722a6fc58cd8c1bd30abf7638095d6774f183b6e831b7093957d1b",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuDisplay",
     "max_length_hint": null,
-    "ui_role": "label",
-    "has_placeholders": false,
-    "english_hash": "5cb0b42660589925c804543d433ba0764dab859487e5a9ed855481dcbfec1f06",
-    "related_keys": [],
     "needs_retranslation": false,
-    "grammatical_role": "noun_phrase"
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "layer_visibility": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardMenuDisplay"
+    ],
+    "english_hash": "aeeab4a983960671becc37f95288f44328b773c4df627cddea0eff177ecc9e88",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardMenuDisplay",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "layer_visibility_tooltip"
+    ],
+    "ui_role": "label"
+  },
+  "layer_visibility_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardMenuDisplay"
+    ],
+    "english_hash": "ca9f0827ab826ba5f16e18e3bd55a32dc1055744243d89587ca5d1bf4f855603",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardMenuDisplay",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "layer_visibility"
+    ],
+    "ui_role": "tooltip"
+  },
+  "miscellaneous": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardMenuDisplay"
+    ],
+    "english_hash": "5cb0b42660589925c804543d433ba0764dab859487e5a9ed855481dcbfec1f06",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardMenuDisplay",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "object_visibility": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardMenuDisplay"
+    ],
+    "english_hash": "9998a4ba72a3cb158590b989a9040ba548d0acefb1014edad39e0b8e84a4c02a",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardMenuDisplay",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "object_visibility_tooltip"
+    ],
+    "ui_role": "label"
+  },
+  "object_visibility_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardMenuDisplay"
+    ],
+    "english_hash": "e92e8e5b6f9ff7312351bbd377fa6ada0fe74a446ed334eb43591af451e715a6",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardMenuDisplay",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "object_visibility"
+    ],
+    "ui_role": "tooltip"
   }
 }
