@@ -45,9 +45,15 @@ from properties_io import (  # noqa: E402
 
 
 def validate_placeholders(english: str, translation: str) -> bool:
-    missing = set(PLACEHOLDER_RE.findall(english)) - set(PLACEHOLDER_RE.findall(translation))
+    eng_ph = set(PLACEHOLDER_RE.findall(english))
+    loc_ph = set(PLACEHOLDER_RE.findall(translation))
+    missing = eng_ph - loc_ph
+    extra = loc_ph - eng_ph
     if missing:
         err(f"      {symbol('warn')} Missing placeholders in translation: {missing}")
+        return False
+    if extra:
+        err(f"      {symbol('warn')} Extra placeholders in translation: {extra}")
         return False
     return True
 

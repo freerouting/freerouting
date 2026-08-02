@@ -34,9 +34,9 @@ def symbol(name: str) -> str:
     return pair[0] if _USE_UNICODE else pair[1]
 
 
-def out(message: str = "", *, file=None) -> None:
+def out(message: str = "", *, file=None, end: str = "\n", flush: bool = False) -> None:
     target = file or sys.stdout
-    print(message, file=target)
+    print(message, file=target, end=end, flush=flush)
 
 
 def err(message: str) -> None:

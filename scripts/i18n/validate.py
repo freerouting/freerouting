@@ -85,9 +85,13 @@ def validate_locale(
             eng_ph = set(PLACEHOLDER_RE.findall(english_value))
             loc_ph = set(PLACEHOLDER_RE.findall(locale_value))
             missing_ph = eng_ph - loc_ph
-            if missing_ph:
+            extra_ph = loc_ph - eng_ph
+            if missing_ph or extra_ph:
                 if verbose:
-                    out(f"  {symbol('warn')} {qualified_key}: missing placeholders {missing_ph}")
+                    if missing_ph:
+                        out(f"  {symbol('warn')} {qualified_key}: missing placeholders {missing_ph}")
+                    if extra_ph:
+                        out(f"  {symbol('warn')} {qualified_key}: extra placeholders {extra_ph}")
                 placeholder_violations += 1
 
             ctx = context.get(qualified_key, {})
