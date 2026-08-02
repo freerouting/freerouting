@@ -8,27 +8,13 @@ from typing import Dict, List, Optional
 
 GLOSSARY_DIR = Path("scripts/i18n/glossary")
 
-DEFAULT_TERMS: Dict[str, str] = {
-    "via": "a plated hole connecting PCB layers",
-    "trace": "a copper track/wire on the board",
-    "net": "an electrical connection between pins",
-    "padstack": "the hole + pad pattern for a component pin or via",
-    "clearance": "the minimum distance between two copper features",
-    "fanout": "short traces from BGA pads to vias on other layers",
-    "ripup": "removing an existing trace to reroute it",
-    "ratsnest": "the visual air-wire showing unconnected pins",
-    "keepout": "an area where traces/vias are not allowed",
-    "silkscreen": "the white text/outline layer on the PCB",
-    "courtyard": "the minimum keepout boundary around a component",
-}
-
 
 def load_glossary(locale: str) -> Dict[str, str]:
     """
-    Load glossary for a locale. Merges _default.json with glossary-{locale}.json.
+    Load glossary for a locale. Merges _default.json with {locale}.json.
     Values are full prompt lines describing how to translate each term.
     """
-    terms = dict(DEFAULT_TERMS)
+    terms: Dict[str, str] = {}
     default_path = GLOSSARY_DIR / "_default.json"
     if default_path.exists():
         with open(default_path, "r", encoding="utf-8") as f:

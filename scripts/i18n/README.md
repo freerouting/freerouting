@@ -127,7 +127,14 @@ python scripts/i18n/validate.py --locale de --bundle gui.BoardMenuFile -v
 
 ## Glossaries
 
-Locale-specific PCB terms live in `scripts/i18n/glossary/{locale}.json`, merged over `_default.json`. Add a file when bootstrapping a new locale for better technical consistency.
+Locale-specific PCB terms live in `scripts/i18n/glossary/`:
+
+| File | Purpose |
+|---|---|
+| `_default.json` | English definitions for all locales (50 Freerouting/Specctra terms) |
+| `de.json`, `fr.json`, … | Locale-specific translation guidance (overrides `_default`) |
+
+Terms were mined from `*_en.properties` and Java UI strings (autorouter, net class, conduction area, push/shove, Specctra DSN/SES, etc.). Add `{locale}.json` when bootstrapping a new language.
 
 ## Supported locales
 
