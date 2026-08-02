@@ -1102,7 +1102,7 @@ public class BoardFrame extends WindowBase {
    * Shows a save confirmation dialog if the current board has unsaved changes.
    *
    * @param p_file The file to load
-   * @param p_format The format of the file (DSN or JSON)
+   * @param p_format The format of the file (DSN or KiCad design JSON)
    */
   public void loadDroppedFile(File p_file, FileFormat p_format) {
     if (p_file == null) {
@@ -1112,7 +1112,7 @@ public class BoardFrame extends WindowBase {
     FileFormat format = p_format;
 
     // Validate format is supported
-    if (format != FileFormat.DSN && format != FileFormat.JSON) {
+    if (format != FileFormat.DSN && format != FileFormat.KICAD_DESIGN_JSON) {
       FRLogger.warn("Dropped file format not supported: " + format);
       return;
     }
@@ -1166,7 +1166,7 @@ public class BoardFrame extends WindowBase {
 
       InputStream inputStream = new ByteArrayInputStream(fileContent);
 
-      if (format == FileFormat.DSN || format == FileFormat.JSON) {
+      if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
         this.load(inputStream, format, null, routingJob);
         FRAnalytics.buttonClicked("file_dropped_" + format.name().toLowerCase(), routingJob.getInputFileDetails());
       }

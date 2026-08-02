@@ -163,7 +163,7 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
         }
       }
 
-       if (format == FileFormat.DSN || format == FileFormat.JSON) {
+       if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
            if (!file_loaded) {
            // Load the first valid file
            board_panel.board_frame.loadDroppedFile(file, format);
@@ -178,7 +178,7 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
         // Unknown format
         FRLogger.warn(
             "Dropped file format not supported: '" + file.getName() + 
-            "'. Supported formats: DSN, JSON.");
+            "'. Supported formats: DSN, KiCad design JSON.");
       }
     }
 
