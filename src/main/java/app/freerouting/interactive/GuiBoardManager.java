@@ -142,14 +142,22 @@ public class GuiBoardManager extends HeadlessBoardManager {
   private app.freerouting.gui.BoardFrame boardFrame;
 
   /**
-   * The minimum interval in milliseconds between consecutive board panel repaints.
+   * The minimum interval in milliseconds between consecutive board panel repaints during
+   * background operations (autorouting, optimization).
    *
-   * <p>This throttle mechanism prevents excessive repainting during intensive operations,
-   * maintaining a maximum effective frame rate of 1 FPS (1000ms interval). This is
-   * particularly important during autorouting and optimization when many board changes
-   * occur rapidly.
+   * <p>This throttle mechanism prevents excessive repainting during intensive background
+   * operations, maintaining a maximum effective frame rate of 1 FPS (1000ms interval).
    */
-  private static final long repaint_interval = 1000;
+  private static final long background_repaint_interval = 1000;
+
+  /**
+   * The minimum interval in milliseconds between consecutive board panel repaints during
+   * interactive operations (dragging, moving).
+   *
+   * <p>This throttle provides smoother visual feedback for interactive operations,
+   * targeting approximately 30 FPS.
+   */
+  private static final long interactive_repaint_interval = 33;
 
   /**
    * The timestamp of the most recent board panel repaint operation.
@@ -1512,33 +1520,54 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * Requests a repaint of the entire board panel.
+   * Requests a repaint of the board panel.
    *
    * <p>Repaint behavior depends on the paint_immediately flag:
    * <ul>
    *   <li><strong>Immediate mode (paint_immediately=true):</strong> Forces synchronous repaint
    *       (used during logfile playback)</li>
    *   <li><strong>Throttled mode (paint_immediately=false):</strong> Respects minimum interval
-   *       between repaints to maintain reasonable frame rate</li>
+   *       between repaints to maintain responsive frame rate</li>
    * </ul>
    *
-   * <p>Throttling prevents excessive repainting during rapid board changes, improving
-   * performance during autorouting and batch operations.
+   * <p>Throttling prevents excessive repainting during rapid board changes. The interval
+   * is adjusted dynamically based on whether the user is interactively dragging items.
    *
-   * @see #repaint_interval
+   * @see #interactive_repaint_interval
+   * @see #background_repaint_interval
    * @see #paint_immediately
    */
   public void repaint() {
     if (this.paint_immediately) {
-      final Rectangle MAX_RECTAMLE = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
-      panel.paintImmediately(MAX_RECTAMLE);
+      final Rectangle MAX_RECTANGLE = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+      panel.paintImmediately(MAX_RECTANGLE);
     } else {
-      if (last_repainted_time < System.currentTimeMillis() - repaint_interval) {
+      // Use shorter interval for interactive dragging to ensure smooth visual feedback
+      long effective_interval = isInInteractiveDrag() ? interactive_repaint_interval : background_repaint_interval;
+      if (last_repainted_time < System.currentTimeMillis() - effective_interval) {
         last_repainted_time = System.currentTimeMillis();
 
-        panel.repaint();
+        // Use partial repaint if we have an update box (more efficient)
+        Rectangle update_rect = get_graphics_update_rectangle();
+        if (update_rect.width > 0 && update_rect.height > 0) {
+          panel.repaint(update_rect);
+        } else {
+          panel.repaint();
+        }
       }
     }
+  }
+
+  /**
+   * Checks if the current interactive state is an active drag operation.
+   *
+   * <p>Used to determine repaint throttling behavior - interactive drags need
+   * higher frame rate for smooth visual feedback.
+   *
+   * @return true if currently in a drag state (DragState or its subclasses)
+   */
+  private boolean isInInteractiveDrag() {
+    return interactive_state instanceof DragState;
   }
 
   /**
