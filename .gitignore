@@ -29,10 +29,6 @@ bin/
 freerouting.dsn
 temp-freerouting.dsn
 freerouting.ses
-
-# gemini-cli settings
-.gemini/
-
 # GitHub App credentials
 gha-creds-*.json
 
