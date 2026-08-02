@@ -16,7 +16,6 @@ bin/
 /scripts/build/runtime
 /scripts/build/Freerouting*
 
-/fixtures/*.ses
 /fixtures/*.bin
 /fixtures/**/*.zip
 
@@ -30,10 +29,6 @@ bin/
 freerouting.dsn
 temp-freerouting.dsn
 freerouting.ses
-
-# gemini-cli settings
-.gemini/
-
 # GitHub App credentials
 gha-creds-*.json
 

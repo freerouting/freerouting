@@ -1,0 +1,117 @@
+(pcb "C:\Work\freerouting\fixtures\Issue368-CorneyIslandWireless.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  218380 -109700  175090 -109700  175090 -66410  218380 -66410
+            218380 -109700)
+    )
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component ceoloide:diode_tht_sod123
+      (place D16 202400 -96300 back 270)
+      (place D17 202400 -77300 back 270)
+    )
+    (component ceoloide:switch_mx
+      (place S16 195000 -97625 back 180)
+      (place S17 195000 -78625 back 180)
+    )
+  )
+  (library
+    (image ceoloide:diode_tht_sod123
+      (outline (path signal 100  250 -400  250 400))
+      (outline (path signal 100  250 0  750 0))
+      (outline (path signal 100  -350 0  -350 -550))
+      (outline (path signal 100  -350 0  250 -400))
+      (outline (path signal 100  -350 0  -350 550))
+      (outline (path signal 100  -750 0  -350 0))
+      (outline (path signal 100  250 400  -350 0))
+      (pin Rect[T]Pad_900.000000x1200.000000_um 1 -1650 0)
+      (pin Rect[T]Pad_900.000000x1200.000000_um 2 1650 0)
+    )
+    (image ceoloide:switch_mx
+      (pin Rect[T]Pad_2550.000000x2500.000000_um 1 -7085 -2540)
+      (pin RoundRect[T]Pad_2550.000000x2500.000000_0.000000_um_0.200000_1 2 5842 -5080)
+      (keepout "" (circle F.Cu 2400 -5080 0))
+      (keepout "" (circle B.Cu 2400 -5080 0))
+      (keepout "" (circle F.Cu 3500 -3810 -2540))
+      (keepout "" (circle B.Cu 3500 -3810 -2540))
+      (keepout "" (circle F.Cu 4600))
+      (keepout "" (circle B.Cu 4600))
+      (keepout "" (circle F.Cu 3500 2540 -5080))
+      (keepout "" (circle B.Cu 3500 2540 -5080))
+      (keepout "" (circle F.Cu 2400 5080 0))
+      (keepout "" (circle B.Cu 2400 5080 0))
+    )
+    (padstack RoundRect[T]Pad_2550.000000x2500.000000_0.000000_um_0.200000_1
+      (shape (polygon F.Cu 0  -1275 750  -775 1250  1275 1250  1275 -1250  -1275 -1250
+            -1275 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2550.000000x2500.000000_um
+      (shape (rect F.Cu -1275 -1250 1275 1250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_900.000000x1200.000000_um
+      (shape (rect F.Cu -450 -600 450 600))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net C5
+      (pins S16-1 S17-1)
+    )
+    (net inner_bottom_B
+      (pins D16-2 S16-2)
+    )
+    (net inner_home_B
+      (pins D17-2 S17-2)
+    )
+    (net R2
+      (pins D16-1)
+    )
+    (net R1
+      (pins D17-1)
+    )
+    (class kicad_default C5 R1 R2 inner_bottom_B inner_home_B
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

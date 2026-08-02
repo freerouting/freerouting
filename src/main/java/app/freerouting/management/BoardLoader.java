@@ -32,14 +32,14 @@ public class BoardLoader {
     }
 
     // Only DSN and JSON/Native format are supported for now
-    if (job.input.format != FileFormat.DSN && job.input.format != FileFormat.JSON) {
+    if (job.input.format != FileFormat.DSN && job.input.format != FileFormat.KICAD_DESIGN_JSON) {
       FRLogger.error("Cannot load board: only DSN and JSON formats are supported, got " + job.input.format, null);
       return false;
     }
 
     // Load the board
     try {
-      if (job.input.format == FileFormat.JSON) {
+      if (job.input.format == FileFormat.KICAD_DESIGN_JSON) {
         HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
         boardManager.loadFromKiCadJson(
             job.input.getData(),

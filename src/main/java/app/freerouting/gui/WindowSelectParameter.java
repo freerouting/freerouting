@@ -153,7 +153,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       // Active layer selection button
       JToggleButton btn = new JToggleButton(curr_layer.name);
       btn.setToolTipText(tm.getText("layer_button_tooltip", curr_layer.name));
-      btn.setEnabled(curr_layer.is_signal);
+      btn.setEnabled(true);
       btn.setMargin(new Insets(2, 5, 2, 5));
       if (!curr_layer.is_signal) {
         btn.setToolTipText(tm.getText("disabled_layer_tooltip"));

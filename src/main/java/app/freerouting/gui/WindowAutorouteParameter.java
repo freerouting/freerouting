@@ -147,6 +147,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       settings_autorouter_layer_active_arr[i]
           .addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_layer_active_arr", null));
       settings_autorouter_layer_active_arr[i].setEnabled(curr_layer.is_signal);
+      if (!curr_layer.is_signal) {
+        settings_autorouter_layer_active_arr[i].setToolTipText(tm.getText("power_layer_tooltip"));
+      }
       gridbag.setConstraints(settings_autorouter_layer_active_arr[i], gridbag_constraints);
       main_panel.add(settings_autorouter_layer_active_arr[i]);
 
@@ -161,6 +164,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       settings_autorouter_combo_box_arr
           .get(i)
           .addActionListener(new PreferredDirectionListener(i));
+      settings_autorouter_combo_box_arr.get(i).setEnabled(curr_layer.is_signal);
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(settings_autorouter_combo_box_arr.get(i), gridbag_constraints);
       main_panel.add(settings_autorouter_combo_box_arr.get(i));

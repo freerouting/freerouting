@@ -82,6 +82,8 @@ public class GlobalSettings implements Serializable {
   @SerializedName("version")
   public String version;
   public transient boolean show_help_option;
+  public transient String compareFile1;
+  public transient String compareFile2;
   // DRC report file details that we got from the command line arguments.
   public transient BoardFileDetails drc_report_file;
   /**
@@ -445,6 +447,14 @@ public class GlobalSettings implements Serializable {
           show_help_option = true;
           continue;
         }
+        if (p_args[i].startsWith("--compare-boards=")) {
+          String[] files = p_args[i].substring("--compare-boards=".length()).split(",");
+          if (files.length == 2) {
+            compareFile1 = files[0].trim();
+            compareFile2 = files[1].trim();
+          }
+          continue;
+        }
         if (p_args[i].startsWith("--")) {
           // it's a general settings value setter
           // Use split limit=2 so that values containing '=' (e.g. URLs with query strings)
@@ -507,11 +517,16 @@ public class GlobalSettings implements Serializable {
                 initialInputFile = file;
                 hasDsn = true;
               } else if (lowerFile.endsWith(".json")) {
-                if (hasDsn) {
-                  FRLogger.warn("Multiple input files (DSN/JSON) provided in -de argument. Only the last one will be used.");
+                if (!hasDsn) {
+                  initialInputFile = file;
+                  hasDsn = true;
+                } else {
+                  if (hasSes) {
+                    FRLogger.warn("Multiple session files (SES/JSON) provided in -de argument. Only the last one will be used.");
+                  }
+                  design_session_filename = file;
+                  hasSes = true;
                 }
-                initialInputFile = file;
-                hasDsn = true;
               } else if (lowerFile.endsWith(".ses")) {
                 if (hasSes) {
                   FRLogger.warn("Multiple SES files provided in -de argument. Only the last one will be used.");

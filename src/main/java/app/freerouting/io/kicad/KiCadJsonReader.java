@@ -30,6 +30,7 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.io.BoardMetadata;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.CoordinateTransform;
+import app.freerouting.io.KiCadNetClassNames;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.rules.BoardRules;
@@ -120,21 +121,29 @@ public final class KiCadJsonReader {
           new app.freerouting.io.specctra.parser.LayerStructure(layerStructure); // dummy or map layer names if needed
 
       // 4. Clearance Matrix
-      int clearanceClassCount = Math.max(2, boardJson.netClasses.size() + 2);
+      KiCadBoardJson.NetClassJson kiCadDefaultNetClass = findKiCadDefaultNetClass(boardJson.netClasses);
+      List<KiCadBoardJson.NetClassJson> additionalNetClasses = nonDefaultNetClasses(boardJson.netClasses);
+
+      int clearanceClassCount = Math.max(2, additionalNetClasses.size() + 2);
       String[] clearanceClassNames = new String[clearanceClassCount];
       clearanceClassNames[0] = "null";
       clearanceClassNames[1] = "default";
-      for (int i = 0; i < boardJson.netClasses.size(); i++) {
-        clearanceClassNames[i + 2] = boardJson.netClasses.get(i).name;
+      for (int i = 0; i < additionalNetClasses.size(); i++) {
+        clearanceClassNames[i + 2] = additionalNetClasses.get(i).name;
       }
 
       ClearanceMatrix clearanceMatrix = new ClearanceMatrix(clearanceClassCount, layerStructure, clearanceClassNames);
       int defaultClearance = (int) Math.round(Unit.scale(0.2, Unit.MM, userUnit) * scaleFactor); // fallback 0.2mm
       clearanceMatrix.set_default_value(defaultClearance);
 
-      // Populate clearance matrix from NetClasses and Custom Clearance Rules
-      for (int i = 0; i < boardJson.netClasses.size(); i++) {
-        KiCadBoardJson.NetClassJson nc = boardJson.netClasses.get(i);
+      if (kiCadDefaultNetClass != null && kiCadDefaultNetClass.clearance > 0) {
+        int defaultClVal = (int) Math.round(kiCadDefaultNetClass.clearance * scaleFactor);
+        clearanceMatrix.set_value(1, 1, defaultClVal);
+      }
+
+      // Populate clearance matrix from non-default NetClasses and Custom Clearance Rules
+      for (int i = 0; i < additionalNetClasses.size(); i++) {
+        KiCadBoardJson.NetClassJson nc = additionalNetClasses.get(i);
         int clNo = i + 2;
         int clVal = (int) Math.round(nc.clearance * scaleFactor);
         clearanceMatrix.set_value(clNo, clNo, clVal);
@@ -155,23 +164,127 @@ public final class KiCadJsonReader {
       // 5. Board Outline / Boundary Shape Creation
       PointOutline boundingBoxOutline = new PointOutline();
       List<PolylineShape> outlineShapes = new ArrayList<>();
-      if (boardJson.outline == null || boardJson.outline.corners.isEmpty()) {
-        // Create an empty bounding box fallback
-        boundingBoxOutline.add_point(new FloatPoint(0, 0));
-        boundingBoxOutline.add_point(new FloatPoint(0, 1000));
-        boundingBoxOutline.add_point(new FloatPoint(1000, 1000));
-        boundingBoxOutline.add_point(new FloatPoint(1000, 0));
+      boolean outlineGenerated = false;
+      if (boardJson.outline == null || boardJson.outline.corners.size() < 3) {
+        FRLogger.warn("Board Outline/Boundary is missing or empty in the JSON file. A supposed board edge around components with 5mm padding will be generated for routing.");
+        double minX = Double.MAX_VALUE;
+        double maxX = -Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+        double maxY = -Double.MAX_VALUE;
+
+        // Check components and pads
+        if (boardJson.components != null) {
+          for (KiCadBoardJson.ComponentJson comp : boardJson.components) {
+            if (comp.position != null) {
+              minX = Math.min(minX, comp.position.x);
+              maxX = Math.max(maxX, comp.position.x);
+              minY = Math.min(minY, comp.position.y);
+              maxY = Math.max(maxY, comp.position.y);
+            }
+            if (comp.pads != null) {
+              for (KiCadBoardJson.PadJson pad : comp.pads) {
+                if (pad.position != null) {
+                  minX = Math.min(minX, pad.position.x);
+                  maxX = Math.max(maxX, pad.position.x);
+                  minY = Math.min(minY, pad.position.y);
+                  maxY = Math.max(maxY, pad.position.y);
+                }
+              }
+            }
+          }
+        }
+
+        // Check vias
+        if (boardJson.vias != null) {
+          for (KiCadBoardJson.ViaJson via : boardJson.vias) {
+            if (via.position != null) {
+              minX = Math.min(minX, via.position.x);
+              maxX = Math.max(maxX, via.position.x);
+              minY = Math.min(minY, via.position.y);
+              maxY = Math.max(maxY, via.position.y);
+            }
+          }
+        }
+
+        // Check traces
+        if (boardJson.traces != null) {
+          for (KiCadBoardJson.TraceJson trace : boardJson.traces) {
+            if (trace.points != null) {
+              for (KiCadBoardJson.Point2D pt : trace.points) {
+                minX = Math.min(minX, pt.x);
+                maxX = Math.max(maxX, pt.x);
+                minY = Math.min(minY, pt.y);
+                maxY = Math.max(maxY, pt.y);
+              }
+            }
+          }
+        }
+
+        // Check conduction areas
+        if (boardJson.conductionAreas != null) {
+          for (KiCadBoardJson.ConductionAreaJson zone : boardJson.conductionAreas) {
+            if (zone.polygon != null) {
+              for (KiCadBoardJson.Point2D pt : zone.polygon) {
+                minX = Math.min(minX, pt.x);
+                maxX = Math.max(maxX, pt.x);
+                minY = Math.min(minY, pt.y);
+                maxY = Math.max(maxY, pt.y);
+              }
+            }
+          }
+        }
+
+        double padding = Unit.scale(5.0, Unit.MM, userUnit);
+
+        if (minX == Double.MAX_VALUE) {
+          // No items found on the board at all, fallback to a default 1000x1000 region in internal units
+          minX = 0;
+          maxX = 1000 / scaleFactor;
+          minY = -1000 / scaleFactor;
+          maxY = 0;
+        }
+
+        // Apply padding
+        minX -= padding;
+        maxX += padding;
+        minY -= padding;
+        maxY += padding;
+
+        Point[] points = new Point[4];
+        points[0] = new IntPoint((int) Math.round(minX * scaleFactor), (int) Math.round(-minY * scaleFactor));
+        points[1] = new IntPoint((int) Math.round(minX * scaleFactor), (int) Math.round(-maxY * scaleFactor));
+        points[2] = new IntPoint((int) Math.round(maxX * scaleFactor), (int) Math.round(-maxY * scaleFactor));
+        points[3] = new IntPoint((int) Math.round(maxX * scaleFactor), (int) Math.round(-minY * scaleFactor));
+
+        for (Point point : points) {
+          boundingBoxOutline.add_point(point.to_float());
+        }
+        outlineShapes.add(new PolygonShape(points));
+        outlineGenerated = true;
       } else {
-        Point[] points = new Point[boardJson.outline.corners.size()];
-        for (int i = 0; i < boardJson.outline.corners.size(); i++) {
-          KiCadBoardJson.Point2D pt = boardJson.outline.corners.get(i);
+        List<KiCadBoardJson.Point2D> corners = new ArrayList<>(boardJson.outline.corners);
+        if (corners.size() > 2) {
+          // Sort corners by polar angle around centroid to ensure simple polygon construction
+          double sumX = 0;
+          double sumY = 0;
+          for (KiCadBoardJson.Point2D pt : corners) {
+            sumX += pt.x;
+            sumY += pt.y;
+          }
+          final double cx = sumX / corners.size();
+          final double cy = sumY / corners.size();
+          corners.sort((p1, p2) -> Double.compare(Math.atan2(p1.y - cy, p1.x - cx), Math.atan2(p2.y - cy, p2.x - cx)));
+        }
+        Point[] points = new Point[corners.size()];
+        for (int i = 0; i < corners.size(); i++) {
+          KiCadBoardJson.Point2D pt = corners.get(i);
           points[i] = new IntPoint((int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
           boundingBoxOutline.add_point(points[i].to_float());
         }
         outlineShapes.add(new PolygonShape(points));
       }
 
-      IntBox boundingBox = boundingBoxOutline.bounding_box();
+      IntBox boundingBox = boundingBoxOutline.bounding_box().offset(1000);
       int outlineClearanceNo = 1; // Default clearance class
 
       // 6. Communication object setup
@@ -194,16 +307,17 @@ public final class KiCadJsonReader {
 
       // 8. Populate Net Classes & Netlist in Rules (now that board is fully linked)
       boardRules.create_default_net_class();
+      NetClass defaultNetClass = boardRules.get_default_net_class();
       Map<String, Integer> netClassIndexMap = new HashMap<>();
-      for (int i = 0; i < boardJson.netClasses.size(); i++) {
-        KiCadBoardJson.NetClassJson nc = boardJson.netClasses.get(i);
+      if (kiCadDefaultNetClass != null) {
+        applyKiCadNetClassParameters(defaultNetClass, kiCadDefaultNetClass, layerCount, scaleFactor, 1);
+      }
+
+      for (int i = 0; i < additionalNetClasses.size(); i++) {
+        KiCadBoardJson.NetClassJson nc = additionalNetClasses.get(i);
         int clNo = i + 2;
         NetClass boardNetClass = boardRules.net_classes.append(nc.name, layerStructure, clearanceMatrix, false);
-        int traceHalfWidth = (int) Math.round(nc.traceWidth * scaleFactor / 2.0);
-        for (int l = 0; l < layerCount; l++) {
-          boardNetClass.set_trace_half_width(l, traceHalfWidth);
-        }
-        boardNetClass.set_trace_clearance_class(clNo);
+        applyKiCadNetClassParameters(boardNetClass, nc, layerCount, scaleFactor, clNo);
         netClassIndexMap.put(nc.name, clNo);
       }
 
@@ -218,18 +332,14 @@ public final class KiCadJsonReader {
         defaultViaDrill = 400.0;
       }
 
-      NetClass defaultNetClass = boardRules.get_default_net_class();
       double defViaDia = defaultViaDiameter;
       double defViaDrill = defaultViaDrill;
-      for (KiCadBoardJson.NetClassJson nc : boardJson.netClasses) {
-        if ("default".equalsIgnoreCase(nc.name)) {
-          if (nc.viaDiameter > 0) {
-            defViaDia = nc.viaDiameter;
-          }
-          if (nc.viaDrill > 0) {
-            defViaDrill = nc.viaDrill;
-          }
-          break;
+      if (kiCadDefaultNetClass != null) {
+        if (kiCadDefaultNetClass.viaDiameter > 0) {
+          defViaDia = kiCadDefaultNetClass.viaDiameter;
+        }
+        if (kiCadDefaultNetClass.viaDrill > 0) {
+          defViaDrill = kiCadDefaultNetClass.viaDrill;
         }
       }
 
@@ -256,11 +366,8 @@ public final class KiCadJsonReader {
       boardRules.via_rules.add(defaultViaRule);
       defaultNetClass.set_via_rule(defaultViaRule);
 
-      for (int i = 0; i < boardJson.netClasses.size(); i++) {
-        KiCadBoardJson.NetClassJson nc = boardJson.netClasses.get(i);
-        if ("default".equalsIgnoreCase(nc.name)) {
-          continue;
-        }
+      for (int i = 0; i < additionalNetClasses.size(); i++) {
+        KiCadBoardJson.NetClassJson nc = additionalNetClasses.get(i);
         int clNo = i + 2;
         NetClass boardNetClass = boardRules.net_classes.get(clNo - 1);
 
@@ -297,7 +404,7 @@ public final class KiCadJsonReader {
       int maxNetNo = boardJson.nets.size();
       for (KiCadBoardJson.NetJson nj : boardJson.nets) {
         Net boardNet = boardRules.nets.add(nj.name, 1, nj.containsPlane);
-        int clNo = netClassIndexMap.getOrDefault(nj.className, 1);
+        int clNo = resolveNetClassIndex(netClassIndexMap, nj.className);
         boardNet.set_class(boardRules.net_classes.get(clNo - 1)); // NetClass array indices are 0-based
       }
 
@@ -409,22 +516,71 @@ public final class KiCadJsonReader {
           }
 
           boolean isDrillable = pad.drill > 0.0;
-          String padstackName = "padstack_" + (padstacks.count() + 1);
-          Padstack padstack = padstacks.add(padstackName, shapeArr, isDrillable, false);
-          IntVector relativeLoc = new IntVector(
+          String padstackName = getDescriptivePadstackName(pad, boardLayers, layerCount);
+          Padstack padstack = padstacks.get(padstackName);
+          if (padstack == null) {
+            padstack = padstacks.add(padstackName, shapeArr, isDrillable, false);
+          }
+           IntVector relativeLoc = new IntVector(
               (int) Math.round(pad.offset.x * scaleFactor),
               (int) Math.round(-pad.offset.y * scaleFactor)
           );
           packagePins.add(new Package.Pin(pad.name, padstack.no, relativeLoc, 0.0));
         }
 
-        Package componentPackage = packages.add(packagePins.toArray(new Package.Pin[0]));
+        boolean isFront = !"B.Cu".equalsIgnoreCase(comp.layer);
+        String basePackageName = comp.footprint;
+        if (basePackageName == null || basePackageName.isEmpty()) {
+          basePackageName = "Package";
+        }
+        Package.Pin[] newPinArr = packagePins.toArray(new Package.Pin[0]);
+        Package componentPackage = null;
+        int suffix = 0;
+        while (true) {
+          String testName = suffix == 0 ? basePackageName : basePackageName + "::" + suffix;
+          try {
+            Package existingPkg = packages.get(testName, isFront);
+            if (existingPkg == null || !existingPkg.name.equalsIgnoreCase(testName)) {
+              componentPackage = packages.add(
+                  testName,
+                  newPinArr,
+                  null,
+                  null,
+                  null,
+                  new Package.Keepout[0],
+                  new Package.Keepout[0],
+                  new Package.Keepout[0],
+                  isFront
+              );
+              break;
+            } else {
+              if (arePackagePinsIdentical(existingPkg, newPinArr)) {
+                componentPackage = existingPkg;
+                break;
+              }
+            }
+          } catch (Exception e) {
+            FRLogger.error("KiCadJsonReader package deduplication error, falling back", e);
+            componentPackage = packages.add(
+                comp.footprint != null ? comp.footprint : "Package",
+                newPinArr,
+                null,
+                null,
+                null,
+                new Package.Keepout[0],
+                new Package.Keepout[0],
+                new Package.Keepout[0],
+                isFront
+            );
+            break;
+          }
+          suffix++;
+        }
         IntPoint position = new IntPoint(
             (int) Math.round(comp.position.x * scaleFactor),
             (int) Math.round(-comp.position.y * scaleFactor)
         );
 
-        boolean isFront = !"B.Cu".equalsIgnoreCase(comp.layer);
         Component boardComp = board.components.add(
             comp.reference,
             position,
@@ -497,7 +653,13 @@ public final class KiCadJsonReader {
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
           shapeArr[li] = viaShape;
         }
-        Padstack viaPadstack = padstacks.add(shapeArr);
+        String viaPadstackName = String.format("Via[%d-%d]_%.0f:%.0f_um",
+            vj.startLayerIndex, vj.endLayerIndex,
+            vj.diameter * 1000.0, vj.drill * 1000.0);
+        Padstack viaPadstack = padstacks.get(viaPadstackName);
+        if (viaPadstack == null) {
+          viaPadstack = padstacks.add(viaPadstackName, shapeArr, true, false);
+        }
         board.insert_via(viaPadstack, center, netNoArr, 1, FixedState.USER_FIXED, true);
       }
 
@@ -516,11 +678,107 @@ public final class KiCadJsonReader {
           null
       );
 
-      return new BoardReadResult.Success(board, metadata, new ArrayList<>());
+      List<String> warnings = new ArrayList<>();
+      if (outlineGenerated) {
+        warnings.add("Board Outline/Boundary is missing or empty in the JSON file. A supposed board edge around components with 5mm padding was generated.");
+      }
+      return new BoardReadResult.Success(board, metadata, warnings);
 
     } catch (Throwable e) {
       FRLogger.warn("Failed to parse and read KiCad JSON board: " + e.getMessage());
       return new BoardReadResult.ParseError("json_payload", "Exception occurred: " + e.getMessage());
+    }
+  }
+
+  /**
+   * Imports traces, vias, and conduction areas from a KiCad session JSON file onto an existing board.
+   */
+  public static void importSession(Reader reader, RoutingBoard board) throws Exception {
+    KiCadBoardJson boardJson = GsonProvider.GSON.fromJson(reader, KiCadBoardJson.class);
+    if (boardJson == null) {
+      throw new IllegalArgumentException("JSON session file payload is empty or invalid");
+    }
+
+    Unit userUnit = Unit.MM;
+    if (boardJson.unit == KiCadBoardJson.UnitJson.MIL) {
+      userUnit = Unit.MIL;
+    } else if (boardJson.unit == KiCadBoardJson.UnitJson.UM) {
+      userUnit = Unit.UM;
+    }
+
+    int resolution = (int) Math.max(1.0, boardJson.resolution);
+    if (boardJson.resolution == 1.0 && userUnit == Unit.MM) {
+      resolution = 10000;
+    }
+    double scaleFactor = resolution;
+
+    // 1. Conduction Areas
+    if (boardJson.conductionAreas != null) {
+      for (KiCadBoardJson.ConductionAreaJson zone : boardJson.conductionAreas) {
+        Net targetNet = board.rules.nets.get(zone.netName, 1);
+        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int[] netNoArr = netNo > 0 ? new int[]{netNo} : new int[0];
+
+        Point[] zonePoints = new Point[zone.polygon.size()];
+        for (int i = 0; i < zone.polygon.size(); i++) {
+          KiCadBoardJson.Point2D pt = zone.polygon.get(i);
+          zonePoints[i] = new IntPoint((int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
+        }
+        Area zoneArea = new PolygonShape(zonePoints);
+        board.insert_conduction_area(zoneArea, zone.layerIndex, netNoArr, 1, zone.isObstacle, FixedState.USER_FIXED);
+      }
+    }
+
+    // 2. Traces
+    if (boardJson.traces != null) {
+      for (KiCadBoardJson.TraceJson tr : boardJson.traces) {
+        Net targetNet = board.rules.nets.get(tr.netName, 1);
+        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int[] netNoArr = netNo > 0 ? new int[]{netNo} : new int[0];
+        int traceHalfWidth = (int) Math.round(tr.width * scaleFactor / 2.0);
+
+        Point[] points = new Point[tr.points.size()];
+        for (int i = 0; i < tr.points.size(); i++) {
+          KiCadBoardJson.Point2D pt = tr.points.get(i);
+          points[i] = new IntPoint((int) Math.round(pt.x * scaleFactor), (int) Math.round(-pt.y * scaleFactor));
+        }
+        board.insert_trace(points, tr.layerIndex, traceHalfWidth, netNoArr, 1, FixedState.USER_FIXED);
+      }
+    }
+
+    // 3. Vias
+    if (boardJson.vias != null) {
+      int layerCount = board.get_layer_count();
+      for (KiCadBoardJson.ViaJson vj : boardJson.vias) {
+        Net targetNet = board.rules.nets.get(vj.netName, 1);
+        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int[] netNoArr = netNo > 0 ? new int[]{netNo} : new int[0];
+
+        IntPoint center = new IntPoint((int) Math.round(vj.position.x * scaleFactor), (int) Math.round(-vj.position.y * scaleFactor));
+
+        ConvexShape[] shapeArr = new ConvexShape[layerCount];
+        double radius = vj.diameter * scaleFactor / 2.0;
+        ConvexShape viaShape = new IntBox(
+            (int) Math.round(-radius),
+            (int) Math.round(-radius),
+            (int) Math.round(radius),
+            (int) Math.round(radius)
+        ).to_Simplex();
+
+        for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
+          if (li >= 0 && li < layerCount) {
+            shapeArr[li] = viaShape;
+          }
+        }
+        String viaPadstackName = String.format("Via[%d-%d]_%.0f:%.0f_um",
+            vj.startLayerIndex, vj.endLayerIndex,
+            vj.diameter * 1000.0, vj.drill * 1000.0);
+        Padstack viaPadstack = board.library.padstacks.get(viaPadstackName);
+        if (viaPadstack == null) {
+          viaPadstack = board.library.padstacks.add(viaPadstackName, shapeArr, true, false);
+        }
+        board.insert_via(viaPadstack, center, netNoArr, 1, FixedState.USER_FIXED, true);
+      }
     }
   }
 
@@ -555,5 +813,120 @@ public final class KiCadJsonReader {
           (int) Math.round(maxY)
       );
     }
+  }
+
+  private static String getDescriptivePadstackName(KiCadBoardJson.PadJson pad, Layer[] boardLayers, int layerCount) {
+    String shapeStr = "Round";
+    if (pad.shape != null) {
+      if (pad.shape.equalsIgnoreCase("circle") || pad.shape.equalsIgnoreCase("round")) {
+        shapeStr = "Round";
+      } else if (pad.shape.equalsIgnoreCase("rect") || pad.shape.equalsIgnoreCase("rectangle")) {
+        shapeStr = "Rect";
+      } else if (pad.shape.equalsIgnoreCase("oval")) {
+        shapeStr = "Oval";
+      } else {
+        shapeStr = pad.shape.substring(0, 1).toUpperCase() + pad.shape.substring(1).toLowerCase();
+      }
+    }
+    
+    String layerType = "A";
+    if (pad.layers != null && pad.layers.size() == 1) {
+      String lName = pad.layers.get(0);
+      if (boardLayers[0].name.equalsIgnoreCase(lName)) {
+        layerType = "T";
+      } else if (boardLayers[layerCount - 1].name.equalsIgnoreCase(lName)) {
+        layerType = "B";
+      }
+    }
+    
+    if (shapeStr.equals("Round")) {
+      return String.format("%s[%s]Pad_%.0f_um", shapeStr, layerType, pad.size.x * 1000.0);
+    } else {
+      return String.format("%s[%s]Pad_%.0fxf_%.0f_um", shapeStr, layerType, pad.size.x * 1000.0, pad.size.y * 1000.0).replace("xf_", "x");
+    }
+  }
+
+  private static boolean arePackagePinsIdentical(Package pkg1, Package.Pin[] p2) {
+    if (pkg1 == null || p2 == null) {
+      return (pkg1 == null) == (p2 == null);
+    }
+    if (pkg1.pin_count() != p2.length) {
+      return false;
+    }
+    for (int i = 0; i < p2.length; i++) {
+      Package.Pin pin1 = pkg1.get_pin(i);
+      Package.Pin pin2 = p2[i];
+      if (pin1 == null || pin2 == null) {
+        if (pin1 != pin2) return false;
+        continue;
+      }
+      if (!pin1.name.equals(pin2.name)) {
+        return false;
+      }
+      if (pin1.padstack_no != pin2.padstack_no) {
+        return false;
+      }
+      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relative_location.to_float();
+      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.relative_location.to_float();
+      if (Math.abs(loc1.x - loc2.x) > 0.001 || Math.abs(loc1.y - loc2.y) > 0.001) {
+        return false;
+      }
+      if (Math.abs(pin1.rotation_in_degree - pin2.rotation_in_degree) > 0.001) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static KiCadBoardJson.NetClassJson findKiCadDefaultNetClass(List<KiCadBoardJson.NetClassJson> netClasses) {
+    for (KiCadBoardJson.NetClassJson netClass : netClasses) {
+      if (KiCadNetClassNames.isKiCadDefaultNetClassName(netClass.name)) {
+        return netClass;
+      }
+    }
+    return null;
+  }
+
+  private static List<KiCadBoardJson.NetClassJson> nonDefaultNetClasses(List<KiCadBoardJson.NetClassJson> netClasses) {
+    List<KiCadBoardJson.NetClassJson> result = new ArrayList<>();
+    for (KiCadBoardJson.NetClassJson netClass : netClasses) {
+      if (!KiCadNetClassNames.isKiCadDefaultNetClassName(netClass.name)) {
+        result.add(netClass);
+      }
+    }
+    return result;
+  }
+
+  private static void applyKiCadNetClassParameters(
+      NetClass target,
+      KiCadBoardJson.NetClassJson source,
+      int layerCount,
+      double scaleFactor,
+      int clearanceClassNo) {
+    if (source.traceWidth > 0) {
+      int traceHalfWidth = (int) Math.round(source.traceWidth * scaleFactor / 2.0);
+      for (int layer = 0; layer < layerCount; layer++) {
+        target.set_trace_half_width(layer, traceHalfWidth);
+      }
+    }
+    if (source.clearance > 0) {
+      target.set_trace_clearance_class(clearanceClassNo);
+    }
+  }
+
+  private static int resolveNetClassIndex(Map<String, Integer> netClassIndexMap, String className) {
+    if (KiCadNetClassNames.isKiCadDefaultNetClassName(className)) {
+      return 1;
+    }
+    Integer classIndex = netClassIndexMap.get(className);
+    if (classIndex != null) {
+      return classIndex;
+    }
+    for (Map.Entry<String, Integer> entry : netClassIndexMap.entrySet()) {
+      if (entry.getKey().equalsIgnoreCase(className)) {
+        return entry.getValue();
+      }
+    }
+    return 1;
   }
 }

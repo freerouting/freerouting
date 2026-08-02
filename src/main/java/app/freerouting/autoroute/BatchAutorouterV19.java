@@ -154,7 +154,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
     public boolean runBatchLoop() {
         boolean anyRoutable = false;
         for (int i = 0; i < this.settings.getLayerCount(); i++) {
-            if (this.settings.get_layer_active(i)) {
+            if (this.settings.get_layer_active(i) && this.board.layer_structure.arr[i].is_signal) {
                 anyRoutable = true;
                 break;
             }

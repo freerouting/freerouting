@@ -580,7 +580,8 @@ public class Wiring extends ScopeKeyword {
         }
       }
       RoutingBoard board = p_par.board_handling.get_routing_board();
-      Padstack curr_padstack = board.library.padstacks.get(padstack_name);
+      String cleanedName = padstack_name != null ? padstack_name.replaceAll("\\.\\d+", "") : null;
+      Padstack curr_padstack = board.library.padstacks.get(cleanedName);
       if (curr_padstack == null) {
         String msg = "Wiring: via padstack '" + padstack_name + "' not found at '" + p_par.scanner.get_scope_identifier() + "'";
         FRLogger.warn(msg);

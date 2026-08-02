@@ -38,7 +38,8 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
    */
   protected final Collection<WindowObjectInfo> subwindows = new LinkedList<>();
 
-  private final JPanel main_panel;
+  protected final JPanel main_panel;
+  protected final JPanel center_panel;
   protected JLabel list_empty_message;
   protected JList<Object> list;
   private JScrollPane list_scroll_pane;
@@ -56,6 +57,10 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     main_panel.setLayout(new BorderLayout());
     this.add(main_panel);
 
+    // create center panel for list/empty message
+    this.center_panel = new JPanel(new BorderLayout());
+    main_panel.add(this.center_panel, BorderLayout.CENTER);
+
     // create a panel for adding buttons
     this.south_panel = new JPanel();
     south_panel.setLayout(new BorderLayout());
@@ -68,35 +73,43 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     JPanel north_button_panel = new JPanel();
     button_panel.add(north_button_panel, BorderLayout.NORTH);
 
-    JButton info_components_show_button = new JButton(tm.getText("info"));
-    info_components_show_button.setToolTipText(tm.getText("info_tooltip"));
-    ShowListener show_listener = new ShowListener();
-    info_components_show_button.addActionListener(show_listener);
-    info_components_show_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_show_button", info_components_show_button.getText()));
-    north_button_panel.add(info_components_show_button);
+    if (showInfoButton()) {
+      JButton info_components_show_button = new JButton(tm.getText("info"));
+      info_components_show_button.setToolTipText(tm.getText("info_tooltip"));
+      ShowListener show_listener = new ShowListener();
+      info_components_show_button.addActionListener(show_listener);
+      info_components_show_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_show_button", info_components_show_button.getText()));
+      north_button_panel.add(info_components_show_button);
+    }
 
-    JButton info_components_instance_button = new JButton(tm.getText("select"));
-    info_components_instance_button.setToolTipText(tm.getText("select_tooltip"));
-    SelectListener instance_listener = new SelectListener();
-    info_components_instance_button.addActionListener(instance_listener);
-    info_components_instance_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_instance_button", info_components_instance_button.getText()));
-    north_button_panel.add(info_components_instance_button);
+    if (showSelectButton()) {
+      JButton info_components_instance_button = new JButton(tm.getText("select"));
+      info_components_instance_button.setToolTipText(tm.getText("select_tooltip"));
+      SelectListener instance_listener = new SelectListener();
+      info_components_instance_button.addActionListener(instance_listener);
+      info_components_instance_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_instance_button", info_components_instance_button.getText()));
+      north_button_panel.add(info_components_instance_button);
+    }
 
     JPanel south_button_panel = new JPanel();
     button_panel.add(south_button_panel, BorderLayout.SOUTH);
 
-    JButton info_components_invert_button = new JButton(tm.getText("invert"));
-    info_components_invert_button.setToolTipText(tm.getText("invert_tooltip"));
-    info_components_invert_button.addActionListener(new InvertListener());
-    info_components_invert_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_invert_button", info_components_invert_button.getText()));
-    south_button_panel.add(info_components_invert_button);
+    if (showInvertButton()) {
+      JButton info_components_invert_button = new JButton(tm.getText("invert"));
+      info_components_invert_button.setToolTipText(tm.getText("invert_tooltip"));
+      info_components_invert_button.addActionListener(new InvertListener());
+      info_components_invert_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_invert_button", info_components_invert_button.getText()));
+      south_button_panel.add(info_components_invert_button);
+    }
 
-    JButton info_components_recalculate_button = new JButton(tm.getText("recalculate"));
-    info_components_recalculate_button.setToolTipText(tm.getText("recalculate_tooltip"));
-    RecalculateListener recalculate_listener = new RecalculateListener();
-    info_components_recalculate_button.addActionListener(recalculate_listener);
-    info_components_recalculate_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_recalculate_button", info_components_recalculate_button.getText()));
-    south_button_panel.add(info_components_recalculate_button);
+    if (showRecalculateButton()) {
+      JButton info_components_recalculate_button = new JButton(tm.getText("recalculate"));
+      info_components_recalculate_button.setToolTipText(tm.getText("recalculate_tooltip"));
+      RecalculateListener recalculate_listener = new RecalculateListener();
+      info_components_recalculate_button.addActionListener(recalculate_listener);
+      info_components_recalculate_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_recalculate_button", info_components_recalculate_button.getText()));
+      south_button_panel.add(info_components_recalculate_button);
+    }
 
     this.list_empty_message = new JLabel(tm.getText("list_empty"));
     this.list_empty_message.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -110,6 +123,22 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     });
   }
 
+  protected boolean showInfoButton() {
+    return true;
+  }
+
+  protected boolean showSelectButton() {
+    return true;
+  }
+
+  protected boolean showInvertButton() {
+    return true;
+  }
+
+  protected boolean showRecalculateButton() {
+    return true;
+  }
+
   @Override
   public void setVisible(boolean p_value) {
     if (p_value) {
@@ -119,31 +148,50 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   }
 
   protected void recalculate() {
-    if (this.list_scroll_pane != null) {
-      main_panel.remove(this.list_scroll_pane);
-    }
-    main_panel.remove(this.list_empty_message);
-    // Create display list
-    this.list_model = new DefaultListModel<>();
-    this.list = new JList<>(this.list_model);
-    this.list.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    this.fill_list();
-    if (this.list.getVisibleRowCount() > 0) {
-      list_scroll_pane = new JScrollPane(this.list);
-      main_panel.add(list_scroll_pane, BorderLayout.CENTER);
+    boolean first_time = (this.list == null);
+    if (first_time) {
+      this.list_model = new DefaultListModel<>();
+      this.list = new JList<>(this.list_model);
+      this.list.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     } else {
-      main_panel.add(list_empty_message, BorderLayout.CENTER);
+      this.list_model.clear();
     }
-    this.pack();
 
-    this.list.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent evt) {
-        if (evt.getClickCount() > 1) {
-          select_instances();
-        }
+    this.fill_list();
+
+    if (first_time) {
+      if (this.list.getVisibleRowCount() > 0) {
+        list_scroll_pane = new JScrollPane(this.list);
+        center_panel.add(list_scroll_pane, BorderLayout.CENTER);
+      } else {
+        center_panel.add(list_empty_message, BorderLayout.CENTER);
       }
-    });
+      this.pack();
+
+      this.list.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent evt) {
+          if (evt.getClickCount() > 1) {
+            select_instances();
+          }
+        }
+      });
+    } else {
+      if (this.list_model.isEmpty()) {
+        if (list_scroll_pane != null) {
+          center_panel.remove(list_scroll_pane);
+        }
+        center_panel.add(list_empty_message, BorderLayout.CENTER);
+      } else {
+        center_panel.remove(list_empty_message);
+        if (list_scroll_pane == null) {
+          list_scroll_pane = new JScrollPane(this.list);
+        }
+        center_panel.add(list_scroll_pane, BorderLayout.CENTER);
+      }
+      center_panel.revalidate();
+      center_panel.repaint();
+    }
   }
 
   @Override

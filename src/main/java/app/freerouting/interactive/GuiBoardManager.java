@@ -2113,6 +2113,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #saveAsBinary(ObjectOutputStream)
    */
   public boolean loadFromBinary(ObjectInputStream p_design) {
+    String inputFilename = (this.routingJob != null && this.routingJob.input != null)
+        ? this.routingJob.input.getFilename()
+        : null;
+    if (this.routingJob != null) {
+      this.routingJob.logInfo("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+    } else {
+      FRLogger.info("Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
+    }
+
     try {
       board = (RoutingBoard) p_design.readObject();
       interactiveSettings = (InteractiveSettings) p_design.readObject();
@@ -2438,9 +2447,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (interactive_state instanceof MenuState) {
       set_interactive_state(InspectedItemState.get_instance(p_items, interactive_state, this));
     } else if (interactive_state instanceof InspectedItemState state) {
-      state
-          .get_item_list()
-          .addAll(p_items);
+      state.get_item_list().clear();
+      state.get_item_list().addAll(p_items);
       repaint();
     }
   }

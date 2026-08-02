@@ -348,7 +348,9 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   TileShape[] calculate_tree_shapes(ObstacleArea p_obstacle_area) {
     TileShape[] result = super.calculate_tree_shapes(p_obstacle_area);
     for (int i = 0; i < result.length; i++) {
-      result[i] = result[i].bounding_box();
+      if (result[i] != null) {
+        result[i] = result[i].bounding_box();
+      }
     }
     return result;
   }
@@ -357,7 +359,9 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   TileShape[] calculate_tree_shapes(BoardOutline p_outline) {
     TileShape[] result = super.calculate_tree_shapes(p_outline);
     for (int i = 0; i < result.length; i++) {
-      result[i] = result[i].bounding_box();
+      if (result[i] != null) {
+        result[i] = result[i].bounding_box();
+      }
     }
     return result;
   }

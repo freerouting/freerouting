@@ -190,23 +190,31 @@ public class Freerouting {
       System.exit(1);
     }
 
-    // Load SES file if specified for DRC
+    // Load session file if specified for DRC
     if (globalSettings.design_session_filename != null) {
       try {
-        java.io.File sesFile = new java.io.File(globalSettings.design_session_filename);
-        if (sesFile.exists()) {
-          FRLogger.info("Loading SES file for DRC: " + globalSettings.design_session_filename);
-          try (java.io.FileInputStream sesStream = new java.io.FileInputStream(sesFile)) {
-            SesImportSummary summary = SesReader.read(sesStream, drcJob.board);
-            FRLogger.info("SES file loaded for DRC: " + summary.wiresImported() + " wires, "
-                + summary.viasImported() + " vias imported"
-                + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
+        java.io.File sessionFile = new java.io.File(globalSettings.design_session_filename);
+        if (sessionFile.exists()) {
+          if (globalSettings.design_session_filename.toLowerCase().endsWith(".json")) {
+            FRLogger.info("Loading KiCad JSON session file for DRC: " + globalSettings.design_session_filename);
+            try (java.io.FileReader jsonReader = new java.io.FileReader(sessionFile)) {
+              app.freerouting.io.kicad.KiCadJsonReader.importSession(jsonReader, drcJob.board);
+              FRLogger.info("KiCad JSON session file loaded for DRC successfully");
+            }
+          } else {
+            FRLogger.info("Loading SES file for DRC: " + globalSettings.design_session_filename);
+            try (java.io.FileInputStream sesStream = new java.io.FileInputStream(sessionFile)) {
+              SesImportSummary summary = SesReader.read(sesStream, drcJob.board);
+              FRLogger.info("SES file loaded for DRC: " + summary.wiresImported() + " wires, "
+                  + summary.viasImported() + " vias imported"
+                  + (summary.errorsEncountered() > 0 ? " (" + summary.errorsEncountered() + " errors)" : ""));
+            }
           }
         } else {
-          FRLogger.warn("SES file for DRC not found: " + globalSettings.design_session_filename);
+          FRLogger.warn("Session file for DRC not found: " + globalSettings.design_session_filename);
         }
       } catch (Exception e) {
-        FRLogger.error("Failed to load SES file for DRC", e);
+        FRLogger.error("Failed to load session file for DRC", e);
       }
     }
 
@@ -940,6 +948,11 @@ public class Freerouting {
     // parse the command line arguments (for the non-router settings)
     globalSettings.applyCommandLineArguments(args);
 
+    if (globalSettings.compareFile1 != null && globalSettings.compareFile2 != null) {
+      boolean success = compareBoardFiles(globalSettings.compareFile1, globalSettings.compareFile2);
+      System.exit(success ? 0 : 1);
+    }
+
     FRLogger.debug("GUI Language: " + globalSettings.currentLocale);
 
     FRLogger.debug("Host: " + globalSettings.runtimeEnvironment.host);
@@ -1099,6 +1112,68 @@ public class Freerouting {
 
     FRLogger.traceExit("MainApplication.main()");
     System.exit(0);
+  }
+
+  private static boolean compareBoardFiles(String file1Path, String file2Path) {
+    FRLogger.info("Starting comparison of board files: " + file1Path + " and " + file2Path);
+    try {
+      java.io.File file1 = new java.io.File(file1Path);
+      java.io.File file2 = new java.io.File(file2Path);
+      if (!file1.exists()) {
+        FRLogger.error("Comparison file 1 does not exist: " + file1Path, null);
+        return false;
+      }
+      if (!file2.exists()) {
+        FRLogger.error("Comparison file 2 does not exist: " + file2Path, null);
+        return false;
+      }
+
+      app.freerouting.board.RoutingBoard board1 = loadBoardFromFile(file1);
+      app.freerouting.board.RoutingBoard board2 = loadBoardFromFile(file2);
+
+      if (board1 == null || board2 == null) {
+        FRLogger.error("Failed to load one or both boards for comparison.", null);
+        return false;
+      }
+
+      app.freerouting.board.BoardComparator.ComparisonResult result =
+          app.freerouting.board.BoardComparator.compare(board1, board2, 1e-3);
+
+      System.out.println(result.report);
+
+      if (result.areEqual) {
+        FRLogger.info("SUCCESS: Boards are identical.");
+      } else {
+        FRLogger.warn("WARNING: Differences detected between the loaded boards.");
+      }
+      return result.areEqual;
+    } catch (Exception e) {
+      FRLogger.error("Error during board files comparison: " + e.getMessage(), e);
+      return false;
+    }
+  }
+
+  private static app.freerouting.board.RoutingBoard loadBoardFromFile(java.io.File file) throws Exception {
+    try (java.io.InputStream is = new java.io.FileInputStream(file)) {
+      if (file.getName().toLowerCase().endsWith(".json")) {
+        try (java.io.Reader r = new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
+          app.freerouting.io.BoardReadResult readResult = app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
+          if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+            return (app.freerouting.board.RoutingBoard) success.board();
+          } else if (readResult instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+            return (app.freerouting.board.RoutingBoard) outlineMissing.board();
+          }
+        }
+      } else {
+        app.freerouting.io.BoardReadResult readResult = app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
+        if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+          return (app.freerouting.board.RoutingBoard) success.board();
+        } else if (readResult instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+          return (app.freerouting.board.RoutingBoard) outlineMissing.board();
+        }
+      }
+    }
+    return null;
   }
 
 }
