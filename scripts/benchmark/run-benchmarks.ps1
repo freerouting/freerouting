@@ -75,6 +75,13 @@ if (-not $binaryCurrent) {
 $sysInfo = Get-SystemInfo
 Write-Output "System: $($sysInfo.cpu_name) ($($sysInfo.cpu_physical_cores) Cores, $($sysInfo.total_ram_gb) GB RAM)"
 
+$gitBranch = Get-GitBranchName
+if ($gitBranch -and $gitBranch -notin @('master', 'main')) {
+    Write-Output "Git branch: $gitBranch (snapshot/current JARs will be labeled with this branch name in reports)"
+} elseif ($gitBranch) {
+    Write-Output "Git branch: $gitBranch (snapshot/current JARs will use manifest build-date labels)"
+}
+
 # Settings object
 $settingsObj = [PSCustomObject]@{
     max_passes        = $MaxPasses
@@ -187,7 +194,8 @@ foreach ($binary in $binaries) {
 
         # Form unique base name with folder name, fixture file name, version
         $timestamp = (Get-Date -Format "yyyyMMdd-HHmmss")
-        $baseName = "${fixtureGroup}--${fixtureStem}--${verLabel}--${timestamp}"
+        $fsVerLabel = Get-FilesystemSafeVersionLabel $verLabel
+        $baseName = "${fixtureGroup}--${fixtureStem}--${fsVerLabel}--${timestamp}"
 
         if ($isCached) {
             Write-Output "[$runIdx/$totalCombinations] $verLabel x $fixtureGroup/$($fixture.Name) (Cache Hit)"

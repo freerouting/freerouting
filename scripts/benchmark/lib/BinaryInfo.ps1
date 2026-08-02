@@ -22,6 +22,40 @@ function Get-JarManifestAttribute {
     return $null
 }
 
+function Get-GitRepoRoot {
+    $dir = $PSScriptRoot
+    while ($dir) {
+        if (Test-Path (Join-Path $dir ".git")) {
+            return $dir
+        }
+        $parent = Split-Path $dir -Parent
+        if ($parent -eq $dir) {
+            break
+        }
+        $dir = $parent
+    }
+    return $null
+}
+
+function Get-GitBranchName {
+    $repoRoot = Get-GitRepoRoot
+    if (-not $repoRoot) {
+        return $null
+    }
+    try {
+        $branch = git -C $repoRoot rev-parse --abbrev-ref HEAD 2>$null
+        if ($LASTEXITCODE -eq 0 -and $branch -and $branch -ne 'HEAD') {
+            return $branch.Trim()
+        }
+    } catch {}
+    return $null
+}
+
+function Get-FilesystemSafeVersionLabel {
+    param([string]$VersionLabel)
+    return ($VersionLabel -replace '[\\/:*?"<>|]', '-')
+}
+
 function Get-BinaryVersionLabel {
     param([System.IO.FileInfo]$Binary)
 
@@ -30,7 +64,13 @@ function Get-BinaryVersionLabel {
         return $matches[1]
     }
 
-    # 2. Snapshot/current build: try JAR manifest Build-Date attribute
+    # 2. Snapshot/current build on a feature branch: use branch name (e.g. pr/764)
+    $branch = Get-GitBranchName
+    if ($branch -and $branch -notin @('master', 'main')) {
+        return $branch
+    }
+
+    # 3. Snapshot/current build on main: try JAR manifest Build-Date attribute
     $buildDate = Get-JarManifestAttribute $Binary.FullName 'Build-Date'
     if (-not $buildDate) {
         $buildDate = Get-JarManifestAttribute $Binary.FullName 'Built-Date'
@@ -42,7 +82,7 @@ function Get-BinaryVersionLabel {
         }
     }
 
-    # 3. Fallback: file last-write date
+    # 4. Fallback: file last-write date
     if (-not $buildDate) {
         $buildDate = $Binary.LastWriteTime.ToString('yyyy-MM-dd')
     }
