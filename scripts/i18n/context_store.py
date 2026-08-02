@@ -10,9 +10,10 @@ DEFAULT_CONTEXT_DIR = Path("scripts/i18n/context")
 LEGACY_CONTEXT_FILE = Path("scripts/i18n/i18n-context.json")
 
 # Fields persisted to disk (english_value is read from properties at runtime).
-PERSISTED_FIELDS = {
+PERSISTED_FIELD_ORDER = (
     "english_hash",
     "needs_retranslation",
+    "bundle_desc",
     "ui_role",
     "grammatical_role",
     "has_placeholders",
@@ -22,16 +23,31 @@ PERSISTED_FIELDS = {
     "related_keys",
     "java_class",
     "code_references",
-    "bundle_desc",
-}
+)
+PERSISTED_FIELDS = frozenset(PERSISTED_FIELD_ORDER)
+SORTED_LIST_FIELDS = frozenset({"placeholders", "related_keys", "code_references"})
 
 
-def _bundle_file_name(bundle: str) -> str:
-    return bundle.replace("/", "_") + ".json"
+def _sort_list_value(field: str, value: Any) -> Any:
+    if field in SORTED_LIST_FIELDS and isinstance(value, list):
+        return sorted(value)
+    return value
 
 
 def _compact_entry(entry: Dict[str, Any]) -> Dict[str, Any]:
-    return {k: entry[k] for k in PERSISTED_FIELDS if k in entry}
+    return {
+        field: _sort_list_value(field, entry[field])
+        for field in PERSISTED_FIELD_ORDER
+        if field in entry
+    }
+
+
+def write_json_deterministic(path: Path, data: Any) -> None:
+    """Write JSON with stable key order at every object level (minimal diff noise)."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False, sort_keys=True)
+        f.write("\n")
 
 
 def load_context_dir(context_dir: Path = DEFAULT_CONTEXT_DIR) -> Dict[str, Dict[str, Any]]:
@@ -51,6 +67,10 @@ def load_context_dir(context_dir: Path = DEFAULT_CONTEXT_DIR) -> Dict[str, Dict[
             entry["key"] = key
             context[qualified] = entry
     return context
+
+
+def _bundle_file_name(bundle: str) -> str:
+    return bundle.replace("/", "_") + ".json"
 
 
 def load_legacy_context(path: Path) -> Dict[str, Dict[str, Any]]:
@@ -79,9 +99,8 @@ def save_context_dir(
         file_name = _bundle_file_name(bundle)
         written.add(file_name)
         path = context_dir / file_name
-        with open(path, "w", encoding="utf-8", newline="\n") as f:
-            json.dump(keys, f, indent=2, ensure_ascii=False)
-            f.write("\n")
+        compact_keys = {key: _compact_entry(entry) for key, entry in sorted(keys.items())}
+        write_json_deterministic(path, compact_keys)
 
     for orphan in existing - written:
         (context_dir / orphan).unlink(missing_ok=True)
