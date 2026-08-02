@@ -4,7 +4,7 @@ import app.freerouting.board.LayerStructure;
 import app.freerouting.boardgraphics.ColorIntensityTable.ObjectNames;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.management.TextManager;
+import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 
 import java.awt.BorderLayout;
@@ -125,8 +125,8 @@ public class WindowVisibility extends BoardSavableSubWindow {
         board_frame.get_locale(),
         locale -> new TextManager(WindowVisibility.class, locale));
 
-    JButton reset_button = new JButton(visibility_tm.getText("reset_value"));
-    reset_button.setToolTipText(visibility_tm.getText("reset_value_tooltip"));
+    JButton reset_button = new JButton(visibility_tm.getText("reset_to_defaults"));
+    reset_button.setToolTipText(visibility_tm.getText("reset_to_defaults_tooltip"));
     reset_button.addActionListener(_ -> {
       reset_to_defaults();
       board_panel.repaint();
