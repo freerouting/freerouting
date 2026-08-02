@@ -561,6 +561,22 @@
     ],
     "ui_role": "tooltip"
   },
+  "power_layer_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowAutorouteParameter"
+    ],
+    "english_hash": "a2f50d078bad22d66982498b2c3ea038145c5ebaad70d0a87ef76d05c8236f1e",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowAutorouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "tooltip"
+  },
   "preferred_direction": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [

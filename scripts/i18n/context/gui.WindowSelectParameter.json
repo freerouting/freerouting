@@ -512,13 +512,13 @@
     "code_references": [
       "app.freerouting.gui.WindowSelectParameter"
     ],
-    "english_hash": "10821a7c36b21d9fa29c811fd2af86e3b52778b8d47f671eaaec411b17b00dce",
+    "english_hash": "2d403b92f9f21edec354f0705574d734b002211a2887084e0ff158ed02e50101",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "tooltip"

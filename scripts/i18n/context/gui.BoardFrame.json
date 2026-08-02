@@ -15,7 +15,12 @@
     "related_keys": [
       "confirm_exit_no",
       "confirm_exit_yes",
-      "confirm_rules_save"
+      "confirm_rules_save",
+      "confirm_save_cancel",
+      "confirm_save_changes",
+      "confirm_save_no",
+      "confirm_save_title",
+      "confirm_save_yes"
     ],
     "ui_role": "confirmation_dialog"
   },
@@ -71,7 +76,117 @@
     "related_keys": [
       "confirm_cancel",
       "confirm_exit_no",
-      "confirm_exit_yes"
+      "confirm_exit_yes",
+      "confirm_save_cancel",
+      "confirm_save_changes",
+      "confirm_save_no",
+      "confirm_save_title",
+      "confirm_save_yes"
+    ],
+    "ui_role": "confirmation_dialog"
+  },
+  "confirm_save_cancel": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardFrame"
+    ],
+    "english_hash": "19766ed6ccb2f4a32778eed80d1928d2c87a18d7c275ccb163ec6709d3eb2e27",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardFrame",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "confirm_save_changes",
+      "confirm_save_no",
+      "confirm_save_title",
+      "confirm_save_yes"
+    ],
+    "ui_role": "confirmation_dialog"
+  },
+  "confirm_save_changes": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardFrame"
+    ],
+    "english_hash": "ac6622277df731380a26580bb007f08c0e857e10d1eb873f2fca0833a5093973",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardFrame",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "confirm_save_cancel",
+      "confirm_save_no",
+      "confirm_save_title",
+      "confirm_save_yes"
+    ],
+    "ui_role": "confirmation_dialog"
+  },
+  "confirm_save_no": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardFrame"
+    ],
+    "english_hash": "20961bde9480b18a47ffa67836a9e6024aacd474f45acc770baf8ecc125257e8",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardFrame",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "confirm_save_cancel",
+      "confirm_save_changes",
+      "confirm_save_title",
+      "confirm_save_yes"
+    ],
+    "ui_role": "confirmation_dialog"
+  },
+  "confirm_save_title": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardFrame"
+    ],
+    "english_hash": "f507179bd454425eee383ca39b8686483dfe06eae90e62bfd2eeeb5095cb5eac",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardFrame",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "confirm_save_cancel",
+      "confirm_save_changes",
+      "confirm_save_no",
+      "confirm_save_yes"
+    ],
+    "ui_role": "dialog_title"
+  },
+  "confirm_save_yes": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardFrame"
+    ],
+    "english_hash": "1509f561f2416598629b886ad7d3c05a7e221e4e0675c84bbff4ee6d9e03913d",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardFrame",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "confirm_save_cancel",
+      "confirm_save_changes",
+      "confirm_save_no",
+      "confirm_save_title"
     ],
     "ui_role": "confirmation_dialog"
   },
@@ -258,11 +373,27 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "message_eagle_save_failed",
-      "message_eagle_saved",
-      "message_gui_settings_save_failed",
-      "message_specctra_ses_save_failed",
-      "message_specctra_ses_saved"
+      "message_binary_file_saved"
+    ],
+    "ui_role": "message"
+  },
+  "message_binary_file_saved": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardFrame"
+    ],
+    "english_hash": "b31e07c3410b7574e434d3319e78a0336562289f61bbcc2b5c28ba2ac5563d23",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardFrame",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{filename}}"
+    ],
+    "related_keys": [
+      "message_binary_file_save_failed"
     ],
     "ui_role": "message"
   },
@@ -319,10 +450,53 @@
     "placeholders": [],
     "related_keys": [
       "message_binary_file_save_failed",
+      "message_binary_file_saved",
       "message_eagle_save_failed",
       "message_eagle_saved",
+      "message_kicad_session_json_save_failed",
+      "message_kicad_session_json_saved",
       "message_specctra_ses_save_failed",
       "message_specctra_ses_saved"
+    ],
+    "ui_role": "message"
+  },
+  "message_kicad_session_json_save_failed": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardFrame"
+    ],
+    "english_hash": "c2c55221e0c1de5c35c220fea443b62f47293754a8c1cd3dedf711def6297f5f",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardFrame",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{filename}}"
+    ],
+    "related_keys": [
+      "message_kicad_session_json_saved"
+    ],
+    "ui_role": "message"
+  },
+  "message_kicad_session_json_saved": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardFrame"
+    ],
+    "english_hash": "11d30847b07af2285fe1b6307de0ffba9e7808187b401f1c441a3c40618080db",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardFrame",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{filename}}"
+    ],
+    "related_keys": [
+      "message_kicad_session_json_save_failed"
     ],
     "ui_role": "message"
   },

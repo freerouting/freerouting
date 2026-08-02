@@ -49,42 +49,6 @@
     "related_keys": [],
     "ui_role": "label"
   },
-  "layer_visibility": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardMenuDisplay"
-    ],
-    "english_hash": "aeeab4a983960671becc37f95288f44328b773c4df627cddea0eff177ecc9e88",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.BoardMenuDisplay",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "layer_visibility_tooltip"
-    ],
-    "ui_role": "label"
-  },
-  "layer_visibility_tooltip": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardMenuDisplay"
-    ],
-    "english_hash": "ca9f0827ab826ba5f16e18e3bd55a32dc1055744243d89587ca5d1bf4f855603",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.BoardMenuDisplay",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "layer_visibility"
-    ],
-    "ui_role": "tooltip"
-  },
   "miscellaneous": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
@@ -101,12 +65,12 @@
     "related_keys": [],
     "ui_role": "label"
   },
-  "object_visibility": {
+  "visibility": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.BoardMenuDisplay"
     ],
-    "english_hash": "9998a4ba72a3cb158590b989a9040ba548d0acefb1014edad39e0b8e84a4c02a",
+    "english_hash": "7448611d5f93aa8acac6a06d76c00b3f23d985bd7fbedbc771409a85ad4a23c5",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -114,17 +78,15 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
-    "related_keys": [
-      "object_visibility_tooltip"
-    ],
+    "related_keys": [],
     "ui_role": "label"
   },
-  "object_visibility_tooltip": {
+  "visibility_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.BoardMenuDisplay"
     ],
-    "english_hash": "e92e8e5b6f9ff7312351bbd377fa6ada0fe74a446ed334eb43591af451e715a6",
+    "english_hash": "e275b2166729efc0725d510e2810bcc3ab1d4d14a85cb58b3cfec67637122d13",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
@@ -133,7 +95,7 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "object_visibility"
+      "visibility"
     ],
     "ui_role": "tooltip"
   }

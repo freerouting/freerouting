@@ -146,13 +146,13 @@
   "pull_tight_region": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "2133b80b7c09eb41187b980dbd7695f9eaacd98258c18368582298b408d49d38",
+    "english_hash": "10bb925501e125c91d153e1bf83fe57826c5b0d755d9199ae00e4b1ffcb0a3a4",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
