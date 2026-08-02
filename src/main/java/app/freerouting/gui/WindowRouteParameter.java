@@ -300,7 +300,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     addSeparator(main_panel, gridbag, gridbag_constraints);
 
-    // Pull tight region
+    // Pull-tight radius (search distance around cursor for trace cleanup)
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.fill = GridBagConstraints.NONE;
     gridbag_constraints.insets = new Insets(3, 10, 3, 10);
@@ -590,9 +590,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         tm.getText("pin_pad_to_turn_gap_tooltip") + " Current value: " + formatUserDistance(edge_to_turn_dist) + ".");
 
     int region_width = this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_region_width();
-    String regionTooltip = tm.getText("pull_tight_region_tooltip") + " Current width: ";
+    String regionTooltip = tm.getText("pull_tight_region_tooltip") + " Current radius: ";
     if (region_width >= Integer.MAX_VALUE) {
-      regionTooltip += "unrestricted.";
+      regionTooltip += "whole board (no limit).";
     } else {
       regionTooltip += formatUserDistance(region_width) + ".";
     }
