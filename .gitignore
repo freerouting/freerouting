@@ -37,4 +37,6 @@ gha-creds-*.json
 /.secrets
 /scripts/benchmark/logs
 /scripts/benchmark/outputs
+/scripts/benchmark/results/comparison-*/
+/scripts/benchmark/binaries/freerouting-current-*.jar
 /scripts/i18n/__pycache__

@@ -14,6 +14,7 @@ param(
     [bool]    $RouterEnabled  = $true,
     [switch]  $Force,
     [switch]  $ReportOnly,
+    [switch]  $SkipWebsiteUpdate,
     [string]  $FilterFixture  = "*",
     [string]  $FilterBinary   = "*"
 )
@@ -43,10 +44,17 @@ $store = Load-BenchmarksJson $JsonPath
 $rawJson = $store.RawData
 $cache = $store.Cache
 
+function Update-BenchmarkReports {
+    param([Hashtable]$Cache)
+    Export-MarkdownReport $Cache $MdPath $CsvPath $ChartDataPath
+    if (-not $SkipWebsiteUpdate) {
+        Update-BenchmarksHtml $Cache $WebsiteHtml
+    }
+}
+
 if ($ReportOnly) {
     Write-Output "Report-only mode. Generating reports from cached data..."
-    Export-MarkdownReport $cache $MdPath $CsvPath $ChartDataPath
-    Update-BenchmarksHtml $cache $WebsiteHtml
+    Update-BenchmarkReports $cache
     Write-Output "Done!"
     exit 0
 }
@@ -304,6 +312,5 @@ foreach ($binary in $binaries) {
 
 # 6. Generate final reports
 Write-Output "Regenerating benchmark reports..."
-Export-MarkdownReport $cache $MdPath $CsvPath $ChartDataPath
-Update-BenchmarksHtml $cache $WebsiteHtml
+Update-BenchmarkReports $cache
 Write-Output "Benchmark Suite Execution Complete!"

@@ -51,12 +51,13 @@ $ErrorActionPreference = "Stop"
 $BenchmarkRoot = $PSScriptRoot
 $RepoRoot = (Resolve-Path (Join-Path $BenchmarkRoot "../..")).Path
 $RunBenchmarksScript = Join-Path $BenchmarkRoot "run-benchmarks.ps1"
-$BinariesDir = Join-Path $BenchmarkRoot "binaries"
 $ComparisonSlug = "$BaselineBranch-vs-$($CompareBranch -replace '[\\/:*?"<>|]', '-')"
 $ResultsDir = Join-Path $BenchmarkRoot "results/comparison-$ComparisonSlug"
+$ComparisonBinariesDir = Join-Path $ResultsDir "binaries"
 $ReportPath = Join-Path $ResultsDir "benchmarks.md"
 $JsonPath = Join-Path $ResultsDir "benchmarks.json"
 $OvernightLog = Join-Path $ResultsDir "overnight-run.log"
+$script:ComparisonStashApplied = $false
 
 function Write-Log {
     param([string]$Message)
@@ -131,7 +132,40 @@ function Get-BranchJarSlug {
 function Get-BranchJarPath {
     param([string]$Branch)
     $slug = Get-BranchJarSlug $Branch
-    return Join-Path $BinariesDir "freerouting-current-$slug.jar"
+    return Join-Path $ComparisonBinariesDir "freerouting-current-$slug.jar"
+}
+
+function Prepare-GitForBranchSwitch {
+    Push-Location $RepoRoot
+    try {
+        $prevEap = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        $porcelain = git status --porcelain 2>&1
+        $ErrorActionPreference = $prevEap
+        if (-not $porcelain) {
+            return
+        }
+
+        Write-Log "Preparing git working tree for branch switch..."
+        git reset HEAD -- scripts/benchmark/ website/benchmarks.html 2>$null | Out-Null
+        Invoke-Git @("stash", "push", "-m", "run-comparison-benchmarks-auto")
+        $script:ComparisonStashApplied = $true
+    } finally {
+        Pop-Location
+    }
+}
+
+function Restore-GitStashIfApplied {
+    if (-not $script:ComparisonStashApplied) {
+        return
+    }
+    try {
+        Invoke-Git @("stash", "pop")
+        Write-Log "Restored stashed working tree changes."
+        $script:ComparisonStashApplied = $false
+    } catch {
+        Write-Log "WARNING: Could not pop auto-stash. Run 'git stash list' and 'git stash pop' manually if needed. $($_.Exception.Message)"
+    }
 }
 
 function Stop-FreeroutingJavaProcesses {
@@ -226,6 +260,7 @@ function Invoke-BenchmarkPhase {
         return $label
     }
 
+    Prepare-GitForBranchSwitch
     Ensure-GitBranch $Branch
 
     if ($Branch -eq $BaselineBranch) {
@@ -264,9 +299,10 @@ function Invoke-BenchmarkPhase {
     Push-Location $BenchmarkRoot
     try {
         $benchParams = @{
-            ResultsDir   = $ResultsDir
-            BinariesDir  = $BinariesDir
-            FilterBinary = $jarFileName
+            ResultsDir        = $ResultsDir
+            BinariesDir       = $ComparisonBinariesDir
+            FilterBinary      = $jarFileName
+            SkipWebsiteUpdate = $true
         }
         if ($Force) {
             $benchParams.Force = $true
@@ -327,7 +363,7 @@ function Add-ComparisonHeader {
 # --- Main ---
 $startedAt = Get-Date
 $null = New-Item -ItemType Directory -Force -Path $ResultsDir
-$null = New-Item -ItemType Directory -Force -Path $BinariesDir
+$null = New-Item -ItemType Directory -Force -Path $ComparisonBinariesDir
 
 if (-not $Resume) {
     Write-Log "Starting fresh comparison in $ResultsDir"
@@ -372,6 +408,7 @@ try {
 
     Add-ComparisonHeader -BaselineLabel $baselineLabel -CompareLabel $compareLabel -StartedAt $startedAt
 
+    Restore-GitStashIfApplied
     Write-Log "Comparison complete."
     Write-Log "Open report: $ReportPath"
     Write-Output ""
@@ -386,6 +423,7 @@ catch {
     exit 1
 }
 finally {
+    Restore-GitStashIfApplied
     if ($originalBranch) {
         try {
             Ensure-GitBranch $originalBranch
