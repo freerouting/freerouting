@@ -1344,6 +1344,12 @@ public class BatchAutorouter extends NamedAlgorithm {
             curr_via_costs, route_start_set, route_dest_set, p_ripped_item_list, p_ripup_costs,
             p_ripup_pass_no, time_limit);
         if (necked_result != null) {
+          if (this.settings.isStrictDrc()) {
+            AutorouteAttemptResult strict_result = enforceStrictDrc(board, p_route_net_no, maxItemIdBeforeRoute);
+            if (strict_result != null) {
+              return strict_result;
+            }
+          }
           return necked_result;
         }
       }

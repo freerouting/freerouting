@@ -15,7 +15,7 @@ public class StrictDrcRoutingTest extends RoutingFixtureTest {
 
   @Test
   @Tag("slow")
-  void strictDrcKeepsBoardViolationFree() {
+  void strictDrcDoesNotAddViolationsBeyondPreExisting() {
     var testingSettings = new TestingSettings();
     testingSettings.setStrictDrc(true);
     testingSettings.setJobTimeoutString("00:05:00");

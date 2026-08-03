@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.board.Item;
 import app.freerouting.board.ObstacleArea;
+import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.settings.sources.TestingSettings;
@@ -45,7 +46,10 @@ public class HoleKeepoutClearanceTest extends RoutingFixtureTest {
     }
     assertTrue(reclassified > 0, "fixture must contain NPTH keepout circles");
 
-    int expectedBoardUnits = 250 * Math.max(1, job.board.communication.resolution);
+    int expectedBoardUnits = (int) Math.round(Unit.scale(
+        250.0 * Math.max(1, job.board.communication.resolution),
+        Unit.UM,
+        job.board.communication.unit));
     for (int layer = 0; layer < matrix.get_layer_count(); layer++) {
       assertTrue(matrix.get_value(holeEdgeClassNo, 1, layer, false) >= expectedBoardUnits,
           "hole_edge clearance must be at least the configured hole clearance");
