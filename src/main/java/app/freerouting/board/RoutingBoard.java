@@ -595,6 +595,14 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     clear_shove_failing_obstacle();
     Point from_corner = p_polyline.first_corner();
     Point to_corner = p_polyline.last_corner();
+    if (from_corner == null || to_corner == null) {
+      // A degenerate polyline (parallel/near-parallel lines produced while shoving against
+      // fixed multi-layer copper) has no well-defined first/last corner -- corner(i) returns
+      // null. The trace cannot be inserted; return null so the caller treats this segment as
+      // not inserted and reroutes, instead of dereferencing a null corner (NPE at .equals).
+      FRLogger.trace("RoutingBoard.insert_forced_trace_polyline: degenerate polyline (null corner), skipping");
+      return null;
+    }
     if (from_corner.equals(to_corner)) {
       return to_corner;
     }
