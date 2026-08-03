@@ -1,4 +1,5 @@
 import java.time.Duration
+import org.gradle.api.tasks.testing.TestResult
 
 plugins {
     id 'java'
@@ -446,6 +447,27 @@ tasks.register('installLocalGitHook', Copy) {
     from new File(rootProject.rootDir, 'scripts/pre-commit')
     into { new File(rootProject.rootDir, '.git/hooks') }
     fileMode 0775
+}
+
+tasks.withType(Test).configureEach {
+    def failedTests = []
+
+    afterTest { descriptor, result ->
+        if (result.resultType == TestResult.ResultType.FAILURE) {
+            failedTests << descriptor
+        }
+    }
+
+    afterSuite { desc, result ->
+        if (!desc.parent && !failedTests.isEmpty()) {
+            def out = System.out
+            out.println()
+            out.println("Failed tests (${failedTests.size()}):")
+            failedTests.each { descriptor ->
+                out.println("  ${descriptor.className} > ${descriptor.displayName}")
+            }
+        }
+    }
 }
 
 test {
