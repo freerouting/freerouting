@@ -1,0 +1,43 @@
+(pcb "S:/SProjects/KiBugs/dsn/fomu-hardware-master/archive/evt/pcb/minimal-soe-ok.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "minimal-soe")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  28400.0 -65402.9  57029.4 -65402.9  57029.4 -45700.0  28400.0 -45700.0  28400.0 -65402.9)
+    )
+    (rule
+      (width 152.4)
+      (clearance 152.4)
+    )
+  )
+  (placement
+  )
+  (library
+  )
+  (network
+    (net /CRESET
+      (pins)
+    )
+  )
+  (wiring
+      (wire (path B.Cu 152.4 36400 -53700 41141.8 -53700 44844.7 -57402.9)(net /CRESET)(type protect))
+  )
+)
