@@ -71,6 +71,18 @@ public class TestingSettings implements SettingsSource {
         this.settings.copperToEdgeClearanceUm = copperToEdgeClearanceUm;
     }
 
+    public void setHoleClearanceUm(double holeClearanceUm) {
+        this.settings.holeClearanceUm = holeClearanceUm;
+    }
+
+    public void setNeckWidthUm(double neckWidthUm) {
+        this.settings.neckWidthUm = neckWidthUm;
+    }
+
+    public void setStrictDrc(boolean strictDrc) {
+        this.settings.strictDrc = strictDrc;
+    }
+
     @Override
     public RouterSettings getSettings() {
         return settings;

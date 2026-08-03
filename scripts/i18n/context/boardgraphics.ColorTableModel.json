@@ -172,13 +172,13 @@
     "code_references": [
       "app.freerouting.boardgraphics.OtherColorTableModel"
     ],
-    "english_hash": "a3526739157ffde5b1d7b13c4b3d985cdc8aaadb7295c32b0917ce5a5dabe9a4",
+    "english_hash": "e2b07cdb29e43660ed135e221c4469d253fb7547d55c5aa99d5f33f686109e60",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

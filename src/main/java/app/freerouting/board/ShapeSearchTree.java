@@ -4,13 +4,16 @@ import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
 import app.freerouting.datastructures.MinAreaTree;
 import app.freerouting.datastructures.Signum;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.LineSegment;
 import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.RegularTileShape;
 import app.freerouting.geometry.planar.Shape;
@@ -19,6 +22,7 @@ import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,6 +39,7 @@ import java.util.TreeSet;
  */
 public class ShapeSearchTree extends MinAreaTree {
 
+  private static final int DRILL_HOLE_CLEARANCE_MARGIN = 10;
   /**
    * used in objects of class EntrySortedByClearance
    */
@@ -841,6 +846,9 @@ public class ShapeSearchTree extends MinAreaTree {
     for (int i = 0; i < result.length; i++) {
       Shape curr_shape = p_drill_item.get_shape(i);
       if (curr_shape == null) {
+        curr_shape = drill_hole_obstacle(p_drill_item);
+      }
+      if (curr_shape == null) {
         result[i] = null;
       } else {
         TileShape curr_tile_shape;
@@ -853,6 +861,7 @@ public class ShapeSearchTree extends MinAreaTree {
         }
         int offset_width = this.clearance_compensation_value(p_drill_item.clearance_class_no(),
             p_drill_item.shape_layer(i));
+        offset_width += drill_hole_clearance_delta(p_drill_item, curr_shape, p_drill_item.shape_layer(i));
         if (curr_tile_shape == null) {
           FRLogger.warn("ShapeSearchTree.calculate_tree_shapes: shape is null");
         } else {
@@ -862,6 +871,65 @@ public class ShapeSearchTree extends MinAreaTree {
       }
     }
     return result;
+  }
+
+  /**
+   * Synthesized obstacle for copper layers where a drilled item has NO pad shape: the drill
+   * hole still passes through (e.g. a through-via with unused inner layers), so other-net
+   * copper on those layers must keep hole clearance from it. Returns null when the
+   * hole-clearance rule is disabled or no drill radius is known.
+   */
+  protected Shape drill_hole_obstacle(DrillItem p_drill_item) {
+    if (this.board == null || this.board.rules == null || this.board.rules.get_hole_clearance() <= 0
+        || p_drill_item.get_padstack() == null) {
+      return null;
+    }
+    double drill_radius = p_drill_item.get_padstack().get_drill_radius();
+    if (drill_radius <= 0) {
+      return null;
+    }
+    Point center = p_drill_item.get_center();
+    if (!(center instanceof IntPoint)) {
+      center = center.to_float().round();
+    }
+    return new Circle((IntPoint) center, (int) Math.ceil(drill_radius));
+  }
+
+  /**
+   * Extra obstacle inflation so that copper of other nets stays hole_clearance away from this
+   * item's drill hole (not just its copper pad). Applies to every drilled item — vias, PTH pins
+   * and hole-only (NPTH) padstacks alike; returns 0 when the hole-clearance rule is disabled.
+   */
+  protected int drill_hole_clearance_delta(DrillItem p_drill_item, Shape p_shape, int p_layer) {
+    if (this.board == null || this.board.rules == null) {
+      return 0;
+    }
+    int hole_clearance = this.board.rules.get_hole_clearance();
+    if (hole_clearance <= 0 || p_shape == null || p_drill_item.get_padstack() == null) {
+      return 0;
+    }
+
+    double drill_radius = p_drill_item.get_padstack().get_drill_radius();
+    if (drill_radius <= 0) {
+      return 0;
+    }
+    double copper_radius;
+    if (p_drill_item.get_padstack().hole_only) {
+      copper_radius = drill_radius;
+    } else {
+      copper_radius = p_shape.border_distance(p_drill_item.get_center().to_float());
+      if (copper_radius <= 0) {
+        Shape pad_shape = p_drill_item.get_padstack().get_shape(p_layer);
+        copper_radius = pad_shape == null ? drill_radius : pad_shape.border_distance(FloatPoint.ZERO);
+      }
+    }
+    int clearance_class = this.compensated_clearance_class_no > 0
+        ? this.compensated_clearance_class_no
+        : BoardRules.default_clearance_class();
+    int copper_clearance = this.board.rules.clearance_matrix.get_value(p_drill_item.clearance_class_no(),
+        clearance_class, p_layer, false);
+    return Math.max(0, (int) Math.ceil(
+        drill_radius + hole_clearance + DRILL_HOLE_CLEARANCE_MARGIN - copper_radius - copper_clearance));
   }
 
   TileShape[] calculate_tree_shapes(ObstacleArea p_obstacle_area) {
