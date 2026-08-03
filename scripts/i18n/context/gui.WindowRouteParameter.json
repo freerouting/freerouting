@@ -10,7 +10,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -26,7 +26,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -42,7 +42,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -58,7 +58,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "automatic",
@@ -78,7 +78,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "automatic_neckdown"
@@ -110,7 +110,7 @@
     "code_references": [
       "app.freerouting.gui.WindowRouteParameter"
     ],
-    "english_hash": "e67527c2b2983359e35c3cdf0e703783dc8024eae3b5f8712f101452e6524ac1",
+    "english_hash": "360cb31650ad74a48a1fb2129c55ee34d12771354ee2a7ee83da734ee4a4ed7c",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -128,7 +128,7 @@
     "code_references": [
       "app.freerouting.gui.WindowRouteParameter"
     ],
-    "english_hash": "d23ea9edf4bfdaf1070d35def8b8a6c25d1607fff4fdfc2937055af5c826c044",
+    "english_hash": "a649837e3a5f239dada86cbf9e7d9acc8a238b72a07318de48321f5fc4a9b143",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -150,7 +150,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "clearance_compensation_checkbox",
@@ -200,7 +200,7 @@
   "clearance_compensation_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "9caf9faba6e38ff10c81bbd8881d109a3323adac14b8c40b76a445ced098a069",
+    "english_hash": "f0af2f4296c417d31506343c38c9b3f880b75221d4f38d0b0ca02ca11060ab95",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
@@ -240,7 +240,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "drag_components_enabled_tooltip"
@@ -258,7 +258,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "drag_components_enabled"
@@ -276,7 +276,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -310,7 +310,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "hilight_routing_obstacle_tooltip"
@@ -328,7 +328,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "hilight_routing_obstacle"
@@ -346,7 +346,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "ignore_conduction_areas_tooltip"
@@ -364,7 +364,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "ignore_conduction_areas"
@@ -382,7 +382,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "keepout_outside_outline_tooltip"
@@ -400,7 +400,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "keepout_outside_outline"
@@ -418,7 +418,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -452,7 +452,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -496,7 +496,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "pin_pad_to_turn_gap_tooltip"
@@ -514,7 +514,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "pin_pad_to_turn_gap"
@@ -532,7 +532,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "pull_tight_accuracy_tooltip",
@@ -552,7 +552,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "pull_tight_accuracy"
@@ -570,7 +570,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "pull_tight_accuracy",
@@ -590,7 +590,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "pull_tight_region"
@@ -608,7 +608,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "push&shove_enabled_tooltip"
@@ -626,7 +626,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "push&shove_enabled"
@@ -644,7 +644,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "restrict_pin_exit_directions_tooltip"
@@ -662,7 +662,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "restrict_pin_exit_directions"
@@ -698,7 +698,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "route_mode"
@@ -734,7 +734,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "rule_selection"
@@ -770,7 +770,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "snap_angle"
@@ -788,7 +788,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -838,7 +838,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "via_snap_to_smd_center_tooltip"
@@ -856,7 +856,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "via_snap_to_smd_center"
