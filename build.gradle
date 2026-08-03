@@ -180,7 +180,7 @@ dependencies {
     rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.34.1'
     rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.34.1'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
-    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.35.3'
+    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.43.0'
     rewrite 'org.openrewrite.recipe:rewrite-gradle:0.1.0'
 
     // ArchUnit: package-architecture enforcement
