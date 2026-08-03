@@ -5,6 +5,7 @@ import static java.util.Collections.shuffle;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
+import app.freerouting.board.BasicBoard;
 import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.DrillItem;
@@ -1323,6 +1324,8 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       int maxItemIdBeforeRoute = board.communication.id_no_generator.max_generated_no();
 
+      byte[] strictDrcBoardSnapshot = this.settings.isStrictDrc() ? board.serialize(false) : null;
+
       // Do the auto-routing between the two sets of items
       AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
           autoroute_control, p_ripped_item_list, p_ripup_costs);
@@ -1344,18 +1347,18 @@ public class BatchAutorouter extends NamedAlgorithm {
             curr_via_costs, route_start_set, route_dest_set, p_ripped_item_list, p_ripup_costs,
             p_ripup_pass_no, time_limit);
         if (necked_result != null) {
-          if (this.settings.isStrictDrc()) {
-            AutorouteAttemptResult strict_result = enforceStrictDrc(board, p_route_net_no, maxItemIdBeforeRoute);
-            if (strict_result != null) {
-              return strict_result;
-            }
+          AutorouteAttemptResult strict_result = applyStrictDrcAfterRoute(p_route_net_no,
+              maxItemIdBeforeRoute, strictDrcBoardSnapshot);
+          if (strict_result != null) {
+            return strict_result;
           }
           return necked_result;
         }
       }
 
-      if (autoroute_result.state == AutorouteAttemptState.ROUTED && this.settings.isStrictDrc()) {
-        AutorouteAttemptResult strict_result = enforceStrictDrc(board, p_route_net_no, maxItemIdBeforeRoute);
+      if (autoroute_result.state == AutorouteAttemptState.ROUTED) {
+        AutorouteAttemptResult strict_result = applyStrictDrcAfterRoute(p_route_net_no,
+            maxItemIdBeforeRoute, strictDrcBoardSnapshot);
         if (strict_result != null) {
           return strict_result;
         }
@@ -1421,6 +1424,23 @@ public class BatchAutorouter extends NamedAlgorithm {
         + (route_net != null ? route_net.name : "#" + p_route_net_no)
         + "' at " + this.settings.getNeckWidthUm() + " um trace width.");
     return neck_result;
+  }
+
+  /**
+   * When {@code strict_drc} rejects a routed connection, restore the board snapshot taken
+   * before {@link AutorouteEngine#autoroute_connection} so rip-up victims removed during
+   * routing are not left torn up.
+   */
+  private AutorouteAttemptResult applyStrictDrcAfterRoute(int p_route_net_no, int p_max_item_id_before,
+      byte[] p_board_snapshot_before_route) {
+    if (!this.settings.isStrictDrc()) {
+      return null;
+    }
+    AutorouteAttemptResult rejection = enforceStrictDrc(board, p_route_net_no, p_max_item_id_before);
+    if (rejection != null && p_board_snapshot_before_route != null) {
+      this.board = (RoutingBoard) BasicBoard.deserialize(p_board_snapshot_before_route);
+    }
+    return rejection;
   }
 
   /**
