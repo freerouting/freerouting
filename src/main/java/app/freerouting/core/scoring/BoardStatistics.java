@@ -87,6 +87,17 @@ public class BoardStatistics implements Serializable {
    * defines the preferred unit, and allows skipping the clearance checks.
    */
   public BoardStatistics(BasicBoard board, Unit unit, boolean includeClearanceViolations) {
+    this(board, unit, includeClearanceViolations, true);
+  }
+
+  /**
+   * Creates board statistics with optional clearance and connection (incomplete) analysis.
+   *
+   * @param includeConnections when {@code false}, skips {@code calculateAllIncompletes()} —
+   *     use when a {@link app.freerouting.interactive.RatsNest} will be created immediately after load
+   */
+  public BoardStatistics(BasicBoard board, Unit unit, boolean includeClearanceViolations,
+      boolean includeConnections) {
     var bb = board.get_bounding_box();
 
     this.host = board.communication.specctra_parser_info.host_cad + ","
@@ -231,10 +242,12 @@ public class BoardStatistics implements Serializable {
     }
 
     // Connections
-    var drc = new app.freerouting.drc.DesignRulesChecker(board, null);
-    drc.calculateAllIncompletes();
-    this.connections.maximumCount = drc.max_connections;
-    this.connections.incompleteCount = drc.getIncompleteCount();
+    if (includeConnections) {
+      var drc = new app.freerouting.drc.DesignRulesChecker(board, null);
+      drc.calculateAllIncompletes();
+      this.connections.maximumCount = drc.max_connections;
+      this.connections.incompleteCount = drc.getIncompleteCount();
+    }
 
     // Bends
     this.bends.totalCount = 0;
@@ -309,7 +322,8 @@ public class BoardStatistics implements Serializable {
     }
 
     if (includeClearanceViolations) {
-      this.clearanceViolations.totalCount = drc.getAllClearanceViolations().size();
+      var clearanceDrc = new app.freerouting.drc.DesignRulesChecker(board, null);
+      this.clearanceViolations.totalCount = clearanceDrc.getAllClearanceViolations().size();
     } else {
       this.clearanceViolations.totalCount = 0;
     }

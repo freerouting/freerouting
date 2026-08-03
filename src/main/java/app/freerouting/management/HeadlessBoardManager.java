@@ -500,21 +500,19 @@ public class HeadlessBoardManager implements BoardManager {
    * @see BoardFileDetails#calculateCrc32(InputStream)
    */
   public long calculateCrc32() {
-    // Create a memory stream
+    return calculateCrc32ForBoard(this.get_routing_board());
+  }
+
+  private long calculateCrc32ForBoard(RoutingBoard board) {
     ByteArrayOutputStream memoryStream = new ByteArrayOutputStream();
     try {
-      DsnWriter.write(this.get_routing_board(), memoryStream, "N/A", false);
+      DsnWriter.write(board, memoryStream, "N/A", false);
     } catch (IOException e) {
-      FRLogger.error("HeadlessBoardManager.calculateCrc32: unable to serialise board to DSN", e);
+      FRLogger.error("HeadlessBoardManager.calculateCrc32ForBoard: unable to serialise board to DSN", e);
       throw new IllegalStateException("Unable to serialize board to DSN for CRC32 calculation", e);
     }
-
-    // Transform the output stream to an input stream
     InputStream inputStream = new ByteArrayInputStream(memoryStream.toByteArray());
-
-    return BoardFileDetails
-        .calculateCrc32(inputStream)
-        .getValue();
+    return BoardFileDetails.calculateCrc32(inputStream).getValue();
   }
 
   /**
@@ -584,76 +582,115 @@ public class HeadlessBoardManager implements BoardManager {
       }
       BoardReadResult dsnResult = DsnReader.readBoard(inputStream, boardObservers, identificationNumberGenerator, inputFilename);
 
-      if (dsnResult instanceof BoardReadResult.Success success) {
-        this.board = (RoutingBoard) success.board();
-      } else if (dsnResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
-        this.board = (RoutingBoard) outlineMissing.board();
-      } else {
-        // ParseError or IoError — no board was constructed
-        if (dsnResult instanceof BoardReadResult.IoError ioError) {
-          routingJob.logError("There was an IO error while reading DSN file.", ioError.cause());
-        } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
-          routingJob.logError("There was a parse error while reading DSN file at '" + parseError.location() + "': " + parseError.detail(), null);
-        }
-        return dsnResult;
-      }
-
-      // Apply board-specific optimisations to RouterSettings after board is loaded
-      if (this.board != null && this.routingJob != null) {
-        int boardLayerCount = this.board.get_layer_count();
-        if (this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
-          this.routingJob.routerSettings.setLayerCount(boardLayerCount);
-        }
-        this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
-        applyCopperToEdgeClearanceOverride();
-        applyHoleClearanceOverride();
-      }
-
-      if (this.board != null) {
-        var boardStats = new BoardStatistics(this.board, null, false);
-        FRAnalytics.fileLoaded("DSN", GSON.toJson(boardStats));
-        this.board.reduce_nets_of_route_items();
-        originalBoardChecksum = calculateCrc32();
-        validatePowerPlanes();
-        FRAnalytics.boardLoaded(
-            this.board.communication.specctra_parser_info.host_cad,
-            this.board.communication.specctra_parser_info.host_version,
-            this.board.get_layer_count(),
-            this.board.components.count(),
-            this.board.rules.nets.max_net_no());
-
-        // Check if a counterpart file exists and compare
-        if (inputFilename != null) {
-          String counterpartPath = null;
-          if (inputFilename.toLowerCase().endsWith(".dsn")) {
-            counterpartPath = inputFilename.substring(0, inputFilename.length() - 4) + ".json";
-          } else if (inputFilename.toLowerCase().endsWith(".json")) {
-            counterpartPath = inputFilename.substring(0, inputFilename.length() - 5) + ".dsn";
-          }
-          if (counterpartPath != null) {
-            java.io.File counterpartFile = new java.io.File(counterpartPath);
-            if (counterpartFile.exists()) {
-              RoutingBoard counterpartBoard = loadBoardFromFileForComparison(counterpartFile);
-              if (counterpartBoard != null) {
-                app.freerouting.board.BoardComparator.ComparisonResult comparison =
-                    app.freerouting.board.BoardComparator.compare(this.board, counterpartBoard, 1e-3);
-                if (comparison.areEqual) {
-                  FRLogger.debug("Counterpart comparison: The loaded board and its counterpart '" + counterpartFile.getName() + "' are identical in representation.");
-                } else {
-                  FRLogger.warn("Counterpart comparison: Differences detected between loaded board and counterpart '" + counterpartFile.getName() + "'.");
-                  FRLogger.debug(comparison.report);
-                }
-              }
-            }
-          }
-        }
-      }
-
+      applyParsedBoardResult(dsnResult, inputFilename, "DSN");
       return dsnResult;
 
     } catch (Exception e) {
       routingJob.logError("There was an error while reading DSN file.", e);
       return new BoardReadResult.IoError(new java.io.IOException("Error reading DSN file", e));
+    }
+  }
+
+  /**
+   * Applies a previously parsed board read result to this manager without performing I/O.
+   * Used by the GUI to finish loading on the EDT after background parsing.
+   */
+  public BoardReadResult applyParsedBoardResult(BoardReadResult dsnResult, String inputFilename,
+      String analyticsFormat) {
+    if (dsnResult instanceof BoardReadResult.Success success) {
+      this.board = (RoutingBoard) success.board();
+    } else if (dsnResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
+      this.board = (RoutingBoard) outlineMissing.board();
+    } else {
+      if (routingJob != null) {
+        if (dsnResult instanceof BoardReadResult.IoError ioError) {
+          routingJob.logError("There was an IO error while reading board file.", ioError.cause());
+        } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
+          routingJob.logError("There was a parse error while reading board file at '"
+              + parseError.location() + "': " + parseError.detail(), null);
+        }
+      }
+      return dsnResult;
+    }
+
+    applyRouterSettingsForLoadedBoard();
+    applyImmediatePostLoadProcessing();
+    scheduleDeferredPostLoadProcessing(inputFilename, analyticsFormat);
+    return dsnResult;
+  }
+
+  private void applyRouterSettingsForLoadedBoard() {
+    if (this.board != null && this.routingJob != null) {
+      int boardLayerCount = this.board.get_layer_count();
+      if (this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
+        this.routingJob.routerSettings.setLayerCount(boardLayerCount);
+      }
+      this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
+      applyCopperToEdgeClearanceOverride();
+      applyHoleClearanceOverride();
+    }
+  }
+
+  private void applyImmediatePostLoadProcessing() {
+    if (this.board == null) {
+      return;
+    }
+    this.board.reduce_nets_of_route_items();
+    validatePowerPlanes();
+  }
+
+  private void scheduleDeferredPostLoadProcessing(String inputFilename, String analyticsFormat) {
+    if (this.board == null) {
+      return;
+    }
+    RoutingBoard loadedBoard = this.board;
+    HeadlessBoardManager manager = this;
+    Thread.ofVirtual().name("board-post-load").start(() -> {
+      try {
+        var boardStats = new BoardStatistics(loadedBoard, null, false, false);
+        FRAnalytics.fileLoaded(analyticsFormat, GSON.toJson(boardStats));
+        FRAnalytics.boardLoaded(
+            loadedBoard.communication.specctra_parser_info.host_cad,
+            loadedBoard.communication.specctra_parser_info.host_version,
+            loadedBoard.get_layer_count(),
+            loadedBoard.components.count(),
+            loadedBoard.rules.nets.max_net_no());
+        manager.originalBoardChecksum = manager.calculateCrc32ForBoard(loadedBoard);
+        compareCounterpartBoardIfPresent(loadedBoard, inputFilename);
+      } catch (Exception e) {
+        FRLogger.error("Deferred post-load processing failed", e);
+      }
+    });
+  }
+
+  private static void compareCounterpartBoardIfPresent(RoutingBoard board, String inputFilename) {
+    if (inputFilename == null) {
+      return;
+    }
+    String counterpartPath = null;
+    if (inputFilename.toLowerCase().endsWith(".dsn")) {
+      counterpartPath = inputFilename.substring(0, inputFilename.length() - 4) + ".json";
+    } else if (inputFilename.toLowerCase().endsWith(".json")) {
+      counterpartPath = inputFilename.substring(0, inputFilename.length() - 5) + ".dsn";
+    }
+    if (counterpartPath == null) {
+      return;
+    }
+    java.io.File counterpartFile = new java.io.File(counterpartPath);
+    if (!counterpartFile.exists()) {
+      return;
+    }
+    RoutingBoard counterpartBoard = loadBoardFromFileForComparison(counterpartFile);
+    if (counterpartBoard == null) {
+      return;
+    }
+    app.freerouting.board.BoardComparator.ComparisonResult comparison =
+        app.freerouting.board.BoardComparator.compare(board, counterpartBoard, 1e-3);
+    if (comparison.areEqual) {
+      FRLogger.debug("Counterpart comparison: The loaded board and its counterpart '" + counterpartFile.getName() + "' are identical in representation.");
+    } else {
+      FRLogger.warn("Counterpart comparison: Differences detected between loaded board and counterpart '" + counterpartFile.getName() + "'.");
+      FRLogger.debug(comparison.report);
     }
   }
 
@@ -682,74 +719,7 @@ public class HeadlessBoardManager implements BoardManager {
 
     try (java.io.Reader reader = new java.io.InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
       BoardReadResult dsnResult = KiCadJsonReader.readBoard(reader, boardObservers, identificationNumberGenerator);
-
-      if (dsnResult instanceof BoardReadResult.Success success) {
-        this.board = (RoutingBoard) success.board();
-      } else if (dsnResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
-        this.board = (RoutingBoard) outlineMissing.board();
-      } else {
-        if (dsnResult instanceof BoardReadResult.IoError ioError) {
-          routingJob.logError("There was an IO error while reading KiCad JSON file.", ioError.cause());
-        } else if (dsnResult instanceof BoardReadResult.ParseError parseError) {
-          routingJob.logError("There was a parse error while reading KiCad JSON file at '" + parseError.location() + "': " + parseError.detail(), null);
-        }
-        return dsnResult;
-      }
-
-      // Apply board-specific optimisations to RouterSettings after board is loaded
-      if (this.board != null && this.routingJob != null) {
-        int boardLayerCount = this.board.get_layer_count();
-        if (this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
-          this.routingJob.routerSettings.setLayerCount(boardLayerCount);
-        }
-        this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
-        applyCopperToEdgeClearanceOverride();
-        applyHoleClearanceOverride();
-      }
-
-      if (this.board != null) {
-        var boardStats = new BoardStatistics(this.board, null, false);
-        FRAnalytics.fileLoaded("KICAD_JSON", GSON.toJson(boardStats));
-        this.board.reduce_nets_of_route_items();
-        originalBoardChecksum = calculateCrc32();
-        validatePowerPlanes();
-        FRAnalytics.boardLoaded(
-            this.board.communication.specctra_parser_info.host_cad,
-            this.board.communication.specctra_parser_info.host_version,
-            this.board.get_layer_count(),
-            this.board.components.count(),
-            this.board.rules.nets.max_net_no());
-
-        // Check if a counterpart file exists and compare
-        inputFilename = (this.routingJob != null && this.routingJob.input != null)
-            ? this.routingJob.input.getFilename()
-            : null;
-        if (inputFilename != null) {
-          String counterpartPath = null;
-          if (inputFilename.toLowerCase().endsWith(".dsn")) {
-            counterpartPath = inputFilename.substring(0, inputFilename.length() - 4) + ".json";
-          } else if (inputFilename.toLowerCase().endsWith(".json")) {
-            counterpartPath = inputFilename.substring(0, inputFilename.length() - 5) + ".dsn";
-          }
-          if (counterpartPath != null) {
-            java.io.File counterpartFile = new java.io.File(counterpartPath);
-            if (counterpartFile.exists()) {
-              RoutingBoard counterpartBoard = loadBoardFromFileForComparison(counterpartFile);
-              if (counterpartBoard != null) {
-                app.freerouting.board.BoardComparator.ComparisonResult comparison =
-                    app.freerouting.board.BoardComparator.compare(this.board, counterpartBoard, 1e-3);
-                if (comparison.areEqual) {
-                  FRLogger.debug("Counterpart comparison: The loaded board and its counterpart '" + counterpartFile.getName() + "' are identical in representation.");
-                } else {
-                  FRLogger.warn("Counterpart comparison: Differences detected between loaded board and counterpart '" + counterpartFile.getName() + "'.");
-                  FRLogger.debug(comparison.report);
-                }
-              }
-            }
-          }
-        }
-      }
-
+      applyParsedBoardResult(dsnResult, inputFilename, "KICAD_JSON");
       return dsnResult;
 
     } catch (Exception e) {
@@ -936,4 +906,4 @@ public class HeadlessBoardManager implements BoardManager {
     }
   }
 
-}
+}

@@ -9,11 +9,15 @@ import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.kicad.KiCadJsonReader;
+import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.RulesWriter;
 import app.freerouting.io.FileFormat;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.InteractiveState;
+import app.freerouting.interactive.RatsNest;
 import app.freerouting.interactive.ScreenMessages;
+import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
@@ -21,6 +25,7 @@ import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import java.awt.BorderLayout;
@@ -44,6 +49,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -194,62 +200,54 @@ public class BoardFrame extends WindowBase {
       }
 
       if (routingJob.input.getFile() != null) {
-        // We allow only one job in the queue for GUI sessions, so we need to remove any
-        // existing ones before adding a new one
-        String sessionId = SessionManager
-            .getInstance()
-            .getGuiSession().id.toString();
-        RoutingJobScheduler
-            .getInstance()
-            .clearJobs(sessionId);
+        final byte[] fileContent = routingJob.input.getData().readAllBytes();
+        final FileFormat inputFormat = routingJob.input.format;
 
-        // Enqueue the job to the routing queue
-        RoutingJobScheduler
-            .getInstance()
-            .enqueueJob(routingJob);
+        javax.swing.SwingUtilities.invokeLater(() -> {
+          String sessionId = SessionManager
+              .getInstance()
+              .getGuiSession().id.toString();
+          RoutingJobScheduler
+              .getInstance()
+              .clearJobs(sessionId);
+          RoutingJobScheduler
+              .getInstance()
+              .enqueueJob(routingJob);
 
-        // Set the input directory in the global settings
-        String oldInputDirectory = globalSettings.guiSettings.inputDirectory;
-        globalSettings.guiSettings.inputDirectory = this.routingJob.input.getDirectoryPath();
-
-        // Save the global settings to the configuration file if the input directory was
-        // changed
-        if (!oldInputDirectory.equals(globalSettings.guiSettings.inputDirectory)) {
-          try {
-            GlobalSettings.saveAsJson(globalSettings);
-          } catch (IOException e) {
-            FRLogger.error("Couldn't save the global settings to the configuration file", e);
+          String oldInputDirectory = globalSettings.guiSettings.inputDirectory;
+          globalSettings.guiSettings.inputDirectory = routingJob.input.getDirectoryPath();
+          if (!oldInputDirectory.equals(globalSettings.guiSettings.inputDirectory)) {
+            try {
+              GlobalSettings.saveAsJson(globalSettings);
+            } catch (IOException e) {
+              FRLogger.error("Couldn't save the global settings to the configuration file", e);
+            }
           }
-        }
+          try {
+            GlobalSettings.setDefaultValue("gui.input_directory", routingJob.input.getDirectoryPath());
+          } catch (Exception e) {
+            FRLogger.error("Couldn't update the input directory in the configuration file", e);
+          }
+        });
 
-        try {
-          GlobalSettings.setDefaultValue("gui.input_directory", this.routingJob.input.getDirectoryPath());
-        } catch (Exception e) {
-          // it's ok if we can't save the configuration file
-          FRLogger.error("Couldn't update the input directory in the configuration file", e);
-        }
-      }
-
-      // Load the file into the frame based on its recognised format
-      if ((board_panel != null) && (board_panel.board_handling != null)
-          && (routingJob.input.format != FileFormat.UNKNOWN)) {
-        switch (routingJob.input.format) {
-          case DSN:
-            this.load(routingJob.input.getData(), FileFormat.DSN, null, routingJob);
-            FRAnalytics.buttonClicked("fileio_loaddsn", this.routingJob.getInputFileDetails());
-            break;
-          case KICAD_DESIGN_JSON:
-            this.load(routingJob.input.getData(), FileFormat.KICAD_DESIGN_JSON, null, routingJob);
-            FRAnalytics.buttonClicked("fileio_loadjson", this.routingJob.getInputFileDetails());
-            break;
-          case FRB:
-            this.load(routingJob.input.getData(), FileFormat.FRB, null, routingJob);
-            FRAnalytics.buttonClicked("fileio_loadfrb", this.routingJob.getInputFileDetails());
-            break;
-          default:
-            // The file format is not supported
-            FRLogger.warn("Loading the board failed, because the selected file format is not supported.");
-            break;
+        if (board_panel != null && board_panel.board_handling != null) {
+          switch (inputFormat) {
+            case DSN:
+              loadFromBytesAsync(fileContent, FileFormat.DSN, routingJob);
+              FRAnalytics.buttonClicked("fileio_loaddsn", this.routingJob.getInputFileDetails());
+              break;
+            case KICAD_DESIGN_JSON:
+              loadFromBytesAsync(fileContent, FileFormat.KICAD_DESIGN_JSON, routingJob);
+              FRAnalytics.buttonClicked("fileio_loadjson", this.routingJob.getInputFileDetails());
+              break;
+            case FRB:
+              this.load(new ByteArrayInputStream(fileContent), FileFormat.FRB, null, routingJob);
+              FRAnalytics.buttonClicked("fileio_loadfrb", this.routingJob.getInputFileDetails());
+              break;
+            default:
+              FRLogger.warn("Loading the board failed, because the selected file format is not supported.");
+              break;
+          }
         }
       }
     });
@@ -452,6 +450,270 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
+   * Parses a design file on a background thread, then completes GUI setup on the EDT in phases.
+   * Keeps the BoardFrame and tool windows responsive during DSN/JSON parsing and heavy post-load work.
+   */
+  private void loadFromBytesAsync(byte[] fileContent, FileFormat format, RoutingJob job) {
+    ensureGeneralSettingsVisibleDuringLoad();
+
+    String filename = job.input != null ? job.input.getFilename() : null;
+    TextManager guiTm = new TextManager(GuiManager.class, locale);
+    String loadingMessage = guiTm.getText("loading_design") + (filename != null ? " " + filename : "");
+    WindowMessage loadingWindow = WindowMessage.show(loadingMessage);
+    loadingWindow.setLocationRelativeTo(this);
+
+    Thread.ofVirtual().name("gui-board-load").start(() -> {
+      long parseStart = System.nanoTime();
+      BoardReadResult readResult = parseBoardFromBytes(fileContent, format, filename);
+      long parseMs = (System.nanoTime() - parseStart) / 1_000_000L;
+      FRLogger.info("Board load: DSN/JSON parse completed in " + parseMs + " ms"
+          + (filename != null ? " ('" + filename + "')" : ""));
+
+      javax.swing.SwingUtilities.invokeLater(
+          () -> finishLoadFromParseResult(readResult, fileContent, format, job, loadingWindow));
+    });
+  }
+
+  private static BoardReadResult parseBoardFromBytes(byte[] fileContent, FileFormat format, String filename) {
+    try (InputStream inputStream = new ByteArrayInputStream(fileContent)) {
+      if (format == FileFormat.DSN) {
+        return DsnReader.readBoard(inputStream, null, new ItemIdentificationNumberGenerator(), filename);
+      }
+      if (format == FileFormat.KICAD_DESIGN_JSON) {
+        try (java.io.Reader reader = new java.io.InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+          return KiCadJsonReader.readBoard(reader, null, new ItemIdentificationNumberGenerator());
+        }
+      }
+      throw new IllegalArgumentException("Unsupported format for async load: " + format);
+    } catch (Exception e) {
+      FRLogger.error("Failed to parse board file", e);
+      return new BoardReadResult.IoError(new IOException("Failed to parse board file", e));
+    }
+  }
+
+  private void ensureGeneralSettingsVisibleDuringLoad() {
+    if (board_panel == null || board_panel.board_handling == null
+        || board_panel.board_handling.graphics_context == null) {
+      return;
+    }
+    allocateEssentialSubwindows();
+    this.select_parameter_window.setLocation(0, 0);
+    this.select_parameter_window.setVisible(true);
+    this.select_parameter_window.toFront();
+  }
+
+  private void disposePermanentSubwindows() {
+    for (int i = 0; i < this.permanent_subwindows.length; i++) {
+      if (this.permanent_subwindows[i] != null) {
+        this.permanent_subwindows[i].dispose();
+        this.permanent_subwindows[i] = null;
+      }
+    }
+    select_parameter_window = null;
+    color_manager = null;
+    visibility_window = null;
+    display_misc_window = null;
+    route_parameter_window = null;
+    autoroute_parameter_window = null;
+    move_parameter_window = null;
+    clearance_matrix_window = null;
+    via_window = null;
+    edit_vias_window = null;
+    edit_net_rules_window = null;
+    assign_net_classes_window = null;
+    padstacks_window = null;
+    packages_window = null;
+    components_window = null;
+    incompletes_window = null;
+    clearance_violations_window = null;
+    length_violations_window = null;
+    net_info_window = null;
+    unconnected_route_window = null;
+    route_stubs_window = null;
+    about_window = null;
+  }
+
+  private void finishLoadFromParseResult(BoardReadResult readResult, byte[] fileContent, FileFormat format,
+      RoutingJob routingJob, WindowMessage loadingWindow) {
+    long attachStart = System.nanoTime();
+    boolean scheduleInitialPaint = false;
+    try {
+      if (!attachParsedBoard(readResult, fileContent, format, routingJob)) {
+        FRLogger.warn("Loading the board file failed.");
+        return;
+      }
+
+      if (readResult instanceof BoardReadResult.Success) {
+        initialize_windows(true);
+        board_panel.board_handling.refreshGuiFromSettings();
+        update_gui(format, readResult, new Point(0, 0), null, true);
+        scheduleBackgroundRatsNestBuild();
+        scheduleInitialPaint = true;
+      }
+    } catch (Exception e) {
+      FRLogger.error("Failed to attach loaded board", e);
+    } finally {
+      long attachMs = (System.nanoTime() - attachStart) / 1_000_000L;
+      FRLogger.info("Board load: GUI attach completed in " + attachMs + " ms");
+      if (!scheduleInitialPaint) {
+        loadingWindow.dispose();
+      }
+    }
+
+    if (scheduleInitialPaint) {
+      scheduleInitialBoardPaint(loadingWindow, format, readResult);
+    } else {
+      javax.swing.SwingUtilities.invokeLater(() -> completeHeavyGuiAfterLoad(format, readResult));
+    }
+  }
+
+  /**
+   * Shows rendering feedback, paints the board with fast simplified plane fills, then warms detailed
+   * plane geometry on a background thread before a full-quality repaint.
+   */
+  private void scheduleInitialBoardPaint(WindowMessage loadingWindow, FileFormat format, BoardReadResult readResult) {
+    var graphicsContext = board_panel.board_handling.graphics_context;
+    String renderingStatus = tm.getText("rendering_board");
+    board_panel.showRenderingOverlay(renderingStatus);
+    screen_messages.set_status_message(renderingStatus);
+    graphicsContext.setSimplifiedPlaneRendering(true);
+
+    javax.swing.SwingUtilities.invokeLater(() -> {
+      board_panel.paintImmediately(0, 0, board_panel.getWidth(), board_panel.getHeight());
+
+      javax.swing.SwingUtilities.invokeLater(() -> {
+        long paintStart = System.nanoTime();
+        try {
+          loadingWindow.dispose();
+          this.zoom_all();
+          board_panel.repaint();
+        } finally {
+          long paintMs = (System.nanoTime() - paintStart) / 1_000_000L;
+          FRLogger.info("Board load: first paint completed in " + paintMs + " ms");
+          board_panel.clearRenderingOverlay();
+          graphicsContext.setSimplifiedPlaneRendering(false);
+          this.updateTexts();
+        }
+        schedulePlaneFillCacheWarm();
+        javax.swing.SwingUtilities.invokeLater(() -> completeHeavyGuiAfterLoad(format, readResult));
+      });
+    });
+  }
+
+  private void schedulePlaneFillCacheWarm() {
+    RoutingBoard board = board_panel.board_handling.get_routing_board();
+    if (board == null) {
+      return;
+    }
+    var conductionAreas = board.get_conduction_areas();
+    if (conductionAreas.isEmpty()) {
+      return;
+    }
+    Thread.ofVirtual().name("plane-fill-cache-warm").start(() -> {
+      long warmStart = System.nanoTime();
+      for (app.freerouting.board.ConductionArea area : conductionAreas) {
+        area.warmDetailedFillCache();
+      }
+      long warmMs = (System.nanoTime() - warmStart) / 1_000_000L;
+      FRLogger.info("Board load: plane fill cache warmed in " + warmMs + " ms");
+      javax.swing.SwingUtilities.invokeLater(() -> {
+        if (board_panel.board_handling.get_routing_board() == board) {
+          board_panel.repaint();
+        }
+      });
+    });
+  }
+
+  private boolean attachParsedBoard(BoardReadResult readResult, byte[] fileContent, FileFormat format,
+      RoutingJob routingJob) {
+    this.routingJob = routingJob;
+    board_panel.reset_board_handling(routingJob);
+    disposePermanentSubwindows();
+
+    String inputFilename = routingJob.input != null ? routingJob.input.getFilename() : null;
+    String analyticsFormat = format == FileFormat.KICAD_DESIGN_JSON ? "KICAD_JSON" : "DSN";
+    board_panel.board_handling.applyParsedBoardResult(readResult, inputFilename, analyticsFormat);
+
+    if (readResult instanceof BoardReadResult.Success) {
+      RoutingBoard board = board_panel.board_handling.get_routing_board();
+      if (this.settingsMerger != null) {
+        if (format == FileFormat.DSN && inputFilename != null) {
+          this.settingsMerger.addOrReplaceSources(new DsnFileSettings(new ByteArrayInputStream(fileContent), inputFilename));
+        }
+        var mergedSettings = this.settingsMerger.merge();
+        int boardLayerCount = board.get_layer_count();
+        if (mergedSettings.getLayerCount() == 0 || mergedSettings.getLayerCount() != boardLayerCount) {
+          mergedSettings.setLayerCount(boardLayerCount);
+        }
+        mergedSettings.applyBoardSpecificOptimizations(board);
+        this.routingJob.setSettings(mergedSettings);
+        var interactiveSettings = board_panel.board_handling.getInteractiveSettings();
+        if (interactiveSettings != null) {
+          interactiveSettings.setSettings(mergedSettings);
+        }
+      }
+
+      this.boardLoadedEventListeners
+          .forEach(listener -> listener.accept(board_panel.board_handling.get_routing_board()));
+      return true;
+    }
+
+    return readResult instanceof BoardReadResult.OutlineMissing;
+  }
+
+  private void scheduleBackgroundRatsNestBuild() {
+    RoutingBoard board = board_panel.board_handling.get_routing_board();
+    if (board == null) {
+      return;
+    }
+    Thread.ofVirtual().name("gui-ratsnest-build").start(() -> {
+      long ratsNestStart = System.nanoTime();
+      RatsNest prepared = new RatsNest(board);
+      long ratsNestMs = (System.nanoTime() - ratsNestStart) / 1_000_000L;
+      FRLogger.info("Board load: rats nest built in " + ratsNestMs + " ms");
+      javax.swing.SwingUtilities.invokeLater(() -> {
+        if (board_panel.board_handling.get_routing_board() == board) {
+          board_panel.board_handling.attachPreparedRatsNest(prepared);
+        }
+      });
+    });
+  }
+
+  private void completeHeavyGuiAfterLoad(FileFormat format, BoardReadResult readResult) {
+    if (!(readResult instanceof BoardReadResult.Success)) {
+      return;
+    }
+    board_panel.create_popup_menus();
+    if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
+      InputStream input_stream = null;
+      boolean defaults_file_found;
+      File defaults_file = new File(this.routingJob.input.getAbsolutePath(), GUI_DEFAULTS_FILE_NAME);
+      defaults_file_found = true;
+      try {
+        input_stream = new FileInputStream(defaults_file);
+      } catch (FileNotFoundException _) {
+        defaults_file_found = false;
+      }
+      if (defaults_file_found) {
+        boolean read_ok = GUIDefaultsFile.read(this, board_panel.board_handling, input_stream);
+        if (!read_ok) {
+          screen_messages.set_status_message(tm.getText("error_1"));
+        }
+        try {
+          if (input_stream != null) {
+            input_stream.close();
+          }
+        } catch (IOException _) {
+          return;
+        }
+        this.zoom_all();
+        board_panel.repaint();
+      }
+    }
+    this.updateTexts();
+  }
+
+  /**
    * Reads an existing board design from file. If format is DSN or JSON, the design is
    * read from a specctra dsn / kicad json file. Returns false, if the file is invalid.
    */
@@ -460,13 +722,7 @@ public class BoardFrame extends WindowBase {
     BoardReadResult read_result = null;
 
     board_panel.reset_board_handling(routingJob);
-    // close all previous windows
-    for (int i = 0; i < this.permanent_subwindows.length; i++) {
-      if (this.permanent_subwindows[i] != null) {
-        this.permanent_subwindows[i].dispose();
-        this.permanent_subwindows[i] = null;
-      }
-    }
+    disposePermanentSubwindows();
 
     if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
       if (format == FileFormat.KICAD_DESIGN_JSON) {
@@ -559,11 +815,11 @@ public class BoardFrame extends WindowBase {
       return false;
     }
 
-    return update_gui(format, read_result, viewport_position, p_message_field);
+    return update_gui(format, read_result, viewport_position, p_message_field, false);
   }
 
   private boolean update_gui(FileFormat format, BoardReadResult read_result, Point viewport_position,
-      JTextField p_message_field) {
+      JTextField p_message_field, boolean deferHeavyWork) {
     boolean isTextDsnOrJson = (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON);
     if (isTextDsnOrJson) {
       if (!(read_result instanceof BoardReadResult.Success)) {
@@ -585,40 +841,54 @@ public class BoardFrame extends WindowBase {
     if (viewport_position != null) {
       board_panel.set_viewport_position(viewport_position);
     }
-    board_panel.create_popup_menus();
+    if (!deferHeavyWork) {
+      board_panel.create_popup_menus();
+    }
     board_panel.init_colors();
-    board_panel.board_handling.create_ratsnest();
+    if (!deferHeavyWork) {
+      board_panel.board_handling.create_ratsnestIfAbsent();
+    }
     this.setToolbarModeSelectionPanelValue(board_panel.board_handling.get_interactive_state());
     this.setToolbarUnitSelectionPanelValue(board_panel.board_handling.coordinate_transform.user_unit);
     this.setVisible(true);
     if (isTextDsnOrJson) {
-      // Read the default gui settings, if gui default file exists.
-      InputStream input_stream = null;
-      boolean defaults_file_found;
+      if (!deferHeavyWork) {
+        // Read the default gui settings, if gui default file exists.
+        InputStream input_stream = null;
+        boolean defaults_file_found;
 
-      File defaults_file = new File(this.routingJob.input.getAbsolutePath(), GUI_DEFAULTS_FILE_NAME);
-      defaults_file_found = true;
-      try {
-        input_stream = new FileInputStream(defaults_file);
-      } catch (FileNotFoundException _) {
-        defaults_file_found = false;
-      }
-
-      if (defaults_file_found) {
-        boolean read_ok = GUIDefaultsFile.read(this, board_panel.board_handling, input_stream);
-        if (!read_ok) {
-          screen_messages.set_status_message(tm.getText("error_1"));
-        }
+        File defaults_file = new File(this.routingJob.input.getAbsolutePath(), GUI_DEFAULTS_FILE_NAME);
+        defaults_file_found = true;
         try {
-          input_stream.close();
-        } catch (IOException _) {
-          return false;
+          input_stream = new FileInputStream(defaults_file);
+        } catch (FileNotFoundException _) {
+          defaults_file_found = false;
         }
+
+        if (defaults_file_found) {
+          boolean read_ok = GUIDefaultsFile.read(this, board_panel.board_handling, input_stream);
+          if (!read_ok) {
+            screen_messages.set_status_message(tm.getText("error_1"));
+          }
+          try {
+            input_stream.close();
+          } catch (IOException _) {
+            return false;
+          }
+        }
+        this.zoom_all();
+        board_panel.repaint();
       }
-      this.zoom_all();
     }
-    this.updateTexts();
+    if (!deferHeavyWork) {
+      this.updateTexts();
+    }
     return true;
+  }
+
+  private boolean update_gui(FileFormat format, BoardReadResult read_result, Point viewport_position,
+      JTextField p_message_field) {
+    return update_gui(format, read_result, viewport_position, p_message_field, false);
   }
 
   /**
@@ -950,6 +1220,21 @@ public class BoardFrame extends WindowBase {
    * management.
    */
   private void allocate_permanent_subwindows() {
+    allocateEssentialSubwindows();
+    allocateRemainingSubwindows();
+  }
+
+  private void allocateEssentialSubwindows() {
+    if (this.select_parameter_window == null) {
+      this.select_parameter_window = new WindowSelectParameter(this);
+      this.permanent_subwindows[6] = this.select_parameter_window;
+    }
+  }
+
+  private void allocateRemainingSubwindows() {
+    if (this.color_manager != null) {
+      return;
+    }
     this.color_manager = new ColorManager(this);
     this.permanent_subwindows[0] = this.color_manager;
     this.visibility_window = new WindowVisibility(this);
@@ -960,8 +1245,6 @@ public class BoardFrame extends WindowBase {
 
     this.route_parameter_window = new WindowRouteParameter(this);
     this.permanent_subwindows[5] = this.route_parameter_window;
-    this.select_parameter_window = new WindowSelectParameter(this);
-    this.permanent_subwindows[6] = this.select_parameter_window;
     this.clearance_matrix_window = new WindowClearanceMatrix(this);
     this.permanent_subwindows[7] = this.clearance_matrix_window;
     this.padstacks_window = new WindowPadstacks(this);
@@ -1000,15 +1283,37 @@ public class BoardFrame extends WindowBase {
 
   /**
    * Creates the additional frames of the board frame.
+   *
+   * @param showEssentialImmediately when {@code true}, General Settings is shown in this EDT pass;
+   *     remaining tool windows are still created on a later cycle
    */
-  private void initialize_windows() {
-    allocate_permanent_subwindows();
+  private void initialize_windows(boolean showEssentialImmediately) {
+    allocateEssentialSubwindows();
 
     this.setLocation(120, 0);
 
     this.select_parameter_window.setLocation(0, 0);
-    this.select_parameter_window.setVisible(true);
 
+    if (showEssentialImmediately) {
+      this.select_parameter_window.setVisible(true);
+      javax.swing.SwingUtilities.invokeLater(() -> {
+        allocateRemainingSubwindows();
+        positionRemainingSubwindows();
+      });
+    } else {
+      javax.swing.SwingUtilities.invokeLater(() -> {
+        this.select_parameter_window.setVisible(true);
+        allocateRemainingSubwindows();
+        positionRemainingSubwindows();
+      });
+    }
+  }
+
+  private void initialize_windows() {
+    initialize_windows(false);
+  }
+
+  private void positionRemainingSubwindows() {
     this.route_parameter_window.setLocation(0, 100);
     this.autoroute_parameter_window.setLocation(0, 200);
     this.move_parameter_window.setLocation(0, 50);
@@ -1164,10 +1469,8 @@ public class BoardFrame extends WindowBase {
         return;
       }
 
-      InputStream inputStream = new ByteArrayInputStream(fileContent);
-
       if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
-        this.load(inputStream, format, null, routingJob);
+        loadFromBytesAsync(fileContent, format, routingJob);
         FRAnalytics.buttonClicked("file_dropped_" + format.name().toLowerCase(), routingJob.getInputFileDetails());
       }
     }

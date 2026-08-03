@@ -11,6 +11,8 @@ import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -214,6 +216,9 @@ public class BoardPanel extends JPanel {
     * @see BoardPanelDropTargetListener
     */
    private BoardPanelDropTargetListener drop_target_listener;
+
+   /** Non-null while the first board paint after load is in progress. */
+   private String renderingOverlayMessage;
 
   /**
    * Board handling instance managing interactive board operations.
@@ -559,6 +564,10 @@ public class BoardPanel extends JPanel {
       }
     }
 
+    if (renderingOverlayMessage != null) {
+      drawRenderingOverlay(p_g);
+    }
+
     if (this.custom_cursor != null) {
       this.custom_cursor.draw(p_g);
     }
@@ -571,6 +580,39 @@ public class BoardPanel extends JPanel {
    */
   private boolean isGhostingActive() {
     return drop_target_listener != null && drop_target_listener.isGhostingActive();
+  }
+
+  /** Shows a semi-transparent overlay while the first board paint after load is in progress. */
+  public void showRenderingOverlay(String message) {
+    renderingOverlayMessage = message;
+    repaint();
+  }
+
+  /** Clears the first-paint rendering overlay. */
+  public void clearRenderingOverlay() {
+    renderingOverlayMessage = null;
+    repaint();
+  }
+
+  private void drawRenderingOverlay(Graphics p_g) {
+    Graphics2D g2d = (Graphics2D) p_g.create();
+    try {
+      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.55f));
+      g2d.setColor(new Color(240, 240, 240, 220));
+      g2d.fillRect(0, 0, getWidth(), getHeight());
+
+      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+      g2d.setColor(new Color(60, 60, 60));
+      Font font = g2d.getFont().deriveFont(Font.BOLD, 16f);
+      g2d.setFont(font);
+      FontMetrics metrics = g2d.getFontMetrics(font);
+      int textWidth = metrics.stringWidth(renderingOverlayMessage);
+      int x = Math.max(8, (getWidth() - textWidth) / 2);
+      int y = Math.max(metrics.getAscent() + 8, getHeight() / 2);
+      g2d.drawString(renderingOverlayMessage, x, y);
+    } finally {
+      g2d.dispose();
+    }
   }
 
   /**

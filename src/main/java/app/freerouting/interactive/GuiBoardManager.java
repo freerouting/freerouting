@@ -1177,6 +1177,30 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void create_ratsnest() {
     ratsnest = new RatsNest(this.board);
+    updateRatsnestStatusMessage();
+  }
+
+  /**
+   * Attaches a rats nest built during background board loading and updates the status bar.
+   */
+  public void attachPreparedRatsNest(RatsNest preparedRatsNest) {
+    this.ratsnest = preparedRatsNest;
+    updateRatsnestStatusMessage();
+  }
+
+  /** Creates a rats nest only when one is not already present (for example after async load). */
+  public void create_ratsnestIfAbsent() {
+    if (ratsnest == null) {
+      create_ratsnest();
+    } else {
+      updateRatsnestStatusMessage();
+    }
+  }
+
+  private void updateRatsnestStatusMessage() {
+    if (ratsnest == null) {
+      return;
+    }
     Integer incomplete_count = ratsnest.incomplete_count();
     int length_violation_count = ratsnest.length_violation_count();
     String curr_message;
@@ -2279,38 +2303,18 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see HeadlessBoardManager#loadFromSpecctraDsn
    */
   @Override
+  public BoardReadResult applyParsedBoardResult(BoardReadResult dsnResult, String inputFilename,
+      String analyticsFormat) {
+    BoardReadResult result = super.applyParsedBoardResult(dsnResult, inputFilename, analyticsFormat);
+    setupGuiAfterBoardLoad(result);
+    return result;
+  }
+
+  @Override
   public BoardReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     var result = super.loadFromSpecctraDsn(inputStream, boardObservers, identificationNumberGenerator);
-
-    if (this.board != null) {
-      // Always reset: a new DSN load may introduce a different layer count or design rules,
-      // making any previously-constructed InteractiveSettings invalid for this board.
-      this.interactiveSettings = InteractiveSettings.reset(this.board, this.routingJob.routerSettings);
-      this.initialize_manual_trace_half_widths();
-
-      // Register the singleton as the live GuiSettings source (priority 50) in the merger so
-      // that every subsequent merge() call reflects the current interactive GUI state.
-      this.settingsMerger.addOrReplaceSources(this.interactiveSettings);
-    }
-
-    // Initialize the GUI-specific graphics context and coordinate transform that
-    // create_board() would normally set up, but which are bypassed when loading
-    // directly from a DSN file via DsnReader. Always recreate on a successful load
-    // because the new design may have different dimensions, layer count, or units.
-    if ((result instanceof BoardReadResult.Success || result instanceof BoardReadResult.OutlineMissing) && this.board != null) {
-      double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
-      this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
-          this.board.communication.unit);
-      Dimension panel_size = (panel != null) ? panel.getPreferredSize() : new Dimension(800, 600);
-      this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
-          this.board.layer_structure, this.locale);
-
-      this.set_layer(0);
-      // Defer GUI refresh until surrounding load flow has recreated frame-managed subwindows.
-      javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
-    }
-
+    scheduleGuiRefreshAfterLoad(result);
     return result;
   }
 
@@ -2318,33 +2322,34 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public BoardReadResult loadFromKiCadJson(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {
     var result = super.loadFromKiCadJson(inputStream, boardObservers, identificationNumberGenerator);
+    scheduleGuiRefreshAfterLoad(result);
+    return result;
+  }
 
-    if (this.board != null) {
-      // Always reset: a new DSN load may introduce a different layer count or design rules,
-      // making any previously-constructed InteractiveSettings invalid for this board.
-      this.interactiveSettings = InteractiveSettings.reset(this.board, this.routingJob.routerSettings);
-      this.initialize_manual_trace_half_widths();
-
-      // Register the singleton as the live GuiSettings source (priority 50) in the merger so
-      // that every subsequent merge() call reflects the current interactive GUI state.
-      this.settingsMerger.addOrReplaceSources(this.interactiveSettings);
+  private void setupGuiAfterBoardLoad(BoardReadResult result) {
+    if (!(result instanceof BoardReadResult.Success || result instanceof BoardReadResult.OutlineMissing)
+        || this.board == null) {
+      return;
     }
 
-    // Initialize the GUI-specific graphics context and coordinate transform
-    if ((result instanceof BoardReadResult.Success || result instanceof BoardReadResult.OutlineMissing) && this.board != null) {
-      double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
-      this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
-          this.board.communication.unit);
-      Dimension panel_size = (panel != null) ? panel.getPreferredSize() : new Dimension(800, 600);
-      this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
-          this.board.layer_structure, this.locale);
+    this.interactiveSettings = InteractiveSettings.reset(this.board, this.routingJob.routerSettings);
+    this.initialize_manual_trace_half_widths();
+    this.settingsMerger.addOrReplaceSources(this.interactiveSettings);
 
-      this.set_layer(0);
-      // Defer GUI refresh until surrounding load flow has recreated frame-managed subwindows.
+    double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
+    this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
+        this.board.communication.unit);
+    Dimension panel_size = (panel != null) ? panel.getPreferredSize() : new Dimension(800, 600);
+    this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
+        this.board.layer_structure, this.locale);
+    this.set_layer(0);
+  }
+
+  private void scheduleGuiRefreshAfterLoad(BoardReadResult result) {
+    if ((result instanceof BoardReadResult.Success || result instanceof BoardReadResult.OutlineMissing)
+        && this.board != null) {
       javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
     }
-
-    return result;
   }
 
   /**

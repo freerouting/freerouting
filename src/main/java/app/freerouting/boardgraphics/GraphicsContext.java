@@ -60,6 +60,9 @@ public class GraphicsContext implements Serializable {
   private boolean[] virtual_layer_visibility_arr = create_default_virtual_layer_visibility_arr();
   private int fully_visible_virtual_layer = -1;
 
+  /** When true, copper pours use fast solid fills (used during the first paint after load). */
+  private transient boolean simplifiedPlaneRendering;
+
   public GraphicsContext(IntBox p_design_bounds, Dimension p_panel_bounds, LayerStructure p_layer_structure, Locale p_locale) {
     coordinate_transform = new CoordinateTransform(p_design_bounds, p_panel_bounds);
     item_color_table = new ItemColorTableModel(p_layer_structure, p_locale);
@@ -828,6 +831,14 @@ public class GraphicsContext implements Serializable {
 
   public int get_fully_visible_layer() {
     return fully_visible_layer;
+  }
+
+  public void setSimplifiedPlaneRendering(boolean simplifiedPlaneRendering) {
+    this.simplifiedPlaneRendering = simplifiedPlaneRendering;
+  }
+
+  public boolean isSimplifiedPlaneRendering() {
+    return simplifiedPlaneRendering;
   }
 
   public int get_fully_visible_virtual_layer() {
