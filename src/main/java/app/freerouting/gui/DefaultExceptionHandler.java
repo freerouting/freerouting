@@ -2,9 +2,11 @@ package app.freerouting.gui;
 
 import static javax.swing.JOptionPane.OK_OPTION;
 
+import app.freerouting.Freerouting;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.Frame;
+import java.awt.GraphicsEnvironment;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -14,7 +16,20 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
     // Here you should have a more robust, permanent record of problems
     FRLogger.error(e.getLocalizedMessage(), e);
     FRAnalytics.exceptionThrown(e.getLocalizedMessage(), e);
-    JOptionPane.showMessageDialog(findActiveFrame(), e.toString(), "Exception Occurred", OK_OPTION);
+    if (shouldShowDialog()) {
+      JOptionPane.showMessageDialog(findActiveFrame(), e.toString(), "Exception Occurred", OK_OPTION);
+    }
+  }
+
+  private static boolean shouldShowDialog() {
+    if (GraphicsEnvironment.isHeadless()) {
+      return false;
+    }
+    if (Freerouting.globalSettings != null
+        && Boolean.FALSE.equals(Freerouting.globalSettings.guiSettings.isEnabled)) {
+      return false;
+    }
+    return true;
   }
 
   private static Frame findActiveFrame() {

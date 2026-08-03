@@ -2,6 +2,7 @@ package app.freerouting.board;
 
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
+import app.freerouting.datastructures.ArrayStack;
 import app.freerouting.datastructures.MinAreaTree;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.Circle;
@@ -576,18 +577,18 @@ public class ShapeSearchTree extends MinAreaTree {
     // in a deterministic order. The non-deterministic order of tree traversal
     // causes different room partitioning.
     List<Leaf> overlapping_leaves = new LinkedList<>();
-    this.node_stack.reset();
-    this.node_stack.push(this.root);
+    ArrayStack<TreeNode> node_stack = new ArrayStack<>(10000);
+    node_stack.push(this.root);
     TreeNode curr_node;
     int room_layer = p_room.get_layer();
 
-    while ((curr_node = this.node_stack.pop()) != null) {
+    while ((curr_node = node_stack.pop()) != null) {
       if (curr_node.bounding_shape.intersects(bounding_shape)) {
         if (curr_node instanceof Leaf leaf) {
           overlapping_leaves.add(leaf);
         } else {
-          this.node_stack.push(((InnerNode) curr_node).first_child);
-          this.node_stack.push(((InnerNode) curr_node).second_child);
+          node_stack.push(((InnerNode) curr_node).first_child);
+          node_stack.push(((InnerNode) curr_node).second_child);
         }
       }
     }

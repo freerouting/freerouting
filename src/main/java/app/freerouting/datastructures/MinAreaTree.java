@@ -13,8 +13,6 @@ import java.util.TreeSet;
  */
 public class MinAreaTree extends ShapeTree {
 
-  protected ArrayStack<TreeNode> node_stack = new ArrayStack<>(10000);
-
   /**
    * Constructor with a fixed set of directions defining the keys and the surrounding shapes
    */
@@ -30,11 +28,11 @@ public class MinAreaTree extends ShapeTree {
     if (this.root == null) {
       return found_overlaps;
     }
-    this.node_stack.reset();
-    this.node_stack.push(this.root);
+    ArrayStack<TreeNode> node_stack = new ArrayStack<>(10000);
+    node_stack.push(this.root);
     TreeNode curr_node;
     for (; ; ) {
-      curr_node = this.node_stack.pop();
+      curr_node = node_stack.pop();
       if (curr_node == null) {
         break;
       }
@@ -42,8 +40,8 @@ public class MinAreaTree extends ShapeTree {
         if (curr_node instanceof Leaf leaf) {
           found_overlaps.add(leaf);
         } else {
-          this.node_stack.push(((InnerNode) curr_node).first_child);
-          this.node_stack.push(((InnerNode) curr_node).second_child);
+          node_stack.push(((InnerNode) curr_node).first_child);
+          node_stack.push(((InnerNode) curr_node).second_child);
         }
       }
     }

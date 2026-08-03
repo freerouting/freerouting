@@ -2,6 +2,7 @@ package app.freerouting.board;
 
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
+import app.freerouting.datastructures.ArrayStack;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.OrthogonalBoundingDirections;
 import app.freerouting.geometry.planar.Polyline;
@@ -61,12 +62,12 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     // Process obstacles inline during tree traversal with dynamic bounding_shape updates.
     // This matches v1.9's algorithm exactly: as obstacles are processed, bounding_shape
     // shrinks, which prunes subsequent tree traversal (just like v1.9 does).
-    this.node_stack.reset();
-    this.node_stack.push(this.root);
+    ArrayStack<TreeNode> node_stack = new ArrayStack<>(10000);
+    node_stack.push(this.root);
     TreeNode curr_node;
 
     for (;;) {
-      curr_node = this.node_stack.pop();
+      curr_node = node_stack.pop();
       if (curr_node == null) {
         break;
       }
@@ -137,8 +138,8 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
             debugStep++;
           }
         } else {
-          this.node_stack.push(((InnerNode) curr_node).first_child);
-          this.node_stack.push(((InnerNode) curr_node).second_child);
+          node_stack.push(((InnerNode) curr_node).first_child);
+          node_stack.push(((InnerNode) curr_node).second_child);
         }
       }
     }

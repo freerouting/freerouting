@@ -2,6 +2,7 @@ package app.freerouting.board;
 
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
+import app.freerouting.datastructures.ArrayStack;
 import app.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
@@ -120,12 +121,12 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     int debugStep = 0;
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
     result.add(new IncompleteFreeSpaceExpansionRoom(start_shape, room_layer, shape_to_be_contained));
-    this.node_stack.reset();
-    this.node_stack.push(this.root);
+    ArrayStack<TreeNode> node_stack = new ArrayStack<>(10000);
+    node_stack.push(this.root);
     TreeNode curr_node;
 
     for (; ; ) {
-      curr_node = this.node_stack.pop();
+      curr_node = node_stack.pop();
       if (curr_node == null) {
         break;
       }
@@ -204,8 +205,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             debugStep++;
           }
         } else {
-          this.node_stack.push(((InnerNode) curr_node).first_child);
-          this.node_stack.push(((InnerNode) curr_node).second_child);
+          node_stack.push(((InnerNode) curr_node).first_child);
+          node_stack.push(((InnerNode) curr_node).second_child);
         }
       }
     }
