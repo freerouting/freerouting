@@ -27,34 +27,40 @@ public abstract class Shape {
    * Reads shape scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB and Layer.Signal are expected, no individual layers.
    */
   public static Shape read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
-    Shape result = null;
     try {
       Object next_token = p_scanner.next_token();
       if (next_token == Keyword.OPEN_BRACKET) {
         // overread the open bracket
         next_token = p_scanner.next_token();
       }
-
-      if (next_token == Keyword.RECTANGLE) {
-
-        result = Shape.read_rectangle_scope(p_scanner, p_layer_structure);
-      } else if (next_token == Keyword.POLYGON) {
-
-        result = Shape.read_polygon_scope(p_scanner, p_layer_structure);
-      } else if (next_token == Keyword.CIRCLE) {
-
-        result = Shape.read_circle_scope(p_scanner, p_layer_structure);
-      } else if (next_token == Keyword.POLYGON_PATH) {
-        result = Shape.read_polygon_path_scope(p_scanner, p_layer_structure);
-      } else {
-        // not a shape scope, skip it.
-        ScopeKeyword.skip_scope(p_scanner);
-      }
+      return read_scope_from_keyword(p_scanner, next_token, p_layer_structure);
     } catch (IOException e) {
       FRLogger.error("Shape.read_scope: IO error scanning file", e);
-      return result;
+      return null;
     }
-    return result;
+  }
+
+  /**
+   * Reads a shape scope when the shape keyword (for example {@code path}) has already been scanned.
+   */
+  static Shape read_scope_from_keyword(IJFlexScanner p_scanner, Object keyword, LayerStructure p_layer_structure) {
+    if (keyword == Keyword.RECTANGLE) {
+      return Shape.read_rectangle_scope(p_scanner, p_layer_structure);
+    }
+    if (keyword == Keyword.POLYGON) {
+      return Shape.read_polygon_scope(p_scanner, p_layer_structure);
+    }
+    if (keyword == Keyword.CIRCLE) {
+      return Shape.read_circle_scope(p_scanner, p_layer_structure);
+    }
+    if (keyword == Keyword.POLYGON_PATH) {
+      return Shape.read_polygon_path_scope(p_scanner, p_layer_structure);
+    }
+    if (keyword == Keyword.POLYLINE_PATH) {
+      return Shape.read_polyline_path_scope(p_scanner, p_layer_structure);
+    }
+    ScopeKeyword.skip_scope(p_scanner);
+    return null;
   }
 
   /**

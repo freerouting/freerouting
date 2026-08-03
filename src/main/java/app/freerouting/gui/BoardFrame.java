@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.Freerouting;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
+import app.freerouting.boardgraphics.TutorialBoardPalette;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
@@ -69,6 +70,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * Graphical frame containing the Menu, Toolbar, Canvas and Status bar.
  */
 public class BoardFrame extends WindowBase {
+
+  private static final String TUTORIAL_BOARD_FILENAME = "tutorial_board.dsn";
 
   public static volatile BoardFrame activeFrame = null;
 
@@ -241,7 +244,9 @@ public class BoardFrame extends WindowBase {
               FRAnalytics.buttonClicked("fileio_loadjson", this.routingJob.getInputFileDetails());
               break;
             case FRB:
-              this.load(new ByteArrayInputStream(fileContent), FileFormat.FRB, null, routingJob);
+              if (!this.load(new ByteArrayInputStream(fileContent), FileFormat.FRB, null, routingJob)) {
+                restoreTutorialBoardAfterFailedLoad(null);
+              }
               FRAnalytics.buttonClicked("fileio_loadfrb", this.routingJob.getInputFileDetails());
               break;
             default:
@@ -466,7 +471,7 @@ public class BoardFrame extends WindowBase {
       long parseStart = System.nanoTime();
       BoardReadResult readResult = parseBoardFromBytes(fileContent, format, filename);
       long parseMs = (System.nanoTime() - parseStart) / 1_000_000L;
-      FRLogger.info("Board load: DSN/JSON parse completed in " + parseMs + " ms"
+      FRLogger.debug("Board load: DSN/JSON parse completed in " + parseMs + " ms"
           + (filename != null ? " ('" + filename + "')" : ""));
 
       javax.swing.SwingUtilities.invokeLater(
@@ -539,7 +544,8 @@ public class BoardFrame extends WindowBase {
     boolean scheduleInitialPaint = false;
     try {
       if (!attachParsedBoard(readResult, fileContent, format, routingJob)) {
-        FRLogger.warn("Loading the board file failed.");
+        FRLogger.warn("Loading the board file failed. Restoring " + TUTORIAL_BOARD_FILENAME + ".");
+        restoreTutorialBoardAfterFailedLoad(loadingWindow);
         return;
       }
 
@@ -552,9 +558,11 @@ public class BoardFrame extends WindowBase {
       }
     } catch (Exception e) {
       FRLogger.error("Failed to attach loaded board", e);
+      restoreTutorialBoardAfterFailedLoad(loadingWindow);
+      return;
     } finally {
       long attachMs = (System.nanoTime() - attachStart) / 1_000_000L;
-      FRLogger.info("Board load: GUI attach completed in " + attachMs + " ms");
+      FRLogger.debug("Board load: GUI attach completed in " + attachMs + " ms");
       if (!scheduleInitialPaint) {
         loadingWindow.dispose();
       }
@@ -584,12 +592,14 @@ public class BoardFrame extends WindowBase {
       javax.swing.SwingUtilities.invokeLater(() -> {
         long paintStart = System.nanoTime();
         try {
-          loadingWindow.dispose();
+          if (loadingWindow != null) {
+            loadingWindow.dispose();
+          }
           this.zoom_all();
           board_panel.repaint();
         } finally {
           long paintMs = (System.nanoTime() - paintStart) / 1_000_000L;
-          FRLogger.info("Board load: first paint completed in " + paintMs + " ms");
+          FRLogger.debug("Board load: first paint completed in " + paintMs + " ms");
           board_panel.clearRenderingOverlay();
           graphicsContext.setSimplifiedPlaneRendering(false);
           this.updateTexts();
@@ -615,7 +625,7 @@ public class BoardFrame extends WindowBase {
         area.warmDetailedFillCache();
       }
       long warmMs = (System.nanoTime() - warmStart) / 1_000_000L;
-      FRLogger.info("Board load: plane fill cache warmed in " + warmMs + " ms");
+      FRLogger.debug("Board load: plane fill cache warmed in " + warmMs + " ms");
       javax.swing.SwingUtilities.invokeLater(() -> {
         if (board_panel.board_handling.get_routing_board() == board) {
           board_panel.repaint();
@@ -626,6 +636,11 @@ public class BoardFrame extends WindowBase {
 
   private boolean attachParsedBoard(BoardReadResult readResult, byte[] fileContent, FileFormat format,
       RoutingJob routingJob) {
+    if (!canAttachParsedBoard(readResult)) {
+      showBoardLoadError(readResult);
+      return false;
+    }
+
     this.routingJob = routingJob;
     board_panel.reset_board_handling(routingJob);
     disposePermanentSubwindows();
@@ -661,6 +676,94 @@ public class BoardFrame extends WindowBase {
     return readResult instanceof BoardReadResult.OutlineMissing;
   }
 
+  private static boolean canAttachParsedBoard(BoardReadResult readResult) {
+    if (readResult instanceof BoardReadResult.Success) {
+      return true;
+    }
+    if (readResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
+      return outlineMissing.board() != null;
+    }
+    return false;
+  }
+
+  private void showBoardLoadError(BoardReadResult readResult) {
+    if (readResult instanceof BoardReadResult.OutlineMissing) {
+      screen_messages.set_status_message(tm.getText("error_7"));
+    } else if (readResult instanceof BoardReadResult.IoError || readResult instanceof BoardReadResult.ParseError) {
+      screen_messages.set_status_message(tm.getText("error_6"));
+    } else {
+      screen_messages.set_status_message(tm.getText("message_8"));
+    }
+    refreshLogCountsInToolbar();
+  }
+
+  /**
+   * Reloads the default tutorial design after a failed user-initiated load, without clearing log entries.
+   *
+   * @return {@code true} when the tutorial board was attached and initial paint was scheduled
+   */
+  private boolean restoreTutorialBoardAfterFailedLoad(WindowMessage loadingWindow) {
+    refreshLogCountsInToolbar();
+    try (InputStream tutorialStream = BoardFrame.class.getClassLoader().getResourceAsStream(TUTORIAL_BOARD_FILENAME)) {
+      if (tutorialStream == null) {
+        FRLogger.error("Could not restore " + TUTORIAL_BOARD_FILENAME + ": classpath resource missing", null);
+        if (loadingWindow != null) {
+          loadingWindow.dispose();
+        }
+        return false;
+      }
+      byte[] tutorialBytes = tutorialStream.readAllBytes();
+      BoardReadResult tutorialResult = parseBoardFromBytes(tutorialBytes, FileFormat.DSN, TUTORIAL_BOARD_FILENAME);
+      if (!(tutorialResult instanceof BoardReadResult.Success)) {
+        FRLogger.error("Could not restore " + TUTORIAL_BOARD_FILENAME + " after a failed load", null);
+        if (loadingWindow != null) {
+          loadingWindow.dispose();
+        }
+        refreshLogCountsInToolbar();
+        return false;
+      }
+
+      routingJob.setDummyInputFile(TUTORIAL_BOARD_FILENAME);
+      routingJob.input.setData(tutorialBytes);
+
+      if (!attachParsedBoard(tutorialResult, tutorialBytes, FileFormat.DSN, routingJob)) {
+        FRLogger.error("Failed to attach " + TUTORIAL_BOARD_FILENAME + " after a failed load", null);
+        if (loadingWindow != null) {
+          loadingWindow.dispose();
+        }
+        refreshLogCountsInToolbar();
+        return false;
+      }
+
+      FRLogger.info("Restored " + TUTORIAL_BOARD_FILENAME + " after a failed board load");
+      initialize_windows(true);
+      board_panel.board_handling.refreshGuiFromSettings();
+      applyTutorialBoardPalette();
+      update_gui(FileFormat.DSN, tutorialResult, new Point(0, 0), null, true);
+      scheduleBackgroundRatsNestBuild();
+      scheduleInitialBoardPaint(loadingWindow, FileFormat.DSN, tutorialResult);
+      refreshLogCountsInToolbar();
+      return true;
+    } catch (IOException e) {
+      FRLogger.error("Could not restore " + TUTORIAL_BOARD_FILENAME + " after a failed load", e);
+      if (loadingWindow != null) {
+        loadingWindow.dispose();
+      }
+      refreshLogCountsInToolbar();
+      return false;
+    }
+  }
+
+  private void applyTutorialBoardPalette() {
+    TutorialBoardPalette.apply(board_panel.board_handling.graphics_context);
+    board_panel.setBackground(TutorialBoardPalette.backgroundColor());
+  }
+
+  private void refreshLogCountsInToolbar() {
+    LogEntries entries = FRLogger.getLogEntries();
+    screen_messages.set_error_and_warning_count(entries.getErrorCount(), entries.getWarningCount());
+  }
+
   private void scheduleBackgroundRatsNestBuild() {
     RoutingBoard board = board_panel.board_handling.get_routing_board();
     if (board == null) {
@@ -670,7 +773,7 @@ public class BoardFrame extends WindowBase {
       long ratsNestStart = System.nanoTime();
       RatsNest prepared = new RatsNest(board);
       long ratsNestMs = (System.nanoTime() - ratsNestStart) / 1_000_000L;
-      FRLogger.info("Board load: rats nest built in " + ratsNestMs + " ms");
+      FRLogger.debug("Board load: rats nest built in " + ratsNestMs + " ms");
       javax.swing.SwingUtilities.invokeLater(() -> {
         if (board_panel.board_handling.get_routing_board() == board) {
           board_panel.board_handling.attachPreparedRatsNest(prepared);
@@ -709,6 +812,9 @@ public class BoardFrame extends WindowBase {
         this.zoom_all();
         board_panel.repaint();
       }
+    }
+    if (TutorialBoardPalette.isTutorialBoard(routingJob.input.getFilename())) {
+      applyTutorialBoardPalette();
     }
     this.updateTexts();
   }
@@ -778,7 +884,7 @@ public class BoardFrame extends WindowBase {
       boolean read_ok = board_panel.board_handling.loadFromBinary(object_stream);
       if (!read_ok) {
         this.updateTexts();
-        return false;
+        return restoreTutorialBoardAfterFailedLoad(null);
       }
 
       // Raise an event to notify the observers that a new board has been loaded
@@ -812,10 +918,14 @@ public class BoardFrame extends WindowBase {
       inputStream.close();
     } catch (IOException _) {
       this.updateTexts();
-      return false;
+      return restoreTutorialBoardAfterFailedLoad(null);
     }
 
-    return update_gui(format, read_result, viewport_position, p_message_field, false);
+    boolean guiUpdated = update_gui(format, read_result, viewport_position, p_message_field, false);
+    if (!guiUpdated) {
+      return restoreTutorialBoardAfterFailedLoad(null);
+    }
+    return true;
   }
 
   private boolean update_gui(FileFormat format, BoardReadResult read_result, Point viewport_position,

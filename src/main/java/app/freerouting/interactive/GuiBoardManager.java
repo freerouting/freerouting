@@ -2019,8 +2019,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveState#key_typed(char)
    */
   public void key_typed_action(char p_key_char) {
-    if (board_is_read_only) {
-      // no interactive action when logfile is running
+    if (board_is_read_only || interactive_state == null || graphics_context == null) {
+      // no interactive action when logfile is running or board graphics are not ready
       return;
     }
     InteractiveState return_state = execute_state_command(interactive_state.key_typed_command(p_key_char));

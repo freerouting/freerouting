@@ -109,6 +109,18 @@ class DsnReaderTest {
     assertEquals("default", board.rules.nets.get("/SCL", 1).get_class().get_name());
   }
 
+  @Test
+  void readBoardLoadsIssue034WithMultipleBoundaryPaths() {
+    InputStream in = DsnTestFixtures.openResource("Issue034-Green14SegLED.dsn");
+    BoardReadResult result = DsnReader.readBoard(in, null, null, "Issue034-Green14SegLED.dsn");
+
+    assertInstanceOf(BoardReadResult.Success.class, result,
+        "KiCad DSN files with multiple (path pcb ...) boundary shapes must load");
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
+    assertNotNull(board.get_outline());
+    assertTrue(board.components.count() > 0, "board must contain placed components");
+  }
+
   // Sealed-switch exhaustiveness check (compile-time guarantee)
 
   @Test

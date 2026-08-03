@@ -264,7 +264,6 @@ public class Structure extends ScopeKeyword {
 
   private static boolean read_boundary_scope(IJFlexScanner p_scanner, BoardConstructionInfo p_board_construction_info) {
     Shape curr_shape = Shape.read_scope(p_scanner, null);
-    // overread the closing bracket.
     try {
       Object prev_token = null;
       for (;;) {
@@ -276,10 +275,8 @@ public class Structure extends ScopeKeyword {
           if (next_token == Keyword.CLEARANCE_CLASS) {
             p_board_construction_info.outline_clearance_class_name = DsnFile.read_string_scope(p_scanner);
           } else {
-            FRLogger.error(
-                "There are multiple shapes defined in the boundary section of the DSN file. This scenario is not currently supported. If you have more than one board outlines defined, try to merge them into one.",
-                null);
-            return false;
+            Shape additional_shape = Shape.read_scope_from_keyword(p_scanner, next_token, null);
+            add_boundary_shape(p_board_construction_info, additional_shape);
           }
         }
         prev_token = next_token;
@@ -292,19 +289,29 @@ public class Structure extends ScopeKeyword {
       FRLogger.warn("Structure.read_boundary_scope: shape is null at '" + p_scanner.get_scope_identifier() + "'");
       return true;
     }
-    if (curr_shape.layer == Layer.PCB) {
-      if (p_board_construction_info.bounding_shape == null) {
-        p_board_construction_info.bounding_shape = curr_shape;
-      } else {
-        FRLogger.warn("Structure.read_boundary_scope: exact 1 bounding_shape expected at '"
-            + p_scanner.get_scope_identifier() + "'");
-      }
-    } else if (curr_shape.layer == Layer.SIGNAL) {
-      p_board_construction_info.outline_shapes.add(curr_shape);
-    } else {
-      FRLogger.warn("Structure.read_boundary_scope: unexpected layer at '" + p_scanner.get_scope_identifier() + "'");
-    }
+    add_boundary_shape(p_board_construction_info, curr_shape);
     return true;
+  }
+
+  private static void add_boundary_shape(BoardConstructionInfo p_board_construction_info, Shape shape) {
+    if (shape == null) {
+      return;
+    }
+    if (shape instanceof PolylinePath || shape instanceof PolygonPath) {
+      p_board_construction_info.outline_shapes.add(shape);
+      return;
+    }
+    if (shape.layer == Layer.PCB) {
+      if (p_board_construction_info.bounding_shape == null) {
+        p_board_construction_info.bounding_shape = shape;
+      } else {
+        p_board_construction_info.outline_shapes.add(shape);
+      }
+    } else if (shape.layer == Layer.SIGNAL) {
+      p_board_construction_info.outline_shapes.add(shape);
+    } else {
+      FRLogger.warn("Structure.add_boundary_shape: unexpected layer at boundary");
+    }
   }
 
   static boolean read_layer_scope(IJFlexScanner p_scanner, BoardConstructionInfo p_board_construction_info,
