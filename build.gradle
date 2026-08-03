@@ -149,11 +149,11 @@ dependencies {
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.8'
 
     // Add Jetty dependencies
-    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.9'
-    implementation 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.9'
-    implementation 'org.eclipse.jetty:jetty-server:12.1.9'
-    implementation 'org.eclipse.jetty:jetty-util:12.1.9'
-    implementation 'org.eclipse.jetty:jetty-security:12.1.9'
+    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.11'
+    implementation 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.11'
+    implementation 'org.eclipse.jetty:jetty-server:12.1.11'
+    implementation 'org.eclipse.jetty:jetty-util:12.1.11'
+    implementation 'org.eclipse.jetty:jetty-security:12.1.11'
 
     // Add SLF4J API and binding dependencies for Jersey logging
     implementation 'org.slf4j:slf4j-api:2.0.17'
