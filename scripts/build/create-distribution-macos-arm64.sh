@@ -4,7 +4,7 @@ set -e
 export APP_VERSION=$1
 export APP_TYPE="dmg"
 
-echo "> JAVA_HOME="$JAVA_HOME
+echo "> JAVA_HOME=$JAVA_HOME"
 
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
@@ -14,27 +14,27 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
-echo "> Distribution directory="$DIR
-cd $DIR
+echo "> Distribution directory=$DIR"
+cd "$DIR"
 
 echo "> Building the Java runtime"
-$JAVA_HOME/bin/jlink -p "$JAVA_HOME/jmods" \
+"$JAVA_HOME/bin/jlink" -p "$JAVA_HOME/jmods" \
 		--add-modules java.desktop,java.logging,java.management,java.net.http,java.sql,java.xml,jdk.crypto.ec,jdk.management \
 		--strip-debug \
 		--no-header-files \
 		--no-man-pages \
 		--strip-native-commands \
 		--vm=server \
-		--output $JAVA_HOME/runtime
+		--output "$JAVA_HOME/runtime"
 
 echo "> Creating the package"
-$JAVA_HOME/bin/jpackage --input ../../build/dist/ \
+"$JAVA_HOME/bin/jpackage" --input ../../build/dist/ \
  --name freerouting \
  --vendor "Andras Fuchs" \
  --main-jar freerouting-executable.jar \
- --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version $APP_VERSION --license-file ../../LICENSE \
+ --type "$APP_TYPE" --runtime-image "$JAVA_HOME/runtime" --app-version "$APP_VERSION" --license-file ../../LICENSE \
  --icon ../../assets/icon/freerouting_icon_256x256_v3.icns \
  --java-options "-Dlog4j2.disableJndi=true"
 
-mv freerouting-$APP_VERSION.dmg freerouting-$APP_VERSION-macos-arm64.dmg
+mv "freerouting-$APP_VERSION.dmg" "freerouting-$APP_VERSION-macos-arm64.dmg"
 

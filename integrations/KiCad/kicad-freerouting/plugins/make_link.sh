@@ -5,7 +5,7 @@
 #
 
 # this script location
-this_dir=$(cd $(dirname "$0") && pwd)
+this_dir=$(cd "$(dirname "$0")" && pwd)
 
 # default plugin location
 plugins_dir="$HOME/.kicad_plugins"
