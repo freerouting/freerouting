@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.Freerouting;
-import app.freerouting.boardgraphics.ColorIntensityTable;
+import app.freerouting.boardgraphics.TutorialBoardPalette;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.interactive.InteractiveActionThread;
@@ -24,7 +24,6 @@ import app.freerouting.settings.sources.GuiSettings;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.FileFormat;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -389,19 +388,9 @@ public class GuiManager {
         }
 
         // Change the palette if we loaded the tutorial DSN file
-        if (Objects.equals(routingJob.input.getFilename(), "tutorial_board.dsn")) {
-            var graphicsContext = new_frame.board_panel.board_handling.graphics_context;
-
-            graphicsContext.color_intensity_table.set_value(ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(),
-                    0.9);
-            graphicsContext.item_color_table.set_conduction_colors(new Color[] {
-                    new Color(232, 204, 135),
-                    new Color(255, 255, 255)
-            });
-            graphicsContext.other_color_table.set_background_color(new Color(1, 58, 32));
-            graphicsContext.other_color_table.set_outline_color(new Color(255, 255, 255));
-
-            new_frame.board_panel.setBackground(graphicsContext.other_color_table.get_background_color());
+        if (TutorialBoardPalette.isTutorialBoard(routingJob.input.getFilename())) {
+            TutorialBoardPalette.apply(new_frame.board_panel.board_handling.graphics_context);
+            new_frame.board_panel.setBackground(TutorialBoardPalette.backgroundColor());
         }
 
         FRAnalytics.buttonClicked("fileio_loaddsn", routingJob.getInputFileDetails());
