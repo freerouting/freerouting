@@ -417,7 +417,7 @@ public class Route {
   }
 
   /**
-   * Hilights the targets and draws the incomplete.
+   * Highlights the targets and draws the incomplete.
    */
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
     if (this.hilight_shove_failing_obstacle && this.shove_failing_obstacle != null) {

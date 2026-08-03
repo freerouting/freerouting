@@ -555,7 +555,7 @@ public class Simplex extends TileShape implements Serializable {
   }
 
   /**
-   * Returns the simplex offseted by p_with. If p_width {@literal >} 0, the offset is to the outer, else to the inner.
+   * Returns the simplex offsetted by p_with. If p_width {@literal >} 0, the offset is to the outer, else to the inner.
    */
   @Override
   public Simplex offset(double p_width) {

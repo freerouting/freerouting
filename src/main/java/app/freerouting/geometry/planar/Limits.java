@@ -8,7 +8,7 @@ import java.math.BigInteger;
 public class Limits {
 
   /**
-   * An upper bound (2^25) so that the product of two integers with absolut value at most CRIT_COOR is contained in the mantissa of a double with some space left for addition.
+   * An upper bound (2^25) so that the product of two integers with absolute value at most CRIT_COOR is contained in the mantissa of a double with some space left for addition.
    */
   public static final int CRIT_INT = 33554432;
 

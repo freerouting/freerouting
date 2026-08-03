@@ -13,7 +13,7 @@ public interface ExpandableObject {
   TileShape get_shape();
 
   /**
-   * Returns the dimension ot the intersection of the shapes of the 2 objects belonging to this door.
+   * Returns the dimension of the intersection of the shapes of the 2 objects belonging to this door.
    */
   int get_dimension();
 

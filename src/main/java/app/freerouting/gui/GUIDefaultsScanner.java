@@ -528,7 +528,7 @@ class GUIDefaultsScanner {
   private static final int ZZ_NO_MATCH = 1;
   private static final int ZZ_PUSHBACK_2BIG = 2;
   /* error messages for the codes above */
-  private static final String ZZ_ERROR_MSG[] = { "Unkown internal scanner error", "Error: could not match input",
+  private static final String ZZ_ERROR_MSG[] = { "Unknown internal scanner error", "Error: could not match input",
       "Error: pushback value was too large" };
   private static final String ZZ_ATTRIBUTE_PACKED_0 = "\1\0\1\11\1\1\1\11\33\1\2\11\4\0\55\1"
       + "\2\0\2\1\1\0\1\11\65\1\1\0\u028e\1";
@@ -720,7 +720,7 @@ class GUIDefaultsScanner {
   /**
    * Refills the input buffer.
    *
-   * @return <code>false</code>, iff there was new input.
+   * @return <code>false</code>, if there was new input.
    * @throws java.io.IOException if any I/O-Error occurs
    */
   private boolean zzRefill() throws IOException {
@@ -834,7 +834,7 @@ class GUIDefaultsScanner {
   }
 
   /**
-   * Reports an error that occured while scanning.
+   * Reports an error that occurred while scanning.
    *
    * <p>
    * In a wellformed scanner (no or only correct usage of yypushback(int) and a

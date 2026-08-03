@@ -528,7 +528,7 @@ public class MazeSearchAlgo {
   }
 
   /**
-   * Expand the target doors of the room. Returns true, if at leat 1 target door
+   * Expand the target doors of the room. Returns true, if at least 1 target door
    * was expanded
    */
   private boolean expand_to_target_doors(MazeListElement p_list_element, boolean p_next_room_is_thick,
@@ -1478,7 +1478,7 @@ public class MazeSearchAlgo {
   /**
    * Shoves a trace room and expands the corresponding doors. Return false, if no
    * door was expanded. In this case occupation of the door_section by ripup can
-   * be delayed to allow shoving the room fromm
+   * be delayed to allow shoving the room from
    * a different door section
    */
   private boolean shove_trace_room(MazeListElement p_list_element, ObstacleExpansionRoom p_obstacle_room) {

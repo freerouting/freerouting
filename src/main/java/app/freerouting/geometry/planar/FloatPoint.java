@@ -192,9 +192,9 @@ public class FloatPoint implements Serializable {
   }
 
   /**
-   * Substracts the coordinates of p_other from this FloatPoint.
+   * Subtracts the coordinates of p_other from this FloatPoint.
    */
-  public FloatPoint substract(FloatPoint p_other) {
+  public FloatPoint subtract(FloatPoint p_other) {
     return new FloatPoint(this.x - p_other.x, this.y - p_other.y);
   }
 
@@ -335,7 +335,7 @@ public class FloatPoint implements Serializable {
    * Turns this FloatPoint by p_factor times 90 degree around p_pole.
    */
   public FloatPoint turn_90_degree(int p_factor, FloatPoint p_pole) {
-    FloatPoint v = this.substract(p_pole);
+    FloatPoint v = this.subtract(p_pole);
     v = v.turn_90_degree(p_factor);
     return p_pole.add(v);
   }

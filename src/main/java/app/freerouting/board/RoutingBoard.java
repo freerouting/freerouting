@@ -1058,7 +1058,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         }
       }
     } else {
-      // For large nets (e.g. power/ground/busses), route to the entire unconnected set at once to avoid CPU thrashing
+      // For large nets (e.g. power/ground/buses), route to the entire unconnected set at once to avoid CPU thrashing
       result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set,
           ctrl_settings, ripped_item_list, null);
     }

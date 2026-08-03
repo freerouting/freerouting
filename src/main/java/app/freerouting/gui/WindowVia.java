@@ -200,7 +200,7 @@ public class WindowVia extends BoardSavableSubWindow {
       this.rule_list_model.addElement(curr_rule);
     }
 
-    // Dispose all subwindows because they may be no longer uptodate.
+    // Dispose all subwindows because they may be no longer up-to-date.
     Iterator<JFrame> it = this.subwindows.iterator();
     while (it.hasNext()) {
       JFrame curr_subwindow = it.next();

@@ -475,7 +475,7 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       this.fireBoardUpdatedEvent(stats, routerCounters, this.board);
 
-      // TODO: Start mutliple instances of the following part in parallel, wait for
+      // TODO: Start multiple instances of the following part in parallel, wait for
       // the results and keep the best one
 
       // Sort items by airline distance (shortest first) for deterministic routing

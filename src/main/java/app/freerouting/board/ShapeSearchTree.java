@@ -662,7 +662,7 @@ public class ShapeSearchTree extends MinAreaTree {
     // are on the right side of this line, and that the line segment
     // intersects with the interior of p_shape.
     // If there are more than 1 such lines take the line which is
-    // furthest away from p_points_to_be_con.tained
+    // furthest away from p_points_to_be_contained.
     // Then intersect p_shape with the halfplane defined by the
     // opposite of this line.
 

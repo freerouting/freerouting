@@ -100,7 +100,7 @@ public class Circuit {
   }
 
   /**
-   * A max_length of -1 indicates, tha no maximum length is defined.
+   * A max_length of -1 indicates that no maximum length is defined.
    */
   public static class ReadScopeResult {
 
@@ -118,7 +118,7 @@ public class Circuit {
   }
 
   /**
-   * A max_length of -1 indicates, tha no maximum length is defined.
+   * A max_length of -1 indicates that no maximum length is defined.
    */
   private static class LengthMatchingRule {
 
