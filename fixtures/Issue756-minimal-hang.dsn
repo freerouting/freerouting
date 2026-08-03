@@ -1,0 +1,44 @@
+(pcb "S:/SProjects/KiBugs/dsn/fomu-hardware-master/archive/evt/pcb/minimal-hang.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "minimal-repro")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  90000 -45000  110000 -45000  110000 -35000  90000 -35000  90000 -45000)
+    )
+    (rule
+      (width 152.4)
+      (clearance 152.4)
+    )
+  )
+  (placement
+  )
+  (library
+  )
+  (network
+    (net +5V
+      (pins)
+    )
+  )
+  (wiring
+      (wire (path F.Cu 1000  100500 -40500  99800 -39200)(net +5V)(type route))
+      (wire (path F.Cu 1000  100600 -40000  100500 -40500)(net +5V)(type route))
+  )
+)
