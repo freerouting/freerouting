@@ -372,11 +372,6 @@ Key facts and invariants for all GitHub Actions workflows under `.github/workflo
 | `docker-release.yml` | GitHub release published | Build + push multi-arch Docker image tagged with semver + `latest` |
 | `deploy-pages.yml` | push to `master` (paths: `website/**`) | Deploy static website to GitHub Pages |
 | `stale.yml` | daily schedule | Mark inactive issues/PRs stale after 120 days |
-| `gemini-dispatch.yml` | PR/issue/comment events | Route `@gemini-cli` commands to the correct sub-workflow |
-| `gemini-triage.yml` | `workflow_call` from dispatch | Label a single newly opened issue via Gemini CLI |
-| `gemini-invoke.yml` | `workflow_call` from dispatch | Execute a freeform `@gemini-cli` request via Gemini CLI |
-| `gemini-review.yml` | `workflow_call` from dispatch | Review a pull request via Gemini CLI |
-| `gemini-scheduled-triage.yml` | hourly schedule | Bulk-triage all unlabelled/`needs-triage` open issues |
 
 ## Invariants that must be preserved in all workflows
 
@@ -387,7 +382,6 @@ All jobs must declare an explicit `permissions` block with least-privilege. The 
 All jobs must have a `timeout-minutes` value to prevent runaway billable-minutes consumption:
 - Gradle build/test jobs: **30 min**
 - Docker multi-platform build jobs: **60 min**
-- Gemini dispatch/comment/fallthrough jobs: **10 min**
 - Stale/pages jobs: **10 min**
 
 ### 3. `chmod +x gradlew` before any `./gradlew` call on Linux/macOS
@@ -399,32 +393,6 @@ Platform build jobs (`build-jar`, `build-ubuntu-x64`, `build-windows-x64`, `buil
 needs: [ build-and-test, delete-old-snapshot-assets ]
 ```
 **Never** depend on `delete-old-snapshot-assets` alone. If `build-and-test` fails, the old assets must not be deleted and no broken artifacts should be published. Depending only on `delete-old-snapshot-assets` (as was the original bug) allows the deletion to race ahead of a failing build and leave the `SNAPSHOT` release empty or stale.
-
-## Gemini CLI workflow invariants
-
-### `GEMINI_CLI_TRUST_WORKSPACE: 'true'` is required on every `run-gemini-cli` step
-Every step that uses `google-github-actions/run-gemini-cli@v0` must set this environment variable, otherwise the CLI exits with:
-> *"Gemini CLI is not running in a trusted directory… set the `GEMINI_CLI_TRUST_WORKSPACE=true` environment variable"* (exit code 1, intermittent)
-
-The failure is intermittent because runner environment state varies between jobs. Set it unconditionally:
-```yaml
-env:
-  GEMINI_CLI_TRUST_WORKSPACE: 'true'
-```
-
-For security-sensitive triage/analysis steps (where untrusted issue body is in scope), keep `GITHUB_TOKEN: ''` — the trust flag only grants filesystem trust to the *CLI itself*, not GitHub API credentials.
-
-### `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'` at workflow level for workflows using `actions/github-script`
-`actions/github-script@v7` runs on Node.js 20 which is deprecated on GitHub Actions runners (forced to Node.js 24 from June 2026, removed September 2026). Workflows that use this action must set:
-```yaml
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
-```
-at the top-level `env:` block (workflow scope) so the flag applies to all jobs. This currently affects: `gemini-dispatch.yml`, `gemini-triage.yml`, `gemini-scheduled-triage.yml`.  
-`gemini-invoke.yml` and `gemini-review.yml` do **not** use `actions/github-script` directly and do not need this flag.
-
-### `GITHUB_TOKEN: ''` on all triage/analysis Gemini steps
-Steps that process untrusted input (issue title/body) must explicitly blank the GitHub token to prevent any accidental credential exposure through Gemini CLI tool calls. The analysis steps in `gemini-triage.yml` and `gemini-scheduled-triage.yml` follow this pattern.
 
 ## `gradle/actions/setup-gradle` version
 Use `gradle/actions/setup-gradle@v4` (not v3). v4 is the current stable version with improved caching and Gradle 9 compatibility.

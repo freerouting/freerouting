@@ -28,6 +28,16 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   private static final double PLANE_HATCH_OPACITY = 0.85;
 
   private boolean is_obstacle;
+  private boolean is_filled = true;
+
+  public boolean get_is_filled() {
+    return this.is_filled;
+  }
+
+  public void set_is_filled(boolean p_value) {
+    this.is_filled = p_value;
+    this.clear_derived_data();
+  }
 
   private transient java.awt.geom.Area cached_fill_area = null;
   private transient app.freerouting.boardgraphics.CoordinateTransform cached_fill_transform = null;
@@ -64,162 +74,164 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     }
 
     Color color = p_color_arr[layerNo];
-    double fillOpacity = Math.min(layerVis * p_intensity * PLANE_FILL_SCALE, 1.0);
+    if (this.is_filled) {
+      double fillOpacity = Math.min(layerVis * p_intensity * PLANE_FILL_SCALE, 1.0);
 
-    double maxClearanceLookupBoard = 2000.0 * this.board.communication.get_resolution(Unit.UM);
-    if (this.board.rules != null && this.board.rules.clearance_matrix != null) {
-      double maxMatrixClearance = this.board.rules.clearance_matrix.max_value(this.clearance_class_no(), layerNo);
-      maxClearanceLookupBoard = Math.max(maxClearanceLookupBoard, maxMatrixClearance + 100.0 * this.board.communication.get_resolution(Unit.UM));
-    }
-    boolean zoomedOut = p_graphics_context.coordinate_transform.board_to_screen(maxClearanceLookupBoard) < 1.5;
+      double maxClearanceLookupBoard = 2000.0 * this.board.communication.get_resolution(Unit.UM);
+      if (this.board.rules != null && this.board.rules.clearance_matrix != null) {
+        double maxMatrixClearance = this.board.rules.clearance_matrix.max_value(this.clearance_class_no(), layerNo);
+        maxClearanceLookupBoard = Math.max(maxClearanceLookupBoard, maxMatrixClearance + 100.0 * this.board.communication.get_resolution(Unit.UM));
+      }
+      boolean zoomedOut = p_graphics_context.coordinate_transform.board_to_screen(maxClearanceLookupBoard) < 1.5;
 
-    if (zoomedOut) {
-      p_graphics_context.fill_area(this.get_area(), p_g, color, fillOpacity);
-    } else {
-      boolean boardChanged = this.board.get_revision() != cached_board_revision;
+      if (zoomedOut) {
+        p_graphics_context.fill_area(this.get_area(), p_g, color, fillOpacity);
+      } else {
+        boolean boardChanged = this.board.get_revision() != cached_board_revision;
 
-      if (cached_board_fill_area == null || boardChanged) {
-        java.awt.geom.Area fillArea = get_awt_area_in_board_units(this.get_area());
-        if (fillArea == null) {
-          fillArea = new java.awt.geom.Area();
-        }
-        if (!fillArea.isEmpty()) {
-          // Bounding box of conduction area
-          IntBox bbox = this.bounding_box();
-          double spokeWidth = 400.0 * this.board.communication.get_resolution(Unit.UM);
-          int maxCl = (int) Math.round(maxClearanceLookupBoard);
-          IntBox inflatedBbox = new IntBox(
-              new IntPoint(bbox.ll.x - maxCl, bbox.ll.y - maxCl),
-              new IntPoint(bbox.ur.x + maxCl, bbox.ur.y + maxCl)
-          );
+        if (cached_board_fill_area == null || boardChanged) {
+          java.awt.geom.Area fillArea = get_awt_area_in_board_units(this.get_area());
+          if (fillArea == null) {
+            fillArea = new java.awt.geom.Area();
+          }
+          if (!fillArea.isEmpty()) {
+            // Bounding box of conduction area
+            IntBox bbox = this.bounding_box();
+            double spokeWidth = 400.0 * this.board.communication.get_resolution(Unit.UM);
+            int maxCl = (int) Math.round(maxClearanceLookupBoard);
+            IntBox inflatedBbox = new IntBox(
+                new IntPoint(bbox.ll.x - maxCl, bbox.ll.y - maxCl),
+                new IntPoint(bbox.ur.x + maxCl, bbox.ur.y + maxCl)
+            );
 
-          // Gather items
-          java.util.List<java.awt.geom.Area> foreignClearances = new java.util.ArrayList<>();
-          java.util.List<java.awt.geom.Area> sameNetClearances = new java.util.ArrayList<>();
-          java.util.List<java.awt.geom.Area> sameNetSpokesList = new java.util.ArrayList<>();
+            // Gather items
+            java.util.List<java.awt.geom.Area> foreignClearances = new java.util.ArrayList<>();
+            java.util.List<java.awt.geom.Area> sameNetClearances = new java.util.ArrayList<>();
+            java.util.List<java.awt.geom.Area> sameNetSpokesList = new java.util.ArrayList<>();
 
-          Set<SearchTreeObject> overlaps = this.board.overlapping_objects(inflatedBbox, layerNo);
-          for (SearchTreeObject ob : overlaps) {
-            if (!(ob instanceof Item currItem) || currItem == this) {
-              continue;
-            }
-            if (!currItem.shares_layer(this)) {
-              continue;
-            }
-
-            // Skip traces and conduction areas for same-net (direct connection)
-            if (currItem instanceof Trace || currItem instanceof ConductionArea) {
-              if (currItem.shares_net(this)) {
+            Set<SearchTreeObject> overlaps = this.board.overlapping_objects(inflatedBbox, layerNo);
+            for (SearchTreeObject ob : overlaps) {
+              if (!(ob instanceof Item currItem) || currItem == this) {
                 continue;
               }
-            }
-
-            int clClass1 = this.clearance_class_no();
-            int clClass2 = currItem.clearance_class_no();
-            double clearanceDist = this.board.clearance_value(clClass1, clClass2, layerNo);
-
-            if (currItem.shares_net(this)) {
-              if (currItem instanceof DrillItem drillItem) {
-                FloatPoint center = drillItem.get_center().to_float();
-                Shape shape = drillItem.get_shape_on_layer(layerNo);
-                if (shape == null) {
-                  continue;
-                }
-
-                Shape enlargedShape = shape.enlarge(clearanceDist);
-                java.awt.geom.Area clearanceAwt = get_awt_area_from_shape_in_board_units(enlargedShape);
-                if (clearanceAwt == null) {
-                  continue;
-                }
-
-                IntBox itemBbox = drillItem.bounding_box();
-                double maxDim = Math.max(itemBbox.width(), itemBbox.height());
-                double expansionRadiusBoard = (maxDim / 2.0) + clearanceDist;
-
-                double halfSpoke = spokeWidth / 2.0;
-                java.awt.geom.Rectangle2D.Double baseSpoke = new java.awt.geom.Rectangle2D.Double(center.x - halfSpoke, center.y - expansionRadiusBoard, spokeWidth, 2 * expansionRadiusBoard);
-
-                java.awt.geom.AffineTransform rotP45 = java.awt.geom.AffineTransform.getRotateInstance(Math.PI / 4.0, center.x, center.y);
-                java.awt.geom.AffineTransform rotM45 = java.awt.geom.AffineTransform.getRotateInstance(-Math.PI / 4.0, center.x, center.y);
-
-                java.awt.geom.Area spokes = new java.awt.geom.Area(rotP45.createTransformedShape(baseSpoke));
-                spokes.add(new java.awt.geom.Area(rotM45.createTransformedShape(baseSpoke)));
-
-                spokes.intersect(clearanceAwt);
-
-                sameNetClearances.add(clearanceAwt);
-                sameNetSpokesList.add(spokes);
+              if (!currItem.shares_layer(this)) {
+                continue;
               }
-            } else {
-              // Foreign-net: clearance gap
-              if (currItem instanceof DrillItem drillItem) {
-                Shape shape = drillItem.get_shape_on_layer(layerNo);
-                if (shape != null) {
+
+              // Skip traces and conduction areas for same-net (direct connection)
+              if (currItem instanceof Trace || currItem instanceof ConductionArea) {
+                if (currItem.shares_net(this)) {
+                  continue;
+                }
+              }
+
+              int clClass1 = this.clearance_class_no();
+              int clClass2 = currItem.clearance_class_no();
+              double clearanceDist = this.board.clearance_value(clClass1, clClass2, layerNo);
+
+              if (currItem.shares_net(this)) {
+                if (currItem instanceof DrillItem drillItem) {
+                  FloatPoint center = drillItem.get_center().to_float();
+                  Shape shape = drillItem.get_shape_on_layer(layerNo);
+                  if (shape == null) {
+                    continue;
+                  }
+
                   Shape enlargedShape = shape.enlarge(clearanceDist);
                   java.awt.geom.Area clearanceAwt = get_awt_area_from_shape_in_board_units(enlargedShape);
-                  if (clearanceAwt != null) {
-                    foreignClearances.add(clearanceAwt);
+                  if (clearanceAwt == null) {
+                    continue;
                   }
+
+                  IntBox itemBbox = drillItem.bounding_box();
+                  double maxDim = Math.max(itemBbox.width(), itemBbox.height());
+                  double expansionRadiusBoard = (maxDim / 2.0) + clearanceDist;
+
+                  double halfSpoke = spokeWidth / 2.0;
+                  java.awt.geom.Rectangle2D.Double baseSpoke = new java.awt.geom.Rectangle2D.Double(center.x - halfSpoke, center.y - expansionRadiusBoard, spokeWidth, 2 * expansionRadiusBoard);
+
+                  java.awt.geom.AffineTransform rotP45 = java.awt.geom.AffineTransform.getRotateInstance(Math.PI / 4.0, center.x, center.y);
+                  java.awt.geom.AffineTransform rotM45 = java.awt.geom.AffineTransform.getRotateInstance(-Math.PI / 4.0, center.x, center.y);
+
+                  java.awt.geom.Area spokes = new java.awt.geom.Area(rotP45.createTransformedShape(baseSpoke));
+                  spokes.add(new java.awt.geom.Area(rotM45.createTransformedShape(baseSpoke)));
+
+                  spokes.intersect(clearanceAwt);
+
+                  sameNetClearances.add(clearanceAwt);
+                  sameNetSpokesList.add(spokes);
                 }
               } else {
-                int shapeCount = currItem.tile_shape_count();
-                for (int i = 0; i < shapeCount; i++) {
-                  if (currItem.shape_layer(i) == layerNo) {
-                    TileShape tileShape = currItem.get_tile_shape(i);
-                    if (tileShape != null) {
-                      Shape enlargedShape = tileShape.enlarge(clearanceDist);
-                      java.awt.geom.Area clearanceAwt = get_awt_area_from_shape_in_board_units(enlargedShape);
-                      if (clearanceAwt != null) {
-                        foreignClearances.add(clearanceAwt);
+                // Foreign-net: clearance gap
+                if (currItem instanceof DrillItem drillItem) {
+                  Shape shape = drillItem.get_shape_on_layer(layerNo);
+                  if (shape != null) {
+                    Shape enlargedShape = shape.enlarge(clearanceDist);
+                    java.awt.geom.Area clearanceAwt = get_awt_area_from_shape_in_board_units(enlargedShape);
+                    if (clearanceAwt != null) {
+                      foreignClearances.add(clearanceAwt);
+                    }
+                  }
+                } else {
+                  int shapeCount = currItem.tile_shape_count();
+                  for (int i = 0; i < shapeCount; i++) {
+                    if (currItem.shape_layer(i) == layerNo) {
+                      TileShape tileShape = currItem.get_tile_shape(i);
+                      if (tileShape != null) {
+                        Shape enlargedShape = tileShape.enlarge(clearanceDist);
+                        java.awt.geom.Area clearanceAwt = get_awt_area_from_shape_in_board_units(enlargedShape);
+                        if (clearanceAwt != null) {
+                          foreignClearances.add(clearanceAwt);
+                        }
                       }
                     }
                   }
                 }
               }
             }
-          }
 
-          // Apply CSG
-          for (java.awt.geom.Area fa : foreignClearances) {
-            fillArea.subtract(fa);
+            // Apply CSG
+            for (java.awt.geom.Area fa : foreignClearances) {
+              fillArea.subtract(fa);
+            }
+            for (java.awt.geom.Area sa : sameNetClearances) {
+              fillArea.subtract(sa);
+            }
+            for (java.awt.geom.Area sp : sameNetSpokesList) {
+              fillArea.add(sp);
+            }
           }
-          for (java.awt.geom.Area sa : sameNetClearances) {
-            fillArea.subtract(sa);
-          }
-          for (java.awt.geom.Area sp : sameNetSpokesList) {
-            fillArea.add(sp);
-          }
+          cached_board_fill_area = fillArea;
+          cached_board_revision = this.board.get_revision();
         }
-        cached_board_fill_area = fillArea;
-        cached_board_revision = this.board.get_revision();
-      }
 
-      if (cached_board_fill_area != null && !cached_board_fill_area.isEmpty()) {
-        Point2D p0 = p_graphics_context.coordinate_transform.board_to_screen(FloatPoint.ZERO);
-        Point2D px = p_graphics_context.coordinate_transform.board_to_screen(new FloatPoint(1, 0));
-        Point2D py = p_graphics_context.coordinate_transform.board_to_screen(new FloatPoint(0, 1));
-        
-        double m00 = px.getX() - p0.getX();
-        double m10 = px.getY() - p0.getY();
-        double m01 = py.getX() - p0.getX();
-        double m11 = py.getY() - p0.getY();
-        double m02 = p0.getX();
-        double m12 = p0.getY();
-        
-        java.awt.geom.AffineTransform boardToScreen = new java.awt.geom.AffineTransform(m00, m10, m01, m11, m02, m12);
-        java.awt.geom.Area screenArea = cached_board_fill_area.createTransformedArea(boardToScreen);
+        if (cached_board_fill_area != null && !cached_board_fill_area.isEmpty()) {
+          Point2D p0 = p_graphics_context.coordinate_transform.board_to_screen(FloatPoint.ZERO);
+          Point2D px = p_graphics_context.coordinate_transform.board_to_screen(new FloatPoint(1, 0));
+          Point2D py = p_graphics_context.coordinate_transform.board_to_screen(new FloatPoint(0, 1));
+          
+          double m00 = px.getX() - p0.getX();
+          double m10 = px.getY() - p0.getY();
+          double m01 = py.getX() - p0.getX();
+          double m11 = py.getY() - p0.getY();
+          double m02 = p0.getX();
+          double m12 = p0.getY();
+          
+          java.awt.geom.AffineTransform boardToScreen = new java.awt.geom.AffineTransform(m00, m10, m01, m11, m02, m12);
+          java.awt.geom.Area screenArea = cached_board_fill_area.createTransformedArea(boardToScreen);
 
-        java.awt.Graphics2D g2 = (java.awt.Graphics2D) p_g;
-        java.awt.Paint oldPaint = g2.getPaint();
-        java.awt.Composite oldComposite = g2.getComposite();
+          java.awt.Graphics2D g2 = (java.awt.Graphics2D) p_g;
+          java.awt.Paint oldPaint = g2.getPaint();
+          java.awt.Composite oldComposite = g2.getComposite();
 
-        g2.setColor(color);
-        g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, (float) fillOpacity));
-        g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.fill(screenArea);
+          g2.setColor(color);
+          g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, (float) fillOpacity));
+          g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+          g2.fill(screenArea);
 
-        g2.setPaint(oldPaint);
-        g2.setComposite(oldComposite);
+          g2.setPaint(oldPaint);
+          g2.setComposite(oldComposite);
+        }
       }
     }
 

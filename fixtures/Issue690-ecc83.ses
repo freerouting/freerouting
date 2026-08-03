@@ -1,0 +1,516 @@
+(session "Issue690-ecc83"
+  (base_design "Issue690-ecc83")
+  (placement
+    (resolution um 10)
+    (component "Footprints:CP_Radial_D10.0mm_P5.00mm"
+      (place C1 1416050 -996950 front 90)
+    )
+    (component "Footprints:C_Disc_D4.7mm_W2.5mm_P5.00mm"
+      (place C2 1371600 -1250950 front 90)
+    )
+    (component "Footprints:MountingHole_3.2mm_M3_DIN965_Pad"
+      (place P5 1250950 -939800 front 0)
+      (place P6 1695450 -939800 front 0)
+      (place P7 1695450 -1327150 front 0)
+      (place P8 1250950 -1327150 front 0)
+    )
+    (component "Footprints:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
+      (place R1 1362710 -1079500 front 270)
+      (place R4 1644650 -1174750 front 270)
+    )
+    (component "Footprints:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal::1"
+      (place R2 1562100 -958850 front 180)
+      (place R3 1339850 -1250950 front 180)
+    )
+    (component "Footprints:Altech_AK300_1x02_P5.00mm_45-Degree"
+      (place P2 1282700 -1127760 front 270)
+      (place P3 1282700 -1007110 front 270)
+    )
+    (component "Footprints:Altech_AK300_1x02_P5.00mm_45-Degree::1"
+      (place P4 1455420 -1311910 front 0)
+    )
+    (component "Footprints:Valve_ECC-83-1"
+      (place U1 1492250 -1136650 front 0)
+    )
+    (component "Footprints:Altech_AK300_1x02_P5.00mm_45-Degree::2"
+      (place P1 1663700 -1054100 front 90)
+    )
+  )
+  (was_is
+  )
+  (routes 
+    (resolution um 10)
+    (parser
+      (host_cad "KiCad's Pcbnew")
+      (host_version "10.0.2")
+    )
+    (library_out 
+      (padstack "Via[0-1]_1200:600_um"
+        (shape
+          (circle "top_cu" 12000 0 0)
+        )
+        (shape
+          (circle "bottom_cu" 12000 0 0)
+        )
+        (attach off)
+      )
+      (padstack "Via[0-1]_1200:600_um"
+        (shape
+          (circle "top_cu" 12000 0 0)
+        )
+        (shape
+          (circle "bottom_cu" 12000 0 0)
+        )
+        (attach off)
+      )
+    )
+    (network_out 
+      (net "Net-(P3-P1)"
+        (wire
+          (path "bottom_cu" 8000
+            1457650 -1089550
+            1457710 -1089490
+            1457710 -1089100
+          )
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1291590 -998220
+            1282700 -1007110
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1457710 -1089100
+            1457710 -1006860
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1457710 -1006860
+            1447800 -996950
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1394460 -998220
+            1291590 -998220
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1447800 -996950
+            1416050 -996950
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1394460 -998220
+            1395730 -996950
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1395730 -996950
+            1416050 -996950
+          )
+          (type protect)
+        )
+      )
+      (net "Net-(P2-P1)"
+        (wire
+          (path "bottom_cu" 8000
+            1371600 -1250950
+            1339850 -1250950
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1304340 -1127760
+            1282700 -1127760
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1320800 -1210590
+            1320800 -1144220
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1320800 -1144220
+            1304340 -1127760
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1339850 -1250950
+            1338580 -1249680
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1338580 -1228370
+            1320800 -1210590
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1338580 -1249680
+            1338580 -1238250
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1338580 -1238250
+            1338580 -1228370
+          )
+          (type protect)
+        )
+      )
+      (net "Net-(U1A-K)"
+        (wire
+          (path "bottom_cu" 8000
+            1371600 -1200950
+            1371600 -1200150
+          )
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1371600 -1200150
+            1371600 -1155700
+            1435000 -1155700
+            1436170 -1154530
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1362710 -1155700
+            1371600 -1155700
+          )
+          (type protect)
+        )
+      )
+      (net "Net-(P1-PM)"
+        (wire
+          (path "bottom_cu" 8000
+            1548250 -1155350
+            1548330 -1155270
+            1548330 -1154940
+          )
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1663700 -1004100
+            1647190 -1004100
+            1645920 -1002830
+          )
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1632920 -1015830
+            1624500 -1015830
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1614170 -1026160
+            1614170 -1065060
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1593850 -1174750
+            1644650 -1174750
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1548330 -1154940
+            1574040 -1154940
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1624500 -1015830
+            1614170 -1026160
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1645920 -1002830
+            1632920 -1015830
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1614170 -1114810
+            1574040 -1154940
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1574040 -1154940
+            1593850 -1174750
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1614170 -1065060
+            1614170 -1114810
+          )
+          (type protect)
+        )
+      )
+      (net "Net-(P4-P1)"
+        (wire
+          (path "bottom_cu" 8000
+            1455420 -1311910
+            1453680 -1310170
+            1453680 -1295400
+          )
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1457710 -1245870
+            1457710 -1264920
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1453680 -1295400
+            1453680 -1277020
+            1457710 -1272990
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1457710 -1184200
+            1457710 -1245870
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1457710 -1272990
+            1457710 -1264920
+          )
+          (type protect)
+        )
+      )
+      (net "Net-(P4-PM)"
+        (wire
+          (path "bottom_cu" 8000
+            1526750 -1089550
+            1526790 -1089510
+            1526790 -1089100
+          )
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1505420 -1255230
+            1498600 -1248410
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1492250 -1077720
+            1492250 -1104900
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1515410 -1077720
+            1526790 -1089100
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1505420 -1311910
+            1505420 -1255230
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1492250 -1104900
+            1498600 -1111250
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1498600 -1111250
+            1498600 -1248410
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1492250 -1077720
+            1515410 -1077720
+          )
+          (type protect)
+        )
+      )
+      (net "Net-(U1A-G)"
+        (wire
+          (path "bottom_cu" 8000
+            1416810 -1118360
+            1377950 -1079500
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1339850 -1162050
+            1355090 -1177290
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1408790 -1340550
+            1522510 -1340550
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1355090 -1210310
+            1363980 -1219200
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1549400 -1313660
+            1549400 -1206800
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1390650 -1244600
+            1390650 -1322410
+            1408790 -1340550
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1358900 -1079500
+            1377950 -1079500
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1352550 -1079500
+            1339850 -1092200
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1436170 -1118360
+            1416810 -1118360
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1363980 -1219200
+            1365250 -1219200
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1549400 -1206800
+            1526790 -1184200
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1355090 -1177290
+            1355090 -1210310
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1358900 -1079500
+            1352550 -1079500
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1522510 -1340550
+            1549400 -1313660
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1339850 -1092200
+            1339850 -1162050
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1365250 -1219200
+            1390650 -1244600
+          )
+          (type protect)
+        )
+      )
+      (net "Net-(U1B-K)"
+        (wire
+          (path "bottom_cu" 8000
+            1562100 -958850
+            1562100 -1105000
+          )
+          (type protect)
+        )
+        (wire
+          (path "bottom_cu" 8000
+            1562100 -1105000
+            1548250 -1118850
+          )
+          (type protect)
+        )
+      )
+    )
+  )
+)

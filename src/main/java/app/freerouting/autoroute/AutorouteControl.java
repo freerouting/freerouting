@@ -11,6 +11,7 @@ import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.RouterSettings;
+import app.freerouting.logger.FRLogger;
 
 import java.util.Collection;
 
@@ -162,7 +163,14 @@ public class AutorouteControl {
  
     for (int i = 0; i < layer_count; i++) {
       add_via_costs[i] = new ViaCost(layer_count);
-      layer_active[i] = p_settings.get_layer_active(i);
+      boolean activeSetting = p_settings.get_layer_active(i);
+      if (!p_board.layer_structure.arr[i].is_signal && activeSetting) {
+        FRLogger.warn("Layer '" + p_board.layer_structure.arr[i].name 
+            + "' is a dedicated power plane and cannot be routed. Forcing active state to false.");
+        layer_active[i] = false;
+      } else {
+        layer_active[i] = activeSetting;
+      }
     }
     is_fanout = false;
     fanout_start_pin_name = null;

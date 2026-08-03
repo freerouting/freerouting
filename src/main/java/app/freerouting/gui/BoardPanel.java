@@ -7,13 +7,16 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import java.awt.AWTException;
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
+import java.awt.dnd.DropTarget;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -91,6 +94,14 @@ public class BoardPanel extends JPanel {
    * the view is scaled by 1/c_zoom_factor (0.5x).
    */
   private static final double c_zoom_factor = 2.0;
+
+  /**
+   * Minimum interval (in milliseconds) between repaints triggered by mouse movement
+   * when the custom crosshair cursor is enabled. This throttles the repaint rate to
+   * prevent flooding the AWT event queue with full board redraws during rapid mouse
+   * motion (e.g. high-DPI mice generating 100+ events/second).
+   */
+  private static final long CURSOR_REPAINT_THROTTLE_MS = 16; // ~60 fps max
 
   /**
    * Message display component showing status information and coordinates.
@@ -183,19 +194,26 @@ public class BoardPanel extends JPanel {
    */
   public PopupMenuDynamicRoute popup_menu_dynamic_route;
 
-  /**
-   * Popup menu for stitch routing operations.
-   *
-   * @see PopupMenuStitchRoute
-   */
-  public PopupMenuStitchRoute popup_menu_stitch_route;
+   /**
+    * Popup menu for stitch routing operations.
+    *
+    * @see PopupMenuStitchRoute
+    */
+   public PopupMenuStitchRoute popup_menu_stitch_route;
 
-  /**
-   * Popup menu for item selection and inspection operations.
-   *
-   * @see PopupMenuInspectedItems
-   */
-  public JPopupMenu popup_menu_select;
+   /**
+    * Popup menu for item selection and inspection operations.
+    *
+    * @see PopupMenuInspectedItems
+    */
+   public JPopupMenu popup_menu_select;
+
+   /**
+    * Drop target listener for handling drag-and-drop file operations.
+    *
+    * @see BoardPanelDropTargetListener
+    */
+   private BoardPanelDropTargetListener drop_target_listener;
 
   /**
    * Board handling instance managing interactive board operations.
@@ -246,6 +264,17 @@ public class BoardPanel extends JPanel {
    * @see #set_custom_crosshair_cursor(boolean)
    */
   private Cursor custom_cursor;
+
+  /**
+   * Timestamp (in milliseconds) of the last repaint triggered by cursor movement.
+   *
+   * <p>Used to throttle cursor-driven repaints. Only one repaint is issued per
+   * {@link #CURSOR_REPAINT_THROTTLE_MS} window; mouse-move events that arrive
+   * within the throttle window update the cursor position but do not immediately
+   * trigger a repaint. The final position will be painted on the next scheduled
+   * repaint.
+   */
+  private long lastCursorRepaintTime;
 
   /**
    * Creates a new BoardPanel within a GUI application context.
@@ -332,6 +361,10 @@ public class BoardPanel extends JPanel {
     board_handling.setBoardFrame(this.board_frame);
     setAutoscrolls(true);
     this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+
+    // Initialize drag-and-drop support for file loading
+    drop_target_listener = new BoardPanelDropTargetListener(this);
+    new DropTarget(this, drop_target_listener);
   }
 
   /**
@@ -451,7 +484,14 @@ public class BoardPanel extends JPanel {
     }
     if (this.custom_cursor != null) {
       this.custom_cursor.set_location(p_evt.getPoint());
-      this.repaint();
+      // Throttle repaints to avoid flooding the AWT event queue with full board redraws
+      // during rapid mouse motion. High-DPI mice can generate 100+ events/second, and
+      // each repaint triggers a full board render + cursor overlay.
+      long now = System.currentTimeMillis();
+      if (now - this.lastCursorRepaintTime >= CURSOR_REPAINT_THROTTLE_MS) {
+        this.lastCursorRepaintTime = now;
+        this.repaint();
+      }
     }
   }
 
@@ -485,6 +525,7 @@ public class BoardPanel extends JPanel {
    * <ol>
    *   <li>Call super to paint the panel background</li>
    *   <li>Delegate board drawing to {@link GuiBoardManager#draw(Graphics)}</li>
+   *   <li>Draw drag-and-drop ghosting overlay if active</li>
    *   <li>Draw custom cursor overlay if enabled</li>
    * </ol>
    *
@@ -505,9 +546,31 @@ public class BoardPanel extends JPanel {
     if (board_handling != null) {
       board_handling.draw(p_g);
     }
+
+    // Draw ghosting overlay for drag-and-drop file operations
+    if (isGhostingActive()) {
+      Graphics2D g2d = (Graphics2D) p_g.create();
+      try {
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        g2d.setColor(new Color(128, 128, 128, 180));
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+      } finally {
+        g2d.dispose();
+      }
+    }
+
     if (this.custom_cursor != null) {
       this.custom_cursor.draw(p_g);
     }
+  }
+
+  /**
+   * Checks if the drag-and-drop ghosting overlay is currently visible.
+   *
+   * @return true if ghosting overlay is active
+   */
+  private boolean isGhostingActive() {
+    return drop_target_listener != null && drop_target_listener.isGhostingActive();
   }
 
   /**
@@ -699,6 +762,12 @@ public class BoardPanel extends JPanel {
     double dy = new_cursor.getY() - p_location.getY();
     Point2D new_center = new Point2D.Double(old_center.getX() + dx, old_center.getY() + dy);
     Point2D adjustment_vector = set_viewport_center(new_center);
+    // Update the custom cursor position to match the new zoom level
+    if (this.custom_cursor != null) {
+      Point2D adjusted_new_cursor = new Point2D.Double(new_cursor.getX() + adjustment_vector.getX() + 0.5,
+          new_cursor.getY() + adjustment_vector.getY() + 0.5);
+      this.custom_cursor.set_location(adjusted_new_cursor);
+    }
     repaint();
     Point2D adjusted_new_cursor = new Point2D.Double(new_cursor.getX() + adjustment_vector.getX() + 0.5,
         new_cursor.getY() + adjustment_vector.getY() + 0.5);

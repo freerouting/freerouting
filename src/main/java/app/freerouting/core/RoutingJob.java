@@ -160,7 +160,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     fileChooser.addChoosableFileFilter(frbFilter);
 
     // Add the file filter for KiCad JSON .JSON files
-    FileNameExtensionFilter jsonFilter = new FileNameExtensionFilter("KiCad JSON file (*.json)", "json");
+    FileNameExtensionFilter jsonFilter = new FileNameExtensionFilter("KiCad Design JSON file (*.json)", "json");
     fileChooser.addChoosableFileFilter(jsonFilter);
 
     // Set a file filter as the default one
@@ -182,7 +182,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         continue;
       }
       if (b == '{') {
-        return FileFormat.JSON;
+        return FileFormat.KICAD_DESIGN_JSON;
       }
       break;
     }
@@ -244,7 +244,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         case BINARY_FILE_EXTENSION -> FileFormat.FRB;
         case "ses" -> FileFormat.SES;
         case "scr" -> FileFormat.SCR;
-        case "json" -> FileFormat.JSON;
+        case "json" -> FileFormat.KICAD_DESIGN_JSON;
         default -> FileFormat.UNKNOWN;
       };
     }
@@ -352,10 +352,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
     FileFormat ff = getFileFormat(outputFile.toPath());
 
-    if ((ff == FileFormat.DSN) || (ff == FileFormat.FRB) || (ff == FileFormat.SES) || (ff == FileFormat.SCR)) {
+    if ((ff == FileFormat.DSN) || (ff == FileFormat.FRB) || (ff == FileFormat.SES) || (ff == FileFormat.SCR) || (ff == FileFormat.KICAD_DESIGN_JSON)) {
       this.output = new BoardFileDetails(outputFile);
       this.output.addUpdatedEventListener(_ -> this.fireInputUpdatedEvent());
-      this.output.format = ff;
+      this.output.format = (ff == FileFormat.KICAD_DESIGN_JSON) ? FileFormat.KICAD_SESSION_JSON : ff;
       fireOutputUpdatedEvent();
       return true;
     } else {
@@ -415,7 +415,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
       this.output.setFilename(changeFileExtension(input.getAbsolutePath(), SES_FILE_EXTENSION));
     }
 
-    if (this.input.format == FileFormat.JSON) {
+    if (this.input.format == FileFormat.KICAD_DESIGN_JSON) {
       this.output = new BoardFileDetails();
       this.output.addUpdatedEventListener(_ -> this.fireOutputUpdatedEvent());
       this.output.setFilename(changeFileExtension(input.getAbsolutePath(), "json"));

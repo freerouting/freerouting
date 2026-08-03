@@ -47,6 +47,20 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
   }
 
   /**
+   * Called when the window has been moved to a different display with a different
+   * GraphicsConfiguration (e.g. different DPI scaling). Re-packs the window and
+   * refreshes displayed values so that component sizes and font metrics are
+   * recomputed for the new display.
+   */
+  @Override
+  protected void onGraphicsConfigurationChanged() {
+    pack();
+    refresh();
+    revalidate();
+    repaint();
+  }
+
+  /**
    * Type for attributes of this class, which are saved to an Objectstream.
    */
   private static class SavedAttributes implements Serializable {

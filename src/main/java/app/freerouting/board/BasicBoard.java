@@ -1932,6 +1932,26 @@ public class BasicBoard implements Serializable {
     }
   }
 
+  /**
+   * Unfills all conduction zones on the board, leaving only their definitions (boundaries) visible.
+   * This disables them as routing obstacles and prevents connection stubs from being routed to them.
+   */
+  public void unfill_conduction_areas() {
+    this.rules.set_ignore_conduction(true);
+    Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
+    for (;;) {
+      UndoableObjects.Storable curr_item = item_list.read_object(it);
+      if (curr_item == null) {
+        break;
+      }
+      if (curr_item instanceof ConductionArea curr_conduction_area) {
+        curr_conduction_area.set_is_filled(false);
+        curr_conduction_area.set_is_obstacle(false);
+      }
+    }
+    this.search_tree_manager.reinsert_tree_items();
+  }
+
   public void areThereItemsOnInactiveLayer(AutorouteControl p_ctrl) {
     if (this.get_layer_count() > 2) {
       boolean hasSomethingOnInactiveLayer = false;

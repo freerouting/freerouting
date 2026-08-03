@@ -14,6 +14,7 @@ param(
     [bool]    $RouterEnabled  = $true,
     [switch]  $Force,
     [switch]  $ReportOnly,
+    [switch]  $SkipWebsiteUpdate,
     [string]  $FilterFixture  = "*",
     [string]  $FilterBinary   = "*"
 )
@@ -43,17 +44,24 @@ $store = Load-BenchmarksJson $JsonPath
 $rawJson = $store.RawData
 $cache = $store.Cache
 
+function Update-BenchmarkReports {
+    param([Hashtable]$Cache)
+    Export-MarkdownReport $Cache $MdPath $CsvPath $ChartDataPath
+    if (-not $SkipWebsiteUpdate) {
+        Update-BenchmarksHtml $Cache $WebsiteHtml
+    }
+}
+
 if ($ReportOnly) {
     Write-Output "Report-only mode. Generating reports from cached data..."
-    Export-MarkdownReport $cache $MdPath $CsvPath $ChartDataPath
-    Update-BenchmarksHtml $cache $WebsiteHtml
+    Update-BenchmarkReports $cache
     Write-Output "Done!"
     exit 0
 }
 
 # Discover files
-$binaries = Get-ChildItem $BinariesDir -Filter "*.jar" | Where-Object { $_.Name -like $FilterBinary }
-$fixtures = Get-ChildItem $FixturesDir -Recurse -Filter "*.dsn" | Where-Object { $_.Name -like $FilterFixture }
+$binaries = @(Get-ChildItem $BinariesDir -Filter "*.jar" | Where-Object { $_.Name -like $FilterBinary })
+$fixtures = @(Get-ChildItem $FixturesDir -Recurse -Filter "*.dsn" | Where-Object { $_.Name -like $FilterFixture })
 
 if ($binaries.Count -eq 0) {
     Write-Error "No Freerouting binaries found in: $BinariesDir"
@@ -74,6 +82,13 @@ if (-not $binaryCurrent) {
 # Gathers system info
 $sysInfo = Get-SystemInfo
 Write-Output "System: $($sysInfo.cpu_name) ($($sysInfo.cpu_physical_cores) Cores, $($sysInfo.total_ram_gb) GB RAM)"
+
+$gitBranch = Get-GitBranchName
+if ($gitBranch -and $gitBranch -notin @('master', 'main')) {
+    Write-Output "Git branch: $gitBranch (snapshot/current JARs will be labeled with this branch name in reports)"
+} elseif ($gitBranch) {
+    Write-Output "Git branch: $gitBranch (snapshot/current JARs will use manifest build-date labels)"
+}
 
 # Settings object
 $settingsObj = [PSCustomObject]@{
@@ -187,7 +202,8 @@ foreach ($binary in $binaries) {
 
         # Form unique base name with folder name, fixture file name, version
         $timestamp = (Get-Date -Format "yyyyMMdd-HHmmss")
-        $baseName = "${fixtureGroup}--${fixtureStem}--${verLabel}--${timestamp}"
+        $fsVerLabel = Get-FilesystemSafeVersionLabel $verLabel
+        $baseName = "${fixtureGroup}--${fixtureStem}--${fsVerLabel}--${timestamp}"
 
         if ($isCached) {
             Write-Output "[$runIdx/$totalCombinations] $verLabel x $fixtureGroup/$($fixture.Name) (Cache Hit)"
@@ -296,6 +312,5 @@ foreach ($binary in $binaries) {
 
 # 6. Generate final reports
 Write-Output "Regenerating benchmark reports..."
-Export-MarkdownReport $cache $MdPath $CsvPath $ChartDataPath
-Update-BenchmarksHtml $cache $WebsiteHtml
+Update-BenchmarkReports $cache
 Write-Output "Benchmark Suite Execution Complete!"

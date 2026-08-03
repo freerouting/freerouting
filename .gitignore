@@ -16,7 +16,6 @@ bin/
 /scripts/build/runtime
 /scripts/build/Freerouting*
 
-/fixtures/*.ses
 /fixtures/*.bin
 /fixtures/**/*.zip
 
@@ -30,10 +29,6 @@ bin/
 freerouting.dsn
 temp-freerouting.dsn
 freerouting.ses
-
-# gemini-cli settings
-.gemini/
-
 # GitHub App credentials
 gha-creds-*.json
 
@@ -42,3 +37,6 @@ gha-creds-*.json
 /.secrets
 /scripts/benchmark/logs
 /scripts/benchmark/outputs
+/scripts/benchmark/results/comparison-*/
+/scripts/benchmark/binaries/freerouting-current-*.jar
+/scripts/i18n/__pycache__

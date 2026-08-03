@@ -168,20 +168,16 @@ public class PolylineTrace extends Trace implements Serializable {
    */
   @Override
   public boolean combine() {
-    if (!this.is_on_the_board()) {
-      return false;
-    }
-    boolean something_changed;
-    if (this.combine_at_start(true)) {
+    // Iterative instead of recursive: a long chain of combinable traces
+    // (e.g. many collinear segments from an SES round-trip) previously grew
+    // the call stack by one frame per combined trace and crashed with a
+    // StackOverflowError. The loop keeps the exact combining order
+    // (retry at the start first, then at the end) and the per-combine
+    // on-board re-check and observer notification of the recursive version.
+    boolean something_changed = false;
+    while (this.is_on_the_board()
+        && (this.combine_at_start(true) || this.combine_at_end(true))) {
       something_changed = true;
-      this.combine();
-    } else if (this.combine_at_end(true)) {
-      something_changed = true;
-      this.combine();
-    } else {
-      something_changed = false;
-    }
-    if (something_changed) {
       // let the observers synchronize the changes
       if ((board.communication != null) && (board.communication.observers != null)) {
         board.communication.observers.notify_changed(this);

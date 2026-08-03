@@ -458,7 +458,7 @@ public class BoardStatistics implements Serializable {
       this.nets.totalCount = countOccurrences(content, "(net");
       this.traces.totalCount = countOccurrences(content, "(wire");
       this.vias.totalCount = countOccurrences(content, "(via");
-    } else if (format == FileFormat.JSON) {
+    } else if (format == FileFormat.KICAD_DESIGN_JSON) {
       try {
         String content = new String(data, StandardCharsets.UTF_8);
         com.google.gson.JsonObject json = GsonProvider.GSON.fromJson(content, com.google.gson.JsonObject.class);
