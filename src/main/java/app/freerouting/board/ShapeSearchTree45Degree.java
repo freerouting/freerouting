@@ -415,6 +415,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     for (int i = 0; i < result.length; i++) {
       Shape curr_shape = p_drill_item.get_shape(i);
       if (curr_shape == null) {
+        curr_shape = drill_hole_obstacle(p_drill_item);
+      }
+      if (curr_shape == null) {
         result[i] = null;
       } else {
         TileShape curr_tile_shape = curr_shape.bounding_octagon();
@@ -426,6 +429,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
         }
 
         int offset_width = this.clearance_compensation_value(p_drill_item.clearance_class_no(), p_drill_item.shape_layer(i));
+        offset_width += drill_hole_clearance_delta(p_drill_item, curr_shape, p_drill_item.shape_layer(i));
         curr_tile_shape = (TileShape) curr_tile_shape.offset(offset_width);
         result[i] = curr_tile_shape.bounding_octagon();
       }

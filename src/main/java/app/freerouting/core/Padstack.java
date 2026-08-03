@@ -29,6 +29,13 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   public final boolean placed_absolute;
   private final ConvexShape[] shapes;
   /**
+   * True for padstacks whose copper-layer shapes were synthesized from the drill radius because
+   * the source padstack had no copper at all (non-plated holes). Such shapes exist only so the
+   * hole becomes an obstacle for routing and DRC; they must not be treated as real copper (e.g.
+   * not re-exported).
+   */
+  public boolean hole_only = false;
+  /**
    * Pointer to the pacdstack list containing this padstack
    */
   private final Padstacks padstack_list;

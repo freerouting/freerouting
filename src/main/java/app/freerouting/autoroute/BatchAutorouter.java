@@ -5,6 +5,7 @@ import static java.util.Collections.shuffle;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
+import app.freerouting.board.BasicBoard;
 import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.DrillItem;
@@ -1321,6 +1322,10 @@ public class BatchAutorouter extends NamedAlgorithm {
       AutorouteEngine autoroute_engine = board.init_autoroute(p_route_net_no,
           autoroute_control.trace_clearance_class_no, this.thread, time_limit, this.retain_autoroute_database);
 
+      int maxItemIdBeforeRoute = board.communication.id_no_generator.max_generated_no();
+
+      byte[] strictDrcBoardSnapshot = this.settings.isStrictDrc() ? board.serialize(false) : null;
+
       // Do the auto-routing between the two sets of items
       AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set,
           autoroute_control, p_ripped_item_list, p_ripup_costs);
@@ -1335,11 +1340,137 @@ public class BatchAutorouter extends NamedAlgorithm {
         FRLogger.trace("compare_trace_opt_changed_area_after net=" + p_route_net_no + ", maxItemId=" + maxItemIdAfterOpt + ", delta=" + (maxItemIdAfterOpt - maxItemIdBeforeOpt));
       }
 
+      if ((autoroute_result.state == AutorouteAttemptState.FAILED
+          || autoroute_result.state == AutorouteAttemptState.INSERT_ERROR)
+          && this.settings.getNeckWidthUm() > 0) {
+        AutorouteAttemptResult necked_result = retryConnectionNecked(p_route_net_no, autoroute_control,
+            curr_via_costs, route_start_set, route_dest_set, p_ripped_item_list, p_ripup_costs,
+            p_ripup_pass_no, time_limit);
+        if (necked_result != null) {
+          AutorouteAttemptResult strict_result = applyStrictDrcAfterRoute(p_route_net_no,
+              maxItemIdBeforeRoute, strictDrcBoardSnapshot);
+          if (strict_result != null) {
+            return strict_result;
+          }
+          return necked_result;
+        }
+      }
+
+      if (autoroute_result.state == AutorouteAttemptState.ROUTED) {
+        AutorouteAttemptResult strict_result = applyStrictDrcAfterRoute(p_route_net_no,
+            maxItemIdBeforeRoute, strictDrcBoardSnapshot);
+        if (strict_result != null) {
+          return strict_result;
+        }
+      }
+
       return autoroute_result;
     } catch (Exception e) {
       FRLogger.error("Error during routing passes", e);
       return new AutorouteAttemptResult(AutorouteAttemptState.FAILED);
     }
+  }
+
+
+  /**
+   * Width-necking retry: when a connection failed at its net-class trace width and the
+   * neck_width_um setting is enabled, retry it ONCE with every layer's trace half-width
+   * clamped to the neck width. Fine-pitch pads whose pitch is below (class width +
+   * clearance) are unroutable at class width and fail as generic congestion; the operator
+   * supplies a legal manufacturable neck width (e.g. the project's densest net class).
+   * Returns the retry result when it routed, else null (keep the original failure).
+   */
+  private AutorouteAttemptResult retryConnectionNecked(int p_route_net_no,
+      AutorouteControl p_original_control, int p_via_costs, Set<Item> p_route_start_set,
+      Set<Item> p_route_dest_set, SortedSet<Item> p_ripped_item_list,
+      Map<Item, Integer> p_ripup_costs, int p_ripup_pass_no, TimeLimit p_time_limit) {
+    int boardResolution = Math.max(1, board.communication.resolution);
+    int neck_width = (int) Math.round(app.freerouting.board.Unit.scale(
+        this.settings.getNeckWidthUm() * boardResolution, app.freerouting.board.Unit.UM,
+        board.communication.unit));
+    int neck_half_width = Math.max(1, neck_width / 2);
+    boolean narrower_somewhere = false;
+    for (int i = 0; i < p_original_control.layer_count; i++) {
+      if (p_original_control.layer_active[i]
+          && p_original_control.trace_half_width[i] > neck_half_width) {
+        narrower_somewhere = true;
+        break;
+      }
+    }
+    if (!narrower_somewhere) {
+      return null;
+    }
+    AutorouteControl neck_control = new AutorouteControl(this.board, p_route_net_no, settings,
+        p_via_costs, this.trace_cost_arr);
+    neck_control.ripup_allowed = true;
+    neck_control.ripup_costs = this.start_ripup_costs * p_ripup_pass_no;
+    neck_control.remove_unconnected_vias = this.remove_unconnected_vias;
+    for (int i = 0; i < neck_control.layer_count; i++) {
+      int compensation = neck_control.compensated_trace_half_width[i] - neck_control.trace_half_width[i];
+      neck_control.trace_half_width[i] = Math.min(neck_control.trace_half_width[i], neck_half_width);
+      neck_control.compensated_trace_half_width[i] = neck_control.trace_half_width[i] + compensation;
+    }
+    AutorouteEngine neck_engine = board.init_autoroute(p_route_net_no,
+        neck_control.trace_clearance_class_no, this.thread, p_time_limit, this.retain_autoroute_database);
+    AutorouteAttemptResult neck_result = neck_engine.autoroute_connection(p_route_start_set,
+        p_route_dest_set, neck_control, p_ripped_item_list, p_ripup_costs);
+    if (neck_result.state != AutorouteAttemptState.ROUTED) {
+      return null;
+    }
+    board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, neck_control.trace_costs,
+        this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+    Net route_net = board.rules.nets.get(p_route_net_no);
+    FRLogger.info("Necked retry routed net '"
+        + (route_net != null ? route_net.name : "#" + p_route_net_no)
+        + "' at " + this.settings.getNeckWidthUm() + " um trace width.");
+    return neck_result;
+  }
+
+  /**
+   * When {@code strict_drc} rejects a routed connection, restore the board snapshot taken
+   * before {@link AutorouteEngine#autoroute_connection} so rip-up victims removed during
+   * routing are not left torn up.
+   */
+  private AutorouteAttemptResult applyStrictDrcAfterRoute(int p_route_net_no, int p_max_item_id_before,
+      byte[] p_board_snapshot_before_route) {
+    if (!this.settings.isStrictDrc()) {
+      return null;
+    }
+    AutorouteAttemptResult rejection = enforceStrictDrc(board, p_route_net_no, p_max_item_id_before);
+    if (rejection != null && p_board_snapshot_before_route != null) {
+      this.board = (RoutingBoard) BasicBoard.deserialize(p_board_snapshot_before_route);
+    }
+    return rejection;
+  }
+
+  /**
+   * Strict-DRC enforcement: if any trace/via inserted by the connection that just routed
+   * (item id above {@code p_max_item_id_before}) carries a clearance violation, rip the
+   * whole set of new items and report the connection FAILED, so the pass counts it as not
+   * routed and later passes (higher ripup costs) retry it. Returns null when the connection
+   * is clean and may be kept.
+   */
+  static AutorouteAttemptResult enforceStrictDrc(app.freerouting.board.RoutingBoard board,
+      int p_route_net_no, int p_max_item_id_before) {
+    List<Item> new_items = new ArrayList<>();
+    boolean has_violation = false;
+    for (Item curr_item : board.get_connectable_items(p_route_net_no)) {
+      if (curr_item.get_id_no() <= p_max_item_id_before
+          || !(curr_item instanceof Trace || curr_item instanceof app.freerouting.board.Via)) {
+        continue;
+      }
+      new_items.add(curr_item);
+      if (!has_violation && !curr_item.clearance_violations().isEmpty()) {
+        has_violation = true;
+      }
+    }
+    if (!has_violation) {
+      return null;
+    }
+    board.remove_items(new_items);
+    return new AutorouteAttemptResult(AutorouteAttemptState.FAILED,
+        "strict_drc: connection ripped because " + new_items.size()
+            + " new item(s) included clearance violations");
   }
 
   /**
