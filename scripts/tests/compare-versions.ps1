@@ -152,7 +152,7 @@ function Parse-LogResults {
     param (
         [string]$LogPath
     )
-    
+
     $Result = @{
         AutoRouterTime = "N/A"
         Unrouted       = "0"
@@ -160,12 +160,12 @@ function Parse-LogResults {
         Passes         = "0"
         FoundSummary   = $false
     }
-    
+
     if (Test-Path $LogPath) {
         # Use Select-String to search the entire file efficiently instead of tailing
         $SummaryMatches = Select-String -Path $LogPath -Pattern "Auto-rout(?:er session|er phase|ing stage).*(?:completed|interrupted)"
         $SummaryLine = if ($SummaryMatches) { $SummaryMatches[-1].Line } else { $null }
-        
+
         # Extract max pass number
         $PassMatches = Select-String -Path $LogPath -Pattern "(?:Auto-routing pass|Auto-router pass|Pass|pass)\s+#?(\d+)"
         if ($PassMatches) {
@@ -174,27 +174,27 @@ function Parse-LogResults {
                 $Result.Passes = $matches[1]
             }
         }
-        
+
         if ($SummaryLine) {
             $Result.FoundSummary = $true
-            
+
             # Extract Duration: completed in (.*?),
             if ($SummaryLine -match "completed in (.*?),") {
                 $Result.AutoRouterTime = $matches[1].Trim()
             }
-            
+
             # Extract Unrouted: (\d+) unrouted
             if ($SummaryLine -match "\((\d+)\s+unrouted") {
                 $Result.Unrouted = $matches[1]
             }
-            
+
             # Extract Peak Heap: (\d+(?:\.\d+)?)\s*MB peak heap
             if ($SummaryLine -match "(\d+(?:\.\d+)?)\s*MB peak heap") {
                 $Result.PeakHeap = $matches[1]
             }
         }
     }
-    
+
     return $Result
 }
 
@@ -259,7 +259,7 @@ function Invoke-Version {
         else {
             Write-Host "  WARNING: Log file not found at $LogPath" -ForegroundColor $WarningColor
         }
-        
+
         $LogResults = Parse-LogResults -LogPath $LogPath
 
         return @{

@@ -101,14 +101,14 @@ public class ConductionArea extends ObstacleArea implements Connectable {
           Point2D p0 = p_graphics_context.coordinate_transform.board_to_screen(FloatPoint.ZERO);
           Point2D px = p_graphics_context.coordinate_transform.board_to_screen(new FloatPoint(1, 0));
           Point2D py = p_graphics_context.coordinate_transform.board_to_screen(new FloatPoint(0, 1));
-          
+
           double m00 = px.getX() - p0.getX();
           double m10 = px.getY() - p0.getY();
           double m01 = py.getX() - p0.getX();
           double m11 = py.getY() - p0.getY();
           double m02 = p0.getX();
           double m12 = p0.getY();
-          
+
           java.awt.geom.AffineTransform boardToScreen = new java.awt.geom.AffineTransform(m00, m10, m01, m11, m02, m12);
           java.awt.geom.Area screenArea = cached_board_fill_area.createTransformedArea(boardToScreen);
 
@@ -280,7 +280,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     if (!(borderShape instanceof app.freerouting.geometry.planar.PolylineShape border) || !border.is_bounded()) {
       return null;
     }
-    
+
     java.awt.geom.Path2D.Double borderPath = new java.awt.geom.Path2D.Double();
     int count = border.border_line_count();
     if (count > 0) {

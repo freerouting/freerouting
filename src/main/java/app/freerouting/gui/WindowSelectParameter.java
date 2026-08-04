@@ -31,10 +31,10 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   private final GuiBoardManager board_handling;
   private final JToggleButton[] settings_select_layer_name_arr;
   private final JCheckBox[] settings_select_layer_eye_arr;
-  
+
   private final JToggleButton[] settings_virtual_layer_name_arr;
   private final JCheckBox[] settings_virtual_layer_eye_arr;
-  
+
   private final JCheckBox[] settings_select_item_selection_choices;
   private final JToggleButton settings_select_all_visible_button;
   private final JToggleButton settings_select_current_only_button;
@@ -128,10 +128,10 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     LayerStructure layer_structure = this.board_handling.get_routing_board().layer_structure;
     int layer_count = layer_structure.arr.length;
-    
+
     this.settings_select_layer_name_arr = new JToggleButton[layer_count];
     this.settings_select_layer_eye_arr = new JCheckBox[layer_count];
-    
+
     ButtonGroup layer_selection_group = new ButtonGroup();
 
     // 1. Signal Layers
@@ -270,7 +270,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     } else {
       settings_select_current_only_button.setSelected(true);
     }
-    
+
     ItemSelectionFilter item_selection_filter = is.get_item_selection_filter();
     if (item_selection_filter == null) {
       FRLogger.warn("SelectParameterWindow.refresh: item_selection_filter is null");
@@ -282,7 +282,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     }
 
     GraphicsContext gc = this.board_handling.graphics_context;
-    
+
     // Sync physical layers
     int active_layer = is.get_layer();
     int active_virtual = gc.get_fully_visible_virtual_layer();

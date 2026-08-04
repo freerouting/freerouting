@@ -22,7 +22,7 @@ function Update-BenchmarksHtml {
     $sysInfo = Get-SystemInfo
     [void]$sb.AppendLine("<div class='benchmark-container'>")
     [void]$sb.AppendLine("  <div class='benchmark-report-info'>Generated on: $ts &middot; System: $($sysInfo.cpu_name) ($($sysInfo.cpu_physical_cores) Cores, $($sysInfo.total_ram_gb) GB RAM)</div>")
-    
+
     foreach ($g in $grouped) {
         $first = $g.Group[0]
         $fixName = $first.fixture.filename
@@ -33,7 +33,7 @@ function Update-BenchmarksHtml {
         $sizeKb = [math]::Round($first.fixture.size_bytes / 1KB, 1)
         $dot = " &middot; "
         [void]$sb.AppendLine("    <p class='fixture-meta'>Size: $($sizeKb) kB $dot Layers: $($first.fixture.layer_count) $dot Nets: $($first.fixture.net_count) $dot Components: $($first.fixture.component_count) $dot Dimensions: $($first.fixture.board_width_mm) x $($first.fixture.board_height_mm) mm ($($first.fixture.board_area_cm2) cm$([char]178)) $dot CAD: $($first.fixture.host_cad) (v$($first.fixture.host_version))</p>")
-        
+
         [void]$sb.AppendLine("    <table class='benchmark-table'>")
         [void]$sb.AppendLine("      <thead>")
         [void]$sb.AppendLine("        <tr class='header-row'>")
@@ -121,12 +121,12 @@ function Update-BenchmarksHtml {
     }
 
     $htmlContent = [System.IO.File]::ReadAllText($HtmlPath, [System.Text.UTF8Encoding]::new($false))
-    
+
     $pattern = '(?s)<!-- BENCHMARK_TABLE_START -->.*?<!-- BENCHMARK_TABLE_END -->'
     $replacement = "<!-- BENCHMARK_TABLE_START -->`r`n$indentedHtml        <!-- BENCHMARK_TABLE_END -->"
-    
+
     $patchedContent = [regex]::Replace($htmlContent, $pattern, $replacement)
- 
+
     $tempHtml = "$HtmlPath.tmp"
     [System.IO.File]::WriteAllText($tempHtml, $patchedContent, [System.Text.UTF8Encoding]::new($false))
     if (Test-Path $tempHtml) {

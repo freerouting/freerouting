@@ -16,7 +16,7 @@ public class SesFileSettings implements SettingsSource {
 
     /**
      * Creates a SesFileSettings source from a SES file.
-     * 
+     *
      * @param fileName Name of the SES file (for logging)
      */
     public SesFileSettings(String fileName) {

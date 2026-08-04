@@ -23,17 +23,17 @@ def extract_raw_sections(filename):
             sec_m = re.search(r'selected_section=(\d+)', line)
             from_sec_m = re.search(r'from_section=(\d+)', line)
             ev_m = re.search(r'expansion_value=([0-9.]+)', line)
-            
+
             # Extract door bounds
             door_m = re.search(r'door_bounds=\[(.*?)\]', line)
             from_door_m = re.search(r'from_door_bounds=\[(.*?)\]', line)
-            
+
             if sec_m and from_sec_m and ev_m and door_m:
                 # Normalize: extract (ll_x,ll_y)..(ur_x,ur_y)
                 door_bounds = door_m.group(1)
                 from_door_bounds = from_door_m.group(1) if from_door_m else "null"
                 ev = float(ev_m.group(1))
-                
+
                 sections.append({
                     'sec': int(sec_m.group(1)),
                     'from_sec': int(from_sec_m.group(1)),
@@ -52,25 +52,25 @@ def find_divergence(log_curr, log_v19):
     print(f"Loading {log_curr}...")
     curr = extract_raw_sections(log_curr)
     print(f"  {len(curr)} RAW_SECTION entries")
-    
+
     print(f"Loading {log_v19}...")
     v19 = extract_raw_sections(log_v19)
     print(f"  {len(v19)} RAW_SECTION entries")
-    
+
     min_len = min(len(curr), len(v19))
     print(f"\nComparing first {min_len} entries for divergence...")
-    
+
     for i in range(min_len):
         c = curr[i]
         v = v19[i]
         nc = normalize(c)
         nv = normalize(v)
-        
+
         if nc != nv:
             print(f"\n*** FIRST DIVERGENCE AT POSITION {i} ***")
             print(f"Current[{i}]:  sec={c['sec']} door={c['door']} from_door={c['from_door']} ev={c['ev']}")
             print(f"V1.9   [{i}]:  sec={v['sec']} door={v['door']} from_door={v['from_door']} ev={v['ev']}")
-            
+
             # Show context: 5 entries before and after
             print(f"\n--- Context: entries {max(0,i-5)} to {min(min_len-1,i+10)} ---")
             print("Current:")
@@ -78,15 +78,15 @@ def find_divergence(log_curr, log_v19):
                 marker = ">>>" if j == i else "   "
                 e = curr[j]
                 print(f"  {marker} [{j:4d}] sec={e['sec']} door={e['door'][:60]} from_door={e['from_door'][:50]} ev={e['ev']}")
-            
+
             print("\nV1.9:")
             for j in range(max(0,i-5), min(len(v19), i+11)):
                 marker = ">>>" if j == i else "   "
                 e = v19[j]
                 print(f"  {marker} [{j:4d}] sec={e['sec']} door={e['door'][:60]} from_door={e['from_door'][:50]} ev={e['ev']}")
-            
+
             return i
-    
+
     print("No divergence found in the overlapping range!")
     return -1
 

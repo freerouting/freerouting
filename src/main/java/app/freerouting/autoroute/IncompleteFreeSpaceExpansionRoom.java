@@ -40,4 +40,4 @@ public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom {
     // Stable hash of shape and layer
     return 31 * get_shape().get_id_no() + get_layer();
   }
-}
+}

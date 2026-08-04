@@ -229,7 +229,7 @@ class KiCadJsonReaderTest {
     // Verify default via rules are created
     assertNotNull(board.rules.get_default_via_rule());
     assertEquals(2, board.library.via_padstack_count());
-    
+
     // Verify NetClass via rule assignment
     assertNotNull(board.rules.net_classes.get("Power").get_via_rule());
   }

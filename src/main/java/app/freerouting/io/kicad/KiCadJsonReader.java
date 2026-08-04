@@ -828,7 +828,7 @@ public final class KiCadJsonReader {
         shapeStr = pad.shape.substring(0, 1).toUpperCase() + pad.shape.substring(1).toLowerCase();
       }
     }
-    
+
     String layerType = "A";
     if (pad.layers != null && pad.layers.size() == 1) {
       String lName = pad.layers.get(0);
@@ -838,7 +838,7 @@ public final class KiCadJsonReader {
         layerType = "B";
       }
     }
-    
+
     if (shapeStr.equals("Round")) {
       return String.format("%s[%s]Pad_%.0f_um", shapeStr, layerType, pad.size.x * 1000.0);
     } else {

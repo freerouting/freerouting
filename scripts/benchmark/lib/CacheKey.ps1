@@ -10,7 +10,7 @@ function Get-BenchmarkCacheKey {
 
     # Form settings string
     $settingsStr = "$($Settings.max_passes)|$($Settings.max_time)|$($Settings.max_threads)|$($Settings.heap_max)|$($Settings.log_level)|$($Settings.fanout_enabled)|$($Settings.router_enabled)|$($Settings.optimizer_enabled)"
-    
+
     # Compute hash of settings string
     $hasher = [System.Security.Cryptography.SHA256]::Create()
     $settingsBytes = [System.Text.Encoding]::UTF8.GetBytes($settingsStr)

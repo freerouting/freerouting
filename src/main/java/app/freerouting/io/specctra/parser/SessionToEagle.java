@@ -315,7 +315,7 @@ public class SessionToEagle extends JFrame {
       return false;
     }
     this.scanner.set_scope_identifier(net_name);
- 
+
     // Delete all unfixed traces and vias for net net_name in Eagle's database.
 
     // read the wires and vias of this net

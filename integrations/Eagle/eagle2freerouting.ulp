@@ -58,7 +58,7 @@ int margin = 10000; //Max 'glue' distance  of close wire ends (in internal units
 // DRU, layer and default via data
 string dr_name[], dr_value[], layer_def, DSN_output_file; // design rules extracted from the board XML file
 string DRU_data[];
-int B_layers[], Lnum, Vnum, default_via_nbr, Pnum, Snum; // Board layer numbers, layer, via and pad signature pointers 
+int B_layers[], Lnum, Vnum, default_via_nbr, Pnum, Snum; // Board layer numbers, layer, via and pad signature pointers
 string L_names[], V_list[], V_name[], P_list[], P_name[], S_list[], S_name[]; // Board layer names, via and pad signature lists
 
 
@@ -90,7 +90,7 @@ string via_sig(int shape, int dia, int drill, int start, int end) {
 		case VIA_SHAPE_SQUARE: s = "Square"; break;
 		case VIA_SHAPE_ROUND: s = "Round"; break;
 		case VIA_SHAPE_OCTAGON: s = "Octagon"; break;
-	}	
+	}
 	sprintf(V_name[Vnum], "\"%s%d$%f\"", s, count, U2G * drill);
 	return V_name[Vnum];
 }
@@ -109,7 +109,7 @@ string pad_sig (int shape, int dia, int drill, int elong, real angl) {
 		case PAD_SHAPE_SQUARE:	s = "Square"; break;
 		case PAD_SHAPE_ROUND:	s = "Round"; break;
 		case PAD_SHAPE_OCTAGON: s = "Octagon"; break;
-		case PAD_SHAPE_LONG: 	s = "Oblong"; break; 
+		case PAD_SHAPE_LONG: 	s = "Oblong"; break;
 		case PAD_SHAPE_OFFSET:	s = "Offset"; break;
 	}
 	sprintf(P_name[Pnum], "\"%s%d\"", s, count);
@@ -168,7 +168,7 @@ string W_SMDpad(string lname, real dx, real dy, real rot, real rdness) {
 	string s, t; int i = 0, k, adj[]; // coordinate buffers
 	if (min(dx,dy)<=0) return ""; // no real surface
 	if (rdness==100 && dx<=dy) {adj[0] = -1; adj[2] = -1;}; // cut last curve point if curve follows
-	if (rdness==100 && dy<=dx) {adj[1] = -1; adj[3] = -1;}; 
+	if (rdness==100 && dy<=dx) {adj[1] = -1; adj[3] = -1;};
 	real agl, crad = min(dx,dy) * rdness/200; // rounding angle and radius
 	real cx = dx/2 - crad, cy = dy/2 - crad; // center of round corners
 	if (!cx) agl = PI/2; else agl = atan(cy/cx); // starting angle of first corner center
@@ -185,10 +185,10 @@ string W_SMDpad(string lname, real dx, real dy, real rot, real rdness) {
 				real rx = crad * cos(ang), ry = crad * sin(ang);
 				sprintf(s, " %f %f", tx+rx, ty+ry); t +=s;
 			}
-		}		
+		}
 	}
 	return t + "))\n";
-} 
+}
 
 string W_Rect(string lname, real x, real y, real rotate) {
 // draws a rotated rectangle
@@ -225,8 +225,8 @@ string W_Pshape(string lname, real dia, real elong, char offset, real r) {
 }
 
 // object boundery calculation routines when scanning the wire segment array
- 
-real xmin, xmax, ymin, ymax; 
+
+real xmin, xmax, ymin, ymax;
 char b_status = false; // indicates if boundary calculation is on or not.
 
 void get_boundary(char state) {
@@ -281,7 +281,7 @@ string write_arc2line(int i) {
 	string s, t;
 	real rtio = rad[i], xloc, yloc, angl; rtio = margin/rtio;
 	real delta = asin(sqrt(rtio)); // optimal angle step
-	if ((a2[i]-a1[i])/delta > 128) delta = (a2[i]-a1[i]) / 128; // limit extreme number of segments	
+	if ((a2[i]-a1[i])/delta > 128) delta = (a2[i]-a1[i]) / 128; // limit extreme number of segments
     real XC = U2G * xc[i], YC= U2G * yc[i], R = U2G * rad[i], A, AS = a1[i] + delta;
 	if (arcy1[i]!=y1[i] || arcx1[i]!=x1[i]) {AS = a2[i] - delta; delta = -delta;} // start at angle2
 	for (A = AS; (A > a1[i] && A < a2[i]) ; A += delta) {
@@ -379,7 +379,7 @@ void get_designrules (void) {
 		// The designrules section is in dr_lines[0]. Extract the parameter list
 		d_rule_count = xmlelements(par_list, dr_lines[0], "designrules/param");
 		if (!d_rule_count) ERROR("No parameters found in the designrules!");
-		// extract the name and value tag data pairs 
+		// extract the name and value tag data pairs
 		for (int i; i < d_rule_count; i++) {
 			dr_name[i] = xmlattribute(par_list[i], "param", "name");
 			dr_value[i] = xmlattribute(par_list[i], "param", "value");
@@ -430,7 +430,7 @@ int layer_structure (string L) { // 18-01-13, updated 30-12-13 to mark single la
 			if (isdigit(L[i+1])) {N = strtol(" " + L[i+1]) + 10; i += 2;}
 			else {N = strtol(" " + L[i]); i++;}; // N is now a one or two digit number
 			if (TBV) {tbv[j] = N; TBV = false; i++;} // store number, remove trailing ":"
-			else 
+			else
 			if (BBV) {bbv[j-1] = N, BBV = false; i++;}
 			else {B_layers[j] = N; NLast = N; j++; for (k=0; k<=i; k++) if (stack[k]<0) stack[k]=N;} // write the via starts if any
 		}
@@ -441,7 +441,7 @@ int layer_structure (string L) { // 18-01-13, updated 30-12-13 to mark single la
 			case ')': sp--; i++; // write last entry from stack in signature
 				via_sig(VIA_SHAPE_ROUND, vsize, dsize, stack[sp], NLast); break;
 			default: i++; // ignore the ] + and * characters
-			} 		
+			}
 	} while (i <= strlen(L));
 	// Done decoding!
 	for (i=1; i<j; i++) { // write the signature for the default blind vias
@@ -450,7 +450,7 @@ int layer_structure (string L) { // 18-01-13, updated 30-12-13 to mark single la
 	}
 	default_via_nbr = Vnum; // number of via defaults,needed to generate tru hole via pads later
 	// All default vias in V_list[]!
-	board(B) { // Get the layer names from the board definition 
+	board(B) { // Get the layer names from the board definition
 		for (i=1; i<j; i++) {B.layers(L) {if (L.number == B_layers[i]) sprintf(L_names[i], "\"%d#%s\"", L.number, L.name);}}
 	}
 	return j-1; // Return the number of layers on the board.
@@ -467,7 +467,7 @@ void read_board_pads_and_vias(void) { // 19-01-28
 							C.pad.drill, C.pad.elongation, C.pad.angle);
 					}
 					if (C.smd) {
-						smd_sig (C.smd.roundness, C.smd.dx, C.smd.dy, C.smd.layer, C.smd.angle); 
+						smd_sig (C.smd.roundness, C.smd.dx, C.smd.dy, C.smd.layer, C.smd.angle);
 					}
 				}
 			}
@@ -519,10 +519,10 @@ string Parser_d(void) {
 	t += "    (host_cad CadSoft)\n";
 	sprintf (s, "    (host_version \"Eagle V %1d.%1d", EAGLE_VERSION, EAGLE_RELEASE);
 	t += s + " - Using " + filename(argv[0]) + ", version " + version + ", on ";
-	t += t2string(time()) + "\")\n"; 
+	t += t2string(time()) + "\")\n";
 	t += "    (case_sensitive off)\n    (via_rotate_first on)\n  )\n";
 	return t;
-}	
+}
 
 string Resolution_d(void) {
 // SPECCTRA Resolution & Unit descriptor; DO NOT CHANGE VALUES 29-5-2013
@@ -623,7 +623,7 @@ string Keepout_d(void) {
 				B.rectangles(R) {
 					if (R.layer == L.number) {
 						sprintf(s, T2 + "(%s(rect %s %f %f %f %f))\n", KOname, Lname, U2G * R.x1, U2G * R.y1, U2G * R.x2, U2G * R.y2);
-						t += s;			
+						t += s;
 					}
 				}
 				B.polygons(PO) {
@@ -634,7 +634,7 @@ string Keepout_d(void) {
 						}
 						t += "))\n";
 					}
-				}	
+				}
 			}
 		}
 		B.holes(H) {
@@ -652,7 +652,7 @@ string Via_d(void) {
 		sprintf(V_name[Vnum], "\"ViaDefault$%f\"", default_drill_size);
 	}
 	for (int i = 1; i<=Vnum; i++) t += T3 + V_name[i] + "\n";
-	t += T2 + ")\n"; 
+	t += T2 + ")\n";
 	t += T2 + "(control\n" + T3 + "(via_at_smd on)\n";
 	return t + T2 + ")\n";
 }
@@ -660,7 +660,7 @@ string Via_d(void) {
 string print_cl(real cl_val, string cl_type) {
 // Used in rule descriptor
 	string t;
-	if (cl_val > 0 && cl_val != default_clearance) sprintf(t, "    (rule (clearance %f (type %s)))\n", cl_val, cl_type); 
+	if (cl_val > 0 && cl_val != default_clearance) sprintf(t, "    (rule (clearance %f (type %s)))\n", cl_val, cl_type);
 	return t;
 }
 
@@ -673,11 +673,11 @@ string Rule_d(void) {
 	t += print_cl(clearance_wire_pad, "wire_pin");
 	t += print_cl(clearance_wire_smd, "wire_smd");
 	t += print_cl(clearance_wire_via, "wire_via");
-	t += print_cl(clearance_pad_pad, "pin_pin"); 
+	t += print_cl(clearance_pad_pad, "pin_pin");
 	t += print_cl(clearance_pad_via, "pin_via");
 	t += print_cl(clearance_via_via, "via_via");
 	t += print_cl(clearance_smd_pad, "smd_pin");
-	t += print_cl(clearance_smd_via, "smd_via"); 
+	t += print_cl(clearance_smd_via, "smd_via");
 	t += print_cl(clearance_smd_smd, "smd_smd");
 	t += print_cl(dim_clearance, "area_wire");
 	t += print_cl(dim_clearance, "area_via");
@@ -801,11 +801,11 @@ string Padstack_d() {
 // SPECCTRA padstack descriptor, updated 30-12-13 to list one padstack layer for single layer boards
 	string s, t, pmem[], vmem[], last_line = T3 + "(attach off)\n" + T2 + ")\n";
 	real top_dia, inner_dia, bottom_dia, dia, x, y, drill, elong, rotate; int i, j, offset;
-	
+
 	// create the default padstack
 	sprintf(s, T2 + "(padstack \"ViaDefault$%f\"\n", default_drill_size); t += s;
 	t += W_Circle("signal", default_via_size) + last_line;
-	
+
 	// Create the via defined pad descriptors
 		for (i=1; i <= Vnum; i++) {
 			strsplit(vmem, V_list[i],':'); //extract via data members from the via list
@@ -821,11 +821,11 @@ string Padstack_d() {
 					if (strstr(V_name[i], "Square")>=0)  t += W_Rect(L_names[j], dia, dia, 0);
 					if (strstr(V_name[i], "Octagon")>=0)  t += W_Octagon(L_names[j], dia, 0);
 				}
-				else t += W_Circle(L_names[j], inner_dia); //inner layer via parts are round 
+				else t += W_Circle(L_names[j], inner_dia); //inner layer via parts are round
 			}
 			t += last_line;
 		} // all pad_vias are written
-		
+
 	// process pads obtained with the 'read_board_pads_and_vias()' module.
 	i = 1; // process smd pads
 	while (i<=Snum) {
@@ -834,7 +834,7 @@ string Padstack_d() {
 		string lname = LN2name(strtol(pmem[3])); int rdness = strtol(pmem[0]);
 		sprintf(s, T2 + "(padstack %s\n", S_name[i]); t += s; // write pad name
 		t += W_SMDpad(lname, x, y, rotate, rdness);
-		t += last_line; i++; 
+		t += last_line; i++;
 	}
 	i = 1; // process thru hole pads
 	while (i<=Pnum) {
@@ -850,7 +850,7 @@ string Padstack_d() {
 			inner_layers += W_Circle(L_names[j], dia);
 			j++;
 		}
-		// generate the top and bottom layer descriptors			
+		// generate the top and bottom layer descriptors
 		sprintf(s, T2 + "(padstack %s\n", P_name[i]); t += s; // write pad name
 		switch(strtol(pmem[0])) {
 			case PAD_SHAPE_SQUARE:
@@ -876,7 +876,7 @@ string Padstack_d() {
 	}
 	return t;
 }
-			
+
 string Network_d() {
 // SPECCTRA network descriptor 28-12-12
 	int i, j, net_class_number[];
@@ -920,7 +920,7 @@ string Network_d() {
 string Wiring_d() {
 // SPECCTRA wiring descriptor
 	string Vname, s, t = T1 + "(wiring\n"; int protect;
-	board(B) {		         
+	board(B) {
 		B.signals(N) {
 			N.wires(W) {
 				if ((W.layer >= 1) && (W.layer <= 16)) {
@@ -929,7 +929,7 @@ string Wiring_d() {
 				t += write_wire_shape(s, ") \n", false);
 				sprintf(s, "      (net \"%s\")", N.name); t += s;
 				protect = max(strstr(wire_protect + ",", N.name + ","), strstr(wire_protect, "*"));
-				if (protect>=0 || (W.style == WIRE_STYLE_SHORTDASH)) t += " (type protect)"; t += "\n    )\n"; 
+				if (protect>=0 || (W.style == WIRE_STYLE_SHORTDASH)) t += " (type protect)"; t += "\n    )\n";
 				}
 			}
       		N.polygons(P) {
@@ -960,8 +960,8 @@ string Wiring_d() {
 				t += s;
 				protect = max(strstr(via_protect + ",", N.name + ","), strstr(via_protect, "*"));
 				// add here the alternative polygon check on a special via layer
-				if (protect>=0) t += " (type protect)"; t += "\n" + T2 + ")\n"; 
-			}	    
+				if (protect>=0) t += " (type protect)"; t += "\n" + T2 + ")\n";
+			}
 		}
 	}
 	return t + "  )\n";

@@ -16,7 +16,7 @@ public class RulesFileSettings implements SettingsSource {
 
     /**
      * Creates a RulesFileSettings source from a RULES file.
-     * 
+     *
      * @param fileName Name of the RULES file (for logging)
      */
     public RulesFileSettings(String fileName) {

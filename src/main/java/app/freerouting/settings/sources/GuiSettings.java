@@ -36,7 +36,7 @@ public class GuiSettings implements SettingsSource {
 
     /**
      * Creates a GuiSettings source with the specified settings.
-     * 
+     *
      * @param settings Router settings from the GUI (should have only modified
      *                 fields non-null)
      */
