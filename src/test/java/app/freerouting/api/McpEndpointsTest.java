@@ -1,5 +1,10 @@
 package app.freerouting.api;
 
+import static app.freerouting.api.EmbeddedServerTestSupport.HTTP_TIMEOUT;
+import static app.freerouting.api.EmbeddedServerTestSupport.stopServerGracefully;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForApiServerReady;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForMcpServerReady;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForServerStarted;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,7 +24,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
@@ -29,7 +33,6 @@ import org.junit.jupiter.api.Test;
 class McpEndpointsTest {
 
   private static final String TEST_USER_ID = "00000000-0000-0000-0000-000000000001";
-  private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(30);
 
   private Server apiServer;
   private Server mcpServer;
@@ -71,6 +74,8 @@ class McpEndpointsTest {
 
     mcpBaseUri = URI.create("http://127.0.0.1:" + mcpPort);
     httpClient = HttpClient.newHttpClient();
+    waitForApiServerReady(URI.create("http://127.0.0.1:" + apiPort));
+    waitForMcpServerReady(mcpBaseUri);
   }
 
   @AfterEach
@@ -432,15 +437,6 @@ class McpEndpointsTest {
         .build();
   }
 
-  private static void stopServerGracefully(Server server) throws Exception {
-    if (server.isStopped()) {
-      return;
-    }
-    server.setStopTimeout(15_000);
-    server.stop();
-    waitForServerStopped(server, 15_000);
-  }
-
   private static boolean containsTool(JsonArray tools, String toolName) {
     for (int i = 0; i < tools.size(); i++) {
       JsonObject item = tools.get(i).getAsJsonObject();
@@ -449,26 +445,5 @@ class McpEndpointsTest {
       }
     }
     return false;
-  }
-
-  private static void waitForServerStarted(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 30_000;
-    while (!server.isStarted()) {
-      if (server.isFailed() || System.currentTimeMillis() > deadline) {
-        throw new IllegalStateException("Server failed to start in time");
-      }
-      Thread.sleep(50);
-    }
-  }
-
-  private static void waitForServerStopped(Server server) throws InterruptedException {
-    waitForServerStopped(server, 5_000);
-  }
-
-  private static void waitForServerStopped(Server server, long timeoutMs) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + timeoutMs;
-    while (!server.isStopped() && System.currentTimeMillis() < deadline) {
-      Thread.sleep(50);
-    }
   }
 }

@@ -1,8 +1,11 @@
 package app.freerouting.api;
 
+import static app.freerouting.api.EmbeddedServerTestSupport.HTTP_TIMEOUT;
+import static app.freerouting.api.EmbeddedServerTestSupport.stopServerGracefully;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForMcpServerReady;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForServerStarted;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
 import app.freerouting.api.mcp.McpApiKeyValidationService;
@@ -27,10 +30,7 @@ class McpWebSocketEndpointTest {
 
   @AfterEach
   void tearDown() throws Exception {
-    if (mcpServer != null) {
-      mcpServer.stop();
-      waitForServerStopped(mcpServer);
-    }
+    stopServerGracefully(mcpServer);
     McpApiKeyValidationService.resetForTesting();
   }
 
@@ -42,13 +42,13 @@ class McpWebSocketEndpointTest {
     WebSocket webSocket = HttpClient.newHttpClient().newWebSocketBuilder()
         .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
         .header("Freerouting-Environment-Host", "TestClient/1.0")
-        .connectTimeout(Duration.ofSeconds(5))
+        .connectTimeout(HTTP_TIMEOUT)
         .buildAsync(wsUri, listener)
         .join();
 
     webSocket.sendText("hello", true).join();
 
-    String response = waitForMessageContaining(listener.messages, "Use POST /v1/mcp", 5);
+    String response = waitForMessageContaining(listener.messages, "Use POST /v1/mcp", 30);
     assertNotNull(response, "WebSocket should return MCP JSON-RPC usage hint");
 
     webSocket.sendClose(WebSocket.NORMAL_CLOSURE, "done").join();
@@ -61,11 +61,11 @@ class McpWebSocketEndpointTest {
     TestWebSocketListener listener = new TestWebSocketListener();
     HttpClient.newHttpClient().newWebSocketBuilder()
         .header("Freerouting-Environment-Host", "TestClient/1.0")
-        .connectTimeout(Duration.ofSeconds(5))
+        .connectTimeout(HTTP_TIMEOUT)
         .buildAsync(wsUri, listener)
         .join();
 
-    Integer status = listener.closeStatus.get(5, TimeUnit.SECONDS);
+    Integer status = listener.closeStatus.get(30, TimeUnit.SECONDS);
     assertEquals(1008, status.intValue());
   }
 
@@ -76,11 +76,11 @@ class McpWebSocketEndpointTest {
     TestWebSocketListener listener = new TestWebSocketListener();
     HttpClient.newHttpClient().newWebSocketBuilder()
         .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
-        .connectTimeout(Duration.ofSeconds(5))
+        .connectTimeout(HTTP_TIMEOUT)
         .buildAsync(wsUri, listener)
         .join();
 
-    Integer status = listener.closeStatus.get(5, TimeUnit.SECONDS);
+    Integer status = listener.closeStatus.get(30, TimeUnit.SECONDS);
     assertEquals(1008, status.intValue());
   }
 
@@ -92,11 +92,11 @@ class McpWebSocketEndpointTest {
     HttpClient.newHttpClient().newWebSocketBuilder()
         .header("Freerouting-Profile-ID", "00000000-0000-0000-0000-000000000001")
         .header("Freerouting-Environment-Host", "TestClient/1.0")
-        .connectTimeout(Duration.ofSeconds(5))
+        .connectTimeout(HTTP_TIMEOUT)
         .buildAsync(wsUri, listener)
         .join();
 
-    Integer status = listener.closeStatus.get(5, TimeUnit.SECONDS);
+    Integer status = listener.closeStatus.get(30, TimeUnit.SECONDS);
     assertEquals(1008, status.intValue());
   }
 
@@ -115,6 +115,7 @@ class McpWebSocketEndpointTest {
     mcpServer = Freerouting.InitializeMCP(mcpSettings);
     waitForServerStarted(mcpServer);
     int mcpPort = ((ServerConnector) mcpServer.getConnectors()[0]).getLocalPort();
+    waitForMcpServerReady(URI.create("http://127.0.0.1:" + mcpPort));
     return URI.create("ws://127.0.0.1:" + mcpPort + "/v1/mcp/ws");
   }
 
@@ -130,23 +131,6 @@ class McpWebSocketEndpointTest {
       }
     }
     return null;
-  }
-
-  private static void waitForServerStarted(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 30_000;
-    while (!server.isStarted()) {
-      if (server.isFailed() || System.currentTimeMillis() > deadline) {
-        throw new IllegalStateException("Server failed to start in time");
-      }
-      Thread.sleep(50);
-    }
-  }
-
-  private static void waitForServerStopped(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 5_000;
-    while (!server.isStopped() && System.currentTimeMillis() < deadline) {
-      Thread.sleep(50);
-    }
   }
 
   private static final class TestWebSocketListener implements WebSocket.Listener {

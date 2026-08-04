@@ -1,8 +1,11 @@
 package app.freerouting.api;
 
+import static app.freerouting.api.EmbeddedServerTestSupport.HTTP_TIMEOUT;
+import static app.freerouting.api.EmbeddedServerTestSupport.stopServerGracefully;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForApiServerReady;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForServerStarted;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
 import app.freerouting.settings.ApiServerSettings;
@@ -11,7 +14,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
@@ -22,26 +24,6 @@ class CorsHandlerTest {
 
   private Server server;
   private URI baseUri;
-
-  private static void waitForServerStarted(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 5000;
-    while (!server.isStarted()) {
-      if (System.currentTimeMillis() > deadline) {
-        fail("Server did not start in time");
-      }
-      Thread.sleep(50);
-    }
-  }
-
-  private static void waitForServerStopped(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 5000;
-    while (!server.isStopped()) {
-      if (System.currentTimeMillis() > deadline) {
-        return;
-      }
-      Thread.sleep(50);
-    }
-  }
 
   @BeforeEach
   void setUp() throws Exception {
@@ -58,14 +40,12 @@ class CorsHandlerTest {
 
     int port = ((ServerConnector) server.getConnectors()[0]).getLocalPort();
     baseUri = URI.create("http://127.0.0.1:" + port);
+    waitForApiServerReady(baseUri);
   }
 
   @AfterEach
   void tearDown() throws Exception {
-    if (server != null) {
-      server.stop();
-      waitForServerStopped(server);
-    }
+    stopServerGracefully(server);
   }
 
   @Test
@@ -76,7 +56,7 @@ class CorsHandlerTest {
         .method("OPTIONS", HttpRequest.BodyPublishers.noBody())
         .header("Origin", "http://example.com")
         .header("Access-Control-Request-Method", "GET")
-        .timeout(Duration.ofSeconds(5))
+        .timeout(HTTP_TIMEOUT)
         .build();
 
     HttpResponse<Void> v1Response = client.send(v1Preflight, HttpResponse.BodyHandlers.discarding());
@@ -89,7 +69,7 @@ class CorsHandlerTest {
         .method("OPTIONS", HttpRequest.BodyPublishers.noBody())
         .header("Origin", "http://example.com")
         .header("Access-Control-Request-Method", "GET")
-        .timeout(Duration.ofSeconds(5))
+        .timeout(HTTP_TIMEOUT)
         .build();
 
     HttpResponse<Void> nonApiResponse = client.send(nonApiPreflight, HttpResponse.BodyHandlers.discarding());
@@ -106,7 +86,7 @@ class CorsHandlerTest {
         .header("Origin", "http://example.com")
         .header("Access-Control-Request-Method", "GET")
         .header("Access-Control-Request-Headers", "Freerouting-Profile-ID,Freerouting-Environment-Host,Freerouting-Profile-Email")
-        .timeout(Duration.ofSeconds(5))
+        .timeout(HTTP_TIMEOUT)
         .build();
 
     HttpResponse<Void> response = client.send(preflight, HttpResponse.BodyHandlers.discarding());

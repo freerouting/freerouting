@@ -1,8 +1,11 @@
 package app.freerouting.api;
 
+import static app.freerouting.api.EmbeddedServerTestSupport.HTTP_TIMEOUT;
+import static app.freerouting.api.EmbeddedServerTestSupport.stopServerGracefully;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForApiServerReady;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForServerStarted;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
 import app.freerouting.api.security.ApiKeyValidationService;
@@ -12,7 +15,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
@@ -44,14 +46,12 @@ class OpenApiMcpVisibilityTest {
     int port = ((ServerConnector) apiServer.getConnectors()[0]).getLocalPort();
     baseUri = URI.create("http://127.0.0.1:" + port);
     httpClient = HttpClient.newHttpClient();
+    waitForApiServerReady(baseUri);
   }
 
   @AfterEach
   void tearDown() throws Exception {
-    if (apiServer != null) {
-      apiServer.stop();
-      waitForServerStopped(apiServer);
-    }
+    stopServerGracefully(apiServer);
     ApiKeyValidationService.resetForTesting();
   }
 
@@ -59,34 +59,18 @@ class OpenApiMcpVisibilityTest {
   void openApiJson_includesMcpAndAgentCardPaths() throws Exception {
     HttpRequest request = HttpRequest.newBuilder(baseUri.resolve("/openapi/openapi.json"))
         .GET()
-        .timeout(Duration.ofSeconds(10))
+        .timeout(HTTP_TIMEOUT)
         .build();
 
     HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-    assertEquals(200, response.statusCode());
+    assertEquals(200, response.statusCode(), () -> "Unexpected OpenAPI response: " + response.body());
 
     String body = response.body();
-    assertTrue(body.contains("\"/v1/mcp\""), "OpenAPI should include MCP JSON-RPC path");
-    assertTrue(body.contains("\"/.well-known/agent.json\""), "OpenAPI should include A2A agent-card path");
-  }
-
-  private static void waitForServerStarted(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 30_000;
-    while (!server.isStarted()) {
-      if (server.isFailed()) {
-        fail("API server failed to start");
-      }
-      if (System.currentTimeMillis() > deadline) {
-        fail("API server did not start in time");
-      }
-      Thread.sleep(50);
-    }
-  }
-
-  private static void waitForServerStopped(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 5_000;
-    while (!server.isStopped() && System.currentTimeMillis() < deadline) {
-      Thread.sleep(50);
-    }
+    assertTrue(body.contains("\"/v1/mcp\""),
+        () -> "OpenAPI should include MCP JSON-RPC path; body starts with: "
+            + body.substring(0, Math.min(body.length(), 300)));
+    assertTrue(body.contains("\"/.well-known/agent.json\""),
+        () -> "OpenAPI should include A2A agent-card path; body starts with: "
+            + body.substring(0, Math.min(body.length(), 300)));
   }
 }

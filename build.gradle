@@ -450,6 +450,16 @@ tasks.register('installLocalGitHook', Copy) {
 }
 
 tasks.withType(Test).configureEach {
+    // Gradle 9.3+ writes transient binary results (in-progress-results-generic.bin).
+    // Leftover files from an interrupted run can make the :test task fail with
+    // NoSuchFileException even when the tests themselves would pass.
+    doFirst {
+        def binaryDir = binaryResultsDirectory.get().asFile
+        if (binaryDir.exists()) {
+            binaryDir.deleteDir()
+        }
+    }
+
     def failedTests = []
 
     afterTest { descriptor, result ->

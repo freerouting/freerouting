@@ -1,7 +1,9 @@
 package app.freerouting.api;
 
+import static app.freerouting.api.EmbeddedServerTestSupport.HTTP_TIMEOUT;
+import static app.freerouting.api.EmbeddedServerTestSupport.stopServerGracefully;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForServerStarted;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
 import app.freerouting.api.security.ApiKeyValidationService;
@@ -11,7 +13,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
@@ -50,10 +51,7 @@ class ApiRateLimitFilterTest {
 
   @AfterEach
   void tearDown() throws Exception {
-    if (apiServer != null) {
-      apiServer.stop();
-      waitForServerStopped(apiServer);
-    }
+    stopServerGracefully(apiServer);
     ApiKeyValidationService.resetForTesting();
   }
 
@@ -61,7 +59,7 @@ class ApiRateLimitFilterTest {
   void apiRateLimit_blocksAfterConfiguredThreshold() throws Exception {
     HttpRequest req = HttpRequest.newBuilder(baseUri.resolve("/v1/system/status"))
         .GET()
-        .timeout(Duration.ofSeconds(10))
+        .timeout(HTTP_TIMEOUT)
         .build();
 
     HttpResponse<String> r1 = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
@@ -71,25 +69,5 @@ class ApiRateLimitFilterTest {
     assertEquals(200, r1.statusCode());
     assertEquals(200, r2.statusCode());
     assertEquals(429, r3.statusCode());
-  }
-
-  private static void waitForServerStarted(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 30_000;
-    while (!server.isStarted()) {
-      if (server.isFailed()) {
-        fail("API server failed to start");
-      }
-      if (System.currentTimeMillis() > deadline) {
-        fail("API server did not start in time");
-      }
-      Thread.sleep(50);
-    }
-  }
-
-  private static void waitForServerStopped(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 5_000;
-    while (!server.isStopped() && System.currentTimeMillis() < deadline) {
-      Thread.sleep(50);
-    }
   }
 }

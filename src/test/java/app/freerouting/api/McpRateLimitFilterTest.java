@@ -1,7 +1,10 @@
 package app.freerouting.api;
 
+import static app.freerouting.api.EmbeddedServerTestSupport.HTTP_TIMEOUT;
+import static app.freerouting.api.EmbeddedServerTestSupport.stopServerGracefully;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForMcpServerReady;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForServerStarted;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
 import app.freerouting.api.mcp.McpApiKeyValidationService;
@@ -12,7 +15,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
@@ -49,14 +51,12 @@ class McpRateLimitFilterTest {
     int mcpPort = ((ServerConnector) mcpServer.getConnectors()[0]).getLocalPort();
     mcpBaseUri = URI.create("http://127.0.0.1:" + mcpPort);
     httpClient = HttpClient.newHttpClient();
+    waitForMcpServerReady(mcpBaseUri);
   }
 
   @AfterEach
   void tearDown() throws Exception {
-    if (mcpServer != null) {
-      mcpServer.stop();
-      waitForServerStopped(mcpServer);
-    }
+    stopServerGracefully(mcpServer);
     McpApiKeyValidationService.resetForTesting();
   }
 
@@ -79,30 +79,10 @@ class McpRateLimitFilterTest {
   private HttpRequest authenticatedRequest(JsonObject body) {
     return HttpRequest.newBuilder(mcpBaseUri.resolve("/v1/mcp"))
         .POST(HttpRequest.BodyPublishers.ofString(body.toString()))
-        .timeout(Duration.ofSeconds(10))
+        .timeout(HTTP_TIMEOUT)
         .header("Content-Type", "application/json")
         .header("Freerouting-Profile-ID", TEST_USER_ID)
         .header("Freerouting-Environment-Host", "test/1.0")
         .build();
-  }
-
-  private static void waitForServerStarted(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 30_000;
-    while (!server.isStarted()) {
-      if (server.isFailed()) {
-        fail("MCP server failed to start");
-      }
-      if (System.currentTimeMillis() > deadline) {
-        fail("MCP server did not start in time");
-      }
-      Thread.sleep(50);
-    }
-  }
-
-  private static void waitForServerStopped(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 5_000;
-    while (!server.isStopped() && System.currentTimeMillis() < deadline) {
-      Thread.sleep(50);
-    }
   }
 }

@@ -1,8 +1,10 @@
 package app.freerouting.api;
 
+import static app.freerouting.api.EmbeddedServerTestSupport.stopServerGracefully;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForApiServerReady;
+import static app.freerouting.api.EmbeddedServerTestSupport.waitForServerStarted;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
 import app.freerouting.api.security.ApiKeyValidationService;
@@ -73,30 +75,17 @@ class ApiRoutingTest {
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
 
     server = Freerouting.InitializeAPI(settings);
-
-    // Jetty + Jersey cold-start can take >5 s on GitHub Actions shared runners.
-// 30 s gives enough headroom without making failures wait too long.
-    long deadline = System.currentTimeMillis() + 30_000;
-    while (!server.isStarted()) {
-      if (server.isFailed()) {
-        fail("API server failed to start (Jetty lifecycle state: FAILED)");
-      }
-      if (System.currentTimeMillis() > deadline) {
-        fail("API server did not start within 30 seconds");
-      }
-      Thread.sleep(50);
-    }
+    waitForServerStarted(server);
 
     int port = ((ServerConnector) server.getConnectors()[0]).getLocalPort();
     baseUri = URI.create("http://127.0.0.1:" + port);
     httpClient = HttpClient.newHttpClient();
+    waitForApiServerReady(baseUri);
   }
 
   @AfterEach
   void tearDown() throws Exception {
-    if (server != null) {
-      server.stop();
-    }
+    stopServerGracefully(server);
     ApiKeyValidationService.resetForTesting();
   }
 
