@@ -171,6 +171,7 @@ One `{locale}.json` exists for every shipped UI locale. `validate.py` fails if a
 | Spanish | `es.json` |
 | French | `fr.json` |
 | Hindi | `hi.json` |
+| Italian | `it.json` |
 | Japanese | `ja.json` |
 | Korean | `ko.json` |
 | Portuguese | `pt.json` |
@@ -184,6 +185,6 @@ Terms were mined from `*_en.properties` and Java UI strings (autorouter, net cla
 
 **Source:** `en` (English `*_en.properties`)
 
-**Translation targets:** `ar`, `bn`, `de`, `es`, `fr`, `hi`, `ja`, `ko`, `pt`, `ru`, `zh`, `zh_tw`
+**Translation targets:** `ar`, `bn`, `de`, `es`, `fr`, `hi`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`, `zh_tw`
 
 See also [docs/developer.md](../../docs/developer.md#translations-i18n).

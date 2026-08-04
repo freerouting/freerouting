@@ -29,6 +29,21 @@ class TextManagerFallbackTest {
   }
 
   @Test
+  void resolvesItalianTranslationsFromLocaleBundle() {
+    TextManager italian = new TextManager(BoardFrame.class, Locale.forLanguageTag("it-IT"));
+
+    assertEquals("annulla (Esc)", italian.getText("cancel"));
+  }
+
+  @Test
+  void fallsBackToEnglishCommonBundleWhenItalianKeyMissing() {
+    TextManager english = new TextManager(BoardFrame.class, Locale.forLanguageTag("en"));
+    TextManager italian = new TextManager(BoardFrame.class, Locale.forLanguageTag("it-IT"));
+
+    assertEquals(english.getText("net_hover_info"), italian.getText("net_hover_info"));
+  }
+
+  @Test
   void fallsBackToEnglishCommonBundleWhenLocaleKeyMissing() {
     TextManager english = new TextManager(BoardFrame.class, Locale.forLanguageTag("en"));
     TextManager arabic = new TextManager(BoardFrame.class, Locale.forLanguageTag("ar"));

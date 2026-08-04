@@ -10,7 +10,7 @@ GLOSSARY_DIR = Path("scripts/i18n/glossary")
 
 # All shipped UI locales, including English source (en uses _default + en.json).
 GLOSSARY_LOCALES = [
-    "ar", "bn", "de", "en", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh", "zh_tw",
+    "ar", "bn", "de", "en", "es", "fr", "hi", "it", "ja", "ko", "pt", "ru", "zh", "zh_tw",
 ]
 
 
