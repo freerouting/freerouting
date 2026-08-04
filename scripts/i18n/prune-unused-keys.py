@@ -55,6 +55,9 @@ SAFE_UNUSED_KEYS: dict[str, set[str]] = {
         "list_empty_message", "maximum_allowed", "minimum_allowed", "net_count",
         "net_explanation", "title", "unknown",
     },
+    "app.freerouting.interactive.InteractiveState": {
+        "batch_autorouter", "batch_optimizer", "stop_message",
+    },
 }
 
 

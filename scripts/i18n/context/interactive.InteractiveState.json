@@ -111,9 +111,7 @@
   },
   "autoroute": {
     "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.AutorouterAndRouteOptimizerThread"
-    ],
+    "code_references": [],
     "english_hash": "bf9ff1c98768e31ea2aaa4a56e0812fd6bc9838f144b1670dd4edcc1b4ba1795",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -124,6 +122,28 @@
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
+  },
+  "autoroute_end_message": {
+    "bundle_desc": "interactive routing session",
+    "code_references": [
+      "app.freerouting.interactive.AutorouterAndRouteOptimizerThread"
+    ],
+    "english_hash": "175d5cd363a45850bbd255216d414e314da39b93cce57b1dc35a3dc8df591b89",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{incomplete_count}}",
+      "{{status}}"
+    ],
+    "related_keys": [
+      "autoroute",
+      "autorouter_started"
+    ],
+    "ui_role": "message"
   },
   "autorouter_started": {
     "bundle_desc": "interactive routing session",
@@ -143,13 +163,13 @@
     "related_keys": [],
     "ui_role": "label"
   },
-  "batch_autorouter": {
+  "batch_autorouter_start_message": {
     "bundle_desc": "interactive routing session",
     "code_references": [
       "app.freerouting.interactive.AutorouterAndRouteOptimizerThread"
     ],
-    "english_hash": "f753726e29c3e27981e38ce83944e9aed74ddd96bdf258e61a34a8ec8da98a9c",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "bf82f106e163e1277c98d80d4d368bc8a696e009cd5da6f087782a0f30e5553a",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
@@ -157,17 +177,17 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "batch_optimizer"
+      "batch_optimizer_start_message"
     ],
-    "ui_role": "label"
+    "ui_role": "message"
   },
-  "batch_optimizer": {
+  "batch_optimizer_start_message": {
     "bundle_desc": "interactive routing session",
     "code_references": [
       "app.freerouting.interactive.AutorouterAndRouteOptimizerThread"
     ],
-    "english_hash": "2ee6172f87895409b49718cbd5a63364e6f5f9b309cb54c4a2716625882b983c",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "206445ab8a0e7fad555b822fc1f8abcd15151e9d880cbc1d8a8bd3e4f3bed075",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
@@ -175,9 +195,9 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "batch_autorouter"
+      "batch_autorouter_start_message"
     ],
-    "ui_role": "label"
+    "ui_role": "message"
   },
   "cannot_change_placement_side": {
     "bundle_desc": "interactive routing session",
@@ -263,9 +283,7 @@
   },
   "connections_not_found": {
     "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.AutorouterAndRouteOptimizerThread"
-    ],
+    "code_references": [],
     "english_hash": "2e336977ff2175ad13fd29d0f6be510fc7ca5e9ba7653ea6e2559744f1b47a2a",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -790,9 +808,7 @@
   },
   "optimization": {
     "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.AutorouterAndRouteOptimizerThread"
-    ],
+    "code_references": [],
     "english_hash": "72244ea575fa305ddd200ad4d9137fdcec07faf4a71ac44239d3df448ae82c50",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -803,6 +819,26 @@
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
+  },
+  "optimization_end_message": {
+    "bundle_desc": "interactive routing session",
+    "code_references": [
+      "app.freerouting.interactive.AutorouterAndRouteOptimizerThread"
+    ],
+    "english_hash": "30e39af15e875ea2f2cfa75b1cdf44556c6ea42daa29450de800e7d3b6779308",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{status}}"
+    ],
+    "related_keys": [
+      "optimization"
+    ],
+    "ui_role": "message"
   },
   "optimizer_started": {
     "bundle_desc": "interactive routing session",
@@ -1086,22 +1122,6 @@
       "some_items_cannot_be_moved_because_they_are_fixed"
     ],
     "ui_role": "label"
-  },
-  "stop_message": {
-    "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.AutorouterAndRouteOptimizerThread"
-    ],
-    "english_hash": "51c0d905c104bbd2f77c7c7017f45d3bef98670c86f7fd4d971c519c45271812",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.interactive.InteractiveState",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "message"
   },
   "unable_to_reset_components_with_different_rotations": {
     "bundle_desc": "interactive routing session",

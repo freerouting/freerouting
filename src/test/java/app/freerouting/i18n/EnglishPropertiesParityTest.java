@@ -58,6 +58,8 @@ class EnglishPropertiesParityTest {
       "(?:TextManager\\s+)?([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*new\\s+TextManager\\s*\\(\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
   private static final Pattern THIS_TM_ASSIGN_PATTERN = Pattern.compile(
       "this\\.tm\\s*=\\s*new\\s+TextManager\\s*\\(\\s*([A-Za-z_][A-Za-z0-9_$.]*)\\.class");
+  private static final Pattern THIS_TM_GET_CLASS_ASSIGN_PATTERN = Pattern.compile(
+      "this\\.tm\\s*=\\s*new\\s+TextManager\\s*\\(\\s*(?:this\\.)?getClass\\s*\\(");
   private static final Pattern IMPORT_PATTERN = Pattern.compile("^import\\s+(?:static\\s+)?([\\w.]+);\\s*$", Pattern.MULTILINE);
   private static final Pattern STATIC_STRING_ARRAY_PATTERN = Pattern.compile(
       "private\\s+static\\s+final\\s+String\\[\\]\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*=\\s*\\{([^}]+)\\}");
@@ -422,6 +424,10 @@ class EnglishPropertiesParityTest {
     Matcher thisTmMatcher = THIS_TM_ASSIGN_PATTERN.matcher(source);
     while (thisTmMatcher.find()) {
       variableToBundle.put("tm", resolveClassName(currentPackageName, thisTmMatcher.group(1), imports));
+    }
+
+    if (THIS_TM_GET_CLASS_ASSIGN_PATTERN.matcher(source).find()) {
+      variableToBundle.put("tm", currentClassName);
     }
 
     if (source.contains("protected final TextManager tm")

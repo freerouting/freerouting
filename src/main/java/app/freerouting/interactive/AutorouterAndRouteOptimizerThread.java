@@ -503,7 +503,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       globalSettings.statistics.incrementJobsCompleted();
       FRAnalytics.autorouterStarted();
 
-      String start_message = tm.getText("batch_autorouter") + " " + tm.getText("stop_message");
+      String start_message = tm.getText("batch_autorouter_start_message");
       boardManager.screen_messages.set_status_message(start_message);
 
       // Let's run the autorouter
@@ -602,7 +602,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         FRAnalytics.routeOptimizerStarted();
 
         if (routingJob.routerSettings.getRunOptimizer() && !this.isStopRequested()) {
-          String opt_message = tm.getText("batch_optimizer") + " " + tm.getText("stop_message");
+          String opt_message = tm.getText("batch_optimizer_start_message");
           boardManager.screen_messages.set_status_message(opt_message);
           this.batchOptimizer.runBatchLoop();
           String curr_message;
@@ -611,7 +611,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
           } else {
             curr_message = tm.getText("completed");
           }
-          String end_message = tm.getText("optimization") + " " + curr_message;
+          String end_message = tm.getText("optimization_end_message", curr_message);
           boardManager.screen_messages.set_status_message(end_message);
         }
 
@@ -666,8 +666,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       int incomplete_count = boardManager
           .get_ratsnest()
           .incomplete_count();
-      String end_message = tm.getText("autoroute") + " " + curr_message + ", " + incomplete_count + " "
-          + tm.getText("connections_not_found");
+      String end_message = tm.getText("autoroute_end_message", curr_message, Integer.toString(incomplete_count));
       boardManager.screen_messages.set_status_message(end_message);
 
       // Refresh the windows
