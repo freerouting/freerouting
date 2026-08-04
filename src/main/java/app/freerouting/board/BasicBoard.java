@@ -1377,8 +1377,10 @@ public class BasicBoard implements Serializable {
       }
     }
 
-    FRLogger.trace(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
-        selectedLayerName, dominantSide, renderingOrderNames));
+    if (FRLogger.isTraceEnabled()) {
+      FRLogger.trace(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
+          selectedLayerName, dominantSide, renderingOrderNames));
+    }
 
     long drawStart = System.nanoTime();
 
@@ -1536,24 +1538,26 @@ public class BasicBoard implements Serializable {
     long endText = System.nanoTime();
 
     long drawEnd = System.nanoTime();
-    FRLogger.debug(String.format(
-        "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms, loop=%.2f ms (culled: %d), texts=%.2f ms] (items: %d)",
-        (drawEnd - drawStart) / 1_000_000.0,
-        (endCollect - startCollect) / 1_000_000.0,
-        (endGroup - startGroup) / 1_000_000.0,
-        (endLoop - startLoop) / 1_000_000.0,
-        culledCount,
-        (endText - startText) / 1_000_000.0,
-        allItems.size()
-    ));
-    FRLogger.debug(String.format(
-        "  - Item drawing times: Trace=%.2f ms (%d), Via=%.2f ms (%d), Pin=%.2f ms (%d), Plane=%.2f ms (%d), Other=%.2f ms (%d)",
-        timeTrace / 1_000_000.0, countTrace,
-        timeVia / 1_000_000.0, countVia,
-        timePin / 1_000_000.0, countPin,
-        timeConduction / 1_000_000.0, countConduction,
-        timeOther / 1_000_000.0, countOther
-    ));
+    if (FRLogger.getLogger().isDebugEnabled()) {
+      FRLogger.debug(String.format(
+          "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms, loop=%.2f ms (culled: %d), texts=%.2f ms] (items: %d)",
+          (drawEnd - drawStart) / 1_000_000.0,
+          (endCollect - startCollect) / 1_000_000.0,
+          (endGroup - startGroup) / 1_000_000.0,
+          (endLoop - startLoop) / 1_000_000.0,
+          culledCount,
+          (endText - startText) / 1_000_000.0,
+          allItems.size()
+      ));
+      FRLogger.debug(String.format(
+          "  - Item drawing times: Trace=%.2f ms (%d), Via=%.2f ms (%d), Pin=%.2f ms (%d), Plane=%.2f ms (%d), Other=%.2f ms (%d)",
+          timeTrace / 1_000_000.0, countTrace,
+          timeVia / 1_000_000.0, countVia,
+          timePin / 1_000_000.0, countPin,
+          timeConduction / 1_000_000.0, countConduction,
+          timeOther / 1_000_000.0, countOther
+      ));
+    }
   }
 
   /**

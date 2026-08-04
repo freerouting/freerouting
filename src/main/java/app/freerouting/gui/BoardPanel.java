@@ -357,6 +357,13 @@ public class BoardPanel extends JPanel {
       @Override
       public void mouseReleased(MouseEvent evt) {
         board_handling.button_released();
+        if (middle_drag_position != null) {
+          // Restore the detailed copper-pour rendering now that panning has ended.
+          if (board_handling != null && board_handling.graphics_context != null) {
+            board_handling.graphics_context.setSimplifiedPlaneRendering(false);
+          }
+          repaint();
+        }
         middle_drag_position = null;
       }
     });
@@ -470,6 +477,13 @@ public class BoardPanel extends JPanel {
       board_handling.mouse_pressed(evt.getPoint());
     } else if (evt.getButton() == 2 && middle_drag_position == null) {
       middle_drag_position = new Point(evt.getPoint());
+      // While panning, render copper pours as fast solid fills (same mechanism used
+      // for the first paint after load) so that the expensive per-frame clearance
+      // CSG / transformed-area fill is skipped during the drag. The detailed view
+      // is restored on mouse release.
+      if (board_handling != null && board_handling.graphics_context != null) {
+        board_handling.graphics_context.setSimplifiedPlaneRendering(true);
+      }
     }
   }
 
