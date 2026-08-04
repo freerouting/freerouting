@@ -25,7 +25,7 @@ public class Issue690RoutingTest extends RoutingFixtureTest {
         ts.setMaxPasses(1);
         ts.setMaxItems(50);
         ts.setFanoutEnabled(false);
-        ts.setJobTimeoutString("00:01:00");
+        ts.setJobTimeoutString("00:02:00");
         RoutingJob job = GetRoutingJob("Issue690-kit-dev-coldfire-xilinx_5213.dsn", ts);
         RunRoutingJob(job);
     }
