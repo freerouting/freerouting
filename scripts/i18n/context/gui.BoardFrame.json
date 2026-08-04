@@ -190,38 +190,6 @@
     ],
     "ui_role": "confirmation_dialog"
   },
-  "error_board_frame_write_failed": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
-    "english_hash": "6a25f0962874d939125478c3fa28deeebeaa7f37baca4968c0e26ffc7a385a54",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.BoardFrame",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "error_board_save_failed"
-    ],
-    "ui_role": "error_message"
-  },
-  "error_board_save_failed": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
-    "english_hash": "b83bf6840aa27cb7d010feb982f7392b43376cbbd2acdfbc99f84a965a4ff3f5",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.BoardFrame",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "error_board_frame_write_failed"
-    ],
-    "ui_role": "error_message"
-  },
   "error_design_file_read_failed": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
@@ -236,13 +204,9 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "error_board_frame_write_failed",
-      "error_board_save_failed",
       "error_dsn_outline_missing",
       "error_dsn_read_failed",
-      "error_gui_defaults_read_failed",
-      "error_no_write_permission",
-      "error_output_file_close_failed"
+      "error_gui_defaults_read_failed"
     ],
     "ui_role": "error_message"
   },
@@ -296,57 +260,9 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "error_board_frame_write_failed",
-      "error_board_save_failed",
       "error_design_file_read_failed",
       "error_dsn_outline_missing",
-      "error_dsn_read_failed",
-      "error_no_write_permission",
-      "error_output_file_close_failed"
-    ],
-    "ui_role": "error_message"
-  },
-  "error_no_write_permission": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
-    "english_hash": "3a83fa856336c7b12050f9d8e82928ba99a690b19788eb861c7ea02eebcce302",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.BoardFrame",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "error_board_frame_write_failed",
-      "error_board_save_failed",
-      "error_design_file_read_failed",
-      "error_dsn_outline_missing",
-      "error_dsn_read_failed",
-      "error_gui_defaults_read_failed",
-      "error_output_file_close_failed"
-    ],
-    "ui_role": "error_message"
-  },
-  "error_output_file_close_failed": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
-    "english_hash": "73ee77552a6002ccfe8ff3a384baa88c77d02b26ba0fb7924900caa9cb0ac0bb",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.BoardFrame",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "error_board_frame_write_failed",
-      "error_board_save_failed",
-      "error_design_file_read_failed",
-      "error_dsn_outline_missing",
-      "error_dsn_read_failed",
-      "error_gui_defaults_read_failed",
-      "error_no_write_permission"
+      "error_dsn_read_failed"
     ],
     "ui_role": "error_message"
   },
@@ -441,29 +357,6 @@
     ],
     "related_keys": [
       "message_eagle_save_failed"
-    ],
-    "ui_role": "message"
-  },
-  "message_gui_settings_save_failed": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
-    "english_hash": "8c3f3dd0ae57d7dfeb81696de4fe2bed581135750a80d09171d98282aec69ecf",
-    "grammatical_role": "full_sentence",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.BoardFrame",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "message_binary_file_save_failed",
-      "message_binary_file_saved",
-      "message_eagle_save_failed",
-      "message_eagle_saved",
-      "message_kicad_session_json_save_failed",
-      "message_kicad_session_json_saved",
-      "message_specctra_ses_save_failed",
-      "message_specctra_ses_saved"
     ],
     "ui_role": "message"
   },

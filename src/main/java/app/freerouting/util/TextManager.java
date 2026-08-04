@@ -16,6 +16,7 @@ import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
@@ -282,14 +283,8 @@ public class TextManager {
   }
 
   public String getText(String key, String... args) {
-    String text;
-    if ((classMessages != null) && (classMessages.containsKey(key))) {
-      text = classMessages.getString(key);
-    } else if ((defaultMessages != null) && (defaultMessages.containsKey(key))) {
-      text = defaultMessages.getString(key);
-    } else if ((englishClassMessages != null) && (englishClassMessages.containsKey(key))) {
-      text = englishClassMessages.getString(key);
-    } else {
+    String text = lookupMessage(key);
+    if (text == null) {
       return key;
     }
 
@@ -311,6 +306,47 @@ public class TextManager {
     }
 
     return text;
+  }
+
+  private String lookupMessage(String key) {
+    if ((classMessages != null) && classMessages.containsKey(key)) {
+      return classMessages.getString(key);
+    }
+
+    String parentMessage = lookupParentClassMessage(key);
+    if (parentMessage != null) {
+      return parentMessage;
+    }
+
+    if ((defaultMessages != null) && defaultMessages.containsKey(key)) {
+      return defaultMessages.getString(key);
+    }
+
+    if ((englishClassMessages != null) && englishClassMessages.containsKey(key)) {
+      return englishClassMessages.getString(key);
+    }
+
+    return null;
+  }
+
+  private String lookupParentClassMessage(String key) {
+    try {
+      Class<?> clazz = Class.forName(currentBaseName).getSuperclass();
+      while (clazz != null && clazz.getName().startsWith("app.freerouting")) {
+        try {
+          ResourceBundle parentBundle = ResourceBundle.getBundle(clazz.getName(), currentLocale);
+          if (parentBundle.containsKey(key)) {
+            return parentBundle.getString(key);
+          }
+        } catch (MissingResourceException _) {
+          // No bundle for this superclass; continue up the hierarchy.
+        }
+        clazz = clazz.getSuperclass();
+      }
+    } catch (ClassNotFoundException _) {
+      // currentBaseName is not a loadable class; skip parent lookup.
+    }
+    return null;
   }
 
   private String insertIcons(JComponent component, String text) {

@@ -103,14 +103,12 @@ public class GuiManager {
             }
 
             if (routingJob.input == null) {
-                FRLogger.warn(tm.getText("file_not_found_prefix") + " " + globalSettings.initialInputFile + " "
-                                + tm.getText("file_not_found_suffix"));
+                FRLogger.warn(tm.getText("file_not_found", globalSettings.initialInputFile));
                 return false;
             }
 
             if (routingJob.input.format == FileFormat.UNKNOWN) {
-                FRLogger.warn(tm.getText("file_not_found_prefix") + " " + globalSettings.initialInputFile + " "
-                                + tm.getText("file_not_found_suffix"));
+                FRLogger.warn(tm.getText("file_not_found", globalSettings.initialInputFile));
                 return false;
             }
             var settingsMerger = globalSettings.settingsMergerProtype.clone();

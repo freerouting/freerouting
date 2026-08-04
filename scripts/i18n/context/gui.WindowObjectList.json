@@ -73,28 +73,6 @@
     ],
     "ui_role": "label"
   },
-  "clearance_violation_message_template": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowClearanceViolations"
-    ],
-    "english_hash": "962f36a6dbaaaba54d22d2f73f0e04abec3980881c8876e9de0be66419fc1b0c",
-    "grammatical_role": "full_sentence",
-    "has_placeholders": true,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowObjectList",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [
-      "{{clearance_mm}}",
-      "{{item_a}}",
-      "{{item_b}}",
-      "{{layer}}",
-      "{{location}}"
-    ],
-    "related_keys": [],
-    "ui_role": "label"
-  },
   "filter": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [

@@ -569,20 +569,6 @@
     "related_keys": [],
     "ui_role": "label"
   },
-  "copy": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "6f5a6034e770acbfb3f797e6a7eb7948d470d45f9928f92b7d72dc7c45e6d0cd",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
   "done": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
@@ -667,20 +653,6 @@
     "related_keys": [
       "gate"
     ],
-    "ui_role": "label"
-  },
-  "generate_snapshot": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "8d708f78b75e10dfb5ebc9bdde87b7078a6fdffd023ae6bba59f2619d43e9217",
-    "grammatical_role": "verb_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
     "ui_role": "label"
   },
   "hole": {
@@ -793,45 +765,9 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "layer",
-      "layer_visibility",
-      "layer_visibility_header"
+      "layer"
     ],
     "ui_role": "label"
-  },
-  "layer_visibility": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "aeeab4a983960671becc37f95288f44328b773c4df627cddea0eff177ecc9e88",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "layer",
-      "layer_changed_to",
-      "layer_visibility_header"
-    ],
-    "ui_role": "label"
-  },
-  "layer_visibility_header": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "35aa0ee9ab86972ba4a36b391fc0959b610ccde200ab64d1ef4cdaa944a20031",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "layer_visibility"
-    ],
-    "ui_role": "dialog_title"
   },
   "length": {
     "bundle_desc": "shared/common strings",
@@ -911,70 +847,6 @@
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
-  },
-  "maximum_all": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "6439e3cfd4b34ed5ad680f48fdf2e393676e5a4442402c2df360f5475cb0494d",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "maximum_all_tooltip"
-    ],
-    "ui_role": "label"
-  },
-  "maximum_all_tooltip": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "486deddb1b32cbc0d8cad92e1d8c7acf24bb6fe71aee7c5ddceb6b85ee9dcf80",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "maximum_all"
-    ],
-    "ui_role": "tooltip"
-  },
-  "minimum_all": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "3d8dcedee958c9f95cd9e4b01e250a2657dbd76148b94f40d8f03584ca9993c8",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "minimum_all_tooltip"
-    ],
-    "ui_role": "label"
-  },
-  "minimum_all_tooltip": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "43fd616f46ded3450861bbf92b22f1c9c09f96a90ba188de9587270fac2d5626",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "minimum_all"
-    ],
-    "ui_role": "tooltip"
   },
   "move": {
     "bundle_desc": "shared/common strings",

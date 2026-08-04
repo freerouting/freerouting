@@ -632,20 +632,6 @@
     ],
     "ui_role": "tooltip"
   },
-  "label_apply_width": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
-    "english_hash": "99041f24e019c397c4e60065a7530d1e6112811c990ed3a39ded5b8b3cd2a262",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowNetClasses",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
   "layers_all": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [

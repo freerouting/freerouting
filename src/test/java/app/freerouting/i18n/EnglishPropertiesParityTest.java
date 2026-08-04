@@ -78,9 +78,6 @@ class EnglishPropertiesParityTest {
       Map.entry("app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui.CleanupWindows"),
       Map.entry("app.freerouting.gui.WindowUnconnectedRoute", "app.freerouting.gui.CleanupWindows"),
       Map.entry("app.freerouting.gui.WindowObjectListWithFilter", "app.freerouting.gui.WindowObjectList"),
-      Map.entry("app.freerouting.gui.WindowNets", "app.freerouting.gui.WindowObjectList"),
-      Map.entry("app.freerouting.gui.WindowClearanceViolations", "app.freerouting.gui.WindowObjectList"),
-      Map.entry("app.freerouting.gui.WindowLengthViolations", "app.freerouting.gui.WindowObjectList"),
       Map.entry("app.freerouting.gui.WindowIncompletes", "app.freerouting.gui.WindowObjectList"),
       Map.entry("app.freerouting.gui.WindowComponents", "app.freerouting.gui.WindowObjectList"),
       Map.entry("app.freerouting.gui.WindowPackages", "app.freerouting.gui.WindowObjectList"),
@@ -514,6 +511,17 @@ class EnglishPropertiesParityTest {
         .matcher(source);
     while (setTextMatcher.find()) {
       String key = setTextMatcher.group(1);
+      if (!isIconKey(key)) {
+        keys.add(key);
+      }
+    }
+
+    Matcher inlineGetTextMatcher = Pattern.compile(
+            "(?:setText|setToolTipText)\\s*\\(\\s*(?:[A-Za-z_][A-Za-z0-9_]*\\.)*"
+                + Pattern.quote(textManagerVariable) + "\\.getText\\(\\s*\"([^\"]+)\"")
+        .matcher(source);
+    while (inlineGetTextMatcher.find()) {
+      String key = inlineGetTextMatcher.group(1);
       if (!isIconKey(key)) {
         keys.add(key);
       }
