@@ -58,9 +58,11 @@ public class TextManager {
       put("rewind", 0xF045F);
     }
   };
+  private static final Locale ENGLISH_LOCALE = Locale.forLanguageTag("en");
   private Locale currentLocale;
   private String currentBaseName;
   private ResourceBundle defaultMessages;
+  private ResourceBundle englishDefaultMessages;
   private ResourceBundle classMessages;
   private ResourceBundle englishClassMessages;
   private Font materialDesignIcons;
@@ -243,43 +245,41 @@ public class TextManager {
   private void loadResourceBundle(String baseName) {
     this.currentBaseName = baseName;
 
-    // Load the default messages that are common to all classes
-    try {
-      defaultMessages = ResourceBundle.getBundle("app.freerouting.Common", currentLocale);
-    } catch (Exception _) {
+    defaultMessages = loadBundle("app.freerouting.Common", currentLocale);
+    englishDefaultMessages = loadBundle("app.freerouting.Common", ENGLISH_LOCALE);
+    classMessages = loadBundle(currentBaseName, currentLocale);
+    englishClassMessages = loadBundle(currentBaseName, ENGLISH_LOCALE);
+
+    if (defaultMessages == null && !isEnglishLocale()) {
       FRLogger.warn(
           "There was a problem loading the resource bundle 'app.freerouting.Common' of locale '" + currentLocale + "'");
-      try {
-        defaultMessages = ResourceBundle.getBundle("app.freerouting.Common", Locale.forLanguageTag("en-US"));
-      } catch (Exception _) {
-        defaultMessages = null;
-        FRLogger.error("There was a problem loading the resource bundle 'app.freerouting.Common' of locale 'en-US'",
-            null);
-      }
+      defaultMessages = englishDefaultMessages;
     }
+    if (classMessages == null && !isEnglishLocale()) {
+      classMessages = englishClassMessages;
+    }
+  }
 
-    // Load the class-specific messages
+  private ResourceBundle loadBundle(String baseName, Locale locale) {
     try {
-      classMessages = ResourceBundle.getBundle(currentBaseName, currentLocale);
-    } catch (Exception _) {
-      // FRLogger.warn("There was a problem loading the resource bundle '" +
-      // currentBaseName + "' of locale '" + currentLocale + "'");
-      try {
-        classMessages = ResourceBundle.getBundle(currentBaseName, Locale.forLanguageTag("en-US"));
-      } catch (Exception _) {
-        classMessages = null;
-        // FRLogger.error("There was a problem loading the resource bundle '" +
-        // currentBaseName + "' of locale 'en-US'",null);
-      }
+      return ResourceBundle.getBundle(baseName, locale);
+    } catch (MissingResourceException _) {
+      return null;
     }
+  }
 
-    // Load the fallback English messages
-    try {
-      englishClassMessages = ResourceBundle.getBundle(currentBaseName, Locale.forLanguageTag("en"));
-    } catch (Exception _) {
-      // FRLogger.warn("There was a problem loading the resource bundle '" +
-      // currentBaseName + "' of locale 'en'");
+  private boolean isEnglishLocale() {
+    if (ENGLISH_LOCALE.equals(currentLocale)) {
+      return true;
     }
+    return "en".equalsIgnoreCase(currentLocale.getLanguage()) && currentLocale.getCountry().isEmpty();
+  }
+
+  private String getBundleString(ResourceBundle bundle, String key) {
+    if (bundle != null && bundle.containsKey(key)) {
+      return bundle.getString(key);
+    }
+    return null;
   }
 
   public String getText(String key, String... args) {
@@ -309,37 +309,52 @@ public class TextManager {
   }
 
   private String lookupMessage(String key) {
-    if ((classMessages != null) && classMessages.containsKey(key)) {
-      return classMessages.getString(key);
+    String message = getBundleString(classMessages, key);
+    if (message != null) {
+      return message;
     }
 
-    String parentMessage = lookupParentClassMessage(key);
-    if (parentMessage != null) {
-      return parentMessage;
+    if (!isEnglishLocale()) {
+      message = getBundleString(englishClassMessages, key);
+      if (message != null) {
+        return message;
+      }
     }
 
-    if ((defaultMessages != null) && defaultMessages.containsKey(key)) {
-      return defaultMessages.getString(key);
+    message = lookupParentClassMessage(key, currentLocale);
+    if (message != null) {
+      return message;
     }
 
-    if ((englishClassMessages != null) && englishClassMessages.containsKey(key)) {
-      return englishClassMessages.getString(key);
+    if (!isEnglishLocale()) {
+      message = lookupParentClassMessage(key, ENGLISH_LOCALE);
+      if (message != null) {
+        return message;
+      }
+    }
+
+    message = getBundleString(defaultMessages, key);
+    if (message != null) {
+      return message;
+    }
+
+    if (!isEnglishLocale()) {
+      message = getBundleString(englishDefaultMessages, key);
+      if (message != null) {
+        return message;
+      }
     }
 
     return null;
   }
 
-  private String lookupParentClassMessage(String key) {
+  private String lookupParentClassMessage(String key, Locale locale) {
     try {
       Class<?> clazz = Class.forName(currentBaseName).getSuperclass();
       while (clazz != null && clazz.getName().startsWith("app.freerouting")) {
-        try {
-          ResourceBundle parentBundle = ResourceBundle.getBundle(clazz.getName(), currentLocale);
-          if (parentBundle.containsKey(key)) {
-            return parentBundle.getString(key);
-          }
-        } catch (MissingResourceException _) {
-          // No bundle for this superclass; continue up the hierarchy.
+        String message = getBundleString(loadBundle(clazz.getName(), locale), key);
+        if (message != null) {
+          return message;
         }
         clazz = clazz.getSuperclass();
       }

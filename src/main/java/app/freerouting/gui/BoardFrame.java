@@ -463,7 +463,9 @@ public class BoardFrame extends WindowBase {
 
     String filename = job.input != null ? job.input.getFilename() : null;
     TextManager guiTm = new TextManager(GuiManager.class, locale);
-    String loadingMessage = guiTm.getText("loading_design") + (filename != null ? " " + filename : "");
+    String loadingMessage = filename != null
+        ? guiTm.getText("loading_design_with_file", filename)
+        : guiTm.getText("loading_design");
     WindowMessage loadingWindow = WindowMessage.show(loadingMessage);
     loadingWindow.setLocationRelativeTo(this);
 

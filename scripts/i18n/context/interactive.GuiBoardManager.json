@@ -45,56 +45,6 @@
     "related_keys": [],
     "ui_role": "dialog_title"
   },
-  "incomplete_connections_to_route": {
-    "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.GuiBoardManager"
-    ],
-    "english_hash": "8bedff539bdf625d5ec5479dd759e6284ed12cde3302f486f395d2727238c53c",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.interactive.GuiBoardManager",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "incompletes"
-    ],
-    "ui_role": "label"
-  },
-  "incompletes": {
-    "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.GuiBoardManager"
-    ],
-    "english_hash": "9ac538d87150a8461d2f18a47798bf5af0649e3a0e9a252b57885f13ea35a3ec",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.interactive.GuiBoardManager",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "length_violations": {
-    "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.GuiBoardManager"
-    ],
-    "english_hash": "a015f341f5ad56a2e51c436adabc354320a054cced5ece7df76c0ec8d186d818",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.interactive.GuiBoardManager",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
   "no_more_redo_possible": {
     "bundle_desc": "interactive routing session",
     "code_references": [
@@ -128,6 +78,47 @@
     "placeholders": [],
     "related_keys": [
       "no_more_redo_possible"
+    ],
+    "ui_role": "label"
+  },
+  "ratsnest_status_incomplete_only": {
+    "bundle_desc": "interactive routing session",
+    "code_references": [
+      "app.freerouting.interactive.GuiBoardManager"
+    ],
+    "english_hash": "05b7ec5510cd26662c4ee2bec7ba26ddff1d2bff67de0d7da81275151763ef14",
+    "grammatical_role": "fragment",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.interactive.GuiBoardManager",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{incomplete_count}}"
+    ],
+    "related_keys": [
+      "ratsnest_status_with_length_violations"
+    ],
+    "ui_role": "label"
+  },
+  "ratsnest_status_with_length_violations": {
+    "bundle_desc": "interactive routing session",
+    "code_references": [
+      "app.freerouting.interactive.GuiBoardManager"
+    ],
+    "english_hash": "03ef754d8dca5b232fca0ceeac890673f305bc327d4f751432d79999d83c2b8e",
+    "grammatical_role": "fragment",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.interactive.GuiBoardManager",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{incomplete_count}}",
+      "{{length_violation_count}}"
+    ],
+    "related_keys": [
+      "ratsnest_status_incomplete_only"
     ],
     "ui_role": "label"
   },

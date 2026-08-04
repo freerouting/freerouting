@@ -58,6 +58,9 @@ SAFE_UNUSED_KEYS: dict[str, set[str]] = {
     "app.freerouting.interactive.InteractiveState": {
         "batch_autorouter", "batch_optimizer", "stop_message",
     },
+    "app.freerouting.interactive.GuiBoardManager": {
+        "incomplete_connections_to_route", "incompletes", "length_violations",
+    },
 }
 
 

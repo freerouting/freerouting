@@ -1205,10 +1205,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
     int length_violation_count = ratsnest.length_violation_count();
     String curr_message;
     if (length_violation_count == 0) {
-      curr_message = incomplete_count + " " + tm.getText("incomplete_connections_to_route");
+      curr_message = tm.getText("ratsnest_status_incomplete_only", Integer.toString(incomplete_count));
     } else {
-      curr_message = incomplete_count + " " + tm.getText("incompletes") + " " + length_violation_count + " "
-          + tm.getText("length_violations");
+      curr_message = tm.getText(
+          "ratsnest_status_with_length_violations",
+          Integer.toString(incomplete_count),
+          Integer.toString(length_violation_count));
     }
     screen_messages.set_status_message(curr_message);
   }
