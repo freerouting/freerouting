@@ -1,0 +1,16 @@
+{
+  "incomplete": {
+    "bundle_desc": "UI component",
+    "code_references": [],
+    "english_hash": "c5905a4adba593169fb57fac15afc16090b9234887fa7f28bd4f226c7a8c5b23",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.drc.AirLine",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  }
+}

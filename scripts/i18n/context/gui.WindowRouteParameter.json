@@ -116,7 +116,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "change_snap_angle_90"
@@ -134,7 +134,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "change_snap_angle_45"
@@ -206,7 +206,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "clearance_compensation",

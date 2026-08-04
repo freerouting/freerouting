@@ -373,7 +373,7 @@
   "clearance_violation_info_expected_clearance": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "f68f98b49921414abd4559a8f1d583ae62fb3721476dbaa0996c17632e2982c1",
+    "english_hash": "6fac31215ce8a0599f34d0baeb90d15ccdf46b5202e3241dd1f5f5ac98be05b8",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
@@ -381,8 +381,8 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [
-      "%.4f",
-      "%.4f"
+      "{{actual_clearance_mm}}",
+      "{{expected_clearance_mm}}"
     ],
     "related_keys": [
       "clearance_violation",

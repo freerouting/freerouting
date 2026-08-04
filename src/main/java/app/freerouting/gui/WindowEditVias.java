@@ -162,7 +162,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       if (table_model.getRowCount() <= 1) {
-        board_frame.screen_messages.set_status_message(tm.getText("message_1"));
+        board_frame.screen_messages.set_status_message(tm.getText("last_via_not_removed"));
         return;
       }
       int selected_row = table.getSelectedRow();
@@ -178,7 +178,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
       // Check, if via_info is used in a via rule.
       for (ViaRule curr_rule : board_rules.via_rules) {
         if (curr_rule.contains(via_info)) {
-          String message = tm.getText("message_2") + " " + curr_rule.name;
+          String message = tm.getText("via_not_removed_in_rule") + " " + curr_rule.name;
           board_frame.screen_messages.set_status_message(message);
           return;
         }

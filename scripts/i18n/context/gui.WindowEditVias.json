@@ -97,7 +97,7 @@
     ],
     "ui_role": "tooltip"
   },
-  "message_1": {
+  "last_via_not_removed": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowEditVias"
@@ -110,28 +110,8 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
-    "related_keys": [
-      "message_2"
-    ],
-    "ui_role": "message"
-  },
-  "message_2": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowEditVias"
-    ],
-    "english_hash": "abfc30221facefb2283bfad6b7c009800406e443b959b044ebece79166c38b1d",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowEditVias",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "message_1"
-    ],
-    "ui_role": "message"
+    "related_keys": [],
+    "ui_role": "label"
   },
   "new_via": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -230,6 +210,24 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
+    "ui_role": "label"
+  },
+  "via_not_removed_in_rule": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowEditVias"
+    ],
+    "english_hash": "abfc30221facefb2283bfad6b7c009800406e443b959b044ebece79166c38b1d",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowEditVias",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "via"
+    ],
     "ui_role": "label"
   }
 }

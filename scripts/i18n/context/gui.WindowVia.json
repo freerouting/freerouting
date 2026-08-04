@@ -263,28 +263,7 @@
     ],
     "ui_role": "label"
   },
-  "message_1": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowVia"
-    ],
-    "english_hash": "f0ef002a29ed0f8cadf1288e4d2d1f773b32e624360a704345a46e7a51fa2702",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowVia",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "message_2",
-      "message_3",
-      "message_4",
-      "message_5"
-    ],
-    "ui_role": "message"
-  },
-  "message_2": {
+  "padstack_name_exists": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowVia"
@@ -298,35 +277,11 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "message_1",
-      "message_3",
-      "message_4",
-      "message_5"
+      "padstack_not_removed_in_use"
     ],
-    "ui_role": "message"
+    "ui_role": "label"
   },
-  "message_3": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowVia"
-    ],
-    "english_hash": "61b223c786b9b8c24cb5f6050d57b2c214e206ddccbd90294357f10946eaf13f",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowVia",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "message_1",
-      "message_2",
-      "message_4",
-      "message_5"
-    ],
-    "ui_role": "message"
-  },
-  "message_4": {
+  "padstack_not_removed_in_use": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowVia"
@@ -340,14 +295,48 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "message_1",
-      "message_2",
-      "message_3",
-      "message_5"
+      "padstack_name_exists"
     ],
-    "ui_role": "message"
+    "ui_role": "label"
   },
-  "message_5": {
+  "prompt_default_radius": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowVia"
+    ],
+    "english_hash": "61b223c786b9b8c24cb5f6050d57b2c214e206ddccbd90294357f10946eaf13f",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowVia",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "prompt_new_padstack_name",
+      "prompt_new_via_rule_name"
+    ],
+    "ui_role": "label"
+  },
+  "prompt_new_padstack_name": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowVia"
+    ],
+    "english_hash": "f0ef002a29ed0f8cadf1288e4d2d1f773b32e624360a704345a46e7a51fa2702",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowVia",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "prompt_new_via_rule_name"
+    ],
+    "ui_role": "label"
+  },
+  "prompt_new_via_rule_name": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowVia"
@@ -361,12 +350,9 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "message_1",
-      "message_2",
-      "message_3",
-      "message_4"
+      "prompt_new_padstack_name"
     ],
-    "ui_role": "message"
+    "ui_role": "label"
   },
   "radius_on_layer": {
     "bundle_desc": "GUI (graphical user interface)",

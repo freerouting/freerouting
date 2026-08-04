@@ -103,14 +103,14 @@ public class GuiManager {
             }
 
             if (routingJob.input == null) {
-                FRLogger.warn(tm.getText("message_6") + " " + globalSettings.initialInputFile + " "
-                                + tm.getText("message_7"));
+                FRLogger.warn(tm.getText("file_not_found_prefix") + " " + globalSettings.initialInputFile + " "
+                                + tm.getText("file_not_found_suffix"));
                 return false;
             }
 
             if (routingJob.input.format == FileFormat.UNKNOWN) {
-                FRLogger.warn(tm.getText("message_6") + " " + globalSettings.initialInputFile + " "
-                                + tm.getText("message_7"));
+                FRLogger.warn(tm.getText("file_not_found_prefix") + " " + globalSettings.initialInputFile + " "
+                                + tm.getText("file_not_found_suffix"));
                 return false;
             }
             var settingsMerger = globalSettings.settingsMergerProtype.clone();
@@ -342,7 +342,7 @@ public class GuiManager {
             input_stream = routingJob.input.getData();
             if (input_stream == null) {
                 if (p_message_field != null) {
-                    p_message_field.setText(tm.getText("message_8") + " " + routingJob.input.getFilename());
+                    p_message_field.setText(tm.getText("error_design_file_read_failed") + " " + routingJob.input.getFilename());
                 }
                 return null;
             }

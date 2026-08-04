@@ -31,6 +31,22 @@
     "related_keys": [],
     "ui_role": "label"
   },
+  "DRILL_HOLES": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowVisibility"
+    ],
+    "english_hash": "537e1822e0c0fcde7cacc529050b64763b31eb17c07f8e4e4b4e5ef2c2e84361",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowVisibility",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "HILIGHT": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [

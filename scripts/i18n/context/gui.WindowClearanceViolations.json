@@ -34,7 +34,7 @@
     "code_references": [
       "app.freerouting.gui.WindowClearanceViolations"
     ],
-    "english_hash": "a8203c0da27a7b3be3af679ff863f001d0061a9d7f344b7b166bd2910d5d3114",
+    "english_hash": "962f36a6dbaaaba54d22d2f73f0e04abec3980881c8876e9de0be66419fc1b0c",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
@@ -42,11 +42,11 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [
-      "%.4f",
-      "%s",
-      "%s",
-      "%s",
-      "%s"
+      "{{clearance_mm}}",
+      "{{item_a}}",
+      "{{item_b}}",
+      "{{layer}}",
+      "{{location}}"
     ],
     "related_keys": [],
     "ui_role": "label"

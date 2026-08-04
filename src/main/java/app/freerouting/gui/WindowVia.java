@@ -251,12 +251,12 @@ public class WindowVia extends BoardSavableSubWindow {
       if (pcb.layer_structure.arr.length <= 1) {
         return;
       }
-      String padstack_name = JOptionPane.showInputDialog(tm.getText("message_1"));
+      String padstack_name = JOptionPane.showInputDialog(tm.getText("prompt_new_padstack_name"));
       if (padstack_name == null) {
         return;
       }
       while (pcb.library.padstacks.get(padstack_name) != null) {
-        padstack_name = JOptionPane.showInputDialog(tm.getText("message_2"), padstack_name);
+        padstack_name = JOptionPane.showInputDialog(tm.getText("padstack_name_exists"), padstack_name);
         if (padstack_name == null) {
           return;
         }
@@ -293,7 +293,7 @@ public class WindowVia extends BoardSavableSubWindow {
       // ask for the default radius
 
       JPanel default_radius_input_panel = new JPanel();
-      default_radius_input_panel.add(new JLabel(tm.getText("message_3")));
+      default_radius_input_panel.add(new JLabel(tm.getText("prompt_default_radius")));
       NumberFormat number_format = NumberFormat.getInstance(board_frame.get_locale());
       number_format.setMaximumFractionDigits(7);
       JFormattedTextField default_radius_input_field = new JFormattedTextField(number_format);
@@ -393,7 +393,7 @@ public class WindowVia extends BoardSavableSubWindow {
         }
       }
       if (via_with_selected_padstack != null) {
-        String message = tm.getText("message_4") + " " + via_with_selected_padstack.get_name();
+        String message = tm.getText("padstack_not_removed_in_use") + " " + via_with_selected_padstack.get_name();
         board_frame.screen_messages.set_status_message(message);
         return;
       }
@@ -466,7 +466,7 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      String new_name = JOptionPane.showInputDialog(tm.getText("message_5"));
+      String new_name = JOptionPane.showInputDialog(tm.getText("prompt_new_via_rule_name"));
       if (new_name == null) {
         return;
       }

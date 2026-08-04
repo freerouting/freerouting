@@ -67,6 +67,94 @@
     "related_keys": [],
     "ui_role": "label"
   },
+  "COURTYARD_BACK": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "3b997ecac400e4ad3d0989d80095fa4eabea3e66fd65e4944e3934a392c0f237",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "COURTYARD_FRONT"
+    ],
+    "ui_role": "label"
+  },
+  "COURTYARD_FRONT": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "69c08ee9af8507f8a6b93692b4ba5d24abb0adf38e42dd822f55f19201c1f87e",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "COURTYARD_BACK"
+    ],
+    "ui_role": "label"
+  },
+  "DRILL_HOLE": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "dc796ce34d3047025007ec57b8b2467bddf6393d8fc96c254f5ff509fc037d97",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "FAB_BACK": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "bebbec7708c9c10e8e2b29aebdeacf6d7b8ef310ba7a687c716bfb5d290a5c36",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "FAB_FRONT"
+    ],
+    "ui_role": "label"
+  },
+  "FAB_FRONT": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "4ba949483bf9d573ac804a4eedad18d30f3be02561ff5d00e9caac8e438ee929",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "FAB_BACK"
+    ],
+    "ui_role": "label"
+  },
   "FIXED_TRACES": {
     "bundle_desc": "board graphics/colors",
     "code_references": [
@@ -178,7 +266,7 @@
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -229,6 +317,42 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
+    "ui_role": "label"
+  },
+  "SILKSCREEN_BACK": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "660b65d8b5060ca78cc7d5e9e975bd09809db89900ad3647cda410d02a6cb2b1",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "SILKSCREEN_FRONT"
+    ],
+    "ui_role": "label"
+  },
+  "SILKSCREEN_FRONT": {
+    "bundle_desc": "board graphics/colors",
+    "code_references": [
+      "app.freerouting.boardgraphics.OtherColorTableModel"
+    ],
+    "english_hash": "2addc46c02c2f249257d6ca3dc7f40540721f9539e18a75c23fbac6113ecf18c",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.boardgraphics.ColorTableModel",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "SILKSCREEN_BACK"
+    ],
     "ui_role": "label"
   },
   "TRACES": {
