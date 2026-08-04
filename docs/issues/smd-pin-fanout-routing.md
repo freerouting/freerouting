@@ -277,7 +277,7 @@ Select-String "drill_rejected_room_mismatch" `
 | Fanout pre-pass | ✅ `BatchFanout` | ✅ `BatchFanout` integrated in `BatchAutorouter` |
 | `Pin.is_obstacle()` same-net via guard | legacy behavior | ✅ fixed (same-net vias allowed) |
 | `withFanout` setting | n/a | ✅ present (default `true`) |
-| Routing result | 0 unrouted | mixed: `Issue558-dev-board.dsn` reaches 0 unrouted, `SMD-routing-issue-demo.dsn` still fails (6 unrouted) |
+| Routing result | 0 unrouted | mixed: `Issue558-dev-board.dsn` reaches 0 unrouted, `Issue508-SMD-routing-issue-demo.dsn` still fails (6 unrouted) |
 
 > **Current focus:** fanout exists and is active, but on tightly packed all-SMD geometries it can still insert 0 escape vias; remaining work is algorithmic quality, not missing orchestration.
 
@@ -298,7 +298,7 @@ Important nuance (explains what you see in GUI):
 ### Measured current behavior (latest local verification)
 
 - `Issue558-dev-board.dsn`: fanout inserts escapes and routing completes to 0 unrouted in the fixture run.
-- `SMD-routing-issue-demo.dsn`: fanout pass #1..#20 inserts `+0` extra vias, then autorouter stops at score `0.00` with 6 unrouted.
+- `Issue508-SMD-routing-issue-demo.dsn`: fanout pass #1..#20 inserts `+0` extra vias, then autorouter stops at score `0.00` with 6 unrouted.
 
 This confirms the remaining gap: **fanout is executing, but fails to find legal escape-via locations on some dense close-pin layouts**.
 
@@ -678,7 +678,7 @@ All 78 DSN files in the `fixtures/` directory were scanned for `(attach off)` us
 
 The primary test board (`Issue508-DAC2020_bm05.dsn`) is excluded from the table above because it has its own dedicated test class `Dac2020Bm05RoutingTest`.
 
-### Synthetic minimal reproduction: `fixtures/SMD-routing-issue-demo.dsn`
+### Synthetic minimal reproduction: `fixtures/Issue508-SMD-routing-issue-demo.dsn`
 
 A hand-crafted minimal board was created specifically to isolate and demonstrate the bug:
 
@@ -812,7 +812,7 @@ Create `src/test/java/app/freerouting/fixtures/Dac2020Bm05RoutingTest.java` with
 | `test_Issue_558_dev_board` | `Issue558-dev-board.dsn` | ✅ `maxIncompleteConnections(0)` | 0 incomplete |
 | `test_Issue_508_BM06` | `Issue508-DAC2020_bm06.dsn` | ✅ `maxIncompleteConnections(8)` | 7 incomplete |
 | `test_Issue_508_BM10` | `Issue508-DAC2020_bm10.dsn` | ✅ `maxIncompleteConnections(0)` | 0 incomplete |
-| `test_SMD_routing_issue_demo` | `SMD-routing-issue-demo.dsn` | ✅ `maxIncompleteConnections(2)` | 1 incomplete |
+| `test_SMD_routing_issue_demo` | `Issue508-SMD-routing-issue-demo.dsn` | ✅ `maxIncompleteConnections(2)` | 1 incomplete |
 
 Rationale: bm06 and the synthetic SMD demo are still known-open algorithmic fanout cases. They should not fail the default `test` task with aspirational `0 incomplete` expectations until the underlying routing issue is actually fixed. The bounded assertions keep useful regression coverage without misclassifying these boards as merge-regressions.
 
@@ -822,7 +822,7 @@ Rationale: bm06 and the synthetic SMD demo are still known-open algorithmic fano
 
 #### Confirmed bug: synthetic demo board routes 0/6 connections
 
-The `SMD-routing-issue-demo.dsn` board was run against the current code.  Result after 3 passes:
+The `Issue508-SMD-routing-issue-demo.dsn` board was run against the current code.  Result after 3 passes:
 
 ```
 Auto-router pass #3 completed in 0.08 s with score 0.00 (6 unrouted)
@@ -907,7 +907,7 @@ Remaining sequence:
 | `src/main/java/app/freerouting/settings/sources/DefaultSettings.java` | Modify | 🔲 Open | Consider `maxEscapeLengthMm = null` (min-only default) |
 | `src/test/java/app/freerouting/fixtures/Dac2020Bm11FanoutTraceTest.java` | Modify | 🔲 Open | Fix NPE; min-only / optional-max assertions |
 | `docs/settings.md` | Modify | 🔲 Open | Document `withFanout` setting (if missing/incomplete) |
-| `fixtures/SMD-routing-issue-demo.dsn` | **New** | ✅ Created | Minimal synthetic 2-layer all-SMD board (6-pin QFN + 0603s, 6 nets); proves bug with score `0.00` |
+| `fixtures/Issue508-SMD-routing-issue-demo.dsn` | **New** | ✅ Created | Minimal synthetic 2-layer all-SMD board (6-pin QFN + 0603s, 6 nets); proves bug with score `0.00` |
 | `src/test/java/app/freerouting/fixtures/Dac2020Bm05RoutingTest.java` | **New** | ✅ Created | Primary bm05 acceptance gate (4 escalating tests) |
 | `src/test/java/app/freerouting/fixtures/SmdPinFanoutRoutingTest.java` | **New** | ✅ Created | Cross-board regression suite (currently 4 fast fixture checks; bm06/demo use bounded expectations until the fanout issue is fully fixed) |
 | `src_v19/…/autoroute/AutorouteControl.java` | **Modify (v1.9)** | ✅ Done | Added `fanout_start_pin_name` field for FANOUT_DIAG log parity |

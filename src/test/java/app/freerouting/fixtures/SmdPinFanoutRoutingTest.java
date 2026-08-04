@@ -68,11 +68,11 @@ public class SmdPinFanoutRoutingTest extends RoutingFixtureTest {
     testSettingsSource.setMaxPasses(10);
     testSettingsSource.setJobTimeoutString("00:01:00");
 
-    RoutingJob job = GetRoutingJob("SMD-routing-issue-demo.dsn", testSettingsSource);
+    RoutingJob job = GetRoutingJob("Issue508-SMD-routing-issue-demo.dsn", testSettingsSource);
     RunRoutingJob(job);
     // The synthetic demo is still a useful smoke test for fanout progress, but full completion
     // remains an open algorithmic issue. Allow a small bound so the default test suite stays green
     // while still catching regressions back toward the old 6-unrouted behavior.
-    assertRoutingResult(job, "SMD-routing-issue-demo.dsn").maxIncompleteConnections(2).check();
+    assertRoutingResult(job, "Issue508-SMD-routing-issue-demo.dsn").maxIncompleteConnections(2).check();
   }
 }

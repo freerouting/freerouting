@@ -1,15 +1,14 @@
 package app.freerouting.io.specctra;
 
+import app.freerouting.TestFixtures;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.io.BoardReadResult;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.nio.file.Path;
 
 /**
  * Utility methods for loading {@link RoutingBoard} instances from DSN fixture files
@@ -60,17 +59,7 @@ public final class DsnTestFixtures {
   // -------------------------------------------------------------------------
 
   static InputStream openFixtureStream(String filename) throws IOException {
-    Path searchDir = Path.of(".").toAbsolutePath();
-    File candidate = Path.of(searchDir.toString(), "fixtures", filename).toFile();
-    while (!candidate.exists()) {
-      searchDir = searchDir.getParent();
-      if (searchDir == null) {
-        throw new IOException("Cannot find DSN fixture: " + filename
-            + " — searched all ancestors of " + Path.of(".").toAbsolutePath());
-      }
-      candidate = Path.of(searchDir.toString(), "fixtures", filename).toFile();
-    }
-    return new FileInputStream(candidate);
+    return new FileInputStream(TestFixtures.resolveFile(filename));
   }
 
   private static RoutingBoard loadBoardFromStream(InputStream stream) throws IOException {

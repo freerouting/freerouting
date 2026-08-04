@@ -4,25 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
-import app.freerouting.management.BoardLoader;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.core.Session;
-import app.freerouting.io.FileFormat;
-import app.freerouting.management.HeadlessBoardManager;
-import app.freerouting.management.SessionManager;
-import app.freerouting.settings.GlobalSettings;
 import app.freerouting.fixtures.RoutingFixtureTest;
+import app.freerouting.management.BoardLoader;
+import app.freerouting.settings.GlobalSettings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.io.File;
-import java.nio.file.Path;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class DesignRulesCheckerTest extends RoutingFixtureTest {
@@ -35,7 +25,7 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
   @Test
   void test_DrcReport_Structure() {
     // Create a simple routing job with a DSN file
-    RoutingJob job = GetRoutingJob("BBD_Mars-64.dsn");
+    RoutingJob job = GetRoutingJob("Issue555-BBD_Mars-64.dsn");
 
     assertNotNull(job, "Job should not be null");
 
@@ -66,7 +56,7 @@ public class DesignRulesCheckerTest extends RoutingFixtureTest {
   @Test
   void test_DrcReport_JsonFormat() {
     // Create a simple routing job with a DSN file
-    RoutingJob job = GetRoutingJob("BBD_Mars-64.dsn");
+    RoutingJob job = GetRoutingJob("Issue555-BBD_Mars-64.dsn");
 
     assertNotNull(job, "Job should not be null");
 

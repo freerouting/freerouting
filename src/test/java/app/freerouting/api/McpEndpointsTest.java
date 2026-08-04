@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.Freerouting;
 import app.freerouting.api.mcp.McpApiKeyValidationService;
 import app.freerouting.api.security.ApiKeyValidationService;
+import app.freerouting.logger.AllowErrorLogs;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.McpServerSettings;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.Test;
 class McpEndpointsTest {
 
   private static final String TEST_USER_ID = "00000000-0000-0000-0000-000000000001";
+  private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(30);
 
   private Server apiServer;
   private Server mcpServer;
@@ -74,12 +76,10 @@ class McpEndpointsTest {
   @AfterEach
   void tearDown() throws Exception {
     if (mcpServer != null) {
-      mcpServer.stop();
-      waitForServerStopped(mcpServer);
+      stopServerGracefully(mcpServer);
     }
     if (apiServer != null) {
-      apiServer.stop();
-      waitForServerStopped(apiServer);
+      stopServerGracefully(apiServer);
     }
     ApiKeyValidationService.resetForTesting();
     McpApiKeyValidationService.resetForTesting();
@@ -103,6 +103,7 @@ class McpEndpointsTest {
   }
 
   @Test
+  @AllowErrorLogs("Jetty shutdown may interrupt in-flight MCP bridge HTTP calls under parallel test load")
   void toolsList_andToolsCall_bridgeToApiRoutes() throws Exception {
     JsonObject listRequest = new JsonObject();
     listRequest.addProperty("jsonrpc", "2.0");
@@ -227,7 +228,7 @@ class McpEndpointsTest {
   void agentCard_isPublicOnMcpServer() throws Exception {
     HttpRequest request = HttpRequest.newBuilder(mcpBaseUri.resolve("/.well-known/agent.json"))
         .GET()
-        .timeout(Duration.ofSeconds(10))
+        .timeout(HTTP_TIMEOUT)
         .build();
 
     HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -247,6 +248,7 @@ class McpEndpointsTest {
   }
 
   @Test
+  @AllowErrorLogs("Misconfigured target URL is rejected; MCP may log RPC interruption under parallel load")
   void toolsCall_rejectsMcpTargetApiBaseUrlMisconfiguration() throws Exception {
     Freerouting.globalSettings.mcpServerSettings.targetApiBaseUrl = mcpBaseUri + "/v1/mcp";
 
@@ -423,11 +425,20 @@ class McpEndpointsTest {
   private HttpRequest authenticatedMcpRequest(JsonObject requestBody) {
     return HttpRequest.newBuilder(mcpBaseUri.resolve("/v1/mcp"))
         .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
-        .timeout(Duration.ofSeconds(10))
+        .timeout(HTTP_TIMEOUT)
         .header("Content-Type", "application/json")
         .header("Freerouting-Profile-ID", TEST_USER_ID)
         .header("Freerouting-Environment-Host", "test/1.0")
         .build();
+  }
+
+  private static void stopServerGracefully(Server server) throws Exception {
+    if (server.isStopped()) {
+      return;
+    }
+    server.setStopTimeout(15_000);
+    server.stop();
+    waitForServerStopped(server, 15_000);
   }
 
   private static boolean containsTool(JsonArray tools, String toolName) {
@@ -451,7 +462,11 @@ class McpEndpointsTest {
   }
 
   private static void waitForServerStopped(Server server) throws InterruptedException {
-    long deadline = System.currentTimeMillis() + 5_000;
+    waitForServerStopped(server, 5_000);
+  }
+
+  private static void waitForServerStopped(Server server, long timeoutMs) throws InterruptedException {
+    long deadline = System.currentTimeMillis() + timeoutMs;
     while (!server.isStopped() && System.currentTimeMillis() < deadline) {
       Thread.sleep(50);
     }

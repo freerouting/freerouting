@@ -471,6 +471,12 @@ tasks.withType(Test).configureEach {
 }
 
 test {
+    // Separate JVMs per fork so static singletons (globalSettings, schedulers) stay isolated.
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+
+    // Absolute fixtures path so forked workers find DSN files even when user.dir is not the repo root.
+    systemProperty 'freerouting.test.fixtures.dir', layout.projectDirectory.dir('fixtures').asFile.absolutePath
+
     useJUnitPlatform {
         // Daily runs skip slow tests unless explicitly requested.
         if (!includeSlowTests.get()) {

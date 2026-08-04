@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
+import app.freerouting.TestFixtures;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
@@ -55,29 +56,10 @@ public class RoutingFixtureTest {
     // Create a new job
     RoutingJob job = new RoutingJob(session.id);
 
-    // Look for the file in the current directory and its parent directories
-    Path testDirectory = Path
-        .of(".")
-        .toAbsolutePath();
-    File testFile = Path
-        .of(testDirectory.toString(), "fixtures", filename)
-        .toFile();
-    while (!testFile.exists()) {
-      testDirectory = testDirectory.getParent();
-      if (testDirectory == null) {
-        break;
-      }
-
-      testFile = Path
-          .of(testDirectory.toString(), "fixtures", filename)
-          .toFile();
-      if (testFile == null) {
-        break;
-      }
-    }
-
     // Load the file as input
+    File testFile;
     try {
+      testFile = TestFixtures.resolveFile(filename);
       job.setInput(testFile);
 
       var statsBefore = new BoardStatistics(job.input
@@ -101,7 +83,7 @@ public class RoutingFixtureTest {
       job.routerSettings = merger.merge();
 
     } catch (IOException e) {
-      throw new RuntimeException(testFile + " not found.", e);
+      throw new RuntimeException(filename + " not found.", e);
     }
 
     return job;

@@ -1,4 +1,4 @@
-(pcb "SMD-routing-issue-demo.dsn"
+(pcb "Issue508-SMD-routing-issue-demo.dsn"
   (parser
     (string_quote ")
     (space_in_quoted_tokens on)
