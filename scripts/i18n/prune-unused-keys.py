@@ -43,8 +43,17 @@ SAFE_UNUSED_KEYS: dict[str, set[str]] = {
         "error_board_frame_write_failed", "error_board_save_failed", "error_no_write_permission",
         "error_output_file_close_failed", "message_gui_settings_save_failed",
     },
+    "app.freerouting.gui.WindowClearanceViolations": {
+        "at", "on_layer",
+    },
     "app.freerouting.gui.WindowNetClasses": {
         "label_apply_width",
+    },
+    "app.freerouting.gui.WindowObjectList": {
+        "assign_class", "assign_class_tooltip", "assign_net_class_dialog_title",
+        "assign_net_class_prompt", "filter_incompletes", "filter_incompletes_tooltip",
+        "list_empty_message", "maximum_allowed", "minimum_allowed", "net_count",
+        "net_explanation", "title", "unknown",
     },
 }
 

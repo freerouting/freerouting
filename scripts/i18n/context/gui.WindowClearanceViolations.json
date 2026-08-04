@@ -1,18 +1,4 @@
 {
-  "at": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
-    "english_hash": "b1d6b91b67c2afa5e322988d9462638d354ddf8a1ef79dba987f815c22b4baee",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowClearanceViolations",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
   "board_outline": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
@@ -114,20 +100,6 @@
     "placeholders": [],
     "related_keys": [],
     "ui_role": "message"
-  },
-  "on_layer": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [],
-    "english_hash": "9dc0c0a58a362a2ef8b3f491611136fcd086b93f3bbf83703705eb2b8f08fa26",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowClearanceViolations",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
   },
   "pin": {
     "bundle_desc": "GUI (graphical user interface)",

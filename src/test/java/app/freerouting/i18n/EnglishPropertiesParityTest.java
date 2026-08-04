@@ -82,6 +82,11 @@ class EnglishPropertiesParityTest {
       Map.entry("app.freerouting.gui.WindowComponents", "app.freerouting.gui.WindowObjectList"),
       Map.entry("app.freerouting.gui.WindowPackages", "app.freerouting.gui.WindowObjectList"),
       Map.entry("app.freerouting.gui.WindowPadstacks", "app.freerouting.gui.WindowObjectList"));
+  /** Subclasses with own bundles that override selected keys from {@link app.freerouting.gui.WindowObjectList}. */
+  private static final Map<String, String> SUBCLASS_BUNDLE_PARENTS = Map.of(
+      "app.freerouting.gui.WindowNets", "app.freerouting.gui.WindowObjectList",
+      "app.freerouting.gui.WindowClearanceViolations", "app.freerouting.gui.WindowObjectList",
+      "app.freerouting.gui.WindowLengthViolations", "app.freerouting.gui.WindowObjectList");
   private static final Path REPORT_PATH_1 = Paths.get(
       "build/reports/i18n/CodeKeysExistInEnglishBundlesReport.txt");
   private static final Path REPORT_JSON_1 = Paths.get(
@@ -236,6 +241,8 @@ class EnglishPropertiesParityTest {
           ? allUsedKeys
           : new LinkedHashSet<>(sourceKeysByBundle.getOrDefault(bundle, Set.of()));
 
+      expandUsedKeysFromSubclassParentOverrides(bundle, englishKeys, sourceKeysByBundle, usedKeys);
+
       Set<String> availableKeys = new LinkedHashSet<>(englishKeys);
       expandWithImplicitCompanionKeys(usedKeys, availableKeys);
 
@@ -264,6 +271,23 @@ class EnglishPropertiesParityTest {
    * Keys derived at runtime from a base key (e.g. {@code save_tooltip} when {@code save} is passed to
    * {@link app.freerouting.util.TextManager#setText}).
    */
+  private static void expandUsedKeysFromSubclassParentOverrides(
+      String bundle,
+      Set<String> englishKeys,
+      Map<String, Set<String>> sourceKeysByBundle,
+      Set<String> usedKeys) {
+    String parentBundle = SUBCLASS_BUNDLE_PARENTS.get(bundle);
+    if (parentBundle == null) {
+      return;
+    }
+    Set<String> parentUsedKeys = sourceKeysByBundle.getOrDefault(parentBundle, Set.of());
+    for (String key : parentUsedKeys) {
+      if (englishKeys.contains(key)) {
+        usedKeys.add(key);
+      }
+    }
+  }
+
   private static void expandWithImplicitCompanionKeys(Set<String> usedKeys, Set<String> availableKeys) {
     Set<String> companions = new LinkedHashSet<>();
     for (String key : usedKeys) {
