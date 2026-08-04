@@ -5,6 +5,7 @@ import app.freerouting.core.events.RoutingJobLogEntryAddedEvent;
 import app.freerouting.core.events.RoutingJobLogEntryAddedEventListener;
 import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
+import app.freerouting.core.scoring.RoutingEta;
 import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
@@ -93,8 +94,14 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   @Schema(name = "drc_settings", description = "DRC configuration settings")
   public DesignRulesCheckerSettings drcSettings = new DesignRulesCheckerSettings();
   @SerializedName("resource_usage")
-  @Schema(name = "resource_usage", description = "Resource usage stats")
+  @Schema(name = "resource_usage", description = "Resource usage of the job")
   public RouterJobResourceUsage resourceUsage = new RouterJobResourceUsage();
+
+  /**
+   * The ETA calculator for this routing job.
+   * Transient because it's runtime-only state, not serialized.
+   */
+  public transient RoutingEtaCalculator etaCalculator = new RoutingEtaCalculator();
   public transient StoppableThread thread;
   public transient RoutingBoard board;
   public transient Instant timeoutAt;

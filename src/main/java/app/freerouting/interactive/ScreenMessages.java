@@ -2,6 +2,7 @@ package app.freerouting.interactive;
 
 import app.freerouting.board.Unit;
 import app.freerouting.core.RouterCounters;
+import app.freerouting.core.scoring.RoutingEta;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
@@ -28,6 +29,7 @@ public class ScreenMessages {
   private final JLabel status_field;
   private final JLabel layer_field;
   private final JLabel score_field;
+  private final JLabel eta_field;
   private final JLabel mouse_position;
   private final JLabel unit_label;
   private final TextManager tm;
@@ -38,7 +40,7 @@ public class ScreenMessages {
    * Creates a new instance of ScreenMessages
    */
   public ScreenMessages(JLabel errorLabel, JLabel warningLabel, JLabel p_status_field, JLabel p_add_field,
-      JLabel p_layer_field, JLabel p_score_field, JLabel p_mouse_position, JLabel p_unit_label,
+      JLabel p_layer_field, JLabel p_score_field, JLabel p_eta_field, JLabel p_mouse_position, JLabel p_unit_label,
       Locale p_locale) {
 
     tm = new TextManager(this.getClass(), p_locale);
@@ -50,6 +52,7 @@ public class ScreenMessages {
     add_field = p_add_field;
     layer_field = p_layer_field;
     score_field = p_score_field;
+    eta_field = p_eta_field;
     mouse_position = p_mouse_position;
     unit_label = p_unit_label;
     add_field.setText(empty_string);
@@ -180,5 +183,18 @@ public class ScreenMessages {
   public void set_board_score(float score, int unrouted_count, int violation_count) {
     score_field.setText(tm.getText("score", FRLogger.defaultFloatFormat.format(score), String.valueOf(unrouted_count),
         String.valueOf(violation_count)));
+  }
+
+  /**
+   * Sets the ETA display text in the status bar.
+   *
+   * @param eta the current routing ETA, or null to clear the display
+   */
+  public void set_routing_eta(RoutingEta eta) {
+    if (eta == null || eta.confidence == RoutingEta.Confidence.NONE) {
+      eta_field.setText(tm.getText("eta_estimating"));
+      return;
+    }
+    eta_field.setText(eta.toDisplayString());
   }
 }
