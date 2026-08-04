@@ -4,6 +4,7 @@ import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Handles the indenting of scopes while writing to an output text file.
@@ -19,7 +20,7 @@ public class IndentFileWriter extends OutputStreamWriter {
    * Creates a new instance of IndentFileWriter
    */
   public IndentFileWriter(OutputStream p_stream) {
-    super(p_stream);
+    super(p_stream, StandardCharsets.UTF_8);
   }
 
   /**

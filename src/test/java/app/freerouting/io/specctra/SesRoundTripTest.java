@@ -11,6 +11,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -206,5 +210,72 @@ class SesRoundTripTest {
     assertEquals(imported.wiresImported(), reimported.wiresImported(),
         "snapping must not change the wire count on re-import");
     assertEquals(0, reimported.errorsEncountered());
+  }
+
+  /**
+   * Issue 742: KiCad must be able to consume Freerouting SES output for the tastexx keyboard board.
+   * Verifies balanced syntax, unique library padstacks, KiCad-style rotation formatting, and a
+   * writer-reader round-trip without errors.
+   */
+  @Test
+  void issue742SesRoundTripsWithoutErrors() throws Exception {
+    RoutingBoard board = DsnTestFixtures.loadBoard("Issue742-tastexx-pcb.dsn");
+
+    SesImportSummary imported;
+    try (InputStream sesIn = DsnTestFixtures.openFixtureStream("Issue742-tastexx-pcb.ses")) {
+      imported = SesReader.read(sesIn, board);
+    }
+    assertTrue(imported.wiresImported() > 0, "fixture SES must contain routed wires");
+    assertEquals(0, imported.errorsEncountered());
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    SesWriter.write(board, out, "Issue742-tastexx-pcb.dsn");
+    String content = out.toString(StandardCharsets.UTF_8);
+
+    assertBalancedScopes(content);
+    assertUniqueLibraryPadstacks(content);
+    assertFalse(content.contains("0.000"), "whole-degree rotations must not use trailing decimals");
+    assertTrue(content.contains("338.5") || content.contains(" front 339"),
+        "fractional or rounded component rotations must be preserved in placement records");
+
+    RoutingBoard fresh = DsnTestFixtures.loadBoard("Issue742-tastexx-pcb.dsn");
+    SesImportSummary reimported = SesReader.read(new ByteArrayInputStream(out.toByteArray()), fresh);
+    assertEquals(imported.wiresImported(), reimported.wiresImported(),
+        "round-trip must preserve wire count");
+    assertEquals(0, reimported.errorsEncountered());
+  }
+
+  /**
+   * Placement rotation formatting must match KiCad Specctra export conventions.
+   */
+  @Test
+  void placementRotationFormattingMatchesKicadStyle() {
+    assertEquals("0", SesWriter.formatPlacementRotation(0.0));
+    assertEquals("339", SesWriter.formatPlacementRotation(339.0));
+    assertEquals("338.5", SesWriter.formatPlacementRotation(338.5));
+    assertEquals("-45.25", SesWriter.formatPlacementRotation(-45.25));
+  }
+
+  private static void assertBalancedScopes(String content) {
+    long opens = content.chars().filter(ch -> ch == '(').count();
+    long closes = content.chars().filter(ch -> ch == ')').count();
+    assertEquals(opens, closes, "SES scopes must be balanced");
+  }
+
+  private static void assertUniqueLibraryPadstacks(String content) {
+    int libraryStart = content.indexOf("(library_out");
+    assertTrue(libraryStart >= 0, "SES must contain library_out scope");
+    int networkStart = content.indexOf("(network_out", libraryStart);
+    assertTrue(networkStart > libraryStart, "SES must contain network_out scope after library_out");
+
+    String librarySection = content.substring(libraryStart, networkStart);
+    Matcher matcher = Pattern.compile("\\(padstack\\s+([^\\s()]+)").matcher(librarySection);
+    Set<String> padstackNames = new HashSet<>();
+    while (matcher.find()) {
+      String padstackName = matcher.group(1);
+      assertTrue(padstackNames.add(padstackName),
+          "library_out must not contain duplicate padstack entries: " + padstackName);
+    }
+    assertFalse(padstackNames.isEmpty(), "library_out must declare at least one via padstack");
   }
 }

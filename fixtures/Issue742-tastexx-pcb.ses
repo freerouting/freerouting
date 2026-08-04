@@ -3,28 +3,28 @@
   (placement
     (resolution um 10)
     (component "isw-kbd:M2_ScrewHole_EdgeCuts"
-      (place H1 231197 -205081 front 0.000)
-      (place H3 231197 -814581 front 0.000)
-      (place H4 1010697 -814581 front 0.000)
-      (place H2 1010697 -205081 front 0.000)
+      (place H1 231197 -205081 front 0)
+      (place H3 231197 -814581 front 0)
+      (place H4 1010697 -814581 front 0)
+      (place H2 1010697 -205081 front 0)
     )
     (component "isw-kbd:Diode_SMD"
-      (place D3 337219 -580115 front 338.500)
-      (place D4 514463 -649933 front 338.500)
-      (place D2 584282 -472689 front 338.500)
-      (place D1 407037 -402870 front 338.500)
+      (place D3 337219 -580115 front 338.5)
+      (place D4 514463 -649933 front 338.5)
+      (place D2 584282 -472689 front 338.5)
+      (place D1 407037 -402870 front 338.5)
     )
     (component "isw-kbd:RP2040-Zero"
-      (place U1 884247 -311031 front 0.000)
+      (place U1 884247 -311031 front 0)
     )
     (component "isw-kbd:CherryMX_GLP3.0_Hotswap_1u"
-      (place SW4 532788 -603412 front 338.500)
-      (place SW2 602607 -426168 front 338.500)
-      (place SW3 355544 -533594 front 338.500)
-      (place SW1 425362 -356349 front 338.500)
+      (place SW4 532788 -603412 front 338.5)
+      (place SW2 602607 -426168 front 338.5)
+      (place SW3 355544 -533594 front 338.5)
+      (place SW1 425362 -356349 front 338.5)
     )
     (component "isw-kbd:LED_WS2812B_UG"
-      (place LED1 719296 -730888 front 338.500)
+      (place LED1 719296 -730888 front 338.5)
     )
   )
   (was_is
@@ -36,15 +36,6 @@
       (host_version "10.0.4")
     )
     (library_out 
-      (padstack "Via[0-1]_800:400_um"
-        (shape
-          (circle F.Cu 8000 0 0)
-        )
-        (shape
-          (circle B.Cu 8000 0 0)
-        )
-        (attach off)
-      )
       (padstack "Via[0-1]_800:400_um"
         (shape
           (circle F.Cu 8000 0 0)

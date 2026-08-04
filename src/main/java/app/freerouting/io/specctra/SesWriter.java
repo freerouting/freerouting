@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Writes a Specctra session (.ses) file from a {@link BasicBoard}.
@@ -155,7 +158,7 @@ public final class SesWriter {
     } else {
       file.write(" back ");
     }
-    file.write(String.format(java.util.Locale.ENGLISH, "%.3f", component.get_rotation_in_degree()));
+    file.write(formatPlacementRotation(component.get_rotation_in_degree()));
     if (component.position_fixed) {
       file.new_line();
       file.write(" (lock_type position)");
@@ -217,11 +220,32 @@ public final class SesWriter {
       CoordinateTransform coordinateTransform, IndentFileWriter file) throws IOException {
     file.start_scope();
     file.write("library_out ");
+    Set<String> writtenPadstackNames = new LinkedHashSet<>();
     for (int i = 0; i < board.library.via_padstack_count(); i++) {
-      writePadstack(board.library.get_via_padstack(i), board, identifierType, coordinateTransform,
-          file);
+      Padstack viaPadstack = board.library.get_via_padstack(i);
+      if (viaPadstack == null || !writtenPadstackNames.add(viaPadstack.name)) {
+        continue;
+      }
+      writePadstack(viaPadstack, board, identifierType, coordinateTransform, file);
     }
     file.end_scope();
+  }
+
+  /**
+   * Formats component rotation for Specctra placement records in the style KiCad exports:
+   * whole degrees as integers ({@code 0}, {@code 339}) and fractional degrees with minimal
+   * decimal precision ({@code 338.5}), never unnecessary trailing zeros ({@code 338.500}).
+   */
+  static String formatPlacementRotation(double degrees) {
+    double rounded = Math.rint(degrees * 1000.0) / 1000.0;
+    if (Math.abs(rounded - Math.rint(rounded)) < 1e-9) {
+      return String.format(Locale.ENGLISH, "%.0f", rounded);
+    }
+    String formatted = String.format(Locale.ENGLISH, "%.3f", rounded);
+    if (formatted.contains(".")) {
+      formatted = formatted.replaceAll("0+$", "").replaceAll("\\.$", "");
+    }
+    return formatted;
   }
 
   private static void writePadstack(Padstack padstack, BasicBoard board,

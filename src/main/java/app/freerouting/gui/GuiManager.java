@@ -189,24 +189,24 @@ public class GuiManager {
                             String design_name = filename_only.substring(0, filename_only.length() - 4);
                             String extension = filename_only.substring(filename_only.length() - 4);
 
-                            OutputStream output_stream = new FileOutputStream(filename);
-
-                            switch (extension) {
-                                case ".dsn" ->
-                                    new_frame.board_panel.board_handling.saveAsSpecctraDesignDsn(output_stream,
-                                            design_name, false);
-                                case ".ses" ->
-                                    new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(output_stream,
-                                            design_name);
-                                case ".scr" -> {
-                                    ByteArrayOutputStream session_output_stream = new ByteArrayOutputStream();
-                                    new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(session_output_stream,
-                                            filename);
-                                    InputStream input_stream = new ByteArrayInputStream(
-                                            session_output_stream.toByteArray());
-                                    new_frame.board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(
-                                            input_stream,
-                                            output_stream);
+                            try (OutputStream output_stream = new FileOutputStream(filename)) {
+                                switch (extension) {
+                                    case ".dsn" ->
+                                        new_frame.board_panel.board_handling.saveAsSpecctraDesignDsn(output_stream,
+                                                design_name, false);
+                                    case ".ses" ->
+                                        new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(output_stream,
+                                                design_name);
+                                    case ".scr" -> {
+                                        ByteArrayOutputStream session_output_stream = new ByteArrayOutputStream();
+                                        new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(session_output_stream,
+                                                filename);
+                                        InputStream input_stream = new ByteArrayInputStream(
+                                                session_output_stream.toByteArray());
+                                        new_frame.board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(
+                                                input_stream,
+                                                output_stream);
+                                    }
                                 }
                             }
 

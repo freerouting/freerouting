@@ -1076,14 +1076,13 @@ public class BoardFrame extends WindowBase {
     }
 
     FRLogger.info("Saving '" + outputFile.getPath() + "'...");
-    OutputStream output_stream;
-    try {
-      output_stream = new FileOutputStream(outputFile);
-    } catch (Exception _) {
-      output_stream = null;
-    }
-
-    if (!board_panel.board_handling.saveAsSpecctraSessionSes(output_stream, designName)) {
+    try (OutputStream outputStream = new FileOutputStream(outputFile)) {
+      if (!board_panel.board_handling.saveAsSpecctraSessionSes(outputStream, designName)) {
+        this.screen_messages.set_status_message(tm.getText("message_specctra_ses_save_failed", outputFile.getPath()));
+        return false;
+      }
+    } catch (IOException e) {
+      FRLogger.error("unable to save Specctra session file '" + outputFile.getPath() + "'", e);
       this.screen_messages.set_status_message(tm.getText("message_specctra_ses_save_failed", outputFile.getPath()));
       return false;
     }
@@ -1207,16 +1206,14 @@ public class BoardFrame extends WindowBase {
 
     FRLogger.info("Saving '" + outputFile.getPath() + "'...");
 
-    OutputStream output_stream;
-    try {
-      output_stream = new FileOutputStream(outputFile);
-    } catch (Exception _) {
-      output_stream = null;
-    }
-
-    if (board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(sesInputStream, output_stream)) {
-      screen_messages.set_status_message(tm.getText("message_eagle_saved", outputFile.getPath()));
-    } else {
+    try (OutputStream outputStream = new FileOutputStream(outputFile)) {
+      if (board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(sesInputStream, outputStream)) {
+        screen_messages.set_status_message(tm.getText("message_eagle_saved", outputFile.getPath()));
+      } else {
+        screen_messages.set_status_message(tm.getText("message_eagle_save_failed", outputFile.getPath()));
+      }
+    } catch (IOException e) {
+      FRLogger.error("unable to save Eagle script file '" + outputFile.getPath() + "'", e);
       screen_messages.set_status_message(tm.getText("message_eagle_save_failed", outputFile.getPath()));
     }
   }
@@ -1230,14 +1227,12 @@ public class BoardFrame extends WindowBase {
     }
 
     FRLogger.info("Saving '" + outputFile.getPath() + "'...");
-    OutputStream output_stream;
-    try {
-      output_stream = new FileOutputStream(outputFile);
-    } catch (Exception _) {
-      output_stream = null;
+    try (OutputStream outputStream = new FileOutputStream(outputFile)) {
+      return board_panel.board_handling.saveAsSpecctraDesignDsn(outputStream, designName, compatibilityMode);
+    } catch (IOException e) {
+      FRLogger.error("unable to save Specctra design file '" + outputFile.getPath() + "'", e);
+      return false;
     }
-
-    return board_panel.board_handling.saveAsSpecctraDesignDsn(output_stream, designName, compatibilityMode);
   }
 
   /**
