@@ -1,0 +1,58 @@
+
+(rules PCB tastexx-pcb.dsn
+  (snap_angle 
+    fortyfive_degree
+  )
+  (rule
+    (width 250.0)
+    (clearance 200.0)
+    (clearance 125.0 (type smd_to_turn_gap))
+    (clearance 50.0 (type smd))
+    (clearance 200.0 (type "kicad_default"))
+  )
+  (padstack "Via[0-1]_800:400_um"
+    (shape
+      (circle F.Cu 800.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 800.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (via 
+    "Via[0-1]_800:400_um" "Via[0-1]_800:400_um" default
+  )
+  (via 
+    "Via[0-1]_800:400_um-kicad_default" "Via[0-1]_800:400_um" "kicad_default"
+  )
+  (via_rule
+    default "Via[0-1]_800:400_um"
+  )
+  (via_rule
+    "kicad_default" "Via[0-1]_800:400_um-kicad_default"
+  )
+  (class default
+    (clearance_class default)
+    (via_rule default)
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "kicad_default"
+    Row1 "Net-(D3-A)" LED5V "unconnected-(U1-Pad1)" Col0 Col1 "unconnected-(U1-Pad4)" "unconnected-(U1-Pad5)"
+    "unconnected-(U1-Pad6)" "unconnected-(U1-Pad7)" "unconnected-(U1-Pad8)" "unconnected-(U1-Pad9)" "unconnected-(U1-Pad10)" "unconnected-(U1-Pad11)" "unconnected-(U1-Pad12)" "unconnected-(U1-Pad13)"
+    "unconnected-(U1-Pad14)" "unconnected-(U1-Pad15)" "unconnected-(U1-Pad26)" "unconnected-(U1-Pad27)" Row0 +3V3 GND +5V
+    "Net-(D4-A)" "Net-(D2-A)" "unconnected-(LED1-DOUT-Pad2)" "Net-(D1-A)"
+    (clearance_class "kicad_default")
+    (via_rule "kicad_default")
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+)
