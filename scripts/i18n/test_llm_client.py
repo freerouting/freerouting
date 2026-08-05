@@ -42,7 +42,7 @@ class LlmClientGoogleTest(unittest.TestCase):
         mock_post.return_value.json.return_value = {
             "candidates": [{"content": {"parts": [{"text": '{"save": "Speichern"}'}]}}]
         }
-        mock_post.return_value.raise_for_status = MagicMock()
+        mock_post.return_value.ok = True
 
         result = llm_client._call_google(
             "translate save",
@@ -55,22 +55,37 @@ class LlmClientGoogleTest(unittest.TestCase):
 
         args, kwargs = mock_post.call_args
         self.assertIn("/models/gemini-3.6-flash:generateContent", args[0])
-        self.assertEqual(kwargs["params"]["key"], "test-key")
-        self.assertEqual(kwargs["json"]["generationConfig"]["temperature"], 0.0)
-        self.assertEqual(kwargs["json"]["generationConfig"]["thinkingConfig"]["thinkingBudget"], 0)
+        self.assertEqual(kwargs["headers"]["x-goog-api-key"], "test-key")
+        generation_config = kwargs["json"]["generationConfig"]
+        self.assertNotIn("temperature", generation_config)
+        self.assertEqual(generation_config["thinkingConfig"]["thinkingLevel"], "minimal")
 
     @patch("requests.post")
-    def test_call_google_omits_thinking_when_default_requested(self, mock_post: MagicMock) -> None:
+    def test_call_google_gemini_25_uses_thinking_budget(self, mock_post: MagicMock) -> None:
         mock_post.return_value.json.return_value = {
             "candidates": [{"content": {"parts": [{"text": "ok"}]}}]
         }
-        mock_post.return_value.raise_for_status = MagicMock()
+        mock_post.return_value.ok = True
 
-        with patch.dict(os.environ, {"LLM_GEMINI_THINKING_BUDGET": "default"}, clear=False):
-            llm_client._call_google("prompt", "gemini-3.1-pro-preview", "k", "http://example", 100)
+        llm_client._call_google("prompt", "gemini-2.5-flash", "AIza-test", "http://example", 100)
 
         generation_config = mock_post.call_args.kwargs["json"]["generationConfig"]
-        self.assertNotIn("thinkingConfig", generation_config)
+        self.assertEqual(generation_config["thinkingConfig"]["thinkingBudget"], 0)
+        self.assertNotIn("thinkingLevel", generation_config["thinkingConfig"])
+
+    @patch("requests.post")
+    def test_call_google_gemini_3_respects_thinking_level_env(self, mock_post: MagicMock) -> None:
+        mock_post.return_value.json.return_value = {
+            "candidates": [{"content": {"parts": [{"text": "ok"}]}}]
+        }
+        mock_post.return_value.ok = True
+
+        with patch.dict(os.environ, {"LLM_GEMINI_THINKING_LEVEL": "low"}, clear=False):
+            llm_client._call_google("prompt", "gemini-3.1-pro-preview", "AIza-test", "http://example", 100)
+
+        generation_config = mock_post.call_args.kwargs["json"]["generationConfig"]
+        self.assertEqual(generation_config["thinkingConfig"]["thinkingLevel"], "low")
+        self.assertNotIn("thinkingBudget", generation_config.get("thinkingConfig", {}))
 
 
 if __name__ == "__main__":

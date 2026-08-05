@@ -28,7 +28,9 @@ from context_store import (  # noqa: E402
     context_diff,
     load_context_dir,
     save_context_dir,
+    sync_translated_flags,
 )
+from properties_io import SUPPORTED_LOCALES  # noqa: E402
 from i18n_output import out, symbol  # noqa: E402
 from java_scanner import scan_java_key_usages  # noqa: E402
 from properties_io import (  # noqa: E402
@@ -234,7 +236,38 @@ def main() -> None:
         action="store_true",
         help="Verify committed context matches current English sources (exit 1 if stale)",
     )
+    parser.add_argument(
+        "--sync-translated",
+        action="store_true",
+        help="Clear needs_retranslation for keys that already have locale translations",
+    )
+    parser.add_argument(
+        "--locale",
+        "-l",
+        type=str,
+        help="Target locale for --sync-translated (e.g. de)",
+    )
+    parser.add_argument(
+        "--all",
+        "-a",
+        action="store_true",
+        help="All supported locales for --sync-translated",
+    )
     args = parser.parse_args()
+
+    if args.sync_translated:
+        if not args.locale and not args.all:
+            parser.error("Specify --locale or --all with --sync-translated")
+        context = load_context_dir(args.output)
+        locales = SUPPORTED_LOCALES if args.all else [args.locale]
+        total_cleared = 0
+        for locale in locales:
+            cleared = sync_translated_flags(context, locale)
+            total_cleared += cleared
+            out(f"{symbol('ok')} {locale}: cleared needs_retranslation on {cleared} keys")
+        save_context_dir(context, args.output)
+        out(f"{symbol('stats')} Synced translated flags ({total_cleared} keys total)")
+        sys.exit(0)
 
     computed = extract_all_context(args.output)
 

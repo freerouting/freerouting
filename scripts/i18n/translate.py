@@ -304,7 +304,7 @@ def translate_locale(
             write_properties(locale_path, result)
             out(f"  {symbol('ok')} Wrote {len(result)} keys to {locale_path}")
 
-    if not dry_run and missing_only:
+    if not dry_run:
         save_context_dir(context, context_dir)
 
     out(f"\n{symbol('stats')} Translation Summary for {locale.upper()}:")

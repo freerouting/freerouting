@@ -107,7 +107,7 @@ def validate_locale(
 
             if ctx.get("needs_retranslation", False):
                 if verbose:
-                    out(f"  {symbol('warn')} {qualified_key}: stale (English changed)")
+                    out(f"  {symbol('warn')} {qualified_key}: flagged needs_retranslation")
                 stale_keys += 1
 
         for key in locale_props:

@@ -81,6 +81,9 @@ python scripts/i18n/translate.py --locale de --bundle gui.BoardMenuFile --missin
 
 # Full locale bootstrap (once per new language — expensive)
 python scripts/i18n/translate.py --locale pt
+
+# After a full (non --missing-only) translation run, sync context flags:
+python scripts/i18n/extract-context.py --sync-translated --all
 ```
 
 **Batch mode:** keys are sent to the LLM in batches (default 15, set `LLM_BATCH_SIZE=1` to force per-key). Failed batch parses fall back to single-key calls with retry/backoff.
@@ -89,10 +92,12 @@ python scripts/i18n/translate.py --locale pt
 
 ```bash
 export LLM_PROVIDER=google
-export GEMINI_API_KEY=...
+export GEMINI_API_KEY=...   # AI Studio auth key (AQ.…) or legacy key (AIza…)
 export LLM_MODEL=gemini-3.6-flash
 python scripts/i18n/translate.py --locale de --bundle gui.BoardMenuFile
 ```
+
+Google AI Studio now issues **auth keys** with an `AQ.` prefix (replacing legacy `AIza…` keys). Pass them via `GEMINI_API_KEY`; the client sends them in the `x-goog-api-key` header on the native Gemini REST endpoint.
 
 **Stale keys:** when `needs_retranslation` is set, the previous locale translation is included in the prompt as an outdated hint.
 
@@ -133,7 +138,8 @@ The parity test `englishBundlesDoNotContainUnusedKeys` writes `build/reports/i18
 | `LLM_API_KEY` | `OPENAI_API_KEY` | API key (Gemini: also `GEMINI_API_KEY` or `GOOGLE_API_KEY`) |
 | `LLM_MODEL` | provider-specific | e.g. `gpt-4o-mini`, `claude-sonnet-5`, `gemini-3.6-flash`, `gemini-3.1-pro-preview` |
 | `LLM_BASE_URL` | provider-specific | OpenAI/Ollama/Gemini API base URL |
-| `LLM_GEMINI_THINKING_BUDGET` | `0` | Gemini thinking token budget (`0` = off; `-1`/`default` = model default) |
+| `LLM_GEMINI_THINKING_LEVEL` | `minimal` | Gemini 3.x only: `minimal`, `low`, `medium`, `high` |
+| `LLM_GEMINI_THINKING_BUDGET` | `0` | Gemini 2.5 and earlier: thinking token budget (`0` = off; `-1`/`default` = model default) |
 | `LLM_BATCH_SIZE` | `15` | Keys per LLM request (1–25) |
 
 ## Recommended timing

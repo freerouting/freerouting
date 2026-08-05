@@ -150,6 +150,20 @@ def _call_anthropic(prompt: str, model: str, api_key: str, max_tokens: int) -> s
     return resp.json()["content"][0]["text"].strip().strip("\"'")
 
 
+def _gemini_uses_thinking_level(model: str) -> bool:
+    """Gemini 3.x uses thinkingLevel; Gemini 2.5 and earlier use thinkingBudget."""
+    normalized = model.lower()
+    return normalized.startswith("gemini-3") or normalized.startswith("gemini-3.")
+
+
+def _gemini_thinking_level() -> str:
+    raw = os.environ.get("LLM_GEMINI_THINKING_LEVEL", "minimal").strip().lower()
+    allowed = {"minimal", "low", "medium", "high"}
+    if raw in allowed:
+        return raw
+    return "minimal"
+
+
 def _gemini_thinking_budget() -> Optional[int]:
     raw = os.environ.get("LLM_GEMINI_THINKING_BUDGET")
     if raw is None:
@@ -164,6 +178,32 @@ def _gemini_thinking_budget() -> Optional[int]:
         return 0
 
 
+def _gemini_generation_config(model: str, max_tokens: int) -> Dict[str, Any]:
+    """Build generationConfig for Gemini REST generateContent."""
+    generation_config: Dict[str, Any] = {"maxOutputTokens": max_tokens}
+
+    # Gemini 3.x rejects temperature/top_p/top_k and thinkingBudget.
+    if _gemini_uses_thinking_level(model):
+        generation_config["thinkingConfig"] = {"thinkingLevel": _gemini_thinking_level()}
+    else:
+        thinking_budget = _gemini_thinking_budget()
+        if thinking_budget is not None:
+            generation_config["thinkingConfig"] = {"thinkingBudget": thinking_budget}
+
+    return generation_config
+
+
+def _google_api_error_message(resp: Any) -> str:
+    try:
+        body = resp.json()
+    except ValueError:
+        return resp.text or str(resp.status_code)
+    message = body.get("error", {}).get("message")
+    if message:
+        return message
+    return json.dumps(body, ensure_ascii=False)
+
+
 def _call_google(prompt: str, model: str, api_key: str, base_url: str, max_tokens: int) -> str:
     import requests
 
@@ -172,28 +212,25 @@ def _call_google(prompt: str, model: str, api_key: str, base_url: str, max_token
             "Gemini API key missing. Set LLM_API_KEY, GEMINI_API_KEY, or GOOGLE_API_KEY."
         )
 
-    generation_config: Dict[str, Any] = {
-        "temperature": 0.0,
-        "maxOutputTokens": max_tokens,
-    }
-    thinking_budget = _gemini_thinking_budget()
-    if thinking_budget is not None:
-        generation_config["thinkingConfig"] = {"thinkingBudget": thinking_budget}
-
     payload: Dict[str, Any] = {
         "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": generation_config,
+        "generationConfig": _gemini_generation_config(model, max_tokens),
     }
 
     url = f"{base_url.rstrip('/')}/models/{model}:generateContent"
     resp = requests.post(
         url,
-        params={"key": api_key},
-        headers={"Content-Type": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+            "x-goog-api-key": api_key,
+        },
         json=payload,
         timeout=120,
     )
-    resp.raise_for_status()
+    if not resp.ok:
+        raise ValueError(
+            f"{resp.status_code} {resp.reason}: {_google_api_error_message(resp)}"
+        )
     body = resp.json()
 
     candidates = body.get("candidates") or []
