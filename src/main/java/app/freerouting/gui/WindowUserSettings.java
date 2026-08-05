@@ -51,9 +51,9 @@ public class WindowUserSettings extends WindowBase {
 
     JDialog profileDialog = new JDialog((Frame) null, "User Settings", true);
     profileDialog.setTitle(tm.getText("title"));
-    profileDialog.setSize(480, 540);
-    profileDialog.setMinimumSize(new Dimension(480, 540));
-    profileDialog.setMaximumSize(new Dimension(480, 540));
+    profileDialog.setSize(480, 570);
+    profileDialog.setMinimumSize(new Dimension(480, 570));
+    profileDialog.setMaximumSize(new Dimension(480, 570));
     profileDialog.setResizable(false);
     profileDialog.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();

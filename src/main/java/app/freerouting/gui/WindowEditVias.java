@@ -178,15 +178,15 @@ public class WindowEditVias extends BoardSavableSubWindow {
       // Check, if via_info is used in a via rule.
       for (ViaRule curr_rule : board_rules.via_rules) {
         if (curr_rule.contains(via_info)) {
-          String message = tm.getText("via_not_removed_in_rule") + " " + curr_rule.name;
-          board_frame.screen_messages.set_status_message(message);
+          board_frame.screen_messages.set_status_message(
+              tm.getText("via_not_removed_in_rule_message", curr_rule.name));
           return;
         }
       }
       if (board_rules.via_infos.remove(via_info)) {
         adjust_table();
-        String message = tm.getText("via") + " " + via_info.get_name() + " " + tm.getText("removed");
-        board_frame.screen_messages.set_status_message(message);
+        board_frame.screen_messages.set_status_message(
+            tm.getText("via_removed_message", via_info.get_name()));
       }
     }
   }

@@ -121,7 +121,8 @@ public class WindowUnconnectedRoute extends CleanupWindows {
 
     @Override
     public String toString() {
-      return tm.getText("net") + " " + this.net.name + ": " + tm.getText("trace_count") + " " + this.trace_count + ", " + tm.getText("via_count") + " " + this.via_count;
+      return tm.getText("unconnected_route_row_message", this.net.name, String.valueOf(this.trace_count),
+          String.valueOf(this.via_count));
     }
 
     @Override

@@ -66,7 +66,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     final JPanel north_panel = new JPanel();
     north_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-    JLabel layer_label = new JLabel(tm.getText("layer") + " ");
+    JLabel layer_label = new JLabel(tm.getText("layer"));
     layer_label.setToolTipText(tm.getText("layer_tooltip"));
     north_panel.add(layer_label);
 
@@ -224,7 +224,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
           continue;
         }
         if (clearance_matrix.is_equal(i, j)) {
-          String message = tm.getText("confirm_remove") + " " + clearance_matrix.get_name(i);
+          String message = tm.getText("confirm_remove_class_message", clearance_matrix.get_name(i));
           int remove_clearance_class_dialog = JOptionPane.showConfirmDialog(this, message, null, JOptionPane.YES_NO_OPTION);
           if (remove_clearance_class_dialog == JOptionPane.YES_OPTION) {
             Collection<Item> board_items = routing_board.get_items();
@@ -413,13 +413,13 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       ClearanceMatrix clearance_matrix = board_handling.get_routing_board().rules.clearance_matrix;
       boolean items_already_assigned = items_already_assigned_row && items_already_assigned_column;
       if (items_already_assigned) {
-        String message = tm.getText("already_assigned") + " ";
+        String message;
         if (curr_row == curr_column) {
-          message += tm.getText("the_class") + " " + clearance_matrix.get_name(curr_row);
+          message = tm.getText("clearance_class_already_assigned_single", clearance_matrix.get_name(curr_row));
         } else {
-          message += tm.getText("the_classes") + " " + clearance_matrix.get_name(curr_row) + " " + tm.getText("and") + " " + clearance_matrix.get_name(curr_column);
+          message = tm.getText("clearance_class_already_assigned_pair", clearance_matrix.get_name(curr_row),
+              clearance_matrix.get_name(curr_column));
         }
-        message += tm.getText("change_anyway");
         int clearance_class_already_assigned_dialog = JOptionPane.showConfirmDialog(board_frame.clearance_matrix_window, message, null, JOptionPane.YES_NO_OPTION);
         if (clearance_class_already_assigned_dialog != JOptionPane.YES_OPTION) {
           return;

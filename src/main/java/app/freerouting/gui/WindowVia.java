@@ -354,7 +354,7 @@ public class WindowVia extends BoardSavableSubWindow {
       layer_names = new JLabel[layer_count];
       circle_radius = new JFormattedTextField[layer_count];
       for (int i = 0; i < layer_count; i++) {
-        String label_string = tm.getText("radius_on_layer") + " " + layer_structure.arr[from_layer_no + i].name + ": ";
+        String label_string = tm.getText("radius_on_layer_label", layer_structure.arr[from_layer_no + i].name);
         layer_names[i] = new JLabel(label_string);
         NumberFormat number_format = NumberFormat.getInstance(board_frame.get_locale());
         number_format.setMaximumFractionDigits(7);
@@ -393,8 +393,8 @@ public class WindowVia extends BoardSavableSubWindow {
         }
       }
       if (via_with_selected_padstack != null) {
-        String message = tm.getText("padstack_not_removed_in_use") + " " + via_with_selected_padstack.get_name();
-        board_frame.screen_messages.set_status_message(message);
+        board_frame.screen_messages.set_status_message(
+            tm.getText("padstack_not_removed_in_use_message", via_with_selected_padstack.get_name()));
         return;
       }
       pcb.library.remove_via_padstack(selected_padstack, pcb);
@@ -491,8 +491,7 @@ public class WindowVia extends BoardSavableSubWindow {
         return;
       }
       ViaRule selected_rule = selected_object;
-      String message = tm.getText("remove_via_rule") + " " + selected_rule.name + "?";
-      if (WindowMessage.confirm(message)) {
+      if (WindowMessage.confirm(tm.getText("remove_via_rule_confirm", selected_rule.name))) {
         BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
         board_rules.via_rules.remove(selected_rule);
         rule_list_model.removeElement(selected_rule);

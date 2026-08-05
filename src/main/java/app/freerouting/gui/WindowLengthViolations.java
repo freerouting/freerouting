@@ -79,17 +79,13 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     public String toString() {
       CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
       NetClass net_class = this.net.get_class();
-      float allowed_length;
-      String allowed_string;
-      if (violation_length > 0) {
-        allowed_length = (float) coordinate_transform.board_to_user(net_class.get_maximum_trace_length());
-        allowed_string = " " + tm.getText("maximum_allowed") + " ";
-      } else {
-        allowed_length = (float) coordinate_transform.board_to_user(net_class.get_minimum_trace_length());
-        allowed_string = " " + tm.getText("minimum_allowed") + " ";
-      }
       float length = (float) coordinate_transform.board_to_user(this.net.get_trace_length());
-      return tm.getText("net") + " " + this.net.name + tm.getText("trace_length") + " " + length + allowed_string + allowed_length;
+      if (violation_length > 0) {
+        return tm.getText("length_violation_max_message", this.net.name, String.valueOf(length),
+            String.valueOf((float) coordinate_transform.board_to_user(net_class.get_maximum_trace_length())));
+      }
+      return tm.getText("length_violation_min_message", this.net.name, String.valueOf(length),
+          String.valueOf((float) coordinate_transform.board_to_user(net_class.get_minimum_trace_length())));
     }
   }
 }

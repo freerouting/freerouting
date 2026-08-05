@@ -586,15 +586,15 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
   private void updateDynamicTooltips() {
     double edge_to_turn_dist = this.guiBoardManager.get_routing_board().rules.get_pin_edge_to_turn_dist();
-    this.edge_to_turn_dist_field.setToolTipText(
-        tm.getText("pin_pad_to_turn_gap_tooltip") + " Current value: " + formatUserDistance(edge_to_turn_dist) + ".");
+    this.edge_to_turn_dist_field.setToolTipText(tm.getText("pin_pad_to_turn_gap_tooltip_current",
+        formatUserDistance(edge_to_turn_dist)));
 
     int region_width = this.guiBoardManager.getInteractiveSettings().get_trace_pull_tight_region_width();
-    String regionTooltip = tm.getText("pull_tight_region_tooltip") + " Current radius: ";
+    String regionTooltip;
     if (region_width >= Integer.MAX_VALUE) {
-      regionTooltip += "whole board (no limit).";
+      regionTooltip = tm.getText("pull_tight_region_tooltip_whole_board");
     } else {
-      regionTooltip += formatUserDistance(region_width) + ".";
+      regionTooltip = tm.getText("pull_tight_region_tooltip_radius", formatUserDistance(region_width));
     }
     this.region_slider.setToolTipText(regionTooltip);
     this.region_width_field.setToolTipText(regionTooltip);
@@ -603,9 +603,10 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     int acc_slider_val = accuracy_slider.getValue();
     int acc_board_value = (c_accuracy_max_slider_value - acc_slider_val + 1) * c_accuracy_scale_factor;
     String accUser = formatUserDistance(acc_board_value);
-    this.accuracy_slider.setToolTipText(tm.getText("pull_tight_accuracy_tooltip") + " Current value: " + accUser + ".");
-    this.accuracy_value_field.setToolTipText(this.accuracy_slider.getToolTipText());
-    this.accuracy_suffix_label.setToolTipText(this.accuracy_slider.getToolTipText());
+    String accuracyTooltip = tm.getText("pull_tight_accuracy_tooltip_current", accUser);
+    this.accuracy_slider.setToolTipText(accuracyTooltip);
+    this.accuracy_value_field.setToolTipText(accuracyTooltip);
+    this.accuracy_suffix_label.setToolTipText(accuracyTooltip);
 
     int clearanceClass = Math.min(1, this.guiBoardManager.get_routing_board().rules.clearance_matrix.get_class_count() - 1);
     double compensation = 0;
@@ -614,7 +615,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       compensation = this.guiBoardManager.get_routing_board().rules.clearance_matrix.clearance_compensation_value(clearanceClass, layer);
     }
     this.clearance_compensation_check_box.setToolTipText(
-        tm.getText("clearance_compensation_checkbox_tooltip") + " Current compensation: " + formatUserDistance(compensation) + ".");
+        tm.getText("clearance_compensation_checkbox_tooltip_current", formatUserDistance(compensation)));
   }
 
   private String formatUserDistance(double boardValue) {

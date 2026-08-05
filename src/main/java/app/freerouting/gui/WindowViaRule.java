@@ -162,8 +162,7 @@ public class WindowViaRule extends WindowBase {
     public void actionPerformed(ActionEvent p_evt) {
       ViaInfo selected_via = rule_list.getSelectedValue();
       if (selected_via != null) {
-        String message = tm.getText("remove_2") + " " + selected_via.get_name() + " " + tm.getText("from_the_rule") + " " + via_rule.name + "?";
-        if (WindowMessage.confirm(message)) {
+        if (WindowMessage.confirm(tm.getText("remove_via_from_rule_confirm", selected_via.get_name(), via_rule.name))) {
           rule_list_model.removeElement(selected_via);
           via_rule.remove_via(selected_via);
         }
