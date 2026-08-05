@@ -65,7 +65,10 @@ def load_glossary(locale: str) -> Dict[str, str]:
 
 def glossary_prompt_lines(locale: str) -> List[str]:
     terms = load_glossary(locale)
-    lines = ["PCB TERMINOLOGY (keep these terms consistent across all translations):"]
+    lines = [
+        "PCB TERMINOLOGY (English keys are lookup labels only; translate using the",
+        "localized form on the right, consistently across all strings in this batch):",
+    ]
     for term, description in sorted(terms.items()):
-        lines.append(f"  - '{term}' = {description}")
+        lines.append(f"  - '{term}' → {description}")
     return lines

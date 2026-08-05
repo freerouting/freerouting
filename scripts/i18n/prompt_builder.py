@@ -13,7 +13,12 @@ def enrich_entry(entry: Dict[str, Any], english_value: str) -> Dict[str, Any]:
     return merged
 
 
+def _latin_script_preserved_names() -> str:
+    return "DSN, SES, Specctra, Freerouting, Andras Fuchs"
+
+
 def _rules_block() -> List[str]:
+    preserved = _latin_script_preserved_names()
     return [
         "RULES:",
         "  - Preserve ALL placeholder tokens (%s, %d, {{...}} etc.) exactly as shown",
@@ -21,6 +26,11 @@ def _rules_block() -> List[str]:
         "  - Preserve \\n escape sequences for multiline strings",
         "  - Keep the same level of formality as the original",
         "  - Do NOT add or remove punctuation that changes meaning",
+        "  - Translate UI text into the target language; use the localized PCB term from",
+        "    the glossary (the text after '='), not the English glossary key",
+        "  - Do NOT leave untranslated English UI words (e.g. clearance, shove fixed)",
+        "    unless they appear in the preserved Latin-script list below",
+        f"  - Keep these names in original Latin script exactly: {preserved}",
     ]
 
 

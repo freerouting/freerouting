@@ -197,6 +197,8 @@ One `{locale}.json` exists for every shipped UI locale. `validate.py` fails if a
 
 Terms were mined from `*_en.properties` and Java UI strings (autorouter, net class, conduction area, push/shove, Specctra DSN/SES, etc.). Extend `_default.json` first, then add the same keys to every `{locale}.json` when introducing new PCB terminology.
 
+**Glossary value style:** each locale entry should lead with the **localized UI term** (the text users should see). English glossary keys are lookup labels only. Keep `DSN`, `SES`, `Specctra`, `Freerouting`, and `Andras Fuchs` in Latin script inside translations when they appear in UI text. Do not embed English UI words such as `clearance` or `shove fixed` in non-English glossary values — that causes the LLM to copy them untranslated.
+
 ## Supported locales
 
 **Source:** `en` (English `*_en.properties`)
