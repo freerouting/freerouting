@@ -20,13 +20,13 @@
     "code_references": [
       "app.freerouting.boardgraphics.OtherColorTableModel"
     ],
-    "english_hash": "b4412c9eaf0d494ae60302bd216a2c784005c364e635520fd121d203f53c85ef",
+    "english_hash": "b9d221d4b68578201b8106276b4a4a97de5756cb24ff4cbeba3d71929b85ea17",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "COMPONENT_FRONT"
@@ -38,13 +38,13 @@
     "code_references": [
       "app.freerouting.boardgraphics.OtherColorTableModel"
     ],
-    "english_hash": "2b09b35a4b7c201f28057cdca053fa7c5cd3ffe14ff9d4900c4039d39d09d817",
+    "english_hash": "b715d31303a97235f0c1af6eef950dbf308276efd206fcabc934387f58d7d21d",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "COMPONENT_BACK"
@@ -56,13 +56,13 @@
     "code_references": [
       "app.freerouting.boardgraphics.ItemColorTableModel"
     ],
-    "english_hash": "177feb5158a2e34553a083bb29fbfc8c049bc609e23765c54a1a976f81864f9a",
+    "english_hash": "16435090833f88002d040c2f9a88110b4b9df80490da3eaf265eed7edaf1b7e5",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -212,13 +212,13 @@
     "code_references": [
       "app.freerouting.boardgraphics.OtherColorTableModel"
     ],
-    "english_hash": "0d653ff18135d53d846414c4ac42a9cc9156536a58ea043d9cbe46d51805f09e",
+    "english_hash": "e5c733a9dd51d9532e142e093f8c556281347573c0bf85e45c06369189049b56",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -228,13 +228,13 @@
     "code_references": [
       "app.freerouting.boardgraphics.ItemColorTableModel"
     ],
-    "english_hash": "4df5b65f6b1c7b8936dfc68b9a48ef4b5e1071cc58368818b6bd5c44cabc6396",
+    "english_hash": "7b18485320a2151e9fca7d5e77b439a0c30326ee1271d18d822fa6585ffbfb2a",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -308,13 +308,13 @@
     "code_references": [
       "app.freerouting.boardgraphics.ItemColorTableModel"
     ],
-    "english_hash": "d3185c9367384fc6cd89d63f7b5b4a7fe6bfe44d7e3a5c53619cba4c99d19584",
+    "english_hash": "3a773b4af5c370fabf0fcbb80d51747747738aa439f2dcdc74eed0f3c13e128b",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -392,13 +392,13 @@
     "code_references": [
       "app.freerouting.boardgraphics.ItemColorTableModel"
     ],
-    "english_hash": "dcad809ee78339082edd4637dbf660401c81ee9b9e9512cff17b9f47009f3c2b",
+    "english_hash": "f7a42af628ab3b42dd59edfa78057832e49fb160684602c4f24fe5392c91d812",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "VIAS"

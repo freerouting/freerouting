@@ -4,13 +4,13 @@
     "code_references": [
       "app.freerouting.gui.BoardMenuOther"
     ],
-    "english_hash": "4fa82fdf241fbf6c632701cafa0f669937af329fe9d36505de5f1c3c317b2a5c",
+    "english_hash": "83b65bf060a6e62f6d4d690a6cf45408a0f385137923b62760523e25277ed800",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuOther",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "delete_all_tracks_and_vias_tooltip"
@@ -22,13 +22,13 @@
     "code_references": [
       "app.freerouting.gui.BoardMenuOther"
     ],
-    "english_hash": "69d01a7694bb5f3662251e76180a7294173d549814a9af782a4acbce58d93403",
+    "english_hash": "fb76f170c78197f3fd663445396ec39e1dd8c8d816bd3e523cd340a2b29990b8",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuOther",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "delete_all_tracks_and_vias"
@@ -68,13 +68,13 @@
   "snapshots_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "9b9ad9b9ff79c8d8b1e1f1bcd5c5246a229e86e809e98d9d849b3151b76d894c",
-    "grammatical_role": "verb_phrase",
+    "english_hash": "853a4d46eb8b11e01906accaa5463a90534bcdc5a72415612c681831974658b2",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuOther",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "snapshots"

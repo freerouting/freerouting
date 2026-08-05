@@ -92,13 +92,13 @@
     "code_references": [
       "app.freerouting.gui.WindowNets"
     ],
-    "english_hash": "806189a63fc38dd8a4d2cfdfe9ae83654ced3fcf23744ccaf6018b6ba7d0b44a",
+    "english_hash": "41828e7d72087b1e93b1374ea63b2731276ada84c0c998c057a98fad7b036904",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNets",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "filter",
@@ -111,13 +111,13 @@
     "code_references": [
       "app.freerouting.gui.WindowNets"
     ],
-    "english_hash": "9eeff1753023232a861e54e2cca93df5dd3277f4fa12fe8f1eb49d6dcd381572",
+    "english_hash": "6fca1522256aeebd00e04f22ebef834c3735bed7d93512a1a53df996dd86503f",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNets",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "filter_incompletes"
@@ -149,13 +149,13 @@
     "code_references": [
       "app.freerouting.gui.WindowNets"
     ],
-    "english_hash": "d2001b02d7db3c20b293f7ba882e0d9c131530ec2627fa5b35853bb82235c6ca",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "89cd54fe7fdfe2199499d564384508b385480b712300c7afd3245596bb4aafba",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNets",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "net_count"
@@ -179,13 +179,13 @@
   "select_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "c98fecdbe8021865a725ebfab4cf23686df516e1925dc704d226b822afc5b50f",
+    "english_hash": "4cb26a58e60d627a7f76284e9b6f2db23b4b49e88b7926664d6948d20ef0625d",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNets",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "select"

@@ -36,13 +36,13 @@
     "code_references": [
       "app.freerouting.gui.WindowObjectList"
     ],
-    "english_hash": "163838396f8678e98250792695075b18a679b274d58e5a4fa14b3c53aecf553b",
+    "english_hash": "55fa3ae9930f5419277ceab88e9dc7f9a90c8139e57669f0582d7c56cf7c96e3",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "info"
@@ -54,13 +54,13 @@
     "code_references": [
       "app.freerouting.gui.WindowObjectList"
     ],
-    "english_hash": "bfe272f94fb0a6e5b220dd7fe0b7d88345d7c8d2e54122d44cc93e0d51473619",
+    "english_hash": "7e04f2ffb9334e3d19a15c949a73818d4b271b0e713dbfad612b29491b46bc1b",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -70,13 +70,13 @@
     "code_references": [
       "app.freerouting.gui.WindowObjectList"
     ],
-    "english_hash": "d86236ded064ecf4bd5b327d30242d997fbb942316e85a852ca92f747960eb1a",
-    "grammatical_role": "fragment",
+    "english_hash": "d3d55370e697f5181f34bf29559b52d9720bd56c655fa58cf2d6846c3cdb5275",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "invert"
@@ -89,13 +89,13 @@
       "app.freerouting.gui.WindowLengthViolations",
       "app.freerouting.gui.WindowObjectList"
     ],
-    "english_hash": "f31b8768396c12bae1b466c43b2db45ce5264c589faaae524abc1877c7f1bd56",
-    "grammatical_role": "fragment",
+    "english_hash": "949da6a3278e2d66078bda0e06f569110d872e46548e354c508af456e3c18715",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -121,13 +121,13 @@
     "code_references": [
       "app.freerouting.gui.WindowObjectList"
     ],
-    "english_hash": "1d93390474a1b30d88232251e39b10d2c7db06f1e48717ce147ab2611e898376",
+    "english_hash": "50d71acb801d3a9cd70dae29a1ad4459d7ae0e9f056a02a45132841a624e7172",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "recalculate"
@@ -155,13 +155,13 @@
     "code_references": [
       "app.freerouting.gui.WindowObjectList"
     ],
-    "english_hash": "151ad2c5b467942705646076275b2078f4e7afb5327d70c825a809cbb4232870",
+    "english_hash": "af8473f3a1a11128842fd20b11845e51515b16935be90ced1b4162aab7befac6",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "select"

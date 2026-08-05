@@ -110,13 +110,13 @@
     "code_references": [
       "app.freerouting.gui.WindowRouteParameter"
     ],
-    "english_hash": "360cb31650ad74a48a1fb2129c55ee34d12771354ee2a7ee83da734ee4a4ed7c",
+    "english_hash": "0dceebc0b99e04caf0f904bf0c764d2e0ed86957718369edf294cb4a42627349",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "change_snap_angle_90"
@@ -128,13 +128,13 @@
     "code_references": [
       "app.freerouting.gui.WindowRouteParameter"
     ],
-    "english_hash": "a649837e3a5f239dada86cbf9e7d9acc8a238b72a07318de48321f5fc4a9b143",
+    "english_hash": "27977e267a4e39e8acbfd580845dcbd02129df39991a7fb0212a9c4321f8c113",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "change_snap_angle_45"
@@ -155,6 +155,7 @@
     "related_keys": [
       "clearance_compensation_checkbox",
       "clearance_compensation_checkbox_tooltip",
+      "clearance_compensation_checkbox_tooltip_current",
       "clearance_compensation_tooltip"
     ],
     "ui_role": "label"
@@ -175,6 +176,7 @@
     "related_keys": [
       "clearance_compensation",
       "clearance_compensation_checkbox_tooltip",
+      "clearance_compensation_checkbox_tooltip_current",
       "clearance_compensation_tooltip"
     ],
     "ui_role": "label"
@@ -193,25 +195,47 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "clearance_compensation_checkbox"
+      "clearance_compensation_checkbox",
+      "clearance_compensation_checkbox_tooltip_current"
     ],
     "ui_role": "tooltip"
+  },
+  "clearance_compensation_checkbox_tooltip_current": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowRouteParameter"
+    ],
+    "english_hash": "2755a4931b3d620d39fcde4ede9d065c90af603b460637c9d44ec3a3f7330ecc",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowRouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{value}}"
+    ],
+    "related_keys": [
+      "clearance_compensation_checkbox_tooltip"
+    ],
+    "ui_role": "label"
   },
   "clearance_compensation_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "f0af2f4296c417d31506343c38c9b3f880b75221d4f38d0b0ca02ca11060ab95",
+    "english_hash": "a043ba227d64f3205e459d2ec48e6166d3a9ffa780727df8928a9924c9341bd8",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "clearance_compensation",
       "clearance_compensation_checkbox",
-      "clearance_compensation_checkbox_tooltip"
+      "clearance_compensation_checkbox_tooltip",
+      "clearance_compensation_checkbox_tooltip_current"
     ],
     "ui_role": "tooltip"
   },
@@ -394,13 +418,13 @@
     "code_references": [
       "app.freerouting.gui.WindowRouteParameter"
     ],
-    "english_hash": "616900b970d657849ce8ccc82e0855a06c3e1fa1953c7596bd76814ef1caab21",
+    "english_hash": "51fa80d9d8d4611cc464e3a161c18b5aa9451460e0fe77c1ac26a964ffe7a3bd",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "keepout_outside_outline"
@@ -499,7 +523,8 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "pin_pad_to_turn_gap_tooltip"
+      "pin_pad_to_turn_gap_tooltip",
+      "pin_pad_to_turn_gap_tooltip_current"
     ],
     "ui_role": "label"
   },
@@ -517,27 +542,51 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "pin_pad_to_turn_gap"
+      "pin_pad_to_turn_gap",
+      "pin_pad_to_turn_gap_tooltip_current"
     ],
     "ui_role": "tooltip"
+  },
+  "pin_pad_to_turn_gap_tooltip_current": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowRouteParameter"
+    ],
+    "english_hash": "bab45388c13169676f67def3b0a3c4d4acf542dd457b204f529ffc03d9ff8c1a",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowRouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{value}}"
+    ],
+    "related_keys": [
+      "pin_pad_to_turn_gap_tooltip"
+    ],
+    "ui_role": "label"
   },
   "pull_tight_accuracy": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowRouteParameter"
     ],
-    "english_hash": "e452475a5ce24267f77e0b26b1dce1d44805afc5c6c879324a3aad3f289e2b56",
+    "english_hash": "b48d23c2190d4c8f5e56324e8ae0455a56b9f69fb8cea25e3a45387d2dbd1eef",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "pull_tight_accuracy_tooltip",
+      "pull_tight_accuracy_tooltip_current",
       "pull_tight_region",
-      "pull_tight_region_tooltip"
+      "pull_tight_region_tooltip",
+      "pull_tight_region_tooltip_radius",
+      "pull_tight_region_tooltip_whole_board"
     ],
     "ui_role": "label"
   },
@@ -555,9 +604,30 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "pull_tight_accuracy"
+      "pull_tight_accuracy",
+      "pull_tight_accuracy_tooltip_current"
     ],
     "ui_role": "tooltip"
+  },
+  "pull_tight_accuracy_tooltip_current": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowRouteParameter"
+    ],
+    "english_hash": "f3726fcb7e7b74f9b8d4f7b35555167ab8f577fc31d4798603c3dc832d45043c",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowRouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{value}}"
+    ],
+    "related_keys": [
+      "pull_tight_accuracy_tooltip"
+    ],
+    "ui_role": "label"
   },
   "pull_tight_region": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -575,7 +645,10 @@
     "related_keys": [
       "pull_tight_accuracy",
       "pull_tight_accuracy_tooltip",
-      "pull_tight_region_tooltip"
+      "pull_tight_accuracy_tooltip_current",
+      "pull_tight_region_tooltip",
+      "pull_tight_region_tooltip_radius",
+      "pull_tight_region_tooltip_whole_board"
     ],
     "ui_role": "label"
   },
@@ -593,9 +666,51 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "pull_tight_region"
+      "pull_tight_region",
+      "pull_tight_region_tooltip_radius",
+      "pull_tight_region_tooltip_whole_board"
     ],
     "ui_role": "tooltip"
+  },
+  "pull_tight_region_tooltip_radius": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowRouteParameter"
+    ],
+    "english_hash": "97315d584a324f4ecef18a5461170948469e4161ac72a1c08a2bfcf6ebd2ff66",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowRouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{value}}"
+    ],
+    "related_keys": [
+      "pull_tight_region_tooltip",
+      "pull_tight_region_tooltip_whole_board"
+    ],
+    "ui_role": "label"
+  },
+  "pull_tight_region_tooltip_whole_board": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowRouteParameter"
+    ],
+    "english_hash": "56a563061ed32420182f57c8a20a411a92a0fe258a69620818369dcc7d079508",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowRouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "pull_tight_region_tooltip",
+      "pull_tight_region_tooltip_radius"
+    ],
+    "ui_role": "label"
   },
   "push&shove_enabled": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -764,13 +879,13 @@
     "code_references": [
       "app.freerouting.gui.WindowRouteParameter"
     ],
-    "english_hash": "df41266efb74e2e27e2b7167550579debdd88f1aee0e2a3f72ebf0e46be38153",
+    "english_hash": "51995b15efc1b5d6540674588d5dc175a67c011ef22d5457b1ea7bf9ef3cde14",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowRouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "snap_angle"

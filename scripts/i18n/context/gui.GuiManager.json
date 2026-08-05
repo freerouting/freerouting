@@ -24,13 +24,13 @@
     "code_references": [
       "app.freerouting.gui.GuiManager"
     ],
-    "english_hash": "ad2c01ad16021a3eea4c4634ffad183c2f7bf5b5aa32c738e75c058f961c06d2",
+    "english_hash": "e3cb6c5a22d24c292aa7a73f49440e81b50467ea73f4848e42e3d16c167ea9a5",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "auto_start_routing_cancel_button",
@@ -64,13 +64,13 @@
     "code_references": [
       "app.freerouting.gui.GuiManager"
     ],
-    "english_hash": "fa2561e5210233c1a2e160a2f35e97e139eeabd86827c12cb1bd27d3196ef723",
+    "english_hash": "b3991c90e08c0612b159405b5e402962bf80c6d7bb113707df067520b1821224",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "auto_start_routing_cancel_button",
@@ -82,13 +82,13 @@
   "command_line_missing_input": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "138bbb3b7a23e95b4c2fb651e3f22c0f62db9219f336218c9c29ee3cb7566aca",
+    "english_hash": "6fc416582a666d4546c054dbc3334cd1548489c5dd8f7ad906fc0081f21c0be4",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -134,13 +134,13 @@
     "code_references": [
       "app.freerouting.gui.GuiManager"
     ],
-    "english_hash": "e6f170a64be89cba3e2950cb0120ba0717cb7208262b3c5d088560b9eccc9142",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "365c7b584800d7c0ff922bb3750191dfe4fbbc11a57a40e13efa35fc50e409f1",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "confirm_cancel",
@@ -151,13 +151,13 @@
   "defaults_restored": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "950e6fcd3e65ad0541459421bdeb9d7715514aa314c348977cecaa64e081d4b8",
-    "grammatical_role": "fragment",
+    "english_hash": "24a6a74e7d5a599129b6774ad78f7c206aa9feff95a9eda9e0ad1fcb2c4943f2",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -238,13 +238,13 @@
   "load_snapshot_confirmation": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "2de4afe33ac6dac337e2e0d4177cf0760df2aad227c6f7344e8129e7ee3a543b",
+    "english_hash": "79eb8b3548cc5c4e273b045c72c882e4df1e9cb6d6f6b3304a6a5205d8cfd343",
     "grammatical_role": "noun_phrase",
     "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [
       "{{modification_time}}"
     ],
@@ -296,13 +296,13 @@
   "nothing_to_restore": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "a14a5844125463bbe2bdf1bc21f5062ce405558fe9c61225e5095642c951b587",
-    "grammatical_role": "fragment",
+    "english_hash": "39f176f0c628f5720233b13c036073b59f40b45fbcfea1719b9e17aec9cc9c87",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -310,13 +310,13 @@
   "open_own_design": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "a0ea97d4d825ed5594f16fe7dc5043621b601b0187e75dc72f1691a7969be2fa",
+    "english_hash": "128bd13c338abbf72b2a5bcac332a153c43c5b3bf43e46da52cffdf80cb3aec1",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "open_own_design_tooltip"
@@ -326,13 +326,13 @@
   "open_own_design_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "bdb5e6c9db2dc52942a179c49ff11b1c9b7c90e7540b3f222a54a1e307da2914",
+    "english_hash": "92e68dff37ba676f5c9f59935fa0fb04fb9828e178669a34ebc6e4d7de83a631",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "open_own_design"
@@ -374,13 +374,13 @@
   "restore_defaults_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "a545e5be6fbc642c7dc0548d978675f0f1468360e56ba8bc5c756c24e1a325be",
-    "grammatical_role": "verb_phrase",
+    "english_hash": "a35d95cb84153bf694ed8acfca2d066adb7800644a6c03ccbbb38dfd86c41749",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "restore_defaults"
@@ -406,13 +406,13 @@
   "router_demonstrations_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "f4db5c10347d012032108f05251d82a8ead0a23fe6fa2f67107199f3186a8eb3",
-    "grammatical_role": "fragment",
+    "english_hash": "e27486d741a446c58f5530a167e53e1692ed3dd9aee786b3c01235647d18abf8",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "router_demonstrations"
@@ -438,13 +438,13 @@
   "sample_designs_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "6c92293958321f27370ac179f30fb5d3520f5f0920cf3d77d93324a9d1823187",
-    "grammatical_role": "verb_phrase",
+    "english_hash": "ad6b93088199ea80ebcee081385e6d835532cd6fe8082aed6abe67310ad04e9e",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "sample_designs"
@@ -470,13 +470,13 @@
   "status_design_file_opened": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "5023662705d96810758a40e018035f9a90b8df6e8250eb522e9ba9e188443ba7",
-    "grammatical_role": "fragment",
+    "english_hash": "b19fb8d1b395b333251f40be2909ca37a0b0a007b3c4c4b34b726be71f715daa",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "status_design_file_label"
@@ -502,13 +502,13 @@
   "user_online_message_1": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "7323ab705376c2dd5756bb2eb3dfbfefacddde676d45eccc3835907542545aad",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "0942d0641378d6d8e64f085b8c06df5e44a012adb7e48824e5af8de9e2cbcee0",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "user_online_message_2"
@@ -518,13 +518,13 @@
   "user_online_message_2": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "a026bed395b606a79c1afd6fd3e8d41a12ae374c632ce9d3683824e7ef9eeca8",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "8317c5d8e4338a14db4cb2e0ebcfac4796dac0041399ce6042cbf2938b485899",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.GuiManager",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "user_online_message_1"

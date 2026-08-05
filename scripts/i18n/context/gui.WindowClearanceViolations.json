@@ -90,13 +90,13 @@
     "code_references": [
       "app.freerouting.gui.WindowClearanceViolations"
     ],
-    "english_hash": "38aff2d2487cc58adcfbbd52621c0a6eb79d9ae30c32db87300898db0cd90111",
-    "grammatical_role": "fragment",
+    "english_hash": "64b94c74b84606f7284e0c460ff5b4e3a66c6a5632b3fc269059240e225ce0c9",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowClearanceViolations",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "message"
@@ -133,19 +133,21 @@
     "related_keys": [],
     "ui_role": "dialog_title"
   },
-  "trace": {
+  "trace_with_net_label": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowClearanceViolations"
     ],
-    "english_hash": "eafe895eb8119e6e5d06463590b2ef81b3651c157d5c8e18f1889186c7fd0ac0",
+    "english_hash": "a3a30f0eb793dac6635b68ac72dc26a75777b523142583c5ffab0a099c424f39",
     "grammatical_role": "fragment",
-    "has_placeholders": false,
+    "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowClearanceViolations",
     "max_length_hint": null,
     "needs_retranslation": false,
-    "placeholders": [],
+    "placeholders": [
+      "{{net}}"
+    ],
     "related_keys": [],
     "ui_role": "label"
   },
@@ -155,22 +157,6 @@
       "app.freerouting.gui.WindowClearanceViolations"
     ],
     "english_hash": "b23a6a8439c0dde5515893e7c90c1e3233b8616e634470f20dc4928bcf3609bc",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowClearanceViolations",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "via": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowClearanceViolations"
-    ],
-    "english_hash": "4d327af41f96c23c6b13c8c80e1591babd241b29e61fb64f1c0ea480f3d666bc",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
@@ -195,7 +181,27 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "via"
+      "via_with_net_label"
+    ],
+    "ui_role": "label"
+  },
+  "via_with_net_label": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowClearanceViolations"
+    ],
+    "english_hash": "7413ec94ce1f263ea1abbf9ecf861ae958dd120255f8a880dcd04109afb905c4",
+    "grammatical_role": "fragment",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowClearanceViolations",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{net}}"
+    ],
+    "related_keys": [
+      "via_keepout"
     ],
     "ui_role": "label"
   }

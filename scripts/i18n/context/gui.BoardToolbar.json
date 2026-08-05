@@ -50,13 +50,13 @@
   "debug_next_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "2b42d29fdba90f3cc40d439ba5dca565ecf14f2f3b2afb9284b2be7ba7361452",
+    "english_hash": "af90ef55043a9d8c1fcbe2e4cff2073462e4fdbcbaea1d7910bc7863dcd05d3f",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "debug_next"
@@ -98,13 +98,13 @@
   "debug_previous_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "060139d5a5829f0bf4b05a0c7fb0ea6fe720476c329de92933338165713adda3",
+    "english_hash": "d03e03477aa13e001f01a4b50e66222b2e0bddc83bd03d711ddad896b8c30204",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "debug_previous"
@@ -130,13 +130,13 @@
   "delete_all_tracks_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "69d01a7694bb5f3662251e76180a7294173d549814a9af782a4acbce58d93403",
+    "english_hash": "fb76f170c78197f3fd663445396ec39e1dd8c8d816bd3e523cd340a2b29990b8",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "delete_all_tracks_button"
@@ -146,13 +146,13 @@
   "display_all_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "cfa1c2a81aca1f3a7b035a1c2a784a532594dd1758497f747eeba2672d6d65c2",
+    "english_hash": "25a8c64362484ab2e70682afb9aef551ea2cffd1940b1487cc120c2592192f1f",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "display_all_button"
@@ -162,13 +162,13 @@
   "display_region_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "5e74fd1268bdad5a4e3ee78d10f5a51325a12c5157f773f2d5c24ddcf0c1dcfe",
+    "english_hash": "d0626e17d0ce98929a53437393023290ca38f434d4750c0e9297d86ad407b25d",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "display_region_button"
@@ -196,13 +196,13 @@
   "drag_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "4f8ae2870209a0741a996bc6f57a8d73c1b20c155f1d0c774d1e027b9b111b2b",
+    "english_hash": "fe1342ec858179c9a5cf26e4aa9ba950f853a6f74b99f99e51a4dc1be0456618",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "drag_button"
@@ -212,13 +212,13 @@
   "incompletes_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "5e6b5827d852b245c1cd9f2a5a6c6d2ee1db6c621858ae5ce8bc246784ae9b7b",
+    "english_hash": "c5117774f1339416090b38e0d45417e12a7c22732c3334a3f463c2562429859b",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "incompletes_button"
@@ -246,13 +246,13 @@
   "inspect_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "2820f2b4a42b1a40d329914557b83d631508be5ad0822e28b6250252fb3b60ff",
+    "english_hash": "b93b8950af1b99f5c19a39e8d749d213814340fedc805333d31381b3df6d3ea0",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "inspect_button"
@@ -262,13 +262,13 @@
   "redo_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "4eacf3c0336a5ee223048f57198abc15e2bc44fe991291a831a1a8d4e60a2ade",
+    "english_hash": "9bec47cedfde69ea1157ba367082479698891788d2782fa7354956cc6a82207d",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "redo_button"
@@ -296,13 +296,13 @@
   "route_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "27b7a8eb79681798dbd0f18d41c780c24a07281530bc33a829b6121301f8be98",
+    "english_hash": "565363f7a613a159f8bf06e87bb34e8b8636eac9e9a30304575d68e466bdaee1",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "route_button"
@@ -312,13 +312,13 @@
   "settings_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "e709319406dfd0baef21c92228f208d18e5a7c8b3d0263d58de4143e8a872bc9",
+    "english_hash": "ca381c1e76e681b6c18fa984a2e2fda6ed4a9f28e914f539db34a6dcb3737149",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "settings_button"
@@ -328,13 +328,13 @@
   "undo_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "b0b0142934df7070a6702fc7a6d9004270c7cddce07f85838316ca36e7f44d47",
+    "english_hash": "4caf725d92386379bfb9994608aa5b6301445d70d7b89a1ce3f97c4dc4c55eeb",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "undo_button"
@@ -433,13 +433,13 @@
   "unit_mil_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "d107829b3da9f81e7b46e384854146c512526a3f4d03af645aab45a731e6c5d5",
+    "english_hash": "e02df106a04a3d7a508813a9a0300c73c92ba0e3e995665de86d2e54f48de934",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "unit_mil"
@@ -492,13 +492,13 @@
     "code_references": [
       "app.freerouting.gui.BoardToolbar"
     ],
-    "english_hash": "289c90decf40c8ec15f72f6080f2a4e7cd11d4128530dd5d290fc06ebadba620",
+    "english_hash": "3b1ec39664627ace73cc50b1ca00dd16aa8873fa04489e7b08ea599c2dcaeff5",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "unit_button",
@@ -531,13 +531,13 @@
   "violations_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "987949f4f1527ec6413790e1ee05d6af47bdfda6e045196751eedc6453787292",
+    "english_hash": "18952fb47b4ad5d3c51b8c1f75ef1b152c83de5d167d255493dd978e7401bc4f",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "violations_button"
@@ -549,13 +549,13 @@
     "code_references": [
       "app.freerouting.gui.BoardToolbar"
     ],
-    "english_hash": "4a41534202c15a00c91b4639132e95838a948a7c91d49cff8c0c3ea4f2b2ad1a",
+    "english_hash": "4ec4b64cce39ddeb5943975c67ba078dbf67ad814ccb2708913c512ec32c3da1",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

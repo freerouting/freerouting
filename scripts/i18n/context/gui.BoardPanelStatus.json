@@ -4,13 +4,13 @@
     "code_references": [
       "app.freerouting.gui.BoardPanelStatus"
     ],
-    "english_hash": "58b5fc0fad42f6ae73de59b4d739d28572e1fdd9ee799703bb786191ba7032a4",
-    "grammatical_role": "fragment",
+    "english_hash": "56d196b353e26436cad1a3526f3f1e787a56d62a875361fba52c532deb449daf",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardPanelStatus",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -38,13 +38,13 @@
     "code_references": [
       "app.freerouting.gui.BoardPanelStatus"
     ],
-    "english_hash": "10a087672cf733c1c1c67d83f268a77551c390ce78b8df1f1e586720d0c173f4",
-    "grammatical_role": "fragment",
+    "english_hash": "f445d2cc503b3b1518f57c87e74f944938aa4a5b3f1d33e0143c129392aa2739",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardPanelStatus",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "current_board_score"
@@ -54,13 +54,13 @@
   "cursor": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "fd528823e8d35d8edb83045e3e3fb9451eb1ea8aecac981d9bd125d069f5ea0e",
-    "grammatical_role": "fragment",
+    "english_hash": "6656f4eed2f743f93acd683b22fda0607138e21bac7139cd01b31e6bd3b5a552",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardPanelStatus",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -70,13 +70,13 @@
     "code_references": [
       "app.freerouting.gui.BoardPanelStatus"
     ],
-    "english_hash": "2afc40c114d0e576b1edaaf397a1779b7adfc89893c36c479c592c35a56b2b38",
-    "grammatical_role": "fragment",
+    "english_hash": "9cac2f2c41edbdbc4eb4746b2fdf4e9279ecaae3a7bd4b78391c087589cef712",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardPanelStatus",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
