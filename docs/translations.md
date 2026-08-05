@@ -46,8 +46,8 @@ When a contributor updates `scripts/i18n/glossary/{locale}.json` and requests a 
 cd c:\Work\freerouting
 pip install -r scripts/i18n/requirements.txt
 
-$env:LLM_PROVIDER = "google"    # or your configured provider
-$env:LLM_MODEL = "gemini-3.6-flash"
+$env:GEMINI_API_KEY = "AQ...."  # restart Cursor after setting if translate fails
+$env:LLM_MODEL = "gemini-3.6-flash"   # optional; default
 $locale = "de"                  # target locale
 
 # Full overwrite for that locale

@@ -29,7 +29,7 @@ from context_store import (  # noqa: E402
     save_context_dir,
 )
 from i18n_output import err, out, symbol  # noqa: E402
-from llm_client import batch_size, translate_batch  # noqa: E402
+from llm_client import batch_size, gemini_api_key, translate_batch  # noqa: E402
 from llm_client import call_llm  # noqa: E402
 from prompt_builder import build_batch_prompt, build_single_prompt, enrich_entry  # noqa: E402
 from properties_io import (  # noqa: E402
@@ -378,6 +378,12 @@ def main() -> None:
     if not args.input.exists():
         err(f"{symbol('fail')} Context directory not found: {args.input}")
         err("   Run: python scripts/i18n/extract-context.py")
+        sys.exit(1)
+
+    if not args.dry_run and not gemini_api_key():
+        err(f"{symbol('fail')} GEMINI_API_KEY is not set.")
+        err("   Set your Google AI Studio key, then restart Cursor so Python can read it.")
+        err("   Example (PowerShell): $env:GEMINI_API_KEY = \"AQ....\"")
         sys.exit(1)
 
     context = load_context_dir(args.input)

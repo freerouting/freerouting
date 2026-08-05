@@ -92,18 +92,24 @@ python scripts/i18n/translate.py --all --missing-only --exclude-locale ar
 python scripts/i18n/extract-context.py --sync-translated --all
 ```
 
-**Batch mode:** keys are sent to the LLM in batches (default 15, set `LLM_BATCH_SIZE=1` to force per-key). Failed batch parses fall back to single-key calls with retry/backoff.
+**Batch mode:** keys are sent to Gemini in batches (default 15, set `LLM_BATCH_SIZE=1` to force per-key). Failed batch parses fall back to single-key calls with retry/backoff.
 
-**Google Gemini example:**
+**Setup (Gemini 3.6 Flash):**
 
 ```bash
-export LLM_PROVIDER=google
 export GEMINI_API_KEY=...   # AI Studio auth key (AQ.…) or legacy key (AIza…)
-export LLM_MODEL=gemini-3.6-flash
+export LLM_MODEL=gemini-3.6-flash   # optional; this is the default
 python scripts/i18n/translate.py --locale de --bundle gui.BoardMenuFile
 ```
 
-Google AI Studio now issues **auth keys** with an `AQ.` prefix (replacing legacy `AIza…` keys). Pass them via `GEMINI_API_KEY`; the client sends them in the `x-goog-api-key` header on the native Gemini REST endpoint.
+PowerShell:
+
+```powershell
+$env:GEMINI_API_KEY = "AQ...."
+python scripts/i18n/translate.py --locale de --missing-only
+```
+
+Google AI Studio now issues **auth keys** with an `AQ.` prefix (replacing legacy `AIza…` keys). Pass them via `GEMINI_API_KEY`; the client sends them in the `x-goog-api-key` header on the native Gemini REST endpoint. **Restart Cursor** (or your terminal) after setting the variable so Python subprocesses inherit it.
 
 **Stale keys:** when `needs_retranslation` is set, the previous locale translation is included in the prompt as an outdated hint.
 
@@ -140,13 +146,12 @@ The parity test `englishBundlesDoNotContainUnusedKeys` writes `build/reports/i18
 
 | Variable | Default | Description |
 |---|---|---|
-| `LLM_PROVIDER` | `openai` | `openai`, `anthropic`, `google`/`gemini`, or `ollama` |
-| `LLM_API_KEY` | `OPENAI_API_KEY` | API key (Gemini: also `GEMINI_API_KEY` or `GOOGLE_API_KEY`) |
-| `LLM_MODEL` | provider-specific | e.g. `gpt-4o-mini`, `claude-sonnet-5`, `gemini-3.6-flash`, `gemini-3.1-pro-preview` |
-| `LLM_BASE_URL` | provider-specific | OpenAI/Ollama/Gemini API base URL |
+| `GEMINI_API_KEY` | *(required)* | Google AI Studio API key (`AQ.…` or legacy `AIza…`); `GOOGLE_API_KEY` is accepted as an alias |
+| `LLM_MODEL` | `gemini-3.6-flash` | Gemini model id for `generateContent` |
+| `LLM_BASE_URL` | `https://generativelanguage.googleapis.com/v1beta` | Gemini REST base URL (override only for testing) |
 | `LLM_GEMINI_THINKING_LEVEL` | `minimal` | Gemini 3.x only: `minimal`, `low`, `medium`, `high` |
 | `LLM_GEMINI_THINKING_BUDGET` | `0` | Gemini 2.5 and earlier: thinking token budget (`0` = off; `-1`/`default` = model default) |
-| `LLM_BATCH_SIZE` | `15` | Keys per LLM request (1–25) |
+| `LLM_BATCH_SIZE` | `15` | Keys per Gemini request (1–25) |
 
 ## Recommended timing
 
