@@ -82,6 +82,12 @@ python scripts/i18n/translate.py --locale de --bundle gui.BoardMenuFile --missin
 # Full locale bootstrap (once per new language — expensive)
 python scripts/i18n/translate.py --locale pt
 
+# Translate all locales except ones already finished
+python scripts/i18n/translate.py --all --exclude-locale ar
+
+# Incremental: skip keys that already have translations
+python scripts/i18n/translate.py --all --missing-only --exclude-locale ar
+
 # After a full (non --missing-only) translation run, sync context flags:
 python scripts/i18n/extract-context.py --sync-translated --all
 ```
@@ -152,6 +158,7 @@ The parity test `englishBundlesDoNotContainUnusedKeys` writes `build/reports/i18
 | Before merging translation PR | `validate.py --locale xx` |
 | New locale (once) | full `translate.py --locale xx`, then `--missing-only` |
 | Release hygiene | `validate.py --all` |
+| Glossary term fix (translator) | Edit `glossary/{locale}.json` → request full locale re-run ([`docs/translations.md`](../../docs/translations.md)) |
 | Every PR (CI) | `extract-context.py --check` (no LLM, no API key) |
 
 ### Incremental guarantees
@@ -166,6 +173,16 @@ The parity test `englishBundlesDoNotContainUnusedKeys` writes `build/reports/i18
 - Run `translate.py --all --missing-only` on a schedule without English changes.
 - Skip `extract-context.py` after English edits.
 - Run LLM translation in CI (use `--check` and `validate.py` only).
+- Hand-edit `*_{locale}.properties` for translation fixes (see [Translator guide](../../docs/translations.md)).
+
+## For translators
+
+Locale bundles under `src/main/resources/**/**_{locale}.properties` are **generated**. If a translation is wrong:
+
+1. Update **`scripts/i18n/glossary/{locale}.json`** (localized term first; keep DSN, SES, Specctra, Freerouting, Andras Fuchs in Latin script).
+2. Open a PR or issue with a **re-translation request for the whole locale** — do not patch individual property files.
+
+Full policy and maintainer rerun steps: **[`docs/translations.md`](../../docs/translations.md)**.
 
 ## Glossaries
 

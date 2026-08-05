@@ -344,6 +344,14 @@ def main() -> None:
         dest="bundles",
         help="Limit to bundle(s), e.g. gui.BoardMenuFile (repeatable)",
     )
+    parser.add_argument(
+        "--exclude-locale",
+        "-x",
+        action="append",
+        dest="exclude_locales",
+        default=[],
+        help="Skip locale(s) with --all (repeatable), e.g. --exclude-locale ar",
+    )
     args = parser.parse_args()
 
     if not args.locale and not args.all:
@@ -363,6 +371,13 @@ def main() -> None:
         out(f"{symbol('warn')} Full translation mode — use --missing-only for incremental updates")
 
     locales = SUPPORTED_LOCALES if args.all else [args.locale]
+    excluded = {code.strip().lower() for code in (args.exclude_locales or []) if code.strip()}
+    if excluded:
+        locales = [loc for loc in locales if loc.lower() not in excluded]
+        out(f"{symbol('info')} Excluding locale(s): {', '.join(sorted(excluded))}")
+    if not locales:
+        err(f"{symbol('fail')} No locales left to translate after exclusions")
+        sys.exit(1)
     exit_code = 0
 
     for locale in locales:
