@@ -24,6 +24,9 @@ _WRITE_RETRY_DELAY_S = 0.25
 
 # Java .properties escape sequences we preserve verbatim in translated files.
 _JAVA_ESCAPE_SEQUENCES: Tuple[str, ...] = ("\\n", "\\t", "\\r", "\\f", "\\\\", '\\"')
+# Literal backslash + "n" as stored in .properties files (not a newline character).
+PROPERTY_NEWLINE_TOKEN = "\\n"
+
 _JAVA_ESCAPE_TOKEN_RE = re.compile(r'\\([ntrfb\\"])')
 
 
@@ -89,6 +92,38 @@ def validate_property_escapes(english: str, translation: str) -> Tuple[bool, Cou
 
 def english_has_property_escapes(english: str) -> bool:
     return any(count_property_escapes(english).values())
+
+
+def split_property_newlines(value: str) -> List[str]:
+    """Split on literal \\n tokens (two-character sequences in the file)."""
+    return value.split(PROPERTY_NEWLINE_TOKEN)
+
+
+def join_property_newlines(segments: List[str]) -> str:
+    """Join segments with literal \\n tokens."""
+    return PROPERTY_NEWLINE_TOKEN.join(segments)
+
+
+def sanitize_segment_translation(segment: str) -> str:
+    """Force one segment to a single line with no embedded \\n tokens."""
+    if not segment:
+        return segment
+    text = segment.replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
+    text = text.replace(PROPERTY_NEWLINE_TOKEN, " ")
+    leading = len(text) - len(text.lstrip(" "))
+    prefix = text[:leading]
+    body = " ".join(text[leading:].split())
+    return prefix + body
+
+
+def validate_segment_join(english: str, translation: str) -> bool:
+    """Verify segment-split counts match after segment-wise translation."""
+    return len(split_property_newlines(english)) == len(split_property_newlines(translation))
+
+
+def should_translate_by_segments(english: str, *, newline_threshold: int = 3) -> bool:
+    """Use per-segment translation when English has many \\n tokens."""
+    return count_property_escapes(english).get(PROPERTY_NEWLINE_TOKEN, 0) >= newline_threshold
 
 
 def _split_property_line(line: str) -> tuple[str, str] | None:

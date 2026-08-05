@@ -185,9 +185,26 @@ def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
     return None
 
 
-def translate_batch(prompt: str, expected_keys: List[str]) -> Optional[Dict[str, str]]:
+def max_tokens_for_values(values: List[str]) -> int:
+    """Size Gemini output budget from English string length (long help text needs more)."""
+    if not values:
+        return 500
+    longest = max(len(value) for value in values)
+    # Translations can be longer; ~2 chars/token with headroom for JSON wrapping.
+    return max(500, min(8192, longest * 2))
+
+
+def parse_json_response(text: str) -> Optional[Dict[str, Any]]:
+    """Parse a JSON object from an LLM response."""
+    return _extract_json_object(text)
+
+
+def translate_batch(
+    prompt: str, expected_keys: List[str], *, english_values: Optional[List[str]] = None
+) -> Optional[Dict[str, str]]:
     """Call Gemini with a batch prompt; parse JSON map of key -> translation."""
-    response = call_llm(prompt, max_tokens=max(500, 120 * len(expected_keys)))
+    values = english_values or []
+    response = call_llm(prompt, max_tokens=max_tokens_for_values(values))
     if response is None:
         return None
 

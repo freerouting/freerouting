@@ -29,19 +29,28 @@ from context_store import (  # noqa: E402
     save_context_dir,
 )
 from i18n_output import err, out, symbol  # noqa: E402
-from llm_client import batch_size, gemini_api_key, translate_batch  # noqa: E402
-from llm_client import call_llm  # noqa: E402
-from prompt_builder import build_batch_prompt, build_single_prompt, enrich_entry  # noqa: E402
+from llm_client import batch_size, call_llm, gemini_api_key, max_tokens_for_values, parse_json_response, translate_batch  # noqa: E402
+from prompt_builder import (  # noqa: E402
+    build_batch_prompt,
+    build_segments_prompt,
+    build_single_prompt,
+    enrich_entry,
+)
 from properties_io import (  # noqa: E402
     ICON_KEY_RE,
     PLACEHOLDER_RE,
     SUPPORTED_LOCALES,
     bundle_name_from_path,
     english_properties_path,
+    join_property_newlines,
     load_properties,
     locale_properties_path,
     normalize_property_escapes,
+    sanitize_segment_translation,
+    should_translate_by_segments,
+    split_property_newlines,
     validate_property_escapes,
+    validate_segment_join,
     write_properties,
 )
 
@@ -78,6 +87,79 @@ def validate_escapes(english: str, translation: str) -> bool:
         return True
     err(f"      {symbol('warn')} Escape sequence mismatch: English {dict(eng_counts)} vs translation {dict(loc_counts)}")
     return False
+
+
+def translate_by_segments(
+    bundle: str,
+    key: str,
+    english_value: str,
+    entry: Dict[str, Any],
+    locale: str,
+) -> Optional[str]:
+    """Translate each \\n-delimited segment and rejoin (exact \\n count guaranteed)."""
+    segments = split_property_newlines(english_value)
+    translated = [""] * len(segments)
+    full_entry = enrich_entry(entry, english_value)
+    full_entry["key"] = key
+
+    work: List[tuple[int, str]] = [(index, segment) for index, segment in enumerate(segments) if segment != ""]
+    if not work:
+        return join_property_newlines(translated)
+
+    def translate_one(index: int, segment: str) -> Optional[str]:
+        prompt = build_segments_prompt(bundle, full_entry, locale, [(index, segment)])
+        response = call_llm(prompt, max_tokens=max_tokens_for_values([segment]))
+        if response is None:
+            return None
+        parsed = parse_json_response(response)
+        if parsed and str(index) in parsed:
+            value = parsed[str(index)]
+            if isinstance(value, str):
+                return sanitize_segment_translation(value.strip().strip("\"'"))
+        return sanitize_segment_translation(response.strip().strip("\"'"))
+
+    size = min(batch_size(), 8)
+    for offset in range(0, len(work), size):
+        chunk = work[offset : offset + size]
+        prompt = build_segments_prompt(bundle, full_entry, locale, chunk)
+        indices = [str(index) for index, _segment in chunk]
+        english_parts = [segment for _index, segment in chunk]
+        parsed = translate_batch(prompt, indices, english_values=english_parts)
+        if parsed is not None and len(parsed) == len(chunk):
+            for index, _segment in chunk:
+                translated[index] = sanitize_segment_translation(parsed[str(index)].strip().strip("\"'"))
+            continue
+
+        err("  Failed to parse segment batch JSON; retrying segments individually")
+        for index, segment in chunk:
+            value = translate_one(index, segment)
+            if value is None:
+                return None
+            translated[index] = value
+
+    return join_property_newlines(translated)
+
+
+def _accept_translation(
+    key: str,
+    english_value: str,
+    translation: str,
+    entry: Dict[str, Any],
+    *,
+    assembled_from_segments: bool = False,
+) -> Optional[str]:
+    full_entry = enrich_entry(entry, english_value)
+    if full_entry.get("has_placeholders") and not validate_placeholders(english_value, translation):
+        return None
+    if full_entry.get("is_html") and not validate_html(english_value, translation):
+        return None
+    if assembled_from_segments:
+        if not validate_segment_join(english_value, translation):
+            err(f"      {symbol('warn')} Segment count mismatch after assembly")
+            return None
+    elif not validate_escapes(english_value, translation):
+        return None
+    return normalize_property_escapes(translation)
 
 
 def get_work_items(
@@ -136,11 +218,48 @@ def translate_items_batch(
     locale: str,
 ) -> Tuple[Dict[str, str], Set[str], int]:
     """Translate a batch; returns translations, failed keys, failure count."""
+    translations: Dict[str, str] = {}
+    failures = 0
+    failed_keys: Set[str] = set()
+    normal_batch: List[Tuple[str, str, Dict[str, Any], Optional[str]]] = []
+
+    for key, english_value, entry, _previous in batch:
+        if should_translate_by_segments(english_value):
+            segment_count = len(split_property_newlines(english_value))
+            out(f"  {symbol('sync')} Translating {key} by segments ({segment_count} lines)...")
+            raw = translate_by_segments(
+                bundle, key, english_value, entry if entry else default_entry(bundle, key, english_value), locale
+            )
+            if raw is None:
+                out(" FAILED")
+                failures += 1
+                failed_keys.add(key)
+                continue
+            accepted = _accept_translation(
+                key,
+                english_value,
+                raw,
+                entry if entry else default_entry(bundle, key, english_value),
+                assembled_from_segments=True,
+            )
+            if accepted is None:
+                out(" FAILED")
+                failures += 1
+                failed_keys.add(key)
+                continue
+            out(" OK")
+            translations[key] = accepted
+        else:
+            normal_batch.append((key, english_value, entry, _previous))
+
+    if not normal_batch:
+        return translations, failed_keys, failures
+
     entries: List[Dict[str, Any]] = []
     previous_by_key: Dict[str, str] = {}
     keys = []
 
-    for key, english_value, entry, previous in batch:
+    for key, english_value, entry, previous in normal_batch:
         keys.append(key)
         full_entry = enrich_entry(entry if entry else default_entry(bundle, key, english_value), english_value)
         entries.append(full_entry)
@@ -148,56 +267,48 @@ def translate_items_batch(
             previous_by_key[key] = previous
 
     prompt = build_batch_prompt(bundle, entries, locale, previous_by_key=previous_by_key)
-    parsed = translate_batch(prompt, keys)
-
-    translations: Dict[str, str] = {}
-    failures = 0
-    failed_keys: Set[str] = set()
+    english_values = [english_value for _key, english_value, _entry, _previous in normal_batch]
+    parsed = translate_batch(prompt, keys, english_values=english_values)
 
     if parsed is not None and len(parsed) == len(keys):
-        for key, english_value, entry, _previous in batch:
+        for key, english_value, entry, _previous in normal_batch:
             translation = parsed[key]
-            full_entry = enrich_entry(entry if entry else default_entry(bundle, key, english_value), english_value)
-            if full_entry.get("has_placeholders") and not validate_placeholders(english_value, translation):
+            accepted = _accept_translation(
+                key, english_value, translation, entry if entry else default_entry(bundle, key, english_value)
+            )
+            if accepted is None:
                 failures += 1
                 failed_keys.add(key)
                 continue
-            if full_entry.get("is_html") and not validate_html(english_value, translation):
-                failures += 1
-                failed_keys.add(key)
-                continue
-            if not validate_escapes(english_value, translation):
-                failures += 1
-                failed_keys.add(key)
-                continue
-            translations[key] = normalize_property_escapes(translation)
+            translations[key] = accepted
         return translations, failed_keys, failures
 
     # Fallback: one key at a time
-    for key, english_value, entry, previous in batch:
+    for key, english_value, entry, previous in normal_batch:
         full_entry = enrich_entry(entry if entry else default_entry(bundle, key, english_value), english_value)
         prompt = build_single_prompt(full_entry, locale, previous_translation=previous)
         out(f"  {symbol('sync')} Translating: {key}...", end="")
-        translation = call_llm(prompt, max_tokens=300)
+        translation = call_llm(prompt, max_tokens=max_tokens_for_values([english_value]))
         if translation is None:
             out(" FAILED")
             failures += 1
             failed_keys.add(key)
             continue
+        accepted = _accept_translation(
+            key, english_value, translation, entry if entry else default_entry(bundle, key, english_value)
+        )
+        if accepted is None:
+            if should_translate_by_segments(english_value):
+                out(" retrying by segments...", end="")
+                raw = translate_by_segments(bundle, key, english_value, full_entry, locale)
+                accepted = _accept_translation(key, english_value, raw or "", full_entry) if raw else None
+            if accepted is None:
+                out(" FAILED")
+                failures += 1
+                failed_keys.add(key)
+                continue
         out(" OK")
-        if full_entry.get("has_placeholders") and not validate_placeholders(english_value, translation):
-            failures += 1
-            failed_keys.add(key)
-            continue
-        if full_entry.get("is_html") and not validate_html(english_value, translation):
-            failures += 1
-            failed_keys.add(key)
-            continue
-        if not validate_escapes(english_value, translation):
-            failures += 1
-            failed_keys.add(key)
-            continue
-        translations[key] = normalize_property_escapes(translation)
+        translations[key] = accepted
         time.sleep(0.05)
 
     return translations, failed_keys, failures
@@ -260,11 +371,11 @@ def translate_bundle(
                 translated_keys.add(key)
                 fresh_count += 1
             elif key in failed_keys or key not in translations:
-                # Keep previous or fall back to English
-                fallback = existing_props.get(key, english_value)
-                result[key] = fallback
-                if key in failed_keys:
-                    err(f"  {symbol('fail')} Keeping fallback for {key}")
+                if key in existing_props:
+                    result[key] = existing_props[key]
+                    err(f"  {symbol('fail')} Keeping previous translation for {key}")
+                else:
+                    err(f"  {symbol('fail')} No translation available for {key}")
 
         if offset + size < len(work_items):
             time.sleep(0.1)
@@ -316,7 +427,7 @@ def translate_locale(
         total_failures += failures
         total_bundles += 1
 
-        if not dry_run and translated_keys:
+        if not dry_run and (translated_keys or result):
             mark_keys_translated(context, bundle, translated_keys)
             locale_path = locale_properties_path(english_path, locale)
             write_properties(locale_path, result)

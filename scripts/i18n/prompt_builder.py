@@ -106,6 +106,41 @@ def build_batch_prompt(
     return "\n".join(lines)
 
 
+def build_segments_prompt(
+    bundle: str,
+    entry: Dict[str, Any],
+    locale: str,
+    segments: List[tuple[int, str]],
+) -> str:
+    """Prompt for translating numbered line segments (preserves \\n count via rejoin)."""
+    lines = [
+        f"Translate numbered LINE SEGMENTS from English to {locale.upper()}.",
+        f"Bundle: {bundle}",
+        f"Key: {entry.get('key', '')}",
+        "",
+        _context_block(entry),
+        "",
+        *glossary_prompt_lines(locale),
+        "",
+        "RULES:",
+        "  - Each segment is ONE line of a multiline string; segments will be rejoined later",
+        "  - Do NOT include \\n, line breaks, or tabs inside any segment translation",
+        "  - Preserve leading/trailing spaces and indentation in each segment exactly",
+        "  - Preserve CLI flags (-de, -mp, etc.), placeholders, and escapes like \\: verbatim",
+        "  - Empty segments must map to an empty string \"\"",
+        f"  - Keep these names in original Latin script exactly: {_latin_script_preserved_names()}",
+        "  - Respond with ONLY a JSON object mapping segment index (string) to translation",
+        "  - Example: {\"0\": \"VERWENDUNG\", \"2\": \"  freerouting [PARAMETER]\"}",
+        "",
+        "SEGMENTS:",
+    ]
+    for index, text in segments:
+        lines.append(f"  {index}: \"{text}\"")
+    lines.append("")
+    lines.append("JSON RESPONSE:")
+    return "\n".join(lines)
+
+
 def _context_block(entry: Dict[str, Any], indent: str = "") -> str:
     p = indent
     lines = [

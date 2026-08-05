@@ -7,11 +7,15 @@ import unittest
 from pathlib import Path
 
 from properties_io import (
+    PROPERTY_NEWLINE_TOKEN,
     _split_property_line,
     count_property_escapes,
+    join_property_newlines,
     load_properties,
     normalize_property_escapes,
     sanitize_property_value,
+    sanitize_segment_translation,
+    split_property_newlines,
     validate_property_escapes,
     write_properties,
 )
@@ -52,6 +56,29 @@ class PropertyEscapeTests(unittest.TestCase):
         key, value = _split_property_line("command_line_help=USAGE\\n\\nPARAMETERS")
         self.assertEqual(key, "command_line_help")
         self.assertEqual(value, "USAGE\\n\\nPARAMETERS")
+
+    def test_split_join_property_newlines_preserves_count(self) -> None:
+        english = "Line one\\n\\nLine two\\nLine three"
+        segments = split_property_newlines(english)
+        joined = join_property_newlines(segments)
+        self.assertEqual(joined, english)
+        self.assertEqual(
+            count_property_escapes(joined)[PROPERTY_NEWLINE_TOKEN],
+            count_property_escapes(english)[PROPERTY_NEWLINE_TOKEN],
+        )
+
+    def test_should_translate_by_segments(self) -> None:
+        from properties_io import should_translate_by_segments
+
+        self.assertFalse(should_translate_by_segments("one\\ntwo"))
+        self.assertTrue(should_translate_by_segments("a\\nb\\nc\\nd"))
+
+    def test_sanitize_segment_translation_removes_embedded_newlines(self) -> None:
+        dirty = "  Loads the file\nand more\\nextra"
+        cleaned = sanitize_segment_translation(dirty)
+        self.assertNotIn("\n", cleaned)
+        self.assertNotIn("\\n", cleaned)
+        self.assertTrue(cleaned.startswith("  Loads the file"))
 
     def test_load_properties_merges_orphan_continuation_lines(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
