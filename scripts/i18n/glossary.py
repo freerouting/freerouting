@@ -9,8 +9,6 @@ from typing import Dict, List, Optional
 GLOSSARY_DIR = Path("scripts/i18n/glossary")
 
 # All shipped UI locales, including English source (en uses _default + en.json).
-# Expansion locales (pl, nl, tr, vi, id, pt_br, uk, cs, hu, th, sv, ro) have
-# glossaries ready; add them to properties_io.SUPPORTED_LOCALES when translating.
 GLOSSARY_LOCALES = [
     "ar", "bn", "cs", "de", "en", "es", "fr", "hi", "hu", "id", "it", "ja", "ko",
     "nl", "pl", "pt", "pt_br", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh", "zh_tw",

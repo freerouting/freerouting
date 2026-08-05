@@ -16,7 +16,8 @@ ICON_KEY_RE = __import__("re").compile(r"^\{\{icon:.+\}\}$")
 
 # Target locales for translation/validation (English "en" is the source bundle).
 SUPPORTED_LOCALES = [
-    "ar", "bn", "de", "es", "fr", "hi", "it", "ja", "ko", "pt", "ru", "zh", "zh_tw",
+    "ar", "bn", "cs", "de", "es", "fr", "hi", "hu", "id", "it", "ja", "ko",
+    "nl", "pl", "pt", "pt_br", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh", "zh_tw",
 ]
 
 _WRITE_RETRIES = 3

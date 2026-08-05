@@ -78,4 +78,4 @@ Glossary-only changes do **not** auto-flag keys; prefer full locale regeneration
 ## Supported locales
 
 **Source:** `en`  
-**Targets:** `ar`, `bn`, `de`, `es`, `fr`, `hi`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`, `zh_tw`
+**Targets:** `ar`, `bn`, `cs`, `de`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt`, `pt_br`, `ro`, `ru`, `sv`, `th`, `tr`, `uk`, `vi`, `zh`, `zh_tw`
