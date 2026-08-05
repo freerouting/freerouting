@@ -49,4 +49,4 @@ public interface ExpansionRoom {
    * Returns a unique identification number for this expansion room.
    */
   int get_id_no();
-}
+}

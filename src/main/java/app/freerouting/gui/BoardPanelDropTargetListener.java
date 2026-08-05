@@ -171,13 +171,13 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
            } else {
           // Log additional valid files for future multi-board support
           FRLogger.warn(
-              "Additional dropped file ignored: '" + file.getName() + 
+              "Additional dropped file ignored: '" + file.getName() +
               "'. Multi-board support is planned for future versions.");
         }
       } else {
         // Unknown format
         FRLogger.warn(
-            "Dropped file format not supported: '" + file.getName() + 
+            "Dropped file format not supported: '" + file.getName() +
             "'. Supported formats: DSN, KiCad design JSON.");
       }
     }

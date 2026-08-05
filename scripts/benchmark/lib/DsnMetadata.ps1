@@ -84,7 +84,7 @@ function Get-DsnMetadata {
 function Convert-ToMM {
     param([double]$val, [string]$unit, [double]$res)
     if ($res -le 0) { $res = 1.0 }
-    
+
     switch ($unit) {
         "inch" { return ($val / $res) * 25.4 }
         "mil"  { return (($val / $res) / 1000.0) * 25.4 }

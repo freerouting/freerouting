@@ -47,7 +47,7 @@ function Save-BenchmarksJson {
     foreach ($key in $Cache.Keys) {
         [void]$runsList.Add($Cache[$key])
     }
-    
+
     $RawData.runs = $runsList
     $RawData.total_runs = $runsList.Count
     $RawData.generated_at = (Get-Date -UFormat "%Y-%m-%dT%H:%M:%SZ")

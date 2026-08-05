@@ -26,7 +26,7 @@ public class RoutingFailureLog implements Serializable {
 
     /**
      * Records a routing failure for an item.
-     * 
+     *
      * @param item   The item that failed to route
      * @param passNo The pass number when the failure occurred
      * @param state  The failure state
@@ -48,7 +48,7 @@ public class RoutingFailureLog implements Serializable {
 
     /**
      * Checks if an item should be skipped due to exceeding the failure threshold.
-     * 
+     *
      * @param item The item to check
      * @return true if the item should be skipped
      */
@@ -63,7 +63,7 @@ public class RoutingFailureLog implements Serializable {
 
     /**
      * Gets all items that have exceeded the failure threshold.
-     * 
+     *
      * @return List of unroutable items
      */
     public List<ItemFailureInfo> getUnroutableItems() {
@@ -78,7 +78,7 @@ public class RoutingFailureLog implements Serializable {
 
     /**
      * Checks if there are any unroutable items.
-     * 
+     *
      * @return true if there are items that exceeded the failure threshold
      */
     public boolean hasUnroutableItems() {
@@ -87,7 +87,7 @@ public class RoutingFailureLog implements Serializable {
 
     /**
      * Gets the failure count for a specific item.
-     * 
+     *
      * @param item The item to check
      * @return The number of failures, or 0 if no failures recorded
      */
@@ -128,7 +128,7 @@ public class RoutingFailureLog implements Serializable {
 
         /**
          * Records a failure for this item (thread-safe).
-         * 
+         *
          * @param passNo The pass number
          * @param state  The failure state
          * @param reason The failure reason
@@ -142,7 +142,7 @@ public class RoutingFailureLog implements Serializable {
 
         /**
          * Checks if this item should be given up on (thread-safe).
-         * 
+         *
          * @return true if failure count exceeds threshold
          */
         public synchronized boolean shouldGiveUp() {

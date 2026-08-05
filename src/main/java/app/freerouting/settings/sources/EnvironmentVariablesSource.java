@@ -9,16 +9,16 @@ import java.util.Map;
 
 /**
  * Provides router settings from environment variables.
- * 
+ *
  * Environment variables must start with "FREEROUTING__ROUTER__" prefix.
  * Double underscores are converted to dots for nested properties.
- * 
+ *
  * Examples:
  * - FREEROUTING__ROUTER__MAX_PASSES=100 → router.max_passes = 100
  * - FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS=4 →
  * router.optimizer.max_threads = 4
  * - FREEROUTING__ROUTER__VIAS_ALLOWED=false → router.vias_allowed = false
- * 
+ *
  * Priority: 55 (between GUI and CLI)
  * - Higher than GUI (50): Environment variables override interactive GUI
  * settings
@@ -44,7 +44,7 @@ public class EnvironmentVariablesSource implements SettingsSource {
     /**
      * Creates an EnvironmentVariablesSource from a custom environment map.
      * Useful for testing.
-     * 
+     *
      * @param environment Map of environment variables
      */
     public EnvironmentVariablesSource(Map<String, String> environment) {
@@ -111,7 +111,7 @@ public class EnvironmentVariablesSource implements SettingsSource {
 
     /**
      * Gets the parsed environment variables for debugging/logging.
-     * 
+     *
      * @return Map of environment variable names to values
      */
     public Map<String, String> getParsedVariables() {
@@ -120,7 +120,7 @@ public class EnvironmentVariablesSource implements SettingsSource {
 
     /**
      * Gets the number of environment variables that were successfully parsed.
-     * 
+     *
      * @return Count of parsed variables
      */
     public int getParsedCount() {

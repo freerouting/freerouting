@@ -29,7 +29,7 @@ import java.util.TreeSet;
  * V1.9 BatchAutorouter implementation - ported from v1.9 for performance
  * comparison.
  * This is a simpler, single-threaded router that was used in v1.9.
- * 
+ *
  * Key differences from current router:
  * - Single-threaded only (no multi-threading support)
  * - Simpler pass logic without board history/backtracking
@@ -148,7 +148,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
      * Autoroutes ripup passes until the board is completed or the autorouter is
      * stopped by the user.
      * Returns true if the board is completed.
-     * 
+     *
      * This is the main entry point, matching the current router's interface.
      */
     public boolean runBatchLoop() {
@@ -254,7 +254,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
      * Auto-routes one ripup pass of all items of the board. Returns false, if the
      * board is already
      * completely routed.
-     * 
+     *
      * This is the v1.9 implementation - simpler than current version:
      * - No board history/backtracking
      * - No failure tracking

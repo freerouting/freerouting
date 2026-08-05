@@ -299,36 +299,36 @@ public class OpenApiMcpToolRegistry {
     if (cleanPath.endsWith("/")) {
       cleanPath = cleanPath.substring(0, cleanPath.length() - 1);
     }
-    
+
     if (cleanPath.equals("/v1/system/status") && "GET".equalsIgnoreCase(method)) return "get_system_status";
     if (cleanPath.equals("/v1/system/environment") && "GET".equalsIgnoreCase(method)) return "get_system_environment";
-    
+
     if (cleanPath.equals("/v1/sessions/create") && "POST".equalsIgnoreCase(method)) return "create_session";
     if (cleanPath.equals("/v1/sessions") && "GET".equalsIgnoreCase(method)) return "list_sessions";
     if (cleanPath.startsWith("/v1/sessions/") && cleanPath.endsWith("/logs") && "GET".equalsIgnoreCase(method)) return "get_session_logs";
     if (cleanPath.startsWith("/v1/sessions/") && cleanPath.endsWith("/monitor") && "PUT".equalsIgnoreCase(method)) return "monitor_session";
     if (cleanPath.startsWith("/v1/sessions/") && "GET".equalsIgnoreCase(method)) return "get_session_details";
-    
+
     if (cleanPath.equals("/v1/jobs/enqueue") && "POST".equalsIgnoreCase(method)) return "enqueue_job";
     if (cleanPath.startsWith("/v1/jobs/list/") && "GET".equalsIgnoreCase(method)) return "list_jobs";
-    
+
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/drc") && "GET".equalsIgnoreCase(method)) return "get_job_drc_report";
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/logs/stream") && "GET".equalsIgnoreCase(method)) return "stream_job_logs";
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/logs") && "GET".equalsIgnoreCase(method)) return "get_job_logs";
-    
+
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/output/json/stream") && "GET".equalsIgnoreCase(method)) return "stream_job_output_json";
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/output/json") && "GET".equalsIgnoreCase(method)) return "download_job_output_json";
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/output/stream") && "GET".equalsIgnoreCase(method)) return "stream_job_output_file";
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/output") && "GET".equalsIgnoreCase(method)) return "download_job_output_file";
-    
+
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/input/json") && "POST".equalsIgnoreCase(method)) return "upload_job_input_json";
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/input") && "POST".equalsIgnoreCase(method)) return "upload_job_input_file";
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/settings") && "POST".equalsIgnoreCase(method)) return "update_job_settings";
-    
+
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/cancel") && "put".equalsIgnoreCase(method)) return "cancel_job";
     if (cleanPath.startsWith("/v1/jobs/") && cleanPath.endsWith("/start") && "put".equalsIgnoreCase(method)) return "start_job";
     if (cleanPath.startsWith("/v1/jobs/") && "GET".equalsIgnoreCase(method)) return "get_job_details";
-    
+
     if (cleanPath.equals("/v1/analytics/identify") && "POST".equalsIgnoreCase(method)) return "identify_user";
     if (cleanPath.equals("/v1/analytics/track") && "POST".equalsIgnoreCase(method)) return "track_user_action";
 
@@ -512,7 +512,7 @@ public class OpenApiMcpToolRegistry {
           }
         }
       }
-      
+
       JsonObject newObj = new JsonObject();
       for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
         newObj.add(entry.getKey(), resolveRefs(entry.getValue(), componentsSchemas, visited));

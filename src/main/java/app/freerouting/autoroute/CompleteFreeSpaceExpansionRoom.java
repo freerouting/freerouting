@@ -213,4 +213,3 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     }
   }
 }
-

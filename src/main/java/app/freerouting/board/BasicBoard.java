@@ -1419,7 +1419,7 @@ public class BasicBoard implements Serializable {
     long endGroup = System.nanoTime();
 
     long startLoop = System.nanoTime();
-    
+
     // Viewport culling bounds in board coordinates
     java.awt.Rectangle clipRect = p_graphics.getClipBounds();
     IntBox clipBox = clipRect != null ? p_graphics_context.coordinate_transform.screen_to_board(clipRect) : null;

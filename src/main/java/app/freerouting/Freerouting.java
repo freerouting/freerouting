@@ -227,7 +227,7 @@ public class Freerouting {
     // Generate DRC report
     String sourceFileName = new File(globalSettings.initialInputFile).getName();
     app.freerouting.drc.DrcReport report = drcChecker.generateReport(sourceFileName, coordinateUnit);
-    
+
     // Calculate final quality score for DRC report
     try {
       var settingsMerger = globalSettings.settingsMergerProtype.clone();
@@ -239,7 +239,7 @@ public class Freerouting {
     } catch (Exception e) {
       FRLogger.warn("Failed to calculate quality score for DRC report: " + e.getMessage());
     }
-    
+
     String drcReportJson = app.freerouting.util.gson.GsonProvider.GSON.toJson(report);
 
     // Output the DRC report

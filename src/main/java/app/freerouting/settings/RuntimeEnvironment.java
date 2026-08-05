@@ -9,7 +9,7 @@ import java.time.Instant;
  * context.
  * This is NOT for configuration from environment variables - use
  * EnvironmentVariablesSource for that.
- * 
+ *
  * This class captures system information like Java version, CPU cores, RAM,
  * etc.
  * that are determined at runtime and cannot be configured.

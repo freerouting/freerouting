@@ -129,7 +129,7 @@ $fixtureEstimates = @{}
 foreach ($fixture in $fixtures) {
     $fGroup = Split-Path (Split-Path $fixture.FullName -Parent) -Leaf
     $fPath = "$fGroup/$($fixture.Name)"
-    
+
     $estimate = 60.0
     if ($fixtureHistory.ContainsKey($fPath)) {
         $latestRuns = $fixtureHistory[$fPath] | Sort-Object -Property run_at -Descending
@@ -164,7 +164,7 @@ $actualTimeSpent = 0.0
 
 foreach ($binary in $binaries) {
     $verLabel = Get-BinaryVersionLabel $binary
-    
+
     # CLI support probe
     if (-not $cliSupportCache.ContainsKey($binary.FullName)) {
         $cliSupportCache[$binary.FullName] = Test-BinaryCliSupport $binary.FullName
@@ -215,13 +215,13 @@ foreach ($binary in $binaries) {
 
         # DSN text parse
         $fixtureMeta = Get-DsnMetadata $fixture.FullName
-        
+
         $runStartTime = Get-Date
-        
+
         # Invoke benchmark
         Write-Output "  -> Running..."
         $runResult = Invoke-BenchmarkRun $binary $fixture $baseName $LogsDir $OutputsDir $settingsObj $supportsCli
-        
+
         $runEndTime = Get-Date
         $runSecs = ($runEndTime - $runStartTime).TotalSeconds
 
@@ -305,7 +305,7 @@ foreach ($binary in $binaries) {
         $completedPendingCount++
         $completedPendingTimeEstimated += $thisEstimate
         $actualTimeSpent += $runResult.WallClockSeconds
-        
+
         Write-Output "  -> Done! [Unrouted: $($runObj.quality.final_unrouted) (DRC: $($runObj.drc.final_unrouted)), Violations: $($runObj.quality.clearance_violations) (DRC: $($runObj.drc.final_violations)), Score: $($runObj.quality.quality_score) (DRC: $($runObj.drc.final_quality_score))]"
     }
 }

@@ -28,7 +28,7 @@ function Format-MarkdownTable {
     }
 
     $sb = [System.Text.StringBuilder]::new()
-    
+
     # Headers
     [void]$sb.Append("|")
     for ($i = 0; $i -lt $colCount; $i++) {
@@ -150,11 +150,11 @@ function Export-MarkdownReport {
             $groupName = $bestRun.fixture.group
             $filename = $bestRun.fixture.filename
             $version = $bestRun.binary.version_label
-            
+
             $unrouted = if ($bestRun.drc.final_unrouted -ne $null) { $bestRun.drc.final_unrouted } elseif ($bestRun.quality.final_unrouted -ne $null) { $bestRun.quality.final_unrouted } else { "N/A" }
             $violations = if ($bestRun.drc.final_violations -ne $null) { $bestRun.drc.final_violations } elseif ($bestRun.quality.clearance_violations -ne $null) { $bestRun.quality.clearance_violations } else { "N/A" }
             $score = if ($bestRun.drc.final_quality_score -ne $null) { $bestRun.drc.final_quality_score.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } elseif ($bestRun.quality.quality_score -ne $null) { $bestRun.quality.quality_score.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
-            
+
             $cpu = if ($bestRun.quality.total_cpu_seconds -ne $null) { $bestRun.quality.total_cpu_seconds.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
             $heap = if ($bestRun.quality.peak_heap_mb -ne $null) { [math]::Round($bestRun.quality.peak_heap_mb).ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
 
@@ -172,7 +172,7 @@ function Export-MarkdownReport {
             $null = $summaryRows.Add(@($groupLink, $fixtureLink, "*All failed*", "N/A", "N/A", "N/A", "N/A", "N/A"))
         }
     }
-    
+
     $sortedSummaryRows = $summaryRows | Sort-Object -Property { $_[0] }, { $_[1] }
     [void]$sb.AppendLine((Format-MarkdownTable $summaryHeaders $summaryAlignments $sortedSummaryRows))
     [void]$sb.AppendLine()
@@ -218,7 +218,7 @@ function Export-MarkdownReport {
             foreach ($run in $sortedRuns) {
                 $ver = $run.binary.version_label
                 $mode = if ($run.run_mode) { $run.run_mode } else { "N/A" }
-                
+
                 $fanoutVal = "N/A"
                 if ($run.phases.fanout.log_found) {
                     $esc = $run.phases.fanout.escaped_pin_count
@@ -235,7 +235,7 @@ function Export-MarkdownReport {
                 $fanoutTime = if ($run.phases.fanout.duration_seconds -ne $null) { $run.phases.fanout.duration_seconds.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
                 $routerTime = if ($run.phases.autorouter.duration_seconds -ne $null) { $run.phases.autorouter.duration_seconds.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
                 $optTime = if ($run.phases.optimizer.duration_seconds -ne $null) { $run.phases.optimizer.duration_seconds.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
-                
+
                 # Compute total time
                 $hasTime = $false
                 $totalTimeVal = 0.0
@@ -259,13 +259,13 @@ function Export-MarkdownReport {
 
                 # Compute unrouted cell string
                 $unroutedStr = "$unroutedVal"
-                
+
                 # Compute violations cell string
                 $violationsStr = "$violationsVal"
 
                 # Compute score cell string
                 $scoreStr = if ($scoreVal -ne $null) { $scoreVal.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
- 
+
                 $heap = if ($run.quality.peak_heap_mb -ne $null) { [math]::Round($run.quality.peak_heap_mb).ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
                 $alloc = if ($run.quality.total_allocated_gb -ne $null) { $run.quality.total_allocated_gb.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
 
@@ -353,11 +353,11 @@ function Export-MarkdownReport {
             $fanoutSuccess = "$($run.phases.fanout.escaped_pin_count)/$($run.phases.fanout.smd_pin_count)"
         }
         $passes = if ($run.phases.autorouter.passes_completed -ne $null) { $run.phases.autorouter.passes_completed } else { "" }
-        
+
         $drcUnrouted = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { "" }
         $drcViolations = if ($run.drc.final_violations -ne $null) { $run.drc.final_violations } elseif ($run.quality.clearance_violations -ne $null) { $run.quality.clearance_violations } else { "" }
         $drcScore = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score } elseif ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { "" }
-        
+
         $wall = if ($run.quality.wall_clock_seconds -ne $null) { $run.quality.wall_clock_seconds } else { "" }
         $cpu = if ($run.quality.total_cpu_seconds -ne $null) { $run.quality.total_cpu_seconds } else { "" }
         $heap = if ($run.quality.peak_heap_mb -ne $null) { $run.quality.peak_heap_mb } else { "" }
@@ -374,7 +374,7 @@ function Export-MarkdownReport {
     foreach ($run in $runs) {
         $chartScore = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score } elseif ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { 0.0 }
         $chartUnrouted = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { 0 }
-        
+
         $chartData += @{
             fixture  = $run.fixture.filename
             version  = $run.binary.version_label

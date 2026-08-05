@@ -73,4 +73,3 @@ public class TargetItemExpansionDoor implements ExpandableObject {
     return 31 * item.get_id_no() + (room != null ? room.get_id_no() : 0);
   }
 }
-

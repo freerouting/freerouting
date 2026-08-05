@@ -127,7 +127,7 @@ public class AutorouteControl {
    * The minimal cost value of all cheap vias
    */
   double min_cheap_via_cost;
- 
+
   /**
    * Creates a new instance of AutorouteControl for the input net
    */
@@ -135,7 +135,7 @@ public class AutorouteControl {
     this(p_board, p_settings, p_settings.get_trace_cost_arr());
     init_net(p_net_no, p_board, p_settings.get_via_costs());
   }
- 
+
   /**
    * Creates a new instance of AutorouteControl for the input net
    */
@@ -143,7 +143,7 @@ public class AutorouteControl {
     this(p_board, p_settings, p_trace_cost_arr);
     init_net(p_net_no, p_board, p_via_costs);
   }
- 
+
   /**
    * Creates a new instance of AutorouteControl
    */
@@ -160,12 +160,12 @@ public class AutorouteControl {
     for (int i = 0; i < layer_count; i++) {
       this.bendCosts[i] = p_settings.get_bend_cost(i);
     }
- 
+
     for (int i = 0; i < layer_count; i++) {
       add_via_costs[i] = new ViaCost(layer_count);
       boolean activeSetting = p_settings.get_layer_active(i);
       if (!p_board.layer_structure.arr[i].is_signal && activeSetting) {
-        FRLogger.warn("Layer '" + p_board.layer_structure.arr[i].name 
+        FRLogger.warn("Layer '" + p_board.layer_structure.arr[i].name
             + "' is a dedicated power plane and cannot be routed. Forcing active state to false.");
         layer_active[i] = false;
       } else {
@@ -192,7 +192,7 @@ public class AutorouteControl {
     attach_smd_allowed = false;
     via_lower_bound = 0;
     via_upper_bound = layer_count;
- 
+
     ripup_allowed = false;
     ripup_costs = 1000;
     ripup_pass_no = 1;

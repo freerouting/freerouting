@@ -103,7 +103,7 @@ public class DsnFile {
     }
     for (int i = 0; i < changed_layer_arr.length; i++) {
       if (changed_layer_arr[i]) {
-        FRLogger.info("Layer '" + routing_board.layer_structure.arr[i].name 
+        FRLogger.info("Layer '" + routing_board.layer_structure.arr[i].name
             + "' has been automatically configured as a dedicated power plane because it contains a large conduction area covering >50% of the board.");
       }
     }

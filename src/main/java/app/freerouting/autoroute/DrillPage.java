@@ -192,4 +192,4 @@ class DrillPage implements ExpandableObject {
     // Stable hash of shape and net_no
     return 31 * shape.get_id_no() + net_no;
   }
-}
+}

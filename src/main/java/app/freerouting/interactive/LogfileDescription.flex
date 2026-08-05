@@ -27,21 +27,21 @@ DecIntegerLiteral =  (-? (0 | [1-9][0-9]*))
 
 DecFloatLiteral = ([+-]? [0-9]+ ("." [0-9]+)?)
 
-Identifier = ({Letter}|{SpecChar})({Letter}|{Digit}|{SpecChar})* 
+Identifier = ({Letter}|{SpecChar})({Letter}|{Digit}|{SpecChar})*
 
 %%
 
 <YYINITIAL> {
-  /* identifiers */ 
+  /* identifiers */
   {Identifier}                   { return yytext(); }
- 
+
   /* literals */
   {DecIntegerLiteral}            { return new Integer(yytext()); }
   {DecFloatLiteral}              { return new Double(yytext()); }
 
   /* comments */
   {Comment}                      { /* ignore */ }
- 
+
   /* whitespace */
   {WhiteSpace}                   { /* ignore */ }
 }

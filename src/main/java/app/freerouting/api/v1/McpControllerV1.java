@@ -126,7 +126,7 @@ public class McpControllerV1 extends BaseController {
     }
 
     FRAnalytics.apiEndpointCalled("POST v1/mcp", requestBody, response.toString(), userId);
-    
+
     if (isNotification) {
       return Response.noContent()
           .header(CorrelationIdFilter.HEADER_NAME, correlationId)

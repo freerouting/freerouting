@@ -107,22 +107,22 @@ function handleLocalUpload(rpcId, jobId, filePath) {
     sendError(rpcId, -32602, "Missing required parameter: jobId or filePath");
     return;
   }
-  
+
   fs.readFile(filePath, (err, fileBytes) => {
     if (err) {
       sendError(rpcId, -32603, "Failed to read local file: " + err.message);
       return;
     }
-    
+
     const base64Data = fileBytes.toString('base64');
-    
+
     const payload = {
       job_id: jobId,
       data: base64Data
     };
-    
+
     const postData = JSON.stringify(payload);
-    
+
     const headers = {
       'Content-Type': 'application/json',
       'Freerouting-Profile-ID': getOrCreateProfileId()
@@ -136,10 +136,10 @@ function handleLocalUpload(rpcId, jobId, filePath) {
     if (process.env.FREEROUTING_API_KEY) {
       headers['Authorization'] = 'Bearer ' + process.env.FREEROUTING_API_KEY;
     }
-    
+
     const uploadUrl = API_URL.replace(/\/mcp$/, '') + `/jobs/${jobId}/input`;
     const finalModule = uploadUrl.startsWith('https') ? https : http;
-    
+
     const req = finalModule.request(uploadUrl, {
       method: 'POST',
       headers: headers
@@ -157,11 +157,11 @@ function handleLocalUpload(rpcId, jobId, filePath) {
         sendToolResponse(rpcId, res.statusCode, isError ? bodyParsed : { message: "Successfully uploaded input from file: " + filePath }, isError);
       });
     });
-    
+
     req.on('error', (err) => {
       sendError(rpcId, -32603, "Upload request failed: " + err.message);
     });
-    
+
     req.write(postData);
     req.end();
   });
@@ -172,7 +172,7 @@ function handleLocalDownload(rpcId, jobId, filePath) {
     sendError(rpcId, -32602, "Missing required parameter: jobId or filePath");
     return;
   }
-  
+
   const headers = {
     'Freerouting-Profile-ID': getOrCreateProfileId()
   };
@@ -185,10 +185,10 @@ function handleLocalDownload(rpcId, jobId, filePath) {
   if (process.env.FREEROUTING_API_KEY) {
     headers['Authorization'] = 'Bearer ' + process.env.FREEROUTING_API_KEY;
   }
-  
+
   const downloadUrl = API_URL.replace(/\/mcp$/, '') + `/jobs/${jobId}/output`;
   const finalModule = downloadUrl.startsWith('https') ? https : http;
-  
+
   const req = finalModule.request(downloadUrl, {
     method: 'GET',
     headers: headers
@@ -207,22 +207,22 @@ function handleLocalDownload(rpcId, jobId, filePath) {
         sendToolResponse(rpcId, res.statusCode, bodyParsed, true);
         return;
       }
-      
+
       if (res.statusCode === 204) {
         sendToolResponse(rpcId, 204, { message: "Job is in progress but no output data is available yet." }, false);
         return;
       }
-      
+
       try {
         const respObj = JSON.parse(data);
         const base64Data = respObj.data;
         const sesBytes = Buffer.from(base64Data, 'base64');
-        
+
         const dir = path.dirname(filePath);
         if (!fs.existsSync(dir)) {
           fs.mkdirSync(dir, { recursive: true });
         }
-        
+
         fs.writeFile(filePath, sesBytes, (err) => {
           if (err) {
             sendError(rpcId, -32603, "Failed to write downloaded file to disk: " + err.message);
@@ -235,7 +235,7 @@ function handleLocalDownload(rpcId, jobId, filePath) {
       }
     });
   });
-  
+
   req.on('error', (err) => {
     sendError(rpcId, -32603, "Download request failed: " + err.message);
   });
@@ -271,7 +271,7 @@ rl.on('line', (line) => {
   if (requestObj && requestObj.method === 'tools/call' && requestObj.params) {
     const toolName = requestObj.params.name;
     const args = requestObj.params.arguments || {};
-    
+
     if (toolName === 'upload_job_input_from_local_file') {
       handleLocalUpload(requestObj.id, args.jobId, args.filePath);
       return;

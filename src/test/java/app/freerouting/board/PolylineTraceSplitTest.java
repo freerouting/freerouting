@@ -46,7 +46,7 @@ public class PolylineTraceSplitTest {
     /**
      * Test that reproduces the bug where a valid trace segment is incorrectly
      * removed during split/overlap operations.
-     * 
+     *
      * This test simulates the scenario from the bug report where:
      * 1. Two traces are combined (trace 360 + 361 -> combined trace 361)
      * 2. A new overlapping trace is inserted (trace 362)

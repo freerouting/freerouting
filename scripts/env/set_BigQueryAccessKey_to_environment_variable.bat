@@ -3,7 +3,7 @@ $jsonContent = Get-Content -Path "C:\Users\andra\Downloads\freerouting-analytics
 
 # Set the JSON content as a system environment variable
 [System.Environment]::SetEnvironmentVariable(
-    "FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY", 
-    $jsonContent, 
+    "FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY",
+    $jsonContent,
     [System.EnvironmentVariableTarget]::Machine
 )

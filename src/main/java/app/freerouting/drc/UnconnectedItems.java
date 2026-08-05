@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 /**
  * Information about an unconnected NET (not individual items).
- * 
+ *
  * IMPORTANT: Despite the name "unconnected_items", this class represents an
  * unconnected NET.
  * Each instance represents ONE net that has multiple disconnected groups of

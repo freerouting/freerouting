@@ -713,7 +713,7 @@ public class MazeSearchAlgo {
     CompleteExpansionRoom next_room = p_door.other_room(p_from_element.next_room);
     int layer = p_from_element.next_room.get_layer();
     FloatPoint shape_entry_middle = p_shape_entry.a.middle_point(p_shape_entry.b);
-    
+
     double bend_cost_penalty = 0.0;
     if (ctrl.bendCosts[layer] > 0.0 && p_from_element.backtrack_door != null) {
       FloatPoint from_mid = p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b);

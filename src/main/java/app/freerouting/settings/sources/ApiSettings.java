@@ -15,7 +15,7 @@ public class ApiSettings implements SettingsSource {
 
     /**
      * Creates an ApiSettings source with the specified settings.
-     * 
+     *
      * @param settings Router settings from the API (should have only specified
      *                 fields non-null)
      */

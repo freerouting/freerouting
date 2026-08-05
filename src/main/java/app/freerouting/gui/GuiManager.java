@@ -355,7 +355,7 @@ public class GuiManager {
         }
 
         // Load session file if specified (after design is loaded, before RULES)
-        if (globalSettings.design_session_filename != null && 
+        if (globalSettings.design_session_filename != null &&
                 (routingJob.input.format.equals(FileFormat.DSN) || routingJob.input.format.equals(FileFormat.KICAD_DESIGN_JSON))) {
             try {
                 File sessionFile = new File(globalSettings.design_session_filename);

@@ -15,7 +15,7 @@ import java.net.http.HttpResponse;
 public class VersionChecker implements Runnable {
 
   private static final String GITHUB_RELEASES_URL = "https://api.github.com/repos/freerouting/freerouting/releases/latest";
-  
+
   private final String currentVersion;
   private final HttpClient httpClient;
 
@@ -88,7 +88,7 @@ public class VersionChecker implements Runnable {
       JsonObject json = JsonParser.parseString(responseBody).getAsJsonObject();
       if (json.has("tag_name")) {
         String latestVersion = json.get("tag_name").getAsString();
-        
+
         String cleanCurrent = currentVersion.substring(1); // currentVersion always starts with 'v'
         String cleanLatest = latestVersion.startsWith("v") || latestVersion.startsWith("V")
             ? latestVersion.substring(1)

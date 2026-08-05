@@ -112,7 +112,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     settings_routing_snap_angle_90_button = new JRadioButton(tm.getText("90_degree"));
     settings_routing_snap_angle_45_button = new JRadioButton(tm.getText("45_degree"));
     settings_routing_snap_angle_none_button = new JRadioButton(tm.getText("none"));
-    
+
     settings_routing_snap_angle_90_button.addActionListener(new SnapAngle90Listener());
     settings_routing_snap_angle_90_button.addActionListener(_ -> FRAnalytics
       .buttonClicked("settings_routing_snap_angle_90_button", settings_routing_snap_angle_90_button.getText()));
@@ -137,7 +137,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     main_panel.add(settings_routing_snap_angle_45_button);
     gridbag.setConstraints(settings_routing_snap_angle_none_button, gridbag_constraints);
     main_panel.add(settings_routing_snap_angle_none_button);
-    
+
     addSeparator(main_panel, gridbag, gridbag_constraints);
 
     // add label and radio buttons for the route mode.
@@ -171,7 +171,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     main_panel.add(settings_routing_dynamic_button);
     gridbag.setConstraints(settings_routing_stitch_button, gridbag_constraints);
     main_panel.add(settings_routing_stitch_button);
-    
+
     addSeparator(main_panel, gridbag, gridbag_constraints);
 
     // add label and radio buttons for automatic or manual trace width selection.
@@ -206,12 +206,12 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     main_panel.add(settings_routing_automatic_button);
     gridbag.setConstraints(settings_routing_manual_button, gridbag_constraints);
     main_panel.add(settings_routing_manual_button);
-    
+
     addSeparator(main_panel, gridbag, gridbag_constraints);
 
     // add check boxes
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    
+
     settings_routing_shove_check_box = new JCheckBox(tm.getText("push&shove_enabled"));
     settings_routing_shove_check_box.addActionListener(new ShoveListener());
     settings_routing_shove_check_box.addActionListener(
@@ -283,14 +283,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.fill = GridBagConstraints.HORIZONTAL;
     gridbag.setConstraints(pin_exit_edge_to_turn_label, gridbag_constraints);
     main_panel.add(pin_exit_edge_to_turn_label);
-    
+
     NumberFormat number_format = NumberFormat.getNumberInstance(p_board_frame.get_locale());
     number_format.setMaximumFractionDigits(3);
     number_format.setGroupingUsed(false);
     this.edge_to_turn_dist_field = new JFormattedTextField(number_format);
     this.edge_to_turn_dist_field.setColumns(6);
     this.edge_to_turn_dist_field.setToolTipText(tm.getText("pin_pad_to_turn_gap_tooltip"));
-    
+
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.fill = GridBagConstraints.NONE;
     this.edge_to_turn_suffix_label = new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
@@ -328,7 +328,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.region_width_field.setToolTipText(tm.getText("pull_tight_region_tooltip"));
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.fill = GridBagConstraints.NONE;
-    
+
     this.region_suffix_label = new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
     main_panel.add(createFieldWithSuffix(region_width_field, region_suffix_label, 4, 6), gridbag_constraints);
     region_width_field.addKeyListener(new RegionWidthFieldKeyListener());
@@ -348,16 +348,16 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.fill = GridBagConstraints.HORIZONTAL;
     gridbag.setConstraints(clearance_compensation_check_box, gridbag_constraints);
     main_panel.add(clearance_compensation_check_box, gridbag_constraints);
-    
+
     NumberFormat compFormat = NumberFormat.getNumberInstance(p_board_frame.get_locale());
     compFormat.setMaximumFractionDigits(3);
     compFormat.setGroupingUsed(false);
-    
+
     this.clearance_value_field = new JFormattedTextField(compFormat);
     this.clearance_value_field.setColumns(6);
     this.clearance_value_field.setEditable(false);
     this.clearance_value_field.setToolTipText(tm.getText("clearance_compensation_checkbox_tooltip"));
-    
+
     this.clearance_suffix_label = new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.fill = GridBagConstraints.NONE;
@@ -389,7 +389,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     accuracy_value_field.setToolTipText(tm.getText("pull_tight_accuracy_tooltip"));
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.fill = GridBagConstraints.NONE;
-    
+
     this.accuracy_suffix_label = new JLabel(this.guiBoardManager.coordinate_transform.user_unit.toString());
     main_panel.add(createFieldWithSuffix(accuracy_value_field, accuracy_suffix_label, 4, 6), gridbag_constraints);
     accuracy_value_field.addKeyListener(new AccuracyFieldKeyListener());
@@ -424,17 +424,17 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     double oldWeightX = constraints.weightx;
     int oldFill = constraints.fill;
     Insets oldInsets = constraints.insets;
-    
+
     constraints.gridwidth = GridBagConstraints.REMAINDER;
     constraints.gridheight = 1;
     constraints.weightx = 0.0;
     constraints.fill = GridBagConstraints.HORIZONTAL;
     constraints.insets = new Insets(6, 10, 6, 10);
-    
+
     JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
     gridbag.setConstraints(separator, constraints);
     panel.add(separator);
-    
+
     constraints.gridwidth = oldGridWidth;
     constraints.gridheight = oldGridHeight;
     constraints.weightx = oldWeightX;
@@ -1037,7 +1037,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         return;
       }
       guiBoardManager.set_clearance_compensation(clearance_compensation_check_box.isSelected());
-      refresh(); 
+      refresh();
     }
   }
 

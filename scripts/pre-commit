@@ -1,3 +1,10 @@
 #!/bin/bash
-./gradlew spotlessApply
+set -e
+
+echo "Running Spotless formatting..."
+./gradlew spotlessApply --no-daemon
+
+echo "Adding formatted files to staging..."
 git add -u
+
+echo "Pre-commit checks complete!"

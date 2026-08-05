@@ -43,7 +43,7 @@ echo "> Composing the distribution file"
 mv "freerouting" "freerouting-$APP_VERSION-linux-x64"
 cp "../../build/dist/LICENSE" "freerouting-$APP_VERSION-linux-x64/LICENSE"
 mv "../../build/dist/freerouting-executable.jar" "freerouting-$APP_VERSION-executable.jar"
- 
+
 zip -r "freerouting-$APP_VERSION-linux-x64.zip" "freerouting-$APP_VERSION-linux-x64"
 
 

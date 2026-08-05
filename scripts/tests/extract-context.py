@@ -5,10 +5,10 @@ def extract_context(log1_path, log2_path):
     def get_lines(path):
         with open(path, 'r', encoding='utf-8', errors='ignore') as f:
             return f.readlines()
-            
+
     lines1 = get_lines(log1_path)
     lines2 = get_lines(log2_path)
-    
+
     idx1 = -1
     count = 0
     for i, line in enumerate(lines1):
@@ -17,7 +17,7 @@ def extract_context(log1_path, log2_path):
             if count == 2502:
                 idx1 = i
                 break
-                
+
     count = 0
     idx2 = -1
     for i, line in enumerate(lines2):
@@ -31,7 +31,7 @@ def extract_context(log1_path, log2_path):
         out.write("--- CURRENT --- \n")
         for i in range(max(0, idx1 - 50), min(len(lines1), idx1 + 10)):
             out.write(lines1[i])
-        
+
         out.write("\n\n--- V1.9 --- \n")
         for i in range(max(0, idx2 - 50), min(len(lines2), idx2 + 10)):
             out.write(lines2[i])

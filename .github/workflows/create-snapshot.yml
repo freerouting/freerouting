@@ -43,7 +43,7 @@ jobs:
           assets: |
             freerouting-SNAPSHOT.zip
             freerouting-SNAPSHOT.tar.gz
-            freerouting-SNAPSHOT-*.*   
+            freerouting-SNAPSHOT-*.*
 
   build-jar:
     needs: [ build-and-test, delete-old-snapshot-assets ]
