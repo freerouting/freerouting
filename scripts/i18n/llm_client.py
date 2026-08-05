@@ -24,6 +24,15 @@ def batch_size() -> int:
         return DEFAULT_BATCH_SIZE
 
 
+def _gemini_api_key() -> str:
+    return (
+        os.environ.get("LLM_API_KEY")
+        or os.environ.get("GEMINI_API_KEY")
+        or os.environ.get("GOOGLE_API_KEY")
+        or ""
+    )
+
+
 def _provider_config() -> Tuple[str, str, str, str]:
     provider = os.environ.get("LLM_PROVIDER", "openai").lower()
     api_key = os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY", "")
@@ -34,6 +43,13 @@ def _provider_config() -> Tuple[str, str, str, str]:
     elif provider == "anthropic":
         model = os.environ.get("LLM_MODEL", "claude-3-haiku-20240307")
         base_url = "https://api.anthropic.com/v1"
+    elif provider in ("google", "gemini"):
+        provider = "google"
+        model = os.environ.get("LLM_MODEL", "gemini-3.6-flash")
+        base_url = os.environ.get(
+            "LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta"
+        )
+        api_key = _gemini_api_key()
     elif provider == "ollama":
         model = os.environ.get("LLM_MODEL", "llama3.2")
         base_url = os.environ.get("LLM_BASE_URL", "http://localhost:11434")
@@ -71,6 +87,11 @@ def call_llm(prompt: str, max_tokens: int = 2000) -> Optional[str]:
         return _call_with_retry(
             lambda: _call_anthropic(prompt, model, api_key, max_tokens),
             "Anthropic API",
+        )
+    if provider == "google":
+        return _call_with_retry(
+            lambda: _call_google(prompt, model, api_key, base_url, max_tokens),
+            "Google Gemini API",
         )
     if provider == "ollama":
         return _call_with_retry(
@@ -127,6 +148,67 @@ def _call_anthropic(prompt: str, model: str, api_key: str, max_tokens: int) -> s
     )
     resp.raise_for_status()
     return resp.json()["content"][0]["text"].strip().strip("\"'")
+
+
+def _gemini_thinking_budget() -> Optional[int]:
+    raw = os.environ.get("LLM_GEMINI_THINKING_BUDGET")
+    if raw is None:
+        # Translation prompts are deterministic; skip reasoning tokens by default.
+        return 0
+    raw = raw.strip()
+    if raw.lower() in ("default", "none", "-1"):
+        return None
+    try:
+        return int(raw)
+    except ValueError:
+        return 0
+
+
+def _call_google(prompt: str, model: str, api_key: str, base_url: str, max_tokens: int) -> str:
+    import requests
+
+    if not api_key:
+        raise ValueError(
+            "Gemini API key missing. Set LLM_API_KEY, GEMINI_API_KEY, or GOOGLE_API_KEY."
+        )
+
+    generation_config: Dict[str, Any] = {
+        "temperature": 0.0,
+        "maxOutputTokens": max_tokens,
+    }
+    thinking_budget = _gemini_thinking_budget()
+    if thinking_budget is not None:
+        generation_config["thinkingConfig"] = {"thinkingBudget": thinking_budget}
+
+    payload: Dict[str, Any] = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": generation_config,
+    }
+
+    url = f"{base_url.rstrip('/')}/models/{model}:generateContent"
+    resp = requests.post(
+        url,
+        params={"key": api_key},
+        headers={"Content-Type": "application/json"},
+        json=payload,
+        timeout=120,
+    )
+    resp.raise_for_status()
+    body = resp.json()
+
+    candidates = body.get("candidates") or []
+    if not candidates:
+        block_reason = body.get("promptFeedback", {}).get("blockReason")
+        raise ValueError(f"Gemini returned no candidates (blockReason={block_reason})")
+
+    parts = candidates[0].get("content", {}).get("parts") or []
+    text_parts = [part.get("text", "") for part in parts if isinstance(part.get("text"), str)]
+    content = "".join(text_parts).strip()
+    if not content:
+        finish_reason = candidates[0].get("finishReason")
+        raise ValueError(f"Gemini returned empty text (finishReason={finish_reason})")
+
+    return content.strip("\"'")
 
 
 def _call_ollama(prompt: str, model: str, base_url: str, max_tokens: int) -> str:

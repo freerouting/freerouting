@@ -85,6 +85,15 @@ python scripts/i18n/translate.py --locale pt
 
 **Batch mode:** keys are sent to the LLM in batches (default 15, set `LLM_BATCH_SIZE=1` to force per-key). Failed batch parses fall back to single-key calls with retry/backoff.
 
+**Google Gemini example:**
+
+```bash
+export LLM_PROVIDER=google
+export GEMINI_API_KEY=...
+export LLM_MODEL=gemini-3.6-flash
+python scripts/i18n/translate.py --locale de --bundle gui.BoardMenuFile
+```
+
 **Stale keys:** when `needs_retranslation` is set, the previous locale translation is included in the prompt as an outdated hint.
 
 ### 3. Validate
@@ -120,10 +129,11 @@ The parity test `englishBundlesDoNotContainUnusedKeys` writes `build/reports/i18
 
 | Variable | Default | Description |
 |---|---|---|
-| `LLM_PROVIDER` | `openai` | `openai`, `anthropic`, or `ollama` |
-| `LLM_API_KEY` | `OPENAI_API_KEY` | API key |
-| `LLM_MODEL` | provider-specific | `gpt-4o-mini` / `claude-3-haiku-20240307` / `llama3.2` |
-| `LLM_BASE_URL` | provider-specific | OpenAI or Ollama base URL |
+| `LLM_PROVIDER` | `openai` | `openai`, `anthropic`, `google`/`gemini`, or `ollama` |
+| `LLM_API_KEY` | `OPENAI_API_KEY` | API key (Gemini: also `GEMINI_API_KEY` or `GOOGLE_API_KEY`) |
+| `LLM_MODEL` | provider-specific | e.g. `gpt-4o-mini`, `claude-sonnet-5`, `gemini-3.6-flash`, `gemini-3.1-pro-preview` |
+| `LLM_BASE_URL` | provider-specific | OpenAI/Ollama/Gemini API base URL |
+| `LLM_GEMINI_THINKING_BUDGET` | `0` | Gemini thinking token budget (`0` = off; `-1`/`default` = model default) |
 | `LLM_BATCH_SIZE` | `15` | Keys per LLM request (1–25) |
 
 ## Recommended timing
