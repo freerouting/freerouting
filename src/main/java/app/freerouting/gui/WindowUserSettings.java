@@ -213,7 +213,7 @@ JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEm
     gbc.gridy = 7;
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
-    JLabel statisticsHeader = new JLabel(tm.getText("statistics_header", globalSettings.statistics.startTime.substring(0, 10)));
+    JLabel statisticsHeader = new JLabel(tm.getText("stats_header", globalSettings.statistics.startTime.substring(0, 10)));
     profileDialog.add(statisticsHeader, gbc);
 
     // Statistics
