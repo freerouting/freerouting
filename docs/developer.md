@@ -48,7 +48,9 @@ All four .jar files will be generated in the `build\libs` subfolder. You would t
 
 Freerouting ships UI strings as Java `.properties` bundles under `src/main/resources/app/freerouting/`. Maintainer tooling for LLM-assisted translation lives in [`scripts/i18n/README.md`](../scripts/i18n/README.md).
 
-Typical workflow after editing English strings:
+**Translators:** see [`docs/translations.md`](translations.md). Do **not** edit `*_{locale}.properties` by hand; fix [`scripts/i18n/glossary/`](../scripts/i18n/glossary/) and request a **full-locale re-translation** in your PR or issue.
+
+Typical workflow after editing **English** strings:
 
 ```bash
 pip install -r scripts/i18n/requirements.txt
