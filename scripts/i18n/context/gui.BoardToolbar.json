@@ -177,9 +177,7 @@
   },
   "drag_button": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardToolbar"
-    ],
+    "code_references": [],
     "english_hash": "442e96ec9e5a5fc7a565a8cece1db4b809442a94b513578917877c0d3fb08d3f",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -227,9 +225,7 @@
   },
   "inspect_button": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardToolbar"
-    ],
+    "code_references": [],
     "english_hash": "e0723a86a5b9408aee9113031785d3d15d9702892f31a46e5fe927c0c8552675",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -259,6 +255,22 @@
     ],
     "ui_role": "tooltip"
   },
+  "mode_heading": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardToolbar"
+    ],
+    "english_hash": "5e23ec6a300dc60a79641769017e16e9bf042cbd8fd0a54586a048ab9da972ff",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardToolbar",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "redo_button_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
@@ -277,9 +289,7 @@
   },
   "route_button": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardToolbar"
-    ],
+    "code_references": [],
     "english_hash": "adc74704d65d5cc96612c15b073209d3de7e93c93b8fdc3362ee50596d18587f",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -353,22 +363,45 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
+      "unit_heading",
       "unit_inch",
       "unit_inch_tooltip",
       "unit_mil",
       "unit_mil_tooltip",
       "unit_mm",
       "unit_mm_tooltip",
-      "unit_um",
-      "unit_um_tooltip"
+      "unit_um"
     ],
     "ui_role": "button_label"
   },
-  "unit_inch": {
+  "unit_heading": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.BoardToolbar"
     ],
+    "english_hash": "4e545960f1bffc134026127ef92963e136ec84b24bb2a6103c0731a64843a40b",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardToolbar",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "unit_button",
+      "unit_inch",
+      "unit_inch_tooltip",
+      "unit_mil",
+      "unit_mil_tooltip",
+      "unit_mm",
+      "unit_mm_tooltip",
+      "unit_um"
+    ],
+    "ui_role": "label"
+  },
+  "unit_inch": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
     "english_hash": "582967534d0f909d196b97f9e6921342777aea87b46fa52df165389db1fb8ccf",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -379,13 +412,13 @@
     "placeholders": [],
     "related_keys": [
       "unit_button",
+      "unit_heading",
       "unit_inch_tooltip",
       "unit_mil",
       "unit_mil_tooltip",
       "unit_mm",
       "unit_mm_tooltip",
-      "unit_um",
-      "unit_um_tooltip"
+      "unit_um"
     ],
     "ui_role": "label"
   },
@@ -407,9 +440,7 @@
   },
   "unit_mil": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardToolbar"
-    ],
+    "code_references": [],
     "english_hash": "55928210084d5f210396892fe8561f83e02d37201adf0b0c195bdf70096cd95c",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -420,13 +451,13 @@
     "placeholders": [],
     "related_keys": [
       "unit_button",
+      "unit_heading",
       "unit_inch",
       "unit_inch_tooltip",
       "unit_mil_tooltip",
       "unit_mm",
       "unit_mm_tooltip",
-      "unit_um",
-      "unit_um_tooltip"
+      "unit_um"
     ],
     "ui_role": "label"
   },
@@ -448,9 +479,7 @@
   },
   "unit_mm": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardToolbar"
-    ],
+    "code_references": [],
     "english_hash": "8fa1dddd53606ceb933c5c6a12e714ed41e11d37a2b7bc48e91d15b54171d033",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -461,13 +490,13 @@
     "placeholders": [],
     "related_keys": [
       "unit_button",
+      "unit_heading",
       "unit_inch",
       "unit_inch_tooltip",
       "unit_mil",
       "unit_mil_tooltip",
       "unit_mm_tooltip",
-      "unit_um",
-      "unit_um_tooltip"
+      "unit_um"
     ],
     "ui_role": "label"
   },
@@ -489,9 +518,7 @@
   },
   "unit_um": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardToolbar"
-    ],
+    "code_references": [],
     "english_hash": "3b1ec39664627ace73cc50b1ca00dd16aa8873fa04489e7b08ea599c2dcaeff5",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -502,13 +529,13 @@
     "placeholders": [],
     "related_keys": [
       "unit_button",
+      "unit_heading",
       "unit_inch",
       "unit_inch_tooltip",
       "unit_mil",
       "unit_mil_tooltip",
       "unit_mm",
-      "unit_mm_tooltip",
-      "unit_um_tooltip"
+      "unit_mm_tooltip"
     ],
     "ui_role": "label"
   },

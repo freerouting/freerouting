@@ -1114,6 +1114,20 @@
     ],
     "ui_role": "label"
   },
+  "text_manager_fallback_class_probe": {
+    "bundle_desc": "interactive routing session",
+    "code_references": [],
+    "english_hash": "d744596dd95ef3025723683c57586318c3f7869678264dde4c16fa4f2e161184",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.interactive.InteractiveState",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "unable_to_reset_components_with_different_rotations": {
     "bundle_desc": "interactive routing session",
     "code_references": [

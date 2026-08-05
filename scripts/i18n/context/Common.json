@@ -1328,6 +1328,20 @@
     ],
     "ui_role": "label"
   },
+  "text_manager_fallback_common_probe": {
+    "bundle_desc": "shared/common strings",
+    "code_references": [],
+    "english_hash": "c2e01d2df8e3150db4d8bb2a6a8eb9b3a5e76e6677895be8556b362b5417e1ea",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": null,
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "to": {
     "bundle_desc": "shared/common strings",
     "code_references": [],

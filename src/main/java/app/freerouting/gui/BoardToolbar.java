@@ -110,9 +110,9 @@ class BoardToolbar extends JPanel {
     left_toolbar.setMaximumSize(new Dimension(1200, 30));
 
     if (!p_disable_select_mode) {
-      modeSelectionPanel = new SegmentedButtons(tm, "Mode", "inspect_button", "route_button", "drag_button");
+      modeSelectionPanel = new SegmentedButtons(tm, tm.getText("mode_heading"), "inspect_button", "route_button", "drag_button");
     } else {
-      modeSelectionPanel = new SegmentedButtons(tm, "Mode", "route_button", "drag_button");
+      modeSelectionPanel = new SegmentedButtons(tm, tm.getText("mode_heading"), "route_button", "drag_button");
     }
     modeSelectionPanel.addValueChangedEventListener((String value) -> {
       switch (value) {
@@ -403,7 +403,7 @@ class BoardToolbar extends JPanel {
     final JToolBar right_toolbar = new JToolBar();
     right_toolbar.setAutoscrolls(true);
 
-    unitSelectionPanel = new SegmentedButtons(tm, "Unit", "unit_mil", "unit_inch", "unit_mm", "unit_um");
+    unitSelectionPanel = new SegmentedButtons(tm, tm.getText("unit_heading"), "unit_mil", "unit_inch", "unit_mm", "unit_um");
     unitSelectionPanel.addValueChangedEventListener((String value) -> {
       switch (value) {
         case "unit_mil":

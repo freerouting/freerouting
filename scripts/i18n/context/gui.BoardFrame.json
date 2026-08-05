@@ -473,5 +473,21 @@
     ],
     "related_keys": [],
     "ui_role": "dialog_title"
+  },
+  "user_settings_button": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.BoardMenuBar"
+    ],
+    "english_hash": "818ed0c87562281ca9470dfc4f15bf6f6669b9a2a705adf4eb30a7718b878edf",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.BoardFrame",
+    "max_length_hint": 30,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "button_label"
   }
 }
