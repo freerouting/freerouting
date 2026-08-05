@@ -40,6 +40,8 @@ from properties_io import (  # noqa: E402
     english_properties_path,
     load_properties,
     locale_properties_path,
+    normalize_property_escapes,
+    validate_property_escapes,
     write_properties,
 )
 
@@ -68,6 +70,14 @@ def validate_html(english: str, translation: str) -> bool:
             err(f"      {symbol('warn')} Missing HTML tag: {tag}")
             return False
     return True
+
+
+def validate_escapes(english: str, translation: str) -> bool:
+    ok, eng_counts, loc_counts = validate_property_escapes(english, translation)
+    if ok:
+        return True
+    err(f"      {symbol('warn')} Escape sequence mismatch: English {dict(eng_counts)} vs translation {dict(loc_counts)}")
+    return False
 
 
 def get_work_items(
@@ -156,7 +166,11 @@ def translate_items_batch(
                 failures += 1
                 failed_keys.add(key)
                 continue
-            translations[key] = translation
+            if not validate_escapes(english_value, translation):
+                failures += 1
+                failed_keys.add(key)
+                continue
+            translations[key] = normalize_property_escapes(translation)
         return translations, failed_keys, failures
 
     # Fallback: one key at a time
@@ -179,7 +193,11 @@ def translate_items_batch(
             failures += 1
             failed_keys.add(key)
             continue
-        translations[key] = translation
+        if not validate_escapes(english_value, translation):
+            failures += 1
+            failed_keys.add(key)
+            continue
+        translations[key] = normalize_property_escapes(translation)
         time.sleep(0.05)
 
     return translations, failed_keys, failures

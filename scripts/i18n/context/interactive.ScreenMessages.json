@@ -10,7 +10,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{items_to_go}}",
       "{{routed_count}}"
@@ -31,7 +31,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{failed_count}}",
       "{{ripped_count}}"
@@ -52,7 +52,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{extra_vias}}",
       "{{failed_count}}"
@@ -74,7 +74,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -90,7 +90,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{items_to_go}}"
     ],
@@ -110,7 +110,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{failed_count}}",
       "{{found_count}}"
@@ -131,7 +131,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{via_count}}"
     ],
@@ -151,7 +151,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{trace_length}}",
       "{{unit}}"
@@ -192,7 +192,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

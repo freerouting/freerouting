@@ -406,7 +406,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "all_visible_tooltip"
@@ -424,7 +424,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "all_visible"
@@ -442,7 +442,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "current_layer_tooltip",
@@ -462,7 +462,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "current_layer"
@@ -480,7 +480,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "current_layer",
@@ -500,7 +500,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "current_only"
@@ -518,7 +518,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "tooltip"

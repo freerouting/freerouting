@@ -10,7 +10,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.CleanupWindows",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "no_unconnected_route_found"
@@ -28,7 +28,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.CleanupWindows",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "no_route_stubs_found"

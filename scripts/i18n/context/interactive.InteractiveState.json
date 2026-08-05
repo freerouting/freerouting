@@ -10,7 +10,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "adding_hole_failed",
@@ -30,7 +30,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "adding_hole_completed",
@@ -50,7 +50,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "adding_hole_to_obstacle_area"
@@ -68,7 +68,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "adding_hole_to_circle_not_yet_implemented"
@@ -84,7 +84,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "all_items_inserted"
@@ -102,7 +102,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "all_connections_routed"
@@ -134,7 +134,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{incomplete_count}}",
       "{{status}}"
@@ -156,7 +156,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{autorouter_pass_number}}"
     ],
@@ -174,7 +174,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "batch_optimizer_start_message"
@@ -192,7 +192,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "batch_autorouter_start_message"
@@ -210,7 +210,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -226,7 +226,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -256,7 +256,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "connections_found",
@@ -273,7 +273,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "connections_could_not_be_routed",
@@ -290,7 +290,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "connections_could_not_be_routed",
@@ -309,7 +309,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "creating_polygonshape",
@@ -328,7 +328,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "creating_circle",
@@ -347,7 +347,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "creating_circle",
@@ -366,7 +366,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "drag_left_mouse_button_to_select_cutout_rectangle",
@@ -385,7 +385,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "drag_left_mouse_button_to_select_items_in_region"
@@ -421,7 +421,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -451,7 +451,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "in_inspect_menu",
@@ -470,7 +470,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "in_inspect_item_mode",
@@ -489,7 +489,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "in_inspect_item_mode",
@@ -508,7 +508,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -524,7 +524,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -542,7 +542,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "keepout_successful_completed"
@@ -562,7 +562,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "keepout_cancelled_because_of_overlaps"
@@ -639,7 +639,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -655,7 +655,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "move_component_failed_because_no_item_selected"
@@ -673,7 +673,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "move_completed"
@@ -689,7 +689,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -705,7 +705,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "no_obstacle_area_found_for_adding_hole",
@@ -726,7 +726,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "no_item_found_for_adding_hole",
@@ -748,7 +748,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "no_item_found_for_adding_hole",
@@ -769,7 +769,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "no_item_found_for_adding_hole",
@@ -790,7 +790,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -840,7 +840,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{optimizer_pass_number}}"
     ],
@@ -858,7 +858,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -874,7 +874,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "pin_not_swapped_because_second_pin_is_already_connected"
@@ -892,7 +892,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "pin_not_swapped_because_it_is_already_connected"
@@ -910,7 +910,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "pin_not_swapped_because_it_is_already_connected",
@@ -930,7 +930,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "pin_not_swapped_because_it_is_already_connected",
@@ -950,7 +950,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": 30,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "please_unfix_selected_items_before_moving",
@@ -969,7 +969,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "please_click_second_pin_with_the_left_mouse_button",
@@ -988,7 +988,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "please_click_second_pin_with_the_left_mouse_button",
@@ -1005,7 +1005,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -1051,7 +1051,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "some_items_are_not_changed_because_they_are_already_connected"
@@ -1067,7 +1067,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "some_items_are_fixed_and_could_therefore_not_be_removed"
@@ -1085,7 +1085,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "some_items_are_fixed_and_could_therefore_not_be_removed",
@@ -1105,7 +1105,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "some_items_are_fixed_and_could_therefore_not_be_removed",
@@ -1125,7 +1125,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.InteractiveState",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

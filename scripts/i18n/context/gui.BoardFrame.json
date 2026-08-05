@@ -221,7 +221,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardFrame",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "error_dsn_read_failed"
@@ -239,7 +239,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardFrame",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "error_dsn_outline_missing"
@@ -257,7 +257,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardFrame",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "error_design_file_read_failed",
@@ -293,7 +293,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardFrame",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "message_binary_file_saved"
@@ -311,7 +311,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardFrame",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{filename}}"
     ],
@@ -331,7 +331,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardFrame",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{filename}}"
     ],
@@ -351,7 +351,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardFrame",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{filename}}"
     ],
@@ -371,7 +371,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardFrame",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{filename}}"
     ],
@@ -391,7 +391,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardFrame",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{filename}}"
     ],
@@ -411,7 +411,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardFrame",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{filename}}"
     ],
@@ -431,7 +431,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardFrame",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{filename}}"
     ],

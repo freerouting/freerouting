@@ -8,7 +8,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "cancel_and_exit_tooltip"
@@ -24,7 +24,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "cancel_and_exit"
@@ -40,7 +40,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -70,7 +70,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "eagle_script"
@@ -86,7 +86,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "error_dsn_extension_required",
@@ -105,7 +105,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "error_design_save_failed",
@@ -124,7 +124,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "error_design_save_failed",
@@ -143,7 +143,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "error_logfile_read_failed"
@@ -159,7 +159,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "error_logfile_create_failed"
@@ -193,7 +193,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "exit"
@@ -225,7 +225,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "generate_logfile_tooltip"
@@ -241,7 +241,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "generate_logfile"
@@ -257,7 +257,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "info_host_cad_session_filename",
@@ -275,7 +275,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "info_eagle_scr_extension",
@@ -293,7 +293,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "info_eagle_scr_extension",
@@ -347,7 +347,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "open"
@@ -363,7 +363,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "replay_logfile_tooltip"
@@ -379,7 +379,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "replay_logfile"
@@ -395,7 +395,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -425,7 +425,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "save_and_exit"
@@ -466,7 +466,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "save_as"
@@ -482,7 +482,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "save",
@@ -503,7 +503,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "save",
@@ -540,7 +540,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "session_file"
@@ -570,7 +570,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "settings"
@@ -586,7 +586,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "status_design_save_as_prefix",
@@ -609,7 +609,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "status_creating_eagle_script",
@@ -655,7 +655,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "status_creating_eagle_script",
@@ -701,7 +701,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "status_creating_eagle_script",
@@ -724,7 +724,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "status_specctra_text_written"
@@ -740,7 +740,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "status_specctra_session_written"
@@ -756,7 +756,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "status_creating_eagle_script",
@@ -779,7 +779,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "status_writing_session_file",
@@ -796,7 +796,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "status_writing_logfile",
@@ -813,7 +813,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "status_writing_logfile",
@@ -830,7 +830,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuFile",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "status_creating_eagle_script",

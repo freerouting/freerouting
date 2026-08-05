@@ -26,7 +26,7 @@
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "COMPONENT_FRONT"
@@ -44,7 +44,7 @@
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "COMPONENT_BACK"
@@ -62,7 +62,7 @@
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -218,7 +218,7 @@
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -234,7 +234,7 @@
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -314,7 +314,7 @@
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -398,7 +398,7 @@
     "is_html": false,
     "java_class": "app.freerouting.boardgraphics.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "VIAS"

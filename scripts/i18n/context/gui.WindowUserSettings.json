@@ -10,7 +10,7 @@
     "is_html": true,
     "java_class": "app.freerouting.gui.WindowUserSettings",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "allow_telemetry"
@@ -60,7 +60,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowUserSettings",
     "max_length_hint": 30,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "email",

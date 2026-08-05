@@ -42,7 +42,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNetClasses",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -434,7 +434,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNetClasses",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "column_tool_tip_1",
@@ -534,7 +534,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNetClasses",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "column_tool_tip_1",
@@ -575,7 +575,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNetClasses",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -607,7 +607,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNetClasses",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "filter_incompletes_tooltip"
@@ -625,7 +625,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNetClasses",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "filter_incompletes"

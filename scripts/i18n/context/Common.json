@@ -8,7 +8,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -22,7 +22,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -36,7 +36,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -50,7 +50,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -64,7 +64,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -106,7 +106,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -120,7 +120,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -134,7 +134,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -222,7 +222,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "change_layer_tooltip"
@@ -238,7 +238,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "change_layer"
@@ -692,7 +692,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -720,7 +720,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -1707,7 +1707,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "zoom",
@@ -1724,7 +1724,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "zoom",

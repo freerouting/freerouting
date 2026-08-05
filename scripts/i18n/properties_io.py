@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import os
+import re
 import time
+from collections import Counter
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 RESOURCE_ROOT = Path("src/main/resources/app/freerouting")
 
@@ -19,6 +21,10 @@ SUPPORTED_LOCALES = [
 
 _WRITE_RETRIES = 3
 _WRITE_RETRY_DELAY_S = 0.25
+
+# Java .properties escape sequences we preserve verbatim in translated files.
+_JAVA_ESCAPE_SEQUENCES: Tuple[str, ...] = ("\\n", "\\t", "\\r", "\\f", "\\\\", '\\"')
+_JAVA_ESCAPE_TOKEN_RE = re.compile(r'\\([ntrfb\\"])')
 
 
 def bundle_name_from_path(path: Path) -> str:
@@ -44,6 +50,55 @@ def locale_properties_path(english_path: Path, locale: str) -> Path:
     return english_path.parent / locale_name
 
 
+def normalize_property_escapes(value: str) -> str:
+    """Convert control characters to Java-style escape sequences for .properties files."""
+    if not value:
+        return value
+    normalized = value.replace("\r\n", "\n").replace("\r", "\n")
+    out: List[str] = []
+    for ch in normalized:
+        if ch == "\n":
+            out.append("\\n")
+        elif ch == "\t":
+            out.append("\\t")
+        elif ch == "\f":
+            out.append("\\f")
+        elif ch == "\x00":
+            continue
+        else:
+            out.append(ch)
+    return "".join(out)
+
+
+def count_property_escapes(value: str) -> Counter[str]:
+    """Count Java escape tokens after normalizing control characters."""
+    normalized = normalize_property_escapes(value)
+    counts: Counter[str] = Counter()
+    for match in _JAVA_ESCAPE_TOKEN_RE.finditer(normalized):
+        token = "\\" + match.group(1)
+        counts[token] += 1
+    return counts
+
+
+def validate_property_escapes(english: str, translation: str) -> Tuple[bool, Counter[str], Counter[str]]:
+    """Return (ok, english_counts, locale_counts) for Java escape sequences."""
+    eng_counts = count_property_escapes(english)
+    loc_counts = count_property_escapes(translation)
+    return eng_counts == loc_counts, eng_counts, loc_counts
+
+
+def english_has_property_escapes(english: str) -> bool:
+    return any(count_property_escapes(english).values())
+
+
+def _split_property_line(line: str) -> tuple[str, str] | None:
+    """Split on the first unescaped '=' or ':' (Java .properties key separator)."""
+    for i, ch in enumerate(line):
+        if ch in ("=", ":") and (i == 0 or line[i - 1] != "\\"):
+            return line[:i].strip(), line[i + 1 :].strip()
+    return None
+
+
 def load_properties(path: Path) -> Dict[str, str]:
     """Load a .properties file, returning a dict of key->value."""
     result: Dict[str, str] = {}
@@ -54,29 +109,39 @@ def load_properties(path: Path) -> Dict[str, str]:
 
     i = 0
     num_lines = len(lines)
+    current_key: str | None = None
     while i < num_lines:
-        line = lines[i].strip()
+        line = lines[i].rstrip("\n\r")
         i += 1
-        if not line or line.startswith("#") or line.startswith("!"):
+        stripped = line.strip()
+        if not stripped:
+            if current_key is not None:
+                result[current_key] = result[current_key] + "\n"
             continue
-        while line.endswith("\\") and not line.endswith("\\\\") and i < num_lines:
-            line = line[:-1] + lines[i].strip()
+        if stripped.startswith("#") or stripped.startswith("!"):
+            current_key = None
+            continue
+        while stripped.endswith("\\") and not stripped.endswith("\\\\") and i < num_lines:
+            stripped = stripped[:-1] + lines[i].strip()
             i += 1
-        if "=" in line:
-            key, _, value = line.partition("=")
-            result[key.strip()] = value.strip()
-        elif ":" in line:
-            key, _, value = line.partition(":")
-            result[key.strip()] = value.strip()
+        split = _split_property_line(stripped)
+        if split is not None:
+            key, value = split
+            result[key] = value
+            current_key = key
+        elif current_key is not None:
+            # Orphan continuation line (LLM wrote a real newline instead of \n).
+            result[current_key] = result[current_key] + "\n" + line.rstrip("\n\r")
+        else:
+            current_key = None
     return result
 
 
 def sanitize_property_value(value: str) -> str:
-    """Remove characters that break .properties files or Windows file I/O."""
+    """Remove unsafe characters and normalize escape sequences for .properties files."""
     if not value:
         return value
-    # NUL and lone CR confuse Java loaders and can trigger Windows write errors.
-    cleaned = value.replace("\x00", "").replace("\r", "")
+    cleaned = normalize_property_escapes(value)
     return cleaned.strip()
 
 

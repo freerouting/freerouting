@@ -10,7 +10,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuOther",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "delete_all_tracks_and_vias_tooltip"
@@ -28,7 +28,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuOther",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "delete_all_tracks_and_vias"
@@ -74,7 +74,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuOther",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "snapshots"

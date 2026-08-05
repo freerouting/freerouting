@@ -26,7 +26,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowViaRule",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "append",
@@ -100,7 +100,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowViaRule",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "move_down"
@@ -138,7 +138,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowViaRule",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "move_up"
@@ -172,7 +172,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowViaRule",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "remove",

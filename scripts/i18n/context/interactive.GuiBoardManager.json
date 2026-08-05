@@ -10,7 +10,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.GuiBoardManager",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -26,7 +26,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.GuiBoardManager",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -40,7 +40,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.GuiBoardManager",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "dialog_title"
@@ -56,7 +56,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.GuiBoardManager",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "no_more_undo_possible"
@@ -74,7 +74,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.GuiBoardManager",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "no_more_redo_possible"
@@ -112,7 +112,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.GuiBoardManager",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{incomplete_count}}",
       "{{length_violation_count}}"
@@ -133,7 +133,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.GuiBoardManager",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -149,7 +149,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.GuiBoardManager",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -165,7 +165,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.GuiBoardManager",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "error_message"
@@ -181,7 +181,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.GuiBoardManager",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -197,7 +197,7 @@
     "is_html": false,
     "java_class": "app.freerouting.interactive.GuiBoardManager",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

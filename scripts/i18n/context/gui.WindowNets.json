@@ -98,7 +98,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNets",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "filter",
@@ -117,7 +117,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNets",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "filter_incompletes"
@@ -155,7 +155,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNets",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "net_count"
@@ -185,7 +185,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowNets",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "select"
