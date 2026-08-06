@@ -166,7 +166,7 @@ dependencies {
     implementation 'com.google.api-client:google-api-client-appengine:2.9.0'
     implementation 'com.google.cloud:google-cloud-core:2.70.0'
     implementation 'com.google.cloud:google-cloud-core-http:2.70.0'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.66.0'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.69.0'
 
     // Add Google Sheets API dependencies for API key validation
     implementation 'com.google.api-client:google-api-client:2.9.0'
