@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch: # Allows you to run this workflow manually
 
 jobs:
   build-and-test:
