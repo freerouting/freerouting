@@ -194,7 +194,7 @@ class BoardToolbar extends JPanel {
       app.freerouting.board.RoutingBoard routingBoard =
           board_frame.board_panel.board_handling.get_routing_board();
       if (routingBoard != null) {
-        guiRoutingJob.routerSettings.applyBoardSpecificOptimizations(routingBoard);
+        guiRoutingJob.routerSettings.applyBoardSpecificOptimizationsIfNeeded(routingBoard);
       }
       InteractiveActionThread thread = board_frame.board_panel.board_handling
           .start_autorouter_and_route_optimizer(guiRoutingJob);
