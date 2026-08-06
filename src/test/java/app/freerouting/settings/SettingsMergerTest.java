@@ -28,6 +28,7 @@ class SettingsMergerTest {
         assertEquals(9999, merged.maxPasses);
         assertTrue(merged.enabled);
         assertTrue(merged.vias_allowed);
+        assertTrue(merged.getRunOptimizer());
     }
 
     @Test

@@ -13,12 +13,12 @@ Tests were conducted on a desktop PC with the following specifications:
 **Freerouting v1.9**
 
 * **Interface:** GUI
-* **Settings:** Benchmark Settings (Fanout: **On**, Route optimizer: **On** - explicitly enabled to override application defaults)
+* **Settings:** Benchmark Settings (Fanout: **On**, Route optimizer: **On**)
 
 **Freerouting v2.2**
 
 * **Interface:** CLI
-* **Settings:** Benchmark Settings (Fanout: **On**, Route optimizer: **On**, API server: **Off**, MCP server: **Off** - explicitly configured to override application defaults)
+* **Settings:** Benchmark Settings (Fanout: **On**, Route optimizer: **On**, API server: **Off**, MCP server: **Off**)
 
 ### Command Line Execution
 

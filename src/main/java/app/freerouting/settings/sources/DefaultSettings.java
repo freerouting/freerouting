@@ -123,7 +123,7 @@ public class DefaultSettings implements SettingsSource {
         settings.fanout.fallbackToBoardVias = true;
 
         // Optimizer defaults
-        settings.optimizer.enabled = false;
+        settings.optimizer.enabled = true;
         settings.optimizer.algorithm = "freerouting-optimizer";
         settings.optimizer.maxPasses = 100;
         settings.optimizer.maxItems = Integer.MAX_VALUE;
