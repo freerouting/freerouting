@@ -1,0 +1,91 @@
+// Configuration-cache-compatible replacement for se.patrikerdes.use-latest-versions.
+// Reads dependencyUpdates/report.json and bumps matching coordinates in *.gradle files.
+
+import groovy.json.JsonSlurper
+
+def pickAvailableVersion = { Map available ->
+    if (available.milestone) {
+        return available.milestone as String
+    }
+    if (available.release) {
+        return available.release as String
+    }
+    if (available.integration) {
+        return available.integration as String
+    }
+    return null
+}
+
+def applyDependencyUpdates = { String content, List updates ->
+    updates.each { update ->
+        def groupQ = java.util.regex.Pattern.quote(update.group as String)
+        def nameQ = java.util.regex.Pattern.quote(update.name as String)
+        def oldVersionQ = java.util.regex.Pattern.quote(update.oldVersion as String)
+        def newVersion = update.newVersion as String
+
+        // 'group:module:version' or "group:module:version"
+        content = content.replaceAll(
+                /(['"]${groupQ}:${nameQ}:)${oldVersionQ}(['"])/,
+                "\$1${newVersion}\$2"
+        )
+
+        // id 'group' version 'version' / id "group" version "version"
+        content = content.replaceAll(
+                /(id[\s\(]+['"]${groupQ}['"][\s\)]+\s*version[\s]+['"])${oldVersionQ}(['"])/,
+                "\$1${newVersion}\$2"
+        )
+    }
+    content
+}
+
+tasks.register('useLatestVersions') {
+    group = 'Help'
+    description = 'Updates dependency and plugin versions in *.gradle files using the dependencyUpdates report.'
+    dependsOn 'dependencyUpdates'
+
+    def reportFile = layout.buildDirectory.file('dependencyUpdates/report.json')
+    def versionFiles = layout.projectDirectory.files(
+            'build.gradle',
+            'settings.gradle',
+            layout.projectDirectory.dir('gradle').asFileTree.matching { include '*.gradle' }
+    )
+
+    inputs.file(reportFile)
+    inputs.files(versionFiles)
+
+    doLast {
+        def report = new JsonSlurper().parse(reportFile.get().asFile)
+        def outdated = (report.outdated?.dependencies ?: []) as List
+
+        def updates = outdated.collect { dep ->
+            def newVersion = pickAvailableVersion(dep.available as Map)
+            if (!newVersion) {
+                return null
+            }
+            [
+                    group      : dep.group as String,
+                    name       : dep.name as String,
+                    oldVersion : dep.version as String,
+                    newVersion : newVersion,
+            ]
+        }.findAll { it != null }
+
+        if (updates.isEmpty()) {
+            logger.lifecycle('useLatestVersions: no outdated dependencies to apply.')
+            return
+        }
+
+        versionFiles.files.each { file ->
+            def original = file.getText('UTF-8')
+            def updated = applyDependencyUpdates(original, updates)
+            if (updated != original) {
+                file.setText(updated, 'UTF-8')
+                logger.lifecycle("useLatestVersions: updated ${file.name}")
+            }
+        }
+
+        updates.each { update ->
+            logger.lifecycle("  ${update.group}:${update.name} [${update.oldVersion} -> ${update.newVersion}]")
+        }
+    }
+}
