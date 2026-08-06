@@ -8,7 +8,7 @@ plugins {
     id 'maven-publish'
     id "com.vanniktech.maven.publish" version "0.36.0"
     id 'net.nemerosa.versioning' version '3.1.0'
-    id 'com.github.ben-manes.versions' version '0.54.0'
+    id 'com.github.ben-manes.versions' version '0.59.0'
     id "se.patrikerdes.use-latest-versions" version "0.2.19"
     id 'org.openrewrite.rewrite' version '7.32.2'
     id "com.diffplug.spotless" version "8.4.0"
