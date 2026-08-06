@@ -26,8 +26,10 @@ from properties_io import (  # noqa: E402
     SUPPORTED_LOCALES,
     bundle_name_from_path,
     english_properties_files,
+    english_has_property_escapes,
     load_properties,
     locale_properties_path,
+    validate_property_escapes,
 )
 
 HTML_KEYS = {"trace_hover_info", "pin_hover_info", "via_hover_info", "net_hover_info"}
@@ -47,11 +49,12 @@ def validate_locale(
     *,
     bundles: Optional[List[str]] = None,
     verbose: bool = False,
-) -> Tuple[int, int, int, int, int, int]:
+) -> Tuple[int, int, int, int, int, int, int]:
     total_keys = 0
     missing_keys = 0
     placeholder_violations = 0
     html_violations = 0
+    escape_violations = 0
     orphan_keys = 0
     stale_keys = 0
 
@@ -95,6 +98,16 @@ def validate_locale(
 
                 placeholder_violations += 1
 
+            if english_has_property_escapes(english_value):
+                ok, eng_counts, loc_counts = validate_property_escapes(english_value, locale_value)
+                if not ok:
+                    if verbose:
+                        out(
+                            f"  {symbol('warn')} {qualified_key}: escape mismatch "
+                            f"English {dict(eng_counts)} vs {locale} {dict(loc_counts)}"
+                        )
+                    escape_violations += 1
+
             ctx = context.get(qualified_key, {})
             if key in HTML_KEYS or ctx.get("is_html"):
                 html_tags = re.findall(r"</?[a-z][a-z0-9]*\b[^>]*>", english_value)
@@ -107,7 +120,7 @@ def validate_locale(
 
             if ctx.get("needs_retranslation", False):
                 if verbose:
-                    out(f"  {symbol('warn')} {qualified_key}: stale (English changed)")
+                    out(f"  {symbol('warn')} {qualified_key}: flagged needs_retranslation")
                 stale_keys += 1
 
         for key in locale_props:
@@ -116,7 +129,7 @@ def validate_locale(
                     out(f"  {symbol('warn')} {bundle}.{key}: orphan key in {locale}")
                 orphan_keys += 1
 
-    return total_keys, missing_keys, placeholder_violations, html_violations, orphan_keys, stale_keys
+    return total_keys, missing_keys, placeholder_violations, html_violations, escape_violations, orphan_keys, stale_keys
 
 
 def main() -> None:
@@ -167,7 +180,7 @@ def main() -> None:
         out(f"  Validating locale: {locale.upper()}")
         out(f"{'=' * 60}")
 
-        total, missing, pl_v, html_v, orphans, stale = validate_locale(
+        total, missing, pl_v, html_v, esc_v, orphans, stale = validate_locale(
             locale, context, bundles=args.bundles, verbose=args.verbose
         )
 
@@ -176,10 +189,11 @@ def main() -> None:
         out(f"     Missing keys: {missing}")
         out(f"     Placeholder violations: {pl_v}")
         out(f"     HTML violations: {html_v}")
+        out(f"     Escape sequence violations: {esc_v}")
         out(f"     Orphan keys: {orphans}")
         out(f"     Stale translations: {stale}")
 
-        if missing > 0 or pl_v > 0 or html_v > 0:
+        if missing > 0 or pl_v > 0 or html_v > 0 or esc_v > 0:
             out(f"  {symbol('fail')} VALIDATION FAILED for {locale.upper()}")
             all_passed = False
         else:

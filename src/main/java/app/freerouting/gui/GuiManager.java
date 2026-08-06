@@ -103,14 +103,12 @@ public class GuiManager {
             }
 
             if (routingJob.input == null) {
-                FRLogger.warn(tm.getText("message_6") + " " + globalSettings.initialInputFile + " "
-                                + tm.getText("message_7"));
+                FRLogger.warn(tm.getText("file_not_found", globalSettings.initialInputFile));
                 return false;
             }
 
             if (routingJob.input.format == FileFormat.UNKNOWN) {
-                FRLogger.warn(tm.getText("message_6") + " " + globalSettings.initialInputFile + " "
-                                + tm.getText("message_7"));
+                FRLogger.warn(tm.getText("file_not_found", globalSettings.initialInputFile));
                 return false;
             }
             var settingsMerger = globalSettings.settingsMergerProtype.clone();
@@ -120,7 +118,7 @@ public class GuiManager {
             routingJob.routerSettings = settingsMerger.merge();
             guiSession.addJob(routingJob);
 
-            String message = tm.getText("loading_design") + " " + globalSettings.initialInputFile;
+            String message = tm.getText("loading_design_with_file", globalSettings.initialInputFile);
             WindowMessage welcome_window = WindowMessage.show(message);
             final BoardFrame new_frame = create_board_frame(routingJob, null, globalSettings, settingsMerger);
             welcome_window.dispose();
@@ -342,7 +340,7 @@ public class GuiManager {
             input_stream = routingJob.input.getData();
             if (input_stream == null) {
                 if (p_message_field != null) {
-                    p_message_field.setText(tm.getText("message_8") + " " + routingJob.input.getFilename());
+                    p_message_field.setText(tm.getText("error_design_file_read_failed_with_file", routingJob.input.getFilename()));
                 }
                 return null;
             }

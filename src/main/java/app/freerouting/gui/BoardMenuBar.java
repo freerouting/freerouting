@@ -2,6 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.FeatureFlagsSettings;
+import app.freerouting.util.TextManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Box;
@@ -44,7 +45,8 @@ public class BoardMenuBar extends JMenuBar {
     add(help_menu);
 
     // Create the Profile button
-    JButton profileButton = new JButton("User Settings");
+    TextManager tm = new TextManager(BoardFrame.class, boardFrame.get_locale());
+    JButton profileButton = new JButton(tm.getText("user_settings_button"));
     profileButton.setBorderPainted(false);
     profileButton.addActionListener(new ActionListener() {
       @Override

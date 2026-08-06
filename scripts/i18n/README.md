@@ -81,9 +81,35 @@ python scripts/i18n/translate.py --locale de --bundle gui.BoardMenuFile --missin
 
 # Full locale bootstrap (once per new language — expensive)
 python scripts/i18n/translate.py --locale pt
+
+# Translate all locales except ones already finished
+python scripts/i18n/translate.py --all --exclude-locale ar
+
+# Incremental: skip keys that already have translations
+python scripts/i18n/translate.py --all --missing-only --exclude-locale ar
+
+# After a full (non --missing-only) translation run, sync context flags:
+python scripts/i18n/extract-context.py --sync-translated --all
 ```
 
-**Batch mode:** keys are sent to the LLM in batches (default 15, set `LLM_BATCH_SIZE=1` to force per-key). Failed batch parses fall back to single-key calls with retry/backoff.
+**Batch mode:** keys are sent to Gemini in batches (default 15, set `LLM_BATCH_SIZE=1` to force per-key). Failed batch parses fall back to single-key calls with retry/backoff.
+
+**Setup (Gemini 3.6 Flash):**
+
+```bash
+export GEMINI_API_KEY=...   # AI Studio auth key (AQ.…) or legacy key (AIza…)
+export LLM_MODEL=gemini-3.6-flash   # optional; this is the default
+python scripts/i18n/translate.py --locale de --bundle gui.BoardMenuFile
+```
+
+PowerShell:
+
+```powershell
+$env:GEMINI_API_KEY = "AQ...."
+python scripts/i18n/translate.py --locale de --missing-only
+```
+
+Google AI Studio now issues **auth keys** with an `AQ.` prefix (replacing legacy `AIza…` keys). Pass them via `GEMINI_API_KEY`; the client sends them in the `x-goog-api-key` header on the native Gemini REST endpoint. **Restart Cursor** (or your terminal) after setting the variable so Python subprocesses inherit it.
 
 **Stale keys:** when `needs_retranslation` is set, the previous locale translation is included in the prompt as an outdated hint.
 
@@ -120,11 +146,12 @@ The parity test `englishBundlesDoNotContainUnusedKeys` writes `build/reports/i18
 
 | Variable | Default | Description |
 |---|---|---|
-| `LLM_PROVIDER` | `openai` | `openai`, `anthropic`, or `ollama` |
-| `LLM_API_KEY` | `OPENAI_API_KEY` | API key |
-| `LLM_MODEL` | provider-specific | `gpt-4o-mini` / `claude-3-haiku-20240307` / `llama3.2` |
-| `LLM_BASE_URL` | provider-specific | OpenAI or Ollama base URL |
-| `LLM_BATCH_SIZE` | `15` | Keys per LLM request (1–25) |
+| `GEMINI_API_KEY` | *(required)* | Google AI Studio API key (`AQ.…` or legacy `AIza…`); `GOOGLE_API_KEY` is accepted as an alias |
+| `LLM_MODEL` | `gemini-3.6-flash` | Gemini model id for `generateContent` |
+| `LLM_BASE_URL` | `https://generativelanguage.googleapis.com/v1beta` | Gemini REST base URL (override only for testing) |
+| `LLM_GEMINI_THINKING_LEVEL` | `minimal` | Gemini 3.x only: `minimal`, `low`, `medium`, `high` |
+| `LLM_GEMINI_THINKING_BUDGET` | `0` | Gemini 2.5 and earlier: thinking token budget (`0` = off; `-1`/`default` = model default) |
+| `LLM_BATCH_SIZE` | `15` | Keys per Gemini request (1–25) |
 
 ## Recommended timing
 
@@ -136,6 +163,7 @@ The parity test `englishBundlesDoNotContainUnusedKeys` writes `build/reports/i18
 | Before merging translation PR | `validate.py --locale xx` |
 | New locale (once) | full `translate.py --locale xx`, then `--missing-only` |
 | Release hygiene | `validate.py --all` |
+| Glossary term fix (translator) | Edit `glossary/{locale}.json` → request full locale re-run ([`docs/translations.md`](../../docs/translations.md)) |
 | Every PR (CI) | `extract-context.py --check` (no LLM, no API key) |
 
 ### Incremental guarantees
@@ -150,6 +178,16 @@ The parity test `englishBundlesDoNotContainUnusedKeys` writes `build/reports/i18
 - Run `translate.py --all --missing-only` on a schedule without English changes.
 - Skip `extract-context.py` after English edits.
 - Run LLM translation in CI (use `--check` and `validate.py` only).
+- Hand-edit `*_{locale}.properties` for translation fixes (see [Translator guide](../../docs/translations.md)).
+
+## For translators
+
+Locale bundles under `src/main/resources/**/**_{locale}.properties` are **generated**. If a translation is wrong:
+
+1. Update **`scripts/i18n/glossary/{locale}.json`** (localized term first; keep DSN, SES, Specctra, Freerouting, Andras Fuchs in Latin script).
+2. Open a PR or issue with a **re-translation request for the whole locale** — do not patch individual property files.
+
+Full policy and maintainer rerun steps: **[`docs/translations.md`](../../docs/translations.md)**.
 
 ## Glossaries
 
@@ -166,24 +204,39 @@ One `{locale}.json` exists for every shipped UI locale. `validate.py` fails if a
 |---|---|
 | Arabic | `ar.json` |
 | Bengali | `bn.json` |
+| Czech | `cs.json` |
 | German | `de.json` |
 | English | `en.json` |
 | Spanish | `es.json` |
 | French | `fr.json` |
 | Hindi | `hi.json` |
+| Hungarian | `hu.json` |
+| Indonesian | `id.json` |
+| Italian | `it.json` |
 | Japanese | `ja.json` |
 | Korean | `ko.json` |
+| Dutch | `nl.json` |
+| Polish | `pl.json` |
 | Portuguese | `pt.json` |
+| Portuguese (Brazil) | `pt_br.json` |
+| Romanian | `ro.json` |
 | Russian | `ru.json` |
+| Swedish | `sv.json` |
+| Thai | `th.json` |
+| Turkish | `tr.json` |
+| Ukrainian | `uk.json` |
+| Vietnamese | `vi.json` |
 | Chinese (Simplified) | `zh.json` |
 | Chinese (Traditional) | `zh_tw.json` |
 
 Terms were mined from `*_en.properties` and Java UI strings (autorouter, net class, conduction area, push/shove, Specctra DSN/SES, etc.). Extend `_default.json` first, then add the same keys to every `{locale}.json` when introducing new PCB terminology.
 
+**Glossary value style:** each locale entry should lead with the **localized UI term** (the text users should see). English glossary keys are lookup labels only. Keep `DSN`, `SES`, `Specctra`, `Freerouting`, and `Andras Fuchs` in Latin script inside translations when they appear in UI text. Do not embed English UI words such as `clearance` or `shove fixed` in non-English glossary values — that causes the LLM to copy them untranslated.
+
 ## Supported locales
 
 **Source:** `en` (English `*_en.properties`)
 
-**Translation targets:** `ar`, `bn`, `de`, `es`, `fr`, `hi`, `ja`, `ko`, `pt`, `ru`, `zh`, `zh_tw`
+**Translation targets:** `ar`, `bn`, `cs`, `de`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt`, `pt_br`, `ro`, `ru`, `sv`, `th`, `tr`, `uk`, `vi`, `zh`, `zh_tw`
 
 See also [docs/developer.md](../../docs/developer.md#translations-i18n).

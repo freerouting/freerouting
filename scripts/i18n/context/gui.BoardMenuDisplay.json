@@ -4,7 +4,7 @@
     "code_references": [
       "app.freerouting.gui.BoardMenuDisplay"
     ],
-    "english_hash": "88c45d9e526c08dd7f8b9d1d3ab96a72d68205232090be5da57e05251bfea650",
+    "english_hash": "7bd7053f414916919c640c927b86a9b3177749fb0b7c23c2ecb5159099b79d6e",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -20,8 +20,8 @@
     "code_references": [
       "app.freerouting.gui.BoardMenuDisplay"
     ],
-    "english_hash": "6fc22aa1e8710794a9f693f03d760b78b4b4e645f127620dada88216434b7669",
-    "grammatical_role": "fragment",
+    "english_hash": "c2ba6751045d8afb1131c400d3e4c91415d072aeec2a0e34c19442e964d8a50a",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuDisplay",
@@ -38,7 +38,7 @@
     "code_references": [
       "app.freerouting.gui.BoardMenuDisplay"
     ],
-    "english_hash": "3907fa7f80722a6fc58cd8c1bd30abf7638095d6774f183b6e831b7093957d1b",
+    "english_hash": "34e108c0896d0158ca4f2797d4f12a143943803be2151aa5d2136ea1bcd9a468",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -70,7 +70,7 @@
     "code_references": [
       "app.freerouting.gui.BoardMenuDisplay"
     ],
-    "english_hash": "7448611d5f93aa8acac6a06d76c00b3f23d985bd7fbedbc771409a85ad4a23c5",
+    "english_hash": "aeeab4a983960671becc37f95288f44328b773c4df627cddea0eff177ecc9e88",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -86,8 +86,8 @@
     "code_references": [
       "app.freerouting.gui.BoardMenuDisplay"
     ],
-    "english_hash": "e275b2166729efc0725d510e2810bcc3ab1d4d14a85cb58b3cfec67637122d13",
-    "grammatical_role": "fragment",
+    "english_hash": "3aa982343d6071c9192dc5259c6a212a18ce5bf7b6a883331ad61d4bca3c21b5",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.BoardMenuDisplay",

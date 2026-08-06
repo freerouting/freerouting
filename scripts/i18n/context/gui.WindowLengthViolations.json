@@ -1,59 +1,55 @@
 {
+  "length_violation_max_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowLengthViolations"
+    ],
+    "english_hash": "ef758d1e148f08f92c9dec1c57447f8d50fea284a3da707a48b6f483314e4b83",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowLengthViolations",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{allowed_length}}",
+      "{{length}}",
+      "{{net}}"
+    ],
+    "related_keys": [
+      "length_violation_min_message"
+    ],
+    "ui_role": "message"
+  },
+  "length_violation_min_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowLengthViolations"
+    ],
+    "english_hash": "d839fe63f41e691da0c36ea62fc3d48d5170564770edb50bca7251e19e7b9cf4",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowLengthViolations",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{allowed_length}}",
+      "{{length}}",
+      "{{net}}"
+    ],
+    "related_keys": [
+      "length_violation_max_message"
+    ],
+    "ui_role": "message"
+  },
   "list_empty": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowLengthViolations"
     ],
-    "english_hash": "ff5864d846f3831b82610c1eea5beb850eb0e4806b2da4a67e90680573ef9909",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowLengthViolations",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "maximum_allowed": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowLengthViolations"
-    ],
-    "english_hash": "c2f5bd7f752ae013463f3454a88b5e1825e7cc32aed9e68902801925a6e44197",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowLengthViolations",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "minimum_allowed": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowLengthViolations"
-    ],
-    "english_hash": "d2a5eb5e8c37a96e4c3c15eb840d9022d7c0477da99222d633785347a89d872b",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowLengthViolations",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "net": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowLengthViolations"
-    ],
-    "english_hash": "660fb2c41d028988b2093656a80d3ae99bc67cd0d5acca5c6063793819b15881",
-    "grammatical_role": "fragment",
+    "english_hash": "47461bd0cbe0d971a472d4788c83487a0d1f864846ac3b99407318f945aaa3c4",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowLengthViolations",
@@ -78,21 +74,5 @@
     "placeholders": [],
     "related_keys": [],
     "ui_role": "dialog_title"
-  },
-  "trace_length": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowLengthViolations"
-    ],
-    "english_hash": "015b535a776b8765560cd2232dd38e34977d308278a22e3463537efda9dc1d54",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowLengthViolations",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
   }
 }

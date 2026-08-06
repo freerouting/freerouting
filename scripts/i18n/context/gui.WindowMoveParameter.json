@@ -4,8 +4,8 @@
     "code_references": [
       "app.freerouting.gui.WindowMoveParameter"
     ],
-    "english_hash": "30f9e6040e48263e2d8de1b82d8c49ba1f671f28e199e0bddb42f9be9a305c89",
-    "grammatical_role": "fragment",
+    "english_hash": "46770fb835efa616cedbba26236141a2c44c104a8ddff3e77ee4b20f61e93625",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowMoveParameter",
@@ -52,8 +52,8 @@
     "code_references": [
       "app.freerouting.gui.WindowMoveParameter"
     ],
-    "english_hash": "36ca89e8caa5102be507b4e6a25e666487644ffd207e09cd92af45550222ba30",
-    "grammatical_role": "fragment",
+    "english_hash": "7e76daaf4af052cc0dda13b6a0897b76bc35ecdbda0760252e92ef86f9f80969",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowMoveParameter",
@@ -68,8 +68,8 @@
     "code_references": [
       "app.freerouting.gui.WindowMoveParameter"
     ],
-    "english_hash": "e3dc558019207bb2d54a48ad02981ea9e4d446a9dfdce5e85af0814325cbf51f",
-    "grammatical_role": "fragment",
+    "english_hash": "64faf70f085a759317be097c43c52f6e08ed2cb54c4a9bf2a54a8e4923064c94",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowMoveParameter",

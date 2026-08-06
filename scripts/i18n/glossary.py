@@ -10,7 +10,8 @@ GLOSSARY_DIR = Path("scripts/i18n/glossary")
 
 # All shipped UI locales, including English source (en uses _default + en.json).
 GLOSSARY_LOCALES = [
-    "ar", "bn", "de", "en", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh", "zh_tw",
+    "ar", "bn", "cs", "de", "en", "es", "fr", "hi", "hu", "id", "it", "ja", "ko",
+    "nl", "pl", "pt", "pt_br", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh", "zh_tw",
 ]
 
 
@@ -65,7 +66,10 @@ def load_glossary(locale: str) -> Dict[str, str]:
 
 def glossary_prompt_lines(locale: str) -> List[str]:
     terms = load_glossary(locale)
-    lines = ["PCB TERMINOLOGY (keep these terms consistent across all translations):"]
+    lines = [
+        "PCB TERMINOLOGY (English keys are lookup labels only; translate using the",
+        "localized form on the right, consistently across all strings in this batch):",
+    ]
     for term, description in sorted(terms.items()):
-        lines.append(f"  - '{term}' = {description}")
+        lines.append(f"  - '{term}' → {description}")
     return lines

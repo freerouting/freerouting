@@ -341,8 +341,8 @@ public class RouteState extends InteractiveState {
     if (p_new_layer >= 0 && p_new_layer < hdlg.get_routing_board().get_layer_count()) {
       if (this.route != null && !this.route.is_layer_active(p_new_layer)) {
         String layer_name = hdlg.get_routing_board().layer_structure.arr[p_new_layer].name;
-        hdlg.screen_messages.set_status_message(tm.getText("layer_not_changed_because_layer") + " " + layer_name + " "
-            + tm.getText("is_not_active_for_the_current_net"));
+        hdlg.screen_messages.set_status_message(
+            tm.getText("layer_not_changed_inactive_net_message", layer_name));
       }
       boolean change_layer_succeeded = route.change_layer(p_new_layer);
       if (change_layer_succeeded) {
@@ -388,7 +388,7 @@ public class RouteState extends InteractiveState {
         } else {
           hdlg.set_layer(p_new_layer);
           String layer_name = hdlg.get_routing_board().layer_structure.arr[p_new_layer].name;
-          hdlg.screen_messages.set_status_message(tm.getText("layer_changed_to") + " " + layer_name);
+          hdlg.screen_messages.set_status_message(tm.getText("layer_changed_to_message", layer_name));
           // make the current situation restorable by undo
           hdlg.get_routing_board().generate_snapshot();
         }
@@ -397,8 +397,8 @@ public class RouteState extends InteractiveState {
         if (shove_failing_layer >= 0) {
           String layer_name = hdlg.get_routing_board().layer_structure.arr[hdlg.get_routing_board()
               .get_shove_failing_layer()].name;
-          hdlg.screen_messages
-              .set_status_message(tm.getText("layer_not_changed_because_of_obstacle_on_layer") + " " + layer_name);
+          hdlg.screen_messages.set_status_message(
+              tm.getText("layer_not_changed_obstacle_message", layer_name));
         } else {
           FRLogger.warn("RouteState.change_layer_action: shove_failing_layer not set");
         }
@@ -420,7 +420,7 @@ public class RouteState extends InteractiveState {
   public void display_default_message() {
     if (route != null) {
       Net curr_net = hdlg.get_routing_board().rules.nets.get(route.net_no_arr[0]);
-      hdlg.screen_messages.set_status_message(tm.getText("routing_net") + " " + curr_net.name);
+      hdlg.screen_messages.set_status_message(tm.getText("routing_net_message", curr_net.name));
     }
   }
 }

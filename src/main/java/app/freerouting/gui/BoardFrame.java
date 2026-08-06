@@ -463,7 +463,9 @@ public class BoardFrame extends WindowBase {
 
     String filename = job.input != null ? job.input.getFilename() : null;
     TextManager guiTm = new TextManager(GuiManager.class, locale);
-    String loadingMessage = guiTm.getText("loading_design") + (filename != null ? " " + filename : "");
+    String loadingMessage = filename != null
+        ? guiTm.getText("loading_design_with_file", filename)
+        : guiTm.getText("loading_design");
     WindowMessage loadingWindow = WindowMessage.show(loadingMessage);
     loadingWindow.setLocationRelativeTo(this);
 
@@ -688,11 +690,11 @@ public class BoardFrame extends WindowBase {
 
   private void showBoardLoadError(BoardReadResult readResult) {
     if (readResult instanceof BoardReadResult.OutlineMissing) {
-      screen_messages.set_status_message(tm.getText("error_7"));
+      screen_messages.set_status_message(tm.getText("error_dsn_outline_missing"));
     } else if (readResult instanceof BoardReadResult.IoError || readResult instanceof BoardReadResult.ParseError) {
-      screen_messages.set_status_message(tm.getText("error_6"));
+      screen_messages.set_status_message(tm.getText("error_dsn_read_failed"));
     } else {
-      screen_messages.set_status_message(tm.getText("message_8"));
+      screen_messages.set_status_message(tm.getText("error_design_file_read_failed"));
     }
     refreshLogCountsInToolbar();
   }
@@ -800,7 +802,7 @@ public class BoardFrame extends WindowBase {
       if (defaults_file_found) {
         boolean read_ok = GUIDefaultsFile.read(this, board_panel.board_handling, input_stream);
         if (!read_ok) {
-          screen_messages.set_status_message(tm.getText("error_1"));
+          screen_messages.set_status_message(tm.getText("error_gui_defaults_read_failed"));
         }
         try {
           if (input_stream != null) {
@@ -935,9 +937,9 @@ public class BoardFrame extends WindowBase {
       if (!(read_result instanceof BoardReadResult.Success)) {
         if (p_message_field != null) {
           if (read_result instanceof BoardReadResult.OutlineMissing) {
-            p_message_field.setText(tm.getText("error_7"));
+            p_message_field.setText(tm.getText("error_dsn_outline_missing"));
           } else {
-            p_message_field.setText(tm.getText("error_6"));
+            p_message_field.setText(tm.getText("error_dsn_read_failed"));
           }
         }
         this.updateTexts();
@@ -978,7 +980,7 @@ public class BoardFrame extends WindowBase {
         if (defaults_file_found) {
           boolean read_ok = GUIDefaultsFile.read(this, board_panel.board_handling, input_stream);
           if (!read_ok) {
-            screen_messages.set_status_message(tm.getText("error_1"));
+            screen_messages.set_status_message(tm.getText("error_gui_defaults_read_failed"));
           }
           try {
             input_stream.close();

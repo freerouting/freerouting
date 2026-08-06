@@ -36,7 +36,7 @@ public class InspectItemsInRegionState extends SelectRegionState {
     InspectItemsInRegionState new_instance = new InspectItemsInRegionState(p_parent_state, p_board_handling);
     new_instance.corner1 = p_location;
     new_instance.hdlg.screen_messages
-        .set_status_message(new_instance.tm.getText("drag_left_mouse_button_to_selects_items_in_region"));
+        .set_status_message(new_instance.tm.getText("drag_left_mouse_button_to_select_items_in_region"));
     return new_instance;
   }
 

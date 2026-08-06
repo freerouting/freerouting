@@ -3,7 +3,7 @@
 **GitHub Issue:** https://github.com/freerouting/freerouting/issues/558  
 **Fixture file:** `fixtures/Issue558-dev-board.dsn`  
 **Regression test:** `src/test/java/app/freerouting/fixtures/DevBoardClearanceRoutingTest.java`  
-**Status:** Investigation complete. Fix not yet implemented.  
+**Status:** Partially mitigated — CLI override ✅ (`copperToEdgeClearanceUm`); DSN export gap remains upstream; **JSON/API path does not read KiCad edge clearance yet** (fix tracked in [`kicad-json-api-mode-improvement-tracker.md`](kicad-json-api-mode-improvement-tracker.md))  
 **Priority:** High (correctness; KiCad DRC fails on routes produced by freerouting)
 
 ---
@@ -21,9 +21,7 @@ Freerouting's built-in DRC does **not** detect this discrepancy because:
 3. Freerouting's DRC only checks against its own clearance rules; since the traces comply with
    those rules, it reports 0 violations.
 
-The regression test `DevBoardClearanceRoutingTest` currently **passes but for the wrong reason**:
-it asserts `clearanceViolations.totalCount == 0`, which is true because the internal DRC is
-checking the wrong threshold (0.2 mm instead of 0.5 mm).
+The regression test `DevBoardClearanceRoutingTest` injects a non-default `copperToEdgeClearanceUm` and verifies the `board_edge` clearance class is created and applied to the outline. It validates the **CLI/settings override path**, not automatic import from KiCad DSN or IPC JSON.
 
 ---
 
@@ -404,14 +402,48 @@ These do not need to be fixed for Issue 558 but are flagged here to maintain con
 
 ---
 
-## 10. Acceptance Criteria
+## 10. JSON/API path (KiCad plugin — experimental v2.3)
+
+KiCad **does** expose copper-to-edge clearance in the live board model:
+
+```python
+settings = board.GetDesignSettings()
+edge_mm = pcbnew.ToMM(settings.m_CopperEdgeClearance)  # KiCad 8+
+```
+
+The KiCad IPC protobuf API also exposes `copper_edge_clearance` in `BoardDesignRules`.
+
+**Current gap in Freerouting's JSON bridge:**
+
+| Step | Status |
+|---|---|
+| Plugin reads `m_CopperEdgeClearance` | ❌ Not implemented — `outline.clearance` hardcoded to `0.5` mm placeholder in `board_json_helpers.py` |
+| JSON carries value in `outline.clearance` | 🟡 Field exists in schema; value is wrong |
+| `KiCadJsonReader` applies to `BoardOutline` | ❌ Uses `outlineClearanceNo = 1` (default class) — ignores `outline.clearance` |
+
+**Fix (P0 in JSON/API sprint):**
+
+1. `board_json_helpers._collect_design_rules()` — read `m_CopperEdgeClearance` → `data["outline"]["clearance"]` (mm)
+2. `KiCadJsonReader` — when `outline.clearance > 0`, create `board_edge` class (same logic as `HeadlessBoardManager.applyCopperToEdgeClearanceOverride`)
+3. Test: JSON fixture with `"outline": {"clearance": 0.5}` → correct outline clearance class
+
+Until this lands, **JSON/API mode does not solve #558** — users must use DSN + CLI override or wait for the fix.
+
+Tracker: [`kicad-json-api-mode-improvement-tracker.md`](kicad-json-api-mode-improvement-tracker.md)
+
+---
+
+## 11. Acceptance Criteria
 
 - [ ] `DevBoardClearanceRoutingTest` fails before the fix (Step 1+4 reveals that DRC was wrong) and passes after (Step 3+4 makes the router route correctly at 0.5mm from edge).  
   *OR*  
   Test is updated per Step 4 and passes end-to-end with Step 3 applied.
 - [ ] No regressions in any existing routing fixture tests (`./gradlew test`).
 - [ ] `Dac2020Bm01RoutingTest` (quickest smoke test) passes with ≤ baseline clearance violations.
-- [ ] `BoardStatistics.clearanceViolations.totalCount` uses `DesignRulesChecker.getAllClearanceViolations()`.
-- [ ] All fields in `RouterSettings` (including new `copperToEdgeClearanceUm`) are nullable with no default initializer outside `DefaultSettings.getSettings()`.
+- [x] `BoardStatistics.clearanceViolations.totalCount` uses `DesignRulesChecker.getAllClearanceViolations()`.
+- [x] `copperToEdgeClearanceUm` in `RouterSettings` + CLI override path (Steps 2–3).
+- [x] `DevBoardClearanceRoutingTest` verifies `board_edge` class creation with injected override.
+- [ ] JSON/API path reads KiCad edge clearance without CLI override.
+- [ ] KiCad DSN export includes edge clearance (upstream — Step 5 deferred).
 - [ ] The routing result for `Issue558-dev-board.dsn` with `copperToEdgeClearanceUm=500` produces zero edge-clearance violations AND zero incomplete connections.
 

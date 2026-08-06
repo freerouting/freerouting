@@ -81,10 +81,10 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
       result = tm.getText("pin");
     } else if (p_item instanceof Via via) {
       Net curr_net = p_item.board.rules.nets.get(via.get_net_no(0));
-      result = tm.getText("via") + " [" + curr_net.name + "]";
+      result = tm.getText("via_with_net_label", curr_net.name);
     } else if (p_item instanceof Trace trace) {
       Net curr_net = p_item.board.rules.nets.get(trace.get_net_no(0));
-      result = tm.getText("trace") + " [" + curr_net.name + "]";
+      result = tm.getText("trace_with_net_label", curr_net.name);
     } else if (p_item instanceof ConductionArea) {
       result = tm.getText("conduction_area");
     } else if (p_item instanceof ObstacleArea) {
@@ -118,9 +118,14 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     public String toString() {
       LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
 
-      String clearance_violation_message_template = tm.getText("clearance_violation_message_template");
-      return clearance_violation_message_template.formatted(delta, item_info(violation.first_item), item_info(violation.second_item), location.to_string(board_frame.get_locale()),
+      String clearance_violation_message_template = tm.getText(
+          "clearance_violation_message_template",
+          "%.4f".formatted(delta),
+          item_info(violation.first_item),
+          item_info(violation.second_item),
+          location.to_string(board_frame.get_locale()),
           layer_structure.arr[violation.layer].name);
+      return clearance_violation_message_template;
     }
 
     @Override

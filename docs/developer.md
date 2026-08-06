@@ -48,7 +48,9 @@ All four .jar files will be generated in the `build\libs` subfolder. You would t
 
 Freerouting ships UI strings as Java `.properties` bundles under `src/main/resources/app/freerouting/`. Maintainer tooling for LLM-assisted translation lives in [`scripts/i18n/README.md`](../scripts/i18n/README.md).
 
-Typical workflow after editing English strings:
+**Translators:** see [`docs/translations.md`](translations.md). Do **not** edit `*_{locale}.properties` by hand; fix [`scripts/i18n/glossary/`](../scripts/i18n/glossary/) and request a **full-locale re-translation** in your PR or issue.
+
+Typical workflow after editing **English** strings:
 
 ```bash
 pip install -r scripts/i18n/requirements.txt
@@ -67,7 +69,7 @@ python scripts/i18n/prune-unused-keys.py --apply
 python scripts/i18n/extract-context.py
 ```
 
-Supported locales: **source** `en`; **targets** `ar`, `bn`, `de`, `es`, `fr`, `hi`, `ja`, `ko`, `pt`, `ru`, `zh`, `zh_tw`. PCB terminology glossaries exist for all of these under `scripts/i18n/glossary/`.
+Supported locales: **source** `en`; **targets** `ar`, `bn`, `cs`, `de`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt`, `pt_br`, `ro`, `ru`, `sv`, `th`, `tr`, `uk`, `vi`, `zh`, `zh_tw`. PCB terminology glossaries exist for all of these under `scripts/i18n/glossary/`.
 
 CI runs `python scripts/i18n/extract-context.py --check` on pull requests to ensure committed context metadata matches the English sources (no API key required).
 

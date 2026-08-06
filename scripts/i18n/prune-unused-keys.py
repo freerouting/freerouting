@@ -31,7 +31,36 @@ ORPHAN_BUNDLES = {
     "app.freerouting.gui.WindowSnapshotSettings",
     "app.freerouting.gui.WindowNetSamples",
     "app.freerouting.interactive.RatsNest",
+}
 
+# Unused keys safe to prune (verified not referenced from Java).
+SAFE_UNUSED_KEYS: dict[str, set[str]] = {
+    "app.freerouting.Common": {
+        "copy", "generate_snapshot", "layer_visibility", "layer_visibility_header",
+        "maximum_all", "maximum_all_tooltip", "minimum_all", "minimum_all_tooltip",
+    },
+    "app.freerouting.gui.BoardFrame": {
+        "error_board_frame_write_failed", "error_board_save_failed", "error_no_write_permission",
+        "error_output_file_close_failed", "message_gui_settings_save_failed",
+    },
+    "app.freerouting.gui.WindowClearanceViolations": {
+        "at", "on_layer",
+    },
+    "app.freerouting.gui.WindowNetClasses": {
+        "label_apply_width",
+    },
+    "app.freerouting.gui.WindowObjectList": {
+        "assign_class", "assign_class_tooltip", "assign_net_class_dialog_title",
+        "assign_net_class_prompt", "filter_incompletes", "filter_incompletes_tooltip",
+        "list_empty_message", "maximum_allowed", "minimum_allowed", "net_count",
+        "net_explanation", "title", "unknown",
+    },
+    "app.freerouting.interactive.InteractiveState": {
+        "batch_autorouter", "batch_optimizer", "stop_message",
+    },
+    "app.freerouting.interactive.GuiBoardManager": {
+        "incomplete_connections_to_route", "incompletes", "length_violations",
+    },
 }
 
 
@@ -144,9 +173,20 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report", type=Path, default=REPORT_JSON)
     parser.add_argument("--apply", action="store_true", help="Write changes (default is dry-run)")
+    parser.add_argument(
+        "--safe-only",
+        action="store_true",
+        help="Only prune SAFE_UNUSED_KEYS and remove orphan property bundles",
+    )
     args = parser.parse_args()
 
     unused_by_bundle = load_unused_keys(args.report)
+    if args.safe_only:
+        unused_by_bundle = {
+            bundle: keys & SAFE_UNUSED_KEYS.get(bundle, set())
+            for bundle, keys in unused_by_bundle.items()
+        }
+        unused_by_bundle = {bundle: keys for bundle, keys in unused_by_bundle.items() if keys}
     mode = "APPLY" if args.apply else "DRY-RUN"
     print(f"=== prune-unused-keys ({mode}) ===")
 

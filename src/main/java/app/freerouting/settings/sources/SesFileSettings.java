@@ -26,11 +26,8 @@ public class SesFileSettings implements SettingsSource {
 
     private RouterSettings loadSettings() {
         try {
-            // SES files typically don't contain router settings, but we include this
-            // for completeness in case they do in some formats
-            // TODO: Implement SES file parsing if needed
-
-            FRLogger.debug("Loaded router settings from SES file: " + fileName);
+            // SES files carry routing results, not router configuration; this source is
+            // a structural placeholder in the SettingsMerger priority ladder.
             return new RouterSettings();
         } catch (Exception e) {
             FRLogger.warn("Failed to load settings from SES file: " + fileName + ": " + e.getMessage());

@@ -156,3 +156,37 @@ def mark_keys_translated(
         entry = context.get(qualified)
         if entry is not None:
             entry["needs_retranslation"] = False
+
+
+def sync_translated_flags(
+    context: Dict[str, Dict[str, Any]],
+    locale: str,
+    *,
+    bundles: Optional[Iterable[str]] = None,
+) -> int:
+    """Clear needs_retranslation for keys that already have a locale translation."""
+    from properties_io import english_properties_path, load_properties, locale_properties_path
+
+    allowed = set(bundles) if bundles else None
+    cleared = 0
+
+    for entry in context.values():
+        bundle = entry.get("bundle")
+        key = entry.get("key")
+        if not bundle or not key:
+            continue
+        if allowed is not None and bundle not in allowed:
+            continue
+        if not entry.get("needs_retranslation"):
+            continue
+
+        english_path = english_properties_path(bundle)
+        if not english_path.exists():
+            continue
+
+        locale_value = load_properties(locale_properties_path(english_path, locale)).get(key, "").strip()
+        if locale_value:
+            entry["needs_retranslation"] = False
+            cleared += 1
+
+    return cleared

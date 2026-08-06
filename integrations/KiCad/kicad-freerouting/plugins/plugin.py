@@ -8,15 +8,14 @@
 #   * ``config``        — constants and settings
 #   * ``gui_helpers``   — wx GUI utilities (dialogs, thread-safe invoke)
 #   * ``java_utils``    — Java detection, version checking, JRE install
-#   * ``ipc_helpers``   — KiCad IPC API detection and board serialization
+#   * ``board_json_helpers`` — board JSON serialization for JSON/API mode
 #   * ``api_client``    — Freerouting REST API client
 #   * ``process_utils`` — ProcessDialog and ProcessThread
-#   * ``router_ipc``    — IPC/API routing workflow
-#   * ``router_dsn``    — Legacy DSN routing workflow
+#   * ``router_json_api`` — JSON/API routing workflow (experimental)
+#   * ``router_dsn``    — Legacy DSN routing workflow (default)
 #
-# The plugin auto-detects whether KiCad's IPC API is available and
-# chooses the appropriate routing mode.  When IPC is unavailable it
-# falls back to the legacy DSN file-exchange workflow transparently.
+# DSN mode is the default production path.  Set ``routing_mode`` to
+# ``ROUTING_MODE_JSON`` for the experimental JSON/API bridge on KiCad 9+.
 # ---------------------------------------------------------------------------
 
 import configparser
@@ -28,15 +27,16 @@ import pcbnew
 import wx
 
 from .config import (
-    DEFAULT_ROUTING_MODE, API_POLL_INTERVAL, API_JOB_TIMEOUT,
+    DEFAULT_ROUTING_MODE, ROUTING_MODE_JSON, normalize_routing_mode,
+    API_POLL_INTERVAL, API_JOB_TIMEOUT,
     SAVE_DEBUG_JSON, DEBUG_JSON_DIR, DEBUG_INPUT_JSON_FILENAME, DEBUG_OUTPUT_JSON_FILENAME,
     LOG_DIR,
 )
 from .gui_helpers import has_pcbnew_api, wx_show_error, wx_safe_invoke
-from .ipc_helpers import is_ipc_available, get_board_json_via_ipc
+from .board_json_helpers import is_json_api_mode_available, serialize_board_to_json
 from .process_utils import ProcessDialog, STATUS_UNDETERMINED, STATUS_IN_PROGRESS, STATUS_PASS, STATUS_FAIL
 from .router_dsn import DsnRouter
-from .router_ipc import IpcRouter
+from .router_json_api import JsonApiRouter
 from .api_client import FreeroutingApiClient
 
 import logging
@@ -76,12 +76,12 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
     """KiCad action plugin that launches Freerouting for auto-routing.
 
     Supports two routing modes:
-      * **IPC/API** (default, requires KiCad 9+): serializes the board
-        to JSON via the IPC API and communicates with Freerouting through
-        its REST API.
-      * **DSN** (legacy fallback): exports/imports Specctra DSN/SES files.
+      * **DSN** (default): exports/imports Specctra DSN/SES files.
+      * **JSON/API** (experimental, KiCad 9+): SWIG board walk → JSON →
+        Freerouting localhost REST API.  Not KiCad protobuf IPC.
 
-    The mode is selected automatically based on IPC availability.
+    Set ``routing_mode`` to ``ROUTING_MODE_JSON`` to opt into JSON/API mode.
+    Legacy ``"IPC"`` is accepted as an alias for ``ROUTING_MODE_JSON``.
     """
 
     def defaults(self):
@@ -93,7 +93,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         self.icon_file_name = str(Path(__file__).parent / "icon_24x24.png")
         self.host = "KiCad"
         self.SPECCTRA = True
-        self.routing_mode = DEFAULT_ROUTING_MODE
+        self.routing_mode = normalize_routing_mode(DEFAULT_ROUTING_MODE)
 
     # ------------------------------------------------------------------
     # Main entry point
@@ -168,11 +168,15 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             """Process pending wx events so the dialog stays responsive."""
             app.ProcessPendingEvents()
 
+        use_json_api = normalize_routing_mode(self.routing_mode) == ROUTING_MODE_JSON
+        if not use_json_api:
+            dialog.hide_json_api_indicator()
+
         # Use a background thread for pre-flight checks so the dialog stays responsive
-        check_results = {"java_path": "", "java_ok": False, "ipc_ok": False}
+        check_results = {"java_path": "", "java_ok": False, "json_api_ok": False}
 
         def run_checks():
-            logger.info("Background thread checking Java and IPC availability...")
+            logger.info("Background thread checking Java and JSON/API availability...")
             from .java_utils import detect_os_architecture, get_local_java_executable_path
             os_name, _ = detect_os_architecture()
 
@@ -186,17 +190,19 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 dialog.set_java_status(STATUS_PASS if ok else STATUS_FAIL)
             wx.CallAfter(update_java)
 
-            # IPC check
-            ipc = (self.routing_mode == "IPC" and is_ipc_available())
-            check_results["ipc_ok"] = ipc
-            logger.info(f"IPC capability check: ok={ipc}")
-            def update_ipc():
-                dialog.set_ipc_status(STATUS_PASS if ipc else STATUS_FAIL)
-            wx.CallAfter(update_ipc)
+            # JSON/API bridge check (only when that mode is requested)
+            if use_json_api:
+                json_ok = is_json_api_mode_available()
+                check_results["json_api_ok"] = json_ok
+                logger.info(f"JSON/API capability check: ok={json_ok}")
+                def update_json_api():
+                    dialog.set_json_api_status(STATUS_PASS if json_ok else STATUS_FAIL)
+                wx.CallAfter(update_json_api)
 
-        # Start with spinner for both checks
+        # Start with spinner for active checks
         dialog.set_java_status(STATUS_IN_PROGRESS)
-        dialog.set_ipc_status(STATUS_IN_PROGRESS)
+        if use_json_api:
+            dialog.set_json_api_status(STATUS_IN_PROGRESS)
         pump_events()
 
         check_thread = threading.Thread(target=run_checks, daemon=True)
@@ -212,7 +218,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         java_ok = check_results["java_ok"]
         java_path = check_results["java_path"]
-        ipc_ok = check_results["ipc_ok"]
+        json_api_ok = check_results["json_api_ok"]
 
         if not java_ok:
             logger.error("Java 25+ JRE check failed.")
@@ -224,21 +230,21 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         self.java_path = java_path
 
         # Determine routing mode
-        if ipc_ok:
-            logger.info("=== Routing mode: IPC/API ===")
-            router = IpcRouter(self)
+        if use_json_api and json_api_ok:
+            logger.info("=== Routing mode: JSON/API (experimental) ===")
+            router = JsonApiRouter(self)
         else:
-            if self.routing_mode == "IPC":
-                logger.warning("IPC not available, falling back to DSN mode.")
+            if use_json_api:
+                logger.warning("JSON/API mode not available, falling back to DSN mode.")
             else:
-                logger.info("=== Routing mode: DSN (legacy) ===")
+                logger.info("=== Routing mode: DSN (default) ===")
             router = DsnRouter(self)
 
         # ============================================================
         # Stage: Starting up Freerouting API server
-        # (only for IPC mode — DSN mode does not use the REST API)
+        # (only for JSON/API mode — DSN mode does not use the REST API)
         # ============================================================
-        if isinstance(router, IpcRouter):
+        if isinstance(router, JsonApiRouter):
             dialog.set_api_status(STATUS_IN_PROGRESS)
             pump_events()
 
@@ -274,8 +280,8 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         success = False
         output_data = None
         try:
-            if isinstance(router, IpcRouter):
-                cancelled, success, output_data = self._run_ipc_stages(router, dialog, pump_events)
+            if isinstance(router, JsonApiRouter):
+                cancelled, success, output_data = self._run_json_api_stages(router, dialog, pump_events)
             else:
                 cancelled, success = self._run_dsn_stages(router, dialog, pump_events)
         except Exception as e:
@@ -289,8 +295,8 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             try:
                 # Apply results back to KiCad AFTER progress dialog is destroyed and event loop finishes cleanup
                 if success and not cancelled:
-                    if isinstance(router, IpcRouter):
-                        logger.info("Applying routing result to KiCad (IPC mode)...")
+                    if isinstance(router, JsonApiRouter):
+                        logger.info("Applying routing result to KiCad (JSON/API mode)...")
                         try:
                             self._apply_result_to_kicad(output_data)
                             logger.info("Routing result applied successfully.")
@@ -324,13 +330,13 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             except Exception as e:
                 print(f"Warning: could not remove temp dir: {e}")
 
-    def _run_ipc_stages(self, router, dialog, pump_events):
-        """Execute the IPC/API routing workflow with status updates.
+    def _run_json_api_stages(self, router, dialog, pump_events):
+        """Execute the JSON/API routing workflow with status updates.
 
         Returns:
             ``(cancelled, success, output_json)``
         """
-        logger.info("Executing IPC stages...")
+        logger.info("Executing JSON/API stages...")
         client = FreeroutingApiClient()
 
         # --- Stage 3: Sending board to Freerouting ---
@@ -338,15 +344,15 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         pump_events()
 
         # Serialize board to JSON
-        logger.info("Serializing board to JSON via KiCad IPC API...")
+        logger.info("Serializing board to JSON for JSON/API mode...")
         try:
-            board_json = get_board_json_via_ipc()
+            board_json = serialize_board_to_json()
             logger.info("Board serialized successfully.")
         except Exception as e:
-            logger.error(f"Failed to serialize board to JSON via IPC: {e}", exc_info=True)
+            logger.error(f"Failed to serialize board to JSON: {e}", exc_info=True)
             dialog.set_sending_status(STATUS_FAIL)
             wx_show_error(textwrap.dedent(f"""
-                Failed to serialize board to JSON via IPC:
+                Failed to serialize board to JSON:
                 {e}
             """))
             return False, False, None
@@ -538,7 +544,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         if board is None:
             raise RuntimeError("No board loaded.")
 
-        # Try IPC write-back
+        # Try native JSON import helpers on pcbnew
         for method_name in ("ApplyBoardJson", "import_json", "ImportBoardJson"):
             if hasattr(pcbnew, method_name):
                 try:

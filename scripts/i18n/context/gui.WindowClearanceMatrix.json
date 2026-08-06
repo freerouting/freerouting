@@ -35,61 +35,13 @@
     ],
     "ui_role": "tooltip"
   },
-  "already_assigned": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowClearanceMatrix"
-    ],
-    "english_hash": "f8525c0dce875b3b00c3e6c57d861d46719ceea3b399346023a1057d02659542",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowClearanceMatrix",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "and": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowClearanceMatrix"
-    ],
-    "english_hash": "6201111b83a0cb5b0922cb37cc442b9a40e24e3b1ce100a4bb204f4c63fd2ac0",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowClearanceMatrix",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "change_anyway": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowClearanceMatrix"
-    ],
-    "english_hash": "2b680df57370a3278de0f4c2356689f9fe7b485cce9a0d36c50c231a8edf96cf",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowClearanceMatrix",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
   "class": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowClearanceMatrix"
     ],
-    "english_hash": "0889113e04d3203f0c401c17c0fd8b352b740dc607433779d3edcaa13320b001",
-    "grammatical_role": "fragment",
+    "english_hash": "4f3a9bd003974a5ed8c9ad65d4aeda3b8a0db6fd903e36e83a3a950624b09bbd",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowClearanceMatrix",
@@ -99,21 +51,64 @@
     "related_keys": [],
     "ui_role": "label"
   },
-  "confirm_remove": {
+  "clearance_class_already_assigned_pair": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowClearanceMatrix"
     ],
-    "english_hash": "7ea5e86c65d9db3788574d248b08ba0e2b81f8d95faa914cb27e31e2ab28dc1a",
+    "english_hash": "e51b2a9ea5fa65d9b98f0675810bc6da68604bcf9a0c12c82abeabad2b5b2a15",
     "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
+    "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowClearanceMatrix",
     "max_length_hint": null,
     "needs_retranslation": false,
-    "placeholders": [],
+    "placeholders": [
+      "{{class_a}}",
+      "{{class_b}}"
+    ],
+    "related_keys": [
+      "clearance_class_already_assigned_single"
+    ],
+    "ui_role": "label"
+  },
+  "clearance_class_already_assigned_single": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowClearanceMatrix"
+    ],
+    "english_hash": "c19ac4357178cbdc34d9b04c628a166161d25ff1b8ac79da2dc4b0d94ebae9af",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowClearanceMatrix",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{class_name}}"
+    ],
+    "related_keys": [
+      "clearance_class_already_assigned_pair"
+    ],
+    "ui_role": "label"
+  },
+  "confirm_remove_class_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowClearanceMatrix"
+    ],
+    "english_hash": "80c6c3fd52aa0882f9b4694bbe2ea053a775ea6c2fcb68b365d2ea8777130a2e",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowClearanceMatrix",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{name}}"
+    ],
     "related_keys": [],
-    "ui_role": "confirmation_dialog"
+    "ui_role": "message"
   },
   "layer": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -136,7 +131,7 @@
     "code_references": [
       "app.freerouting.gui.WindowClearanceMatrix"
     ],
-    "english_hash": "d341000731cb299ffc650c447d5f6e3310c8e4bc8187d7ccd8159e7013a6bc42",
+    "english_hash": "1fc949c232467523e7d5b099f5b15d716e761349ee42d5f1c4e218d99ab8ab6d",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -198,42 +193,6 @@
       "prune"
     ],
     "ui_role": "tooltip"
-  },
-  "the_class": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowClearanceMatrix"
-    ],
-    "english_hash": "ee1a6d754532b0f15144f9d2a5b6e83044b22bbaebf2f030ef46f5f107081a82",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowClearanceMatrix",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "the_classes"
-    ],
-    "ui_role": "label"
-  },
-  "the_classes": {
-    "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.WindowClearanceMatrix"
-    ],
-    "english_hash": "726dc36e5e26a456bda6572a30074523c05981c02f18d412256e06292154a108",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.gui.WindowClearanceMatrix",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "the_class"
-    ],
-    "ui_role": "label"
   },
   "title": {
     "bundle_desc": "GUI (graphical user interface)",

@@ -4,7 +4,7 @@
 # This module implements the original routing workflow: export the board
 # as a Specctra DSN file, run Freerouting in headless mode, and import
 # the resulting SES file back into KiCad.  It is used as a fallback
-# when the IPC API is not available.
+# when JSON/API mode is not available or not selected.
 # ---------------------------------------------------------------------------
 
 import re
@@ -35,7 +35,7 @@ class DsnRouter:
 
     This class encapsulates the prepare → export → run → import cycle
     for the file-based routing approach.  It is used by the main plugin
-    when IPC mode is not available.
+    when DSN mode is selected (the default) or JSON/API mode is unavailable.
     """
 
     def __init__(self, plugin):

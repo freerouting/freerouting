@@ -324,7 +324,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       int selected_row = table.getSelectedRow();
       if (!canRemoveNetClass(table_model.getRowCount(), selected_row)) {
         if (table_model.getRowCount() <= 1) {
-          board_frame.screen_messages.set_status_message(tm.getText("message_1"));
+          board_frame.screen_messages.set_status_message(tm.getText("default_net_class_not_removed"));
         }
         return;
       }
@@ -338,15 +338,15 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       for (int i = 1; i < board_rules.nets.max_net_no(); i++) {
         Net curr_net = board_rules.nets.get(i);
         if (curr_net.get_class() == net_rule) {
-          String message = tm.getText("message_2") + " " + curr_net.name;
-          board_frame.screen_messages.set_status_message(message);
+          board_frame.screen_messages.set_status_message(
+              tm.getText("net_class_not_removed_in_use_message", curr_net.name));
           return;
         }
       }
       if (board_rules.net_classes.remove(net_rule)) {
         adjust_table();
-        String message = tm.getText("net_class") + " " + net_rule.get_name() + " " + tm.getText("removed");
-        board_frame.screen_messages.set_status_message(message);
+        board_frame.screen_messages.set_status_message(
+            tm.getText("net_class_removed_message", net_rule.get_name()));
       }
     }
   }

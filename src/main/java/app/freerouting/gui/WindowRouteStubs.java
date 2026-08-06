@@ -149,8 +149,8 @@ public class WindowRouteStubs extends CleanupWindows {
         item_string = tm.getText("via");
       }
       String layer_name = board_frame.board_panel.board_handling.get_routing_board().layer_structure.arr[layer_no].name;
-      return item_string + " " + tm.getText("stub_net") + " " + this.net.name + " " + tm.getText("at") + " " + this.location.to_string(board_frame.get_locale()) + " " + tm.getText("on_layer") + " "
-          + layer_name;
+      return tm.getText("route_stub_row_message", item_string, this.net.name,
+          this.location.to_string(board_frame.get_locale()), layer_name);
     }
 
     @Override

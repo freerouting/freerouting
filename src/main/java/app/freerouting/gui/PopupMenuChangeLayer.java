@@ -48,19 +48,16 @@ class PopupMenuChangeLayer extends JMenu {
   private class LayermenuItem extends JMenuItem {
 
     private final int layer_no;
-    private final String message1;
 
     LayermenuItem(int p_layer_no) {
-      TextManager tm = new TextManager(this.getClass(), board_frame.get_locale());
-
-      message1 = tm.getText("layer_changed_to") + " ";
       layer_no = p_layer_no;
       addActionListener(_ ->
       {
         final BoardPanel board_panel = board_frame.board_panel;
         if (board_panel.board_handling.change_layer_action(layer_no)) {
+          TextManager tm = new TextManager(PopupMenuChangeLayer.class, board_frame.get_locale());
           String layer_name = board_panel.board_handling.get_routing_board().layer_structure.arr[layer_no].name;
-          board_panel.screen_messages.set_status_message(message1 + layer_name);
+          board_panel.screen_messages.set_status_message(tm.getText("layer_changed_to_message", layer_name));
         }
         // If change_layer failed the status message is set inside change_layer_action
         // because the information of the cause of the failing is missing here.

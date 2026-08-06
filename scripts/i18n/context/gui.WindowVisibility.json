@@ -31,6 +31,22 @@
     "related_keys": [],
     "ui_role": "label"
   },
+  "DRILL_HOLES": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.WindowVisibility"
+    ],
+    "english_hash": "537e1822e0c0fcde7cacc529050b64763b31eb17c07f8e4e4b4e5ef2c2e84361",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.WindowVisibility",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "HILIGHT": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
@@ -52,7 +68,7 @@
     "code_references": [
       "app.freerouting.gui.WindowVisibility"
     ],
-    "english_hash": "0d653ff18135d53d846414c4ac42a9cc9156536a58ea043d9cbe46d51805f09e",
+    "english_hash": "e5c733a9dd51d9532e142e093f8c556281347573c0bf85e45c06369189049b56",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -182,7 +198,7 @@
     "code_references": [
       "app.freerouting.gui.WindowVisibility"
     ],
-    "english_hash": "237f7b3476cb24562fa0282aef3961f398ed7593e47c6a65c2ebfd38935d3972",
+    "english_hash": "bb1f82e8d01282b8231f3a81e4f2c230ef557ff76f656441003dacfe59afcfcc",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -230,7 +246,7 @@
     "code_references": [
       "app.freerouting.gui.WindowVisibility"
     ],
-    "english_hash": "e240e635ff6dce4ff2ac0b90a84889cff420f2c9a56014543e78f366681820db",
+    "english_hash": "0953e0d5167d771d81c95db0e1393dac062bb8965b7515d26e720613d9a95b34",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,

@@ -77,7 +77,18 @@ public class GlobalSettings implements Serializable {
       "ru",
       "pt",
       "ja",
-      "ko"
+      "ko",
+      "pl",
+      "nl",
+      "tr",
+      "vi",
+      "id",
+      "uk",
+      "cs",
+      "hu",
+      "th",
+      "sv",
+      "ro"
   };
   @SerializedName("version")
   public String version;
@@ -662,12 +673,36 @@ public class GlobalSettings implements Serializable {
             currentLocale = Locale.forLanguageTag("bn-BD");
           } else if (localeString.startsWith("ru")) {
             currentLocale = Locale.forLanguageTag("ru-RU");
+          } else if (localeString.startsWith("pt_br")) {
+            currentLocale = Locale.forLanguageTag("pt-BR");
           } else if (localeString.startsWith("pt")) {
             currentLocale = Locale.forLanguageTag("pt-PT");
           } else if (localeString.startsWith("ja")) {
             currentLocale = Locale.JAPANESE;
           } else if (localeString.startsWith("ko")) {
             currentLocale = Locale.KOREAN;
+          } else if (localeString.startsWith("pl")) {
+            currentLocale = Locale.forLanguageTag("pl-PL");
+          } else if (localeString.startsWith("nl")) {
+            currentLocale = Locale.forLanguageTag("nl-NL");
+          } else if (localeString.startsWith("tr")) {
+            currentLocale = Locale.forLanguageTag("tr-TR");
+          } else if (localeString.startsWith("vi")) {
+            currentLocale = Locale.forLanguageTag("vi-VN");
+          } else if (localeString.startsWith("id")) {
+            currentLocale = Locale.forLanguageTag("id-ID");
+          } else if (localeString.startsWith("uk")) {
+            currentLocale = Locale.forLanguageTag("uk-UA");
+          } else if (localeString.startsWith("cs")) {
+            currentLocale = Locale.forLanguageTag("cs-CZ");
+          } else if (localeString.startsWith("hu")) {
+            currentLocale = Locale.forLanguageTag("hu-HU");
+          } else if (localeString.startsWith("th")) {
+            currentLocale = Locale.forLanguageTag("th-TH");
+          } else if (localeString.startsWith("sv")) {
+            currentLocale = Locale.forLanguageTag("sv-SE");
+          } else if (localeString.startsWith("ro")) {
+            currentLocale = Locale.forLanguageTag("ro-RO");
           }
 
         } else if (p_args[i].startsWith("-dl")) {

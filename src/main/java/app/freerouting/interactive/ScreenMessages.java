@@ -100,8 +100,8 @@ public class ScreenMessages {
     int failed = p_not_found;
     int items_to_go = p_items_to_go;
 
-    add_field.setText(tm.getText("to_route") + " " + items_to_go);
-    layer_field.setText(tm.getText("found") + " " + found + ", " + tm.getText("failed") + " " + failed);
+    add_field.setText(tm.getText("interactive_autoroute_add", String.valueOf(items_to_go)));
+    layer_field.setText(tm.getText("interactive_autoroute_layer", String.valueOf(found), String.valueOf(failed)));
   }
 
   public void set_batch_autoroute_info(RouterCounters routerCounters) {
@@ -110,19 +110,19 @@ public class ScreenMessages {
     int failed = routerCounters.failedToBeRoutedCount;
     if ("fanout".equals(routerCounters.phase)) {
       int extraVias = routerCounters.fanoutExtraViasCount == null ? 0 : routerCounters.fanoutExtraViasCount;
-      add_field.setText(tm.getText("to_route") + " " + items_to_go + ", " + tm.getText("routed") + " " + routed + ", ");
-      layer_field.setText(tm.getText("failed") + " " + failed + ", " + tm.getText("via_count") + " +" + extraVias);
+      add_field.setText(tm.getText("batch_autoroute_add", String.valueOf(items_to_go), String.valueOf(routed)));
+      layer_field.setText(tm.getText("batch_fanout_layer", String.valueOf(failed), String.valueOf(extraVias)));
       return;
     }
     int ripped = routerCounters.rippedCount;
-    add_field.setText(tm.getText("to_route") + " " + items_to_go + ", " + tm.getText("routed") + " " + routed + ", ");
-    layer_field.setText(tm.getText("ripped") + " " + ripped + ", " + tm.getText("failed") + " " + failed);
+    add_field.setText(tm.getText("batch_autoroute_add", String.valueOf(items_to_go), String.valueOf(routed)));
+    layer_field.setText(tm.getText("batch_autoroute_layer", String.valueOf(ripped), String.valueOf(failed)));
   }
 
   public void set_post_route_info(int p_via_count, double p_trace_length, Unit unit) {
     int via_count = p_via_count;
-    add_field.setText(tm.getText("via_count") + " " + via_count);
-    layer_field.setText(tm.getText("trace_length") + " " + this.number_format.format(p_trace_length) + " " + unit);
+    add_field.setText(tm.getText("post_route_add", String.valueOf(via_count)));
+    layer_field.setText(tm.getText("post_route_layer", this.number_format.format(p_trace_length), unit.toString()));
   }
 
   /**

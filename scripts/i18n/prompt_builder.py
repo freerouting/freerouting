@@ -13,14 +13,27 @@ def enrich_entry(entry: Dict[str, Any], english_value: str) -> Dict[str, Any]:
     return merged
 
 
+def _latin_script_preserved_names() -> str:
+    return "DSN, SES, Specctra, Freerouting, Andras Fuchs"
+
+
 def _rules_block() -> List[str]:
+    preserved = _latin_script_preserved_names()
     return [
         "RULES:",
         "  - Preserve ALL placeholder tokens (%s, %d, {{...}} etc.) exactly as shown",
         "  - Preserve ALL HTML tags (<html>, <b>, <br>, etc.) exactly as shown",
-        "  - Preserve \\n escape sequences for multiline strings",
+        "  - Preserve Java .properties escape sequences VERBATIM as two-character tokens:",
+        "    \\n (backslash + letter n), \\t, \\r, \\f, \\\\, \\\" — NOT real line breaks or tabs",
+        "  - If ENGLISH contains \\n, your translation must contain the same number of \\n tokens",
+        "  - In JSON responses, write \\n inside strings (e.g. \"Line one\\nLine two\"), never literal newlines",
         "  - Keep the same level of formality as the original",
         "  - Do NOT add or remove punctuation that changes meaning",
+        "  - Translate UI text into the target language; use the localized PCB term from",
+        "    the glossary (the text after '='), not the English glossary key",
+        "  - Do NOT leave untranslated English UI words (e.g. clearance, shove fixed)",
+        "    unless they appear in the preserved Latin-script list below",
+        f"  - Keep these names in original Latin script exactly: {preserved}",
     ]
 
 
@@ -70,7 +83,8 @@ def build_batch_prompt(
         "",
         *_rules_block(),
         "  - Respond with ONLY a JSON object mapping each key to its translation",
-        "  - Example: {\"save\": \"Speichern\", \"cancel\": \"Abbrechen\"}",
+        "  - Example: {\"save\": \"Speichern\", \"confirm_cancel\": \"Text\\nMore text\"}",
+        "  - Use \\n (two characters) inside JSON string values, never literal line breaks",
         "",
         *glossary_prompt_lines(locale),
         "",
@@ -88,6 +102,41 @@ def build_batch_prompt(
             lines.append(f"  PREVIOUS TRANSLATION (outdated): \"{prev}\"")
         lines.append("")
 
+    lines.append("JSON RESPONSE:")
+    return "\n".join(lines)
+
+
+def build_segments_prompt(
+    bundle: str,
+    entry: Dict[str, Any],
+    locale: str,
+    segments: List[tuple[int, str]],
+) -> str:
+    """Prompt for translating numbered line segments (preserves \\n count via rejoin)."""
+    lines = [
+        f"Translate numbered LINE SEGMENTS from English to {locale.upper()}.",
+        f"Bundle: {bundle}",
+        f"Key: {entry.get('key', '')}",
+        "",
+        _context_block(entry),
+        "",
+        *glossary_prompt_lines(locale),
+        "",
+        "RULES:",
+        "  - Each segment is ONE line of a multiline string; segments will be rejoined later",
+        "  - Do NOT include \\n, line breaks, or tabs inside any segment translation",
+        "  - Preserve leading/trailing spaces and indentation in each segment exactly",
+        "  - Preserve CLI flags (-de, -mp, etc.), placeholders, and escapes like \\: verbatim",
+        "  - Empty segments must map to an empty string \"\"",
+        f"  - Keep these names in original Latin script exactly: {_latin_script_preserved_names()}",
+        "  - Respond with ONLY a JSON object mapping segment index (string) to translation",
+        "  - Example: {\"0\": \"VERWENDUNG\", \"2\": \"  freerouting [PARAMETER]\"}",
+        "",
+        "SEGMENTS:",
+    ]
+    for index, text in segments:
+        lines.append(f"  {index}: \"{text}\"")
+    lines.append("")
     lines.append("JSON RESPONSE:")
     return "\n".join(lines)
 

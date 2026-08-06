@@ -18,7 +18,7 @@
   "gate pin": "게이트 핀 (Specctra 핀 참조)",
   "keepout": "킵아웃 (배선·배치 금지 구역)",
   "layer": "레이어",
-  "logical part": "logical part (Specctra 부품 정의)",
+  "logical part": "논리 파트 (Specctra 부품 정의)",
   "neckdown": "넥다운 (패드에서 자동 트레이스 폭 축소)",
   "net": "넷 (전기 연결 그룹)",
   "net class": "넷 클래스 (net class)",
@@ -45,7 +45,7 @@
   "trace length": "트레이스 길이",
   "trace width": "트레이스 폭",
   "unroute": "배선 해제 (unroute)",
-  "unrouted": "미배선 / unrouted",
+  "unrouted": "미배선",
   "via": "비아 (층간 연결)",
   "via keepout": "비아 금지 구역 (via keepout)",
   "via rule": "비아 규칙 (via rule)"

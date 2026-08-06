@@ -4,8 +4,8 @@
     "code_references": [
       "app.freerouting.gui.WindowObjectInfo"
     ],
-    "english_hash": "b2aff82af147680677f1c1e5e6892b7e7ff6cbe3e6cad52dacf3776e22c3ab75",
-    "grammatical_role": "fragment",
+    "english_hash": "ba61eea246993d3ff552ff2645a632e9b743d05d0dd96a5cf93f3b472ab69c8a",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.WindowObjectInfo",
@@ -84,7 +84,7 @@
     "code_references": [
       "app.freerouting.gui.WindowObjectInfo"
     ],
-    "english_hash": "6da72e21f061c67ad058abc4c1deb39e2c695e3a66fa4e37df1f6f09c0084fc3",
+    "english_hash": "79b5309d1fadfbe6f87165c06bca9885f17e2ab0a0d3774751999ecb800e9484",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
@@ -100,7 +100,7 @@
     "code_references": [
       "app.freerouting.gui.WindowObjectInfo"
     ],
-    "english_hash": "805869221bd1853e5add62e0e39d55386ec380610a2295c984bf739da35e37b3",
+    "english_hash": "8ccdc15aa4af78ae85048995ca75822c05f8ef3523fde3b9b374a979c7b76c91",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,

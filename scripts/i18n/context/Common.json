@@ -2,8 +2,8 @@
   "SHOVE_FIXED": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "c7072f5a600c37b8b17c0558991abb85e531fc5125b629eac3cd4db1e5418a3f",
-    "grammatical_role": "fragment",
+    "english_hash": "0cc9e793fe0a71b974d8e5981392f16495dd11f410f5a84376026a3930040fb8",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -16,8 +16,8 @@
   "SYSTEM_FIXED": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "8523c90b3c5aa1077970a91027f3fcbd28c13c59e9091e931baa710b83892fa2",
-    "grammatical_role": "fragment",
+    "english_hash": "c6c109b4b760dee1c367e19150065ac3681c26715e9817efd2f8c26a64581137",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -30,8 +30,8 @@
   "UNFIXED": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "b8b6146ed6a8a8532e5a171c40ebafc5a15cf4fcd474318616a01ca7c1c51717",
-    "grammatical_role": "fragment",
+    "english_hash": "6a83856c4995edfbeccb357b55d48fcf874f54e880bcbfb710ca0bd75c0b1c34",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -44,8 +44,8 @@
   "USER_FIXED": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "c6c71cd990734d03361ff6f98d8fee9ffa32d20639d5b92e4fe6f94248eb8796",
-    "grammatical_role": "fragment",
+    "english_hash": "e5b11dc3299805c997b30ddddece94ea3f10469781ab8ea25c9f6bec9a09b846",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -58,8 +58,8 @@
   "add_corner": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "35938e4ade61153ba259fd41d04f5f8850e812cb9f6dbde4a3ca0ae5cd3685a2",
-    "grammatical_role": "verb_phrase",
+    "english_hash": "53199c82e663c772cba735e1898e22192767522f627bef793b9224f2fb0ef8b9",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -100,8 +100,8 @@
   "attach_smd": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "c93c4bd9dfa065e900619af195b1734cf7161e50459d7ccd3846895d410c62f7",
-    "grammatical_role": "fragment",
+    "english_hash": "78063c3b78201e4d63dfe9bababb815f1930e690a6643054bbb8ac726ece75b0",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -114,7 +114,7 @@
   "back": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "3c482346f375027677fa8a0d6830a32714d4f13f9e94c2d9e215e0ac205ad4e5",
+    "english_hash": "76900f1bfd16c8d4dd3d25e6f46638d7165aee23883ccea6bfe071c514421769",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
@@ -128,8 +128,8 @@
   "between": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "fbb27fbdc4f4dd04e21693a3b56c311cd37f743174c1bad4fc27467605426c28",
-    "grammatical_role": "fragment",
+    "english_hash": "c1ea3f5e7aa473034872296473c7fcf9c79344355ba4fd003120627f6ec1a5f7",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -216,8 +216,8 @@
   "change_layer": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "625b1373f58c7ef2b9fdf6a516ae8ac25c95baa1777ddcfc1a4dd113f1f585d8",
-    "grammatical_role": "fragment",
+    "english_hash": "577636cc9aa5663f52e433e950d2733d187d01b63152bb05563bd7aa2ae564d1",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -232,8 +232,8 @@
   "change_layer_tooltip": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "c60c7b305aa50f580e9794ce3a25e9d680bc84700a9e7582bee944d10a9d0c0f",
-    "grammatical_role": "fragment",
+    "english_hash": "082817d48e868c685684beb70b4433b209b6d33f1c958ed1da8dd53a6e842a97",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -373,7 +373,7 @@
   "clearance_violation_info_expected_clearance": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "f68f98b49921414abd4559a8f1d583ae62fb3721476dbaa0996c17632e2982c1",
+    "english_hash": "6fac31215ce8a0599f34d0baeb90d15ccdf46b5202e3241dd1f5f5ac98be05b8",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
@@ -381,8 +381,8 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [
-      "%.4f",
-      "%.4f"
+      "{{actual_clearance_mm}}",
+      "{{expected_clearance_mm}}"
     ],
     "related_keys": [
       "clearance_violation",
@@ -569,20 +569,6 @@
     "related_keys": [],
     "ui_role": "label"
   },
-  "copy": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "6f5a6034e770acbfb3f797e6a7eb7948d470d45f9928f92b7d72dc7c45e6d0cd",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
   "done": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
@@ -669,20 +655,6 @@
     ],
     "ui_role": "label"
   },
-  "generate_snapshot": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "8d708f78b75e10dfb5ebc9bdde87b7078a6fdffd023ae6bba59f2619d43e9217",
-    "grammatical_role": "verb_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
   "hole": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
@@ -714,7 +686,7 @@
   "incompletes": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "0d653ff18135d53d846414c4ac42a9cc9156536a58ea043d9cbe46d51805f09e",
+    "english_hash": "e5c733a9dd51d9532e142e093f8c556281347573c0bf85e45c06369189049b56",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -742,8 +714,8 @@
   "insert": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "bedab6016fb99e8aaa60fae0d544289740149917d0285d21c0bb2029e55bebdd",
-    "grammatical_role": "fragment",
+    "english_hash": "dbceb4c7c4bfce8c039fe4c5570b91de21cacc67ddc91615d84edb7f4546c9c6",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -781,57 +753,23 @@
     "related_keys": [],
     "ui_role": "label"
   },
-  "layer_changed_to": {
+  "layer_changed_to_message": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "68b4ead88a87c1b07d59026362fc1973df6fca6dd63f06db66495eb99706bf4f",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "layer",
-      "layer_visibility",
-      "layer_visibility_header"
-    ],
-    "ui_role": "label"
-  },
-  "layer_visibility": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "aeeab4a983960671becc37f95288f44328b773c4df627cddea0eff177ecc9e88",
+    "english_hash": "2d54b43fa7a696f23f519f0563e949b8d3e05faf0311ea98b968510d1c7f2e54",
     "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
+    "has_placeholders": true,
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
     "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "layer",
-      "layer_changed_to",
-      "layer_visibility_header"
+    "placeholders": [
+      "{{layer}}"
     ],
-    "ui_role": "label"
-  },
-  "layer_visibility_header": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "35aa0ee9ab86972ba4a36b391fc0959b610ccde200ab64d1ef4cdaa944a20031",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
     "related_keys": [
-      "layer_visibility"
+      "layer"
     ],
-    "ui_role": "dialog_title"
+    "ui_role": "message"
   },
   "length": {
     "bundle_desc": "shared/common strings",
@@ -911,70 +849,6 @@
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
-  },
-  "maximum_all": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "6439e3cfd4b34ed5ad680f48fdf2e393676e5a4442402c2df360f5475cb0494d",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "maximum_all_tooltip"
-    ],
-    "ui_role": "label"
-  },
-  "maximum_all_tooltip": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "486deddb1b32cbc0d8cad92e1d8c7acf24bb6fe71aee7c5ddceb6b85ee9dcf80",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "maximum_all"
-    ],
-    "ui_role": "tooltip"
-  },
-  "minimum_all": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "3d8dcedee958c9f95cd9e4b01e250a2657dbd76148b94f40d8f03584ca9993c8",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "minimum_all_tooltip"
-    ],
-    "ui_role": "label"
-  },
-  "minimum_all_tooltip": {
-    "bundle_desc": "shared/common strings",
-    "code_references": [],
-    "english_hash": "43fd616f46ded3450861bbf92b22f1c9c09f96a90ba188de9587270fac2d5626",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": null,
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [
-      "minimum_all"
-    ],
-    "ui_role": "tooltip"
   },
   "move": {
     "bundle_desc": "shared/common strings",
@@ -1454,6 +1328,20 @@
     ],
     "ui_role": "label"
   },
+  "text_manager_fallback_common_probe": {
+    "bundle_desc": "shared/common strings",
+    "code_references": [],
+    "english_hash": "c2e01d2df8e3150db4d8bb2a6a8eb9b3a5e76e6677895be8556b362b5417e1ea",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": null,
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "to": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
@@ -1827,8 +1715,8 @@
   "zoom_in": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "c1f1fd4eb1387afdd868b2a359cc14ea28b3a2602a2cc011bccadcb7c4f8410a",
-    "grammatical_role": "fragment",
+    "english_hash": "8928af0334ee6fbdb0c06fed1c09c0851c72dc3f6d7846ff1bb3be3d30766162",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,
@@ -1844,8 +1732,8 @@
   "zoom_out": {
     "bundle_desc": "shared/common strings",
     "code_references": [],
-    "english_hash": "2303d66c7abcef217fdb6db33529b9e42b0c34c1829616f9e0ab6d019e9343b1",
-    "grammatical_role": "fragment",
+    "english_hash": "768ed12dde52f5322cf2e9b7e0b3020fd096252aa67d4e7dccb85f95ad148e65",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": null,

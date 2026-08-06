@@ -4,7 +4,7 @@
     "code_references": [
       "app.freerouting.gui.WindowUserSettings"
     ],
-    "english_hash": "b5abf702f2f49a25b10c962cc147ea53a411c5616cb07dda1bcdbff2d039cdbf",
+    "english_hash": "e28231a0c077aa3d3e76d561573937e315560049e7a3d081b82206d1ca8af691",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": true,
@@ -54,7 +54,7 @@
   "email_button": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "7f274994804b455300a53005b308610fd101cf7fc9185a45163df7bb71db183b",
+    "english_hash": "7d20e7b6c62b4ecc516327e86bcc813d5c91717ac95123bbcf04dd5ffb513450",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -213,7 +213,7 @@
     ],
     "ui_role": "message"
   },
-  "statistics_header": {
+  "stats_header": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.WindowUserSettings"

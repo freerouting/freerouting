@@ -26,10 +26,8 @@ public class RulesFileSettings implements SettingsSource {
 
     private RouterSettings loadSettings() {
         try {
-            // RULES files contain router settings that should override DSN settings
-            // TODO: Integrate with existing RulesFile.read logic
-
-            FRLogger.debug("Loaded router settings from RULES file: " + fileName);
+            // Design rules from .rules files are applied to the board via RulesReader;
+            // this source is a structural placeholder for behavioral RouterSettings.
             return new RouterSettings();
         } catch (Exception e) {
             FRLogger.warn("Failed to load settings from RULES file: " + fileName + ": " + e.getMessage());

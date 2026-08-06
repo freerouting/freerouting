@@ -327,9 +327,6 @@ public class BatchAutorouter extends NamedAlgorithm {
       BatchAutorouterThread[] autorouterThreads = new BatchAutorouterThread[job.routerSettings.maxThreads];
       BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
 
-      // Start multiple instances of the following part in parallel, wait for the
-      // results and keep only the best one
-
       // Prepare the threads
       for (int threadIndex = 0; threadIndex < job.routerSettings.maxThreads; threadIndex++) {
         // deep copy the board
@@ -475,9 +472,6 @@ public class BatchAutorouter extends NamedAlgorithm {
       }
 
       this.fireBoardUpdatedEvent(stats, routerCounters, this.board);
-
-      // TODO: Start multiple instances of the following part in parallel, wait for
-      // the results and keep the best one
 
       // Sort items by airline distance (shortest first) for deterministic routing
       // This prioritizes local connections which typically route faster

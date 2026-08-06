@@ -1,30 +1,66 @@
 {
-  "components": {
+  "batch_autoroute_add": {
     "bundle_desc": "interactive routing session",
-    "code_references": [],
-    "english_hash": "7b12be43febc6e18259dd77c004315b4143d570234e0f15acf5f9d7b79c371b5",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "english_hash": "f39903c92d81a790d4bd013a14e115941d7f036e6dac1c155c79c8558985ecd6",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
     "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
+    "placeholders": [
+      "{{items_to_go}}",
+      "{{routed_count}}"
+    ],
+    "related_keys": [
+      "batch_autoroute_layer"
+    ],
     "ui_role": "label"
   },
-  "connections_not_found": {
+  "batch_autoroute_layer": {
     "bundle_desc": "interactive routing session",
-    "code_references": [],
-    "english_hash": "439f1944937c26f2480451446fa8fcc5254ecd093d3a179d3076e44549ef42ca",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "english_hash": "18f61ce82fcb84de235df04be15af74d02eab14e37a5b7c3b0ff9b6bcb5e7871",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
     "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
+    "placeholders": [
+      "{{failed_count}}",
+      "{{ripped_count}}"
+    ],
+    "related_keys": [
+      "batch_autoroute_add"
+    ],
+    "ui_role": "label"
+  },
+  "batch_fanout_layer": {
+    "bundle_desc": "interactive routing session",
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "english_hash": "66c59a03d40f5a81121be5e8d6acfbed34b57a40f49402b04683660e359c7361",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{extra_vias}}",
+      "{{failed_count}}"
+    ],
+    "related_keys": [
+      "batch_autoroute_add",
+      "batch_autoroute_layer"
+    ],
     "ui_role": "label"
   },
   "current_layer": {
@@ -32,37 +68,7 @@
     "code_references": [
       "app.freerouting.interactive.ScreenMessages"
     ],
-    "english_hash": "301a2d763305375f6039ded373e95e6e51216ae0abd48b275a110a5b66d05bba",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.interactive.ScreenMessages",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "failed": {
-    "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.ScreenMessages"
-    ],
-    "english_hash": "a6964edfab2c18eb95c09e496d064fef6c3d8fe189d290ec116b4a89884a8ce8",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.interactive.ScreenMessages",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "fanout_pass": {
-    "bundle_desc": "interactive routing session",
-    "code_references": [],
-    "english_hash": "bf6c561f6b3216e75f9beb32ec97c36bb37614cebac2528b78c8df7d44d0c686",
+    "english_hash": "7bb2049548c769da8fb2049f9964ca3998cd79e89298f0521b04e604fb979883",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -73,52 +79,86 @@
     "related_keys": [],
     "ui_role": "label"
   },
-  "found": {
+  "interactive_autoroute_add": {
     "bundle_desc": "interactive routing session",
     "code_references": [
       "app.freerouting.interactive.ScreenMessages"
     ],
-    "english_hash": "88c34fc241e3037337fcb87bc84d742b03ee6efd83779ca21bc7c9f259b0591a",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
+    "english_hash": "cb90480f8fcfa790e7c6de006fb27a6b835f4e67a9245986ca38211d3fa17d8b",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
     "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
+    "placeholders": [
+      "{{items_to_go}}"
+    ],
+    "related_keys": [
+      "interactive_autoroute_layer"
+    ],
     "ui_role": "label"
   },
-  "ripped": {
+  "interactive_autoroute_layer": {
     "bundle_desc": "interactive routing session",
     "code_references": [
       "app.freerouting.interactive.ScreenMessages"
     ],
-    "english_hash": "826e33ce0683d1c5f9dce564482957bed445b9a3663058ff9b907374ba7634f4",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
+    "english_hash": "0c90524c08507092ec56ac5918cb2ba9050718610793e18013996bb82659de03",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
     "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
+    "placeholders": [
+      "{{failed_count}}",
+      "{{found_count}}"
+    ],
+    "related_keys": [
+      "interactive_autoroute_add"
+    ],
     "ui_role": "label"
   },
-  "routed": {
+  "post_route_add": {
     "bundle_desc": "interactive routing session",
     "code_references": [
       "app.freerouting.interactive.ScreenMessages"
     ],
-    "english_hash": "de0d2817777f897260030c2305db1a7a1cf26a32d533ef112050aa2bda3c6ec6",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
+    "english_hash": "6ce1823eab71c10b6132896721133ed4012e030de68bb4ed1fca0fd5b2584f16",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.interactive.ScreenMessages",
     "max_length_hint": null,
     "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
+    "placeholders": [
+      "{{via_count}}"
+    ],
+    "related_keys": [
+      "post_route_layer"
+    ],
+    "ui_role": "label"
+  },
+  "post_route_layer": {
+    "bundle_desc": "interactive routing session",
+    "code_references": [
+      "app.freerouting.interactive.ScreenMessages"
+    ],
+    "english_hash": "c53984ee9a50cae5fe3cf0f30e6cb73be57368684ae923cc270913adfa0ff5cd",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.interactive.ScreenMessages",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{trace_length}}",
+      "{{unit}}"
+    ],
+    "related_keys": [
+      "post_route_add"
+    ],
     "ui_role": "label"
   },
   "score": {
@@ -126,7 +166,7 @@
     "code_references": [
       "app.freerouting.interactive.ScreenMessages"
     ],
-    "english_hash": "061d52d0bac1f89c80509cc538755cd5ee16c22a2dc38216e011dc38263984b8",
+    "english_hash": "2820a32debcdc87755bb47e64a3500a2412b814802cc2f24dd6b7bfb48ad5f54",
     "grammatical_role": "noun_phrase",
     "has_placeholders": true,
     "is_html": false,
@@ -135,22 +175,9 @@
     "needs_retranslation": false,
     "placeholders": [
       "{{score}}",
-      "{{unrouted_count}}"
+      "{{unrouted_count}}",
+      "{{violation_count}}"
     ],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "still": {
-    "bundle_desc": "interactive routing session",
-    "code_references": [],
-    "english_hash": "94e8566ddfc123edf115fcbb35a16973409d95e05e3deb7dc4a15a7af325a885",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.interactive.ScreenMessages",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
   },
@@ -159,55 +186,7 @@
     "code_references": [
       "app.freerouting.interactive.ScreenMessages"
     ],
-    "english_hash": "bdcf79cd83c1ac8ea935f6af544fc7e4be5158b25dfa7335081f25333a403e2b",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.interactive.ScreenMessages",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "to_route": {
-    "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.ScreenMessages"
-    ],
-    "english_hash": "57981d4b11f33b9a6308f741f7724f367807cc0326a8946d2db8c392067e668c",
-    "grammatical_role": "fragment",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.interactive.ScreenMessages",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "trace_length": {
-    "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.ScreenMessages"
-    ],
-    "english_hash": "3c653f43dac5dda14ead70c9e66a892361c32a628d70e18b7f5e6f48c120aec7",
-    "grammatical_role": "noun_phrase",
-    "has_placeholders": false,
-    "is_html": false,
-    "java_class": "app.freerouting.interactive.ScreenMessages",
-    "max_length_hint": null,
-    "needs_retranslation": false,
-    "placeholders": [],
-    "related_keys": [],
-    "ui_role": "label"
-  },
-  "via_count": {
-    "bundle_desc": "interactive routing session",
-    "code_references": [
-      "app.freerouting.interactive.ScreenMessages"
-    ],
-    "english_hash": "41f30a24313c121490f8403f9d3f10da95810bab9ba0569159cf86741bb05286",
+    "english_hash": "c17844aebe190286734ab1f8ff4a387dbdf2e7435d7086f9f7e62b54cd41fce7",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
