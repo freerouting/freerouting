@@ -491,22 +491,27 @@ tasks.withType(Test).configureEach { Test task ->
 
     def failedTests = []
 
-    afterTest { descriptor, result ->
-        if (result.resultType == TestResult.ResultType.FAILURE) {
-            failedTests << descriptor
-        }
-    }
-
-    afterSuite { desc, result ->
-        if (!desc.parent && !failedTests.isEmpty()) {
-            def out = System.out
-            out.println()
-            out.println("Failed tests (${failedTests.size()}):")
-            failedTests.each { descriptor ->
-                out.println("  ${descriptor.className} > ${descriptor.displayName}")
+    // Prefer addTestListener over deprecated afterTest/afterSuite(Closure) (removed in Gradle 10).
+    addTestListener(new TestListener() {
+        @Override
+        void afterTest(TestDescriptor descriptor, TestResult result) {
+            if (result.resultType == TestResult.ResultType.FAILURE) {
+                failedTests << descriptor
             }
         }
-    }
+
+        @Override
+        void afterSuite(TestDescriptor desc, TestResult result) {
+            if (!desc.parent && !failedTests.isEmpty()) {
+                def out = System.out
+                out.println()
+                out.println("Failed tests (${failedTests.size()}):")
+                failedTests.each { descriptor ->
+                    out.println("  ${descriptor.className} > ${descriptor.displayName}")
+                }
+            }
+        }
+    })
 }
 
 test {
