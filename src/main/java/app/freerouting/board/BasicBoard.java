@@ -1366,19 +1366,21 @@ public class BasicBoard implements Serializable {
       drawSteps.add(selectedStep);
     }
 
-    // Populate layerOrderNames for logging to match the actual drawSteps
-    java.util.List<String> renderingOrderNames = new java.util.ArrayList<>();
-    for (RenderStep step : drawSteps) {
-      if (step.isVirtual) {
-        String[] virtualNames = {"F.Silkscreen", "B.Silkscreen", "F.Courtyard", "B.Courtyard", "F.Fab", "B.Fab"};
-        renderingOrderNames.add(virtualNames[step.index]);
-      } else {
-        renderingOrderNames.add(layer_structure.arr[step.index].name);
+    if (FRLogger.isTraceEnabled()) {
+      // Populate layerOrderNames for logging to match the actual drawSteps
+      java.util.List<String> renderingOrderNames = new java.util.ArrayList<>();
+      for (RenderStep step : drawSteps) {
+        if (step.isVirtual) {
+          String[] virtualNames = {"F.Silkscreen", "B.Silkscreen", "F.Courtyard", "B.Courtyard", "F.Fab", "B.Fab"};
+          renderingOrderNames.add(virtualNames[step.index]);
+        } else {
+          renderingOrderNames.add(layer_structure.arr[step.index].name);
+        }
       }
-    }
 
-    FRLogger.trace(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
-        selectedLayerName, dominantSide, renderingOrderNames));
+      FRLogger.trace(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
+          selectedLayerName, dominantSide, renderingOrderNames));
+    }
 
     long drawStart = System.nanoTime();
 
@@ -1419,7 +1421,7 @@ public class BasicBoard implements Serializable {
     long endGroup = System.nanoTime();
 
     long startLoop = System.nanoTime();
-    
+
     // Viewport culling bounds in board coordinates
     java.awt.Rectangle clipRect = p_graphics.getClipBounds();
     IntBox clipBox = clipRect != null ? p_graphics_context.coordinate_transform.screen_to_board(clipRect) : null;
@@ -1536,24 +1538,26 @@ public class BasicBoard implements Serializable {
     long endText = System.nanoTime();
 
     long drawEnd = System.nanoTime();
-    FRLogger.debug(String.format(
-        "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms, loop=%.2f ms (culled: %d), texts=%.2f ms] (items: %d)",
-        (drawEnd - drawStart) / 1_000_000.0,
-        (endCollect - startCollect) / 1_000_000.0,
-        (endGroup - startGroup) / 1_000_000.0,
-        (endLoop - startLoop) / 1_000_000.0,
-        culledCount,
-        (endText - startText) / 1_000_000.0,
-        allItems.size()
-    ));
-    FRLogger.debug(String.format(
-        "  - Item drawing times: Trace=%.2f ms (%d), Via=%.2f ms (%d), Pin=%.2f ms (%d), Plane=%.2f ms (%d), Other=%.2f ms (%d)",
-        timeTrace / 1_000_000.0, countTrace,
-        timeVia / 1_000_000.0, countVia,
-        timePin / 1_000_000.0, countPin,
-        timeConduction / 1_000_000.0, countConduction,
-        timeOther / 1_000_000.0, countOther
-    ));
+    if (FRLogger.getLogger().isDebugEnabled()) {
+      FRLogger.debug(String.format(
+          "BasicBoard.draw: total %.2f ms [collect=%.2f ms, group=%.2f ms, loop=%.2f ms (culled: %d), texts=%.2f ms] (items: %d)",
+          (drawEnd - drawStart) / 1_000_000.0,
+          (endCollect - startCollect) / 1_000_000.0,
+          (endGroup - startGroup) / 1_000_000.0,
+          (endLoop - startLoop) / 1_000_000.0,
+          culledCount,
+          (endText - startText) / 1_000_000.0,
+          allItems.size()
+      ));
+      FRLogger.debug(String.format(
+          "  - Item drawing times: Trace=%.2f ms (%d), Via=%.2f ms (%d), Pin=%.2f ms (%d), Plane=%.2f ms (%d), Other=%.2f ms (%d)",
+          timeTrace / 1_000_000.0, countTrace,
+          timeVia / 1_000_000.0, countVia,
+          timePin / 1_000_000.0, countPin,
+          timeConduction / 1_000_000.0, countConduction,
+          timeOther / 1_000_000.0, countOther
+      ));
+    }
   }
 
   /**
