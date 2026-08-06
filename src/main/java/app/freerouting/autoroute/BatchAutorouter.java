@@ -121,6 +121,19 @@ public class BatchAutorouter extends NamedAlgorithm {
     return p_mm * board.communication.get_resolution(Unit.MM);
   }
 
+  // On the distances these thresholds replaced: the literals were 10000/15000/
+  // 20000/50000 board units, with comments claiming 10/15/20/50 mm. That reading
+  // assumed 1 unit == 1 micron. 74 of the 86 upstream fixtures declare
+  // `(resolution um 10)`, i.e. 10000 units per mm, so the literals were really
+  // 1/1.5/2/5 mm there -- and on a `(resolution mil 2540)` board, 0.1 mm. The
+  // physical distance therefore varied 10x across boards, which is the actual
+  // bug. Deriving them from the resolution fixes that; the mm values chosen
+  // preserve what the literals did on the dominant board class. Setting them to
+  // the values the comments CLAIMED was measured across the fixture corpus and
+  // regressed real boards -- Issue107-freq_teiler went from 0 unrouted to 2,
+  // Issue035-ReadPlaceScope from 9 to 12 -- because isEscapeViaNet feeds ripup
+  // and via costs on the main routing path, not just the opt-in power-trunk one.
+
   public BatchAutorouter(RoutingJob job) {
     this(job.thread, job.board, job.routerSettings, !job.routerSettings.isFanoutEnabled(), true,
         job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
@@ -1800,7 +1813,7 @@ public class BatchAutorouter extends NamedAlgorithm {
         for (int i = 0; i < pin_locations.size(); i++) {
           for (int j = i + 1; j < pin_locations.size(); j++) {
             double distance = pin_locations.get(i).distance(pin_locations.get(j));
-            if (distance < mmToBoardUnits(10.0)) {
+            if (distance < mmToBoardUnits(1.0)) {
               // Tight cluster = escape via pattern (QFN/BGA escape corner)
               return true;
             }
@@ -1860,8 +1873,8 @@ public class BatchAutorouter extends NamedAlgorithm {
           for (int k = j + 1; k < allVias.size(); k++) {
             app.freerouting.board.Via via2 = allVias.get(k);
             double dist = via1.get_center().to_float().distance(via2.get_center().to_float());
-            // Vias closer than 15 mm to each other count as an escape cluster.
-            if (dist < mmToBoardUnits(15.0)) {
+            // Vias closer than 1.5 mm to each other count as an escape cluster.
+            if (dist < mmToBoardUnits(1.5)) {
               escapeVias.add(via1);
               escapeVias.add(via2);
             }
@@ -1982,7 +1995,7 @@ public class BatchAutorouter extends NamedAlgorithm {
         app.freerouting.geometry.planar.FloatPoint trace_point = trace.first_corner().to_float();
         double dist = trace_point.distance(
             new app.freerouting.geometry.planar.FloatPoint(cluster_cx, cluster_cy));
-        if (dist > mmToBoardUnits(20.0)) { // > 20 mm from cluster = anchor
+        if (dist > mmToBoardUnits(2.0)) { // > 2 mm from cluster = anchor
           anchor_items.add(item);
         }
       } else if (item instanceof app.freerouting.board.Via via &&
@@ -2067,8 +2080,8 @@ public class BatchAutorouter extends NamedAlgorithm {
         }
       }
 
-      // Vias within 50 mm of anchors are boundary candidates
-      if (min_dist < mmToBoardUnits(50.0)) {
+      // Vias within 5 mm of anchors are boundary candidates
+      if (min_dist < mmToBoardUnits(5.0)) {
         boundary_vias.add(via);
       }
     }
