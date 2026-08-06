@@ -77,10 +77,11 @@ public class RoutingFixtureTest {
       testingSettings.setMaxPasses(100);
       merger.addOrReplaceSources(testingSettings);
 
-      // Inject into global prototype so it survives Scheduler re-initialization
-      Freerouting.globalSettings.settingsMergerProtype.addOrReplaceSources(testingSettings);
-
       job.routerSettings = merger.merge();
+
+      // Scheduler re-merge applies job.routerSettings via ApiSettings (priority 70).
+      // Do not also register TestingSettings on the global prototype — its priority (80)
+      // would override the per-job snapshot when tests share that slot.
 
     } catch (IOException e) {
       throw new RuntimeException(filename + " not found.", e);
