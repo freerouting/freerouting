@@ -7,7 +7,6 @@ plugins {
     id 'signing'
     id 'maven-publish'
     id "com.vanniktech.maven.publish" version "0.36.0"
-    id 'net.nemerosa.versioning' version '3.1.0'
     id 'com.github.ben-manes.versions' version '0.54.0'
     id "se.patrikerdes.use-latest-versions" version "0.2.19"
     id 'org.openrewrite.rewrite' version '7.32.2'
@@ -207,13 +206,19 @@ def includeSlowTests = providers.gradleProperty('includeSlowTests')
     .map { it.toBoolean() }
     .orElse(false)
 
+// Configuration-cache-safe git revision (replaces net.nemerosa.versioning, which shells out via JGit).
+def buildRevision = providers.exec {
+    workingDir(layout.projectDirectory.asFile)
+    commandLine('git', 'rev-parse', 'HEAD')
+}.standardOutput.asText.map { it.trim() }.get()
+
 def manifestAttributes = [
         'Automatic-Module-Name' : 'app.freerouting',
         'Built-By'              : System.properties['user.name'],
         'Created-By'            : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
         'Build-Date'            : project.buildDate,
         'Build-Time'            : project.buildTime,
-        'Build-Revision'        : versioning.info.commit,
+        'Build-Revision'        : buildRevision,
         'Specification-Title'   : project.name,
         'Specification-Version' : project.version,
         'Implementation-Title'  : project.name,
