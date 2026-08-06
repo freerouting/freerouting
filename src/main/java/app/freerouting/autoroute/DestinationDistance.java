@@ -164,10 +164,16 @@ public class DestinationDistance {
     // Manhattan distance with minimum trace cost (admissible lower bound)
     double manhattan_cost = (delta_x + delta_y) * min_component_solder_inner_trace_cost;
 
-    // If on different layer than destination, add one via cost (layer change required)
-    if ((p_layer == 0 && !component_side_box_is_empty && p_layer != 0)
-        || (p_layer == layer_count - 1 && !solder_side_box_is_empty && p_layer != layer_count - 1)
-        || (p_layer != 0 && p_layer != layer_count - 1 && !inner_side_box_is_empty)) {
+    // A layer change is required exactly when the destination is NOT on p_layer,
+    // i.e. when the branch above fell through to a box on a different layer.
+    // The previous condition could never fire on the outer layers: its first two
+    // disjuncts read `p_layer == 0 && p_layer != 0` and
+    // `p_layer == layer_count - 1 && p_layer != layer_count - 1`.
+    boolean destination_on_this_layer =
+        (p_layer == 0 && !component_side_box_is_empty)
+            || (p_layer == layer_count - 1 && !solder_side_box_is_empty)
+            || (p_layer != 0 && p_layer != layer_count - 1 && !inner_side_box_is_empty);
+    if (!destination_on_this_layer) {
       manhattan_cost += min_normal_via_cost;
     }
 

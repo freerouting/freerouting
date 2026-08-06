@@ -13,6 +13,7 @@ import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;
+import app.freerouting.board.Unit;
 import app.freerouting.board.Via;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
@@ -34,6 +35,8 @@ import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -63,6 +66,10 @@ public class BatchAutorouter extends NamedAlgorithm {
   // Number of consecutive passes with no meaningful score improvement before
   // aborting (prevents endless looping when items cannot be routed)
   private static final int STAGNATION_PASS_LIMIT = 5;
+  // Per-via budget for the opt-in power-trunk passes. These run once per escape
+  // via across three phases, so the old 30s/45s/60s figures let a single power
+  // net with a few dozen escape vias dominate the entire routing job.
+  private static final int POWER_TRUNK_MILLIS_PER_VIA = 10000;
   // Number of no-improvement passes before attempting a one-time fanout-tail cleanup.
   private static final int FANOUT_RECOVERY_STAGNATION_PASSES = 3;
   // Minimum score gain (on the 0–1000 normalized scale) that counts as a
@@ -98,10 +105,21 @@ public class BatchAutorouter extends NamedAlgorithm {
   private Instant sessionStartTime;
   private long lastBoardUpdateTimestamp = 0;
   /**
-   * Layer congestion tracking: count traces per layer for assignment optimization.
-   * Used to prefer routing on less-congested layers.
+   * Memoized net priorities. calculateNetPriority walks every connectable item on
+   * the net, so it must not be recomputed on each comparison during the sort.
    */
-  private int[] layerTraceCounts;
+  private final Map<Integer, Integer> netPriorityCache = new HashMap<>();
+  /** Upper-cased net names, built lazily; see {@link #netNameSetUpper()}. */
+  private Set<String> netNamesUpper;
+
+  /**
+   * Converts millimetres to this board's coordinate units. Board units come from
+   * the DSN resolution and are NOT always microns, so distance thresholds must be
+   * derived rather than written as literals.
+   */
+  private double mmToBoardUnits(double p_mm) {
+    return p_mm * board.communication.get_resolution(Unit.MM);
+  }
 
   public BatchAutorouter(RoutingJob job) {
     this(job.thread, job.board, job.routerSettings, !job.routerSettings.isFanoutEnabled(), true,
@@ -146,9 +164,6 @@ public class BatchAutorouter extends NamedAlgorithm {
     BatchAutorouter router_instance = new BatchAutorouter(job.thread, updated_routing_board, routerSettings, true,
         p_with_preferred_directions, p_ripup_costs, trace_pull_tight_accuracy);
     router_instance.job = job;
-
-    // Layer assignment optimization: pre-compute layer congestion
-    router_instance.computeLayerCongestion();
 
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
@@ -269,17 +284,27 @@ public class BatchAutorouter extends NamedAlgorithm {
    * Calculate routing priority for a net. Lower value = route first.
    * Priority order: GND (0) > VCC (1) > high density (2-N) > low density (100+)
    */
-  private int calculateNetPriority(Item p_item, int p_net_no) {
+  private int calculateNetPriority(int p_net_no) {
+    Integer cached = netPriorityCache.get(p_net_no);
+    if (cached != null) {
+      return cached;
+    }
+    int result = computeNetPriority(p_net_no);
+    netPriorityCache.put(p_net_no, result);
+    return result;
+  }
+
+  private int computeNetPriority(int p_net_no) {
     Net net = board.rules.nets.get(p_net_no);
-    if (net == null) {
-      return 100; // Unknown net, low priority
+    if (net == null || net.name == null) {
+      return 100; // Unknown or unnamed net, low priority
     }
 
     // Calculate trace width for this net (average of existing traces)
     int max_width = getNetTraceWidth(p_net_no);
 
     // GND net gets highest priority (0), with width + thermal sub-priority
-    if (net.name != null && net.name.toUpperCase().contains("GND")) {
+    if (net.name.toUpperCase().contains("GND")) {
       // Wider GND traces: priority 0 + width factor (0.0-0.9)
       // Narrower GND traces: priority 0.5-0.9
       double width_factor = Math.min(0.9, max_width / 10000.0);
@@ -350,18 +375,61 @@ public class BatchAutorouter extends NamedAlgorithm {
    * These nets benefit from earlier routing to minimize crosstalk and jitter.
    */
   private boolean isCriticalSignal(String p_net_name) {
-    // Clock signals (CLK, CK, XTAL, OSC)
-    if (p_net_name.contains("CLK") || p_net_name.contains("CK") ||
-        p_net_name.contains("XTAL") || p_net_name.contains("OSC") ||
-        p_net_name.contains("CLOCK")) {
+    String[] tokens = netNameTokens(p_net_name);
+    // Clocks. "CK" is accepted only as a whole token: as a substring it also
+    // matches BACKLIGHT, TRACK, LOCK and CHECK.
+    if (hasToken(tokens, "CLK", "CK", "CLOCK", "XTAL", "XIN", "XOUT", "OSC",
+        "MCLK", "SCLK", "BCLK", "LRCLK", "REFCLK")) {
       return true;
     }
-    // Reset signals (RST, RESET, NRESET, RES)
-    if (p_net_name.contains("RST") || p_net_name.contains("RESET") ||
-        p_net_name.contains("RES")) {
+    // Resets. "RES" is deliberately NOT accepted -- it also spells RESERVED,
+    // RESISTOR and RESULT, none of which are timing-critical.
+    if (hasToken(tokens, "RST", "RSTN", "NRST", "RESET", "RESETN", "NRESET")) {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Splits a net name into upper-case alphanumeric tokens, so that matching is
+   * done on name components rather than on substrings. "/U3/USB_DP" yields
+   * [U3, USB, DP].
+   */
+  private static String[] netNameTokens(String p_net_name) {
+    return p_net_name.toUpperCase().split("[^A-Z0-9]+");
+  }
+
+  /**
+   * True if any token equals one of p_keywords, ignoring a trailing index so
+   * that "CLK2" still matches "CLK".
+   */
+  private static boolean hasToken(String[] p_tokens, String... p_keywords) {
+    for (String token : p_tokens) {
+      if (token.isEmpty()) {
+        continue;
+      }
+      String bare = token.replaceAll("[0-9]+$", "");
+      for (String keyword : p_keywords) {
+        if (token.equals(keyword) || bare.equals(keyword)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /** Upper-cased set of every net name on the board, built once on first use. */
+  private Set<String> netNameSetUpper() {
+    if (netNamesUpper == null) {
+      netNamesUpper = new HashSet<>();
+      for (int i = 1; i <= board.rules.nets.max_net_no(); i++) {
+        Net n = board.rules.nets.get(i);
+        if (n != null && n.name != null) {
+          netNamesUpper.add(n.name.toUpperCase());
+        }
+      }
+    }
+    return netNamesUpper;
   }
 
   /**
@@ -389,19 +457,28 @@ public class BatchAutorouter extends NamedAlgorithm {
    */
   private boolean isDifferentialPairMember(String p_net_name) {
     String name = p_net_name.toUpperCase();
-    // High-speed differential pairs (DP, DM, LVDS, DIFF, _P, _N)
-    if (name.contains("DP") || name.contains("DM") ||
-        name.contains("LVDS") || name.contains("DIFF") ||
-        name.endsWith("_P") || name.endsWith("_N") ||
-        name.endsWith("+") || name.endsWith("-")) {
-      return true;
+
+    // A polarity suffix only means "differential pair" if the opposite member
+    // actually exists on this board. Without that check an active-low enable
+    // ("EN_N") or a supply return ("VBUS-") is misread as a pair member.
+    String[][] suffix_pairs = {{"_P", "_N"}, {"_DP", "_DM"}, {"+", "-"}};
+    for (String[] pair : suffix_pairs) {
+      for (int i = 0; i < 2; i++) {
+        String self = pair[i];
+        String other = pair[1 - i];
+        if (name.endsWith(self)) {
+          String sibling = name.substring(0, name.length() - self.length()) + other;
+          if (netNameSetUpper().contains(sibling)) {
+            return true;
+          }
+        }
+      }
     }
-    // USB, HDMI, etc (common differential standards)
-    if (name.contains("USB") || name.contains("HDMI") ||
-        name.contains("CML") || name.contains("TMDS")) {
-      return true;
-    }
-    return false;
+
+    // Named differential standards, matched on whole tokens only. As substrings,
+    // "DP" and "DM" also match ADP, SDP and MDMA.
+    return hasToken(netNameTokens(name),
+        "DP", "DM", "USB", "HDMI", "LVDS", "DIFF", "CML", "TMDS", "MIPI");
   }
 
   /**
@@ -413,44 +490,80 @@ public class BatchAutorouter extends NamedAlgorithm {
     job.logInfo("Stub minimization: removing unused trace stubs");
     int stubs_removed = 0;
 
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
-    java.util.List<Item> traces_to_check = new java.util.ArrayList<>();
+    // Contact index, built in a SINGLE pass over the item list. The previous
+    // implementation rescanned every item twice per trace, which made this pass
+    // O(N^2) in the item count.
+    // Keys are packed coordinates rather than Point objects: IntPoint overrides
+    // equals() but not hashCode(), so it cannot be used as a hash-map key.
+    Map<Integer, Map<Long, Integer>> trace_ends_per_layer = new HashMap<>();
+    Map<Long, Integer> via_or_pin_at = new HashMap<>();
+    List<PolylineTrace> traces_to_check = new ArrayList<>();
 
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
     for (;;) {
       UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
       if (curr_ob == null) {
         break;
       }
       if (curr_ob instanceof Trace trace) {
-        traces_to_check.add(trace);
+        if (trace instanceof PolylineTrace polyline_trace) {
+          traces_to_check.add(polyline_trace);
+        }
+        Map<Long, Integer> at_layer =
+            trace_ends_per_layer.computeIfAbsent(trace.get_layer(), k -> new HashMap<>());
+        Long first_key = pointKey(trace.first_corner());
+        Long last_key = pointKey(trace.last_corner());
+        if (first_key != null) {
+          at_layer.merge(first_key, 1, Integer::sum);
+        }
+        if (last_key != null && !last_key.equals(first_key)) {
+          at_layer.merge(last_key, 1, Integer::sum);
+        }
+      } else if (curr_ob instanceof Via via) {
+        Long key = pointKey(via.get_center());
+        if (key != null) {
+          via_or_pin_at.merge(key, 1, Integer::sum);
+        }
+      } else if (curr_ob instanceof Pin pin) {
+        Long key = pointKey(pin.get_center());
+        if (key != null) {
+          via_or_pin_at.merge(key, 1, Integer::sum);
+        }
       }
     }
 
-    // Check each trace for unused endpoints
-    for (Item trace_item : traces_to_check) {
-      if (trace_item instanceof PolylineTrace trace) {
-        // Check if trace endpoints are connected to anything important
-        app.freerouting.geometry.planar.Point first_corner = trace.first_corner();
-        app.freerouting.geometry.planar.Point last_corner = trace.last_corner();
+    for (PolylineTrace trace : traces_to_check) {
+      Long first_key = pointKey(trace.first_corner());
+      Long last_key = pointKey(trace.last_corner());
+      if (first_key == null || last_key == null) {
+        // Coordinate we cannot index. Be conservative and never remove copper on
+        // the strength of an endpoint we could not evaluate.
+        continue;
+      }
 
-        // Count contacts at each end
-        int first_end_contacts = countContacts(first_corner, trace.get_layer(), trace);
-        int last_end_contacts = countContacts(last_corner, trace.get_layer(), trace);
+      Map<Long, Integer> at_layer =
+          trace_ends_per_layer.getOrDefault(trace.get_layer(), Map.of());
 
-        // A stub is an end with NO other item on it. countContacts already excludes
-        // this trace, so a normal pad->via segment reports 1 at each end -- testing
-        // for 1 here deleted correctly routed copper.
-        Net trace_net = trace.net_count() > 0 ? board.rules.nets.get(trace.get_net_no(0)) : null;
-        if ((first_end_contacts == 0 || last_end_contacts == 0) &&
-            trace_net != null && trace_net.name != null &&
-            isDifferentialPairMember(trace_net.name)) {
-          // For high-speed nets, remove obvious stubs
-          try {
-            board.remove_item(trace_item);
-            stubs_removed++;
-          } catch (Exception e) {
-            // Ignore removal failures (item locked, etc)
-          }
+      // Subtract this trace's own contribution: the index counted it too, and the
+      // question is what ELSE lands on that endpoint.
+      int first_end_contacts = at_layer.getOrDefault(first_key, 0) - 1
+          + via_or_pin_at.getOrDefault(first_key, 0);
+      int last_end_contacts = at_layer.getOrDefault(last_key, 0)
+          - (last_key.equals(first_key) ? 0 : 1)
+          + via_or_pin_at.getOrDefault(last_key, 0);
+
+      // A stub is an end with NO other item on it. The old test was "== 1", but a
+      // normal pad->via segment has exactly one contact at each end, so that test
+      // matched correctly routed copper.
+      Net trace_net = trace.net_count() > 0 ? board.rules.nets.get(trace.get_net_no(0)) : null;
+      if ((first_end_contacts == 0 || last_end_contacts == 0)
+          && trace_net != null && trace_net.name != null
+          && isDifferentialPairMember(trace_net.name)) {
+        try {
+          board.remove_item(trace);
+          stubs_removed++;
+        } catch (Exception e) {
+          // Ignore removal failures (item locked, etc)
         }
       }
     }
@@ -461,62 +574,18 @@ public class BatchAutorouter extends NamedAlgorithm {
   }
 
   /**
-   * Compute layer congestion: count traces on each layer for assignment optimization.
-   * Helps prefer routing on less-congested layers to balance layer utilization.
+   * Packs a point into a hash-map key. Returns null for coordinate types this
+   * cannot represent exactly, so callers can treat them as "unknown".
+   * <p>
+   * Needed because {@link app.freerouting.geometry.planar.IntPoint} overrides
+   * {@code equals} but not {@code hashCode}, so it breaks the hash contract and
+   * cannot be used as a key directly.
    */
-  private void computeLayerCongestion() {
-    int layer_count = board.get_layer_count();
-    if (layerTraceCounts == null) {
-      layerTraceCounts = new int[layer_count];
+  private static Long pointKey(app.freerouting.geometry.planar.Point p_point) {
+    if (p_point instanceof app.freerouting.geometry.planar.IntPoint int_point) {
+      return (((long) int_point.x) << 32) ^ (int_point.y & 0xffffffffL);
     }
-
-    // Count traces per layer
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
-    for (;;) {
-      UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
-      if (curr_ob == null) {
-        break;
-      }
-      if (curr_ob instanceof Trace trace) {
-        int layer = trace.get_layer();
-        if (layer >= 0 && layer < layer_count) {
-          layerTraceCounts[layer]++;
-        }
-      }
-    }
-
-    job.logInfo("Layer assignment: congestion computed (" + layer_count + " layers)");
-  }
-
-  /**
-   * Count how many items (traces, vias, pads) are connected at a point.
-   */
-  private int countContacts(app.freerouting.geometry.planar.Point p_point, int p_layer, Item p_exclude) {
-    int count = 0;
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
-
-    for (;;) {
-      UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
-      if (curr_ob == null) {
-        break;
-      }
-      if (curr_ob instanceof Item item && item != p_exclude) {
-        if (item instanceof Trace trace && trace.get_layer() == p_layer) {
-          if (trace.first_corner().equals(p_point) || trace.last_corner().equals(p_point)) {
-            count++;
-          }
-        } else if (item instanceof Via via) {
-          if (via.get_center().equals(p_point)) {
-            count++;
-          }
-        } else if (item instanceof Pin pin) {
-          if (pin.get_center().equals(p_point)) {
-            count++;
-          }
-        }
-      }
-    }
-    return count;
+    return null;
   }
 
   private List<Item> getAutorouteItems(RoutingBoard board) {
@@ -757,12 +826,12 @@ public class BatchAutorouter extends NamedAlgorithm {
         // For items with multiple nets, find the best (lowest priority) net
         int minPriority1 = Integer.MAX_VALUE;
         for (int i = 0; i < item1.net_count(); i++) {
-          minPriority1 = Math.min(minPriority1, calculateNetPriority(item1, item1.get_net_no(i)));
+          minPriority1 = Math.min(minPriority1, calculateNetPriority(item1.get_net_no(i)));
         }
 
         int minPriority2 = Integer.MAX_VALUE;
         for (int i = 0; i < item2.net_count(); i++) {
-          minPriority2 = Math.min(minPriority2, calculateNetPriority(item2, item2.get_net_no(i)));
+          minPriority2 = Math.min(minPriority2, calculateNetPriority(item2.get_net_no(i)));
         }
 
         if (minPriority1 != minPriority2) {
@@ -1571,26 +1640,14 @@ public class BatchAutorouter extends NamedAlgorithm {
         curr_via_costs = (int) (curr_via_costs * thermal_via_factor);
       }
 
-      // Layer assignment optimization: prefer less-congested layers
-      // Reduce via costs to underutilized layers, discourage congested layers
-      if (p_ripup_pass_no <= 7 && layerTraceCounts != null) {
-        // Compute layer congestion factors (0-1, where 1 = most congested)
-        int max_layer_traces = 0;
-        for (int count : layerTraceCounts) {
-          max_layer_traces = Math.max(max_layer_traces, count);
-        }
-        if (max_layer_traces > 0) {
-          // Average congestion across layers
-          double avg_congestion = 0;
-          for (int count : layerTraceCounts) {
-            avg_congestion += (double) count / max_layer_traces;
-          }
-          avg_congestion /= layerTraceCounts.length;
-          // Reduce via costs slightly (5%) to encourage layer diversity
-          double layer_factor = 0.95 + (0.05 * avg_congestion); // 0.95-1.0 based on congestion
-          curr_via_costs = (int) (curr_via_costs * layer_factor);
-        }
-      }
+      // NOTE: a "prefer less-congested layers" adjustment was removed here. It
+      // collapsed the per-layer trace counts into one board-wide average and
+      // applied a single 0.95-1.0 scalar to curr_via_costs, which is not a
+      // per-layer bias at all -- curr_via_costs is one value for the whole
+      // AutorouteControl. The counts were also taken once before the first pass
+      // and never refreshed, so they described the starting board, not the
+      // current one. Expressing a real layer preference needs a per-layer cost
+      // vector, which this call site does not have.
 
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
@@ -1743,8 +1800,7 @@ public class BatchAutorouter extends NamedAlgorithm {
         for (int i = 0; i < pin_locations.size(); i++) {
           for (int j = i + 1; j < pin_locations.size(); j++) {
             double distance = pin_locations.get(i).distance(pin_locations.get(j));
-            // 10mm in board units (1 unit = 1 micron, so 10mm = 10000 units)
-            if (distance < 10000) {
+            if (distance < mmToBoardUnits(10.0)) {
               // Tight cluster = escape via pattern (QFN/BGA escape corner)
               return true;
             }
@@ -1780,7 +1836,8 @@ public class BatchAutorouter extends NamedAlgorithm {
       app.freerouting.rules.Net curr_net = board.rules.nets.get(i);
       if (curr_net == null) continue;
 
-      String netName = curr_net.name.toUpperCase();
+      // A net may have no name; contains_plane() is still meaningful for those.
+      String netName = curr_net.name != null ? curr_net.name.toUpperCase() : "";
       boolean isPowerNet = netName.contains("GND") || netName.contains("VCC") ||
                            netName.contains("POWER") || curr_net.contains_plane();
       if (!isPowerNet) continue;
@@ -1803,8 +1860,8 @@ public class BatchAutorouter extends NamedAlgorithm {
           for (int k = j + 1; k < allVias.size(); k++) {
             app.freerouting.board.Via via2 = allVias.get(k);
             double dist = via1.get_center().to_float().distance(via2.get_center().to_float());
-            // 10mm = 10000 units; if < 15mm, mark as escape vias
-            if (dist < 15000) {
+            // Vias closer than 15 mm to each other count as an escape cluster.
+            if (dist < mmToBoardUnits(15.0)) {
               escapeVias.add(via1);
               escapeVias.add(via2);
             }
@@ -1840,7 +1897,7 @@ public class BatchAutorouter extends NamedAlgorithm {
 
       for (app.freerouting.board.Via via_item : escapeVias) {
         app.freerouting.datastructures.TimeLimit time_limit =
-            new app.freerouting.datastructures.TimeLimit(30000); // 30 sec per via
+            new app.freerouting.datastructures.TimeLimit(POWER_TRUNK_MILLIS_PER_VIA);
 
         app.freerouting.autoroute.AutorouteAttemptResult result =
             board.autoroute(via_item, this.settings, aggressive_ripup_cost, this.thread,
@@ -1892,13 +1949,21 @@ public class BatchAutorouter extends NamedAlgorithm {
     // Find edge vias (furthest from cluster center = closest to main area)
     java.util.List<app.freerouting.board.Via> edge_vias =
         new java.util.ArrayList<>();
+    // Two passes: establish the maximum distance first, THEN select against it.
+    // Doing both in one pass made the threshold depend on iteration order -- the
+    // first via always passed (dist > 0) and the selection varied with the set's
+    // ordering, so "top 30% most distant" was neither.
+    app.freerouting.geometry.planar.FloatPoint cluster_centre =
+        new app.freerouting.geometry.planar.FloatPoint(cluster_cx, cluster_cy);
+
     double max_dist = 0;
     for (app.freerouting.board.Via via : p_escape_vias) {
-      double dist = via.get_center().to_float().distance(
-          new app.freerouting.geometry.planar.FloatPoint(cluster_cx, cluster_cy));
-      if (dist > max_dist * 0.7) { // Top 30% most distant = edges
+      max_dist = Math.max(max_dist, via.get_center().to_float().distance(cluster_centre));
+    }
+
+    for (app.freerouting.board.Via via : p_escape_vias) {
+      if (via.get_center().to_float().distance(cluster_centre) > max_dist * 0.7) {
         edge_vias.add(via);
-        max_dist = Math.max(max_dist, dist);
       }
     }
 
@@ -1917,7 +1982,7 @@ public class BatchAutorouter extends NamedAlgorithm {
         app.freerouting.geometry.planar.FloatPoint trace_point = trace.first_corner().to_float();
         double dist = trace_point.distance(
             new app.freerouting.geometry.planar.FloatPoint(cluster_cx, cluster_cy));
-        if (dist > 20000) { // > 20mm from cluster = anchor
+        if (dist > mmToBoardUnits(20.0)) { // > 20 mm from cluster = anchor
           anchor_items.add(item);
         }
       } else if (item instanceof app.freerouting.board.Via via &&
@@ -1940,7 +2005,7 @@ public class BatchAutorouter extends NamedAlgorithm {
     for (app.freerouting.board.Via edge_via : edge_vias) {
       // Try routing this edge via - should connect to anchors
       app.freerouting.datastructures.TimeLimit time_limit =
-          new app.freerouting.datastructures.TimeLimit(45000); // 45 sec for anchors
+          new app.freerouting.datastructures.TimeLimit(POWER_TRUNK_MILLIS_PER_VIA);
 
       app.freerouting.autoroute.AutorouteAttemptResult result =
           board.autoroute(edge_via, this.settings, ultra_aggressive_cost, this.thread,
@@ -2002,8 +2067,8 @@ public class BatchAutorouter extends NamedAlgorithm {
         }
       }
 
-      // Vias within 50mm of anchors are boundary candidates
-      if (min_dist < 50000) {
+      // Vias within 50 mm of anchors are boundary candidates
+      if (min_dist < mmToBoardUnits(50.0)) {
         boundary_vias.add(via);
       }
     }
@@ -2021,7 +2086,7 @@ public class BatchAutorouter extends NamedAlgorithm {
     for (app.freerouting.board.Via boundary_via : boundary_vias) {
       // Phase 3: absolute minimum ripup cost (1) to force routing
       app.freerouting.datastructures.TimeLimit time_limit =
-          new app.freerouting.datastructures.TimeLimit(60000); // 60 sec for boundary
+          new app.freerouting.datastructures.TimeLimit(POWER_TRUNK_MILLIS_PER_VIA);
 
       app.freerouting.autoroute.AutorouteAttemptResult result =
           board.autoroute(boundary_via, this.settings, 1, this.thread, time_limit);

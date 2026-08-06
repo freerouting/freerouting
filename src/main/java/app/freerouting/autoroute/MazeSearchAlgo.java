@@ -49,7 +49,14 @@ public class MazeSearchAlgo {
   final AutorouteControl ctrl;
   /**
    * The queue of expanded elements used in this search algorithm.
-   * Using PriorityQueue instead of TreeSet to reduce allocation churn (array-based vs tree-based).
+   * <p>
+   * PriorityQueue rather than TreeSet: an array-backed heap avoids allocating a
+   * red-black tree node per element. Note the semantic difference -- a TreeSet
+   * dropped elements whose {@link MazeListElement#compareTo} returned 0, whereas
+   * a PriorityQueue retains them. That is safe here because the pop loop already
+   * skips any element whose door section is occupied, which is how the algorithm
+   * handles a door being reached more than once; the cost is queue size, not
+   * correctness.
    */
   final PriorityQueue<MazeListElement> maze_expansion_list;
 
@@ -233,9 +240,11 @@ public class MazeSearchAlgo {
         return false;
       }
 
-      Iterator<MazeListElement> it = maze_expansion_list.iterator();
-      list_element = it.next();
-      it.remove();
+      // poll() is the documented "remove the minimum" operation. The previous
+      // iterator().next() only happened to return the minimum because a binary
+      // heap keeps it at index 0; PriorityQueue's Iterator makes no ordering
+      // guarantee, so that was relying on an implementation detail.
+      list_element = maze_expansion_list.poll();
 
       int curr_section_no = list_element.section_no_of_door;
       curr_door_section = list_element.door.get_maze_search_element(curr_section_no);
