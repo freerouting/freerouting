@@ -1366,18 +1366,18 @@ public class BasicBoard implements Serializable {
       drawSteps.add(selectedStep);
     }
 
-    // Populate layerOrderNames for logging to match the actual drawSteps
-    java.util.List<String> renderingOrderNames = new java.util.ArrayList<>();
-    for (RenderStep step : drawSteps) {
-      if (step.isVirtual) {
-        String[] virtualNames = {"F.Silkscreen", "B.Silkscreen", "F.Courtyard", "B.Courtyard", "F.Fab", "B.Fab"};
-        renderingOrderNames.add(virtualNames[step.index]);
-      } else {
-        renderingOrderNames.add(layer_structure.arr[step.index].name);
-      }
-    }
-
     if (FRLogger.isTraceEnabled()) {
+      // Populate layerOrderNames for logging to match the actual drawSteps
+      java.util.List<String> renderingOrderNames = new java.util.ArrayList<>();
+      for (RenderStep step : drawSteps) {
+        if (step.isVirtual) {
+          String[] virtualNames = {"F.Silkscreen", "B.Silkscreen", "F.Courtyard", "B.Courtyard", "F.Fab", "B.Fab"};
+          renderingOrderNames.add(virtualNames[step.index]);
+        } else {
+          renderingOrderNames.add(layer_structure.arr[step.index].name);
+        }
+      }
+
       FRLogger.trace(String.format("BasicBoard.draw: Selected Layer: %s, Dominant Side: %s, Rendering Order: %s",
           selectedLayerName, dominantSide, renderingOrderNames));
     }
@@ -1421,7 +1421,7 @@ public class BasicBoard implements Serializable {
     long endGroup = System.nanoTime();
 
     long startLoop = System.nanoTime();
-    
+
     // Viewport culling bounds in board coordinates
     java.awt.Rectangle clipRect = p_graphics.getClipBounds();
     IntBox clipBox = clipRect != null ? p_graphics_context.coordinate_transform.screen_to_board(clipRect) : null;
