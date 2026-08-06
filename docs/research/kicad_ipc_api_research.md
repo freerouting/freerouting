@@ -281,9 +281,9 @@ Goal: make IPC the normal path when available, with automatic fallback to DSN.
 
 The KiCad Python plugin (`integrations/KiCad/kicad-freerouting/plugins/plugin.py`) has been updated to support dual-mode operation:
 
-**IPC/API mode (default when available):**
-1. Detects KiCad IPC API availability via `is_ipc_available()` — checks for `pcbnew` IPC attributes and probes via `pcbnew.GetBuildVersion()`.
-2. Serializes the board to KiCad JSON using the IPC API (`get_board_json_via_ipc()`), with a manual fallback that walks `pcbnew` board objects.
+**JSON/API mode (experimental, opt-in via `ROUTING_MODE_JSON`):**
+1. Detects JSON/API availability via `is_json_api_mode_available()` — checks for `pcbnew` JSON export helpers and KiCad 9+ SWIG bindings.
+2. Serializes the board to KiCad JSON using `serialize_board_to_json()`, which walks `pcbnew` board objects in-process.
 3. Saves the JSON to `freerouting_debug.json` for debugging.
 4. Starts Freerouting as a headless API server (`-api_server.enabled=true -api_server.authentication.enabled=false -gui.enabled=false`).
 5. Creates a session and job via the REST API (`POST /v1/sessions/create`, `POST /v1/jobs/enqueue`).
@@ -291,32 +291,33 @@ The KiCad Python plugin (`integrations/KiCad/kicad-freerouting/plugins/plugin.py
 7. Starts the job via `PUT /v1/jobs/{jobId}/start`.
 8. Polls for completion with a progress dialog (user can cancel).
 9. Downloads the result JSON via `GET /v1/jobs/{jobId}/output/json`.
-10. Applies the result back to KiCad via IPC write-back or manual `pcbnew` API calls.
+10. Applies the result back to KiCad via native JSON import helpers or manual `pcbnew` API calls.
 11. Saves the result JSON to `freerouting_result.json` for debugging.
 
-**DSN mode (legacy fallback):**
-- When IPC is not available, the plugin falls back to the original DSN export/import workflow.
-- The user sees no difference in the UI — the fallback is automatic.
+**DSN mode (default):**
+- The plugin uses the original DSN export/import workflow unless `ROUTING_MODE_JSON` is set in `config.py`.
+- JSON/API mode falls back to DSN automatically when serialization is unavailable.
 
 **Key implementation details:**
 - `FreeroutingApiClient` class: minimal REST API client using `urllib` with automatic JSON serialization, health checks, session/job management, and polling.
-- `is_ipc_available()`: probes for IPC support by checking `pcbnew` attributes (`ipc`, `IpcApi`, `GetIpcApi`, `board_to_json`, `GetBoardAsJson`) and version detection.
-- `_build_board_json_manually()`: fallback JSON builder that walks `pcbnew` board objects (footprints, pads, tracks, vias, drawings) when IPC doesn't provide direct JSON export.
-- `_apply_json_result_to_kicad()`: applies routing results back to KiCad via IPC write-back methods or manual `pcbnew.PCB_TRACK`/`pcbnew.PCB_VIA` creation.
+- `is_json_api_mode_available()`: probes whether the in-process SWIG JSON bridge can run on KiCad 9+.
+- `_build_board_json_manually()`: JSON builder that walks `pcbnew` board objects (footprints, pads, tracks, vias, drawings).
+- `_apply_json_result_to_kicad()`: applies routing results back to KiCad via native import helpers or manual `pcbnew.PCB_TRACK`/`pcbnew.PCB_VIA` creation.
 - Debug JSON files are always saved to the routing directory for both input and output.
 
-**New plugin settings (in `plugin.ini`):**
-- The `routing_mode` field in the plugin class defaults to `"IPC"` but can be set to `"DSN"` to force legacy mode.
+**Plugin routing mode (in `config.py`):**
+- `DEFAULT_ROUTING_MODE = ROUTING_MODE_DSN` — DSN is the default for v2.3.
+- Set `ROUTING_MODE_JSON` to opt into the experimental JSON/API bridge. Legacy `"IPC"` is accepted as an alias.
 - The API server binds to `127.0.0.1:37864` with authentication disabled for seamless local operation.
 
 Exit criteria:
-- ✅ The user can route from KiCad without manual file export when IPC is available.
-- ✅ DSN fallback still works when IPC is not available.
+- ✅ The user can route from KiCad without manual file export when JSON/API mode is enabled.
+- ✅ DSN mode is the default production path.
 - ✅ Debug JSON files are saved for both input and output.
 - ✅ Progress dialog shows job ID and session ID during routing.
 - ✅ User can cancel routing via the Terminate button.
 
-### Phase 4: Testing and parity
+### Phase 4: Testing and parity 🔲 In progress
 
 Goal: verify that IPC and DSN produce equivalent results.
 
@@ -327,19 +328,25 @@ Tasks:
 - compare trace length
 - compare clearance violation count
 - compare runtime and memory use
+- **wire KiCad edge clearance into JSON serializer + reader (#558 IPC path)**
+- re-enable `Issue733DsnJsonParityTest` when input parity is acceptable
 
 Exit criteria:
 
 - no regressions in DSN mode
 - IPC mode behaves predictably
+- edge clearance matches KiCad design settings without CLI override
 - any differences are understood and documented
+
+Tracker: [`docs/issues/kicad-json-api-mode-improvement-tracker.md`](../issues/kicad-json-api-mode-improvement-tracker.md)
 
 ## Issue 558 and copper to edge clearance
 
-KiCad IPC is important because it can expose rule data that DSN may lose.
-That makes IPC the better path for copper to edge clearance.
+KiCad IPC is important because it **can** expose rule data that DSN loses — including copper-to-edge clearance via `BOARD_DESIGN_SETTINGS.m_CopperEdgeClearance`.
 
-For DSN users, keep the explicit copper to edge clearance setting in Freerouting so the gap can still be closed.
+**Current state (2026-08-06):** The JSON bridge does **not** read this value yet. See [`docs/issues/kicad-json-api-mode-improvement-tracker.md`](../issues/kicad-json-api-mode-improvement-tracker.md) P0.
+
+For DSN users, keep the explicit `copperToEdgeClearanceUm` setting in Freerouting so the gap can still be closed via CLI/API override.
 
 ## Risks
 

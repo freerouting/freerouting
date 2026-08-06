@@ -1,11 +1,12 @@
+# board_json_helpers.py — Board JSON serialization for JSON/API mode
 # ---------------------------------------------------------------------------
-# ipc_helpers.py — KiCad IPC API detection and board serialization
-# ---------------------------------------------------------------------------
-# This module handles communication with KiCad's IPC API (available in
-# KiCad 9+).  It provides:
-#   * ``is_ipc_available()`` — probes for IPC support at runtime.
-#   * ``get_board_json_via_ipc()`` — serializes the current board to JSON.
-#   * ``_build_board_json_manually()`` — fallback that walks pcbnew objects.
+# Builds KiCadBoardJson payloads from in-process SWIG ``pcbnew`` objects.
+# This is **not** KiCad's official protobuf IPC API — the ActionPlugin
+# walks the board manually and sends JSON to Freerouting over localhost REST.
+#
+#   * ``is_json_api_mode_available()`` — probes whether JSON/API mode can run.
+#   * ``serialize_board_to_json()`` — serializes the current board to JSON.
+#   * ``_build_board_json_manually()`` — SWIG board walk implementation.
 # ---------------------------------------------------------------------------
 
 import json
@@ -19,9 +20,9 @@ import pcbnew
 logger = logging.getLogger("freerouting")
 
 from .config import (
-    IPC_JSON_EXPORT_METHODS,
-    IPC_MIN_KICAD_MAJOR,
-    IPC_PROBE_ATTRIBUTES,
+    JSON_API_EXPORT_METHODS,
+    JSON_API_MIN_KICAD_MAJOR,
+    JSON_API_PROBE_ATTRIBUTES,
 )
 
 
@@ -59,47 +60,43 @@ def _to_str(value):
     return str(value)
 
 
-def is_ipc_available():
-    """Check whether we can serialize the board for IPC/API mode.
+def is_json_api_mode_available():
+    """Check whether JSON/API mode can serialize the current board.
 
-    For a SWIG ActionPlugin running inside KiCad, the protobuf-based
-    IPC API methods (e.g. ``GetBoardAsJson``) are **not** exposed on the
+    For a SWIG ActionPlugin running inside KiCad, KiCad's protobuf IPC
+    API methods (e.g. ``GetBoardAsJson``) are **not** exposed on the
     ``pcbnew`` module — they are available only to external IPC clients
-    using the ``kicad-python`` package.  However, this plugin has direct
-    SWIG access to the board and can always fall back to manual
-    serialisation via ``_build_board_json_manually()``.  Therefore,
-    IPC/API mode is effectively always available when KiCad 9+ is
-    detected (the SWIG bindings are still present but deprecated).
+    using the ``kicad-python`` package.  This plugin instead walks
+    ``pcbnew`` objects via SWIG and builds JSON manually.  JSON/API mode
+    is therefore available when KiCad 9+ is detected.
 
     Returns:
-        ``True`` if we can serialise the board (always True for a
-        SWIG ActionPlugin running inside KiCad 9+).
+        ``True`` if the board can be serialized for the JSON/API bridge.
     """
-    # 1. Check for native IPC-API methods (external-client use case)
-    for attr in IPC_PROBE_ATTRIBUTES:
+    # 1. Check for native JSON export helpers (external IPC client use case)
+    for attr in JSON_API_PROBE_ATTRIBUTES:
         if hasattr(pcbnew, attr):
-            logger.info(f"KiCad IPC API detected (pcbnew.{attr} is available).")
+            logger.info(f"KiCad JSON export helper detected (pcbnew.{attr}).")
             return True
 
-    # 2. Check version — KiCad 9+ still has SWIG bindings, and our
-    #    manual fallback serialisation works on any version.
+    # 2. KiCad 9+ SWIG bindings — manual serialisation always works in-process.
     try:
         version_str = str(pcbnew.GetBuildVersion()).strip()
         major = int(version_str.split(".")[0])
-        if major >= IPC_MIN_KICAD_MAJOR:
+        if major >= JSON_API_MIN_KICAD_MAJOR:
             logger.info(
                 f"KiCad {version_str} detected — "
-                "SWIG ActionPlugin mode, manual serialisation available."
+                "SWIG ActionPlugin JSON/API bridge available."
             )
             return True
     except Exception:
         pass
 
-    logger.info("KiCad IPC API is not available.")
+    logger.info("JSON/API mode is not available for this KiCad version.")
     return False
 
 
-def _probe_ipc_via_json_export():
+def _probe_json_export_methods():
     """Try calling a JSON-export method on the current board as a probe.
 
     Returns:
@@ -109,19 +106,19 @@ def _probe_ipc_via_json_export():
         board = pcbnew.GetBoard()
         if board is None:
             return False
-        for method_name in IPC_JSON_EXPORT_METHODS:
+        for method_name in JSON_API_EXPORT_METHODS:
             if hasattr(pcbnew, method_name):
                 result = getattr(pcbnew, method_name)(board)
                 if result is not None:
-                    logger.info(f"IPC probe succeeded via pcbnew.{method_name}().")
+                    logger.info(f"JSON export probe succeeded via pcbnew.{method_name}().")
                     return True
     except Exception as e:
-        logger.error(f"IPC probe failed: {e}", exc_info=True)
+        logger.error(f"JSON export probe failed: {e}", exc_info=True)
     return False
 
 
-def get_board_json_via_ipc():
-    """Serialize the current board to KiCad JSON using the IPC API.
+def serialize_board_to_json():
+    """Serialize the current board to KiCad JSON for the JSON/API bridge.
 
     Returns:
         JSON string conforming to the KiCadBoardJson schema.
@@ -139,8 +136,7 @@ def get_board_json_via_ipc():
 def _build_board_json_manually(board):
     """Build a KiCadBoardJson-compatible dict by walking pcbnew objects.
 
-    This is a best-effort fallback when the IPC API doesn't provide a
-    direct JSON export.  It iterates over footprints, tracks, and
+    This is a SWIG board walk — not KiCad's protobuf IPC export.  It iterates over footprints, tracks, and
     drawings to reconstruct the board data.
 
     Args:

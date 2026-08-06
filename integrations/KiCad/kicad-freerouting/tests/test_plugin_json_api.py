@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------------
-# test_plugin_ipc.py — Integration tests for the KiCad Freerouting plugin
+# test_plugin_json_api.py — Integration tests for the KiCad Freerouting plugin
 # ---------------------------------------------------------------------------
-# These tests verify the plugin's IPC workflow end-to-end:
+# These tests verify the plugin's JSON/API workflow and module structure:
 #   1. KiCad 10+ is installed and can be started
-#  2. The plugin can be loaded into KiCad
+#   2. The plugin can be loaded into KiCad
 #   3. A test fixture board can be loaded
-#   4. The plugin's IPC helpers work (board serialization)
+#   4. Board JSON helpers work (serialization)
 #   5. The plugin can be executed
 #   6. Results are verified
 #
@@ -82,8 +82,8 @@ class TestPluginStructure:
         """All expected plugin modules are present."""
         expected = [
             "__init__.py", "plugin.py", "config.py", "gui_helpers.py",
-            "java_utils.py", "ipc_helpers.py", "api_client.py",
-            "process_utils.py", "router_dsn.py", "router_ipc.py",
+            "java_utils.py", "board_json_helpers.py", "api_client.py",
+            "process_utils.py", "router_dsn.py", "router_json_api.py",
         ]
         for name in expected:
             path = self.PLUGINS_DIR / name
@@ -114,27 +114,38 @@ class TestPluginStructure:
         assert hasattr(config, "DEFAULT_FR_API_BASE_URL")
         assert hasattr(config, "JAVA_MIN_MAJOR_VERSION")
         assert config.JAVA_MIN_MAJOR_VERSION == 25
-        assert hasattr(config, "IPC_PROBE_ATTRIBUTES")
-        assert hasattr(config, "DEFAULT_ROUTING_MODE")
+        assert hasattr(config, "JSON_API_PROBE_ATTRIBUTES")
+        assert hasattr(config, "ROUTING_MODE_DSN")
+        assert hasattr(config, "ROUTING_MODE_JSON")
+        assert config.DEFAULT_ROUTING_MODE == config.ROUTING_MODE_DSN
 
 
 # ---------------------------------------------------------------------------
-# Test 3: IPC helpers (board serialization)
+# Test 3: Board JSON helpers (serialization)
 # ---------------------------------------------------------------------------
 
-class TestIpcHelpers:
-    """Test the IPC detection and board serialization logic."""
+class TestBoardJsonHelpers:
+    """Test JSON/API mode detection and board serialization logic."""
 
     PLUGINS_DIR = Path(__file__).parent.parent / "plugins"
 
-    def test_is_ipc_available_runs(self):
-        """is_ipc_available() should return a boolean without crashing."""
+    def test_is_json_api_mode_available_runs(self):
+        """is_json_api_mode_available() should return a boolean without crashing."""
         # Add plugins dir to path so we can import
         sys.path.insert(0, str(self.PLUGINS_DIR.parent))
         try:
-            from plugins.ipc_helpers import is_ipc_available
-            result = is_ipc_available()
+            from plugins.board_json_helpers import is_json_api_mode_available
+            result = is_json_api_mode_available()
             assert isinstance(result, bool)
+        finally:
+            sys.path.pop(0)
+
+    def test_normalize_routing_mode_legacy_ipc_alias(self):
+        """Legacy 'IPC' routing mode alias maps to JSON."""
+        sys.path.insert(0, str(self.PLUGINS_DIR.parent))
+        try:
+            from plugins.config import normalize_routing_mode, ROUTING_MODE_JSON
+            assert normalize_routing_mode("IPC") == ROUTING_MODE_JSON
         finally:
             sys.path.pop(0)
 
@@ -144,7 +155,7 @@ class TestIpcHelpers:
         # that mimics pcbnew.BOARD's interface
         sys.path.insert(0, str(self.PLUGINS_DIR.parent))
         try:
-            from plugins.ipc_helpers import _build_board_json_manually
+            from plugins.board_json_helpers import _build_board_json_manually
 
             # Create a minimal mock board object
             class MockBoard:

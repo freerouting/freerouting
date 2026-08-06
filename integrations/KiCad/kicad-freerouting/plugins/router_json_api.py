@@ -1,10 +1,8 @@
+# router_json_api.py — JSON/API routing workflow
 # ---------------------------------------------------------------------------
-# router_ipc.py — IPC/API-based routing workflow
-# ---------------------------------------------------------------------------
-# This module implements the modern routing workflow: serialize the board
-# to JSON via KiCad's IPC API, start Freerouting as a local REST API
-# server, upload the JSON, start the job, poll for completion, download
-# the result, and apply it back to KiCad.
+# Experimental routing path: serialize the board to JSON via in-process SWIG,
+# start Freerouting as a local REST API server, upload JSON, poll for
+# completion, download the result, and apply it back to KiCad.
 # ---------------------------------------------------------------------------
 
 import json
@@ -28,12 +26,12 @@ from .config import (
     LOG_DIR,
 )
 from .gui_helpers import wx_show_error
-from .ipc_helpers import get_board_json_via_ipc
+from .board_json_helpers import serialize_board_to_json
 from .process_utils import ProcessDialog
 
 
-class IpcRouter:
-    """IPC/API-based routing workflow.
+class JsonApiRouter:
+    """JSON/API routing workflow (experimental).
 
     Orchestrates the full lifecycle: board serialization → API server
     startup → session/job creation → JSON upload → job start → polling
@@ -52,20 +50,20 @@ class IpcRouter:
     # ------------------------------------------------------------------
 
     def run(self):
-        """Execute the complete IPC/API routing workflow.
+        """Execute the complete JSON/API routing workflow.
 
         Returns:
             ``True`` if routing completed and results were applied.
         """
         # Step 1: Serialize board to JSON
-        logger.info("Serializing board to JSON via KiCad IPC API...")
+        logger.info("Serializing board to JSON for JSON/API mode...")
         try:
-            board_json = get_board_json_via_ipc()
+            board_json = serialize_board_to_json()
             logger.info("Serialization succeeded.")
         except Exception as e:
-            logger.error(f"Failed to serialize board to JSON via IPC: {e}", exc_info=True)
+            logger.error(f"Failed to serialize board to JSON: {e}", exc_info=True)
             wx_show_error(textwrap.dedent(f"""
-                Failed to serialize board to JSON via IPC:
+                Failed to serialize board to JSON:
                 {e}
 
                 Falling back to DSN mode.
@@ -85,8 +83,8 @@ class IpcRouter:
         try:
             return self._run_workflow(board_json)
         except Exception as e:
-            logger.error(f"IPC routing workflow failed: {e}", exc_info=True)
-            wx_show_error(f"IPC routing workflow failed:\n{e}")
+            logger.error(f"JSON/API routing workflow failed: {e}", exc_info=True)
+            wx_show_error(f"JSON/API routing workflow failed:\n{e}")
             return False
 
     # ------------------------------------------------------------------
@@ -201,7 +199,7 @@ class IpcRouter:
         dialog = ProcessDialog(
             None,
             textwrap.dedent(f"""
-                Freerouting IPC Routing in Progress
+                Freerouting JSON/API Routing in Progress
                 Job: {job_id}
                 Session: {session_id}
 
@@ -213,7 +211,7 @@ class IpcRouter:
         result = {"success": False, "output_json": None, "cancelled": False}
 
         def poll():
-            logger.info("Starting background poll thread in router_ipc...")
+            logger.info("Starting background poll thread in router_json_api...")
             try:
                 ok, output = client.wait_for_job_completion(
                     job_id,
@@ -281,7 +279,7 @@ class IpcRouter:
     def _apply_result_to_kicad(self, json_str):
         """Apply a KiCad JSON routing result back to the board.
 
-        Tries IPC write-back methods first, then falls back to manual
+        Tries native JSON import methods first, then falls back to manual
         pcbnew API calls.
         """
         try:
@@ -293,7 +291,7 @@ class IpcRouter:
         if board is None:
             raise RuntimeError("No board loaded.")
 
-        # Try IPC write-back
+        # Try native JSON import helpers on pcbnew
         for method_name in ("ApplyBoardJson", "import_json", "ImportBoardJson"):
             if hasattr(pcbnew, method_name):
                 try:
@@ -320,7 +318,7 @@ class IpcRouter:
         unit = data.get("unit", "MM").upper()
         resolution = float(data.get("resolution", 1.0))
         scale = (1e6 / resolution) if unit == "MM" else 1.0
-        logger.info(f"Dynamic coordinate scaling set to: {scale} (unit: {unit}, resolution: {resolution}) in router_ipc")
+        logger.info(f"Dynamic coordinate scaling set to: {scale} (unit: {unit}, resolution: {resolution}) in router_json_api")
 
         # Build net name → net code mapping
         net_map = {}
@@ -340,10 +338,10 @@ class IpcRouter:
         has_commit = hasattr(pcbnew, "BOARD_COMMIT")
         if has_commit:
             commit = pcbnew.BOARD_COMMIT()
-            logger.info("Using BOARD_COMMIT for manual trace/via application in router_ipc.")
+            logger.info("Using BOARD_COMMIT for manual trace/via application in router_json_api.")
         else:
             commit = None
-            logger.info("BOARD_COMMIT not available, applying changes directly in router_ipc.")
+            logger.info("BOARD_COMMIT not available, applying changes directly in router_json_api.")
 
         # Traces
         for trace in data.get("traces", []):
@@ -394,7 +392,7 @@ class IpcRouter:
         if commit:
             try:
                 commit.Push()
-                logger.info("BOARD_COMMIT pushed successfully in router_ipc.")
+                logger.info("BOARD_COMMIT pushed successfully in router_json_api.")
             except Exception as e:
                 logger.error(f"BOARD_COMMIT Push failed, trying commit.Push(board): {e}")
                 try:

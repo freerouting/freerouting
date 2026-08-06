@@ -1,201 +1,228 @@
 # Freerouting v2.3 Release Plan
 
 > **Public tracker:** [GitHub Issue #649](https://github.com/freerouting/freerouting/issues/649)  
-> **Revised:** 2026-08-04 — post manual QA, issue closures, Python client publish, and #649 checklist update  
+> **Revised:** 2026-08-06 (PM) — IPC improvement sprint; clearance gap documented; i18n + TODO complete  
 > **Version in tree:** `2.2.5-SNAPSHOT` (GA target: `2.3.0`)
 
 ---
 
 ## Release Status
 
-**Phase:** Pre-RC — feature work is essentially complete; remaining items are integration sign-off, i18n polish, manual GUI QA, and the release cut.
+**Phase:** IPC improvement sprint → then final QA → RC cut.
 
 | Gate | Status |
 |---|---|
-| Core routing features (fanout, bend cost, DRC stats, edge clearance CLI) | ✅ Done |
+| Core routing (fanout, bend cost, DRC stats, edge clearance CLI) | ✅ Done |
 | MCP + A2A | ✅ Done |
-| KiCad IPC / JSON pipeline (in-repo) | ✅ Implemented — final sign-off pending |
+| KiCad JSON/API pipeline | 🟡 **Experimental** — [`kicad-json-api-mode-improvement-tracker.md`](kicad-json-api-mode-improvement-tracker.md) |
 | Python API client | ✅ Published |
-| Unit test audit | ✅ Done (#649 checked) |
-| Optimizer verification + docs | ✅ Done (#649 checked) |
-| SoC / InteractiveCommand | ✅ Done (#649 checked) |
+| i18n (contextual, missing strings, templates) | ✅ Done |
+| TODO resolution | ✅ Done — 3 intentional TODOs remain |
+| Unit test audit + optimizer docs | ✅ Done |
 | Manual GUI testing | 🔲 Remaining |
-| i18n missing strings + template consistency | 🔲 Remaining |
-| TODO resolution | ✅ Done (3 intentional TODO locations remain, within ≤10 target) |
 | RC tag + GA cut | 🔲 Not started |
 
 ---
 
-## Decisions (updated 2026-08-04)
+## Decisions (updated 2026-08-06)
 
 | Question | Decision | Notes |
 |---|---|---|
-| Copper Plane 152-A | **Not a v2.3 gate** | Ship with known-bug caveat → v2.4 backlog |
-| Star Ground (#383) | **Deferred to v2.4** | Not on #649 checklist; no implementation started; issue stays open |
-| KiCad IPC API | **In scope** | Primary path for KiCad 9/10; supersedes DSN-only fix for #558 |
-| Multi-threading | **Deferred** | v2.5+ |
-| Code modernization + package rename | **Deferred** | Struck through on #649 — too disruptive pre-release |
-| Community beta period | **Deferred** | Struck through on #649 — proceed to GA after internal QA + `./gradlew check` |
-| #558 copper-to-edge (DSN path) | **Mitigated, not fully closed** | CLI `copperToEdgeClearanceUm` + IPC JSON carry full rules; KiCad DSN export gap remains upstream |
+| KiCad JSON/API mode | **Ship as experimental in v2.3** | In-repo JSON/API path exists; **DSN is the default**; JSON/API is opt-in. True KiCad protobuf IPC → v2.4. |
+| Star Ground (#383) | **Deferred to v2.4** | See analysis below; issue stays open |
+| bm01 / bm07 benchmark regressions | **Accepted for v2.3** | Minor unrouted-count drift vs v1.9 on nightly runs; not a GA gate |
+| Copper Plane 152-A | **Not a v2.3 gate** | Known-bug caveat → v2.4 |
+| #558 copper-to-edge | **Partial** | CLI override ✅; DSN export gap upstream; **IPC JSON does not read KiCad edge clearance yet** |
+| Code modernization + package rename | **Deferred** | Struck through on #649 |
+| Community beta | **Skipped** | Proceed to GA after internal GUI QA |
 
 ---
 
-## Completed Work (mapped to #649)
+## Completed (#649 checklist)
 
-### Routing Engine & Performance ✅
+### Routing, API, Integrations
 
-| Item | Evidence |
-|---|---|
-| Better SMD support (`BatchFanout`, `withFanout`, escape-length enforcement) | `BatchFanout.java`, `SmdPinFanoutRoutingTest`; bm05 nightly: 22 unrouted vs v1.9 37 |
-| Single-sided fabrication / bend cost (#156) | `BendCostRoutingTest`, `MazeSearchAlgo`, UI in `WindowAutorouteParameter` |
-| Copper-to-edge clearance support (#558 mitigation) | `copperToEdgeClearanceUm` in `RouterSettings`, `DevBoardClearanceRoutingTest` |
-| `BoardStatistics` full DRC | Uses `DesignRulesChecker.getAllClearanceViolations()` |
-| Layer visibility / virtual display layers (#713) | `WindowSelectParameter` KiCad-style layer panel |
+- Better SMD support, single-sided / bend cost (#156), copper-to-edge CLI (#558 mitigation)
+- MCP + A2A (#566, #588, #589)
+- Python API client update
+- KiCad IPC/JSON **code landed** (PR #765) — release as experimental, not GA-complete integration
 
-### API & Integrations ✅ (mostly)
+### Quality, i18n, maintenance
 
-| Item | Evidence |
-|---|---|
-| MCP server + A2A Agent Card (#566, #588, #589) | `McpControllerV1`, `docs/API/MCP.md` |
-| KiCad IPC JSON — Phases 1–3 (in-repo) | PR #765; `KiCadJsonReader`/`Writer`, plugin `router_ipc.py`, `integrations/KiCad/TESTING.md` |
-| Python API client update | Published externally (`freerouting-python-client`); #649 checked |
+- TODO resolution ✅ (3 remaining, intentional):
+  - `GlobalSettings.java:321` — per-version migration hook placeholder
+  - `GuiBoardManager.java:2730` — thread should receive board+settings only
+  - `BaseController.java:66,73` — email lookup + auth endpoint (API security gap, tracked)
+- i18n: contextual translations, missing strings, template consistency ✅
+- Unit test audit ✅
+- Optimizer verification + docs ✅
+- SoC / `InteractiveCommand` ✅
 
-### Architecture, QA & Docs ✅
-
-| Item | Evidence |
-|---|---|
-| SoC — `InteractiveCommand` pattern | `interactive/commands/InteractiveCommand.java` |
-| Unit test audit | #649 checked; 2 `@Disabled` parity tests documented in `Issue733DsnJsonParityTest` |
-| Optimizer verification | #649 checked |
-| Contextual i18n translations | PRs #748, #769 |
-| TODO audit | Stale TODOs removed; 3 locations kept (`BaseController` auth, `GuiBoardManager` thread coupling, `GlobalSettings` migration hook) |
-
-### Recently Closed Issues (manual verification, 2026-08-03/04)
+### Recently closed (manual verification)
 
 | Issue | Title |
 |---|---|
-| [#742](https://github.com/freerouting/freerouting/issues/742) | Orientation decimal point omitted in SES export → fixed (#746) |
-| [#754](https://github.com/freerouting/freerouting/issues/754) | StackOverflowError opening 6-layer PCB |
-| [#753](https://github.com/freerouting/freerouting/issues/753) | FreeRouter stalling / version sensitivity |
-| [#756](https://github.com/freerouting/freerouting/issues/756) | Hang when opening DSN files |
-| [#757](https://github.com/freerouting/freerouting/issues/757) | StackOverflowError opening a DSN file |
+| [#742](https://github.com/freerouting/freerouting/issues/742) | Orientation decimal in SES export |
+| [#754](https://github.com/freerouting/freerouting/issues/754) | StackOverflowError on 6-layer PCB |
+| [#753](https://github.com/freerouting/freerouting/issues/753) | Stalling / version sensitivity |
+| [#756](https://github.com/freerouting/freerouting/issues/756) | Hang opening DSN |
+| [#757](https://github.com/freerouting/freerouting/issues/757) | StackOverflowError opening DSN |
+
+---
+
+## Today's focus: JSON/API mode (2026-08-06)
+
+Full backlog: [`kicad-json-api-mode-improvement-tracker.md`](kicad-json-api-mode-improvement-tracker.md)
+
+**#558 blocker in JSON/API path:** KiCad exposes edge clearance via `board.GetDesignSettings().m_CopperEdgeClearance`, but the plugin hardcodes `outline.clearance: 0.5` and `KiCadJsonReader` ignores it (`outlineClearanceNo = 1`). **P0 fix:** read → JSON → apply `board_edge` class.
+
+| Priority | Task | Est. |
+|---|---|---|
+| P0 | Wire `m_CopperEdgeClearance` through plugin + Java reader | 2–3 h |
+| P0 | Verify netclass / custom DRU clearance import | 1–2 h |
+| P1 | Issue733 DSN/JSON parity — fix top diffs | 3–4 h |
+| P2 | Plugin: experimental label; DSN default | ✅ Done |
+
+**Milestone #10 open:** [#649](https://github.com/freerouting/freerouting/issues/649) (tracker), [#558](https://github.com/freerouting/freerouting/issues/558) (edge clearance — JSON/API fix in progress), [#729](https://github.com/freerouting/freerouting/issues/729) (config save — unrelated).
+
+---
+
+## KiCad Integration — Experimental in v2.3
+
+**What shipped (PR #765):**
+
+- In-repo: `KiCadJsonReader`/`Writer`, REST endpoints for JSON job I/O, DRC on JSON boards
+- Plugin: dual-mode (`router_json_api.py` + `router_dsn.py`); DSN default, JSON/API opt-in
+- Plugin unit tests under `integrations/KiCad/kicad-freerouting/tests/`
+
+**Why experimental, not GA-ready:**
+
+- **Clearance settings not imported from KiCad** — edge clearance hardcoded; #558 unsolved on JSON/API path (P0)
+- DSN/JSON board parity gaps (`Issue733DsnJsonParityTest` — 2 tests `@Disabled`)
+- JSON/API path not yet validated end-to-end on enough real KiCad 9/10 boards
+- True KiCad protobuf IPC is GUI-only until KiCad 11 (see [Issue-real-kicad-ipc-migration.md](Issue-real-kicad-ipc-migration.md))
+- ✅ Plugin defaults to DSN; JSON/API is opt-in via `ROUTING_MODE_JSON`
+
+**v2.3 release messaging:**
+
+- **Default / recommended:** DSN mode (unchanged workflow, battle-tested)
+- **Experimental:** JSON/API mode — opt-in on KiCad 9/10; report issues
+- **#649 item:** Check off as "delivered experimental" once release notes and plugin UI label are updated
+
+**v2.4 backlog:**
+
+- Fix DSN/JSON parity gaps; re-enable parity tests
+- Manual QA matrix (KiCad 9 + 10, JSON/API + DSN, large/complex boards)
+- Migrate to real KiCad protobuf IPC (Issue-real-kicad-ipc-migration)
+- Document known JSON/API limitations in `integrations/KiCad/TESTING.md` and KiCad plugin README
+
+---
+
+## Star Ground (#383) — Feature Primer
+
+> Full analysis: [`docs/issues/Issue383-star-ground-routing.md`](Issue383-star-ground-routing.md)
+
+### What the reporter wants (issue body, @Dapid, 2024-11)
+
+Star ground is a PCB design practice where every ground return connects to **one common point** via independent traces — no shared ground paths between sub-circuits. Today the workflow is:
+
+1. Manually route each GND pin to a chosen star center
+2. Lock those traces
+3. Run the autorouter for everything else
+
+The pain: the star center location is a guess. If a different point would work better globally, the designer must redo step 1. The request is for Freerouting to **choose the star center and enforce radial topology automatically**.
+
+Comments on the issue are sparse — mostly stale-bot cycles with @Dapid confirming **"Still valid"** (2025-03, 2025-07, 2025-11, 2026-03). No design discussion beyond the original report. Community interest is steady but low-volume.
+
+### Why Freerouting can't do this today
+
+The autorouter builds a **minimum spanning tree** per net (`MazeSearchAlgo`). For GND with N pads it naturally daisy-chains or buses — the opposite of a star. There is no topology constraint.
+
+### Recommended implementation (v2.4, Option B from analysis)
+
+Opt-in via `RouterSettings.starGroundNetNames` (empty by default → zero regression risk):
+
+```
+1. StarGroundPlanner.computeStarCenter(net) → Point (centroid of pins, snapped to valid via site)
+2. Insert a hub via at the star center before routing
+3. Split net into N two-terminal sub-nets: (pin_i ↔ hub) using existing fromto/subnet machinery
+4. Route normally — each arm is independent
+5. Optimizer guard — skip trace merges that would collapse radial arms back into a daisy chain
+```
+
+**Reuse points:** `rules.Net.subnet_number`, DSN `(fromto ...)` parsing in `Network.read_net_scope()`, existing subnet routing in `BatchAutorouter`.
+
+**Hard parts:**
+
+- Virtual hub item must survive `BoardHistory` restores
+- Star center placement affects routability of other nets
+- Optimizer must not undo the topology post-route
+- Interaction with copper pours (`contains_plane`) — star ground is mostly an analog/low-frequency concern; may need to skip plane nets
+- KiCad plugin UI to designate star-ground nets (no DSN-level constraint today)
+
+**Effort estimate:** ~10 developer-days (was Sprint 2 in original roadmap).
 
 ---
 
 ## Remaining Before GA
 
-These are the **only open items** on [#649](https://github.com/freerouting/freerouting/issues/649) still unchecked:
+### 1. Manual GUI testing (~1–2 days)
 
-### 1. KiCad Integration Upgrade — final sign-off (~0.5 day)
+Only unchecked item on #649. Document in `logs/v23-gui-test-results.md`:
 
-Code is merged (PR #765). Remaining work is confirmation, not implementation:
-
-- [ ] Run plugin unit tests: `integrations/KiCad/kicad-freerouting/tests/`
-- [ ] Manual smoke test: KiCad 10 IPC mode (serialize → route → apply)
-- [ ] Manual smoke test: DSN fallback on KiCad without IPC
-- [ ] Check off #649 item once both paths verified
-
-### 2. i18n — Missing Strings (~1 day)
-
-- [ ] Scan `src/main/resources/**/*.properties`; diff non-English locales against `*_en.properties`
-- [ ] Fill gaps (LLM-assisted translations with codebase context)
-- [ ] Optional stretch: Gradle CI task to fail on missing keys (roadmap item 18 — not required for GA if manual audit is clean)
-
-### 3. i18n — Template Consistency (~0.5 day)
-
-- [ ] Verify `{0}`, `{1}` placeholder usage is consistent across all locale files
-- [ ] Fix any mismatched placeholder counts
-
-### 4. Manual GUI Testing (~1–2 days)
-
-Test list from original Sprint 3 plan; document results in `logs/v23-gui-test-results.md`:
-
-- [ ] Router settings panel — all fields round-trip correctly after DSN load
-- [ ] Single-step routing mode — step forward/backward works
-- [ ] Bend cost per-layer input in autoroute parameters
-- [ ] Layer panel — color swatch, eye toggle, active layer, virtual layers (Silk/CY/Fab)
-- [ ] KiCad plugin — IPC mode indicator and progress dialog
+- [ ] Router settings panel round-trip after DSN load
+- [ ] Single-step routing forward/backward
+- [ ] Bend cost per-layer input
+- [ ] Layer panel (color swatch, eye toggle, virtual layers)
+- [ ] KiCad plugin — DSN mode (primary) + experimental IPC label/warning
 - [ ] DSN load on previously failing boards (6-layer, large hierarchies)
 
-### 5. Release Cut (~1 day)
+### 2. Release cut (~1 day)
 
-- [ ] `./gradlew check` green (fast + slow tests)
-- [ ] `compare-versions.ps1` on bm01, bm05, bm07, bm08 — confirm no new clearance regressions
-- [ ] Update `docs/architecture.md`: KiCad JSON/IPC layer, `BatchFanout`, MCP; update `docs/settings.md` for new router fields
-- [ ] Bump `ext.publishInfo.versionId` in `gradle/project-info.gradle` → `2.3.0`
+- [ ] `./gradlew check` green
+- [ ] Update release notes: IPC experimental, DSN recommended, known limitations (#558, #152, bm05 partial)
+- [ ] Mark KiCad plugin JSON/API mode as experimental in UI/docs
+- [ ] Bump `gradle/project-info.gradle` → `2.3.0`
 - [ ] `./gradlew executableJar` + platform installers
-- [ ] Tag `v2.3.0`, publish GitHub release + SNAPSHOT assets
+- [ ] Tag `v2.3.0`, publish GitHub release
 - [ ] Close #649
 
-**Estimated remaining effort: ~4–5 developer-days → GA within one focused week.**
+**Estimated remaining: ~2–3 developer-days.**
 
 ---
 
-## Known Limitations (document in release notes, not blockers)
+## Known Limitations (release notes)
 
-| Item | Status | User-facing guidance |
+| Item | Guidance |
+|---|---|
+| KiCad JSON/API mode | Experimental — DSN is default for production work |
+| [#558](https://github.com/freerouting/freerouting/issues/558) Edge clearance | DSN: use `--router.copperToEdgeClearanceUm=500`. JSON/API: fix in progress (read `m_CopperEdgeClearance`) |
+| [#383](https://github.com/freerouting/freerouting/issues/383) Star ground | Manual lock-and-route workflow unchanged → v2.4 |
+| [#152](https://github.com/freerouting/freerouting/issues/152) Copper plane routing | May introduce clearance violations on plane nets |
+| SMD bm05 | 22 unrouted (nightly) vs v1.9 37 — improved, not perfect |
+| bm01 / bm07 | Minor unrouted regressions vs v1.9 — **accepted** |
+
+---
+
+## Benchmark Snapshot (accepted baselines)
+
+See [`scripts/benchmark/results/benchmarks.md`](../../scripts/benchmark/results/benchmarks.md).
+
+| Fixture | Current (`s2026.08.03`) | Notes |
 |---|---|---|
-| [#558](https://github.com/freerouting/freerouting/issues/558) DSN copper-to-edge | Open (upstream KiCad DSN gap) | Use KiCad IPC mode (KiCad 9/10) or `--router.copperToEdgeClearanceUm=500` for DSN-only |
-| [#383](https://github.com/freerouting/freerouting/issues/383) Star ground | Deferred v2.4 | Manual star-point + lock workflow unchanged |
-| [#152](https://github.com/freerouting/freerouting/issues/152) Copper plane routing | Deferred v2.4 | Plane nets may introduce clearance violations (`interf_u.dsn`: 62 violations) |
-| SMD bm05 full completion | Improved, not perfect | 22 unrouted (nightly) vs v1.9 37; tracked in `docs/issues/smd-pin-fanout-routing.md` |
-| DSN/JSON parity | 2 tests `@Disabled` | IPC path is primary; parity gaps documented in `Issue733DsnJsonParityTest` |
-| bm01 / bm07 routing | Minor regressions vs v1.9 on some nightly runs | Monitor; not a GA gate if `./gradlew check` passes |
+| bm05 | 22 unrouted, 0 violations | Best unrouted across versions |
+| bm06 | 2 unrouted | Better than v1.9 (8) |
+| bm08 | 0 unrouted, score 1000 | Best score |
+| bm11 | 2 unrouted, 0 violations | Best violations |
+| bm01 | 5 unrouted | Accepted regression vs 2.2.4 (0 unrouted) |
+| bm07 | 3 unrouted | Accepted regression vs v1.9 (0 unrouted) |
 
 ---
 
-## Deferred to Post-v2.3
+## Post-v2.3 Backlog (v2.4 focus)
 
-| Item | Target | Reason |
-|---|---|---|
-| Star Ground (#383) | v2.4 | Not started; opt-in feature |
-| Code modernization | v2.4+ | Struck through on #649 |
-| Package reorganization | v2.4+ | Struck through on #649 |
-| Community beta period | Skipped | Owner decision on #649 |
-| Copper Plane 152-A | v2.4 | High risk, root cause unknown |
-| Multi-threaded routing | v2.5+ | Architecture not thread-safe |
-| Bidirectional maze search | v2.4+ | Major `MazeSearchAlgo` rewrite |
-| i18n CI key-check Gradle task | v2.4 | Nice-to-have after manual audit |
-
----
-
-## Sprint History (archived — for reference)
-
-<details>
-<summary>Sprint 1–4 original schedule (2026-05-14 plan)</summary>
-
-### Sprint 1 — Routing Correctness ✅
-
-- BoardStatistics DRC fix, SMD BatchFanout, copperToEdgeClearanceUm, layer visibility panel (#713)
-
-### Sprint 2 — API, Integrations & Features 🟡
-
-- MCP/A2A ✅, KiCad IPC ✅, Bend Cost ✅, Star Ground ❌ (deferred)
-
-### Sprint 3 — Quality & Polish 🟡
-
-- Unit test audit ✅, optimizer docs ✅, SoC ✅, contextual i18n ✅
-- TODO audit ✅, missing i18n 🔲, GUI testing 🔲
-
-### Sprint 4 — Release 🔲
-
-- Code modernization ❌ (deferred), beta ❌ (skipped), architecture docs 🔲, RC/GA cut 🔲
-
-</details>
-
----
-
-## Benchmark Snapshot (2026-08-03 nightly)
-
-See [`scripts/benchmark/results/benchmarks.md`](../../scripts/benchmark/results/benchmarks.md) for full tables.
-
-**Current (`s2026.08.03`) wins vs historical best:**
-
-| Fixture | Unrouted | Violations | Score | Notes |
-|---|---:|---:|---:|---|
-| bm05 | 22 | 0 | 785 | Best unrouted count across all versions |
-| bm06 | 2 | 8 | 963 | Better than v1.9 (8 unrouted) |
-| bm08 | 0 | 1 | 1000 | Best score; 1 violation (DRC now surfaces real issues) |
-| bm11 | 2 | 0 | 987 | Best violations (v1.9 had 17) |
-
-**Watch items:** bm01 (5 unrouted vs 2.2.4's 0), bm07 (3 unrouted vs v1.9's 0). Re-run compare-versions before tagging GA.
+1. **KiCad IPC** — parity fixes, QA, promote from experimental to default
+2. **Star Ground (#383)** — Option B sub-net expansion (see primer above)
+3. **Copper plane 152-A** — clearance violation investigation
+4. **SMD bm05** — remaining 22 unrouted connections
+5. Code modernization + package rename (if ever)

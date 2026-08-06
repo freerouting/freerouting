@@ -28,7 +28,7 @@ logger = logging.getLogger("freerouting")
 class FreeroutingApiClient:
     """Minimal client for the Freerouting REST API (v1).
 
-    Designed for the IPC bridge workflow where the KiCad plugin acts as
+    Designed for the JSON/API bridge workflow where the KiCad plugin acts as
     a local client against a Freerouting server running on localhost.
 
     All public methods return ``None`` or ``False`` on failure and log
@@ -126,7 +126,7 @@ class FreeroutingApiClient:
     # Job management
     # ------------------------------------------------------------------
 
-    def enqueue_job(self, session_id, job_name="KiCad IPC Job"):
+    def enqueue_job(self, session_id, job_name="KiCad JSON Job"):
         """Enqueue a new job in the given session.
 
         Returns:

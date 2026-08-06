@@ -139,7 +139,7 @@ class ProcessDialog(wx.Dialog):
 
     The order of indicators is:
       1. Detecting Java 25+ JRE
-      2. Checking if KiCad IPC API is available
+      2. Checking JSON/API bridge availability (JSON mode only)
       3. Starting up Freerouting API server
       4. Sending board to Freerouting
       5. Auto-router is running
@@ -174,8 +174,8 @@ class ProcessDialog(wx.Dialog):
         self.java_indicator = StatusIndicator(self, "Detecting Java 25+ JRE", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.java_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
 
-        self.ipc_indicator = StatusIndicator(self, "Checking if KiCad IPC API is available", STATUS_UNDETERMINED)
-        indicator_sizer.Add(self.ipc_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
+        self.json_api_indicator = StatusIndicator(self, "Checking JSON/API bridge availability", STATUS_UNDETERMINED)
+        indicator_sizer.Add(self.json_api_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
 
         self.api_indicator = StatusIndicator(self, "Starting up Freerouting API", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.api_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
@@ -224,9 +224,14 @@ class ProcessDialog(wx.Dialog):
         """Update the Java detection indicator."""
         self.java_indicator.set_status(status)
 
-    def set_ipc_status(self, status):
-        """Update the IPC API indicator."""
-        self.ipc_indicator.set_status(status)
+    def set_json_api_status(self, status):
+        """Update the JSON/API bridge indicator."""
+        self.json_api_indicator.set_status(status)
+
+    def hide_json_api_indicator(self):
+        """Hide the JSON/API indicator when running in DSN mode."""
+        self.json_api_indicator.Hide()
+        self.Layout()
 
     def set_api_status(self, status):
         """Update the 'Starting up Freerouting API' indicator."""

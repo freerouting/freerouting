@@ -11,7 +11,7 @@ import tempfile
 from pathlib import Path
 
 # ------------------------------------------------------------------
-# Freerouting API server settings (used when running in IPC/API mode)
+# Freerouting API server settings (used when running in JSON/API mode)
 # ------------------------------------------------------------------
 # The plugin starts Freerouting as a local headless API server.  These
 # values control where it binds and how the plugin connects to it.
@@ -44,11 +44,11 @@ ADOPTIUM_API_URL = (
 MAC_HOMEBREW_JAVA_PATH = "/opt/homebrew/opt/openjdk/bin/java"
 
 # ------------------------------------------------------------------
-# KiCad IPC API detection
+# JSON/API mode — board serialization prerequisites
 # ------------------------------------------------------------------
-# Attribute names we look for on the ``pcbnew`` module to determine
-# whether the running KiCad instance exposes the IPC API.
-IPC_PROBE_ATTRIBUTES = (
+# Attribute names we look for on the ``pcbnew`` module when probing for
+# native JSON export helpers (external KiCad IPC clients only).
+JSON_API_PROBE_ATTRIBUTES = (
     "ipc",
     "IpcApi",
     "GetIpcApi",
@@ -57,14 +57,14 @@ IPC_PROBE_ATTRIBUTES = (
 )
 
 # Method names tried when probing for a JSON-export capability.
-IPC_JSON_EXPORT_METHODS = (
+JSON_API_EXPORT_METHODS = (
     "GetBoardAsJson",
     "board_to_json",
     "ExportBoardJson",
 )
 
-# Minimum KiCad major version that supports IPC.
-IPC_MIN_KICAD_MAJOR = 9
+# Minimum KiCad major version for the JSON/API bridge (SWIG walk + REST).
+JSON_API_MIN_KICAD_MAJOR = 9
 
 # ------------------------------------------------------------------
 # API client defaults
@@ -97,6 +97,19 @@ DEBUG_OUTPUT_JSON_FILENAME = "freerouting_output_board.json"
 # ------------------------------------------------------------------
 # Routing modes
 # ------------------------------------------------------------------
-# "IPC" — use KiCad IPC + Freerouting REST API (preferred, requires KiCad 9+).
-# "DSN" — legacy Specctra DSN file exchange (works with any KiCad version).
-DEFAULT_ROUTING_MODE = "IPC"
+# "DSN" — legacy Specctra DSN file exchange (default; works with all KiCad versions).
+# "JSON" — experimental live JSON/API bridge via SWIG serialization + localhost REST
+#          (requires KiCad 9+).  Not KiCad's official protobuf IPC API.
+ROUTING_MODE_DSN = "DSN"
+ROUTING_MODE_JSON = "JSON"
+DEFAULT_ROUTING_MODE = ROUTING_MODE_DSN
+
+# Legacy alias — "IPC" was the pre-v2.3 name for JSON/API mode.
+_ROUTING_MODE_ALIASES = {"IPC": ROUTING_MODE_JSON}
+
+
+def normalize_routing_mode(mode):
+    """Return a canonical routing mode string."""
+    if mode is None:
+        return DEFAULT_ROUTING_MODE
+    return _ROUTING_MODE_ALIASES.get(mode, mode)

@@ -1,5 +1,8 @@
 # Testing the KiCad Freerouting Plugin
 
+> **JSON/API mode is experimental in Freerouting v2.3.** DSN mode is the default and recommended for production routing.
+> Improvement backlog: [`docs/issues/kicad-json-api-mode-improvement-tracker.md`](../../docs/issues/kicad-json-api-mode-improvement-tracker.md)
+
 ## Overview
 
 This document describes how to test the KiCad Freerouting plugin in an
@@ -133,7 +136,7 @@ pip install pytest pytest-timeout kicad-python PyVirtualDisplay
 
 ```bash
 cd integrations/KiCad/kicad-freerouting
-python -m pytest tests/test_plugin_ipc.py -v -k "TestPluginStructure or TestIpcHelpers or TestApiClient or TestJavaUtils"
+python -m pytest tests/test_plugin_json_api.py -v -k "TestPluginStructure or TestBoardJsonHelpers or TestApiClient or TestJavaUtils"
 ```
 
 ### Full integration test (KiCad required)
