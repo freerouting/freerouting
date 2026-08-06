@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.InteractiveSettings;
@@ -33,6 +34,27 @@ class DialogInteractionHandlersTest {
     verify(boardManager).set_ignore_conduction(true);
     verify(boardManager).set_clearance_compensation(false);
     verify(boardManager).set_pin_edge_to_turn_dist(125.5f);
+  }
+
+  @Test
+  void manualRulesPanel_visibilityFollowsManualRuleSelectionOnly() {
+    InteractiveSettings interactiveSettings = mock(InteractiveSettings.class);
+
+    // Manual rule selection off -> panel hidden
+    when(interactiveSettings.get_manual_rule_selection()).thenReturn(false);
+    assertFalse(WindowRouteParameter.isManualRulesPanelVisible(interactiveSettings));
+
+    // Manual rule selection on -> panel visible
+    when(interactiveSettings.get_manual_rule_selection()).thenReturn(true);
+    assertTrue(WindowRouteParameter.isManualRulesPanelVisible(interactiveSettings));
+
+    // Changing an unrelated setting must not affect panel visibility.
+    // The panel visibility is driven solely by manual_rule_selection, so
+    // toggling push_enabled (which fires a property change and triggers refresh)
+    // must not re-show the panel.
+    when(interactiveSettings.get_manual_rule_selection()).thenReturn(false);
+    interactiveSettings.set_push_enabled(true);
+    assertFalse(WindowRouteParameter.isManualRulesPanelVisible(interactiveSettings));
   }
 
   @Test

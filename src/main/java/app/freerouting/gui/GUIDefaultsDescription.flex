@@ -78,7 +78,6 @@ Identifier = ({Letter}|{SpecChar})({Letter}|{Digit}|{SpecChar})*
    "keepout"                   { return GUIDefaultsFile.Keyword.KEEPOUT; }
    "layer_visibility"          { return GUIDefaultsFile.Keyword.LAYER_VISIBILITY; }
    "length_matching"           { return GUIDefaultsFile.Keyword.LENGTH_MATCHING; }
-   "manual_rules"              { return GUIDefaultsFile.Keyword.MANUAL_RULES; }
    "manual_rule_settings"      { return GUIDefaultsFile.Keyword.MANUAL_RULE_SETTINGS; }
    "move_parameter"            { return GUIDefaultsFile.Keyword.MOVE_PARAMETER; }
    "net_info"                  { return GUIDefaultsFile.Keyword.NET_INFO; }

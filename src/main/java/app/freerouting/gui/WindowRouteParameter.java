@@ -4,14 +4,16 @@ import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardOutline;
 import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.ClearanceMatrix;
+import app.freerouting.rules.ViaRule;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,21 +22,23 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.text.NumberFormat;
 import java.util.Collection;
 import javax.swing.ButtonGroup;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.border.Border;
-import javax.swing.BorderFactory;
 
 /**
  * Window handling parameters of the interactive routing.
@@ -45,7 +49,6 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private static final int c_region_scale_factor = 200;
   private static final int c_accuracy_max_slider_value = 100;
   private static final int c_accuracy_scale_factor = 20;
-  final WindowManualRules manual_rule_window;
   private final GuiBoardManager guiBoardManager;
   private final JSlider region_slider;
   private final JFormattedTextField region_width_field;
@@ -74,6 +77,12 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private final JFormattedTextField clearance_value_field;
   private final JLabel clearance_suffix_label;
   private final JCheckBox route_detail_outline_keepout_check_box;
+  // Inline manual rule selection controls (replaces the former WindowManualRules popup).
+  private final JPanel manual_rules_panel;
+  private JComboBox<ViaRule> manual_via_rule_combo_box;
+  private ComboBoxClearance manual_clearance_combo_box;
+  private JFormattedTextField manual_trace_width_field;
+  private ComboBoxLayer manual_layer_combo_box;
   private boolean updating_controls = false;
   private boolean key_input_completed = true;
 
@@ -82,7 +91,6 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
    */
   public WindowRouteParameter(BoardFrame p_board_frame) {
     this.guiBoardManager = p_board_frame.board_panel.board_handling;
-    this.manual_rule_window = new WindowManualRules(p_board_frame);
 
     setLanguage(p_board_frame.get_locale());
 
@@ -206,7 +214,15 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     main_panel.add(settings_routing_automatic_button);
     gridbag.setConstraints(settings_routing_manual_button, gridbag_constraints);
     main_panel.add(settings_routing_manual_button);
-    
+
+    // Inline manual rule selection panel (replaces the former WindowManualRules popup).
+    this.manual_rules_panel = createManualRulesPanel(p_board_frame);
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridheight = 1;
+    gridbag.setConstraints(this.manual_rules_panel, gridbag_constraints);
+    main_panel.add(this.manual_rules_panel);
+    this.manual_rules_panel.setVisible(false);
+
     addSeparator(main_panel, gridbag, gridbag_constraints);
 
     // add check boxes
@@ -409,12 +425,149 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     this.refresh();
     this.pack();
-    this.setResizable(false);
+    this.setResizable(true);
 
     InteractiveSettings is = this.guiBoardManager.getInteractiveSettings();
     if (is != null) {
       is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
     }
+  }
+
+  /**
+   * Builds the inline panel containing the manual rule selection controls
+   * (via rule, clearance class, trace width, layer). This replaces the former
+   * {@code WindowManualRules} popup window.
+   */
+  private JPanel createManualRulesPanel(BoardFrame p_board_frame) {
+    JPanel panel = new JPanel();
+    GridBagLayout gridbag = new GridBagLayout();
+    panel.setLayout(gridbag);
+    String groupTitle = tm.getText("manual_rule_selection_group");
+    if (groupTitle != null) {
+      panel.setBorder(BorderFactory.createTitledBorder(groupTitle));
+    }
+    GridBagConstraints constraints = new GridBagConstraints();
+    constraints.anchor = GridBagConstraints.WEST;
+    constraints.insets = new Insets(1, 10, 1, 10);
+
+    JLabel via_rule_label = new JLabel(tm.getText("via_rule"));
+    constraints.gridwidth = 2;
+    gridbag.setConstraints(via_rule_label, constraints);
+    panel.add(via_rule_label);
+
+    var viaRules = guiBoardManager.get_routing_board().rules.via_rules;
+    if (viaRules != null && !viaRules.isEmpty()) {
+      this.manual_via_rule_combo_box = new JComboBox<>(viaRules);
+    } else {
+      this.manual_via_rule_combo_box = new JComboBox<>();
+    }
+    constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(this.manual_via_rule_combo_box, constraints);
+    panel.add(this.manual_via_rule_combo_box);
+    this.manual_via_rule_combo_box.addActionListener(new ViaRuleComboBoxListener());
+
+    JLabel class_label = new JLabel(tm.getText("trace_clearance_class"));
+    constraints.gridwidth = 2;
+    gridbag.setConstraints(class_label, constraints);
+    panel.add(class_label);
+
+    ClearanceMatrix clearanceMatrix = guiBoardManager.get_routing_board().rules.clearance_matrix;
+    this.manual_clearance_combo_box = new ComboBoxClearance(clearanceMatrix);
+    constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(this.manual_clearance_combo_box, constraints);
+    panel.add(this.manual_clearance_combo_box);
+    this.manual_clearance_combo_box.addActionListener(new ClearanceComboBoxListener());
+
+    JLabel separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
+    constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(separator, constraints);
+    panel.add(separator, constraints);
+
+    JLabel width_label = new JLabel(tm.getText("trace_width"));
+    constraints.gridwidth = 2;
+    gridbag.setConstraints(width_label, constraints);
+    panel.add(width_label);
+    NumberFormat number_format = NumberFormat.getInstance(p_board_frame.get_locale());
+    number_format.setMaximumFractionDigits(7);
+    this.manual_trace_width_field = new JFormattedTextField(number_format);
+    this.manual_trace_width_field.setColumns(7);
+    int curr_half_width = this.guiBoardManager.getInteractiveSettings().get_manual_trace_half_width(0);
+    this.set_manual_trace_width_field(curr_half_width);
+    constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(this.manual_trace_width_field, constraints);
+    panel.add(this.manual_trace_width_field);
+    this.manual_trace_width_field.addKeyListener(new ManualTraceWidthFieldKeyListener());
+    this.manual_trace_width_field.addFocusListener(new ManualTraceWidthFieldFocusListener());
+
+    JLabel layer_label = new JLabel(tm.getText("on_layer"));
+    constraints.gridwidth = 2;
+    gridbag.setConstraints(layer_label, constraints);
+    panel.add(layer_label);
+
+    this.manual_layer_combo_box = new ComboBoxLayer(this.guiBoardManager.get_routing_board().layer_structure, p_board_frame.get_locale());
+    constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(this.manual_layer_combo_box, constraints);
+    panel.add(this.manual_layer_combo_box);
+    this.manual_layer_combo_box.addActionListener(new ManualLayerComboBoxListener());
+    this.manual_layer_combo_box.addActionListener(
+        _ -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_layer_combo_box", this.manual_layer_combo_box
+            .getSelectedItem()
+            .toString()));
+
+    return panel;
+  }
+
+  /**
+   * Sets the trace width field to the given half width (in board units).
+   */
+  private void set_manual_trace_width_field(int p_half_width) {
+    if (p_half_width < 0) {
+      this.manual_trace_width_field.setText("");
+    } else {
+      Float trace_width = (float) guiBoardManager.coordinate_transform.board_to_user(2 * p_half_width);
+      this.manual_trace_width_field.setValue(trace_width);
+    }
+  }
+
+  /**
+   * Sets the selected layer of the manual layer combo box and updates the trace width field.
+   */
+  private void set_manual_selected_layer(ComboBoxLayer.Layer p_layer) {
+    int curr_half_width;
+    if (p_layer.index == ComboBoxLayer.ALL_LAYER_INDEX) {
+      // check if the half width is layer_dependent.
+      boolean trace_widths_layer_dependent = false;
+      int first_half_width = this.guiBoardManager.getInteractiveSettings().get_manual_trace_half_width(0);
+      for (int i = 1; i < this.guiBoardManager.get_layer_count(); i++) {
+        if (this.guiBoardManager.getInteractiveSettings().get_manual_trace_half_width(i) != first_half_width) {
+          trace_widths_layer_dependent = true;
+          break;
+        }
+      }
+      if (trace_widths_layer_dependent) {
+        curr_half_width = -1;
+      } else {
+        curr_half_width = first_half_width;
+      }
+    } else if (p_layer.index == ComboBoxLayer.INNER_LAYER_INDEX) {
+      // check if the half width is layer_dependent on the inner layers.
+      boolean trace_widths_layer_dependent = false;
+      int first_half_width = this.guiBoardManager.getInteractiveSettings().get_manual_trace_half_width(1);
+      for (int i = 2; i < this.guiBoardManager.get_layer_count() - 1; i++) {
+        if (this.guiBoardManager.getInteractiveSettings().get_manual_trace_half_width(i) != first_half_width) {
+          trace_widths_layer_dependent = true;
+          break;
+        }
+      }
+      if (trace_widths_layer_dependent) {
+        curr_half_width = -1;
+      } else {
+        curr_half_width = first_half_width;
+      }
+    } else {
+      curr_half_width = this.guiBoardManager.getInteractiveSettings().get_manual_trace_half_width(p_layer.index);
+    }
+    set_manual_trace_width_field(curr_half_width);
   }
 
   // Inject standard JSeparators keeping sizing under control
@@ -443,30 +596,13 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   @Override
-  public void dispose() {
-    manual_rule_window.dispose();
-    super.dispose();
-  }
-
-  @Override
   public boolean read(ObjectInputStream p_object_stream) {
     boolean read_ok = super.read(p_object_stream);
     if (!read_ok) {
       return false;
     }
-    read_ok = manual_rule_window.read(p_object_stream);
-    if (!read_ok) {
-      return false;
-    }
-    this.manual_trace_width_listener.first_time = false;
     this.refresh();
     return true;
-  }
-
-  @Override
-  public void save(ObjectOutputStream p_object_stream) {
-    super.save(p_object_stream);
-    manual_rule_window.save(p_object_stream);
   }
 
   @Override
@@ -489,13 +625,13 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
           settings_routing_dynamic_button.setSelected(true);
       }
 
-      if (this.guiBoardManager.getInteractiveSettings().get_manual_rule_selection()) {
-          settings_routing_manual_button.setSelected(true);
-        if (this.manual_rule_window != null) {
-          this.manual_rule_window.setVisible(true);
-        }
-      } else {
-          settings_routing_automatic_button.setSelected(true);
+      boolean manual_rule_selection = this.guiBoardManager.getInteractiveSettings().get_manual_rule_selection();
+      settings_routing_manual_button.setSelected(manual_rule_selection);
+      settings_routing_automatic_button.setSelected(!manual_rule_selection);
+      boolean wasVisible = this.manual_rules_panel.isVisible();
+      this.manual_rules_panel.setVisible(manual_rule_selection);
+      if (wasVisible != manual_rule_selection) {
+        javax.swing.SwingUtilities.invokeLater(this::pack);
       }
 
       this.settings_routing_shove_check_box.setSelected(this.guiBoardManager.getInteractiveSettings().get_push_enabled());
@@ -518,9 +654,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       region_slider.setValue(region_slider_value);
       region_width_field.setValue(this.guiBoardManager.coordinate_transform.board_to_user(region_slider_value * c_region_scale_factor));
 
-      if (this.manual_rule_window != null) {
-        this.manual_rule_window.refresh();
-      }
+      refreshManualRulesPanel();
 
       this.edge_to_turn_suffix_label.setText(this.guiBoardManager.coordinate_transform.user_unit.toString());
       this.region_suffix_label.setText(this.guiBoardManager.coordinate_transform.user_unit.toString());
@@ -557,16 +691,23 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
   }
 
-  @Override
-  public void parent_iconified() {
-    manual_rule_window.parent_iconified();
-    super.parent_iconified();
-  }
-
-  @Override
-  public void parent_deiconified() {
-    manual_rule_window.parent_deiconified();
-    super.parent_deiconified();
+  /**
+   * Refreshes the values in the inline manual rule selection panel.
+   */
+  private void refreshManualRulesPanel() {
+    RoutingBoard routing_board = guiBoardManager.get_routing_board();
+    ComboBoxModel<ViaRule> new_model = new DefaultComboBoxModel<>(routing_board.rules.via_rules);
+    this.manual_via_rule_combo_box.setModel(new_model);
+    ClearanceMatrix clearance_matrix = routing_board.rules.clearance_matrix;
+    if (this.manual_clearance_combo_box.get_class_count() != clearance_matrix.get_class_count()) {
+      this.manual_clearance_combo_box.adjust(clearance_matrix);
+    }
+    this.manual_clearance_combo_box.setSelectedIndex(guiBoardManager.getInteractiveSettings().get_manual_trace_clearance_class());
+    int via_rule_index = guiBoardManager.getInteractiveSettings().get_manual_via_rule_index();
+    if (via_rule_index < this.manual_via_rule_combo_box.getItemCount()) {
+      this.manual_via_rule_combo_box.setSelectedIndex(via_rule_index);
+    }
+    this.set_manual_selected_layer(this.manual_layer_combo_box.get_selected_layer());
   }
 
   private void set_pull_tight_region_width(int p_slider_value) {
@@ -699,6 +840,19 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     p_board_manager.set_pin_edge_to_turn_dist(p_value);
   }
 
+  /**
+   * Returns whether the inline manual rule selection panel should be visible
+   * for the given interactive settings. The panel is visible if and only if
+   * manual rule selection is active. This is the single source of truth for
+   * panel visibility, so that changing any unrelated setting (e.g. push
+   * enabled, pull-tight accuracy) never re-shows the panel unexpectedly.
+   *
+   * <p>Used by unit tests to verify the manual-rule-panel visibility behavior.
+   */
+  public static boolean isManualRulesPanelVisible(InteractiveSettings p_interactive_settings) {
+    return p_interactive_settings.get_manual_rule_selection();
+  }
+
   private class SnapAngle90Listener implements ActionListener {
 
     @Override
@@ -797,23 +951,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      manual_rule_window.setVisible(false);
       guiBoardManager.getInteractiveSettings().set_manual_tracewidth_selection(false);
     }
   }
 
   private class ManualTraceWidthListener implements ActionListener {
 
-    boolean first_time = true;
-
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      if (first_time) {
-        Point location = getLocation();
-        manual_rule_window.setLocation((int) location.getX() + 200, (int) location.getY() + 200);
-        first_time = false;
-      }
-      manual_rule_window.setVisible(true);
       guiBoardManager.getInteractiveSettings().set_manual_tracewidth_selection(true);
     }
   }
@@ -1068,6 +1213,77 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (outline != null) {
         outline.generate_keepout_outside(route_detail_outline_keepout_check_box.isSelected());
       }
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // Inline manual rule selection listeners (moved from WindowManualRules).
+  // -------------------------------------------------------------------------
+
+  private class ManualLayerComboBoxListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+      ComboBoxLayer.Layer new_selected_layer = manual_layer_combo_box.get_selected_layer();
+      set_manual_selected_layer(new_selected_layer);
+    }
+  }
+
+  private class ClearanceComboBoxListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+      int new_index = manual_clearance_combo_box.get_selected_class_index();
+      guiBoardManager.getInteractiveSettings().set_manual_trace_clearance_class(new_index);
+    }
+  }
+
+  private class ViaRuleComboBoxListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+      int new_index = manual_via_rule_combo_box.getSelectedIndex();
+      guiBoardManager.getInteractiveSettings().set_manual_via_rule_index(new_index);
+    }
+  }
+
+  private class ManualTraceWidthFieldKeyListener extends KeyAdapter {
+
+    @Override
+    public void keyTyped(KeyEvent p_evt) {
+      if (p_evt.getKeyChar() == '\n') {
+        key_input_completed = true;
+        Object input = manual_trace_width_field.getValue();
+        if (!(input instanceof Number)) {
+          return;
+        }
+        double input_value = ((Number) input).doubleValue();
+        if (input_value <= 0) {
+          return;
+        }
+        double board_value = guiBoardManager.coordinate_transform.user_to_board(input_value);
+        int new_half_width = (int) Math.round(0.5 * board_value);
+        guiBoardManager.set_manual_trace_half_width(manual_layer_combo_box.get_selected_layer().index, new_half_width);
+        set_manual_trace_width_field(new_half_width);
+      } else {
+        key_input_completed = false;
+      }
+    }
+  }
+
+  private class ManualTraceWidthFieldFocusListener implements FocusListener {
+
+    @Override
+    public void focusLost(FocusEvent p_evt) {
+      if (!key_input_completed) {
+        // restore the text field.
+        set_manual_selected_layer(manual_layer_combo_box.get_selected_layer());
+        key_input_completed = true;
+      }
+    }
+
+    @Override
+    public void focusGained(FocusEvent p_evt) {
     }
   }
 }
