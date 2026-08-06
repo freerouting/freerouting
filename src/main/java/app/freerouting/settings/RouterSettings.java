@@ -25,6 +25,21 @@ public class RouterSettings implements Serializable, Cloneable {
   /** Enable power trunk routing after fanout escape vias are placed. */
   @SerializedName("route_power_trunks")
   public Boolean routePowerTrunksAfterFanout;
+  /**
+   * Enable the experimental multi-threaded ripup pass. Defaults to OFF: the
+   * underlying {@code autoroute_pass_multi_thread} is still a work in progress,
+   * so it must never be selected implicitly from the thread count.
+   */
+  @SerializedName("parallel_passes")
+  public Boolean parallelPassesEnabled;
+  /**
+   * Enable the experimental post-routing stub minimization pass. Defaults to OFF
+   * because the endpoint test matches exact corner coordinates and therefore
+   * cannot distinguish a dangling stub from a T-junction or a trace that
+   * terminates on a pad edge rather than the pad centre.
+   */
+  @SerializedName("minimize_stubs")
+  public Boolean minimizeStubsEnabled;
   @SerializedName("copper_to_edge_clearance_um")
   public Double copperToEdgeClearanceUm;
   @SerializedName("job_timeout")
@@ -405,6 +420,8 @@ public class RouterSettings implements Serializable, Cloneable {
     result.scoring = this.scoring != null ? this.scoring.clone() : new RouterScoringSettings();
     result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
     result.routePowerTrunksAfterFanout = this.routePowerTrunksAfterFanout;
+    result.parallelPassesEnabled = this.parallelPassesEnabled;
+    result.minimizeStubsEnabled = this.minimizeStubsEnabled;
 
     return result;
   }
@@ -463,6 +480,32 @@ public class RouterSettings implements Serializable, Cloneable {
 
   public boolean isRoutePowerTrunksEnabled() {
     return routePowerTrunksAfterFanout != null && Boolean.TRUE.equals(routePowerTrunksAfterFanout);
+  }
+
+  /** Experimental multi-threaded ripup pass. Off unless explicitly enabled. */
+  public boolean isParallelPassesEnabled() {
+    return Boolean.TRUE.equals(parallelPassesEnabled);
+  }
+
+  public void setParallelPassesEnabled(Boolean value) {
+    Boolean oldValue = this.parallelPassesEnabled;
+    this.parallelPassesEnabled = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("parallelPasses", oldValue, value);
+    }
+  }
+
+  /** Experimental post-routing stub minimization. Off unless explicitly enabled. */
+  public boolean isMinimizeStubsEnabled() {
+    return Boolean.TRUE.equals(minimizeStubsEnabled);
+  }
+
+  public void setMinimizeStubsEnabled(Boolean value) {
+    Boolean oldValue = this.minimizeStubsEnabled;
+    this.minimizeStubsEnabled = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("minimizeStubs", oldValue, value);
+    }
   }
 
   public void setRoutePowerTrunksEnabled(Boolean value) {

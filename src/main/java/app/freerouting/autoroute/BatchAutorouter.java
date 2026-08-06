@@ -153,8 +153,12 @@ public class BatchAutorouter extends NamedAlgorithm {
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
     while (still_unrouted_items && !job.thread.is_stop_auto_router_requested() && curr_pass_no <= p_max_pass_count) {
-      // Phase 4: Use multi-threaded routing if multiple threads available
-      boolean useMultiThread = routerSettings.maxThreads != null && routerSettings.maxThreads > 1;
+      // Phase 4: multi-threaded ripup pass. OPT-IN ONLY.
+      // autoroute_pass_multi_thread is still a work in progress (see its javadoc),
+      // so it must not be selected implicitly from the thread count -- maxThreads
+      // defaults to (cores - 1), which would silently enable it for almost everyone.
+      boolean useMultiThread = routerSettings.isParallelPassesEnabled()
+          && routerSettings.maxThreads != null && routerSettings.maxThreads > 1;
       if (useMultiThread) {
         still_unrouted_items = router_instance.autoroute_pass_multi_thread(curr_pass_no);
       } else {
@@ -166,9 +170,13 @@ public class BatchAutorouter extends NamedAlgorithm {
     }
     router_instance.remove_tails(Item.StopConnectionOption.NONE);
 
-    // Post-routing optimization: stub minimization (remove unused trace stubs)
-    // Reduces signal integrity degradation from stub reflections
-    router_instance.minimize_stubs();
+    // Post-routing optimization: stub minimization (remove unused trace stubs).
+    // OPT-IN ONLY -- this pass removes copper, and its endpoint test compares exact
+    // corner coordinates, so it cannot tell a dangling stub from a T-junction or a
+    // trace terminating on a pad edge. Never run it unless explicitly requested.
+    if (router_instance.settings.isMinimizeStubsEnabled()) {
+      router_instance.minimize_stubs();
+    }
 
     if (!still_unrouted_items) {
       --curr_pass_no;
@@ -429,10 +437,13 @@ public class BatchAutorouter extends NamedAlgorithm {
         int first_end_contacts = countContacts(first_corner, trace.get_layer(), trace);
         int last_end_contacts = countContacts(last_corner, trace.get_layer(), trace);
 
-        // If either end has only 1 contact (the trace itself), it's a stub
-        if ((first_end_contacts == 1 || last_end_contacts == 1) &&
-            trace.net_count() > 0 &&
-            isDifferentialPairMember(board.rules.nets.get(trace.get_net_no(0)).name)) {
+        // A stub is an end with NO other item on it. countContacts already excludes
+        // this trace, so a normal pad->via segment reports 1 at each end -- testing
+        // for 1 here deleted correctly routed copper.
+        Net trace_net = trace.net_count() > 0 ? board.rules.nets.get(trace.get_net_no(0)) : null;
+        if ((first_end_contacts == 0 || last_end_contacts == 0) &&
+            trace_net != null && trace_net.name != null &&
+            isDifferentialPairMember(trace_net.name)) {
           // For high-speed nets, remove obvious stubs
           try {
             board.remove_item(trace_item);
