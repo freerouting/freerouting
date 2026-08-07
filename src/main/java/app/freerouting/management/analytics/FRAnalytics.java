@@ -169,16 +169,35 @@ public class FRAnalytics {
   }
 
   public static void identify() {
+    identifyAnonymous(permanent_user_id, buildIdentifyTraits());
+  }
+
+  /**
+   * Re-sends the current profile traits after the user updates email or consent settings.
+   * Keeps {@code first_seen} stable so returning users are not misclassified as new.
+   */
+  public static void refreshIdentity() {
+    identifyAnonymous(permanent_user_id, buildIdentifyTraits());
+  }
+
+  private static Map<String, String> buildIdentifyTraits() {
     Map<String, String> traits = new HashMap<>();
     traits.put("anonymous", "true");
     traits.put("user_id", permanent_user_id);
     traits.put("user_email", permanent_user_email);
-    traits.put("first_seen", Instant.now().toString());
+    String firstSeen = globalSettings.statistics.startTime;
+    if (firstSeen == null || firstSeen.isBlank()) {
+      firstSeen = Instant
+          .now()
+          .toString();
+    }
+    traits.put("first_seen", firstSeen);
     traits.put("client_version", globalSettings.version);
     traits.put("os_name", System.getProperty("os.name"));
     traits.put("os_version", System.getProperty("os.version"));
-    // identifyUser(permanent_user_id, traits);
-    identifyAnonymous(permanent_user_id, traits);
+    traits.put("allow_telemetry", Boolean.toString(globalSettings.userProfileSettings.isTelemetryAllowed));
+    traits.put("allow_contact", Boolean.toString(globalSettings.userProfileSettings.isContactAllowed));
+    return traits;
   }
 
   public static void setAppLocation(String windowClassName, String windowTitle) {

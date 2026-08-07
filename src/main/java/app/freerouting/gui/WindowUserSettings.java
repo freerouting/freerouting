@@ -165,6 +165,10 @@ JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEm
       @Override
       public void actionPerformed(ActionEvent e) {
         globalSettings.userProfileSettings.userEmail = emailField.getText();
+        FRAnalytics.setUserId(
+            globalSettings.userProfileSettings.userId,
+            globalSettings.userProfileSettings.userEmail);
+        FRAnalytics.refreshIdentity();
         try {
           GlobalSettings.saveAsJson(globalSettings);
         } catch (IOException ex) {

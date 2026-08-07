@@ -101,7 +101,7 @@ public class AnalyticsControllerV1 {
         .build();
   }
 
-  @Operation(summary = "Identify user", description = "Associates user traits (e.g. anonymous, user_id, user_email, first_seen, client_version, os_name, os_version) with a user ID or anonymous ID and persists them to BigQuery for analytics purposes.")
+  @Operation(summary = "Identify user", description = "Associates user traits (e.g. anonymous, user_id, user_email, first_seen, client_version, os_name, os_version, allow_telemetry, allow_contact) with a user ID or anonymous ID and persists them to BigQuery for analytics purposes.")
   @RequestBody(description = "User identification payload containing user traits", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Payload.class), examples = @ExampleObject(name = "Anonymous client session", value = """
       {
         "anonymousId": "550e8400-e29b-41d4-a716-446655440000",
@@ -112,7 +112,9 @@ public class AnalyticsControllerV1 {
           "first_seen": "2026-06-09T10:00:00Z",
           "client_version": "2.0.0",
           "os_name": "Linux",
-          "os_version": "5.15.0"
+          "os_version": "5.15.0",
+          "allow_telemetry": "true",
+          "allow_contact": "true"
         }
       }
       """)))
