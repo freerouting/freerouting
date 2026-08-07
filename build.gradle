@@ -589,7 +589,13 @@ rewrite {
 tasks.register('phase2FieldReferenceRenames', Exec) {
     group = 'rewrite'
     description = 'Apply cross-file field reference renames from build/field-renames.tsv'
-    commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1'
+    def pkgs = System.getProperty('rewrite.targetPackages', '')
+    if (pkgs) {
+        def pkgList = pkgs.split(',').collect { it.trim() }
+        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1', '-TargetPackages', pkgList.join(',')
+    } else {
+        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1'
+    }
 }
 
 tasks.register('phase2aFieldsPost') {

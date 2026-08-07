@@ -1,6 +1,7 @@
 # Applies cross-file field reference renames using build/field-renames.tsv
 # produced by RenameInstanceFieldsToCamelCase.
 param(
+    [string[]]$TargetPackages = @(),
     [string[]]$SourceRoots = @("src/main/java", "src/test/java"),
     [string]$RenameMapPath = "build/field-renames.tsv"
 )
@@ -28,7 +29,21 @@ $tabChar = [char]9
 foreach ($line in $lines) {
     if ([string]::IsNullOrWhiteSpace($line)) { continue }
     $parts = $line.Split($tabChar)
-    if ($parts.Length -ge 2) {
+    if ($parts.Length -ge 3) {
+        $classFqn = $parts[0].Trim()
+        $oldName  = $parts[1].Trim()
+        $newName  = $parts[2].Trim()
+        if ($TargetPackages.Length -gt 0) {
+            $matched = $false
+            foreach ($pkg in $TargetPackages) {
+                if ($classFqn.StartsWith($pkg)) { $matched = $true; break }
+            }
+            if (-not $matched) { continue }
+        }
+        if ($oldName -and $newName -and ($oldName -cne $newName)) {
+            $renames[$oldName] = $newName
+        }
+    } elseif ($parts.Length -ge 2 -and $TargetPackages.Length -eq 0) {
         $oldName = $parts[0].Trim()
         $newName = $parts[1].Trim()
         if ($oldName -and $newName -and ($oldName -cne $newName)) {
@@ -37,10 +52,10 @@ foreach ($line in $lines) {
     }
 }
 
-[Console]::WriteLine("Loaded $($renames.Count) renames into hashtable.")
+[Console]::WriteLine("Loaded $($renames.Count) renames into hashtable (TargetPackages: '$($TargetPackages -join ', ')').")
 
 if ($renames.Count -eq 0) {
-    [Console]::WriteLine("Rename map is empty - nothing to do.")
+    [Console]::WriteLine("Rename map is empty for target packages - nothing to do.")
     exit 0
 }
 

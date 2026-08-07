@@ -294,7 +294,7 @@ public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstan
       changesByClass.computeIfAbsent(enclosingClassFqn, k -> new ArrayList<>()).add(change);
       renameMap.put(change.getHasName(), change.getToName());
       COLLECTED_RENAMES.put(change.getHasName(), change.getToName());
-      appendRenameToMapFile(change.getHasName(), change.getToName());
+      appendRenameToMapFile(enclosingClassFqn, change.getHasName(), change.getToName());
     }
 
     List<ChangeFieldName> changesForClass(String fqn) {
@@ -322,12 +322,12 @@ public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstan
     }
   }
 
-  private static void appendRenameToMapFile(String fromName, String toName) {
+  private static void appendRenameToMapFile(String classFqn, String fromName, String toName) {
     try {
       Files.createDirectories(RENAME_MAP_PATH.getParent());
       Files.writeString(
           RENAME_MAP_PATH,
-          fromName + '\t' + toName + '\n',
+          classFqn + '\t' + fromName + '\t' + toName + '\n',
           java.nio.file.StandardOpenOption.CREATE,
           java.nio.file.StandardOpenOption.APPEND);
     } catch (IOException e) {
@@ -337,7 +337,6 @@ public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstan
 
   static void writeRenameMapFile(Map<String, String> renames) {
     try {
-      writeRenameMapFileTo(RENAME_MAP_PATH, renames);
       writeRenameMapFileTo(RENAME_MAP_FALLBACK_PATH, renames);
     } catch (IOException e) {
       throw new IllegalStateException("Failed to write field rename map", e);
