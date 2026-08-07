@@ -24,6 +24,15 @@ java.toolchain {
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+sourceSets {
+    rewriteRecipes {
+        java {
+            srcDirs = ['src/rewrite/java']
+        }
+    }
+}
+
+
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
@@ -192,6 +201,12 @@ dependencies {
     rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.41.0'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
     rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.43.0'
+
+    rewriteRecipesImplementation 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
+    rewriteRecipesImplementation 'org.openrewrite:rewrite-java:8.88.0'
+    rewriteRecipesImplementation 'org.openrewrite:rewrite-core:8.88.0'
+    rewrite sourceSets.rewriteRecipes.output
+
 
     // ArchUnit: package-architecture enforcement
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.5.0'
@@ -570,6 +585,39 @@ rewrite {
     // Protect the v1.9 reference implementation (src_v19 source set) — it must stay unmodified.
     exclusion("src_v19/**")
     exclusion("**/src_v19/**")
+
+tasks.register('phase2FieldReferenceRenames', Exec) {
+    group = 'rewrite'
+    description = 'Apply cross-file field reference renames from build/field-renames.tsv'
+    commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1'
+}
+
+tasks.register('phase2aFieldsPost') {
+    group = 'rewrite'
+    description = 'Post-steps after Phase2aFields: field reference fallback + spotlessApply'
+    dependsOn(tasks.named('phase2FieldReferenceRenames'), tasks.named('spotlessApply'))
+}
+
+tasks.register('phase2fPost') {
+    group = 'rewrite'
+    description = 'Post-steps after Phase2fLocalVariables: spotlessApply only'
+    dependsOn(tasks.named('spotlessApply'))
+}
+
+tasks.register('phase2Naming') {
+    group = 'rewrite'
+    description = 'Phase 2 post-steps: field reference fallback + spotlessApply (run rewriteRun first)'
+    dependsOn(tasks.named('phase2FieldReferenceRenames'), tasks.named('spotlessApply'))
+}
+
+tasks.named('spotlessApply').configure { mustRunAfter(tasks.named('phase2FieldReferenceRenames')) }
+
+['rewriteRun', 'rewriteDryRun', 'rewriteDiscover'].each { taskName ->
+    tasks.matching { it.name == taskName }.configureEach {
+        dependsOn(tasks.named('compileRewriteRecipesJava'))
+    }
+}
+
 
     // --- PHASE 1: Hygiene (run first to reduce noise) ---
     // Curated composite in rewrite.yml: CommonStaticAnalysis minus MethodNameCasing

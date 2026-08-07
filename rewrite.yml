@@ -42,3 +42,63 @@ recipeList:
   - org.openrewrite.staticanalysis.UpperCaseLiteralSuffixes
   - org.openrewrite.staticanalysis.UseDiamondOperator
   - org.openrewrite.staticanalysis.UseJavaStyleArrayDeclarations
+
+---
+# Phase 2a: instance fields (all visibilities). Test with: ./gradlew phase2aFieldsPost compileJava
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2aFields
+displayName: Freerouting phase 2a — instance fields
+description: Rename non-constant instance fields to lowerCamelCase.
+recipeList:
+  - app.freerouting.rewrite.RenameInstanceFieldsToCamelCase:
+      includeTestSources: true
+
+---
+# Phase 2b: object-colliding methods. Test with: ./gradlew compileJava
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2bObjectCollisions
+displayName: Freerouting phase 2b — object-colliding methods
+description: Rename domain methods that collide with java.lang.Object methods.
+recipeList:
+  - app.freerouting.rewrite.RenameObjectCollidingMethods
+
+---
+# Phase 2c: interface/enum method declarations. Test with: ./gradlew compileJava
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2cInterfaceEnumMethods
+displayName: Freerouting phase 2c — interface/enum methods
+description: Rename snake_case interface and enum method declarations.
+recipeList:
+  - app.freerouting.rewrite.RenameNonClassMethodsToCamelCase:
+      includeTestSources: true
+
+---
+# Phase 2d: class method declarations. Test with: ./gradlew compileJava
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2dClassMethods
+displayName: Freerouting phase 2d — class methods
+description: Rename snake_case methods in classes (requires renamePublicMethods).
+recipeList:
+  - org.openrewrite.staticanalysis.MethodNameCasing:
+      renamePublicMethods: true
+      includeTestSources: true
+
+---
+# Phase 2e: method and constructor parameters. Test with: ./gradlew phase2eMethodParameters
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2eMethodParameters
+displayName: Freerouting phase 2e — method parameters
+description: Rename snake_case method and constructor parameters to lowerCamelCase.
+recipeList:
+  - app.freerouting.rewrite.RenameMethodParametersToCamelCase:
+      includeTestSources: true
+
+---
+# Phase 2f: local variables. Test with: ./gradlew phase2fLocalVariables
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase2fLocalVariables
+displayName: Freerouting phase 2f — local variables
+description: Rename snake_case local variables to lowerCamelCase.
+recipeList:
+  - org.openrewrite.staticanalysis.RenameLocalVariablesToCamelCase
+
