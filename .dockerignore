@@ -1,37 +1,71 @@
+# Docker image only runs `./gradlew executableJar -x test` (see Dockerfile).
+# Keep the build context limited to sources + Gradle wrapper — not tests, docs, or VCS history.
+# BUILD_REVISION is passed as a build-arg from CI (no .git needed in context).
+
+# --- Version control & CI ---
+.git
+.github
+
+# --- Gradle outputs & caches (created by the test step before docker build on CI) ---
+.gradle
+build
+out
+tmp
+.nb-gradle
+
+# --- IDE / editor ---
+.idea
+**/.idea
+*.iml
 **/.classpath
-**/.dockerignore
-**/.env
-#**/.git
-**/.gitignore
 **/.project
 **/.settings
-**/.toolstarget
 **/.vs
 **/.vscode
 **/*.*proj.user
 **/*.dbmdl
 **/*.jfm
-**/azds.yaml
-**/bin
-**/charts
-**/docker-compose*
-**/Dockerfile*
-**/node_modules
-**/npm-debug.log
-**/obj
-**/secrets.dev.yaml
-**/values.dev.yaml
-LICENSE
-README.md
-!**/.gitignore
-!.git/HEAD
-!.git/config
-!.git/packed-refs
-!.git/refs/heads/**
-build
+
+# --- Tests & fixtures (skipped in Docker) ---
+src/test
+fixtures
+
+# --- Not required to compile the executable jar ---
+scripts
+integrations
 design
 distribution
 docs
-integrations
-logs
 stats
+logs
+
+# --- Docs / meta (not used at compile time) ---
+LICENSE
+README.md
+AGENTS.md
+**/*.md
+!gradle/**/*.md
+
+# --- Secrets / local agent files ---
+**/.env
+.agent
+.secrets
+gha-creds-*.json
+**/secrets.dev.yaml
+**/values.dev.yaml
+
+# --- Container / compose (not part of the Gradle build) ---
+**/.dockerignore
+**/docker-compose*
+**/Dockerfile*
+**/azds.yaml
+**/charts
+
+# --- Misc build artifacts ---
+**/bin
+**/obj
+**/node_modules
+**/npm-debug.log
+**/*.log
+**/*.jar
+!gradle/wrapper/gradle-wrapper.jar

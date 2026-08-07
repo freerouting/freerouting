@@ -20,7 +20,7 @@ COPY . /app
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git \
     && rm -rf /var/lib/apt/lists/* \
-    && ./gradlew executableJar -x test
+    && ./gradlew executableJar -x test -x compileTestJava
 
 # Stage 2: Create the final image
 FROM eclipse-temurin:25-jre-jammy
