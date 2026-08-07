@@ -1,6 +1,7 @@
 package app.freerouting.api.mcp;
 
 import app.freerouting.api.ApiExceptionMapper;
+import app.freerouting.api.ApiUsageFilter;
 import app.freerouting.api.CorrelationIdFilter;
 import app.freerouting.api.EnvironmentHostValidationFilter;
 import app.freerouting.api.GsonMessageBodyHandler;
@@ -32,6 +33,7 @@ public class McpApplication extends Application {
     classes.add(McpRateLimitFilter.class);
     classes.add(CorrelationIdFilter.class);
     classes.add(EnvironmentHostValidationFilter.class);
+    classes.add(ApiUsageFilter.class);
     classes.add(ApiExceptionMapper.class);
     classes.add(NotFoundExceptionMapper.class);
     classes.add(JsonStringMessageBodyWriter.class);

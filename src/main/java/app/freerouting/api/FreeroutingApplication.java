@@ -25,6 +25,8 @@ import org.glassfish.jersey.media.sse.SseFeature;
  *   <li><b>Priority 5000</b> — {@link ApiAnalyticsFilter}:
  *       captures HTTP ≥ 400 responses for analytics; 2xx paths are tracked individually by each
  *       controller method.</li>
+ *   <li><b>Priority 5000</b> — {@link ApiUsageFilter}:
+ *       emits one canonical {@code API Usage} row per request (billing-grade usage metrics).</li>
  * </ol>
  */
 @ApplicationPath("/")
@@ -47,6 +49,7 @@ public class FreeroutingApplication extends Application {
     // Tracks all error (4xx/5xx) responses centrally; 2xx paths remain tracked
     // individually by the controller methods with full request/response payloads.
     classes.add(ApiAnalyticsFilter.class);
+    classes.add(ApiUsageFilter.class);
     classes.add(SseFeature.class);
     return classes;
   }

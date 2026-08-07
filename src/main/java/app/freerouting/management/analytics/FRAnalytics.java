@@ -472,4 +472,54 @@ public class FRAnalytics {
 
     trackAnonymousAction(effectiveUserId, "API Endpoint Called", properties);
   }
+
+  /**
+   * Records one canonical API usage row for billing and quota analytics. Emitted by
+   * {@link app.freerouting.api.ApiUsageFilter} once per HTTP request/response cycle.
+   */
+  public static void apiUsageRecorded(
+      String httpMethod,
+      String apiPath,
+      String apiRouteNormalized,
+      int httpStatus,
+      long durationMs,
+      String apiKeyHash,
+      String profileId,
+      String profileEmail,
+      String environmentHost,
+      Long requestBytes,
+      Long responseBytes,
+      UUID profileUuid) {
+    Map<String, String> properties = new HashMap<>();
+    properties.put("http_method", httpMethod);
+    properties.put("api_path", apiPath);
+    properties.put("api_route", apiRouteNormalized);
+    properties.put("http_status", Integer.toString(httpStatus));
+    properties.put("duration_ms", Long.toString(durationMs));
+    if (apiKeyHash != null) {
+      properties.put("api_key_hash", apiKeyHash);
+    }
+    if (profileId != null) {
+      properties.put("profile_id", profileId);
+    }
+    if (profileEmail != null) {
+      properties.put("profile_email", profileEmail);
+    }
+    if (environmentHost != null) {
+      properties.put("environment_host", environmentHost);
+    }
+    if (requestBytes != null) {
+      properties.put("request_bytes", Long.toString(requestBytes));
+    }
+    if (responseBytes != null) {
+      properties.put("response_bytes", Long.toString(responseBytes));
+    }
+
+    String effectiveUserId = (profileUuid != null) ? profileUuid.toString() : profileId;
+    if (effectiveUserId != null) {
+      properties.put("user_id", effectiveUserId);
+    }
+
+    trackAnonymousAction(effectiveUserId, "API Usage", properties);
+  }
 }
