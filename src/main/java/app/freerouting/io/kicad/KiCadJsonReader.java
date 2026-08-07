@@ -32,7 +32,6 @@ import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.CoordinateTransform;
 import app.freerouting.io.KiCadNetClassNames;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.DefaultItemClearanceClasses;
@@ -40,6 +39,7 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
+import app.freerouting.util.gson.GsonProvider;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -818,11 +818,11 @@ public final class KiCadJsonReader {
   private static String getDescriptivePadstackName(KiCadBoardJson.PadJson pad, Layer[] boardLayers, int layerCount) {
     String shapeStr = "Round";
     if (pad.shape != null) {
-      if (pad.shape.equalsIgnoreCase("circle") || pad.shape.equalsIgnoreCase("round")) {
+      if ("circle".equalsIgnoreCase(pad.shape) || "round".equalsIgnoreCase(pad.shape)) {
         shapeStr = "Round";
-      } else if (pad.shape.equalsIgnoreCase("rect") || pad.shape.equalsIgnoreCase("rectangle")) {
+      } else if ("rect".equalsIgnoreCase(pad.shape) || "rectangle".equalsIgnoreCase(pad.shape)) {
         shapeStr = "Rect";
-      } else if (pad.shape.equalsIgnoreCase("oval")) {
+      } else if ("oval".equalsIgnoreCase(pad.shape)) {
         shapeStr = "Oval";
       } else {
         shapeStr = pad.shape.substring(0, 1).toUpperCase() + pad.shape.substring(1).toLowerCase();
@@ -839,7 +839,7 @@ public final class KiCadJsonReader {
       }
     }
     
-    if (shapeStr.equals("Round")) {
+    if ("Round".equals(shapeStr)) {
       return String.format("%s[%s]Pad_%.0f_um", shapeStr, layerType, pad.size.x * 1000.0);
     } else {
       return String.format("%s[%s]Pad_%.0fxf_%.0f_um", shapeStr, layerType, pad.size.x * 1000.0, pad.size.y * 1000.0).replace("xf_", "x");
@@ -857,7 +857,9 @@ public final class KiCadJsonReader {
       Package.Pin pin1 = pkg1.get_pin(i);
       Package.Pin pin2 = p2[i];
       if (pin1 == null || pin2 == null) {
-        if (pin1 != pin2) return false;
+        if (pin1 != pin2) {
+          return false;
+        }
         continue;
       }
       if (!pin1.name.equals(pin2.name)) {

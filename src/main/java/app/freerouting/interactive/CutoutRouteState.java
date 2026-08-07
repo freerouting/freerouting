@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class CutoutRouteState extends SelectRegionState {
+public final class CutoutRouteState extends SelectRegionState {
 
   private final Collection<PolylineTrace> trace_list;
 

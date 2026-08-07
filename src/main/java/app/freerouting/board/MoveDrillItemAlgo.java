@@ -15,7 +15,7 @@ import java.util.LinkedList;
 /**
  * Contains internal auxiliary functions of class RoutingBoard for shoving vias and pins
  */
-public class MoveDrillItemAlgo {
+public final class MoveDrillItemAlgo {
 
   private MoveDrillItemAlgo() {
   }

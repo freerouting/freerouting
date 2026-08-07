@@ -25,7 +25,7 @@ class ScoringWeightComparisonTest {
   private static final int INCOMPLETE_CONNECTIONS = 2;
   private static final int CLEARANCE_VIOLATIONS = 0;
   private static final int BEND_COUNT = 50;
-  private static final float TOTAL_TRACE_MM = 250.0f;
+  private static final float TOTAL_TRACE_MM = 250.0F;
   private static final int VIA_COUNT = 15;
 
   private BoardStatistics stats;

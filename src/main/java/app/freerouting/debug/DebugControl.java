@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Manages the execution flow for debugging purposes.
  * Handles pausing, resuming, stepping, and delays.
  */
-public class DebugControl {
+public final class DebugControl {
 
     private static final DebugControl INSTANCE = new DebugControl();
     private static final java.util.regex.Pattern NET_NUMBER_PATTERN = java.util.regex.Pattern.compile("Net #(\\d+)");
@@ -89,8 +89,9 @@ public class DebugControl {
      * @param targetNetNo The net number we want to rewind back to the beginning of.
      */
     public boolean shouldContinueRewind(int targetNetNo) {
-        if (stepNetHistory.isEmpty())
-            return false;
+      if (stepNetHistory.isEmpty()) {
+        return false;
+      }
         // logic: we pop the last step's net.
         // If the stack is invalid or we shifted nets, we might stop.
         // For now, let's assume the caller manages the loop and popping.
@@ -98,14 +99,16 @@ public class DebugControl {
     }
 
     public int popLastStepNet() {
-        if (stepNetHistory.isEmpty())
-            return -1;
+      if (stepNetHistory.isEmpty()) {
+        return -1;
+      }
         return stepNetHistory.pop();
     }
 
     public int peekLastStepNet() {
-        if (stepNetHistory.isEmpty())
-            return -1;
+      if (stepNetHistory.isEmpty()) {
+        return -1;
+      }
         return stepNetHistory.peek();
     }
 

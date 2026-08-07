@@ -27,7 +27,6 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
-import app.freerouting.drc.NetIncompletes;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import java.awt.Color;
@@ -674,11 +673,10 @@ public class Route {
       }
     }
     TimeLimit time_limit = new TimeLimit(CHECK_FORCED_TRACE_TIME_LIMIT);
-    Point ok_point = board.insert_forced_trace_segment(prev_corner, p_to_corner, neck_down_halfwidth, layer, net_no_arr,
+    return board.insert_forced_trace_segment(prev_corner, p_to_corner, neck_down_halfwidth, layer, net_no_arr,
         clearance_class, max_shove_trace_recursion_depth,
         max_shove_via_recursion_depth, max_spring_over_recursion_depth, trace_tidy_width, pull_tight_accuracy,
         !is_stitch_mode, time_limit);
-    return ok_point;
   }
 
   /**
@@ -706,11 +704,10 @@ public class Route {
       return p_from_corner;
     }
     TimeLimit time_limit = new TimeLimit(CHECK_FORCED_TRACE_TIME_LIMIT);
-    Point ok_point = board.insert_forced_trace_segment(p_from_corner, p_to_corner, neck_down_halfwidth, layer,
+    return board.insert_forced_trace_segment(p_from_corner, p_to_corner, neck_down_halfwidth, layer,
         net_no_arr, clearance_class, max_shove_trace_recursion_depth,
         max_shove_via_recursion_depth, max_spring_over_recursion_depth, trace_tidy_width, pull_tight_accuracy,
         !is_stitch_mode, time_limit);
-    return ok_point;
   }
 
   private static class TargetPoint {

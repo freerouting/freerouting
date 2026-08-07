@@ -270,7 +270,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     if (job.output == null) {
       job.output = new BoardFileDetails(job.board);
       job.output.addUpdatedEventListener(_ -> job.fireOutputUpdatedEvent());
-      String outputBaseName = (job.input != null) ? job.input.getFilenameWithoutExtension() : job.name;
+      String outputBaseName = job.input != null ? job.input.getFilenameWithoutExtension() : job.name;
       if (job.input != null && job.input.format == FileFormat.KICAD_DESIGN_JSON) {
         job.output.format = FileFormat.KICAD_SESSION_JSON;
         job.output.setFilename(outputBaseName + ".json");

@@ -8,7 +8,7 @@ import app.freerouting.logger.FRLogger;
 /**
  * Utility class for loading boards from routing jobs.
  */
-public class BoardLoader {
+public final class BoardLoader {
 
   private BoardLoader() {
   }

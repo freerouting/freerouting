@@ -14,7 +14,6 @@ import app.freerouting.settings.McpServerSettings;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
-import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;

@@ -73,7 +73,7 @@ public final class TutorialBoardPalette {
   private static Color[] alternatingLayerColors(int layerCount, Color evenLayerColor, Color oddLayerColor) {
     Color[] colors = new Color[layerCount];
     for (int i = 0; i < layerCount; i++) {
-      colors[i] = (i % 2 == 0) ? evenLayerColor : oddLayerColor;
+      colors[i] = i % 2 == 0 ? evenLayerColor : oddLayerColor;
     }
     return colors;
   }

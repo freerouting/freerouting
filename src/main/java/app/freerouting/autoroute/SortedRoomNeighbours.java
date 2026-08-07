@@ -26,7 +26,7 @@ import java.util.TreeSet;
  * To calculate the neighbour rooms of an expansion room. The neighbour rooms will be sorted in counterclock sense around the border of the shape of p_room. Overlapping neighbours containing an item
  * may be stored in an unordered list.
  */
-public class SortedRoomNeighbours {
+public final class SortedRoomNeighbours {
 
   private final ExpansionRoom from_room;
   private final CompleteExpansionRoom completed_room;

@@ -9,10 +9,9 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
+import java.util.Collection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Collection;
 
 /**
  * Test cases for PolylineTrace split operations, particularly around

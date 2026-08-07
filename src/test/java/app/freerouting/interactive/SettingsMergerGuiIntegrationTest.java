@@ -1,5 +1,9 @@
 package app.freerouting.interactive;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.board.RoutingBoard;
@@ -9,14 +13,11 @@ import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.GuiSettings;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration tests for Sub-Issue 06: verifies that the {@link InteractiveSettings} singleton,

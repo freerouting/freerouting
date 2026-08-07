@@ -1,5 +1,8 @@
 package app.freerouting.boardgraphics;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.IntBox;
@@ -8,9 +11,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TutorialBoardPaletteTest {
 

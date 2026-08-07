@@ -1,10 +1,6 @@
 package app.freerouting.fixtures;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import app.freerouting.Freerouting;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.settings.sources.TestingSettings;
 import java.time.Duration;

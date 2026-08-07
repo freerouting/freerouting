@@ -24,20 +24,20 @@ public class DefaultSettings implements SettingsSource {
      * This is intentionally the largest penalty so that routing completion
      * always dominates trace-length and via-count considerations.
      */
-    public static final float DEFAULT_UNROUTED_NET_PENALTY = 5_000_000.0f;
+    public static final float DEFAULT_UNROUTED_NET_PENALTY = 5_000_000.0F;
 
     /**
      * Penalty subtracted from the board score for each clearance (DRC) violation.
      * Set relative to the unrouted penalty to allow a balance where completing all nets
      * with a few violations can be preferred over leaving nets unrouted.
      */
-    public static final float DEFAULT_CLEARANCE_VIOLATION_PENALTY = 1_000_000.0f;
+    public static final float DEFAULT_CLEARANCE_VIOLATION_PENALTY = 1_000_000.0F;
     /**
      * Penalty per bend (direction-change corner) in any trace.
      * Kept small so that bend reduction is a tie-breaker after completion and
      * clearance quality, not a primary objective.
      */
-    public static final float DEFAULT_BEND_PENALTY = 10.0f;
+    public static final float DEFAULT_BEND_PENALTY = 10.0F;
     /**
      * Cost per via placed on a regular (non-plane) net.
      * Via costs drive the autorouter's layer-change decisions during maze search;

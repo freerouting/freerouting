@@ -8,7 +8,7 @@ package app.freerouting.io.specctra.parser;
  * <p>This class is retained as an empty shell to avoid breaking any binary
  * references until the next major release.
  */
-public class RulesFile {
+public final class RulesFile {
 
   private RulesFile() {
   }

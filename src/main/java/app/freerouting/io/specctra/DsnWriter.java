@@ -2,18 +2,16 @@ package app.freerouting.io.specctra;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.datastructures.IndentFileWriter;
-import app.freerouting.io.CoordinateTransform;
 import app.freerouting.io.specctra.parser.Library;
 import app.freerouting.io.specctra.parser.Network;
-import app.freerouting.io.specctra.parser.PartLibrary;
 import app.freerouting.io.specctra.parser.Parser;
+import app.freerouting.io.specctra.parser.PartLibrary;
 import app.freerouting.io.specctra.parser.Placement;
 import app.freerouting.io.specctra.parser.Resolution;
 import app.freerouting.io.specctra.parser.Structure;
 import app.freerouting.io.specctra.parser.Unit;
 import app.freerouting.io.specctra.parser.Wiring;
 import app.freerouting.io.specctra.parser.WriteScopeParameter;
-
 import java.io.IOException;
 import java.io.OutputStream;
 

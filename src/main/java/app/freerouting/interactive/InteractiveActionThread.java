@@ -5,11 +5,11 @@ import static app.freerouting.Freerouting.globalSettings;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.ThreadActionListener;
 import app.freerouting.settings.GlobalSettings;
 import java.awt.Graphics;
 import java.io.IOException;
 import java.util.ArrayList;
-import app.freerouting.management.ThreadActionListener;
 import java.util.List;
 
 /**
@@ -312,7 +312,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    *
    * @see #get_autoroute_instance(GuiBoardManager, RoutingJob)
    */
-  private static class AutorouteThread extends InteractiveActionThread {
+  private static final class AutorouteThread extends InteractiveActionThread {
 
     private AutorouteThread(GuiBoardManager p_board_handling, RoutingJob job) {
       super(p_board_handling, job);
@@ -347,7 +347,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    *
    * @see #get_pull_tight_instance(GuiBoardManager, RoutingJob)
    */
-  private static class PullTightThread extends InteractiveActionThread {
+  private static final class PullTightThread extends InteractiveActionThread {
 
     private PullTightThread(GuiBoardManager p_board_handling, RoutingJob job) {
       super(p_board_handling, job);

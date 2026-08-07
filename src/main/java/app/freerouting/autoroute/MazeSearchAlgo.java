@@ -84,7 +84,7 @@ public class MazeSearchAlgo {
           app.freerouting.geometry.planar.FloatPoint pin_center_float = ctrl.fanout_start_pin_center.to_float();
           boolean onStartLayer = p_element.next_room != null && p_element.next_room.get_layer() == ctrl.fanout_start_pin_layer;
           if (onStartLayer) {
-            double maxLen = (ctrl.settings.fanout != null && ctrl.settings.fanout.maxEscapeLengthMm != null)
+            double maxLen = ctrl.settings.fanout != null && ctrl.settings.fanout.maxEscapeLengthMm != null
                 ? ctrl.settings.fanout.maxEscapeLengthMm * 1000.0 : 3000.0;
             double resolution = autoroute_engine.board.communication.get_resolution(app.freerouting.board.Unit.UM);
             app.freerouting.geometry.planar.FloatPoint entry_point = p_element.shape_entry.a.middle_point(p_element.shape_entry.b);
@@ -94,7 +94,7 @@ public class MazeSearchAlgo {
             }
           }
           if (p_element.door instanceof ExpansionDrill drill) {
-            double minLen = (ctrl.settings.fanout != null && ctrl.settings.fanout.minEscapeLengthMm != null)
+            double minLen = ctrl.settings.fanout != null && ctrl.settings.fanout.minEscapeLengthMm != null
                 ? ctrl.settings.fanout.minEscapeLengthMm * 1000.0 : 500.0;
             double resolution = autoroute_engine.board.communication.get_resolution(app.freerouting.board.Unit.UM);
             double drillDist = drill.location.to_float().distance(pin_center_float);
@@ -181,8 +181,7 @@ public class MazeSearchAlgo {
         double fanout_via_cost_factor = p_trace.get_half_width() / p_trace.get_length();
         fanout_via_cost_factor *= fanout_via_cost_factor;
         fanout_via_cost_factor *= FANOUT_COST_CONST;
-        fanout_via_cost_factor = Math.max(fanout_via_cost_factor, 1);
-        return fanout_via_cost_factor;
+        return Math.max(fanout_via_cost_factor, 1);
       }
     }
     return 1;
@@ -1433,7 +1432,9 @@ public class MazeSearchAlgo {
          }
          StringBuilder sb = new StringBuilder("[");
          for (app.freerouting.board.Item ci : obstacle_connection.item_list) {
-           if (sb.length() > 1) sb.append(",");
+           if (sb.length() > 1) {
+             sb.append(",");
+           }
            sb.append(ci.get_id_no());
          }
          sb.append("]");

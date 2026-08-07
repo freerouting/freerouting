@@ -6,13 +6,12 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.RouterSettings;
-import app.freerouting.logger.FRLogger;
-
 import java.util.Collection;
 
 /**
@@ -30,7 +29,7 @@ public class AutorouteControl {
   /**
    * Defines for each layer, if it may be used for routing.
    */
-  final public boolean[] layer_active;
+  public final boolean[] layer_active;
   final int layer_count;
   /**
    * The currently used trace half widths in the autoroute algorithm on each layer
@@ -315,7 +314,7 @@ public class AutorouteControl {
   /**
    * Array of via costs from one layer to the other layers
    */
-  static class ViaCost {
+  static final class ViaCost {
 
     public int[] to_layer;
 

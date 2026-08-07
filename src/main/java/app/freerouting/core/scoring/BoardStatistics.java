@@ -172,7 +172,7 @@ public class BoardStatistics implements Serializable {
     this.traces.totalLength = (float) board
         .get_traces()
         .stream()
-        .mapToDouble(trace -> trace.get_length())
+        .mapToDouble(Trace::get_length)
         .sum();
     // Normalise trace length to millimetres so that calculateScore() uses a
     // physically meaningful cost regardless of DSN coordinate resolution.
@@ -559,7 +559,7 @@ public class BoardStatistics implements Serializable {
     // totalLength is in raw board units which vary wildly between DSN files
     // (e.g. 1 nm for KiCad at resolution 1e6, vs 0.1 µm for EAGLE/benchmark boards),
     // and would make the score collapse to 0 for high-resolution KiCad exports.
-    float traceLengthForCost = (this.traces.totalLengthMm != null)
+    float traceLengthForCost = this.traces.totalLengthMm != null
         ? this.traces.totalLengthMm
         : this.traces.totalLength;
     float costs = (float) (traceLengthForCost * scoringSettings.defaultPreferredDirectionTraceCost
@@ -587,10 +587,10 @@ public class BoardStatistics implements Serializable {
 
   public static class BoardStatisticsFanout implements Serializable {
     @SerializedName("total_smd_pins")
-    public int totalSmdPins = 0;
+    public int totalSmdPins;
     @SerializedName("pins_to_escape")
-    public int pinsToEscape = 0;
+    public int pinsToEscape;
     @SerializedName("escaped_count")
-    public int escapedCount = 0;
+    public int escapedCount;
   }
 }

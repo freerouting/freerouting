@@ -574,7 +574,7 @@ public class HeadlessBoardManager implements BoardManager {
     }
 
     try {
-      String inputFilename = (this.routingJob != null && this.routingJob.input != null)
+      String inputFilename = this.routingJob != null && this.routingJob.input != null
           ? this.routingJob.input.getFilename()
           : null;
       if (this.routingJob != null) {
@@ -710,7 +710,7 @@ public class HeadlessBoardManager implements BoardManager {
       return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
 
-    String inputFilename = (this.routingJob != null && this.routingJob.input != null)
+    String inputFilename = this.routingJob != null && this.routingJob.input != null
         ? this.routingJob.input.getFilename()
         : null;
     if (this.routingJob != null) {

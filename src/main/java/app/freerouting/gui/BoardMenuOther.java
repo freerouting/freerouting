@@ -1,12 +1,12 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-public class BoardMenuOther extends JMenu {
+public final class BoardMenuOther extends JMenu {
 
   private final BoardFrame board_frame;
   private final TextManager tm;

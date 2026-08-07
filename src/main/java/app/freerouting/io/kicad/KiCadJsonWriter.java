@@ -1,14 +1,22 @@
 package app.freerouting.io.kicad;
 
-import app.freerouting.board.*;
-import app.freerouting.core.*;
-import app.freerouting.geometry.planar.*;
-import app.freerouting.rules.*;
+import app.freerouting.board.BoardOutline;
+import app.freerouting.board.ConductionArea;
+import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.Trace;
+import app.freerouting.board.Unit;
+import app.freerouting.board.Via;
+import app.freerouting.core.Padstack;
+import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.rules.Net;
+import app.freerouting.rules.NetClass;
+import app.freerouting.rules.ViaInfo;
+import app.freerouting.rules.ViaRule;
 import app.freerouting.util.gson.GsonProvider;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Serializes a {@link RoutingBoard} back to KiCad JSON representation.

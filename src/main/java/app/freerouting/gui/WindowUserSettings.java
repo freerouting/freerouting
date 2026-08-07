@@ -36,7 +36,7 @@ import javax.swing.event.DocumentListener;
  * sharing and contact preferences, as well as view usage statistics and access the project's
  * sponsorship options.
  */
-public class WindowUserSettings extends WindowBase {
+public final class WindowUserSettings extends WindowBase {
 
   /**
    * Creates and initializes a new user settings dialog window.

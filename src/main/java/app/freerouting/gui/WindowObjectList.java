@@ -48,7 +48,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   /**
    * Creates a new instance of ObjectListWindow
    */
-  public WindowObjectList(BoardFrame p_board_frame) {
+  protected WindowObjectList(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
     this.board_frame = p_board_frame;
 
@@ -148,7 +148,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   }
 
   protected void recalculate() {
-    boolean first_time = (this.list == null);
+    boolean first_time = this.list == null;
     if (first_time) {
       this.list_model = new DefaultListModel<>();
       this.list = new JList<>(this.list_model);

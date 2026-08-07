@@ -3,10 +3,22 @@ package app.freerouting.management;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.board.*;
-import app.freerouting.geometry.planar.*;
-import app.freerouting.rules.*;
-import app.freerouting.logger.*;
+import app.freerouting.board.Communication;
+import app.freerouting.board.FixedState;
+import app.freerouting.board.Layer;
+import app.freerouting.board.LayerStructure;
+import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.RoutingBoard;
+import app.freerouting.geometry.planar.Area;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.ClearanceMatrix;
+import app.freerouting.rules.Net;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

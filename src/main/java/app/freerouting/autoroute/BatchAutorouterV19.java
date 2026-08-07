@@ -11,9 +11,9 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
@@ -47,7 +47,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
     private final int trace_pull_tight_accuracy;
 
     protected RoutingJob job;
-    private boolean isOptimizerAutorouter = false;
+    private boolean isOptimizerAutorouter;
 
     /** Used to draw the airline of the current routed incomplete. */
     private FloatLine air_line;

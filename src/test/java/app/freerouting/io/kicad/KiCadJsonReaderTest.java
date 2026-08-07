@@ -1,17 +1,21 @@
 package app.freerouting.io.kicad;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.io.BoardReadResult;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.rules.NetClass;
 import app.freerouting.settings.GlobalSettings;
+import java.io.StringReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.StringReader;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class KiCadJsonReaderTest {
 

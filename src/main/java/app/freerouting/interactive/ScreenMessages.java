@@ -80,9 +80,9 @@ public class ScreenMessages {
     if (this.write_protected) {
       return;
     }
-    String statusText = (operation == null || operation.isEmpty()) ? message : operation + ": " + message;
+    String statusText = operation == null || operation.isEmpty() ? message : operation + ": " + message;
     status_field.setText(statusText == null ? empty_string : statusText);
-    String impactedText = (impactedItems == null || impactedItems.isEmpty()) ? empty_string : impactedItems;
+    String impactedText = impactedItems == null || impactedItems.isEmpty() ? empty_string : impactedItems;
     add_field.setText(impactedText);
   }
 

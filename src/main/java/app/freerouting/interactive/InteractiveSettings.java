@@ -5,7 +5,6 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.sources.GuiSettings;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;

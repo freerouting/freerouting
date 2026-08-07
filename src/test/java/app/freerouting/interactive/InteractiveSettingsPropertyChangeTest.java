@@ -1,22 +1,24 @@
 package app.freerouting.interactive;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.RouterSettings;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the {@link java.beans.PropertyChangeSupport} wiring in {@link InteractiveSettings}.

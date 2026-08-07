@@ -94,7 +94,7 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
         || normalizedPath.startsWith("v1/analytics/")
         || normalizedPath.startsWith("dev/")
         || normalizedPath.startsWith("openapi/")
-        || normalizedPath.equals("swagger-ui")
+        || "swagger-ui".equals(normalizedPath)
         || normalizedPath.startsWith("swagger-ui/");
   }
 

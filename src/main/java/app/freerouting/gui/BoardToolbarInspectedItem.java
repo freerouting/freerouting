@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import java.awt.Dimension;
 import javax.swing.JButton;
 import javax.swing.JLabel;

@@ -10,7 +10,7 @@ import java.util.Iterator;
 /**
  * Interactive state for constructing an obstacle with a polygon shape.
  */
-public class PolygonShapeConstructionState extends CornerItemConstructionState {
+public final class PolygonShapeConstructionState extends CornerItemConstructionState {
 
   /**
    * Creates a new instance of PolygonShapeConstructionState

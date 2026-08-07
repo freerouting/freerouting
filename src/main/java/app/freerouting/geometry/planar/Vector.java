@@ -35,7 +35,7 @@ public abstract class Vector implements Serializable {
       p_y = p_y.negate();
       p_z = p_z.negate();
     }
-    if (p_x.mod(p_z).signum() == 0 && p_x.mod(p_z).signum() == 0) {
+    if (p_x.mod(p_z).signum() == 0) {
       // p_x and p_y can be divided by p_z
       p_x = p_x.divide(p_z);
       p_y = p_y.divide(p_z);

@@ -68,7 +68,7 @@ public class BatchAutorouter extends NamedAlgorithm {
   private static final int FANOUT_RECOVERY_STAGNATION_PASSES = 3;
   // Minimum score gain (on the 0–1000 normalized scale) that counts as a
   // meaningful improvement; gains smaller than this are treated as stagnation.
-  private static final float STAGNATION_SCORE_THRESHOLD = 0.5f;
+  private static final float STAGNATION_SCORE_THRESHOLD = 0.5F;
 
   private final boolean remove_unconnected_vias;
   private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
@@ -80,8 +80,8 @@ public class BatchAutorouter extends NamedAlgorithm {
   private final List<Item> reusable_autoroute_item_list = new ArrayList<>();
   private final Set<Item> reusable_handled_items = new TreeSet<>();
   protected RoutingJob job;
-  private int totalItemsRouted = 0;
-  private boolean fanoutTimedOut = false;
+  private int totalItemsRouted;
+  private boolean fanoutTimedOut;
 
   public boolean isFanoutTimedOut() {
     return this.fanoutTimedOut;
@@ -102,9 +102,9 @@ public class BatchAutorouter extends NamedAlgorithm {
    * Time when the routing session started.
    */
   private Instant sessionStartTime;
-  private long lastBoardUpdateTimestamp = 0;
+  private long lastBoardUpdateTimestamp;
 
-  private boolean isOptimizerAutorouter = false;
+  private boolean isOptimizerAutorouter;
 
   public BatchAutorouter(RoutingJob job) {
     this(job.thread, job.board, job.routerSettings, !job.routerSettings.isFanoutEnabled(), true,
@@ -287,13 +287,13 @@ public class BatchAutorouter extends NamedAlgorithm {
                 // be routed to the pour in this pass.
                 if (net != null && net.contains_plane()) {
                   boolean alreadyConnectedToPlane = connected_set.stream()
-                      .anyMatch(connectedItem -> connectedItem instanceof ConductionArea);
+                      .anyMatch(ConductionArea.class::isInstance);
                   if (alreadyConnectedToPlane) {
                     continue;
                   }
                 }
                 autoroute_item_list.add(curr_item);
-                String netName = (net != null) ? net.name : "net#" + curr_net_no;
+                String netName = net != null ? net.name : "net#" + curr_net_no;
                 FRLogger.debug("Queuing item for routing: " + curr_item.getClass().getSimpleName() + " on net '"
                     + netName + "' (connected: " + connected_set.size() + "/" + net_item_count + ")");
               }
@@ -465,7 +465,7 @@ public class BatchAutorouter extends NamedAlgorithm {
           int netIncompletes = tempDrc.getIncompleteCount(netNo);
           if (netIncompletes > 0) {
             Net net = board.rules.nets.get(netNo);
-            String netName = (net != null) ? net.name : "net#" + netNo;
+            String netName = net != null ? net.name : "net#" + netNo;
             job.logDebug("  Net '" + netName + "' has " + netIncompletes + " incomplete(s)");
           }
         }
@@ -614,7 +614,7 @@ public class BatchAutorouter extends NamedAlgorithm {
             ++skipped;
           } else {
             Net net = board.rules.nets.get(curr_item.get_net_no(i));
-            String netName = (net != null) ? net.name : "net#" + curr_item.get_net_no(i);
+            String netName = net != null ? net.name : "net#" + curr_item.get_net_no(i);
 
             // Record the failure
             board.failureLog.recordFailure(curr_item, p_pass_no, autorouterResult.state, autorouterResult.details);
@@ -1723,13 +1723,15 @@ public class BatchAutorouter extends NamedAlgorithm {
 
     for (Item from_item : p_from_items) {
       FloatPoint from_point = getItemReferencePoint(from_item);
-      if (from_point == null)
+      if (from_point == null) {
         continue;
+      }
 
       for (Item to_item : p_to_items) {
         FloatPoint to_point = getItemReferencePoint(to_item);
-        if (to_point == null)
+        if (to_point == null) {
           continue;
+        }
 
         double distance = from_point.distance(to_point);
         if (distance < min_distance) {

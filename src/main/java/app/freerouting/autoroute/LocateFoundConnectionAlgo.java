@@ -12,7 +12,6 @@ import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.SortedSet;
@@ -199,7 +198,7 @@ public abstract class LocateFoundConnectionAlgo {
     CompleteExpansionRoom curr_next_room = null;
     ExpandableObject curr_backtrack_door = p_maze_search_result.destination_door;
     MazeSearchElement curr_maze_search_element = curr_backtrack_door.get_maze_search_element(p_maze_search_result.section_no_of_door);
-    boolean debugBacktrack = (p_net_no == 98);
+    boolean debugBacktrack = p_net_no == 98;
     if (debugBacktrack) {
       String destType = curr_backtrack_door.getClass().getSimpleName();
       FRLogger.trace("BACKTRACK_START net=" + p_net_no
@@ -474,7 +473,7 @@ public abstract class LocateFoundConnectionAlgo {
   /**
    * Type of the elements of the list returned by this.backtrack(). Next_room is the common room of the current door and the next door in the backtrack list.
    */
-  protected static class BacktrackElement {
+  protected static final class BacktrackElement {
 
     public final ExpandableObject door;
     public final int section_no_of_door;

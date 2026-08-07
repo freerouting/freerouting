@@ -118,14 +118,13 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     public String toString() {
       LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
 
-      String clearance_violation_message_template = tm.getText(
+      return tm.getText(
           "clearance_violation_message_template",
           "%.4f".formatted(delta),
           item_info(violation.first_item),
           item_info(violation.second_item),
           location.to_string(board_frame.get_locale()),
           layer_structure.arr[violation.layer].name);
-      return clearance_violation_message_template;
     }
 
     @Override

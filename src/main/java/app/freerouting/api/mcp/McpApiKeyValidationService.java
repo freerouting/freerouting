@@ -14,7 +14,7 @@ import java.util.List;
  * MCP authentication is controlled solely by {@code mcp_server.authentication.enabled} and is
  * independent of the REST API authentication setting.
  */
-public class McpApiKeyValidationService {
+public final class McpApiKeyValidationService {
 
   private static McpApiKeyValidationService instance;
   private final List<ApiKeyProvider> providers;

@@ -11,13 +11,13 @@ import java.util.Set;
 public class DebugSettings implements Serializable {
 
     @SerializedName("enable_detailed_logging")
-    public boolean enableDetailedLogging = false;
+    public boolean enableDetailedLogging;
 
     @SerializedName("single_step_execution")
-    public boolean singleStepExecution = false;
+    public boolean singleStepExecution;
 
     @SerializedName("trace_insertion_delay")
-    public int traceInsertionDelay = 0;
+    public int traceInsertionDelay;
 
     @SerializedName("filter_by_net")
     public Set<String> filterByNet = new HashSet<>();

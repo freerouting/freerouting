@@ -41,8 +41,7 @@ public class NetList {
    * Returns the net with the input name, or null, if the netlist does not contain a net with the input name.
    */
   public Net get_net(Net.Id p_net_id) {
-    Net value = nets.get(p_net_id);
-    return value;
+    return nets.get(p_net_id);
   }
 
   /**

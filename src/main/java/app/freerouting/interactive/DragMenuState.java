@@ -18,8 +18,7 @@ public class DragMenuState extends MenuState {
    * Returns a new instance of DragMenuState
    */
   public static DragMenuState get_instance(GuiBoardManager p_board_handling) {
-    DragMenuState new_state = new DragMenuState(p_board_handling);
-    return new_state;
+    return new DragMenuState(p_board_handling);
   }
 
   @Override

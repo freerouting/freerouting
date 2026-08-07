@@ -3,7 +3,7 @@ package app.freerouting.geometry.planar;
 /**
  * Implementation of an enum class Side with the three values ON_THE_LEFT, ON_THE_RIGHT, COLLINEAR.
  */
-public class Side {
+public final class Side {
 
   public static final Side ON_THE_LEFT = new Side("on_the_left");
   public static final Side ON_THE_RIGHT = new Side("on_the_right");

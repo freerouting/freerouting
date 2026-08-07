@@ -1,14 +1,14 @@
 package app.freerouting.gui;
 
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 /**
  * Creates the rules menu of a board frame.
  */
-public class BoardMenuRules extends JMenu {
+public final class BoardMenuRules extends JMenu {
 
   private final BoardFrame board_frame;
   private final TextManager tm;

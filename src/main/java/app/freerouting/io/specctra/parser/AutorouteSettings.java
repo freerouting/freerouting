@@ -7,7 +7,7 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 import java.io.IOException;
 
-public class AutorouteSettings {
+public final class AutorouteSettings {
 
   private AutorouteSettings() {
   }

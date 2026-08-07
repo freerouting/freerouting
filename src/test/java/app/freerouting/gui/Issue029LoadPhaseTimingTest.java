@@ -2,18 +2,17 @@ package app.freerouting.gui;
 
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnTestFixtures;
-import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
-import org.junit.jupiter.api.Test;
-
 import java.io.InputStream;
 import java.util.UUID;
+import org.junit.jupiter.api.Test;
 
 class Issue029LoadPhaseTimingTest {
 

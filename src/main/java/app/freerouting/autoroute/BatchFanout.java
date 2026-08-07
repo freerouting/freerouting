@@ -1,9 +1,6 @@
 package app.freerouting.autoroute;
 
-import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
 import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
@@ -13,12 +10,11 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 /** Handles the sequencing of the fanout inside the batch autorouter. */
-public class BatchFanout {
+public final class BatchFanout {
 
   private final StoppableThread thread;
   private final RoutingBoard routing_board;
@@ -29,15 +25,15 @@ public class BatchFanout {
   private final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   private int lastNotRoutedCount;
   private int extraViasTotal;
-  public int totalItemsFanouted = 0;
-  private Long deadlineMs = null;
-  private boolean isTimedOut = false;
+  public int totalItemsFanouted;
+  private Long deadlineMs;
+  private boolean isTimedOut;
 
   private BatchFanout(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread) {
     this.thread = p_thread;
     this.routing_board = p_board;
     this.settings = p_settings;
-    String sortingOrder = (p_settings.fanout != null && p_settings.fanout.pinSortingOrder != null)
+    String sortingOrder = p_settings.fanout != null && p_settings.fanout.pinSortingOrder != null
         ? p_settings.fanout.pinSortingOrder : "outer_first";
     Collection<app.freerouting.board.Pin> board_smd_pin_list = routing_board.get_smd_pins();
     // Filter out SMD pins that belong to no net — they don't need fanout and would inflate
@@ -90,7 +86,7 @@ public class BatchFanout {
         fanout_instance.deadlineMs = fanoutStart + timeoutSeconds * 1000;
       }
     }
-    int maxPasses = (p_settings.fanout != null && p_settings.fanout.maxPasses != null)
+    int maxPasses = p_settings.fanout != null && p_settings.fanout.maxPasses != null
         ? p_settings.fanout.maxPasses : 20;
     final int STAGNATION_PASS_LIMIT = 3;
     int completedPasses = 0;
@@ -154,7 +150,7 @@ public class BatchFanout {
     int viasBeforePass = this.routing_board.get_vias().size();
     int ripup_costs = this.settings.get_start_ripup_costs() * (p_pass_no + 1);
 
-    long baseMillisPerPin = (this.settings.fanout != null && this.settings.fanout.maxMillisecondsPerPin != null)
+    long baseMillisPerPin = this.settings.fanout != null && this.settings.fanout.maxMillisecondsPerPin != null
         ? this.settings.fanout.maxMillisecondsPerPin : 10000L;
     boolean ripupAllowed = (this.settings.fanout == null || this.settings.fanout.ripupAllowed == null)
         || Boolean.TRUE.equals(this.settings.fanout.ripupAllowed);

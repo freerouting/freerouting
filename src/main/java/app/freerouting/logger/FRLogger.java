@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
  * Provides centralized logging functionality for the application.
  * Wraps Log4j2 and maintains an internal list of log entries for UI display.
  */
-public class FRLogger {
+public final class FRLogger {
 
   public static final DecimalFormat defaultFloatFormat = new DecimalFormat("0.00",
       new java.text.DecimalFormatSymbols(java.util.Locale.US));
@@ -27,7 +27,7 @@ public class FRLogger {
   private static final HashMap<Integer, Instant> perfData = new HashMap<>();
   private static final LogEntries logEntries = new LogEntries();
   private static final CopyOnWriteArrayList<TraceEventListener> traceEventListeners = new CopyOnWriteArrayList<>();
-  public static boolean granularTraceEnabled = false;
+  public static boolean granularTraceEnabled;
   private static Logger logger;
   private static boolean enabled = true;
 

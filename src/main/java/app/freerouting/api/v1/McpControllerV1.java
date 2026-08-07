@@ -1,10 +1,10 @@
 package app.freerouting.api.v1;
 
+import app.freerouting.Freerouting;
 import app.freerouting.api.BaseController;
 import app.freerouting.api.CorrelationIdFilter;
 import app.freerouting.api.mcp.McpRealtimeBridge;
 import app.freerouting.api.mcp.OpenApiMcpToolRegistry;
-import app.freerouting.Freerouting;
 import app.freerouting.constants.Constants;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
@@ -83,7 +83,7 @@ public class McpControllerV1 extends BaseController {
     }
 
     JsonElement id = request.get("id");
-    boolean isNotification = (id == null || id.isJsonNull());
+    boolean isNotification = id == null || id.isJsonNull();
     String method = request.has("method") ? request.get("method").getAsString() : null;
     JsonObject params = request.has("params") && request.get("params").isJsonObject()
         ? request.getAsJsonObject("params")

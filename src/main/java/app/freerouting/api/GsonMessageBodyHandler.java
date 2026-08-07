@@ -2,8 +2,8 @@ package app.freerouting.api;
 
 import app.freerouting.util.gson.GsonProvider;
 import jakarta.annotation.Priority;
-import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;

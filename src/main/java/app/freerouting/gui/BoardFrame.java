@@ -3,22 +3,21 @@ package app.freerouting.gui;
 import app.freerouting.Freerouting;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
-import app.freerouting.boardgraphics.TutorialBoardPalette;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
+import app.freerouting.boardgraphics.TutorialBoardPalette;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.io.BoardReadResult;
-import app.freerouting.io.kicad.KiCadJsonReader;
-import app.freerouting.io.specctra.DsnReader;
-import app.freerouting.io.specctra.RulesWriter;
-import app.freerouting.io.FileFormat;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.interactive.ScreenMessages;
-import app.freerouting.settings.sources.DsnFileSettings;
+import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.FileFormat;
+import app.freerouting.io.kicad.KiCadJsonReader;
+import app.freerouting.io.specctra.DsnReader;
+import app.freerouting.io.specctra.RulesWriter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
@@ -26,9 +25,10 @@ import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.util.TextManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
+import app.freerouting.settings.sources.DsnFileSettings;
+import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -49,8 +49,8 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -73,7 +73,7 @@ public class BoardFrame extends WindowBase {
 
   private static final String TUTORIAL_BOARD_FILENAME = "tutorial_board.dsn";
 
-  public static volatile BoardFrame activeFrame = null;
+  public static volatile BoardFrame activeFrame;
 
   /**
    * The windows above stored in an array
@@ -442,7 +442,7 @@ public class BoardFrame extends WindowBase {
     if (this.routingJob != null) {
       if (this.routingJob.input != null) {
         String filename = this.routingJob.input.getFilename();
-        if (filename != null && !filename.isBlank() && !filename.equals("tutorial_board.dsn") && !filename.equals("empty_board.dsn")) {
+        if (filename != null && !filename.isBlank() && !"tutorial_board.dsn".equals(filename) && !"empty_board.dsn".equals(filename)) {
           boardName = filename;
         }
       }
@@ -937,7 +937,7 @@ public class BoardFrame extends WindowBase {
 
   private boolean update_gui(FileFormat format, BoardReadResult read_result, Point viewport_position,
       JTextField p_message_field, boolean deferHeavyWork) {
-    boolean isTextDsnOrJson = (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON);
+    boolean isTextDsnOrJson = format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON;
     if (isTextDsnOrJson) {
       if (!(read_result instanceof BoardReadResult.Success)) {
         if (p_message_field != null) {

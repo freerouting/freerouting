@@ -17,7 +17,7 @@ import app.freerouting.rules.ViaInfo;
 /**
  * Class with static functions for checking and inserting forced vias.
  */
-public class ForcedViaAlgo {
+public final class ForcedViaAlgo {
 
   private ForcedViaAlgo() {
   }

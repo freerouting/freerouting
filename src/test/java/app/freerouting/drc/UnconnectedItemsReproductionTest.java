@@ -7,17 +7,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.*;
+import app.freerouting.board.BasicBoard;
+import app.freerouting.board.Item;
+import app.freerouting.board.Trace;
+import app.freerouting.board.Via;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.fixtures.RoutingFixtureTest;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.settings.GlobalSettings;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import app.freerouting.fixtures.RoutingFixtureTest;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
@@ -36,28 +36,28 @@ public class TextManager {
 
   // A key-value pair for Material Design icon names and their corresponding
   // Unicode characters
-  private final Map<String, Integer> iconMap = new HashMap<>() {
-    {
-      put("cog", 0xF0493);
-      put("auto-fix", 0xF0068);
-      put("cancel", 0xF073A);
-      put("delete-sweep", 0xF05E9);
-      put("undo", 0xF054C);
-      put("redo", 0xF044E);
-      put("spider-web", 0xF0BCA);
-      put("order-bool-ascending-variant", 0xF098F);
-      put("magnify-plus-cursor", 0xF0A63);
-      put("magnify-minus", 0xF034A);
-      put("alert", 0xF0026);
-      put("close-octagon", 0xF015C);
-      put("play", 0xF040A);
-      put("pause", 0xF03E4);
-      put("step-forward", 0xF04D7);
-      put("step-backward", 0xF04D5);
-      put("fast-forward", 0xF0211);
-      put("rewind", 0xF045F);
-    }
-  };
+  private final Map<String, Integer> iconMap;
+  {
+    iconMap = new HashMap<>();
+    iconMap.put("cog", 0xF0493);
+    iconMap.put("auto-fix", 0xF0068);
+    iconMap.put("cancel", 0xF073A);
+    iconMap.put("delete-sweep", 0xF05E9);
+    iconMap.put("undo", 0xF054C);
+    iconMap.put("redo", 0xF044E);
+    iconMap.put("spider-web", 0xF0BCA);
+    iconMap.put("order-bool-ascending-variant", 0xF098F);
+    iconMap.put("magnify-plus-cursor", 0xF0A63);
+    iconMap.put("magnify-minus", 0xF034A);
+    iconMap.put("alert", 0xF0026);
+    iconMap.put("close-octagon", 0xF015C);
+    iconMap.put("play", 0xF040A);
+    iconMap.put("pause", 0xF03E4);
+    iconMap.put("step-forward", 0xF04D7);
+    iconMap.put("step-backward", 0xF04D5);
+    iconMap.put("fast-forward", 0xF0211);
+    iconMap.put("rewind", 0xF045F);
+  }
   private static final Locale ENGLISH_LOCALE = Locale.forLanguageTag("en");
   private Locale currentLocale;
   private String currentBaseName;

@@ -15,7 +15,7 @@ import java.util.Iterator;
 /**
  * Contains functions for optimizing and improving via locations.
  */
-public class OptViaAlgo {
+public final class OptViaAlgo {
 
   private OptViaAlgo() {
   }

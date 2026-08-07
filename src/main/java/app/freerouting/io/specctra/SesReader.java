@@ -3,6 +3,8 @@ package app.freerouting.io.specctra;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.FixedState;
 import app.freerouting.core.Padstack;
+import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.io.specctra.parser.IJFlexScanner;
 import app.freerouting.io.specctra.parser.Keyword;
 import app.freerouting.io.specctra.parser.LayerStructure;
@@ -10,11 +12,8 @@ import app.freerouting.io.specctra.parser.PolygonPath;
 import app.freerouting.io.specctra.parser.ScopeKeyword;
 import app.freerouting.io.specctra.parser.Shape;
 import app.freerouting.io.specctra.parser.SpecctraDsnStreamReader;
-import app.freerouting.geometry.planar.Point;
-import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,9 +33,9 @@ public final class SesReader {
   private final BasicBoard board;
   private final LayerStructure specctraLayerStructure;
   private final double sessionFileScaleDenominator;
-  private int wiresImported = 0;
-  private int viasImported = 0;
-  private int errorsEncountered = 0;
+  private int wiresImported;
+  private int viasImported;
+  private int errorsEncountered;
 
   private SesReader(IJFlexScanner scanner, BasicBoard board, double scaleDenominator) {
     this.scanner = scanner;
@@ -103,9 +102,9 @@ public final class SesReader {
       nextToken = this.scanner.next_token();
       boolean keywordOk = true;
       if (i == 0) {
-        keywordOk = (nextToken == Keyword.OPEN_BRACKET);
+        keywordOk = nextToken == Keyword.OPEN_BRACKET;
       } else if (i == 1) {
-        keywordOk = (nextToken == Keyword.SESSION);
+        keywordOk = nextToken == Keyword.SESSION;
         this.scanner.yybegin(SpecctraDsnStreamReader.NAME); // consume the session name
       }
       if (!keywordOk) {

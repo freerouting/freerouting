@@ -2,11 +2,9 @@ package app.freerouting.gui;
 
 import app.freerouting.board.LayerStructure;
 import app.freerouting.boardgraphics.ColorIntensityTable.ObjectNames;
-import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
-
+import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -23,8 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 

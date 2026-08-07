@@ -263,7 +263,7 @@ final class AnalyticsErrorAggregator {
     }
 
     String exceptionType = e.getClass().getSimpleName();
-    String message = (e.getMessage() != null) ? e.getMessage() : "(no message)";
+    String message = e.getMessage() != null ? e.getMessage() : "(no message)";
     if (message.length() > 200) {
       message = message.substring(0, 200) + "…";
     }

@@ -5,15 +5,14 @@ import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.BoardMetadata;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.io.specctra.parser.Keyword;
 import app.freerouting.io.specctra.parser.ReadScopeParameter;
 import app.freerouting.io.specctra.parser.ScopeKeyword;
 import app.freerouting.io.specctra.parser.SpecctraDsnStreamReader;
 import app.freerouting.logger.FRLogger;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -105,9 +104,9 @@ public final class DsnReader {
       }
       boolean ok = true;
       if (i == 0) {
-        ok = (token == Keyword.OPEN_BRACKET);
+        ok = token == Keyword.OPEN_BRACKET;
       } else if (i == 1) {
-        ok = (token == Keyword.PCB_SCOPE);
+        ok = token == Keyword.PCB_SCOPE;
         // switch the scanner to NAME mode so the pcb-name token is consumed cleanly
         scanner.yybegin(SpecctraDsnStreamReader.NAME);
       } else {
@@ -207,9 +206,9 @@ public final class DsnReader {
       }
       boolean ok = true;
       if (i == 0) {
-        ok = (token == Keyword.OPEN_BRACKET);
+        ok = token == Keyword.OPEN_BRACKET;
       } else if (i == 1) {
-        ok = (token == Keyword.PCB_SCOPE);
+        ok = token == Keyword.PCB_SCOPE;
         scanner.yybegin(SpecctraDsnStreamReader.NAME);
       }
       if (!ok) {

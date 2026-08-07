@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.JPopupMenu;
 
-public class MoveItemState extends InteractiveState {
+public final class MoveItemState extends InteractiveState {
 
   private final Set<Item> item_list;
   private final Set<Component> component_list;

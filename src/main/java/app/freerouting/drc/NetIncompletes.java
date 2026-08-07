@@ -52,7 +52,7 @@ public class NetIncompletes {
     /**
      * Number of connected groups in this net at calculation time.
      */
-    private int connected_group_count = 0;
+    private int connected_group_count;
 
     /**
      * Creates a new instance of NetIncompletes.
@@ -321,13 +321,13 @@ public class NetIncompletes {
         }
     }
 
-    /**
-     * Represents a potential edge (connection) between two NetItems in the Delaunay
-     * triangulation.
-     * Sortable by length to facilitate finding the shortest connections (Minimum
-     * Spanning Tree-like approach).
-     */
-    private static class Edge implements Comparable<Edge> {
+  /**
+   * Represents a potential edge (connection) between two NetItems in the Delaunay
+   * triangulation.
+   * Sortable by length to facilitate finding the shortest connections (Minimum
+   * Spanning Tree-like approach).
+   */
+  private static final class Edge implements Comparable<Edge> {
 
         public final NetItem from_item;
         public final FloatPoint from_corner;

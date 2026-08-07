@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.util.ReflectionUtil;
 import org.junit.jupiter.api.Test;
 
 class RouterSettingsMergeTest {

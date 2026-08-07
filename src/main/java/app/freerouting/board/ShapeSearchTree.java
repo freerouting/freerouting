@@ -9,12 +9,12 @@ import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.IntOctagon;
+import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.LineSegment;
-import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.RegularTileShape;
 import app.freerouting.geometry.planar.Shape;
@@ -650,8 +650,7 @@ public class ShapeSearchTree extends MinAreaTree {
         bounding_shape = new_bounding_shape;
       }
     }
-    result = divide_large_room(result, board.get_bounding_box());
-    return result;
+    return divide_large_room(result, board.get_bounding_box());
   }
 
   /**

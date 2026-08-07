@@ -14,7 +14,7 @@ import java.util.UUID;
  * API users will be assigned to a new session when they authenticate by providing their e-mail address.
  * One Freerouting process can have multiple active sessions at the same time.
  */
-public class SessionManager {
+public final class SessionManager {
 
   private static final SessionManager instance = new SessionManager();
   private static final Map<String, Session> sessions = new HashMap<>();

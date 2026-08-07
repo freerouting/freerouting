@@ -24,9 +24,9 @@ public class ComponentOutline extends Item implements Serializable {
   private Vector translation;
   private double rotation_in_degree;
   private boolean is_front;
-  private boolean is_courtyard;
-  private boolean is_fabrication;
-  private boolean is_closed;
+  private final boolean is_courtyard;
+  private final boolean is_fabrication;
+  private final boolean is_closed;
 
   /**
    * Creates a new instance of ComponentOutline

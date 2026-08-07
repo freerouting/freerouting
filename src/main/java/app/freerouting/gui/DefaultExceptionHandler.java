@@ -25,11 +25,8 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
     if (GraphicsEnvironment.isHeadless()) {
       return false;
     }
-    if (Freerouting.globalSettings != null
-        && Boolean.FALSE.equals(Freerouting.globalSettings.guiSettings.isEnabled)) {
-      return false;
-    }
-    return true;
+    return !(Freerouting.globalSettings != null
+        && Boolean.FALSE.equals(Freerouting.globalSettings.guiSettings.isEnabled));
   }
 
   private static Frame findActiveFrame() {

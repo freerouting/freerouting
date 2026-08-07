@@ -16,7 +16,7 @@ import java.util.LinkedList;
 /**
  * Class for reading and writing dsn-files.
  */
-public class DsnFile {
+public final class DsnFile {
 
   static final char CLASS_CLEARANCE_SEPARATOR = '-';
 
@@ -107,10 +107,7 @@ public class DsnFile {
             + "' has been automatically configured as a dedicated power plane because it contains a large conduction area covering >50% of the board.");
       }
     }
-    if (nothing_changed) {
-      return false;
-    }
-    return true;
+    return !nothing_changed;
   }
 
   static boolean read_on_off_scope(IJFlexScanner p_scanner) {

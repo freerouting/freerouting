@@ -1,18 +1,18 @@
 package app.freerouting.gui;
 
-import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardOutline;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.Trace;
 import app.freerouting.interactive.GuiBoardManager;
+import app.freerouting.interactive.InteractiveSettings;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -23,6 +23,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.NumberFormat;
 import java.util.Collection;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
@@ -31,10 +32,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.border.Border;
-import javax.swing.BorderFactory;
 
 /**
  * Window handling parameters of the interactive routing.
@@ -74,7 +74,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private final JFormattedTextField clearance_value_field;
   private final JLabel clearance_suffix_label;
   private final JCheckBox route_detail_outline_keepout_check_box;
-  private boolean updating_controls = false;
+  private boolean updating_controls;
   private boolean key_input_completed = true;
 
   /**

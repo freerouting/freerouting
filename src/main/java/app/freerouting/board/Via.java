@@ -34,7 +34,7 @@ public class Via extends DrillItem implements Serializable {
    * Escape vias use SMD-to-SMD clearance rules on their SMD layer rather than normal
    * conductor-to-conductor clearance, because they sit inside the SMD pad copper footprint.
    */
-  public boolean isEscapeVia = false;
+  public boolean isEscapeVia;
   /**
    * The SMD layer (primary layer) on which this escape via connects to an SMD pin.
    * Only relevant when isEscapeVia is true. -1 if not an escape via.

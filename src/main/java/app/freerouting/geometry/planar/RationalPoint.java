@@ -64,8 +64,7 @@ public class RationalPoint extends Point implements Serializable {
   public int get_id_no() {
     int result = x.hashCode();
     result = 31 * result + y.hashCode();
-    result = 31 * result + z.hashCode();
-    return result;
+    return 31 * result + z.hashCode();
   }
 
   @Override

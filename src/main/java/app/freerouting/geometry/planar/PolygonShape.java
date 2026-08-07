@@ -406,8 +406,7 @@ public class PolygonShape extends PolylineShape {
       prev_corner = curr_corner;
       curr_corner = next_corner;
     }
-    result = 0.5 * Math.abs(result);
-    return result;
+    return 0.5 * Math.abs(result);
   }
 
   @Override

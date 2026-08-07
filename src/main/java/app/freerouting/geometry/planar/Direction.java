@@ -106,7 +106,15 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
   /**
    * Returns true, if p_ob is a Direction and this Direction and p_ob point into the same direction
    */
-  public final boolean equals(Direction p_other) {
+  @Override
+  public final boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    Direction p_other = (Direction) obj;
     if (this == p_other) {
       return true;
     }

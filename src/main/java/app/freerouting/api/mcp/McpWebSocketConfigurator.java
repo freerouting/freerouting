@@ -1,8 +1,8 @@
 package app.freerouting.api.mcp;
 
-import jakarta.websocket.server.HandshakeRequest;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.HandshakeResponse;
+import jakarta.websocket.server.HandshakeRequest;
 import jakarta.websocket.server.ServerEndpointConfig;
 import java.util.List;
 import java.util.Map;

@@ -4,7 +4,6 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -17,7 +16,7 @@ import java.io.InputStream;
  *             returning a bare {@code boolean}.
  */
 @Deprecated
-public class SesFileReader {
+public final class SesFileReader {
 
     private SesFileReader() {
     }

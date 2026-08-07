@@ -7,13 +7,14 @@ import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
@@ -25,8 +26,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import app.freerouting.core.ProgressThrottler;
 
 /**
  * Handles the sequencing of the auto-router passes.
@@ -49,10 +48,10 @@ public class BatchAutorouterThread extends StoppableThread {
   private final int passNo;
 
   public FloatLine latest_air_line;
-  public float cpuTimeUsed = 0.0f;
-  public float maxMemoryUsed = 0.0f;
-  private int routedCount = 0;
-  private int failedCount = 0;
+  public float cpuTimeUsed = 0.0F;
+  public float maxMemoryUsed = 0.0F;
+  private int routedCount;
+  private int failedCount;
 
   public BatchAutorouterThread(RoutingBoard board, List<Item> autorouteItemList, int passNo,
       RouterSettings routerSettings, int startRipupCosts, int tracePullTightAccuracy,
@@ -345,7 +344,7 @@ public class BatchAutorouterThread extends StoppableThread {
       // Check if this item should be skipped due to repeated failures
       if (this.board.failureLog.shouldSkip(curr_item)) {
         Net net = board.rules.nets.get(curr_item.get_net_no(0));
-        String netName = (net != null) ? net.name : "net#" + curr_item.get_net_no(0);
+        String netName = net != null ? net.name : "net#" + curr_item.get_net_no(0);
         FRLogger.debug("Skipping " + curr_item.getClass().getSimpleName() + " on net '" + netName
             + "' - exceeded failure threshold (" + board.failureLog.getFailureCount(curr_item) + " failures)");
         --items_to_go_count;
@@ -383,7 +382,7 @@ public class BatchAutorouterThread extends StoppableThread {
           ++skipped;
         } else {
           Net net = board.rules.nets.get(curr_item.get_net_no(i));
-          String netName = (net != null) ? net.name : "net#" + curr_item.get_net_no(i);
+          String netName = net != null ? net.name : "net#" + curr_item.get_net_no(i);
 
           // Record the failure
           this.board.failureLog.recordFailure(curr_item, passNo, autorouterResult.state, autorouterResult.details);

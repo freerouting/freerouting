@@ -1,9 +1,9 @@
 package app.freerouting.settings.sources;
 
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.ReflectionUtil;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
+import app.freerouting.util.ReflectionUtil;
 import java.util.HashMap;
 import java.util.Map;
 

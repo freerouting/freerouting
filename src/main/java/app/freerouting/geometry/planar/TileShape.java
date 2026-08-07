@@ -153,8 +153,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       prev_corner = curr_corner;
       curr_corner = next_corner;
     }
-    result = 0.5 * Math.abs(result);
-    return result;
+    return 0.5 * Math.abs(result);
   }
 
   /**

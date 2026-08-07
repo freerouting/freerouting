@@ -63,9 +63,7 @@ public class LogEntries {
   }
 
   public LogEntry add(LogEntryType type, String message, UUID topic) {
-    LogEntry logEntry = this.add(type, message, topic, null);
-
-    return logEntry;
+    return this.add(type, message, topic, null);
   }
 
   public LogEntry add(LogEntryType type, String message, UUID topic, Throwable exception) {

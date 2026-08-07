@@ -1,7 +1,7 @@
 package app.freerouting.io.kicad;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Data Transfer Object (DTO) for KiCad board data serialized as JSON.

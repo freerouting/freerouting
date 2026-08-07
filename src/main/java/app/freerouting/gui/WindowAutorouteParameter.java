@@ -3,9 +3,9 @@ package app.freerouting.gui;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.RouterSettings;
+import app.freerouting.util.TextManager;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -77,7 +77,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private boolean max_passes_input_completed = true;
   private boolean max_threads_input_completed = true;
   // Flag to prevent circular updates between GUI and settings
-  private boolean isUpdatingFromSettings = false;
+  private boolean isUpdatingFromSettings;
 
   /**
    * Creates a new instance of WindowAutorouteParameter
@@ -718,8 +718,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
   // Set timeout fields based on the provided timeout string (in format "HH:MM:SS" or seconds)
   private void setJobTimeoutFields(String timeoutString) {
-    Long parsedSeconds = (timeoutString == null) ? null : TextManager.parseTimespanString(timeoutString);
-    long totalSeconds = (parsedSeconds == null) ? DEFAULT_TIMEOUT_SECONDS : parsedSeconds;
+    Long parsedSeconds = timeoutString == null ? null : TextManager.parseTimespanString(timeoutString);
+    long totalSeconds = parsedSeconds == null ? DEFAULT_TIMEOUT_SECONDS : parsedSeconds;
 
     if (totalSeconds < 0) {
       totalSeconds = DEFAULT_TIMEOUT_SECONDS;

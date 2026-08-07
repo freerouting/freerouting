@@ -6,7 +6,7 @@ import app.freerouting.geometry.planar.FloatPoint;
  * Class implementing the different functionality in the route menu, especially
  * the different behaviour of the mouse button 1.
  */
-public class RouteMenuState extends MenuState {
+public final class RouteMenuState extends MenuState {
 
   /**
    * Creates a new instance of RouteMenuState
@@ -19,8 +19,7 @@ public class RouteMenuState extends MenuState {
    * Returns a new instance of RouteMenuState
    */
   public static RouteMenuState get_instance(GuiBoardManager p_board_handling) {
-    RouteMenuState new_state = new RouteMenuState(p_board_handling);
-    return new_state;
+    return new RouteMenuState(p_board_handling);
   }
 
   @Override

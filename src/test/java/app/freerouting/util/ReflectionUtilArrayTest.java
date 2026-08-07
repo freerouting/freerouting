@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.settings.LayerSettings;
 import app.freerouting.settings.RouterSettings;
 import org.junit.jupiter.api.Test;
 
@@ -64,9 +63,8 @@ class ReflectionUtilArrayTest {
 
     // Should throw NoSuchFieldException because the Java field name is preferredDirectionHorizontal
     // but the SerializedName annotation value is preferred_direction_horizontal, so only the annotation value must match.
-    assertThrows(NoSuchFieldException.class, () -> {
-      ReflectionUtil.setFieldValue(settings, "layers.preferredDirectionHorizontal", "true,false");
-    });
+    assertThrows(NoSuchFieldException.class, () ->
+      ReflectionUtil.setFieldValue(settings, "layers.preferredDirectionHorizontal", "true,false"));
 
     // Similarly for routable - it matches because the SerializedName is "routable"
     try {

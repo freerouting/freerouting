@@ -5,7 +5,6 @@ import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -22,7 +21,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   /**
    * Creates a new instance of ObjectListWindowWithFilter
    */
-  public WindowObjectListWithFilter(BoardFrame p_board_frame) {
+  protected WindowObjectListWithFilter(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
 

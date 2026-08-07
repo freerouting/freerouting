@@ -266,9 +266,9 @@ public class GraphicsContext implements Serializable {
     }
   }
 
-  private transient java.awt.TexturePaint cached_hatch_paint = null;
+  private transient java.awt.TexturePaint cached_hatch_paint;
   private transient double cached_hatch_pitch_px = -1.0;
-  private transient Color cached_hatch_color = null;
+  private transient Color cached_hatch_color;
 
   public java.awt.geom.Area get_awt_area(Area p_area) {
     if (p_area == null || p_area.is_empty()) {
@@ -549,7 +549,7 @@ public class GraphicsContext implements Serializable {
     if (p_x > p_rect.x + p_rect.width + p_dist) {
       return false;
     }
-    return !(p_y > p_rect.y + p_rect.height + p_dist);
+    return p_y <= p_rect.y + p_rect.height + p_dist;
   }
 
   /**
@@ -852,7 +852,7 @@ public class GraphicsContext implements Serializable {
   public boolean is_front_selected() {
     int selectedVirtualLayer = get_fully_visible_virtual_layer();
     if (selectedVirtualLayer != -1) {
-      return (selectedVirtualLayer % 2 == 0);
+      return selectedVirtualLayer % 2 == 0;
     }
     if (fully_visible_layer != -1) {
       return fully_visible_layer < layer_visibility_arr.length / 2;

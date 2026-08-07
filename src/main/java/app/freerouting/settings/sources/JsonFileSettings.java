@@ -1,10 +1,10 @@
 package app.freerouting.settings.sources;
 
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
+import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

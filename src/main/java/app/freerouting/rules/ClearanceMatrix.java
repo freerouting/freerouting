@@ -339,7 +339,7 @@ public class ClearanceMatrix implements Serializable {
   /**
    * contains a row of entries of the clearance matrix
    */
-  private class Row implements ObjectInfoPanel.Printable, Serializable {
+  private final class Row implements ObjectInfoPanel.Printable, Serializable {
 
     final String name;
     final MatrixEntry[] column;
@@ -387,7 +387,7 @@ public class ClearanceMatrix implements Serializable {
   /**
    * a single entry of the clearance matrix
    */
-  private class MatrixEntry implements Serializable {
+  private final class MatrixEntry implements Serializable {
 
     int[] layer;
 

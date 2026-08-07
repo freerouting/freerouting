@@ -2,8 +2,8 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import javax.swing.JMenuItem;
 
 public class PopupMenuStitchRoute extends PopupMenuDisplay {

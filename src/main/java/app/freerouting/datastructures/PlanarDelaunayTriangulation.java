@@ -271,7 +271,7 @@ public class PlanarDelaunayTriangulation {
   /**
    * Describes a line segment in the result of the Delaunay Triangulation.
    */
-  public static class ResultEdge {
+  public static final class ResultEdge {
 
     /**
      * The start point of the line segment

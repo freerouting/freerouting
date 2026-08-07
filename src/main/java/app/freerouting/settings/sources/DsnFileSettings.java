@@ -38,7 +38,7 @@ public class DsnFileSettings implements SettingsSource {
         }
 
         // Start with whatever the DSN's autoroute block provided (or a blank slate).
-        RouterSettings rs = (extracted != null) ? extracted : new RouterSettings();
+        RouterSettings rs = extracted != null ? extracted : new RouterSettings();
 
         // Always seed the layer arrays from the actual DSN layer count so that any board
         // with more or fewer than 2 layers gets correctly-sized arrays in the merged result –

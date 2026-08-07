@@ -6,7 +6,7 @@ import com.google.gson.Strictness;
 import java.nio.file.Path;
 import java.time.Instant;
 
-public class GsonProvider {
+public final class GsonProvider {
 
   public static final Gson GSON = new GsonBuilder()
       .setPrettyPrinting()

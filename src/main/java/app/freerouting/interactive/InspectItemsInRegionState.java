@@ -10,7 +10,7 @@ import java.util.TreeSet;
 /**
  * Interactive state for selecting all items in a rectangle.
  */
-public class InspectItemsInRegionState extends SelectRegionState {
+public final class InspectItemsInRegionState extends SelectRegionState {
 
   /**
    * Creates a new instance of InspectItemsInRegionState

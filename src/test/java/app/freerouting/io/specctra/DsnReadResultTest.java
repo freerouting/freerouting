@@ -1,12 +1,15 @@
 package app.freerouting.io.specctra;
 
-import app.freerouting.io.BoardReadResult;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.io.BoardReadResult;
 import java.io.IOException;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class DsnReadResultTest {
 

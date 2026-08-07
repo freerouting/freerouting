@@ -7,7 +7,6 @@ import app.freerouting.board.PrintableShape;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Shape;
-import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.Net;

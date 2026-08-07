@@ -3,7 +3,6 @@ package app.freerouting.io.specctra.parser;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.logger.FRLogger;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -15,7 +14,7 @@ import java.io.OutputStream;
  *             {@code BoardManager} or any GUI class.
  */
 @Deprecated
-public class SpecctraSesFileWriter {
+public final class SpecctraSesFileWriter {
 
   private SpecctraSesFileWriter() {
   }

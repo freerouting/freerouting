@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-public class ReflectionUtil {
+public final class ReflectionUtil {
 
   private ReflectionUtil() {
   }

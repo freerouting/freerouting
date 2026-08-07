@@ -33,9 +33,9 @@ public class BatchOptimizer extends NamedAlgorithm {
   // the minimum cumulative trace length that was reached during the optimization
   protected double min_cumulative_trace_length = 0.0;
   protected RoutingJob job;
-  protected int totalItemsOptimized = 0;
-  protected Long deadlineMs = null;
-  protected boolean isTimedOut = false;
+  protected int totalItemsOptimized;
+  protected Long deadlineMs;
+  protected boolean isTimedOut;
 
   /**
    * Creates a new instance of BatchOptRoute, which is used to optimize the board.
@@ -184,9 +184,9 @@ public class BatchOptimizer extends NamedAlgorithm {
     double sessionDurationSeconds = (System.currentTimeMillis() - sessionStartMs) / 1000.0;
     float cpuSecondsEnd = sampleCurrentThreadCpuSeconds();
     float allocMbEnd = sampleCurrentThreadAllocatedMb();
-    float cpuSecondsUsed = (cpuSecondsStart >= 0f && cpuSecondsEnd >= cpuSecondsStart)
+    float cpuSecondsUsed = cpuSecondsStart >= 0f && cpuSecondsEnd >= cpuSecondsStart
         ? cpuSecondsEnd - cpuSecondsStart : Math.max(0f, cpuSecondsEnd);
-    float allocMbUsed = (allocMbStart >= 0f && allocMbEnd >= allocMbStart)
+    float allocMbUsed = allocMbStart >= 0f && allocMbEnd >= allocMbStart
         ? allocMbEnd - allocMbStart : Math.max(0f, allocMbEnd);
     peakHeapMb = Math.max(peakHeapMb, sampleHeapUsageMb());
 
@@ -213,7 +213,7 @@ public class BatchOptimizer extends NamedAlgorithm {
    * must go on no matter how much it improved.
    */
   protected float opt_route_pass(int p_pass_no, boolean p_with_preferred_directions) {
-    float route_improved = 0.0f;
+    float route_improved = 0.0F;
 
     BoardStatistics boardStatisticsBefore = board.get_statistics();
     RouterCounters routerCounters = new RouterCounters();

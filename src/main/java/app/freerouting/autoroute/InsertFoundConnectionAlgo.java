@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * Inserts the traces and vias of the connection found by the autoroute algorithm.
  */
-public class InsertFoundConnectionAlgo {
+public final class InsertFoundConnectionAlgo {
 
   private final RoutingBoard board;
   private final AutorouteControl ctrl;
@@ -412,9 +412,8 @@ public class InsertFoundConnectionAlgo {
       }
     }
 
-    Point ok_point = board.insert_forced_trace_segment(neck_down_end_point, p_to_corner, neck_down_halfwidth, p_layer, net_no_arr, ctrl.trace_clearance_class_no, ctrl.max_shove_trace_recursion_depth,
+    return board.insert_forced_trace_segment(neck_down_end_point, p_to_corner, neck_down_halfwidth, p_layer, net_no_arr, ctrl.trace_clearance_class_no, ctrl.max_shove_trace_recursion_depth,
         ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
-    return ok_point;
   }
 
   /**

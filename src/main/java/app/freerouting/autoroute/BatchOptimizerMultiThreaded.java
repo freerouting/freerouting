@@ -45,9 +45,10 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
     winning_candidate = null;
 
     if (this.board_update_strategy == BoardUpdateStrategy.HYBRID) {
-      int num_optimal = 1, num_prioritized = 1;
+      int num_optimal = 1;
+      int num_prioritized = 1;
 
-      if (job.routerSettings.optimizer.hybridRatio != null && job.routerSettings.optimizer.hybridRatio.indexOf(":") > 0) {
+      if (job.routerSettings.optimizer.hybridRatio != null && job.routerSettings.optimizer.hybridRatio.indexOf(":") >= 1) {
         String[] ratio = job.routerSettings.optimizer.hybridRatio.split(":");
 
         try {

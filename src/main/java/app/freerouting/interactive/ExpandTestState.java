@@ -21,7 +21,7 @@ import java.util.TreeSet;
 /**
  * State for testing the expanding algorithm of the autorouter.
  */
-public class ExpandTestState extends InteractiveState {
+public final class ExpandTestState extends InteractiveState {
 
   private boolean in_autoroute;
   private MazeSearchAlgo maze_search_algo;

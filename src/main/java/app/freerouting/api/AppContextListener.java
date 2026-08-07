@@ -1,7 +1,7 @@
 package app.freerouting.api;
 
-import app.freerouting.logger.FRLogger;
 import app.freerouting.api.security.ApiKeyValidationService;
+import app.freerouting.logger.FRLogger;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;

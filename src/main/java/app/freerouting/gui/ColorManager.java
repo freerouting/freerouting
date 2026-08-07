@@ -1,8 +1,8 @@
 package app.freerouting.gui;
 
 import app.freerouting.boardgraphics.GraphicsContext;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;

@@ -4,7 +4,6 @@ import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.interactive.GuiBoardManager;
-
 import app.freerouting.logger.FRLogger;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -20,7 +19,7 @@ import javax.swing.JFrame;
  * Description of a text file, where the board independent interactive settings
  * are stored.
  */
-public class GUIDefaultsFile {
+public final class GUIDefaultsFile {
 
   private final BoardFrame board_frame;
   private final GuiBoardManager board_handling;

@@ -561,9 +561,10 @@ rewrite {
     exclusion("**/src_v19/**")
 
     // --- PHASE 1: Hygiene (run first to reduce noise) ---
-    // activeRecipe("org.openrewrite.java.RemoveUnusedImports")
-    // activeRecipe("org.openrewrite.staticanalysis.CommonStaticAnalysis")
-    // activeRecipe("org.openrewrite.java.format.AutoFormat")
+    // Curated composite in rewrite.yml: CommonStaticAnalysis minus MethodNameCasing
+    // (inconsistent renames across widened-access overrides) and WriteOctalValuesAsDecimal.
+    // activeRecipe("app.freerouting.Phase1Hygiene")
+    // activeRecipe("org.openrewrite.java.format.AutoFormat") // skipped: reformats 78 files
 
     // --- PHASE 2: Naming Convention (snake_case -> camelCase) ---
     // WARNING: renaming private fields breaks Java-serialization compatibility of saved

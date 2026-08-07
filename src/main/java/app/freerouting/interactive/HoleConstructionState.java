@@ -18,7 +18,7 @@ import java.util.Iterator;
 /**
  * Interactive cutting a hole into an obstacle shape
  */
-public class HoleConstructionState extends CornerItemConstructionState {
+public final class HoleConstructionState extends CornerItemConstructionState {
 
   private ObstacleArea item_to_modify;
 

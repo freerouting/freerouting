@@ -32,7 +32,7 @@ public class McpApiKeyValidationFilter implements ContainerRequestFilter {
       return false;
     }
     String normalizedPath = path.startsWith("/") ? path.substring(1) : path;
-    return normalizedPath.equals(".well-known/agent.json")
+    return ".well-known/agent.json".equals(normalizedPath)
         || normalizedPath.startsWith(".well-known/");
   }
 

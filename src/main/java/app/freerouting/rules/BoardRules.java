@@ -457,8 +457,7 @@ public class BoardRules implements Serializable {
     ConvexShape curr_shape = via_padstack.get_shape(via_padstack.from_layer());
     double result = curr_shape.max_width();
     curr_shape = via_padstack.get_shape(via_padstack.to_layer());
-    result = Math.max(result, curr_shape.max_width());
-    return result;
+    return Math.max(result, curr_shape.max_width());
   }
 
   /**

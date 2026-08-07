@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class SortedOrthogonalRoomNeighbours {
+public final class SortedOrthogonalRoomNeighbours {
 
   public final CompleteExpansionRoom completed_room;
   public final SortedSet<SortedRoomNeighbour> sorted_neighbours;

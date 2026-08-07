@@ -15,7 +15,7 @@ import javax.swing.JPopupMenu;
 /**
  * Interactive creation of a circle obstacle
  */
-public class CircleConstructionState extends InteractiveState {
+public final class CircleConstructionState extends InteractiveState {
 
   private final FloatPoint circle_center;
   private double circle_radius = 0;

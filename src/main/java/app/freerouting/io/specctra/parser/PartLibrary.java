@@ -262,7 +262,7 @@ public class PartLibrary extends ScopeKeyword {
     }
   }
 
-  public static class LogicalPartMapping {
+  public static final class LogicalPartMapping {
 
     /**
      * The name of the mapping.
@@ -279,7 +279,7 @@ public class PartLibrary extends ScopeKeyword {
     }
   }
 
-  public static class PartPin {
+  public static final class PartPin {
 
     public final String pin_name;
     public final String gate_name;
@@ -296,7 +296,7 @@ public class PartLibrary extends ScopeKeyword {
     }
   }
 
-  public static class LogicalPart {
+  public static final class LogicalPart {
 
     /**
      * The name of the mapping.

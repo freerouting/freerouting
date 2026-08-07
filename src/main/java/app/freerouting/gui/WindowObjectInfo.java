@@ -35,7 +35,7 @@ import javax.swing.text.StyledDocument;
 /**
  * Window displaying text information for a list of objects implementing the ObjectInfoWindow.Printable interface.
  */
-public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectInfoPanel {
+public final class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectInfoPanel {
 
   private static final int MAX_WINDOW_HEIGHT = 500;
   private static final int SCROLLBAR_ADD = 30;

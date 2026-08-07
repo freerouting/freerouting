@@ -1,11 +1,15 @@
 package app.freerouting.io.specctra;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import app.freerouting.Freerouting;
+import app.freerouting.board.DrillItem;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.settings.GlobalSettings;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -15,8 +19,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Round-trip tests for {@link SesWriter} and {@link SesReader}.
@@ -181,7 +185,7 @@ class SesRoundTripTest {
       for (boolean startSide : new boolean[]{true, false}) {
         var contacts = startSide ? trace.get_start_contacts() : trace.get_end_contacts();
         boolean hasDrillContact = contacts.stream()
-            .anyMatch(c -> c instanceof app.freerouting.board.DrillItem);
+            .anyMatch(DrillItem.class::isInstance);
         if (!hasDrillContact) {
           continue;
         }
@@ -192,8 +196,8 @@ class SesRoundTripTest {
           // A snap may only move the endpoint to the center of a contacted drill item,
           // and never further than that item's pad inradius.
           boolean isDrillCenter = contacts.stream()
-              .filter(c -> c instanceof app.freerouting.board.DrillItem)
-              .map(c -> ((app.freerouting.board.DrillItem) c).get_center().to_float())
+              .filter(DrillItem.class::isInstance)
+              .map(c -> ((DrillItem) c).get_center().to_float())
               .anyMatch(center -> center.distance(snapped) < 0.5);
           assertTrue(isDrillCenter, "snap target must be a contacted drill item center");
           assertTrue(corner.distance(snapped) > 0.5, "null is expected for already-centered endpoints");

@@ -1,8 +1,5 @@
 package app.freerouting.interactive;
 
-import app.freerouting.management.HeadlessBoardManager;
-import app.freerouting.management.BoardManager;
-
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.board.AngleRestriction;
@@ -23,7 +20,6 @@ import app.freerouting.board.Unit;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.io.BoardReadResult;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -32,21 +28,22 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
 import app.freerouting.interactive.commands.InteractiveCommand;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnWriter;
-import app.freerouting.io.specctra.parser.DsnFile;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.logger.TraceEvent;
 import app.freerouting.logger.TraceEventListener;
-import app.freerouting.util.TextManager;
+import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
+import app.freerouting.util.TextManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -331,7 +328,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>Determines the language used for all user-facing text elements.
    */
-  private Locale locale;
+  private final Locale locale;
 
   /**
    * Number of threads to use for parallel routing operations.
@@ -2168,7 +2165,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #saveAsBinary(ObjectOutputStream)
    */
   public boolean loadFromBinary(ObjectInputStream p_design) {
-    String inputFilename = (this.routingJob != null && this.routingJob.input != null)
+    String inputFilename = this.routingJob != null && this.routingJob.input != null
         ? this.routingJob.input.getFilename()
         : null;
     if (this.routingJob != null) {
@@ -2350,7 +2347,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
     this.coordinate_transform = new CoordinateTransform(1, this.board.communication.unit, unit_factor,
         this.board.communication.unit);
-    Dimension panel_size = (panel != null) ? panel.getPreferredSize() : new Dimension(800, 600);
+    Dimension panel_size = panel != null ? panel.getPreferredSize() : new Dimension(800, 600);
     this.graphics_context = new GraphicsContext(this.board.bounding_box, panel_size,
         this.board.layer_structure, this.locale);
     this.set_layer(0);

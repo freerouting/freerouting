@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.CliSettings;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.EnvironmentVariablesSource;
 import app.freerouting.settings.sources.JsonFileSettings;
 import java.util.HashMap;

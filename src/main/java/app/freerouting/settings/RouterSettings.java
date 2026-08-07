@@ -303,7 +303,7 @@ public class RouterSettings implements Serializable, Cloneable {
         layers[i].routable = true;
       }
       if (layers[i].bendCost == null) {
-        layers[i].bendCost = (scoring != null && scoring.defaultBendCost != null) ? scoring.defaultBendCost : 0.0;
+        layers[i].bendCost = scoring != null && scoring.defaultBendCost != null ? scoring.defaultBendCost : 0.0;
       }
       if (p_board.layer_structure.arr[i].is_signal) {
         curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
@@ -351,12 +351,12 @@ public class RouterSettings implements Serializable, Cloneable {
         layerChanges.append(String.format(" preferredDirectionHorizontal: %s -> %s;", originalPrefHoriz[i], layers[i].preferredDirectionHorizontal));
       }
 
-      double oldPrefCost = (originalPrefCost != null && i < originalPrefCost.length) ? originalPrefCost[i] : 0.0;
+      double oldPrefCost = originalPrefCost != null && i < originalPrefCost.length ? originalPrefCost[i] : 0.0;
       if (oldPrefCost != scoring.preferredDirectionTraceCost[i]) {
         layerChanges.append(String.format(" preferredDirectionTraceCost: %s -> %s;", oldPrefCost, scoring.preferredDirectionTraceCost[i]));
       }
 
-      double oldUndesiredCost = (originalUndesiredCost != null && i < originalUndesiredCost.length) ? originalUndesiredCost[i] : 0.0;
+      double oldUndesiredCost = originalUndesiredCost != null && i < originalUndesiredCost.length ? originalUndesiredCost[i] : 0.0;
       if (oldUndesiredCost != scoring.undesiredDirectionTraceCost[i]) {
         layerChanges.append(String.format(" undesiredDirectionTraceCost: %s -> %s;", oldUndesiredCost, scoring.undesiredDirectionTraceCost[i]));
       }
@@ -445,7 +445,7 @@ public class RouterSettings implements Serializable, Cloneable {
     result.holeClearanceUm = this.holeClearanceUm;
     result.neckWidthUm = this.neckWidthUm;
     result.strictDrc = this.strictDrc;
-    result.ignoreNetClasses = (this.ignoreNetClasses != null) ? this.ignoreNetClasses.clone() : null;
+    result.ignoreNetClasses = this.ignoreNetClasses != null ? this.ignoreNetClasses.clone() : null;
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     result.enabled = this.enabled;
     result.vias_allowed = this.vias_allowed;
@@ -463,7 +463,7 @@ public class RouterSettings implements Serializable, Cloneable {
 
   /** Neck width in micrometers, or 0 when width necking is disabled. */
   public double getNeckWidthUm() {
-    return (neckWidthUm != null && neckWidthUm > 0) ? neckWidthUm : 0;
+    return neckWidthUm != null && neckWidthUm > 0 ? neckWidthUm : 0;
   }
 
   public boolean isStrictDrc() {
@@ -471,7 +471,7 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public int get_start_ripup_costs() {
-    return (scoring != null && scoring.startRipupCosts != null) ? scoring.startRipupCosts : 1;
+    return scoring != null && scoring.startRipupCosts != null ? scoring.startRipupCosts : 1;
   }
 
   public void set_start_ripup_costs(int p_value) {
@@ -531,7 +531,7 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public int get_via_costs() {
-    return (scoring != null && scoring.viaCosts != null) ? scoring.viaCosts : 1;
+    return scoring != null && scoring.viaCosts != null ? scoring.viaCosts : 1;
   }
 
   public void set_via_costs(int p_value) {
@@ -542,7 +542,7 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public int get_plane_via_costs() {
-    return (scoring != null && scoring.planeViaCosts != null) ? scoring.planeViaCosts : 1;
+    return scoring != null && scoring.planeViaCosts != null ? scoring.planeViaCosts : 1;
   }
 
   public void set_plane_via_costs(int p_value) {
@@ -593,7 +593,7 @@ public class RouterSettings implements Serializable, Cloneable {
       return 0.0;
     }
     if (layers[p_layer] == null || layers[p_layer].bendCost == null) {
-      return (scoring != null && scoring.defaultBendCost != null)
+      return scoring != null && scoring.defaultBendCost != null
           ? Math.max(MIN_BEND_COST, Math.min(MAX_BEND_COST, scoring.defaultBendCost))
           : 0.0;
     }
@@ -619,7 +619,7 @@ public class RouterSettings implements Serializable, Cloneable {
       return false;
     }
     if (layers[p_layer] == null) {
-      return (p_layer % 2 == 1);
+      return p_layer % 2 == 1;
     }
     return layers[p_layer].preferredDirectionHorizontal != null ? layers[p_layer].preferredDirectionHorizontal : (p_layer % 2 == 1);
   }

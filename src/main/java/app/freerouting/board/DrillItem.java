@@ -1,8 +1,8 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.ColorIntensityTable;
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
-import app.freerouting.boardgraphics.ColorIntensityTable;
 import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -47,7 +47,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
    */
   private int precalculated_last_layer = -1;
 
-  public DrillItem(Point p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no,
+  protected DrillItem(Point p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no,
       FixedState p_fixed_state, BasicBoard p_board) {
     super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
     this.center = p_center;
@@ -417,7 +417,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
         int activeVirtual = p_graphics_context.get_fully_visible_virtual_layer();
         boolean isBack = false;
         if (activeVirtual != -1) {
-          isBack = (activeVirtual % 2 != 0); // odd indices are Back (B.Silkscreen=1, B.Courtyard=3, B.Fab=5)
+          isBack = activeVirtual % 2 != 0; // odd indices are Back (B.Silkscreen=1, B.Courtyard=3, B.Fab=5)
         }
         int layerCount = board.get_layer_count();
         lastPhysicalLayer = isBack ? (layerCount - 1) : 0;

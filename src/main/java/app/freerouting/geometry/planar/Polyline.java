@@ -702,10 +702,9 @@ public class Polyline implements Serializable {
       llx = Math.min(llx, tmp);
       urx = Math.max(urx, tmp);
     }
-    IntOctagon surrounding_octagon = new IntOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx),
+    return new IntOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx),
         (int) Math.ceil(uy), (int) Math.floor(ulx), (int) Math.ceil(lrx),
         (int) Math.floor(llx), (int) Math.ceil(urx));
-    return surrounding_octagon;
   }
 
   /**

@@ -12,7 +12,7 @@ import javax.swing.UIManager;
 /**
  * Startup window visible when the program is loading.
  */
-public class WindowMessage extends WindowBase {
+public final class WindowMessage extends WindowBase {
 
   /**
    * Creates a new instance of WindowMessage

@@ -567,7 +567,7 @@ public abstract class Shape {
   /**
    * Contains the result of the function read_area_scope. area_name or clearance_class_name may be null, which means they are not provided.
    */
-  static class ReadAreaScopeResult {
+  static final class ReadAreaScopeResult {
 
     final Collection<Shape> shape_list;
     final String clearance_class_name;

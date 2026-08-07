@@ -1,22 +1,15 @@
 package app.freerouting.board;
 
+import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
-import app.freerouting.geometry.planar.PolylineShape;
-import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
-import app.freerouting.rules.ViaInfo;
-import app.freerouting.logger.FRLogger;
-import app.freerouting.datastructures.UndoableObjects;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -272,7 +265,9 @@ public class BoardComparator {
 
       boolean foundMatch = false;
       for (int i = 0; i < tr2.size(); i++) {
-        if (matchedTr2[i]) continue;
+        if (matchedTr2[i]) {
+          continue;
+        }
         Trace t2 = tr2.get(i);
         if (!(t2 instanceof PolylineTrace pt2)) {
           continue;
@@ -372,7 +367,9 @@ public class BoardComparator {
 
       boolean foundMatch = false;
       for (int i = 0; i < vias2.size(); i++) {
-        if (matchedVias2[i]) continue;
+        if (matchedVias2[i]) {
+          continue;
+        }
         Via v2 = vias2.get(i);
         double cx2 = v2.get_center().to_float().x * scale2;
         double cy2 = v2.get_center().to_float().y * scale2;
@@ -441,21 +438,33 @@ public class BoardComparator {
     }
 
     // Compare conduction areas & obstacles count
-    int condCount1 = 0, condCount2 = 0;
-    int obstCount1 = 0, obstCount2 = 0;
+    int condCount1 = 0;
+    int condCount2 = 0;
+    int obstCount1 = 0;
+    int obstCount2 = 0;
     Iterator<UndoableObjects.UndoableObjectNode> it1 = board1.item_list.start_read_object();
     for (;;) {
       Item item = (Item) board1.item_list.read_object(it1);
-      if (item == null) break;
-      if (item instanceof ConductionArea) condCount1++;
-      else if (item instanceof ObstacleArea && !(item instanceof ConductionArea) && !(item instanceof Pin) && !(item instanceof ComponentOutline)) obstCount1++;
+      if (item == null) {
+        break;
+      }
+      if (item instanceof ConductionArea) {
+        condCount1++;
+      } else if (item instanceof ObstacleArea && !(item instanceof ConductionArea) && !(item instanceof Pin) && !(item instanceof ComponentOutline)) {
+        obstCount1++;
+      }
     }
     Iterator<UndoableObjects.UndoableObjectNode> it2 = board2.item_list.start_read_object();
     for (;;) {
       Item item = (Item) board2.item_list.read_object(it2);
-      if (item == null) break;
-      if (item instanceof ConductionArea) condCount2++;
-      else if (item instanceof ObstacleArea && !(item instanceof ConductionArea) && !(item instanceof Pin) && !(item instanceof ComponentOutline)) obstCount2++;
+      if (item == null) {
+        break;
+      }
+      if (item instanceof ConductionArea) {
+        condCount2++;
+      } else if (item instanceof ObstacleArea && !(item instanceof ConductionArea) && !(item instanceof Pin) && !(item instanceof ComponentOutline)) {
+        obstCount2++;
+      }
     }
 
     if (condCount1 != condCount2) {

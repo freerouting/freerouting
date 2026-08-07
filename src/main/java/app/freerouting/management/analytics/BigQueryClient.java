@@ -1,12 +1,12 @@
 package app.freerouting.management.analytics;
 
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.dto.Context;
 import app.freerouting.management.analytics.dto.Library;
 import app.freerouting.management.analytics.dto.Payload;
 import app.freerouting.management.analytics.dto.Properties;
 import app.freerouting.management.analytics.dto.Traits;
+import app.freerouting.util.TextManager;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.bigquery.BigQuery;

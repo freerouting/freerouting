@@ -50,7 +50,7 @@ public class MazeListElement implements Comparable<MazeListElement> {
    * Non-zero only when room_ripped is true and this element was directly created
    * by expand_to_door_section with a positive add_costs.
    */
-  int ripup_cost = 0;
+  int ripup_cost;
 
   /** Creates a new instance of ExpansionInfo */
   public MazeListElement(

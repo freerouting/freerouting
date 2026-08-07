@@ -3,7 +3,6 @@ package app.freerouting.api.security;
 import app.freerouting.Freerouting;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.ApiAuthenticationSettings;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,7 @@ import java.util.List;
  * Obtain the instance via {@link #getInstance()}. Call {@link #resetForTesting()} in unit tests
  * to force re-initialization with a fresh configuration.
  */
-public class ApiKeyValidationService {
+public final class ApiKeyValidationService {
 
     private static ApiKeyValidationService instance;
     private final List<ApiKeyProvider> providers;

@@ -1,13 +1,13 @@
 package app.freerouting.io.specctra;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.Unit;
 import app.freerouting.io.BoardMetadata;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BoardMetadataTest {
 

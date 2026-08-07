@@ -528,7 +528,7 @@ class GUIDefaultsScanner {
   private static final int ZZ_NO_MATCH = 1;
   private static final int ZZ_PUSHBACK_2BIG = 2;
   /* error messages for the codes above */
-  private static final String ZZ_ERROR_MSG[] = { "Unknown internal scanner error", "Error: could not match input",
+  private static final String[] ZZ_ERROR_MSG = { "Unknown internal scanner error", "Error: could not match input",
       "Error: pushback value was too large" };
   private static final String ZZ_ATTRIBUTE_PACKED_0 = "\1\0\1\11\1\1\1\11\33\1\2\11\4\0\55\1"
       + "\2\0\2\1\1\0\1\11\65\1\1\0\u028e\1";
@@ -552,7 +552,7 @@ class GUIDefaultsScanner {
    * this buffer contains the current text to be matched and is the source of the
    * yytext() string
    */
-  private char zzBuffer[] = new char[ZZ_BUFFERSIZE];
+  private char[] zzBuffer = new char[ZZ_BUFFERSIZE];
   /**
    * the textposition at the last accepting state
    */
@@ -740,7 +740,7 @@ class GUIDefaultsScanner {
     /* is the buffer big enough? */
     if (zzCurrentPos >= zzBuffer.length) {
       /* if not: blow it up */
-      char newBuffer[] = new char[zzCurrentPos * 2];
+      char[] newBuffer = new char[zzCurrentPos * 2];
       System.arraycopy(zzBuffer, 0, newBuffer, 0, zzBuffer.length);
       zzBuffer = newBuffer;
     }

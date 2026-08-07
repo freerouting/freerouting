@@ -2,8 +2,9 @@ package app.freerouting.gui;
 
 import static app.freerouting.Freerouting.globalSettings;
 
-import app.freerouting.util.TextManager;
+import app.freerouting.core.RoutingJob;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -13,8 +14,6 @@ import java.util.function.Consumer;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
-
-import app.freerouting.core.RoutingJob;
 
 /**
  * Creates the file menu of a board frame.

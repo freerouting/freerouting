@@ -50,8 +50,8 @@ class DrillHoleClearanceShapeTest {
     RoutingBoard board = DsnTestFixtures.loadBoard(FIXTURE);
     List<DrillItem> items = drilledItems(board);
     assumeTrue(!items.isEmpty(), "fixture must contain drilled items");
-    boolean sawVia = items.stream().anyMatch(it -> it instanceof Via);
-    boolean sawPin = items.stream().anyMatch(it -> it instanceof Pin);
+    boolean sawVia = items.stream().anyMatch(Via.class::isInstance);
+    boolean sawPin = items.stream().anyMatch(Pin.class::isInstance);
     assertTrue(sawVia && sawPin, "fixture must provide both a via and a drilled pin");
 
     for (DrillItem item : items) {

@@ -26,7 +26,7 @@ public final class ApiUsagePaths {
         || normalized.startsWith("dev/")
         || normalized.startsWith(".well-known/")
         || normalized.startsWith("openapi/")
-        || normalized.equals("swagger-ui")
+        || "swagger-ui".equals(normalized)
         || normalized.startsWith("swagger-ui/");
   }
 

@@ -69,7 +69,7 @@ public class DrcReport {
    * Quality score of the board
    */
   @SerializedName("quality_score")
-  public Double quality_score = null;
+  public Double quality_score;
 
   public DrcReport(String coordinateUnits, String source, String version) {
     this.coordinate_units = coordinateUnits;

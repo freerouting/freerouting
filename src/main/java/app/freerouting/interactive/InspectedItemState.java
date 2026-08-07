@@ -13,7 +13,7 @@ import javax.swing.JPopupMenu;
 /**
  * Class implementing actions on the currently selected items.
  */
-public class InspectedItemState extends InteractiveState {
+public final class InspectedItemState extends InteractiveState {
 
   private Set<Item> item_list;
   private ClearanceViolations clearance_violations;
@@ -35,8 +35,7 @@ public class InspectedItemState extends InteractiveState {
     if (p_item_list.isEmpty()) {
       return null;
     }
-    InspectedItemState new_state = new InspectedItemState(p_item_list, p_parent_state, p_board_handling);
-    return new_state;
+    return new InspectedItemState(p_item_list, p_parent_state, p_board_handling);
   }
 
   /**

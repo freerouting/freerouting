@@ -26,11 +26,15 @@ public class SelectRegionState extends InteractiveState {
   @Override
   public InteractiveState mouse_dragged(FloatPoint p_point) {
     // Early exit on null or redundant micro-movements
-    if (p_point == null || (corner2 != null && p_point.equals(corner2))) return this;
+    if (p_point == null || (corner2 != null && p_point.equals(corner2))) {
+      return this;
+    }
 
     if (corner1 == null) {
       corner1 = p_point;
-      if (hdlg != null) hdlg.repaint();
+      if (hdlg != null) {
+        hdlg.repaint();
+      }
       return this;
     }
 
@@ -40,21 +44,28 @@ public class SelectRegionState extends InteractiveState {
     if (hdlg != null) {
       var dirtyRect = rubber_band_dirty_rect(previous_corner2, corner2);
       // Fall back to full repaint if dirty rect calculation fails
-      if (dirtyRect != null) hdlg.repaint(dirtyRect);
-      else hdlg.repaint();
+      if (dirtyRect != null) {
+        hdlg.repaint(dirtyRect);
+      } else {
+        hdlg.repaint();
+      }
     }
     return this;
   }
 
   private Rectangle rubber_band_dirty_rect(FloatPoint p_old_corner2, FloatPoint p_new_corner2) {
-    if (hdlg == null || hdlg.graphics_context == null || hdlg.graphics_context.coordinate_transform == null) return null;
+    if (hdlg == null || hdlg.graphics_context == null || hdlg.graphics_context.coordinate_transform == null) {
+      return null;
+    }
     
     var transform = hdlg.graphics_context.coordinate_transform;
     var sc_corner1 = transform.board_to_screen(corner1);
     var sc_new_corner2 = transform.board_to_screen(p_new_corner2);
-    
+
     // Fail gracefully if transforms fail
-    if (sc_corner1 == null || sc_new_corner2 == null) return null;
+    if (sc_corner1 == null || sc_new_corner2 == null) {
+      return null;
+    }
     
     var dirty_rect = screen_rect(sc_corner1, sc_new_corner2);
     
@@ -80,12 +91,18 @@ public class SelectRegionState extends InteractiveState {
 
   @Override
   public void draw(Graphics p_graphics) {
-    if (this.return_state != null) this.return_state.draw(p_graphics);
-    
-    if (hdlg == null || hdlg.graphics_context == null) return;
+    if (this.return_state != null) {
+      this.return_state.draw(p_graphics);
+    }
+
+    if (hdlg == null || hdlg.graphics_context == null) {
+      return;
+    }
     
     var current_mouse = hdlg.get_current_mouse_position();
-    if (corner1 == null || current_mouse == null) return;
+    if (corner1 == null || current_mouse == null) {
+      return;
+    }
     
     corner2 = current_mouse;
     hdlg.graphics_context.draw_rectangle(corner1, corner2, 1, Color.white, p_graphics, 1);

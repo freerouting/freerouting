@@ -17,10 +17,9 @@ import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.datastructures.UndoableObjects.Storable;
 import app.freerouting.geometry.planar.Area;
-import app.freerouting.geometry.planar.ConvexShape;
-import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Limits;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.io.CoordinateTransform;
@@ -30,8 +29,6 @@ import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
 import app.freerouting.rules.NetClass;
-import app.freerouting.geometry.planar.Limits;
-import app.freerouting.geometry.planar.Point;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -88,7 +85,7 @@ public class Structure extends ScopeKeyword {
     p_par.file.end_scope();
   }
 
-  static private void write_conduction_areas(WriteScopeParameter p_par) throws IOException {
+  private static void write_conduction_areas(WriteScopeParameter p_par) throws IOException {
     Storable curr_ob;
     Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
     for (;;) {
@@ -107,7 +104,7 @@ public class Structure extends ScopeKeyword {
     }
   }
 
-  static private void write_keepouts(WriteScopeParameter p_par) throws IOException {
+  private static void write_keepouts(WriteScopeParameter p_par) throws IOException {
     Storable curr_ob;
     Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
     for (;;) {
@@ -130,7 +127,7 @@ public class Structure extends ScopeKeyword {
     }
   }
 
-  static private void write_boundaries(WriteScopeParameter p_par) throws IOException {
+  private static void write_boundaries(WriteScopeParameter p_par) throws IOException {
     // write the bounding box
     p_par.file.start_scope();
     p_par.file.write("boundary");

@@ -258,8 +258,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       }
     }
 
-    if (activeSignalLayers.isEmpty()) return tm.getText("layers_none");
-    if (activeSignalLayers.size() == allSignalLayers.size()) return tm.getText("layers_all");
+    if (activeSignalLayers.isEmpty()) {
+      return tm.getText("layers_none");
+    }
+    if (activeSignalLayers.size() == allSignalLayers.size()) {
+      return tm.getText("layers_all");
+    }
 
     if (activeSignalLayers.size() == 2 &&
         activeSignalLayers.get(0).equals(allSignalLayers.get(0)) &&
@@ -299,8 +303,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       }
     }
 
-    if (commonHalfWidth == null) return "0";
-    if (multiple) return tm.getText("width_multiple");
+    if (commonHalfWidth == null) {
+      return "0";
+    }
+    if (multiple) {
+      return tm.getText("width_multiple");
+    }
     return String.format(Locale.ENGLISH, "%.4f", ct.board_to_user(commonHalfWidth * 2));
   }
 
@@ -631,7 +639,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         net_rule.set_ignore_cycles_with_areas(value);
       } else if (p_col == ColumnName.MIN_TRACE_LENGTH.ordinal()) {
 
-        float curr_value = 0f;
+        float curr_value = 0F;
         if (p_value instanceof Float float1) {
           curr_value = float1;
         } else if (p_value instanceof String string) {
@@ -653,7 +661,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         net_rule.set_minimum_trace_length(min_trace_length);
         board_frame.board_panel.board_handling.recalculate_length_violations();
       } else if (p_col == ColumnName.MAX_TRACE_LENGTH.ordinal()) {
-        float curr_value = 0f;
+        float curr_value = 0F;
         if (p_value instanceof Float float1) {
           curr_value = float1;
         } else if (p_value instanceof String string) {
@@ -708,9 +716,13 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       if (p_col == ColumnName.ON_LAYER.ordinal() || p_col == ColumnName.TRACE_WIDTH.ordinal()) {
         return String.class;
       }
-      if (getRowCount() == 0) return Object.class;
+      if (getRowCount() == 0) {
+        return Object.class;
+      }
       Object curr_entry = getValueAt(0, p_col);
-      if (curr_entry == null) return Object.class;
+      if (curr_entry == null) {
+        return Object.class;
+      }
       Class<?> curr_class = curr_entry.getClass();
       // changed because of a localisation bug in Java
       if (curr_entry instanceof Float) {
@@ -760,22 +772,34 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       int rows = (int) Math.ceil(allSignalLayers.size() / 2.0);
       int dynamicHeight = Math.min(300, Math.max(80, rows * 35 + 20));
 
-      btnAll.addActionListener(_ -> { for (int idx : allSignalLayers) checkboxes[idx].setSelected(true); });
+      btnAll.addActionListener(_ -> {
+        for (int idx : allSignalLayers) {
+          checkboxes[idx].setSelected(true);
+        }
+      });
       btnOuter.addActionListener(_ -> {
-        for (int idx : allSignalLayers) checkboxes[idx].setSelected(false);
+        for (int idx : allSignalLayers) {
+          checkboxes[idx].setSelected(false);
+        }
         if (!allSignalLayers.isEmpty()) {
           checkboxes[allSignalLayers.get(0)].setSelected(true);
           checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(true);
         }
       });
       btnInner.addActionListener(_ -> {
-        for (int idx : allSignalLayers) checkboxes[idx].setSelected(true);
+        for (int idx : allSignalLayers) {
+          checkboxes[idx].setSelected(true);
+        }
         if (allSignalLayers.size() >= 2) {
           checkboxes[allSignalLayers.get(0)].setSelected(false);
           checkboxes[allSignalLayers.get(allSignalLayers.size() - 1)].setSelected(false);
         }
       });
-      btnClear.addActionListener(_ -> { for (int idx : allSignalLayers) checkboxes[idx].setSelected(false); });
+      btnClear.addActionListener(_ -> {
+        for (int idx : allSignalLayers) {
+          checkboxes[idx].setSelected(false);
+        }
+      });
 
       JPanel bottom_panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
       JButton btn_ok = new JButton(p_tm.getText("button_ok"));
@@ -801,7 +825,9 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
     private void save() {
       for (int i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i] == null) continue;
+        if (checkboxes[i] == null) {
+          continue;
+        }
         netClass.set_active_routing_layer(i, checkboxes[i].isSelected());
       }
       dispose();
@@ -816,8 +842,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     }
     @Override public void actionPerformed(ActionEvent e) {
       int row = table.getEditingRow();
-      if (row < 0) row = table.getSelectedRow();
-      if (row < 0) return;
+      if (row < 0) {
+        row = table.getSelectedRow();
+      }
+      if (row < 0) {
+        return;
+      }
       int modelRow = table.convertRowIndexToModel(row);
       NetClass nc = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes.get(modelRow);
       LayerRulesDialog dialog = new LayerRulesDialog(board_frame, nc, board_frame.board_panel.board_handling, tm);

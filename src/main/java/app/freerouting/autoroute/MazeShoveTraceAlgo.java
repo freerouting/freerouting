@@ -20,7 +20,7 @@ import java.util.Collection;
 /**
  * Auxiliary functions used in MazeSearchAlgo.
  */
-public class MazeShoveTraceAlgo {
+public final class MazeShoveTraceAlgo {
 
   private MazeShoveTraceAlgo() {
   }

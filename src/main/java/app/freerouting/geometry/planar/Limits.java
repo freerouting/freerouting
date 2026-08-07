@@ -5,7 +5,7 @@ import java.math.BigInteger;
 /**
  * Some numerical limits and values are stored here.
  */
-public class Limits {
+public final class Limits {
 
   /**
    * An upper bound (2^25) so that the product of two integers with absolute value at most CRIT_COOR is contained in the mantissa of a double with some space left for addition.

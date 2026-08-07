@@ -1,9 +1,9 @@
 package app.freerouting.drc;
 
 import app.freerouting.board.Item;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Information about an unconnected NET (not individual items).

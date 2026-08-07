@@ -8,10 +8,10 @@ import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.drc.DesignRulesChecker;
-import app.freerouting.io.specctra.SesImportSummary;
-import app.freerouting.io.specctra.SesReader;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.GuiManager;
+import app.freerouting.io.specctra.SesImportSummary;
+import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.management.SessionManager;
@@ -330,7 +330,7 @@ public class Freerouting {
     Handler apiHandler = context;
 
     // Configure CORS if origins are provided
-    if (apiServerSettings.cors_origins != null && !apiServerSettings.cors_origins.equals("")) {
+    if (apiServerSettings.cors_origins != null && !"".equals(apiServerSettings.cors_origins)) {
       String allowedOrigins = apiServerSettings.cors_origins;
 
       CrossOriginHandler corsHandler = new CrossOriginHandler();
@@ -427,7 +427,7 @@ public class Freerouting {
 
     Handler mcpHandler = context;
 
-    if (mcpServerSettings.cors_origins != null && !mcpServerSettings.cors_origins.equals("")) {
+    if (mcpServerSettings.cors_origins != null && !"".equals(mcpServerSettings.cors_origins)) {
       String allowedOrigins = mcpServerSettings.cors_origins;
 
       CrossOriginHandler corsHandler = new CrossOriginHandler();
@@ -462,9 +462,8 @@ public class Freerouting {
 
     context.addEventListener(new McpContextListener());
 
-    JakartaWebSocketServletContainerInitializer.configure(context, (servletContext, wsContainer) -> {
-      wsContainer.addEndpoint(McpWebSocketEndpoint.class);
-    });
+    JakartaWebSocketServletContainerInitializer.configure(context, (servletContext, wsContainer) ->
+      wsContainer.addEndpoint(McpWebSocketEndpoint.class));
 
     new Thread(() -> {
       try {

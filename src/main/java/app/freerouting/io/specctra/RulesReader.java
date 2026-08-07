@@ -15,7 +15,6 @@ import app.freerouting.io.specctra.parser.SpecctraDsnStreamReader;
 import app.freerouting.io.specctra.parser.Structure;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;

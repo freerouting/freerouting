@@ -27,7 +27,7 @@ public abstract class ShapeTree {
   /**
    * Creates a new instance of ShapeTree
    */
-  public ShapeTree(ShapeBoundingDirections p_directions) {
+  protected ShapeTree(ShapeBoundingDirections p_directions) {
     bounding_directions = p_directions;
     root = null;
     leaf_count = 0;

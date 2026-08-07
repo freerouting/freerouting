@@ -116,12 +116,12 @@ public class Log4j2ConfigurationFactory extends ConfigurationFactory {
 
     private String getProperty(String key, String defaultValue) {
         String value = System.getProperty(key);
-        return (value != null && !value.isBlank()) ? value : defaultValue;
+        return value != null && !value.isBlank() ? value : defaultValue;
     }
 
     private boolean getBooleanProperty(String key, boolean defaultValue) {
         String value = System.getProperty(key);
-        return (value != null) ? Boolean.parseBoolean(value) : defaultValue;
+        return value != null ? Boolean.parseBoolean(value) : defaultValue;
     }
 
     private Level parseLevel(String level) {

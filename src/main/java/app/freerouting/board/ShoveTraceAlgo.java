@@ -197,7 +197,9 @@ public class ShoveTraceAlgo {
           .append(", obstacles=[");
       boolean first = true;
       for (Item obs : obstacles) {
-        if (!first) obstacleLog.append(", ");
+        if (!first) {
+          obstacleLog.append(", ");
+        }
         first = false;
         obstacleLog.append("{id=").append(obs.get_id_no())
             .append(",type=").append(obs.getClass().getSimpleName());
@@ -331,7 +333,9 @@ public class ShoveTraceAlgo {
           .append(", obstacles=[");
       boolean first = true;
       for (Item obs : obstacles) {
-        if (!first) obstacleLog.append(", ");
+        if (!first) {
+          obstacleLog.append(", ");
+        }
         first = false;
         obstacleLog.append("{id=").append(obs.get_id_no())
             .append(",type=").append(obs.getClass().getSimpleName());

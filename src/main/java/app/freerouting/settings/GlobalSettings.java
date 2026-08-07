@@ -7,9 +7,9 @@ import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.util.ReflectionUtil;
 import app.freerouting.util.gson.GsonProvider;
-import app.freerouting.settings.sources.DefaultSettings;
 import com.google.gson.annotations.SerializedName;
 import java.io.IOException;
 import java.io.Reader;
@@ -18,7 +18,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
@@ -454,7 +453,7 @@ public class GlobalSettings implements Serializable {
   public void applyCommandLineArguments(String[] p_args) {
     for (int i = 0; i < p_args.length; i++) {
       try {
-        if (p_args[i].equalsIgnoreCase("-help") || p_args[i].equalsIgnoreCase("--help") || p_args[i].equalsIgnoreCase("-h")) {
+        if ("-help".equalsIgnoreCase(p_args[i]) || "--help".equalsIgnoreCase(p_args[i]) || "-h".equalsIgnoreCase(p_args[i])) {
           show_help_option = true;
           continue;
         }
@@ -476,13 +475,13 @@ public class GlobalSettings implements Serializable {
           if ((parts.length == 2) && (!Objects.equals(parts[0], "user_data_path"))) {
             if (parts[0].startsWith("debug.")) {
               // handle debug settings
-              if (parts[0].equals("debug.enable_detailed_logging")) {
+              if ("debug.enable_detailed_logging".equals(parts[0])) {
                 debugSettings.enableDetailedLogging = Boolean.parseBoolean(parts[1]);
-              } else if (parts[0].equals("debug.single_step_execution")) {
+              } else if ("debug.single_step_execution".equals(parts[0])) {
                 debugSettings.singleStepExecution = Boolean.parseBoolean(parts[1]);
-              } else if (parts[0].equals("debug.trace_insertion_delay")) {
+              } else if ("debug.trace_insertion_delay".equals(parts[0])) {
                 debugSettings.traceInsertionDelay = Integer.parseInt(parts[1]);
-              } else if (parts[0].equals("debug.filter_by_net")) {
+              } else if ("debug.filter_by_net".equals(parts[0])) {
                 String[] nets = parts[1].split(",");
                 for (String net : nets) {
                   debugSettings.filterByNet.add(net.trim().toLowerCase());

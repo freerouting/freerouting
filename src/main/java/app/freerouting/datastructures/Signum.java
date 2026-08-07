@@ -3,7 +3,7 @@ package app.freerouting.datastructures;
 /**
  * Implements the mathematical signum function.
  */
-public class Signum {
+public final class Signum {
 
   public static final Signum POSITIVE = new Signum("positive");
   public static final Signum NEGATIVE = new Signum("negative");

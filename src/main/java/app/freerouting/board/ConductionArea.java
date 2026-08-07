@@ -11,7 +11,6 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
@@ -45,10 +44,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     this.clear_derived_data();
   }
 
-  private transient java.awt.geom.Area cached_fill_area = null;
-  private transient app.freerouting.boardgraphics.CoordinateTransform cached_fill_transform = null;
+  private transient java.awt.geom.Area cached_fill_area;
+  private transient app.freerouting.boardgraphics.CoordinateTransform cached_fill_transform;
   private transient int cached_board_revision = -1;
-  private transient java.awt.geom.Area cached_board_fill_area = null;
+  private transient java.awt.geom.Area cached_board_fill_area;
 
   /**
    * Creates a new instance of ConductionArea

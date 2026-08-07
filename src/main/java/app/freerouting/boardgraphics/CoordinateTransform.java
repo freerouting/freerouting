@@ -94,7 +94,8 @@ public class CoordinateTransform implements Serializable {
 
     FloatPoint rotated_point = p_point.rotate(this.rotation, this.rotation_pole);
 
-    double x, y;
+    double x;
+    double y;
     if (this.mirror_left_right) {
       x = (design_box_with_offset.width() - rotated_point.x - 1) * scale_factor + display_x_offset;
     } else {
@@ -112,7 +113,8 @@ public class CoordinateTransform implements Serializable {
    * Transform a java.awt.geom.Point2D to a geometry.planar.FloatPoint
    */
   public FloatPoint screen_to_board(Point2D p_point) {
-    double x, y;
+    double x;
+    double y;
     if (this.mirror_left_right) {
       x = design_box_with_offset.width() - (p_point.getX() - display_x_offset) / scale_factor - 1;
     } else {

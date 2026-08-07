@@ -3,7 +3,6 @@ package app.freerouting.io.specctra;
 import app.freerouting.TestFixtures;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.io.BoardReadResult;
-
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;

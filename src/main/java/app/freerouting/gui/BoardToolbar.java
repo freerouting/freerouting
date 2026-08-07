@@ -14,19 +14,19 @@ import app.freerouting.interactive.RouteMenuState;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.Arrays;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -43,7 +43,7 @@ import javax.swing.border.BevelBorder;
  */
 class BoardToolbar extends JPanel {
 
-  private final float ICON_FONT_SIZE = 26.0f;
+  private final float ICON_FONT_SIZE = 26.0F;
   private final SegmentedButtons modeSelectionPanel;
   private final JButton settings_button;
   private final JButton toolbar_autoroute_button;
@@ -64,7 +64,7 @@ class BoardToolbar extends JPanel {
   private JButton vars_next_button;
   private JButton vars_previous_button;
 
-  private boolean isShiftDown = false;
+  private boolean isShiftDown;
 
   /**
    * Creates a new instance of BoardToolbarPanel
@@ -95,9 +95,8 @@ class BoardToolbar extends JPanel {
     setupKeyboardShortcuts();
 
     // Register listener for debug state changes
-    app.freerouting.debug.DebugControl.getInstance().addDebugStateListener(isPaused -> {
-      SwingUtilities.invokeLater(this::updateDebugButtonsState);
-    });
+    app.freerouting.debug.DebugControl.getInstance().addDebugStateListener(isPaused ->
+      SwingUtilities.invokeLater(this::updateDebugButtonsState));
 
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
@@ -140,9 +139,8 @@ class BoardToolbar extends JPanel {
     // Add "Settings" button to the toolbar
     settings_button = new JButton();
     tm.setText(settings_button, "settings_button");
-    settings_button.addActionListener(_ -> {
-      board_frame.autoroute_parameter_window.setVisible(true);
-    });
+    settings_button.addActionListener(_ ->
+      board_frame.autoroute_parameter_window.setVisible(true));
     settings_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_button", settings_button.getText()));
     middle_toolbar.add(settings_button);
 
@@ -211,14 +209,18 @@ class BoardToolbar extends JPanel {
 
         // Since we reset(), it defaults to PAUSED if singleStep enabled.
         // So Enable Play/Next/Prev, Disable Pause
-        if (vars_play_button != null)
+        if (vars_play_button != null) {
           vars_play_button.setEnabled(true);
-        if (vars_next_button != null)
+        }
+        if (vars_next_button != null) {
           vars_next_button.setEnabled(true);
-        if (vars_previous_button != null)
+        }
+        if (vars_previous_button != null) {
           vars_previous_button.setEnabled(true);
-        if (vars_pause_button != null)
+        }
+        if (vars_pause_button != null) {
           vars_pause_button.setEnabled(false);
+        }
       }
     });
     toolbar_autoroute_button.addActionListener(
@@ -228,9 +230,8 @@ class BoardToolbar extends JPanel {
     // Add "Cancel" button to the toolbar
     cancel_button = new JButton();
     tm.setText(cancel_button, "cancel_button");
-    cancel_button.addActionListener(_ -> {
-      board_frame.board_panel.board_handling.stop_autorouter_and_route_optimizer();
-    });
+    cancel_button.addActionListener(_ ->
+      board_frame.board_panel.board_handling.stop_autorouter_and_route_optimizer());
     cancel_button.addActionListener(_ -> FRAnalytics.buttonClicked("cancel_button", cancel_button.getText()));
     cancel_button.setEnabled(false);
     middle_toolbar.add(cancel_button);
@@ -348,18 +349,19 @@ class BoardToolbar extends JPanel {
 
       // Previous Button
       tm.setText(vars_previous_button, "debug_previous");
-      if (vars_previous_button.getText().startsWith("!"))
+      if (vars_previous_button.getText().startsWith("!")) {
         vars_previous_button.setText("previous"); // Fallback
-      vars_previous_button.addActionListener(_ -> {
-        handlePreviousStep();
-      });
+      }
+      vars_previous_button.addActionListener(_ ->
+          handlePreviousStep());
       vars_previous_button.setEnabled(false); // Initially disabled
       middle_toolbar.add(vars_previous_button);
 
       // Play Button
       tm.setText(vars_play_button, "debug_play");
-      if (vars_play_button.getText().startsWith("!"))
+      if (vars_play_button.getText().startsWith("!")) {
         vars_play_button.setText("Play"); // Fallback
+      }
       vars_play_button.addActionListener(_ -> {
         app.freerouting.debug.DebugControl.getInstance().resume();
         vars_pause_button.setEnabled(true);
@@ -372,8 +374,9 @@ class BoardToolbar extends JPanel {
 
       // Pause Button
       tm.setText(vars_pause_button, "debug_pause"); // Key needs to exist or fallback
-      if (vars_pause_button.getText().startsWith("!"))
+      if (vars_pause_button.getText().startsWith("!")) {
         vars_pause_button.setText("Pause"); // Fallback
+      }
       vars_pause_button.addActionListener(_ -> {
         app.freerouting.debug.DebugControl.getInstance().pause();
         updateDebugButtonsState();
@@ -383,11 +386,11 @@ class BoardToolbar extends JPanel {
 
       // Next Button
       tm.setText(vars_next_button, "debug_next");
-      if (vars_next_button.getText().startsWith("!"))
+      if (vars_next_button.getText().startsWith("!")) {
         vars_next_button.setText("Next"); // Fallback
-      vars_next_button.addActionListener(_ -> {
-        handleNextStep();
-      });
+      }
+      vars_next_button.addActionListener(_ ->
+          handleNextStep());
       vars_next_button.setEnabled(false); // Initially disabled
       middle_toolbar.add(vars_next_button);
 
@@ -524,15 +527,17 @@ class BoardToolbar extends JPanel {
     this.getActionMap().put("debugNext", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (vars_next_button != null && vars_next_button.isEnabled())
+        if (vars_next_button != null && vars_next_button.isEnabled()) {
           handleNextStep();
+        }
       }
     });
     this.getActionMap().put("debugPrevious", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (vars_previous_button != null && vars_previous_button.isEnabled())
+        if (vars_previous_button != null && vars_previous_button.isEnabled()) {
           handlePreviousStep();
+        }
       }
     });
     // Map Shift+Arrow to same handlers, the handlers check the Shift state or we
@@ -600,19 +605,24 @@ class BoardToolbar extends JPanel {
 
   private void updateDebugButtonsState() {
     boolean isPaused = app.freerouting.debug.DebugControl.getInstance().isPaused();
-    if (vars_pause_button != null)
+    if (vars_pause_button != null) {
       vars_pause_button.setEnabled(!isPaused);
-    if (vars_play_button != null)
+    }
+    if (vars_play_button != null) {
       vars_play_button.setEnabled(isPaused);
-    if (vars_next_button != null)
+    }
+    if (vars_next_button != null) {
       vars_next_button.setEnabled(isPaused);
-    if (vars_previous_button != null)
+    }
+    if (vars_previous_button != null) {
       vars_previous_button.setEnabled(isPaused);
+    }
   }
 
   private void updateDebugIcons() {
-    if (vars_next_button == null || vars_previous_button == null)
+    if (vars_next_button == null || vars_previous_button == null) {
       return;
+    }
 
     TextManager tm = new TextManager(this.getClass(), board_frame.get_locale());
     if (isShiftDown) {
@@ -620,12 +630,14 @@ class BoardToolbar extends JPanel {
       tm.setText(vars_previous_button, "debug_rewind");
     } else {
       tm.setText(vars_next_button, "debug_next");
-      if (vars_next_button.getText().startsWith("!"))
+      if (vars_next_button.getText().startsWith("!")) {
         vars_next_button.setText("Next");
+      }
 
       tm.setText(vars_previous_button, "debug_previous");
-      if (vars_previous_button.getText().startsWith("!"))
+      if (vars_previous_button.getText().startsWith("!")) {
         vars_previous_button.setText("Previous");
+      }
     }
 
     // Reset fonts to the icon size AFTER TextManager (which scales them)

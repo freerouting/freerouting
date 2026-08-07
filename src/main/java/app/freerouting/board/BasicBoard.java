@@ -86,7 +86,7 @@ public class BasicBoard implements Serializable {
    */
   public transient SearchTreeManager search_tree_manager;
   private transient Set<Integer> normalizeSuppressedNetNos = new HashSet<>();
-  private transient int revision = 0;
+  private transient int revision;
   /**
    * the rectangle, where the graphics may be not up-to-date
    */
@@ -878,7 +878,7 @@ public class BasicBoard implements Serializable {
       normalizeSuppressedNetNos = new HashSet<>();
     }
     if (normalizeSuppressedNetNos.contains(p_net_no)) {
-      String netName = (rules != null && rules.nets != null && rules.nets.get(p_net_no) != null)
+      String netName = rules != null && rules.nets != null && rules.nets.get(p_net_no) != null
           ? rules.nets.get(p_net_no).name : String.valueOf(p_net_no);
       FRLogger.debug("BasicBoard.normalize_traces: skipping net '" + netName
           + "' because normalization already hit the oscillation cap on this board candidate.");
@@ -894,7 +894,7 @@ public class BasicBoard implements Serializable {
         // and a re-combined state (e.g. a self-intersecting or zero-length segment that
         // the geometry engine cannot cleanly normalise).  Stop here rather than hanging
         // the board-load thread for minutes.
-        String netName = (rules != null && rules.nets != null && rules.nets.get(p_net_no) != null)
+        String netName = rules != null && rules.nets != null && rules.nets.get(p_net_no) != null
             ? rules.nets.get(p_net_no).name : String.valueOf(p_net_no);
         FRLogger.warn("BasicBoard.normalize_traces: reached " + MAX_NORMALIZE_ITERATIONS
             + " iterations for net '" + netName + "' — stopping to prevent hang."
@@ -983,7 +983,7 @@ public class BasicBoard implements Serializable {
       int iterationCount = 0;
       while (something_changed) {
         if (++iterationCount > MAX_NORMALIZE_ITERATIONS) {
-          String netName = (rules != null && rules.nets != null && rules.nets.get(netNo) != null)
+          String netName = rules != null && rules.nets != null && rules.nets.get(netNo) != null
               ? rules.nets.get(netNo).name : String.valueOf(netNo);
           FRLogger.warn("BasicBoard.normalize_all_traces: reached " + MAX_NORMALIZE_ITERATIONS
               + " iterations for net '" + netName + "' — stopping to prevent hang.");
@@ -1301,8 +1301,12 @@ public class BasicBoard implements Serializable {
 
       @Override
       public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RenderStep)) return false;
+        if (this == o) {
+          return true;
+        }
+        if (!(o instanceof RenderStep)) {
+          return false;
+        }
         RenderStep other = (RenderStep) o;
         return isVirtual == other.isVirtual && index == other.index;
       }

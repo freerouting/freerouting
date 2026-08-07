@@ -166,8 +166,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     result = 31 * result + lowerLeftDiagonalX;
     result = 31 * result + upperRightDiagonalX;
     result = 31 * result + upperLeftDiagonalX;
-    result = 31 * result + lowerRightDiagonalX;
-    return result;
+    return 31 * result + lowerRightDiagonalX;
   }
 
   /**
@@ -556,7 +555,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     }
     double tmp_1 = p_point.x - p_point.y;
     double tmp_2 = p_point.x + p_point.y;
-    return !(upperLeftDiagonalX > tmp_1) && !(lowerRightDiagonalX < tmp_1) && !(lowerLeftDiagonalX > tmp_2) && !(upperRightDiagonalX < tmp_2);
+    return upperLeftDiagonalX <= tmp_1 && lowerRightDiagonalX >= tmp_1 && lowerLeftDiagonalX <= tmp_2 && upperRightDiagonalX >= tmp_2;
   }
 
   /**

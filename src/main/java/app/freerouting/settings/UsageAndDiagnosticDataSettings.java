@@ -29,11 +29,11 @@ public class UsageAndDiagnosticDataSettings implements Serializable {
    * High-volume, low-value GUI navigation events. Disabled by default to reduce BigQuery cost.
    */
   @SerializedName("track_window_changed")
-  public boolean trackWindowChanged = false;
+  public boolean trackWindowChanged;
   /**
    * High-volume, low-value GUI click events. Disabled by default; use {@code Profile Updated}
    * and {@code File Saved} for actionable signals instead.
    */
   @SerializedName("track_button_clicked")
-  public boolean trackButtonClicked = false;
+  public boolean trackButtonClicked;
 }

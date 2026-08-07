@@ -1,6 +1,5 @@
 package app.freerouting.api.mcp;
 
-import app.freerouting.Freerouting;
 import app.freerouting.constants.Constants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -12,10 +11,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import jakarta.ws.rs.core.Context;
 
 /**
  * Public A2A agent-card endpoint for MCP discovery.

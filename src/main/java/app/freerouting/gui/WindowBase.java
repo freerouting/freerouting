@@ -1,8 +1,8 @@
 package app.freerouting.gui;
 
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.util.TextManager;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GraphicsConfiguration;
@@ -107,7 +107,7 @@ public class WindowBase extends JFrame {
     if (current != lastGraphicsConfig) {
       lastGraphicsConfig = current;
       FRLogger.trace("Window '" + this.getClass().getName() + "' moved to a different display; re-laying out for new DPI scaling.");
-      SwingUtilities.invokeLater(() -> onGraphicsConfigurationChanged());
+      SwingUtilities.invokeLater(this::onGraphicsConfigurationChanged);
     }
   }
 

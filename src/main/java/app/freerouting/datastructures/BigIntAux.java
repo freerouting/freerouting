@@ -5,7 +5,7 @@ import java.math.BigInteger;
 /**
  * Auxiliary functions with BigInteger Parameters
  */
-public class BigIntAux {
+public final class BigIntAux {
 
   /*
    * trailingZeroTable[i] is the number of trailing zero bits in the binary

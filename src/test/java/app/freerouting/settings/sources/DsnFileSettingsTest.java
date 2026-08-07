@@ -1,14 +1,15 @@
 package app.freerouting.settings.sources;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import app.freerouting.Freerouting;
 import app.freerouting.io.specctra.DsnTestFixtures;
 import app.freerouting.settings.GlobalSettings;
+import java.io.InputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.InputStream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DsnFileSettingsTest {
 

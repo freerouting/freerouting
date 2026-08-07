@@ -1,18 +1,18 @@
 package app.freerouting.fixtures;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayInputStream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Regression tests for Issue #676 — {@code AutorouteSettings.get_layer_active: p_layer out of

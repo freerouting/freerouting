@@ -1,0 +1,44 @@
+---
+# Freerouting OpenRewrite phases.
+#
+# Phase1Hygiene is a curated subset of org.openrewrite.staticanalysis.CommonStaticAnalysis:
+# the composite is NOT used directly because two of its ingredients are unsafe for this repo:
+#   - MethodNameCasing: renames package-private abstract method declarations but skips the
+#     public @Override implementations (widened access), leaving the code uncompilable.
+#     Method renaming belongs to the dedicated Phase 2 rename recipes instead.
+#   - WriteOctalValuesAsDecimal: rewrites intentional octal literals (e.g. fileMode 0775 in
+#     build.gradle) into unreadable decimals.
+#   - EmptyBlock: rewrites deliberately empty if-blocks (e.g. TODO placeholders in
+#     BaseController) into dangling condition statements, dropping null guards (NPE) and
+#     leaving confusing bare expressions like `job.thread.is_stop_auto_router_requested();`.
+#
+# Apply with: ./gradlew rewriteRun -Drewrite.activeRecipes=app.freerouting.Phase1Hygiene
+type: specs.openrewrite.org/v1beta/recipe
+name: app.freerouting.Phase1Hygiene
+displayName: Freerouting phase 1 hygiene
+description: Import/format-neutral static-analysis hygiene without identifier renames.
+recipeList:
+  - org.openrewrite.java.RemoveUnusedImports
+  - org.openrewrite.java.OrderImports
+  - org.openrewrite.staticanalysis.AbstractClassPublicConstructor
+  - org.openrewrite.staticanalysis.BooleanChecksNotInverted
+  - org.openrewrite.staticanalysis.CovariantEquals
+  - org.openrewrite.staticanalysis.EqualsAvoidsNull
+  - org.openrewrite.staticanalysis.ExplicitInitialization
+  - org.openrewrite.staticanalysis.FinalClass
+  - org.openrewrite.staticanalysis.FinalizePrivateFields
+  - org.openrewrite.staticanalysis.IndexOfShouldNotCompareGreaterThanZero
+  - org.openrewrite.staticanalysis.InlineVariable
+  - org.openrewrite.staticanalysis.LambdaBlockToExpression
+  - org.openrewrite.staticanalysis.ModifierOrder
+  - org.openrewrite.staticanalysis.MultipleVariableDeclarations
+  - org.openrewrite.staticanalysis.NeedBraces
+  - org.openrewrite.staticanalysis.NoDoubleBraceInitialization
+  - org.openrewrite.staticanalysis.NoValueOfOnStringType
+  - org.openrewrite.staticanalysis.ReplaceLambdaWithMethodReference
+  - org.openrewrite.staticanalysis.SimplifyBooleanExpression
+  - org.openrewrite.staticanalysis.SimplifyBooleanReturn
+  - org.openrewrite.staticanalysis.UnnecessaryParentheses
+  - org.openrewrite.staticanalysis.UpperCaseLiteralSuffixes
+  - org.openrewrite.staticanalysis.UseDiamondOperator
+  - org.openrewrite.staticanalysis.UseJavaStyleArrayDeclarations

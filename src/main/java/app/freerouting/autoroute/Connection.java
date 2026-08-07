@@ -10,7 +10,7 @@ import java.util.TreeSet;
 /**
  * Describes a routing connection ending at the next fork or terminal item.
  */
-public class Connection {
+public final class Connection {
 
   private static final double DETOUR_ADD = 100;
   private static final double DETOUR_ITEM_COST = 0.1;
@@ -151,7 +151,6 @@ public class Connection {
       return Integer.MAX_VALUE;
     }
     double min_trace_length = start_point.to_float().distance(end_point.to_float());
-    double detour = (this.trace_length() + DETOUR_ADD) / (min_trace_length + DETOUR_ADD) + DETOUR_ITEM_COST * (item_list.size() - 1);
-    return detour;
+    return (this.trace_length() + DETOUR_ADD) / (min_trace_length + DETOUR_ADD) + DETOUR_ITEM_COST * (item_list.size() - 1);
   }
 }

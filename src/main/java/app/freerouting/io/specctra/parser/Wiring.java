@@ -21,9 +21,6 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polygon;
 import app.freerouting.geometry.planar.Polyline;
-import app.freerouting.geometry.planar.PolylineShape;
-import app.freerouting.geometry.planar.TileShape;
-import app.freerouting.io.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
@@ -417,7 +414,7 @@ public class Wiring extends ScopeKeyword {
       half_width = 0;
     }
     if (layer_no < 0 || layer_no >= board.get_layer_count()) {
-      String layerName = (path != null) ? path.layer.name : border_shape.layer.name;
+      String layerName = path != null ? path.layer.name : border_shape.layer.name;
       String msg = "Wiring: wire ignored — unknown layer '" + layerName + "' at '" + p_par.scanner.get_scope_identifier() + "'";
       FRLogger.warn(msg);
       p_par.warnings.add(msg);

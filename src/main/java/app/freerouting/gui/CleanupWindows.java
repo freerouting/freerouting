@@ -7,7 +7,7 @@ public abstract class CleanupWindows extends WindowObjectListWithFilter {
    *
    * @param p_board_frame
    */
-  public CleanupWindows(BoardFrame p_board_frame) {
+  protected CleanupWindows(BoardFrame p_board_frame) {
     super(p_board_frame);
   }
 }

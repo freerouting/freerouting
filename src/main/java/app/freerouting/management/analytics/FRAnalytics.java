@@ -16,76 +16,76 @@ import java.util.UUID;
 /**
  * A class to manage analytics for the application.
  */
-public class FRAnalytics {
+public final class FRAnalytics {
 
-  private static final HashMap<String, String> appLocationTable = new HashMap<String, String>() {
-    {
-      put("app.freerouting.gui.BoardFrame", "app.freerouting.gui/Board");
-      put("app.freerouting.gui.WindowVisibility", "app.freerouting.gui/Appearance/Visibility");
-      put("app.freerouting.gui.ColorManager", "app.freerouting.gui/Appearance/Colors");
-      put("app.freerouting.gui.WindowDisplayMisc", "app.freerouting.gui/Appearance/Misc");
-      put("app.freerouting.gui.WindowSelectParameter", "app.freerouting.gui/Settings/Selection");
-      put("app.freerouting.gui.WindowRouteParameter", "app.freerouting.gui/Settings/Routing");
-      put("app.freerouting.gui.WindowAutorouteParameter", "app.freerouting.gui/Settings/Auto-router");
-      put("app.freerouting.gui.WindowAutorouteDetailParameter", "app.freerouting.gui/Settings/Auto-router/Details");
-      put("app.freerouting.gui.WindowMoveParameter", "app.freerouting.gui/Settings/Controls");
-      put("app.freerouting.gui.WindowClearanceMatrix", "app.freerouting.gui/Rules/ClearanceMatrix");
-      put("app.freerouting.gui.WindowVia", "app.freerouting.gui/Rules/Vias");
-      put("app.freerouting.gui.WindowNets", "app.freerouting.gui/Rules/Nets");
-      put("app.freerouting.gui.WindowNetClasses", "app.freerouting.gui/Rules/NetClasses");
-      put("app.freerouting.gui.WindowPackages", "app.freerouting.gui/Information/LibraryPackages");
-      put("app.freerouting.gui.WindowPadstacks", "app.freerouting.gui/Information/LibraryPadstacks");
-      put("app.freerouting.gui.WindowComponents", "app.freerouting.gui/Information/PlacedComponents");
-      put("app.freerouting.gui.WindowIncompletes", "app.freerouting.gui/Information/Incompletes");
-      put("app.freerouting.gui.WindowLengthViolations", "app.freerouting.gui/Information/LengthViolations");
-      put("app.freerouting.gui.WindowClearanceViolations", "app.freerouting.gui/Information/ClearanceViolations");
-      put("app.freerouting.gui.WindowUnconnectedRoute", "app.freerouting.gui/Information/UnconnectedRoutes");
-      put("app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui/Information/RouteStubs");
+  private static final HashMap<String, String> appLocationTable;
+  static {
+    appLocationTable = new HashMap<String, String>();
+    appLocationTable.put("app.freerouting.gui.BoardFrame", "app.freerouting.gui/Board");
+    appLocationTable.put("app.freerouting.gui.WindowVisibility", "app.freerouting.gui/Appearance/Visibility");
+    appLocationTable.put("app.freerouting.gui.ColorManager", "app.freerouting.gui/Appearance/Colors");
+    appLocationTable.put("app.freerouting.gui.WindowDisplayMisc", "app.freerouting.gui/Appearance/Misc");
+    appLocationTable.put("app.freerouting.gui.WindowSelectParameter", "app.freerouting.gui/Settings/Selection");
+    appLocationTable.put("app.freerouting.gui.WindowRouteParameter", "app.freerouting.gui/Settings/Routing");
+    appLocationTable.put("app.freerouting.gui.WindowAutorouteParameter", "app.freerouting.gui/Settings/Auto-router");
+    appLocationTable.put("app.freerouting.gui.WindowAutorouteDetailParameter", "app.freerouting.gui/Settings/Auto-router/Details");
+    appLocationTable.put("app.freerouting.gui.WindowMoveParameter", "app.freerouting.gui/Settings/Controls");
+    appLocationTable.put("app.freerouting.gui.WindowClearanceMatrix", "app.freerouting.gui/Rules/ClearanceMatrix");
+    appLocationTable.put("app.freerouting.gui.WindowVia", "app.freerouting.gui/Rules/Vias");
+    appLocationTable.put("app.freerouting.gui.WindowNets", "app.freerouting.gui/Rules/Nets");
+    appLocationTable.put("app.freerouting.gui.WindowNetClasses", "app.freerouting.gui/Rules/NetClasses");
+    appLocationTable.put("app.freerouting.gui.WindowPackages", "app.freerouting.gui/Information/LibraryPackages");
+    appLocationTable.put("app.freerouting.gui.WindowPadstacks", "app.freerouting.gui/Information/LibraryPadstacks");
+    appLocationTable.put("app.freerouting.gui.WindowComponents", "app.freerouting.gui/Information/PlacedComponents");
+    appLocationTable.put("app.freerouting.gui.WindowIncompletes", "app.freerouting.gui/Information/Incompletes");
+    appLocationTable.put("app.freerouting.gui.WindowLengthViolations", "app.freerouting.gui/Information/LengthViolations");
+    appLocationTable.put("app.freerouting.gui.WindowClearanceViolations", "app.freerouting.gui/Information/ClearanceViolations");
+    appLocationTable.put("app.freerouting.gui.WindowUnconnectedRoute", "app.freerouting.gui/Information/UnconnectedRoutes");
+    appLocationTable.put("app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui/Information/RouteStubs");
 
-      put("app.freerouting.gui.WindowAbout", "app.freerouting.gui/Help/About");
-      put("select_button", "app.freerouting.gui/Board/Toolbar/Select");
-      put("route_button", "app.freerouting.gui/Board/Toolbar/Route");
-      put("drag_button", "app.freerouting.gui/Board/Toolbar/Drag");
-      put("autoroute_button", "app.freerouting.gui/Board/Toolbar/Autorouter");
-      put("undo_button", "app.freerouting.gui/Board/Toolbar/Undo");
-      put("redo_button", "app.freerouting.gui/Board/Toolbar/Redo");
-      put("incompletes_button", "app.freerouting.gui/Board/Toolbar/Incompletes");
-      put("violation_button", "app.freerouting.gui/Board/Toolbar/Violations");
-      put("display_all_button", "app.freerouting.gui/Board/Toolbar/ZoomAll");
-      put("display_region_button", "app.freerouting.gui/Board/Toolbar/ZoomRegion");
-      put("file_save_menuitem", "app.freerouting.gui/Board/Menu/File/Save");
-      put("file_save_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/SaveAndExit");
-      put("file_cancel_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/CancelAndExit");
-      put("file_save_as_menuitem", "app.freerouting.gui/Board/Menu/File/SaveAs");
-      put("file_write_logfile_menuitem", "app.freerouting.gui/Board/Menu/File/MacroRecording");
-      put("file_replay_logfile_menuitem", "app.freerouting.gui/Board/Menu/File/MacroPlayback");
-      put("file_save_settings_menuitem", "app.freerouting.gui/Board/Menu/File/SaveGUISettings");
-      put("file_write_session_file_menuitem", "app.freerouting.gui/Board/Menu/File/ExportAsSpecctra");
-      put("file_write_eagle_session_script_menuitem", "app.freerouting.gui/Board/Menu/File/ExportAsEagleScript");
-      put("display_visibility_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Visibility");
-      put("display_colors_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Colors");
-      put("display_miscellaneous_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Miscellaneous");
-      put("settings_selection_menuitem", "app.freerouting.gui/Board/Menu/Settings/Selection");
-      put("settings_routing_menuitem", "app.freerouting.gui/Board/Menu/Settings/Routing");
-      put("settings_autorouter_menuitem", "app.freerouting.gui/Board/Menu/Settings/AutoRouter");
-      put("settings_controls_menuitem", "app.freerouting.gui/Board/Menu/Settings/Controls");
-      put("rules_clearance_menuitem", "app.freerouting.gui/Board/Menu/Rules/ClearanceMatrix");
-      put("rules_vias_menuitem", "app.freerouting.gui/Board/Menu/Rules/Vias");
-      put("rules_nets_menuitem", "app.freerouting.gui/Board/Menu/Rules/Nets");
-      put("rules_net_class_menuitem", "app.freerouting.gui/Board/Menu/Rules/NetClasses");
-      put("info_packages_menuitem", "app.freerouting.gui/Board/Menu/Info/Packages");
-      put("info_padstacks_menuitem", "app.freerouting.gui/Board/Menu/Info/Padstacks");
-      put("info_components_menuitem", "app.freerouting.gui/Board/Menu/Info/Components");
-      put("info_incompletes_menuitem", "app.freerouting.gui/Board/Menu/Info/IncompleteRoutes");
-      put("info_length_violations_menuitem", "app.freerouting.gui/Board/Menu/Info/LengthViolations");
-      put("info_clearance_violations_menuitem", "app.freerouting.gui/Board/Menu/Info/ClearanceViolations");
-      put("info_unconnected_routes_menuitem", "app.freerouting.gui/Board/Menu/Info/UnconnectedRoutes");
-      put("info_route_stubs_menuitem", "app.freerouting.gui/Board/Menu/Info/RoutedStubs");
+    appLocationTable.put("app.freerouting.gui.WindowAbout", "app.freerouting.gui/Help/About");
+    appLocationTable.put("select_button", "app.freerouting.gui/Board/Toolbar/Select");
+    appLocationTable.put("route_button", "app.freerouting.gui/Board/Toolbar/Route");
+    appLocationTable.put("drag_button", "app.freerouting.gui/Board/Toolbar/Drag");
+    appLocationTable.put("autoroute_button", "app.freerouting.gui/Board/Toolbar/Autorouter");
+    appLocationTable.put("undo_button", "app.freerouting.gui/Board/Toolbar/Undo");
+    appLocationTable.put("redo_button", "app.freerouting.gui/Board/Toolbar/Redo");
+    appLocationTable.put("incompletes_button", "app.freerouting.gui/Board/Toolbar/Incompletes");
+    appLocationTable.put("violation_button", "app.freerouting.gui/Board/Toolbar/Violations");
+    appLocationTable.put("display_all_button", "app.freerouting.gui/Board/Toolbar/ZoomAll");
+    appLocationTable.put("display_region_button", "app.freerouting.gui/Board/Toolbar/ZoomRegion");
+    appLocationTable.put("file_save_menuitem", "app.freerouting.gui/Board/Menu/File/Save");
+    appLocationTable.put("file_save_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/SaveAndExit");
+    appLocationTable.put("file_cancel_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/CancelAndExit");
+    appLocationTable.put("file_save_as_menuitem", "app.freerouting.gui/Board/Menu/File/SaveAs");
+    appLocationTable.put("file_write_logfile_menuitem", "app.freerouting.gui/Board/Menu/File/MacroRecording");
+    appLocationTable.put("file_replay_logfile_menuitem", "app.freerouting.gui/Board/Menu/File/MacroPlayback");
+    appLocationTable.put("file_save_settings_menuitem", "app.freerouting.gui/Board/Menu/File/SaveGUISettings");
+    appLocationTable.put("file_write_session_file_menuitem", "app.freerouting.gui/Board/Menu/File/ExportAsSpecctra");
+    appLocationTable.put("file_write_eagle_session_script_menuitem", "app.freerouting.gui/Board/Menu/File/ExportAsEagleScript");
+    appLocationTable.put("display_visibility_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Visibility");
+    appLocationTable.put("display_colors_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Colors");
+    appLocationTable.put("display_miscellaneous_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Miscellaneous");
+    appLocationTable.put("settings_selection_menuitem", "app.freerouting.gui/Board/Menu/Settings/Selection");
+    appLocationTable.put("settings_routing_menuitem", "app.freerouting.gui/Board/Menu/Settings/Routing");
+    appLocationTable.put("settings_autorouter_menuitem", "app.freerouting.gui/Board/Menu/Settings/AutoRouter");
+    appLocationTable.put("settings_controls_menuitem", "app.freerouting.gui/Board/Menu/Settings/Controls");
+    appLocationTable.put("rules_clearance_menuitem", "app.freerouting.gui/Board/Menu/Rules/ClearanceMatrix");
+    appLocationTable.put("rules_vias_menuitem", "app.freerouting.gui/Board/Menu/Rules/Vias");
+    appLocationTable.put("rules_nets_menuitem", "app.freerouting.gui/Board/Menu/Rules/Nets");
+    appLocationTable.put("rules_net_class_menuitem", "app.freerouting.gui/Board/Menu/Rules/NetClasses");
+    appLocationTable.put("info_packages_menuitem", "app.freerouting.gui/Board/Menu/Info/Packages");
+    appLocationTable.put("info_padstacks_menuitem", "app.freerouting.gui/Board/Menu/Info/Padstacks");
+    appLocationTable.put("info_components_menuitem", "app.freerouting.gui/Board/Menu/Info/Components");
+    appLocationTable.put("info_incompletes_menuitem", "app.freerouting.gui/Board/Menu/Info/IncompleteRoutes");
+    appLocationTable.put("info_length_violations_menuitem", "app.freerouting.gui/Board/Menu/Info/LengthViolations");
+    appLocationTable.put("info_clearance_violations_menuitem", "app.freerouting.gui/Board/Menu/Info/ClearanceViolations");
+    appLocationTable.put("info_unconnected_routes_menuitem", "app.freerouting.gui/Board/Menu/Info/UnconnectedRoutes");
+    appLocationTable.put("info_route_stubs_menuitem", "app.freerouting.gui/Board/Menu/Info/RoutedStubs");
 
-      put("other_delete_all_tracks_menuitem", "app.freerouting.gui/Board/Menu/Other/DeleteAllTracksAndVias");
-      put("help_about_menuitem", "app.freerouting.gui/Board/Menu/Help/About");
-    }
-  };
+    appLocationTable.put("other_delete_all_tracks_menuitem", "app.freerouting.gui/Board/Menu/Other/DeleteAllTracksAndVias");
+    appLocationTable.put("help_about_menuitem", "app.freerouting.gui/Board/Menu/Help/About");
+  }
   private static AnalyticsClient analytics;
   private static String permanent_user_id;
   private static String permanent_user_email;
@@ -313,8 +313,8 @@ public class FRAnalytics {
     properties.put("total_autorouter_runtime", String.valueOf(totalAutorouterRuntime));
     properties.put("total_route_optimizer_runtime", String.valueOf(totalRouteOptimizerRuntime));
     properties.put("application_runtime", String.valueOf(appClosedAt - appStartedAt));
-    properties.put("statistics_start_time", String.valueOf(globalSettings.statistics.startTime));
-    properties.put("statistics_end_time", String.valueOf(globalSettings.statistics.endTime));
+    properties.put("statistics_start_time", globalSettings.statistics.startTime);
+    properties.put("statistics_end_time", globalSettings.statistics.endTime);
     properties.put("statistics_sessions_total", String.valueOf(globalSettings.statistics.sessionsTotal));
     properties.put("statistics_jobs_started", String.valueOf(globalSettings.statistics.jobsStarted));
     properties.put("statistics_jobs_completed", String.valueOf(globalSettings.statistics.jobsCompleted));
@@ -462,7 +462,7 @@ public class FRAnalytics {
 
     // Determine the effective identity: prefer the per-request caller UUID over the
     // static permanent_user_id (which is always null in headless / API-only mode).
-    String effectiveUserId = (userId != null) ? userId.toString() : permanent_user_id;
+    String effectiveUserId = userId != null ? userId.toString() : permanent_user_id;
 
     // Inject the resolved user_id into the properties map so that it overrides the
     // null permanent_user_id that trackAnonymousAction would otherwise write.
@@ -515,7 +515,7 @@ public class FRAnalytics {
       properties.put("response_bytes", Long.toString(responseBytes));
     }
 
-    String effectiveUserId = (profileUuid != null) ? profileUuid.toString() : profileId;
+    String effectiveUserId = profileUuid != null ? profileUuid.toString() : profileId;
     if (effectiveUserId != null) {
       properties.put("user_id", effectiveUserId);
     }

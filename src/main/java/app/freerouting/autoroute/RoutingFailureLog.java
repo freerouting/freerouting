@@ -1,11 +1,10 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.Item;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-
-import java.io.Serializable;
 
 /**
  * Thread-safe logbook for tracking routing failures per item.

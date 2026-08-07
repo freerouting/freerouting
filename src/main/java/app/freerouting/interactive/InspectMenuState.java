@@ -16,11 +16,11 @@ import java.util.Set;
  * especially
  * the different behaviour of the mouse button 1.
  */
-public class InspectMenuState extends MenuState {
+public final class InspectMenuState extends MenuState {
 
-  private Item last_hovered_item = null;
-  private ClearanceViolation last_hovered_violation = null;
-  private String backup_message = null;
+  private Item last_hovered_item;
+  private ClearanceViolation last_hovered_violation;
+  private String backup_message;
 
   /**
    * Creates a new instance of InspectMenuState
@@ -33,8 +33,7 @@ public class InspectMenuState extends MenuState {
    * Returns a new instance of InspectMenuState
    */
   public static InspectMenuState get_instance(GuiBoardManager p_board_handling) {
-    InspectMenuState new_state = new InspectMenuState(p_board_handling);
-    return new_state;
+    return new InspectMenuState(p_board_handling);
   }
 
   @Override

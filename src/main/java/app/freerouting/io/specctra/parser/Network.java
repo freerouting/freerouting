@@ -201,7 +201,8 @@ public class Network extends ScopeKeyword {
 
   private static boolean read_net_pins(IJFlexScanner p_scanner, Collection<Net.Pin> p_pin_list) {
     Object next_token;
-    String component_name, pin_name;
+    String component_name;
+    String pin_name;
     while (!(component_name = ((SpecctraDsnStreamReader) p_scanner).next_string(true, '-')).isEmpty()) {
 
       try {
@@ -958,7 +959,7 @@ public class Network extends ScopeKeyword {
     }
     if (curr_package.outline != null) {
       for (int i = 0; i < curr_package.outline.length; i++) {
-        boolean is_courtyard = (i == courtyard_idx);
+        boolean is_courtyard = i == courtyard_idx;
         if (curr_package.outline_widths != null && i < curr_package.outline_widths.length) {
           if (curr_package.outline_widths[i] == 0.0) {
             is_courtyard = true;

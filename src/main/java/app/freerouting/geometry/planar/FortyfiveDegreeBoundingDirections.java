@@ -3,7 +3,7 @@ package app.freerouting.geometry.planar;
 /**
  * Implements the abstract class ShapeBoundingDirections as the 8 directions, which are multiples of 45 degree. The class is a singleton with the only instantiation INSTANCE.
  */
-public class FortyfiveDegreeBoundingDirections implements ShapeBoundingDirections {
+public final class FortyfiveDegreeBoundingDirections implements ShapeBoundingDirections {
 
   /**
    * the one and only instantiation

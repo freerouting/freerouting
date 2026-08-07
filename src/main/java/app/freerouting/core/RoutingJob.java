@@ -5,7 +5,6 @@ import app.freerouting.core.events.RoutingJobLogEntryAddedEvent;
 import app.freerouting.core.events.RoutingJobLogEntryAddedEventListener;
 import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
-import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntry;
@@ -98,7 +97,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public transient StoppableThread thread;
   public transient RoutingBoard board;
   public transient Instant timeoutAt;
-  private boolean isCancelledByUser = false;
+  private boolean isCancelledByUser;
 
   public boolean isCancelledByUser() {
     return isCancelledByUser;
@@ -110,7 +109,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
   @SerializedName("current_pass")
   @Schema(name = "current_pass", description = "Current routing pass")
-  private int currentPass = 0;
+  private int currentPass;
 
   /**
    * We need a parameterless constructor for the serialization.
@@ -355,7 +354,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     if ((ff == FileFormat.DSN) || (ff == FileFormat.FRB) || (ff == FileFormat.SES) || (ff == FileFormat.SCR) || (ff == FileFormat.KICAD_DESIGN_JSON)) {
       this.output = new BoardFileDetails(outputFile);
       this.output.addUpdatedEventListener(_ -> this.fireInputUpdatedEvent());
-      this.output.format = (ff == FileFormat.KICAD_DESIGN_JSON) ? FileFormat.KICAD_SESSION_JSON : ff;
+      this.output.format = ff == FileFormat.KICAD_DESIGN_JSON ? FileFormat.KICAD_SESSION_JSON : ff;
       fireOutputUpdatedEvent();
       return true;
     } else {

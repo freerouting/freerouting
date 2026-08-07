@@ -34,13 +34,13 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
    * hole becomes an obstacle for routing and DRC; they must not be treated as real copper (e.g.
    * not re-exported).
    */
-  public boolean hole_only = false;
+  public boolean hole_only;
   /**
    * Pointer to the pacdstack list containing this padstack
    */
   private final Padstacks padstack_list;
   /** Cached drill radius to avoid repeated regex parsing on every render call. */
-  private Double cachedDrillRadius = null;
+  private Double cachedDrillRadius;
 
   /**
    * Creates a new Padstack with shape p_shapes[i] on layer i (0 <= i < p_shapes.length). p_is_drilllable indicates, if vias of the own net are allowed to overlap with this padstack If

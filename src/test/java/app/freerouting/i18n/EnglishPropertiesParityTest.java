@@ -5,6 +5,7 @@
 
 package app.freerouting.i18n;
 
+import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
@@ -22,12 +23,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import app.freerouting.logger.FRLogger;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class EnglishPropertiesParityTest {
@@ -310,7 +309,7 @@ class EnglishPropertiesParityTest {
 
     try (var paths = Files.walk(JAVA_SOURCE_ROOT)) {
       paths.filter(path -> path.toString().endsWith(".java"))
-          .filter(path -> !path.getFileName().toString().equals("TextManager.java"))
+          .filter(path -> !"TextManager.java".equals(path.getFileName().toString()))
           .forEach(path -> {
             try {
               collectSourceKeysFromFile(path, keysByBundle);
@@ -491,7 +490,7 @@ class EnglishPropertiesParityTest {
     if (EXTENDS_INTERACTIVE_STATE_PATTERN.matcher(source).find()
         && INHERITED_TM_USAGE_PATTERN.matcher(source).find()
         && currentClassName.startsWith("app.freerouting.interactive.")
-        && !currentClassName.equals("app.freerouting.interactive.InteractiveState")) {
+        && !"app.freerouting.interactive.InteractiveState".equals(currentClassName)) {
       bundleOwners.add("app.freerouting.interactive.InteractiveState");
     }
 

@@ -14,10 +14,10 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.TextManager;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
+import app.freerouting.util.TextManager;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.ObjectOutputStream;
@@ -1090,16 +1090,14 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    * Gets the information for hover event to display
    */
   public String get_hover_info(Locale p_locale) {
-    String hover_info = "";
-    return hover_info;
+    return "";
   }
 
   /**
    * Internal function used in the implementation of get_hover_info
    */
   public String get_connectable_item_hover_info(Locale p_locale) {
-    String connectable_item_hover_info = this.get_net_hover_info(p_locale);
-    return connectable_item_hover_info;
+    return this.get_net_hover_info(p_locale);
   }
 
   /**
@@ -1328,7 +1326,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
 
   public String getAllNetNames() {
     return this.getAllNets().stream()
-        .map(net -> net.toString())
+        .map(Net::toString)
         .reduce((a, b) -> a + "," + b)
         .orElse("no nets");
   }

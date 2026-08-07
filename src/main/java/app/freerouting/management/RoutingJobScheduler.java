@@ -8,14 +8,14 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.specctra.SesImportSummary;
+import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.TextManager;
-import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.sources.ApiSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
-import app.freerouting.io.specctra.SesReader;
-import app.freerouting.io.specctra.SesImportSummary;
+import app.freerouting.util.TextManager;
+import app.freerouting.util.gson.GsonProvider;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -32,7 +33,7 @@ import java.util.UUID;
  * jobs with the highest priority are processed first.
  * There is only one instance of this class in the Freerouting process.
  */
-public class RoutingJobScheduler {
+public final class RoutingJobScheduler {
 
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
   public final LinkedList<RoutingJob> jobs = new LinkedList<>();
@@ -50,7 +51,7 @@ public class RoutingJobScheduler {
             RoutingJob[] jobsArray;
             synchronized (jobs) {
               // Remove any null entries that could have been introduced by concurrent access
-              jobs.removeIf(j -> j == null);
+              jobs.removeIf(Objects::isNull);
               // sort the jobs by priority
               Collections.sort(jobs);
 

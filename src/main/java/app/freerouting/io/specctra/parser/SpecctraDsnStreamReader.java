@@ -233,7 +233,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
   private static final int ZZ_NO_MATCH = 1;
   private static final int ZZ_PUSHBACK_2BIG = 2;
   /* error messages for the codes above */
-  private static final String ZZ_ERROR_MSG[] = {
+  private static final String[] ZZ_ERROR_MSG = {
       "Unknown internal scanner error",
       "Error: could not match input",
       "Error: pushback value was too large"
@@ -261,7 +261,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
   /**
    * this buffer contains the current text to be matched and is the source of the yytext() string
    */
-  private char zzBuffer[] = new char[ZZ_BUFFERSIZE];
+  private char[] zzBuffer = new char[ZZ_BUFFERSIZE];
   /**
    * the textposition at the last accepting state
    */
@@ -469,7 +469,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
     /* is the buffer big enough? */
     if (zzCurrentPos >= zzBuffer.length) {
       /* if not: blow it up */
-      char newBuffer[] = new char[zzCurrentPos * 2];
+      char[] newBuffer = new char[zzCurrentPos * 2];
       System.arraycopy(zzBuffer, 0, newBuffer, 0, zzBuffer.length);
       zzBuffer = newBuffer;
     }
@@ -1408,7 +1408,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
   }
 
   public String[] next_string_list(char separator) {
-    Collection<String> result = new LinkedList<String>();
+    Collection<String> result = new LinkedList<>();
 
     // Every string list must have at least one item, but the first item can be empty. In this case we ignore that and continue reading the next item.
     // This is extra step is also needed to handle the bug KiCad 8 introduced in the netlist definition, when it started the list of nets with a "" string.

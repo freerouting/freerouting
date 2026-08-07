@@ -3,14 +3,13 @@ package app.freerouting.gui;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.Cursor;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,9 +28,9 @@ import javax.swing.JOptionPane;
 public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetListener {
 
   private final BoardPanel board_panel;
-  private boolean is_drag_active = false;
+  private boolean is_drag_active;
   // Flag to track if we're showing the ghosting overlay
-  private boolean is_ghosting_active = false;
+  private boolean is_ghosting_active;
 
   /**
    * Creates a new drop target listener for the board panel.

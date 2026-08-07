@@ -1,15 +1,14 @@
 package app.freerouting.fixtures;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import app.freerouting.board.Trace;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.settings.sources.TestingSettings;
-import org.junit.jupiter.api.Test;
-
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 /**
  * Regression tests that validate correct multi-layer board handling.

@@ -199,7 +199,7 @@ public class PolylineTrace extends Trace implements Serializable {
     Collection<Item> contacts = get_normal_contacts(start_corner, false);
     if (p_ignore_areas) {
       // remove conduction areas from the list
-      contacts.removeIf(c -> c instanceof ConductionArea);
+      contacts.removeIf(ConductionArea.class::isInstance);
     }
     if (debugNet49) {
       FRLogger.trace("compare_trace_combine_at_start_net49 thisId=" + this.get_id_no()
@@ -316,7 +316,7 @@ public class PolylineTrace extends Trace implements Serializable {
     Collection<Item> contacts = get_normal_contacts(end_corner, false);
     if (p_ignore_areas) {
       // remove conduction areas from the list
-      contacts.removeIf(c -> c instanceof ConductionArea);
+      contacts.removeIf(ConductionArea.class::isInstance);
     }
     if (debugNet49) {
       FRLogger.trace("compare_trace_combine_at_end_net49 thisId=" + this.get_id_no()
@@ -1077,7 +1077,7 @@ public class PolylineTrace extends Trace implements Serializable {
         this.get_layer());
     double add_width = Math.max(edge_to_turn_dist, curr_clearance + 1);
     double preserve_length = matching_exit_restriction.min_length + this.get_half_width() + add_width;
-    return !(preserve_length > end_line_length);
+    return preserve_length <= end_line_length;
   }
 
   /**

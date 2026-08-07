@@ -262,7 +262,7 @@ public class Library extends ScopeKeyword {
             outline_widths[i] = path.width;
             double[] coords = path.coordinate_arr;
             if (coords.length >= 4) {
-              outline_is_closed[i] = (coords[0] == coords[coords.length - 2] && coords[1] == coords[coords.length - 1]);
+              outline_is_closed[i] = coords[0] == coords[coords.length - 2] && coords[1] == coords[coords.length - 1];
             }
           } else {
             outline_widths[i] = 0.0;
@@ -354,7 +354,9 @@ public class Library extends ScopeKeyword {
       app.freerouting.core.Package.Pin pin1 = pkg1.get_pin(i);
       app.freerouting.core.Package.Pin pin2 = p2[i];
       if (pin1 == null || pin2 == null) {
-        if (pin1 != pin2) return false;
+        if (pin1 != pin2) {
+          return false;
+        }
         continue;
       }
       if (!pin1.name.equals(pin2.name)) {

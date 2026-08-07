@@ -16,7 +16,7 @@ import java.util.LinkedList;
 /**
  * Class for interactive construction of a tile shaped obstacle
  */
-public class TileConstructionState extends CornerItemConstructionState {
+public final class TileConstructionState extends CornerItemConstructionState {
 
   /**
    * Creates a new instance of TileConstructionState

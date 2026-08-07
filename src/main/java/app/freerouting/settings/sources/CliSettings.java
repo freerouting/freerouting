@@ -1,9 +1,9 @@
 package app.freerouting.settings.sources;
 
 import app.freerouting.logger.FRLogger;
-import app.freerouting.util.ReflectionUtil;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
+import app.freerouting.util.ReflectionUtil;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +58,7 @@ public class CliSettings implements SettingsSource {
             } else if (arg.startsWith("-")) {
                 // Handle -flag value format
                 String flag = arg.substring(1);
-                String value = (i + 1 < args.length && !args[i + 1].startsWith("-")) ? args[++i] : "";
+                String value = i + 1 < args.length && !args[i + 1].startsWith("-") ? args[++i] : "";
 
                 if ("de".equals(flag)) {
                     hasDesignInputArgument = true;

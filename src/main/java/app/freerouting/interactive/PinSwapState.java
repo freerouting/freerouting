@@ -10,7 +10,7 @@ import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;
 
-public class PinSwapState extends InteractiveState {
+public final class PinSwapState extends InteractiveState {
 
   private final Pin from_pin;
   private final Set<Pin> swappable_pins;

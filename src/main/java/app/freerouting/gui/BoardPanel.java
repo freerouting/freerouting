@@ -402,7 +402,7 @@ public class BoardPanel extends JPanel {
    */
   public void reset_board_handling(RoutingJob routingJob) {
     // Save the settingsMerger reference before disposing the old instance
-    SettingsMerger settingsMerger = (board_handling != null) ? board_handling.settingsMerger : null;
+    SettingsMerger settingsMerger = board_handling != null ? board_handling.settingsMerger : null;
 
     // Dispose the old board_handling instance before creating a new one
     if (board_handling != null) {
@@ -825,9 +825,8 @@ public class BoardPanel extends JPanel {
       this.custom_cursor.set_location(adjusted_new_cursor);
     }
     repaint();
-    Point2D adjusted_new_cursor = new Point2D.Double(new_cursor.getX() + adjustment_vector.getX() + 0.5,
+    return new Point2D.Double(new_cursor.getX() + adjustment_vector.getX() + 0.5,
         new_cursor.getY() + adjustment_vector.getY() + 0.5);
-    return adjusted_new_cursor;
   }
 
   /**
@@ -875,8 +874,7 @@ public class BoardPanel extends JPanel {
     adjusted_y_corner = Math.max(y_corner, 0);
     Point new_position = new Point((int) adjusted_x_corner, (int) adjusted_y_corner);
     set_viewport_position(new_position);
-    Point adjustment_vector = new Point((int) (adjusted_x_corner - x_corner), (int) (adjusted_y_corner - y_corner));
-    return adjustment_vector;
+    return new Point((int) (adjusted_x_corner - x_corner), (int) (adjusted_y_corner - y_corner));
   }
 
   /**

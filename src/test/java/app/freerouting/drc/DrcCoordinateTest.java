@@ -2,27 +2,16 @@ package app.freerouting.drc;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
-import app.freerouting.management.BoardLoader;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.core.Session;
-import app.freerouting.io.FileFormat;
-import app.freerouting.management.HeadlessBoardManager;
-import app.freerouting.management.SessionManager;
-import app.freerouting.settings.GlobalSettings;
-import app.freerouting.settings.sources.TestingSettings;
 import app.freerouting.fixtures.RoutingFixtureTest;
+import app.freerouting.management.BoardLoader;
+import app.freerouting.settings.GlobalSettings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.io.File;
-import java.nio.file.Path;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class DrcCoordinateTest extends RoutingFixtureTest {

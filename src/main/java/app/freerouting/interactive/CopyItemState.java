@@ -23,7 +23,7 @@ import javax.swing.JPopupMenu;
 /**
  * Interactive copying of items.
  */
-public class CopyItemState extends InteractiveState {
+public final class CopyItemState extends InteractiveState {
 
   private final Collection<Item> item_list;
   private Point start_position;

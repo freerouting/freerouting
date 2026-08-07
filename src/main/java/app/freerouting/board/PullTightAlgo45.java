@@ -282,7 +282,6 @@ class PullTightAlgo45 extends PullTightAlgo {
     FloatPoint curr_corner = prev_line.intersection_approx(next_line);
     FloatPoint prev_corner = prev_line.intersection_approx(p_line_arr[p_no - 1]);
     FloatPoint next_corner = next_line.intersection_approx(p_line_arr[p_no + 2]);
-    Line result;
     int new_x = 0;
     int new_y = 0;
     boolean new_line_is_vertical = false;
@@ -322,8 +321,7 @@ class PullTightAlgo45 extends PullTightAlgo {
     }
 
     Point line_a = new IntPoint(new_x, new_y);
-    result = new Line(line_a, new_line_dir);
-    return result;
+    return new Line(line_a, new_line_dir);
   }
 
   /**
