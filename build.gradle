@@ -585,6 +585,15 @@ rewrite {
     // Protect the v1.9 reference implementation (src_v19 source set) — it must stay unmodified.
     exclusion("src_v19/**")
     exclusion("**/src_v19/**")
+    exclusion("**/geometry/**")
+    exclusion("**/board/**")
+    exclusion("**/drc/**")
+    exclusion("**/autoroute/**")
+    exclusion("**/management/**")
+    exclusion("**/io/**")
+    exclusion("**/interactive/**")
+    exclusion("**/gui/**")
+
 
 tasks.register('phase2FieldReferenceRenames', Exec) {
     group = 'rewrite'

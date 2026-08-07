@@ -288,11 +288,15 @@ public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstan
 
   public static final class FieldRenamePlan {
     private final Map<String, List<ChangeFieldName>> changesByClass = new LinkedHashMap<>();
-    private final Map<String, String> renameMap = new LinkedHashMap<>();
+    private final Map<String, FieldRenameInfo> renameMap = new LinkedHashMap<>();
+
+    public record FieldRenameInfo(String classFqn, String fromName, String toName) {}
 
     void add(String enclosingClassFqn, ChangeFieldName change) {
       changesByClass.computeIfAbsent(enclosingClassFqn, k -> new ArrayList<>()).add(change);
-      renameMap.put(change.getHasName(), change.getToName());
+      renameMap.put(
+          change.getHasName(),
+          new FieldRenameInfo(enclosingClassFqn, change.getHasName(), change.getToName()));
       COLLECTED_RENAMES.put(change.getHasName(), change.getToName());
       appendRenameToMapFile(enclosingClassFqn, change.getHasName(), change.getToName());
     }
@@ -301,7 +305,7 @@ public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstan
       return changesByClass.getOrDefault(fqn, java.util.Collections.emptyList());
     }
 
-    Map<String, String> renameMap() {
+    Map<String, FieldRenameInfo> renameMap() {
       return renameMap;
     }
 
@@ -335,20 +339,27 @@ public class RenameInstanceFieldsToCamelCase extends ScanningRecipe<RenameInstan
     }
   }
 
-  static void writeRenameMapFile(Map<String, String> renames) {
+  static void writeRenameMapFile(Map<String, FieldRenamePlan.FieldRenameInfo> renames) {
     try {
+      writeRenameMapFileTo(RENAME_MAP_PATH, renames);
       writeRenameMapFileTo(RENAME_MAP_FALLBACK_PATH, renames);
     } catch (IOException e) {
       throw new IllegalStateException("Failed to write field rename map", e);
     }
   }
 
-  private static void writeRenameMapFileTo(Path path, Map<String, String> renames)
-      throws IOException {
+  private static void writeRenameMapFileTo(
+      Path path, Map<String, FieldRenamePlan.FieldRenameInfo> renames) throws IOException {
     Files.createDirectories(path.getParent());
     StringBuilder content = new StringBuilder();
-    for (Map.Entry<String, String> entry : renames.entrySet()) {
-      content.append(entry.getKey()).append('\t').append(entry.getValue()).append('\n');
+    for (FieldRenamePlan.FieldRenameInfo info : renames.values()) {
+      content
+          .append(info.classFqn())
+          .append('\t')
+          .append(info.fromName())
+          .append('\t')
+          .append(info.toName())
+          .append('\n');
     }
     Files.writeString(path, content.toString());
   }
