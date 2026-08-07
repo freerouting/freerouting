@@ -25,7 +25,7 @@ public final class RouteMenuState extends MenuState {
 
   @Override
   public void display_default_message() {
-    hdlg.screen_messages.set_status_message(" in route menu");
+    hdlg.screenMessages.set_status_message(" in route menu");
   }
 
   @Override

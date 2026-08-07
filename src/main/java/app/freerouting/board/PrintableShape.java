@@ -40,13 +40,13 @@ public abstract class PrintableShape {
 
       String result = tm.getText("circle") + ": ";
       if (center.x != 0 || center.y != 0) {
-        String center_string = tm.getText("center") + " =" + center.to_string(this.locale);
-        result += center_string;
+        String centerString = tm.getText("center") + " =" + center.to_string(this.locale);
+        result += centerString;
       }
       NumberFormat nf = NumberFormat.getInstance(this.locale);
       nf.setMaximumFractionDigits(4);
-      String radius_string = tm.getText("radius") + " = " + nf.format((float) radius);
-      result += radius_string;
+      String radiusString = tm.getText("radius") + " = " + nf.format((float) radius);
+      result += radiusString;
       return result;
     }
   }
@@ -54,13 +54,13 @@ public abstract class PrintableShape {
   /** Creates a Polygon from the input coordinates. */
   static class Rectangle extends PrintableShape {
 
-    public final FloatPoint lower_left;
-    public final FloatPoint upper_right;
+    public final FloatPoint lowerLeft;
+    public final FloatPoint upperRight;
 
     public Rectangle(FloatPoint p_lower_left, FloatPoint p_upper_right, Locale p_locale) {
       super(p_locale);
-      lower_left = p_lower_left;
-      upper_right = p_upper_right;
+      lowerLeft = p_lower_left;
+      upperRight = p_upper_right;
     }
 
     @Override
@@ -69,23 +69,23 @@ public abstract class PrintableShape {
 
       return tm.getText("rectangle")
           + ": "
-          + tm.getText("lower_left")
+          + tm.getText("lowerLeft")
           + " = "
-          + lower_left.to_string(this.locale)
+          + lowerLeft.to_string(this.locale)
           + ", "
-          + tm.getText("upper_right")
+          + tm.getText("upperRight")
           + " = "
-          + upper_right.to_string(this.locale);
+          + upperRight.to_string(this.locale);
     }
   }
 
   static class Polygon extends PrintableShape {
 
-    public final FloatPoint[] corner_arr;
+    public final FloatPoint[] cornerArr;
 
     public Polygon(FloatPoint[] p_corners, Locale p_locale) {
       super(p_locale);
-      corner_arr = p_corners;
+      cornerArr = p_corners;
     }
 
     @Override
@@ -94,7 +94,7 @@ public abstract class PrintableShape {
 
       return tm.getText("polygon")
           + ": "
-          + Arrays.stream(corner_arr)
+          + Arrays.stream(cornerArr)
               .map(c -> c.to_string(this.locale))
               .collect(Collectors.joining(", "));
     }

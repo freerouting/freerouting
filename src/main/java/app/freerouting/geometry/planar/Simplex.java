@@ -19,11 +19,11 @@ public class Simplex extends TileShape implements Serializable {
   private final Line[] arr;
 
   /** the following fields are for storing precalculated data */
-  private transient Point[] precalculated_corners;
+  private transient Point[] precalculatedCorners;
 
-  private transient FloatPoint[] precalculated_float_corners;
-  private transient IntBox precalculated_bounding_box;
-  private transient IntOctagon precalculated_bounding_octagon;
+  private transient FloatPoint[] precalculatedFloatCorners;
+  private transient IntBox precalculatedBoundingBox;
+  private transient IntOctagon precalculatedBoundingOctagon;
 
   /**
    * Constructs a Simplex from the directed lines in p_line_arr. The simplex will not be normalized.
@@ -38,12 +38,12 @@ public class Simplex extends TileShape implements Serializable {
     if (p_line_arr.length == 0) {
       return Simplex.EMPTY;
     }
-    Line[] curr_arr = new Line[p_line_arr.length];
-    System.arraycopy(p_line_arr, 0, curr_arr, 0, p_line_arr.length);
+    Line[] currArr = new Line[p_line_arr.length];
+    System.arraycopy(p_line_arr, 0, currArr, 0, p_line_arr.length);
     // sort the lines in ascending direction
-    Arrays.sort(curr_arr);
-    Simplex curr_simplex = new Simplex(curr_arr);
-    return curr_simplex.remove_redundant_lines();
+    Arrays.sort(currArr);
+    Simplex currSimplex = new Simplex(currArr);
+    return currSimplex.remove_redundant_lines();
   }
 
   /** Return true, if this simplex is empty */
@@ -97,15 +97,15 @@ public class Simplex extends TileShape implements Serializable {
     if (arr.length == 1) {
       return false;
     }
-    int prev_no;
+    int prevNo;
     if (no == 0) {
-      prev_no = arr.length - 1;
+      prevNo = arr.length - 1;
     } else {
-      prev_no = no - 1;
+      prevNo = no - 1;
     }
-    IntVector prev_dir = (IntVector) arr[prev_no].direction().get_vector();
-    IntVector curr_dir = (IntVector) arr[no].direction().get_vector();
-    return prev_dir.determinant(curr_dir) > 0;
+    IntVector prevDir = (IntVector) arr[prevNo].direction().get_vector();
+    IntVector currDir = (IntVector) arr[no].direction().get_vector();
+    return prevDir.determinant(currDir) > 0;
   }
 
   /** Returns true, if the shape of this simplex is contained in a sufficiently large box */
@@ -148,12 +148,12 @@ public class Simplex extends TileShape implements Serializable {
     } else {
       no = p_no;
     }
-    if (precalculated_corners == null)
+    if (precalculatedCorners == null)
     // corner array is not yet allocated
     {
-      precalculated_corners = new Point[arr.length];
+      precalculatedCorners = new Point[arr.length];
     }
-    if (precalculated_corners[no] == null)
+    if (precalculatedCorners[no] == null)
     // corner is not yet calculated
     {
       Line prev;
@@ -162,9 +162,9 @@ public class Simplex extends TileShape implements Serializable {
       } else {
         prev = arr[no - 1];
       }
-      precalculated_corners[no] = arr[no].intersection(prev);
+      precalculatedCorners[no] = arr[no].intersection(prev);
     }
-    return precalculated_corners[no];
+    return precalculatedCorners[no];
   }
 
   /**
@@ -187,12 +187,12 @@ public class Simplex extends TileShape implements Serializable {
     } else {
       no = p_no;
     }
-    if (precalculated_float_corners == null)
+    if (precalculatedFloatCorners == null)
     // corner array is not yet allocated
     {
-      precalculated_float_corners = new FloatPoint[arr.length];
+      precalculatedFloatCorners = new FloatPoint[arr.length];
     }
-    if (precalculated_float_corners[no] == null)
+    if (precalculatedFloatCorners[no] == null)
     // corner is not yet calculated
     {
       Line prev;
@@ -201,20 +201,20 @@ public class Simplex extends TileShape implements Serializable {
       } else {
         prev = arr[no - 1];
       }
-      precalculated_float_corners[no] = arr[no].intersection_approx(prev);
+      precalculatedFloatCorners[no] = arr[no].intersection_approx(prev);
     }
-    return precalculated_float_corners[no];
+    return precalculatedFloatCorners[no];
   }
 
   @Override
   public FloatPoint[] corner_approx_arr() {
-    if (precalculated_float_corners == null)
+    if (precalculatedFloatCorners == null)
     // corner array is not yet allocated
     {
-      precalculated_float_corners = new FloatPoint[arr.length];
+      precalculatedFloatCorners = new FloatPoint[arr.length];
     }
-    for (int i = 0; i < precalculated_float_corners.length; i++) {
-      if (precalculated_float_corners[i] == null)
+    for (int i = 0; i < precalculatedFloatCorners.length; i++) {
+      if (precalculatedFloatCorners[i] == null)
       // corner is not yet calculated
       {
         Line prev;
@@ -223,10 +223,10 @@ public class Simplex extends TileShape implements Serializable {
         } else {
           prev = arr[i - 1];
         }
-        precalculated_float_corners[i] = arr[i].intersection_approx(prev);
+        precalculatedFloatCorners[i] = arr[i].intersection_approx(prev);
       }
     }
-    return precalculated_float_corners;
+    return precalculatedFloatCorners;
   }
 
   /**
@@ -280,11 +280,11 @@ public class Simplex extends TileShape implements Serializable {
         return 1;
       }
       Point intersection = arr[1].intersection(arr[2]);
-      Side side_of_line0 = arr[0].side_of(intersection);
-      if (side_of_line0 == Side.ON_THE_RIGHT) {
+      Side sideOfLine0 = arr[0].side_of(intersection);
+      if (sideOfLine0 == Side.ON_THE_RIGHT) {
         return 2;
       }
-      if (side_of_line0 == Side.ON_THE_LEFT) {
+      if (sideOfLine0 == Side.ON_THE_LEFT) {
         FRLogger.debug("empty Simplex not normalized");
         return -1;
       }
@@ -293,12 +293,12 @@ public class Simplex extends TileShape implements Serializable {
     }
     // now the simplex has 4 edge lines
     // check if opposing lines are collinear
-    boolean collinear_0_2 = arr[0].overlaps(arr[2]);
-    boolean collinear_1_3 = arr[1].overlaps(arr[3]);
-    if (collinear_0_2 && collinear_1_3) {
+    boolean collinear02 = arr[0].overlaps(arr[2]);
+    boolean collinear13 = arr[1].overlaps(arr[3]);
+    if (collinear02 && collinear13) {
       return 0;
     }
-    if (collinear_0_2 || collinear_1_3) {
+    if (collinear02 || collinear13) {
       return 1;
     }
     return 2;
@@ -309,21 +309,21 @@ public class Simplex extends TileShape implements Serializable {
     if (!this.is_bounded()) {
       return Integer.MAX_VALUE;
     }
-    double max_distance = Integer.MIN_VALUE;
-    double max_distance_2 = Integer.MIN_VALUE;
-    FloatPoint gravity_point = this.centre_of_gravity();
+    double maxDistance = Integer.MIN_VALUE;
+    double maxDistance2 = Integer.MIN_VALUE;
+    FloatPoint gravityPoint = this.centre_of_gravity();
 
     for (int i = 0; i < border_line_count(); i++) {
-      double curr_distance = Math.abs(arr[i].signed_distance(gravity_point));
+      double currDistance = Math.abs(arr[i].signed_distance(gravityPoint));
 
-      if (curr_distance > max_distance) {
-        max_distance_2 = max_distance;
-        max_distance = curr_distance;
-      } else if (curr_distance > max_distance_2) {
-        max_distance_2 = curr_distance;
+      if (currDistance > maxDistance) {
+        maxDistance2 = maxDistance;
+        maxDistance = currDistance;
+      } else if (currDistance > maxDistance2) {
+        maxDistance2 = currDistance;
       }
     }
-    return max_distance + max_distance_2;
+    return maxDistance + maxDistance2;
   }
 
   @Override
@@ -331,32 +331,32 @@ public class Simplex extends TileShape implements Serializable {
     if (!this.is_bounded()) {
       return Integer.MAX_VALUE;
     }
-    double min_distance = Integer.MAX_VALUE;
-    double min_distance_2 = Integer.MAX_VALUE;
-    FloatPoint gravity_point = this.centre_of_gravity();
+    double minDistance = Integer.MAX_VALUE;
+    double minDistance2 = Integer.MAX_VALUE;
+    FloatPoint gravityPoint = this.centre_of_gravity();
 
     for (int i = 0; i < border_line_count(); i++) {
-      double curr_distance = Math.abs(arr[i].signed_distance(gravity_point));
+      double currDistance = Math.abs(arr[i].signed_distance(gravityPoint));
 
-      if (curr_distance < min_distance) {
-        min_distance_2 = min_distance;
-        min_distance = curr_distance;
-      } else if (curr_distance < min_distance_2) {
-        min_distance_2 = curr_distance;
+      if (currDistance < minDistance) {
+        minDistance2 = minDistance;
+        minDistance = currDistance;
+      } else if (currDistance < minDistance2) {
+        minDistance2 = currDistance;
       }
     }
-    return min_distance + min_distance_2;
+    return minDistance + minDistance2;
   }
 
   /** checks if this simplex can be converted into an IntBox */
   @Override
   public boolean is_IntBox() {
     for (int i = 0; i < arr.length; i++) {
-      Line curr_line = arr[i];
-      if (!(curr_line.a instanceof IntPoint && curr_line.b instanceof IntPoint)) {
+      Line currLine = arr[i];
+      if (!(currLine.a instanceof IntPoint && currLine.b instanceof IntPoint)) {
         return false;
       }
-      if (!curr_line.is_orthogonal()) {
+      if (!currLine.is_orthogonal()) {
         return false;
       }
       if (!corner_is_bounded(i)) {
@@ -370,11 +370,11 @@ public class Simplex extends TileShape implements Serializable {
   @Override
   public boolean is_IntOctagon() {
     for (int i = 0; i < arr.length; i++) {
-      Line curr_line = arr[i];
-      if (!(curr_line.a instanceof IntPoint && curr_line.b instanceof IntPoint)) {
+      Line currLine = arr[i];
+      if (!(currLine.a instanceof IntPoint && currLine.b instanceof IntPoint)) {
         return false;
       }
-      if (!curr_line.is_multiple_of_45_degree()) {
+      if (!currLine.is_multiple_of_45_degree()) {
         return false;
       }
       if (!corner_is_bounded(i)) {
@@ -410,9 +410,9 @@ public class Simplex extends TileShape implements Serializable {
     int llx = -Limits.CRIT_INT;
     int ulx = -Limits.CRIT_INT;
     for (int i = 0; i < arr.length; i++) {
-      Line curr_line = arr[i];
-      IntPoint a = (IntPoint) curr_line.a;
-      IntPoint b = (IntPoint) curr_line.b;
+      Line currLine = arr[i];
+      IntPoint a = (IntPoint) currLine.a;
+      IntPoint b = (IntPoint) currLine.b;
       if (a.y == b.y) {
         if (b.x >= a.x) {
           // lower boundary line
@@ -461,11 +461,11 @@ public class Simplex extends TileShape implements Serializable {
     if (p_vector.equals(Vector.ZERO)) {
       return this;
     }
-    Line[] new_arr = new Line[arr.length];
+    Line[] newArr = new Line[arr.length];
     for (int i = 0; i < arr.length; i++) {
-      new_arr[i] = arr[i].translate_by(p_vector);
+      newArr[i] = arr[i].translate_by(p_vector);
     }
-    return new Simplex(new_arr);
+    return new Simplex(newArr);
   }
 
   /**
@@ -477,7 +477,7 @@ public class Simplex extends TileShape implements Serializable {
     if (arr.length == 0) {
       return IntBox.EMPTY;
     }
-    if (precalculated_bounding_box == null) {
+    if (precalculatedBoundingBox == null) {
       double llx = Integer.MAX_VALUE;
       double lly = Integer.MAX_VALUE;
       double urx = Integer.MIN_VALUE;
@@ -489,17 +489,17 @@ public class Simplex extends TileShape implements Serializable {
         urx = Math.max(urx, curr.x);
         ury = Math.max(ury, curr.y);
       }
-      IntPoint lower_left = new IntPoint((int) Math.floor(llx), (int) Math.floor(lly));
-      IntPoint upper_right = new IntPoint((int) Math.ceil(urx), (int) Math.ceil(ury));
-      precalculated_bounding_box = new IntBox(lower_left, upper_right);
+      IntPoint lowerLeft = new IntPoint((int) Math.floor(llx), (int) Math.floor(lly));
+      IntPoint upperRight = new IntPoint((int) Math.ceil(urx), (int) Math.ceil(ury));
+      precalculatedBoundingBox = new IntBox(lowerLeft, upperRight);
     }
-    return precalculated_bounding_box;
+    return precalculatedBoundingBox;
   }
 
   /** Calculates a bounding octagon of the Simplex. Returns null, if the Simplex is not bounded. */
   @Override
   public IntOctagon bounding_octagon() {
-    if (precalculated_bounding_octagon == null) {
+    if (precalculatedBoundingOctagon == null) {
       double lx = Integer.MAX_VALUE;
       double ly = Integer.MAX_VALUE;
       double rx = Integer.MIN_VALUE;
@@ -531,7 +531,7 @@ public class Simplex extends TileShape implements Serializable {
       {
         return null;
       }
-      precalculated_bounding_octagon =
+      precalculatedBoundingOctagon =
           new IntOctagon(
               (int) Math.floor(lx),
               (int) Math.floor(ly),
@@ -542,7 +542,7 @@ public class Simplex extends TileShape implements Serializable {
               (int) Math.floor(llx),
               (int) Math.ceil(urx));
     }
-    return precalculated_bounding_octagon;
+    return precalculatedBoundingOctagon;
   }
 
   @Override
@@ -564,15 +564,15 @@ public class Simplex extends TileShape implements Serializable {
     if (p_width == 0) {
       return this;
     }
-    Line[] new_arr = new Line[arr.length];
+    Line[] newArr = new Line[arr.length];
     for (int i = 0; i < arr.length; i++) {
-      new_arr[i] = arr[i].translate(-p_width);
+      newArr[i] = arr[i].translate(-p_width);
     }
-    Simplex offset_simplex = new Simplex(new_arr);
+    Simplex offsetSimplex = new Simplex(newArr);
     if (p_width < 0) {
-      offset_simplex = offset_simplex.remove_redundant_lines();
+      offsetSimplex = offsetSimplex.remove_redundant_lines();
     }
-    return offset_simplex;
+    return offsetSimplex;
   }
 
   /**
@@ -584,13 +584,13 @@ public class Simplex extends TileShape implements Serializable {
     if (p_offset == 0) {
       return this;
     }
-    Simplex offset_simplex = offset(p_offset);
-    IntOctagon bounding_oct = this.bounding_octagon();
-    if (bounding_oct == null) {
+    Simplex offsetSimplex = offset(p_offset);
+    IntOctagon boundingOct = this.bounding_octagon();
+    if (boundingOct == null) {
       return Simplex.EMPTY;
     }
-    IntOctagon offset_oct = bounding_oct.offset(p_offset);
-    return offset_simplex.intersection(offset_oct.to_Simplex());
+    IntOctagon offsetOct = boundingOct.offset(p_offset);
+    return offsetSimplex.intersection(offsetOct.to_Simplex());
   }
 
   /**
@@ -599,12 +599,12 @@ public class Simplex extends TileShape implements Serializable {
    */
   public int index_of_right_most_corner(Point p_from_point) {
     Point pole = p_from_point;
-    Point right_most_corner = corner(0);
+    Point rightMostCorner = corner(0);
     int result = 0;
     for (int i = 1; i < arr.length; i++) {
-      Point curr_corner = corner(i);
-      if (curr_corner.side_of(pole, right_most_corner) == Side.ON_THE_RIGHT) {
-        right_most_corner = curr_corner;
+      Point currCorner = corner(i);
+      if (currCorner.side_of(pole, rightMostCorner) == Side.ON_THE_RIGHT) {
+        rightMostCorner = currCorner;
         result = i;
       }
     }
@@ -623,11 +623,11 @@ public class Simplex extends TileShape implements Serializable {
     if (this.is_empty() || p_other.is_empty()) {
       return EMPTY;
     }
-    Line[] new_arr = new Line[arr.length + p_other.arr.length];
-    System.arraycopy(arr, 0, new_arr, 0, arr.length);
-    System.arraycopy(p_other.arr, 0, new_arr, arr.length, p_other.arr.length);
-    Arrays.sort(new_arr);
-    Simplex result = new Simplex(new_arr);
+    Line[] newArr = new Line[arr.length + p_other.arr.length];
+    System.arraycopy(arr, 0, newArr, 0, arr.length);
+    System.arraycopy(p_other.arr, 0, newArr, arr.length, p_other.arr.length);
+    Arrays.sort(newArr);
+    Simplex result = new Simplex(newArr);
     return result.remove_redundant_lines();
   }
 
@@ -667,10 +667,10 @@ public class Simplex extends TileShape implements Serializable {
     if (p_no < 0 || p_no >= arr.length) {
       return this;
     }
-    Line[] new_arr = new Line[this.arr.length - 1];
-    System.arraycopy(this.arr, 0, new_arr, 0, p_no);
-    System.arraycopy(this.arr, p_no + 1, new_arr, p_no, new_arr.length - p_no);
-    return new Simplex(new_arr);
+    Line[] newArr = new Line[this.arr.length - 1];
+    System.arraycopy(this.arr, 0, newArr, 0, p_no);
+    System.arraycopy(this.arr, p_no + 1, newArr, p_no, newArr.length - p_no);
+    return new Simplex(newArr);
   }
 
   @Override
@@ -699,164 +699,163 @@ public class Simplex extends TileShape implements Serializable {
       FRLogger.warn("Simplex.cutout_from only implemented for 2-dim simplex");
       return null;
     }
-    Simplex inner_simplex = this.intersection(p_outer_simplex);
-    if (inner_simplex.dimension() < 2) {
+    Simplex innerSimplex = this.intersection(p_outer_simplex);
+    if (innerSimplex.dimension() < 2) {
       // nothing to cutout from p_outer_simplex
       Simplex[] result = new Simplex[1];
       result[0] = p_outer_simplex;
       return result;
     }
-    int inner_corner_count = inner_simplex.arr.length;
-    Line[][] division_line_arr = new Line[inner_corner_count][];
-    for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; inner_corner_no++) {
-      division_line_arr[inner_corner_no] =
-          inner_simplex.calc_division_lines(inner_corner_no, p_outer_simplex);
-      if (division_line_arr[inner_corner_no] == null) {
+    int innerCornerCount = innerSimplex.arr.length;
+    Line[][] divisionLineArr = new Line[innerCornerCount][];
+    for (int inner_corner_no = 0; inner_corner_no < innerCornerCount; inner_corner_no++) {
+      divisionLineArr[inner_corner_no] =
+          innerSimplex.calc_division_lines(inner_corner_no, p_outer_simplex);
+      if (divisionLineArr[inner_corner_no] == null) {
         FRLogger.warn("Simplex.cutout_from: division line is null");
         Simplex[] result = new Simplex[1];
         result[0] = p_outer_simplex;
         return result;
       }
     }
-    boolean check_cross_first_line = false;
-    Line prev_division_line = null;
-    Line first_division_line = division_line_arr[0][0];
-    IntDirection first_direction = (IntDirection) first_division_line.direction();
-    Collection<Simplex> result_list = new LinkedList<>();
+    boolean checkCrossFirstLine = false;
+    Line prevDivisionLine = null;
+    Line firstDivisionLine = divisionLineArr[0][0];
+    IntDirection firstDirection = (IntDirection) firstDivisionLine.direction();
+    Collection<Simplex> resultList = new LinkedList<>();
 
-    for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; inner_corner_no++) {
-      Line next_division_line;
-      if (inner_corner_no == inner_simplex.arr.length - 1) {
-        next_division_line = division_line_arr[0][0];
+    for (int inner_corner_no = 0; inner_corner_no < innerCornerCount; inner_corner_no++) {
+      Line nextDivisionLine;
+      if (inner_corner_no == innerSimplex.arr.length - 1) {
+        nextDivisionLine = divisionLineArr[0][0];
       } else {
-        next_division_line = division_line_arr[inner_corner_no + 1][0];
+        nextDivisionLine = divisionLineArr[inner_corner_no + 1][0];
       }
-      Line[] curr_division_lines = division_line_arr[inner_corner_no];
-      if (curr_division_lines.length == 2) {
+      Line[] currDivisionLines = divisionLineArr[inner_corner_no];
+      if (currDivisionLines.length == 2) {
         // 2 division lines are necessary (sharp corner).
         // Construct an unbounded simplex from
-        // curr_division_lines[1] and curr_division_lines[0]
+        // currDivisionLines[1] and currDivisionLines[0]
         // and intersect it with the outer simplex
-        IntDirection curr_dir = (IntDirection) curr_division_lines[0].direction();
-        boolean merge_prev_division_line = false;
-        boolean merge_first_division_line = false;
-        if (prev_division_line != null) {
-          IntDirection prev_dir = (IntDirection) prev_division_line.direction();
-          if (curr_dir.determinant(prev_dir) > 0) {
+        IntDirection currDir = (IntDirection) currDivisionLines[0].direction();
+        boolean mergePrevDivisionLine = false;
+        boolean mergeFirstDivisionLine = false;
+        if (prevDivisionLine != null) {
+          IntDirection prevDir = (IntDirection) prevDivisionLine.direction();
+          if (currDir.determinant(prevDir) > 0) {
 
             // the previous division line may intersect
-            //  curr_division_lines[0] inside p_divide_simplex
-            merge_prev_division_line = true;
+            //  currDivisionLines[0] inside p_divide_simplex
+            mergePrevDivisionLine = true;
           }
         }
-        if (!check_cross_first_line) {
-          check_cross_first_line = inner_corner_no > 0 && curr_dir.determinant(first_direction) > 0;
+        if (!checkCrossFirstLine) {
+          checkCrossFirstLine = inner_corner_no > 0 && currDir.determinant(firstDirection) > 0;
         }
-        if (check_cross_first_line) {
-          IntDirection curr_dir2 = (IntDirection) curr_division_lines[1].direction();
-          if (curr_dir2.determinant(first_direction) < 0) {
+        if (checkCrossFirstLine) {
+          IntDirection currDir2 = (IntDirection) currDivisionLines[1].direction();
+          if (currDir2.determinant(firstDirection) < 0) {
             // The current piece has an intersection area with the first
             // piece.
-            // Add a line to tmp_polyline to prevent this
-            merge_first_division_line = true;
+            // Add a line to tmpPolyline to prevent this
+            mergeFirstDivisionLine = true;
           }
         }
-        int piece_line_count = 2;
-        if (merge_prev_division_line) {
-          ++piece_line_count;
+        int pieceLineCount = 2;
+        if (mergePrevDivisionLine) {
+          ++pieceLineCount;
         }
-        if (merge_first_division_line) {
-          ++piece_line_count;
+        if (mergeFirstDivisionLine) {
+          ++pieceLineCount;
         }
-        Line[] piece_lines = new Line[piece_line_count];
-        piece_lines[0] = new Line(curr_division_lines[1].b, curr_division_lines[1].a);
-        piece_lines[1] = curr_division_lines[0];
-        int curr_line_no = 1;
-        if (merge_prev_division_line) {
-          ++curr_line_no;
-          piece_lines[curr_line_no] = prev_division_line;
+        Line[] pieceLines = new Line[pieceLineCount];
+        pieceLines[0] = new Line(currDivisionLines[1].b, currDivisionLines[1].a);
+        pieceLines[1] = currDivisionLines[0];
+        int currLineNo = 1;
+        if (mergePrevDivisionLine) {
+          ++currLineNo;
+          pieceLines[currLineNo] = prevDivisionLine;
         }
-        if (merge_first_division_line) {
-          ++curr_line_no;
-          piece_lines[curr_line_no] = new Line(first_division_line.b, first_division_line.a);
+        if (mergeFirstDivisionLine) {
+          ++currLineNo;
+          pieceLines[currLineNo] = new Line(firstDivisionLine.b, firstDivisionLine.a);
         }
-        Simplex curr_piece = new Simplex(piece_lines);
-        result_list.add(curr_piece.intersection(p_outer_simplex));
+        Simplex currPiece = new Simplex(pieceLines);
+        resultList.add(currPiece.intersection(p_outer_simplex));
       }
-      // construct an unbounded simplex from next_division_line,
-      // inner_simplex.line [inner_corner_no] and the last current division line
+      // construct an unbounded simplex from nextDivisionLine,
+      // innerSimplex.line [inner_corner_no] and the last current division line
       // and intersect it with the outer simplex
-      boolean merge_next_division_line = !next_division_line.b.equals(next_division_line.a);
-      Line last_curr_division_line = curr_division_lines[curr_division_lines.length - 1];
-      IntDirection last_curr_dir = (IntDirection) last_curr_division_line.direction();
-      boolean merge_last_curr_division_line =
-          !last_curr_division_line.b.equals(last_curr_division_line.a);
-      boolean merge_prev_division_line = false;
-      boolean merge_first_division_line = false;
-      if (prev_division_line != null) {
-        IntDirection prev_dir = (IntDirection) prev_division_line.direction();
-        if (last_curr_dir.determinant(prev_dir) > 0) {
+      boolean mergeNextDivisionLine = !nextDivisionLine.b.equals(nextDivisionLine.a);
+      Line lastCurrDivisionLine = currDivisionLines[currDivisionLines.length - 1];
+      IntDirection lastCurrDir = (IntDirection) lastCurrDivisionLine.direction();
+      boolean mergeLastCurrDivisionLine = !lastCurrDivisionLine.b.equals(lastCurrDivisionLine.a);
+      boolean mergePrevDivisionLine = false;
+      boolean mergeFirstDivisionLine = false;
+      if (prevDivisionLine != null) {
+        IntDirection prevDir = (IntDirection) prevDivisionLine.direction();
+        if (lastCurrDir.determinant(prevDir) > 0) {
 
           // the previous division line may intersect
           //  the last current division line inside p_divide_simplex
-          merge_prev_division_line = true;
+          mergePrevDivisionLine = true;
         }
       }
-      if (!check_cross_first_line) {
-        check_cross_first_line =
+      if (!checkCrossFirstLine) {
+        checkCrossFirstLine =
             inner_corner_no > 0
-                && last_curr_dir.determinant(first_direction) > 0
-                && last_curr_dir.get_vector().scalar_product(first_direction.get_vector()) < 0;
-        // scalar_product checked to ignore backcrossing at
+                && lastCurrDir.determinant(firstDirection) > 0
+                && lastCurrDir.get_vector().scalar_product(firstDirection.get_vector()) < 0;
+        // scalarProduct checked to ignore backcrossing at
         // small inner_corner_no
       }
-      if (check_cross_first_line) {
-        IntDirection next_dir = (IntDirection) next_division_line.direction();
-        if (next_dir.determinant(first_direction) < 0) {
+      if (checkCrossFirstLine) {
+        IntDirection nextDir = (IntDirection) nextDivisionLine.direction();
+        if (nextDir.determinant(firstDirection) < 0) {
           // The current piece has an intersection area with the first piece.
-          // Add a line to tmp_polyline to prevent this
-          merge_first_division_line = true;
+          // Add a line to tmpPolyline to prevent this
+          mergeFirstDivisionLine = true;
         }
       }
-      int piece_line_count = 1;
-      if (merge_next_division_line) {
-        ++piece_line_count;
+      int pieceLineCount = 1;
+      if (mergeNextDivisionLine) {
+        ++pieceLineCount;
       }
-      if (merge_last_curr_division_line) {
-        ++piece_line_count;
+      if (mergeLastCurrDivisionLine) {
+        ++pieceLineCount;
       }
-      if (merge_prev_division_line) {
-        ++piece_line_count;
+      if (mergePrevDivisionLine) {
+        ++pieceLineCount;
       }
-      if (merge_first_division_line) {
-        ++piece_line_count;
+      if (mergeFirstDivisionLine) {
+        ++pieceLineCount;
       }
-      Line[] piece_lines = new Line[piece_line_count];
-      Line curr_line = inner_simplex.arr[inner_corner_no];
-      piece_lines[0] = new Line(curr_line.b, curr_line.a);
-      int curr_line_no = 0;
-      if (merge_next_division_line) {
-        ++curr_line_no;
-        piece_lines[curr_line_no] = new Line(next_division_line.b, next_division_line.a);
+      Line[] pieceLines = new Line[pieceLineCount];
+      Line currLine = innerSimplex.arr[inner_corner_no];
+      pieceLines[0] = new Line(currLine.b, currLine.a);
+      int currLineNo = 0;
+      if (mergeNextDivisionLine) {
+        ++currLineNo;
+        pieceLines[currLineNo] = new Line(nextDivisionLine.b, nextDivisionLine.a);
       }
-      if (merge_last_curr_division_line) {
-        ++curr_line_no;
-        piece_lines[curr_line_no] = last_curr_division_line;
+      if (mergeLastCurrDivisionLine) {
+        ++currLineNo;
+        pieceLines[currLineNo] = lastCurrDivisionLine;
       }
-      if (merge_prev_division_line) {
-        ++curr_line_no;
-        piece_lines[curr_line_no] = prev_division_line;
+      if (mergePrevDivisionLine) {
+        ++currLineNo;
+        pieceLines[currLineNo] = prevDivisionLine;
       }
-      if (merge_first_division_line) {
-        ++curr_line_no;
-        piece_lines[curr_line_no] = new Line(first_division_line.b, first_division_line.a);
+      if (mergeFirstDivisionLine) {
+        ++currLineNo;
+        pieceLines[currLineNo] = new Line(firstDivisionLine.b, firstDivisionLine.a);
       }
-      Simplex curr_piece = new Simplex(piece_lines);
-      result_list.add(curr_piece.intersection(p_outer_simplex));
-      next_division_line = prev_division_line;
+      Simplex currPiece = new Simplex(pieceLines);
+      resultList.add(currPiece.intersection(p_outer_simplex));
+      nextDivisionLine = prevDivisionLine;
     }
-    Simplex[] result = new Simplex[result_list.size()];
-    Iterator<Simplex> it = result_list.iterator();
+    Simplex[] result = new Simplex[resultList.size()];
+    Iterator<Simplex> it = resultList.iterator();
     for (int i = 0; i < result.length; i++) {
       result[i] = it.next();
     }
@@ -878,119 +877,119 @@ public class Simplex extends TileShape implements Serializable {
    * the lines of this simplex are sorted.
    */
   Simplex remove_redundant_lines() {
-    Line[] line_arr = new Line[arr.length];
-    // copy the sorted lines of arr into line_arr while skipping
+    Line[] lineArr = new Line[arr.length];
+    // copy the sorted lines of arr into lineArr while skipping
     // multiple lines
-    int new_length = 1;
-    line_arr[0] = arr[0];
-    Line prev = line_arr[0];
+    int newLength = 1;
+    lineArr[0] = arr[0];
+    Line prev = lineArr[0];
     for (int i = 1; i < arr.length; i++) {
       if (!arr[i].fast_equals(prev)) {
-        line_arr[new_length] = arr[i];
-        prev = line_arr[new_length];
-        ++new_length;
+        lineArr[newLength] = arr[i];
+        prev = lineArr[newLength];
+        ++newLength;
       }
     }
 
-    Side[] intersection_sides = new Side[new_length];
+    Side[] intersectionSides = new Side[newLength];
     // precalculated array , on which side of this line the previous and the
     // next line do intersect
 
-    boolean try_again = new_length > 2;
-    int index_of_last_removed_line = new_length;
-    while (try_again) {
-      try_again = false;
-      int prev_ind = new_length - 1;
-      int next_ind;
-      Line prev_line = line_arr[prev_ind];
-      Line curr_line = line_arr[0];
-      Line next_line;
-      for (int ind = 0; ind < new_length; ind++) {
-        if (ind == new_length - 1) {
-          next_ind = 0;
+    boolean tryAgain = newLength > 2;
+    int indexOfLastRemovedLine = newLength;
+    while (tryAgain) {
+      tryAgain = false;
+      int prevInd = newLength - 1;
+      int nextInd;
+      Line prevLine = lineArr[prevInd];
+      Line currLine = lineArr[0];
+      Line nextLine;
+      for (int ind = 0; ind < newLength; ind++) {
+        if (ind == newLength - 1) {
+          nextInd = 0;
         } else {
-          next_ind = ind + 1;
+          nextInd = ind + 1;
         }
-        next_line = line_arr[next_ind];
+        nextLine = lineArr[nextInd];
 
-        boolean remove_line = false;
-        IntDirection prev_dir = (IntDirection) prev_line.direction();
-        IntDirection next_dir = (IntDirection) next_line.direction();
-        double det = prev_dir.determinant(next_dir);
-        if (det != 0) // prev_line and next_line are not parallel
+        boolean removeLine = false;
+        IntDirection prevDir = (IntDirection) prevLine.direction();
+        IntDirection nextDir = (IntDirection) nextLine.direction();
+        double det = prevDir.determinant(nextDir);
+        if (det != 0) // prevLine and nextLine are not parallel
         {
-          if (intersection_sides[ind] == null) {
-            // intersection_sides [ind] not precalculated
-            intersection_sides[ind] = curr_line.side_of_intersection(prev_line, next_line);
+          if (intersectionSides[ind] == null) {
+            // intersectionSides [ind] not precalculated
+            intersectionSides[ind] = currLine.side_of_intersection(prevLine, nextLine);
           }
           if (det > 0)
-          // direction of next_line is bigger than direction of prev_line
+          // direction of nextLine is bigger than direction of prevLine
           {
-            // if the intersection of prev_line and next_line
-            // is on the left of curr_line, curr_line does not
+            // if the intersection of prevLine and nextLine
+            // is on the left of currLine, currLine does not
             // contribute to the shape of the simplex
-            remove_line = intersection_sides[ind] != Side.ON_THE_LEFT;
+            removeLine = intersectionSides[ind] != Side.ON_THE_LEFT;
           } else
-          // direction of next_line is smaller than direction of prev_line
+          // direction of nextLine is smaller than direction of prevLine
           {
 
-            if (intersection_sides[ind] == Side.ON_THE_LEFT) {
-              IntDirection curr_dir = (IntDirection) curr_line.direction();
-              if (prev_dir.determinant(curr_dir) > 0)
-              // direction of curr_line is bigger than direction of prev_line
+            if (intersectionSides[ind] == Side.ON_THE_LEFT) {
+              IntDirection currDir = (IntDirection) currLine.direction();
+              if (prevDir.determinant(currDir) > 0)
+              // direction of currLine is bigger than direction of prevLine
               {
-                // the halfplane defined by curr_line does not intersect
-                // with the simplex defined by prev_line and nex_line,
+                // the halfplane defined by currLine does not intersect
+                // with the simplex defined by prevLine and nex_line,
                 // hence this simplex must be empty
-                new_length = 0;
-                try_again = false;
+                newLength = 0;
+                tryAgain = false;
                 break;
               }
             }
           }
-        } else // prev_line and next_line are parallel
+        } else // prevLine and nextLine are parallel
         {
-          if (prev_line.side_of(next_line.a) == Side.ON_THE_LEFT)
-          // prev_line is to the left of next_line,
-          // the halfplanes defined by prev_line and next_line
+          if (prevLine.side_of(nextLine.a) == Side.ON_THE_LEFT)
+          // prevLine is to the left of nextLine,
+          // the halfplanes defined by prevLine and nextLine
           // do not intersect
           {
-            new_length = 0;
-            try_again = false;
+            newLength = 0;
+            tryAgain = false;
             break;
           }
         }
-        if (remove_line) {
-          try_again = true;
-          --new_length;
-          for (int i = ind; i < new_length; i++) {
-            line_arr[i] = line_arr[i + 1];
-            intersection_sides[i] = intersection_sides[i + 1];
+        if (removeLine) {
+          tryAgain = true;
+          --newLength;
+          for (int i = ind; i < newLength; i++) {
+            lineArr[i] = lineArr[i + 1];
+            intersectionSides[i] = intersectionSides[i + 1];
           }
 
-          if (new_length < 3) {
-            try_again = false;
+          if (newLength < 3) {
+            tryAgain = false;
             break;
           }
-          // reset 3 precalculated intersection_sides
+          // reset 3 precalculated intersectionSides
           if (ind == 0) {
-            prev_ind = new_length - 1;
+            prevInd = newLength - 1;
           }
-          intersection_sides[prev_ind] = null;
-          if (ind >= new_length) {
-            next_ind = 0;
+          intersectionSides[prevInd] = null;
+          if (ind >= newLength) {
+            nextInd = 0;
           } else {
-            next_ind = ind;
+            nextInd = ind;
           }
-          intersection_sides[next_ind] = null;
+          intersectionSides[nextInd] = null;
           --ind;
-          index_of_last_removed_line = ind;
+          indexOfLastRemovedLine = ind;
         } else {
-          prev_line = curr_line;
-          prev_ind = ind;
+          prevLine = currLine;
+          prevInd = ind;
         }
-        curr_line = next_line;
-        if (!try_again && ind >= index_of_last_removed_line)
+        currLine = nextLine;
+        if (!tryAgain && ind >= indexOfLastRemovedLine)
         // tried all lines without removing one
         {
           break;
@@ -998,33 +997,33 @@ public class Simplex extends TileShape implements Serializable {
       }
     }
 
-    if (new_length == 2) {
-      if (line_arr[0].is_parallel(line_arr[1])) {
-        if (line_arr[0].direction().equals(line_arr[1].direction()))
+    if (newLength == 2) {
+      if (lineArr[0].is_parallel(lineArr[1])) {
+        if (lineArr[0].direction().equals(lineArr[1].direction()))
         // one of the two remaining lines is redundant
         {
-          if (line_arr[1].side_of(line_arr[0].a) == Side.ON_THE_LEFT) {
-            line_arr[0] = line_arr[1];
+          if (lineArr[1].side_of(lineArr[0].a) == Side.ON_THE_LEFT) {
+            lineArr[0] = lineArr[1];
           }
-          --new_length;
+          --newLength;
         } else
         // the two remaining lines have opposite direction
         // the simplex may be empty
         {
-          if (line_arr[1].side_of(line_arr[0].a) == Side.ON_THE_LEFT) {
-            new_length = 0;
+          if (lineArr[1].side_of(lineArr[0].a) == Side.ON_THE_LEFT) {
+            newLength = 0;
           }
         }
       }
     }
-    if (new_length == arr.length) {
+    if (newLength == arr.length) {
       return this; // nothing removed
     }
-    if (new_length == 0) {
+    if (newLength == 0) {
       return Simplex.EMPTY;
     }
-    Line[] result = new Line[new_length];
-    System.arraycopy(line_arr, 0, result, 0, new_length);
+    Line[] result = new Line[newLength];
+    System.arraycopy(lineArr, 0, result, 0, newLength);
     return new Simplex(result);
   }
 
@@ -1050,123 +1049,122 @@ public class Simplex extends TileShape implements Serializable {
    * with parametertype Simplex.
    */
   private Line[] calc_division_lines(int p_inner_corner_no, Simplex p_outer_simplex) {
-    Line curr_inner_line = this.arr[p_inner_corner_no];
-    Line prev_inner_line;
+    Line currInnerLine = this.arr[p_inner_corner_no];
+    Line prevInnerLine;
     if (p_inner_corner_no != 0) {
-      prev_inner_line = this.arr[p_inner_corner_no - 1];
+      prevInnerLine = this.arr[p_inner_corner_no - 1];
     } else {
-      prev_inner_line = this.arr[arr.length - 1];
+      prevInnerLine = this.arr[arr.length - 1];
     }
-    FloatPoint intersection = curr_inner_line.intersection_approx(prev_inner_line);
+    FloatPoint intersection = currInnerLine.intersection_approx(prevInnerLine);
     if (intersection.x >= Integer.MAX_VALUE) {
       FRLogger.warn("Simplex.calc_division_lines: intersection expected");
       return null;
     }
-    IntPoint inner_corner = intersection.round();
-    double c_tolerance = 0.0001;
-    boolean is_exact =
-        Math.abs(inner_corner.x - intersection.x) < c_tolerance
-            && Math.abs(inner_corner.y - intersection.y) < c_tolerance;
+    IntPoint innerCorner = intersection.round();
+    double cTolerance = 0.0001;
+    boolean isExact =
+        Math.abs(innerCorner.x - intersection.x) < cTolerance
+            && Math.abs(innerCorner.y - intersection.y) < cTolerance;
 
-    if (!is_exact) {
+    if (!isExact) {
       // it is assumed, that the corners of the original inner simplex are
       // exact and the not exact corners come from the intersection of
       // the inner simplex with the outer simplex.
       // Because these corners lie on the border of the outer simplex,
       // no division is necessary
       Line[] result = new Line[1];
-      result[0] = prev_inner_line;
+      result[0] = prevInnerLine;
       return result;
     }
-    IntDirection first_projection_dir = Direction.NULL;
-    IntDirection second_projection_dir = Direction.NULL;
-    IntDirection prev_inner_dir = (IntDirection) prev_inner_line.direction().opposite();
-    IntDirection next_inner_dir = (IntDirection) curr_inner_line.direction();
-    int outer_line_no = 0;
+    IntDirection firstProjectionDir = Direction.NULL;
+    IntDirection secondProjectionDir = Direction.NULL;
+    IntDirection prevInnerDir = (IntDirection) prevInnerLine.direction().opposite();
+    IntDirection nextInnerDir = (IntDirection) currInnerLine.direction();
+    int outerLineNo = 0;
 
     // search the first outer line, so that
     // the perpendicular projection of the inner corner onto this
-    // line is visible from inner_corner to the left of prev_inner_line.
+    // line is visible from innerCorner to the left of prevInnerLine.
 
-    double min_distance = Integer.MAX_VALUE;
+    double minDistance = Integer.MAX_VALUE;
 
     for (int ind = 0; ind < p_outer_simplex.arr.length; ind++) {
-      Line outer_line = p_outer_simplex.arr[outer_line_no];
-      IntDirection curr_projection_dir =
-          (IntDirection) inner_corner.perpendicular_direction(outer_line);
-      if (curr_projection_dir == Direction.NULL) {
+      Line outerLine = p_outer_simplex.arr[outerLineNo];
+      IntDirection currProjectionDir =
+          (IntDirection) innerCorner.perpendicular_direction(outerLine);
+      if (currProjectionDir == Direction.NULL) {
         Line[] result = new Line[1];
-        result[0] = new Line(inner_corner, inner_corner);
+        result[0] = new Line(innerCorner, innerCorner);
         return result;
       }
-      boolean projection_visible = prev_inner_dir.determinant(curr_projection_dir) >= 0;
-      if (projection_visible) {
-        double curr_distance = Math.abs(outer_line.signed_distance(inner_corner.to_float()));
-        boolean second_division_necessary = curr_projection_dir.determinant(next_inner_dir) < 0;
+      boolean projectionVisible = prevInnerDir.determinant(currProjectionDir) >= 0;
+      if (projectionVisible) {
+        double currDistance = Math.abs(outerLine.signed_distance(innerCorner.to_float()));
+        boolean secondDivisionNecessary = currProjectionDir.determinant(nextInnerDir) < 0;
         // may occur at a sharp angle
-        IntDirection curr_second_projection_dir = curr_projection_dir;
+        IntDirection currSecondProjectionDir = currProjectionDir;
 
-        if (second_division_necessary) {
-          // search the first projection_dir between curr_projection_dir
-          // and next_inner_dir, that is visible from next_inner_line
-          boolean second_projection_visible = false;
-          int tmp_outer_line_no = outer_line_no;
-          while (!second_projection_visible) {
-            if (tmp_outer_line_no == p_outer_simplex.arr.length - 1) {
-              tmp_outer_line_no = 0;
+        if (secondDivisionNecessary) {
+          // search the first projection_dir between currProjectionDir
+          // and nextInnerDir, that is visible from next_inner_line
+          boolean secondProjectionVisible = false;
+          int tmpOuterLineNo = outerLineNo;
+          while (!secondProjectionVisible) {
+            if (tmpOuterLineNo == p_outer_simplex.arr.length - 1) {
+              tmpOuterLineNo = 0;
             } else {
-              ++tmp_outer_line_no;
+              ++tmpOuterLineNo;
             }
-            curr_second_projection_dir =
+            currSecondProjectionDir =
                 (IntDirection)
-                    inner_corner.perpendicular_direction(p_outer_simplex.arr[tmp_outer_line_no]);
+                    innerCorner.perpendicular_direction(p_outer_simplex.arr[tmpOuterLineNo]);
 
-            if (curr_second_projection_dir == Direction.NULL)
-            // inner corner is on outer_line
+            if (currSecondProjectionDir == Direction.NULL)
+            // inner corner is on outerLine
             {
               Line[] result = new Line[1];
-              result[0] = new Line(inner_corner, inner_corner);
+              result[0] = new Line(innerCorner, innerCorner);
               return result;
             }
-            if (curr_projection_dir.determinant(curr_second_projection_dir) < 0) {
-              // curr_second_projection_dir not found;
-              // the angle between curr_projection_dir and
-              // curr_second_projection_dir would be already bigger
+            if (currProjectionDir.determinant(currSecondProjectionDir) < 0) {
+              // currSecondProjectionDir not found;
+              // the angle between currProjectionDir and
+              // currSecondProjectionDir would be already bigger
               // than 180 degree
-              curr_distance = Integer.MAX_VALUE;
+              currDistance = Integer.MAX_VALUE;
               break;
             }
 
-            second_projection_visible = curr_second_projection_dir.determinant(next_inner_dir) >= 0;
+            secondProjectionVisible = currSecondProjectionDir.determinant(nextInnerDir) >= 0;
           }
-          curr_distance +=
-              Math.abs(
-                  p_outer_simplex.arr[tmp_outer_line_no].signed_distance(inner_corner.to_float()));
+          currDistance +=
+              Math.abs(p_outer_simplex.arr[tmpOuterLineNo].signed_distance(innerCorner.to_float()));
         }
-        if (curr_distance < min_distance) {
-          min_distance = curr_distance;
-          first_projection_dir = curr_projection_dir;
-          second_projection_dir = curr_second_projection_dir;
+        if (currDistance < minDistance) {
+          minDistance = currDistance;
+          firstProjectionDir = currProjectionDir;
+          secondProjectionDir = currSecondProjectionDir;
         }
       }
-      if (outer_line_no == p_outer_simplex.arr.length - 1) {
-        outer_line_no = 0;
+      if (outerLineNo == p_outer_simplex.arr.length - 1) {
+        outerLineNo = 0;
       } else {
-        ++outer_line_no;
+        ++outerLineNo;
       }
     }
-    if (min_distance == Integer.MAX_VALUE) {
+    if (minDistance == Integer.MAX_VALUE) {
       FRLogger.warn("Simplex.calc_division_lines: division not found");
       return null;
     }
     Line[] result;
-    if (first_projection_dir.equals(second_projection_dir)) {
+    if (firstProjectionDir.equals(secondProjectionDir)) {
       result = new Line[1];
-      result[0] = new Line(inner_corner, first_projection_dir);
+      result[0] = new Line(innerCorner, firstProjectionDir);
     } else {
       result = new Line[2];
-      result[0] = new Line(inner_corner, first_projection_dir);
-      result[1] = new Line(inner_corner, second_projection_dir);
+      result[0] = new Line(innerCorner, firstProjectionDir);
+      result[1] = new Line(innerCorner, secondProjectionDir);
     }
     return result;
   }

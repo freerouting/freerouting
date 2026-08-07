@@ -28,7 +28,7 @@ import app.freerouting.settings.SettingsSource;
  * fields contain only the values this source explicitly provides. All other fields must remain
  * {@code null} so the {@link app.freerouting.settings.SettingsMerger} can resolve them from their
  * authoritative sources. {@code InteractiveSettings} honours this contract by populating only
- * {@code trace_pull_tight_accuracy} and {@code automatic_neckdown}.
+ * {@code tracePullTightAccuracy} and {@code automaticNeckdown}.
  */
 public class GuiSettings implements SettingsSource {
 

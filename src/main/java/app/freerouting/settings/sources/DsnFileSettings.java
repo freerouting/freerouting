@@ -33,7 +33,7 @@ public class DsnFileSettings implements SettingsSource {
     int layerCount = 0;
 
     if (result instanceof BoardReadResult.Success s && s.metadata() != null) {
-      extracted = s.metadata().routerSettings(); // null when no (autoroute_settings …) block
+      extracted = s.metadata().routerSettings(); // null when no (autorouteSettings …) block
       layerCount = s.metadata().layerCount();
     }
 

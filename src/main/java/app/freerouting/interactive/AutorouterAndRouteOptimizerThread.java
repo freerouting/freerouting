@@ -252,7 +252,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
                   event.getRouterCounters().fanoutExtraViasCount == null
                       ? 0
                       : event.getRouterCounters().fanoutExtraViasCount;
-              boardManager.screen_messages.set_status_message(
+              boardManager.screenMessages.set_status_message(
                   "Fanout pass #"
                       + event.getRouterCounters().passCount
                       + " (routed "
@@ -264,8 +264,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
                       + " vias)");
             }
 
-            boardManager.screen_messages.set_batch_autoroute_info(event.getRouterCounters());
-            boardManager.screen_messages.set_board_score(
+            boardManager.screenMessages.set_batch_autoroute_info(event.getRouterCounters());
+            boardManager.screenMessages.set_board_score(
                 boardScore,
                 event.getBoardStatistics().connections.incompleteCount,
                 event.getBoardStatistics().clearanceViolations.totalCount);
@@ -294,9 +294,9 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
             TaskState taskState = event.getTaskState();
             if (taskState == TaskState.RUNNING) {
               TextManager tm = new TextManager(InteractiveState.class, boardManager.get_locale());
-              String start_message =
+              String startMessage =
                   tm.getText("autorouter_started", Integer.toString(event.getPassNumber()));
-              boardManager.screen_messages.set_status_message(start_message);
+              boardManager.screenMessages.set_status_message(startMessage);
             }
           }
         });
@@ -326,11 +326,11 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
               @Override
               public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
                 BoardStatistics boardStatistics = event.getBoardStatistics();
-                boardManager.screen_messages.set_post_route_info(
+                boardManager.screenMessages.set_post_route_info(
                     boardStatistics.items.viaCount,
                     boardStatistics.traces.totalLength,
-                    boardManager.coordinate_transform.user_unit);
-                boardManager.screen_messages.set_board_score(
+                    boardManager.coordinateTransform.userUnit);
+                boardManager.screenMessages.set_board_score(
                     boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring),
                     boardStatistics.connections.incompleteCount,
                     boardStatistics.clearanceViolations.totalCount);
@@ -346,9 +346,9 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
                 if (taskState == TaskState.RUNNING) {
                   TextManager tm =
                       new TextManager(InteractiveState.class, boardManager.get_locale());
-                  String start_message =
+                  String startMessage =
                       tm.getText("optimizer_started", Integer.toString(event.getPassNumber()));
-                  boardManager.screen_messages.set_status_message(start_message);
+                  boardManager.screenMessages.set_status_message(startMessage);
                 }
               }
             });
@@ -376,10 +376,10 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
               public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
                 BoardStatistics boardStatistics = event.getBoardStatistics();
                 boardManager.replaceRoutingBoard(event.getBoard());
-                boardManager.screen_messages.set_post_route_info(
+                boardManager.screenMessages.set_post_route_info(
                     boardStatistics.items.viaCount,
                     boardStatistics.traces.totalLength,
-                    boardManager.coordinate_transform.user_unit);
+                    boardManager.coordinateTransform.userUnit);
               }
             });
 
@@ -391,9 +391,9 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
                 if (taskState == TaskState.RUNNING) {
                   TextManager tm =
                       new TextManager(InteractiveState.class, boardManager.get_locale());
-                  String start_message =
+                  String startMessage =
                       tm.getText("optimizer_started", Integer.toString(event.getPassNumber()));
-                  boardManager.screen_messages.set_status_message(start_message);
+                  boardManager.screenMessages.set_status_message(startMessage);
                 }
               }
             });
@@ -537,10 +537,10 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
     try {
       TextManager tm = new TextManager(InteractiveState.class, boardManager.get_locale());
 
-      boolean saved_board_read_only = boardManager.is_board_read_only();
+      boolean savedBoardReadOnly = boardManager.is_board_read_only();
       boardManager.set_board_read_only(true);
-      boolean ratsnest_hidden_before = boardManager.get_ratsnest().is_hidden();
-      if (!ratsnest_hidden_before) {
+      boolean ratsnestHiddenBefore = boardManager.get_ratsnest().is_hidden();
+      if (!ratsnestHiddenBefore) {
         boardManager.get_ratsnest().hide();
       }
 
@@ -564,8 +564,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       globalSettings.statistics.incrementJobsCompleted();
       FRAnalytics.autorouterStarted();
 
-      String start_message = tm.getText("batch_autorouter_start_message");
-      boardManager.screen_messages.set_status_message(start_message);
+      String startMessage = tm.getText("batch_autorouter_start_message");
+      boardManager.screenMessages.set_status_message(startMessage);
 
       // Let's run the autorouter
       if (isRouterEnabled && !this.is_stop_auto_router_requested()) {
@@ -665,13 +665,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       Thread.sleep(100);
 
       // Let's run the optimizer if it's enabled
-      int num_threads = boardManager.get_num_threads();
-      if ((num_threads > 0) && (routingJob.routerSettings.optimizer.enabled)) {
+      int numThreads = boardManager.get_num_threads();
+      if ((numThreads > 0) && (routingJob.routerSettings.optimizer.enabled)) {
         routingJob.logInfo(
             "Starting optimization on "
-                + (num_threads == 1 ? "1 thread" : num_threads + " threads")
+                + (numThreads == 1 ? "1 thread" : numThreads + " threads")
                 + "...");
-        if (num_threads > 1) {
+        if (numThreads > 1) {
           routingJob.logWarning(
               "Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
         }
@@ -680,23 +680,23 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         FRAnalytics.routeOptimizerStarted();
 
         if (routingJob.routerSettings.getRunOptimizer() && !this.isStopRequested()) {
-          String opt_message = tm.getText("batch_optimizer_start_message");
-          boardManager.screen_messages.set_status_message(opt_message);
+          String optMessage = tm.getText("batch_optimizer_start_message");
+          boardManager.screenMessages.set_status_message(optMessage);
           this.batchOptimizer.runBatchLoop();
-          String curr_message;
+          String currMessage;
           if (this.isStopRequested()) {
-            curr_message = tm.getText("interrupted");
+            currMessage = tm.getText("interrupted");
           } else {
-            curr_message = tm.getText("completed");
+            currMessage = tm.getText("completed");
           }
-          String end_message = tm.getText("optimization_end_message", curr_message);
-          boardManager.screen_messages.set_status_message(end_message);
+          String endMessage = tm.getText("optimization_end_message", currMessage);
+          boardManager.screenMessages.set_status_message(endMessage);
         }
 
         bs = new BoardStatistics(boardManager.get_routing_board());
         var scoreAfterOptimization = bs.getNormalizedScore(routingJob.routerSettings.scoring);
 
-        double percentage_improvement =
+        double percentageImprovement =
             ((scoreAfterOptimization / scoreBeforeOptimization) * 100.0) - 100.0;
 
         double routeOptimizationSecondsToComplete =
@@ -709,16 +709,16 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
                     scoreBeforeOptimization,
                     bs.connections.incompleteCount,
                     bs.clearanceViolations.totalCount)
-                + (percentage_improvement > 0
+                + (percentageImprovement > 0
                     ? " and an improvement of "
-                        + FRLogger.defaultSignedFloatFormat.format(percentage_improvement)
+                        + FRLogger.defaultSignedFloatFormat.format(percentageImprovement)
                         + "%."
                     : "."));
         FRAnalytics.routeOptimizerFinished();
       }
 
       // Restore the board read-only state
-      boardManager.set_board_read_only(saved_board_read_only);
+      boardManager.set_board_read_only(savedBoardReadOnly);
 
       // Save the result to the output field as a Specctra SES file
       if (routingJob.output.format == FileFormat.SES) {
@@ -735,25 +735,25 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
 
       // Update the ratsnest
       boardManager.update_ratsnest();
-      if (!ratsnest_hidden_before) {
+      if (!ratsnestHiddenBefore) {
         boardManager.get_ratsnest().show();
       }
 
       // Update the message status bar, indicating that auto-routing is completed
-      boardManager.screen_messages.clear();
-      String curr_message;
+      boardManager.screenMessages.clear();
+      String currMessage;
       if (this.isStopRequested()) {
-        curr_message = tm.getText("interrupted");
+        currMessage = tm.getText("interrupted");
       } else {
-        curr_message = tm.getText("completed");
+        currMessage = tm.getText("completed");
       }
-      int incomplete_count = boardManager.get_ratsnest().incomplete_count();
-      String end_message =
-          tm.getText("autoroute_end_message", curr_message, Integer.toString(incomplete_count));
-      boardManager.screen_messages.set_status_message(end_message);
+      int incompleteCount = boardManager.get_ratsnest().incomplete_count();
+      String endMessage =
+          tm.getText("autoroute_end_message", currMessage, Integer.toString(incompleteCount));
+      boardManager.screenMessages.set_status_message(endMessage);
 
       // Refresh the windows
-      boardManager.get_panel().board_frame.refresh_windows();
+      boardManager.get_panel().boardFrame.refresh_windows();
       if (boardManager.get_routing_board().rules.get_trace_angle_restriction()
           == AngleRestriction.FORTYFIVE_DEGREE) {
         int non45DegreeCount = boardManager.get_routing_board().getNon45DegreeTraceCount();
@@ -864,45 +864,45 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
   public void draw(Graphics p_graphics) {
     // Cast to access get_air_line() which exists on both BatchAutorouter and
     // BatchAutorouterV19
-    FloatLine curr_air_line = null;
+    FloatLine currAirLine = null;
     if (batchAutorouter instanceof BatchAutorouter) {
-      curr_air_line = ((BatchAutorouter) batchAutorouter).get_air_line();
+      currAirLine = ((BatchAutorouter) batchAutorouter).get_air_line();
     } else if (batchAutorouter instanceof BatchAutorouterV19) {
-      curr_air_line = ((BatchAutorouterV19) batchAutorouter).get_air_line();
+      currAirLine = ((BatchAutorouterV19) batchAutorouter).get_air_line();
     }
-    if (curr_air_line != null) {
-      FloatPoint[] draw_line = new FloatPoint[2];
-      draw_line[0] = curr_air_line.a;
-      draw_line[1] = curr_air_line.b;
+    if (currAirLine != null) {
+      FloatPoint[] drawLine = new FloatPoint[2];
+      drawLine[0] = currAirLine.a;
+      drawLine[1] = currAirLine.b;
       // draw the incomplete
-      Color draw_color = this.boardManager.graphics_context.get_incomplete_color();
-      double draw_width =
+      Color drawColor = this.boardManager.graphicsContext.get_incomplete_color();
+      double drawWidth =
           Math.min(
               this.boardManager.get_routing_board().communication.get_resolution(Unit.MIL) * 3,
               300); // problem with low resolution on Kicad300;
-      this.boardManager.graphics_context.draw(draw_line, draw_width, draw_color, p_graphics, 1);
+      this.boardManager.graphicsContext.draw(drawLine, drawWidth, drawColor, p_graphics, 1);
     }
 
     if (this.batchOptimizer != null) {
       // draw the current optimization position
-      FloatPoint current_opt_position = batchOptimizer.get_current_position();
+      FloatPoint currentOptPosition = batchOptimizer.get_current_position();
       int radius = 10 * this.boardManager.get_routing_board().rules.get_default_trace_half_width(0);
-      if (current_opt_position != null) {
-        final int draw_width = 1;
-        Color draw_color = this.boardManager.graphics_context.get_incomplete_color();
-        FloatPoint[] draw_points = new FloatPoint[2];
-        draw_points[0] =
-            new FloatPoint(current_opt_position.x - radius, current_opt_position.y - radius);
-        draw_points[1] =
-            new FloatPoint(current_opt_position.x + radius, current_opt_position.y + radius);
-        this.boardManager.graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, 1);
-        draw_points[0] =
-            new FloatPoint(current_opt_position.x + radius, current_opt_position.y - radius);
-        draw_points[1] =
-            new FloatPoint(current_opt_position.x - radius, current_opt_position.y + radius);
-        this.boardManager.graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, 1);
-        this.boardManager.graphics_context.draw_circle(
-            current_opt_position, radius, draw_width, draw_color, p_graphics, 1);
+      if (currentOptPosition != null) {
+        final int drawWidth = 1;
+        Color drawColor = this.boardManager.graphicsContext.get_incomplete_color();
+        FloatPoint[] drawPoints = new FloatPoint[2];
+        drawPoints[0] =
+            new FloatPoint(currentOptPosition.x - radius, currentOptPosition.y - radius);
+        drawPoints[1] =
+            new FloatPoint(currentOptPosition.x + radius, currentOptPosition.y + radius);
+        this.boardManager.graphicsContext.draw(drawPoints, drawWidth, drawColor, p_graphics, 1);
+        drawPoints[0] =
+            new FloatPoint(currentOptPosition.x + radius, currentOptPosition.y - radius);
+        drawPoints[1] =
+            new FloatPoint(currentOptPosition.x - radius, currentOptPosition.y + radius);
+        this.boardManager.graphicsContext.draw(drawPoints, drawWidth, drawColor, p_graphics, 1);
+        this.boardManager.graphicsContext.draw_circle(
+            currentOptPosition, radius, drawWidth, drawColor, p_graphics, 1);
       }
     }
   }

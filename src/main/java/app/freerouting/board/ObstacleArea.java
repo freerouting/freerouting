@@ -19,9 +19,7 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-/**
- * An item on the board with a relative_area shape, for example keepout, conduction relative_area
- */
+/** An item on the board with a relativeArea shape, for example keepout, conduction relativeArea */
 public class ObstacleArea extends Item implements Serializable {
 
   /** For debugging the division into tree shapes */
@@ -33,18 +31,18 @@ public class ObstacleArea extends Item implements Serializable {
    */
   public final String name;
 
-  private final Area relative_area;
+  private final Area relativeArea;
 
-  /** the layer of this relative_area */
+  /** the layer of this relativeArea */
   private int layer;
 
-  private transient Area precalculated_absolute_area;
+  private transient Area precalculatedAbsoluteArea;
   private Vector translation;
-  private double rotation_in_degree;
-  private boolean side_changed;
+  private double rotationInDegree;
+  private boolean sideChanged;
 
   /**
-   * Creates a new relative_area item which may belong to several nets. p_name is null, if the
+   * Creates a new relativeArea item which may belong to several nets. p_name is null, if the
    * ObstacleArea does not belong to a component.
    */
   ObstacleArea(
@@ -61,16 +59,16 @@ public class ObstacleArea extends Item implements Serializable {
       FixedState p_fixed_state,
       BasicBoard p_board) {
     super(p_net_no_arr, p_clearance_type, p_id_no, p_cmp_no, p_fixed_state, p_board);
-    this.relative_area = p_area;
+    this.relativeArea = p_area;
     this.layer = p_layer;
     this.translation = p_translation;
-    this.rotation_in_degree = p_rotation_in_degree;
-    this.side_changed = p_side_changed;
+    this.rotationInDegree = p_rotation_in_degree;
+    this.sideChanged = p_side_changed;
     this.name = p_name;
   }
 
   /**
-   * Creates a new relative_area item without net. p_name is null, if the ObstacleArea does not
+   * Creates a new relativeArea item without net. p_name is null, if the ObstacleArea does not
    * belong to a component.
    */
   ObstacleArea(
@@ -102,15 +100,15 @@ public class ObstacleArea extends Item implements Serializable {
 
   @Override
   public Item copy(int p_id_no) {
-    int[] copied_net_nos = new int[net_no_arr.length];
-    System.arraycopy(net_no_arr, 0, copied_net_nos, 0, net_no_arr.length);
+    int[] copiedNetNos = new int[netNoArr.length];
+    System.arraycopy(netNoArr, 0, copiedNetNos, 0, netNoArr.length);
     return new ObstacleArea(
-        relative_area,
+        relativeArea,
         layer,
         translation,
-        rotation_in_degree,
-        side_changed,
-        copied_net_nos,
+        rotationInDegree,
+        sideChanged,
+        copiedNetNos,
         clearance_class_no(),
         p_id_no,
         get_component_no(),
@@ -120,33 +118,33 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   public Area get_area() {
-    if (this.precalculated_absolute_area == null) {
-      if (this.relative_area == null) {
+    if (this.precalculatedAbsoluteArea == null) {
+      if (this.relativeArea == null) {
         FRLogger.warn("ObstacleArea.get_area: area is null");
         return null;
       }
-      Area turned_area = this.relative_area;
-      if (this.side_changed && !this.board.components.get_flip_style_rotate_first()) {
-        turned_area = turned_area.mirror_vertical(Point.ZERO);
+      Area turnedArea = this.relativeArea;
+      if (this.sideChanged && !this.board.components.get_flip_style_rotate_first()) {
+        turnedArea = turnedArea.mirror_vertical(Point.ZERO);
       }
-      if (this.rotation_in_degree != 0) {
-        double rotation = this.rotation_in_degree;
+      if (this.rotationInDegree != 0) {
+        double rotation = this.rotationInDegree;
         if (rotation % 90 == 0) {
-          turned_area = turned_area.turn_90_degree(((int) rotation) / 90, Point.ZERO);
+          turnedArea = turnedArea.turn_90_degree(((int) rotation) / 90, Point.ZERO);
         } else {
-          turned_area = turned_area.rotate_approx(Math.toRadians(rotation), FloatPoint.ZERO);
+          turnedArea = turnedArea.rotate_approx(Math.toRadians(rotation), FloatPoint.ZERO);
         }
       }
-      if (this.side_changed && this.board.components.get_flip_style_rotate_first()) {
-        turned_area = turned_area.mirror_vertical(Point.ZERO);
+      if (this.sideChanged && this.board.components.get_flip_style_rotate_first()) {
+        turnedArea = turnedArea.mirror_vertical(Point.ZERO);
       }
-      this.precalculated_absolute_area = turned_area.translate_by(this.translation);
+      this.precalculatedAbsoluteArea = turnedArea.translate_by(this.translation);
     }
-    return this.precalculated_absolute_area;
+    return this.precalculatedAbsoluteArea;
   }
 
   protected Area get_relative_area() {
-    return this.relative_area;
+    return this.relativeArea;
   }
 
   @Override
@@ -188,22 +186,22 @@ public class ObstacleArea extends Item implements Serializable {
 
   @Override
   public int tile_shape_count() {
-    TileShape[] tile_shapes = this.split_to_convex();
-    if (tile_shapes == null) {
-      // an error occurred while dividing the relative_area
+    TileShape[] tileShapes = this.split_to_convex();
+    if (tileShapes == null) {
+      // an error occurred while dividing the relativeArea
       return 0;
     }
-    return tile_shapes.length;
+    return tileShapes.length;
   }
 
   @Override
   public TileShape get_tile_shape(int p_no) {
-    TileShape[] tile_shapes = this.split_to_convex();
-    if (tile_shapes == null || p_no < 0 || p_no >= tile_shapes.length) {
+    TileShape[] tileShapes = this.split_to_convex();
+    if (tileShapes == null || p_no < 0 || p_no >= tileShapes.length) {
       FRLogger.warn("ConvexObstacle.get_tile_shape: p_no out of range");
       return null;
     }
-    return tile_shapes[p_no];
+    return tileShapes[p_no];
   }
 
   @Override
@@ -214,45 +212,45 @@ public class ObstacleArea extends Item implements Serializable {
 
   @Override
   public void turn_90_degree(int p_factor, IntPoint p_pole) {
-    this.rotation_in_degree += p_factor * 90;
-    while (this.rotation_in_degree >= 360) {
-      this.rotation_in_degree -= 360;
+    this.rotationInDegree += p_factor * 90;
+    while (this.rotationInDegree >= 360) {
+      this.rotationInDegree -= 360;
     }
-    while (this.rotation_in_degree < 0) {
-      this.rotation_in_degree += 360;
+    while (this.rotationInDegree < 0) {
+      this.rotationInDegree += 360;
     }
-    Point rel_location = Point.ZERO.translate_by(this.translation);
-    this.translation = rel_location.turn_90_degree(p_factor, p_pole).difference_by(Point.ZERO);
+    Point relLocation = Point.ZERO.translate_by(this.translation);
+    this.translation = relLocation.turn_90_degree(p_factor, p_pole).difference_by(Point.ZERO);
     this.clear_derived_data();
   }
 
   @Override
   public void rotate_approx(double p_angle_in_degree, FloatPoint p_pole) {
-    double turn_angle = p_angle_in_degree;
-    if (this.side_changed && this.board.components.get_flip_style_rotate_first()) {
-      turn_angle = 360 - p_angle_in_degree;
+    double turnAngle = p_angle_in_degree;
+    if (this.sideChanged && this.board.components.get_flip_style_rotate_first()) {
+      turnAngle = 360 - p_angle_in_degree;
     }
-    this.rotation_in_degree += turn_angle;
-    while (this.rotation_in_degree >= 360) {
-      this.rotation_in_degree -= 360;
+    this.rotationInDegree += turnAngle;
+    while (this.rotationInDegree >= 360) {
+      this.rotationInDegree -= 360;
     }
-    while (this.rotation_in_degree < 0) {
-      this.rotation_in_degree += 360;
+    while (this.rotationInDegree < 0) {
+      this.rotationInDegree += 360;
     }
-    FloatPoint new_translation =
+    FloatPoint newTranslation =
         this.translation.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole);
-    this.translation = new_translation.round().difference_by(Point.ZERO);
+    this.translation = newTranslation.round().difference_by(Point.ZERO);
     this.clear_derived_data();
   }
 
   @Override
   public void change_placement_side(IntPoint p_pole) {
-    this.side_changed = !this.side_changed;
+    this.sideChanged = !this.sideChanged;
     if (this.board != null) {
       this.layer = board.get_layer_count() - this.layer - 1;
     }
-    Point rel_location = Point.ZERO.translate_by(this.translation);
-    this.translation = rel_location.mirror_vertical(p_pole).difference_by(Point.ZERO);
+    Point relLocation = Point.ZERO.translate_by(this.translation);
+    this.translation = relLocation.mirror_vertical(p_pole).difference_by(Point.ZERO);
     this.clear_derived_data();
   }
 
@@ -289,10 +287,10 @@ public class ObstacleArea extends Item implements Serializable {
     double intensity = p_graphics_context.get_layer_visibility(this.layer) * p_intensity;
     p_graphics_context.fill_area(this.get_area(), p_g, color, intensity);
     if (intensity > 0 && display_tree_shapes) {
-      ShapeSearchTree default_tree = this.board.search_tree_manager.get_default_tree();
-      for (int i = 0; i < this.tree_shape_count(default_tree); i++) {
+      ShapeSearchTree defaultTree = this.board.searchTreeManager.get_default_tree();
+      for (int i = 0; i < this.tree_shape_count(defaultTree); i++) {
         p_graphics_context.draw_boundary(
-            this.get_tree_shape(default_tree, i), 1, Color.white, p_g, 1);
+            this.get_tree_shape(defaultTree, i), 1, Color.white, p_g, 1);
       }
     }
   }
@@ -307,11 +305,11 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   protected double get_rotation_in_degree() {
-    return rotation_in_degree;
+    return rotationInDegree;
   }
 
   protected boolean get_side_changed() {
-    return side_changed;
+    return sideChanged;
   }
 
   @Override
@@ -319,10 +317,10 @@ public class ObstacleArea extends Item implements Serializable {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
     p_window.append_bold(tm.getText("keepout"));
-    int cmp_no = this.get_component_no();
-    if (cmp_no > 0) {
+    int cmpNo = this.get_component_no();
+    if (cmpNo > 0) {
       p_window.append(" " + tm.getText("of_component") + " ");
-      Component component = board.components.get(cmp_no);
+      Component component = board.components.get(cmpNo);
       p_window.append(component.name, tm.getText("component_info"), component);
     }
     this.print_shape_info(p_window, p_locale);
@@ -337,23 +335,23 @@ public class ObstacleArea extends Item implements Serializable {
     p_window.append(" " + tm.getText("at") + " ");
     FloatPoint center = this.get_area().get_border().centre_of_gravity();
     p_window.append(center);
-    Integer hole_count = this.relative_area.get_holes().length;
-    if (hole_count > 0) {
+    Integer holeCount = this.relativeArea.get_holes().length;
+    if (holeCount > 0) {
       p_window.append(" " + tm.getText("with") + " ");
       NumberFormat nf = NumberFormat.getInstance(p_locale);
-      p_window.append(nf.format(hole_count));
-      if (hole_count == 1) {
+      p_window.append(nf.format(holeCount));
+      if (holeCount == 1) {
         p_window.append(" " + tm.getText("hole"));
       } else {
         p_window.append(" " + tm.getText("holes"));
       }
     }
     p_window.append(" " + tm.getText("on_layer") + " ");
-    p_window.append(this.board.layer_structure.arr[this.get_layer()].name);
+    p_window.append(this.board.layerStructure.arr[this.get_layer()].name);
   }
 
   TileShape[] split_to_convex() {
-    if (this.relative_area == null) {
+    if (this.relativeArea == null) {
       FRLogger.warn("ObstacleArea.split_to_convex: area is null");
       return null;
     }
@@ -363,7 +361,7 @@ public class ObstacleArea extends Item implements Serializable {
   @Override
   public void clear_derived_data() {
     super.clear_derived_data();
-    this.precalculated_absolute_area = null;
+    this.precalculatedAbsoluteArea = null;
   }
 
   @Override

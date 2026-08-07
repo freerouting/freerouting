@@ -21,7 +21,7 @@ import java.util.TreeSet;
 /** Class describing functionality required for traces in the plane. */
 public abstract class Trace extends Item implements Connectable, Serializable {
 
-  private final int half_width; // half width of the trace pen
+  private final int halfWidth; // half width of the trace pen
   private int layer; // board layer of the trace
 
   Trace(
@@ -34,7 +34,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       FixedState p_fixed_state,
       BasicBoard p_board) {
     super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
-    half_width = p_half_width;
+    halfWidth = p_half_width;
     p_layer = Math.max(p_layer, 0);
     if (p_board != null) {
       p_layer = Math.min(p_layer, p_board.get_layer_count() - 1);
@@ -67,7 +67,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   public int get_half_width() {
-    return half_width;
+    return halfWidth;
   }
 
   /** Returns the length of this trace. */
@@ -78,7 +78,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * p_tree_id_no Equals get_half_width(), if no clearance compensation is used in this tree.
    */
   public int get_compensated_half_width(ShapeSearchTree p_search_tree) {
-    return this.half_width
+    return this.halfWidth
         + p_search_tree.clearance_compensation_value(clearance_class_no(), this.layer);
   }
 
@@ -119,13 +119,13 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   @Override
   public Set<Item> get_normal_contacts() {
     Set<Item> result = new TreeSet<>();
-    Point start_corner = this.first_corner();
-    if (start_corner != null) {
-      result.addAll(get_normal_contacts(start_corner, false));
+    Point startCorner = this.first_corner();
+    if (startCorner != null) {
+      result.addAll(get_normal_contacts(startCorner, false));
     }
-    Point end_corner = this.last_corner();
-    if (end_corner != null) {
-      result.addAll(get_normal_contacts(end_corner, false));
+    Point endCorner = this.last_corner();
+    if (endCorner != null) {
+      result.addAll(get_normal_contacts(endCorner, false));
     }
     return result;
   }
@@ -138,12 +138,12 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   /** Returns true, if this trace is not contacted at its first or at its last point. */
   @Override
   public boolean is_tail() {
-    Collection<Item> contact_list = this.get_start_contacts();
-    if (contact_list.isEmpty()) {
+    Collection<Item> contactList = this.get_start_contacts();
+    if (contactList.isEmpty()) {
       return true;
     }
-    contact_list = this.get_end_contacts();
-    return contact_list.isEmpty();
+    contactList = this.get_end_contacts();
+    return contactList.isEmpty();
   }
 
   @Override
@@ -171,28 +171,27 @@ public abstract class Trace extends Item implements Connectable, Serializable {
         || !(p_point.equals(this.first_corner()) || p_point.equals(this.last_corner()))) {
       return new TreeSet<>();
     }
-    TileShape search_shape = TileShape.get_instance(p_point);
-    Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
+    TileShape searchShape = TileShape.get_instance(p_point);
+    Set<SearchTreeObject> overlaps = board.overlapping_objects(searchShape, this.layer);
     Set<Item> result = new TreeSet<>();
-    for (SearchTreeObject curr_ob : overlaps) {
-      if (!(curr_ob instanceof Item curr_item)) {
+    for (SearchTreeObject currOb : overlaps) {
+      if (!(currOb instanceof Item currItem)) {
         continue;
       }
-      if (curr_item != this
-          && curr_item.shares_layer(this)
-          && (p_ignore_net || curr_item.shares_net(this))) {
-        if (curr_item instanceof Trace curr_trace) {
-          if (p_point.equals(curr_trace.first_corner())
-              || p_point.equals(curr_trace.last_corner())) {
-            result.add(curr_item);
+      if (currItem != this
+          && currItem.shares_layer(this)
+          && (p_ignore_net || currItem.shares_net(this))) {
+        if (currItem instanceof Trace currTrace) {
+          if (p_point.equals(currTrace.first_corner()) || p_point.equals(currTrace.last_corner())) {
+            result.add(currItem);
           }
-        } else if (curr_item instanceof DrillItem curr_drill_item) {
+        } else if (currItem instanceof DrillItem curr_drill_item) {
           if (p_point.equals(curr_drill_item.get_center())) {
-            result.add(curr_item);
+            result.add(currItem);
           }
-        } else if (curr_item instanceof ConductionArea curr_area) {
-          if (curr_area.get_area().contains(p_point)) {
-            result.add(curr_item);
+        } else if (currItem instanceof ConductionArea currArea) {
+          if (currArea.get_area().contains(p_point)) {
+            result.add(currItem);
           }
         }
       }
@@ -210,18 +209,18 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     if (this.layer != p_other.layer) {
       return null;
     }
-    boolean contact_at_first_corner =
+    boolean contactAtFirstCorner =
         this.first_corner().equals(p_other.first_corner())
             || this.first_corner().equals(p_other.last_corner());
-    boolean contact_at_last_corner =
+    boolean contactAtLastCorner =
         this.last_corner().equals(p_other.first_corner())
             || this.last_corner().equals(p_other.last_corner());
     Point result;
-    if (!(contact_at_first_corner || contact_at_last_corner)
-        || contact_at_first_corner && contact_at_last_corner) {
+    if (!(contactAtFirstCorner || contactAtLastCorner)
+        || contactAtFirstCorner && contactAtLastCorner) {
       // no contact point or more than 1 contact point
       result = null;
-    } else if (contact_at_first_corner) {
+    } else if (contactAtFirstCorner) {
       result = this.first_corner();
     } else // contact at last corner
     {
@@ -238,9 +237,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   /** looks, if this trace is connected to the same object at its start and its end point */
   @Override
   public boolean is_overlap() {
-    Set<Item> start_contacts = this.get_start_contacts();
-    Set<Item> end_contacts = this.get_end_contacts();
-    return !Collections.disjoint(start_contacts, end_contacts);
+    Set<Item> startContacts = this.get_start_contacts();
+    Set<Item> endContacts = this.get_end_contacts();
+    return !Collections.disjoint(startContacts, endContacts);
   }
 
   /**
@@ -254,9 +253,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
     // check, if the trace belongs to a net, which is not shovable.
     Nets nets = this.board.rules.nets;
-    for (int curr_net_no : this.net_no_arr) {
-      if (Nets.is_normal_net_no(curr_net_no)) {
-        if (nets.get(curr_net_no).get_class().is_shove_fixed()) {
+    for (int currNetNo : this.netNoArr) {
+      if (Nets.is_normal_net_no(currNetNo)) {
+        if (nets.get(currNetNo).get_class().is_shove_fixed()) {
           return true;
         }
       }
@@ -268,9 +267,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   public Point nearest_end_point(Point p_from_point) {
     Point p1 = first_corner();
     Point p2 = last_corner();
-    FloatPoint from_point = p_from_point.to_float();
-    double d1 = from_point.distance(p1.to_float());
-    double d2 = from_point.distance(p2.to_float());
+    FloatPoint fromPoint = p_from_point.to_float();
+    double d1 = fromPoint.distance(p1.to_float());
+    double d2 = fromPoint.distance(p2.to_float());
     Point result;
     if (d1 < d2) {
       result = p1;
@@ -283,7 +282,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   /** Checks, if this trace can be reached by other items via more than one path */
   public boolean is_cycle() {
     boolean debugNet49 =
-        this.net_no_arr != null && this.net_no_arr.length > 0 && this.net_no_arr[0] == 49;
+        this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
     if (this.is_overlap()) {
       if (debugNet49) {
         FRLogger.trace(
@@ -293,33 +292,33 @@ public abstract class Trace extends Item implements Connectable, Serializable {
                 + this.first_corner()
                 + ", last="
                 + this.last_corner()
-                + ", start_contacts="
+                + ", startContacts="
                 + this.get_start_contacts().stream()
                     .map(i -> i.get_id_no() + "")
                     .collect(java.util.stream.Collectors.joining(","))
-                + ", end_contacts="
+                + ", endContacts="
                 + this.get_end_contacts().stream()
                     .map(i -> i.get_id_no() + "")
                     .collect(java.util.stream.Collectors.joining(",")));
       }
       return true;
     }
-    Collection<Item> start_contacts = this.get_start_contacts();
+    Collection<Item> startContacts = this.get_start_contacts();
     // a cycle exists if through expanding the start contact we reach
     // this trace again via an end contact
     // make sure, that all direct neighbours are
     // expanded from here, to block coming back to
     // this trace via a start contact.
-    Set<Item> visited_items = new TreeSet<>(start_contacts);
-    boolean ignore_areas = false;
-    if (this.net_no_arr.length > 0) {
-      Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
-      if (curr_net != null && curr_net.get_class() != null) {
-        ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
+    Set<Item> visitedItems = new TreeSet<>(startContacts);
+    boolean ignoreAreas = false;
+    if (this.netNoArr.length > 0) {
+      Net currNet = this.board.rules.nets.get(this.netNoArr[0]);
+      if (currNet != null && currNet.get_class() != null) {
+        ignoreAreas = currNet.get_class().get_ignore_cycles_with_areas();
       }
     }
-    for (Item curr_contact : start_contacts) {
-      if (curr_contact.is_cycle_recu(visited_items, this, this, ignore_areas)) {
+    for (Item currContact : startContacts) {
+      if (currContact.is_cycle_recu(visitedItems, this, this, ignoreAreas)) {
         if (debugNet49) {
           FRLogger.trace(
               "compare_trace_is_cycle_dfs net=49, id="
@@ -328,12 +327,12 @@ public abstract class Trace extends Item implements Connectable, Serializable {
                   + this.first_corner()
                   + ", last="
                   + this.last_corner()
-                  + ", start_contacts="
-                  + start_contacts.stream()
+                  + ", startContacts="
+                  + startContacts.stream()
                       .map(i -> i.get_id_no() + "")
                       .collect(java.util.stream.Collectors.joining(","))
                   + ", found_via="
-                  + curr_contact.get_id_no());
+                  + currContact.get_id_no());
         }
         return true;
       }
@@ -351,25 +350,25 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     // Use only uncontacted endpoints of the trace.
     // Otherwise, the allocated memory in the calculation of the incompletes might
     // become very big.
-    int stub_count = 0;
-    boolean stub_at_start = false;
-    boolean stub_at_end = false;
+    int stubCount = 0;
+    boolean stubAtStart = false;
+    boolean stubAtEnd = false;
     if (get_start_contacts().isEmpty()) {
-      ++stub_count;
-      stub_at_start = true;
+      ++stubCount;
+      stubAtStart = true;
     }
     if (get_end_contacts().isEmpty()) {
-      ++stub_count;
-      stub_at_end = true;
+      ++stubCount;
+      stubAtEnd = true;
     }
-    Point[] result = new Point[stub_count];
-    int stub_no = 0;
-    if (stub_at_start) {
-      result[stub_no] = first_corner();
-      ++stub_no;
+    Point[] result = new Point[stubCount];
+    int stubNo = 0;
+    if (stubAtStart) {
+      result[stubNo] = first_corner();
+      ++stubNo;
     }
-    if (stub_at_end) {
-      result[stub_no] = last_corner();
+    if (stubAtEnd) {
+      result[stubNo] = last_corner();
     }
     for (int i = 0; i < result.length; i++) {
       if (result[i] == null) {
@@ -403,19 +402,19 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     if (this.board == null) {
       return result;
     }
-    Point curr_end_point = this.first_corner();
+    Point currEndPoint = this.first_corner();
     for (int i = 0; i < 2; i++) {
-      IntOctagon curr_oct = curr_end_point.surrounding_octagon();
-      curr_oct = curr_oct.enlarge(this.half_width);
-      Set<Item> curr_overlaps =
+      IntOctagon currOct = currEndPoint.surrounding_octagon();
+      currOct = currOct.enlarge(this.halfWidth);
+      Set<Item> currOverlaps =
           this.board.overlapping_items_with_clearance(
-              curr_oct, this.layer, new int[0], this.clearance_class_no());
-      for (Item curr_item : curr_overlaps) {
-        if ((curr_item instanceof Pin pin) && curr_item.shares_net(this)) {
+              currOct, this.layer, new int[0], this.clearance_class_no());
+      for (Item currItem : currOverlaps) {
+        if ((currItem instanceof Pin pin) && currItem.shares_net(this)) {
           result.add(pin);
         }
       }
-      curr_end_point = this.last_corner();
+      currEndPoint = this.last_corner();
     }
     return result;
   }
@@ -430,9 +429,9 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     p_window.append(" " + tm.getText("to") + " ");
     p_window.append(this.last_corner().to_float());
     p_window.append(" " + tm.getText("on_layer") + " ");
-    p_window.append(this.board.layer_structure.arr[this.layer].name);
+    p_window.append(this.board.layerStructure.arr[this.layer].name);
     p_window.append(", " + tm.getText("width") + " ");
-    p_window.append(2 * this.half_width);
+    p_window.append(2 * this.halfWidth);
     p_window.append(", " + tm.getText("length") + " ");
     p_window.append(this.get_length());
     this.print_connectable_item_info(p_window, p_locale);
@@ -444,15 +443,15 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
     double mmResolution = this.board.communication.get_resolution(Unit.MM);
-    double widthInMm = (2 * this.half_width) / mmResolution;
+    double widthInMm = (2 * this.halfWidth) / mmResolution;
     double lengthInMm = this.get_length() / mmResolution;
 
-    String layer_name = this.board.layer_structure.arr[this.layer].name;
+    String layerName = this.board.layerStructure.arr[this.layer].name;
     String widthStr = String.format(p_locale, "%.4f", widthInMm);
     String lengthStr = String.format(p_locale, "%.4f", lengthInMm);
     String connInfo = this.get_connectable_item_hover_info(p_locale);
 
-    return tm.getText("trace_hover_info", layer_name, widthStr, lengthStr, connInfo);
+    return tm.getText("trace_hover_info", layerName, widthStr, lengthStr, connInfo);
   }
 
   @Override

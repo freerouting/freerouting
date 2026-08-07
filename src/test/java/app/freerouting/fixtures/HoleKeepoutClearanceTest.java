@@ -31,7 +31,7 @@ public class HoleKeepoutClearanceTest extends RoutingFixtureTest {
 
     job = RunRoutingJob(job);
 
-    var matrix = job.board.rules.clearance_matrix;
+    var matrix = job.board.rules.clearanceMatrix;
     int holeEdgeClassNo = matrix.get_no("hole_edge");
     assertTrue(holeEdgeClassNo > 0, "hole_edge clearance class must exist");
 

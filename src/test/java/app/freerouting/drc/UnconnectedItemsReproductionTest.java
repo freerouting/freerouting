@@ -135,7 +135,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
             + ".");
 
     long unconnectedNetGroups =
-        allIssues.stream().filter(ui -> "unconnected_items".equals(ui.type)).count();
+        allIssues.stream().filter(ui -> "unconnectedItems".equals(ui.type)).count();
 
     System.out.println("Unconnected net groups detected: " + unconnectedNetGroups);
 
@@ -155,7 +155,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     Set<Integer> danglingTrackIds =
         allIssues.stream()
             .filter(ui -> "track_dangling".equals(ui.type))
-            .map(ui -> ui.first_item.get_id_no())
+            .map(ui -> ui.firstItem.get_id_no())
             .collect(Collectors.toSet());
 
     int[] spotCheckIds = {2340, 1869, 2372, 1802};
@@ -175,7 +175,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
     assertNotNull(report, "DRC report should not be null");
     assertNotNull(report.violations, "Violations list should not be null");
-    assertNotNull(report.unconnected_items, "Unconnected-items list should not be null");
+    assertNotNull(report.unconnectedItems, "Unconnected-items list should not be null");
 
     // Dangling tracks + dangling vias are reported as violations
     long trackDanglingViolations =
@@ -185,7 +185,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
     System.out.println("Report: track_dangling violations = " + trackDanglingViolations);
     System.out.println("Report: via_dangling   violations = " + viaDanglingViolations);
-    System.out.println("Report: unconnected_items entries = " + report.unconnected_items.size());
+    System.out.println("Report: unconnectedItems entries = " + report.unconnectedItems.size());
 
     // Lower-bound for dangling tracks (normalization artefacts may inflate count)
     assertTrue(
@@ -203,10 +203,10 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     // Unconnected net groups: normalization failures inflate the count above the
     // reference value of 9, so we use a lower-bound guard here as well.
     assertTrue(
-        report.unconnected_items.size() >= EXPECTED_UNCONNECTED_NET_GROUPS,
+        report.unconnectedItems.size() >= EXPECTED_UNCONNECTED_NET_GROUPS,
         "Report should contain at least "
             + EXPECTED_UNCONNECTED_NET_GROUPS
             + " unconnected-item entries; actual="
-            + report.unconnected_items.size());
+            + report.unconnectedItems.size());
   }
 }

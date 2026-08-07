@@ -20,98 +20,98 @@ public class AutorouteControl {
   public final RouterSettings settings;
 
   /** The horizontal and vertical trace costs on each layer */
-  public final ExpansionCostFactor[] trace_costs;
+  public final ExpansionCostFactor[] traceCosts;
 
   public final double[] bendCosts;
-  public final boolean with_neckdown;
+  public final boolean withNeckdown;
 
   /** Defines for each layer, if it may be used for routing. */
-  public final boolean[] layer_active;
+  public final boolean[] layerActive;
 
-  final int layer_count;
+  final int layerCount;
 
   /** The currently used trace half widths in the autoroute algorithm on each layer */
-  final int[] trace_half_width;
+  final int[] traceHalfWidth;
 
   /**
    * The currently used compensated trace half widths in the autoroute algorithm on each layer.
-   * Equal to trace_half_width if no clearance compensation is used.
+   * Equal to traceHalfWidth if no clearance compensation is used.
    */
-  final int[] compensated_trace_half_width;
+  final int[] compensatedTraceHalfWidth;
 
-  final double[] via_radius_arr;
+  final double[] viaRadiusArr;
 
   /** the additional costs to min_normal via_cost for inserting a via between 2 layers */
-  final ViaCost[] add_via_costs;
+  final ViaCost[] addViaCosts;
 
   /** The currently used clearance class for traces in the autoroute algorithm */
-  public int trace_clearance_class_no;
+  public int traceClearanceClassNo;
 
   /** True, if layer change by inserting of vias is allowed */
-  public boolean vias_allowed;
+  public boolean viasAllowed;
 
   /** True, if vias may drill to the pad of SMD pins */
-  public boolean attach_smd_allowed;
+  public boolean attachSmdAllowed;
 
   /** The minimum cost value of all normal vias */
-  public double min_normal_via_cost;
+  public double minNormalViaCost;
 
-  public boolean ripup_allowed;
-  public int ripup_costs;
-  public int ripup_pass_no;
+  public boolean ripupAllowed;
+  public int ripupCosts;
+  public int ripupPassNo;
 
   /** If true, the autoroute algorithm completes after the first drill */
-  public boolean is_fanout;
+  public boolean isFanout;
 
   /** Source pin name for targeted fanout diagnostics. */
-  public String fanout_start_pin_name;
+  public String fanoutStartPinName;
 
   /** Source pin center for targeted fanout diagnostics. */
-  public Point fanout_start_pin_center;
+  public Point fanoutStartPinCenter;
 
   /** Source pin layer for targeted fanout diagnostics and limits. */
-  public int fanout_start_pin_layer = -1;
+  public int fanoutStartPinLayer = -1;
 
   /** Normally true, if the autorouter contains no fanout pass */
-  public boolean remove_unconnected_vias;
+  public boolean removeUnconnectedVias;
 
   /** The currently used net number in the autoroute algorithm */
-  int net_no;
+  int netNo;
 
   /** The currently used clearance class for vias in the autoroute algorithm */
-  int via_clearance_class;
+  int viaClearanceClass;
 
   /** The possible (partial) vias, which can be used by the autorouter */
-  public ViaRule via_rule;
+  public ViaRule viaRule;
 
   /** The array of possible via ranges used bei the autorouter */
-  ViaMask[] via_info_arr;
+  ViaMask[] viaInfoArr;
 
   /** The lower bound for the first layer of vias */
-  int via_lower_bound;
+  int viaLowerBound;
 
   /** The upper bound for the last layer of vias */
-  int via_upper_bound;
+  int viaUpperBound;
 
-  double max_via_radius;
+  double maxViaRadius;
 
   /** The width of the region around changed traces, where traces are pulled tight */
-  int tidy_region_width;
+  int tidyRegionWidth;
 
   /** The pull tight accuracy of traces */
-  int pull_tight_accuracy;
+  int pullTightAccuracy;
 
   /** The maximum recursion depth for shoving traces */
-  int max_shove_trace_recursion_depth;
+  int maxShoveTraceRecursionDepth;
 
   /** The maximum recursion depth for shoving obstacles */
-  int max_shove_via_recursion_depth;
+  int maxShoveViaRecursionDepth;
 
   /** The maximum recursion depth for traces springing over obstacles */
-  int max_spring_over_recursion_depth;
+  int maxSpringOverRecursionDepth;
 
   /** The minimal cost value of all cheap vias */
-  double min_cheap_via_cost;
+  double minCheapViaCost;
 
   /** Creates a new instance of AutorouteControl for the input net */
   public AutorouteControl(RoutingBoard p_board, int p_net_no, RouterSettings p_settings) {
@@ -134,146 +134,146 @@ public class AutorouteControl {
   private AutorouteControl(
       RoutingBoard p_board, RouterSettings p_settings, ExpansionCostFactor[] p_trace_costs_arr) {
     this.settings = p_settings;
-    layer_count = p_board.get_layer_count();
-    trace_half_width = new int[layer_count];
-    compensated_trace_half_width = new int[layer_count];
-    layer_active = new boolean[layer_count];
-    vias_allowed = p_settings.get_vias_allowed();
-    via_radius_arr = new double[layer_count];
-    add_via_costs = new ViaCost[layer_count];
-    this.bendCosts = new double[layer_count];
-    for (int i = 0; i < layer_count; i++) {
+    layerCount = p_board.get_layer_count();
+    traceHalfWidth = new int[layerCount];
+    compensatedTraceHalfWidth = new int[layerCount];
+    layerActive = new boolean[layerCount];
+    viasAllowed = p_settings.get_vias_allowed();
+    viaRadiusArr = new double[layerCount];
+    addViaCosts = new ViaCost[layerCount];
+    this.bendCosts = new double[layerCount];
+    for (int i = 0; i < layerCount; i++) {
       this.bendCosts[i] = p_settings.get_bend_cost(i);
     }
 
-    for (int i = 0; i < layer_count; i++) {
-      add_via_costs[i] = new ViaCost(layer_count);
+    for (int i = 0; i < layerCount; i++) {
+      addViaCosts[i] = new ViaCost(layerCount);
       boolean activeSetting = p_settings.get_layer_active(i);
-      if (!p_board.layer_structure.arr[i].is_signal && activeSetting) {
+      if (!p_board.layerStructure.arr[i].isSignal && activeSetting) {
         FRLogger.warn(
             "Layer '"
-                + p_board.layer_structure.arr[i].name
+                + p_board.layerStructure.arr[i].name
                 + "' is a dedicated power plane and cannot be routed. Forcing active state to false.");
-        layer_active[i] = false;
+        layerActive[i] = false;
       } else {
-        layer_active[i] = activeSetting;
+        layerActive[i] = activeSetting;
       }
     }
-    is_fanout = false;
-    fanout_start_pin_name = null;
-    fanout_start_pin_center = null;
-    fanout_start_pin_layer = -1;
-    remove_unconnected_vias = true;
-    with_neckdown = p_settings.get_automatic_neckdown();
-    tidy_region_width = Integer.MAX_VALUE;
-    pull_tight_accuracy = 500;
-    max_shove_trace_recursion_depth = 20;
-    max_shove_via_recursion_depth = 5;
-    max_spring_over_recursion_depth = 5;
-    for (int i = 0; i < layer_count; i++) {
-      for (int j = 0; j < layer_count; j++) {
-        add_via_costs[i].to_layer[j] = 0;
+    isFanout = false;
+    fanoutStartPinName = null;
+    fanoutStartPinCenter = null;
+    fanoutStartPinLayer = -1;
+    removeUnconnectedVias = true;
+    withNeckdown = p_settings.get_automatic_neckdown();
+    tidyRegionWidth = Integer.MAX_VALUE;
+    pullTightAccuracy = 500;
+    maxShoveTraceRecursionDepth = 20;
+    maxShoveViaRecursionDepth = 5;
+    maxSpringOverRecursionDepth = 5;
+    for (int i = 0; i < layerCount; i++) {
+      for (int j = 0; j < layerCount; j++) {
+        addViaCosts[i].toLayer[j] = 0;
       }
     }
-    trace_costs = p_trace_costs_arr;
-    attach_smd_allowed = false;
-    via_lower_bound = 0;
-    via_upper_bound = layer_count;
+    traceCosts = p_trace_costs_arr;
+    attachSmdAllowed = false;
+    viaLowerBound = 0;
+    viaUpperBound = layerCount;
 
-    ripup_allowed = false;
-    ripup_costs = 1000;
-    ripup_pass_no = 1;
+    ripupAllowed = false;
+    ripupCosts = 1000;
+    ripupPassNo = 1;
   }
 
   private void init_net(int p_net_no, RoutingBoard p_board, int p_via_costs) {
-    net_no = p_net_no;
-    Net curr_net = p_board.rules.nets.get(p_net_no);
-    NetClass curr_net_class;
-    if (curr_net != null) {
-      curr_net_class = curr_net.get_class();
-      trace_clearance_class_no = curr_net_class.get_trace_clearance_class();
-      via_rule = curr_net_class.get_via_rule();
+    netNo = p_net_no;
+    Net currNet = p_board.rules.nets.get(p_net_no);
+    NetClass currNetClass;
+    if (currNet != null) {
+      currNetClass = currNet.get_class();
+      traceClearanceClassNo = currNetClass.get_trace_clearance_class();
+      viaRule = currNetClass.get_via_rule();
     } else {
-      trace_clearance_class_no = 1;
-      via_rule = p_board.rules.via_rules.firstElement();
-      curr_net_class = null;
+      traceClearanceClassNo = 1;
+      viaRule = p_board.rules.viaRules.firstElement();
+      currNetClass = null;
     }
-    for (int i = 0; i < layer_count; i++) {
-      if (net_no > 0) {
-        trace_half_width[i] = p_board.rules.get_trace_half_width(net_no, i);
+    for (int i = 0; i < layerCount; i++) {
+      if (netNo > 0) {
+        traceHalfWidth[i] = p_board.rules.get_trace_half_width(netNo, i);
       } else {
-        trace_half_width[i] = p_board.rules.get_trace_half_width(1, i);
+        traceHalfWidth[i] = p_board.rules.get_trace_half_width(1, i);
       }
-      compensated_trace_half_width[i] =
-          trace_half_width[i]
-              + p_board.rules.clearance_matrix.clearance_compensation_value(
-                  trace_clearance_class_no, i);
-      if (curr_net_class != null && !curr_net_class.is_active_routing_layer(i)) {
-        layer_active[i] = false;
+      compensatedTraceHalfWidth[i] =
+          traceHalfWidth[i]
+              + p_board.rules.clearanceMatrix.clearance_compensation_value(
+                  traceClearanceClassNo, i);
+      if (currNetClass != null && !currNetClass.is_active_routing_layer(i)) {
+        layerActive[i] = false;
       }
     }
     rebuild_via_info(p_board, p_via_costs, p_net_no);
   }
 
   public void rebuild_via_info(RoutingBoard p_board, int p_via_costs, int p_net_no) {
-    if (via_rule.via_count() > 0) {
-      this.via_clearance_class = via_rule.get_via(0).get_clearance_class();
+    if (viaRule.via_count() > 0) {
+      this.viaClearanceClass = viaRule.get_via(0).get_clearance_class();
     } else {
-      this.via_clearance_class = 1;
+      this.viaClearanceClass = 1;
     }
-    this.via_info_arr = new ViaMask[via_rule.via_count()];
-    this.attach_smd_allowed = false;
-    for (int i = 0; i < via_rule.via_count(); i++) {
-      ViaInfo curr_via = via_rule.get_via(i);
-      if (curr_via.attach_smd_allowed()) {
-        this.attach_smd_allowed = true;
+    this.viaInfoArr = new ViaMask[viaRule.via_count()];
+    this.attachSmdAllowed = false;
+    for (int i = 0; i < viaRule.via_count(); i++) {
+      ViaInfo currVia = viaRule.get_via(i);
+      if (currVia.attach_smd_allowed()) {
+        this.attachSmdAllowed = true;
       }
-      Padstack curr_via_padstack = curr_via.get_padstack();
-      int from_layer = curr_via_padstack.from_layer();
-      int to_layer = curr_via_padstack.to_layer();
-      for (int j = from_layer; j <= to_layer; j++) {
-        ConvexShape curr_shape = curr_via_padstack.get_shape(j);
-        double curr_radius;
-        if (curr_shape != null) {
-          curr_radius = 0.5 * curr_shape.max_width();
+      Padstack currViaPadstack = currVia.get_padstack();
+      int fromLayer = currViaPadstack.from_layer();
+      int toLayer = currViaPadstack.to_layer();
+      for (int j = fromLayer; j <= toLayer; j++) {
+        ConvexShape currShape = currViaPadstack.get_shape(j);
+        double currRadius;
+        if (currShape != null) {
+          currRadius = 0.5 * currShape.max_width();
         } else {
-          curr_radius = 0;
+          currRadius = 0;
         }
-        this.via_radius_arr[j] = Math.max(this.via_radius_arr[j], curr_radius);
+        this.viaRadiusArr[j] = Math.max(this.viaRadiusArr[j], currRadius);
       }
-      via_info_arr[i] = new ViaMask(from_layer, to_layer, curr_via.attach_smd_allowed());
+      viaInfoArr[i] = new ViaMask(fromLayer, toLayer, currVia.attach_smd_allowed());
     }
 
-    boolean pure_smd_net = isPureSmdNet(p_board, p_net_no);
-    if (!this.attach_smd_allowed && layer_count > 1 && pure_smd_net) {
+    boolean pureSmdNet = isPureSmdNet(p_board, p_net_no);
+    if (!this.attachSmdAllowed && layerCount > 1 && pureSmdNet) {
       // Pure SMD nets must still be able to escape their component layer, even if the DSN marks
       // every padstack as attach-off. This only relaxes the routing gate for same-net fanout;
       // cross-net DRC remains governed by the padstack's attach flag.
-      this.attach_smd_allowed = true;
+      this.attachSmdAllowed = true;
     }
 
-    for (int j = 0; j < this.layer_count; j++) {
-      this.via_radius_arr[j] = Math.max(this.via_radius_arr[j], trace_half_width[j]);
-      this.max_via_radius = Math.max(this.max_via_radius, this.via_radius_arr[j]);
+    for (int j = 0; j < this.layerCount; j++) {
+      this.viaRadiusArr[j] = Math.max(this.viaRadiusArr[j], traceHalfWidth[j]);
+      this.maxViaRadius = Math.max(this.maxViaRadius, this.viaRadiusArr[j]);
     }
-    double via_cost_factor = this.max_via_radius;
-    via_cost_factor = Math.max(via_cost_factor, 1);
-    if (pure_smd_net) {
+    double viaCostFactor = this.maxViaRadius;
+    viaCostFactor = Math.max(viaCostFactor, 1);
+    if (pureSmdNet) {
       // Pure SMD boards need a much cheaper via escape to avoid exhausting the local pad channel
       // before the search commits to a layer change.
-      via_cost_factor *= 0.1;
+      viaCostFactor *= 0.1;
     }
-    min_normal_via_cost = p_via_costs * via_cost_factor;
-    min_cheap_via_cost = 0.8 * min_normal_via_cost;
+    minNormalViaCost = p_via_costs * viaCostFactor;
+    minCheapViaCost = 0.8 * minNormalViaCost;
   }
 
   private static boolean isPureSmdNet(RoutingBoard p_board, int p_net_no) {
-    Collection<Item> net_items = p_board.get_connectable_items(p_net_no);
-    if (net_items.isEmpty()) {
+    Collection<Item> netItems = p_board.get_connectable_items(p_net_no);
+    if (netItems.isEmpty()) {
       return false;
     }
 
-    for (Item item : net_items) {
+    for (Item item : netItems) {
       if (!(item instanceof Pin pin) || pin.first_layer() != pin.last_layer()) {
         return false;
       }
@@ -300,23 +300,23 @@ public class AutorouteControl {
   /** Array of via costs from one layer to the other layers */
   static final class ViaCost {
 
-    public int[] to_layer;
+    public int[] toLayer;
 
     private ViaCost(int p_layer_count) {
-      to_layer = new int[p_layer_count];
+      toLayer = new int[p_layer_count];
     }
   }
 
   static class ViaMask {
 
-    final int from_layer;
-    final int to_layer;
-    final boolean attach_smd_allowed;
+    final int fromLayer;
+    final int toLayer;
+    final boolean attachSmdAllowed;
 
     ViaMask(int p_from_layer, int p_to_layer, boolean p_attach_smd_allowed) {
-      from_layer = p_from_layer;
-      to_layer = p_to_layer;
-      attach_smd_allowed = p_attach_smd_allowed;
+      fromLayer = p_from_layer;
+      toLayer = p_to_layer;
+      attachSmdAllowed = p_attach_smd_allowed;
     }
   }
 }

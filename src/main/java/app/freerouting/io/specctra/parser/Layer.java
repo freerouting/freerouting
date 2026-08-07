@@ -15,8 +15,8 @@ public class Layer {
 
   public final String name;
   public final int no;
-  public final boolean is_signal;
-  public final Collection<String> net_names;
+  public final boolean isSignal;
+  public final Collection<String> netNames;
 
   /**
    * Creates a new instance of Layer. p_no is the physical layer number starting with 0 at the
@@ -27,8 +27,8 @@ public class Layer {
   public Layer(String p_name, int p_no, boolean p_is_signal, Collection<String> p_net_names) {
     name = p_name;
     no = p_no;
-    is_signal = p_is_signal;
-    net_names = p_net_names;
+    isSignal = p_is_signal;
+    netNames = p_net_names;
   }
 
   /**
@@ -40,8 +40,8 @@ public class Layer {
   public Layer(String p_name, int p_no, boolean p_is_signal) {
     name = p_name;
     no = p_no;
-    is_signal = p_is_signal;
-    net_names = new LinkedList<>();
+    isSignal = p_is_signal;
+    netNames = new LinkedList<>();
   }
 
   /** Writes a layer scope in the structure scope. */
@@ -49,11 +49,11 @@ public class Layer {
       throws IOException {
     p_par.file.start_scope();
     p_par.file.write("layer ");
-    app.freerouting.board.Layer board_layer = p_par.board.layer_structure.arr[p_layer_no];
-    p_par.identifier_type.write(board_layer.name, p_par.file);
+    app.freerouting.board.Layer boardLayer = p_par.board.layerStructure.arr[p_layer_no];
+    p_par.identifierType.write(boardLayer.name, p_par.file);
     p_par.file.new_line();
     p_par.file.write("(type ");
-    if (board_layer.is_signal) {
+    if (boardLayer.isSignal) {
       p_par.file.write("signal)");
     } else {
       p_par.file.write("power)");

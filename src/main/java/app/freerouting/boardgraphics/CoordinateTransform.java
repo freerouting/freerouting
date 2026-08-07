@@ -11,74 +11,74 @@ import java.io.Serializable;
 /** Transformation function between the board and the screen coordinate systems. */
 public class CoordinateTransform implements Serializable {
 
-  final IntBox design_box;
-  final IntBox design_box_with_offset;
-  final Dimension screen_bounds;
-  private final double scale_factor;
-  private final double display_x_offset;
-  private final double display_y_offset;
-  private final FloatPoint rotation_pole;
+  final IntBox designBox;
+  final IntBox designBoxWithOffset;
+  final Dimension screenBounds;
+  private final double scaleFactor;
+  private final double displayXOffset;
+  private final double displayYOffset;
+  private final FloatPoint rotationPole;
 
   /** Left side and right side of the board are swapped. */
-  private boolean mirror_left_right;
+  private boolean mirrorLeftRight;
 
   /** Top side and bottom side of the board are swapped. */
-  private boolean mirror_top_bottom = true;
+  private boolean mirrorTopBottom = true;
 
   private double rotation = 0;
 
   public CoordinateTransform(IntBox p_design_box, Dimension p_panel_bounds) {
-    this.screen_bounds = p_panel_bounds;
-    this.design_box = p_design_box;
-    this.rotation_pole = p_design_box.centre_of_gravity();
+    this.screenBounds = p_panel_bounds;
+    this.designBox = p_design_box;
+    this.rotationPole = p_design_box.centre_of_gravity();
 
-    int min_ll = Math.min(p_design_box.ll.x, p_design_box.ll.y);
-    int max_ur = Math.max(p_design_box.ur.x, p_design_box.ur.y);
-    if (Math.max(Math.abs(min_ll), Math.abs(max_ur)) <= 0.3 * Limits.CRIT_INT) {
+    int minLl = Math.min(p_design_box.ll.x, p_design_box.ll.y);
+    int maxUr = Math.max(p_design_box.ur.x, p_design_box.ur.y);
+    if (Math.max(Math.abs(minLl), Math.abs(maxUr)) <= 0.3 * Limits.CRIT_INT) {
       // create an offset to p_design_box to enable deep zoom out
-      double design_offset = Math.max(p_design_box.width(), p_design_box.height());
-      design_box_with_offset = p_design_box.offset(design_offset);
+      double designOffset = Math.max(p_design_box.width(), p_design_box.height());
+      designBoxWithOffset = p_design_box.offset(designOffset);
     } else {
       // no offset because of danger of integer overflow
-      design_box_with_offset = p_design_box;
+      designBoxWithOffset = p_design_box;
     }
 
-    double x_scale_factor = screen_bounds.getWidth() / design_box_with_offset.width();
-    double y_scale_factor = screen_bounds.getHeight() / design_box_with_offset.height();
+    double xScaleFactor = screenBounds.getWidth() / designBoxWithOffset.width();
+    double yScaleFactor = screenBounds.getHeight() / designBoxWithOffset.height();
 
-    scale_factor = Math.min(x_scale_factor, y_scale_factor);
-    display_x_offset = scale_factor * design_box_with_offset.ll.x;
-    display_y_offset = scale_factor * design_box_with_offset.ll.y;
+    scaleFactor = Math.min(xScaleFactor, yScaleFactor);
+    displayXOffset = scaleFactor * designBoxWithOffset.ll.x;
+    displayYOffset = scaleFactor * designBoxWithOffset.ll.y;
   }
 
   /** Copy constructor */
   public CoordinateTransform(CoordinateTransform p_coordinate_transform) {
-    this.screen_bounds = new Dimension(p_coordinate_transform.screen_bounds);
-    this.design_box =
-        new IntBox(p_coordinate_transform.design_box.ll, p_coordinate_transform.design_box.ur);
-    this.rotation_pole =
+    this.screenBounds = new Dimension(p_coordinate_transform.screenBounds);
+    this.designBox =
+        new IntBox(p_coordinate_transform.designBox.ll, p_coordinate_transform.designBox.ur);
+    this.rotationPole =
         new FloatPoint(
-            p_coordinate_transform.rotation_pole.x, p_coordinate_transform.rotation_pole.y);
-    this.design_box_with_offset =
+            p_coordinate_transform.rotationPole.x, p_coordinate_transform.rotationPole.y);
+    this.designBoxWithOffset =
         new IntBox(
-            p_coordinate_transform.design_box_with_offset.ll,
-            p_coordinate_transform.design_box_with_offset.ur);
-    this.scale_factor = p_coordinate_transform.scale_factor;
-    this.display_x_offset = p_coordinate_transform.display_x_offset;
-    this.display_y_offset = p_coordinate_transform.display_y_offset;
-    this.mirror_left_right = p_coordinate_transform.mirror_left_right;
-    this.mirror_top_bottom = p_coordinate_transform.mirror_top_bottom;
+            p_coordinate_transform.designBoxWithOffset.ll,
+            p_coordinate_transform.designBoxWithOffset.ur);
+    this.scaleFactor = p_coordinate_transform.scaleFactor;
+    this.displayXOffset = p_coordinate_transform.displayXOffset;
+    this.displayYOffset = p_coordinate_transform.displayYOffset;
+    this.mirrorLeftRight = p_coordinate_transform.mirrorLeftRight;
+    this.mirrorTopBottom = p_coordinate_transform.mirrorTopBottom;
     this.rotation = p_coordinate_transform.rotation;
   }
 
   /** scale a value from the board to the screen coordinate system */
   public double board_to_screen(double p_val) {
-    return p_val * scale_factor;
+    return p_val * scaleFactor;
   }
 
   /** scale a value the screen to the board coordinate system */
   public double screen_to_board(double p_val) {
-    return p_val / scale_factor;
+    return p_val / scaleFactor;
   }
 
   /** transform a geometry.planar.FloatPoint to a java.awt.geom.Point2D */
@@ -87,19 +87,19 @@ public class CoordinateTransform implements Serializable {
       return null;
     }
 
-    FloatPoint rotated_point = p_point.rotate(this.rotation, this.rotation_pole);
+    FloatPoint rotatedPoint = p_point.rotate(this.rotation, this.rotationPole);
 
     double x;
     double y;
-    if (this.mirror_left_right) {
-      x = (design_box_with_offset.width() - rotated_point.x - 1) * scale_factor + display_x_offset;
+    if (this.mirrorLeftRight) {
+      x = (designBoxWithOffset.width() - rotatedPoint.x - 1) * scaleFactor + displayXOffset;
     } else {
-      x = rotated_point.x * scale_factor - display_x_offset;
+      x = rotatedPoint.x * scaleFactor - displayXOffset;
     }
-    if (this.mirror_top_bottom) {
-      y = (design_box_with_offset.height() - rotated_point.y - 1) * scale_factor + display_y_offset;
+    if (this.mirrorTopBottom) {
+      y = (designBoxWithOffset.height() - rotatedPoint.y - 1) * scaleFactor + displayYOffset;
     } else {
-      y = rotated_point.y * scale_factor - display_y_offset;
+      y = rotatedPoint.y * scaleFactor - displayYOffset;
     }
     return new Point2D.Double(x, y);
   }
@@ -108,27 +108,27 @@ public class CoordinateTransform implements Serializable {
   public FloatPoint screen_to_board(Point2D p_point) {
     double x;
     double y;
-    if (this.mirror_left_right) {
-      x = design_box_with_offset.width() - (p_point.getX() - display_x_offset) / scale_factor - 1;
+    if (this.mirrorLeftRight) {
+      x = designBoxWithOffset.width() - (p_point.getX() - displayXOffset) / scaleFactor - 1;
     } else {
-      x = (p_point.getX() + display_x_offset) / scale_factor;
+      x = (p_point.getX() + displayXOffset) / scaleFactor;
     }
-    if (this.mirror_top_bottom) {
-      y = design_box_with_offset.height() - (p_point.getY() - display_y_offset) / scale_factor - 1;
+    if (this.mirrorTopBottom) {
+      y = designBoxWithOffset.height() - (p_point.getY() - displayYOffset) / scaleFactor - 1;
     } else {
-      y = (p_point.getY() + display_y_offset) / scale_factor;
+      y = (p_point.getY() + displayYOffset) / scaleFactor;
     }
     FloatPoint result = new FloatPoint(x, y);
-    return result.rotate(-this.rotation, this.rotation_pole);
+    return result.rotate(-this.rotation, this.rotationPole);
   }
 
   /** Transforms an angle in radian on the board to an angle on the screen. */
   public double board_to_screen_angle(double p_angle) {
     double result = p_angle + this.rotation;
-    if (this.mirror_left_right) {
+    if (this.mirrorLeftRight) {
       result = Math.PI - result;
     }
-    if (this.mirror_top_bottom) {
+    if (this.mirrorTopBottom) {
       result = -result;
     }
     while (result >= 2 * Math.PI) {
@@ -145,14 +145,14 @@ public class CoordinateTransform implements Serializable {
    * multiple of Pi/2, a bounding rectangle of the rotated rectangular shape is returned.
    */
   public Rectangle board_to_screen(IntBox p_box) {
-    Point2D corner_1 = board_to_screen(p_box.ll.to_float());
-    Point2D corner_2 = board_to_screen(p_box.ur.to_float());
-    double ll_x = Math.min(corner_1.getX(), corner_2.getX());
-    double ll_y = Math.min(corner_1.getY(), corner_2.getY());
-    double dx = Math.abs(corner_2.getX() - corner_1.getX());
-    double dy = Math.abs(corner_2.getY() - corner_1.getY());
+    Point2D corner1 = board_to_screen(p_box.ll.to_float());
+    Point2D corner2 = board_to_screen(p_box.ur.to_float());
+    double llX = Math.min(corner1.getX(), corner2.getX());
+    double llY = Math.min(corner1.getY(), corner2.getY());
+    double dx = Math.abs(corner2.getX() - corner1.getX());
+    double dy = Math.abs(corner2.getY() - corner1.getY());
     return new Rectangle(
-        (int) Math.floor(ll_x), (int) Math.floor(ll_y), (int) Math.ceil(dx), (int) Math.ceil(dy));
+        (int) Math.floor(llX), (int) Math.floor(llY), (int) Math.ceil(dx), (int) Math.ceil(dy));
   }
 
   /**
@@ -160,40 +160,40 @@ public class CoordinateTransform implements Serializable {
    * multiple of Pi/2, a bounding box of the rotated rectangular shape is returned.
    */
   public IntBox screen_to_board(Rectangle p_rect) {
-    FloatPoint corner_1 = screen_to_board(new Point2D.Double(p_rect.getX(), p_rect.getY()));
-    FloatPoint corner_2 =
+    FloatPoint corner1 = screen_to_board(new Point2D.Double(p_rect.getX(), p_rect.getY()));
+    FloatPoint corner2 =
         screen_to_board(
             new Point2D.Double(
                 p_rect.getX() + p_rect.getWidth(), p_rect.getY() + p_rect.getHeight()));
-    int llx = (int) Math.floor(Math.min(corner_1.x, corner_2.x));
-    int lly = (int) Math.floor(Math.min(corner_1.y, corner_2.y));
-    int urx = (int) Math.ceil(Math.max(corner_1.x, corner_2.x));
-    int ury = (int) Math.ceil(Math.max(corner_1.y, corner_2.y));
+    int llx = (int) Math.floor(Math.min(corner1.x, corner2.x));
+    int lly = (int) Math.floor(Math.min(corner1.y, corner2.y));
+    int urx = (int) Math.ceil(Math.max(corner1.x, corner2.x));
+    int ury = (int) Math.ceil(Math.max(corner1.y, corner2.y));
     return new IntBox(llx, lly, urx, ury);
   }
 
   /** Returns, if the left side and the right side of the board are swapped. */
   public boolean is_mirror_left_right() {
-    return mirror_left_right;
+    return mirrorLeftRight;
   }
 
   /** If p_value is true, the left side and the right side of the board will be swapped. */
   public void set_mirror_left_right(boolean p_value) {
-    mirror_left_right = p_value;
+    mirrorLeftRight = p_value;
   }
 
   /** Returns, if the top side and the bottom side of the board are swapped. */
   public boolean is_mirror_top_bottom() {
     // Because the origin of display is the upper left corner, the internal value
     // is opposite to the result of this function.
-    return !mirror_top_bottom;
+    return !mirrorTopBottom;
   }
 
   /** If p_value is true, the top side and the bottom side of the board will be swapped. */
   public void set_mirror_top_bottom(boolean p_value) {
     // Because the origin of display is the upper left corner, the internal value
     // will be opposite to the input value of this function.
-    mirror_top_bottom = !p_value;
+    mirrorTopBottom = !p_value;
   }
 
   /** Returns the rotation of the displayed board. */
@@ -225,21 +225,21 @@ public class CoordinateTransform implements Serializable {
     if (other == null) {
       return false;
     }
-    return this.scale_factor == other.scale_factor
+    return this.scaleFactor == other.scaleFactor
         && this.rotation == other.rotation
-        && this.mirror_left_right == other.mirror_left_right
-        && this.mirror_top_bottom == other.mirror_top_bottom;
+        && this.mirrorLeftRight == other.mirrorLeftRight
+        && this.mirrorTopBottom == other.mirrorTopBottom;
   }
 
   public boolean is_same_transform_state(CoordinateTransform other) {
     if (other == null) {
       return false;
     }
-    return this.scale_factor == other.scale_factor
-        && this.display_x_offset == other.display_x_offset
-        && this.display_y_offset == other.display_y_offset
+    return this.scaleFactor == other.scaleFactor
+        && this.displayXOffset == other.displayXOffset
+        && this.displayYOffset == other.displayYOffset
         && this.rotation == other.rotation
-        && this.mirror_left_right == other.mirror_left_right
-        && this.mirror_top_bottom == other.mirror_top_bottom;
+        && this.mirrorLeftRight == other.mirrorLeftRight
+        && this.mirrorTopBottom == other.mirrorTopBottom;
   }
 }

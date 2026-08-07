@@ -595,6 +595,18 @@ rewrite {
     exclusion("**/gui/**")
 
 
+tasks.register('phase2GenerateFieldMap', Exec) {
+    group = 'rewrite'
+    description = 'Generate field rename map before running rewriteRun'
+    def pkgs = System.getProperty('rewrite.targetPackages', '')
+    if (pkgs) {
+        def pkgList = pkgs.split(',').collect { it.trim() }
+        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/generate-field-rename-map.ps1', '-TargetPackages', pkgList.join(',')
+    } else {
+        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/generate-field-rename-map.ps1'
+    }
+}
+
 tasks.register('phase2FieldReferenceRenames', Exec) {
     group = 'rewrite'
     description = 'Apply cross-file field reference renames from build/field-renames.tsv'

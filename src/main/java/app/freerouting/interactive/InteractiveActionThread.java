@@ -217,7 +217,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
             // address
             if ((globalSettings.statistics.jobsCompleted >= 5)
                 && globalSettings.userProfileSettings.userEmail.isEmpty()) {
-              boardManager.get_panel().board_frame.menubar.showProfileDialog();
+              boardManager.get_panel().boardFrame.menubar.showProfileDialog();
             }
           }
         });

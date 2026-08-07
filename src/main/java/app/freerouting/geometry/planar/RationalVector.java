@@ -141,30 +141,30 @@ public class RationalVector extends Vector implements Serializable {
     while (n >= 4) {
       n -= 4;
     }
-    BigInteger new_x;
-    BigInteger new_y;
+    BigInteger newX;
+    BigInteger newY;
     switch (n) {
       case 0 -> { // 0 degree
-        new_x = x;
-        new_y = y;
+        newX = x;
+        newY = y;
       }
       case 1 -> { // 90 degree
-        new_x = y.negate();
-        new_y = x;
+        newX = y.negate();
+        newY = x;
       }
       case 2 -> { // 180 degree
-        new_x = x.negate();
-        new_y = y.negate();
+        newX = x.negate();
+        newY = y.negate();
       }
       case 3 -> { // 270 degree
-        new_x = y;
-        new_y = x.negate();
+        newX = y;
+        newY = x.negate();
       }
       default -> {
         return this;
       }
     }
-    return new RationalVector(new_x, new_y, this.z);
+    return new RationalVector(newX, newY, this.z);
   }
 
   @Override
@@ -242,11 +242,11 @@ public class RationalVector extends Vector implements Serializable {
 
   @Override
   Point add_to(IntPoint p_point) {
-    BigInteger new_x = z.multiply(BigInteger.valueOf(p_point.x));
-    new_x = new_x.add(x);
-    BigInteger new_y = z.multiply(BigInteger.valueOf(p_point.y));
-    new_y = new_y.add(y);
-    return new RationalPoint(new_x, new_y, z);
+    BigInteger newX = z.multiply(BigInteger.valueOf(p_point.x));
+    newX = newX.add(x);
+    BigInteger newY = z.multiply(BigInteger.valueOf(p_point.y));
+    newY = newY.add(y);
+    return new RationalPoint(newX, newY, z);
   }
 
   @Override
@@ -273,9 +273,9 @@ public class RationalVector extends Vector implements Serializable {
 
   @Override
   Side side_of(RationalVector p_other) {
-    BigInteger tmp_1 = y.multiply(p_other.x);
-    BigInteger tmp_2 = x.multiply(p_other.y);
-    BigInteger determinant = tmp_1.subtract(tmp_2);
+    BigInteger tmp1 = y.multiply(p_other.x);
+    BigInteger tmp2 = x.multiply(p_other.y);
+    BigInteger determinant = tmp1.subtract(tmp2);
     int signum = determinant.signum();
     return Side.of(signum);
   }

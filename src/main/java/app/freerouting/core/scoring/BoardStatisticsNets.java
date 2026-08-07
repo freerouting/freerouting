@@ -9,6 +9,6 @@ public class BoardStatisticsNets implements Serializable {
   @SerializedName("total_count")
   public Integer totalCount;
 
-  @SerializedName("class_count")
+  @SerializedName("classCount")
   public Integer classCount;
 }

@@ -8,55 +8,53 @@ import javax.swing.JMenuItem;
 /** Creates the display menu of a board frame. */
 public final class BoardMenuDisplay extends JMenu {
 
-  private final BoardFrame board_frame;
+  private final BoardFrame boardFrame;
   private final TextManager tm;
 
   /** Creates a new instance of BoardDisplayMenu */
   private BoardMenuDisplay(BoardFrame p_board_frame) {
-    board_frame = p_board_frame;
+    boardFrame = p_board_frame;
     tm = new TextManager(this.getClass(), p_board_frame.get_locale());
   }
 
   /** Returns a new display menu for the board frame. */
   public static BoardMenuDisplay get_instance(BoardFrame p_board_frame) {
-    final BoardMenuDisplay display_menu = new BoardMenuDisplay(p_board_frame);
-    display_menu.setText(display_menu.tm.getText("display"));
+    final BoardMenuDisplay displayMenu = new BoardMenuDisplay(p_board_frame);
+    displayMenu.setText(displayMenu.tm.getText("display"));
 
-    JMenuItem display_visibility_menuitem = new JMenuItem();
-    display_visibility_menuitem.setText(display_menu.tm.getText("visibility"));
-    display_visibility_menuitem.setToolTipText(display_menu.tm.getText("visibility_tooltip"));
-    display_visibility_menuitem.addActionListener(
-        _ -> display_menu.board_frame.visibility_window.setVisible(true));
-    display_visibility_menuitem.addActionListener(
+    JMenuItem displayVisibilityMenuitem = new JMenuItem();
+    displayVisibilityMenuitem.setText(displayMenu.tm.getText("visibility"));
+    displayVisibilityMenuitem.setToolTipText(displayMenu.tm.getText("visibility_tooltip"));
+    displayVisibilityMenuitem.addActionListener(
+        _ -> displayMenu.boardFrame.visibilityWindow.setVisible(true));
+    displayVisibilityMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "display_visibility_menuitem", display_visibility_menuitem.getText()));
+                "displayVisibilityMenuitem", displayVisibilityMenuitem.getText()));
 
-    display_menu.add(display_visibility_menuitem);
+    displayMenu.add(displayVisibilityMenuitem);
 
-    JMenuItem display_colors_menuitem = new JMenuItem();
-    display_colors_menuitem.setText(display_menu.tm.getText("colors"));
-    display_colors_menuitem.setToolTipText(display_menu.tm.getText("colors_tooltip"));
-    display_colors_menuitem.addActionListener(
-        _ -> display_menu.board_frame.color_manager.setVisible(true));
-    display_colors_menuitem.addActionListener(
+    JMenuItem displayColorsMenuitem = new JMenuItem();
+    displayColorsMenuitem.setText(displayMenu.tm.getText("colors"));
+    displayColorsMenuitem.setToolTipText(displayMenu.tm.getText("colors_tooltip"));
+    displayColorsMenuitem.addActionListener(
+        _ -> displayMenu.boardFrame.colorManager.setVisible(true));
+    displayColorsMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("displayColorsMenuitem", displayColorsMenuitem.getText()));
+
+    displayMenu.add(displayColorsMenuitem);
+
+    JMenuItem displayMiscellaneousMenuitem = new JMenuItem();
+    displayMiscellaneousMenuitem.setText(displayMenu.tm.getText("miscellaneous"));
+    displayMiscellaneousMenuitem.addActionListener(
+        _ -> displayMenu.boardFrame.displayMiscWindow.setVisible(true));
+    displayMiscellaneousMenuitem.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "display_colors_menuitem", display_colors_menuitem.getText()));
+                "displayMiscellaneousMenuitem", displayMiscellaneousMenuitem.getText()));
 
-    display_menu.add(display_colors_menuitem);
+    displayMenu.add(displayMiscellaneousMenuitem);
 
-    JMenuItem display_miscellaneous_menuitem = new JMenuItem();
-    display_miscellaneous_menuitem.setText(display_menu.tm.getText("miscellaneous"));
-    display_miscellaneous_menuitem.addActionListener(
-        _ -> display_menu.board_frame.display_misc_window.setVisible(true));
-    display_miscellaneous_menuitem.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "display_miscellaneous_menuitem", display_miscellaneous_menuitem.getText()));
-
-    display_menu.add(display_miscellaneous_menuitem);
-
-    return display_menu;
+    return displayMenu;
   }
 }

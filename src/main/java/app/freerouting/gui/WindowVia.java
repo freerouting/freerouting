@@ -43,10 +43,10 @@ import javax.swing.ListSelectionModel;
 public class WindowVia extends BoardSavableSubWindow {
 
   private static final int WINDOW_OFFSET = 30;
-  private final BoardFrame board_frame;
-  private final JList<ViaRule> rule_list;
-  private final DefaultListModel<ViaRule> rule_list_model;
-  private final JPanel main_panel;
+  private final BoardFrame boardFrame;
+  private final JList<ViaRule> ruleList;
+  private final DefaultListModel<ViaRule> ruleListModel;
+  private final JPanel mainPanel;
 
   /** The subwindows with information about selected object */
   private final Collection<JFrame> subwindows = new LinkedList<>();
@@ -57,161 +57,158 @@ public class WindowVia extends BoardSavableSubWindow {
 
     this.setTitle(tm.getText("title"));
 
-    this.board_frame = p_board_frame;
+    this.boardFrame = p_board_frame;
 
-    this.main_panel = new JPanel();
-    main_panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    main_panel.setLayout(new BorderLayout());
+    this.mainPanel = new JPanel();
+    mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    mainPanel.setLayout(new BorderLayout());
 
-    JPanel north_panel = new JPanel();
-    main_panel.add(north_panel, BorderLayout.NORTH);
+    JPanel northPanel = new JPanel();
+    mainPanel.add(northPanel, BorderLayout.NORTH);
     GridBagLayout gridbag = new GridBagLayout();
-    north_panel.setLayout(gridbag);
-    GridBagConstraints gridbag_constraints = new GridBagConstraints();
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    northPanel.setLayout(gridbag);
+    GridBagConstraints gridbagConstraints = new GridBagConstraints();
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
 
-    JLabel available_via_padstack_label = new JLabel(tm.getText("available_via_padstacks"));
-    available_via_padstack_label.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
-    gridbag.setConstraints(available_via_padstack_label, gridbag_constraints);
-    north_panel.add(available_via_padstack_label, gridbag_constraints);
+    JLabel availableViaPadstackLabel = new JLabel(tm.getText("available_via_padstacks"));
+    availableViaPadstackLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
+    gridbag.setConstraints(availableViaPadstackLabel, gridbagConstraints);
+    northPanel.add(availableViaPadstackLabel, gridbagConstraints);
 
-    JPanel padstack_button_panel = new JPanel();
-    padstack_button_panel.setLayout(new FlowLayout());
-    gridbag.setConstraints(padstack_button_panel, gridbag_constraints);
-    north_panel.add(padstack_button_panel, gridbag_constraints);
+    JPanel padstackButtonPanel = new JPanel();
+    padstackButtonPanel.setLayout(new FlowLayout());
+    gridbag.setConstraints(padstackButtonPanel, gridbagConstraints);
+    northPanel.add(padstackButtonPanel, gridbagConstraints);
 
-    final JButton rules_vias_padstacks_info_button = new JButton(tm.getText("info"));
-    rules_vias_padstacks_info_button.setToolTipText(tm.getText("info_tooltip"));
-    rules_vias_padstacks_info_button.addActionListener(new ShowPadstacksListener());
-    rules_vias_padstacks_info_button.addActionListener(
+    final JButton rulesViasPadstacksInfoButton = new JButton(tm.getText("info"));
+    rulesViasPadstacksInfoButton.setToolTipText(tm.getText("info_tooltip"));
+    rulesViasPadstacksInfoButton.addActionListener(new ShowPadstacksListener());
+    rulesViasPadstacksInfoButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_padstacks_info_button", rules_vias_padstacks_info_button.getText()));
-    padstack_button_panel.add(rules_vias_padstacks_info_button);
+                "rulesViasPadstacksInfoButton", rulesViasPadstacksInfoButton.getText()));
+    padstackButtonPanel.add(rulesViasPadstacksInfoButton);
 
-    final JButton rules_vias_padstacks_create_button = new JButton(tm.getText("create"));
-    rules_vias_padstacks_create_button.setToolTipText(tm.getText("create_tooltip"));
-    rules_vias_padstacks_create_button.addActionListener(new AddPadstackListener());
-    rules_vias_padstacks_create_button.addActionListener(
+    final JButton rulesViasPadstacksCreateButton = new JButton(tm.getText("create"));
+    rulesViasPadstacksCreateButton.setToolTipText(tm.getText("create_tooltip"));
+    rulesViasPadstacksCreateButton.addActionListener(new AddPadstackListener());
+    rulesViasPadstacksCreateButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_padstacks_create_button",
-                rules_vias_padstacks_create_button.getText()));
-    padstack_button_panel.add(rules_vias_padstacks_create_button);
+                "rulesViasPadstacksCreateButton", rulesViasPadstacksCreateButton.getText()));
+    padstackButtonPanel.add(rulesViasPadstacksCreateButton);
 
-    final JButton rules_vias_padstacks_remove_button = new JButton(tm.getText("remove"));
-    rules_vias_padstacks_remove_button.setToolTipText(tm.getText("remove_tooltip"));
-    rules_vias_padstacks_remove_button.addActionListener(new RemovePadstackListener());
-    rules_vias_padstacks_remove_button.addActionListener(
+    final JButton rulesViasPadstacksRemoveButton = new JButton(tm.getText("remove"));
+    rulesViasPadstacksRemoveButton.setToolTipText(tm.getText("remove_tooltip"));
+    rulesViasPadstacksRemoveButton.addActionListener(new RemovePadstackListener());
+    rulesViasPadstacksRemoveButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_padstacks_remove_button",
-                rules_vias_padstacks_remove_button.getText()));
-    padstack_button_panel.add(rules_vias_padstacks_remove_button);
+                "rulesViasPadstacksRemoveButton", rulesViasPadstacksRemoveButton.getText()));
+    padstackButtonPanel.add(rulesViasPadstacksRemoveButton);
 
-    JLabel separator_label =
-        new JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
-    separator_label.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-    gridbag.setConstraints(separator_label, gridbag_constraints);
-    north_panel.add(separator_label, gridbag_constraints);
+    JLabel separatorLabel = new JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
+    separatorLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+    gridbag.setConstraints(separatorLabel, gridbagConstraints);
+    northPanel.add(separatorLabel, gridbagConstraints);
 
-    JLabel available_vias_label = new JLabel(tm.getText("available_vias"));
-    available_vias_label.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
-    gridbag.setConstraints(available_vias_label, gridbag_constraints);
-    north_panel.add(available_vias_label, gridbag_constraints);
+    JLabel availableViasLabel = new JLabel(tm.getText("available_vias"));
+    availableViasLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
+    gridbag.setConstraints(availableViasLabel, gridbagConstraints);
+    northPanel.add(availableViasLabel, gridbagConstraints);
 
-    JPanel via_button_panel = new JPanel();
-    via_button_panel.setLayout(new FlowLayout());
-    gridbag.setConstraints(via_button_panel, gridbag_constraints);
-    north_panel.add(via_button_panel, gridbag_constraints);
+    JPanel viaButtonPanel = new JPanel();
+    viaButtonPanel.setLayout(new FlowLayout());
+    gridbag.setConstraints(viaButtonPanel, gridbagConstraints);
+    northPanel.add(viaButtonPanel, gridbagConstraints);
 
-    final JButton rules_vias_vias_info_button = new JButton(tm.getText("info"));
-    rules_vias_vias_info_button.setToolTipText(tm.getText("info_tooltip_2"));
-    rules_vias_vias_info_button.addActionListener(new ShowViasListener());
-    rules_vias_vias_info_button.addActionListener(
+    final JButton rulesViasViasInfoButton = new JButton(tm.getText("info"));
+    rulesViasViasInfoButton.setToolTipText(tm.getText("info_tooltip_2"));
+    rulesViasViasInfoButton.addActionListener(new ShowViasListener());
+    rulesViasViasInfoButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_vias_info_button", rules_vias_vias_info_button.getText()));
-    via_button_panel.add(rules_vias_vias_info_button);
+                "rulesViasViasInfoButton", rulesViasViasInfoButton.getText()));
+    viaButtonPanel.add(rulesViasViasInfoButton);
 
-    final JButton rules_vias_vias_edit_button = new JButton(tm.getText("edit"));
-    rules_vias_vias_edit_button.setToolTipText(tm.getText("edit_tooltip"));
-    rules_vias_vias_edit_button.addActionListener(new EditViasListener());
-    rules_vias_vias_edit_button.addActionListener(
+    final JButton rulesViasViasEditButton = new JButton(tm.getText("edit"));
+    rulesViasViasEditButton.setToolTipText(tm.getText("edit_tooltip"));
+    rulesViasViasEditButton.addActionListener(new EditViasListener());
+    rulesViasViasEditButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_vias_edit_button", rules_vias_vias_edit_button.getText()));
-    via_button_panel.add(rules_vias_vias_edit_button);
+                "rulesViasViasEditButton", rulesViasViasEditButton.getText()));
+    viaButtonPanel.add(rulesViasViasEditButton);
 
-    separator_label = new JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
-    separator_label.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-    gridbag.setConstraints(separator_label, gridbag_constraints);
-    north_panel.add(separator_label, gridbag_constraints);
+    separatorLabel = new JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
+    separatorLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+    gridbag.setConstraints(separatorLabel, gridbagConstraints);
+    northPanel.add(separatorLabel, gridbagConstraints);
 
-    JLabel via_rule_list_name = new JLabel(tm.getText("via_rules"));
-    via_rule_list_name.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
-    gridbag.setConstraints(via_rule_list_name, gridbag_constraints);
-    north_panel.add(via_rule_list_name, gridbag_constraints);
-    north_panel.add(via_rule_list_name, gridbag_constraints);
+    JLabel viaRuleListName = new JLabel(tm.getText("viaRules"));
+    viaRuleListName.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
+    gridbag.setConstraints(viaRuleListName, gridbagConstraints);
+    northPanel.add(viaRuleListName, gridbagConstraints);
+    northPanel.add(viaRuleListName, gridbagConstraints);
 
-    this.rule_list_model = new DefaultListModel<>();
-    this.rule_list = new JList<>(this.rule_list_model);
+    this.ruleListModel = new DefaultListModel<>();
+    this.ruleList = new JList<>(this.ruleListModel);
 
-    this.rule_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    this.rule_list.setSelectedIndex(0);
-    this.rule_list.setVisibleRowCount(5);
-    JScrollPane list_scroll_pane = new JScrollPane(this.rule_list);
-    list_scroll_pane.setPreferredSize(new Dimension(200, 100));
-    this.main_panel.add(list_scroll_pane, BorderLayout.CENTER);
+    this.ruleList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    this.ruleList.setSelectedIndex(0);
+    this.ruleList.setVisibleRowCount(5);
+    JScrollPane listScrollPane = new JScrollPane(this.ruleList);
+    listScrollPane.setPreferredSize(new Dimension(200, 100));
+    this.mainPanel.add(listScrollPane, BorderLayout.CENTER);
 
     // fill the list
-    BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-    for (ViaRule curr_rule : board_rules.via_rules) {
-      this.rule_list_model.addElement(curr_rule);
+    BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+    for (ViaRule currRule : boardRules.viaRules) {
+      this.ruleListModel.addElement(currRule);
     }
 
     // Add buttons to edit the via rules.
-    JPanel via_rule_button_panel = new JPanel();
-    via_rule_button_panel.setLayout(new FlowLayout());
-    this.add(via_rule_button_panel, BorderLayout.SOUTH);
+    JPanel viaRuleButtonPanel = new JPanel();
+    viaRuleButtonPanel.setLayout(new FlowLayout());
+    this.add(viaRuleButtonPanel, BorderLayout.SOUTH);
 
-    final JButton rules_vias_rules_info_button = new JButton(tm.getText("info"));
-    rules_vias_rules_info_button.setToolTipText(tm.getText("info_tooltip_3"));
-    rules_vias_rules_info_button.addActionListener(new ShowViaRuleListener());
-    rules_vias_rules_info_button.addActionListener(
+    final JButton rulesViasRulesInfoButton = new JButton(tm.getText("info"));
+    rulesViasRulesInfoButton.setToolTipText(tm.getText("info_tooltip_3"));
+    rulesViasRulesInfoButton.addActionListener(new ShowViaRuleListener());
+    rulesViasRulesInfoButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_rules_info_button", rules_vias_rules_info_button.getText()));
-    via_rule_button_panel.add(rules_vias_rules_info_button);
+                "rulesViasRulesInfoButton", rulesViasRulesInfoButton.getText()));
+    viaRuleButtonPanel.add(rulesViasRulesInfoButton);
 
-    final JButton rules_vias_rules_create_button = new JButton(tm.getText("create"));
-    rules_vias_rules_create_button.setToolTipText(tm.getText("create_tooltip_2"));
-    rules_vias_rules_create_button.addActionListener(new AddViaRuleListener());
-    rules_vias_rules_create_button.addActionListener(
+    final JButton rulesViasRulesCreateButton = new JButton(tm.getText("create"));
+    rulesViasRulesCreateButton.setToolTipText(tm.getText("create_tooltip_2"));
+    rulesViasRulesCreateButton.addActionListener(new AddViaRuleListener());
+    rulesViasRulesCreateButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_rules_create_button", rules_vias_rules_create_button.getText()));
-    via_rule_button_panel.add(rules_vias_rules_create_button);
+                "rulesViasRulesCreateButton", rulesViasRulesCreateButton.getText()));
+    viaRuleButtonPanel.add(rulesViasRulesCreateButton);
 
-    final JButton rules_vias_rules_edit_button = new JButton(tm.getText("edit"));
-    rules_vias_rules_edit_button.setToolTipText(tm.getText("edit_tooltip_2"));
-    rules_vias_rules_edit_button.addActionListener(new EditViaRuleListener());
-    rules_vias_rules_edit_button.addActionListener(
+    final JButton rulesViasRulesEditButton = new JButton(tm.getText("edit"));
+    rulesViasRulesEditButton.setToolTipText(tm.getText("edit_tooltip_2"));
+    rulesViasRulesEditButton.addActionListener(new EditViaRuleListener());
+    rulesViasRulesEditButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_rules_edit_button", rules_vias_rules_edit_button.getText()));
-    via_rule_button_panel.add(rules_vias_rules_edit_button);
+                "rulesViasRulesEditButton", rulesViasRulesEditButton.getText()));
+    viaRuleButtonPanel.add(rulesViasRulesEditButton);
 
-    final JButton rules_vias_rules_remove_button = new JButton(tm.getText("remove"));
-    rules_vias_rules_remove_button.setToolTipText(tm.getText("remove_tooltip_2"));
-    rules_vias_rules_remove_button.addActionListener(new RemoveViaRuleListener());
-    rules_vias_rules_remove_button.addActionListener(
+    final JButton rulesViasRulesRemoveButton = new JButton(tm.getText("remove"));
+    rulesViasRulesRemoveButton.setToolTipText(tm.getText("remove_tooltip_2"));
+    rulesViasRulesRemoveButton.addActionListener(new RemoveViaRuleListener());
+    rulesViasRulesRemoveButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_rules_remove_button", rules_vias_rules_remove_button.getText()));
-    via_rule_button_panel.add(rules_vias_rules_remove_button);
+                "rulesViasRulesRemoveButton", rulesViasRulesRemoveButton.getText()));
+    viaRuleButtonPanel.add(rulesViasRulesRemoveButton);
 
-    this.add(main_panel);
+    this.add(mainPanel);
     this.pack();
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
   }
@@ -219,19 +216,19 @@ public class WindowVia extends BoardSavableSubWindow {
   @Override
   public void refresh() {
     // reinsert the elements in the rule list
-    this.rule_list_model.removeAllElements();
-    BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-    for (ViaRule curr_rule : board_rules.via_rules) {
-      this.rule_list_model.addElement(curr_rule);
+    this.ruleListModel.removeAllElements();
+    BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+    for (ViaRule currRule : boardRules.viaRules) {
+      this.ruleListModel.addElement(currRule);
     }
 
     // Dispose all subwindows because they may be no longer up-to-date.
     Iterator<JFrame> it = this.subwindows.iterator();
     while (it.hasNext()) {
-      JFrame curr_subwindow = it.next();
-      if (curr_subwindow != null) {
+      JFrame currSubwindow = it.next();
+      if (currSubwindow != null) {
 
-        curr_subwindow.dispose();
+        currSubwindow.dispose();
       }
       it.remove();
     }
@@ -239,13 +236,13 @@ public class WindowVia extends BoardSavableSubWindow {
 
   @Override
   public void dispose() {
-    for (JFrame curr_subwindow : this.subwindows) {
-      if (curr_subwindow != null) {
-        curr_subwindow.dispose();
+    for (JFrame currSubwindow : this.subwindows) {
+      if (currSubwindow != null) {
+        currSubwindow.dispose();
       }
     }
-    if (board_frame.edit_vias_window != null) {
-      board_frame.edit_vias_window.dispose();
+    if (boardFrame.editViasWindow != null) {
+      boardFrame.editViasWindow.dispose();
     }
     super.dispose();
   }
@@ -254,25 +251,21 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>();
-      BoardLibrary board_library =
-          board_frame.board_panel.board_handling.get_routing_board().library;
-      for (int i = 0; i < board_library.via_padstack_count(); i++) {
-        object_list.add(board_library.get_via_padstack(i));
+      Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>();
+      BoardLibrary boardLibrary = boardFrame.boardPanel.boardHandling.get_routing_board().library;
+      for (int i = 0; i < boardLibrary.via_padstack_count(); i++) {
+        objectList.add(boardLibrary.get_via_padstack(i));
       }
-      CoordinateTransform coordinate_transform =
-          board_frame.board_panel.board_handling.coordinate_transform;
-      WindowObjectInfo new_window =
+      CoordinateTransform coordinateTransform =
+          boardFrame.boardPanel.boardHandling.coordinateTransform;
+      WindowObjectInfo newWindow =
           WindowObjectInfo.display(
-              tm.getText("available_via_padstacks"),
-              object_list,
-              board_frame,
-              coordinate_transform);
+              tm.getText("available_via_padstacks"), objectList, boardFrame, coordinateTransform);
       Point loc = getLocation();
-      Point new_window_location =
+      Point newWindowLocation =
           new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
-      new_window.setLocation(new_window_location);
-      subwindows.add(new_window);
+      newWindow.setLocation(newWindowLocation);
+      subwindows.add(newWindow);
     }
   }
 
@@ -280,154 +273,148 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      BasicBoard pcb = board_frame.board_panel.board_handling.get_routing_board();
-      if (pcb.layer_structure.arr.length <= 1) {
+      BasicBoard pcb = boardFrame.boardPanel.boardHandling.get_routing_board();
+      if (pcb.layerStructure.arr.length <= 1) {
         return;
       }
-      String padstack_name = JOptionPane.showInputDialog(tm.getText("prompt_new_padstack_name"));
-      if (padstack_name == null) {
+      String padstackName = JOptionPane.showInputDialog(tm.getText("prompt_new_padstack_name"));
+      if (padstackName == null) {
         return;
       }
-      while (pcb.library.padstacks.get(padstack_name) != null) {
-        padstack_name =
-            JOptionPane.showInputDialog(tm.getText("padstack_name_exists"), padstack_name);
-        if (padstack_name == null) {
+      while (pcb.library.padstacks.get(padstackName) != null) {
+        padstackName =
+            JOptionPane.showInputDialog(tm.getText("padstack_name_exists"), padstackName);
+        if (padstackName == null) {
           return;
         }
       }
-      Layer start_layer = pcb.layer_structure.arr[0];
-      Layer end_layer = pcb.layer_structure.arr[pcb.layer_structure.arr.length - 1];
-      boolean layers_selected = false;
-      if (pcb.layer_structure.arr.length == 2) {
-        layers_selected = true;
+      Layer startLayer = pcb.layerStructure.arr[0];
+      Layer endLayer = pcb.layerStructure.arr[pcb.layerStructure.arr.length - 1];
+      boolean layersSelected = false;
+      if (pcb.layerStructure.arr.length == 2) {
+        layersSelected = true;
       } else {
-        Layer[] possible_start_layers =
-            Arrays.copyOf(pcb.layer_structure.arr, pcb.layer_structure.arr.length - 1);
-        Object selected_value =
+        Layer[] possibleStartLayers =
+            Arrays.copyOf(pcb.layerStructure.arr, pcb.layerStructure.arr.length - 1);
+        Object selectedValue =
             JOptionPane.showInputDialog(
                 null,
                 tm.getText("select_start_layer"),
                 tm.getText("start_layer_selection"),
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
-                possible_start_layers,
-                possible_start_layers[0]);
-        if (selected_value == null) {
+                possibleStartLayers,
+                possibleStartLayers[0]);
+        if (selectedValue == null) {
           return;
         }
-        start_layer = (Layer) selected_value;
-        if (start_layer == possible_start_layers[possible_start_layers.length - 1]) {
-          layers_selected = true;
+        startLayer = (Layer) selectedValue;
+        if (startLayer == possibleStartLayers[possibleStartLayers.length - 1]) {
+          layersSelected = true;
         }
       }
-      if (!layers_selected) {
-        int first_possible_end_layer_no = pcb.layer_structure.get_no(start_layer) + 1;
-        Layer[] possible_end_layers =
+      if (!layersSelected) {
+        int firstPossibleEndLayerNo = pcb.layerStructure.get_no(startLayer) + 1;
+        Layer[] possibleEndLayers =
             Arrays.copyOfRange(
-                pcb.layer_structure.arr,
-                first_possible_end_layer_no,
-                pcb.layer_structure.arr.length);
-        Object selected_value =
+                pcb.layerStructure.arr, firstPossibleEndLayerNo, pcb.layerStructure.arr.length);
+        Object selectedValue =
             JOptionPane.showInputDialog(
                 null,
                 tm.getText("select_end_layer"),
                 tm.getText("end_layer_selection"),
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
-                possible_end_layers,
-                possible_end_layers[possible_end_layers.length - 1]);
-        if (selected_value == null) {
+                possibleEndLayers,
+                possibleEndLayers[possibleEndLayers.length - 1]);
+        if (selectedValue == null) {
           return;
         }
-        end_layer = (Layer) selected_value;
+        endLayer = (Layer) selectedValue;
       }
-      double default_radius = 100.0;
+      double defaultRadius = 100.0;
 
       // ask for the default radius
 
-      JPanel default_radius_input_panel = new JPanel();
-      default_radius_input_panel.add(new JLabel(tm.getText("prompt_default_radius")));
-      NumberFormat number_format = NumberFormat.getInstance(board_frame.get_locale());
-      number_format.setMaximumFractionDigits(7);
-      JFormattedTextField default_radius_input_field = new JFormattedTextField(number_format);
-      default_radius_input_field.setColumns(7);
-      default_radius_input_panel.add(default_radius_input_field);
+      JPanel defaultRadiusInputPanel = new JPanel();
+      defaultRadiusInputPanel.add(new JLabel(tm.getText("prompt_default_radius")));
+      NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+      numberFormat.setMaximumFractionDigits(7);
+      JFormattedTextField defaultRadiusInputField = new JFormattedTextField(numberFormat);
+      defaultRadiusInputField.setColumns(7);
+      defaultRadiusInputPanel.add(defaultRadiusInputField);
       JOptionPane.showMessageDialog(
-          board_frame, default_radius_input_panel, null, JOptionPane.PLAIN_MESSAGE);
-      Object input_value = default_radius_input_field.getValue();
-      if (input_value instanceof Number number) {
-        default_radius = number.doubleValue();
+          boardFrame, defaultRadiusInputPanel, null, JOptionPane.PLAIN_MESSAGE);
+      Object inputValue = defaultRadiusInputField.getValue();
+      if (inputValue instanceof Number number) {
+        defaultRadius = number.doubleValue();
       }
 
       // input panel  to make the default radius layer-dependent
 
-      PadstackInputPanel padstack_input_panel =
-          new PadstackInputPanel(start_layer, end_layer, default_radius);
+      PadstackInputPanel padstackInputPanel =
+          new PadstackInputPanel(startLayer, endLayer, defaultRadius);
       JOptionPane.showMessageDialog(
-          board_frame,
-          padstack_input_panel,
-          tm.getText("adjust_circles"),
-          JOptionPane.PLAIN_MESSAGE);
-      int from_layer_no = pcb.layer_structure.get_no(start_layer);
-      int to_layer_no = pcb.layer_structure.get_no(end_layer);
-      ConvexShape[] padstack_shapes = new ConvexShape[pcb.layer_structure.arr.length];
-      CoordinateTransform coordinate_transform =
-          board_frame.board_panel.board_handling.coordinate_transform;
-      boolean shape_exists = false;
-      for (int i = from_layer_no; i <= to_layer_no; i++) {
-        Object input = padstack_input_panel.circle_radius[i - from_layer_no].getValue();
-        double radius = default_radius;
+          boardFrame, padstackInputPanel, tm.getText("adjust_circles"), JOptionPane.PLAIN_MESSAGE);
+      int fromLayerNo = pcb.layerStructure.get_no(startLayer);
+      int toLayerNo = pcb.layerStructure.get_no(endLayer);
+      ConvexShape[] padstackShapes = new ConvexShape[pcb.layerStructure.arr.length];
+      CoordinateTransform coordinateTransform =
+          boardFrame.boardPanel.boardHandling.coordinateTransform;
+      boolean shapeExists = false;
+      for (int i = fromLayerNo; i <= toLayerNo; i++) {
+        Object input = padstackInputPanel.circleRadius[i - fromLayerNo].getValue();
+        double radius = defaultRadius;
         if (input instanceof Number number) {
           radius = number.doubleValue();
         }
-        int circle_radius = (int) Math.round(coordinate_transform.user_to_board(radius));
-        if (circle_radius > 0) {
-          padstack_shapes[i] =
-              new Circle(app.freerouting.geometry.planar.Point.ZERO, circle_radius);
-          shape_exists = true;
+        int circleRadius = (int) Math.round(coordinateTransform.user_to_board(radius));
+        if (circleRadius > 0) {
+          padstackShapes[i] = new Circle(app.freerouting.geometry.planar.Point.ZERO, circleRadius);
+          shapeExists = true;
         }
       }
-      if (!shape_exists) {
+      if (!shapeExists) {
         return;
       }
-      Padstack new_padstack = pcb.library.padstacks.add(padstack_name, padstack_shapes, true, true);
-      pcb.library.add_via_padstack(new_padstack);
+      Padstack newPadstack = pcb.library.padstacks.add(padstackName, padstackShapes, true, true);
+      pcb.library.add_via_padstack(newPadstack);
     }
   }
 
   /** Internal class used in AddPadstackListener */
   private class PadstackInputPanel extends JPanel {
 
-    private final JLabel[] layer_names;
-    private final JFormattedTextField[] circle_radius;
+    private final JLabel[] layerNames;
+    private final JFormattedTextField[] circleRadius;
 
     PadstackInputPanel(Layer p_from_layer, Layer p_to_layer, Double p_default_radius) {
       GridBagLayout gridbag = new GridBagLayout();
       this.setLayout(gridbag);
-      GridBagConstraints gridbag_constraints = new GridBagConstraints();
+      GridBagConstraints gridbagConstraints = new GridBagConstraints();
 
-      LayerStructure layer_structure =
-          board_frame.board_panel.board_handling.get_routing_board().layer_structure;
-      int from_layer_no = layer_structure.get_no(p_from_layer);
-      int to_layer_no = layer_structure.get_no(p_to_layer);
-      int layer_count = to_layer_no - from_layer_no + 1;
-      layer_names = new JLabel[layer_count];
-      circle_radius = new JFormattedTextField[layer_count];
-      for (int i = 0; i < layer_count; i++) {
-        String label_string =
-            tm.getText("radius_on_layer_label", layer_structure.arr[from_layer_no + i].name);
-        layer_names[i] = new JLabel(label_string);
-        NumberFormat number_format = NumberFormat.getInstance(board_frame.get_locale());
-        number_format.setMaximumFractionDigits(7);
-        circle_radius[i] = new JFormattedTextField(number_format);
-        circle_radius[i].setColumns(7);
-        circle_radius[i].setValue(p_default_radius);
-        gridbag.setConstraints(layer_names[i], gridbag_constraints);
-        gridbag_constraints.gridwidth = 2;
-        this.add(layer_names[i], gridbag_constraints);
-        gridbag.setConstraints(circle_radius[i], gridbag_constraints);
-        gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-        this.add(circle_radius[i], gridbag_constraints);
+      LayerStructure layerStructure =
+          boardFrame.boardPanel.boardHandling.get_routing_board().layerStructure;
+      int fromLayerNo = layerStructure.get_no(p_from_layer);
+      int toLayerNo = layerStructure.get_no(p_to_layer);
+      int layerCount = toLayerNo - fromLayerNo + 1;
+      layerNames = new JLabel[layerCount];
+      circleRadius = new JFormattedTextField[layerCount];
+      for (int i = 0; i < layerCount; i++) {
+        String labelString =
+            tm.getText("radius_on_layer_label", layerStructure.arr[fromLayerNo + i].name);
+        layerNames[i] = new JLabel(labelString);
+        NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+        numberFormat.setMaximumFractionDigits(7);
+        circleRadius[i] = new JFormattedTextField(numberFormat);
+        circleRadius[i].setColumns(7);
+        circleRadius[i].setValue(p_default_radius);
+        gridbag.setConstraints(layerNames[i], gridbagConstraints);
+        gridbagConstraints.gridwidth = 2;
+        this.add(layerNames[i], gridbagConstraints);
+        gridbag.setConstraints(circleRadius[i], gridbagConstraints);
+        gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        this.add(circleRadius[i], gridbagConstraints);
       }
     }
   }
@@ -436,35 +423,34 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      BasicBoard pcb = board_frame.board_panel.board_handling.get_routing_board();
-      Padstack[] via_padstacks = pcb.library.get_via_padstacks();
-      Object selected_value =
+      BasicBoard pcb = boardFrame.boardPanel.boardHandling.get_routing_board();
+      Padstack[] viaPadstacks = pcb.library.get_via_padstacks();
+      Object selectedValue =
           JOptionPane.showInputDialog(
               null,
               tm.getText("choose_padstack_to_remove"),
               tm.getText("remove_via_padstack"),
               JOptionPane.INFORMATION_MESSAGE,
               null,
-              via_padstacks,
-              via_padstacks[0]);
-      if (selected_value == null) {
+              viaPadstacks,
+              viaPadstacks[0]);
+      if (selectedValue == null) {
         return;
       }
-      Padstack selected_padstack = (Padstack) selected_value;
-      ViaInfo via_with_selected_padstack = null;
-      for (int i = 0; i < pcb.rules.via_infos.count(); i++) {
-        if (pcb.rules.via_infos.get(i).get_padstack() == selected_padstack) {
-          via_with_selected_padstack = pcb.rules.via_infos.get(i);
+      Padstack selectedPadstack = (Padstack) selectedValue;
+      ViaInfo viaWithSelectedPadstack = null;
+      for (int i = 0; i < pcb.rules.viaInfos.count(); i++) {
+        if (pcb.rules.viaInfos.get(i).get_padstack() == selectedPadstack) {
+          viaWithSelectedPadstack = pcb.rules.viaInfos.get(i);
           break;
         }
       }
-      if (via_with_selected_padstack != null) {
-        board_frame.screen_messages.set_status_message(
-            tm.getText(
-                "padstack_not_removed_in_use_message", via_with_selected_padstack.get_name()));
+      if (viaWithSelectedPadstack != null) {
+        boardFrame.screenMessages.set_status_message(
+            tm.getText("padstack_not_removed_in_use_message", viaWithSelectedPadstack.get_name()));
         return;
       }
-      pcb.library.remove_via_padstack(selected_padstack, pcb);
+      pcb.library.remove_via_padstack(selectedPadstack, pcb);
     }
   }
 
@@ -472,22 +458,21 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>();
-      ViaInfos via_infos =
-          board_frame.board_panel.board_handling.get_routing_board().rules.via_infos;
-      for (int i = 0; i < via_infos.count(); i++) {
-        object_list.add(via_infos.get(i));
+      Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>();
+      ViaInfos viaInfos = boardFrame.boardPanel.boardHandling.get_routing_board().rules.viaInfos;
+      for (int i = 0; i < viaInfos.count(); i++) {
+        objectList.add(viaInfos.get(i));
       }
-      CoordinateTransform coordinate_transform =
-          board_frame.board_panel.board_handling.coordinate_transform;
-      WindowObjectInfo new_window =
+      CoordinateTransform coordinateTransform =
+          boardFrame.boardPanel.boardHandling.coordinateTransform;
+      WindowObjectInfo newWindow =
           WindowObjectInfo.display(
-              tm.getText("available_vias"), object_list, board_frame, coordinate_transform);
+              tm.getText("available_vias"), objectList, boardFrame, coordinateTransform);
       Point loc = getLocation();
-      Point new_window_location =
+      Point newWindowLocation =
           new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
-      new_window.setLocation(new_window_location);
-      subwindows.add(new_window);
+      newWindow.setLocation(newWindowLocation);
+      subwindows.add(newWindow);
     }
   }
 
@@ -495,7 +480,7 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_frame.edit_vias_window.setVisible(true);
+      boardFrame.editViasWindow.setVisible(true);
     }
   }
 
@@ -503,21 +488,21 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      List<ViaRule> selected_objects = rule_list.getSelectedValuesList();
-      if (selected_objects.isEmpty()) {
+      List<ViaRule> selectedObjects = ruleList.getSelectedValuesList();
+      if (selectedObjects.isEmpty()) {
         return;
       }
-      Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>(selected_objects);
-      CoordinateTransform coordinate_transform =
-          board_frame.board_panel.board_handling.coordinate_transform;
-      WindowObjectInfo new_window =
+      Collection<WindowObjectInfo.Printable> objectList = new LinkedList<>(selectedObjects);
+      CoordinateTransform coordinateTransform =
+          boardFrame.boardPanel.boardHandling.coordinateTransform;
+      WindowObjectInfo newWindow =
           WindowObjectInfo.display(
-              tm.getText("selected_rule"), object_list, board_frame, coordinate_transform);
+              tm.getText("selectedRule"), objectList, boardFrame, coordinateTransform);
       Point loc = getLocation();
-      Point new_window_location =
+      Point newWindowLocation =
           new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
-      new_window.setLocation(new_window_location);
-      subwindows.add(new_window);
+      newWindow.setLocation(newWindowLocation);
+      subwindows.add(newWindow);
     }
   }
 
@@ -525,18 +510,17 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      ViaRule selected_object = rule_list.getSelectedValue();
-      if (selected_object == null) {
+      ViaRule selectedObject = ruleList.getSelectedValue();
+      if (selectedObject == null) {
         return;
       }
-      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-      WindowViaRule new_window =
-          new WindowViaRule(selected_object, board_rules.via_infos, board_frame);
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+      WindowViaRule newWindow = new WindowViaRule(selectedObject, boardRules.viaInfos, boardFrame);
       Point loc = getLocation();
-      Point new_window_location =
+      Point newWindowLocation =
           new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
-      new_window.setLocation(new_window_location);
-      subwindows.add(new_window);
+      newWindow.setLocation(newWindowLocation);
+      subwindows.add(newWindow);
     }
   }
 
@@ -544,19 +528,19 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      String new_name = JOptionPane.showInputDialog(tm.getText("prompt_new_via_rule_name"));
-      if (new_name == null) {
+      String newName = JOptionPane.showInputDialog(tm.getText("prompt_new_via_rule_name"));
+      if (newName == null) {
         return;
       }
-      new_name = new_name.trim();
-      if (new_name.isEmpty()) {
+      newName = newName.trim();
+      if (newName.isEmpty()) {
         return;
       }
-      ViaRule new_via_rule = new ViaRule(new_name);
-      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-      board_rules.via_rules.add(new_via_rule);
-      rule_list_model.addElement(new_via_rule);
-      board_frame.refresh_windows();
+      ViaRule newViaRule = new ViaRule(newName);
+      BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+      boardRules.viaRules.add(newViaRule);
+      ruleListModel.addElement(newViaRule);
+      boardFrame.refresh_windows();
     }
   }
 
@@ -564,15 +548,15 @@ public class WindowVia extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      ViaRule selected_object = rule_list.getSelectedValue();
-      if (selected_object == null) {
+      ViaRule selectedObject = ruleList.getSelectedValue();
+      if (selectedObject == null) {
         return;
       }
-      ViaRule selected_rule = selected_object;
-      if (WindowMessage.confirm(tm.getText("remove_via_rule_confirm", selected_rule.name))) {
-        BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-        board_rules.via_rules.remove(selected_rule);
-        rule_list_model.removeElement(selected_rule);
+      ViaRule selectedRule = selectedObject;
+      if (WindowMessage.confirm(tm.getText("remove_via_rule_confirm", selectedRule.name))) {
+        BoardRules boardRules = boardFrame.boardPanel.boardHandling.get_routing_board().rules;
+        boardRules.viaRules.remove(selectedRule);
+        ruleListModel.removeElement(selectedRule);
       }
     }
   }

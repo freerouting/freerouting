@@ -65,7 +65,7 @@ class ApiRoutingTest {
     settings.isEnabled = true;
     settings.isHttpAllowed = true;
     settings.endpoints = new String[] {"http://127.0.0.1:0"};
-    settings.cors_origins = null; // No CORS needed for unit tests
+    settings.corsOrigins = null; // No CORS needed for unit tests
     // Disable authentication for this test: no providers are configured, so enabling
     // auth would deny every request. Real deployments have auth ON by default.
     // Must be set on both the local settings object AND globalSettings, because

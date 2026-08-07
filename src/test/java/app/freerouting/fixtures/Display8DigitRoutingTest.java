@@ -40,7 +40,7 @@ public class Display8DigitRoutingTest extends RoutingFixtureTest {
 
     // The DSN file contains a degenerate keepout polygon at line 27 (all 3 vertices identical,
     // producing a zero-area shape). Freerouting must handle this gracefully — warn and skip —
-    // rather than crashing with a NullPointerException in Polyline.projection_line.
+    // rather than crashing with a NullPointerException in Polyline.projectionLine.
     // The router is expected to complete without clearance violations.
     // Due to normalization failures caused by the degenerate geometry in the board design,
     // some connections may remain incomplete; we accept up to 50 incomplete connections.

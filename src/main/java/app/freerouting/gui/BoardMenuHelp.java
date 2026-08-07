@@ -7,7 +7,7 @@ import javax.swing.JMenuItem;
 
 public class BoardMenuHelp extends JMenu {
 
-  protected final BoardFrame board_frame;
+  protected final BoardFrame boardFrame;
 
   /**
    * Creates a new instance of BoardMenuHelpReduced Separated from BoardMenuHelp to avoid
@@ -15,15 +15,15 @@ public class BoardMenuHelp extends JMenu {
    * extended help menu.
    */
   public BoardMenuHelp(BoardFrame p_board_frame) {
-    this.board_frame = p_board_frame;
+    this.boardFrame = p_board_frame;
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
     this.setText(tm.getText("help"));
 
-    JMenuItem help_about_menuitem = new JMenuItem();
-    help_about_menuitem.setText(tm.getText("about"));
-    help_about_menuitem.addActionListener(_ -> board_frame.about_window.setVisible(true));
-    help_about_menuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("help_about_menuitem", help_about_menuitem.getText()));
-    this.add(help_about_menuitem);
+    JMenuItem helpAboutMenuitem = new JMenuItem();
+    helpAboutMenuitem.setText(tm.getText("about"));
+    helpAboutMenuitem.addActionListener(_ -> boardFrame.aboutWindow.setVisible(true));
+    helpAboutMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("helpAboutMenuitem", helpAboutMenuitem.getText()));
+    this.add(helpAboutMenuitem);
   }
 }

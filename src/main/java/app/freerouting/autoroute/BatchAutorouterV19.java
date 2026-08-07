@@ -37,17 +37,17 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
 
-  private final boolean remove_unconnected_vias;
-  private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
-  private final boolean retain_autoroute_database;
-  private final int start_ripup_costs;
-  private final int trace_pull_tight_accuracy;
+  private final boolean removeUnconnectedVias;
+  private final AutorouteControl.ExpansionCostFactor[] traceCostArr;
+  private final boolean retainAutorouteDatabase;
+  private final int startRipupCosts;
+  private final int tracePullTightAccuracy;
 
   protected RoutingJob job;
   private boolean isOptimizerAutorouter;
 
   /** Used to draw the airline of the current routed incomplete. */
-  private FloatLine air_line;
+  private FloatLine airLine;
 
   /** Initial number of unrouted nets at the start of the routing session. */
   private int initialUnroutedCount;
@@ -67,7 +67,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
         true,
         true,
         job.routerSettings.get_start_ripup_costs(),
-        job.routerSettings.trace_pull_tight_accuracy);
+        job.routerSettings.tracePullTightAccuracy);
     this.job = job;
   }
 
@@ -89,22 +89,21 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       settings.maxThreads = 1;
     }
 
-    this.remove_unconnected_vias = p_remove_unconnected_vias;
+    this.removeUnconnectedVias = p_remove_unconnected_vias;
     if (p_with_preferred_directions) {
-      this.trace_cost_arr = this.settings.get_trace_cost_arr();
+      this.traceCostArr = this.settings.get_trace_cost_arr();
     } else {
       // remove preferred direction
-      this.trace_cost_arr = new AutorouteControl.ExpansionCostFactor[this.board.get_layer_count()];
-      for (int i = 0; i < this.trace_cost_arr.length; i++) {
-        double curr_min_cost = this.settings.get_preferred_direction_trace_costs(i);
-        this.trace_cost_arr[i] =
-            new AutorouteControl.ExpansionCostFactor(curr_min_cost, curr_min_cost);
+      this.traceCostArr = new AutorouteControl.ExpansionCostFactor[this.board.get_layer_count()];
+      for (int i = 0; i < this.traceCostArr.length; i++) {
+        double currMinCost = this.settings.get_preferred_direction_trace_costs(i);
+        this.traceCostArr[i] = new AutorouteControl.ExpansionCostFactor(currMinCost, currMinCost);
       }
     }
 
-    this.start_ripup_costs = p_start_ripup_costs;
-    this.trace_pull_tight_accuracy = p_pull_tight_accuracy;
-    this.retain_autoroute_database = false;
+    this.startRipupCosts = p_start_ripup_costs;
+    this.tracePullTightAccuracy = p_pull_tight_accuracy;
+    this.retainAutorouteDatabase = false;
   }
 
   @Override
@@ -151,7 +150,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
   public boolean runBatchLoop() {
     boolean anyRoutable = false;
     for (int i = 0; i < this.settings.getLayerCount(); i++) {
-      if (this.settings.get_layer_active(i) && this.board.layer_structure.arr[i].is_signal) {
+      if (this.settings.get_layer_active(i) && this.board.layerStructure.arr[i].isSignal) {
         anyRoutable = true;
         break;
       }
@@ -183,7 +182,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
         this.thread.request_stop_auto_router();
       }
 
-      String current_board_hash = this.board.get_hash();
+      String currentBoardHash = this.board.get_hash();
 
       if (this.settings.maxPasses != null
           && this.settings.maxPasses > 0
@@ -193,24 +192,24 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       }
 
       this.fireTaskStateChangedEvent(
-          new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, current_board_hash));
+          new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, currentBoardHash));
 
       FRLogger.traceEntry(
           "BatchAutorouterV19.autoroute_pass #"
               + currentPass
               + " on board '"
-              + current_board_hash
+              + currentBoardHash
               + "'");
 
       // Run one pass using v1.9 logic
       continueAutorouting = autoroute_pass(currentPass, true);
 
-      double autorouter_pass_duration =
+      double autorouterPassDuration =
           FRLogger.traceExit(
               "BatchAutorouterV19.autoroute_pass #"
                   + currentPass
                   + " on board '"
-                  + current_board_hash
+                  + currentBoardHash
                   + "'");
 
       var boardStatistics = this.board.get_statistics();
@@ -220,9 +219,9 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
           "V1.9 Auto-routing pass #"
               + currentPass
               + " on board '"
-              + current_board_hash
+              + currentBoardHash
               + "' was completed in "
-              + FRLogger.formatDuration(autorouter_pass_duration)
+              + FRLogger.formatDuration(autorouterPassDuration)
               + " with the score of "
               + FRLogger.formatScore(
                   boardScore,
@@ -242,7 +241,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
         job.logInfo(passCompletedMessage);
       }
 
-      if (this.settings.save_intermediate_stages) {
+      if (this.settings.saveIntermediateStages) {
         fireBoardSnapshotEvent(this.board);
       }
 
@@ -254,7 +253,7 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
     job.board = this.board;
 
-    if (!(this.remove_unconnected_vias
+    if (!(this.removeUnconnectedVias
         || continueAutorouting
         || this.thread.is_stop_auto_router_requested())) {
       // clean up the route if the board is completed and if fanout is used.
@@ -282,35 +281,35 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
    */
   private boolean autoroute_pass(int p_pass_no, boolean p_with_screen_message) {
     try {
-      Collection<Item> autoroute_item_list = new LinkedList<>();
-      Set<Item> handled_items = new TreeSet<>();
-      Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+      Collection<Item> autorouteItemList = new LinkedList<>();
+      Set<Item> handledItems = new TreeSet<>();
+      Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.start_read_object();
       for (; ; ) {
-        UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
-        if (curr_ob == null) {
+        UndoableObjects.Storable currOb = board.itemList.read_object(it);
+        if (currOb == null) {
           break;
         }
-        if (curr_ob instanceof Connectable && curr_ob instanceof Item) {
+        if (currOb instanceof Connectable && currOb instanceof Item) {
           // This is a connectable item, like PolylineTrace or Pin
-          Item curr_item = (Item) curr_ob;
-          if (!curr_item.is_routable()) {
-            if (!handled_items.contains(curr_item)) {
+          Item currItem = (Item) currOb;
+          if (!currItem.is_routable()) {
+            if (!handledItems.contains(currItem)) {
 
               // Let's go through all nets of this item
-              for (int i = 0; i < curr_item.net_count(); ++i) {
-                int curr_net_no = curr_item.get_net_no(i);
-                Set<Item> connected_set = curr_item.get_connected_set(curr_net_no);
-                for (Item curr_connected_item : connected_set) {
+              for (int i = 0; i < currItem.net_count(); ++i) {
+                int currNetNo = currItem.get_net_no(i);
+                Set<Item> connectedSet = currItem.get_connected_set(currNetNo);
+                for (Item curr_connected_item : connectedSet) {
                   if (curr_connected_item.net_count() <= 1) {
-                    handled_items.add(curr_connected_item);
+                    handledItems.add(curr_connected_item);
                   }
                 }
-                int net_item_count = board.connectable_item_count(curr_net_no);
+                int netItemCount = board.connectable_item_count(currNetNo);
 
                 // If the item is not connected to all other items of the net, we add it to the
                 // auto-router's to-do list
-                if ((connected_set.size() < net_item_count) && (!curr_item.has_ignored_nets())) {
-                  autoroute_item_list.add(curr_item);
+                if ((connectedSet.size() < netItemCount) && (!currItem.has_ignored_nets())) {
+                  autorouteItemList.add(currItem);
                 }
               }
             }
@@ -319,27 +318,27 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
       }
 
       // If there are no items to route, we're done
-      if (autoroute_item_list.isEmpty()) {
-        this.air_line = null;
+      if (autorouteItemList.isEmpty()) {
+        this.airLine = null;
         return false;
       }
 
-      int items_to_go_count = autoroute_item_list.size();
-      int ripped_item_count = 0;
-      int not_found = 0;
+      int itemsToGoCount = autorouteItemList.size();
+      int rippedItemCount = 0;
+      int notFound = 0;
       int routed = 0;
 
-      job.logDebug("V1.9 Pass #" + p_pass_no + ": " + items_to_go_count + " items to route");
+      job.logDebug("V1.9 Pass #" + p_pass_no + ": " + itemsToGoCount + " items to route");
 
       // Let's go through all items to route (v1.9: natural order, no sorting)
-      for (Item curr_item : autoroute_item_list) {
+      for (Item currItem : autorouteItemList) {
         // If the user requested to stop the auto-router, we stop it
         if (this.thread.is_stop_auto_router_requested()) {
           break;
         }
 
         // Let's go through all nets of this item
-        for (int i = 0; i < curr_item.net_count(); ++i) {
+        for (int i = 0; i < currItem.net_count(); ++i) {
           // If the user requested to stop the auto-router, we stop it
           if (this.thread.is_stop_auto_router_requested()) {
             break;
@@ -349,41 +348,41 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
           board.start_marking_changed_area();
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
-          SortedSet<Item> ripped_item_list = new TreeSet<>();
-          if (autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no)) {
+          SortedSet<Item> rippedItemList = new TreeSet<>();
+          if (autoroute_item(currItem, currItem.get_net_no(i), rippedItemList, p_pass_no)) {
             ++routed;
           } else {
-            ++not_found;
+            ++notFound;
           }
-          --items_to_go_count;
-          ripped_item_count += ripped_item_list.size();
+          --itemsToGoCount;
+          rippedItemCount += rippedItemList.size();
         }
       }
 
       // V1.9: Always remove tails after each pass
-      if (this.remove_unconnected_vias) {
+      if (this.removeUnconnectedVias) {
         remove_tails(Item.StopConnectionOption.NONE);
       } else {
         remove_tails(Item.StopConnectionOption.FANOUT_VIA);
       }
 
       // We are done with this pass
-      this.air_line = null;
+      this.airLine = null;
 
       job.logDebug(
           "V1.9 Pass #"
               + p_pass_no
               + " completed: routed="
               + routed
-              + ", not_found="
-              + not_found
+              + ", notFound="
+              + notFound
               + ", ripped="
-              + ripped_item_count);
+              + rippedItemCount);
 
       return true;
     } catch (Exception e) {
       job.logError("Something went wrong during the V1.9 auto-routing", e);
-      this.air_line = null;
+      this.airLine = null;
       return false;
     }
   }
@@ -394,8 +393,8 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
     board.opt_changed_area(
         new int[0],
         null,
-        this.trace_pull_tight_accuracy,
-        this.trace_cost_arr,
+        this.tracePullTightAccuracy,
+        this.traceCostArr,
         this.thread,
         TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
   }
@@ -407,98 +406,98 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
   private boolean autoroute_item(
       Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no) {
     try {
-      boolean contains_plane = false;
+      boolean containsPlane = false;
 
       // Get the net
-      Net route_net = board.rules.nets.get(p_route_net_no);
-      if (route_net != null) {
-        contains_plane = route_net.contains_plane();
+      Net routeNet = board.rules.nets.get(p_route_net_no);
+      if (routeNet != null) {
+        containsPlane = routeNet.contains_plane();
       }
 
       // Get the current via costs based on auto-router settings
-      int curr_via_costs;
-      if (contains_plane) {
-        curr_via_costs = this.settings.get_plane_via_costs();
+      int currViaCosts;
+      if (containsPlane) {
+        currViaCosts = this.settings.get_plane_via_costs();
       } else {
-        curr_via_costs = this.settings.get_via_costs();
+        currViaCosts = this.settings.get_via_costs();
       }
 
       // Get and calculate the auto-router settings based on the board and net we are
       // working on
-      AutorouteControl autoroute_control =
+      AutorouteControl autorouteControl =
           new AutorouteControl(
-              this.board, p_route_net_no, settings, curr_via_costs, this.trace_cost_arr);
-      autoroute_control.ripup_allowed = true;
-      autoroute_control.ripup_costs = this.start_ripup_costs * p_ripup_pass_no;
-      autoroute_control.remove_unconnected_vias = this.remove_unconnected_vias;
+              this.board, p_route_net_no, settings, currViaCosts, this.traceCostArr);
+      autorouteControl.ripupAllowed = true;
+      autorouteControl.ripupCosts = this.startRipupCosts * p_ripup_pass_no;
+      autorouteControl.removeUnconnectedVias = this.removeUnconnectedVias;
 
       // Check if the item is already routed
-      Set<Item> unconnected_set = p_item.get_unconnected_set(p_route_net_no);
-      if (unconnected_set.isEmpty()) {
+      Set<Item> unconnectedSet = p_item.get_unconnected_set(p_route_net_no);
+      if (unconnectedSet.isEmpty()) {
         return true; // p_item is already routed.
       }
 
-      Set<Item> connected_set = p_item.get_connected_set(p_route_net_no);
-      Set<Item> route_start_set;
-      Set<Item> route_dest_set;
-      if (contains_plane) {
-        for (Item curr_item : connected_set) {
-          if (curr_item instanceof ConductionArea) {
+      Set<Item> connectedSet = p_item.get_connected_set(p_route_net_no);
+      Set<Item> routeStartSet;
+      Set<Item> routeDestSet;
+      if (containsPlane) {
+        for (Item currItem : connectedSet) {
+          if (currItem instanceof ConductionArea) {
             return true; // already connected to plane
           }
         }
       }
-      if (contains_plane) {
-        route_start_set = connected_set;
-        route_dest_set = unconnected_set;
+      if (containsPlane) {
+        routeStartSet = connectedSet;
+        routeDestSet = unconnectedSet;
       } else {
-        route_start_set = unconnected_set;
-        route_dest_set = connected_set;
+        routeStartSet = unconnectedSet;
+        routeDestSet = connectedSet;
       }
 
       // Calculate the shortest distance between the two sets of items
-      calc_airline(route_start_set, route_dest_set);
+      calc_airline(routeStartSet, routeDestSet);
 
       // Calculate the maximum time for this autoroute pass
-      double max_milliseconds = 100000 * Math.pow(2, p_ripup_pass_no - 1);
-      max_milliseconds = Math.min(max_milliseconds, Integer.MAX_VALUE);
-      TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
+      double maxMilliseconds = 100000 * Math.pow(2, p_ripup_pass_no - 1);
+      maxMilliseconds = Math.min(maxMilliseconds, Integer.MAX_VALUE);
+      TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
 
       // Initialize the auto-router engine
-      AutorouteEngine autoroute_engine =
+      AutorouteEngine autorouteEngine =
           board.init_autoroute(
               p_route_net_no,
-              autoroute_control.trace_clearance_class_no,
+              autorouteControl.traceClearanceClassNo,
               this.thread,
-              time_limit,
-              this.retain_autoroute_database);
+              timeLimit,
+              this.retainAutorouteDatabase);
 
       // Do the auto-routing between the two sets of items
       // V1.9 used AutorouteEngine.AutorouteResult enum, current version uses
       // AutorouteAttemptResult
       // We need to adapt to the current interface
-      AutorouteAttemptResult autoroute_result =
-          autoroute_engine.autoroute_connection(
-              route_start_set,
-              route_dest_set,
-              autoroute_control,
+      AutorouteAttemptResult autorouteResult =
+          autorouteEngine.autoroute_connection(
+              routeStartSet,
+              routeDestSet,
+              autorouteControl,
               p_ripped_item_list,
               null); // null: costs not needed here
 
       // Update the changed area of the board
-      if (autoroute_result.state == AutorouteAttemptState.ROUTED) {
+      if (autorouteResult.state == AutorouteAttemptState.ROUTED) {
         board.opt_changed_area(
             new int[0],
             null,
-            this.trace_pull_tight_accuracy,
-            autoroute_control.trace_costs,
+            this.tracePullTightAccuracy,
+            autorouteControl.traceCosts,
             this.thread,
             TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
       }
 
       // Return true, if the item is routed
-      return autoroute_result.state == AutorouteAttemptState.ROUTED
-          || autoroute_result.state == AutorouteAttemptState.ALREADY_CONNECTED;
+      return autorouteResult.state == AutorouteAttemptState.ROUTED
+          || autorouteResult.state == AutorouteAttemptState.ALREADY_CONNECTED;
     } catch (Exception e) {
       return false;
     }
@@ -506,13 +505,13 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
 
   /** Returns the airline of the current autorouted connection or null, if no such airline exists */
   public FloatLine get_air_line() {
-    if (this.air_line == null) {
+    if (this.airLine == null) {
       return null;
     }
-    if (this.air_line.a == null || this.air_line.b == null) {
+    if (this.airLine.a == null || this.airLine.b == null) {
       return null;
     }
-    return this.air_line;
+    return this.airLine;
   }
 
   /**
@@ -520,27 +519,27 @@ public class BatchAutorouterV19 extends NamedAlgorithm {
    * items (pins and vias are connectable DrillItems)
    */
   private void calc_airline(Collection<Item> p_from_items, Collection<Item> p_to_items) {
-    FloatPoint from_corner = null;
-    FloatPoint to_corner = null;
-    double min_distance = Double.MAX_VALUE;
+    FloatPoint fromCorner = null;
+    FloatPoint toCorner = null;
+    double minDistance = Double.MAX_VALUE;
     for (Item curr_from_item : p_from_items) {
       if (!(curr_from_item instanceof DrillItem)) {
         continue;
       }
-      FloatPoint curr_from_corner = ((DrillItem) curr_from_item).get_center().to_float();
+      FloatPoint currFromCorner = ((DrillItem) curr_from_item).get_center().to_float();
       for (Item curr_to_item : p_to_items) {
         if (!(curr_to_item instanceof DrillItem)) {
           continue;
         }
-        FloatPoint curr_to_corner = ((DrillItem) curr_to_item).get_center().to_float();
-        double curr_distance = curr_from_corner.distance_square(curr_to_corner);
-        if (curr_distance < min_distance) {
-          min_distance = curr_distance;
-          from_corner = curr_from_corner;
-          to_corner = curr_to_corner;
+        FloatPoint currToCorner = ((DrillItem) curr_to_item).get_center().to_float();
+        double currDistance = currFromCorner.distance_square(currToCorner);
+        if (currDistance < minDistance) {
+          minDistance = currDistance;
+          fromCorner = currFromCorner;
+          toCorner = currToCorner;
         }
       }
     }
-    this.air_line = new FloatLine(from_corner, to_corner);
+    this.airLine = new FloatLine(fromCorner, toCorner);
   }
 }

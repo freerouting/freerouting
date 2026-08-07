@@ -10,10 +10,10 @@ import java.util.Locale;
 public class ClearanceViolation implements ObjectInfoPanel.Printable {
 
   /** The first item of the clearance violation */
-  public final Item first_item;
+  public final Item firstItem;
 
   /** The second item of the clearance violation */
-  public final Item second_item;
+  public final Item secondItem;
 
   /** The shape of the clearance violation */
   public final ConvexShape shape;
@@ -21,8 +21,8 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
   /** The layer of the clearance violation */
   public final int layer;
 
-  public final double expected_clearance;
-  public final double actual_clearance;
+  public final double expectedClearance;
+  public final double actualClearance;
 
   /** Creates a new instance of ClearanceViolation */
   public ClearanceViolation(
@@ -32,12 +32,12 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
       int p_layer,
       double p_expected_clearance,
       double p_actual_clearance) {
-    first_item = p_first_item;
-    second_item = p_second_item;
+    firstItem = p_first_item;
+    secondItem = p_second_item;
     shape = p_shape;
     layer = p_layer;
-    expected_clearance = p_expected_clearance;
-    actual_clearance = p_actual_clearance;
+    expectedClearance = p_expected_clearance;
+    actualClearance = p_actual_clearance;
   }
 
   @Override
@@ -50,20 +50,20 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
     p_window.append(", " + tm.getText("width") + " ");
     p_window.append(2 * this.shape.smallest_radius());
     p_window.append(", " + tm.getText("layer") + " ");
-    p_window.append(first_item.board.layer_structure.arr[this.layer].name);
+    p_window.append(firstItem.board.layerStructure.arr[this.layer].name);
     p_window.append(", " + tm.getText("between"));
     p_window.newline();
     p_window.indent();
-    first_item.print_info(p_window, p_locale);
+    firstItem.print_info(p_window, p_locale);
     p_window.indent();
-    second_item.print_info(p_window, p_locale);
+    secondItem.print_info(p_window, p_locale);
     p_window.newline();
     p_window.indent();
-    String clearance_violation_info_expected_clearance =
+    String clearanceViolationInfoExpectedClearance =
         tm.getText(
-            "clearance_violation_info_expected_clearance",
-            "%.4f".formatted(this.expected_clearance / 10000.0),
-            "%.4f".formatted(this.actual_clearance / 10000.0));
-    p_window.append(clearance_violation_info_expected_clearance);
+            "clearanceViolationInfoExpectedClearance",
+            "%.4f".formatted(this.expectedClearance / 10000.0),
+            "%.4f".formatted(this.actualClearance / 10000.0));
+    p_window.append(clearanceViolationInfoExpectedClearance);
   }
 }

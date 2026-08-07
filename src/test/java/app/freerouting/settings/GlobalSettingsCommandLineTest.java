@@ -28,7 +28,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals("myboard.dsn", settings.initialInputFile);
-    assertNull(settings.design_session_filename);
+    assertNull(settings.designSessionFilename);
     assertNull(settings.initialRulesFile);
   }
 
@@ -38,7 +38,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals("myboard.dsn", settings.initialInputFile);
-    assertEquals("myboard.ses", settings.design_session_filename);
+    assertEquals("myboard.ses", settings.designSessionFilename);
     assertNull(settings.initialRulesFile);
   }
 
@@ -48,7 +48,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals("myboard.dsn", settings.initialInputFile);
-    assertNull(settings.design_session_filename);
+    assertNull(settings.designSessionFilename);
     assertEquals("myboard.rules", settings.initialRulesFile);
   }
 
@@ -58,7 +58,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals("myboard.dsn", settings.initialInputFile);
-    assertEquals("myboard.ses", settings.design_session_filename);
+    assertEquals("myboard.ses", settings.designSessionFilename);
     assertEquals("myboard.rules", settings.initialRulesFile);
   }
 
@@ -68,7 +68,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals("myboard.dsn", settings.initialInputFile);
-    assertEquals("myboard.ses", settings.design_session_filename);
+    assertEquals("myboard.ses", settings.designSessionFilename);
     assertEquals("myboard.rules", settings.initialRulesFile);
   }
 
@@ -78,7 +78,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals("myboard.dsn", settings.initialInputFile);
-    assertEquals("myboard.ses", settings.design_session_filename);
+    assertEquals("myboard.ses", settings.designSessionFilename);
     assertEquals("myboard.rules", settings.initialRulesFile);
   }
 
@@ -88,7 +88,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals("sonde xilinx.dsn", settings.initialInputFile);
-    assertNull(settings.design_session_filename);
+    assertNull(settings.designSessionFilename);
     assertNull(settings.initialRulesFile);
   }
 
@@ -98,7 +98,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals("myboard.dsn", settings.initialInputFile);
-    assertEquals("myboard.ses", settings.design_session_filename);
+    assertEquals("myboard.ses", settings.designSessionFilename);
     assertEquals("myboard.rules", settings.initialRulesFile);
   }
 
@@ -108,7 +108,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals("/path/to/myboard.dsn", settings.initialInputFile);
-    assertEquals("/path/to/myboard.ses", settings.design_session_filename);
+    assertEquals("/path/to/myboard.ses", settings.designSessionFilename);
   }
 
   @Test
@@ -117,7 +117,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals("myboard.DSN", settings.initialInputFile);
-    assertEquals("myboard.SES", settings.design_session_filename);
+    assertEquals("myboard.SES", settings.designSessionFilename);
     assertEquals("myboard.RULES", settings.initialRulesFile);
   }
 
@@ -136,7 +136,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertNull(settings.initialInputFile);
-    assertEquals("myboard.ses", settings.design_session_filename);
+    assertEquals("myboard.ses", settings.designSessionFilename);
   }
 
   @Test
@@ -145,7 +145,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertNull(settings.initialInputFile);
-    assertNull(settings.design_session_filename);
+    assertNull(settings.designSessionFilename);
     assertEquals("myboard.rules", settings.initialRulesFile);
   }
 
@@ -155,7 +155,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertNull(settings.initialInputFile);
-    assertNull(settings.design_session_filename);
+    assertNull(settings.designSessionFilename);
     assertNull(settings.initialRulesFile);
   }
 
@@ -165,7 +165,7 @@ class GlobalSettingsCommandLineTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals("myboard.dsn", settings.initialInputFile);
-    assertEquals("myboard.ses", settings.design_session_filename);
+    assertEquals("myboard.ses", settings.designSessionFilename);
     assertEquals("output.ses", settings.initialOutputFile);
     assertEquals(10, settings.getMaxPasses());
   }
@@ -230,10 +230,10 @@ class GlobalSettingsCommandLineTest {
     // If a value contained a '=' (e.g. a URL query param), split("=", 2) must
     // preserve everything after the first '=' as the value.  Use a setting
     // whose value is a String to keep the assertion simple.
-    String[] args = {"--api_server.cors_origins=https://example.com?foo=bar"};
+    String[] args = {"--api_server.corsOrigins=https://example.com?foo=bar"};
     settings.applyCommandLineArguments(args);
 
-    assertEquals("https://example.com?foo=bar", settings.apiServerSettings.cors_origins);
+    assertEquals("https://example.com?foo=bar", settings.apiServerSettings.corsOrigins);
   }
 
   @Test

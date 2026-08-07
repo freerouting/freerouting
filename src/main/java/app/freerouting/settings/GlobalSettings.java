@@ -82,11 +82,11 @@ public class GlobalSettings implements Serializable {
   @SerializedName("version")
   public String version;
 
-  public transient boolean show_help_option;
+  public transient boolean showHelpOption;
   public transient String compareFile1;
   public transient String compareFile2;
   // DRC report file details that we got from the command line arguments.
-  public transient BoardFileDetails drc_report_file;
+  public transient BoardFileDetails drcReportFile;
 
   /**
    * The initial input file path provided via command line arguments. This is used for
@@ -107,10 +107,10 @@ public class GlobalSettings implements Serializable {
   public transient String initialRulesFile;
 
   /**
-   * The design_session_filename field stores the optional Specctra session file (.ses) path
-   * provided via the -de command line argument.
+   * The designSessionFilename field stores the optional Specctra session file (.ses) path provided
+   * via the -de command line argument.
    */
-  public transient String design_session_filename;
+  public transient String designSessionFilename;
 
   /**
    * The current locale for the application. It is initialized based on the system default locale,
@@ -475,7 +475,7 @@ public class GlobalSettings implements Serializable {
         if ("-help".equalsIgnoreCase(p_args[i])
             || "--help".equalsIgnoreCase(p_args[i])
             || "-h".equalsIgnoreCase(p_args[i])) {
-          show_help_option = true;
+          showHelpOption = true;
           continue;
         }
         if (p_args[i].startsWith("--compare-boards=")) {
@@ -556,7 +556,7 @@ public class GlobalSettings implements Serializable {
                     FRLogger.warn(
                         "Multiple session files (SES/JSON) provided in -de argument. Only the last one will be used.");
                   }
-                  design_session_filename = file;
+                  designSessionFilename = file;
                   hasSes = true;
                 }
               } else if (lowerFile.endsWith(".ses")) {
@@ -564,7 +564,7 @@ public class GlobalSettings implements Serializable {
                   FRLogger.warn(
                       "Multiple SES files provided in -de argument. Only the last one will be used.");
                 }
-                design_session_filename = file;
+                designSessionFilename = file;
                 hasSes = true;
               } else if (lowerFile.endsWith(".rules")) {
                 if (hasRules) {
@@ -600,9 +600,9 @@ public class GlobalSettings implements Serializable {
           routerSettings.enabled = false;
           drcSettings.enabled = true;
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            drc_report_file = new BoardFileDetails();
-            drc_report_file.format = FileFormat.DRC_JSON;
-            drc_report_file.setFilename(p_args[i + 1]);
+            drcReportFile = new BoardFileDetails();
+            drcReportFile.format = FileFormat.DRC_JSON;
+            drcReportFile.setFilename(p_args[i + 1]);
             i++;
           }
         } else if (p_args[i].startsWith("-dr")) {
@@ -744,7 +744,7 @@ public class GlobalSettings implements Serializable {
             i++;
           }
         } else if (p_args[i].startsWith("-help")) {
-          show_help_option = true;
+          showHelpOption = true;
         } else if (p_args[i].startsWith("-inc")) {
           // ignore net class(es)
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {

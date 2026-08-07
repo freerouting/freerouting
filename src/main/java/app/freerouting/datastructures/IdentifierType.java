@@ -8,16 +8,16 @@ import java.nio.charset.StandardCharsets;
 /** Describes legal identifiers together with the character used for string quotes. */
 public class IdentifierType {
 
-  private final String string_quote;
-  private final String[] reserved_chars;
+  private final String stringQuote;
+  private final String[] reservedChars;
 
   /**
    * Defines the reserved characters and the string for quoting identifiers containing reserved
    * characters for a new instance of Identifier.
    */
   public IdentifierType(String[] p_reserved_chars, String p_string_quote) {
-    reserved_chars = p_reserved_chars;
-    string_quote = p_string_quote;
+    reservedChars = p_reserved_chars;
+    stringQuote = p_string_quote;
   }
 
   /** Writes p_name after putting it into quotes, if it contains reserved characters or blanks. */
@@ -31,15 +31,15 @@ public class IdentifierType {
 
     try {
       // if the name contains our quote character, we must remove it
-      if (p_name.contains(string_quote)) {
-        p_name = p_name.replace(string_quote, "");
+      if (p_name.contains(stringQuote)) {
+        p_name = p_name.replace(stringQuote, "");
       }
 
-      boolean need_quotes = false;
+      boolean needQuotes = false;
       // if the name contains a reserved character, we must put it into quotes
-      for (String reserved_char : reserved_chars) {
+      for (String reserved_char : reservedChars) {
         if (p_name.contains(reserved_char)) {
-          need_quotes = true;
+          needQuotes = true;
           break;
         }
       }
@@ -47,17 +47,17 @@ public class IdentifierType {
       // if the name contains a non-ASCII character, we must put it into quotes
       for (byte ch : p_name.getBytes(StandardCharsets.UTF_8)) {
         if (ch <= 0) {
-          need_quotes = true;
+          needQuotes = true;
           break;
         }
       }
 
-      if (!need_quotes) {
+      if (!needQuotes) {
         if (p_name.matches("^-?\\d.*")) {
-          need_quotes = true;
+          needQuotes = true;
         }
       }
-      if (need_quotes) {
+      if (needQuotes) {
         p_name = quote(p_name);
       }
       p_file.write(p_name);
@@ -72,8 +72,8 @@ public class IdentifierType {
       FRLogger.warn("IdentifierType.is_legal: p_string is null");
       return false;
     }
-    for (int i = 0; i < reserved_chars.length; i++) {
-      if (p_string.contains(reserved_chars[i])) {
+    for (int i = 0; i < reservedChars.length; i++) {
+      if (p_string.contains(reservedChars[i])) {
         return false;
       }
     }
@@ -82,6 +82,6 @@ public class IdentifierType {
 
   /** Puts p_sting into quotes. */
   private String quote(String p_string) {
-    return string_quote + p_string + string_quote;
+    return stringQuote + p_string + stringQuote;
   }
 }

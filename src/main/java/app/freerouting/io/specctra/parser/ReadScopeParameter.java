@@ -25,10 +25,10 @@ import java.util.List;
 public class ReadScopeParameter {
 
   final IJFlexScanner scanner;
-  final BoardParserCallback board_handling;
+  final BoardParserCallback boardHandling;
   final NetList netlist = new NetList();
   final BoardObservers observers;
-  final IdentificationNumberGenerator item_id_no_generator;
+  final IdentificationNumberGenerator itemIdNoGenerator;
 
   /**
    * Warnings collected during DSN parsing (e.g. skipped wires, missing padstacks, degenerate
@@ -40,13 +40,13 @@ public class ReadScopeParameter {
    * Collection of elements of class PlaneInfo. The plane cannot be inserted directly into the
    * boards, because the layers may not be read completely.
    */
-  final Collection<PlaneInfo> plane_list = new LinkedList<>();
+  final Collection<PlaneInfo> planeList = new LinkedList<>();
 
   /**
    * Component placement information. It is filled while reading the placement scope and can be
    * evaluated after reading the library and network scope.
    */
-  final Collection<ComponentPlacement> placement_list = new LinkedList<>();
+  final Collection<ComponentPlacement> placementList = new LinkedList<>();
 
   final Collection<String[]> constants = new LinkedList<>();
 
@@ -54,36 +54,36 @@ public class ReadScopeParameter {
    * The names of the via padstacks filled while reading the structure scope and evaluated after
    * reading the library scope.
    */
-  Collection<String> via_padstack_names;
+  Collection<String> viaPadstackNames;
 
-  boolean via_at_smd_allowed;
-  public AngleRestriction snap_angle = AngleRestriction.FORTYFIVE_DEGREE;
+  boolean viaAtSmdAllowed;
+  public AngleRestriction snapAngle = AngleRestriction.FORTYFIVE_DEGREE;
 
   /** The logical parts are used for pin and gate swaw */
-  Collection<PartLibrary.LogicalPartMapping> logical_part_mappings = new LinkedList<>();
+  Collection<PartLibrary.LogicalPartMapping> logicalPartMappings = new LinkedList<>();
 
-  Collection<PartLibrary.LogicalPart> logical_parts = new LinkedList<>();
+  Collection<PartLibrary.LogicalPart> logicalParts = new LinkedList<>();
 
   /** The following objects are from the parser scope. */
-  public String string_quote = "\"";
+  public String stringQuote = "\"";
 
-  public String host_cad;
-  public String host_version;
+  public String hostCad;
+  public String hostVersion;
 
-  boolean dsn_file_generated_by_host = true;
+  boolean dsnFileGeneratedByHost = true;
 
   /** Set to {@code false} by the structure reader when the board outline is absent. */
-  public boolean board_outline_ok = true;
+  public boolean boardOutlineOk = true;
 
-  public Communication.SpecctraParserInfo.WriteResolution write_resolution;
+  public Communication.SpecctraParserInfo.WriteResolution writeResolution;
 
   /** The following objects will be initialised when the structure scope is read. */
-  public CoordinateTransform coordinate_transform;
+  public CoordinateTransform coordinateTransform;
 
-  public LayerStructure layer_structure;
+  public LayerStructure layerStructure;
 
   /** Nullable — only populated when an {@code (autoroute ...)} scope is present in the DSN file. */
-  public RouterSettings autoroute_settings;
+  public RouterSettings autorouteSettings;
 
   public Unit unit = Unit.MIL;
   public int resolution = 100; // default resolution
@@ -102,9 +102,9 @@ public class ReadScopeParameter {
       BoardObservers p_observers,
       IdentificationNumberGenerator p_item_id_no_generator) {
     scanner = p_scanner;
-    board_handling = new MinimalBoardManager();
+    boardHandling = new MinimalBoardManager();
     observers = p_observers;
-    item_id_no_generator = p_item_id_no_generator;
+    itemIdNoGenerator = p_item_id_no_generator;
   }
 
   /**
@@ -112,7 +112,7 @@ public class ReadScopeParameter {
    * reached the board-construction step.
    */
   public BasicBoard getBoard() {
-    return board_handling.get_routing_board();
+    return boardHandling.get_routing_board();
   }
 
   /**
@@ -147,14 +147,14 @@ public class ReadScopeParameter {
         Communication p_board_communication) {
       int outlineClearanceNo = 0;
       if (p_rules != null) {
-        if (p_outline_clearance_class_name != null && p_rules.clearance_matrix != null) {
+        if (p_outline_clearance_class_name != null && p_rules.clearanceMatrix != null) {
           outlineClearanceNo =
-              Math.max(0, p_rules.clearance_matrix.get_no(p_outline_clearance_class_name));
+              Math.max(0, p_rules.clearanceMatrix.get_no(p_outline_clearance_class_name));
         } else {
           outlineClearanceNo =
               p_rules
                   .get_default_net_class()
-                  .default_item_clearance_classes
+                  .defaultItemClearanceClasses
                   .get(DefaultItemClearanceClasses.ItemClass.AREA);
         }
       }
@@ -185,11 +185,11 @@ public class ReadScopeParameter {
   static class PlaneInfo {
 
     final Shape.ReadAreaScopeResult area;
-    final String net_name;
+    final String netName;
 
     PlaneInfo(Shape.ReadAreaScopeResult p_area, String p_net_name) {
       area = p_area;
-      net_name = p_net_name;
+      netName = p_net_name;
     }
   }
 }

@@ -38,28 +38,27 @@ public class GraphicsContext implements Serializable {
   private static final int virtual_layer_count = 6;
   private static final boolean show_line_segments = false;
   private static final boolean show_area_division = false;
-  public transient ItemColorTableModel item_color_table;
-  public transient OtherColorTableModel other_color_table;
-  public ColorIntensityTable color_intensity_table;
-  public CoordinateTransform coordinate_transform;
+  public transient ItemColorTableModel itemColorTable;
+  public transient OtherColorTableModel otherColorTable;
+  public ColorIntensityTable colorIntensityTable;
+  public CoordinateTransform coordinateTransform;
 
   /**
-   * layer_visibility_arr[i] is between 0 and 1, for each layer i, 0 is invisible and 1 fully
-   * visible.
+   * layerVisibilityArr[i] is between 0 and 1, for each layer i, 0 is invisible and 1 fully visible.
    */
-  private double[] layer_visibility_arr;
+  private double[] layerVisibilityArr;
 
   /**
    * The factor for automatic layer dimming of layers different from the current layer. Values are
    * between 0 and 1. If 1, there is no automatic layer dimming.
    */
-  private double auto_layer_dim_factor = 0.7;
+  private double autoLayerDimFactor = 0.7;
 
   /** The layer, which is not automatically dimmed. */
-  private int fully_visible_layer = -1;
+  private int fullyVisibleLayer = -1;
 
-  private boolean[] virtual_layer_visibility_arr = create_default_virtual_layer_visibility_arr();
-  private int fully_visible_virtual_layer = -1;
+  private boolean[] virtualLayerVisibilityArr = create_default_virtual_layer_visibility_arr();
+  private int fullyVisibleVirtualLayer = -1;
 
   /** When true, copper pours use fast solid fills (used during the first paint after load). */
   private transient boolean simplifiedPlaneRendering;
@@ -69,30 +68,29 @@ public class GraphicsContext implements Serializable {
       Dimension p_panel_bounds,
       LayerStructure p_layer_structure,
       Locale p_locale) {
-    coordinate_transform = new CoordinateTransform(p_design_bounds, p_panel_bounds);
-    item_color_table = new ItemColorTableModel(p_layer_structure, p_locale);
-    other_color_table = new OtherColorTableModel(p_locale);
-    color_intensity_table = new ColorIntensityTable();
-    layer_visibility_arr = new double[p_layer_structure.arr.length];
-    for (int i = 0; i < layer_visibility_arr.length; i++) {
-      if (p_layer_structure.arr[i].is_signal) {
-        layer_visibility_arr[i] = 1.00;
+    coordinateTransform = new CoordinateTransform(p_design_bounds, p_panel_bounds);
+    itemColorTable = new ItemColorTableModel(p_layer_structure, p_locale);
+    otherColorTable = new OtherColorTableModel(p_locale);
+    colorIntensityTable = new ColorIntensityTable();
+    layerVisibilityArr = new double[p_layer_structure.arr.length];
+    for (int i = 0; i < layerVisibilityArr.length; i++) {
+      if (p_layer_structure.arr[i].isSignal) {
+        layerVisibilityArr[i] = 1.00;
       } else {
-        layer_visibility_arr[i] = 0.25;
+        layerVisibilityArr[i] = 0.25;
       }
     }
   }
 
   /** Copy constructor */
   public GraphicsContext(GraphicsContext p_graphics_context) {
-    this.coordinate_transform = new CoordinateTransform(p_graphics_context.coordinate_transform);
-    this.item_color_table = new ItemColorTableModel(p_graphics_context.item_color_table);
-    this.other_color_table = new OtherColorTableModel(p_graphics_context.other_color_table);
-    this.color_intensity_table = new ColorIntensityTable(p_graphics_context.color_intensity_table);
-    this.layer_visibility_arr = p_graphics_context.copy_layer_visibility_arr();
-    this.virtual_layer_visibility_arr =
-        p_graphics_context.get_virtual_layer_visibility_arr().clone();
-    this.fully_visible_virtual_layer = p_graphics_context.fully_visible_virtual_layer;
+    this.coordinateTransform = new CoordinateTransform(p_graphics_context.coordinateTransform);
+    this.itemColorTable = new ItemColorTableModel(p_graphics_context.itemColorTable);
+    this.otherColorTable = new OtherColorTableModel(p_graphics_context.otherColorTable);
+    this.colorIntensityTable = new ColorIntensityTable(p_graphics_context.colorIntensityTable);
+    this.layerVisibilityArr = p_graphics_context.copy_layer_visibility_arr();
+    this.virtualLayerVisibilityArr = p_graphics_context.get_virtual_layer_visibility_arr().clone();
+    this.fullyVisibleVirtualLayer = p_graphics_context.fullyVisibleVirtualLayer;
   }
 
   private static boolean[] create_default_virtual_layer_visibility_arr() {
@@ -100,10 +98,10 @@ public class GraphicsContext implements Serializable {
   }
 
   private boolean[] get_virtual_layer_visibility_arr() {
-    if (virtual_layer_visibility_arr == null || virtual_layer_visibility_arr.length == 0) {
-      virtual_layer_visibility_arr = create_default_virtual_layer_visibility_arr();
+    if (virtualLayerVisibilityArr == null || virtualLayerVisibilityArr.length == 0) {
+      virtualLayerVisibilityArr = create_default_virtual_layer_visibility_arr();
     }
-    return virtual_layer_visibility_arr;
+    return virtualLayerVisibilityArr;
   }
 
   /** initialise some values in p_graphics */
@@ -116,13 +114,13 @@ public class GraphicsContext implements Serializable {
   }
 
   static void set_translucency(Graphics2D p_g2, double p_factor) {
-    AlphaComposite curr_alpha_composite;
+    AlphaComposite currAlphaComposite;
     if (p_factor >= 0) {
-      curr_alpha_composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) p_factor);
+      currAlphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) p_factor);
     } else {
-      curr_alpha_composite = AlphaComposite.getInstance(AlphaComposite.DST_OVER, (float) -p_factor);
+      currAlphaComposite = AlphaComposite.getInstance(AlphaComposite.DST_OVER, (float) -p_factor);
     }
-    p_g2.setComposite(curr_alpha_composite);
+    p_g2.setComposite(currAlphaComposite);
   }
 
   /**
@@ -130,26 +128,26 @@ public class GraphicsContext implements Serializable {
    * placed outside the board.
    */
   public void change_design_bounds(IntBox p_new_design_bounds) {
-    if (p_new_design_bounds.equals(this.coordinate_transform.design_box)) {
+    if (p_new_design_bounds.equals(this.coordinateTransform.designBox)) {
       return;
     }
-    Dimension screen_bounds = this.coordinate_transform.screen_bounds;
-    this.coordinate_transform = new CoordinateTransform(p_new_design_bounds, screen_bounds);
+    Dimension screenBounds = this.coordinateTransform.screenBounds;
+    this.coordinateTransform = new CoordinateTransform(p_new_design_bounds, screenBounds);
   }
 
   /** changes the size of the panel to p_new_bounds */
   public void change_panel_size(Dimension p_new_bounds) {
-    if (coordinate_transform == null) {
+    if (coordinateTransform == null) {
       return;
     }
-    IntBox design_box = coordinate_transform.design_box;
-    boolean left_right_swapped = coordinate_transform.is_mirror_left_right();
-    boolean top_bottom_swapped = coordinate_transform.is_mirror_top_bottom();
-    double rotation = coordinate_transform.get_rotation();
-    coordinate_transform = new CoordinateTransform(design_box, p_new_bounds);
-    coordinate_transform.set_mirror_left_right(left_right_swapped);
-    coordinate_transform.set_mirror_top_bottom(top_bottom_swapped);
-    coordinate_transform.set_rotation(rotation);
+    IntBox designBox = coordinateTransform.designBox;
+    boolean leftRightSwapped = coordinateTransform.is_mirror_left_right();
+    boolean topBottomSwapped = coordinateTransform.is_mirror_top_bottom();
+    double rotation = coordinateTransform.get_rotation();
+    coordinateTransform = new CoordinateTransform(designBox, p_new_bounds);
+    coordinateTransform.set_mirror_left_right(leftRightSwapped);
+    coordinateTransform.set_mirror_top_bottom(topBottomSwapped);
+    coordinateTransform.set_rotation(rotation);
   }
 
   /** draws a polygon with corners p_points */
@@ -163,41 +161,41 @@ public class GraphicsContext implements Serializable {
       return;
     }
     Graphics2D g2 = (Graphics2D) p_g;
-    Rectangle clip_shape = p_g.getClip().getBounds();
-    // the class member update_box cannot be used here, because
+    Rectangle clipShape = p_g.getClip().getBounds();
+    // the class member updateBox cannot be used here, because
     // the dirty rectangle is internally enlarged by the system.
     // Therefore, we can not improve the performance by using an
     // update octagon instead of a box.
-    IntBox clip_box = coordinate_transform.screen_to_board(clip_shape);
-    double scaled_width = coordinate_transform.board_to_screen(p_half_width);
+    IntBox clipBox = coordinateTransform.screen_to_board(clipShape);
+    double scaledWidth = coordinateTransform.board_to_screen(p_half_width);
 
-    init_draw_graphics(g2, p_color, (float) scaled_width * 2);
+    init_draw_graphics(g2, p_color, (float) scaledWidth * 2);
     set_translucency(g2, p_translucency_factor);
 
-    GeneralPath draw_path = null;
+    GeneralPath drawPath = null;
     if (!show_line_segments) {
-      draw_path = new GeneralPath();
+      drawPath = new GeneralPath();
     }
 
     for (int i = 0; i < (p_points.length - 1); i++) {
       if (line_outside_update_box(
-          p_points[i], p_points[i + 1], p_half_width + update_offset, clip_box)) {
+          p_points[i], p_points[i + 1], p_half_width + update_offset, clipBox)) {
         // this check should be unnecessary here,
         // the system should do it in the draw(line) function
         continue;
       }
-      Point2D p1 = coordinate_transform.board_to_screen(p_points[i]);
-      Point2D p2 = coordinate_transform.board_to_screen(p_points[i + 1]);
+      Point2D p1 = coordinateTransform.board_to_screen(p_points[i]);
+      Point2D p2 = coordinateTransform.board_to_screen(p_points[i + 1]);
       Line2D line = new Line2D.Double(p1, p2);
 
       if (show_line_segments) {
         g2.draw(line);
       } else {
-        draw_path.append(line, false);
+        drawPath.append(line, false);
       }
     }
     if (!show_line_segments) {
-      g2.draw(draw_path);
+      g2.draw(drawPath);
     }
   }
 
@@ -215,15 +213,15 @@ public class GraphicsContext implements Serializable {
       return;
     }
     Graphics2D g2 = (Graphics2D) p_g;
-    Point2D center = coordinate_transform.board_to_screen(p_center);
+    Point2D center = coordinateTransform.board_to_screen(p_center);
 
-    double radius = coordinate_transform.board_to_screen(p_radius);
+    double radius = coordinateTransform.board_to_screen(p_radius);
     double diameter = 2 * radius;
-    float draw_width = (float) (2 * coordinate_transform.board_to_screen(p_draw_half_width));
+    float drawWidth = (float) (2 * coordinateTransform.board_to_screen(p_draw_half_width));
     Ellipse2D circle =
         new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter);
     set_translucency(g2, p_translucency_factor);
-    init_draw_graphics(g2, p_color, draw_width);
+    init_draw_graphics(g2, p_color, drawWidth);
     g2.draw(circle);
   }
 
@@ -241,18 +239,18 @@ public class GraphicsContext implements Serializable {
       return;
     }
     Graphics2D g2 = (Graphics2D) p_g;
-    Point2D corner1 = coordinate_transform.board_to_screen(p_corner1);
-    Point2D corner2 = coordinate_transform.board_to_screen(p_corner2);
+    Point2D corner1 = coordinateTransform.board_to_screen(p_corner1);
+    Point2D corner2 = coordinateTransform.board_to_screen(p_corner2);
 
     double xmin = Math.min(corner1.getX(), corner2.getX());
     double ymin = Math.min(corner1.getY(), corner2.getY());
 
-    float draw_width = (float) (2 * coordinate_transform.board_to_screen(p_draw_half_width));
+    float drawWidth = (float) (2 * coordinateTransform.board_to_screen(p_draw_half_width));
     double width = Math.abs(corner2.getX() - corner1.getX());
     double height = Math.abs(corner2.getY() - corner1.getY());
     Rectangle2D rectangle = new Rectangle2D.Double(xmin, ymin, width, height);
     set_translucency(g2, p_translucency_factor);
-    init_draw_graphics(g2, p_color, draw_width);
+    init_draw_graphics(g2, p_color, drawWidth);
     g2.draw(rectangle);
   }
 
@@ -264,14 +262,14 @@ public class GraphicsContext implements Serializable {
       Graphics p_g,
       double p_translucency_factor) {
     if (p_shape instanceof PolylineShape) {
-      FloatPoint[] draw_corners = p_shape.corner_approx_arr();
-      if (draw_corners.length <= 1) {
+      FloatPoint[] drawCorners = p_shape.corner_approx_arr();
+      if (drawCorners.length <= 1) {
         return;
       }
-      FloatPoint[] closed_draw_corners = new FloatPoint[draw_corners.length + 1];
-      System.arraycopy(draw_corners, 0, closed_draw_corners, 0, draw_corners.length);
-      closed_draw_corners[closed_draw_corners.length - 1] = draw_corners[0];
-      this.draw(closed_draw_corners, p_draw_half_width, p_color, p_g, p_translucency_factor);
+      FloatPoint[] closedDrawCorners = new FloatPoint[drawCorners.length + 1];
+      System.arraycopy(drawCorners, 0, closedDrawCorners, 0, drawCorners.length);
+      closedDrawCorners[closedDrawCorners.length - 1] = drawCorners[0];
+      this.draw(closedDrawCorners, p_draw_half_width, p_color, p_g, p_translucency_factor);
     } else if (p_shape instanceof Circle curr_circle) {
       this.draw_circle(
           curr_circle.center.to_float(),
@@ -297,17 +295,17 @@ public class GraphicsContext implements Serializable {
     }
   }
 
-  private transient java.awt.TexturePaint cached_hatch_paint;
-  private transient double cached_hatch_pitch_px = -1.0;
-  private transient Color cached_hatch_color;
+  private transient java.awt.TexturePaint cachedHatchPaint;
+  private transient double cachedHatchPitchPx = -1.0;
+  private transient Color cachedHatchColor;
 
   public java.awt.geom.Area get_awt_area(Area p_area) {
     if (p_area == null || p_area.is_empty()) {
       return null;
     }
     if (p_area instanceof Circle circle) {
-      Point2D center = coordinate_transform.board_to_screen(circle.center.to_float());
-      double radius = coordinate_transform.board_to_screen(circle.radius);
+      Point2D center = coordinateTransform.board_to_screen(circle.center.to_float());
+      double radius = coordinateTransform.board_to_screen(circle.radius);
       double diameter = 2 * radius;
       return new java.awt.geom.Area(
           new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter));
@@ -321,10 +319,10 @@ public class GraphicsContext implements Serializable {
     java.awt.geom.Path2D.Double borderPath = new java.awt.geom.Path2D.Double();
     int count = border.border_line_count();
     if (count > 0) {
-      Point2D p0 = coordinate_transform.board_to_screen(border.corner_approx(0));
+      Point2D p0 = coordinateTransform.board_to_screen(border.corner_approx(0));
       borderPath.moveTo(p0.getX(), p0.getY());
       for (int i = 1; i < count; i++) {
-        Point2D pi = coordinate_transform.board_to_screen(border.corner_approx(i));
+        Point2D pi = coordinateTransform.board_to_screen(border.corner_approx(i));
         borderPath.lineTo(pi.getX(), pi.getY());
       }
       borderPath.closePath();
@@ -337,18 +335,18 @@ public class GraphicsContext implements Serializable {
         int hCount = holePoly.border_line_count();
         if (hCount > 0) {
           java.awt.geom.Path2D.Double holePath = new java.awt.geom.Path2D.Double();
-          Point2D hp0 = coordinate_transform.board_to_screen(holePoly.corner_approx(0));
+          Point2D hp0 = coordinateTransform.board_to_screen(holePoly.corner_approx(0));
           holePath.moveTo(hp0.getX(), hp0.getY());
           for (int i = 1; i < hCount; i++) {
-            Point2D hpi = coordinate_transform.board_to_screen(holePoly.corner_approx(i));
+            Point2D hpi = coordinateTransform.board_to_screen(holePoly.corner_approx(i));
             holePath.lineTo(hpi.getX(), hpi.getY());
           }
           holePath.closePath();
           awtArea.subtract(new java.awt.geom.Area(holePath));
         }
       } else if (hole instanceof Circle circle) {
-        Point2D center = coordinate_transform.board_to_screen(circle.center.to_float());
-        double radius = coordinate_transform.board_to_screen(circle.radius);
+        Point2D center = coordinateTransform.board_to_screen(circle.center.to_float());
+        double radius = coordinateTransform.board_to_screen(circle.radius);
         double diameter = 2 * radius;
         awtArea.subtract(
             new java.awt.geom.Area(
@@ -368,7 +366,7 @@ public class GraphicsContext implements Serializable {
     if (p_color == null || p_area == null || p_area.is_empty() || p_translucency_factor <= 0) {
       return;
     }
-    double pitchPx = coordinate_transform.board_to_screen(p_pitch_board_units);
+    double pitchPx = coordinateTransform.board_to_screen(p_pitch_board_units);
     if (pitchPx < 2.0) {
       return;
     }
@@ -389,9 +387,9 @@ public class GraphicsContext implements Serializable {
     set_translucency(g2, p_translucency_factor);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    if (cached_hatch_paint == null
-        || cached_hatch_pitch_px != pitchPx
-        || !p_color.equals(cached_hatch_color)) {
+    if (cachedHatchPaint == null
+        || cachedHatchPitchPx != pitchPx
+        || !p_color.equals(cachedHatchColor)) {
       java.awt.image.BufferedImage bi =
           new java.awt.image.BufferedImage(pInt, pInt, java.awt.image.BufferedImage.TYPE_INT_ARGB);
       Graphics2D g2t = bi.createGraphics();
@@ -401,15 +399,15 @@ public class GraphicsContext implements Serializable {
       g2t.drawLine(0, pInt, pInt, 0);
       g2t.drawLine(-1, pInt + 1, pInt + 1, -1);
       g2t.dispose();
-      cached_hatch_paint = new java.awt.TexturePaint(bi, new Rectangle2D.Double(0, 0, pInt, pInt));
-      cached_hatch_pitch_px = pitchPx;
-      cached_hatch_color = p_color;
+      cachedHatchPaint = new java.awt.TexturePaint(bi, new Rectangle2D.Double(0, 0, pInt, pInt));
+      cachedHatchPitchPx = pitchPx;
+      cachedHatchColor = p_color;
     }
 
     java.awt.Shape oldClip = g2.getClip();
     java.awt.Stroke oldStroke = g2.getStroke();
     g2.clip(outerArea);
-    g2.setPaint(cached_hatch_paint);
+    g2.setPaint(cachedHatchPaint);
     g2.setStroke(
         new BasicStroke((float) (2 * pitchPx), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
     g2.draw(outerArea);
@@ -425,8 +423,8 @@ public class GraphicsContext implements Serializable {
       return null;
     }
     if (p_shape instanceof Circle circle) {
-      Point2D center = coordinate_transform.board_to_screen(circle.center.to_float());
-      double radius = coordinate_transform.board_to_screen(circle.radius);
+      Point2D center = coordinateTransform.board_to_screen(circle.center.to_float());
+      double radius = coordinateTransform.board_to_screen(circle.radius);
       double diameter = 2 * radius;
       return new java.awt.geom.Area(
           new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter));
@@ -437,10 +435,10 @@ public class GraphicsContext implements Serializable {
         return null;
       }
       java.awt.geom.Path2D.Double path = new java.awt.geom.Path2D.Double();
-      Point2D p0 = coordinate_transform.board_to_screen(poly.corner_approx(0));
+      Point2D p0 = coordinateTransform.board_to_screen(poly.corner_approx(0));
       path.moveTo(p0.getX(), p0.getY());
       for (int i = 1; i < count; i++) {
-        Point2D pi = coordinate_transform.board_to_screen(poly.corner_approx(i));
+        Point2D pi = coordinateTransform.board_to_screen(poly.corner_approx(i));
         path.lineTo(pi.getX(), pi.getY());
       }
       path.closePath();
@@ -539,8 +537,8 @@ public class GraphicsContext implements Serializable {
     if (p_color == null) {
       return;
     }
-    Point2D center = coordinate_transform.board_to_screen(p_circle.center.to_float());
-    double radius = coordinate_transform.board_to_screen(p_circle.radius);
+    Point2D center = coordinateTransform.board_to_screen(p_circle.center.to_float());
+    double radius = coordinateTransform.board_to_screen(p_circle.radius);
     if (!point_near_rectangle(center.getX(), center.getY(), p_g.getClip().getBounds(), radius)) {
       return;
     }
@@ -557,9 +555,9 @@ public class GraphicsContext implements Serializable {
   /** Draws the interior of an ellipse. */
   public void fill_ellipse(
       Ellipse p_ellipse, Graphics p_g, Color p_color, double p_translucency_factor) {
-    Ellipse[] ellipse_arr = new Ellipse[1];
-    ellipse_arr[0] = p_ellipse;
-    fill_ellipse_arr(ellipse_arr, p_g, p_color, p_translucency_factor);
+    Ellipse[] ellipseArr = new Ellipse[1];
+    ellipseArr[0] = p_ellipse;
+    fill_ellipse_arr(ellipseArr, p_g, p_color, p_translucency_factor);
   }
 
   /**
@@ -571,32 +569,32 @@ public class GraphicsContext implements Serializable {
     if (p_color == null || p_ellipse_arr.length == 0) {
       return;
     }
-    GeneralPath draw_path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
+    GeneralPath drawPath = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
     for (Ellipse curr_ellipse : p_ellipse_arr) {
-      Point2D center = coordinate_transform.board_to_screen(curr_ellipse.center);
-      double bigger_radius = coordinate_transform.board_to_screen(curr_ellipse.bigger_radius);
+      Point2D center = coordinateTransform.board_to_screen(curr_ellipse.center);
+      double biggerRadius = coordinateTransform.board_to_screen(curr_ellipse.biggerRadius);
       if (!point_near_rectangle(
-          center.getX(), center.getY(), p_g.getClip().getBounds(), bigger_radius)) {
+          center.getX(), center.getY(), p_g.getClip().getBounds(), biggerRadius)) {
         continue;
       }
-      double smaller_radius = coordinate_transform.board_to_screen(curr_ellipse.smaller_radius);
-      Ellipse2D draw_ellipse =
+      double smallerRadius = coordinateTransform.board_to_screen(curr_ellipse.smallerRadius);
+      Ellipse2D drawEllipse =
           new Ellipse2D.Double(
-              center.getX() - bigger_radius,
-              center.getY() - smaller_radius,
-              2 * bigger_radius,
-              2 * smaller_radius);
-      double rotation = coordinate_transform.board_to_screen_angle(curr_ellipse.rotation);
-      AffineTransform affine_transform = new AffineTransform();
-      affine_transform.rotate(rotation, center.getX(), center.getY());
-      java.awt.Shape rotated_ellipse = affine_transform.createTransformedShape(draw_ellipse);
-      draw_path.append(rotated_ellipse, false);
+              center.getX() - biggerRadius,
+              center.getY() - smallerRadius,
+              2 * biggerRadius,
+              2 * smallerRadius);
+      double rotation = coordinateTransform.board_to_screen_angle(curr_ellipse.rotation);
+      AffineTransform affineTransform = new AffineTransform();
+      affineTransform.rotate(rotation, center.getX(), center.getY());
+      java.awt.Shape rotatedEllipse = affineTransform.createTransformedShape(drawEllipse);
+      drawPath.append(rotatedEllipse, false);
     }
     Graphics2D g2 = (Graphics2D) p_g;
     g2.setColor(p_color);
     set_translucency(g2, p_translucency_factor);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g2.fill(draw_path);
+    g2.fill(drawPath);
   }
 
   /** Checks, if the distance of the point with coordinates p_x, p_y to p_rect is at most p_dist. */
@@ -620,16 +618,16 @@ public class GraphicsContext implements Serializable {
       return;
     }
     Graphics2D g2 = (Graphics2D) p_g;
-    Polygon draw_polygon = new Polygon();
+    Polygon drawPolygon = new Polygon();
     for (int i = 0; i < p_points.length; i++) {
-      Point2D curr_corner = coordinate_transform.board_to_screen(p_points[i]);
-      draw_polygon.addPoint(
-          (int) Math.round(curr_corner.getX()), (int) Math.round(curr_corner.getY()));
+      Point2D currCorner = coordinateTransform.board_to_screen(p_points[i]);
+      drawPolygon.addPoint(
+          (int) Math.round(currCorner.getX()), (int) Math.round(currCorner.getY()));
     }
     g2.setColor(p_color);
     set_translucency(g2, p_translucency_factor);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g2.fill(draw_polygon);
+    g2.fill(drawPolygon);
   }
 
   /**
@@ -641,22 +639,22 @@ public class GraphicsContext implements Serializable {
     if (p_color == null) {
       return;
     }
-    GeneralPath draw_path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
+    GeneralPath drawPath = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
     for (int j = 0; j < p_point_lists.length; j++) {
-      Polygon draw_polygon = new Polygon();
-      FloatPoint[] curr_point_list = p_point_lists[j];
-      for (int i = 0; i < curr_point_list.length; i++) {
-        Point2D curr_corner = coordinate_transform.board_to_screen(curr_point_list[i]);
-        draw_polygon.addPoint(
-            (int) Math.round(curr_corner.getX()), (int) Math.round(curr_corner.getY()));
+      Polygon drawPolygon = new Polygon();
+      FloatPoint[] currPointList = p_point_lists[j];
+      for (int i = 0; i < currPointList.length; i++) {
+        Point2D currCorner = coordinateTransform.board_to_screen(currPointList[i]);
+        drawPolygon.addPoint(
+            (int) Math.round(currCorner.getX()), (int) Math.round(currCorner.getY()));
       }
-      draw_path.append(draw_polygon, false);
+      drawPath.append(drawPolygon, false);
     }
     Graphics2D g2 = (Graphics2D) p_g;
     g2.setColor(p_color);
     set_translucency(g2, p_translucency_factor);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g2.fill(draw_path);
+    g2.fill(drawPath);
   }
 
   /** draws the interior of an item of class geometry.planar.Area */
@@ -672,38 +670,38 @@ public class GraphicsContext implements Serializable {
         FRLogger.warn("GraphicsContext.fill_area: shape not bounded");
         return;
       }
-      Rectangle clip_shape = p_g.getClip().getBounds();
-      IntBox clip_box = coordinate_transform.screen_to_board(clip_shape);
-      if (!border.bounding_box().intersects(clip_box)) {
+      Rectangle clipShape = p_g.getClip().getBounds();
+      IntBox clipBox = coordinateTransform.screen_to_board(clipShape);
+      if (!border.bounding_box().intersects(clipBox)) {
         return;
       }
       Shape[] holes = p_area.get_holes();
 
-      FloatPoint[][] draw_polygons = new FloatPoint[holes.length + 1][];
-      for (int j = 0; j < draw_polygons.length; j++) {
-        PolylineShape curr_draw_shape;
+      FloatPoint[][] drawPolygons = new FloatPoint[holes.length + 1][];
+      for (int j = 0; j < drawPolygons.length; j++) {
+        PolylineShape currDrawShape;
         if (j == 0) {
-          curr_draw_shape = border;
+          currDrawShape = border;
         } else {
-          curr_draw_shape = (PolylineShape) holes[j - 1];
+          currDrawShape = (PolylineShape) holes[j - 1];
         }
-        draw_polygons[j] = new FloatPoint[curr_draw_shape.border_line_count() + 1];
-        FloatPoint[] curr_draw_polygon = draw_polygons[j];
-        for (int i = 0; i < curr_draw_polygon.length - 1; i++) {
-          curr_draw_polygon[i] = curr_draw_shape.corner_approx(i);
+        drawPolygons[j] = new FloatPoint[currDrawShape.border_line_count() + 1];
+        FloatPoint[] currDrawPolygon = drawPolygons[j];
+        for (int i = 0; i < currDrawPolygon.length - 1; i++) {
+          currDrawPolygon[i] = currDrawShape.corner_approx(i);
         }
         // close the polygon
-        curr_draw_polygon[curr_draw_polygon.length - 1] = curr_draw_polygon[0];
+        currDrawPolygon[currDrawPolygon.length - 1] = currDrawPolygon[0];
       }
-      fill_area(draw_polygons, p_g, p_color, p_translucency_factor);
+      fill_area(drawPolygons, p_g, p_color, p_translucency_factor);
     }
     if (show_area_division) {
       TileShape[] tiles = p_area.split_to_convex();
       for (int i = 0; i < tiles.length; i++) {
         FloatPoint[] corners = new FloatPoint[tiles[i].border_line_count() + 1];
-        TileShape curr_tile = tiles[i];
+        TileShape currTile = tiles[i];
         for (int j = 0; j < corners.length - 1; j++) {
-          corners[j] = curr_tile.corner_approx(j);
+          corners[j] = currTile.corner_approx(j);
         }
         corners[corners.length - 1] = corners[0];
         draw(corners, 1, Color.white, p_g, 0.7);
@@ -712,167 +710,165 @@ public class GraphicsContext implements Serializable {
   }
 
   public Color get_background_color() {
-    return other_color_table.get_background_color();
+    return otherColorTable.get_background_color();
   }
 
   public Color get_hilight_color() {
-    return other_color_table.get_hilight_color();
+    return otherColorTable.get_hilight_color();
   }
 
   public Color get_incomplete_color() {
-    return other_color_table.get_incomplete_color();
+    return otherColorTable.get_incomplete_color();
   }
 
   public Color get_outline_color() {
-    return other_color_table.get_outline_color();
+    return otherColorTable.get_outline_color();
   }
 
   public Color get_component_color(boolean p_front) {
-    return other_color_table.get_component_color(p_front);
+    return otherColorTable.get_component_color(p_front);
   }
 
   public Color get_violations_color() {
-    return other_color_table.get_violations_color();
+    return otherColorTable.get_violations_color();
   }
 
   public Color get_length_matching_area_color() {
-    return other_color_table.get_length_matching_area_color();
+    return otherColorTable.get_length_matching_area_color();
   }
 
   public Color[] get_trace_colors(boolean p_fixed) {
 
-    return item_color_table.get_trace_colors(p_fixed);
+    return itemColorTable.get_trace_colors(p_fixed);
   }
 
   public Color[] get_via_colors(boolean p_fixed) {
-    return item_color_table.get_via_colors(p_fixed);
+    return itemColorTable.get_via_colors(p_fixed);
   }
 
   public Color[] get_pin_colors() {
-    return item_color_table.get_pin_colors();
+    return itemColorTable.get_pin_colors();
   }
 
   public Color[] get_conduction_colors() {
-    return item_color_table.get_conduction_colors();
+    return itemColorTable.get_conduction_colors();
   }
 
   public Color[] get_obstacle_colors() {
-    return item_color_table.get_obstacle_colors();
+    return itemColorTable.get_obstacle_colors();
   }
 
   public Color[] get_via_obstacle_colors() {
-    return item_color_table.get_via_obstacle_colors();
+    return itemColorTable.get_via_obstacle_colors();
   }
 
   public Color[] get_place_obstacle_colors() {
-    return item_color_table.get_place_obstacle_colors();
+    return itemColorTable.get_place_obstacle_colors();
   }
 
   public double get_trace_color_intensity() {
-    return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.TRACES.ordinal());
+    return colorIntensityTable.get_value(ColorIntensityTable.ObjectNames.TRACES.ordinal());
   }
 
   public void set_trace_color_intensity(double p_value) {
-    color_intensity_table.set_value(ColorIntensityTable.ObjectNames.TRACES.ordinal(), p_value);
+    colorIntensityTable.set_value(ColorIntensityTable.ObjectNames.TRACES.ordinal(), p_value);
   }
 
   public double get_via_color_intensity() {
-    return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.VIAS.ordinal());
+    return colorIntensityTable.get_value(ColorIntensityTable.ObjectNames.VIAS.ordinal());
   }
 
   public void set_via_color_intensity(double p_value) {
-    color_intensity_table.set_value(ColorIntensityTable.ObjectNames.VIAS.ordinal(), p_value);
+    colorIntensityTable.set_value(ColorIntensityTable.ObjectNames.VIAS.ordinal(), p_value);
   }
 
   public double get_pin_color_intensity() {
-    return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.PINS.ordinal());
+    return colorIntensityTable.get_value(ColorIntensityTable.ObjectNames.PINS.ordinal());
   }
 
   public void set_pin_color_intensity(double p_value) {
-    color_intensity_table.set_value(ColorIntensityTable.ObjectNames.PINS.ordinal(), p_value);
+    colorIntensityTable.set_value(ColorIntensityTable.ObjectNames.PINS.ordinal(), p_value);
   }
 
   public double get_conduction_color_intensity() {
-    return color_intensity_table.get_value(
+    return colorIntensityTable.get_value(
         ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal());
   }
 
   public void set_conduction_color_intensity(double p_value) {
-    color_intensity_table.set_value(
+    colorIntensityTable.set_value(
         ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), p_value);
   }
 
   public double get_obstacle_color_intensity() {
-    return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal());
+    return colorIntensityTable.get_value(ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal());
   }
 
   public void set_obstacle_color_intensity(double p_value) {
-    color_intensity_table.set_value(ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal(), p_value);
+    colorIntensityTable.set_value(ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal(), p_value);
   }
 
   public double get_via_obstacle_color_intensity() {
-    return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.VIA_KEEPOUTS.ordinal());
+    return colorIntensityTable.get_value(ColorIntensityTable.ObjectNames.VIA_KEEPOUTS.ordinal());
   }
 
   public void set_via_obstacle_color_intensity(double p_value) {
-    color_intensity_table.set_value(
-        ColorIntensityTable.ObjectNames.VIA_KEEPOUTS.ordinal(), p_value);
+    colorIntensityTable.set_value(ColorIntensityTable.ObjectNames.VIA_KEEPOUTS.ordinal(), p_value);
   }
 
   public double get_place_obstacle_color_intensity() {
-    return color_intensity_table.get_value(
-        ColorIntensityTable.ObjectNames.PLACE_KEEPOUTS.ordinal());
+    return colorIntensityTable.get_value(ColorIntensityTable.ObjectNames.PLACE_KEEPOUTS.ordinal());
   }
 
   public double get_component_outline_color_intensity() {
-    return color_intensity_table.get_value(
+    return colorIntensityTable.get_value(
         ColorIntensityTable.ObjectNames.COMPONENT_OUTLINES.ordinal());
   }
 
   public double get_hilight_color_intensity() {
-    return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.HILIGHT.ordinal());
+    return colorIntensityTable.get_value(ColorIntensityTable.ObjectNames.HILIGHT.ordinal());
   }
 
   public void set_hilight_color_intensity(double p_value) {
-    color_intensity_table.set_value(ColorIntensityTable.ObjectNames.HILIGHT.ordinal(), p_value);
+    colorIntensityTable.set_value(ColorIntensityTable.ObjectNames.HILIGHT.ordinal(), p_value);
   }
 
   public double get_incomplete_color_intensity() {
-    return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal());
+    return colorIntensityTable.get_value(ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal());
   }
 
   public void set_incomplete_color_intensity(double p_value) {
-    color_intensity_table.set_value(ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal(), p_value);
+    colorIntensityTable.set_value(ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal(), p_value);
   }
 
   public double get_length_matching_area_color_intensity() {
-    return color_intensity_table.get_value(
+    return colorIntensityTable.get_value(
         ColorIntensityTable.ObjectNames.LENGTH_MATCHING_AREAS.ordinal());
   }
 
   public void set_length_matching_area_color_intensity(double p_value) {
-    color_intensity_table.set_value(
+    colorIntensityTable.set_value(
         ColorIntensityTable.ObjectNames.LENGTH_MATCHING_AREAS.ordinal(), p_value);
   }
 
   public Dimension get_panel_size() {
-    return coordinate_transform.screen_bounds;
+    return coordinateTransform.screenBounds;
   }
 
   /** Returns the center of the design on the screen. */
   public Point2D get_design_center() {
-    FloatPoint center = coordinate_transform.design_box_with_offset.centre_of_gravity();
-    return coordinate_transform.board_to_screen(center);
+    FloatPoint center = coordinateTransform.designBoxWithOffset.centre_of_gravity();
+    return coordinateTransform.board_to_screen(center);
   }
 
   /** Returns the bounding box of the design in screen coordinates. */
   public Rectangle get_design_bounds() {
-    return coordinate_transform.board_to_screen(coordinate_transform.design_box);
+    return coordinateTransform.board_to_screen(coordinateTransform.designBox);
   }
 
   /** gets the factor for automatic layer dimming */
   public double get_auto_layer_dim_factor() {
-    return this.auto_layer_dim_factor;
+    return this.autoLayerDimFactor;
   }
 
   /**
@@ -880,19 +876,19 @@ public class GraphicsContext implements Serializable {
    * automatic layer dimming.
    */
   public void set_auto_layer_dim_factor(double p_value) {
-    auto_layer_dim_factor = p_value;
+    autoLayerDimFactor = p_value;
   }
 
   /** Sets the layer, which will be excluded from automatic layer dimming. */
   public void set_fully_visible_layer(int p_layer_no) {
-    fully_visible_layer = p_layer_no;
+    fullyVisibleLayer = p_layer_no;
     if (p_layer_no != -1) {
-      fully_visible_virtual_layer = -1;
+      fullyVisibleVirtualLayer = -1;
     }
   }
 
   public int get_fully_visible_layer() {
-    return fully_visible_layer;
+    return fullyVisibleLayer;
   }
 
   public void setSimplifiedPlaneRendering(boolean simplifiedPlaneRendering) {
@@ -905,10 +901,10 @@ public class GraphicsContext implements Serializable {
 
   public int get_fully_visible_virtual_layer() {
     boolean[] visibilityArr = get_virtual_layer_visibility_arr();
-    if (fully_visible_virtual_layer < -1 || fully_visible_virtual_layer >= visibilityArr.length) {
+    if (fullyVisibleVirtualLayer < -1 || fullyVisibleVirtualLayer >= visibilityArr.length) {
       return -1;
     }
-    return fully_visible_virtual_layer;
+    return fullyVisibleVirtualLayer;
   }
 
   public boolean is_front_selected() {
@@ -916,8 +912,8 @@ public class GraphicsContext implements Serializable {
     if (selectedVirtualLayer != -1) {
       return selectedVirtualLayer % 2 == 0;
     }
-    if (fully_visible_layer != -1) {
-      return fully_visible_layer < layer_visibility_arr.length / 2;
+    if (fullyVisibleLayer != -1) {
+      return fullyVisibleLayer < layerVisibilityArr.length / 2;
     }
     return true;
   }
@@ -942,9 +938,9 @@ public class GraphicsContext implements Serializable {
     if (idx < -1 || idx >= visibilityArr.length) {
       idx = -1;
     }
-    fully_visible_virtual_layer = idx;
+    fullyVisibleVirtualLayer = idx;
     if (idx != -1) {
-      fully_visible_layer = -1;
+      fullyVisibleLayer = -1;
     }
   }
 
@@ -956,15 +952,15 @@ public class GraphicsContext implements Serializable {
     if (!visibilityArr[virtual_layer_idx]) {
       return 0.0;
     }
-    if (fully_visible_layer != -1) {
-      return this.auto_layer_dim_factor;
+    if (fullyVisibleLayer != -1) {
+      return this.autoLayerDimFactor;
     }
     int selectedVirtualLayer = get_fully_visible_virtual_layer();
     if (selectedVirtualLayer != -1) {
       if (selectedVirtualLayer == virtual_layer_idx) {
         return 1.0;
       } else {
-        return this.auto_layer_dim_factor;
+        return this.autoLayerDimFactor;
       }
     }
     return 1.0;
@@ -976,19 +972,19 @@ public class GraphicsContext implements Serializable {
    */
   public double get_layer_visibility(int p_layer_no) {
     double result;
-    if (fully_visible_virtual_layer != -1) {
-      result = this.auto_layer_dim_factor * layer_visibility_arr[p_layer_no];
-    } else if (p_layer_no == this.fully_visible_layer) {
-      result = layer_visibility_arr[p_layer_no];
+    if (fullyVisibleVirtualLayer != -1) {
+      result = this.autoLayerDimFactor * layerVisibilityArr[p_layer_no];
+    } else if (p_layer_no == this.fullyVisibleLayer) {
+      result = layerVisibilityArr[p_layer_no];
     } else {
-      result = this.auto_layer_dim_factor * layer_visibility_arr[p_layer_no];
+      result = this.autoLayerDimFactor * layerVisibilityArr[p_layer_no];
     }
     return result;
   }
 
   /** Gets the visibility factor of the input layer without the automatic layer dimming. */
   public double get_raw_layer_visibility(int p_layer_no) {
-    return layer_visibility_arr[p_layer_no];
+    return layerVisibilityArr[p_layer_no];
   }
 
   /**
@@ -996,26 +992,26 @@ public class GraphicsContext implements Serializable {
    * value is 0, the layer is invisible, if the value is 1, the layer is fully visible.
    */
   public void set_layer_visibility(int p_layer_no, double p_value) {
-    layer_visibility_arr[p_layer_no] = Math.max(0, Math.min(p_value, 1));
+    layerVisibilityArr[p_layer_no] = Math.max(0, Math.min(p_value, 1));
   }
 
   public void set_layer_visibility_arr(double[] p_layer_visibility_arr) {
-    this.layer_visibility_arr = p_layer_visibility_arr;
+    this.layerVisibilityArr = p_layer_visibility_arr;
   }
 
   public double[] copy_layer_visibility_arr() {
-    double[] result = new double[this.layer_visibility_arr.length];
-    System.arraycopy(this.layer_visibility_arr, 0, result, 0, this.layer_visibility_arr.length);
+    double[] result = new double[this.layerVisibilityArr.length];
+    System.arraycopy(this.layerVisibilityArr, 0, result, 0, this.layerVisibilityArr.length);
     return result;
   }
 
   /** Returns the number of layers on the board */
   public int layer_count() {
-    return layer_visibility_arr.length;
+    return layerVisibilityArr.length;
   }
 
   /**
-   * filter lines, which cannot touch the update_box to improve the performance of the draw function
+   * filter lines, which cannot touch the updateBox to improve the performance of the draw function
    * by avoiding unnecessary calls of draw (line)
    */
   private boolean line_outside_update_box(
@@ -1038,19 +1034,19 @@ public class GraphicsContext implements Serializable {
   /** Writes an instance of this class to a file. */
   private void writeObject(ObjectOutputStream p_stream) throws IOException {
     p_stream.defaultWriteObject();
-    item_color_table.write_object(p_stream);
-    other_color_table.write_object(p_stream);
+    itemColorTable.write_object(p_stream);
+    otherColorTable.write_object(p_stream);
   }
 
   /** Reads an instance of this class from a file */
   private void readObject(ObjectInputStream p_stream) throws IOException, ClassNotFoundException {
     p_stream.defaultReadObject();
-    if (virtual_layer_visibility_arr == null
-        || virtual_layer_visibility_arr.length != virtual_layer_count) {
-      virtual_layer_visibility_arr = create_default_virtual_layer_visibility_arr();
+    if (virtualLayerVisibilityArr == null
+        || virtualLayerVisibilityArr.length != virtual_layer_count) {
+      virtualLayerVisibilityArr = create_default_virtual_layer_visibility_arr();
     }
-    fully_visible_virtual_layer = get_fully_visible_virtual_layer();
-    this.item_color_table = new ItemColorTableModel(p_stream);
-    this.other_color_table = new OtherColorTableModel(p_stream);
+    fullyVisibleVirtualLayer = get_fully_visible_virtual_layer();
+    this.itemColorTable = new ItemColorTableModel(p_stream);
+    this.otherColorTable = new OtherColorTableModel(p_stream);
   }
 }

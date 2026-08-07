@@ -80,7 +80,7 @@ public final class RulesReader {
       currToken = scanner.next_token();
       if (!(currToken instanceof String) || !currToken.equals(designName)) {
         FRLogger.warn(
-            "RulesReader.read: design_name not matching at '"
+            "RulesReader.read: designName not matching at '"
                 + scanner.get_scope_identifier()
                 + "' (expected '"
                 + designName
@@ -90,8 +90,8 @@ public final class RulesReader {
         // non-fatal: continue reading
       }
 
-      LayerStructure layerStructure = new LayerStructure(board.layer_structure);
-      CoordinateTransform coordinateTransform = board.communication.coordinate_transform;
+      LayerStructure layerStructure = new LayerStructure(board.layerStructure);
+      CoordinateTransform coordinateTransform = board.communication.coordinateTransform;
 
       // Parse all top-level scopes in the rules body
       Object nextToken = null;
@@ -157,13 +157,13 @@ public final class RulesReader {
     }
     int layerNo = -1;
     if (layerName != null) {
-      layerNo = board.layer_structure.get_no(layerName);
+      layerNo = board.layerStructure.get_no(layerName);
       if (layerNo < 0) {
         FRLogger.warn("RulesReader.applyRules: layer not found: '" + layerName + "'");
       }
     }
-    CoordinateTransform coordinateTransform = board.communication.coordinate_transform;
-    String stringQuote = board.communication.specctra_parser_info.string_quote;
+    CoordinateTransform coordinateTransform = board.communication.coordinateTransform;
+    String stringQuote = board.communication.specctraParserInfo.stringQuote;
     for (Rule rule : rules) {
       if (rule instanceof Rule.WidthRule widthRule) {
         int traceHalfwidth =
@@ -217,11 +217,11 @@ public final class RulesReader {
     if (viaInfo == null) {
       return;
     }
-    ViaInfo existing = board.rules.via_infos.get(viaInfo.get_name());
+    ViaInfo existing = board.rules.viaInfos.get(viaInfo.get_name());
     if (existing != null) {
-      board.rules.via_infos.remove(existing);
+      board.rules.viaInfos.remove(existing);
     }
-    board.rules.via_infos.add(viaInfo);
+    board.rules.viaInfos.add(viaInfo);
   }
 
   private static void applyViaRule(IJFlexScanner scanner, BasicBoard board) {
@@ -238,7 +238,7 @@ public final class RulesReader {
       return;
     }
     Network.insert_net_class(
-        netClass, layerStructure, board, board.communication.coordinate_transform, false);
+        netClass, layerStructure, board, board.communication.coordinateTransform, false);
   }
 
   private static void closeQuietly(InputStream stream) {

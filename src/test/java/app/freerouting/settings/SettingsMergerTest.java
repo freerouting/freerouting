@@ -25,7 +25,7 @@ class SettingsMergerTest {
     // Verify default values
     assertEquals(9999, merged.maxPasses);
     assertTrue(merged.enabled);
-    assertTrue(merged.vias_allowed);
+    assertTrue(merged.viasAllowed);
     assertTrue(merged.getRunOptimizer());
   }
 
@@ -122,7 +122,7 @@ class SettingsMergerTest {
     // Test that sources can partially override settings
     Map<String, String> env = new HashMap<>();
     env.put("FREEROUTING__ROUTER__MAX_PASSES", "200");
-    // Don't set vias_allowed, should use default
+    // Don't set viasAllowed, should use default
 
     DefaultSettings defaults = new DefaultSettings();
     EnvironmentVariablesSource envSource = new EnvironmentVariablesSource(env);
@@ -131,7 +131,7 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     assertEquals(200, merged.maxPasses); // Overridden
-    assertTrue(merged.vias_allowed); // Default
+    assertTrue(merged.viasAllowed); // Default
     assertTrue(merged.enabled); // Default
   }
 
@@ -163,9 +163,9 @@ class SettingsMergerTest {
     assertNotNull(merged);
     assertEquals(150, merged.maxPasses);
     assertEquals(6, merged.optimizer.maxThreads);
-    // Note: vias_allowed might not be set correctly due to field name vs
+    // Note: viasAllowed might not be set correctly due to field name vs
     // serialization name mismatch
-    // assertFalse(merged.vias_allowed);
+    // assertFalse(merged.viasAllowed);
     assertEquals("freerouting-router-v19", merged.algorithm);
   }
 

@@ -9,37 +9,37 @@ import app.freerouting.geometry.planar.TileShape;
 public class ExpansionDoor implements ExpandableObject {
 
   /** The first room of this door. */
-  public final ExpansionRoom first_room;
+  public final ExpansionRoom firstRoom;
 
   /** The second room of this door. */
-  public final ExpansionRoom second_room;
+  public final ExpansionRoom secondRoom;
 
   /** The dimension of a door may be 1 or 2. */
   public final int dimension;
 
   /** each section of the following array can be expanded separately by the maze search algorithm */
-  MazeSearchElement[] section_arr;
+  MazeSearchElement[] sectionArr;
 
   /** Creates a new instance of ExpansionDoor */
   public ExpansionDoor(ExpansionRoom p_first_room, ExpansionRoom p_second_room, int p_dimension) {
-    first_room = p_first_room;
-    second_room = p_second_room;
+    firstRoom = p_first_room;
+    secondRoom = p_second_room;
     dimension = p_dimension;
   }
 
   /** Creates a new instance of ExpansionDoor */
   public ExpansionDoor(ExpansionRoom p_first_room, ExpansionRoom p_second_room) {
-    first_room = p_first_room;
-    second_room = p_second_room;
-    dimension = first_room.get_shape().intersection(second_room.get_shape()).dimension();
+    firstRoom = p_first_room;
+    secondRoom = p_second_room;
+    dimension = firstRoom.get_shape().intersection(secondRoom.get_shape()).dimension();
   }
 
   /** Calculates the intersection of the shapes of the 2 rooms belonging to this door. */
   @Override
   public TileShape get_shape() {
-    TileShape first_shape = first_room.get_shape();
-    TileShape second_shape = second_room.get_shape();
-    return first_shape.intersection(second_shape);
+    TileShape firstShape = firstRoom.get_shape();
+    TileShape secondShape = secondRoom.get_shape();
+    return firstShape.intersection(secondShape);
   }
 
   /**
@@ -52,15 +52,15 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null, if p_room is neither equal to this.first_room nor
-   * to this.second_room.
+   * Returns the other room of this door, or null, if p_room is neither equal to this.firstRoom nor
+   * to this.secondRoom.
    */
   public ExpansionRoom other_room(ExpansionRoom p_room) {
     ExpansionRoom result;
-    if (p_room == first_room) {
-      result = second_room;
-    } else if (p_room == second_room) {
-      result = first_room;
+    if (p_room == firstRoom) {
+      result = secondRoom;
+    } else if (p_room == secondRoom) {
+      result = firstRoom;
     } else {
       result = null;
     }
@@ -68,16 +68,16 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null, if p_room is neither equal to this.first_room nor
-   * to this.second_room, or if the other room is not a CompleteExpansionRoom.
+   * Returns the other room of this door, or null, if p_room is neither equal to this.firstRoom nor
+   * to this.secondRoom, or if the other room is not a CompleteExpansionRoom.
    */
   @Override
   public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
     ExpansionRoom result;
-    if (p_room == first_room) {
-      result = second_room;
-    } else if (p_room == second_room) {
-      result = first_room;
+    if (p_room == firstRoom) {
+      result = secondRoom;
+    } else if (p_room == secondRoom) {
+      result = firstRoom;
     } else {
       result = null;
     }
@@ -89,110 +89,110 @@ public class ExpansionDoor implements ExpandableObject {
 
   @Override
   public int maze_search_element_count() {
-    return this.section_arr.length;
+    return this.sectionArr.length;
   }
 
   @Override
   public MazeSearchElement get_maze_search_element(int p_no) {
-    return this.section_arr[p_no];
+    return this.sectionArr[p_no];
   }
 
   /** Calculates the Line segments of the sections of this door. */
   public FloatLine[] get_section_segments(double p_offset) {
     double offset = p_offset + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
-    TileShape door_shape = this.get_shape();
+    TileShape doorShape = this.get_shape();
     {
-      if (door_shape.is_empty()) {
+      if (doorShape.is_empty()) {
         return new FloatLine[0];
       }
     }
-    FloatLine door_line_segment;
-    FloatLine shrinked_line_segment;
+    FloatLine doorLineSegment;
+    FloatLine shrinkedLineSegment;
     if (this.dimension == 1) {
-      door_line_segment = door_shape.diagonal_corner_segment();
-      shrinked_line_segment = door_line_segment.shrink_segment(offset);
+      doorLineSegment = doorShape.diagonal_corner_segment();
+      shrinkedLineSegment = doorLineSegment.shrink_segment(offset);
     } else if (this.dimension == 2
-        && this.first_room instanceof CompleteFreeSpaceExpansionRoom
-        && this.second_room instanceof CompleteFreeSpaceExpansionRoom) {
+        && this.firstRoom instanceof CompleteFreeSpaceExpansionRoom
+        && this.secondRoom instanceof CompleteFreeSpaceExpansionRoom) {
       // Overlapping doors at a corner possible in case of 90- or 45-degree routing.
       // In case of freeangle routing the corners are cut off.
-      door_line_segment = calc_door_line_segment(door_shape);
-      if (door_line_segment == null) {
+      doorLineSegment = calc_door_line_segment(doorShape);
+      if (doorLineSegment == null) {
         // CompleteFreeSpaceExpansionRoom inside other room
         return new FloatLine[0];
       }
-      if (door_line_segment.b.distance_square(door_line_segment.a) < 4 * offset * offset) {
+      if (doorLineSegment.b.distance_square(doorLineSegment.a) < 4 * offset * offset) {
         // door is small, 2 dimensional small doors are not yet expanded.
         return new FloatLine[0];
       }
-      shrinked_line_segment = door_line_segment.shrink_segment(offset);
+      shrinkedLineSegment = doorLineSegment.shrink_segment(offset);
     } else {
-      FloatPoint gravity_point = door_shape.centre_of_gravity();
-      door_line_segment = new FloatLine(gravity_point, gravity_point);
-      shrinked_line_segment = door_line_segment;
+      FloatPoint gravityPoint = doorShape.centre_of_gravity();
+      doorLineSegment = new FloatLine(gravityPoint, gravityPoint);
+      shrinkedLineSegment = doorLineSegment;
     }
-    final double c_max_door_section_width = 10 * offset;
-    int section_count =
-        (int) (door_line_segment.b.distance(door_line_segment.a) / c_max_door_section_width) + 1;
-    this.allocate_sections(section_count);
-    return shrinked_line_segment.divide_segment_into_sections(section_count);
+    final double cMaxDoorSectionWidth = 10 * offset;
+    int sectionCount =
+        (int) (doorLineSegment.b.distance(doorLineSegment.a) / cMaxDoorSectionWidth) + 1;
+    this.allocate_sections(sectionCount);
+    return shrinkedLineSegment.divide_segment_into_sections(sectionCount);
   }
 
   /**
    * Calculates a diagonal line of the 2-dimensional p_door_shape which represents the restraint
-   * line between the shapes of this.first_room and this.second_room.
+   * line between the shapes of this.firstRoom and this.secondRoom.
    */
   private FloatLine calc_door_line_segment(TileShape p_door_shape) {
-    TileShape first_room_shape = this.first_room.get_shape();
-    TileShape second_room_shape = this.second_room.get_shape();
-    Point first_corner = null;
-    Point second_corner = null;
-    int corner_count = p_door_shape.border_line_count();
-    for (int i = 0; i < corner_count; i++) {
-      Point curr_corner = p_door_shape.corner(i);
-      if (!first_room_shape.contains_inside(curr_corner)
-          && !second_room_shape.contains_inside(curr_corner)) {
-        // curr_corner is on the border of both room shapes.
-        if (first_corner == null) {
-          first_corner = curr_corner;
-        } else if (!first_corner.equals(curr_corner)) {
-          second_corner = curr_corner;
+    TileShape firstRoomShape = this.firstRoom.get_shape();
+    TileShape secondRoomShape = this.secondRoom.get_shape();
+    Point firstCorner = null;
+    Point secondCorner = null;
+    int cornerCount = p_door_shape.border_line_count();
+    for (int i = 0; i < cornerCount; i++) {
+      Point currCorner = p_door_shape.corner(i);
+      if (!firstRoomShape.contains_inside(currCorner)
+          && !secondRoomShape.contains_inside(currCorner)) {
+        // currCorner is on the border of both room shapes.
+        if (firstCorner == null) {
+          firstCorner = currCorner;
+        } else if (!firstCorner.equals(currCorner)) {
+          secondCorner = currCorner;
           break;
         }
       }
     }
-    if (first_corner == null || second_corner == null) {
+    if (firstCorner == null || secondCorner == null) {
       return null;
     }
-    return new FloatLine(first_corner.to_float(), second_corner.to_float());
+    return new FloatLine(firstCorner.to_float(), secondCorner.to_float());
   }
 
   /** Resets this ExpandableObject for autorouting the next connection. */
   @Override
   public void reset() {
-    if (section_arr != null) {
-      for (MazeSearchElement curr_section : section_arr) {
-        curr_section.reset();
+    if (sectionArr != null) {
+      for (MazeSearchElement currSection : sectionArr) {
+        currSection.reset();
       }
     }
   }
 
   @Override
   public int get_id_no() {
-    int id1 = first_room.get_id_no();
-    int id2 = second_room.get_id_no();
+    int id1 = firstRoom.get_id_no();
+    int id2 = secondRoom.get_id_no();
     // Use a stable combination of room IDs. Note: min/max ensures order-independence.
     return Math.min(id1, id2) * 31 + Math.max(id1, id2);
   }
 
   /** allocates and initialises p_section_count sections */
   void allocate_sections(int p_section_count) {
-    if (section_arr != null && section_arr.length == p_section_count) {
+    if (sectionArr != null && sectionArr.length == p_section_count) {
       return; // already allocated
     }
-    section_arr = new MazeSearchElement[p_section_count];
-    for (int i = 0; i < section_arr.length; i++) {
-      section_arr[i] = new MazeSearchElement();
+    sectionArr = new MazeSearchElement[p_section_count];
+    for (int i = 0; i < sectionArr.length; i++) {
+      sectionArr[i] = new MazeSearchElement();
     }
   }
 }

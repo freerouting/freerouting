@@ -20,8 +20,8 @@ public class ApiServerSettings implements Serializable {
   @SerializedName("authentication")
   public ApiAuthenticationSettings authentication = new ApiAuthenticationSettings();
 
-  @SerializedName("cors_origins")
-  public String cors_origins = "";
+  @SerializedName("corsOrigins")
+  public String corsOrigins = "";
 
   @SerializedName("rate_limit")
   public RateLimitSettings rateLimit = new RateLimitSettings();

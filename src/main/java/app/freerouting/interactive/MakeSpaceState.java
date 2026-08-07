@@ -20,23 +20,23 @@ public class MakeSpaceState extends DragState {
   public MakeSpaceState(
       FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_location, p_parent_state, p_board_handling);
-    int[] shove_trace_width_arr = new int[hdlg.get_routing_board().get_layer_count()];
-    boolean[] layer_active_arr = new boolean[shove_trace_width_arr.length];
-    int shove_trace_width = Math.min(100, hdlg.get_routing_board().get_min_trace_half_width() / 10);
-    shove_trace_width = Math.max(shove_trace_width, 5);
-    for (int i = 0; i < shove_trace_width_arr.length; i++) {
-      shove_trace_width_arr[i] = shove_trace_width;
-      layer_active_arr[i] = true;
+    int[] shoveTraceWidthArr = new int[hdlg.get_routing_board().get_layer_count()];
+    boolean[] layerActiveArr = new boolean[shoveTraceWidthArr.length];
+    int shoveTraceWidth = Math.min(100, hdlg.get_routing_board().get_min_trace_half_width() / 10);
+    shoveTraceWidth = Math.max(shoveTraceWidth, 5);
+    for (int i = 0; i < shoveTraceWidthArr.length; i++) {
+      shoveTraceWidthArr[i] = shoveTraceWidth;
+      layerActiveArr[i] = true;
     }
-    int[] route_net_no_arr = new int[1];
-    route_net_no_arr[0] = Nets.hidden_net_no;
+    int[] routeNetNoArr = new int[1];
+    routeNetNoArr[0] = Nets.hidden_net_no;
     route =
         new Route(
             p_location.round(),
             hdlg.getInteractiveSettings().get_layer(),
-            shove_trace_width_arr,
-            layer_active_arr,
-            route_net_no_arr,
+            shoveTraceWidthArr,
+            layerActiveArr,
+            routeNetNoArr,
             0,
             ViaRule.EMPTY,
             true,
@@ -53,22 +53,22 @@ public class MakeSpaceState extends DragState {
 
   @Override
   public InteractiveState move_to(FloatPoint p_to_location) {
-    if (!something_dragged) {
+    if (!somethingDragged) {
       // initialisations for the first time dragging
-      this.observers_activated = !hdlg.get_routing_board().observers_active();
-      if (this.observers_activated) {
+      this.observersActivated = !hdlg.get_routing_board().observers_active();
+      if (this.observersActivated) {
         hdlg.get_routing_board().start_notify_observers();
       }
       // make the situation restorable by undo
       hdlg.get_routing_board().generate_snapshot();
-      something_dragged = true;
+      somethingDragged = true;
     }
     route.next_corner(p_to_location);
 
-    Point route_end = route.get_last_corner();
+    Point routeEnd = route.get_last_corner();
     if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NONE
-        && !route_end.equals(p_to_location.round())) {
-      hdlg.move_mouse(route_end.to_float());
+        && !routeEnd.equals(p_to_location.round())) {
+      hdlg.move_mouse(routeEnd.to_float());
     }
     hdlg.recalculate_length_violations();
     hdlg.repaint();
@@ -77,21 +77,21 @@ public class MakeSpaceState extends DragState {
 
   @Override
   public InteractiveState button_released() {
-    int delete_net_no = Nets.hidden_net_no;
+    int deleteNetNo = Nets.hidden_net_no;
     BasicBoard board = hdlg.get_routing_board();
-    board.remove_items(board.get_connectable_items(delete_net_no));
-    if (this.observers_activated) {
+    board.remove_items(board.get_connectable_items(deleteNetNo));
+    if (this.observersActivated) {
       hdlg.get_routing_board().end_notify_observers();
-      this.observers_activated = false;
+      this.observersActivated = false;
     }
     hdlg.show_ratsnest();
-    return this.return_state;
+    return this.returnState;
   }
 
   @Override
   public void draw(Graphics p_graphics) {
     if (route != null) {
-      route.draw(p_graphics, hdlg.graphics_context);
+      route.draw(p_graphics, hdlg.graphicsContext);
     }
   }
 }

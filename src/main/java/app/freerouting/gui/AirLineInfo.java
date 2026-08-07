@@ -21,10 +21,10 @@ public class AirLineInfo implements ObjectInfoPanel.Printable {
     p_window.append_bold(tm.getText("incomplete"));
     p_window.append(" " + tm.getText("net") + " ");
     p_window.append(airline.net.name);
-    p_window.append(" " + tm.getText("from") + " ", "Incomplete Start Item", airline.from_item);
-    p_window.append(airline.from_corner);
-    p_window.append(" " + tm.getText("to") + " ", "Incomplete End Item", airline.to_item);
-    p_window.append(airline.to_corner);
+    p_window.append(" " + tm.getText("from") + " ", "Incomplete Start Item", airline.fromItem);
+    p_window.append(airline.fromCorner);
+    p_window.append(" " + tm.getText("to") + " ", "Incomplete End Item", airline.toItem);
+    p_window.append(airline.toCorner);
     p_window.newline();
   }
 

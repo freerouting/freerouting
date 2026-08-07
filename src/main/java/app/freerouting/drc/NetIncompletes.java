@@ -34,17 +34,17 @@ public class NetIncompletes {
   private final Net net;
 
   /** The radius of the markers drawn at the ends of airlines or layer changes. */
-  private final double draw_marker_radius;
+  private final double drawMarkerRadius;
 
   /**
    * The length of the violation of the length restriction of the net. > 0: cumulative trace length
    * is too big. < 0: trace length is too small. 0: trace length is ok or the net has no length
    * restrictions.
    */
-  private double length_violation = 0;
+  private double lengthViolation = 0;
 
   /** Number of connected groups in this net at calculation time. */
-  private int connected_group_count;
+  private int connectedGroupCount;
 
   /**
    * Creates a new instance of NetIncompletes. Calculates the incomplete connections (ratsnest) for
@@ -55,7 +55,7 @@ public class NetIncompletes {
    * @param p_board The board context.
    */
   public NetIncompletes(int p_net_no, Collection<Item> p_net_items, BasicBoard p_board) {
-    this.draw_marker_radius = p_board.rules.get_min_trace_half_width() * 2;
+    this.drawMarkerRadius = p_board.rules.get_min_trace_half_width() * 2;
     this.incompletes = new LinkedList<>();
     this.net = p_board.rules.nets.get(p_net_no);
 
@@ -77,21 +77,21 @@ public class NetIncompletes {
     // AND items with zero contacts (unconnected pins/pads)
     // These are DRC violations, not unrouted connections, and should not be counted
     // as incompletes
-    Collection<Item> filtered_items = new LinkedList<>();
-    int dangling_count = 0;
-    int unconnected_count = 0;
-    int conduction_area_count = 0;
-    int conduction_area_filtered_count = 0;
+    Collection<Item> filteredItems = new LinkedList<>();
+    int danglingCount = 0;
+    int unconnectedCount = 0;
+    int conductionAreaCount = 0;
+    int conductionAreaFilteredCount = 0;
     for (Item item : p_net_items) {
       // Track ConductionArea items
       if (item instanceof ConductionArea) {
-        conduction_area_count++;
+        conductionAreaCount++;
       }
 
       // Skip dangling vias and traces - they're violations, not incomplete
       // connections
       if (item.is_tail()) {
-        dangling_count++;
+        danglingCount++;
         continue;
       }
       // Skip items with no contacts - they're isolated/unconnected, not incomplete
@@ -103,121 +103,120 @@ public class NetIncompletes {
       if (!(item instanceof ConductionArea)
           && !(item instanceof DrillItem)
           && item.get_normal_contacts().isEmpty()) {
-        unconnected_count++;
+        unconnectedCount++;
         continue;
       }
 
       // Track if ConductionArea made it through the filter
       if (item instanceof ConductionArea) {
-        conduction_area_filtered_count++;
+        conductionAreaFilteredCount++;
       }
 
-      filtered_items.add(item);
+      filteredItems.add(item);
     }
 
     FRLogger.trace(
         "NetIncompletes.<init>",
         "filtering_complete",
-        "Filtering complete: filtered_items="
-            + filtered_items.size()
+        "Filtering complete: filteredItems="
+            + filteredItems.size()
             + ", dangling="
-            + dangling_count
+            + danglingCount
             + ", unconnected="
-            + unconnected_count
+            + unconnectedCount
             + ", conduction_areas_total="
-            + conduction_area_count
+            + conductionAreaCount
             + ", conduction_areas_kept="
-            + conduction_area_filtered_count,
+            + conductionAreaFilteredCount,
         netLabel,
         new Point[0]);
 
-    // Create an array of Item-connected_set pairs.
-    NetItem[] net_items = calculate_net_items(filtered_items);
+    // Create an array of Item-connectedSet pairs.
+    NetItem[] netItems = calculate_net_items(filteredItems);
 
-    Set<Collection<Item>> unique_connected_sets = new HashSet<>();
-    for (NetItem net_item : net_items) {
-      unique_connected_sets.add(net_item.connected_set);
+    Set<Collection<Item>> uniqueConnectedSets = new HashSet<>();
+    for (NetItem net_item : netItems) {
+      uniqueConnectedSets.add(net_item.connectedSet);
     }
-    this.connected_group_count = unique_connected_sets.size();
+    this.connectedGroupCount = uniqueConnectedSets.size();
 
     FRLogger.trace(
         "NetIncompletes.<init>",
         "connected_sets_calculated",
         "Connected sets calculated: net_items_count="
-            + net_items.length
-            + ", unique_connected_sets="
-            + unique_connected_sets.size()
+            + netItems.length
+            + ", uniqueConnectedSets="
+            + uniqueConnectedSets.size()
             + " (for N groups, expect N-1 airlines)",
         netLabel,
         new Point[0]);
 
-    if (net_items.length <= 1) {
-      this.connected_group_count = net_items.length;
+    if (netItems.length <= 1) {
+      this.connectedGroupCount = netItems.length;
       FRLogger.trace(
           "NetIncompletes.<init>",
           "fully_connected",
-          "Net is fully connected or has no routable items: net_items=" + net_items.length,
+          "Net is fully connected or has no routable items: netItems=" + netItems.length,
           netLabel,
           new Point[0]);
       return;
     }
 
-    // create a Delaunay Triangulation for the net_items
-    Collection<PlanarDelaunayTriangulation.Storable> triangulation_objects =
-        new LinkedList<>(Arrays.asList(net_items));
+    // create a Delaunay Triangulation for the netItems
+    Collection<PlanarDelaunayTriangulation.Storable> triangulationObjects =
+        new LinkedList<>(Arrays.asList(netItems));
     PlanarDelaunayTriangulation triangulation =
-        new PlanarDelaunayTriangulation(triangulation_objects);
+        new PlanarDelaunayTriangulation(triangulationObjects);
 
     // sort the result edges of the triangulation by length in ascending order.
-    Collection<PlanarDelaunayTriangulation.ResultEdge> triangulation_lines =
+    Collection<PlanarDelaunayTriangulation.ResultEdge> triangulationLines =
         triangulation.get_edge_lines();
-    SortedSet<Edge> sorted_edges = new TreeSet<>();
+    SortedSet<Edge> sortedEdges = new TreeSet<>();
 
-    for (PlanarDelaunayTriangulation.ResultEdge curr_line : triangulation_lines) {
-      Edge new_edge =
+    for (PlanarDelaunayTriangulation.ResultEdge currLine : triangulationLines) {
+      Edge newEdge =
           new Edge(
-              (NetItem) curr_line.start_object,
-              curr_line.start_point.to_float(),
-              (NetItem) curr_line.end_object,
-              curr_line.end_point.to_float());
-      sorted_edges.add(new_edge);
+              (NetItem) currLine.startObject,
+              currLine.startPoint.to_float(),
+              (NetItem) currLine.endObject,
+              currLine.endPoint.to_float());
+      sortedEdges.add(newEdge);
     }
 
-    // Create the Airlines. Skip edges, whose from_item and to_item are already in
+    // Create the Airlines. Skip edges, whose fromItem and toItem are already in
     // the same
     // connected set
     // or whose connected sets have already an airline.
-    Net curr_net = p_board.rules.nets.get(p_net_no);
-    for (Edge curr_edge : sorted_edges) {
-      if (curr_edge.from_item.connected_set == curr_edge.to_item.connected_set) {
+    Net currNet = p_board.rules.nets.get(p_net_no);
+    for (Edge currEdge : sortedEdges) {
+      if (currEdge.fromItem.connectedSet == currEdge.toItem.connectedSet) {
         continue; // airline exists already
       }
 
       this.incompletes.add(
           new AirLine(
-              curr_net,
-              curr_edge.from_item.item,
-              curr_edge.from_corner,
-              curr_edge.to_item.item,
-              curr_edge.to_corner));
-      join_connected_sets(
-          net_items, curr_edge.from_item.connected_set, curr_edge.to_item.connected_set);
+              currNet,
+              currEdge.fromItem.item,
+              currEdge.fromCorner,
+              currEdge.toItem.item,
+              currEdge.toCorner));
+      join_connected_sets(netItems, currEdge.fromItem.connectedSet, currEdge.toItem.connectedSet);
     }
 
     FRLogger.trace(
         "NetIncompletes.<init>",
         "airlines_created",
-        "Airlines created: incomplete_count="
+        "Airlines created: incompleteCount="
             + this.incompletes.size()
             + ", total_items="
             + p_net_items.size()
-            + ", filtered_items="
-            + filtered_items.size()
-            + ", net_items="
-            + net_items.length
+            + ", filteredItems="
+            + filteredItems.size()
+            + ", netItems="
+            + netItems.length
             + ", connected_groups="
-            + unique_connected_sets.size()
-            + " => Formula: total_items - incomplete_count = "
+            + uniqueConnectedSets.size()
+            + " => Formula: total_items - incompleteCount = "
             + (p_net_items.size() - this.incompletes.size()),
         netLabel,
         new Point[0]);
@@ -240,7 +239,7 @@ public class NetIncompletes {
    * from the minimum trace width rules.
    */
   public double getMarkerRadius() {
-    return this.draw_marker_radius;
+    return this.drawMarkerRadius;
   }
 
   /** Returns the number of incompletes/airlines of this net. */
@@ -250,28 +249,28 @@ public class NetIncompletes {
 
   /** Returns the number of connected groups used to compute airlines. */
   public int get_connected_group_count() {
-    return this.connected_group_count;
+    return this.connectedGroupCount;
   }
 
   /** Recalculates the length violations. Return false, if the length violation has not changed. */
   boolean calc_length_violation() {
-    double old_violation = this.length_violation;
-    double max_length = this.net.get_class().get_maximum_trace_length();
-    double min_length = this.net.get_class().get_minimum_trace_length();
-    if (max_length <= 0 && min_length <= 0) {
-      this.length_violation = 0;
+    double oldViolation = this.lengthViolation;
+    double maxLength = this.net.get_class().get_maximum_trace_length();
+    double minLength = this.net.get_class().get_minimum_trace_length();
+    if (maxLength <= 0 && minLength <= 0) {
+      this.lengthViolation = 0;
       return false;
     }
-    double new_violation = 0;
-    double trace_length = this.net.get_trace_length();
-    if (max_length > 0 && trace_length > max_length) {
-      new_violation = trace_length - max_length;
+    double newViolation = 0;
+    double traceLength = this.net.get_trace_length();
+    if (maxLength > 0 && traceLength > maxLength) {
+      newViolation = traceLength - maxLength;
     }
-    if (min_length > 0 && trace_length < min_length && this.incompletes.isEmpty()) {
-      new_violation = trace_length - min_length;
+    if (minLength > 0 && traceLength < minLength && this.incompletes.isEmpty()) {
+      newViolation = traceLength - minLength;
     }
-    this.length_violation = new_violation;
-    return Math.abs(new_violation - old_violation) > 0.1;
+    this.lengthViolation = newViolation;
+    return Math.abs(newViolation - oldViolation) > 0.1;
   }
 
   /**
@@ -280,42 +279,42 @@ public class NetIncompletes {
    * @return positive if too long, negative if too short, 0 if valid.
    */
   public double get_length_violation() {
-    return this.length_violation;
+    return this.lengthViolation;
   }
 
   /**
-   * Calculates an array of Item-connected_set pairs for the items of this net. Groups items that
-   * are physically connected into the same connected set.
+   * Calculates an array of Item-connectedSet pairs for the items of this net. Groups items that are
+   * physically connected into the same connected set.
    *
    * @param p_item_list The list of items to group.
    * @return An array of NetItem objects representing the grouped items.
    */
   private NetItem[] calculate_net_items(Collection<Item> p_item_list) {
     ArrayList<NetItem> result = new ArrayList<>();
-    Set<Item> unique_items = new HashSet<>(p_item_list);
-    int unique_items_count = unique_items.size();
+    Set<Item> uniqueItems = new HashSet<>(p_item_list);
+    int uniqueItemsCount = uniqueItems.size();
 
-    while (!unique_items.isEmpty()) {
-      Item start_item = unique_items.iterator().next();
-      Collection<Item> curr_connected_set = start_item.get_connected_set(this.net.net_number);
+    while (!uniqueItems.isEmpty()) {
+      Item startItem = uniqueItems.iterator().next();
+      Collection<Item> currConnectedSet = startItem.get_connected_set(this.net.netNumber);
 
       // Prevent ConcurrentModificationException by creating a list of items to remove
-      Collection<Item> items_in_component = new ArrayList<>();
-      for (Item item_in_set : curr_connected_set) {
-        if (unique_items.contains(item_in_set)) {
-          items_in_component.add(item_in_set);
+      Collection<Item> itemsInComponent = new ArrayList<>();
+      for (Item item_in_set : currConnectedSet) {
+        if (uniqueItems.contains(item_in_set)) {
+          itemsInComponent.add(item_in_set);
         }
       }
 
-      for (Item curr_item : items_in_component) {
-        result.add(new NetItem(curr_item, curr_connected_set));
+      for (Item currItem : itemsInComponent) {
+        result.add(new NetItem(currItem, currConnectedSet));
       }
-      unique_items.removeAll(items_in_component);
+      uniqueItems.removeAll(itemsInComponent);
     }
 
-    if (result.size() > unique_items_count) {
+    if (result.size() > uniqueItemsCount) {
       FRLogger.warn("NetIncompletes.calculate_net_items: too many items");
-    } else if (result.size() < unique_items_count) {
+    } else if (result.size() < uniqueItemsCount) {
       FRLogger.warn("NetIncompletes.calculate_net_items: too few items");
     }
     return result.toArray(new NetItem[0]);
@@ -330,10 +329,10 @@ public class NetIncompletes {
       Collection<Item> p_from_connected_set,
       Collection<Item> p_to_connected_set) {
     for (int i = 0; i < p_net_items.length; i++) {
-      NetItem curr_item = p_net_items[i];
-      if (curr_item.connected_set == p_from_connected_set) {
-        p_to_connected_set.add(curr_item.item);
-        curr_item.connected_set = p_to_connected_set;
+      NetItem currItem = p_net_items[i];
+      if (currItem.connectedSet == p_from_connected_set) {
+        p_to_connected_set.add(currItem.item);
+        currItem.connectedSet = p_to_connected_set;
       }
     }
   }
@@ -345,37 +344,37 @@ public class NetIncompletes {
    */
   private static final class Edge implements Comparable<Edge> {
 
-    public final NetItem from_item;
-    public final FloatPoint from_corner;
-    public final NetItem to_item;
-    public final FloatPoint to_corner;
-    public final double length_square;
+    public final NetItem fromItem;
+    public final FloatPoint fromCorner;
+    public final NetItem toItem;
+    public final FloatPoint toCorner;
+    public final double lengthSquare;
 
     private Edge(
         NetItem p_from_item, FloatPoint p_from_corner, NetItem p_to_item, FloatPoint p_to_corner) {
-      from_item = p_from_item;
-      from_corner = p_from_corner;
-      to_item = p_to_item;
-      to_corner = p_to_corner;
-      length_square = p_to_corner.distance_square(p_from_corner);
+      fromItem = p_from_item;
+      fromCorner = p_from_corner;
+      toItem = p_to_item;
+      toCorner = p_to_corner;
+      lengthSquare = p_to_corner.distance_square(p_from_corner);
     }
 
     @Override
     public int compareTo(Edge p_other) {
-      double result = this.length_square - p_other.length_square;
+      double result = this.lengthSquare - p_other.lengthSquare;
       if (result == 0) {
         // prevent result 0, so that edges with the same length as another edge are not
         // skipped in
         // the set
-        result = this.from_corner.x - p_other.from_corner.x;
+        result = this.fromCorner.x - p_other.fromCorner.x;
         if (result == 0) {
-          result = this.from_corner.y - p_other.from_corner.y;
+          result = this.fromCorner.y - p_other.fromCorner.y;
         }
         if (result == 0) {
-          result = this.to_corner.x - p_other.to_corner.x;
+          result = this.toCorner.x - p_other.toCorner.x;
         }
         if (result == 0) {
-          result = this.to_corner.y - p_other.to_corner.y;
+          result = this.toCorner.y - p_other.toCorner.y;
         }
       }
       return Signum.as_int(result);
@@ -386,11 +385,11 @@ public class NetIncompletes {
   private static class NetItem implements PlanarDelaunayTriangulation.Storable {
 
     final Item item;
-    Collection<Item> connected_set;
+    Collection<Item> connectedSet;
 
     NetItem(Item p_item, Collection<Item> p_connected_set) {
       item = p_item;
-      connected_set = p_connected_set;
+      connectedSet = p_connected_set;
     }
 
     @Override

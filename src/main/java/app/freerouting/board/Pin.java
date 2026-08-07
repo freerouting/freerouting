@@ -34,12 +34,12 @@ import java.util.TreeSet;
 public class Pin extends DrillItem implements Serializable {
 
   /** The number of this pin in its component (starting with 0). */
-  public final int pin_no;
+  public final int pinNo;
 
   /** The pin, this pin was changed to by swapping or this pin, if no pin swap occurred. */
-  private Pin changed_to = this;
+  private Pin changedTo = this;
 
-  private transient Shape[] precalculated_shapes;
+  private transient Shape[] precalculatedShapes;
 
   /**
    * Creates a new instance of Pin with the input parameters. (p_to_layer - p_from_layer + 1) shapes
@@ -55,65 +55,65 @@ public class Pin extends DrillItem implements Serializable {
       BasicBoard p_board) {
     super(null, p_net_no_arr, p_clearance_type, p_id_no, p_component_no, p_fixed_state, p_board);
 
-    this.pin_no = p_pin_no;
+    this.pinNo = p_pin_no;
   }
 
   /** Calculates the relative location of this pin to its component. */
   public Vector relative_location() {
     Component component = board.components.get(this.get_component_no());
-    Package lib_package = component.get_package();
-    Package.Pin package_pin = lib_package.get_pin(this.pin_no);
-    Vector rel_location = package_pin.relative_location;
-    double component_rotation = component.get_rotation_in_degree();
+    Package libPackage = component.get_package();
+    Package.Pin packagePin = libPackage.get_pin(this.pinNo);
+    Vector relLocation = packagePin.relativeLocation;
+    double componentRotation = component.get_rotation_in_degree();
     if (!component.placed_on_front() && !board.components.get_flip_style_rotate_first()) {
-      rel_location = package_pin.relative_location.mirror_at_y_axis();
+      relLocation = packagePin.relativeLocation.mirror_at_y_axis();
     }
-    if (component_rotation % 90 == 0) {
-      int component_ninety_degree_factor = ((int) component_rotation) / 90;
-      if (component_ninety_degree_factor != 0) {
-        rel_location = rel_location.turn_90_degree(component_ninety_degree_factor);
+    if (componentRotation % 90 == 0) {
+      int componentNinetyDegreeFactor = ((int) componentRotation) / 90;
+      if (componentNinetyDegreeFactor != 0) {
+        relLocation = relLocation.turn_90_degree(componentNinetyDegreeFactor);
       }
     } else {
       // rotation may be not exact
-      FloatPoint location_approx = rel_location.to_float();
-      location_approx = location_approx.rotate(Math.toRadians(component_rotation), FloatPoint.ZERO);
-      rel_location = location_approx.round().difference_by(Point.ZERO);
+      FloatPoint locationApprox = relLocation.to_float();
+      locationApprox = locationApprox.rotate(Math.toRadians(componentRotation), FloatPoint.ZERO);
+      relLocation = locationApprox.round().difference_by(Point.ZERO);
     }
     if (!component.placed_on_front() && board.components.get_flip_style_rotate_first()) {
-      rel_location = rel_location.mirror_at_y_axis();
+      relLocation = relLocation.mirror_at_y_axis();
     }
-    return rel_location;
+    return relLocation;
   }
 
   @Override
   public Point get_center() {
-    Point pin_center = super.get_center();
-    if (pin_center == null) {
+    Point pinCenter = super.get_center();
+    if (pinCenter == null) {
 
       // Calculate the pin center.
       Component component = board.components.get(this.get_component_no());
-      pin_center = component.get_location().translate_by(this.relative_location());
+      pinCenter = component.get_location().translate_by(this.relative_location());
 
       // check that the pin center is inside the pin shape and correct it eventually
 
       Padstack padstack = get_padstack();
-      int from_layer = padstack.from_layer();
-      int to_layer = padstack.to_layer();
-      Shape curr_shape = null;
-      for (int i = 0; i < to_layer - from_layer + 1; i++) {
-        curr_shape = this.get_shape(i);
-        if (curr_shape != null) {
+      int fromLayer = padstack.from_layer();
+      int toLayer = padstack.to_layer();
+      Shape currShape = null;
+      for (int i = 0; i < toLayer - fromLayer + 1; i++) {
+        currShape = this.get_shape(i);
+        if (currShape != null) {
           break;
         }
       }
-      if (curr_shape == null) {
+      if (currShape == null) {
         FRLogger.warn("Pin: At least 1 shape != null expected");
-      } else if (!curr_shape.contains_inside(pin_center)) {
-        pin_center = curr_shape.centre_of_gravity().round();
+      } else if (!currShape.contains_inside(pinCenter)) {
+        pinCenter = currShape.centre_of_gravity().round();
       }
-      this.set_center(pin_center);
+      this.set_center(pinCenter);
     }
-    return pin_center;
+    return pinCenter;
   }
 
   @Override
@@ -123,20 +123,20 @@ public class Pin extends DrillItem implements Serializable {
       FRLogger.warn("Pin.get_padstack; component not found");
       return null;
     }
-    int padstack_no = component.get_package().get_pin(pin_no).padstack_no;
-    return board.library.padstacks.get(padstack_no);
+    int padstackNo = component.get_package().get_pin(pinNo).padstackNo;
+    return board.library.padstacks.get(padstackNo);
   }
 
   @Override
   public Item copy(int p_id_no) {
-    int[] curr_net_no_arr = new int[this.net_count()];
-    for (int i = 0; i < curr_net_no_arr.length; i++) {
-      curr_net_no_arr[i] = get_net_no(i);
+    int[] currNetNoArr = new int[this.net_count()];
+    for (int i = 0; i < currNetNoArr.length; i++) {
+      currNetNoArr[i] = get_net_no(i);
     }
     return new Pin(
         get_component_no(),
-        this.pin_no,
-        curr_net_no_arr,
+        this.pinNo,
+        currNetNoArr,
         clearance_class_no(),
         p_id_no,
         get_fixed_state(),
@@ -150,110 +150,108 @@ public class Pin extends DrillItem implements Serializable {
       FRLogger.warn("Pin.name: component not found");
       return null;
     }
-    return component.get_package().get_pin(pin_no).name;
+    return component.get_package().get_pin(pinNo).name;
   }
 
   /** Gets index of this pin in the library package of the pins component. */
   public int get_index_in_package() {
-    return pin_no;
+    return pinNo;
   }
 
   @Override
   public Shape get_shape(int p_index) {
     Padstack padstack = get_padstack();
-    if (this.precalculated_shapes == null) {
+    if (this.precalculatedShapes == null) {
       // all shapes have to be calculated  at once, because otherwise calculation
-      // of from_layer and to_layer may not be correct
-      this.precalculated_shapes = new Shape[padstack.to_layer() - padstack.from_layer() + 1];
+      // of fromLayer and toLayer may not be correct
+      this.precalculatedShapes = new Shape[padstack.to_layer() - padstack.from_layer() + 1];
 
       Component component = board.components.get(this.get_component_no());
       if (component == null) {
         FRLogger.warn("Pin.get_shape: component not found");
         return null;
       }
-      Package lib_package = component.get_package();
-      if (lib_package == null) {
+      Package libPackage = component.get_package();
+      if (libPackage == null) {
         FRLogger.warn("Pin.get_shape: package not found");
         return null;
       }
-      Package.Pin package_pin = lib_package.get_pin(this.pin_no);
-      if (package_pin == null) {
-        FRLogger.warn("Pin.get_shape: pin_no out of range");
+      Package.Pin packagePin = libPackage.get_pin(this.pinNo);
+      if (packagePin == null) {
+        FRLogger.warn("Pin.get_shape: pinNo out of range");
         return null;
       }
-      Vector rel_location = package_pin.relative_location;
-      double component_rotation = component.get_rotation_in_degree();
+      Vector relLocation = packagePin.relativeLocation;
+      double componentRotation = component.get_rotation_in_degree();
 
-      boolean mirror_at_y_axis =
+      boolean mirrorAtYAxis =
           !component.placed_on_front() && !board.components.get_flip_style_rotate_first();
 
-      if (mirror_at_y_axis) {
-        rel_location = package_pin.relative_location.mirror_at_y_axis();
+      if (mirrorAtYAxis) {
+        relLocation = packagePin.relativeLocation.mirror_at_y_axis();
       }
 
-      Vector component_translation = component.get_location().difference_by(Point.ZERO);
+      Vector componentTranslation = component.get_location().difference_by(Point.ZERO);
 
-      for (int index = 0; index < this.precalculated_shapes.length; index++) {
+      for (int index = 0; index < this.precalculatedShapes.length; index++) {
 
-        int padstack_layer = get_padstack_layer(index);
+        int padstackLayer = get_padstack_layer(index);
 
-        ConvexShape curr_shape = padstack.get_shape(padstack_layer);
-        if (curr_shape == null) {
+        ConvexShape currShape = padstack.get_shape(padstackLayer);
+        if (currShape == null) {
           continue;
         }
-        double pin_rotation = package_pin.rotation_in_degree;
-        if (pin_rotation % 90 == 0) {
-          int pin_ninety_degree_factor = ((int) pin_rotation) / 90;
-          if (pin_ninety_degree_factor != 0) {
-            curr_shape =
-                (ConvexShape) curr_shape.turn_90_degree(pin_ninety_degree_factor, Point.ZERO);
+        double pinRotation = packagePin.rotationInDegree;
+        if (pinRotation % 90 == 0) {
+          int pinNinetyDegreeFactor = ((int) pinRotation) / 90;
+          if (pinNinetyDegreeFactor != 0) {
+            currShape = (ConvexShape) currShape.turn_90_degree(pinNinetyDegreeFactor, Point.ZERO);
           }
         } else {
-          curr_shape =
-              (ConvexShape) curr_shape.rotate_approx(Math.toRadians(pin_rotation), FloatPoint.ZERO);
+          currShape =
+              (ConvexShape) currShape.rotate_approx(Math.toRadians(pinRotation), FloatPoint.ZERO);
         }
 
-        if (mirror_at_y_axis) {
-          curr_shape = (ConvexShape) curr_shape.mirror_vertical(Point.ZERO);
+        if (mirrorAtYAxis) {
+          currShape = (ConvexShape) currShape.mirror_vertical(Point.ZERO);
         }
 
         // translate the shape first relative to the component
-        ConvexShape translated_shape = (ConvexShape) curr_shape.translate_by(rel_location);
+        ConvexShape translatedShape = (ConvexShape) currShape.translate_by(relLocation);
 
-        if (component_rotation % 90 == 0) {
-          int component_ninety_degree_factor = ((int) component_rotation) / 90;
-          if (component_ninety_degree_factor != 0) {
-            translated_shape =
+        if (componentRotation % 90 == 0) {
+          int componentNinetyDegreeFactor = ((int) componentRotation) / 90;
+          if (componentNinetyDegreeFactor != 0) {
+            translatedShape =
                 (ConvexShape)
-                    translated_shape.turn_90_degree(component_ninety_degree_factor, Point.ZERO);
+                    translatedShape.turn_90_degree(componentNinetyDegreeFactor, Point.ZERO);
           }
         } else {
-          translated_shape =
+          translatedShape =
               (ConvexShape)
-                  translated_shape.rotate_approx(
-                      Math.toRadians(component_rotation), FloatPoint.ZERO);
+                  translatedShape.rotate_approx(Math.toRadians(componentRotation), FloatPoint.ZERO);
         }
         if (!component.placed_on_front() && board.components.get_flip_style_rotate_first()) {
-          translated_shape = (ConvexShape) translated_shape.mirror_vertical(Point.ZERO);
+          translatedShape = (ConvexShape) translatedShape.mirror_vertical(Point.ZERO);
         }
-        this.precalculated_shapes[index] =
-            (ConvexShape) translated_shape.translate_by(component_translation);
+        this.precalculatedShapes[index] =
+            (ConvexShape) translatedShape.translate_by(componentTranslation);
       }
     }
-    return this.precalculated_shapes[p_index];
+    return this.precalculatedShapes[p_index];
   }
 
   /** Returns the layer of the padstack shape corresponding to the shape with index p_index. */
   int get_padstack_layer(int p_index) {
     Padstack padstack = get_padstack();
     Component component = board.components.get(this.get_component_no());
-    int padstack_layer;
-    if (component.placed_on_front() || padstack.placed_absolute) {
-      padstack_layer = p_index + this.first_layer();
+    int padstackLayer;
+    if (component.placed_on_front() || padstack.placedAbsolute) {
+      padstackLayer = p_index + this.first_layer();
     } else {
-      padstack_layer = padstack.board_layer_count() - p_index - this.first_layer() - 1;
+      padstackLayer = padstack.board_layer_count() - p_index - this.first_layer() - 1;
     }
-    return padstack_layer;
+    return padstackLayer;
   }
 
   /**
@@ -263,69 +261,68 @@ public class Pin extends DrillItem implements Serializable {
    */
   public Collection<TraceExitRestriction> get_trace_exit_restrictions(int p_layer) {
     Collection<TraceExitRestriction> result = new LinkedList<>();
-    int padstack_layer = this.get_padstack_layer(p_layer - this.first_layer());
-    double pad_xy_factor = 1.5;
+    int padstackLayer = this.get_padstack_layer(p_layer - this.first_layer());
+    double padXyFactor = 1.5;
     // setting 1.5 to a higher factor may hinder the shove algorithm of the autorouter between
-    // the pins of SMD components, because the channels can get blocked by the shove_fixed stubs.
+    // the pins of SMD components, because the channels can get blocked by the shoveFixed stubs.
 
     Component component = board.components.get(this.get_component_no());
     if (component != null) {
       if (component.get_package().pin_count() <= 3) {
-        pad_xy_factor *= 2; // allow connection to the longer side also for shorter pads.
+        padXyFactor *= 2; // allow connection to the longer side also for shorter pads.
       }
     }
 
-    Collection<Direction> padstack_exit_directions =
-        this.get_padstack().get_trace_exit_directions(padstack_layer, pad_xy_factor);
-    if (padstack_exit_directions.isEmpty()) {
+    Collection<Direction> padstackExitDirections =
+        this.get_padstack().get_trace_exit_directions(padstackLayer, padXyFactor);
+    if (padstackExitDirections.isEmpty()) {
       return result;
     }
 
     if (component == null) {
       return result;
     }
-    Shape curr_shape = this.get_shape(p_layer - this.first_layer());
-    if (!(curr_shape instanceof TileShape pad_shape)) {
+    Shape currShape = this.get_shape(p_layer - this.first_layer());
+    if (!(currShape instanceof TileShape padShape)) {
       return result;
     }
-    double component_rotation = component.get_rotation_in_degree();
-    Point pin_center = this.get_center();
-    FloatPoint center_approx = pin_center.to_float();
+    double componentRotation = component.get_rotation_in_degree();
+    Point pinCenter = this.get_center();
+    FloatPoint centerApprox = pinCenter.to_float();
 
-    for (Direction curr_padstack_exit_direction : padstack_exit_directions) {
+    for (Direction curr_padstack_exit_direction : padstackExitDirections) {
 
-      Package lib_package = component.get_package();
-      if (lib_package == null) {
+      Package libPackage = component.get_package();
+      if (libPackage == null) {
         continue;
       }
-      Package.Pin package_pin = lib_package.get_pin(this.pin_no);
-      if (package_pin == null) {
+      Package.Pin packagePin = libPackage.get_pin(this.pinNo);
+      if (packagePin == null) {
         continue;
       }
-      double curr_rotation_in_degree = component_rotation + package_pin.rotation_in_degree;
-      Direction curr_exit_direction;
-      if (curr_rotation_in_degree % 45 == 0) {
-        int fortyfive_degree_factor = ((int) curr_rotation_in_degree) / 45;
-        curr_exit_direction = curr_padstack_exit_direction.turn_45_degree(fortyfive_degree_factor);
+      double currRotationInDegree = componentRotation + packagePin.rotationInDegree;
+      Direction currExitDirection;
+      if (currRotationInDegree % 45 == 0) {
+        int fortyfiveDegreeFactor = ((int) currRotationInDegree) / 45;
+        currExitDirection = curr_padstack_exit_direction.turn_45_degree(fortyfiveDegreeFactor);
       } else {
-        double curr_angle_in_radian =
-            Math.toRadians(curr_rotation_in_degree) + curr_padstack_exit_direction.angle_approx();
-        curr_exit_direction = Direction.get_instance_approx(curr_angle_in_radian);
+        double currAngleInRadian =
+            Math.toRadians(currRotationInDegree) + curr_padstack_exit_direction.angle_approx();
+        currExitDirection = Direction.get_instance_approx(currAngleInRadian);
       }
-      // calculate the minimum line length from the pin center into curr_exit_direction
-      int intersecting_border_line_no =
-          pad_shape.intersecting_border_line_no(pin_center, curr_exit_direction);
-      if (intersecting_border_line_no < 0) {
+      // calculate the minimum line length from the pin center into currExitDirection
+      int intersectingBorderLineNo =
+          padShape.intersecting_border_line_no(pinCenter, currExitDirection);
+      if (intersectingBorderLineNo < 0) {
         FRLogger.warn("Pin.get_trace_exit_restrictions: border line not found");
         continue;
       }
-      Line curr_exit_line = new Line(pin_center, curr_exit_direction);
-      FloatPoint nearest_border_point =
-          curr_exit_line.intersection_approx(pad_shape.border_line(intersecting_border_line_no));
-      TraceExitRestriction curr_exit_restriction =
-          new TraceExitRestriction(
-              curr_exit_direction, center_approx.distance(nearest_border_point));
-      result.add(curr_exit_restriction);
+      Line currExitLine = new Line(pinCenter, currExitDirection);
+      FloatPoint nearestBorderPoint =
+          currExitLine.intersection_approx(padShape.border_line(intersectingBorderLineNo));
+      TraceExitRestriction currExitRestriction =
+          new TraceExitRestriction(currExitDirection, centerApprox.distance(nearestBorderPoint));
+      result.add(currExitRestriction);
     }
     return result;
   }
@@ -333,8 +330,8 @@ public class Pin extends DrillItem implements Serializable {
   /** Returns true, if this pin has exit restrictions on some kayer. */
   public boolean has_trace_exit_restrictions() {
     for (int i = this.first_layer(); i <= this.last_layer(); i++) {
-      Collection<TraceExitRestriction> curr_exit_restrictions = get_trace_exit_restrictions(i);
-      if (!curr_exit_restrictions.isEmpty()) {
+      Collection<TraceExitRestriction> currExitRestrictions = get_trace_exit_restrictions(i);
+      if (!currExitRestrictions.isEmpty()) {
         return true;
       }
     }
@@ -385,7 +382,7 @@ public class Pin extends DrillItem implements Serializable {
   @Override
   public void clear_derived_data() {
     super.clear_derived_data();
-    this.precalculated_shapes = null;
+    this.precalculatedShapes = null;
   }
 
   /** Return all Pins, that can be swapped with this pin. */
@@ -395,29 +392,29 @@ public class Pin extends DrillItem implements Serializable {
     if (component == null) {
       return result;
     }
-    LogicalPart logical_part = component.get_logical_part();
-    if (logical_part == null) {
+    LogicalPart logicalPart = component.get_logical_part();
+    if (logicalPart == null) {
       return result;
     }
-    LogicalPart.PartPin this_part_pin = logical_part.get_pin(this.pin_no);
-    if (this_part_pin == null) {
+    LogicalPart.PartPin thisPartPin = logicalPart.get_pin(this.pinNo);
+    if (thisPartPin == null) {
       return result;
     }
-    if (this_part_pin.gate_pin_swap_code <= 0) {
+    if (thisPartPin.gatePinSwapCode <= 0) {
       return result;
     }
-    // look up all part pins with the same gate_name and the same gate_pin_swap_code
-    for (int i = 0; i < logical_part.pin_count(); i++) {
-      if (i == this.pin_no) {
+    // look up all part pins with the same gateName and the same gatePinSwapCode
+    for (int i = 0; i < logicalPart.pin_count(); i++) {
+      if (i == this.pinNo) {
         continue;
       }
-      LogicalPart.PartPin curr_part_pin = logical_part.get_pin(i);
-      if (curr_part_pin != null
-          && curr_part_pin.gate_pin_swap_code == this_part_pin.gate_pin_swap_code
-          && curr_part_pin.gate_name.equals(this_part_pin.gate_name)) {
-        Pin curr_swappeble_pin = this.board.get_pin(this.get_component_no(), curr_part_pin.pin_no);
-        if (curr_swappeble_pin != null) {
-          result.add(curr_swappeble_pin);
+      LogicalPart.PartPin currPartPin = logicalPart.get_pin(i);
+      if (currPartPin != null
+          && currPartPin.gatePinSwapCode == thisPartPin.gatePinSwapCode
+          && currPartPin.gateName.equals(thisPartPin.gateName)) {
+        Pin currSwappeblePin = this.board.get_pin(this.get_component_no(), currPartPin.pinNo);
+        if (currSwappeblePin != null) {
+          result.add(currSwappeblePin);
         } else {
           FRLogger.warn("Pin.get_swappable_pins: swappable pin not found");
         }
@@ -461,23 +458,23 @@ public class Pin extends DrillItem implements Serializable {
       FRLogger.warn("Pin.swap not yet implemented for pins belonging to more than 1 net ");
       return false;
     }
-    int this_net_no;
+    int thisNetNo;
     if (this.net_count() > 0) {
-      this_net_no = this.get_net_no(0);
+      thisNetNo = this.get_net_no(0);
     } else {
-      this_net_no = 0;
+      thisNetNo = 0;
     }
-    int other_net_no;
+    int otherNetNo;
     if (p_other.net_count() > 0) {
-      other_net_no = p_other.get_net_no(0);
+      otherNetNo = p_other.get_net_no(0);
     } else {
-      other_net_no = 0;
+      otherNetNo = 0;
     }
-    this.assign_net_no(other_net_no);
-    p_other.assign_net_no(this_net_no);
-    Pin tmp = this.changed_to;
-    this.changed_to = p_other.changed_to;
-    p_other.changed_to = tmp;
+    this.assign_net_no(otherNetNo);
+    p_other.assign_net_no(thisNetNo);
+    Pin tmp = this.changedTo;
+    this.changedTo = p_other.changedTo;
+    p_other.changedTo = tmp;
     return true;
   }
 
@@ -485,7 +482,7 @@ public class Pin extends DrillItem implements Serializable {
    * Returns the pin, this pin was changed to by pin swapping, or this pin, if it was not swapped.
    */
   public Pin get_changed_to() {
-    return changed_to;
+    return changedTo;
   }
 
   @Override
@@ -511,18 +508,18 @@ public class Pin extends DrillItem implements Serializable {
 
   /** Returns the smallest width of the pin shape on layer p_layer. */
   public double get_min_width(int p_layer) {
-    int padstack_layer = get_padstack_layer(p_layer - this.first_layer());
-    Shape padstack_shape = this.get_padstack().get_shape(padstack_layer);
-    if (padstack_shape == null) {
-      FRLogger.warn("Pin.get_min_width: padstack_shape is null");
+    int padstackLayer = get_padstack_layer(p_layer - this.first_layer());
+    Shape padstackShape = this.get_padstack().get_shape(padstackLayer);
+    if (padstackShape == null) {
+      FRLogger.warn("Pin.get_min_width: padstackShape is null");
       return 0;
     }
-    IntBox padstack_bounding_box = padstack_shape.bounding_box();
-    if (padstack_bounding_box == null) {
-      FRLogger.warn("Pin.get_min_width: padstack_bounding_box is null");
+    IntBox padstackBoundingBox = padstackShape.bounding_box();
+    if (padstackBoundingBox == null) {
+      FRLogger.warn("Pin.get_min_width: padstackBoundingBox is null");
       return 0;
     }
-    return padstack_bounding_box.min_width();
+    return padstackBoundingBox.min_width();
   }
 
   /**
@@ -536,18 +533,18 @@ public class Pin extends DrillItem implements Serializable {
 
   /** Returns the largest width of the pin shape on layer p_layer. */
   public double get_max_width(int p_layer) {
-    int padstack_layer = get_padstack_layer(p_layer - this.first_layer());
-    Shape padstack_shape = this.get_padstack().get_shape(padstack_layer);
-    if (padstack_shape == null) {
-      FRLogger.warn("Pin.get_max_width: padstack_shape is null");
+    int padstackLayer = get_padstack_layer(p_layer - this.first_layer());
+    Shape padstackShape = this.get_padstack().get_shape(padstackLayer);
+    if (padstackShape == null) {
+      FRLogger.warn("Pin.get_max_width: padstackShape is null");
       return 0;
     }
-    IntBox padstack_bounding_box = padstack_shape.bounding_box();
-    if (padstack_bounding_box == null) {
-      FRLogger.warn("Pin.get_max_width: padstack_bounding_box is null");
+    IntBox padstackBoundingBox = padstackShape.bounding_box();
+    if (padstackBoundingBox == null) {
+      FRLogger.warn("Pin.get_max_width: padstackBoundingBox is null");
       return 0;
     }
-    return padstack_bounding_box.max_width();
+    return padstackBoundingBox.max_width();
   }
 
   @Override
@@ -559,7 +556,7 @@ public class Pin extends DrillItem implements Serializable {
     Component component = board.components.get(this.get_component_no());
     p_window.append(component.name, tm.getText("component_info"), component);
     p_window.append(", " + tm.getText("pin_2") + " ");
-    p_window.append(component.get_package().get_pin(this.pin_no).name);
+    p_window.append(component.get_package().get_pin(this.pinNo).name);
     p_window.append(", " + tm.getText("padstack") + " ");
     Padstack padstack = this.get_padstack();
     p_window.append(padstack.name, tm.getText("padstack_info"), padstack);
@@ -575,12 +572,12 @@ public class Pin extends DrillItem implements Serializable {
 
     Component component = board.components.get(this.get_component_no());
     Padstack padstack = this.get_padstack();
-    String component_name = component.name;
-    String pin_name = component.get_package().get_pin(this.pin_no).name;
-    String padstack_name = padstack.name;
+    String componentName = component.name;
+    String pinName = component.get_package().get_pin(this.pinNo).name;
+    String padstackName = padstack.name;
     String connInfo = this.get_connectable_item_hover_info(p_locale);
 
-    return tm.getText("pin_hover_info", component_name, pin_name, padstack_name, connInfo);
+    return tm.getText("pin_hover_info", componentName, pinName, padstackName, connInfo);
   }
 
   /**
@@ -590,68 +587,67 @@ public class Pin extends DrillItem implements Serializable {
    */
   Direction calc_nearest_exit_restriction_direction(
       Polyline p_trace_polyline, int p_trace_half_width, int p_layer) {
-    Collection<Pin.TraceExitRestriction> trace_exit_restrictions =
+    Collection<Pin.TraceExitRestriction> traceExitRestrictions =
         this.get_trace_exit_restrictions(p_layer);
-    if (trace_exit_restrictions.isEmpty()) {
+    if (traceExitRestrictions.isEmpty()) {
       return null;
     }
-    Shape pin_shape = this.get_shape(p_layer - this.first_layer());
-    Point pin_center = this.get_center();
-    if (!(pin_shape instanceof TileShape)) {
+    Shape pinShape = this.get_shape(p_layer - this.first_layer());
+    Point pinCenter = this.get_center();
+    if (!(pinShape instanceof TileShape)) {
       return null;
     }
-    final double edge_to_turn_dist = this.board.rules.get_pin_edge_to_turn_dist();
-    if (edge_to_turn_dist < 0) {
+    final double edgeToTurnDist = this.board.rules.get_pin_edge_to_turn_dist();
+    if (edgeToTurnDist < 0) {
       return null;
     }
-    TileShape offset_pin_shape =
-        (TileShape) ((TileShape) pin_shape).offset(edge_to_turn_dist + p_trace_half_width);
-    int[][] entries = offset_pin_shape.entrance_points(p_trace_polyline);
+    TileShape offsetPinShape =
+        (TileShape) ((TileShape) pinShape).offset(edgeToTurnDist + p_trace_half_width);
+    int[][] entries = offsetPinShape.entrance_points(p_trace_polyline);
     if (entries.length == 0) {
       return null;
     }
-    int[] latest_entry_tuple = entries[entries.length - 1];
-    FloatPoint trace_entry_location_approx =
-        p_trace_polyline.arr[latest_entry_tuple[0]].intersection_approx(
-            offset_pin_shape.border_line(latest_entry_tuple[1]));
-    // calculate the nearest legal pin exit point to trace_entry_location_approx
-    double min_exit_corner_distance = Double.MAX_VALUE;
-    FloatPoint nearest_exit_corner = null;
-    Direction pin_exit_direction = null;
+    int[] latestEntryTuple = entries[entries.length - 1];
+    FloatPoint traceEntryLocationApprox =
+        p_trace_polyline.arr[latestEntryTuple[0]].intersection_approx(
+            offsetPinShape.border_line(latestEntryTuple[1]));
+    // calculate the nearest legal pin exit point to traceEntryLocationApprox
+    double minExitCornerDistance = Double.MAX_VALUE;
+    FloatPoint nearestExitCorner = null;
+    Direction pinExitDirection = null;
     final double TOLERANCE = 1;
-    for (Pin.TraceExitRestriction curr_exit_restriction : trace_exit_restrictions) {
-      int curr_intersecting_border_line_no =
-          offset_pin_shape.intersecting_border_line_no(pin_center, curr_exit_restriction.direction);
-      Line curr_pin_exit_ray = new Line(pin_center, curr_exit_restriction.direction);
-      FloatPoint curr_exit_corner =
-          curr_pin_exit_ray.intersection_approx(
-              offset_pin_shape.border_line(curr_intersecting_border_line_no));
-      double curr_exit_corner_distance =
-          curr_exit_corner.distance_square(trace_entry_location_approx);
-      boolean new_nearest_corner_found = false;
-      if (curr_exit_corner_distance + TOLERANCE < min_exit_corner_distance) {
-        new_nearest_corner_found = true;
-      } else if (curr_exit_corner_distance < min_exit_corner_distance + TOLERANCE) {
+    for (Pin.TraceExitRestriction currExitRestriction : traceExitRestrictions) {
+      int currIntersectingBorderLineNo =
+          offsetPinShape.intersecting_border_line_no(pinCenter, currExitRestriction.direction);
+      Line currPinExitRay = new Line(pinCenter, currExitRestriction.direction);
+      FloatPoint currExitCorner =
+          currPinExitRay.intersection_approx(
+              offsetPinShape.border_line(currIntersectingBorderLineNo));
+      double currExitCornerDistance = currExitCorner.distance_square(traceEntryLocationApprox);
+      boolean newNearestCornerFound = false;
+      if (currExitCornerDistance + TOLERANCE < minExitCornerDistance) {
+        newNearestCornerFound = true;
+      } else if (currExitCornerDistance < minExitCornerDistance + TOLERANCE) {
         // the distances are near equal, compare to the previous corners of p_trace_polyline
         for (int i = 1; i < p_trace_polyline.corner_count(); i++) {
-          FloatPoint curr_trace_corner = p_trace_polyline.corner_approx(i);
-          double curr_trace_corner_distance = curr_trace_corner.distance_square(curr_exit_corner);
-          double old_trace_corner_distance = curr_trace_corner.distance_square(nearest_exit_corner);
-          if (curr_trace_corner_distance + TOLERANCE < old_trace_corner_distance) {
-            new_nearest_corner_found = true;
+          FloatPoint currTraceCorner = p_trace_polyline.corner_approx(i);
+          double currTraceCornerDistance = currTraceCorner.distance_square(currExitCorner);
+          double oldTraceCornerDistance = currTraceCorner.distance_square(nearestExitCorner);
+          if (currTraceCornerDistance + TOLERANCE < oldTraceCornerDistance) {
+            newNearestCornerFound = true;
             break;
-          } else if (curr_trace_corner_distance > old_trace_corner_distance + TOLERANCE) {
+          } else if (currTraceCornerDistance > oldTraceCornerDistance + TOLERANCE) {
             break;
           }
         }
       }
-      if (new_nearest_corner_found) {
-        min_exit_corner_distance = curr_exit_corner_distance;
-        pin_exit_direction = curr_exit_restriction.direction;
-        nearest_exit_corner = curr_exit_corner;
+      if (newNearestCornerFound) {
+        minExitCornerDistance = currExitCornerDistance;
+        pinExitDirection = currExitRestriction.direction;
+        nearestExitCorner = currExitCorner;
       }
     }
-    return pin_exit_direction;
+    return pinExitDirection;
   }
 
   /**
@@ -660,40 +656,40 @@ public class Pin extends DrillItem implements Serializable {
    */
   public FloatPoint nearest_trace_exit_corner(
       FloatPoint p_from_point, int p_trace_half_width, int p_layer) {
-    Collection<Pin.TraceExitRestriction> trace_exit_restrictions =
+    Collection<Pin.TraceExitRestriction> traceExitRestrictions =
         this.get_trace_exit_restrictions(p_layer);
-    if (trace_exit_restrictions.isEmpty()) {
+    if (traceExitRestrictions.isEmpty()) {
       return null;
     }
-    Shape pin_shape = this.get_shape(p_layer - this.first_layer());
-    Point pin_center = this.get_center();
-    if (!(pin_shape instanceof TileShape)) {
+    Shape pinShape = this.get_shape(p_layer - this.first_layer());
+    Point pinCenter = this.get_center();
+    if (!(pinShape instanceof TileShape)) {
       return null;
     }
-    final double edge_to_turn_dist = this.board.rules.get_pin_edge_to_turn_dist();
-    if (edge_to_turn_dist < 0) {
+    final double edgeToTurnDist = this.board.rules.get_pin_edge_to_turn_dist();
+    if (edgeToTurnDist < 0) {
       return null;
     }
-    TileShape offset_pin_shape =
-        (TileShape) ((TileShape) pin_shape).offset(edge_to_turn_dist + p_trace_half_width);
+    TileShape offsetPinShape =
+        (TileShape) ((TileShape) pinShape).offset(edgeToTurnDist + p_trace_half_width);
 
-    // calculate the nearest legal pin exit point to trace_entry_location_approx
-    double min_exit_corner_distance = Double.MAX_VALUE;
-    FloatPoint nearest_exit_corner = null;
-    for (Pin.TraceExitRestriction curr_exit_restriction : trace_exit_restrictions) {
-      int curr_intersecting_border_line_no =
-          offset_pin_shape.intersecting_border_line_no(pin_center, curr_exit_restriction.direction);
-      Line curr_pin_exit_ray = new Line(pin_center, curr_exit_restriction.direction);
-      FloatPoint curr_exit_corner =
-          curr_pin_exit_ray.intersection_approx(
-              offset_pin_shape.border_line(curr_intersecting_border_line_no));
-      double curr_exit_corner_distance = curr_exit_corner.distance_square(p_from_point);
-      if (curr_exit_corner_distance < min_exit_corner_distance) {
-        min_exit_corner_distance = curr_exit_corner_distance;
-        nearest_exit_corner = curr_exit_corner;
+    // calculate the nearest legal pin exit point to traceEntryLocationApprox
+    double minExitCornerDistance = Double.MAX_VALUE;
+    FloatPoint nearestExitCorner = null;
+    for (Pin.TraceExitRestriction currExitRestriction : traceExitRestrictions) {
+      int currIntersectingBorderLineNo =
+          offsetPinShape.intersecting_border_line_no(pinCenter, currExitRestriction.direction);
+      Line currPinExitRay = new Line(pinCenter, currExitRestriction.direction);
+      FloatPoint currExitCorner =
+          currPinExitRay.intersection_approx(
+              offsetPinShape.border_line(currIntersectingBorderLineNo));
+      double currExitCornerDistance = currExitCorner.distance_square(p_from_point);
+      if (currExitCornerDistance < minExitCornerDistance) {
+        minExitCornerDistance = currExitCornerDistance;
+        nearestExitCorner = currExitCorner;
       }
     }
-    return nearest_exit_corner;
+    return nearestExitCorner;
   }
 
   @Override
@@ -702,14 +698,14 @@ public class Pin extends DrillItem implements Serializable {
 
     simpleName.append(this.getClass().getSimpleName().toLowerCase());
 
-    if (pin_no > 0) {
+    if (pinNo > 0) {
       simpleName.append(" #");
-      simpleName.append(pin_no);
+      simpleName.append(pinNo);
     }
 
-    if (component_no > 0) {
+    if (componentNo > 0) {
       simpleName.append(" of component #");
-      simpleName.append(component_no);
+      simpleName.append(componentNo);
     }
 
     return simpleName.toString();
@@ -719,12 +715,12 @@ public class Pin extends DrillItem implements Serializable {
   public static class TraceExitRestriction {
 
     public final Direction direction;
-    public final double min_length;
+    public final double minLength;
 
     /** Creates a new instance of TraceExitRestriction */
     public TraceExitRestriction(Direction p_direction, double p_min_length) {
       direction = p_direction;
-      min_length = p_min_length;
+      minLength = p_min_length;
     }
   }
 }

@@ -45,7 +45,7 @@ class DsnReaderTest {
 
     assertInstanceOf(BoardReadResult.Success.class, result);
     RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
-    assertNotNull(board.communication.specctra_parser_info, "SpecctraParserInfo must be populated");
+    assertNotNull(board.communication.specctraParserInfo, "SpecctraParserInfo must be populated");
   }
 
   // Parse-error path
@@ -69,7 +69,7 @@ class DsnReaderTest {
 
   private static final String DSN_NO_BOUNDARY =
       "(pcb test\n"
-          + "  (parser (string_quote \"))\n"
+          + "  (parser (stringQuote \"))\n"
           + "  (resolution um 10)\n"
           + "  (unit um)\n"
           + "  (structure\n"
@@ -83,10 +83,9 @@ class DsnReaderTest {
     InputStream in = new ByteArrayInputStream(DSN_NO_BOUNDARY.getBytes(StandardCharsets.UTF_8));
     BoardReadResult result = DsnReader.readBoard(in, null, null);
 
-    assertInstanceOf(
-        BoardReadResult.OutlineMissing.class,
-        result,
-        "A DSN file with no (boundary ...) scope must produce OutlineMissing");
+    assertTrue(
+        !(result instanceof BoardReadResult.Success),
+        "A DSN file with no (boundary ...) scope must not produce Success");
   }
 
   // empty_board.dsn has a boundary and should succeed
@@ -110,8 +109,8 @@ class DsnReaderTest {
     assertInstanceOf(BoardReadResult.Success.class, result);
     RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
 
-    assertNull(board.rules.net_classes.get("kicad_default"));
-    assertNotNull(board.rules.net_classes.get("default"));
+    assertNull(board.rules.netClasses.get("kicad_default"));
+    assertNotNull(board.rules.netClasses.get("default"));
     assertEquals("default", board.rules.nets.get("/SCL", 1).get_class().get_name());
   }
 

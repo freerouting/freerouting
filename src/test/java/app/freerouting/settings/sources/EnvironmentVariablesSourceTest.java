@@ -70,7 +70,7 @@ class EnvironmentVariablesSourceTest {
     RouterSettings settings = source.getSettings();
 
     assertNotNull(settings);
-    assertFalse(settings.vias_allowed);
+    assertFalse(settings.viasAllowed);
     assertEquals(1, source.getParsedCount());
   }
 
@@ -87,7 +87,7 @@ class EnvironmentVariablesSourceTest {
     assertNotNull(settings);
     assertEquals(50, settings.maxPasses);
     assertEquals(4, settings.optimizer.maxThreads);
-    assertTrue(settings.vias_allowed);
+    assertTrue(settings.viasAllowed);
     assertEquals(3, source.getParsedCount());
   }
 

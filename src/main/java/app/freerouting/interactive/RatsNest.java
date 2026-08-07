@@ -62,7 +62,7 @@ public class RatsNest {
   /**
    * Per-net visibility filter array for selective rats nest display.
    *
-   * <p>Array indexing: {@code is_filtered[i]} controls visibility for net number {@code (i+1)}.
+   * <p>Array indexing: {@code isFiltered[i]} controls visibility for net number {@code (i+1)}.
    *
    * <ul>
    *   <li>{@code true}: Airlines for this net are hidden
@@ -71,7 +71,7 @@ public class RatsNest {
    *
    * <p>This allows users to focus on specific nets by hiding the rats nest clutter from other nets.
    */
-  private final boolean[] is_filtered;
+  private final boolean[] isFiltered;
 
   /**
    * Global visibility flag for the entire rats nest display.
@@ -105,10 +105,10 @@ public class RatsNest {
     this.drc = new DesignRulesChecker(p_board, null);
     this.drc.calculateAllIncompletes();
 
-    int max_net_no = p_board.rules.nets.max_net_no();
-    this.is_filtered = new boolean[max_net_no];
-    for (int i = 0; i < max_net_no; i++) {
-      is_filtered[i] = false;
+    int maxNetNo = p_board.rules.nets.max_net_no();
+    this.isFiltered = new boolean[maxNetNo];
+    for (int i = 0; i < maxNetNo; i++) {
+      isFiltered[i] = false;
     }
   }
 
@@ -181,7 +181,7 @@ public class RatsNest {
   public int incomplete_count() {
     int result = drc.getIncompleteCount();
     StringBuilder perNet = new StringBuilder();
-    for (int netNo = 1; netNo <= this.is_filtered.length; netNo++) {
+    for (int netNo = 1; netNo <= this.isFiltered.length; netNo++) {
       int netIncomplete = drc.getIncompleteCount(netNo);
       if (netIncomplete > 0) {
         if (!perNet.isEmpty()) {
@@ -191,13 +191,13 @@ public class RatsNest {
       }
     }
     FRLogger.trace(
-        "RatsNest.incomplete_count",
+        "RatsNest.incompleteCount",
         "total_incomplete_count",
         "RatsNest total incomplete count=" + result,
         "RatsNest",
         new app.freerouting.geometry.planar.Point[0]);
     FRLogger.trace(
-        "RatsNest.incomplete_count",
+        "RatsNest.incompleteCount",
         "net_breakdown",
         "RatsNest incomplete net breakdown=" + perNet,
         "RatsNest",
@@ -227,9 +227,9 @@ public class RatsNest {
   public int incomplete_count(int p_net_no) {
     int result = drc.getIncompleteCount(p_net_no);
     FRLogger.trace(
-        "RatsNest.incomplete_count",
+        "RatsNest.incompleteCount",
         "net_incomplete_count",
-        "RatsNest net=" + p_net_no + " incomplete_count=" + result,
+        "RatsNest net=" + p_net_no + " incompleteCount=" + result,
         "Net #" + p_net_no,
         new app.freerouting.geometry.planar.Point[0]);
     return result;
@@ -412,10 +412,10 @@ public class RatsNest {
    * @see #draw(Graphics, GraphicsContext)
    */
   public void set_filter(int p_net_no, boolean p_value) {
-    if (p_net_no < 1 || p_net_no > is_filtered.length) {
+    if (p_net_no < 1 || p_net_no > isFiltered.length) {
       return;
     }
-    is_filtered[p_net_no - 1] = p_value;
+    isFiltered[p_net_no - 1] = p_value;
   }
 
   /**
@@ -441,15 +441,14 @@ public class RatsNest {
    * @see GraphicsContext
    */
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
-    boolean draw_length_violations_only = this.hidden;
+    boolean drawLengthViolationsOnly = this.hidden;
 
-    for (int i = 0; i < is_filtered.length; i++) {
+    for (int i = 0; i < isFiltered.length; i++) {
       // net index to net number: i -> i+1
-      if (!is_filtered[i]) {
+      if (!isFiltered[i]) {
         NetIncompletes ni = drc.getNetIncompletes(i + 1);
         if (ni != null) {
-          NetIncompletesGraphics.draw(
-              ni, p_graphics, p_graphics_context, draw_length_violations_only);
+          NetIncompletesGraphics.draw(ni, p_graphics, p_graphics_context, drawLengthViolationsOnly);
         }
       }
     }

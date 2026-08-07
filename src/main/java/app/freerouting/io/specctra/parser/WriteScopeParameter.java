@@ -10,11 +10,11 @@ import app.freerouting.settings.RouterSettings;
 public class WriteScopeParameter {
 
   public final BasicBoard board;
-  public final RouterSettings autoroute_settings;
+  public final RouterSettings autorouteSettings;
   public final IndentFileWriter file;
-  public final CoordinateTransform coordinate_transform;
-  public final boolean compat_mode;
-  public final IdentifierType identifier_type;
+  public final CoordinateTransform coordinateTransform;
+  public final boolean compatMode;
+  public final IdentifierType identifierType;
 
   /**
    * Creates a new instance of WriteScopeParameter. If p_compat_mode is true, only standard specctra
@@ -28,11 +28,11 @@ public class WriteScopeParameter {
       CoordinateTransform p_coordinate_transform,
       boolean p_compat_mode) {
     board = p_board;
-    autoroute_settings = p_autoroute_settings;
+    autorouteSettings = p_autoroute_settings;
     file = p_file;
-    coordinate_transform = p_coordinate_transform;
-    compat_mode = p_compat_mode;
-    String[] reserved_chars = {"(", ")", " ", ";", "-", "_"};
-    identifier_type = new IdentifierType(reserved_chars, p_string_quote);
+    coordinateTransform = p_coordinate_transform;
+    compatMode = p_compat_mode;
+    String[] reservedChars = {"(", ")", " ", ";", "-", "_"};
+    identifierType = new IdentifierType(reservedChars, p_string_quote);
   }
 }

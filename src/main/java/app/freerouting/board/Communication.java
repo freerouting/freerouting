@@ -13,19 +13,19 @@ import java.util.regex.Pattern;
 public class Communication implements Serializable {
 
   /** For coordinate transforms to a Specctra dsn file for example. */
-  public final CoordinateTransform coordinate_transform;
+  public final CoordinateTransform coordinateTransform;
 
   /** mil, inch or mm */
   public final Unit unit;
 
   /**
-   * The resolution (1 / unit_factor) of the coordinate system, which is imported from the host
+   * The resolution (1 / unitFactor) of the coordinate system, which is imported from the host
    * system.
    */
   public final int resolution;
 
-  public final SpecctraParserInfo specctra_parser_info;
-  public final IdentificationNumberGenerator id_no_generator;
+  public final SpecctraParserInfo specctraParserInfo;
+  public final IdentificationNumberGenerator idNoGenerator;
   public transient BoardObservers observers;
 
   /** Creates a new instance of BoardCommunication */
@@ -36,11 +36,11 @@ public class Communication implements Serializable {
       CoordinateTransform p_coordinate_transform,
       IdentificationNumberGenerator p_id_no_generator,
       BoardObservers p_observers) {
-    coordinate_transform = p_coordinate_transform;
+    coordinateTransform = p_coordinate_transform;
     unit = p_unit;
     resolution = p_resolution;
-    specctra_parser_info = p_specctra_parser_info;
-    id_no_generator = p_id_no_generator;
+    specctraParserInfo = p_specctra_parser_info;
+    idNoGenerator = p_id_no_generator;
     observers = p_observers;
   }
 
@@ -56,20 +56,20 @@ public class Communication implements Serializable {
   }
 
   public boolean host_cad_is_eagle() {
-    return specctra_parser_info != null
-        && specctra_parser_info.host_cad != null
-        && "CadSoft".equalsIgnoreCase(specctra_parser_info.host_cad);
+    return specctraParserInfo != null
+        && specctraParserInfo.hostCad != null
+        && "CadSoft".equalsIgnoreCase(specctraParserInfo.hostCad);
   }
 
   public boolean host_is_old_kicad() {
-    if ((specctra_parser_info == null)
-        || (specctra_parser_info.host_cad == null)
-        || (specctra_parser_info.host_version == null)) {
+    if ((specctraParserInfo == null)
+        || (specctraParserInfo.hostCad == null)
+        || (specctraParserInfo.hostVersion == null)) {
       return false;
     }
 
-    if (specctra_parser_info.host_cad.toLowerCase().contains("kicad")) {
-      String versionString = specctra_parser_info.host_version;
+    if (specctraParserInfo.hostCad.toLowerCase().contains("kicad")) {
+      String versionString = specctraParserInfo.hostVersion;
       Matcher matcher = Pattern.compile("\\d+").matcher(versionString);
       if (matcher.find()) {
         int versionNumber = Integer.parseInt(matcher.group());
@@ -81,7 +81,7 @@ public class Communication implements Serializable {
   }
 
   public boolean host_cad_exists() {
-    return specctra_parser_info != null && specctra_parser_info.host_cad != null;
+    return specctraParserInfo != null && specctraParserInfo.hostCad != null;
   }
 
   /** Returns the resolution scaled to the input unit */
@@ -101,13 +101,13 @@ public class Communication implements Serializable {
   public static class SpecctraParserInfo implements Serializable {
 
     /** Character for quoting strings in a dsn-File. */
-    public final String string_quote;
+    public final String stringQuote;
 
-    public final String host_cad;
-    public final String host_version;
+    public final String hostCad;
+    public final String hostVersion;
     public final Collection<String[]> constants;
-    public final WriteResolution write_resolution;
-    public final boolean dsn_file_generated_by_host;
+    public final WriteResolution writeResolution;
+    public final boolean dsnFileGeneratedByHost;
 
     public SpecctraParserInfo(
         String p_string_quote,
@@ -116,22 +116,22 @@ public class Communication implements Serializable {
         Collection<String[]> p_constants,
         WriteResolution p_write_resolution,
         boolean p_dsn_file_generated_by_host) {
-      string_quote = p_string_quote;
-      host_cad = p_host_cad;
-      host_version = p_host_version;
+      stringQuote = p_string_quote;
+      hostCad = p_host_cad;
+      hostVersion = p_host_version;
       constants = p_constants;
-      write_resolution = p_write_resolution;
-      dsn_file_generated_by_host = p_dsn_file_generated_by_host;
+      writeResolution = p_write_resolution;
+      dsnFileGeneratedByHost = p_dsn_file_generated_by_host;
     }
 
     public static class WriteResolution implements Serializable {
 
-      public final String char_name;
-      public final int positive_int;
+      public final String charName;
+      public final int positiveInt;
 
       public WriteResolution(String p_char_name, int p_positive_int) {
-        char_name = p_char_name;
-        positive_int = p_positive_int;
+        charName = p_char_name;
+        positiveInt = p_positive_int;
       }
     }
   }

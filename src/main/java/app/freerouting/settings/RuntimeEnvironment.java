@@ -13,7 +13,7 @@ import java.time.Instant;
  */
 public class RuntimeEnvironment implements Serializable {
 
-  @SerializedName("freerouting_version")
+  @SerializedName("freeroutingVersion")
   public String freeroutingVersion;
 
   @SerializedName("app_started_at")

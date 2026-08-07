@@ -26,7 +26,7 @@ import java.util.Locale;
 public class Via extends DrillItem implements Serializable {
 
   /** True, if coppersharing of this via with smd pins of the same net is allowed. */
-  public final boolean attach_allowed;
+  public final boolean attachAllowed;
 
   /**
    * True if this is an escape via inserted by the escalation fanout phase to provide a layer
@@ -43,10 +43,10 @@ public class Via extends DrillItem implements Serializable {
   public int escapeViaSmdLayer = -1;
 
   private Padstack padstack;
-  private transient Shape[] precalculated_shapes;
+  private transient Shape[] precalculatedShapes;
 
   /** Temporary data used in the autoroute algorithm. */
-  private transient ExpansionDrill autoroute_drill_info;
+  private transient ExpansionDrill autorouteDrillInfo;
 
   /** Creates a new instance of Via with the input parameters */
   public Via(
@@ -61,7 +61,7 @@ public class Via extends DrillItem implements Serializable {
       BasicBoard p_board) {
     super(p_center, p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
     this.padstack = p_padstack;
-    this.attach_allowed = p_attach_allowed;
+    this.attachAllowed = p_attach_allowed;
   }
 
   @Override
@@ -70,12 +70,12 @@ public class Via extends DrillItem implements Serializable {
         new Via(
             padstack,
             get_center(),
-            net_no_arr,
+            netNoArr,
             clearance_class_no(),
             p_id_no,
             get_component_no(),
             get_fixed_state(),
-            attach_allowed,
+            attachAllowed,
             board);
     copy.isEscapeVia = this.isEscapeVia;
     copy.escapeViaSmdLayer = this.escapeViaSmdLayer;
@@ -94,10 +94,10 @@ public class Via extends DrillItem implements Serializable {
     for (app.freerouting.drc.ClearanceViolation violation : rawViolations) {
       if (violation.layer == this.escapeViaSmdLayer) {
         Item other = null;
-        if (violation.first_item == this) {
-          other = violation.second_item;
-        } else if (violation.second_item == this) {
-          other = violation.first_item;
+        if (violation.firstItem == this) {
+          other = violation.secondItem;
+        } else if (violation.secondItem == this) {
+          other = violation.firstItem;
         }
         if (other != null && other.shares_net(this)) {
           continue;
@@ -114,21 +114,21 @@ public class Via extends DrillItem implements Serializable {
       FRLogger.warn("Via.get_shape: padstack is null");
       return null;
     }
-    if (this.precalculated_shapes == null) {
-      this.precalculated_shapes = new Shape[padstack.to_layer() - padstack.from_layer() + 1];
-      for (int i = 0; i < this.precalculated_shapes.length; i++) {
-        int padstack_layer = i + this.first_layer();
-        Vector translate_vector = get_center().difference_by(Point.ZERO);
-        Shape curr_shape = padstack.get_shape(padstack_layer);
+    if (this.precalculatedShapes == null) {
+      this.precalculatedShapes = new Shape[padstack.to_layer() - padstack.from_layer() + 1];
+      for (int i = 0; i < this.precalculatedShapes.length; i++) {
+        int padstackLayer = i + this.first_layer();
+        Vector translateVector = get_center().difference_by(Point.ZERO);
+        Shape currShape = padstack.get_shape(padstackLayer);
 
-        if (curr_shape == null) {
-          this.precalculated_shapes[i] = null;
+        if (currShape == null) {
+          this.precalculatedShapes[i] = null;
         } else {
-          this.precalculated_shapes[i] = (Shape) curr_shape.translate_by(translate_vector);
+          this.precalculatedShapes[i] = (Shape) currShape.translate_by(translateVector);
         }
       }
     }
-    return this.precalculated_shapes[p_index];
+    return this.precalculatedShapes[p_index];
   }
 
   @Override
@@ -159,24 +159,24 @@ public class Via extends DrillItem implements Serializable {
     if (p_other instanceof Trace) {
       return false;
     }
-    return !this.attach_allowed || !(p_other instanceof Pin) || !((Pin) p_other).drill_allowed();
+    return !this.attachAllowed || !(p_other instanceof Pin) || !((Pin) p_other).drill_allowed();
   }
 
   /** Checks, if the Via has contacts on at most 1 layer. */
   @Override
   public boolean is_tail() {
-    Collection<Item> contact_list = this.get_normal_contacts();
-    if (contact_list.size() <= 1) {
+    Collection<Item> contactList = this.get_normal_contacts();
+    if (contactList.size() <= 1) {
       return true;
     }
-    Iterator<Item> it = contact_list.iterator();
-    Item curr_contact_item = it.next();
-    int first_contact_first_layer = curr_contact_item.first_layer();
-    int first_contact_last_layer = curr_contact_item.last_layer();
+    Iterator<Item> it = contactList.iterator();
+    Item currContactItem = it.next();
+    int firstContactFirstLayer = currContactItem.first_layer();
+    int firstContactLastLayer = currContactItem.last_layer();
     while (it.hasNext()) {
-      curr_contact_item = it.next();
-      if (curr_contact_item.first_layer() != first_contact_first_layer
-          || curr_contact_item.last_layer() != first_contact_last_layer) {
+      currContactItem = it.next();
+      if (currContactItem.first_layer() != firstContactFirstLayer
+          || currContactItem.last_layer() != firstContactLastLayer) {
         return false;
       }
     }
@@ -188,42 +188,42 @@ public class Via extends DrillItem implements Serializable {
     if (this.board == null) {
       return;
     }
-    Padstack new_padstack = this.board.library.get_mirrored_via_padstack(this.padstack);
-    if (new_padstack == null) {
+    Padstack newPadstack = this.board.library.get_mirrored_via_padstack(this.padstack);
+    if (newPadstack == null) {
       return;
     }
-    this.padstack = new_padstack;
+    this.padstack = newPadstack;
     super.change_placement_side(p_pole);
     clear_derived_data();
   }
 
   public ExpansionDrill get_autoroute_drill_info(ShapeSearchTree p_autoroute_tree) {
-    if (this.autoroute_drill_info == null) {
-      ItemAutorouteInfo via_autoroute_info = this.get_autoroute_info();
-      TileShape curr_drill_shape = TileShape.get_instance(this.get_center());
-      this.autoroute_drill_info =
+    if (this.autorouteDrillInfo == null) {
+      ItemAutorouteInfo viaAutorouteInfo = this.get_autoroute_info();
+      TileShape currDrillShape = TileShape.get_instance(this.get_center());
+      this.autorouteDrillInfo =
           new ExpansionDrill(
-              curr_drill_shape, this.get_center(), this.first_layer(), this.last_layer());
-      int via_layer_count = this.last_layer() - this.first_layer() + 1;
-      for (int i = 0; i < via_layer_count; i++) {
-        this.autoroute_drill_info.room_arr[i] =
-            via_autoroute_info.get_expansion_room(i, p_autoroute_tree);
+              currDrillShape, this.get_center(), this.first_layer(), this.last_layer());
+      int viaLayerCount = this.last_layer() - this.first_layer() + 1;
+      for (int i = 0; i < viaLayerCount; i++) {
+        this.autorouteDrillInfo.roomArr[i] =
+            viaAutorouteInfo.get_expansion_room(i, p_autoroute_tree);
       }
     }
-    return this.autoroute_drill_info;
+    return this.autorouteDrillInfo;
   }
 
   @Override
   public void clear_derived_data() {
     super.clear_derived_data();
-    this.precalculated_shapes = null;
-    this.autoroute_drill_info = null;
+    this.precalculatedShapes = null;
+    this.autorouteDrillInfo = null;
   }
 
   @Override
   public void clear_autoroute_info() {
     super.clear_autoroute_info();
-    this.autoroute_drill_info = null;
+    this.autorouteDrillInfo = null;
   }
 
   @Override
@@ -279,12 +279,12 @@ public class Via extends DrillItem implements Serializable {
   public String get_hover_info(Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    String from_layer = this.board.layer_structure.arr[this.first_layer()].name;
-    String to_layer = this.board.layer_structure.arr[this.last_layer()].name;
-    String padstack_name = padstack.name;
+    String fromLayer = this.board.layerStructure.arr[this.first_layer()].name;
+    String toLayer = this.board.layerStructure.arr[this.last_layer()].name;
+    String padstackName = padstack.name;
     String connInfo = this.get_connectable_item_hover_info(p_locale);
 
-    return tm.getText("via_hover_info", padstack_name, from_layer, to_layer, connInfo);
+    return tm.getText("via_hover_info", padstackName, fromLayer, toLayer, connInfo);
   }
 
   @Override

@@ -21,7 +21,7 @@ public final class ForcedViaAlgo {
 
   /**
    * Checks, if a Via is possible at the input layer after evtl. shoving aside obstacle traces.
-   * p_room_shape is used for calculating the from_side.
+   * p_room_shape is used for calculating the fromSide.
    */
   public static ForcedPadAlgo.CheckDrillResult check_layer(
       double p_via_radius,
@@ -39,43 +39,39 @@ public final class ForcedViaAlgo {
     if (p_via_radius <= 0) {
       return ForcedPadAlgo.CheckDrillResult.DRILLABLE;
     }
-    ForcedPadAlgo forced_pad_algo = new ForcedPadAlgo(p_board);
+    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(p_board);
     if (!(p_location instanceof IntPoint)) {
       return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
     }
     IntPoint intLocation = (IntPoint) p_location;
-    ConvexShape via_shape = new Circle(intLocation, (int) Math.ceil(p_via_radius));
+    ConvexShape viaShape = new Circle(intLocation, (int) Math.ceil(p_via_radius));
 
-    double check_radius =
+    double checkRadius =
         p_via_radius
             + 0.5 * p_board.clearance_value(p_cl_class, p_cl_class, p_layer)
             + p_board.get_min_trace_half_width();
 
-    TileShape tile_shape;
-    boolean is_90_degree;
+    TileShape tileShape;
+    boolean is90Degree;
     if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-      tile_shape = via_shape.bounding_box();
-      is_90_degree = true;
+      tileShape = viaShape.bounding_box();
+      is90Degree = true;
     } else {
-      tile_shape = via_shape.bounding_octagon();
-      is_90_degree = false;
+      tileShape = viaShape.bounding_octagon();
+      is90Degree = false;
     }
 
-    CalcFromSide from_side =
+    CalcFromSide fromSide =
         calculate_from_side(
-            p_location.to_float(),
-            tile_shape,
-            p_room_shape.to_Simplex(),
-            check_radius,
-            is_90_degree);
-    if (from_side == null) {
+            p_location.to_float(), tileShape, p_room_shape.to_Simplex(), checkRadius, is90Degree);
+    if (fromSide == null) {
       return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
     }
 
     ForcedPadAlgo.CheckDrillResult viaResult =
-        forced_pad_algo.check_forced_pad(
-            tile_shape,
-            from_side,
+        forcedPadAlgo.check_forced_pad(
+            tileShape,
+            fromSide,
             p_layer,
             p_net_no_arr,
             p_cl_class,
@@ -102,9 +98,9 @@ public final class ForcedViaAlgo {
     }
 
     ForcedPadAlgo.CheckDrillResult traceResult =
-        forced_pad_algo.check_forced_pad(
+        forcedPadAlgo.check_forced_pad(
             startTraceShape,
-            from_side,
+            fromSide,
             p_layer,
             p_net_no_arr,
             p_trace_clearance_class,
@@ -137,39 +133,39 @@ public final class ForcedViaAlgo {
       RoutingBoard p_board,
       int[] p_trace_pen_halfwidth_arr,
       int p_trace_clearance_class_no) {
-    Vector translate_vector = p_location.difference_by(Point.ZERO);
-    int calc_from_side_offset = p_board.get_min_trace_half_width();
-    ForcedPadAlgo forced_pad_algo = new ForcedPadAlgo(p_board);
-    Padstack via_padstack = p_via_info.get_padstack();
-    Shape hole_shape = hole_check_shape(via_padstack, p_location, p_board);
-    for (int i = via_padstack.from_layer(); i <= via_padstack.to_layer(); i++) {
-      Shape curr_pad_shape = via_padstack.get_shape(i);
-      int curr_clearance_class = p_via_info.get_clearance_class();
-      if (curr_pad_shape == null) {
-        if (hole_shape == null) {
+    Vector translateVector = p_location.difference_by(Point.ZERO);
+    int calcFromSideOffset = p_board.get_min_trace_half_width();
+    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(p_board);
+    Padstack viaPadstack = p_via_info.get_padstack();
+    Shape holeShape = hole_check_shape(viaPadstack, p_location, p_board);
+    for (int i = viaPadstack.from_layer(); i <= viaPadstack.to_layer(); i++) {
+      Shape currPadShape = viaPadstack.get_shape(i);
+      int currClearanceClass = p_via_info.get_clearance_class();
+      if (currPadShape == null) {
+        if (holeShape == null) {
           continue;
         }
         // The drill hole itself must keep hole clearance from copper on this layer.
-        curr_pad_shape = hole_shape;
-        curr_clearance_class = 0;
+        currPadShape = holeShape;
+        currClearanceClass = 0;
       } else {
-        curr_pad_shape = (Shape) curr_pad_shape.translate_by(translate_vector);
+        currPadShape = (Shape) currPadShape.translate_by(translateVector);
       }
-      TileShape tile_shape;
+      TileShape tileShape;
       if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-        tile_shape = curr_pad_shape.bounding_box();
+        tileShape = currPadShape.bounding_box();
       } else {
-        tile_shape = curr_pad_shape.bounding_octagon();
+        tileShape = currPadShape.bounding_octagon();
       }
-      CalcFromSide from_side =
-          forced_pad_algo.calc_from_side(
-              tile_shape, p_location, i, calc_from_side_offset, curr_clearance_class);
-      if (forced_pad_algo.check_forced_pad(
-              tile_shape,
-              from_side,
+      CalcFromSide fromSide =
+          forcedPadAlgo.calc_from_side(
+              tileShape, p_location, i, calcFromSideOffset, currClearanceClass);
+      if (forcedPadAlgo.check_forced_pad(
+              tileShape,
+              fromSide,
               i,
               p_net_no_arr,
-              curr_clearance_class,
+              currClearanceClass,
               p_via_info.attach_smd_allowed(),
               null,
               p_max_recursion_depth,
@@ -180,18 +176,18 @@ public final class ForcedViaAlgo {
         p_board.set_shove_failing_layer(i);
         return false;
       }
-      if (curr_clearance_class != 0 && hole_shape != null) {
+      if (currClearanceClass != 0 && holeShape != null) {
         // The drill hole must ALSO keep hole clearance from other-net copper on layers where
         // the pad exists — the pad check above only enforces the (smaller) copper clearance.
-        TileShape hole_tile;
+        TileShape holeTile;
         if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-          hole_tile = hole_shape.bounding_box();
+          holeTile = holeShape.bounding_box();
         } else {
-          hole_tile = hole_shape.bounding_octagon();
+          holeTile = holeShape.bounding_octagon();
         }
-        if (forced_pad_algo.check_forced_pad(
-                hole_tile,
-                from_side,
+        if (forcedPadAlgo.check_forced_pad(
+                holeTile,
+                fromSide,
                 i,
                 p_net_no_arr,
                 0,
@@ -218,9 +214,9 @@ public final class ForcedViaAlgo {
         } else {
           startTraceShape = startTraceCircle.bounding_octagon();
         }
-        if (forced_pad_algo.check_forced_pad(
+        if (forcedPadAlgo.check_forced_pad(
                 startTraceShape,
-                from_side,
+                fromSide,
                 i,
                 p_net_no_arr,
                 p_trace_clearance_class_no,
@@ -255,51 +251,51 @@ public final class ForcedViaAlgo {
       int p_max_recursion_depth,
       int p_max_via_recursion_depth,
       RoutingBoard p_board) {
-    Vector translate_vector = p_location.difference_by(Point.ZERO);
-    int calc_from_side_offset = p_board.get_min_trace_half_width();
-    ForcedPadAlgo forced_pad_algo = new ForcedPadAlgo(p_board);
-    Padstack via_padstack = p_via_info.get_padstack();
-    Shape hole_shape = hole_check_shape(via_padstack, p_location, p_board);
-    for (int i = via_padstack.from_layer(); i <= via_padstack.to_layer(); i++) {
-      Shape curr_pad_shape = via_padstack.get_shape(i);
-      int curr_clearance_class = p_via_info.get_clearance_class();
-      if (curr_pad_shape == null) {
-        if (hole_shape == null) {
+    Vector translateVector = p_location.difference_by(Point.ZERO);
+    int calcFromSideOffset = p_board.get_min_trace_half_width();
+    ForcedPadAlgo forcedPadAlgo = new ForcedPadAlgo(p_board);
+    Padstack viaPadstack = p_via_info.get_padstack();
+    Shape holeShape = hole_check_shape(viaPadstack, p_location, p_board);
+    for (int i = viaPadstack.from_layer(); i <= viaPadstack.to_layer(); i++) {
+      Shape currPadShape = viaPadstack.get_shape(i);
+      int currClearanceClass = p_via_info.get_clearance_class();
+      if (currPadShape == null) {
+        if (holeShape == null) {
           continue;
         }
-        curr_pad_shape = hole_shape;
-        curr_clearance_class = 0;
+        currPadShape = holeShape;
+        currClearanceClass = 0;
       } else {
-        curr_pad_shape = (Shape) curr_pad_shape.translate_by(translate_vector);
+        currPadShape = (Shape) currPadShape.translate_by(translateVector);
       }
-      TileShape tile_shape;
-      Circle start_trace_circle;
+      TileShape tileShape;
+      Circle startTraceCircle;
       if (p_trace_pen_halfwidth_arr[i] > 0 && p_location instanceof IntPoint point) {
-        start_trace_circle = new Circle(point, p_trace_pen_halfwidth_arr[i]);
+        startTraceCircle = new Circle(point, p_trace_pen_halfwidth_arr[i]);
       } else {
-        start_trace_circle = null;
+        startTraceCircle = null;
       }
-      TileShape start_trace_shape = null;
+      TileShape startTraceShape = null;
       if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-        tile_shape = curr_pad_shape.bounding_box();
-        if (start_trace_circle != null) {
-          start_trace_shape = start_trace_circle.bounding_box();
+        tileShape = currPadShape.bounding_box();
+        if (startTraceCircle != null) {
+          startTraceShape = startTraceCircle.bounding_box();
         }
       } else {
-        tile_shape = curr_pad_shape.bounding_octagon();
-        if (start_trace_circle != null) {
-          start_trace_shape = start_trace_circle.bounding_octagon();
+        tileShape = currPadShape.bounding_octagon();
+        if (startTraceCircle != null) {
+          startTraceShape = startTraceCircle.bounding_octagon();
         }
       }
-      CalcFromSide from_side =
-          forced_pad_algo.calc_from_side(
-              tile_shape, p_location, i, calc_from_side_offset, curr_clearance_class);
-      if (!forced_pad_algo.forced_pad(
-          tile_shape,
-          from_side,
+      CalcFromSide fromSide =
+          forcedPadAlgo.calc_from_side(
+              tileShape, p_location, i, calcFromSideOffset, currClearanceClass);
+      if (!forcedPadAlgo.forced_pad(
+          tileShape,
+          fromSide,
           i,
           p_net_no_arr,
-          curr_clearance_class,
+          currClearanceClass,
           p_via_info.attach_smd_allowed(),
           null,
           p_max_recursion_depth,
@@ -307,16 +303,16 @@ public final class ForcedViaAlgo {
         p_board.set_shove_failing_layer(i);
         return false;
       }
-      if (curr_clearance_class != 0 && hole_shape != null) {
-        TileShape hole_tile;
+      if (currClearanceClass != 0 && holeShape != null) {
+        TileShape holeTile;
         if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
-          hole_tile = hole_shape.bounding_box();
+          holeTile = holeShape.bounding_box();
         } else {
-          hole_tile = hole_shape.bounding_octagon();
+          holeTile = holeShape.bounding_octagon();
         }
-        if (!forced_pad_algo.forced_pad(
-            hole_tile,
-            from_side,
+        if (!forcedPadAlgo.forced_pad(
+            holeTile,
+            fromSide,
             i,
             p_net_no_arr,
             0,
@@ -328,11 +324,11 @@ public final class ForcedViaAlgo {
           return false;
         }
       }
-      if (start_trace_shape != null) {
-        // necessary in case start_trace_shape is bigger than tile_shape
-        if (!forced_pad_algo.forced_pad(
-            start_trace_shape,
-            from_side,
+      if (startTraceShape != null) {
+        // necessary in case startTraceShape is bigger than tileShape
+        if (!forcedPadAlgo.forced_pad(
+            startTraceShape,
+            fromSide,
             i,
             p_net_no_arr,
             p_trace_clearance_class_no,
@@ -346,7 +342,7 @@ public final class ForcedViaAlgo {
       }
     }
     p_board.insert_via(
-        via_padstack,
+        viaPadstack,
         p_location,
         p_net_no_arr,
         p_via_info.get_clearance_class(),
@@ -357,22 +353,22 @@ public final class ForcedViaAlgo {
 
   /**
    * Hole-clearance substitute shape for a copper-less layer of a via padstack: the drill still
-   * passes through, so other copper must stay hole_clearance away from it. Returns null when the
+   * passes through, so other copper must stay holeClearance away from it. Returns null when the
    * rule is off or no drill radius is known.
    */
   private static Shape hole_check_shape(
       Padstack p_padstack, Point p_location, RoutingBoard p_board) {
-    int hole_clearance = p_board.rules.get_hole_clearance();
-    if (hole_clearance <= 0 || !(p_location instanceof IntPoint center)) {
+    int holeClearance = p_board.rules.get_hole_clearance();
+    if (holeClearance <= 0 || !(p_location instanceof IntPoint center)) {
       return null;
     }
-    double drill_radius = p_padstack.get_drill_radius();
-    if (drill_radius <= 0) {
+    double drillRadius = p_padstack.get_drill_radius();
+    if (drillRadius <= 0) {
       return null;
     }
     // Inflate by the hole clearance itself and check with the null clearance class (0), so
     // the requirement is exact hole-to-copper spacing regardless of the neighbor's class.
-    return new Circle(center, (int) Math.ceil(drill_radius + hole_clearance + 10));
+    return new Circle(center, (int) Math.ceil(drillRadius + holeClearance + 10));
   }
 
   private static CalcFromSide calculate_from_side(
@@ -380,82 +376,82 @@ public final class ForcedViaAlgo {
       TileShape p_via_shape,
       Simplex p_room_shape,
       double p_dist,
-      boolean is_90_degree) {
-    IntBox via_box = p_via_shape.bounding_box();
+      boolean is90Degree) {
+    IntBox viaBox = p_via_shape.bounding_box();
     for (int i = 0; i < 4; i++) {
-      FloatPoint check_point;
-      double border_x;
-      double border_y;
+      FloatPoint checkPoint;
+      double borderX;
+      double borderY;
       switch (i) {
         case 0 -> {
-          check_point = new FloatPoint(p_via_location.x, p_via_location.y - p_dist);
-          border_x = p_via_location.x;
-          border_y = via_box.ll.y;
+          checkPoint = new FloatPoint(p_via_location.x, p_via_location.y - p_dist);
+          borderX = p_via_location.x;
+          borderY = viaBox.ll.y;
         }
         case 1 -> {
-          check_point = new FloatPoint(p_via_location.x + p_dist, p_via_location.y);
-          border_x = via_box.ur.x;
-          border_y = p_via_location.y;
+          checkPoint = new FloatPoint(p_via_location.x + p_dist, p_via_location.y);
+          borderX = viaBox.ur.x;
+          borderY = p_via_location.y;
         }
         case 2 -> {
-          check_point = new FloatPoint(p_via_location.x, p_via_location.y + p_dist);
-          border_x = p_via_location.x;
-          border_y = via_box.ur.y;
+          checkPoint = new FloatPoint(p_via_location.x, p_via_location.y + p_dist);
+          borderX = p_via_location.x;
+          borderY = viaBox.ur.y;
         }
         default -> { // i == 3
-          check_point = new FloatPoint(p_via_location.x - p_dist, p_via_location.y);
-          border_x = via_box.ll.x;
-          border_y = p_via_location.y;
+          checkPoint = new FloatPoint(p_via_location.x - p_dist, p_via_location.y);
+          borderX = viaBox.ll.x;
+          borderY = p_via_location.y;
         }
       }
-      if (p_room_shape.contains(check_point)) {
-        int from_side_no;
-        if (is_90_degree) {
-          from_side_no = i;
+      if (p_room_shape.contains(checkPoint)) {
+        int fromSideNo;
+        if (is90Degree) {
+          fromSideNo = i;
         } else {
-          from_side_no = 2 * i;
+          fromSideNo = 2 * i;
         }
-        FloatPoint curr_border_point = new FloatPoint(border_x, border_y);
-        return new CalcFromSide(from_side_no, curr_border_point);
+        FloatPoint currBorderPoint = new FloatPoint(borderX, borderY);
+        return new CalcFromSide(fromSideNo, currBorderPoint);
       }
     }
-    if (is_90_degree) {
+    if (is90Degree) {
       return null;
     }
     // try the diagonal directions
     double dist = p_dist / Limits.sqrt2;
-    double border_dist = via_box.max_width() / (2 * Limits.sqrt2);
+    double borderDist = viaBox.max_width() / (2 * Limits.sqrt2);
     for (int i = 0; i < 4; i++) {
-      FloatPoint check_point;
-      double border_x;
-      double border_y;
+      FloatPoint checkPoint;
+      double borderX;
+      double borderY;
       switch (i) {
         case 0 -> {
-          check_point = new FloatPoint(p_via_location.x + dist, p_via_location.y - dist);
-          border_x = p_via_location.x + border_dist;
-          border_y = p_via_location.y - border_dist;
+          checkPoint = new FloatPoint(p_via_location.x + dist, p_via_location.y - dist);
+          borderX = p_via_location.x + borderDist;
+          borderY = p_via_location.y - borderDist;
         }
         case 1 -> {
-          check_point = new FloatPoint(p_via_location.x + dist, p_via_location.y + dist);
-          border_x = p_via_location.x + border_dist;
-          border_y = p_via_location.y + border_dist;
+          checkPoint = new FloatPoint(p_via_location.x + dist, p_via_location.y + dist);
+          borderX = p_via_location.x + borderDist;
+          borderY = p_via_location.y + borderDist;
         }
         case 2 -> {
-          check_point = new FloatPoint(p_via_location.x - dist, p_via_location.y + dist);
-          border_x = p_via_location.x - border_dist;
-          border_y = p_via_location.y + border_dist;
+          checkPoint = new FloatPoint(p_via_location.x - dist, p_via_location.y + dist);
+          borderX = p_via_location.x - borderDist;
+          borderY = p_via_location.y + borderDist;
         }
         default -> { // i == 3
-          check_point = new FloatPoint(p_via_location.x - dist, p_via_location.y - dist);
-          border_x = p_via_location.x - border_dist;
-          border_y = p_via_location.y - border_dist;
+          checkPoint = new FloatPoint(p_via_location.x - dist, p_via_location.y - dist);
+          borderX = p_via_location.x - borderDist;
+          borderY = p_via_location.y - borderDist;
         }
       }
-      if (p_room_shape.contains(check_point)) {
+      if (p_room_shape.contains(checkPoint)) {
 
-        int from_side_no = 2 * i + 1;
-        FloatPoint curr_border_point = new FloatPoint(border_x, border_y);
-        return new CalcFromSide(from_side_no, curr_border_point);
+        int fromSideNo = 2 * i + 1;
+        FloatPoint currBorderPoint = new FloatPoint(borderX, borderY);
+        return new CalcFromSide(fromSideNo, currBorderPoint);
       }
     }
     return null;

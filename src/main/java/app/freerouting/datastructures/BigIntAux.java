@@ -53,12 +53,12 @@ public final class BigIntAux {
     // taking the least common multiple would be optimal
     {
       result[2] = p_first[2].multiply(p_second[2]);
-      BigInteger tmp_1 = p_first[0].multiply(p_second[2]);
-      BigInteger tmp_2 = p_second[0].multiply(p_first[2]);
-      result[0] = tmp_1.add(tmp_2);
-      tmp_1 = p_first[1].multiply(p_second[2]);
-      tmp_2 = p_second[1].multiply(p_first[2]);
-      result[1] = tmp_1.add(tmp_2);
+      BigInteger tmp1 = p_first[0].multiply(p_second[2]);
+      BigInteger tmp2 = p_second[0].multiply(p_first[2]);
+      result[0] = tmp1.add(tmp2);
+      tmp1 = p_first[1].multiply(p_second[2]);
+      tmp2 = p_second[1].multiply(p_first[2]);
+      result[1] = tmp1.add(tmp2);
     }
     return result;
   }

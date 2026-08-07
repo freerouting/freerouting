@@ -24,27 +24,27 @@ public class Component
   public final int no;
 
   /** If true, the component cannot be moved. */
-  public final boolean position_fixed;
+  public final boolean positionFixed;
 
   /** The library package of the component if it is placed on the component side. */
-  private final Package lib_package_front;
+  private final Package libPackageFront;
 
   /** The library package of the component if it is placed on the solder side. */
-  private final Package lib_package_back;
+  private final Package libPackageBack;
 
   /** The location of the component. */
   private Point location;
 
   /** The rotation of the library package of the component in degree */
-  private double rotation_in_degree;
+  private double rotationInDegree;
 
   /** Contains information for gate swapping and pin swapping, if != null */
-  private LogicalPart logical_part;
+  private LogicalPart logicalPart;
 
   /** If false, the component will be placed on the back side of the board. */
-  private boolean on_front;
+  private boolean onFront;
 
-  private final String part_number;
+  private final String partNumber;
 
   /**
    * Creates a new instance of Component with the input parameters. If p_on_front is false, the
@@ -62,19 +62,19 @@ public class Component
       String p_part_number) {
     name = p_name;
     location = p_location;
-    rotation_in_degree = p_rotation_in_degree;
-    while (this.rotation_in_degree >= 360) {
-      this.rotation_in_degree -= 360;
+    rotationInDegree = p_rotation_in_degree;
+    while (this.rotationInDegree >= 360) {
+      this.rotationInDegree -= 360;
     }
-    while (this.rotation_in_degree < 0) {
-      this.rotation_in_degree += 360;
+    while (this.rotationInDegree < 0) {
+      this.rotationInDegree += 360;
     }
-    on_front = p_on_front;
-    lib_package_front = p_package_front;
-    lib_package_back = p_package_back;
+    onFront = p_on_front;
+    libPackageFront = p_package_front;
+    libPackageBack = p_package_back;
     no = p_no;
-    position_fixed = p_position_fixed;
-    part_number = p_part_number;
+    positionFixed = p_position_fixed;
+    partNumber = p_part_number;
   }
 
   /** Returns the location of this component. */
@@ -84,7 +84,7 @@ public class Component
 
   /** Returns the rotation of this component in degree. */
   public double get_rotation_in_degree() {
-    return rotation_in_degree;
+    return rotationInDegree;
   }
 
   public boolean is_placed() {
@@ -93,7 +93,7 @@ public class Component
 
   /** If false, the component will be placed on the back side of the board. */
   public boolean placed_on_front() {
-    return this.on_front;
+    return this.onFront;
   }
 
   /**
@@ -111,12 +111,12 @@ public class Component
     if (p_factor == 0) {
       return;
     }
-    this.rotation_in_degree = this.rotation_in_degree + p_factor * 90;
-    while (this.rotation_in_degree >= 360) {
-      this.rotation_in_degree -= 360;
+    this.rotationInDegree = this.rotationInDegree + p_factor * 90;
+    while (this.rotationInDegree >= 360) {
+      this.rotationInDegree -= 360;
     }
-    while (this.rotation_in_degree < 0) {
-      this.rotation_in_degree += 360;
+    while (this.rotationInDegree < 0) {
+      this.rotationInDegree += 360;
     }
     if (location != null) {
       this.location = this.location.turn_90_degree(p_factor, p_pole);
@@ -128,17 +128,17 @@ public class Component
     if (p_angle_in_degree == 0) {
       return;
     }
-    double turn_angle = p_angle_in_degree;
+    double turnAngle = p_angle_in_degree;
     if (p_flip_style_rotate_first && !this.placed_on_front()) {
       // take care of the order of mirroring and rotating on the back side of the board
-      turn_angle = 360 - p_angle_in_degree;
+      turnAngle = 360 - p_angle_in_degree;
     }
-    this.rotation_in_degree = this.rotation_in_degree + turn_angle;
-    while (this.rotation_in_degree >= 360) {
-      this.rotation_in_degree -= 360;
+    this.rotationInDegree = this.rotationInDegree + turnAngle;
+    while (this.rotationInDegree >= 360) {
+      this.rotationInDegree -= 360;
     }
-    while (this.rotation_in_degree < 0) {
-      this.rotation_in_degree += 360;
+    while (this.rotationInDegree < 0) {
+      this.rotationInDegree += 360;
     }
     if (location != null) {
       this.location =
@@ -154,7 +154,7 @@ public class Component
    * p_pole.
    */
   public void change_side(IntPoint p_pole) {
-    this.on_front = !this.on_front;
+    this.onFront = !this.onFront;
     this.location = this.location.mirror_vertical(p_pole);
   }
 
@@ -170,7 +170,7 @@ public class Component
   }
 
   public String get_part_number() {
-    return this.part_number;
+    return this.partNumber;
   }
 
   /** Creates a copy of this component. */
@@ -180,14 +180,14 @@ public class Component
         new Component(
             name,
             location,
-            rotation_in_degree,
-            on_front,
-            lib_package_front,
-            lib_package_back,
+            rotationInDegree,
+            onFront,
+            libPackageFront,
+            libPackageBack,
             no,
-            position_fixed,
-            part_number);
-    result.logical_part = this.logical_part;
+            positionFixed,
+            partNumber);
+    result.logicalPart = this.logicalPart;
     return result;
   }
 
@@ -198,12 +198,12 @@ public class Component
 
   /** Returns information for pin swap and gate swap, if != null. */
   public LogicalPart get_logical_part() {
-    return this.logical_part;
+    return this.logicalPart;
   }
 
   /** Sets the information for pin swap and gate swap. */
   public void set_logical_part(LogicalPart p_logical_part) {
-    this.logical_part = p_logical_part;
+    this.logicalPart = p_logical_part;
   }
 
   @Override
@@ -217,9 +217,9 @@ public class Component
       p_window.append(this.location.to_float());
 
       p_window.append(", " + tm.getText("rotation") + " ");
-      p_window.append_without_transforming(rotation_in_degree);
+      p_window.append_without_transforming(rotationInDegree);
 
-      if (this.on_front) {
+      if (this.onFront) {
         p_window.append(", " + tm.getText("front"));
       } else {
         p_window.append(", " + tm.getText("back"));
@@ -228,11 +228,11 @@ public class Component
       p_window.append(" " + tm.getText("not_yet_placed"));
     }
     p_window.append(", " + tm.getText("package"));
-    Package lib_package = this.get_package();
-    p_window.append(lib_package.name, tm.getText("package_info"), lib_package);
-    if (this.logical_part != null) {
-      p_window.append(", " + tm.getText("logical_part") + " ");
-      p_window.append(this.logical_part.name, tm.getText("logical_part_info"), this.logical_part);
+    Package libPackage = this.get_package();
+    p_window.append(libPackage.name, tm.getText("package_info"), libPackage);
+    if (this.logicalPart != null) {
+      p_window.append(", " + tm.getText("logicalPart") + " ");
+      p_window.append(this.logicalPart.name, tm.getText("logical_part_info"), this.logicalPart);
     }
     p_window.newline();
   }
@@ -240,10 +240,10 @@ public class Component
   /** Returns the library package of this component. */
   public Package get_package() {
     Package result;
-    if (this.on_front) {
-      result = lib_package_front;
+    if (this.onFront) {
+      result = libPackageFront;
     } else {
-      result = lib_package_back;
+      result = libPackageBack;
     }
     return result;
   }

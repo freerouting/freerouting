@@ -229,33 +229,33 @@ public class RationalPoint extends Point implements Serializable {
     tmp1 = tmp1.add(tmp2);
     tmp2 = det.multiply(BigInteger.valueOf(v.y));
     tmp2 = tmp2.multiply(z);
-    BigInteger proj_x = tmp1.add(tmp2);
+    BigInteger projX = tmp1.add(tmp2);
 
     tmp1 = vxvy.multiply(x);
     tmp2 = vyvy.multiply(y);
     tmp1 = tmp1.add(tmp2);
     tmp2 = det.multiply(BigInteger.valueOf(v.x));
     tmp2 = tmp2.multiply(z);
-    BigInteger proj_y = tmp1.add(tmp2);
+    BigInteger projY = tmp1.add(tmp2);
 
     int signum = denominator.signum();
     if (signum != 0) {
       if (signum < 0) {
         denominator = denominator.negate();
-        proj_x = proj_x.negate();
-        proj_y = proj_y.negate();
+        projX = projX.negate();
+        projY = projY.negate();
       }
-      if (proj_x.mod(denominator).signum() == 0 && proj_y.mod(denominator).signum() == 0) {
-        proj_x = proj_x.divide(denominator);
-        proj_y = proj_y.divide(denominator);
-        if (proj_x.abs().compareTo(Limits.CRIT_INT_BIG) <= 0
-            && proj_y.abs().compareTo(Limits.CRIT_INT_BIG) <= 0) {
-          return new IntPoint(proj_x.intValue(), proj_y.intValue());
+      if (projX.mod(denominator).signum() == 0 && projY.mod(denominator).signum() == 0) {
+        projX = projX.divide(denominator);
+        projY = projY.divide(denominator);
+        if (projX.abs().compareTo(Limits.CRIT_INT_BIG) <= 0
+            && projY.abs().compareTo(Limits.CRIT_INT_BIG) <= 0) {
+          return new IntPoint(projX.intValue(), projY.intValue());
         }
         denominator = BigInteger.ONE;
       }
     }
-    return new RationalPoint(proj_x, proj_y, denominator);
+    return new RationalPoint(projX, projY, denominator);
   }
 
   @Override

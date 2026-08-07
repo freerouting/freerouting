@@ -23,11 +23,11 @@ public class PolylinePath extends Path {
     p_identifier.write(this.layer.name, p_file);
     p_file.write(" ");
     p_file.write(String.valueOf(this.width));
-    int line_count = coordinate_arr.length / 4;
-    for (int i = 0; i < line_count; i++) {
+    int lineCount = coordinateArr.length / 4;
+    for (int i = 0; i < lineCount; i++) {
       p_file.new_line();
       for (int j = 0; j < 4; j++) {
-        p_file.write(String.valueOf(coordinate_arr[4 * i + j]));
+        p_file.write(String.valueOf(coordinateArr[4 * i + j]));
         p_file.write(" ");
       }
     }
@@ -42,12 +42,12 @@ public class PolylinePath extends Path {
     p_identifier.write(this.layer.name, p_file);
     p_file.write(" ");
     p_file.write(String.valueOf(this.width));
-    int line_count = coordinate_arr.length / 4;
-    for (int i = 0; i < line_count; i++) {
+    int lineCount = coordinateArr.length / 4;
+    for (int i = 0; i < lineCount; i++) {
       p_file.new_line();
       for (int j = 0; j < 4; j++) {
-        int curr_coor = (int) Math.round(coordinate_arr[4 * i + j]);
-        p_file.write(String.valueOf(curr_coor));
+        int currCoor = (int) Math.round(coordinateArr[4 * i + j]);
+        p_file.write(String.valueOf(currCoor));
         p_file.write(" ");
       }
     }
@@ -68,7 +68,7 @@ public class PolylinePath extends Path {
 
   @Override
   public Rectangle bounding_box() {
-    FRLogger.warn("PolylinePath.bounding_box not implemented");
+    FRLogger.warn("PolylinePath.boundingBox not implemented");
     return null;
   }
 }

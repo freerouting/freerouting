@@ -20,7 +20,7 @@ public class DevBoardClearanceRoutingTest extends RoutingFixtureTest {
 
     job = RunRoutingJob(job);
 
-    int boardEdgeClassNo = job.board.rules.clearance_matrix.get_no("board_edge");
+    int boardEdgeClassNo = job.board.rules.clearanceMatrix.get_no("board_edge");
     assertTrue(boardEdgeClassNo >= 0, "Expected board_edge clearance class to be created.");
     assertEquals(
         boardEdgeClassNo,
@@ -34,10 +34,10 @@ public class DevBoardClearanceRoutingTest extends RoutingFixtureTest {
                     testCopperToEdgeClearanceUm * Math.max(1, job.board.communication.resolution),
                     Unit.UM,
                     job.board.communication.unit));
-    for (int layer = 0; layer < job.board.rules.clearance_matrix.get_layer_count(); layer++) {
+    for (int layer = 0; layer < job.board.rules.clearanceMatrix.get_layer_count(); layer++) {
       assertEquals(
           expectedBoardUnits,
-          job.board.rules.clearance_matrix.get_value(
+          job.board.rules.clearanceMatrix.get_value(
               boardEdgeClassNo, boardEdgeClassNo, layer, false),
           "board_edge self-clearance should match copperToEdgeClearanceUm on every layer.");
     }

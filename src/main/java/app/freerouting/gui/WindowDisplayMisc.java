@@ -22,201 +22,198 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
   private static final int MAX_SLIDER_VALUE = 100;
   private final BoardPanel panel;
-  private final JRadioButton appearance_misc_small_cursor_checkbox;
-  private final JRadioButton appearance_misc_big_cursor_checkbox;
-  private final JRadioButton appearance_misc_rotation_none_checkbox;
-  private final JRadioButton appearance_misc_rotation_90_degree_checkbox;
-  private final JRadioButton appearance_misc_rotation_180_degree_checkbox;
-  private final JRadioButton appearance_misc_rotation_270_degree_checkbox;
-  private final JRadioButton appearance_misc_mirror_none_checkbox;
-  private final JRadioButton appearance_misc_vertical_mirror_checkbox;
-  private final JRadioButton appearance_misc_horizontal_mirror_checkbox;
-  private final JSlider auto_layer_dim_slider;
+  private final JRadioButton appearanceMiscSmallCursorCheckbox;
+  private final JRadioButton appearanceMiscBigCursorCheckbox;
+  private final JRadioButton appearanceMiscRotationNoneCheckbox;
+  private final JRadioButton appearanceMiscRotation90DegreeCheckbox;
+  private final JRadioButton appearanceMiscRotation180DegreeCheckbox;
+  private final JRadioButton appearanceMiscRotation270DegreeCheckbox;
+  private final JRadioButton appearanceMiscMirrorNoneCheckbox;
+  private final JRadioButton appearanceMiscVerticalMirrorCheckbox;
+  private final JRadioButton appearanceMiscHorizontalMirrorCheckbox;
+  private final JSlider autoLayerDimSlider;
 
   /** Creates a new instance of DisplayMiscWindow */
   public WindowDisplayMisc(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
 
-    this.panel = p_board_frame.board_panel;
+    this.panel = p_board_frame.boardPanel;
     this.setTitle(tm.getText("title"));
 
     // Create main panel
 
-    final JPanel main_panel = new JPanel();
-    getContentPane().add(main_panel);
+    final JPanel mainPanel = new JPanel();
+    getContentPane().add(mainPanel);
 
     // Initialize gridbag layout.
 
     GridBagLayout gridbag = new GridBagLayout();
-    main_panel.setLayout(gridbag);
-    GridBagConstraints gridbag_constraints = new GridBagConstraints();
-    gridbag_constraints.anchor = GridBagConstraints.WEST;
-    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
+    mainPanel.setLayout(gridbag);
+    GridBagConstraints gridbagConstraints = new GridBagConstraints();
+    gridbagConstraints.anchor = GridBagConstraints.WEST;
+    gridbagConstraints.gridwidth = GridBagConstraints.RELATIVE;
 
     // add label and buttongroup for the appearance of the cross-hair cursor.
 
-    JLabel cursor_label = new JLabel("   " + tm.getText("cross_hair_cursor"));
-    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
-    gridbag_constraints.gridheight = 2;
-    gridbag.setConstraints(cursor_label, gridbag_constraints);
-    main_panel.add(cursor_label, gridbag_constraints);
+    JLabel cursorLabel = new JLabel("   " + tm.getText("cross_hair_cursor"));
+    gridbagConstraints.gridwidth = GridBagConstraints.RELATIVE;
+    gridbagConstraints.gridheight = 2;
+    gridbag.setConstraints(cursorLabel, gridbagConstraints);
+    mainPanel.add(cursorLabel, gridbagConstraints);
 
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag_constraints.gridheight = 1;
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbagConstraints.gridheight = 1;
 
-    appearance_misc_small_cursor_checkbox = new JRadioButton(tm.getText("small"));
-    appearance_misc_small_cursor_checkbox.setToolTipText(tm.getText("cursor_checkbox_tooltip"));
-    appearance_misc_small_cursor_checkbox.addActionListener(new SmallCursorListener());
-    appearance_misc_small_cursor_checkbox.addActionListener(
+    appearanceMiscSmallCursorCheckbox = new JRadioButton(tm.getText("small"));
+    appearanceMiscSmallCursorCheckbox.setToolTipText(tm.getText("cursor_checkbox_tooltip"));
+    appearanceMiscSmallCursorCheckbox.addActionListener(new SmallCursorListener());
+    appearanceMiscSmallCursorCheckbox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "appearance_misc_small_cursor_checkbox",
-                appearance_misc_small_cursor_checkbox.getText()));
-    gridbag.setConstraints(appearance_misc_small_cursor_checkbox, gridbag_constraints);
-    main_panel.add(appearance_misc_small_cursor_checkbox, gridbag_constraints);
+                "appearanceMiscSmallCursorCheckbox", appearanceMiscSmallCursorCheckbox.getText()));
+    gridbag.setConstraints(appearanceMiscSmallCursorCheckbox, gridbagConstraints);
+    mainPanel.add(appearanceMiscSmallCursorCheckbox, gridbagConstraints);
 
-    appearance_misc_big_cursor_checkbox = new JRadioButton(tm.getText("big"));
-    appearance_misc_big_cursor_checkbox.addActionListener(new BigCursorListener());
-    appearance_misc_big_cursor_checkbox.addActionListener(
+    appearanceMiscBigCursorCheckbox = new JRadioButton(tm.getText("big"));
+    appearanceMiscBigCursorCheckbox.addActionListener(new BigCursorListener());
+    appearanceMiscBigCursorCheckbox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "appearance_misc_big_cursor_checkbox",
-                appearance_misc_big_cursor_checkbox.getText()));
-    appearance_misc_big_cursor_checkbox.setToolTipText(tm.getText("cursor_checkbox_tooltip"));
-    gridbag.setConstraints(appearance_misc_big_cursor_checkbox, gridbag_constraints);
-    main_panel.add(appearance_misc_big_cursor_checkbox, gridbag_constraints);
+                "appearanceMiscBigCursorCheckbox", appearanceMiscBigCursorCheckbox.getText()));
+    appearanceMiscBigCursorCheckbox.setToolTipText(tm.getText("cursor_checkbox_tooltip"));
+    gridbag.setConstraints(appearanceMiscBigCursorCheckbox, gridbagConstraints);
+    mainPanel.add(appearanceMiscBigCursorCheckbox, gridbagConstraints);
 
-    ButtonGroup cursor_button_group = new ButtonGroup();
-    cursor_button_group.add(appearance_misc_small_cursor_checkbox);
-    cursor_button_group.add(appearance_misc_big_cursor_checkbox);
+    ButtonGroup cursorButtonGroup = new ButtonGroup();
+    cursorButtonGroup.add(appearanceMiscSmallCursorCheckbox);
+    cursorButtonGroup.add(appearanceMiscBigCursorCheckbox);
 
     JLabel separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
-    gridbag.setConstraints(separator, gridbag_constraints);
-    main_panel.add(separator, gridbag_constraints);
+    gridbag.setConstraints(separator, gridbagConstraints);
+    mainPanel.add(separator, gridbagConstraints);
 
     // Add label and buttongroup for the rotation of the board.
 
-    JLabel rotation_label = new JLabel("   " + tm.getText("rotation"));
-    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
-    gridbag_constraints.gridheight = 4;
-    gridbag.setConstraints(rotation_label, gridbag_constraints);
-    main_panel.add(rotation_label, gridbag_constraints);
+    JLabel rotationLabel = new JLabel("   " + tm.getText("rotation"));
+    gridbagConstraints.gridwidth = GridBagConstraints.RELATIVE;
+    gridbagConstraints.gridheight = 4;
+    gridbag.setConstraints(rotationLabel, gridbagConstraints);
+    mainPanel.add(rotationLabel, gridbagConstraints);
 
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag_constraints.gridheight = 1;
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbagConstraints.gridheight = 1;
 
-    appearance_misc_rotation_none_checkbox = new JRadioButton(tm.getText("none"));
-    gridbag.setConstraints(appearance_misc_rotation_none_checkbox, gridbag_constraints);
-    main_panel.add(appearance_misc_rotation_none_checkbox, gridbag_constraints);
+    appearanceMiscRotationNoneCheckbox = new JRadioButton(tm.getText("none"));
+    gridbag.setConstraints(appearanceMiscRotationNoneCheckbox, gridbagConstraints);
+    mainPanel.add(appearanceMiscRotationNoneCheckbox, gridbagConstraints);
 
-    appearance_misc_rotation_90_degree_checkbox = new JRadioButton(tm.getText("90_degree"));
-    gridbag.setConstraints(appearance_misc_rotation_90_degree_checkbox, gridbag_constraints);
-    main_panel.add(appearance_misc_rotation_90_degree_checkbox, gridbag_constraints);
+    appearanceMiscRotation90DegreeCheckbox = new JRadioButton(tm.getText("90_degree"));
+    gridbag.setConstraints(appearanceMiscRotation90DegreeCheckbox, gridbagConstraints);
+    mainPanel.add(appearanceMiscRotation90DegreeCheckbox, gridbagConstraints);
 
-    appearance_misc_rotation_180_degree_checkbox = new JRadioButton(tm.getText("180_degree"));
-    gridbag.setConstraints(appearance_misc_rotation_180_degree_checkbox, gridbag_constraints);
-    main_panel.add(appearance_misc_rotation_180_degree_checkbox, gridbag_constraints);
+    appearanceMiscRotation180DegreeCheckbox = new JRadioButton(tm.getText("180_degree"));
+    gridbag.setConstraints(appearanceMiscRotation180DegreeCheckbox, gridbagConstraints);
+    mainPanel.add(appearanceMiscRotation180DegreeCheckbox, gridbagConstraints);
 
-    appearance_misc_rotation_270_degree_checkbox = new JRadioButton(tm.getText("-90_degree"));
-    gridbag.setConstraints(appearance_misc_rotation_270_degree_checkbox, gridbag_constraints);
-    main_panel.add(appearance_misc_rotation_270_degree_checkbox, gridbag_constraints);
+    appearanceMiscRotation270DegreeCheckbox = new JRadioButton(tm.getText("-90_degree"));
+    gridbag.setConstraints(appearanceMiscRotation270DegreeCheckbox, gridbagConstraints);
+    mainPanel.add(appearanceMiscRotation270DegreeCheckbox, gridbagConstraints);
 
-    ButtonGroup rotation_button_group = new ButtonGroup();
-    rotation_button_group.add(appearance_misc_rotation_none_checkbox);
-    rotation_button_group.add(appearance_misc_rotation_90_degree_checkbox);
-    rotation_button_group.add(appearance_misc_rotation_180_degree_checkbox);
-    rotation_button_group.add(appearance_misc_rotation_270_degree_checkbox);
+    ButtonGroup rotationButtonGroup = new ButtonGroup();
+    rotationButtonGroup.add(appearanceMiscRotationNoneCheckbox);
+    rotationButtonGroup.add(appearanceMiscRotation90DegreeCheckbox);
+    rotationButtonGroup.add(appearanceMiscRotation180DegreeCheckbox);
+    rotationButtonGroup.add(appearanceMiscRotation270DegreeCheckbox);
 
-    appearance_misc_rotation_none_checkbox.addActionListener(new RotationNoneListener());
-    appearance_misc_rotation_none_checkbox.addActionListener(
+    appearanceMiscRotationNoneCheckbox.addActionListener(new RotationNoneListener());
+    appearanceMiscRotationNoneCheckbox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "appearance_misc_rotation_none_checkbox",
-                appearance_misc_rotation_none_checkbox.getText()));
-    appearance_misc_rotation_90_degree_checkbox.addActionListener(new Rotation90Listener());
-    appearance_misc_rotation_90_degree_checkbox.addActionListener(
+                "appearanceMiscRotationNoneCheckbox",
+                appearanceMiscRotationNoneCheckbox.getText()));
+    appearanceMiscRotation90DegreeCheckbox.addActionListener(new Rotation90Listener());
+    appearanceMiscRotation90DegreeCheckbox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "appearance_misc_rotation_90_degree_checkbox",
-                appearance_misc_rotation_90_degree_checkbox.getText()));
-    appearance_misc_rotation_180_degree_checkbox.addActionListener(new Rotation180Listener());
-    appearance_misc_rotation_180_degree_checkbox.addActionListener(
+                "appearanceMiscRotation90DegreeCheckbox",
+                appearanceMiscRotation90DegreeCheckbox.getText()));
+    appearanceMiscRotation180DegreeCheckbox.addActionListener(new Rotation180Listener());
+    appearanceMiscRotation180DegreeCheckbox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "appearance_misc_rotation_180_degree_checkbox",
-                appearance_misc_rotation_180_degree_checkbox.getText()));
-    appearance_misc_rotation_270_degree_checkbox.addActionListener(new Rotation270Listener());
-    appearance_misc_rotation_270_degree_checkbox.addActionListener(
+                "appearanceMiscRotation180DegreeCheckbox",
+                appearanceMiscRotation180DegreeCheckbox.getText()));
+    appearanceMiscRotation270DegreeCheckbox.addActionListener(new Rotation270Listener());
+    appearanceMiscRotation270DegreeCheckbox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "appearance_misc_rotation_270_degree_checkbox",
-                appearance_misc_rotation_270_degree_checkbox.getText()));
+                "appearanceMiscRotation270DegreeCheckbox",
+                appearanceMiscRotation270DegreeCheckbox.getText()));
 
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
-    gridbag.setConstraints(separator, gridbag_constraints);
-    main_panel.add(separator, gridbag_constraints);
+    gridbag.setConstraints(separator, gridbagConstraints);
+    mainPanel.add(separator, gridbagConstraints);
 
     // add label and buttongroup for the mirroring of the board.
 
-    JLabel mirroring_label = new JLabel("   " + tm.getText("board_mirroring"));
-    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
-    gridbag_constraints.gridheight = 3;
-    gridbag.setConstraints(mirroring_label, gridbag_constraints);
-    main_panel.add(mirroring_label, gridbag_constraints);
+    JLabel mirroringLabel = new JLabel("   " + tm.getText("board_mirroring"));
+    gridbagConstraints.gridwidth = GridBagConstraints.RELATIVE;
+    gridbagConstraints.gridheight = 3;
+    gridbag.setConstraints(mirroringLabel, gridbagConstraints);
+    mainPanel.add(mirroringLabel, gridbagConstraints);
 
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag_constraints.gridheight = 1;
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbagConstraints.gridheight = 1;
 
-    appearance_misc_mirror_none_checkbox = new JRadioButton(tm.getText("none"));
-    appearance_misc_mirror_none_checkbox.addActionListener(new MirrorNoneListener());
-    appearance_misc_mirror_none_checkbox.addActionListener(
+    appearanceMiscMirrorNoneCheckbox = new JRadioButton(tm.getText("none"));
+    appearanceMiscMirrorNoneCheckbox.addActionListener(new MirrorNoneListener());
+    appearanceMiscMirrorNoneCheckbox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "appearance_misc_mirror_none_checkbox",
-                appearance_misc_mirror_none_checkbox.getText()));
-    gridbag.setConstraints(appearance_misc_mirror_none_checkbox, gridbag_constraints);
-    main_panel.add(appearance_misc_mirror_none_checkbox, gridbag_constraints);
+                "appearanceMiscMirrorNoneCheckbox", appearanceMiscMirrorNoneCheckbox.getText()));
+    gridbag.setConstraints(appearanceMiscMirrorNoneCheckbox, gridbagConstraints);
+    mainPanel.add(appearanceMiscMirrorNoneCheckbox, gridbagConstraints);
 
-    appearance_misc_vertical_mirror_checkbox = new JRadioButton(tm.getText("left_right"));
-    appearance_misc_vertical_mirror_checkbox.addActionListener(new VerticalMirrorListener());
-    appearance_misc_vertical_mirror_checkbox.addActionListener(
+    appearanceMiscVerticalMirrorCheckbox = new JRadioButton(tm.getText("left_right"));
+    appearanceMiscVerticalMirrorCheckbox.addActionListener(new VerticalMirrorListener());
+    appearanceMiscVerticalMirrorCheckbox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "appearance_misc_vertical_mirror_checkbox",
-                appearance_misc_vertical_mirror_checkbox.getText()));
-    gridbag.setConstraints(appearance_misc_vertical_mirror_checkbox, gridbag_constraints);
-    main_panel.add(appearance_misc_vertical_mirror_checkbox, gridbag_constraints);
+                "appearanceMiscVerticalMirrorCheckbox",
+                appearanceMiscVerticalMirrorCheckbox.getText()));
+    gridbag.setConstraints(appearanceMiscVerticalMirrorCheckbox, gridbagConstraints);
+    mainPanel.add(appearanceMiscVerticalMirrorCheckbox, gridbagConstraints);
 
-    appearance_misc_horizontal_mirror_checkbox = new JRadioButton(tm.getText("top_bottom"));
-    appearance_misc_horizontal_mirror_checkbox.addActionListener(new HorizontalMirrorListener());
-    appearance_misc_horizontal_mirror_checkbox.addActionListener(
+    appearanceMiscHorizontalMirrorCheckbox = new JRadioButton(tm.getText("top_bottom"));
+    appearanceMiscHorizontalMirrorCheckbox.addActionListener(new HorizontalMirrorListener());
+    appearanceMiscHorizontalMirrorCheckbox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "appearance_misc_horizontal_mirror_checkbox",
-                appearance_misc_horizontal_mirror_checkbox.getText()));
-    gridbag.setConstraints(appearance_misc_horizontal_mirror_checkbox, gridbag_constraints);
-    main_panel.add(appearance_misc_horizontal_mirror_checkbox, gridbag_constraints);
+                "appearanceMiscHorizontalMirrorCheckbox",
+                appearanceMiscHorizontalMirrorCheckbox.getText()));
+    gridbag.setConstraints(appearanceMiscHorizontalMirrorCheckbox, gridbagConstraints);
+    mainPanel.add(appearanceMiscHorizontalMirrorCheckbox, gridbagConstraints);
 
-    ButtonGroup mirroring_button_group = new ButtonGroup();
-    mirroring_button_group.add(appearance_misc_mirror_none_checkbox);
-    mirroring_button_group.add(appearance_misc_vertical_mirror_checkbox);
-    mirroring_button_group.add(appearance_misc_horizontal_mirror_checkbox);
+    ButtonGroup mirroringButtonGroup = new ButtonGroup();
+    mirroringButtonGroup.add(appearanceMiscMirrorNoneCheckbox);
+    mirroringButtonGroup.add(appearanceMiscVerticalMirrorCheckbox);
+    mirroringButtonGroup.add(appearanceMiscHorizontalMirrorCheckbox);
 
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
-    gridbag.setConstraints(separator, gridbag_constraints);
-    main_panel.add(separator, gridbag_constraints);
+    gridbag.setConstraints(separator, gridbagConstraints);
+    mainPanel.add(separator, gridbagConstraints);
 
     // add slider for automatic layer dimming
 
-    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
-    JLabel auto_layer_dim_label = new JLabel(tm.getText("layer_dimming"));
-    auto_layer_dim_label.setToolTipText(tm.getText("layer_dimming_tooltip"));
-    gridbag.setConstraints(auto_layer_dim_label, gridbag_constraints);
-    main_panel.add(auto_layer_dim_label);
-    this.auto_layer_dim_slider = new JSlider(0, MAX_SLIDER_VALUE);
-    gridbag.setConstraints(auto_layer_dim_slider, gridbag_constraints);
-    main_panel.add(auto_layer_dim_slider);
-    this.auto_layer_dim_slider.addChangeListener(new SliderChangeListener());
+    gridbagConstraints.insets = new Insets(5, 10, 5, 10);
+    JLabel autoLayerDimLabel = new JLabel(tm.getText("layerDimming"));
+    autoLayerDimLabel.setToolTipText(tm.getText("layer_dimming_tooltip"));
+    gridbag.setConstraints(autoLayerDimLabel, gridbagConstraints);
+    mainPanel.add(autoLayerDimLabel);
+    this.autoLayerDimSlider = new JSlider(0, MAX_SLIDER_VALUE);
+    gridbag.setConstraints(autoLayerDimSlider, gridbagConstraints);
+    mainPanel.add(autoLayerDimSlider);
+    this.autoLayerDimSlider.addChangeListener(new SliderChangeListener());
 
     this.refresh();
     this.pack();
@@ -226,41 +223,40 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   /** Refreshes the displayed values in this window. */
   @Override
   public void refresh() {
-    appearance_misc_small_cursor_checkbox.setSelected(!panel.is_custom_cross_hair_cursor());
-    appearance_misc_big_cursor_checkbox.setSelected(panel.is_custom_cross_hair_cursor());
+    appearanceMiscSmallCursorCheckbox.setSelected(!panel.is_custom_cross_hair_cursor());
+    appearanceMiscBigCursorCheckbox.setSelected(panel.is_custom_cross_hair_cursor());
 
-    int ninety_degree_rotation =
-        panel.board_handling.graphics_context.coordinate_transform.get_90_degree_rotation();
+    int ninetyDegreeRotation =
+        panel.boardHandling.graphicsContext.coordinateTransform.get_90_degree_rotation();
 
-    switch (ninety_degree_rotation) {
-      case 0 -> appearance_misc_rotation_none_checkbox.setSelected(true);
-      case 1 -> appearance_misc_rotation_90_degree_checkbox.setSelected(true);
-      case 2 -> appearance_misc_rotation_180_degree_checkbox.setSelected(true);
-      case 3 -> appearance_misc_rotation_270_degree_checkbox.setSelected(true);
+    switch (ninetyDegreeRotation) {
+      case 0 -> appearanceMiscRotationNoneCheckbox.setSelected(true);
+      case 1 -> appearanceMiscRotation90DegreeCheckbox.setSelected(true);
+      case 2 -> appearanceMiscRotation180DegreeCheckbox.setSelected(true);
+      case 3 -> appearanceMiscRotation270DegreeCheckbox.setSelected(true);
       default -> {
-        FRLogger.warn("DisplayMiscWindow: unexpected ninety_degree_rotation");
-        appearance_misc_rotation_none_checkbox.setSelected(true);
+        FRLogger.warn("DisplayMiscWindow: unexpected ninetyDegreeRotation");
+        appearanceMiscRotationNoneCheckbox.setSelected(true);
       }
     }
 
-    boolean is_mirror_left_right =
-        panel.board_handling.graphics_context.coordinate_transform.is_mirror_left_right();
-    boolean is_mirror_top_button =
-        panel.board_handling.graphics_context.coordinate_transform.is_mirror_top_bottom();
-    appearance_misc_mirror_none_checkbox.setSelected(
-        !(is_mirror_left_right || is_mirror_top_button));
+    boolean isMirrorLeftRight =
+        panel.boardHandling.graphicsContext.coordinateTransform.is_mirror_left_right();
+    boolean isMirrorTopButton =
+        panel.boardHandling.graphicsContext.coordinateTransform.is_mirror_top_bottom();
+    appearanceMiscMirrorNoneCheckbox.setSelected(!(isMirrorLeftRight || isMirrorTopButton));
 
-    appearance_misc_vertical_mirror_checkbox.setSelected(
-        panel.board_handling.graphics_context.coordinate_transform.is_mirror_left_right());
-    appearance_misc_horizontal_mirror_checkbox.setSelected(
-        panel.board_handling.graphics_context.coordinate_transform.is_mirror_top_bottom());
+    appearanceMiscVerticalMirrorCheckbox.setSelected(
+        panel.boardHandling.graphicsContext.coordinateTransform.is_mirror_left_right());
+    appearanceMiscHorizontalMirrorCheckbox.setSelected(
+        panel.boardHandling.graphicsContext.coordinateTransform.is_mirror_top_bottom());
 
-    int curr_slider_value =
+    int currSliderValue =
         (int)
             Math.round(
                 MAX_SLIDER_VALUE
-                    * (1 - panel.board_handling.graphics_context.get_auto_layer_dim_factor()));
-    auto_layer_dim_slider.setValue(curr_slider_value);
+                    * (1 - panel.boardHandling.graphicsContext.get_auto_layer_dim_factor()));
+    autoLayerDimSlider.setValue(currSliderValue);
   }
 
   private class SmallCursorListener implements ActionListener {
@@ -283,9 +279,9 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      CoordinateTransform coordinate_transform =
-          panel.board_handling.graphics_context.coordinate_transform;
-      coordinate_transform.set_rotation(0);
+      CoordinateTransform coordinateTransform =
+          panel.boardHandling.graphicsContext.coordinateTransform;
+      coordinateTransform.set_rotation(0);
       panel.repaint();
     }
   }
@@ -294,9 +290,9 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      CoordinateTransform coordinate_transform =
-          panel.board_handling.graphics_context.coordinate_transform;
-      coordinate_transform.set_rotation(0.5 * Math.PI);
+      CoordinateTransform coordinateTransform =
+          panel.boardHandling.graphicsContext.coordinateTransform;
+      coordinateTransform.set_rotation(0.5 * Math.PI);
       panel.repaint();
     }
   }
@@ -305,9 +301,9 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      CoordinateTransform coordinate_transform =
-          panel.board_handling.graphics_context.coordinate_transform;
-      coordinate_transform.set_rotation(Math.PI);
+      CoordinateTransform coordinateTransform =
+          panel.boardHandling.graphicsContext.coordinateTransform;
+      coordinateTransform.set_rotation(Math.PI);
       panel.repaint();
     }
   }
@@ -316,9 +312,9 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      CoordinateTransform coordinate_transform =
-          panel.board_handling.graphics_context.coordinate_transform;
-      coordinate_transform.set_rotation(1.5 * Math.PI);
+      CoordinateTransform coordinateTransform =
+          panel.boardHandling.graphicsContext.coordinateTransform;
+      coordinateTransform.set_rotation(1.5 * Math.PI);
       panel.repaint();
     }
   }
@@ -327,18 +323,18 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      CoordinateTransform coordinate_transform =
-          panel.board_handling.graphics_context.coordinate_transform;
-      if (!(coordinate_transform.is_mirror_left_right()
-          || coordinate_transform.is_mirror_top_bottom())) {
+      CoordinateTransform coordinateTransform =
+          panel.boardHandling.graphicsContext.coordinateTransform;
+      if (!(coordinateTransform.is_mirror_left_right()
+          || coordinateTransform.is_mirror_top_bottom())) {
         return; // mirroring already switched off
       }
       // remember the old viewort center to retain the displayed section of the board.
-      FloatPoint old_viewport_center =
-          coordinate_transform.screen_to_board(panel.get_viewport_center());
-      coordinate_transform.set_mirror_left_right(false);
-      coordinate_transform.set_mirror_top_bottom(false);
-      panel.set_viewport_center(coordinate_transform.board_to_screen(old_viewport_center));
+      FloatPoint oldViewportCenter =
+          coordinateTransform.screen_to_board(panel.get_viewport_center());
+      coordinateTransform.set_mirror_left_right(false);
+      coordinateTransform.set_mirror_top_bottom(false);
+      panel.set_viewport_center(coordinateTransform.board_to_screen(oldViewportCenter));
       panel.repaint();
     }
   }
@@ -347,17 +343,17 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      CoordinateTransform coordinate_transform =
-          panel.board_handling.graphics_context.coordinate_transform;
-      if (coordinate_transform.is_mirror_left_right()) {
+      CoordinateTransform coordinateTransform =
+          panel.boardHandling.graphicsContext.coordinateTransform;
+      if (coordinateTransform.is_mirror_left_right()) {
         return; // already mirrored
       }
       // remember the old viewport center to retain the displayed section of the board.
-      FloatPoint old_viewport_center =
-          coordinate_transform.screen_to_board(panel.get_viewport_center());
-      coordinate_transform.set_mirror_left_right(true);
-      coordinate_transform.set_mirror_top_bottom(false);
-      panel.set_viewport_center(coordinate_transform.board_to_screen(old_viewport_center));
+      FloatPoint oldViewportCenter =
+          coordinateTransform.screen_to_board(panel.get_viewport_center());
+      coordinateTransform.set_mirror_left_right(true);
+      coordinateTransform.set_mirror_top_bottom(false);
+      panel.set_viewport_center(coordinateTransform.board_to_screen(oldViewportCenter));
       panel.repaint();
     }
   }
@@ -366,17 +362,17 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      CoordinateTransform coordinate_transform =
-          panel.board_handling.graphics_context.coordinate_transform;
-      if (coordinate_transform.is_mirror_top_bottom()) {
+      CoordinateTransform coordinateTransform =
+          panel.boardHandling.graphicsContext.coordinateTransform;
+      if (coordinateTransform.is_mirror_top_bottom()) {
         return; // already mirrored
       }
       // remember the old viewport center to retain the displayed section of the board.
-      FloatPoint old_viewport_center =
-          coordinate_transform.screen_to_board(panel.get_viewport_center());
-      coordinate_transform.set_mirror_top_bottom(true);
-      coordinate_transform.set_mirror_left_right(false);
-      panel.set_viewport_center(coordinate_transform.board_to_screen(old_viewport_center));
+      FloatPoint oldViewportCenter =
+          coordinateTransform.screen_to_board(panel.get_viewport_center());
+      coordinateTransform.set_mirror_top_bottom(true);
+      coordinateTransform.set_mirror_left_right(false);
+      panel.set_viewport_center(coordinateTransform.board_to_screen(oldViewportCenter));
       panel.repaint();
     }
   }
@@ -385,8 +381,8 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     @Override
     public void stateChanged(ChangeEvent evt) {
-      double new_value = 1 - (double) auto_layer_dim_slider.getValue() / (double) MAX_SLIDER_VALUE;
-      panel.board_handling.graphics_context.set_auto_layer_dim_factor(new_value);
+      double newValue = 1 - (double) autoLayerDimSlider.getValue() / (double) MAX_SLIDER_VALUE;
+      panel.boardHandling.graphicsContext.set_auto_layer_dim_factor(newValue);
       panel.repaint();
     }
   }

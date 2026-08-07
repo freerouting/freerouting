@@ -108,28 +108,27 @@ public class GuiManager {
       guiSession.addJob(routingJob);
 
       String message = tm.getText("loading_design_with_file", globalSettings.initialInputFile);
-      WindowMessage welcome_window = WindowMessage.show(message);
-      final BoardFrame new_frame =
+      WindowMessage welcomeWindow = WindowMessage.show(message);
+      final BoardFrame newFrame =
           create_board_frame(routingJob, null, globalSettings, settingsMerger);
-      welcome_window.dispose();
-      if (new_frame == null) {
+      welcomeWindow.dispose();
+      if (newFrame == null) {
         FRLogger.warn("Couldn't create window frame");
         System.exit(1);
         return false;
       }
       var bs =
-          new BoardStatistics(
-              new_frame.board_panel.board_handling.get_routing_board(), null, false);
-      new_frame.board_panel.board_handling.screen_messages.set_board_score(
+          new BoardStatistics(newFrame.boardPanel.boardHandling.get_routing_board(), null, false);
+      newFrame.boardPanel.boardHandling.screenMessages.set_board_score(
           bs.getNormalizedScore(routingJob.routerSettings.scoring),
           bs.connections.incompleteCount,
           bs.clearanceViolations.totalCount);
-      new_frame.board_panel.board_handling.set_num_threads(routingJob.routerSettings.maxThreads);
-      new_frame.board_panel.board_handling.set_board_update_strategy(
+      newFrame.boardPanel.boardHandling.set_num_threads(routingJob.routerSettings.maxThreads);
+      newFrame.boardPanel.boardHandling.set_board_update_strategy(
           routingJob.routerSettings.optimizer.boardUpdateStrategy);
-      new_frame.board_panel.board_handling.set_hybrid_ratio(
+      newFrame.boardPanel.boardHandling.set_hybrid_ratio(
           routingJob.routerSettings.optimizer.hybridRatio);
-      new_frame.board_panel.board_handling.set_item_selection_strategy(
+      newFrame.boardPanel.boardHandling.set_item_selection_strategy(
           routingJob.routerSettings.optimizer.itemSelectionStrategy);
 
       if (globalSettings.initialOutputFile != null) {
@@ -146,7 +145,7 @@ public class GuiManager {
 
         // we need to set up a listener to save the design file when the autorouter is
         // running
-        new_frame.board_panel.board_handling.autorouter_listener =
+        newFrame.boardPanel.boardHandling.autorouterListener =
             new ThreadActionListener() {
               @Override
               public void autorouterStarted() {}
@@ -179,26 +178,26 @@ public class GuiManager {
 
                 FRLogger.info("Saving '" + filename + "'...");
                 try {
-                  String filename_only = new File(filename).getName();
-                  String design_name = filename_only.substring(0, filename_only.length() - 4);
-                  String extension = filename_only.substring(filename_only.length() - 4);
+                  String filenameOnly = new File(filename).getName();
+                  String designName = filenameOnly.substring(0, filenameOnly.length() - 4);
+                  String extension = filenameOnly.substring(filenameOnly.length() - 4);
 
-                  try (OutputStream output_stream = new FileOutputStream(filename)) {
+                  try (OutputStream outputStream = new FileOutputStream(filename)) {
                     switch (extension) {
                       case ".dsn" ->
-                          new_frame.board_panel.board_handling.saveAsSpecctraDesignDsn(
-                              output_stream, design_name, false);
+                          newFrame.boardPanel.boardHandling.saveAsSpecctraDesignDsn(
+                              outputStream, designName, false);
                       case ".ses" ->
-                          new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(
-                              output_stream, design_name);
+                          newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(
+                              outputStream, designName);
                       case ".scr" -> {
-                        ByteArrayOutputStream session_output_stream = new ByteArrayOutputStream();
-                        new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(
-                            session_output_stream, filename);
-                        InputStream input_stream =
-                            new ByteArrayInputStream(session_output_stream.toByteArray());
-                        new_frame.board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(
-                            input_stream, output_stream);
+                        ByteArrayOutputStream sessionOutputStream = new ByteArrayOutputStream();
+                        newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(
+                            sessionOutputStream, filename);
+                        InputStream inputStream =
+                            new ByteArrayInputStream(sessionOutputStream.toByteArray());
+                        newFrame.boardPanel.boardHandling.saveSpecctraSessionSesAsEagleScriptScr(
+                            inputStream, outputStream);
                       }
                     }
                   }
@@ -227,7 +226,7 @@ public class GuiManager {
         Object[] options = {startNowButton, CANCEL_TEXT};
 
         final String AUTOSTART_MSG = tm.getText("auto_start_routing_message");
-        JOptionPane auto_start_routing_dialog =
+        JOptionPane autoStartRoutingDialog =
             new JOptionPane(
                 AUTOSTART_MSG,
                 JOptionPane.WARNING_MESSAGE,
@@ -236,7 +235,7 @@ public class GuiManager {
                 options,
                 options[0]);
 
-        startNowButton.addActionListener(_ -> auto_start_routing_dialog.setValue(options[0]));
+        startNowButton.addActionListener(_ -> autoStartRoutingDialog.setValue(options[0]));
         startNowButton.addActionListener(
             _ ->
                 FRAnalytics.buttonClicked(
@@ -246,7 +245,7 @@ public class GuiManager {
 
         if (globalSettings.guiSettings.dialogConfirmationTimeout > 0) {
           // Add a timer to the dialog
-          JDialog autostartDialog = auto_start_routing_dialog.createDialog(AUTOSTART_TITLE);
+          JDialog autostartDialog = autoStartRoutingDialog.createDialog(AUTOSTART_TITLE);
 
           // Update startNowButton text every second
           Timer autostartTimer =
@@ -260,7 +259,7 @@ public class GuiManager {
                       if (--secondsLeft > 0) {
                         startNowButton.setText(START_NOW_TEXT + " (" + secondsLeft + ")");
                       } else {
-                        auto_start_routing_dialog.setValue(options[0]);
+                        autoStartRoutingDialog.setValue(options[0]);
                         FRAnalytics.buttonClicked(
                             "auto_start_routing_dialog_start_with_timeout",
                             startNowButton.getText());
@@ -275,19 +274,19 @@ public class GuiManager {
           autostartTimer.stop();
         }
 
-        Object choice = auto_start_routing_dialog.getValue();
+        Object choice = autoStartRoutingDialog.getValue();
         // Start the auto-router if the user didn't cancel the dialog
         if ((globalSettings.guiSettings.dialogConfirmationTimeout == 0) || (choice == options[0])) {
           // Start the auto-router
           // Note: routingJob.routerSettings already has CLI settings applied in line
           // 87-91
           InteractiveActionThread thread =
-              new_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(routingJob);
+              newFrame.boardPanel.boardHandling.start_autorouter_and_route_optimizer(routingJob);
 
-          if (new_frame.board_panel.board_handling.autorouter_listener != null) {
+          if (newFrame.boardPanel.boardHandling.autorouterListener != null) {
             // Add the auto-router listener to save the design file when the autorouter is
             // running
-            thread.addListener(new_frame.board_panel.board_handling.autorouter_listener);
+            thread.addListener(newFrame.boardPanel.boardHandling.autorouterListener);
           }
 
           globalSettings.guiSettings.exitWhenFinished = true;
@@ -299,7 +298,7 @@ public class GuiManager {
         }
       }
 
-      new_frame.addWindowListener(
+      newFrame.addWindowListener(
           new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent evt) {
@@ -312,8 +311,8 @@ public class GuiManager {
       var settingsMerger = globalSettings.settingsMergerProtype.clone();
       settingsMerger.addOrReplaceSources(new GuiSettings(null));
 
-      final BoardFrame new_frame = create_board_frame(null, null, globalSettings, settingsMerger);
-      if (new_frame == null) {
+      final BoardFrame newFrame = create_board_frame(null, null, globalSettings, settingsMerger);
+      if (newFrame == null) {
         FRLogger.warn("Couldn't create window frame");
         System.exit(1);
         return false;
@@ -333,17 +332,17 @@ public class GuiManager {
       SettingsMerger settingsMerger) {
     TextManager tm = new TextManager(GuiManager.class, globalSettings.currentLocale);
 
-    InputStream input_stream = null;
+    InputStream inputStream = null;
     if ((routingJob == null) || (routingJob.input.getFile() == null)) {
       routingJob = new RoutingJob(SessionManager.getInstance().getGuiSession().id);
 
       routingJob.setDummyInputFile("tutorial_board.dsn");
       // Load an empty template file from the resources
       ClassLoader classLoader = WindowBase.class.getClassLoader();
-      input_stream = classLoader.getResourceAsStream("tutorial_board.dsn");
+      inputStream = classLoader.getResourceAsStream("tutorial_board.dsn");
     } else {
-      input_stream = routingJob.input.getData();
-      if (input_stream == null) {
+      inputStream = routingJob.input.getData();
+      if (inputStream == null) {
         if (p_message_field != null) {
           p_message_field.setText(
               tm.getText(
@@ -353,34 +352,34 @@ public class GuiManager {
       }
     }
 
-    BoardFrame new_frame = new BoardFrame(routingJob, globalSettings, settingsMerger);
+    BoardFrame newFrame = new BoardFrame(routingJob, globalSettings, settingsMerger);
 
-    boolean read_ok =
-        new_frame.load(input_stream, routingJob.input.format, p_message_field, routingJob);
-    if (!read_ok) {
+    boolean readOk =
+        newFrame.load(inputStream, routingJob.input.format, p_message_field, routingJob);
+    if (!readOk) {
       return null;
     }
 
     // Load session file if specified (after design is loaded, before RULES)
-    if (globalSettings.design_session_filename != null
+    if (globalSettings.designSessionFilename != null
         && (routingJob.input.format.equals(FileFormat.DSN)
             || routingJob.input.format.equals(FileFormat.KICAD_DESIGN_JSON))) {
       try {
-        File sessionFile = new File(globalSettings.design_session_filename);
+        File sessionFile = new File(globalSettings.designSessionFilename);
         if (sessionFile.exists()) {
-          if (globalSettings.design_session_filename.toLowerCase().endsWith(".json")) {
+          if (globalSettings.designSessionFilename.toLowerCase().endsWith(".json")) {
             FRLogger.info(
-                "Loading KiCad JSON session file: " + globalSettings.design_session_filename);
+                "Loading KiCad JSON session file: " + globalSettings.designSessionFilename);
             try (java.io.FileReader jsonReader = new java.io.FileReader(sessionFile)) {
               app.freerouting.io.kicad.KiCadJsonReader.importSession(
-                  jsonReader, new_frame.board_panel.board_handling.get_routing_board());
+                  jsonReader, newFrame.boardPanel.boardHandling.get_routing_board());
               FRLogger.info("KiCad JSON session file loaded successfully");
             }
           } else {
-            FRLogger.info("Loading SES file: " + globalSettings.design_session_filename);
+            FRLogger.info("Loading SES file: " + globalSettings.designSessionFilename);
             FileInputStream sesStream = new FileInputStream(sessionFile);
             SesImportSummary summary =
-                SesReader.read(sesStream, new_frame.board_panel.board_handling.get_routing_board());
+                SesReader.read(sesStream, newFrame.boardPanel.boardHandling.get_routing_board());
             FRLogger.info(
                 "SES file loaded: "
                     + summary.wiresImported()
@@ -391,9 +390,9 @@ public class GuiManager {
                         ? " (" + summary.errorsEncountered() + " errors)"
                         : ""));
           }
-          new_frame.refresh_windows(); // Refresh UI to show loaded routes
+          newFrame.refresh_windows(); // Refresh UI to show loaded routes
         } else {
-          FRLogger.warn("Session file not found: " + globalSettings.design_session_filename);
+          FRLogger.warn("Session file not found: " + globalSettings.designSessionFilename);
         }
       } catch (Exception e) {
         FRLogger.error("Failed to load session file", e);
@@ -402,61 +401,61 @@ public class GuiManager {
 
     // Change the palette if we loaded the tutorial DSN file
     if (TutorialBoardPalette.isTutorialBoard(routingJob.input.getFilename())) {
-      TutorialBoardPalette.apply(new_frame.board_panel.board_handling.graphics_context);
-      new_frame.board_panel.setBackground(TutorialBoardPalette.backgroundColor());
+      TutorialBoardPalette.apply(newFrame.boardPanel.boardHandling.graphicsContext);
+      newFrame.boardPanel.setBackground(TutorialBoardPalette.backgroundColor());
     }
 
     FRAnalytics.buttonClicked("fileio_loaddsn", routingJob.getInputFileDetails());
 
     if (!globalSettings.featureFlags.inspectionMode) {
-      new_frame.board_panel.board_handling.set_route_menu_state();
+      newFrame.boardPanel.boardHandling.set_route_menu_state();
     }
 
     if (routingJob.input.format.equals(FileFormat.DSN)) {
       // Read the file with the saved rules, if it exists.
-      String design_name = routingJob.name;
+      String designName = routingJob.name;
 
-      String rules_file_name;
-      String parent_folder_name;
-      String confirm_import_rules_message;
+      String rulesFileName;
+      String parentFolderName;
+      String confirmImportRulesMessage;
       if (globalSettings.initialRulesFile == null) {
-        rules_file_name = design_name + ".rules";
-        parent_folder_name = routingJob.input.getDirectoryPath();
-        confirm_import_rules_message = tm.getText("confirm_import_rules");
+        rulesFileName = designName + ".rules";
+        parentFolderName = routingJob.input.getDirectoryPath();
+        confirmImportRulesMessage = tm.getText("confirm_import_rules");
       } else {
-        rules_file_name = globalSettings.initialRulesFile;
-        parent_folder_name = null;
-        confirm_import_rules_message = null;
+        rulesFileName = globalSettings.initialRulesFile;
+        parentFolderName = null;
+        confirmImportRulesMessage = null;
       }
 
-      File rules_file = new File(parent_folder_name, rules_file_name);
-      if (rules_file.exists()) {
+      File rulesFile = new File(parentFolderName, rulesFileName);
+      if (rulesFile.exists()) {
         // load the .rules file
         read_rules_file(
-            design_name,
-            parent_folder_name,
-            rules_file_name,
-            new_frame.board_panel.board_handling,
-            confirm_import_rules_message);
+            designName,
+            parentFolderName,
+            rulesFileName,
+            newFrame.boardPanel.boardHandling,
+            confirmImportRulesMessage);
       }
 
       // ignore net classes if they were defined by a command line argument
       if (routingJob.routerSettings.ignoreNetClasses != null) {
-        for (String net_class_name : routingJob.routerSettings.ignoreNetClasses) {
+        for (String netClassName : routingJob.routerSettings.ignoreNetClasses) {
           NetClasses netClasses =
-              new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
+              newFrame.boardPanel.boardHandling.get_routing_board().rules.netClasses;
 
           for (int i = 0; i < netClasses.count(); i++) {
-            if (netClasses.get(i).get_name().equalsIgnoreCase(net_class_name)) {
-              netClasses.get(i).is_ignored_by_autorouter = true;
+            if (netClasses.get(i).get_name().equalsIgnoreCase(netClassName)) {
+              netClasses.get(i).isIgnoredByAutorouter = true;
             }
           }
         }
       }
 
-      new_frame.refresh_windows();
+      newFrame.refresh_windows();
     }
-    return new_frame;
+    return newFrame;
   }
 
   public static void saveSettings() throws IOException {
@@ -466,27 +465,26 @@ public class GuiManager {
   private static boolean read_rules_file(
       String p_design_name,
       String p_parent_name,
-      String rules_file_name,
+      String rulesFileName,
       GuiBoardManager p_board_handling,
       String p_confirm_message) {
 
-    boolean dsn_file_generated_by_host =
+    boolean dsnFileGeneratedByHost =
         p_board_handling.get_routing_board()
             .communication
-            .specctra_parser_info
-            .dsn_file_generated_by_host;
+            .specctraParserInfo
+            .dsnFileGeneratedByHost;
 
     try {
-      File rules_file = new File(p_parent_name, rules_file_name);
-      FRLogger.info("Opening '" + rules_file_name + "'...");
-      try (InputStream input_stream = new FileInputStream(rules_file)) {
-        if (dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message)) {
-          return RulesReader.read(
-              input_stream, p_design_name, p_board_handling.get_routing_board());
+      File rulesFile = new File(p_parent_name, rulesFileName);
+      FRLogger.info("Opening '" + rulesFileName + "'...");
+      try (InputStream inputStream = new FileInputStream(rulesFile)) {
+        if (dsnFileGeneratedByHost && WindowMessage.confirm(p_confirm_message)) {
+          return RulesReader.read(inputStream, p_design_name, p_board_handling.get_routing_board());
         }
       }
     } catch (IOException e) {
-      FRLogger.error("Error reading rules file '" + rules_file_name + "'.", e);
+      FRLogger.error("Error reading rules file '" + rulesFileName + "'.", e);
     }
     return false;
   }

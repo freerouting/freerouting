@@ -26,114 +26,110 @@ import javax.swing.JPanel;
 public class WindowManualRules extends BoardSavableSubWindow {
 
   private static final int max_slider_value = 15000;
-  private static final double scale_factor = 1;
-  private final GuiBoardManager board_handling;
-  private final ComboBoxLayer settings_routing_manual_rule_selection_layer_combo_box;
-  private final ComboBoxClearance settings_routing_manual_rule_selection_clearance_combo_box;
-  private final JComboBox<ViaRule> settings_routing_manual_rule_selection_via_rule_combo_box;
-  private final JFormattedTextField trace_width_field;
-  private boolean key_input_completed = true;
+  private static final double scaleFactor = 1;
+  private final GuiBoardManager boardHandling;
+  private final ComboBoxLayer settingsRoutingManualRuleSelectionLayerComboBox;
+  private final ComboBoxClearance settingsRoutingManualRuleSelectionClearanceComboBox;
+  private final JComboBox<ViaRule> settingsRoutingManualRuleSelectionViaRuleComboBox;
+  private final JFormattedTextField traceWidthField;
+  private boolean keyInputCompleted = true;
 
   /** Creates a new instance of TraceWidthWindow */
   public WindowManualRules(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
-    this.board_handling = p_board_frame.board_panel.board_handling;
+    this.boardHandling = p_board_frame.boardPanel.boardHandling;
     setLanguage(p_board_frame.get_locale());
 
     this.setTitle(tm.getText("title"));
 
     // create main panel
 
-    final JPanel main_panel = new JPanel();
-    getContentPane().add(main_panel);
+    final JPanel mainPanel = new JPanel();
+    getContentPane().add(mainPanel);
     GridBagLayout gridbag = new GridBagLayout();
-    main_panel.setLayout(gridbag);
-    GridBagConstraints gridbag_constraints = new GridBagConstraints();
-    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
-    gridbag_constraints.anchor = GridBagConstraints.WEST;
+    mainPanel.setLayout(gridbag);
+    GridBagConstraints gridbagConstraints = new GridBagConstraints();
+    gridbagConstraints.insets = new Insets(5, 10, 5, 10);
+    gridbagConstraints.anchor = GridBagConstraints.WEST;
 
-    JLabel via_rule_label = new JLabel(tm.getText("via_rule"));
-    gridbag_constraints.gridwidth = 2;
-    gridbag.setConstraints(via_rule_label, gridbag_constraints);
-    main_panel.add(via_rule_label);
+    JLabel viaRuleLabel = new JLabel(tm.getText("viaRule"));
+    gridbagConstraints.gridwidth = 2;
+    gridbag.setConstraints(viaRuleLabel, gridbagConstraints);
+    mainPanel.add(viaRuleLabel);
 
-    RoutingBoard routing_board = this.board_handling.get_routing_board();
-    settings_routing_manual_rule_selection_via_rule_combo_box =
-        new JComboBox<>(routing_board.rules.via_rules);
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    RoutingBoard routingBoard = this.boardHandling.get_routing_board();
+    settingsRoutingManualRuleSelectionViaRuleComboBox =
+        new JComboBox<>(routingBoard.rules.viaRules);
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(
-        this.settings_routing_manual_rule_selection_via_rule_combo_box, gridbag_constraints);
-    main_panel.add(this.settings_routing_manual_rule_selection_via_rule_combo_box);
-    settings_routing_manual_rule_selection_via_rule_combo_box.addActionListener(
+        this.settingsRoutingManualRuleSelectionViaRuleComboBox, gridbagConstraints);
+    mainPanel.add(this.settingsRoutingManualRuleSelectionViaRuleComboBox);
+    settingsRoutingManualRuleSelectionViaRuleComboBox.addActionListener(
         new ViaRuleComboBoxListener());
-    // settings_routing_manual_rule_selection_via_rule_combo_box.addActionListener(evt ->
-    // FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_via_rule_combo_box",
-    // settings_routing_manual_rule_selection_via_rule_combo_box.getSelectedItem().toString()));
+    // settingsRoutingManualRuleSelectionViaRuleComboBox.addActionListener(evt ->
+    // FRAnalytics.buttonClicked("settingsRoutingManualRuleSelectionViaRuleComboBox",
+    // settingsRoutingManualRuleSelectionViaRuleComboBox.getSelectedItem().toString()));
 
-    JLabel class_label = new JLabel(tm.getText("trace_clearance_class"));
-    gridbag_constraints.gridwidth = 2;
-    gridbag.setConstraints(class_label, gridbag_constraints);
-    main_panel.add(class_label);
+    JLabel classLabel = new JLabel(tm.getText("traceClearanceClass"));
+    gridbagConstraints.gridwidth = 2;
+    gridbag.setConstraints(classLabel, gridbagConstraints);
+    mainPanel.add(classLabel);
 
-    settings_routing_manual_rule_selection_clearance_combo_box =
-        new ComboBoxClearance(routing_board.rules.clearance_matrix);
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    settingsRoutingManualRuleSelectionClearanceComboBox =
+        new ComboBoxClearance(routingBoard.rules.clearanceMatrix);
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(
-        this.settings_routing_manual_rule_selection_clearance_combo_box, gridbag_constraints);
-    main_panel.add(this.settings_routing_manual_rule_selection_clearance_combo_box);
-    settings_routing_manual_rule_selection_clearance_combo_box.addActionListener(
+        this.settingsRoutingManualRuleSelectionClearanceComboBox, gridbagConstraints);
+    mainPanel.add(this.settingsRoutingManualRuleSelectionClearanceComboBox);
+    settingsRoutingManualRuleSelectionClearanceComboBox.addActionListener(
         new ClearanceComboBoxListener());
-    // settings_routing_manual_rule_selection_clearance_combo_box.addActionListener(evt ->
-    // FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_clearance_combo_box",
-    // settings_routing_manual_rule_selection_clearance_combo_box.getSelectedItem().toString()));
+    // settingsRoutingManualRuleSelectionClearanceComboBox.addActionListener(evt ->
+    // FRAnalytics.buttonClicked("settingsRoutingManualRuleSelectionClearanceComboBox",
+    // settingsRoutingManualRuleSelectionClearanceComboBox.getSelectedItem().toString()));
 
     JLabel separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(separator, gridbag_constraints);
-    main_panel.add(separator, gridbag_constraints);
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(separator, gridbagConstraints);
+    mainPanel.add(separator, gridbagConstraints);
 
-    JLabel width_label = new JLabel(tm.getText("trace_width"));
-    gridbag_constraints.gridwidth = 2;
-    gridbag.setConstraints(width_label, gridbag_constraints);
-    main_panel.add(width_label);
-    NumberFormat number_format = NumberFormat.getInstance(p_board_frame.get_locale());
-    number_format.setMaximumFractionDigits(7);
-    this.trace_width_field = new JFormattedTextField(number_format);
-    this.trace_width_field.setColumns(7);
-    int curr_half_width =
-        this.board_handling.getInteractiveSettings().get_manual_trace_half_width(0);
-    this.set_trace_width_field(curr_half_width);
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(trace_width_field, gridbag_constraints);
-    main_panel.add(trace_width_field);
-    trace_width_field.addKeyListener(new TraceWidthFieldKeyListener());
-    trace_width_field.addFocusListener(new TraceWidthFieldFocusListener());
+    JLabel widthLabel = new JLabel(tm.getText("traceWidth"));
+    gridbagConstraints.gridwidth = 2;
+    gridbag.setConstraints(widthLabel, gridbagConstraints);
+    mainPanel.add(widthLabel);
+    NumberFormat numberFormat = NumberFormat.getInstance(p_board_frame.get_locale());
+    numberFormat.setMaximumFractionDigits(7);
+    this.traceWidthField = new JFormattedTextField(numberFormat);
+    this.traceWidthField.setColumns(7);
+    int currHalfWidth = this.boardHandling.getInteractiveSettings().get_manual_trace_half_width(0);
+    this.set_trace_width_field(currHalfWidth);
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(traceWidthField, gridbagConstraints);
+    mainPanel.add(traceWidthField);
+    traceWidthField.addKeyListener(new TraceWidthFieldKeyListener());
+    traceWidthField.addFocusListener(new TraceWidthFieldFocusListener());
 
-    JLabel layer_label = new JLabel(tm.getText("on_layer"));
-    gridbag_constraints.gridwidth = 2;
-    gridbag.setConstraints(layer_label, gridbag_constraints);
-    main_panel.add(layer_label);
+    JLabel layerLabel = new JLabel(tm.getText("on_layer"));
+    gridbagConstraints.gridwidth = 2;
+    gridbag.setConstraints(layerLabel, gridbagConstraints);
+    mainPanel.add(layerLabel);
 
-    settings_routing_manual_rule_selection_layer_combo_box =
+    settingsRoutingManualRuleSelectionLayerComboBox =
         new ComboBoxLayer(
-            this.board_handling.get_routing_board().layer_structure, p_board_frame.get_locale());
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+            this.boardHandling.get_routing_board().layerStructure, p_board_frame.get_locale());
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(
-        this.settings_routing_manual_rule_selection_layer_combo_box, gridbag_constraints);
-    main_panel.add(this.settings_routing_manual_rule_selection_layer_combo_box);
-    settings_routing_manual_rule_selection_layer_combo_box.addActionListener(
-        new LayerComboBoxListener());
-    settings_routing_manual_rule_selection_layer_combo_box.addActionListener(
+        this.settingsRoutingManualRuleSelectionLayerComboBox, gridbagConstraints);
+    mainPanel.add(this.settingsRoutingManualRuleSelectionLayerComboBox);
+    settingsRoutingManualRuleSelectionLayerComboBox.addActionListener(new LayerComboBoxListener());
+    settingsRoutingManualRuleSelectionLayerComboBox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "settings_routing_manual_rule_selection_layer_combo_box",
-                settings_routing_manual_rule_selection_layer_combo_box
-                    .getSelectedItem()
-                    .toString()));
+                "settingsRoutingManualRuleSelectionLayerComboBox",
+                settingsRoutingManualRuleSelectionLayerComboBox.getSelectedItem().toString()));
 
-    JLabel empty_label = new JLabel();
-    gridbag.setConstraints(empty_label, gridbag_constraints);
-    main_panel.add(empty_label);
+    JLabel emptyLabel = new JLabel();
+    gridbag.setConstraints(emptyLabel, gridbagConstraints);
+    mainPanel.add(emptyLabel);
 
     this.pack();
     this.setResizable(false);
@@ -142,88 +138,86 @@ public class WindowManualRules extends BoardSavableSubWindow {
   /** Recalculates the values in the trace width fields. */
   @Override
   public void refresh() {
-    RoutingBoard routing_board = board_handling.get_routing_board();
-    ComboBoxModel<ViaRule> new_model = new DefaultComboBoxModel<>(routing_board.rules.via_rules);
-    this.settings_routing_manual_rule_selection_via_rule_combo_box.setModel(new_model);
-    ClearanceMatrix clearance_matrix = board_handling.get_routing_board().rules.clearance_matrix;
-    if (this.settings_routing_manual_rule_selection_clearance_combo_box.get_class_count()
-        != routing_board.rules.clearance_matrix.get_class_count()) {
-      this.settings_routing_manual_rule_selection_clearance_combo_box.adjust(clearance_matrix);
+    RoutingBoard routingBoard = boardHandling.get_routing_board();
+    ComboBoxModel<ViaRule> newModel = new DefaultComboBoxModel<>(routingBoard.rules.viaRules);
+    this.settingsRoutingManualRuleSelectionViaRuleComboBox.setModel(newModel);
+    ClearanceMatrix clearanceMatrix = boardHandling.get_routing_board().rules.clearanceMatrix;
+    if (this.settingsRoutingManualRuleSelectionClearanceComboBox.get_class_count()
+        != routingBoard.rules.clearanceMatrix.get_class_count()) {
+      this.settingsRoutingManualRuleSelectionClearanceComboBox.adjust(clearanceMatrix);
     }
-    this.settings_routing_manual_rule_selection_clearance_combo_box.setSelectedIndex(
-        board_handling.getInteractiveSettings().get_manual_trace_clearance_class());
-    int via_rule_index = board_handling.getInteractiveSettings().get_manual_via_rule_index();
-    if (via_rule_index
-        < this.settings_routing_manual_rule_selection_via_rule_combo_box.getItemCount()) {
-      this.settings_routing_manual_rule_selection_via_rule_combo_box.setSelectedIndex(
-          board_handling.getInteractiveSettings().get_manual_via_rule_index());
+    this.settingsRoutingManualRuleSelectionClearanceComboBox.setSelectedIndex(
+        boardHandling.getInteractiveSettings().get_manual_trace_clearance_class());
+    int viaRuleIndex = boardHandling.getInteractiveSettings().get_manual_via_rule_index();
+    if (viaRuleIndex < this.settingsRoutingManualRuleSelectionViaRuleComboBox.getItemCount()) {
+      this.settingsRoutingManualRuleSelectionViaRuleComboBox.setSelectedIndex(
+          boardHandling.getInteractiveSettings().get_manual_via_rule_index());
     }
     this.set_selected_layer(
-        this.settings_routing_manual_rule_selection_layer_combo_box.get_selected_layer());
+        this.settingsRoutingManualRuleSelectionLayerComboBox.get_selected_layer());
     this.repaint();
   }
 
   public void set_trace_width_field(int p_half_width) {
     if (p_half_width < 0) {
-      this.trace_width_field.setText("");
+      this.traceWidthField.setText("");
     } else {
-      Float trace_width =
-          (float) board_handling.coordinate_transform.board_to_user(2 * p_half_width);
-      this.trace_width_field.setValue(trace_width);
+      Float traceWidth = (float) boardHandling.coordinateTransform.board_to_user(2 * p_half_width);
+      this.traceWidthField.setValue(traceWidth);
     }
   }
 
   /** Sets the selected layer to p_layer. */
   private void set_selected_layer(ComboBoxLayer.Layer p_layer) {
-    int curr_half_width;
+    int currHalfWidth;
     if (p_layer.index == ComboBoxLayer.ALL_LAYER_INDEX) {
       // check if the half width is layer_dependent.
-      boolean trace_widths_layer_dependent = false;
-      int first_half_width =
-          this.board_handling.getInteractiveSettings().get_manual_trace_half_width(0);
-      for (int i = 1; i < this.board_handling.get_layer_count(); i++) {
-        if (this.board_handling.getInteractiveSettings().get_manual_trace_half_width(i)
-            != first_half_width) {
-          trace_widths_layer_dependent = true;
+      boolean traceWidthsLayerDependent = false;
+      int firstHalfWidth =
+          this.boardHandling.getInteractiveSettings().get_manual_trace_half_width(0);
+      for (int i = 1; i < this.boardHandling.get_layer_count(); i++) {
+        if (this.boardHandling.getInteractiveSettings().get_manual_trace_half_width(i)
+            != firstHalfWidth) {
+          traceWidthsLayerDependent = true;
           break;
         }
       }
-      if (trace_widths_layer_dependent) {
-        curr_half_width = -1;
+      if (traceWidthsLayerDependent) {
+        currHalfWidth = -1;
       } else {
-        curr_half_width = first_half_width;
+        currHalfWidth = firstHalfWidth;
       }
     } else if (p_layer.index == ComboBoxLayer.INNER_LAYER_INDEX) {
       // check if the half width is layer_dependent on the inner layers.
-      boolean trace_widths_layer_dependent = false;
-      int first_half_width =
-          this.board_handling.getInteractiveSettings().get_manual_trace_half_width(1);
-      for (int i = 2; i < this.board_handling.get_layer_count() - 1; i++) {
-        if (this.board_handling.getInteractiveSettings().get_manual_trace_half_width(i)
-            != first_half_width) {
-          trace_widths_layer_dependent = true;
+      boolean traceWidthsLayerDependent = false;
+      int firstHalfWidth =
+          this.boardHandling.getInteractiveSettings().get_manual_trace_half_width(1);
+      for (int i = 2; i < this.boardHandling.get_layer_count() - 1; i++) {
+        if (this.boardHandling.getInteractiveSettings().get_manual_trace_half_width(i)
+            != firstHalfWidth) {
+          traceWidthsLayerDependent = true;
           break;
         }
       }
-      if (trace_widths_layer_dependent) {
-        curr_half_width = -1;
+      if (traceWidthsLayerDependent) {
+        currHalfWidth = -1;
       } else {
-        curr_half_width = first_half_width;
+        currHalfWidth = firstHalfWidth;
       }
     } else {
-      curr_half_width =
-          this.board_handling.getInteractiveSettings().get_manual_trace_half_width(p_layer.index);
+      currHalfWidth =
+          this.boardHandling.getInteractiveSettings().get_manual_trace_half_width(p_layer.index);
     }
-    set_trace_width_field(curr_half_width);
+    set_trace_width_field(currHalfWidth);
   }
 
   private class LayerComboBoxListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      ComboBoxLayer.Layer new_selected_layer =
-          settings_routing_manual_rule_selection_layer_combo_box.get_selected_layer();
-      set_selected_layer(new_selected_layer);
+      ComboBoxLayer.Layer newSelectedLayer =
+          settingsRoutingManualRuleSelectionLayerComboBox.get_selected_layer();
+      set_selected_layer(newSelectedLayer);
     }
   }
 
@@ -231,9 +225,8 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      int new_index =
-          settings_routing_manual_rule_selection_clearance_combo_box.get_selected_class_index();
-      board_handling.getInteractiveSettings().set_manual_trace_clearance_class(new_index);
+      int newIndex = settingsRoutingManualRuleSelectionClearanceComboBox.get_selected_class_index();
+      boardHandling.getInteractiveSettings().set_manual_trace_clearance_class(newIndex);
     }
   }
 
@@ -241,8 +234,8 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      int new_index = settings_routing_manual_rule_selection_via_rule_combo_box.getSelectedIndex();
-      board_handling.getInteractiveSettings().set_manual_via_rule_index(new_index);
+      int newIndex = settingsRoutingManualRuleSelectionViaRuleComboBox.getSelectedIndex();
+      boardHandling.getInteractiveSettings().set_manual_via_rule_index(newIndex);
     }
   }
 
@@ -251,23 +244,23 @@ public class WindowManualRules extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        key_input_completed = true;
-        Object input = trace_width_field.getValue();
+        keyInputCompleted = true;
+        Object input = traceWidthField.getValue();
         if (!(input instanceof Number)) {
           return;
         }
-        double input_value = ((Number) input).doubleValue();
-        if (input_value <= 0) {
+        double inputValue = ((Number) input).doubleValue();
+        if (inputValue <= 0) {
           return;
         }
-        double board_value = board_handling.coordinate_transform.user_to_board(input_value);
-        int new_half_width = (int) Math.round(0.5 * board_value);
-        board_handling.set_manual_trace_half_width(
-            settings_routing_manual_rule_selection_layer_combo_box.get_selected_layer().index,
-            new_half_width);
-        set_trace_width_field(new_half_width);
+        double boardValue = boardHandling.coordinateTransform.user_to_board(inputValue);
+        int newHalfWidth = (int) Math.round(0.5 * boardValue);
+        boardHandling.set_manual_trace_half_width(
+            settingsRoutingManualRuleSelectionLayerComboBox.get_selected_layer().index,
+            newHalfWidth);
+        set_trace_width_field(newHalfWidth);
       } else {
-        key_input_completed = false;
+        keyInputCompleted = false;
       }
     }
   }
@@ -276,11 +269,10 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
     @Override
     public void focusLost(FocusEvent p_evt) {
-      if (!key_input_completed) {
+      if (!keyInputCompleted) {
         // restore the text field.
-        set_selected_layer(
-            settings_routing_manual_rule_selection_layer_combo_box.get_selected_layer());
-        key_input_completed = true;
+        set_selected_layer(settingsRoutingManualRuleSelectionLayerComboBox.get_selected_layer());
+        keyInputCompleted = true;
       }
     }
 

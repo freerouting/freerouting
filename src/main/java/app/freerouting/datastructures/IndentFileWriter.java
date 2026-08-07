@@ -12,7 +12,7 @@ public class IndentFileWriter extends OutputStreamWriter {
   private static final String INDENT_STRING = "  ";
   private static final String BEGIN_SCOPE = "(";
   private static final String END_SCOPE = ")";
-  private int current_indent_level;
+  private int currentIndentLevel;
 
   /** Creates a new instance of IndentFileWriter */
   public IndentFileWriter(OutputStream p_stream) {
@@ -30,7 +30,7 @@ public class IndentFileWriter extends OutputStreamWriter {
     } catch (IOException e) {
       FRLogger.error("IndentFileWriter.start_scope: unable to write to file", e);
     }
-    ++current_indent_level;
+    ++currentIndentLevel;
   }
 
   public void start_scope() {
@@ -39,7 +39,7 @@ public class IndentFileWriter extends OutputStreamWriter {
 
   /** Closes the latest open scope. */
   public void end_scope() {
-    --current_indent_level;
+    --currentIndentLevel;
     new_line();
     try {
       write(END_SCOPE);
@@ -52,11 +52,11 @@ public class IndentFileWriter extends OutputStreamWriter {
   public void new_line() {
     try {
       write("\n");
-      for (int i = 0; i < current_indent_level; i++) {
+      for (int i = 0; i < currentIndentLevel; i++) {
         write(INDENT_STRING);
       }
     } catch (IOException e) {
-      FRLogger.error("IndentFileWriter.new_line: unable to write to file", e);
+      FRLogger.error("IndentFileWriter.newLine: unable to write to file", e);
     }
   }
 }

@@ -25,17 +25,17 @@ import javax.swing.JPopupMenu;
 
 public final class MoveItemState extends InteractiveState {
 
-  private final Set<Item> item_list;
-  private final Set<Component> component_list;
+  private final Set<Item> itemList;
+  private final Set<Component> componentList;
 
   /** In case of a component grid the first component is aligned to this grid. */
-  private final Component grid_snap_component;
+  private final Component gridSnapComponent;
 
-  private final Collection<NetItems> net_items_list;
-  private final boolean observers_activated;
-  private IntPoint current_position;
-  private IntPoint previous_position;
-  private Collection<ClearanceViolation> clearance_violations;
+  private final Collection<NetItems> netItemsList;
+  private final boolean observersActivated;
+  private IntPoint currentPosition;
+  private IntPoint previousPosition;
+  private Collection<ClearanceViolation> clearanceViolations;
 
   /** Creates a new instance of MoveComponentState */
   private MoveItemState(
@@ -46,32 +46,32 @@ public final class MoveItemState extends InteractiveState {
       InteractiveState p_parent_state,
       GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
-    this.component_list = p_component_list;
-    this.grid_snap_component = p_first_component;
-    this.current_position = p_location.round();
-    this.previous_position = current_position;
-    BasicBoard routing_board = hdlg.get_routing_board();
-    this.observers_activated = !hdlg.get_routing_board().observers_active();
-    if (this.observers_activated) {
+    this.componentList = p_component_list;
+    this.gridSnapComponent = p_first_component;
+    this.currentPosition = p_location.round();
+    this.previousPosition = currentPosition;
+    BasicBoard routingBoard = hdlg.get_routing_board();
+    this.observersActivated = !hdlg.get_routing_board().observers_active();
+    if (this.observersActivated) {
       hdlg.get_routing_board().start_notify_observers();
     }
     // make the situation restorable by undo
-    routing_board.generate_snapshot();
+    routingBoard.generate_snapshot();
 
-    for (Item curr_item : p_item_list) {
-      routing_board.remove_item(curr_item);
+    for (Item currItem : p_item_list) {
+      routingBoard.remove_item(currItem);
     }
-    this.net_items_list = new LinkedList<>();
-    this.item_list = new TreeSet<>();
+    this.netItemsList = new LinkedList<>();
+    this.itemList = new TreeSet<>();
 
-    for (Item curr_item : p_item_list) {
+    for (Item currItem : p_item_list) {
       // Copy the items in p_item_list, because otherwise the undo algorithm will not
       // work.
-      Item copied_item = curr_item.copy(0);
-      for (int i = 0; i < curr_item.net_count(); i++) {
-        add_to_net_items_list(copied_item, curr_item.get_net_no(i));
+      Item copiedItem = currItem.copy(0);
+      for (int i = 0; i < currItem.net_count(); i++) {
+        add_to_net_items_list(copiedItem, currItem.get_net_no(i));
       }
-      this.item_list.add(copied_item);
+      this.itemList.add(copiedItem);
     }
   }
 
@@ -88,120 +88,119 @@ public final class MoveItemState extends InteractiveState {
     TextManager tm = new TextManager(InteractiveState.class, p_board_handling.get_locale());
 
     if (p_item_list.isEmpty()) {
-      p_board_handling.screen_messages.set_status_message(
+      p_board_handling.screenMessages.set_status_message(
           tm.getText("move_component_failed_because_no_item_selected"));
       return null;
     }
     // extend p_item_list to full components
-    Set<Item> item_list = new TreeSet<>();
-    Set<Component> component_list = new TreeSet<>();
-    BasicBoard routing_board = p_board_handling.get_routing_board();
-    Component grid_snap_component = null;
-    for (Item curr_item : p_item_list) {
-      if (curr_item.get_component_no() > 0) {
-        Component curr_component = routing_board.components.get(curr_item.get_component_no());
-        if (curr_component == null) {
+    Set<Item> itemList = new TreeSet<>();
+    Set<Component> componentList = new TreeSet<>();
+    BasicBoard routingBoard = p_board_handling.get_routing_board();
+    Component gridSnapComponent = null;
+    for (Item currItem : p_item_list) {
+      if (currItem.get_component_no() > 0) {
+        Component currComponent = routingBoard.components.get(currItem.get_component_no());
+        if (currComponent == null) {
           FRLogger.warn("MoveComponentState.get_instance inconsistent component number");
           return null;
         }
-        if (grid_snap_component == null
+        if (gridSnapComponent == null
             && (p_board_handling.getInteractiveSettings().get_horizontal_component_grid() > 0
                 || p_board_handling.getInteractiveSettings().get_vertical_component_grid() > 0)) {
-          grid_snap_component = curr_component;
+          gridSnapComponent = currComponent;
         }
-        if (!component_list.contains(curr_component)) {
-          Collection<Item> component_items = routing_board.get_component_items(curr_component.no);
-          for (Item curr_component_item : component_items) {
-            component_list.add(curr_component);
-            item_list.add(curr_component_item);
+        if (!componentList.contains(currComponent)) {
+          Collection<Item> componentItems = routingBoard.get_component_items(currComponent.no);
+          for (Item curr_component_item : componentItems) {
+            componentList.add(currComponent);
+            itemList.add(curr_component_item);
           }
         }
       } else {
-        item_list.add(curr_item);
+        itemList.add(currItem);
       }
     }
-    Set<Item> fixed_items = new TreeSet<>();
-    Set<Item> obstacle_items = new TreeSet<>();
-    Set<Item> add_items = new TreeSet<>();
-    boolean move_ok = true;
-    for (Item curr_item : item_list) {
-      if (curr_item.is_user_fixed()) {
-        p_board_handling.screen_messages.set_status_message(
+    Set<Item> fixedItems = new TreeSet<>();
+    Set<Item> obstacleItems = new TreeSet<>();
+    Set<Item> addItems = new TreeSet<>();
+    boolean moveOk = true;
+    for (Item currItem : itemList) {
+      if (currItem.is_user_fixed()) {
+        p_board_handling.screenMessages.set_status_message(
             tm.getText("some_items_cannot_be_moved_because_they_are_fixed"));
-        move_ok = false;
-        obstacle_items.add(curr_item);
-        fixed_items.add(curr_item);
-      } else if (curr_item.is_connected()) {
+        moveOk = false;
+        obstacleItems.add(currItem);
+        fixedItems.add(currItem);
+      } else if (currItem.is_connected()) {
         // Check if the whole connected set is inside the selected items,
         // and add the items of the connected set to the move list in this case.
         // Conduction areas are ignored, because otherwise components with
         // pins contacted to a plane could never be moved.
-        boolean item_movable = true;
-        Collection<Item> contacts = curr_item.get_connected_set(-1, true);
+        boolean itemMovable = true;
+        Collection<Item> contacts = currItem.get_connected_set(-1, true);
         {
-          for (Item curr_contact : contacts) {
-            if (curr_contact instanceof ConductionArea) {
+          for (Item currContact : contacts) {
+            if (currContact instanceof ConductionArea) {
 
               continue;
             }
-            if (curr_contact.is_user_fixed()) {
-              item_movable = false;
-              fixed_items.add(curr_contact);
-            } else if (curr_contact.get_component_no() != 0) {
-              Component curr_component =
-                  routing_board.components.get(curr_contact.get_component_no());
-              if (!component_list.contains(curr_component)) {
-                item_movable = false;
+            if (currContact.is_user_fixed()) {
+              itemMovable = false;
+              fixedItems.add(currContact);
+            } else if (currContact.get_component_no() != 0) {
+              Component currComponent = routingBoard.components.get(currContact.get_component_no());
+              if (!componentList.contains(currComponent)) {
+                itemMovable = false;
               }
             }
-            if (item_movable) {
-              add_items.add(curr_contact);
+            if (itemMovable) {
+              addItems.add(currContact);
             } else {
-              obstacle_items.add(curr_contact);
+              obstacleItems.add(currContact);
             }
           }
         }
-        if (!item_movable) {
-          move_ok = false;
+        if (!itemMovable) {
+          moveOk = false;
         }
       }
     }
-    if (!move_ok) {
+    if (!moveOk) {
       if (p_parent_state instanceof InspectedItemState state) {
-        if (!fixed_items.isEmpty()) {
-          state.get_item_list().addAll(fixed_items);
-          p_board_handling.screen_messages.set_status_message(
+        if (!fixedItems.isEmpty()) {
+          state.get_item_list().addAll(fixedItems);
+          p_board_handling.screenMessages.set_status_message(
               tm.getText("please_unfix_selected_items_before_moving"));
         } else {
-          state.get_item_list().addAll(obstacle_items);
-          p_board_handling.screen_messages.set_status_message(
+          state.get_item_list().addAll(obstacleItems);
+          p_board_handling.screenMessages.set_status_message(
               tm.getText("please_unroute_or_extend_selection_before_moving"));
         }
       }
       return null;
     }
-    item_list.addAll(add_items);
+    itemList.addAll(addItems);
     return new MoveItemState(
         p_location,
-        item_list,
-        component_list,
-        grid_snap_component,
-        p_parent_state.return_state,
+        itemList,
+        componentList,
+        gridSnapComponent,
+        p_parent_state.returnState,
         p_board_handling);
   }
 
   private void add_to_net_items_list(Item p_item, int p_net_no) {
-    for (NetItems curr_items : this.net_items_list) {
-      if (curr_items.net_no == p_net_no) {
+    for (NetItems curr_items : this.netItemsList) {
+      if (curr_items.netNo == p_net_no) {
         // list for p_net_no exists already
         curr_items.items.add(p_item);
         return;
       }
     }
-    Collection<Item> new_item_list = hdlg.get_routing_board().get_connectable_items(p_net_no);
-    new_item_list.add(p_item);
-    NetItems new_net_items = new NetItems(p_net_no, new_item_list);
-    this.net_items_list.add(new_net_items);
+    Collection<Item> newItemList = hdlg.get_routing_board().get_connectable_items(p_net_no);
+    newItemList.add(p_item);
+    NetItems newNetItems = new NetItems(p_net_no, newItemList);
+    this.netItemsList.add(newNetItems);
   }
 
   @Override
@@ -218,38 +217,37 @@ public final class MoveItemState extends InteractiveState {
 
   @Override
   public InteractiveState complete() {
-    for (Item curr_item : this.item_list) {
-      if (curr_item.clearance_violation_count() > 0) {
-        hdlg.screen_messages.set_status_message(
-            tm.getText("insertion_failed_because_of_obstacles"));
+    for (Item currItem : this.itemList) {
+      if (currItem.clearance_violation_count() > 0) {
+        hdlg.screenMessages.set_status_message(tm.getText("insertion_failed_because_of_obstacles"));
         return this;
       }
     }
-    BasicBoard routing_board = hdlg.get_routing_board();
-    for (Item curr_item : this.item_list) {
-      routing_board.insert_item(curr_item);
+    BasicBoard routingBoard = hdlg.get_routing_board();
+    for (Item currItem : this.itemList) {
+      routingBoard.insert_item(currItem);
     }
 
     // let the observers synchronize the moving
-    for (Component curr_component : this.component_list) {
-      routing_board.communication.observers.notify_moved(curr_component);
+    for (Component currComponent : this.componentList) {
+      routingBoard.communication.observers.notify_moved(currComponent);
     }
 
-    for (NetItems curr_net_items : this.net_items_list) {
-      this.hdlg.update_ratsnest(curr_net_items.net_no);
+    for (NetItems curr_net_items : this.netItemsList) {
+      this.hdlg.update_ratsnest(curr_net_items.netNo);
     }
-    hdlg.screen_messages.set_status_message(tm.getText("move_completed"));
+    hdlg.screenMessages.set_status_message(tm.getText("move_completed"));
     hdlg.repaint();
-    return this.return_state;
+    return this.returnState;
   }
 
   @Override
   public InteractiveState cancel() {
     hdlg.get_routing_board().undo(null);
-    for (NetItems curr_net_items : this.net_items_list) {
-      this.hdlg.update_ratsnest(curr_net_items.net_no);
+    for (NetItems curr_net_items : this.netItemsList) {
+      this.hdlg.update_ratsnest(curr_net_items.netNo);
     }
-    return this.return_state;
+    return this.returnState;
   }
 
   @Override
@@ -264,40 +262,40 @@ public final class MoveItemState extends InteractiveState {
 
   /** Changes the position of the items in the list to p_new_location. */
   private void move(FloatPoint p_new_position) {
-    current_position = p_new_position.round();
-    if (!current_position.equals(previous_position)) {
-      Vector translate_vector = current_position.difference_by(previous_position);
-      if (this.grid_snap_component != null) {
-        translate_vector = adjust_to_placement_grid(translate_vector);
+    currentPosition = p_new_position.round();
+    if (!currentPosition.equals(previousPosition)) {
+      Vector translateVector = currentPosition.difference_by(previousPosition);
+      if (this.gridSnapComponent != null) {
+        translateVector = adjust_to_placement_grid(translateVector);
       }
       Components components = hdlg.get_routing_board().components;
-      for (Component curr_component : this.component_list) {
-        components.move(curr_component.no, translate_vector);
+      for (Component currComponent : this.componentList) {
+        components.move(currComponent.no, translateVector);
       }
-      this.clearance_violations = new LinkedList<>();
-      for (Item curr_item : this.item_list) {
-        curr_item.translate_by(translate_vector);
-        this.clearance_violations.addAll(curr_item.clearance_violations());
+      this.clearanceViolations = new LinkedList<>();
+      for (Item currItem : this.itemList) {
+        currItem.translate_by(translateVector);
+        this.clearanceViolations.addAll(currItem.clearance_violations());
       }
-      previous_position = current_position;
-      for (NetItems curr_net_items : this.net_items_list) {
-        this.hdlg.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
+      previousPosition = currentPosition;
+      for (NetItems curr_net_items : this.netItemsList) {
+        this.hdlg.update_ratsnest(curr_net_items.netNo, curr_net_items.items);
       }
       hdlg.repaint();
     }
   }
 
   private Vector adjust_to_placement_grid(Vector p_vector) {
-    Point new_component_location = this.grid_snap_component.get_location().translate_by(p_vector);
-    IntPoint rounded_component_location =
-        new_component_location
+    Point newComponentLocation = this.gridSnapComponent.get_location().translate_by(p_vector);
+    IntPoint roundedComponentLocation =
+        newComponentLocation
             .to_float()
             .round_to_grid(
                 hdlg.getInteractiveSettings().get_horizontal_component_grid(),
                 hdlg.getInteractiveSettings().get_vertical_component_grid());
-    Vector adjustment = rounded_component_location.difference_by(new_component_location);
+    Vector adjustment = roundedComponentLocation.difference_by(newComponentLocation);
     Vector result = p_vector.add(adjustment);
-    this.current_position = this.previous_position.translate_by(result).to_float().round();
+    this.currentPosition = this.previousPosition.translate_by(result).to_float().round();
     return p_vector.add(adjustment);
   }
 
@@ -307,16 +305,16 @@ public final class MoveItemState extends InteractiveState {
       return;
     }
     Components components = hdlg.get_routing_board().components;
-    for (Component curr_component : this.component_list) {
-      components.turn_90_degree(curr_component.no, p_factor, current_position);
+    for (Component currComponent : this.componentList) {
+      components.turn_90_degree(currComponent.no, p_factor, currentPosition);
     }
-    this.clearance_violations = new LinkedList<>();
-    for (Item curr_item : this.item_list) {
-      curr_item.turn_90_degree(p_factor, current_position);
-      this.clearance_violations.addAll(curr_item.clearance_violations());
+    this.clearanceViolations = new LinkedList<>();
+    for (Item currItem : this.itemList) {
+      currItem.turn_90_degree(p_factor, currentPosition);
+      this.clearanceViolations.addAll(currItem.clearance_violations());
     }
-    for (NetItems curr_net_items : this.net_items_list) {
-      this.hdlg.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
+    for (NetItems curr_net_items : this.netItemsList) {
+      this.hdlg.update_ratsnest(curr_net_items.netNo, curr_net_items.items);
     }
     hdlg.repaint();
   }
@@ -326,17 +324,17 @@ public final class MoveItemState extends InteractiveState {
       return;
     }
     Components components = hdlg.get_routing_board().components;
-    for (Component curr_component : this.component_list) {
-      components.rotate(curr_component.no, p_angle_in_degree, this.current_position);
+    for (Component currComponent : this.componentList) {
+      components.rotate(currComponent.no, p_angle_in_degree, this.currentPosition);
     }
-    this.clearance_violations = new LinkedList<>();
-    FloatPoint float_position = this.current_position.to_float();
-    for (Item curr_item : this.item_list) {
-      curr_item.rotate_approx(p_angle_in_degree, float_position);
-      this.clearance_violations.addAll(curr_item.clearance_violations());
+    this.clearanceViolations = new LinkedList<>();
+    FloatPoint floatPosition = this.currentPosition.to_float();
+    for (Item currItem : this.itemList) {
+      currItem.rotate_approx(p_angle_in_degree, floatPosition);
+      this.clearanceViolations.addAll(currItem.clearance_violations());
     }
-    for (NetItems curr_net_items : this.net_items_list) {
-      this.hdlg.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
+    for (NetItems curr_net_items : this.netItemsList) {
+      this.hdlg.update_ratsnest(curr_net_items.netNo, curr_net_items.items);
     }
     hdlg.repaint();
   }
@@ -353,61 +351,61 @@ public final class MoveItemState extends InteractiveState {
   /** Changes the placement side of the items in the list. */
   public void change_placement_side() {
     // Check, that all items can be mirrored
-    LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
-    BoardLibrary board_library = hdlg.get_routing_board().library;
-    boolean placement_side_changable = true;
-    for (Item curr_item : item_list) {
-      if (curr_item instanceof Via via) {
-        if (board_library.get_mirrored_via_padstack(via.get_padstack()) == null) {
-          placement_side_changable = false;
+    LayerStructure layerStructure = hdlg.get_routing_board().layerStructure;
+    BoardLibrary boardLibrary = hdlg.get_routing_board().library;
+    boolean placementSideChangable = true;
+    for (Item currItem : itemList) {
+      if (currItem instanceof Via via) {
+        if (boardLibrary.get_mirrored_via_padstack(via.get_padstack()) == null) {
+          placementSideChangable = false;
           break;
         }
-      } else if (curr_item.first_layer() == curr_item.last_layer()) {
-        int new_layer_no = hdlg.get_layer_count() - curr_item.first_layer() - 1;
-        if (!layer_structure.arr[new_layer_no].is_signal) {
-          placement_side_changable = false;
+      } else if (currItem.first_layer() == currItem.last_layer()) {
+        int newLayerNo = hdlg.get_layer_count() - currItem.first_layer() - 1;
+        if (!layerStructure.arr[newLayerNo].isSignal) {
+          placementSideChangable = false;
           break;
         }
       }
     }
-    if (!placement_side_changable) {
-      hdlg.screen_messages.set_status_message(tm.getText("cannot_change_placement_side"));
+    if (!placementSideChangable) {
+      hdlg.screenMessages.set_status_message(tm.getText("cannot_change_placement_side"));
       return;
     }
 
     Components components = hdlg.get_routing_board().components;
-    for (Component curr_component : this.component_list) {
-      components.change_side(curr_component.no, current_position);
+    for (Component currComponent : this.componentList) {
+      components.change_side(currComponent.no, currentPosition);
     }
-    this.clearance_violations = new LinkedList<>();
-    for (Item curr_item : this.item_list) {
-      curr_item.change_placement_side(current_position);
-      this.clearance_violations.addAll(curr_item.clearance_violations());
+    this.clearanceViolations = new LinkedList<>();
+    for (Item currItem : this.itemList) {
+      currItem.change_placement_side(currentPosition);
+      this.clearanceViolations.addAll(currItem.clearance_violations());
     }
-    for (NetItems curr_net_items : this.net_items_list) {
-      this.hdlg.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
+    for (NetItems curr_net_items : this.netItemsList) {
+      this.hdlg.update_ratsnest(curr_net_items.netNo, curr_net_items.items);
     }
     hdlg.repaint();
   }
 
   public void reset_rotation() {
-    Component component_to_reset = null;
-    for (Component curr_component : this.component_list) {
-      if (component_to_reset == null) {
-        component_to_reset = curr_component;
-      } else if (component_to_reset.get_rotation_in_degree()
-          != curr_component.get_rotation_in_degree()) {
-        hdlg.screen_messages.set_status_message(
+    Component componentToReset = null;
+    for (Component currComponent : this.componentList) {
+      if (componentToReset == null) {
+        componentToReset = currComponent;
+      } else if (componentToReset.get_rotation_in_degree()
+          != currComponent.get_rotation_in_degree()) {
+        hdlg.screenMessages.set_status_message(
             tm.getText("unable_to_reset_components_with_different_rotations"));
         return;
       }
     }
-    if (component_to_reset == null) {
+    if (componentToReset == null) {
       return;
     }
-    double rotation = component_to_reset.get_rotation_in_degree();
+    double rotation = componentToReset.get_rotation_in_degree();
     if (!hdlg.get_routing_board().components.get_flip_style_rotate_first()
-        || component_to_reset.placed_on_front()) {
+        || componentToReset.placed_on_front()) {
       rotation = 360 - rotation;
     }
     rotate(rotation);
@@ -416,7 +414,7 @@ public final class MoveItemState extends InteractiveState {
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
   public InteractiveState key_typed(char p_key_char) {
-    InteractiveState curr_return_state = this;
+    InteractiveState currReturnState = this;
     switch (p_key_char) {
       case '+' -> turn_90_degree(1);
       case '*' -> turn_90_degree(2);
@@ -424,14 +422,14 @@ public final class MoveItemState extends InteractiveState {
       case '/' -> change_placement_side();
       case 'r' -> hdlg.getInteractiveSettings().set_zoom_with_wheel(false);
       case 'z' -> hdlg.getInteractiveSettings().set_zoom_with_wheel(true);
-      default -> curr_return_state = super.key_typed(p_key_char);
+      default -> currReturnState = super.key_typed(p_key_char);
     }
-    return curr_return_state;
+    return currReturnState;
   }
 
   @Override
   public JPopupMenu get_popup_menu() {
-    return hdlg.get_panel().popup_menu_move;
+    return hdlg.get_panel().popupMenuMove;
   }
 
   @Override
@@ -441,27 +439,27 @@ public final class MoveItemState extends InteractiveState {
 
   @Override
   public void draw(Graphics p_graphics) {
-    if (this.item_list == null) {
+    if (this.itemList == null) {
       return;
     }
-    for (Item curr_item : this.item_list) {
-      curr_item.draw(p_graphics, hdlg.graphics_context);
+    for (Item currItem : this.itemList) {
+      currItem.draw(p_graphics, hdlg.graphicsContext);
     }
-    if (this.clearance_violations != null) {
-      Color draw_color = hdlg.graphics_context.get_violations_color();
-      for (ClearanceViolation curr_violation : this.clearance_violations) {
-        hdlg.graphics_context.fill_area(curr_violation.shape, p_graphics, draw_color, 1);
+    if (this.clearanceViolations != null) {
+      Color drawColor = hdlg.graphicsContext.get_violations_color();
+      for (ClearanceViolation currViolation : this.clearanceViolations) {
+        hdlg.graphicsContext.fill_area(currViolation.shape, p_graphics, drawColor, 1);
       }
     }
   }
 
   private static class NetItems {
 
-    final int net_no;
+    final int netNo;
     final Collection<Item> items;
 
     NetItems(int p_net_no, Collection<Item> p_items) {
-      net_no = p_net_no;
+      netNo = p_net_no;
       items = p_items;
     }
   }

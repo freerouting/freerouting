@@ -34,11 +34,11 @@ public class BoardMenuBar extends JMenuBar {
     infoMenu = BoardMenuInfo.get_instance(boardFrame);
     add(infoMenu);
     if (featureFlags.otherMenu) {
-      JMenu other_menu = BoardMenuOther.get_instance(boardFrame);
-      add(other_menu);
+      JMenu otherMenu = BoardMenuOther.get_instance(boardFrame);
+      add(otherMenu);
     }
-    JMenu help_menu = new BoardMenuHelp(boardFrame);
-    add(help_menu);
+    JMenu helpMenu = new BoardMenuHelp(boardFrame);
+    add(helpMenu);
 
     // Create the Profile button
     TextManager tm = new TextManager(BoardFrame.class, boardFrame.get_locale());

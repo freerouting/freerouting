@@ -11,29 +11,29 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
 
   public final String name;
   public final int no;
-  private final PartPin[] part_pin_arr;
+  private final PartPin[] partPinArr;
 
   /**
-   * Creates a new instance of LogicalPart. The part pins are sorted by pin_no. The pin_no's of the
+   * Creates a new instance of LogicalPart. The part pins are sorted by pinNo. The pinNo's of the
    * part pins must be the same number as in the components' library package.
    */
   public LogicalPart(String p_name, int p_no, PartPin[] p_part_pin_arr) {
     name = p_name;
     no = p_no;
-    part_pin_arr = p_part_pin_arr;
+    partPinArr = p_part_pin_arr;
   }
 
   public int pin_count() {
-    return part_pin_arr.length;
+    return partPinArr.length;
   }
 
-  /** Returns the pim with index p_no. Pin numbers are from 0 to pin_count - 1 */
+  /** Returns the pim with index p_no. Pin numbers are from 0 to pinCount - 1 */
   public PartPin get_pin(int p_no) {
-    if (p_no < 0 || p_no >= part_pin_arr.length) {
+    if (p_no < 0 || p_no >= partPinArr.length) {
       FRLogger.warn("LogicalPart.get_pin: p_no out of range");
       return null;
     }
-    return part_pin_arr[p_no];
+    return partPinArr[p_no];
   }
 
   @Override
@@ -42,22 +42,22 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
 
     p_window.append_bold(tm.getText("logical_part_2") + " ");
     p_window.append_bold(this.name);
-    for (int i = 0; i < this.part_pin_arr.length; i++) {
-      PartPin curr_pin = this.part_pin_arr[i];
+    for (int i = 0; i < this.partPinArr.length; i++) {
+      PartPin currPin = this.partPinArr[i];
       p_window.newline();
       p_window.indent();
       p_window.append(tm.getText("pin") + " ");
-      p_window.append(curr_pin.pin_name);
+      p_window.append(currPin.pinName);
       p_window.append(", " + tm.getText("gate") + " ");
-      p_window.append(curr_pin.gate_name);
+      p_window.append(currPin.gateName);
       p_window.append(", " + tm.getText("swap_code") + " ");
-      int gate_swap_code = curr_pin.gate_swap_code;
-      p_window.append(String.valueOf(gate_swap_code));
+      int gateSwapCode = currPin.gateSwapCode;
+      p_window.append(String.valueOf(gateSwapCode));
       p_window.append(", " + tm.getText("gate_pin") + " ");
-      p_window.append(curr_pin.gate_pin_name);
+      p_window.append(currPin.gatePinName);
       p_window.append(", " + tm.getText("swap_code") + " ");
-      int pin_swap_code = curr_pin.gate_pin_swap_code;
-      p_window.append(String.valueOf(pin_swap_code));
+      int pinSwapCode = currPin.gatePinSwapCode;
+      p_window.append(String.valueOf(pinSwapCode));
     }
     p_window.newline();
     p_window.newline();
@@ -66,28 +66,28 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
   public static class PartPin implements Comparable<PartPin>, Serializable {
 
     /** The number of the part pin. Must be the same number as in the components library package. */
-    public final int pin_no;
+    public final int pinNo;
 
     /** The name of the part pin. Must be the same name as in the components library package. */
-    public final String pin_name;
+    public final String pinName;
 
     /** The name of the gate this pin belongs to. */
-    public final String gate_name;
+    public final String gateName;
 
     /**
      * The gate swap code. Gates with the same gate swap code can be swapped. Gates with swap code
      * {@literal <}= 0 are not swappable.
      */
-    public final int gate_swap_code;
+    public final int gateSwapCode;
 
     /** The identifier of the pin in the gate. */
-    public final String gate_pin_name;
+    public final String gatePinName;
 
     /**
      * The pin swap code of the gate. Pins with the same pin swap code can be swapped inside a gate.
      * Pins with swap code {@literal <}= 0 are not swappable.
      */
-    public final int gate_pin_swap_code;
+    public final int gatePinSwapCode;
 
     public PartPin(
         int p_pin_no,
@@ -96,17 +96,17 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable {
         int p_gate_swap_code,
         String p_gate_pin_name,
         int p_gate_pin_swap_code) {
-      pin_no = p_pin_no;
-      pin_name = p_pin_name;
-      gate_name = p_gate_name;
-      gate_swap_code = p_gate_swap_code;
-      gate_pin_name = p_gate_pin_name;
-      gate_pin_swap_code = p_gate_pin_swap_code;
+      pinNo = p_pin_no;
+      pinName = p_pin_name;
+      gateName = p_gate_name;
+      gateSwapCode = p_gate_swap_code;
+      gatePinName = p_gate_pin_name;
+      gatePinSwapCode = p_gate_pin_swap_code;
     }
 
     @Override
     public int compareTo(PartPin p_other) {
-      return this.pin_no - p_other.pin_no;
+      return this.pinNo - p_other.pinNo;
     }
   }
 }

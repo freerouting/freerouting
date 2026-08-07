@@ -15,25 +15,25 @@ import javax.swing.JTextField;
  */
 public abstract class WindowObjectListWithFilter extends WindowObjectList {
 
-  protected final JPanel input_panel;
-  private final JTextField filter_string;
+  protected final JPanel inputPanel;
+  private final JTextField filterString;
 
   /** Creates a new instance of ObjectListWindowWithFilter */
   protected WindowObjectListWithFilter(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
 
-    this.input_panel = new JPanel();
-    this.south_panel.add(input_panel, BorderLayout.SOUTH);
+    this.inputPanel = new JPanel();
+    this.southPanel.add(inputPanel, BorderLayout.SOUTH);
 
-    JLabel filter_label = new JLabel(tm.getText("filter"));
-    input_panel.add(filter_label, BorderLayout.WEST);
+    JLabel filterLabel = new JLabel(tm.getText("filter"));
+    inputPanel.add(filterLabel, BorderLayout.WEST);
 
-    this.filter_string = new JTextField(10);
-    this.filter_string.setText("");
-    input_panel.add(filter_string, BorderLayout.EAST);
+    this.filterString = new JTextField(10);
+    this.filterString.setText("");
+    inputPanel.add(filterString, BorderLayout.EAST);
 
-    this.filter_string
+    this.filterString
         .getDocument()
         .addDocumentListener(
             new javax.swing.event.DocumentListener() {
@@ -57,14 +57,14 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   /** Adds p_object to the list only if its name matches the filter. */
   @Override
   protected void add_to_list(Object p_object) {
-    String curr_filter_string = this.filter_string.getText().trim();
-    boolean object_matches;
-    if (curr_filter_string.isEmpty()) {
-      object_matches = true;
+    String currFilterString = this.filterString.getText().trim();
+    boolean objectMatches;
+    if (currFilterString.isEmpty()) {
+      objectMatches = true;
     } else {
-      object_matches = p_object.toString().toLowerCase().contains(curr_filter_string.toLowerCase());
+      objectMatches = p_object.toString().toLowerCase().contains(currFilterString.toLowerCase());
     }
-    if (object_matches) {
+    if (objectMatches) {
       super.add_to_list(p_object);
     }
   }
@@ -75,7 +75,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   @Override
   public void save(ObjectOutputStream p_object_stream) {
     try {
-      p_object_stream.writeObject(filter_string.getText());
+      p_object_stream.writeObject(filterString.getText());
     } catch (IOException _) {
       FRLogger.warn("WindowObjectListWithFilter.save: save failed");
     }
@@ -85,8 +85,8 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   @Override
   public boolean read(ObjectInputStream p_object_stream) {
     try {
-      String curr_string = (String) p_object_stream.readObject();
-      this.filter_string.setText(curr_string);
+      String currString = (String) p_object_stream.readObject();
+      this.filterString.setText(currString);
     } catch (Exception _) {
       FRLogger.warn("WindowObjectListWithFilter.read: read failed");
     }

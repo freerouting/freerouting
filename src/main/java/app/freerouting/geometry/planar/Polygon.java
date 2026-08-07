@@ -26,23 +26,23 @@ public class Polygon implements Serializable {
     }
     corners.addAll(Arrays.asList(p_point_arr));
 
-    boolean corner_removed = true;
-    while (corner_removed) {
-      corner_removed = false;
+    boolean cornerRemoved = true;
+    while (cornerRemoved) {
+      cornerRemoved = false;
       // remove multiple points
 
       if (corners.isEmpty()) {
         return;
       }
       Iterator<Point> i = corners.iterator();
-      Point curr_ob = i.next();
+      Point currOb = i.next();
       while (i.hasNext()) {
-        Point next_ob = i.next();
-        if (next_ob.equals(curr_ob)) {
+        Point nextOb = i.next();
+        if (nextOb.equals(currOb)) {
           i.remove();
-          corner_removed = true;
+          cornerRemoved = true;
         } else {
-          curr_ob = next_ob;
+          currOb = nextOb;
         }
       }
 
@@ -50,19 +50,19 @@ public class Polygon implements Serializable {
       // and next point.
       i = corners.iterator();
       Point prev = i.next();
-      Iterator<Point> prev_i = corners.iterator();
+      Iterator<Point> prevI = corners.iterator();
       if (!i.hasNext()) {
         continue;
       }
       Point curr = i.next();
-      prev_i.next();
+      prevI.next();
       while (i.hasNext()) {
         Point next = i.next();
-        prev_i.next();
+        prevI.next();
 
         if (curr.side_of(prev, next) == Side.COLLINEAR) {
-          prev_i.remove();
-          corner_removed = true;
+          prevI.remove();
+          cornerRemoved = true;
           break;
         }
         prev = curr;
@@ -73,10 +73,10 @@ public class Polygon implements Serializable {
 
   /** returns the array of corners of this polygon */
   public Point[] corner_array() {
-    int corner_count = corners.size();
-    Point[] result = new Point[corner_count];
+    int cornerCount = corners.size();
+    Point[] result = new Point[cornerCount];
     Iterator<Point> it = corners.iterator();
-    for (int i = 0; i < corner_count; i++) {
+    for (int i = 0; i < cornerCount; i++) {
       result[i] = it.next();
     }
     return result;
@@ -84,12 +84,12 @@ public class Polygon implements Serializable {
 
   /** Reverts the order of the corners of this polygon. */
   public Polygon revert_corners() {
-    Point[] corner_arr = corner_array();
-    Point[] reverse_corner_arr = new Point[corner_arr.length];
-    for (int i = 0; i < corner_arr.length; i++) {
-      reverse_corner_arr[i] = corner_arr[corner_arr.length - i - 1];
+    Point[] cornerArr = corner_array();
+    Point[] reverseCornerArr = new Point[cornerArr.length];
+    for (int i = 0; i < cornerArr.length; i++) {
+      reverseCornerArr[i] = cornerArr[cornerArr.length - i - 1];
     }
-    return new Polygon(reverse_corner_arr);
+    return new Polygon(reverseCornerArr);
   }
 
   /**
@@ -98,34 +98,34 @@ public class Polygon implements Serializable {
    * sense.
    */
   public int winding_number_after_closing() {
-    Point[] corner_arr = corner_array();
-    if (corner_arr.length < 2) {
+    Point[] cornerArr = corner_array();
+    if (cornerArr.length < 2) {
       return 0;
     }
-    Vector first_side_vector = corner_arr[1].difference_by(corner_arr[0]);
-    Vector prev_side_vector = first_side_vector;
-    int corner_count = corner_arr.length;
+    Vector firstSideVector = cornerArr[1].difference_by(cornerArr[0]);
+    Vector prevSideVector = firstSideVector;
+    int cornerCount = cornerArr.length;
     // Skip the last corner, if it is equal to the first corner.
-    if (corner_arr[0].equals(corner_arr[corner_count - 1])) {
-      --corner_count;
+    if (cornerArr[0].equals(cornerArr[cornerCount - 1])) {
+      --cornerCount;
     }
-    double angle_sum = 0;
-    for (int i = 1; i <= corner_count; i++) {
-      Vector next_side_vector;
-      if (i == corner_count - 1) {
-        next_side_vector = corner_arr[0].difference_by(corner_arr[i]);
-      } else if (i == corner_count) {
-        next_side_vector = first_side_vector;
+    double angleSum = 0;
+    for (int i = 1; i <= cornerCount; i++) {
+      Vector nextSideVector;
+      if (i == cornerCount - 1) {
+        nextSideVector = cornerArr[0].difference_by(cornerArr[i]);
+      } else if (i == cornerCount) {
+        nextSideVector = firstSideVector;
       } else {
-        next_side_vector = corner_arr[i + 1].difference_by(corner_arr[i]);
+        nextSideVector = cornerArr[i + 1].difference_by(cornerArr[i]);
       }
-      angle_sum += prev_side_vector.angle_approx(next_side_vector);
-      prev_side_vector = next_side_vector;
+      angleSum += prevSideVector.angle_approx(nextSideVector);
+      prevSideVector = nextSideVector;
     }
-    angle_sum /= 2.0 * Math.PI;
-    if (Math.abs(angle_sum) < 0.5) {
+    angleSum /= 2.0 * Math.PI;
+    if (Math.abs(angleSum) < 0.5) {
       FRLogger.warn("Polygon.winding_number_after_closing: winding number != 0 expected");
     }
-    return (int) Math.round(angle_sum);
+    return (int) Math.round(angleSum);
   }
 }

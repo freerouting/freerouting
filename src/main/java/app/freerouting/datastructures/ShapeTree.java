@@ -16,78 +16,78 @@ public abstract class ShapeTree {
    * the fixed directions for calculating bounding RegularTileShapes of shapes to store in this
    * tree.
    */
-  protected final ShapeBoundingDirections bounding_directions;
+  protected final ShapeBoundingDirections boundingDirections;
 
   /** Root node - initially null */
   protected TreeNode root;
 
   /** The number of entries stored in the tree */
-  protected int leaf_count;
+  protected int leafCount;
 
   /** Creates a new instance of ShapeTree */
   protected ShapeTree(ShapeBoundingDirections p_directions) {
-    bounding_directions = p_directions;
+    boundingDirections = p_directions;
     root = null;
-    leaf_count = 0;
+    leafCount = 0;
   }
 
   /** Inserts all shapes of p_obj into the tree */
   public void insert(ShapeTree.Storable p_obj) {
-    int shape_count = p_obj.tree_shape_count(this);
-    if (shape_count <= 0) {
+    int shapeCount = p_obj.tree_shape_count(this);
+    if (shapeCount <= 0) {
       return;
     }
-    Leaf[] leaf_arr = new Leaf[shape_count];
-    for (int i = 0; i < shape_count; i++) {
-      leaf_arr[i] = insert(p_obj, i);
+    Leaf[] leafArr = new Leaf[shapeCount];
+    for (int i = 0; i < shapeCount; i++) {
+      leafArr[i] = insert(p_obj, i);
     }
-    p_obj.set_search_tree_entries(leaf_arr, this);
+    p_obj.set_search_tree_entries(leafArr, this);
   }
 
   /** Insert a shape - creates a new node with a bounding shape */
   protected Leaf insert(ShapeTree.Storable p_object, int p_index) {
-    Shape object_shape = p_object.get_tree_shape(this, p_index);
-    if (object_shape == null) {
+    Shape objectShape = p_object.get_tree_shape(this, p_index);
+    if (objectShape == null) {
       return null;
     }
 
-    RegularTileShape bounding_shape = object_shape.bounding_shape(bounding_directions);
-    if (bounding_shape == null) {
+    RegularTileShape boundingShape = objectShape.bounding_shape(boundingDirections);
+    if (boundingShape == null) {
       FRLogger.warn("ShapeTree.insert: bounding shape of TreeObject is null");
       return null;
     }
     // Construct a new KdLeaf and set it up
-    Leaf new_leaf = new Leaf(p_object, p_index, null, bounding_shape);
-    this.insert(new_leaf);
-    return new_leaf;
+    Leaf newLeaf = new Leaf(p_object, p_index, null, boundingShape);
+    this.insert(newLeaf);
+    return newLeaf;
   }
 
   /** Inserts the leaves of this tree into an array. */
   public Leaf[] to_array() {
-    Leaf[] result = new Leaf[this.leaf_count];
+    Leaf[] result = new Leaf[this.leafCount];
     if (result.length == 0) {
       return result;
     }
-    TreeNode curr_node = this.root;
-    int curr_index = 0;
+    TreeNode currNode = this.root;
+    int currIndex = 0;
     for (; ; ) {
-      // go down from curr_node to the left most leaf
-      while (curr_node instanceof InnerNode) {
-        curr_node = ((InnerNode) curr_node).first_child;
+      // go down from currNode to the left most leaf
+      while (currNode instanceof InnerNode) {
+        currNode = ((InnerNode) currNode).firstChild;
       }
-      result[curr_index] = (Leaf) curr_node;
+      result[currIndex] = (Leaf) currNode;
 
-      ++curr_index;
-      // go up until parent.second_child != curr_node, which means we came from first_child
-      InnerNode curr_parent = curr_node.parent;
-      while (curr_parent != null && curr_parent.second_child == curr_node) {
-        curr_node = curr_parent;
-        curr_parent = curr_node.parent;
+      ++currIndex;
+      // go up until parent.secondChild != currNode, which means we came from firstChild
+      InnerNode currParent = currNode.parent;
+      while (currParent != null && currParent.secondChild == currNode) {
+        currNode = currParent;
+        currParent = currNode.parent;
       }
-      if (curr_parent == null) {
+      if (currParent == null) {
         break;
       }
-      curr_node = curr_parent.second_child;
+      currNode = currParent.secondChild;
     }
     return result;
   }
@@ -108,32 +108,32 @@ public abstract class ShapeTree {
 
   /** Returns the number of entries stored in the tree. */
   public int size() {
-    return leaf_count;
+    return leafCount;
   }
 
   /** Outputs some statistic information about the tree. */
   public void statistics(String p_message) {
-    Leaf[] leaf_arr = this.to_array();
-    double cumulative_depth = 0;
-    int maximum_depth = 0;
-    for (int i = 0; i < leaf_arr.length; i++) {
-      if (leaf_arr[i] != null) {
-        int distance_to_root = leaf_arr[i].distance_to_root();
-        cumulative_depth += distance_to_root;
-        maximum_depth = Math.max(maximum_depth, distance_to_root);
+    Leaf[] leafArr = this.to_array();
+    double cumulativeDepth = 0;
+    int maximumDepth = 0;
+    for (int i = 0; i < leafArr.length; i++) {
+      if (leafArr[i] != null) {
+        int distanceToRoot = leafArr[i].distance_to_root();
+        cumulativeDepth += distanceToRoot;
+        maximumDepth = Math.max(maximumDepth, distanceToRoot);
       }
     }
-    double average_depth = cumulative_depth / leaf_arr.length;
+    double averageDepth = cumulativeDepth / leafArr.length;
     FRLogger.info(
         "MinAreaTree: Entry count: "
-            + leaf_arr.length
+            + leafArr.length
             + " log: "
-            + Math.round(Math.log(leaf_arr.length))
+            + Math.round(Math.log(leafArr.length))
             + " Average depth: "
-            + Math.round(average_depth)
+            + Math.round(averageDepth)
             + " "
             + " Maximum depth: "
-            + maximum_depth
+            + maximumDepth
             + " "
             + p_message);
   }
@@ -161,11 +161,11 @@ public abstract class ShapeTree {
   public static class TreeEntry {
 
     public final ShapeTree.Storable object;
-    public final int shape_index_in_object;
+    public final int shapeIndexInObject;
 
     public TreeEntry(ShapeTree.Storable p_object, int p_shape_index_in_object) {
       object = p_object;
-      shape_index_in_object = p_shape_index_in_object;
+      shapeIndexInObject = p_shape_index_in_object;
     }
   }
 
@@ -174,7 +174,7 @@ public abstract class ShapeTree {
   /** Common functionality of inner nodes and leaf nodes. */
   protected static class TreeNode {
 
-    public RegularTileShape bounding_shape;
+    public RegularTileShape boundingShape;
     InnerNode parent;
   }
 
@@ -183,14 +183,14 @@ public abstract class ShapeTree {
   /** Description of an inner node of the tree, which implements a fork to its two children. */
   public static class InnerNode extends TreeNode {
 
-    public TreeNode first_child;
-    public TreeNode second_child;
+    public TreeNode firstChild;
+    public TreeNode secondChild;
 
     public InnerNode(RegularTileShape p_bounding_shape, InnerNode p_parent) {
-      bounding_shape = p_bounding_shape;
+      boundingShape = p_bounding_shape;
       parent = p_parent;
-      first_child = null;
-      second_child = null;
+      firstChild = null;
+      secondChild = null;
     }
   }
 
@@ -203,24 +203,24 @@ public abstract class ShapeTree {
     public ShapeTree.Storable object;
 
     /** index of the shape in the object */
-    public int shape_index_in_object;
+    public int shapeIndexInObject;
 
     public Leaf(
         ShapeTree.Storable p_object,
         int p_index,
         InnerNode p_parent,
         RegularTileShape p_bounding_shape) {
-      bounding_shape = p_bounding_shape;
+      boundingShape = p_bounding_shape;
       parent = p_parent;
       object = p_object;
-      shape_index_in_object = p_index;
+      shapeIndexInObject = p_index;
     }
 
     @Override
     public int compareTo(Leaf p_other) {
       int result = this.object.compareTo(p_other.object);
       if (result == 0) {
-        result = shape_index_in_object - p_other.shape_index_in_object;
+        result = shapeIndexInObject - p_other.shapeIndexInObject;
       }
       return result;
     }
@@ -228,9 +228,9 @@ public abstract class ShapeTree {
     /** Returns the number of nodes between this leaf and the croot of the tree. */
     public int distance_to_root() {
       int result = 1;
-      InnerNode curr_parent = this.parent;
-      while (curr_parent.parent != null) {
-        curr_parent = curr_parent.parent;
+      InnerNode currParent = this.parent;
+      while (currParent.parent != null) {
+        currParent = currParent.parent;
         ++result;
       }
       return result;

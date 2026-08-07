@@ -74,12 +74,13 @@ public final class ReflectionUtil {
 
   private static Field getFieldByNameOrSerializedName(Class<?> clazz, String name)
       throws NoSuchFieldException {
+    String camelName = snakeToLowerCamel(name);
     for (Field field : clazz.getDeclaredFields()) {
       SerializedName annotation = field.getAnnotation(SerializedName.class);
       if (annotation != null && annotation.value().equals(name)) {
         return field;
       }
-      if (field.getName().equals(name)) {
+      if (field.getName().equals(name) || field.getName().equals(camelName)) {
         // Enforce that fields with a SerializedName must not be queried by their camelCase Java
         // name
         if (annotation != null && !name.equals(name.toLowerCase())) {
@@ -88,7 +89,22 @@ public final class ReflectionUtil {
         return field;
       }
     }
+    if (clazz.getSuperclass() != null && clazz.getSuperclass() != Object.class) {
+      return getFieldByNameOrSerializedName(clazz.getSuperclass(), name);
+    }
     throw new NoSuchFieldException("No field found with name or SerializedName: " + name);
+  }
+
+  private static String snakeToLowerCamel(String name) {
+    if (!name.contains("_")) return name;
+    String[] parts = name.split("_");
+    StringBuilder sb = new StringBuilder(parts[0].toLowerCase());
+    for (int i = 1; i < parts.length; i++) {
+      if (!parts[i].isEmpty()) {
+        sb.append(Character.toUpperCase(parts[i].charAt(0))).append(parts[i].substring(1));
+      }
+    }
+    return sb.toString();
   }
 
   private static Object convertValue(Class<?> targetType, Object value) {

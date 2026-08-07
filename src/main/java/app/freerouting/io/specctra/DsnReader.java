@@ -144,7 +144,7 @@ public final class DsnReader {
 
     if (readOk) {
       // Apply power-plane autoroute settings if the DSN had no (autoroute ...) scope
-      if (par.autoroute_settings == null) {
+      if (par.autorouteSettings == null) {
         DsnFile.adjustPlaneAutorouteSettings(board);
       }
       List<String> warnings = par.getWarnings();
@@ -157,7 +157,7 @@ public final class DsnReader {
                 + " warning(s).");
       }
       return new BoardReadResult.Success(board, null, warnings);
-    } else if (!par.board_outline_ok) {
+    } else if (!par.boardOutlineOk) {
       List<String> warnings = par.getWarnings();
       if (!warnings.isEmpty()) {
         FRLogger.warn(
@@ -175,7 +175,7 @@ public final class DsnReader {
 
   /**
    * Parses only the {@code (parser ...)}, {@code (resolution ...)}, and {@code (structure (layer
-   * ...))} / {@code (structure (rule ...))} / {@code (structure (autoroute_settings ...))} scopes.
+   * ...))} / {@code (structure (rule ...))} / {@code (structure (autorouteSettings ...))} scopes.
    * Does <em>not</em> construct full board geometry, component placements, netlist items, or route
    * traces.
    *
@@ -247,13 +247,13 @@ public final class DsnReader {
       }
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.PARSER_SCOPE) {
-          // Populates par.host_cad, par.host_version, par.string_quote
+          // Populates par.hostCad, par.hostVersion, par.stringQuote
           Keyword.PARSER_SCOPE.read_scope(par);
         } else if (nextToken == Keyword.RESOLUTION_SCOPE) {
           // Populates par.unit, par.resolution
           Keyword.RESOLUTION_SCOPE.read_scope(par);
         } else if (nextToken == Keyword.STRUCTURE_SCOPE) {
-          // Populates par.layer_structure, par.snap_angle, par.autoroute_settings
+          // Populates par.layerStructure, par.snapAngle, par.autorouteSettings
           // and creates the board via MinimalBoardManager (if a valid boundary exists).
           // Return value is ignored — we extract whatever was populated.
           Keyword.STRUCTURE_SCOPE.read_scope(par);
@@ -270,21 +270,21 @@ public final class DsnReader {
     // Build BoardMetadata from the parsed fields.
     // -----------------------------------------------------------------------
     int layerCount = 0;
-    if (par.layer_structure != null) {
-      layerCount = par.layer_structure.arr.length;
+    if (par.layerStructure != null) {
+      layerCount = par.layerStructure.arr.length;
     } else if (par.getBoard() != null) {
       layerCount = par.getBoard().get_layer_count();
     }
 
     BoardMetadata metadata =
         new BoardMetadata(
-            par.host_cad,
-            par.host_version,
+            par.hostCad,
+            par.hostVersion,
             layerCount,
             par.unit,
             par.resolution,
-            par.snap_angle,
-            par.autoroute_settings);
+            par.snapAngle,
+            par.autorouteSettings);
 
     return new BoardReadResult.Success(par.getBoard(), metadata, par.getWarnings());
   }

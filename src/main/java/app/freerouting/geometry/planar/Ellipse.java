@@ -13,28 +13,28 @@ public class Ellipse implements Serializable {
   /** Rotation of the ellipse in radian normed to 0 {@literal <}= rotation {@literal <} pi */
   public final double rotation;
 
-  public final double bigger_radius;
-  public final double smaller_radius;
+  public final double biggerRadius;
+  public final double smallerRadius;
 
   /** Creates a new instance of Ellipse */
   public Ellipse(FloatPoint p_center, double p_rotation, double p_radius_1, double p_radius_2) {
     this.center = p_center;
-    double curr_rotation;
+    double currRotation;
     if (p_radius_1 >= p_radius_2) {
-      this.bigger_radius = p_radius_1;
-      this.smaller_radius = p_radius_2;
-      curr_rotation = p_rotation;
+      this.biggerRadius = p_radius_1;
+      this.smallerRadius = p_radius_2;
+      currRotation = p_rotation;
     } else {
-      this.bigger_radius = p_radius_2;
-      this.smaller_radius = p_radius_1;
-      curr_rotation = p_rotation + 0.5 * Math.PI;
+      this.biggerRadius = p_radius_2;
+      this.smallerRadius = p_radius_1;
+      currRotation = p_rotation + 0.5 * Math.PI;
     }
-    while (curr_rotation >= Math.PI) {
-      curr_rotation -= Math.PI;
+    while (currRotation >= Math.PI) {
+      currRotation -= Math.PI;
     }
-    while (curr_rotation < 0) {
-      curr_rotation += Math.PI;
+    while (currRotation < 0) {
+      currRotation += Math.PI;
     }
-    this.rotation = curr_rotation;
+    this.rotation = currRotation;
   }
 }

@@ -8,6 +8,6 @@ public class BoardStatisticsConnections implements Serializable {
   @SerializedName("maximum_count")
   public Integer maximumCount;
 
-  @SerializedName("incomplete_count")
+  @SerializedName("incompleteCount")
   public Integer incompleteCount;
 }

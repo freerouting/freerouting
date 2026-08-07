@@ -22,7 +22,7 @@ public class ItemIdentificationNumberGenerator
     implements IdentificationNumberGenerator, Serializable {
 
   private static final int c_max_id_no = Integer.MAX_VALUE / 2;
-  private int last_generated_id_no;
+  private int lastGeneratedIdNo;
 
   /**
    * Tracks how many times the counter has wrapped around (for diagnostics). {@code long} is used so
@@ -34,12 +34,12 @@ public class ItemIdentificationNumberGenerator
   public ItemIdentificationNumberGenerator() {}
 
   /**
-   * Create a new unique identification number. Use eventually the id_no generated from the host
+   * Create a new unique identification number. Use eventually the idNo generated from the host
    * system for synchronisation.
    */
   @Override
   public int new_no() {
-    if (last_generated_id_no >= c_max_id_no) {
+    if (lastGeneratedIdNo >= c_max_id_no) {
       // Wrap around to 1 instead of overflowing into negative territory.
       // Emit a single warning per wrap so the log is not flooded.
       wrapAroundCount++;
@@ -52,15 +52,15 @@ public class ItemIdentificationNumberGenerator
               + " IDs that were previously assigned to now-deleted items may be"
               + " assigned again to newly created items."
               + " Consider restarting the router to regenerate IDs from scratch.");
-      last_generated_id_no = 0;
+      lastGeneratedIdNo = 0;
     }
-    ++last_generated_id_no;
-    return last_generated_id_no;
+    ++lastGeneratedIdNo;
+    return lastGeneratedIdNo;
   }
 
   /** Return the maximum generated id number so far. */
   @Override
   public int max_generated_no() {
-    return last_generated_id_no;
+    return lastGeneratedIdNo;
   }
 }

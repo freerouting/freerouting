@@ -15,34 +15,34 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
   /** The custom layer index in the combobox, when all inner layers are selected. */
   public static final int INNER_LAYER_INDEX = -2;
 
-  private final Layer[] layer_arr;
+  private final Layer[] layerArr;
 
   /** Creates a new instance of LayerComboBox */
   public ComboBoxLayer(LayerStructure p_layer_structure, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    int signal_layer_count = p_layer_structure.signal_layer_count();
-    int item_count = signal_layer_count + 1;
+    int signalLayerCount = p_layer_structure.signal_layer_count();
+    int itemCount = signalLayerCount + 1;
 
-    boolean add_inner_layer_item = signal_layer_count > 2;
-    if (add_inner_layer_item) {
-      ++item_count;
+    boolean addInnerLayerItem = signalLayerCount > 2;
+    if (addInnerLayerItem) {
+      ++itemCount;
     }
 
-    this.layer_arr = new Layer[item_count];
-    this.layer_arr[0] = new Layer(tm.getText("all"), ALL_LAYER_INDEX);
-    int curr_layer_no = 0;
-    if (add_inner_layer_item) {
-      this.layer_arr[1] = new Layer(tm.getText("inner"), INNER_LAYER_INDEX);
-      ++curr_layer_no;
+    this.layerArr = new Layer[itemCount];
+    this.layerArr[0] = new Layer(tm.getText("all"), ALL_LAYER_INDEX);
+    int currLayerNo = 0;
+    if (addInnerLayerItem) {
+      this.layerArr[1] = new Layer(tm.getText("inner"), INNER_LAYER_INDEX);
+      ++currLayerNo;
     }
-    for (int i = 0; i < signal_layer_count; i++) {
-      ++curr_layer_no;
-      app.freerouting.board.Layer curr_signal_layer = p_layer_structure.get_signal_layer(i);
-      layer_arr[curr_layer_no] =
-          new Layer(curr_signal_layer.name, p_layer_structure.get_no(curr_signal_layer));
+    for (int i = 0; i < signalLayerCount; i++) {
+      ++currLayerNo;
+      app.freerouting.board.Layer currSignalLayer = p_layer_structure.get_signal_layer(i);
+      layerArr[currLayerNo] =
+          new Layer(currSignalLayer.name, p_layer_structure.get_no(currSignalLayer));
     }
-    this.setModel(new DefaultComboBoxModel<>(layer_arr));
+    this.setModel(new DefaultComboBoxModel<>(layerArr));
     this.setSelectedIndex(0);
   }
 
@@ -58,7 +58,7 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
 
     final String name;
 
-    /** The index in the board layer_structure, -1 for the layers with name "all" or "inner" */
+    /** The index in the board layerStructure, -1 for the layers with name "all" or "inner" */
     final int index;
 
     Layer(String p_name, int p_index) {

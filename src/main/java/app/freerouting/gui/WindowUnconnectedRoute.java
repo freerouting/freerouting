@@ -16,7 +16,7 @@ import java.util.TreeSet;
 
 public class WindowUnconnectedRoute extends CleanupWindows {
 
-  private int max_unconnected_route_info_id_no;
+  private int maxUnconnectedRouteInfoIdNo;
 
   /** Creates a new instance of WindowUnconnectedRoute */
   public WindowUnconnectedRoute(BoardFrame p_board_frame) {
@@ -26,94 +26,94 @@ public class WindowUnconnectedRoute extends CleanupWindows {
     this.tm = new TextManager(CleanupWindows.class, p_board_frame.get_locale());
 
     this.setTitle(tm.getText("unconnected_route"));
-    this.list_empty_message.setText(tm.getText("no_unconnected_route_found"));
+    this.listEmptyMessage.setText(tm.getText("no_unconnected_route_found"));
   }
 
   @Override
   protected void fill_list() {
-    BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
+    BasicBoard routingBoard = this.boardFrame.boardPanel.boardHandling.get_routing_board();
 
-    Set<Item> handled_items = new TreeSet<>();
+    Set<Item> handledItems = new TreeSet<>();
 
-    SortedSet<UnconnectedRouteInfo> unconnected_route_info_set = new TreeSet<>();
+    SortedSet<UnconnectedRouteInfo> unconnectedRouteInfoSet = new TreeSet<>();
 
-    Collection<Item> board_items = routing_board.get_items();
-    for (Item curr_item : board_items) {
-      if (!(curr_item instanceof Trace || curr_item instanceof Via)) {
+    Collection<Item> boardItems = routingBoard.get_items();
+    for (Item currItem : boardItems) {
+      if (!(currItem instanceof Trace || currItem instanceof Via)) {
         continue;
       }
-      if (handled_items.contains(curr_item)) {
+      if (handledItems.contains(currItem)) {
         continue;
       }
-      Collection<Item> curr_connected_set = curr_item.get_connected_set(-1);
-      boolean terminal_item_found = false;
-      for (Item curr_connnected_item : curr_connected_set) {
-        handled_items.add(curr_connnected_item);
+      Collection<Item> currConnectedSet = currItem.get_connected_set(-1);
+      boolean terminalItemFound = false;
+      for (Item curr_connnected_item : currConnectedSet) {
+        handledItems.add(curr_connnected_item);
         if (!(curr_connnected_item instanceof Trace || curr_connnected_item instanceof Via)) {
-          terminal_item_found = true;
+          terminalItemFound = true;
         }
       }
-      if (!terminal_item_found) {
+      if (!terminalItemFound) {
         // We have found unconnected route
-        if (curr_item.net_count() == 1) {
-          Net curr_net = routing_board.rules.nets.get(curr_item.get_net_no(0));
-          if (curr_net != null) {
-            UnconnectedRouteInfo curr_unconnected_route_info =
-                new UnconnectedRouteInfo(curr_net, curr_connected_set);
-            unconnected_route_info_set.add(curr_unconnected_route_info);
+        if (currItem.net_count() == 1) {
+          Net currNet = routingBoard.rules.nets.get(currItem.get_net_no(0));
+          if (currNet != null) {
+            UnconnectedRouteInfo currUnconnectedRouteInfo =
+                new UnconnectedRouteInfo(currNet, currConnectedSet);
+            unconnectedRouteInfoSet.add(currUnconnectedRouteInfo);
           }
         } else {
-          FRLogger.warn("WindowUnconnectedRoute.fill_list: net_count 1 expected");
+          FRLogger.warn("WindowUnconnectedRoute.fill_list: netCount 1 expected");
         }
       }
     }
 
-    for (UnconnectedRouteInfo curr_info : unconnected_route_info_set) {
-      this.add_to_list(curr_info);
+    for (UnconnectedRouteInfo currInfo : unconnectedRouteInfoSet) {
+      this.add_to_list(currInfo);
     }
-    this.list.setVisibleRowCount(Math.min(unconnected_route_info_set.size(), DEFAULT_TABLE_SIZE));
+    this.list.setVisibleRowCount(Math.min(unconnectedRouteInfoSet.size(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
   protected void select_instances() {
-    List<Object> selected_list_values = list.getSelectedValuesList();
-    if (selected_list_values.isEmpty()) {
+    List<Object> selectedListValues = list.getSelectedValuesList();
+    if (selectedListValues.isEmpty()) {
       return;
     }
-    Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_list_values.size(); i++) {
-      selected_items.addAll(((UnconnectedRouteInfo) selected_list_values.get(i)).item_list);
+    Set<Item> selectedItems = new TreeSet<>();
+    for (int i = 0; i < selectedListValues.size(); i++) {
+      selectedItems.addAll(((UnconnectedRouteInfo) selectedListValues.get(i)).itemList);
     }
-    GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-    board_handling.select_items(selected_items);
-    board_handling.zoom_selection();
+    GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+    boardHandling.select_items(selectedItems);
+    boardHandling.zoom_selection();
   }
 
   /** Describes information of a connected set of unconnected traces and vias. */
   private class UnconnectedRouteInfo implements Comparable<UnconnectedRouteInfo> {
 
     private final Net net;
-    private final Collection<Item> item_list;
-    private final int id_no;
-    private final Integer trace_count;
-    private final Integer via_count;
+    private final Collection<Item> itemList;
+    private final int idNo;
+    private final Integer traceCount;
+    private final Integer viaCount;
 
     public UnconnectedRouteInfo(Net p_net, Collection<Item> p_item_list) {
       this.net = p_net;
-      this.item_list = p_item_list;
-      ++max_unconnected_route_info_id_no;
-      this.id_no = max_unconnected_route_info_id_no;
-      int curr_trace_count = 0;
-      int curr_via_count = 0;
-      for (Item curr_item : p_item_list) {
-        if (curr_item instanceof Trace) {
-          ++curr_trace_count;
-        } else if (curr_item instanceof Via) {
-          ++curr_via_count;
+      this.itemList = p_item_list;
+      ++maxUnconnectedRouteInfoIdNo;
+      this.idNo = maxUnconnectedRouteInfoIdNo;
+      int currTraceCount = 0;
+      int currViaCount = 0;
+      for (Item currItem : p_item_list) {
+        if (currItem instanceof Trace) {
+          ++currTraceCount;
+        } else if (currItem instanceof Via) {
+          ++currViaCount;
         }
       }
-      this.trace_count = curr_trace_count;
-      this.via_count = curr_via_count;
+      this.traceCount = currTraceCount;
+      this.viaCount = currViaCount;
     }
 
     @Override
@@ -121,15 +121,15 @@ public class WindowUnconnectedRoute extends CleanupWindows {
       return tm.getText(
           "unconnected_route_row_message",
           this.net.name,
-          String.valueOf(this.trace_count),
-          String.valueOf(this.via_count));
+          String.valueOf(this.traceCount),
+          String.valueOf(this.viaCount));
     }
 
     @Override
     public int compareTo(UnconnectedRouteInfo p_other) {
       int result = this.net.name.compareTo(p_other.net.name);
       if (result == 0) {
-        result = this.id_no - p_other.id_no;
+        result = this.idNo - p_other.idNo;
       }
       return result;
     }

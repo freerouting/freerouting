@@ -62,7 +62,7 @@ public final class SesWriter {
     String sessionName = designName.replace(".dsn", ".ses");
     String[] reservedChars = {"(", ")", " ", ";", "-", "_", "/", "~", "{", "}"};
     IdentifierType identifierType =
-        new IdentifierType(reservedChars, board.communication.specctra_parser_info.string_quote);
+        new IdentifierType(reservedChars, board.communication.specctraParserInfo.stringQuote);
     writeSessionScope(board, identifierType, outputFile, sessionName, designName);
     outputFile.flush();
   }
@@ -79,7 +79,7 @@ public final class SesWriter {
       String designName)
       throws IOException {
     double scaleFactor =
-        board.communication.coordinate_transform.dsn_to_board(1) / board.communication.resolution;
+        board.communication.coordinateTransform.dsn_to_board(1) / board.communication.resolution;
     CoordinateTransform coordinateTransform = new CoordinateTransform(scaleFactor, 0, 0);
     file.start_scope(false);
     file.write("session ");
@@ -174,7 +174,7 @@ public final class SesWriter {
       file.write(" back ");
     }
     file.write(formatPlacementRotation(component.get_rotation_in_degree()));
-    if (component.position_fixed) {
+    if (component.positionFixed) {
       file.new_line();
       file.write(" (lock_type position)");
     }
@@ -227,7 +227,7 @@ public final class SesWriter {
     file.start_scope();
     file.write("routes ");
     Resolution.write_scope(file, board.communication);
-    Parser.write_scope(file, board.communication.specctra_parser_info, identifierType, true);
+    Parser.write_scope(file, board.communication.specctraParserInfo, identifierType, true);
     writeLibrary(board, identifierType, coordinateTransform, file);
     writeNetwork(board, identifierType, coordinateTransform, file);
     file.end_scope();
@@ -298,15 +298,15 @@ public final class SesWriter {
       if (currBoardShape == null) {
         continue;
       }
-      app.freerouting.board.Layer boardLayer = board.layer_structure.arr[i];
-      Layer currLayer = new Layer(boardLayer.name, i, boardLayer.is_signal);
+      app.freerouting.board.Layer boardLayer = board.layerStructure.arr[i];
+      Layer currLayer = new Layer(boardLayer.name, i, boardLayer.isSignal);
       Shape currShape = coordinateTransform.board_to_dsn_rel(currBoardShape, currLayer);
       file.start_scope();
       file.write("shape");
       currShape.write_scope_int(file, identifierType);
       file.end_scope();
     }
-    if (!padstack.attach_allowed) {
+    if (!padstack.attachAllowed) {
       file.new_line();
       file.write("(attach off)");
     }
@@ -344,7 +344,7 @@ public final class SesWriter {
       boolean isVia = currItem instanceof Via;
       boolean isConductionArea =
           currItem instanceof ConductionArea
-              && board.layer_structure.arr[currItem.first_layer()].is_signal;
+              && board.layerStructure.arr[currItem.first_layer()].isSignal;
       if (!headerWritten && (isWire || isVia || isConductionArea)) {
         file.start_scope();
         file.write("net ");
@@ -378,7 +378,7 @@ public final class SesWriter {
       IndentFileWriter file)
       throws IOException {
     int layerNo = wire.get_layer();
-    app.freerouting.board.Layer boardLayer = board.layer_structure.arr[layerNo];
+    app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerNo];
     int wireWidth = (int) Math.round(coordinateTransform.board_to_dsn(2 * wire.get_half_width()));
     file.start_scope();
     file.write("wire");
@@ -525,8 +525,8 @@ public final class SesWriter {
     }
     Area currArea = conductionArea.get_area();
     int layerNo = conductionArea.get_layer();
-    app.freerouting.board.Layer boardLayer = board.layer_structure.arr[layerNo];
-    Layer conductionLayer = new Layer(boardLayer.name, layerNo, boardLayer.is_signal);
+    app.freerouting.board.Layer boardLayer = board.layerStructure.arr[layerNo];
+    Layer conductionLayer = new Layer(boardLayer.name, layerNo, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
     if (currArea instanceof app.freerouting.geometry.planar.Shape shape) {

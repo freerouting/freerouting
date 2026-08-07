@@ -43,12 +43,12 @@ public class NetList {
   /** Returns all nets in this net list containing the input pin. */
   public Collection<Net> get_nets(String p_component_name, String p_pin_name) {
     Collection<Net> result = new LinkedList<>();
-    Net.Pin search_pin = new Net.Pin(p_component_name, p_pin_name);
-    Collection<Net> net_list = nets.values();
-    for (Net curr_net : net_list) {
-      Set<Net.Pin> net_pins = curr_net.get_pins();
-      if (net_pins != null && net_pins.contains(search_pin)) {
-        result.add(curr_net);
+    Net.Pin searchPin = new Net.Pin(p_component_name, p_pin_name);
+    Collection<Net> netList = nets.values();
+    for (Net currNet : netList) {
+      Set<Net.Pin> netPins = currNet.get_pins();
+      if (netPins != null && netPins.contains(searchPin)) {
+        result.add(currNet);
       }
     }
     return result;

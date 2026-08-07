@@ -15,15 +15,15 @@ import javax.swing.JPopupMenu;
 /** Interactive creation of a circle obstacle */
 public final class CircleConstructionState extends InteractiveState {
 
-  private final FloatPoint circle_center;
-  private double circle_radius = 0;
-  private boolean observers_activated;
+  private final FloatPoint circleCenter;
+  private double circleRadius = 0;
+  private boolean observersActivated;
 
   /** Creates a new instance of CircleConstructionState */
   private CircleConstructionState(
       FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
-    circle_center = p_location;
+    circleCenter = p_location;
   }
 
   /**
@@ -51,45 +51,45 @@ public final class CircleConstructionState extends InteractiveState {
   /** completes the circle construction state */
   @Override
   public InteractiveState complete() {
-    IntPoint center = this.circle_center.round();
-    int radius = (int) Math.round(this.circle_radius);
+    IntPoint center = this.circleCenter.round();
+    int radius = (int) Math.round(this.circleRadius);
     int layer = hdlg.getInteractiveSettings().get_layer();
-    int cl_class;
+    int clClass;
     RoutingBoard board = hdlg.get_routing_board();
-    cl_class = BoardRules.clearance_class_none();
-    boolean construction_succeeded = this.circle_radius > 0;
-    ConvexShape obstacle_shape = null;
-    if (construction_succeeded) {
+    clClass = BoardRules.clearance_class_none();
+    boolean constructionSucceeded = this.circleRadius > 0;
+    ConvexShape obstacleShape = null;
+    if (constructionSucceeded) {
 
-      obstacle_shape = new Circle(center, radius);
+      obstacleShape = new Circle(center, radius);
       if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
           == AngleRestriction.NINETY_DEGREE) {
-        obstacle_shape = obstacle_shape.bounding_box();
+        obstacleShape = obstacleShape.bounding_box();
       } else if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
           == AngleRestriction.FORTYFIVE_DEGREE) {
-        obstacle_shape = obstacle_shape.bounding_octagon();
+        obstacleShape = obstacleShape.bounding_octagon();
       }
-      construction_succeeded = board.check_shape(obstacle_shape, layer, new int[0], cl_class);
+      constructionSucceeded = board.check_shape(obstacleShape, layer, new int[0], clClass);
     }
-    if (construction_succeeded) {
-      hdlg.screen_messages.set_status_message(tm.getText("keepout_successful_completed"));
+    if (constructionSucceeded) {
+      hdlg.screenMessages.set_status_message(tm.getText("keepout_successful_completed"));
 
       // insert the new shape as keepout
-      this.observers_activated = !hdlg.get_routing_board().observers_active();
-      if (this.observers_activated) {
+      this.observersActivated = !hdlg.get_routing_board().observers_active();
+      if (this.observersActivated) {
         hdlg.get_routing_board().start_notify_observers();
       }
       board.generate_snapshot();
-      board.insert_obstacle(obstacle_shape, layer, cl_class, FixedState.UNFIXED);
-      if (this.observers_activated) {
+      board.insert_obstacle(obstacleShape, layer, clClass, FixedState.UNFIXED);
+      if (this.observersActivated) {
         hdlg.get_routing_board().end_notify_observers();
-        this.observers_activated = false;
+        this.observersActivated = false;
       }
     } else {
-      hdlg.screen_messages.set_status_message(tm.getText("keepout_cancelled_because_of_overlaps"));
+      hdlg.screenMessages.set_status_message(tm.getText("keepout_cancelled_because_of_overlaps"));
     }
     hdlg.repaint();
-    return this.return_state;
+    return this.returnState;
   }
 
   /**
@@ -100,22 +100,21 @@ public final class CircleConstructionState extends InteractiveState {
   /** draws the graphic construction aid for the circle */
   @Override
   public void draw(Graphics p_graphics) {
-    FloatPoint current_mouse_position = hdlg.get_current_mouse_position();
-    if (current_mouse_position == null) {
+    FloatPoint currentMousePosition = hdlg.get_current_mouse_position();
+    if (currentMousePosition == null) {
       return;
     }
-    this.circle_radius = circle_center.distance(current_mouse_position);
-    hdlg.graphics_context.draw_circle(
-        circle_center, circle_radius, 300, Color.white, p_graphics, 1);
+    this.circleRadius = circleCenter.distance(currentMousePosition);
+    hdlg.graphicsContext.draw_circle(circleCenter, circleRadius, 300, Color.white, p_graphics, 1);
   }
 
   @Override
   public JPopupMenu get_popup_menu() {
-    return hdlg.get_panel().popup_menu_insert_cancel;
+    return hdlg.get_panel().popupMenuInsertCancel;
   }
 
   @Override
   public void display_default_message() {
-    hdlg.screen_messages.set_status_message(tm.getText("creating_circle"));
+    hdlg.screenMessages.set_status_message(tm.getText("creating_circle"));
   }
 }

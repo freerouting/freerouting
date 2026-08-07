@@ -59,11 +59,11 @@ public final class KiCadJsonWriter {
 
     // 1. Layers
     for (int i = 0; i < board.get_layer_count(); i++) {
-      app.freerouting.board.Layer layer = board.layer_structure.arr[i];
+      app.freerouting.board.Layer layer = board.layerStructure.arr[i];
       KiCadBoardJson.LayerJson layerJson = new KiCadBoardJson.LayerJson();
       layerJson.index = i;
       layerJson.name = layer.name;
-      layerJson.type = layer.is_signal ? "signal" : "plane";
+      layerJson.type = layer.isSignal ? "signal" : "plane";
       boardJson.layers.add(layerJson);
     }
 
@@ -74,7 +74,7 @@ public final class KiCadJsonWriter {
         continue;
       }
       KiCadBoardJson.NetJson netJson = new KiCadBoardJson.NetJson();
-      netJson.id = net.net_number;
+      netJson.id = net.netNumber;
       netJson.name = net.name;
       netJson.className = net.get_class() != null ? net.get_class().get_name() : "default";
       netJson.containsPlane = net.contains_plane();
@@ -82,8 +82,8 @@ public final class KiCadJsonWriter {
     }
 
     // 3. Net Classes
-    for (int i = 0; i < board.rules.net_classes.count(); i++) {
-      NetClass netClass = board.rules.net_classes.get(i);
+    for (int i = 0; i < board.rules.netClasses.count(); i++) {
+      NetClass netClass = board.rules.netClasses.get(i);
       if (netClass == null) {
         continue;
       }
@@ -91,7 +91,7 @@ public final class KiCadJsonWriter {
       ncJson.name = netClass.get_name();
       int clearanceClassNo = netClass.get_trace_clearance_class();
       ncJson.clearance =
-          board.rules.clearance_matrix.get_value(clearanceClassNo, clearanceClassNo, 0, false)
+          board.rules.clearanceMatrix.get_value(clearanceClassNo, clearanceClassNo, 0, false)
               / scaleFactor;
       ncJson.traceWidth = (2 * netClass.get_trace_half_width(0)) / scaleFactor;
 
@@ -125,7 +125,7 @@ public final class KiCadJsonWriter {
       boardJson.outline = new KiCadBoardJson.OutlineJson();
       int clearanceClassNo = outline.clearance_class_no();
       boardJson.outline.clearance =
-          board.rules.clearance_matrix.get_value(clearanceClassNo, clearanceClassNo, 0, false)
+          board.rules.clearanceMatrix.get_value(clearanceClassNo, clearanceClassNo, 0, false)
               / scaleFactor;
       for (int i = 0; i < outline.shape_count(); i++) {
         PolylineShape polyShape = outline.get_shape(i);

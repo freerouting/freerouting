@@ -98,10 +98,10 @@ public class DefaultSettings implements SettingsSource {
     settings.jobTimeoutString = "12:00:00";
     settings.maxPasses = 9999;
     settings.maxItems = Integer.MAX_VALUE;
-    settings.trace_pull_tight_accuracy = 500;
-    settings.vias_allowed = true;
-    settings.automatic_neckdown = true;
-    settings.save_intermediate_stages = false;
+    settings.tracePullTightAccuracy = 500;
+    settings.viasAllowed = true;
+    settings.automaticNeckdown = true;
+    settings.saveIntermediateStages = false;
     settings.ignoreNetClasses = new String[0];
     settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;

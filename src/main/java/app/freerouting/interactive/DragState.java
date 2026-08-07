@@ -11,15 +11,15 @@ import java.util.TreeSet;
 /** Class implementing functionality when the mouse is dragged on a routing board */
 public abstract class DragState extends InteractiveState {
 
-  protected FloatPoint previous_location;
-  protected boolean something_dragged;
-  protected boolean observers_activated;
+  protected FloatPoint previousLocation;
+  protected boolean somethingDragged;
+  protected boolean observersActivated;
 
   /** Creates a new instance of DragState */
   protected DragState(
       FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
-    previous_location = p_location;
+    previousLocation = p_location;
   }
 
   /**
@@ -29,51 +29,51 @@ public abstract class DragState extends InteractiveState {
   public static DragState get_instance(
       FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     p_board_handling.display_layer_message();
-    Item item_to_move = null;
-    int try_count = 1;
+    Item itemToMove = null;
+    int tryCount = 1;
     if (p_board_handling.getInteractiveSettings().get_select_on_all_visible_layers()) {
-      try_count += p_board_handling.get_layer_count();
+      tryCount += p_board_handling.get_layer_count();
     }
-    int curr_layer = p_board_handling.getInteractiveSettings().get_layer();
-    int pick_layer = curr_layer;
-    boolean item_found = false;
+    int currLayer = p_board_handling.getInteractiveSettings().get_layer();
+    int pickLayer = currLayer;
+    boolean itemFound = false;
 
-    for (int i = 0; i < try_count; i++) {
+    for (int i = 0; i < tryCount; i++) {
       if (i == 0
-          || pick_layer != curr_layer
-              && (p_board_handling.graphics_context.get_layer_visibility(pick_layer)) > 0) {
-        Collection<Item> found_items =
+          || pickLayer != currLayer
+              && (p_board_handling.graphicsContext.get_layer_visibility(pickLayer)) > 0) {
+        Collection<Item> foundItems =
             p_board_handling
                 .get_routing_board()
                 .pick_items(
                     p_location.round(),
-                    pick_layer,
+                    pickLayer,
                     p_board_handling.getInteractiveSettings().get_item_selection_filter());
-        for (Item curr_item : found_items) {
-          item_found = true;
-          if (curr_item instanceof Trace) {
+        for (Item currItem : foundItems) {
+          itemFound = true;
+          if (currItem instanceof Trace) {
             continue; // traces are not moved
           }
           if (!p_board_handling.getInteractiveSettings().get_drag_components_enabled()
-              && curr_item.get_component_no() != 0) {
+              && currItem.get_component_no() != 0) {
             continue;
           }
-          item_to_move = curr_item;
-          if (curr_item instanceof DrillItem) {
+          itemToMove = currItem;
+          if (currItem instanceof DrillItem) {
             break; // drill items are preferred
           }
         }
-        if (item_to_move != null) {
+        if (itemToMove != null) {
           break;
         }
       }
       // nothing found on settings.layer, try all visible layers
-      pick_layer = i;
+      pickLayer = i;
     }
     DragState result;
-    if (item_to_move != null) {
-      result = new DragItemState(item_to_move, p_location, p_parent_state, p_board_handling);
-    } else if (!item_found) {
+    if (itemToMove != null) {
+      result = new DragItemState(itemToMove, p_location, p_parent_state, p_board_handling);
+    } else if (!itemFound) {
       result = new MakeSpaceState(p_location, p_parent_state, p_board_handling);
     } else {
       result = null;
@@ -91,13 +91,13 @@ public abstract class DragState extends InteractiveState {
     InteractiveState result = this.move_to(p_point);
     if (result != this) {
       // an error occurred
-      Set<Integer> changed_nets = new TreeSet<>();
-      hdlg.get_routing_board().undo(changed_nets);
-      for (Integer changed_net : changed_nets) {
+      Set<Integer> changedNets = new TreeSet<>();
+      hdlg.get_routing_board().undo(changedNets);
+      for (Integer changed_net : changedNets) {
         hdlg.update_ratsnest(changed_net);
       }
     }
-    if (this.something_dragged) {}
+    if (this.somethingDragged) {}
     return result;
   }
 

@@ -33,7 +33,7 @@ class CorsHandlerTest {
     settings.isEnabled = true;
     settings.isHttpAllowed = true;
     settings.endpoints = new String[] {"http://127.0.0.1:0"};
-    settings.cors_origins = "http://example.com";
+    settings.corsOrigins = "http://example.com";
 
     server = Freerouting.InitializeAPI(settings);
     waitForServerStarted(server);

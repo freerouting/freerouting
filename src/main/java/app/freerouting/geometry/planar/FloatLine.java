@@ -41,17 +41,17 @@ public class FloatLine {
     double d1y = this.b.y - this.a.y;
     double d2x = p_other.b.x - p_other.a.x;
     double d2y = p_other.b.y - p_other.a.y;
-    double det_1 = this.a.x * this.b.y - this.a.y * this.b.x;
-    double det_2 = p_other.a.x * p_other.b.y - p_other.a.y * p_other.b.x;
+    double det1 = this.a.x * this.b.y - this.a.y * this.b.x;
+    double det2 = p_other.a.x * p_other.b.y - p_other.a.y * p_other.b.x;
     double det = d2x * d1y - d2y * d1x;
-    double is_x;
-    double is_y;
+    double isX;
+    double isY;
     if (det == 0) {
       return null;
     }
-    is_x = (d2x * det_1 - d1x * det_2) / det;
-    is_y = (d2y * det_1 - d1y * det_2) / det;
-    return new FloatPoint(is_x, is_y);
+    isX = (d2x * det1 - d1x * det2) / det;
+    isY = (d2y * det1 - d1y * det2) / det;
+    return new FloatPoint(isX, isY);
   }
 
   /**
@@ -64,18 +64,18 @@ public class FloatLine {
     double dxdx = dx * dx;
     double dydy = dy * dy;
     double length = Math.sqrt(dxdx + dydy);
-    FloatPoint new_a;
+    FloatPoint newA;
     if (dxdx <= dydy) {
       // translate along the x axis
-      double rel_x = (p_dist * length) / dy;
-      new_a = new FloatPoint(this.a.x - rel_x, this.a.y);
+      double relX = (p_dist * length) / dy;
+      newA = new FloatPoint(this.a.x - relX, this.a.y);
     } else {
       // translate along the y axis
-      double rel_y = (p_dist * length) / dx;
-      new_a = new FloatPoint(this.a.x, this.a.y + rel_y);
+      double relY = (p_dist * length) / dx;
+      newA = new FloatPoint(this.a.x, this.a.y + relY);
     }
-    FloatPoint new_b = new FloatPoint(new_a.x + dx, new_a.y + dy);
-    return new FloatLine(new_a, new_b);
+    FloatPoint newB = new FloatPoint(newA.x + dx, newA.y + dy);
+    return new FloatLine(newA, newB);
   }
 
   /**
@@ -137,26 +137,25 @@ public class FloatLine {
     if (this.a.scalar_product(this.b, p_line_segment.b) < 0) {
       return null;
     }
-    FloatPoint projected_a;
+    FloatPoint projectedA;
     if (this.a.scalar_product(this.b, p_line_segment.a) < 0) {
-      projected_a = this.a;
+      projectedA = this.a;
     } else {
-      projected_a = this.perpendicular_projection(p_line_segment.a);
-      if (Math.abs(projected_a.x) >= Limits.CRIT_INT
-          || Math.abs(projected_a.y) >= Limits.CRIT_INT) {
+      projectedA = this.perpendicular_projection(p_line_segment.a);
+      if (Math.abs(projectedA.x) >= Limits.CRIT_INT || Math.abs(projectedA.y) >= Limits.CRIT_INT) {
         return null;
       }
     }
-    FloatPoint projected_b;
+    FloatPoint projectedB;
     if (this.b.scalar_product(this.a, p_line_segment.b) < 0) {
-      projected_b = this.b;
+      projectedB = this.b;
     } else {
-      projected_b = this.perpendicular_projection(p_line_segment.b);
+      projectedB = this.perpendicular_projection(p_line_segment.b);
     }
-    if (Math.abs(projected_b.x) >= Limits.CRIT_INT || Math.abs(projected_b.y) >= Limits.CRIT_INT) {
+    if (Math.abs(projectedB.x) >= Limits.CRIT_INT || Math.abs(projectedB.y) >= Limits.CRIT_INT) {
       return null;
     }
-    return new FloatLine(projected_a, projected_b);
+    return new FloatLine(projectedA, projectedB);
   }
 
   /**
@@ -171,35 +170,35 @@ public class FloatLine {
     if (p_line_segment.b.scalar_product(p_line_segment.a, this.a) <= 0) {
       return null;
     }
-    FloatPoint projected_a;
+    FloatPoint projectedA;
     if (p_line_segment.a.scalar_product(p_line_segment.b, this.a) < 0) {
-      FloatLine curr_perpendicular_line =
+      FloatLine currPerpendicularLine =
           new FloatLine(p_line_segment.a, p_line_segment.b.turn_90_degree(1, p_line_segment.a));
-      projected_a = curr_perpendicular_line.intersection(this);
-      if (projected_a == null
-          || Math.abs(projected_a.x) >= Limits.CRIT_INT
-          || Math.abs(projected_a.y) >= Limits.CRIT_INT) {
+      projectedA = currPerpendicularLine.intersection(this);
+      if (projectedA == null
+          || Math.abs(projectedA.x) >= Limits.CRIT_INT
+          || Math.abs(projectedA.y) >= Limits.CRIT_INT) {
         return null;
       }
     } else {
-      projected_a = this.a;
+      projectedA = this.a;
     }
 
-    FloatPoint projected_b;
+    FloatPoint projectedB;
 
     if (p_line_segment.b.scalar_product(p_line_segment.a, this.b) < 0) {
-      FloatLine curr_perpendicular_line =
+      FloatLine currPerpendicularLine =
           new FloatLine(p_line_segment.b, p_line_segment.a.turn_90_degree(1, p_line_segment.b));
-      projected_b = curr_perpendicular_line.intersection(this);
-      if (projected_b == null
-          || Math.abs(projected_b.x) >= Limits.CRIT_INT
-          || Math.abs(projected_b.y) >= Limits.CRIT_INT) {
+      projectedB = currPerpendicularLine.intersection(this);
+      if (projectedB == null
+          || Math.abs(projectedB.x) >= Limits.CRIT_INT
+          || Math.abs(projectedB.y) >= Limits.CRIT_INT) {
         return null;
       }
     } else {
-      projected_b = this.b;
+      projectedB = this.b;
     }
-    return new FloatLine(projected_a, projected_b);
+    return new FloatLine(projectedA, projectedB);
   }
 
   /**
@@ -214,11 +213,11 @@ public class FloatLine {
     }
     double length = Math.sqrt(dx * dx + dy * dy);
     double offset = Math.min(p_offset, length / 2);
-    FloatPoint new_a = new FloatPoint(a.x + (dx * offset) / length, a.y + (dy * offset) / length);
-    double new_length = length - offset;
-    FloatPoint new_b =
-        new FloatPoint(a.x + (dx * new_length) / length, a.y + (dy * new_length) / length);
-    return new FloatLine(new_a, new_b);
+    FloatPoint newA = new FloatPoint(a.x + (dx * offset) / length, a.y + (dy * offset) / length);
+    double newLength = length - offset;
+    FloatPoint newB =
+        new FloatPoint(a.x + (dx * newLength) / length, a.y + (dy * newLength) / length);
+    return new FloatLine(newA, newB);
   }
 
   /** Calculates the nearest point on this line to p_from_point between this.a and this.b. */
@@ -250,24 +249,24 @@ public class FloatLine {
       result[0] = this;
       return result;
     }
-    double line_length = this.b.distance(this.a);
+    double lineLength = this.b.distance(this.a);
     FloatLine[] result = new FloatLine[p_count];
-    double section_length = line_length / p_count;
+    double sectionLength = lineLength / p_count;
     double dx = b.x - a.x;
     double dy = b.y - a.y;
-    FloatPoint curr_a = this.a;
+    FloatPoint currA = this.a;
     for (int i = 0; i < p_count; i++) {
-      FloatPoint curr_b;
+      FloatPoint currB;
       if (i == p_count - 1) {
-        curr_b = this.b;
+        currB = this.b;
       } else {
-        double curr_b_dist = (i + 1) * section_length;
-        double curr_b_x = a.x + (dx * curr_b_dist) / line_length;
-        double curr_b_y = a.y + (dy * curr_b_dist) / line_length;
-        curr_b = new FloatPoint(curr_b_x, curr_b_y);
+        double currBDist = (i + 1) * sectionLength;
+        double currBX = a.x + (dx * currBDist) / lineLength;
+        double currBY = a.y + (dy * currBDist) / lineLength;
+        currB = new FloatPoint(currBX, currBY);
       }
-      result[i] = new FloatLine(curr_a, curr_b);
-      curr_a = curr_b;
+      result[i] = new FloatLine(currA, currB);
+      currA = currB;
     }
     return result;
   }

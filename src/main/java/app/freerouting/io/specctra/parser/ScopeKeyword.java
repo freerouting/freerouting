@@ -14,23 +14,23 @@ public class ScopeKeyword extends Keyword {
    * Skips the current scope while reading a dsn file. Returns false, if no legal scope was found.
    */
   public static boolean skip_scope(IJFlexScanner p_scanner) {
-    int open_bracked_count = 1;
-    while (open_bracked_count > 0) {
+    int openBrackedCount = 1;
+    while (openBrackedCount > 0) {
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      Object curr_token;
+      Object currToken;
       try {
-        curr_token = p_scanner.next_token();
+        currToken = p_scanner.next_token();
       } catch (Exception e) {
         FRLogger.error("ScopeKeyword.skip_scope: Error while scanning file", e);
         return false;
       }
-      if (curr_token == null) {
+      if (currToken == null) {
         return false; // end of file
       }
-      if (curr_token == Keyword.OPEN_BRACKET) {
-        ++open_bracked_count;
-      } else if (curr_token == Keyword.CLOSED_BRACKET) {
-        --open_bracked_count;
+      if (currToken == Keyword.OPEN_BRACKET) {
+        ++openBrackedCount;
+      } else if (currToken == Keyword.CLOSED_BRACKET) {
+        --openBrackedCount;
       }
     }
     return true;
@@ -38,31 +38,31 @@ public class ScopeKeyword extends Keyword {
 
   /** Reads the next scope of this keyword from dsn file. */
   public boolean read_scope(ReadScopeParameter p_par) {
-    Object next_token = null;
+    Object nextToken = null;
     for (; ; ) {
-      Object prev_token = next_token;
+      Object prevToken = nextToken;
       try {
-        next_token = p_par.scanner.next_token();
+        nextToken = p_par.scanner.next_token();
       } catch (IOException e) {
         FRLogger.error("ScopeKeyword.read_scope: IO error scanning file", e);
         return false;
       }
-      if (next_token == null) {
+      if (nextToken == null) {
         // end of file
         return true;
       }
-      if (next_token == CLOSED_BRACKET) {
+      if (nextToken == CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == OPEN_BRACKET) {
-        ScopeKeyword next_scope;
+      if (prevToken == OPEN_BRACKET) {
+        ScopeKeyword nextScope;
         // a new scope is expected
-        if (next_token instanceof ScopeKeyword keyword) {
+        if (nextToken instanceof ScopeKeyword keyword) {
           // read the next scope, which is the "structure" part of the DSN file
-          next_scope = keyword;
-          if (!next_scope.read_scope(p_par)) {
+          nextScope = keyword;
+          if (!nextScope.read_scope(p_par)) {
             return false;
           }
         } else {

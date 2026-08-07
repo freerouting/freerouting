@@ -15,21 +15,21 @@ public class ScreenMessages {
   private static final String empty_string = "            ";
   final JLabel errorLabel;
   final JLabel warningLabel;
-  private final String active_layer_string;
-  private final String target_layer_string;
+  private final String activeLayerString;
+  private final String targetLayerString;
 
   /** The number format for displaying the trace length */
-  private final NumberFormat number_format;
+  private final NumberFormat numberFormat;
 
-  private final JLabel add_field;
-  private final JLabel status_field;
-  private final JLabel layer_field;
-  private final JLabel score_field;
-  private final JLabel mouse_position;
-  private final JLabel unit_label;
+  private final JLabel addField;
+  private final JLabel statusField;
+  private final JLabel layerField;
+  private final JLabel scoreField;
+  private final JLabel mousePosition;
+  private final JLabel unitLabel;
   private final TextManager tm;
-  private String prev_target_layer_name = empty_string;
-  private boolean write_protected;
+  private String prevTargetLayerName = empty_string;
+  private boolean writeProtected;
 
   /** Creates a new instance of ScreenMessages */
   public ScreenMessages(
@@ -44,21 +44,21 @@ public class ScreenMessages {
       Locale p_locale) {
 
     tm = new TextManager(this.getClass(), p_locale);
-    active_layer_string = tm.getText("current_layer") + " ";
-    target_layer_string = tm.getText("target_layer") + " ";
+    activeLayerString = tm.getText("currentLayer") + " ";
+    targetLayerString = tm.getText("targetLayer") + " ";
     this.errorLabel = errorLabel;
     this.warningLabel = warningLabel;
-    status_field = p_status_field;
-    add_field = p_add_field;
-    layer_field = p_layer_field;
-    score_field = p_score_field;
-    mouse_position = p_mouse_position;
-    unit_label = p_unit_label;
-    add_field.setText(empty_string);
+    statusField = p_status_field;
+    addField = p_add_field;
+    layerField = p_layer_field;
+    scoreField = p_score_field;
+    mousePosition = p_mouse_position;
+    unitLabel = p_unit_label;
+    addField.setText(empty_string);
 
-    this.number_format = NumberFormat.getInstance(p_locale);
-    this.number_format.setMinimumFractionDigits(2);
-    this.number_format.setMaximumFractionDigits(2);
+    this.numberFormat = NumberFormat.getInstance(p_locale);
+    this.numberFormat.setMinimumFractionDigits(2);
+    this.numberFormat.setMaximumFractionDigits(2);
   }
 
   public void set_error_and_warning_count(int errorsCount, int warningCount) {
@@ -68,85 +68,85 @@ public class ScreenMessages {
 
   /** Sets the message in the status field. */
   public void set_status_message(String p_message) {
-    if (!this.write_protected) {
-      status_field.setText(p_message);
+    if (!this.writeProtected) {
+      statusField.setText(p_message);
     }
   }
 
   /** Displays the latest traced operation in the footer. */
   public void set_trace_message(String operation, String message, String impactedItems) {
-    if (this.write_protected) {
+    if (this.writeProtected) {
       return;
     }
     String statusText =
         operation == null || operation.isEmpty() ? message : operation + ": " + message;
-    status_field.setText(statusText == null ? empty_string : statusText);
+    statusField.setText(statusText == null ? empty_string : statusText);
     String impactedText =
         impactedItems == null || impactedItems.isEmpty() ? empty_string : impactedItems;
-    add_field.setText(impactedText);
+    addField.setText(impactedText);
   }
 
   /** Sets the displayed layer number on the screen. */
   public void set_layer(String p_layer_name) {
-    if (!this.write_protected) {
-      layer_field.setText(active_layer_string + p_layer_name);
+    if (!this.writeProtected) {
+      layerField.setText(activeLayerString + p_layer_name);
     }
   }
 
   public void set_interactive_autoroute_info(int p_found, int p_not_found, int p_items_to_go) {
     int found = p_found;
     int failed = p_not_found;
-    int items_to_go = p_items_to_go;
+    int itemsToGo = p_items_to_go;
 
-    add_field.setText(tm.getText("interactive_autoroute_add", String.valueOf(items_to_go)));
-    layer_field.setText(
+    addField.setText(tm.getText("interactive_autoroute_add", String.valueOf(itemsToGo)));
+    layerField.setText(
         tm.getText("interactive_autoroute_layer", String.valueOf(found), String.valueOf(failed)));
   }
 
   public void set_batch_autoroute_info(RouterCounters routerCounters) {
-    int items_to_go = routerCounters.queuedToBeRoutedCount;
+    int itemsToGo = routerCounters.queuedToBeRoutedCount;
     int routed = routerCounters.routedCount;
     int failed = routerCounters.failedToBeRoutedCount;
     if ("fanout".equals(routerCounters.phase)) {
       int extraVias =
           routerCounters.fanoutExtraViasCount == null ? 0 : routerCounters.fanoutExtraViasCount;
-      add_field.setText(
-          tm.getText("batch_autoroute_add", String.valueOf(items_to_go), String.valueOf(routed)));
-      layer_field.setText(
+      addField.setText(
+          tm.getText("batch_autoroute_add", String.valueOf(itemsToGo), String.valueOf(routed)));
+      layerField.setText(
           tm.getText("batch_fanout_layer", String.valueOf(failed), String.valueOf(extraVias)));
       return;
     }
     int ripped = routerCounters.rippedCount;
-    add_field.setText(
-        tm.getText("batch_autoroute_add", String.valueOf(items_to_go), String.valueOf(routed)));
-    layer_field.setText(
+    addField.setText(
+        tm.getText("batch_autoroute_add", String.valueOf(itemsToGo), String.valueOf(routed)));
+    layerField.setText(
         tm.getText("batch_autoroute_layer", String.valueOf(ripped), String.valueOf(failed)));
   }
 
   public void set_post_route_info(int p_via_count, double p_trace_length, Unit unit) {
-    int via_count = p_via_count;
-    add_field.setText(tm.getText("post_route_add", String.valueOf(via_count)));
-    layer_field.setText(
-        tm.getText("post_route_layer", this.number_format.format(p_trace_length), unit.toString()));
+    int viaCount = p_via_count;
+    addField.setText(tm.getText("post_route_add", String.valueOf(viaCount)));
+    layerField.setText(
+        tm.getText("post_route_layer", this.numberFormat.format(p_trace_length), unit.toString()));
   }
 
   /** Sets the displayed layer of the nearest target item in interactive routing. */
   public void set_target_layer(String p_layer_name) {
-    if (!(p_layer_name.equals(prev_target_layer_name) || this.write_protected)) {
-      add_field.setText(target_layer_string + p_layer_name);
-      prev_target_layer_name = p_layer_name;
+    if (!(p_layer_name.equals(prevTargetLayerName) || this.writeProtected)) {
+      addField.setText(targetLayerString + p_layer_name);
+      prevTargetLayerName = p_layer_name;
     }
   }
 
   public void set_mouse_position(FloatPoint p_pos) {
-    if (p_pos == null || this.mouse_position == null || this.write_protected) {
+    if (p_pos == null || this.mousePosition == null || this.writeProtected) {
       return;
     }
-    this.mouse_position.setText(p_pos.to_string(this.tm.getLocale(), 2, 10));
+    this.mousePosition.setText(p_pos.to_string(this.tm.getLocale(), 2, 10));
   }
 
   public void set_unit_label(String p_unit) {
-    this.unit_label.setText(p_unit);
+    this.unitLabel.setText(p_unit);
   }
 
   /**
@@ -154,33 +154,33 @@ public class ScreenMessages {
    * target item.
    */
   public void clear_add_field() {
-    if (!this.write_protected) {
-      add_field.setText(empty_string);
-      prev_target_layer_name = empty_string;
+    if (!this.writeProtected) {
+      addField.setText(empty_string);
+      prevTargetLayerName = empty_string;
     }
   }
 
   /** Clears the status field and the additional field. */
   public void clear() {
-    if (!this.write_protected) {
-      status_field.setText(empty_string);
+    if (!this.writeProtected) {
+      statusField.setText(empty_string);
       clear_add_field();
-      layer_field.setText(empty_string);
-      score_field.setText(empty_string);
+      layerField.setText(empty_string);
+      scoreField.setText(empty_string);
     }
   }
 
-  /** As long as write_protected is set to true, the set functions in this class will do nothing. */
+  /** As long as writeProtected is set to true, the set functions in this class will do nothing. */
   public void set_write_protected(boolean p_value) {
-    write_protected = p_value;
+    writeProtected = p_value;
   }
 
-  public void set_board_score(float score, int unrouted_count, int violation_count) {
-    score_field.setText(
+  public void set_board_score(float score, int unrouted_count, int violationCount) {
+    scoreField.setText(
         tm.getText(
             "score",
             FRLogger.defaultFloatFormat.format(score),
             String.valueOf(unrouted_count),
-            String.valueOf(violation_count)));
+            String.valueOf(violationCount)));
   }
 }

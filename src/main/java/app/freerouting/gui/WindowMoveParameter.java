@@ -22,115 +22,113 @@ import javax.swing.JRadioButton;
 /** Window with the parameters for moving components. */
 public class WindowMoveParameter extends BoardSavableSubWindow {
 
-  private final GuiBoardManager board_handling;
-  private final JFormattedTextField horizontal_grid_field;
-  private final JFormattedTextField vertical_grid_field;
-  private final JRadioButton settings_controls_zoom_radiobutton;
-  private final JRadioButton settings_controls_rotate_radiobutton;
-  private boolean key_input_completed = true;
+  private final GuiBoardManager boardHandling;
+  private final JFormattedTextField horizontalGridField;
+  private final JFormattedTextField verticalGridField;
+  private final JRadioButton settingsControlsZoomRadiobutton;
+  private final JRadioButton settingsControlsRotateRadiobutton;
+  private boolean keyInputCompleted = true;
 
   /** Creates a new instance of WindowMoveParameter */
   public WindowMoveParameter(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
-    this.board_handling = p_board_frame.board_panel.board_handling;
+    this.boardHandling = p_board_frame.boardPanel.boardHandling;
 
     this.setTitle(tm.getText("title"));
 
     // create main panel
 
-    final JPanel main_panel = new JPanel();
-    this.add(main_panel);
+    final JPanel mainPanel = new JPanel();
+    this.add(mainPanel);
     GridBagLayout gridbag = new GridBagLayout();
-    main_panel.setLayout(gridbag);
-    GridBagConstraints gridbag_constraints = new GridBagConstraints();
-    gridbag_constraints.anchor = GridBagConstraints.WEST;
-    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
+    mainPanel.setLayout(gridbag);
+    GridBagConstraints gridbagConstraints = new GridBagConstraints();
+    gridbagConstraints.anchor = GridBagConstraints.WEST;
+    gridbagConstraints.insets = new Insets(1, 10, 1, 10);
 
     // Create label and number field for the horizontal and vertical component grid
 
-    gridbag_constraints.gridwidth = 2;
-    JLabel horizontal_grid_label = new JLabel(tm.getText("horizontal_component_grid"));
-    gridbag.setConstraints(horizontal_grid_label, gridbag_constraints);
-    main_panel.add(horizontal_grid_label);
+    gridbagConstraints.gridwidth = 2;
+    JLabel horizontalGridLabel = new JLabel(tm.getText("horizontalComponentGrid"));
+    gridbag.setConstraints(horizontalGridLabel, gridbagConstraints);
+    mainPanel.add(horizontalGridLabel);
 
-    NumberFormat number_format = NumberFormat.getInstance(p_board_frame.get_locale());
-    number_format.setMaximumFractionDigits(7);
-    this.horizontal_grid_field = new JFormattedTextField(number_format);
-    this.horizontal_grid_field.setColumns(5);
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(horizontal_grid_field, gridbag_constraints);
-    main_panel.add(horizontal_grid_field);
+    NumberFormat numberFormat = NumberFormat.getInstance(p_board_frame.get_locale());
+    numberFormat.setMaximumFractionDigits(7);
+    this.horizontalGridField = new JFormattedTextField(numberFormat);
+    this.horizontalGridField.setColumns(5);
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(horizontalGridField, gridbagConstraints);
+    mainPanel.add(horizontalGridField);
     set_horizontal_grid_field(
-        this.board_handling.getInteractiveSettings().get_horizontal_component_grid());
-    horizontal_grid_field.addKeyListener(new HorizontalGridFieldKeyListener());
-    horizontal_grid_field.addFocusListener(new HorizontalGridFieldFocusListener());
+        this.boardHandling.getInteractiveSettings().get_horizontal_component_grid());
+    horizontalGridField.addKeyListener(new HorizontalGridFieldKeyListener());
+    horizontalGridField.addFocusListener(new HorizontalGridFieldFocusListener());
 
-    gridbag_constraints.gridwidth = 2;
-    JLabel vertical_grid_label = new JLabel(tm.getText("vertical_component_grid"));
-    gridbag.setConstraints(vertical_grid_label, gridbag_constraints);
-    main_panel.add(vertical_grid_label);
+    gridbagConstraints.gridwidth = 2;
+    JLabel verticalGridLabel = new JLabel(tm.getText("verticalComponentGrid"));
+    gridbag.setConstraints(verticalGridLabel, gridbagConstraints);
+    mainPanel.add(verticalGridLabel);
 
-    this.vertical_grid_field = new JFormattedTextField(number_format);
-    this.vertical_grid_field.setColumns(5);
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(vertical_grid_field, gridbag_constraints);
-    main_panel.add(vertical_grid_field);
+    this.verticalGridField = new JFormattedTextField(numberFormat);
+    this.verticalGridField.setColumns(5);
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(verticalGridField, gridbagConstraints);
+    mainPanel.add(verticalGridField);
     set_vertical_grid_field(
-        this.board_handling.getInteractiveSettings().get_vertical_component_grid());
-    vertical_grid_field.addKeyListener(new VerticalGridFieldKeyListener());
-    vertical_grid_field.addFocusListener(new VerticalGridFieldFocusListener());
+        this.boardHandling.getInteractiveSettings().get_vertical_component_grid());
+    verticalGridField.addKeyListener(new VerticalGridFieldKeyListener());
+    verticalGridField.addFocusListener(new VerticalGridFieldFocusListener());
 
     JLabel separator = new JLabel("  –––––––––––––––––––––––––––––––––––––––––––––––  ");
-    gridbag.setConstraints(separator, gridbag_constraints);
-    main_panel.add(separator, gridbag_constraints);
+    gridbag.setConstraints(separator, gridbagConstraints);
+    mainPanel.add(separator, gridbagConstraints);
 
     // add label and button group for the wheel function.
 
-    JLabel wheel_function_label = new JLabel(tm.getText("wheel_function"));
-    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
-    gridbag_constraints.gridheight = 2;
-    gridbag.setConstraints(wheel_function_label, gridbag_constraints);
-    main_panel.add(wheel_function_label);
-    wheel_function_label.setToolTipText(tm.getText("wheel_function_tooltip"));
+    JLabel wheelFunctionLabel = new JLabel(tm.getText("wheel_function"));
+    gridbagConstraints.gridwidth = GridBagConstraints.RELATIVE;
+    gridbagConstraints.gridheight = 2;
+    gridbag.setConstraints(wheelFunctionLabel, gridbagConstraints);
+    mainPanel.add(wheelFunctionLabel);
+    wheelFunctionLabel.setToolTipText(tm.getText("wheel_function_tooltip"));
 
-    settings_controls_zoom_radiobutton = new JRadioButton(tm.getText("zoom"));
-    settings_controls_rotate_radiobutton = new JRadioButton(tm.getText("rotate"));
+    settingsControlsZoomRadiobutton = new JRadioButton(tm.getText("zoom"));
+    settingsControlsRotateRadiobutton = new JRadioButton(tm.getText("rotate"));
 
-    settings_controls_zoom_radiobutton.addActionListener(new ZoomButtonListener());
-    settings_controls_zoom_radiobutton.addActionListener(
+    settingsControlsZoomRadiobutton.addActionListener(new ZoomButtonListener());
+    settingsControlsZoomRadiobutton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "settings_controls_zoom_radiobutton",
-                settings_controls_zoom_radiobutton.getText()));
-    settings_controls_rotate_radiobutton.addActionListener(new RotateButtonListener());
-    settings_controls_rotate_radiobutton.addActionListener(
+                "settingsControlsZoomRadiobutton", settingsControlsZoomRadiobutton.getText()));
+    settingsControlsRotateRadiobutton.addActionListener(new RotateButtonListener());
+    settingsControlsRotateRadiobutton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "settings_controls_rotate_radiobutton",
-                settings_controls_rotate_radiobutton.getText()));
+                "settingsControlsRotateRadiobutton", settingsControlsRotateRadiobutton.getText()));
 
-    ButtonGroup button_group = new ButtonGroup();
-    button_group.add(settings_controls_zoom_radiobutton);
-    button_group.add(settings_controls_rotate_radiobutton);
-    if (this.board_handling.getInteractiveSettings().get_zoom_with_wheel()) {
-      settings_controls_zoom_radiobutton.setSelected(true);
+    ButtonGroup buttonGroup = new ButtonGroup();
+    buttonGroup.add(settingsControlsZoomRadiobutton);
+    buttonGroup.add(settingsControlsRotateRadiobutton);
+    if (this.boardHandling.getInteractiveSettings().get_zoom_with_wheel()) {
+      settingsControlsZoomRadiobutton.setSelected(true);
     } else {
-      settings_controls_rotate_radiobutton.setSelected(true);
+      settingsControlsRotateRadiobutton.setSelected(true);
     }
 
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag_constraints.gridheight = 1;
-    gridbag.setConstraints(settings_controls_zoom_radiobutton, gridbag_constraints);
-    main_panel.add(settings_controls_zoom_radiobutton, gridbag_constraints);
-    gridbag.setConstraints(settings_controls_rotate_radiobutton, gridbag_constraints);
-    main_panel.add(settings_controls_rotate_radiobutton, gridbag_constraints);
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbagConstraints.gridheight = 1;
+    gridbag.setConstraints(settingsControlsZoomRadiobutton, gridbagConstraints);
+    mainPanel.add(settingsControlsZoomRadiobutton, gridbagConstraints);
+    gridbag.setConstraints(settingsControlsRotateRadiobutton, gridbagConstraints);
+    mainPanel.add(settingsControlsRotateRadiobutton, gridbagConstraints);
 
     this.refresh();
     this.pack();
     this.setResizable(false);
 
     // Subscribe to the InteractiveSettings singleton so this window stays in sync.
-    InteractiveSettings is = this.board_handling.getInteractiveSettings();
+    InteractiveSettings is = this.boardHandling.getInteractiveSettings();
     if (is != null) {
       is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
     }
@@ -138,19 +136,19 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
   private void set_horizontal_grid_field(double p_value) {
     if (p_value <= 0) {
-      this.horizontal_grid_field.setValue(0);
+      this.horizontalGridField.setValue(0);
     } else {
-      Float grid_width = (float) board_handling.coordinate_transform.board_to_user(p_value);
-      this.horizontal_grid_field.setValue(grid_width);
+      Float gridWidth = (float) boardHandling.coordinateTransform.board_to_user(p_value);
+      this.horizontalGridField.setValue(gridWidth);
     }
   }
 
   private void set_vertical_grid_field(double p_value) {
     if (p_value <= 0) {
-      this.vertical_grid_field.setValue(0);
+      this.verticalGridField.setValue(0);
     } else {
-      Float grid_width = (float) board_handling.coordinate_transform.board_to_user(p_value);
-      this.vertical_grid_field.setValue(grid_width);
+      Float gridWidth = (float) boardHandling.coordinateTransform.board_to_user(p_value);
+      this.verticalGridField.setValue(gridWidth);
     }
   }
 
@@ -159,24 +157,24 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        key_input_completed = true;
-        Object input = horizontal_grid_field.getValue();
-        double input_value;
+        keyInputCompleted = true;
+        Object input = horizontalGridField.getValue();
+        double inputValue;
         if (!(input instanceof Number)) {
-          input_value = 0;
+          inputValue = 0;
         }
-        input_value = ((Number) input).doubleValue();
-        if (input_value < 0) {
-          input_value = 0;
+        inputValue = ((Number) input).doubleValue();
+        if (inputValue < 0) {
+          inputValue = 0;
         }
-        board_handling
+        boardHandling
             .getInteractiveSettings()
             .set_horizontal_component_grid(
-                (int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
+                (int) Math.round(boardHandling.coordinateTransform.user_to_board(inputValue)));
         set_horizontal_grid_field(
-            board_handling.getInteractiveSettings().get_horizontal_component_grid());
+            boardHandling.getInteractiveSettings().get_horizontal_component_grid());
       } else {
-        key_input_completed = false;
+        keyInputCompleted = false;
       }
     }
   }
@@ -185,11 +183,11 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     @Override
     public void focusLost(FocusEvent p_evt) {
-      if (!key_input_completed) {
+      if (!keyInputCompleted) {
         // restore the text field.
         set_horizontal_grid_field(
-            board_handling.getInteractiveSettings().get_horizontal_component_grid());
-        key_input_completed = true;
+            boardHandling.getInteractiveSettings().get_horizontal_component_grid());
+        keyInputCompleted = true;
       }
     }
 
@@ -202,24 +200,24 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
-        key_input_completed = true;
-        Object input = vertical_grid_field.getValue();
-        double input_value;
+        keyInputCompleted = true;
+        Object input = verticalGridField.getValue();
+        double inputValue;
         if (!(input instanceof Number)) {
-          input_value = 0;
+          inputValue = 0;
         }
-        input_value = ((Number) input).doubleValue();
-        if (input_value < 0) {
-          input_value = 0;
+        inputValue = ((Number) input).doubleValue();
+        if (inputValue < 0) {
+          inputValue = 0;
         }
-        board_handling
+        boardHandling
             .getInteractiveSettings()
             .set_vertical_component_grid(
-                (int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
+                (int) Math.round(boardHandling.coordinateTransform.user_to_board(inputValue)));
         set_vertical_grid_field(
-            board_handling.getInteractiveSettings().get_vertical_component_grid());
+            boardHandling.getInteractiveSettings().get_vertical_component_grid());
       } else {
-        key_input_completed = false;
+        keyInputCompleted = false;
       }
     }
   }
@@ -228,11 +226,11 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     @Override
     public void focusLost(FocusEvent p_evt) {
-      if (!key_input_completed) {
+      if (!keyInputCompleted) {
         // restore the text field.
         set_vertical_grid_field(
-            board_handling.getInteractiveSettings().get_vertical_component_grid());
-        key_input_completed = true;
+            boardHandling.getInteractiveSettings().get_vertical_component_grid());
+        keyInputCompleted = true;
       }
     }
 
@@ -244,7 +242,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_handling.getInteractiveSettings().set_zoom_with_wheel(true);
+      boardHandling.getInteractiveSettings().set_zoom_with_wheel(true);
     }
   }
 
@@ -252,7 +250,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_handling.getInteractiveSettings().set_zoom_with_wheel(false);
+      boardHandling.getInteractiveSettings().set_zoom_with_wheel(false);
     }
   }
 }

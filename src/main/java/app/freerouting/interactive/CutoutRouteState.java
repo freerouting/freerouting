@@ -14,7 +14,7 @@ import java.util.TreeSet;
 
 public final class CutoutRouteState extends SelectRegionState {
 
-  private final Collection<PolylineTrace> trace_list;
+  private final Collection<PolylineTrace> traceList;
 
   /** Creates a new instance of CutoutRouteState */
   private CutoutRouteState(
@@ -22,7 +22,7 @@ public final class CutoutRouteState extends SelectRegionState {
       InteractiveState p_parent_state,
       GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
-    this.trace_list = p_item_list;
+    this.traceList = p_item_list;
   }
 
   /** Returns a new instance of this class. */
@@ -41,29 +41,28 @@ public final class CutoutRouteState extends SelectRegionState {
       GuiBoardManager p_board_handling) {
     p_board_handling.display_layer_message();
     // filter items, which cannot be cutout
-    Collection<PolylineTrace> item_list = new LinkedList<>();
+    Collection<PolylineTrace> itemList = new LinkedList<>();
 
-    for (Item curr_item : p_item_list) {
-      if (!curr_item.is_user_fixed() && curr_item instanceof PolylineTrace trace) {
-        item_list.add(trace);
+    for (Item currItem : p_item_list) {
+      if (!currItem.is_user_fixed() && currItem instanceof PolylineTrace trace) {
+        itemList.add(trace);
       }
     }
 
-    CutoutRouteState new_instance =
-        new CutoutRouteState(item_list, p_parent_state, p_board_handling);
-    new_instance.corner1 = p_location;
-    new_instance.hdlg.screen_messages.set_status_message(
-        new_instance.tm.getText("drag_left_mouse_button_to_select_cutout_rectangle"));
-    return new_instance;
+    CutoutRouteState newInstance = new CutoutRouteState(itemList, p_parent_state, p_board_handling);
+    newInstance.corner1 = p_location;
+    newInstance.hdlg.screenMessages.set_status_message(
+        newInstance.tm.getText("drag_left_mouse_button_to_select_cutout_rectangle"));
+    return newInstance;
   }
 
   @Override
   public InteractiveState complete() {
-    hdlg.screen_messages.set_status_message("");
+    hdlg.screenMessages.set_status_message("");
     corner2 = hdlg.get_current_mouse_position();
     corner2 = hdlg.get_current_mouse_position();
     this.cutout_route();
-    return this.return_state;
+    return this.returnState;
   }
 
   /** Selects all items in the rectangle defined by corner1 and corner2. */
@@ -77,37 +76,37 @@ public final class CutoutRouteState extends SelectRegionState {
     IntPoint p1 = this.corner1.round();
     IntPoint p2 = this.corner2.round();
 
-    IntBox cut_box =
+    IntBox cutBox =
         new IntBox(
             Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
 
-    Set<Integer> changed_nets = new TreeSet<>();
+    Set<Integer> changedNets = new TreeSet<>();
 
-    for (PolylineTrace curr_trace : this.trace_list) {
-      ShapeTraceEntries.cutout_trace(curr_trace, cut_box, 0);
-      for (int i = 0; i < curr_trace.net_count(); i++) {
-        changed_nets.add(curr_trace.get_net_no(i));
+    for (PolylineTrace currTrace : this.traceList) {
+      ShapeTraceEntries.cutout_trace(currTrace, cutBox, 0);
+      for (int i = 0; i < currTrace.net_count(); i++) {
+        changedNets.add(currTrace.get_net_no(i));
       }
     }
 
-    for (Integer changed_net : changed_nets) {
+    for (Integer changed_net : changedNets) {
       hdlg.update_ratsnest(changed_net);
     }
   }
 
   @Override
   public void draw(Graphics p_graphics) {
-    if (trace_list == null) {
+    if (traceList == null) {
       return;
     }
 
-    for (PolylineTrace curr_trace : this.trace_list) {
+    for (PolylineTrace currTrace : this.traceList) {
 
-      curr_trace.draw(
+      currTrace.draw(
           p_graphics,
-          hdlg.graphics_context,
-          hdlg.graphics_context.get_hilight_color(),
-          hdlg.graphics_context.get_hilight_color_intensity());
+          hdlg.graphicsContext,
+          hdlg.graphicsContext.get_hilight_color(),
+          hdlg.graphicsContext.get_hilight_color_intensity());
     }
     super.draw(p_graphics);
   }

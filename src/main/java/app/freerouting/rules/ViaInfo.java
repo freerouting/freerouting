@@ -7,16 +7,16 @@ import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * Information about a combination of via_padstack, via clearance class and drill_to_smd_allowed
- * used in interactive and automatic routing.
+ * Information about a combination of viaPadstack, via clearance class and drill_to_smd_allowed used
+ * in interactive and automatic routing.
  */
 public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, Serializable {
 
-  private final BoardRules board_rules;
+  private final BoardRules boardRules;
   private String name;
   private Padstack padstack;
-  private int clearance_class;
-  private boolean attach_smd_allowed;
+  private int clearanceClass;
+  private boolean attachSmdAllowed;
 
   /** Creates a new instance of ViaRule */
   public ViaInfo(
@@ -27,9 +27,9 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
       BoardRules p_board_rules) {
     name = p_name;
     padstack = p_padstack;
-    clearance_class = p_clearance_class;
-    attach_smd_allowed = p_drill_to_smd_allowed;
-    board_rules = p_board_rules;
+    clearanceClass = p_clearance_class;
+    attachSmdAllowed = p_drill_to_smd_allowed;
+    boardRules = p_board_rules;
   }
 
   public String get_name() {
@@ -54,19 +54,19 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
   }
 
   public int get_clearance_class() {
-    return clearance_class;
+    return clearanceClass;
   }
 
   public void set_clearance_class(int p_clearance_class) {
-    clearance_class = p_clearance_class;
+    clearanceClass = p_clearance_class;
   }
 
   public boolean attach_smd_allowed() {
-    return attach_smd_allowed;
+    return attachSmdAllowed;
   }
 
   public void set_attach_smd_allowed(boolean p_attach_smd_allowed) {
-    attach_smd_allowed = p_attach_smd_allowed;
+    attachSmdAllowed = p_attach_smd_allowed;
   }
 
   @Override
@@ -83,14 +83,14 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
     p_window.append_bold(": ");
     p_window.append(tm.getText("padstack") + " ");
     p_window.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
-    p_window.append(", " + tm.getText("clearance_class") + " ");
-    String curr_name = board_rules.clearance_matrix.get_name(this.clearance_class);
+    p_window.append(", " + tm.getText("clearanceClass") + " ");
+    String currName = boardRules.clearanceMatrix.get_name(this.clearanceClass);
     p_window.append(
-        curr_name,
+        currName,
         tm.getText("clearance_class_2"),
-        board_rules.clearance_matrix.get_row(this.clearance_class));
+        boardRules.clearanceMatrix.get_row(this.clearanceClass));
     p_window.append(", " + tm.getText("attach_smd") + " ");
-    if (attach_smd_allowed) {
+    if (attachSmdAllowed) {
       p_window.append(" " + tm.getText("on"));
     } else {
       p_window.append(" " + tm.getText("off"));

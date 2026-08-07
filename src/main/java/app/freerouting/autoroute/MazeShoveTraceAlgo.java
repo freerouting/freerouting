@@ -39,277 +39,271 @@ public final class MazeShoveTraceAlgo {
     if (!(p_obstacle_room.get_item() instanceof PolylineTrace obstacle_trace)) {
       return true;
     }
-    int trace_layer = p_obstacle_room.get_layer();
+    int traceLayer = p_obstacle_room.get_layer();
     // only traces with the same halfwidth and the same clearance class can be
     // shoved.
-    if (obstacle_trace.get_half_width() != p_ctrl.trace_half_width[trace_layer]
-        || obstacle_trace.clearance_class_no() != p_ctrl.trace_clearance_class_no) {
+    if (obstacle_trace.get_half_width() != p_ctrl.traceHalfWidth[traceLayer]
+        || obstacle_trace.clearance_class_no() != p_ctrl.traceClearanceClassNo) {
       return true;
     }
-    double compensated_trace_half_width = p_ctrl.compensated_trace_half_width[trace_layer];
-    TileShape from_door_shape = from_door.get_shape();
-    if (from_door_shape.max_width() < 2 * compensated_trace_half_width) {
+    double compensatedTraceHalfWidth = p_ctrl.compensatedTraceHalfWidth[traceLayer];
+    TileShape fromDoorShape = from_door.get_shape();
+    if (fromDoorShape.max_width() < 2 * compensatedTraceHalfWidth) {
       return true;
     }
-    int trace_corner_no = p_obstacle_room.get_index_in_item();
+    int traceCornerNo = p_obstacle_room.get_index_in_item();
 
-    Polyline trace_polyline = obstacle_trace.polyline();
+    Polyline tracePolyline = obstacle_trace.polyline();
 
-    // Check if trace_corner_no allows access to indices up to trace_corner_no + 2
+    // Check if traceCornerNo allows access to indices up to traceCornerNo + 2
     // (needed at lines 133-134 and 136-140)
     // Stale indices can occur when traces are modified during routing (pull-tight,
     // shoving, etc.)
-    if (trace_corner_no < 0 || trace_corner_no >= trace_polyline.arr.length - 2) {
+    if (traceCornerNo < 0 || traceCornerNo >= tracePolyline.arr.length - 2) {
       return false;
     }
-    Collection<ExpansionDoor> room_doors = p_obstacle_room.get_doors();
+    Collection<ExpansionDoor> roomDoors = p_obstacle_room.get_doors();
     // The side of the trace line seen from the doors to expand.
     // Used to determine, if a door is on the right side to put it into the
     // p_door_list.
-    LineSegment shove_line_segment;
+    LineSegment shoveLineSegment;
     if (from_door.dimension == 2) {
       // shove from a link door into the direction of the other link door.
-      CompleteExpansionRoom other_room = from_door.other_room(p_obstacle_room);
-      if (!(other_room instanceof ObstacleExpansionRoom)) {
+      CompleteExpansionRoom otherRoom = from_door.other_room(p_obstacle_room);
+      if (!(otherRoom instanceof ObstacleExpansionRoom)) {
         return false;
       }
-      if (!end_points_matching(obstacle_trace, ((ObstacleExpansionRoom) other_room).get_item())) {
+      if (!end_points_matching(obstacle_trace, ((ObstacleExpansionRoom) otherRoom).get_item())) {
         return false;
       }
-      FloatPoint door_center = from_door_shape.centre_of_gravity();
-      FloatPoint corner_1 = trace_polyline.corner_approx(trace_corner_no);
-      FloatPoint corner_2 = trace_polyline.corner_approx(trace_corner_no + 1);
-      if (corner_1.distance_square(corner_2) < 1) {
-        // shove_line_segment may be reduced to a point
+      FloatPoint doorCenter = fromDoorShape.centre_of_gravity();
+      FloatPoint corner1 = tracePolyline.corner_approx(traceCornerNo);
+      FloatPoint corner2 = tracePolyline.corner_approx(traceCornerNo + 1);
+      if (corner1.distance_square(corner2) < 1) {
+        // shoveLineSegment may be reduced to a point
         return false;
       }
-      boolean shove_into_direction_of_trace_start =
-          door_center.distance_square(corner_2) < door_center.distance_square(corner_1);
-      shove_line_segment = new LineSegment(trace_polyline, trace_corner_no + 1);
-      if (shove_into_direction_of_trace_start) {
+      boolean shoveIntoDirectionOfTraceStart =
+          doorCenter.distance_square(corner2) < doorCenter.distance_square(corner1);
+      shoveLineSegment = new LineSegment(tracePolyline, traceCornerNo + 1);
+      if (shoveIntoDirectionOfTraceStart) {
 
         // shove from the endpoint to the start point of the line segment
-        shove_line_segment = shove_line_segment.opposite();
+        shoveLineSegment = shoveLineSegment.opposite();
       }
     } else {
-      CompleteExpansionRoom from_room = from_door.other_room(p_obstacle_room);
-      FloatPoint from_point = from_room.get_shape().centre_of_gravity();
-      Line shove_trace_line = trace_polyline.arr[trace_corner_no + 1];
-      FloatLine door_line_segment = from_door_shape.diagonal_corner_segment();
-      Side side_of_trace_line = shove_trace_line.side_of(door_line_segment.a, 0);
+      CompleteExpansionRoom fromRoom = from_door.other_room(p_obstacle_room);
+      FloatPoint fromPoint = fromRoom.get_shape().centre_of_gravity();
+      Line shoveTraceLine = tracePolyline.arr[traceCornerNo + 1];
+      FloatLine doorLineSegment = fromDoorShape.diagonal_corner_segment();
+      Side sideOfTraceLine = shoveTraceLine.side_of(doorLineSegment.a, 0);
 
-      FloatLine polar_line_segment = from_door_shape.polar_line_segment(from_point);
+      FloatLine polarLineSegment = fromDoorShape.polar_line_segment(fromPoint);
 
-      boolean door_line_swapped =
-          polar_line_segment.b.distance_square(door_line_segment.a)
-              < polar_line_segment.a.distance_square(door_line_segment.a);
+      boolean doorLineSwapped =
+          polarLineSegment.b.distance_square(doorLineSegment.a)
+              < polarLineSegment.a.distance_square(doorLineSegment.a);
 
-      boolean section_ok;
+      boolean sectionOk;
       // shove only from the right most section to the right or from the left most
       // section to the
       // left.
 
-      double shape_entry_check_distance = compensated_trace_half_width + 5;
-      double check_dist_square = shape_entry_check_distance * shape_entry_check_distance;
+      double shapeEntryCheckDistance = compensatedTraceHalfWidth + 5;
+      double checkDistSquare = shapeEntryCheckDistance * shapeEntryCheckDistance;
 
-      if (p_shove_to_the_left && !door_line_swapped || !p_shove_to_the_left && door_line_swapped) {
-        section_ok =
-            p_list_element.section_no_of_door == p_list_element.door.maze_search_element_count() - 1
-                && (p_list_element.shape_entry.a.distance_square(door_line_segment.b)
-                        <= check_dist_square
-                    || p_list_element.shape_entry.b.distance_square(door_line_segment.b)
-                        <= check_dist_square);
+      if (p_shove_to_the_left && !doorLineSwapped || !p_shove_to_the_left && doorLineSwapped) {
+        sectionOk =
+            p_list_element.sectionNoOfDoor == p_list_element.door.maze_search_element_count() - 1
+                && (p_list_element.shapeEntry.a.distance_square(doorLineSegment.b)
+                        <= checkDistSquare
+                    || p_list_element.shapeEntry.b.distance_square(doorLineSegment.b)
+                        <= checkDistSquare);
       } else {
-        section_ok =
-            p_list_element.section_no_of_door == 0
-                && (p_list_element.shape_entry.a.distance_square(door_line_segment.a)
-                        <= check_dist_square
-                    || p_list_element.shape_entry.b.distance_square(door_line_segment.a)
-                        <= check_dist_square);
+        sectionOk =
+            p_list_element.sectionNoOfDoor == 0
+                && (p_list_element.shapeEntry.a.distance_square(doorLineSegment.a)
+                        <= checkDistSquare
+                    || p_list_element.shapeEntry.b.distance_square(doorLineSegment.a)
+                        <= checkDistSquare);
       }
-      if (!section_ok) {
+      if (!sectionOk) {
         return false;
       }
 
       // create the line segment for shoving
 
-      FloatLine shrinked_line_segment =
-          polar_line_segment.shrink_segment(compensated_trace_half_width);
-      Direction perpendicular_direction = shove_trace_line.direction().turn_45_degree(2);
-      if (side_of_trace_line == Side.ON_THE_LEFT) {
+      FloatLine shrinkedLineSegment = polarLineSegment.shrink_segment(compensatedTraceHalfWidth);
+      Direction perpendicularDirection = shoveTraceLine.direction().turn_45_degree(2);
+      if (sideOfTraceLine == Side.ON_THE_LEFT) {
         if (p_shove_to_the_left) {
-          Line start_closing_line =
-              new Line(shrinked_line_segment.b.round(), perpendicular_direction);
-          shove_line_segment =
+          Line startClosingLine = new Line(shrinkedLineSegment.b.round(), perpendicularDirection);
+          shoveLineSegment =
               new LineSegment(
-                  start_closing_line,
-                  trace_polyline.arr[trace_corner_no + 1],
-                  trace_polyline.arr[trace_corner_no + 2]);
+                  startClosingLine,
+                  tracePolyline.arr[traceCornerNo + 1],
+                  tracePolyline.arr[traceCornerNo + 2]);
         } else {
-          Line start_closing_line =
-              new Line(shrinked_line_segment.a.round(), perpendicular_direction);
-          shove_line_segment =
+          Line startClosingLine = new Line(shrinkedLineSegment.a.round(), perpendicularDirection);
+          shoveLineSegment =
               new LineSegment(
-                  start_closing_line,
-                  trace_polyline.arr[trace_corner_no + 1].opposite(),
-                  trace_polyline.arr[trace_corner_no].opposite());
+                  startClosingLine,
+                  tracePolyline.arr[traceCornerNo + 1].opposite(),
+                  tracePolyline.arr[traceCornerNo].opposite());
         }
       } else {
         if (p_shove_to_the_left) {
-          Line start_closing_line =
-              new Line(shrinked_line_segment.b.round(), perpendicular_direction);
-          shove_line_segment =
+          Line startClosingLine = new Line(shrinkedLineSegment.b.round(), perpendicularDirection);
+          shoveLineSegment =
               new LineSegment(
-                  start_closing_line,
-                  trace_polyline.arr[trace_corner_no + 1].opposite(),
-                  trace_polyline.arr[trace_corner_no].opposite());
+                  startClosingLine,
+                  tracePolyline.arr[traceCornerNo + 1].opposite(),
+                  tracePolyline.arr[traceCornerNo].opposite());
         } else {
-          Line start_closing_line =
-              new Line(shrinked_line_segment.a.round(), perpendicular_direction);
-          shove_line_segment =
+          Line startClosingLine = new Line(shrinkedLineSegment.a.round(), perpendicularDirection);
+          shoveLineSegment =
               new LineSegment(
-                  start_closing_line,
-                  trace_polyline.arr[trace_corner_no + 1],
-                  trace_polyline.arr[trace_corner_no + 2]);
+                  startClosingLine,
+                  tracePolyline.arr[traceCornerNo + 1],
+                  tracePolyline.arr[traceCornerNo + 2]);
         }
       }
     }
-    int trace_half_width = p_ctrl.trace_half_width[trace_layer];
-    int[] net_no_arr = new int[1];
-    net_no_arr[0] = p_ctrl.net_no;
+    int traceHalfWidth = p_ctrl.traceHalfWidth[traceLayer];
+    int[] netNoArr = new int[1];
+    netNoArr[0] = p_ctrl.netNo;
 
-    double shove_width =
+    double shoveWidth =
         p_board.check_trace_segment(
-            shove_line_segment,
-            trace_layer,
-            net_no_arr,
-            trace_half_width,
-            p_ctrl.trace_clearance_class_no,
+            shoveLineSegment,
+            traceLayer,
+            netNoArr,
+            traceHalfWidth,
+            p_ctrl.traceClearanceClassNo,
             true);
-    boolean segment_shortened = false;
-    if (shove_width < Integer.MAX_VALUE) {
-      // shorten shove_line_segment
-      shove_width = shove_width - 1;
-      if (shove_width <= 0) {
+    boolean segmentShortened = false;
+    if (shoveWidth < Integer.MAX_VALUE) {
+      // shorten shoveLineSegment
+      shoveWidth = shoveWidth - 1;
+      if (shoveWidth <= 0) {
         return true;
       }
-      shove_line_segment = shove_line_segment.change_length_approx(shove_width);
-      segment_shortened = true;
+      shoveLineSegment = shoveLineSegment.change_length_approx(shoveWidth);
+      segmentShortened = true;
     }
 
-    FloatPoint from_corner = shove_line_segment.start_point_approx();
-    FloatPoint to_corner = shove_line_segment.end_point_approx();
-    boolean segment_ist_point = from_corner.distance_square(to_corner) < 0.1;
+    FloatPoint fromCorner = shoveLineSegment.start_point_approx();
+    FloatPoint toCorner = shoveLineSegment.end_point_approx();
+    boolean segmentIstPoint = fromCorner.distance_square(toCorner) < 0.1;
 
-    if (!segment_ist_point) {
-      shove_width =
+    if (!segmentIstPoint) {
+      shoveWidth =
           ShoveTraceAlgo.check(
               p_board,
-              shove_line_segment,
+              shoveLineSegment,
               p_shove_to_the_left,
-              trace_layer,
-              net_no_arr,
-              trace_half_width,
-              p_ctrl.trace_clearance_class_no,
-              p_ctrl.max_shove_trace_recursion_depth,
-              p_ctrl.max_shove_via_recursion_depth);
+              traceLayer,
+              netNoArr,
+              traceHalfWidth,
+              p_ctrl.traceClearanceClassNo,
+              p_ctrl.maxShoveTraceRecursionDepth,
+              p_ctrl.maxShoveViaRecursionDepth);
 
-      if (shove_width <= 0) {
+      if (shoveWidth <= 0) {
         return true;
       }
     }
 
     // Put the doors on this side of the room into p_to_door_list with
-    if (segment_shortened) {
-      shove_width = Math.min(shove_width, from_corner.distance(to_corner));
+    if (segmentShortened) {
+      shoveWidth = Math.min(shoveWidth, fromCorner.distance(toCorner));
     }
 
-    Line shove_line = shove_line_segment.get_line();
+    Line shoveLine = shoveLineSegment.get_line();
 
     // From_door_compare_distance is used to check, that a door is between from_door
     // and the end
     // point
     // of the shove line.
-    double from_door_compare_distance;
-    if (from_door.dimension == 2 || segment_ist_point) {
-      from_door_compare_distance = Double.MAX_VALUE;
+    double fromDoorCompareDistance;
+    if (from_door.dimension == 2 || segmentIstPoint) {
+      fromDoorCompareDistance = Double.MAX_VALUE;
     } else {
-      from_door_compare_distance = to_corner.distance_square(from_door_shape.corner_approx(0));
+      fromDoorCompareDistance = toCorner.distance_square(fromDoorShape.corner_approx(0));
     }
 
-    for (ExpansionDoor curr_door : room_doors) {
-      if (curr_door == from_door) {
+    for (ExpansionDoor currDoor : roomDoors) {
+      if (currDoor == from_door) {
         continue;
       }
-      if (curr_door.first_room instanceof ObstacleExpansionRoom room
-          && curr_door.second_room instanceof ObstacleExpansionRoom room1) {
-        Item first_room_item = room.get_item();
-        Item second_room_item = room1.get_item();
-        if (first_room_item != second_room_item) {
+      if (currDoor.firstRoom instanceof ObstacleExpansionRoom room
+          && currDoor.secondRoom instanceof ObstacleExpansionRoom room1) {
+        Item firstRoomItem = room.get_item();
+        Item secondRoomItem = room1.get_item();
+        if (firstRoomItem != secondRoomItem) {
           // there may be topological problems at a trace fork
           continue;
         }
       }
-      TileShape curr_door_shape = curr_door.get_shape();
-      if (curr_door.dimension == 2 && shove_width >= Integer.MAX_VALUE) {
-        boolean add_link_door = curr_door_shape.contains(to_corner);
+      TileShape currDoorShape = currDoor.get_shape();
+      if (currDoor.dimension == 2 && shoveWidth >= Integer.MAX_VALUE) {
+        boolean addLinkDoor = currDoorShape.contains(toCorner);
 
-        if (add_link_door) {
-          FloatLine[] line_sections = curr_door.get_section_segments(compensated_trace_half_width);
-          p_to_door_list.add(new DoorSection(curr_door, 0, line_sections[0]));
+        if (addLinkDoor) {
+          FloatLine[] lineSections = currDoor.get_section_segments(compensatedTraceHalfWidth);
+          p_to_door_list.add(new DoorSection(currDoor, 0, lineSections[0]));
         }
-      } else if (!segment_ist_point) {
-        // now curr_door is 1-dimensional
+      } else if (!segmentIstPoint) {
+        // now currDoor is 1-dimensional
 
-        // check, that curr_door is on the same border_line as p_from_door.
-        FloatLine curr_door_segment = curr_door_shape.diagonal_corner_segment();
-        if (curr_door_segment == null) {
+        // check, that currDoor is on the same borderLine as p_from_door.
+        FloatLine currDoorSegment = currDoorShape.diagonal_corner_segment();
+        if (currDoorSegment == null) {
           FRLogger.trace("MazeShoveTraceAlgo.check_shove_trace_line: door shape is empty");
           continue;
         }
-        Side start_corner_side_of_trace_line = shove_line.side_of(curr_door_segment.a, 0);
-        Side end_corner_side_of_trace_line = shove_line.side_of(curr_door_segment.b, 0);
+        Side startCornerSideOfTraceLine = shoveLine.side_of(currDoorSegment.a, 0);
+        Side endCornerSideOfTraceLine = shoveLine.side_of(currDoorSegment.b, 0);
         if (p_shove_to_the_left) {
-          if (start_corner_side_of_trace_line != Side.ON_THE_LEFT
-              || end_corner_side_of_trace_line != Side.ON_THE_LEFT) {
+          if (startCornerSideOfTraceLine != Side.ON_THE_LEFT
+              || endCornerSideOfTraceLine != Side.ON_THE_LEFT) {
             continue;
           }
         } else {
-          if (start_corner_side_of_trace_line != Side.ON_THE_RIGHT
-              || end_corner_side_of_trace_line != Side.ON_THE_RIGHT) {
+          if (startCornerSideOfTraceLine != Side.ON_THE_RIGHT
+              || endCornerSideOfTraceLine != Side.ON_THE_RIGHT) {
             continue;
           }
         }
-        FloatLine curr_door_line = curr_door_shape.polar_line_segment(from_corner);
-        FloatPoint curr_door_nearest_corner;
-        if (curr_door_line.a.distance_square(from_corner)
-            <= curr_door_line.b.distance_square(from_corner)) {
-          curr_door_nearest_corner = curr_door_line.a;
+        FloatLine currDoorLine = currDoorShape.polar_line_segment(fromCorner);
+        FloatPoint currDoorNearestCorner;
+        if (currDoorLine.a.distance_square(fromCorner)
+            <= currDoorLine.b.distance_square(fromCorner)) {
+          currDoorNearestCorner = currDoorLine.a;
         } else {
-          curr_door_nearest_corner = curr_door_line.b;
+          currDoorNearestCorner = currDoorLine.b;
         }
-        if (to_corner.distance_square(curr_door_nearest_corner) >= from_door_compare_distance) {
-          // curr_door is not located into the direction of to_corner.
+        if (toCorner.distance_square(currDoorNearestCorner) >= fromDoorCompareDistance) {
+          // currDoor is not located into the direction of toCorner.
           continue;
         }
-        FloatPoint curr_door_projection = curr_door_nearest_corner.projection_approx(shove_line);
+        FloatPoint currDoorProjection = currDoorNearestCorner.projection_approx(shoveLine);
 
-        if (curr_door_projection.distance(from_corner) + compensated_trace_half_width
-            <= shove_width) {
-          FloatLine[] line_sections = curr_door.get_section_segments(compensated_trace_half_width);
-          for (int i = 0; i < line_sections.length; i++) {
-            FloatLine curr_line_section = line_sections[i];
-            FloatPoint curr_section_nearest_corner;
-            if (curr_line_section.a.distance_square(from_corner)
-                <= curr_line_section.b.distance_square(from_corner)) {
-              curr_section_nearest_corner = curr_line_section.a;
+        if (currDoorProjection.distance(fromCorner) + compensatedTraceHalfWidth <= shoveWidth) {
+          FloatLine[] lineSections = currDoor.get_section_segments(compensatedTraceHalfWidth);
+          for (int i = 0; i < lineSections.length; i++) {
+            FloatLine currLineSection = lineSections[i];
+            FloatPoint currSectionNearestCorner;
+            if (currLineSection.a.distance_square(fromCorner)
+                <= currLineSection.b.distance_square(fromCorner)) {
+              currSectionNearestCorner = currLineSection.a;
             } else {
-              curr_section_nearest_corner = curr_line_section.b;
+              currSectionNearestCorner = currLineSection.b;
             }
-            FloatPoint curr_section_projection =
-                curr_section_nearest_corner.projection_approx(shove_line);
-            if (curr_section_projection.distance(from_corner) <= shove_width) {
-              p_to_door_list.add(new DoorSection(curr_door, i, curr_line_section));
+            FloatPoint currSectionProjection =
+                currSectionNearestCorner.projection_approx(shoveLine);
+            if (currSectionProjection.distance(fromCorner) <= shoveWidth) {
+              p_to_door_list.add(new DoorSection(currDoor, i, currLineSection));
             }
           }
         }
@@ -329,33 +323,33 @@ public final class MazeShoveTraceAlgo {
     if (!p_trace.shares_net(p_from_item)) {
       return false;
     }
-    boolean points_matching;
+    boolean pointsMatching;
     if (p_from_item instanceof DrillItem item) {
-      Point from_center = item.get_center();
-      points_matching =
-          from_center.equals(p_trace.first_corner()) || from_center.equals(p_trace.last_corner());
+      Point fromCenter = item.get_center();
+      pointsMatching =
+          fromCenter.equals(p_trace.first_corner()) || fromCenter.equals(p_trace.last_corner());
     } else if (p_from_item instanceof PolylineTrace from_trace) {
-      points_matching =
+      pointsMatching =
           p_trace.first_corner().equals(from_trace.first_corner())
               || p_trace.first_corner().equals(from_trace.last_corner())
               || p_trace.last_corner().equals(from_trace.first_corner())
               || p_trace.last_corner().equals(from_trace.last_corner());
     } else {
-      points_matching = false;
+      pointsMatching = false;
     }
-    return points_matching;
+    return pointsMatching;
   }
 
   public static class DoorSection {
 
     final ExpansionDoor door;
-    final int section_no;
-    final FloatLine section_line;
+    final int sectionNo;
+    final FloatLine sectionLine;
 
     DoorSection(ExpansionDoor p_door, int p_section_no, FloatLine p_section_line) {
       door = p_door;
-      section_no = p_section_no;
-      section_line = p_section_line;
+      sectionNo = p_section_no;
+      sectionLine = p_section_line;
     }
   }
 }

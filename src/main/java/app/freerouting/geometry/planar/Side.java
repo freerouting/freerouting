@@ -5,8 +5,8 @@ package app.freerouting.geometry.planar;
  */
 public final class Side {
 
-  public static final Side ON_THE_LEFT = new Side("on_the_left");
-  public static final Side ON_THE_RIGHT = new Side("on_the_right");
+  public static final Side ON_THE_LEFT = new Side("onTheLeft");
+  public static final Side ON_THE_RIGHT = new Side("onTheRight");
   public static final Side COLLINEAR = new Side("collinear");
   private final String name;
 

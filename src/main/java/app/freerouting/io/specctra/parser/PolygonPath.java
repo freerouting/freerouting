@@ -26,12 +26,12 @@ public class PolygonPath extends Path {
     p_identifier_type.write(this.layer.name, p_file);
     p_file.write(" ");
     p_file.write(String.valueOf(this.width));
-    int corner_count = coordinate_arr.length / 2;
-    for (int i = 0; i < corner_count; i++) {
+    int cornerCount = coordinateArr.length / 2;
+    for (int i = 0; i < cornerCount; i++) {
       p_file.new_line();
-      p_file.write(String.valueOf(coordinate_arr[2 * i]));
+      p_file.write(String.valueOf(coordinateArr[2 * i]));
       p_file.write(" ");
-      p_file.write(String.valueOf(coordinate_arr[2 * i + 1]));
+      p_file.write(String.valueOf(coordinateArr[2 * i + 1]));
     }
     p_file.end_scope();
   }
@@ -44,14 +44,14 @@ public class PolygonPath extends Path {
     p_identifier_type.write(this.layer.name, p_file);
     p_file.write(" ");
     p_file.write(String.valueOf(this.width));
-    int corner_count = coordinate_arr.length / 2;
-    for (int i = 0; i < corner_count; i++) {
+    int cornerCount = coordinateArr.length / 2;
+    for (int i = 0; i < cornerCount; i++) {
       p_file.new_line();
-      int curr_coor = (int) Math.round(coordinate_arr[2 * i]);
-      p_file.write(String.valueOf(curr_coor));
+      int currCoor = (int) Math.round(coordinateArr[2 * i]);
+      p_file.write(String.valueOf(currCoor));
       p_file.write(" ");
-      curr_coor = (int) Math.round(coordinate_arr[2 * i + 1]);
-      p_file.write(String.valueOf(curr_coor));
+      currCoor = (int) Math.round(coordinateArr[2 * i + 1]);
+      p_file.write(String.valueOf(currCoor));
     }
     p_file.end_scope();
   }
@@ -59,23 +59,23 @@ public class PolygonPath extends Path {
   @Override
   public app.freerouting.geometry.planar.Shape transform_to_board(
       CoordinateTransform p_coordinate_transform) {
-    FloatPoint[] corner_arr = new FloatPoint[this.coordinate_arr.length / 2];
-    double[] curr_point = new double[2];
-    for (int i = 0; i < corner_arr.length; i++) {
-      curr_point[0] = this.coordinate_arr[2 * i];
-      curr_point[1] = this.coordinate_arr[2 * i + 1];
-      corner_arr[i] = p_coordinate_transform.dsn_to_board(curr_point);
+    FloatPoint[] cornerArr = new FloatPoint[this.coordinateArr.length / 2];
+    double[] currPoint = new double[2];
+    for (int i = 0; i < cornerArr.length; i++) {
+      currPoint[0] = this.coordinateArr[2 * i];
+      currPoint[1] = this.coordinateArr[2 * i + 1];
+      cornerArr[i] = p_coordinate_transform.dsn_to_board(currPoint);
     }
     double offset = p_coordinate_transform.dsn_to_board(this.width) / 2;
-    if (corner_arr.length <= 2) {
-      IntOctagon bounding_oct = FloatPoint.bounding_octagon(corner_arr);
-      return bounding_oct.enlarge(offset);
+    if (cornerArr.length <= 2) {
+      IntOctagon boundingOct = FloatPoint.bounding_octagon(cornerArr);
+      return boundingOct.enlarge(offset);
     }
-    IntPoint[] rounded_corner_arr = new IntPoint[corner_arr.length];
-    for (int i = 0; i < corner_arr.length; i++) {
-      rounded_corner_arr[i] = corner_arr[i].round();
+    IntPoint[] roundedCornerArr = new IntPoint[cornerArr.length];
+    for (int i = 0; i < cornerArr.length; i++) {
+      roundedCornerArr[i] = cornerArr[i].round();
     }
-    app.freerouting.geometry.planar.Shape result = new PolygonShape(rounded_corner_arr);
+    app.freerouting.geometry.planar.Shape result = new PolygonShape(roundedCornerArr);
     if (offset > 0) {
       result = result.bounding_tile().enlarge(offset);
     }
@@ -85,23 +85,23 @@ public class PolygonPath extends Path {
   @Override
   public app.freerouting.geometry.planar.Shape transform_to_board_rel(
       CoordinateTransform p_coordinate_transform) {
-    FloatPoint[] corner_arr = new FloatPoint[this.coordinate_arr.length / 2];
-    double[] curr_point = new double[2];
-    for (int i = 0; i < corner_arr.length; i++) {
-      curr_point[0] = this.coordinate_arr[2 * i];
-      curr_point[1] = this.coordinate_arr[2 * i + 1];
-      corner_arr[i] = p_coordinate_transform.dsn_to_board_rel(curr_point);
+    FloatPoint[] cornerArr = new FloatPoint[this.coordinateArr.length / 2];
+    double[] currPoint = new double[2];
+    for (int i = 0; i < cornerArr.length; i++) {
+      currPoint[0] = this.coordinateArr[2 * i];
+      currPoint[1] = this.coordinateArr[2 * i + 1];
+      cornerArr[i] = p_coordinate_transform.dsn_to_board_rel(currPoint);
     }
     double offset = p_coordinate_transform.dsn_to_board(this.width) / 2;
-    if (corner_arr.length <= 2) {
-      IntOctagon bounding_oct = FloatPoint.bounding_octagon(corner_arr);
-      return bounding_oct.enlarge(offset);
+    if (cornerArr.length <= 2) {
+      IntOctagon boundingOct = FloatPoint.bounding_octagon(cornerArr);
+      return boundingOct.enlarge(offset);
     }
-    IntPoint[] rounded_corner_arr = new IntPoint[corner_arr.length];
-    for (int i = 0; i < corner_arr.length; i++) {
-      rounded_corner_arr[i] = corner_arr[i].round();
+    IntPoint[] roundedCornerArr = new IntPoint[cornerArr.length];
+    for (int i = 0; i < cornerArr.length; i++) {
+      roundedCornerArr[i] = cornerArr[i].round();
     }
-    app.freerouting.geometry.planar.Shape result = new PolygonShape(rounded_corner_arr);
+    app.freerouting.geometry.planar.Shape result = new PolygonShape(roundedCornerArr);
     if (offset > 0) {
       result = result.bounding_tile().enlarge(offset);
     }
@@ -116,15 +116,15 @@ public class PolygonPath extends Path {
     bounds[1] = Integer.MAX_VALUE;
     bounds[2] = Integer.MIN_VALUE;
     bounds[3] = Integer.MIN_VALUE;
-    for (int i = 0; i < coordinate_arr.length; i++) {
+    for (int i = 0; i < coordinateArr.length; i++) {
       if (i % 2 == 0) {
         // x coordinate
-        bounds[0] = Math.min(bounds[0], coordinate_arr[i] - offset);
-        bounds[2] = Math.max(bounds[2], coordinate_arr[i]) + offset;
+        bounds[0] = Math.min(bounds[0], coordinateArr[i] - offset);
+        bounds[2] = Math.max(bounds[2], coordinateArr[i]) + offset;
       } else {
         // x coordinate
-        bounds[1] = Math.min(bounds[1], coordinate_arr[i] - offset);
-        bounds[3] = Math.max(bounds[3], coordinate_arr[i] + offset);
+        bounds[1] = Math.min(bounds[1], coordinateArr[i] - offset);
+        bounds[3] = Math.max(bounds[3], coordinateArr[i] + offset);
       }
     }
     return new Rectangle(layer, bounds);

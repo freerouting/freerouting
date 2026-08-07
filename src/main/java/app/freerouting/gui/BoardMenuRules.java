@@ -8,56 +8,51 @@ import javax.swing.JMenuItem;
 /** Creates the rules menu of a board frame. */
 public final class BoardMenuRules extends JMenu {
 
-  private final BoardFrame board_frame;
+  private final BoardFrame boardFrame;
   private final TextManager tm;
 
   /** Creates a new instance of BoardRulesMenu */
   private BoardMenuRules(BoardFrame p_board_frame) {
-    board_frame = p_board_frame;
+    boardFrame = p_board_frame;
     tm = new TextManager(this.getClass(), p_board_frame.get_locale());
   }
 
   /** Returns a new windows menu for the board frame. */
   public static BoardMenuRules get_instance(BoardFrame p_board_frame) {
-    final BoardMenuRules rules_menu = new BoardMenuRules(p_board_frame);
+    final BoardMenuRules rulesMenu = new BoardMenuRules(p_board_frame);
 
-    rules_menu.setText(rules_menu.tm.getText("rules"));
+    rulesMenu.setText(rulesMenu.tm.getText("rules"));
 
-    JMenuItem rules_clearance_menuitem = new JMenuItem();
-    rules_clearance_menuitem.setText(rules_menu.tm.getText("clearance_matrix"));
-    rules_clearance_menuitem.addActionListener(
-        _ -> rules_menu.board_frame.clearance_matrix_window.setVisible(true));
-    rules_clearance_menuitem.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "rules_clearance_menuitem", rules_clearance_menuitem.getText()));
-    rules_menu.add(rules_clearance_menuitem);
+    JMenuItem rulesClearanceMenuitem = new JMenuItem();
+    rulesClearanceMenuitem.setText(rulesMenu.tm.getText("clearanceMatrix"));
+    rulesClearanceMenuitem.addActionListener(
+        _ -> rulesMenu.boardFrame.clearanceMatrixWindow.setVisible(true));
+    rulesClearanceMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("rulesClearanceMenuitem", rulesClearanceMenuitem.getText()));
+    rulesMenu.add(rulesClearanceMenuitem);
 
-    JMenuItem rules_vias_menuitem = new JMenuItem();
-    rules_vias_menuitem.setText(rules_menu.tm.getText("vias"));
-    rules_vias_menuitem.addActionListener(_ -> rules_menu.board_frame.via_window.setVisible(true));
-    rules_vias_menuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("rules_vias_menuitem", rules_vias_menuitem.getText()));
-    rules_menu.add(rules_vias_menuitem);
+    JMenuItem rulesViasMenuitem = new JMenuItem();
+    rulesViasMenuitem.setText(rulesMenu.tm.getText("vias"));
+    rulesViasMenuitem.addActionListener(_ -> rulesMenu.boardFrame.viaWindow.setVisible(true));
+    rulesViasMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("rulesViasMenuitem", rulesViasMenuitem.getText()));
+    rulesMenu.add(rulesViasMenuitem);
 
-    JMenuItem rules_nets_menuitem = new JMenuItem();
-    rules_nets_menuitem.setText(rules_menu.tm.getText("nets"));
-    rules_nets_menuitem.addActionListener(
-        _ -> rules_menu.board_frame.net_info_window.setVisible(true));
-    rules_nets_menuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("rules_nets_menuitem", rules_nets_menuitem.getText()));
-    rules_menu.add(rules_nets_menuitem);
+    JMenuItem rulesNetsMenuitem = new JMenuItem();
+    rulesNetsMenuitem.setText(rulesMenu.tm.getText("nets"));
+    rulesNetsMenuitem.addActionListener(_ -> rulesMenu.boardFrame.netInfoWindow.setVisible(true));
+    rulesNetsMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("rulesNetsMenuitem", rulesNetsMenuitem.getText()));
+    rulesMenu.add(rulesNetsMenuitem);
 
-    JMenuItem rules_net_class_menuitem = new JMenuItem();
-    rules_net_class_menuitem.setText(rules_menu.tm.getText("net_classes"));
-    rules_net_class_menuitem.addActionListener(
-        _ -> rules_menu.board_frame.edit_net_rules_window.setVisible(true));
-    rules_net_class_menuitem.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "rules_net_class_menuitem", rules_net_class_menuitem.getText()));
-    rules_menu.add(rules_net_class_menuitem);
+    JMenuItem rulesNetClassMenuitem = new JMenuItem();
+    rulesNetClassMenuitem.setText(rulesMenu.tm.getText("netClasses"));
+    rulesNetClassMenuitem.addActionListener(
+        _ -> rulesMenu.boardFrame.editNetRulesWindow.setVisible(true));
+    rulesNetClassMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("rulesNetClassMenuitem", rulesNetClassMenuitem.getText()));
+    rulesMenu.add(rulesNetClassMenuitem);
 
-    return rules_menu;
+    return rulesMenu;
   }
 }

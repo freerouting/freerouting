@@ -4,29 +4,29 @@ package app.freerouting.autoroute;
 public class MazeSearchElement {
 
   /** true, if this door is already occupied by the maze expanding algorithm */
-  public boolean is_occupied;
+  public boolean isOccupied;
 
   /** Used for backtracking in the maze expanding algorithm */
-  public ExpandableObject backtrack_door;
+  public ExpandableObject backtrackDoor;
 
-  public int section_no_of_backtrack_door;
-  public boolean room_ripped;
+  public int sectionNoOfBacktrackDoor;
+  public boolean roomRipped;
   public Adjustment adjustment = Adjustment.NONE;
 
   /**
-   * The ripup cost paid to enter this door's room via the maze search. Zero when room_ripped is
+   * The ripup cost paid to enter this door's room via the maze search. Zero when roomRipped is
    * false.
    */
-  public int ripup_cost;
+  public int ripupCost;
 
   /** Resets this MazeSearchElement for autorouting the next connection. */
   public void reset() {
-    is_occupied = false;
-    backtrack_door = null;
-    section_no_of_backtrack_door = 0;
-    room_ripped = false;
+    isOccupied = false;
+    backtrackDoor = null;
+    sectionNoOfBacktrackDoor = 0;
+    roomRipped = false;
     adjustment = Adjustment.NONE;
-    ripup_cost = 0;
+    ripupCost = 0;
   }
 
   public enum Adjustment {

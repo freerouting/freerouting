@@ -23,7 +23,7 @@ public class SessionToEagle extends JFrame {
   private final IJFlexScanner scanner;
 
   /** The generated Eagle script file. */
-  private final OutputStreamWriter out_file;
+  private final OutputStreamWriter outFile;
 
   /**
    * Some information is read from the board, because it is not contained in the specctra session
@@ -32,15 +32,15 @@ public class SessionToEagle extends JFrame {
   private final BasicBoard board;
 
   /** The layer structure in specctra format */
-  private final LayerStructure specctra_layer_structure;
+  private final LayerStructure specctraLayerStructure;
 
   private final Unit unit;
 
   /** The scale factor for transforming coordinates from the session file to Eagle */
-  private final double session_file_scale_denominator;
+  private final double sessionFileScaleDenominator;
 
   /** The scale factor for transforming coordinates from the board to Eagle */
-  private final double board_scale_factor;
+  private final double boardScaleFactor;
 
   SessionToEagle(
       IJFlexScanner p_scanner,
@@ -50,12 +50,12 @@ public class SessionToEagle extends JFrame {
       double p_session_file_scale_dominator,
       double p_board_scale_factor) {
     scanner = p_scanner;
-    out_file = p_out_file;
+    outFile = p_out_file;
     board = p_board;
-    this.specctra_layer_structure = new LayerStructure(p_board.layer_structure);
+    this.specctraLayerStructure = new LayerStructure(p_board.layerStructure);
     unit = p_unit;
-    session_file_scale_denominator = p_session_file_scale_dominator;
-    board_scale_factor = p_board_scale_factor;
+    sessionFileScaleDenominator = p_session_file_scale_dominator;
+    boardScaleFactor = p_board_scale_factor;
   }
 
   public static boolean get_instance(
@@ -68,22 +68,22 @@ public class SessionToEagle extends JFrame {
 
     IJFlexScanner scanner = new SpecctraDsnStreamReader(p_session);
 
-    // create a file_writer for the eagle script file.
-    OutputStreamWriter file_writer = new OutputStreamWriter(p_output_stream);
+    // create a fileWriter for the eagle script file.
+    OutputStreamWriter fileWriter = new OutputStreamWriter(p_output_stream);
 
-    double board_scale_factor = p_board.communication.coordinate_transform.board_to_dsn(1);
-    SessionToEagle new_instance =
+    double boardScaleFactor = p_board.communication.coordinateTransform.board_to_dsn(1);
+    SessionToEagle newInstance =
         new SessionToEagle(
             scanner,
-            file_writer,
+            fileWriter,
             p_board,
             p_board.communication.unit,
             p_board.communication.resolution,
-            board_scale_factor);
+            boardScaleFactor);
 
     boolean result;
     try {
-      result = new_instance.process_session_scope();
+      result = newInstance.process_session_scope();
     } catch (IOException e) {
       FRLogger.error("unable to process session scope", e);
       result = false;
@@ -92,7 +92,7 @@ public class SessionToEagle extends JFrame {
     // close files
     try {
       p_session.close();
-      file_writer.close();
+      fileWriter.close();
     } catch (IOException e) {
       FRLogger.error("unable to close files", e);
     }
@@ -103,18 +103,18 @@ public class SessionToEagle extends JFrame {
   private boolean process_session_scope() throws IOException {
 
     // read the first line of the session file
-    Object next_token = null;
+    Object nextToken = null;
     for (int i = 0; i < 3; i++) {
-      next_token = this.scanner.next_token();
-      boolean keyword_ok = true;
+      nextToken = this.scanner.next_token();
+      boolean keywordOk = true;
       if (i == 0) {
-        keyword_ok = next_token == Keyword.OPEN_BRACKET;
+        keywordOk = nextToken == Keyword.OPEN_BRACKET;
       } else if (i == 1) {
-        keyword_ok = next_token == Keyword.SESSION;
+        keywordOk = nextToken == Keyword.SESSION;
         this.scanner.yybegin(
             SpecctraDsnStreamReader.NAME); // to overread the name of the pcb for i = 2
       }
-      if (!keyword_ok) {
+      if (!keywordOk) {
         FRLogger.warn("SessionToEagle.process_session_scope specctra session file format expected");
         return false;
       }
@@ -122,65 +122,65 @@ public class SessionToEagle extends JFrame {
 
     // Write the header of the eagle script file.
 
-    this.out_file.write("GRID ");
-    this.out_file.write(this.unit.toString());
-    this.out_file.write("\n");
-    this.out_file.write("SET WIRE_BEND 2\n");
-    this.out_file.write("SET OPTIMIZING OFF\n");
+    this.outFile.write("GRID ");
+    this.outFile.write(this.unit.toString());
+    this.outFile.write("\n");
+    this.outFile.write("SET WIRE_BEND 2\n");
+    this.outFile.write("SET OPTIMIZING OFF\n");
 
     // Activate all layers in Eagle.
 
-    for (int i = 0; i < this.board.layer_structure.arr.length; i++) {
-      this.out_file.write("LAYER " + this.get_eagle_layer_string(i) + ";\n");
+    for (int i = 0; i < this.board.layerStructure.arr.length; i++) {
+      this.outFile.write("LAYER " + this.get_eagle_layer_string(i) + ";\n");
     }
 
-    this.out_file.write("LAYER 17;\n");
-    this.out_file.write("LAYER 18;\n");
-    this.out_file.write("LAYER 19;\n");
-    this.out_file.write("LAYER 20;\n");
-    this.out_file.write("LAYER 23;\n");
-    this.out_file.write("LAYER 24;\n");
+    this.outFile.write("LAYER 17;\n");
+    this.outFile.write("LAYER 18;\n");
+    this.outFile.write("LAYER 19;\n");
+    this.outFile.write("LAYER 20;\n");
+    this.outFile.write("LAYER 23;\n");
+    this.outFile.write("LAYER 24;\n");
 
     // Generate Code to remove the complete route.
     // Write a bounding rectangle with GROUP (Min_X-1 Min_Y-1) (Max_X+1 Max_Y+1);
 
-    IntBox board_bounding_box = this.board.get_bounding_box();
+    IntBox boardBoundingBox = this.board.get_bounding_box();
 
-    float min_x = (float) this.board_scale_factor * (board_bounding_box.ll.x - 1);
-    float min_y = (float) this.board_scale_factor * (board_bounding_box.ll.y - 1);
-    float max_x = (float) this.board_scale_factor * (board_bounding_box.ur.x + 1);
-    float max_y = (float) this.board_scale_factor * (board_bounding_box.ur.y + 1);
+    float minX = (float) this.boardScaleFactor * (boardBoundingBox.ll.x - 1);
+    float minY = (float) this.boardScaleFactor * (boardBoundingBox.ll.y - 1);
+    float maxX = (float) this.boardScaleFactor * (boardBoundingBox.ur.x + 1);
+    float maxY = (float) this.boardScaleFactor * (boardBoundingBox.ur.y + 1);
 
-    this.out_file.write("GROUP (");
-    this.out_file.write(String.valueOf(min_x));
-    this.out_file.write(" ");
-    this.out_file.write(String.valueOf(min_y));
-    this.out_file.write(") (");
-    this.out_file.write(String.valueOf(max_x));
-    this.out_file.write(" ");
-    this.out_file.write(String.valueOf(max_y));
-    this.out_file.write(");\n");
-    this.out_file.write("RIPUP;\n");
+    this.outFile.write("GROUP (");
+    this.outFile.write(String.valueOf(minX));
+    this.outFile.write(" ");
+    this.outFile.write(String.valueOf(minY));
+    this.outFile.write(") (");
+    this.outFile.write(String.valueOf(maxX));
+    this.outFile.write(" ");
+    this.outFile.write(String.valueOf(maxY));
+    this.outFile.write(");\n");
+    this.outFile.write("RIPUP;\n");
 
     // read the direct subscopes of the session scope
     for (; ; ) {
-      Object prev_token = next_token;
-      next_token = this.scanner.next_token();
-      if (next_token == null) {
+      Object prevToken = nextToken;
+      nextToken = this.scanner.next_token();
+      if (nextToken == null) {
         // end of file
         return true;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == Keyword.OPEN_BRACKET) {
-        if (next_token == Keyword.ROUTES) {
+      if (prevToken == Keyword.OPEN_BRACKET) {
+        if (nextToken == Keyword.ROUTES) {
           if (!process_routes_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.PLACEMENT_SCOPE) {
+        } else if (nextToken == Keyword.PLACEMENT_SCOPE) {
           if (!process_placement_scope()) {
             return false;
           }
@@ -191,28 +191,28 @@ public class SessionToEagle extends JFrame {
       }
     }
     // Wird nur einmal am End benoetigt!
-    this.out_file.write("RATSNEST\n");
+    this.outFile.write("RATSNEST\n");
     return true;
   }
 
   private boolean process_placement_scope() throws IOException {
     // read the component scopes
-    Object next_token = null;
+    Object nextToken = null;
     for (; ; ) {
-      Object prev_token = next_token;
-      next_token = this.scanner.next_token();
-      if (next_token == null) {
+      Object prevToken = nextToken;
+      nextToken = this.scanner.next_token();
+      if (nextToken == null) {
         // unexpected end of file
         return false;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == Keyword.OPEN_BRACKET) {
+      if (prevToken == Keyword.OPEN_BRACKET) {
 
-        if (next_token == Keyword.COMPONENT_SCOPE) {
+        if (nextToken == Keyword.COMPONENT_SCOPE) {
           if (!process_component_placement()) {
             return false;
           }
@@ -227,32 +227,32 @@ public class SessionToEagle extends JFrame {
   }
 
   private boolean process_component_placement() throws IOException {
-    ComponentPlacement component_placement = Component.read_scope(this.scanner);
-    if (component_placement == null) {
+    ComponentPlacement componentPlacement = Component.read_scope(this.scanner);
+    if (componentPlacement == null) {
       return false;
     }
-    for (ComponentPlacement.ComponentLocation curr_location : component_placement.locations) {
-      this.out_file.write("ROTATE =");
+    for (ComponentPlacement.ComponentLocation curr_location : componentPlacement.locations) {
+      this.outFile.write("ROTATE =");
       int rotation = (int) Math.round(curr_location.rotation);
-      String rotation_string;
-      if (curr_location.is_front) {
-        rotation_string = "R" + rotation;
+      String rotationString;
+      if (curr_location.isFront) {
+        rotationString = "R" + rotation;
       } else {
-        rotation_string = "MR" + rotation;
+        rotationString = "MR" + rotation;
       }
-      this.out_file.write(rotation_string);
-      this.out_file.write(" '");
-      this.out_file.write(curr_location.name);
-      this.out_file.write("';\n");
-      this.out_file.write("move '");
-      this.out_file.write(curr_location.name);
-      this.out_file.write("' (");
-      double x_coor = curr_location.coor[0] / this.session_file_scale_denominator;
-      this.out_file.write(String.valueOf(x_coor));
-      this.out_file.write(" ");
-      double y_coor = curr_location.coor[1] / this.session_file_scale_denominator;
-      this.out_file.write(String.valueOf(y_coor));
-      this.out_file.write(");\n");
+      this.outFile.write(rotationString);
+      this.outFile.write(" '");
+      this.outFile.write(curr_location.name);
+      this.outFile.write("';\n");
+      this.outFile.write("move '");
+      this.outFile.write(curr_location.name);
+      this.outFile.write("' (");
+      double xCoor = curr_location.coor[0] / this.sessionFileScaleDenominator;
+      this.outFile.write(String.valueOf(xCoor));
+      this.outFile.write(" ");
+      double yCoor = curr_location.coor[1] / this.sessionFileScaleDenominator;
+      this.outFile.write(String.valueOf(yCoor));
+      this.outFile.write(");\n");
     }
     return true;
   }
@@ -260,22 +260,22 @@ public class SessionToEagle extends JFrame {
   private boolean process_routes_scope() throws IOException {
     // read the direct subscopes of the routes scope
     boolean result = true;
-    Object next_token = null;
+    Object nextToken = null;
     for (; ; ) {
-      Object prev_token = next_token;
-      next_token = this.scanner.next_token();
-      if (next_token == null) {
+      Object prevToken = nextToken;
+      nextToken = this.scanner.next_token();
+      if (nextToken == null) {
         // unexpected end of file
         return false;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == Keyword.OPEN_BRACKET) {
+      if (prevToken == Keyword.OPEN_BRACKET) {
 
-        if (next_token == Keyword.NETWORK_OUT) {
+        if (nextToken == Keyword.NETWORK_OUT) {
           result = process_network_scope();
         } else {
           // skip unknown scope
@@ -288,23 +288,23 @@ public class SessionToEagle extends JFrame {
 
   private boolean process_network_scope() throws IOException {
     boolean result = true;
-    Object next_token = null;
+    Object nextToken = null;
     // read the net scopes
     for (; ; ) {
-      Object prev_token = next_token;
-      next_token = this.scanner.next_token();
-      if (next_token == null) {
+      Object prevToken = nextToken;
+      nextToken = this.scanner.next_token();
+      if (nextToken == null) {
         // unexpected end of file
         return false;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == Keyword.OPEN_BRACKET) {
+      if (prevToken == Keyword.OPEN_BRACKET) {
 
-        if (next_token == Keyword.NET) {
+        if (nextToken == Keyword.NET) {
           result = process_net_scope();
         } else {
           // skip unknown scope
@@ -317,38 +317,38 @@ public class SessionToEagle extends JFrame {
 
   private boolean process_net_scope() throws IOException {
     // read the net name
-    Object next_token = this.scanner.next_token();
-    if (!(next_token instanceof String net_name)) {
+    Object nextToken = this.scanner.next_token();
+    if (!(nextToken instanceof String netName)) {
       FRLogger.warn(
           "SessionToEagle.process_net_scope: String expected at '"
               + this.scanner.get_scope_identifier()
               + "'");
       return false;
     }
-    this.scanner.set_scope_identifier(net_name);
+    this.scanner.set_scope_identifier(netName);
 
-    // Delete all unfixed traces and vias for net net_name in Eagle's database.
+    // Delete all unfixed traces and vias for net netName in Eagle's database.
 
     // read the wires and vias of this net
     for (; ; ) {
-      Object prev_token = next_token;
-      next_token = this.scanner.next_token();
-      if (next_token == null) {
+      Object prevToken = nextToken;
+      nextToken = this.scanner.next_token();
+      if (nextToken == null) {
         // end of file
         return true;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == Keyword.OPEN_BRACKET) {
-        if (next_token == Keyword.WIRE) {
-          if (!process_wire_scope(net_name)) {
+      if (prevToken == Keyword.OPEN_BRACKET) {
+        if (nextToken == Keyword.WIRE) {
+          if (!process_wire_scope(netName)) {
             return false;
           }
-        } else if (next_token == Keyword.VIA) {
-          if (!process_via_scope(net_name)) {
+        } else if (nextToken == Keyword.VIA) {
+          if (!process_via_scope(netName)) {
             return false;
           }
         } else {
@@ -360,85 +360,85 @@ public class SessionToEagle extends JFrame {
   }
 
   private boolean process_wire_scope(String p_net_name) throws IOException {
-    PolygonPath wire_path = null;
-    Object next_token = null;
+    PolygonPath wirePath = null;
+    Object nextToken = null;
     for (; ; ) {
-      Object prev_token = next_token;
-      next_token = this.scanner.next_token();
-      if (next_token == null) {
+      Object prevToken = nextToken;
+      nextToken = this.scanner.next_token();
+      if (nextToken == null) {
         FRLogger.warn(
             "SessionToEagle.process_wire_scope: unexpected end of file at '"
                 + this.scanner.get_scope_identifier()
                 + "'");
         return false;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
-      if (prev_token == Keyword.OPEN_BRACKET) {
-        if (next_token == Keyword.POLYGON_PATH) {
-          wire_path = Shape.read_polygon_path_scope(this.scanner, this.specctra_layer_structure);
+      if (prevToken == Keyword.OPEN_BRACKET) {
+        if (nextToken == Keyword.POLYGON_PATH) {
+          wirePath = Shape.read_polygon_path_scope(this.scanner, this.specctraLayerStructure);
         } else {
           ScopeKeyword.skip_scope(this.scanner);
         }
       }
     }
-    if (wire_path == null) {
+    if (wirePath == null) {
       // conduction areas are skipped
       return true;
     }
 
-    this.out_file.write("CHANGE LAYER ");
+    this.outFile.write("CHANGE LAYER ");
 
-    this.out_file.write(wire_path.layer.name);
-    this.out_file.write(";\n");
+    this.outFile.write(wirePath.layer.name);
+    this.outFile.write(";\n");
 
     // WIRE ['signal_name'] [width] [ROUND | FLAT]  [curve | @radius]
 
-    this.out_file.write("WIRE '");
+    this.outFile.write("WIRE '");
 
-    this.out_file.write(p_net_name);
-    this.out_file.write("' ");
-    double wire_width = wire_path.width / this.session_file_scale_denominator;
-    this.out_file.write(String.valueOf(wire_width));
-    this.out_file.write(" (");
-    for (int i = 0; i < wire_path.coordinate_arr.length; i++) {
-      double wire_coor = wire_path.coordinate_arr[i] / this.session_file_scale_denominator;
-      this.out_file.write(String.valueOf(wire_coor));
+    this.outFile.write(p_net_name);
+    this.outFile.write("' ");
+    double wireWidth = wirePath.width / this.sessionFileScaleDenominator;
+    this.outFile.write(String.valueOf(wireWidth));
+    this.outFile.write(" (");
+    for (int i = 0; i < wirePath.coordinateArr.length; i++) {
+      double wireCoor = wirePath.coordinateArr[i] / this.sessionFileScaleDenominator;
+      this.outFile.write(String.valueOf(wireCoor));
       if (i % 2 == 0) {
-        this.out_file.write(" ");
+        this.outFile.write(" ");
       } else {
-        if (i == wire_path.coordinate_arr.length - 1) {
-          this.out_file.write(")");
+        if (i == wirePath.coordinateArr.length - 1) {
+          this.outFile.write(")");
         } else {
-          this.out_file.write(") (");
+          this.outFile.write(") (");
         }
       }
     }
-    this.out_file.write(";\n");
+    this.outFile.write(";\n");
 
     return true;
   }
 
   private boolean process_via_scope(String p_net_name) throws IOException {
     // read the padstack name
-    Object next_token = this.scanner.next_token();
-    if (!(next_token instanceof String padstack_name)) {
+    Object nextToken = this.scanner.next_token();
+    if (!(nextToken instanceof String padstackName)) {
       FRLogger.warn(
           "SessionToEagle.process_via_scope: padstack name expected at '"
               + this.scanner.get_scope_identifier()
               + "'");
       return false;
     }
-    this.scanner.set_scope_identifier(padstack_name);
+    this.scanner.set_scope_identifier(padstackName);
     // read the location
     double[] location = new double[2];
     for (int i = 0; i < 2; i++) {
-      next_token = this.scanner.next_token();
-      if (next_token instanceof Double double1) {
+      nextToken = this.scanner.next_token();
+      if (nextToken instanceof Double double1) {
         location[i] = double1;
-      } else if (next_token instanceof Integer integer) {
+      } else if (nextToken instanceof Integer integer) {
         location[i] = integer;
       } else {
         FRLogger.warn(
@@ -448,13 +448,13 @@ public class SessionToEagle extends JFrame {
         return false;
       }
     }
-    next_token = this.scanner.next_token();
-    while (next_token == Keyword.OPEN_BRACKET) {
+    nextToken = this.scanner.next_token();
+    while (nextToken == Keyword.OPEN_BRACKET) {
       // skip unknown scopes
       ScopeKeyword.skip_scope(this.scanner);
-      next_token = this.scanner.next_token();
+      nextToken = this.scanner.next_token();
     }
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn(
           "SessionToEagle.process_via_scope: closing bracket expected at '"
               + this.scanner.get_scope_identifier()
@@ -462,9 +462,9 @@ public class SessionToEagle extends JFrame {
       return false;
     }
 
-    Padstack via_padstack = this.board.library.padstacks.get(padstack_name);
+    Padstack viaPadstack = this.board.library.padstacks.get(padstackName);
 
-    if (via_padstack == null) {
+    if (viaPadstack == null) {
       FRLogger.warn(
           "SessionToEagle.process_via_scope: via padstack not found at '"
               + this.scanner.get_scope_identifier()
@@ -472,63 +472,63 @@ public class SessionToEagle extends JFrame {
       return false;
     }
 
-    ConvexShape via_shape = via_padstack.get_shape(via_padstack.from_layer());
+    ConvexShape viaShape = viaPadstack.get_shape(viaPadstack.from_layer());
 
-    double via_diameter = via_shape.max_width() * this.board_scale_factor;
+    double viaDiameter = viaShape.max_width() * this.boardScaleFactor;
 
-    // The Padstack name is of the form Name$drill_diameter$from_layer-to_layer
+    // The Padstack name is of the form Name$drill_diameter$fromLayer-toLayer
 
-    String[] name_parts = via_padstack.name.split("\\$", 3);
+    String[] nameParts = viaPadstack.name.split("\\$", 3);
 
     // example CHANGE DRILL 0.2
 
-    this.out_file.write("CHANGE DRILL ");
-    if (name_parts.length > 1) {
-      this.out_file.write(name_parts[1]);
+    this.outFile.write("CHANGE DRILL ");
+    if (nameParts.length > 1) {
+      this.outFile.write(nameParts[1]);
     } else {
       // create a default drill, because it is needed in Eagle
-      this.out_file.write("0.1");
+      this.outFile.write("0.1");
     }
-    this.out_file.write(";\n");
+    this.outFile.write(";\n");
 
     // VIA ['signal_name'] [diameter] [shape] [layers] [flags]
     // Via Net2 0.6 round 1-4 (20.0, 222.0);
-    this.out_file.write("VIA '");
+    this.outFile.write("VIA '");
 
-    this.out_file.write(p_net_name);
-    this.out_file.write("' ");
+    this.outFile.write(p_net_name);
+    this.outFile.write("' ");
 
     // Durchmesser aus Padstack
-    this.out_file.write(String.valueOf(via_diameter));
+    this.outFile.write(String.valueOf(viaDiameter));
 
     // Shape lesen und einsetzen Square / Round / Octagon
-    if (via_shape instanceof Circle) {
-      this.out_file.write(" round ");
-    } else if (via_shape instanceof IntOctagon) {
-      this.out_file.write(" octagon ");
+    if (viaShape instanceof Circle) {
+      this.outFile.write(" round ");
+    } else if (viaShape instanceof IntOctagon) {
+      this.outFile.write(" octagon ");
     } else {
-      this.out_file.write(" square ");
+      this.outFile.write(" square ");
     }
-    this.out_file.write(get_eagle_layer_string(via_padstack.from_layer()));
-    this.out_file.write("-");
-    this.out_file.write(get_eagle_layer_string(via_padstack.to_layer()));
-    this.out_file.write(" (");
-    double x_coor = location[0] / this.session_file_scale_denominator;
-    this.out_file.write(String.valueOf(x_coor));
-    this.out_file.write(" ");
-    double y_coor = location[1] / this.session_file_scale_denominator;
-    this.out_file.write(String.valueOf(y_coor));
-    this.out_file.write(");\n");
+    this.outFile.write(get_eagle_layer_string(viaPadstack.from_layer()));
+    this.outFile.write("-");
+    this.outFile.write(get_eagle_layer_string(viaPadstack.to_layer()));
+    this.outFile.write(" (");
+    double xCoor = location[0] / this.sessionFileScaleDenominator;
+    this.outFile.write(String.valueOf(xCoor));
+    this.outFile.write(" ");
+    double yCoor = location[1] / this.sessionFileScaleDenominator;
+    this.outFile.write(String.valueOf(yCoor));
+    this.outFile.write(");\n");
 
     return true;
   }
 
   private String get_eagle_layer_string(int p_layer_no) {
-    if (p_layer_no < 0 || p_layer_no >= specctra_layer_structure.arr.length) {
+    if (p_layer_no < 0 || p_layer_no >= specctraLayerStructure.arr.length) {
       return "0";
     }
-    String[] name_pieces = this.specctra_layer_structure.arr[p_layer_no].name.split("#", 2);
-    return name_pieces[0];
+    String[] namePieces = this.specctraLayerStructure.arr[p_layer_no].name.split("#", 2);
+    return namePieces[0];
   }
 
   private boolean process_swapped_pins() throws IOException {
@@ -541,84 +541,84 @@ public class SessionToEagle extends JFrame {
   }
 
   private boolean process_swapped_pins(int p_component_no) throws IOException {
-    Collection<Pin> component_pins = this.board.get_component_pins(p_component_no);
-    boolean component_has_swapped_pins = false;
-    for (Pin curr_pin : component_pins) {
-      if (curr_pin.get_changed_to() != curr_pin) {
-        component_has_swapped_pins = true;
+    Collection<Pin> componentPins = this.board.get_component_pins(p_component_no);
+    boolean componentHasSwappedPins = false;
+    for (Pin currPin : componentPins) {
+      if (currPin.get_changed_to() != currPin) {
+        componentHasSwappedPins = true;
         break;
       }
     }
-    if (!component_has_swapped_pins) {
+    if (!componentHasSwappedPins) {
       return true;
     }
-    PinInfo[] pin_info_arr = new PinInfo[component_pins.size()];
+    PinInfo[] pinInfoArr = new PinInfo[componentPins.size()];
     int i = 0;
-    for (Pin curr_pin : component_pins) {
-      pin_info_arr[i] = new PinInfo(curr_pin);
+    for (Pin currPin : componentPins) {
+      pinInfoArr[i] = new PinInfo(currPin);
       ++i;
     }
-    for (i = 0; i < pin_info_arr.length; i++) {
-      PinInfo curr_pin_info = pin_info_arr[i];
-      if (curr_pin_info.curr_changed_to != curr_pin_info.pin.get_changed_to()) {
-        PinInfo other_pin_info = null;
-        for (int j = i + 1; j < pin_info_arr.length; j++) {
-          if (pin_info_arr[j].pin.get_changed_to() == curr_pin_info.pin) {
-            other_pin_info = pin_info_arr[j];
+    for (i = 0; i < pinInfoArr.length; i++) {
+      PinInfo currPinInfo = pinInfoArr[i];
+      if (currPinInfo.currChangedTo != currPinInfo.pin.get_changed_to()) {
+        PinInfo otherPinInfo = null;
+        for (int j = i + 1; j < pinInfoArr.length; j++) {
+          if (pinInfoArr[j].pin.get_changed_to() == currPinInfo.pin) {
+            otherPinInfo = pinInfoArr[j];
           }
         }
-        if (other_pin_info == null) {
+        if (otherPinInfo == null) {
           FRLogger.warn(
-              "SessuinToEagle.process_swapped_pins: other_pin_info not found at '"
+              "SessuinToEagle.process_swapped_pins: otherPinInfo not found at '"
                   + this.scanner.get_scope_identifier()
                   + "'");
           return false;
         }
-        write_pin_swap(curr_pin_info.pin, other_pin_info.pin);
-        curr_pin_info.curr_changed_to = other_pin_info.pin;
-        other_pin_info.curr_changed_to = curr_pin_info.pin;
+        write_pin_swap(currPinInfo.pin, otherPinInfo.pin);
+        currPinInfo.currChangedTo = otherPinInfo.pin;
+        otherPinInfo.currChangedTo = currPinInfo.pin;
       }
     }
     return true;
   }
 
   private void write_pin_swap(Pin p_pin_1, Pin p_pin_2) throws IOException {
-    int layer_no = Math.max(p_pin_1.first_layer(), p_pin_2.first_layer());
-    String layer_name = board.layer_structure.arr[layer_no].name;
+    int layerNo = Math.max(p_pin_1.first_layer(), p_pin_2.first_layer());
+    String layerName = board.layerStructure.arr[layerNo].name;
 
-    this.out_file.write("CHANGE LAYER ");
-    this.out_file.write(layer_name);
-    this.out_file.write(";\n");
+    this.outFile.write("CHANGE LAYER ");
+    this.outFile.write(layerName);
+    this.outFile.write(";\n");
 
-    double[] location_1 =
-        this.board.communication.coordinate_transform.board_to_dsn(p_pin_1.get_center().to_float());
-    double[] location_2 =
-        this.board.communication.coordinate_transform.board_to_dsn(p_pin_2.get_center().to_float());
+    double[] location1 =
+        this.board.communication.coordinateTransform.board_to_dsn(p_pin_1.get_center().to_float());
+    double[] location2 =
+        this.board.communication.coordinateTransform.board_to_dsn(p_pin_2.get_center().to_float());
 
-    this.out_file.write("PINSWAP ");
-    this.out_file.write(" (");
-    double curr_coor = location_1[0];
-    this.out_file.write(String.valueOf(curr_coor));
-    this.out_file.write(" ");
-    curr_coor = location_1[1];
-    this.out_file.write(String.valueOf(curr_coor));
-    this.out_file.write(") (");
-    curr_coor = location_2[0];
-    this.out_file.write(String.valueOf(curr_coor));
-    this.out_file.write(" ");
-    curr_coor = location_2[1];
-    this.out_file.write(String.valueOf(curr_coor));
-    this.out_file.write(");\n");
+    this.outFile.write("PINSWAP ");
+    this.outFile.write(" (");
+    double currCoor = location1[0];
+    this.outFile.write(String.valueOf(currCoor));
+    this.outFile.write(" ");
+    currCoor = location1[1];
+    this.outFile.write(String.valueOf(currCoor));
+    this.outFile.write(") (");
+    currCoor = location2[0];
+    this.outFile.write(String.valueOf(currCoor));
+    this.outFile.write(" ");
+    currCoor = location2[1];
+    this.outFile.write(String.valueOf(currCoor));
+    this.outFile.write(");\n");
   }
 
   private static class PinInfo {
 
     final Pin pin;
-    Pin curr_changed_to;
+    Pin currChangedTo;
 
     PinInfo(Pin p_pin) {
       pin = p_pin;
-      curr_changed_to = p_pin;
+      currChangedTo = p_pin;
     }
   }
 }

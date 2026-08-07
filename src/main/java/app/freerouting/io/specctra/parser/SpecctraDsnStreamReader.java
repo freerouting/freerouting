@@ -542,7 +542,7 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
   /** ZZ_ATTRIBUTE[aState] contains the attributes of state <code>aState</code> */
   private static final int[] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
-  public static String scope_identifier = "";
+  public static String scopeIdentifier = "";
   public static NumberFormat nf;
   /* user code: */ StringBuffer stringBuffer = new StringBuffer();
 
@@ -859,12 +859,12 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
 
   @Override
   public String get_scope_identifier() {
-    return scope_identifier;
+    return scopeIdentifier;
   }
 
   @Override
   public void set_scope_identifier(String identifier) {
-    scope_identifier = identifier;
+    scopeIdentifier = identifier;
   }
 
   /**
@@ -1806,18 +1806,18 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
     // we ignore that and continue reading the next item.
     // This is extra step is also needed to handle the bug KiCad 8 introduced in the netlist
     // definition, when it started the list of nets with a "" string.
-    String first_string = next_string(true, separator);
-    if (first_string.length() > 0) {
-      result.add(first_string);
+    String firstString = next_string(true, separator);
+    if (firstString.length() > 0) {
+      result.add(firstString);
     }
 
     for (; ; ) {
-      String next_string = next_string(true, separator);
-      if (next_string.length() == 0) {
+      String nextString = next_string(true, separator);
+      if (nextString.length() == 0) {
         break;
       }
 
-      result.add(next_string);
+      result.add(nextString);
     }
 
     zzStartRead = zzMarkedPos - 1;
@@ -1840,18 +1840,18 @@ public class SpecctraDsnStreamReader implements IJFlexScanner {
   }
 
   public Boolean next_closing_bracket() {
-    Object next_token;
+    Object nextToken;
     try {
-      next_token = next_token();
+      nextToken = next_token();
     } catch (IOException e) {
       FRLogger.error("Network.read_net_pins: IO error scanning file", e);
       return false;
     }
-    if (next_token == null) {
+    if (nextToken == null) {
       FRLogger.warn("Network.read_net_pins: unexpected end of file");
       return false;
     }
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       // not end of scope
       FRLogger.warn("Network.read_net_pins: expected closed bracket is missing");
       return false;

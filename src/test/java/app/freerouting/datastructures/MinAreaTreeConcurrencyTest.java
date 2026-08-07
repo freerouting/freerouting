@@ -25,7 +25,7 @@ class MinAreaTreeConcurrencyTest {
   @Test
   void overlaps_concurrent_queries_do_not_corrupt_stack() throws Exception {
     RoutingBoard board = DsnTestFixtures.loadBoard("Issue508-DAC2020_bm01.dsn");
-    var tree = board.search_tree_manager.get_default_tree();
+    var tree = board.searchTreeManager.get_default_tree();
     RegularTileShape queryShape =
         board.get_bounding_box().bounding_shape(FortyfiveDegreeBoundingDirections.INSTANCE);
 

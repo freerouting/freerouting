@@ -19,42 +19,42 @@ public abstract class Rule {
   /** Returns a collection of objects of class Rule. */
   public static Collection<Rule> read_scope(IJFlexScanner p_scanner) {
     Collection<Rule> result = new LinkedList<>();
-    Object current_token = null;
+    Object currentToken = null;
     for (; ; ) {
-      Object prev_token = current_token;
+      Object prevToken = currentToken;
       try {
-        current_token = p_scanner.next_token();
+        currentToken = p_scanner.next_token();
       } catch (IOException e) {
         FRLogger.error("Rule.read_scope: IO error scanning file", e);
         return null;
       }
-      if (current_token == null) {
+      if (currentToken == null) {
         FRLogger.warn(
             "Rule.read_scope: unexpected end of file at '"
                 + p_scanner.get_scope_identifier()
                 + "'");
         return null;
       }
-      if (current_token == Keyword.CLOSED_BRACKET) {
+      if (currentToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == Keyword.OPEN_BRACKET) {
+      if (prevToken == Keyword.OPEN_BRACKET) {
         // every rule starts with a "("
-        Rule curr_rule = null;
-        if (current_token == Keyword.WIDTH) {
+        Rule currRule = null;
+        if (currentToken == Keyword.WIDTH) {
           // this is a "(width" rule
-          curr_rule = read_width_rule(p_scanner);
-        } else if (current_token == Keyword.CLEARANCE) {
+          currRule = read_width_rule(p_scanner);
+        } else if (currentToken == Keyword.CLEARANCE) {
           // this is a "(clear" rule
-          curr_rule = read_clearance_rule(p_scanner);
+          currRule = read_clearance_rule(p_scanner);
         } else {
           ScopeKeyword.skip_scope(p_scanner);
         }
 
-        if (curr_rule != null) {
-          result.add(curr_rule);
+        if (currRule != null) {
+          result.add(currRule);
         }
       }
     }
@@ -64,15 +64,15 @@ public abstract class Rule {
   /** Reads a LayerRule from dsn-file. */
   public static LayerRule read_layer_rule_scope(IJFlexScanner p_scanner) {
     try {
-      Collection<String> layer_names = new LinkedList<>();
-      Collection<Rule> rule_list = new LinkedList<>();
+      Collection<String> layerNames = new LinkedList<>();
+      Collection<Rule> ruleList = new LinkedList<>();
       for (; ; ) {
         p_scanner.yybegin(SpecctraDsnStreamReader.LAYER_NAME);
-        Object next_token = p_scanner.next_token();
-        if (next_token == Keyword.OPEN_BRACKET) {
+        Object nextToken = p_scanner.next_token();
+        if (nextToken == Keyword.OPEN_BRACKET) {
           break;
         }
-        if (!(next_token instanceof String)) {
+        if (!(nextToken instanceof String)) {
 
           FRLogger.warn(
               "Rule.read_layer_rule_scope: string expected at '"
@@ -80,14 +80,14 @@ public abstract class Rule {
                   + "'");
           return null;
         }
-        layer_names.add((String) next_token);
+        layerNames.add((String) nextToken);
       }
       for (; ; ) {
-        Object next_token = p_scanner.next_token();
-        if (next_token == Keyword.CLOSED_BRACKET) {
+        Object nextToken = p_scanner.next_token();
+        if (nextToken == Keyword.CLOSED_BRACKET) {
           break;
         }
-        if (next_token != Keyword.RULE) {
+        if (nextToken != Keyword.RULE) {
 
           FRLogger.warn(
               "Rule.read_layer_rule_scope: rule expected at '"
@@ -95,9 +95,9 @@ public abstract class Rule {
                   + "'");
           return null;
         }
-        rule_list.addAll(read_scope(p_scanner));
+        ruleList.addAll(read_scope(p_scanner));
       }
-      return new LayerRule(layer_names, rule_list);
+      return new LayerRule(layerNames, ruleList);
     } catch (IOException e) {
       FRLogger.error("Rule.read_layer_rule_scope: IO error scanning file", e);
       return null;
@@ -120,15 +120,15 @@ public abstract class Rule {
     p_par.file.write("rule");
 
     // write the trace width
-    int default_trace_half_width = p_net_class.get_trace_half_width(0);
-    double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(default_trace_half_width);
+    int defaultTraceHalfWidth = p_net_class.get_trace_half_width(0);
+    double traceWidth = 2 * p_par.coordinateTransform.board_to_dsn(defaultTraceHalfWidth);
     p_par.file.new_line();
     p_par.file.write("(width ");
-    p_par.file.write(String.valueOf(trace_width));
+    p_par.file.write(String.valueOf(traceWidth));
     p_par.file.write(")");
     p_par.file.end_scope();
-    for (int i = 1; i < p_par.board.layer_structure.arr.length; i++) {
-      if (p_net_class.get_trace_half_width(i) != default_trace_half_width) {
+    for (int i = 1; i < p_par.board.layerStructure.arr.length; i++) {
+      if (p_net_class.get_trace_half_width(i) != defaultTraceHalfWidth) {
         write_layer_rule(p_net_class, i, p_par);
       }
     }
@@ -139,19 +139,19 @@ public abstract class Rule {
     p_par.file.start_scope();
     p_par.file.write("layer_rule ");
 
-    Layer curr_board_layer = p_par.board.layer_structure.arr[p_layer_no];
+    Layer currBoardLayer = p_par.board.layerStructure.arr[p_layer_no];
 
-    p_par.file.write(curr_board_layer.name);
+    p_par.file.write(currBoardLayer.name);
     p_par.file.start_scope();
     p_par.file.write("rule ");
 
-    int curr_trace_half_width = p_net_class.get_trace_half_width(p_layer_no);
+    int currTraceHalfWidth = p_net_class.get_trace_half_width(p_layer_no);
 
     // write the trace width
-    double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(curr_trace_half_width);
+    double traceWidth = 2 * p_par.coordinateTransform.board_to_dsn(currTraceHalfWidth);
     p_par.file.new_line();
     p_par.file.write("(width ");
-    p_par.file.write(String.valueOf(trace_width));
+    p_par.file.write(String.valueOf(traceWidth));
     p_par.file.write(") ");
     p_par.file.end_scope();
     p_par.file.end_scope();
@@ -162,35 +162,35 @@ public abstract class Rule {
     p_par.file.start_scope();
     p_par.file.write("rule");
     // write the trace width
-    double trace_width =
+    double traceWidth =
         2
-            * p_par.coordinate_transform.board_to_dsn(
+            * p_par.coordinateTransform.board_to_dsn(
                 p_par.board.rules.get_default_net_class().get_trace_half_width(0));
     p_par.file.new_line();
     p_par.file.write("(width ");
-    p_par.file.write(String.valueOf(trace_width));
+    p_par.file.write(String.valueOf(traceWidth));
     p_par.file.write(")");
     // write the default clearance rule
-    int default_cl_no = BoardRules.default_clearance_class();
-    int default_board_clearance =
-        p_par.board.rules.clearance_matrix.get_value(default_cl_no, default_cl_no, p_layer, false);
-    double default_clearance = p_par.coordinate_transform.board_to_dsn(default_board_clearance);
+    int defaultClNo = BoardRules.default_clearance_class();
+    int defaultBoardClearance =
+        p_par.board.rules.clearanceMatrix.get_value(defaultClNo, defaultClNo, p_layer, false);
+    double defaultClearance = p_par.coordinateTransform.board_to_dsn(defaultBoardClearance);
     p_par.file.new_line();
     // write the default clearance
     p_par.file.write("(clearance ");
-    p_par.file.write(String.valueOf(default_clearance));
+    p_par.file.write(String.valueOf(defaultClearance));
     p_par.file.write(")");
     // write the smd_to_turn_gap
-    double smd_to_turn_dist =
-        p_par.coordinate_transform.board_to_dsn(p_par.board.rules.get_pin_edge_to_turn_dist());
+    double smdToTurnDist =
+        p_par.coordinateTransform.board_to_dsn(p_par.board.rules.get_pin_edge_to_turn_dist());
     p_par.file.new_line();
     p_par.file.write("(clearance ");
-    p_par.file.write(String.valueOf(smd_to_turn_dist));
+    p_par.file.write(String.valueOf(smdToTurnDist));
     p_par.file.write(" (type smd_to_turn_gap))");
 
     // write the named clearance rules from the clearance matrix
     write_named_clearance_rules(p_par, p_layer);
-    // write_non_default_clearance_rules(p_par, p_layer, default_board_clearance);
+    // write_non_default_clearance_rules(p_par, p_layer, defaultBoardClearance);
 
     p_par.file.end_scope();
   }
@@ -199,25 +199,25 @@ public abstract class Rule {
   private static void write_non_default_clearance_rules(
       WriteScopeParameter p_par, int p_layer, int p_default_clearance) throws IOException {
 
-    ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
-    int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
+    ClearanceMatrix clMatrix = p_par.board.rules.clearanceMatrix;
+    int clCount = p_par.board.rules.clearanceMatrix.get_class_count();
 
-    for (int i = 1; i <= cl_count; i++) {
-      for (int j = i; j < cl_count; j++) {
-        int curr_board_clearance = cl_matrix.get_value(i, j, p_layer, false);
+    for (int i = 1; i <= clCount; i++) {
+      for (int j = i; j < clCount; j++) {
+        int currBoardClearance = clMatrix.get_value(i, j, p_layer, false);
 
-        if (curr_board_clearance == p_default_clearance) {
+        if (currBoardClearance == p_default_clearance) {
           continue;
         }
 
-        double curr_clearance = p_par.coordinate_transform.board_to_dsn(curr_board_clearance);
+        double currClearance = p_par.coordinateTransform.board_to_dsn(currBoardClearance);
         p_par.file.new_line();
         p_par.file.write("(clearance ");
-        p_par.file.write(String.valueOf(curr_clearance));
+        p_par.file.write(String.valueOf(currClearance));
         p_par.file.write(" (type ");
-        p_par.identifier_type.write(cl_matrix.get_name(i), p_par.file);
+        p_par.identifierType.write(clMatrix.get_name(i), p_par.file);
         p_par.file.write(DsnFile.CLASS_CLEARANCE_SEPARATOR);
-        p_par.identifier_type.write(cl_matrix.get_name(j), p_par.file);
+        p_par.identifierType.write(clMatrix.get_name(j), p_par.file);
         p_par.file.write("))");
       }
     }
@@ -227,22 +227,22 @@ public abstract class Rule {
   private static void write_named_clearance_rules(WriteScopeParameter p_par, int p_layer)
       throws IOException {
 
-    ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
-    int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
+    ClearanceMatrix clMatrix = p_par.board.rules.clearanceMatrix;
+    int clCount = p_par.board.rules.clearanceMatrix.get_class_count();
 
-    for (int i = 1; i < cl_count; i++) {
-      if (Objects.equals(cl_matrix.get_name(i), "default")) {
+    for (int i = 1; i < clCount; i++) {
+      if (Objects.equals(clMatrix.get_name(i), "default")) {
         continue;
       }
 
-      int curr_board_clearance = cl_matrix.get_value(i, i, p_layer, false);
-      double curr_clearance = p_par.coordinate_transform.board_to_dsn(curr_board_clearance);
+      int currBoardClearance = clMatrix.get_value(i, i, p_layer, false);
+      double currClearance = p_par.coordinateTransform.board_to_dsn(currBoardClearance);
 
       p_par.file.new_line();
       p_par.file.write("(clearance ");
-      p_par.file.write(String.valueOf(curr_clearance));
+      p_par.file.write(String.valueOf(currClearance));
       p_par.file.write(" (type ");
-      p_par.identifier_type.write(cl_matrix.get_name(i), p_par.file);
+      p_par.identifierType.write(clMatrix.get_name(i), p_par.file);
       p_par.file.write("))");
     }
   }
@@ -251,17 +251,17 @@ public abstract class Rule {
     try {
       double value = p_scanner.next_double();
 
-      Collection<String> class_pairs = new LinkedList<>();
-      Object next_token = p_scanner.next_token();
-      if (next_token != Keyword.CLOSED_BRACKET) {
+      Collection<String> classPairs = new LinkedList<>();
+      Object nextToken = p_scanner.next_token();
+      if (nextToken != Keyword.CLOSED_BRACKET) {
         // look for "(type"
-        if (next_token != Keyword.OPEN_BRACKET) {
+        if (nextToken != Keyword.OPEN_BRACKET) {
           FRLogger.warn(
               "Rule.read_clearance_rule: ( expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
-        next_token = p_scanner.next_token();
-        if (next_token != Keyword.TYPE) {
+        nextToken = p_scanner.next_token();
+        if (nextToken != Keyword.TYPE) {
           FRLogger.warn(
               "Rule.read_clearance_rule: type expected at '"
                   + p_scanner.get_scope_identifier()
@@ -269,7 +269,7 @@ public abstract class Rule {
           return null;
         }
 
-        class_pairs.addAll(List.of(p_scanner.next_string_list(DsnFile.CLASS_CLEARANCE_SEPARATOR)));
+        classPairs.addAll(List.of(p_scanner.next_string_list(DsnFile.CLASS_CLEARANCE_SEPARATOR)));
 
         // check the closing ")" of "(type"
         if (!p_scanner.next_closing_bracket()) {
@@ -290,7 +290,7 @@ public abstract class Rule {
         }
       }
 
-      return new ClearanceRule(value, class_pairs);
+      return new ClearanceRule(value, classPairs);
     } catch (IOException e) {
       FRLogger.error("Rule.read_clearance_rule: IO error scanning file", e);
       return null;
@@ -300,7 +300,7 @@ public abstract class Rule {
   public static void write_item_clearance_class(
       String p_name, IndentFileWriter p_file, IdentifierType p_identifier_type) throws IOException {
     p_file.new_line();
-    p_file.write("(clearance_class ");
+    p_file.write("(clearanceClass ");
     p_identifier_type.write(p_name, p_file);
     p_file.write(")");
   }
@@ -317,21 +317,21 @@ public abstract class Rule {
   public static class ClearanceRule extends Rule {
 
     final double value;
-    final Collection<String> clearance_class_pairs;
+    final Collection<String> clearanceClassPairs;
 
     public ClearanceRule(double p_value, Collection<String> p_class_pairs) {
       value = p_value;
-      clearance_class_pairs = p_class_pairs;
+      clearanceClassPairs = p_class_pairs;
     }
   }
 
   public static class LayerRule {
 
-    final Collection<String> layer_names;
+    final Collection<String> layerNames;
     final Collection<Rule> rules;
 
     LayerRule(Collection<String> p_layer_names, Collection<Rule> p_rules) {
-      layer_names = p_layer_names;
+      layerNames = p_layer_names;
       rules = p_rules;
     }
   }

@@ -158,56 +158,56 @@ public class IntBox extends RegularTileShape implements Serializable {
     p_max_result_points = Math.min(p_max_result_points, 2);
     IntPoint[] result = new IntPoint[p_max_result_points];
 
-    int lower_x_diff = p_point.x - ll.x;
-    int upper_x_diff = ur.x - p_point.x;
-    int lower_y_diff = p_point.y - ll.y;
-    int upper_y_diff = ur.y - p_point.y;
+    int lowerXDiff = p_point.x - ll.x;
+    int upperXDiff = ur.x - p_point.x;
+    int lowerYDiff = p_point.y - ll.y;
+    int upperYDiff = ur.y - p_point.y;
 
-    int min_diff;
-    int second_min_diff;
+    int minDiff;
+    int secondMinDiff;
 
-    int nearest_projection_x = p_point.x;
-    int nearest_projection_y = p_point.y;
-    int second_nearest_projection_x = p_point.x;
-    int second_nearest_projection_y = p_point.y;
-    if (lower_x_diff <= upper_x_diff) {
-      min_diff = lower_x_diff;
-      second_min_diff = upper_x_diff;
-      nearest_projection_x = ll.x;
-      second_nearest_projection_x = ur.x;
+    int nearestProjectionX = p_point.x;
+    int nearestProjectionY = p_point.y;
+    int secondNearestProjectionX = p_point.x;
+    int secondNearestProjectionY = p_point.y;
+    if (lowerXDiff <= upperXDiff) {
+      minDiff = lowerXDiff;
+      secondMinDiff = upperXDiff;
+      nearestProjectionX = ll.x;
+      secondNearestProjectionX = ur.x;
     } else {
-      min_diff = upper_x_diff;
-      second_min_diff = lower_x_diff;
-      nearest_projection_x = ur.x;
-      second_nearest_projection_x = ll.x;
+      minDiff = upperXDiff;
+      secondMinDiff = lowerXDiff;
+      nearestProjectionX = ur.x;
+      secondNearestProjectionX = ll.x;
     }
-    if (lower_y_diff < min_diff) {
-      second_min_diff = min_diff;
-      min_diff = lower_y_diff;
-      second_nearest_projection_x = nearest_projection_x;
-      second_nearest_projection_y = nearest_projection_y;
-      nearest_projection_x = p_point.x;
-      nearest_projection_y = ll.y;
-    } else if (lower_y_diff < second_min_diff) {
-      second_min_diff = lower_y_diff;
-      second_nearest_projection_x = p_point.x;
-      second_nearest_projection_y = ll.y;
+    if (lowerYDiff < minDiff) {
+      secondMinDiff = minDiff;
+      minDiff = lowerYDiff;
+      secondNearestProjectionX = nearestProjectionX;
+      secondNearestProjectionY = nearestProjectionY;
+      nearestProjectionX = p_point.x;
+      nearestProjectionY = ll.y;
+    } else if (lowerYDiff < secondMinDiff) {
+      secondMinDiff = lowerYDiff;
+      secondNearestProjectionX = p_point.x;
+      secondNearestProjectionY = ll.y;
     }
-    if (upper_y_diff < min_diff) {
-      second_min_diff = min_diff;
-      min_diff = upper_y_diff;
-      second_nearest_projection_x = nearest_projection_x;
-      second_nearest_projection_y = nearest_projection_y;
-      nearest_projection_x = p_point.x;
-      nearest_projection_y = ur.y;
-    } else if (upper_y_diff < second_min_diff) {
-      second_min_diff = upper_y_diff;
-      second_nearest_projection_x = p_point.x;
-      second_nearest_projection_y = ur.y;
+    if (upperYDiff < minDiff) {
+      secondMinDiff = minDiff;
+      minDiff = upperYDiff;
+      secondNearestProjectionX = nearestProjectionX;
+      secondNearestProjectionY = nearestProjectionY;
+      nearestProjectionX = p_point.x;
+      nearestProjectionY = ur.y;
+    } else if (upperYDiff < secondMinDiff) {
+      secondMinDiff = upperYDiff;
+      secondNearestProjectionX = p_point.x;
+      secondNearestProjectionY = ur.y;
     }
-    result[0] = new IntPoint(nearest_projection_x, nearest_projection_y);
+    result[0] = new IntPoint(nearestProjectionX, nearestProjectionY);
     if (result.length > 1) {
-      result[1] = new IntPoint(second_nearest_projection_x, second_nearest_projection_y);
+      result[1] = new IntPoint(secondNearestProjectionX, secondNearestProjectionY);
     }
 
     return result;
@@ -224,21 +224,21 @@ public class IntBox extends RegularTileShape implements Serializable {
       IntBox p_other, double p_horizontal_weight, double p_vertical_weight) {
     double result;
 
-    double max_ll_x = Math.max(this.ll.x, p_other.ll.x);
-    double max_ll_y = Math.max(this.ll.y, p_other.ll.y);
-    double min_ur_x = Math.min(this.ur.x, p_other.ur.x);
-    double min_ur_y = Math.min(this.ur.y, p_other.ur.y);
+    double maxLlX = Math.max(this.ll.x, p_other.ll.x);
+    double maxLlY = Math.max(this.ll.y, p_other.ll.y);
+    double minUrX = Math.min(this.ur.x, p_other.ur.x);
+    double minUrY = Math.min(this.ur.y, p_other.ur.y);
 
-    if (min_ur_x >= max_ll_x) {
-      result = Math.max(p_vertical_weight * (max_ll_y - min_ur_y), 0);
-    } else if (min_ur_y >= max_ll_y) {
-      result = Math.max(p_horizontal_weight * (max_ll_x - min_ur_x), 0);
+    if (minUrX >= maxLlX) {
+      result = Math.max(p_vertical_weight * (maxLlY - minUrY), 0);
+    } else if (minUrY >= maxLlY) {
+      result = Math.max(p_horizontal_weight * (maxLlX - minUrX), 0);
     } else {
-      double delta_x = max_ll_x - min_ur_x;
-      double delta_y = max_ll_y - min_ur_y;
-      delta_x *= p_horizontal_weight;
-      delta_y *= p_vertical_weight;
-      result = Math.sqrt(delta_x * delta_x + delta_y * delta_y);
+      double deltaX = maxLlX - minUrX;
+      double deltaY = maxLlY - minUrY;
+      deltaX *= p_horizontal_weight;
+      deltaY *= p_vertical_weight;
+      result = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
     return result;
   }
@@ -385,9 +385,9 @@ public class IntBox extends RegularTileShape implements Serializable {
     if (p_rel_coor.equals(Vector.ZERO)) {
       return this;
     }
-    IntPoint new_ll = (IntPoint) ll.translate_by(p_rel_coor);
-    IntPoint new_ur = (IntPoint) ur.translate_by(p_rel_coor);
-    return new IntBox(new_ll, new_ur);
+    IntPoint newLl = (IntPoint) ll.translate_by(p_rel_coor);
+    IntPoint newUr = (IntPoint) ur.translate_by(p_rel_coor);
+    return new IntBox(newLl, newUr);
   }
 
   @Override
@@ -404,42 +404,42 @@ public class IntBox extends RegularTileShape implements Serializable {
 
   @Override
   public Line border_line(int p_no) {
-    int a_x;
-    int a_y;
-    int b_x;
-    int b_y;
+    int aX;
+    int aY;
+    int bX;
+    int bY;
     switch (p_no) {
       case 0 -> {
         // lower boundary line
-        a_x = 0;
-        a_y = ll.y;
-        b_x = 1;
-        b_y = ll.y;
+        aX = 0;
+        aY = ll.y;
+        bX = 1;
+        bY = ll.y;
       }
       case 1 -> {
         // right boundary line
-        a_x = ur.x;
-        a_y = 0;
-        b_x = ur.x;
-        b_y = 1;
+        aX = ur.x;
+        aY = 0;
+        bX = ur.x;
+        bY = 1;
       }
       case 2 -> {
         // upper boundary line
-        a_x = 0;
-        a_y = ur.y;
-        b_x = -1;
-        b_y = ur.y;
+        aX = 0;
+        aY = ur.y;
+        bX = -1;
+        bY = ur.y;
       }
       case 3 -> {
         // left boundary line
-        a_x = ll.x;
-        a_y = 0;
-        b_x = ll.x;
-        b_y = -1;
+        aX = ll.x;
+        aY = 0;
+        bX = ll.x;
+        bY = -1;
       }
       default -> throw new IllegalArgumentException("IntBox.edge_line: p_no out of range");
     }
-    return new Line(a_x, a_y, b_x, b_y);
+    return new Line(aX, aY, bX, bY);
   }
 
   @Override
@@ -458,9 +458,9 @@ public class IntBox extends RegularTileShape implements Serializable {
       return this;
     }
     int dist = (int) Math.round(p_dist);
-    IntPoint lower_left = new IntPoint(ll.x - dist, ll.y - dist);
-    IntPoint upper_right = new IntPoint(ur.x + dist, ur.y + dist);
-    return new IntBox(lower_left, upper_right);
+    IntPoint lowerLeft = new IntPoint(ll.x - dist, ll.y - dist);
+    IntPoint upperRight = new IntPoint(ur.x + dist, ur.y + dist);
+    return new IntBox(lowerLeft, upperRight);
   }
 
   /**
@@ -472,9 +472,9 @@ public class IntBox extends RegularTileShape implements Serializable {
       return this;
     }
     int dist = (int) Math.round(p_dist);
-    IntPoint lower_left = new IntPoint(ll.x - dist, ll.y);
-    IntPoint upper_right = new IntPoint(ur.x + dist, ur.y);
-    return new IntBox(lower_left, upper_right);
+    IntPoint lowerLeft = new IntPoint(ll.x - dist, ll.y);
+    IntPoint upperRight = new IntPoint(ur.x + dist, ur.y);
+    return new IntBox(lowerLeft, upperRight);
   }
 
   /**
@@ -486,34 +486,34 @@ public class IntBox extends RegularTileShape implements Serializable {
       return this;
     }
     int dist = (int) Math.round(p_dist);
-    IntPoint lower_left = new IntPoint(ll.x, ll.y - dist);
-    IntPoint upper_right = new IntPoint(ur.x, ur.y + dist);
-    return new IntBox(lower_left, upper_right);
+    IntPoint lowerLeft = new IntPoint(ll.x, ll.y - dist);
+    IntPoint upperRight = new IntPoint(ur.x, ur.y + dist);
+    return new IntBox(lowerLeft, upperRight);
   }
 
   /**
    * Shrinks the width and height of the box by the input width. The box will not vanish completely.
    */
   public IntBox shrink(int p_width) {
-    int ll_x;
-    int ur_x;
+    int llX;
+    int urX;
     if (2 * p_width <= this.ur.x - this.ll.x) {
-      ll_x = this.ll.x + p_width;
-      ur_x = this.ur.x - p_width;
+      llX = this.ll.x + p_width;
+      urX = this.ur.x - p_width;
     } else {
-      ll_x = (this.ll.x + this.ur.x) / 2;
-      ur_x = ll_x;
+      llX = (this.ll.x + this.ur.x) / 2;
+      urX = llX;
     }
-    int ll_y;
-    int ur_y;
+    int llY;
+    int urY;
     if (2 * p_width <= this.ur.y - this.ll.y) {
-      ll_y = this.ll.y + p_width;
-      ur_y = this.ur.y - p_width;
+      llY = this.ll.y + p_width;
+      urY = this.ur.y - p_width;
     } else {
-      ll_y = (this.ll.y + this.ur.y) / 2;
-      ur_y = ll_y;
+      llY = (this.ll.y + this.ur.y) / 2;
+      urY = llY;
     }
-    return new IntBox(ll_x, ll_y, ur_x, ur_y);
+    return new IntBox(llX, llY, urX, urY);
   }
 
   @Override
@@ -580,17 +580,17 @@ public class IntBox extends RegularTileShape implements Serializable {
   /** Returns an object of class Simplex defining the same shape */
   @Override
   public Simplex to_Simplex() {
-    Line[] line_arr;
+    Line[] lineArr;
     if (is_empty()) {
-      line_arr = new Line[0];
+      lineArr = new Line[0];
     } else {
-      line_arr = new Line[4];
-      line_arr[0] = Line.get_instance(ll, IntDirection.RIGHT);
-      line_arr[1] = Line.get_instance(ur, IntDirection.UP);
-      line_arr[2] = Line.get_instance(ur, IntDirection.LEFT);
-      line_arr[3] = Line.get_instance(ll, IntDirection.DOWN);
+      lineArr = new Line[4];
+      lineArr[0] = Line.get_instance(ll, IntDirection.RIGHT);
+      lineArr[1] = Line.get_instance(ur, IntDirection.UP);
+      lineArr[2] = Line.get_instance(ur, IntDirection.LEFT);
+      lineArr[3] = Line.get_instance(ll, IntDirection.DOWN);
     }
-    return new Simplex(line_arr);
+    return new Simplex(lineArr);
   }
 
   @Override
@@ -614,38 +614,38 @@ public class IntBox extends RegularTileShape implements Serializable {
 
   /** Calculates the part of p_from_box, which has minimal distance to this box. */
   public IntBox nearest_part(IntBox p_from_box) {
-    int ll_x;
+    int llX;
 
     if (p_from_box.ll.x >= this.ll.x) {
-      ll_x = p_from_box.ll.x;
+      llX = p_from_box.ll.x;
     } else {
-      ll_x = Math.min(p_from_box.ur.x, this.ll.x);
+      llX = Math.min(p_from_box.ur.x, this.ll.x);
     }
 
-    int ur_x;
+    int urX;
 
     if (p_from_box.ur.x <= this.ur.x) {
-      ur_x = p_from_box.ur.x;
+      urX = p_from_box.ur.x;
     } else {
-      ur_x = Math.max(p_from_box.ll.x, this.ur.x);
+      urX = Math.max(p_from_box.ll.x, this.ur.x);
     }
 
-    int ll_y;
+    int llY;
 
     if (p_from_box.ll.y >= this.ll.y) {
-      ll_y = p_from_box.ll.y;
+      llY = p_from_box.ll.y;
     } else {
-      ll_y = Math.min(p_from_box.ur.y, this.ll.y);
+      llY = Math.min(p_from_box.ur.y, this.ll.y);
     }
 
-    int ur_y;
+    int urY;
 
     if (p_from_box.ur.y <= this.ur.y) {
-      ur_y = p_from_box.ur.y;
+      urY = p_from_box.ur.y;
     } else {
-      ur_y = Math.max(p_from_box.ll.y, this.ur.y);
+      urY = Math.max(p_from_box.ll.y, this.ur.y);
     }
-    return new IntBox(ll_x, ll_y, ur_x, ur_y);
+    return new IntBox(llX, llY, urX, urY);
   }
 
   @Override
@@ -689,30 +689,30 @@ public class IntBox extends RegularTileShape implements Serializable {
     }
     double length = this.ur.x - this.ll.x;
     double height = this.ur.y - this.ll.y;
-    int x_count = (int) Math.ceil(length / p_max_section_width);
-    int y_count = (int) Math.ceil(height / p_max_section_width);
-    int section_length_x = (int) Math.ceil(length / x_count);
-    int section_length_y = (int) Math.ceil(height / y_count);
-    IntBox[] result = new IntBox[x_count * y_count];
-    int curr_index = 0;
-    for (int j = 0; j < y_count; j++) {
-      int curr_lly = this.ll.y + j * section_length_y;
-      int curr_ury;
-      if (j == (y_count - 1)) {
-        curr_ury = this.ur.y;
+    int xCount = (int) Math.ceil(length / p_max_section_width);
+    int yCount = (int) Math.ceil(height / p_max_section_width);
+    int sectionLengthX = (int) Math.ceil(length / xCount);
+    int sectionLengthY = (int) Math.ceil(height / yCount);
+    IntBox[] result = new IntBox[xCount * yCount];
+    int currIndex = 0;
+    for (int j = 0; j < yCount; j++) {
+      int currLly = this.ll.y + j * sectionLengthY;
+      int currUry;
+      if (j == (yCount - 1)) {
+        currUry = this.ur.y;
       } else {
-        curr_ury = curr_lly + section_length_y;
+        currUry = currLly + sectionLengthY;
       }
-      for (int i = 0; i < x_count; i++) {
-        int curr_llx = this.ll.x + i * section_length_x;
-        int curr_urx;
-        if (i == (x_count - 1)) {
-          curr_urx = this.ur.x;
+      for (int i = 0; i < xCount; i++) {
+        int currLlx = this.ll.x + i * sectionLengthX;
+        int currUrx;
+        if (i == (xCount - 1)) {
+          currUrx = this.ur.x;
         } else {
-          curr_urx = curr_llx + section_length_x;
+          currUrx = currLlx + sectionLengthX;
         }
-        result[curr_index] = new IntBox(curr_llx, curr_lly, curr_urx, curr_ury);
-        ++curr_index;
+        result[currIndex] = new IntBox(currLlx, currLly, currUrx, currUry);
+        ++currIndex;
       }
     }
     return result;
@@ -720,10 +720,10 @@ public class IntBox extends RegularTileShape implements Serializable {
 
   @Override
   public TileShape[] cutout(TileShape p_shape) {
-    TileShape[] tmp_result = p_shape.cutout_from(this);
-    TileShape[] result = new TileShape[tmp_result.length];
+    TileShape[] tmpResult = p_shape.cutout_from(this);
+    TileShape[] result = new TileShape[tmpResult.length];
     for (int i = 0; i < result.length; i++) {
-      result[i] = tmp_result[i].simplify();
+      result[i] = tmpResult[i].simplify();
     }
     return result;
   }

@@ -19,13 +19,13 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
   public final int no;
 
   /** true, if vias of the own net are allowed to overlap with this padstack */
-  public final boolean attach_allowed;
+  public final boolean attachAllowed;
 
   /**
    * If false, the layers of the padstack are mirrored, if it is placed on the back side. The
    * default is false.
    */
-  public final boolean placed_absolute;
+  public final boolean placedAbsolute;
 
   private final ConvexShape[] shapes;
 
@@ -35,10 +35,10 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
    * becomes an obstacle for routing and DRC; they must not be treated as real copper (e.g. not
    * re-exported).
    */
-  public boolean hole_only;
+  public boolean holeOnly;
 
   /** Pointer to the pacdstack list containing this padstack */
-  private final Padstacks padstack_list;
+  private final Padstacks padstackList;
 
   /** Cached drill radius to avoid repeated regex parsing on every render call. */
   private Double cachedDrillRadius;
@@ -59,9 +59,9 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
     shapes = p_shapes;
     name = p_name;
     no = p_no;
-    attach_allowed = p_is_drilllable;
-    placed_absolute = p_placed_absolute;
-    padstack_list = p_padstack_list;
+    attachAllowed = p_is_drilllable;
+    placedAbsolute = p_placed_absolute;
+    padstackList = p_padstack_list;
   }
 
   /** Compares 2 padstacks by name. Useful for example to display padstacks in alphabetic order. */
@@ -176,24 +176,24 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
     if (p_layer < 0 || p_layer >= shapes.length) {
       return result;
     }
-    ConvexShape curr_shape = shapes[p_layer];
-    if (curr_shape == null) {
+    ConvexShape currShape = shapes[p_layer];
+    if (currShape == null) {
       return result;
     }
-    if (!(curr_shape instanceof IntBox || curr_shape instanceof IntOctagon)) {
+    if (!(currShape instanceof IntBox || currShape instanceof IntOctagon)) {
       return result;
     }
-    IntBox curr_box = curr_shape.bounding_box();
+    IntBox currBox = currShape.bounding_box();
 
-    boolean all_dirs =
-        Math.max(curr_box.width(), curr_box.height())
-            < p_factor * Math.min(curr_box.width(), curr_box.height());
+    boolean allDirs =
+        Math.max(currBox.width(), currBox.height())
+            < p_factor * Math.min(currBox.width(), currBox.height());
 
-    if (all_dirs || curr_box.width() >= curr_box.height()) {
+    if (allDirs || currBox.width() >= currBox.height()) {
       result.add(Direction.RIGHT);
       result.add(Direction.LEFT);
     }
-    if (all_dirs || curr_box.width() <= curr_box.height()) {
+    if (allDirs || currBox.width() <= currBox.height()) {
       result.add(Direction.UP);
       result.add(Direction.DOWN);
     }
@@ -212,7 +212,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
         p_window.indent();
         p_window.append(shapes[i], p_locale);
         p_window.append(" " + tm.getText("on_layer") + " ");
-        p_window.append(padstack_list.board_layer_structure.arr[i].name);
+        p_window.append(padstackList.boardLayerStructure.arr[i].name);
       }
     }
     p_window.newline();

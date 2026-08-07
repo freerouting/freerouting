@@ -11,9 +11,9 @@ class IdentifierTypeTest {
 
   @Test
   void testWrite() throws IOException {
-    String[] reserved_chars = {"(", ")", " ", "-"};
-    String string_quote = "\"";
-    IdentifierType identifierType = new IdentifierType(reserved_chars, string_quote);
+    String[] reservedChars = {"(", ")", " ", "-"};
+    String stringQuote = "\"";
+    IdentifierType identifierType = new IdentifierType(reservedChars, stringQuote);
 
     // Test with a numeric string
     ByteArrayOutputStream baos_numeric = new ByteArrayOutputStream();

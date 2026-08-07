@@ -9,19 +9,19 @@ public class BoardStatisticsItems implements Serializable {
   @SerializedName("total_count")
   public Integer totalCount;
 
-  @SerializedName("trace_count")
+  @SerializedName("traceCount")
   public Integer traceCount;
 
-  @SerializedName("via_count")
+  @SerializedName("viaCount")
   public Integer viaCount;
 
-  @SerializedName("conduction_area_count")
+  @SerializedName("conductionAreaCount")
   public Integer conductionAreaCount;
 
   @SerializedName("drill_item_count")
   public Integer drillItemCount;
 
-  @SerializedName("pin_count")
+  @SerializedName("pinCount")
   public Integer pinCount;
 
   @SerializedName("component_count")

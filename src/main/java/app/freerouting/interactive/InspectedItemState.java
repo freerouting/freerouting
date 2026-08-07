@@ -13,14 +13,14 @@ import javax.swing.JPopupMenu;
 /** Class implementing actions on the currently selected items. */
 public final class InspectedItemState extends InteractiveState {
 
-  private Set<Item> item_list;
-  private ClearanceViolations clearance_violations;
+  private Set<Item> itemList;
+  private ClearanceViolations clearanceViolations;
 
   /** Creates a new instance of InspectedItemState */
   private InspectedItemState(
       Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     super(p_parent_state, p_board_handling);
-    item_list = p_item_list;
+    itemList = p_item_list;
   }
 
   /**
@@ -37,7 +37,7 @@ public final class InspectedItemState extends InteractiveState {
 
   /** Gets the list of the currently selected items. */
   public Collection<Item> get_item_list() {
-    return item_list;
+    return itemList;
   }
 
   @Override
@@ -73,21 +73,21 @@ public final class InspectedItemState extends InteractiveState {
   public InteractiveState extent_to_whole_nets() {
 
     // collect all net numbers of the selected items
-    Set<Integer> curr_net_no_set = new TreeSet<>();
-    for (Item curr_item : item_list) {
-      if (curr_item instanceof Connectable) {
-        for (int i = 0; i < curr_item.net_count(); i++) {
-          curr_net_no_set.add(curr_item.get_net_no(i));
+    Set<Integer> currNetNoSet = new TreeSet<>();
+    for (Item currItem : itemList) {
+      if (currItem instanceof Connectable) {
+        for (int i = 0; i < currItem.net_count(); i++) {
+          currNetNoSet.add(currItem.get_net_no(i));
         }
       }
     }
-    Set<Item> new_selected_items = new TreeSet<>();
-    for (int curr_net_no : curr_net_no_set) {
-      new_selected_items.addAll(hdlg.get_routing_board().get_connectable_items(curr_net_no));
+    Set<Item> newSelectedItems = new TreeSet<>();
+    for (int currNetNo : currNetNoSet) {
+      newSelectedItems.addAll(hdlg.get_routing_board().get_connectable_items(currNetNo));
     }
-    this.item_list = new_selected_items;
-    if (new_selected_items.isEmpty()) {
-      return this.return_state;
+    this.itemList = newSelectedItems;
+    if (newSelectedItems.isEmpty()) {
+      return this.returnState;
     }
     filter();
     hdlg.repaint();
@@ -98,36 +98,36 @@ public final class InspectedItemState extends InteractiveState {
   public InteractiveState extent_to_whole_components() {
 
     // collect all group numbers of the selected items
-    Set<Integer> curr_group_no_set = new TreeSet<>();
-    for (Item curr_item : item_list) {
-      if (curr_item.get_component_no() > 0) {
-        curr_group_no_set.add(curr_item.get_component_no());
+    Set<Integer> currGroupNoSet = new TreeSet<>();
+    for (Item currItem : itemList) {
+      if (currItem.get_component_no() > 0) {
+        currGroupNoSet.add(currItem.get_component_no());
       }
     }
-    Set<Item> new_selected_items = new TreeSet<>(item_list);
-    for (int curr_group_no : curr_group_no_set) {
-      new_selected_items.addAll(hdlg.get_routing_board().get_component_items(curr_group_no));
+    Set<Item> newSelectedItems = new TreeSet<>(itemList);
+    for (int curr_group_no : currGroupNoSet) {
+      newSelectedItems.addAll(hdlg.get_routing_board().get_component_items(curr_group_no));
     }
-    if (new_selected_items.isEmpty()) {
-      return this.return_state;
+    if (newSelectedItems.isEmpty()) {
+      return this.returnState;
     }
-    this.item_list = new_selected_items;
+    this.itemList = newSelectedItems;
     hdlg.repaint();
     return this;
   }
 
   /** Select also all items belonging to any connected set of the current selected items. */
   public InteractiveState extent_to_whole_connected_sets() {
-    Set<Item> new_selected_items = new TreeSet<>();
-    for (Item curr_item : this.item_list) {
-      if (curr_item instanceof Connectable) {
-        new_selected_items.addAll(curr_item.get_connected_set(-1));
+    Set<Item> newSelectedItems = new TreeSet<>();
+    for (Item currItem : this.itemList) {
+      if (currItem instanceof Connectable) {
+        newSelectedItems.addAll(currItem.get_connected_set(-1));
       }
     }
-    if (new_selected_items.isEmpty()) {
-      return this.return_state;
+    if (newSelectedItems.isEmpty()) {
+      return this.returnState;
     }
-    this.item_list = new_selected_items;
+    this.itemList = newSelectedItems;
     filter();
     hdlg.repaint();
     return this;
@@ -135,44 +135,44 @@ public final class InspectedItemState extends InteractiveState {
 
   /** Select also all items belonging to any connection of the current selected items. */
   public InteractiveState extent_to_whole_connections() {
-    Set<Item> new_selected_items = new TreeSet<>();
-    for (Item curr_item : this.item_list) {
-      if (curr_item instanceof Connectable) {
-        new_selected_items.addAll(curr_item.get_connection_items());
+    Set<Item> newSelectedItems = new TreeSet<>();
+    for (Item currItem : this.itemList) {
+      if (currItem instanceof Connectable) {
+        newSelectedItems.addAll(currItem.get_connection_items());
       }
     }
-    if (new_selected_items.isEmpty()) {
-      return this.return_state;
+    if (newSelectedItems.isEmpty()) {
+      return this.returnState;
     }
-    this.item_list = new_selected_items;
+    this.itemList = newSelectedItems;
     filter();
     hdlg.repaint();
     return this;
   }
 
   /**
-   * Picks item at p_point. Removes it from the selected_items list, if it is already in there,
-   * otherwise adds it to the list. Returns true (to change to the return_state) if nothing was
+   * Picks item at p_point. Removes it from the selectedItems list, if it is already in there,
+   * otherwise adds it to the list. Returns true (to change to the returnState) if nothing was
    * picked.
    */
   public InteractiveState toggle_select(FloatPoint p_point) {
-    Collection<Item> picked_items = hdlg.pick_items(p_point);
-    boolean state_ended = picked_items.isEmpty();
-    if (picked_items.size() == 1) {
-      Item picked_item = picked_items.iterator().next();
-      if (this.item_list.contains(picked_item)) {
-        this.item_list.remove(picked_item);
-        if (this.item_list.isEmpty()) {
-          state_ended = true;
+    Collection<Item> pickedItems = hdlg.pick_items(p_point);
+    boolean stateEnded = pickedItems.isEmpty();
+    if (pickedItems.size() == 1) {
+      Item pickedItem = pickedItems.iterator().next();
+      if (this.itemList.contains(pickedItem)) {
+        this.itemList.remove(pickedItem);
+        if (this.itemList.isEmpty()) {
+          stateEnded = true;
         }
       } else {
-        this.item_list.add(picked_item);
+        this.itemList.add(pickedItem);
       }
     }
     hdlg.repaint();
     InteractiveState result;
-    if (state_ended) {
-      result = this.return_state;
+    if (stateEnded) {
+      result = this.returnState;
     } else {
       result = this;
     }
@@ -181,24 +181,24 @@ public final class InspectedItemState extends InteractiveState {
 
   /** Shows or hides the clearance violations of the selected items. */
   public void toggle_clearance_violations() {
-    if (clearance_violations == null) {
-      clearance_violations = new ClearanceViolations(this.item_list);
-      Integer violation_count = clearance_violations.list.size();
-      String curr_message = violation_count + " " + tm.getText("clearance_violations_found");
-      hdlg.screen_messages.set_status_message(curr_message);
+    if (clearanceViolations == null) {
+      clearanceViolations = new ClearanceViolations(this.itemList);
+      Integer violationCount = clearanceViolations.list.size();
+      String currMessage = violationCount + " " + tm.getText("clearance_violations_found");
+      hdlg.screenMessages.set_status_message(currMessage);
     } else {
-      clearance_violations = null;
-      hdlg.screen_messages.set_status_message("");
+      clearanceViolations = null;
+      hdlg.screenMessages.set_status_message("");
     }
     hdlg.repaint();
   }
 
   /** Removes items not selected by the current interactive filter from the selected item list. */
   public InteractiveState filter() {
-    item_list = hdlg.getInteractiveSettings().get_item_selection_filter().filter(item_list);
+    itemList = hdlg.getInteractiveSettings().get_item_selection_filter().filter(itemList);
     InteractiveState result = this;
-    if (item_list.isEmpty()) {
-      result = this.return_state;
+    if (itemList.isEmpty()) {
+      result = this.returnState;
     }
     hdlg.repaint();
     return result;
@@ -207,9 +207,9 @@ public final class InspectedItemState extends InteractiveState {
   /** Prints information about the selected item into a graphical text window. */
   public InspectedItemState info() {
     WindowObjectInfo.display(
-        this.item_list,
-        hdlg.get_panel().board_frame,
-        hdlg.coordinate_transform,
+        this.itemList,
+        hdlg.get_panel().boardFrame,
+        hdlg.coordinateTransform,
         new java.awt.Point(100, 100));
     return this;
   }
@@ -221,34 +221,34 @@ public final class InspectedItemState extends InteractiveState {
 
   @Override
   public void draw(Graphics p_graphics) {
-    if (item_list == null) {
+    if (itemList == null) {
       return;
     }
 
-    for (Item curr_item : item_list) {
-      curr_item.draw(
+    for (Item currItem : itemList) {
+      currItem.draw(
           p_graphics,
-          hdlg.graphics_context,
-          hdlg.graphics_context.get_hilight_color(),
-          hdlg.graphics_context.get_hilight_color_intensity());
+          hdlg.graphicsContext,
+          hdlg.graphicsContext.get_hilight_color(),
+          hdlg.graphicsContext.get_hilight_color_intensity());
     }
-    if (clearance_violations != null) {
-      clearance_violations.draw(p_graphics, hdlg.graphics_context);
+    if (clearanceViolations != null) {
+      clearanceViolations.draw(p_graphics, hdlg.graphicsContext);
     }
   }
 
   @Override
   public JPopupMenu get_popup_menu() {
-    return hdlg.get_panel().popup_menu_select;
+    return hdlg.get_panel().popupMenuSelect;
   }
 
   @Override
   public void set_toolbar() {
-    hdlg.get_panel().board_frame.set_inspect_toolbar();
+    hdlg.get_panel().boardFrame.set_inspect_toolbar();
   }
 
   @Override
   public void display_default_message() {
-    hdlg.screen_messages.set_status_message(tm.getText("in_inspect_item_mode"));
+    hdlg.screenMessages.set_status_message(tm.getText("in_inspect_item_mode"));
   }
 }

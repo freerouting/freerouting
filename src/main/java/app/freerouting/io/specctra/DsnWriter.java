@@ -64,18 +64,18 @@ public final class DsnWriter {
             board,
             null,
             outputFile,
-            board.communication.specctra_parser_info.string_quote,
-            board.communication.coordinate_transform,
+            board.communication.specctraParserInfo.stringQuote,
+            board.communication.coordinateTransform,
             compatMode);
 
     outputFile.start_scope(false);
     outputFile.write("pcb ");
-    writeScopeParam.identifier_type.write(designName, outputFile);
+    writeScopeParam.identifierType.write(designName, outputFile);
 
     Parser.write_scope(
         writeScopeParam.file,
-        writeScopeParam.board.communication.specctra_parser_info,
-        writeScopeParam.identifier_type,
+        writeScopeParam.board.communication.specctraParserInfo,
+        writeScopeParam.identifierType,
         false);
 
     Resolution.write_scope(outputFile, board.communication);

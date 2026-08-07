@@ -21,8 +21,8 @@ public class LayerStructure {
   public LayerStructure(app.freerouting.board.LayerStructure p_board_layer_structure) {
     arr = new Layer[p_board_layer_structure.arr.length];
     for (int i = 0; i < arr.length; i++) {
-      app.freerouting.board.Layer board_layer = p_board_layer_structure.arr[i];
-      arr[i] = new Layer(board_layer.name, i, board_layer.is_signal);
+      app.freerouting.board.Layer boardLayer = p_board_layer_structure.arr[i];
+      arr[i] = new Layer(boardLayer.name, i, boardLayer.isSignal);
     }
   }
 
@@ -47,8 +47,8 @@ public class LayerStructure {
 
   public int signal_layer_count() {
     int result = 0;
-    for (Layer curr_layer : arr) {
-      if (curr_layer.is_signal) {
+    for (Layer currLayer : arr) {
+      if (currLayer.isSignal) {
         ++result;
       }
     }
@@ -58,9 +58,9 @@ public class LayerStructure {
   /** Returns, if the net with name p_net_name contains a power plane. */
   public boolean contains_plane(String p_net_name) {
 
-    for (Layer curr_layer : arr) {
-      if (!curr_layer.is_signal) {
-        if (curr_layer.net_names.contains(p_net_name)) {
+    for (Layer currLayer : arr) {
+      if (!currLayer.isSignal) {
+        if (currLayer.netNames.contains(p_net_name)) {
           return true;
         }
       }

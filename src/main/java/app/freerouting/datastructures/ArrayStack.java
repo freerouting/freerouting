@@ -5,14 +5,14 @@ package app.freerouting.datastructures;
 public class ArrayStack<p_element_type> {
 
   private int level = -1;
-  private p_element_type[] node_arr;
+  private p_element_type[] nodeArr;
 
   /**
    * Creates a new instance of ArrayStack with an initial maximal capacity for p_max_stack_depth
    * elements.
    */
   public ArrayStack(int p_max_stack_depth) {
-    node_arr = (p_element_type[]) new Object[p_max_stack_depth];
+    nodeArr = (p_element_type[]) new Object[p_max_stack_depth];
   }
 
   /** Sets the stack to empty. */
@@ -25,11 +25,11 @@ public class ArrayStack<p_element_type> {
 
     ++level;
 
-    if (level >= node_arr.length) {
+    if (level >= nodeArr.length) {
       reallocate();
     }
 
-    node_arr[level] = p_element;
+    nodeArr[level] = p_element;
   }
 
   /** Pops the next element from the top of the stack. Returns null, if the stack is exhausted. */
@@ -37,14 +37,14 @@ public class ArrayStack<p_element_type> {
     if (level < 0) {
       return null;
     }
-    p_element_type result = node_arr[level];
+    p_element_type result = nodeArr[level];
     --level;
     return result;
   }
 
   private void reallocate() {
-    p_element_type[] new_arr = (p_element_type[]) new Object[4 * this.node_arr.length];
-    System.arraycopy(node_arr, 0, new_arr, 0, node_arr.length);
-    this.node_arr = new_arr;
+    p_element_type[] newArr = (p_element_type[]) new Object[4 * this.nodeArr.length];
+    System.arraycopy(nodeArr, 0, newArr, 0, nodeArr.length);
+    this.nodeArr = newArr;
   }
 }

@@ -61,12 +61,12 @@ public class JobControllerMocked {
                          "fanout_max_passes": 20,
                          "max_threads": 11,
                          "improvement_threshold": 0.01,
-                         "trace_pull_tight_accuracy": 500,
+                         "tracePullTightAccuracy": 500,
                          "allowed_via_types": true,
-                         "via_costs": 50,
+                         "viaCosts": 50,
                          "plane_via_costs": 5,
-                         "start_ripup_costs": 100,
-                         "automatic_neckdown": true
+                         "startRipupCosts": 100,
+                         "automaticNeckdown": true
                      }
                 }
                 """)
@@ -110,12 +110,12 @@ public class JobControllerMocked {
                              "fanout_max_passes": 20,
                              "max_threads": 11,
                              "improvement_threshold": 0.01,
-                             "trace_pull_tight_accuracy": 500,
+                             "tracePullTightAccuracy": 500,
                              "allowed_via_types": true,
-                             "via_costs": 50,
+                             "viaCosts": 50,
                              "plane_via_costs": 5,
-                             "start_ripup_costs": 100,
-                             "automatic_neckdown": true
+                             "startRipupCosts": 100,
+                             "automaticNeckdown": true
                          }
                      },
                      {
@@ -133,12 +133,12 @@ public class JobControllerMocked {
                              "fanout_max_passes": 20,
                              "max_threads": 11,
                              "improvement_threshold": 0.01,
-                             "trace_pull_tight_accuracy": 500,
+                             "tracePullTightAccuracy": 500,
                              "allowed_via_types": true,
-                             "via_costs": 50,
+                             "viaCosts": 50,
                              "plane_via_costs": 5,
-                             "start_ripup_costs": 100,
-                             "automatic_neckdown": true
+                             "startRipupCosts": 100,
+                             "automaticNeckdown": true
                          }
                      },
                      {
@@ -156,12 +156,12 @@ public class JobControllerMocked {
                              "fanout_max_passes": 20,
                              "max_threads": 11,
                              "improvement_threshold": 0.01,
-                             "trace_pull_tight_accuracy": 500,
+                             "tracePullTightAccuracy": 500,
                              "allowed_via_types": true,
-                             "via_costs": 50,
+                             "viaCosts": 50,
                              "plane_via_costs": 5,
-                             "start_ripup_costs": 100,
-                             "automatic_neckdown": true
+                             "startRipupCosts": 100,
+                             "automaticNeckdown": true
                          }
                      }
                 ]
@@ -205,12 +205,12 @@ public class JobControllerMocked {
                          "fanout_max_passes": 20,
                          "max_threads": 11,
                          "improvement_threshold": 0.01,
-                         "trace_pull_tight_accuracy": 500,
+                         "tracePullTightAccuracy": 500,
                          "allowed_via_types": true,
-                         "via_costs": 50,
+                         "viaCosts": 50,
                          "plane_via_costs": 5,
-                         "start_ripup_costs": 100,
-                         "automatic_neckdown": true
+                         "startRipupCosts": 100,
+                         "automaticNeckdown": true
                      }
                 }
                 """)
@@ -253,12 +253,12 @@ public class JobControllerMocked {
                          "fanout_max_passes": 20,
                          "max_threads": 11,
                          "improvement_threshold": 0.01,
-                         "trace_pull_tight_accuracy": 500,
+                         "tracePullTightAccuracy": 500,
                          "allowed_via_types": true,
-                         "via_costs": 50,
+                         "viaCosts": 50,
                          "plane_via_costs": 5,
-                         "start_ripup_costs": 100,
-                         "automatic_neckdown": true
+                         "startRipupCosts": 100,
+                         "automaticNeckdown": true
                      }
                 }
                 """)
@@ -301,12 +301,12 @@ public class JobControllerMocked {
                          "fanout_max_passes": 20,
                          "max_threads": 11,
                          "improvement_threshold": 0.01,
-                         "trace_pull_tight_accuracy": 500,
+                         "tracePullTightAccuracy": 500,
                          "allowed_via_types": true,
-                         "via_costs": 50,
+                         "viaCosts": 50,
                          "plane_via_costs": 5,
-                         "start_ripup_costs": 100,
-                         "automatic_neckdown": true
+                         "startRipupCosts": 100,
+                         "automaticNeckdown": true
                      }
                 }
                 """)
@@ -353,12 +353,12 @@ public class JobControllerMocked {
                          "fanout_max_passes": 20,
                          "max_threads": 11,
                          "improvement_threshold": 0.01,
-                         "trace_pull_tight_accuracy": 500,
+                         "tracePullTightAccuracy": 500,
                          "allowed_via_types": true,
-                         "via_costs": 42,
+                         "viaCosts": 42,
                          "plane_via_costs": 5,
-                         "start_ripup_costs": 100,
-                         "automatic_neckdown": true
+                         "startRipupCosts": 100,
+                         "automaticNeckdown": true
                      }
                 }
                 """)
@@ -400,13 +400,13 @@ public class JobControllerMocked {
                          "size": 50853,
                          "crc32": 4085067588,
                          "format": "DSN",
-                         "layer_count": 0,
+                         "layerCount": 0,
                          "component_count": 0,
                          "netclass_count": 0,
-                         "net_count": 0,
+                         "netCount": 0,
                          "track_count": 0,
-                         "trace_count": 0,
-                         "via_count": 0,
+                         "traceCount": 0,
+                         "viaCount": 0,
                          "filename": "Issue102-Mars-64-revE-rot00.dsn",
                          "path": ""
                      },
@@ -422,12 +422,12 @@ public class JobControllerMocked {
                          "fanout_max_passes": 20,
                          "max_threads": 11,
                          "improvement_threshold": 0.01,
-                         "trace_pull_tight_accuracy": 500,
+                         "tracePullTightAccuracy": 500,
                          "allowed_via_types": true,
-                         "via_costs": 42,
+                         "viaCosts": 42,
                          "plane_via_costs": 5,
-                         "start_ripup_costs": 100,
-                         "automatic_neckdown": true
+                         "startRipupCosts": 100,
+                         "automaticNeckdown": true
                      }
                 }
                 """)
@@ -462,13 +462,13 @@ public class JobControllerMocked {
                              "size": 13150,
                              "crc32": 264089660,
                              "format": "SES",
-                             "layer_count": 0,
+                             "layerCount": 0,
                              "component_count": 0,
                              "netclass_count": 0,
-                             "net_count": 0,
+                             "netCount": 0,
                              "track_count": 0,
-                             "trace_count": 0,
-                             "via_count": 0,
+                             "traceCount": 0,
+                             "viaCount": 0,
                              "filename": "Issue102-Mars-64-revE-rot00.ses",
                              "path": ""
                         }

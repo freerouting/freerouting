@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
  * app.freerouting.board.PolylineTrace#combine()}.
  *
  * <p>Before the fix, {@code combine()} called itself once per successful merge ({@code
- * combine_at_start} / {@code combine_at_end}), so reading a net made of a long chain of connected
+ * combineAtStart} / {@code combine_at_end}), so reading a net made of a long chain of connected
  * collinear 2-point segments recursed once per segment and overflowed the stack during import —
  * before routing even started. This is a different method than the {@code normalize()} recursion
  * that was bounded in v2.2.4.

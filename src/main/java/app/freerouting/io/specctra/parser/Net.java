@@ -16,7 +16,7 @@ public class Net {
   public final Id id;
 
   /** List of elements of type Pin. */
-  private Set<Pin> pin_list;
+  private Set<Pin> pinList;
 
   /** Creates a new instance of Net */
   public Net(Id p_net_id) {
@@ -29,13 +29,13 @@ public class Net {
       Collection<app.freerouting.board.Pin> p_pin_list)
       throws IOException {
     p_par.file.start_scope();
-    write_net_id(p_net, p_par.file, p_par.identifier_type);
+    write_net_id(p_net, p_par.file, p_par.identifierType);
     // write the pins scope
     p_par.file.start_scope();
     p_par.file.write("pins");
-    for (app.freerouting.board.Pin curr_pin : p_pin_list) {
-      if (curr_pin.contains_net(p_net.net_number)) {
-        write_pin(p_par, curr_pin);
+    for (app.freerouting.board.Pin currPin : p_pin_list) {
+      if (currPin.contains_net(p_net.netNumber)) {
+        write_pin(p_par, currPin);
       }
     }
     p_par.file.end_scope();
@@ -48,51 +48,51 @@ public class Net {
     p_file.write("net ");
     p_identifier_type.write(p_net.name, p_file);
     p_file.write(" ");
-    int subnet_number = p_net.subnet_number;
-    p_file.write(String.valueOf(subnet_number));
+    int subnetNumber = p_net.subnetNumber;
+    p_file.write(String.valueOf(subnetNumber));
   }
 
   public static void write_pin(WriteScopeParameter p_par, app.freerouting.board.Pin p_pin)
       throws IOException {
-    Component curr_component = p_par.board.components.get(p_pin.get_component_no());
-    if (curr_component == null) {
-      FRLogger.warn("Net.write_scope: component not found at '" + curr_component.name + "'");
+    Component currComponent = p_par.board.components.get(p_pin.get_component_no());
+    if (currComponent == null) {
+      FRLogger.warn("Net.write_scope: component not found at '" + currComponent.name + "'");
       return;
     }
-    Package.Pin lib_pin = curr_component.get_package().get_pin(p_pin.get_index_in_package());
-    if (lib_pin == null) {
-      FRLogger.warn("Net.write_scope:  pin number out of range at '" + curr_component.name + "'");
+    Package.Pin libPin = currComponent.get_package().get_pin(p_pin.get_index_in_package());
+    if (libPin == null) {
+      FRLogger.warn("Net.write_scope:  pin number out of range at '" + currComponent.name + "'");
       return;
     }
     p_par.file.new_line();
-    p_par.identifier_type.write(curr_component.name, p_par.file);
+    p_par.identifierType.write(currComponent.name, p_par.file);
     p_par.file.write("-");
-    p_par.identifier_type.write(lib_pin.name, p_par.file);
+    p_par.identifierType.write(libPin.name, p_par.file);
   }
 
   public Set<Pin> get_pins() {
-    return pin_list;
+    return pinList;
   }
 
   public void set_pins(Collection<Pin> p_pin_list) {
-    pin_list = new TreeSet<>(p_pin_list);
+    pinList = new TreeSet<>(p_pin_list);
   }
 
   public static class Id implements Comparable<Id> {
 
     public final String name;
-    public final int subnet_number;
+    public final int subnetNumber;
 
     public Id(String p_name, int p_subnet_number) {
       name = p_name;
-      subnet_number = p_subnet_number;
+      subnetNumber = p_subnet_number;
     }
 
     @Override
     public int compareTo(Id p_other) {
       int result = this.name.compareTo(p_other.name);
       if (result == 0) {
-        result = this.subnet_number - p_other.subnet_number;
+        result = this.subnetNumber - p_other.subnetNumber;
       }
       return result;
     }
@@ -101,26 +101,26 @@ public class Net {
   /** Sorted tuple of component name and pin name. */
   public static class Pin implements Comparable<Pin> {
 
-    public final String component_name;
-    public final String pin_name;
+    public final String componentName;
+    public final String pinName;
 
     public Pin(String p_component_name, String p_pin_name) {
-      component_name = p_component_name;
-      pin_name = p_pin_name;
+      componentName = p_component_name;
+      pinName = p_pin_name;
     }
 
     @Override
     public int compareTo(Pin p_other) {
-      int result = this.component_name.compareTo(p_other.component_name);
+      int result = this.componentName.compareTo(p_other.componentName);
       if (result == 0) {
-        result = this.pin_name.compareTo(p_other.pin_name);
+        result = this.pinName.compareTo(p_other.pinName);
       }
       return result;
     }
 
     @Override
     public String toString() {
-      return "Pin{" + component_name + '-' + pin_name + '}';
+      return "Pin{" + componentName + '-' + pinName + '}';
     }
   }
 }

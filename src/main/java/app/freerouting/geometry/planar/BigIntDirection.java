@@ -105,9 +105,9 @@ public class BigIntDirection extends Direction implements Serializable {
     // now this direction and p_other are located in the same
     // open horizontal half plane
 
-    BigInteger tmp_1 = y.multiply(p_other.x);
-    BigInteger tmp_2 = x.multiply(p_other.y);
-    BigInteger determinant = tmp_1.subtract(tmp_2);
+    BigInteger tmp1 = y.multiply(p_other.x);
+    BigInteger tmp2 = x.multiply(p_other.y);
+    BigInteger determinant = tmp1.subtract(tmp2);
     return determinant.signum();
   }
 }

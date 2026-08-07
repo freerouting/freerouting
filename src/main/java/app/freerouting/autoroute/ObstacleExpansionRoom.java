@@ -16,29 +16,29 @@ import java.util.List;
 public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   private final Item item;
-  private final int index_in_item;
+  private final int indexInItem;
   private final TileShape shape;
 
   /** The list of doors to neighbour expansion rooms */
   private List<ExpansionDoor> doors;
 
-  private boolean doors_calculated;
+  private boolean doorsCalculated;
 
   /** Creates a new instance of ObstacleExpansionRoom */
   ObstacleExpansionRoom(Item p_item, int p_index_in_item, ShapeSearchTree p_shape_tree) {
     this.item = p_item;
-    this.index_in_item = p_index_in_item;
+    this.indexInItem = p_index_in_item;
     this.shape = p_item.get_tree_shape(p_shape_tree, p_index_in_item);
     this.doors = new ArrayList<>();
   }
 
   public int get_index_in_item() {
-    return this.index_in_item;
+    return this.indexInItem;
   }
 
   @Override
   public int get_layer() {
-    return this.item.shape_layer(this.index_in_item);
+    return this.item.shape_layer(this.indexInItem);
   }
 
   @Override
@@ -48,15 +48,15 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   @Override
   public int get_id_no() {
-    return (this.item.get_id_no() << 10) | this.index_in_item;
+    return (this.item.get_id_no() << 10) | this.indexInItem;
   }
 
   /** Checks, if this room has already a 1-dimensional door to p_other */
   @Override
   public boolean door_exists(ExpansionRoom p_other) {
     if (doors != null) {
-      for (ExpansionDoor curr_door : this.doors) {
-        if (curr_door.first_room == p_other || curr_door.second_room == p_other) {
+      for (ExpansionDoor currDoor : this.doors) {
+        if (currDoor.firstRoom == p_other || currDoor.secondRoom == p_other) {
           return true;
         }
       }
@@ -90,14 +90,14 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
         return false;
       }
       // create only doors between consecutive trace segments
-      if (this.index_in_item != p_other.index_in_item + 1
-          && this.index_in_item != p_other.index_in_item - 1) {
+      if (this.indexInItem != p_other.indexInItem + 1
+          && this.indexInItem != p_other.indexInItem - 1) {
         return false;
       }
     }
-    ExpansionDoor new_door = new ExpansionDoor(this, p_other, 2);
-    this.add_door(new_door);
-    p_other.add_door(new_door);
+    ExpansionDoor newDoor = new ExpansionDoor(this, p_other, 2);
+    this.add_door(newDoor);
+    p_other.add_door(newDoor);
     return true;
   }
 
@@ -115,8 +115,8 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   @Override
   public void reset_doors() {
-    for (ExpandableObject curr_door : this.doors) {
-      curr_door.reset();
+    for (ExpandableObject currDoor : this.doors) {
+      currDoor.reset();
     }
   }
 
@@ -141,20 +141,20 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   /** Returns, if all doors to the neighbour rooms are calculated. */
   boolean all_doors_calculated() {
-    return this.doors_calculated;
+    return this.doorsCalculated;
   }
 
   void set_doors_calculated(boolean p_value) {
-    this.doors_calculated = p_value;
+    this.doorsCalculated = p_value;
   }
 
   /** Draws the shape of this room. */
   @Override
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity) {
-    Color draw_color = Color.WHITE;
-    double layer_visibility = p_graphics_context.get_layer_visibility(this.get_layer());
+    Color drawColor = Color.WHITE;
+    double layerVisibility = p_graphics_context.get_layer_visibility(this.get_layer());
     p_graphics_context.fill_area(
-        this.get_shape(), p_graphics, draw_color, p_intensity * layer_visibility);
-    p_graphics_context.draw_boundary(this.get_shape(), 0, draw_color, p_graphics, layer_visibility);
+        this.get_shape(), p_graphics, drawColor, p_intensity * layerVisibility);
+    p_graphics_context.draw_boundary(this.get_shape(), 0, drawColor, p_graphics, layerVisibility);
   }
 }

@@ -6,8 +6,8 @@ import app.freerouting.rules.Net;
 
 /**
  * Represents an incomplete connection (airline) between two items on the board. Each airline is
- * associated with a net and connects two specific items (from_item and to_item) at specific
- * locations (from_corner and to_corner).
+ * associated with a net and connects two specific items (fromItem and toItem) at specific locations
+ * (fromCorner and toCorner).
  */
 public class AirLine implements Comparable<AirLine> {
 
@@ -15,16 +15,16 @@ public class AirLine implements Comparable<AirLine> {
   public final Net net;
 
   /** The item where the airline starts. */
-  public final Item from_item;
+  public final Item fromItem;
 
   /** The exact starting coordinate of the airline. */
-  public final FloatPoint from_corner;
+  public final FloatPoint fromCorner;
 
   /** The item where the airline ends. */
-  public final Item to_item;
+  public final Item toItem;
 
   /** The exact ending coordinate of the airline. */
-  public final FloatPoint to_corner;
+  public final FloatPoint toCorner;
 
   public AirLine(
       Net p_net,
@@ -33,10 +33,10 @@ public class AirLine implements Comparable<AirLine> {
       Item p_to_item,
       FloatPoint p_to_corner) {
     net = p_net;
-    from_item = p_from_item;
-    from_corner = p_from_corner;
-    to_item = p_to_item;
-    to_corner = p_to_corner;
+    fromItem = p_from_item;
+    fromCorner = p_from_corner;
+    toItem = p_to_item;
+    toCorner = p_to_corner;
   }
 
   @Override
@@ -46,6 +46,6 @@ public class AirLine implements Comparable<AirLine> {
 
   @Override
   public String toString() {
-    return this.net.name + ": " + from_item + " - " + to_item;
+    return this.net.name + ": " + fromItem + " - " + toItem;
   }
 }

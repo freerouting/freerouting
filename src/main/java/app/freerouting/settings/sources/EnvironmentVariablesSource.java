@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * <p>Examples: - FREEROUTING__ROUTER__MAX_PASSES=100 → router.max_passes = 100 -
  * FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS=4 → router.optimizer.max_threads = 4 -
- * FREEROUTING__ROUTER__VIAS_ALLOWED=false → router.vias_allowed = false
+ * FREEROUTING__ROUTER__VIAS_ALLOWED=false → router.viasAllowed = false
  *
  * <p>Priority: 55 (between GUI and CLI) - Higher than GUI (50): Environment variables override
  * interactive GUI settings - Lower than CLI (60): Command-line arguments override environment

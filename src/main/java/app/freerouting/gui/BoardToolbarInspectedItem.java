@@ -10,142 +10,136 @@ import javax.swing.JToolBar;
 /** Describes the toolbar of the board frame, when it is in the inspected item state. */
 class BoardToolbarInspectedItem extends JToolBar {
 
-  private final BoardFrame board_frame;
+  private final BoardFrame boardFrame;
   private final TextManager tm;
 
   /** Creates a new instance of BoardToolbarInspectedItem. */
   BoardToolbarInspectedItem(BoardFrame p_board_frame) {
-    this.board_frame = p_board_frame;
+    this.boardFrame = p_board_frame;
 
     this.tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
-    JButton toolbar_cancel_button = new JButton();
-    toolbar_cancel_button.setText(tm.getText("cancel"));
-    toolbar_cancel_button.setToolTipText(tm.getText("cancel_tooltip"));
-    toolbar_cancel_button.addActionListener(
-        _ -> board_frame.board_panel.board_handling.cancel_state());
-    toolbar_cancel_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("toolbar_cancel_button", toolbar_cancel_button.getText()));
+    JButton toolbarCancelButton = new JButton();
+    toolbarCancelButton.setText(tm.getText("cancel"));
+    toolbarCancelButton.setToolTipText(tm.getText("cancel_tooltip"));
+    toolbarCancelButton.addActionListener(_ -> boardFrame.boardPanel.boardHandling.cancel_state());
+    toolbarCancelButton.addActionListener(
+        _ -> FRAnalytics.buttonClicked("toolbarCancelButton", toolbarCancelButton.getText()));
 
-    this.add(toolbar_cancel_button);
+    this.add(toolbarCancelButton);
 
-    JButton toolbar_info_button = new JButton();
-    toolbar_info_button.setText(tm.getText("info"));
-    toolbar_info_button.setToolTipText(tm.getText("info_tooltip"));
-    toolbar_info_button.addActionListener(
-        _ -> board_frame.board_panel.board_handling.display_selected_item_info());
-    toolbar_info_button.addActionListener(
-        _ -> FRAnalytics.buttonClicked("toolbar_info_button", toolbar_info_button.getText()));
+    JButton toolbarInfoButton = new JButton();
+    toolbarInfoButton.setText(tm.getText("info"));
+    toolbarInfoButton.setToolTipText(tm.getText("info_tooltip"));
+    toolbarInfoButton.addActionListener(
+        _ -> boardFrame.boardPanel.boardHandling.display_selected_item_info());
+    toolbarInfoButton.addActionListener(
+        _ -> FRAnalytics.buttonClicked("toolbarInfoButton", toolbarInfoButton.getText()));
 
-    this.add(toolbar_info_button);
+    this.add(toolbarInfoButton);
 
     JLabel jLabel5 = new JLabel();
     jLabel5.setMaximumSize(new Dimension(10, 10));
     jLabel5.setPreferredSize(new Dimension(10, 10));
     this.add(jLabel5);
 
-    JButton toolbar_whole_nets_button = new JButton();
-    toolbar_whole_nets_button.setText(tm.getText("nets"));
-    toolbar_whole_nets_button.setToolTipText(tm.getText("nets_tooltip"));
-    toolbar_whole_nets_button.addActionListener(
-        _ -> board_frame.board_panel.board_handling.extend_selection_to_whole_nets());
-    toolbar_whole_nets_button.addActionListener(
+    JButton toolbarWholeNetsButton = new JButton();
+    toolbarWholeNetsButton.setText(tm.getText("nets"));
+    toolbarWholeNetsButton.setToolTipText(tm.getText("nets_tooltip"));
+    toolbarWholeNetsButton.addActionListener(
+        _ -> boardFrame.boardPanel.boardHandling.extend_selection_to_whole_nets());
+    toolbarWholeNetsButton.addActionListener(
+        _ -> FRAnalytics.buttonClicked("toolbarWholeNetsButton", toolbarWholeNetsButton.getText()));
+
+    this.add(toolbarWholeNetsButton);
+
+    JButton toolbarWholeConnectedSetsButton = new JButton();
+    toolbarWholeConnectedSetsButton.setText(tm.getText("conn_sets"));
+    toolbarWholeConnectedSetsButton.setToolTipText(tm.getText("conn_sets_tooltip"));
+    toolbarWholeConnectedSetsButton.addActionListener(
+        _ -> boardFrame.boardPanel.boardHandling.extend_selection_to_whole_connected_sets());
+    toolbarWholeConnectedSetsButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "toolbar_whole_nets_button", toolbar_whole_nets_button.getText()));
+                "toolbarWholeConnectedSetsButton", toolbarWholeConnectedSetsButton.getText()));
 
-    this.add(toolbar_whole_nets_button);
+    this.add(toolbarWholeConnectedSetsButton);
 
-    JButton toolbar_whole_connected_sets_button = new JButton();
-    toolbar_whole_connected_sets_button.setText(tm.getText("conn_sets"));
-    toolbar_whole_connected_sets_button.setToolTipText(tm.getText("conn_sets_tooltip"));
-    toolbar_whole_connected_sets_button.addActionListener(
-        _ -> board_frame.board_panel.board_handling.extend_selection_to_whole_connected_sets());
-    toolbar_whole_connected_sets_button.addActionListener(
+    JButton toolbarWholeConnectionsButton = new JButton();
+    toolbarWholeConnectionsButton.setText(tm.getText("connections"));
+    toolbarWholeConnectionsButton.setToolTipText(tm.getText("connections_tooltip"));
+    toolbarWholeConnectionsButton.addActionListener(
+        _ -> boardFrame.boardPanel.boardHandling.extend_selection_to_whole_connections());
+    toolbarWholeConnectionsButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "toolbar_whole_connected_sets_button",
-                toolbar_whole_connected_sets_button.getText()));
+                "toolbarWholeConnectionsButton", toolbarWholeConnectionsButton.getText()));
 
-    this.add(toolbar_whole_connected_sets_button);
+    this.add(toolbarWholeConnectionsButton);
 
-    JButton toolbar_whole_connections_button = new JButton();
-    toolbar_whole_connections_button.setText(tm.getText("connections"));
-    toolbar_whole_connections_button.setToolTipText(tm.getText("connections_tooltip"));
-    toolbar_whole_connections_button.addActionListener(
-        _ -> board_frame.board_panel.board_handling.extend_selection_to_whole_connections());
-    toolbar_whole_connections_button.addActionListener(
+    JButton toolbarWholeGroupsButton = new JButton();
+    toolbarWholeGroupsButton.setText(tm.getText("components"));
+    toolbarWholeGroupsButton.setToolTipText(tm.getText("components_tooltip"));
+    toolbarWholeGroupsButton.addActionListener(
+        _ -> boardFrame.boardPanel.boardHandling.extend_selection_to_whole_components());
+    toolbarWholeGroupsButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "toolbar_whole_connections_button", toolbar_whole_connections_button.getText()));
+                "toolbarWholeGroupsButton", toolbarWholeGroupsButton.getText()));
 
-    this.add(toolbar_whole_connections_button);
-
-    JButton toolbar_whole_groups_button = new JButton();
-    toolbar_whole_groups_button.setText(tm.getText("components"));
-    toolbar_whole_groups_button.setToolTipText(tm.getText("components_tooltip"));
-    toolbar_whole_groups_button.addActionListener(
-        _ -> board_frame.board_panel.board_handling.extend_selection_to_whole_components());
-    toolbar_whole_groups_button.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "toolbar_whole_groups_button", toolbar_whole_groups_button.getText()));
-
-    this.add(toolbar_whole_groups_button);
+    this.add(toolbarWholeGroupsButton);
 
     JLabel jLabel6 = new JLabel();
     jLabel6.setMaximumSize(new Dimension(10, 10));
     jLabel6.setPreferredSize(new Dimension(10, 10));
     this.add(jLabel6);
 
-    JButton toolbar_violation_button = new JButton();
-    toolbar_violation_button.setText(tm.getText("violations"));
-    toolbar_violation_button.setToolTipText(tm.getText("violations_tooltip"));
-    toolbar_violation_button.addActionListener(
-        _ -> board_frame.board_panel.board_handling.toggle_selected_item_violations());
-    toolbar_violation_button.addActionListener(
-        _ ->
-            FRAnalytics.buttonClicked(
-                "toolbar_violation_button", toolbar_violation_button.getText()));
+    JButton toolbarViolationButton = new JButton();
+    toolbarViolationButton.setText(tm.getText("violations"));
+    toolbarViolationButton.setToolTipText(tm.getText("violations_tooltip"));
+    toolbarViolationButton.addActionListener(
+        _ -> boardFrame.boardPanel.boardHandling.toggle_selected_item_violations());
+    toolbarViolationButton.addActionListener(
+        _ -> FRAnalytics.buttonClicked("toolbarViolationButton", toolbarViolationButton.getText()));
 
-    this.add(toolbar_violation_button);
+    this.add(toolbarViolationButton);
 
     JLabel jLabel7 = new JLabel();
     jLabel7.setMaximumSize(new Dimension(10, 10));
     jLabel7.setPreferredSize(new Dimension(10, 10));
     this.add(jLabel7);
 
-    JButton toolbar_display_selection_button = new JButton();
-    toolbar_display_selection_button.setText(tm.getText("zoom_selection"));
-    toolbar_display_selection_button.setToolTipText(tm.getText("zoom_selection_tooltip"));
-    toolbar_display_selection_button.addActionListener(
-        _ -> board_frame.board_panel.board_handling.zoom_selection());
-    toolbar_display_selection_button.addActionListener(
+    JButton toolbarDisplaySelectionButton = new JButton();
+    toolbarDisplaySelectionButton.setText(tm.getText("zoom_selection"));
+    toolbarDisplaySelectionButton.setToolTipText(tm.getText("zoom_selection_tooltip"));
+    toolbarDisplaySelectionButton.addActionListener(
+        _ -> boardFrame.boardPanel.boardHandling.zoom_selection());
+    toolbarDisplaySelectionButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "toolbar_display_selection_button", toolbar_display_selection_button.getText()));
-    this.add(toolbar_display_selection_button);
+                "toolbarDisplaySelectionButton", toolbarDisplaySelectionButton.getText()));
+    this.add(toolbarDisplaySelectionButton);
 
-    JButton toolbar_display_all_button = new JButton();
-    toolbar_display_all_button.setText(tm.getText("zoom_all"));
-    toolbar_display_all_button.setToolTipText(tm.getText("zoom_all_tooltip"));
-    toolbar_display_all_button.addActionListener(_ -> board_frame.zoom_all());
-    toolbar_display_all_button.addActionListener(
+    JButton toolbarDisplayAllButton = new JButton();
+    toolbarDisplayAllButton.setText(tm.getText("zoom_all"));
+    toolbarDisplayAllButton.setToolTipText(tm.getText("zoom_all_tooltip"));
+    toolbarDisplayAllButton.addActionListener(_ -> boardFrame.zoom_all());
+    toolbarDisplayAllButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "toolbar_display_all_button", toolbar_display_all_button.getText()));
-    this.add(toolbar_display_all_button);
+                "toolbarDisplayAllButton", toolbarDisplayAllButton.getText()));
+    this.add(toolbarDisplayAllButton);
 
-    JButton toolbar_display_region_button = new JButton();
-    toolbar_display_region_button.setText(tm.getText("zoom_region"));
-    toolbar_display_region_button.setToolTipText(tm.getText("zoom_region_tooltip"));
-    toolbar_display_region_button.addActionListener(
-        _ -> board_frame.board_panel.board_handling.zoom_region());
-    toolbar_display_region_button.addActionListener(
+    JButton toolbarDisplayRegionButton = new JButton();
+    toolbarDisplayRegionButton.setText(tm.getText("zoom_region"));
+    toolbarDisplayRegionButton.setToolTipText(tm.getText("zoom_region_tooltip"));
+    toolbarDisplayRegionButton.addActionListener(
+        _ -> boardFrame.boardPanel.boardHandling.zoom_region());
+    toolbarDisplayRegionButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "toolbar_display_region_button", toolbar_display_region_button.getText()));
+                "toolbarDisplayRegionButton", toolbarDisplayRegionButton.getText()));
 
-    this.add(toolbar_display_region_button);
+    this.add(toolbarDisplayRegionButton);
   }
 }

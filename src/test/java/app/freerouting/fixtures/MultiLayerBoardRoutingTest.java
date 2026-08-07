@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
  * null}). {@code DsnFileSettings} always calls {@code RouterSettings.setLayerCount(n)} using the
  * layer count extracted from the DSN {@code (structure (layer …))} declarations, so the merged
  * settings have correctly-sized arrays as soon as the DSN file is parsed – independently of whether
- * an {@code (autoroute_settings …)} block is present in the file. {@code
+ * an {@code (autorouteSettings …)} block is present in the file. {@code
  * applyBoardSpecificOptimizations()} then refines the per-layer cost values based on the actual
  * board geometry.
  *
@@ -42,10 +42,10 @@ import org.junit.jupiter.api.Test;
  *
  * <ul>
  *   <li>{@code Issue066-Project_GP8B.dsn} — 4-layer board (F.Cu / In1.Cu / In2.Cu / B.Cu), 266
- *       connections, no {@code (autoroute_settings)} block (exercises the "DsnFileSettings must set
+ *       connections, no {@code (autorouteSettings)} block (exercises the "DsnFileSettings must set
  *       layer count even without an autoroute block" path).
  *   <li>{@code Issue289-Autorouter_PCB_FHT-8086_2024-03-08.dsn} — 6-layer board (layers 1, 2, 21,
- *       22, 23, 24), 142 connections, no {@code (autoroute_settings)} block.
+ *       22, 23, 24), 142 connections, no {@code (autorouteSettings)} block.
  * </ul>
  */
 public class MultiLayerBoardRoutingTest extends RoutingFixtureTest {

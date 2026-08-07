@@ -19,9 +19,9 @@ public abstract class Cursor {
       new Line2D.Double(-MAX_COOR, -MAX_COOR, MAX_COOR, MAX_COOR);
   private static final Line2D LEFT_DIAGONAL_LINE =
       new Line2D.Double(-MAX_COOR, MAX_COOR, MAX_COOR, -MAX_COOR);
-  double x_coor;
-  double y_coor;
-  boolean location_initialized;
+  double xCoor;
+  double yCoor;
+  boolean locationInitialized;
 
   public static Cursor get_45_degree_cross_hair_cursor() {
     return new FortyfiveDegreeCrossHairCursor();
@@ -38,9 +38,9 @@ public abstract class Cursor {
   public abstract void draw(Graphics p_graphics);
 
   public void set_location(Point2D p_location) {
-    this.x_coor = p_location.getX();
-    this.y_coor = p_location.getY();
-    location_initialized = true;
+    this.xCoor = p_location.getX();
+    this.yCoor = p_location.getY();
+    locationInitialized = true;
   }
 
   private static class FortyfiveDegreeCrossHairCursor extends Cursor {
@@ -48,18 +48,18 @@ public abstract class Cursor {
     @Override
     public void draw(Graphics p_graphics) {
 
-      if (!location_initialized) {
+      if (!locationInitialized) {
         return;
       }
       Graphics2D g2 = (Graphics2D) p_graphics;
       init_graphics(g2);
-      GeneralPath draw_path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
-      draw_path.append(VERTICAL_LINE, false);
-      draw_path.append(HORIZONTAL_LINE, false);
-      draw_path.append(RIGHT_DIAGONAL_LINE, false);
-      draw_path.append(LEFT_DIAGONAL_LINE, false);
-      g2.translate(this.x_coor, this.y_coor);
-      g2.draw(draw_path);
+      GeneralPath drawPath = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
+      drawPath.append(VERTICAL_LINE, false);
+      drawPath.append(HORIZONTAL_LINE, false);
+      drawPath.append(RIGHT_DIAGONAL_LINE, false);
+      drawPath.append(LEFT_DIAGONAL_LINE, false);
+      g2.translate(this.xCoor, this.yCoor);
+      g2.draw(drawPath);
     }
   }
 }

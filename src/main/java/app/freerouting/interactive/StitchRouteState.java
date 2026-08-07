@@ -37,7 +37,7 @@ public class StitchRouteState extends RouteState {
 
   @Override
   public JPopupMenu get_popup_menu() {
-    return hdlg.get_panel().popup_menu_stitch_route;
+    return hdlg.get_panel().popupMenuStitchRoute;
   }
 
   @Override
@@ -52,24 +52,24 @@ public class StitchRouteState extends RouteState {
       return;
     }
     // draw a line from the routing end point to the cursor
-    FloatPoint[] draw_points = new FloatPoint[2];
-    draw_points[0] = route.get_last_corner().to_float();
-    draw_points[1] = hdlg.get_current_mouse_position();
-    Color draw_color = hdlg.graphics_context.get_hilight_color();
-    double display_width =
-        hdlg.get_trace_halfwidth(route.net_no_arr[0], hdlg.getInteractiveSettings().get_layer());
-    int clearance_draw_width = 50;
-    double radius_with_clearance = display_width;
-    NetClass default_net_class = hdlg.get_routing_board().rules.get_default_net_class();
-    int cl_class =
-        default_net_class.default_item_clearance_classes.get(
+    FloatPoint[] drawPoints = new FloatPoint[2];
+    drawPoints[0] = route.get_last_corner().to_float();
+    drawPoints[1] = hdlg.get_current_mouse_position();
+    Color drawColor = hdlg.graphicsContext.get_hilight_color();
+    double displayWidth =
+        hdlg.get_trace_halfwidth(route.netNoArr[0], hdlg.getInteractiveSettings().get_layer());
+    int clearanceDrawWidth = 50;
+    double radiusWithClearance = displayWidth;
+    NetClass defaultNetClass = hdlg.get_routing_board().rules.get_default_net_class();
+    int clClass =
+        defaultNetClass.defaultItemClearanceClasses.get(
             DefaultItemClearanceClasses.ItemClass.TRACE);
-    radius_with_clearance +=
+    radiusWithClearance +=
         hdlg.get_routing_board()
-            .clearance_value(cl_class, cl_class, hdlg.getInteractiveSettings().get_layer());
-    hdlg.graphics_context.draw(draw_points, display_width, draw_color, p_graphics, 0.5);
+            .clearance_value(clClass, clClass, hdlg.getInteractiveSettings().get_layer());
+    hdlg.graphicsContext.draw(drawPoints, displayWidth, drawColor, p_graphics, 0.5);
     // draw the clearance boundary around the end point
-    hdlg.graphics_context.draw_circle(
-        draw_points[1], radius_with_clearance, clearance_draw_width, draw_color, p_graphics, 0.5);
+    hdlg.graphicsContext.draw_circle(
+        drawPoints[1], radiusWithClearance, clearanceDrawWidth, drawColor, p_graphics, 0.5);
   }
 }

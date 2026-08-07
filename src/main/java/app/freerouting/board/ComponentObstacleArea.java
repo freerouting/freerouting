@@ -85,16 +85,15 @@ public class ComponentObstacleArea extends ObstacleArea {
 
   @Override
   public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
-    Color[] color_arr = new Color[this.board.layer_structure.arr.length];
-    Color front_draw_color = p_graphics_context.other_color_table.get_courtyard_color(true);
-    for (int i = 0; i < color_arr.length - 1; i++) {
-      color_arr[i] = front_draw_color;
+    Color[] colorArr = new Color[this.board.layerStructure.arr.length];
+    Color frontDrawColor = p_graphics_context.otherColorTable.get_courtyard_color(true);
+    for (int i = 0; i < colorArr.length - 1; i++) {
+      colorArr[i] = frontDrawColor;
     }
-    if (color_arr.length > 1) {
-      color_arr[color_arr.length - 1] =
-          p_graphics_context.other_color_table.get_courtyard_color(false);
+    if (colorArr.length > 1) {
+      colorArr[colorArr.length - 1] = p_graphics_context.otherColorTable.get_courtyard_color(false);
     }
-    return color_arr;
+    return colorArr;
   }
 
   @Override
@@ -117,8 +116,8 @@ public class ComponentObstacleArea extends ObstacleArea {
     Color color = p_color_arr[this.get_layer()];
     double intensity = virtualVisibility * p_intensity;
 
-    double draw_width = Math.min(this.board.communication.get_resolution(Unit.MIL), 100);
-    p_graphics_context.draw_boundary(this.get_area(), draw_width, color, p_g, intensity);
+    double drawWidth = Math.min(this.board.communication.get_resolution(Unit.MIL), 100);
+    p_graphics_context.draw_boundary(this.get_area(), drawWidth, color, p_g, intensity);
   }
 
   @Override

@@ -40,9 +40,9 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
 
   /** Returns the via info with name p_name, or null, if no such via exists. */
   public ViaInfo get(String p_name) {
-    for (ViaInfo curr_via : this.list) {
-      if (curr_via.get_name().equals(p_name)) {
-        return curr_via;
+    for (ViaInfo currVia : this.list) {
+      if (currVia.get_name().equals(p_name)) {
+        return currVia;
       }
     }
     return null;
@@ -50,8 +50,8 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
 
   /** Returns true, if a via info with name p_name is already wyisting in the list. */
   public boolean name_exists(String p_name) {
-    for (ViaInfo curr_via : this.list) {
-      if (curr_via.get_name().equals(p_name)) {
+    for (ViaInfo currVia : this.list) {
+      if (currVia.get_name().equals(p_name)) {
         return true;
       }
     }
@@ -71,11 +71,11 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
 
     p_window.append_bold(tm.getText("vias") + ": ");
     int counter = 0;
-    boolean first_time = true;
-    final int max_vias_per_row = 5;
-    for (ViaInfo curr_via : this.list) {
-      if (first_time) {
-        first_time = false;
+    boolean firstTime = true;
+    final int maxViasPerRow = 5;
+    for (ViaInfo currVia : this.list) {
+      if (firstTime) {
+        firstTime = false;
       } else {
         p_window.append(", ");
       }
@@ -83,8 +83,8 @@ public class ViaInfos implements Serializable, ObjectInfoPanel.Printable {
         p_window.newline();
         p_window.indent();
       }
-      p_window.append(curr_via.get_name(), tm.getText("via_info"), curr_via);
-      counter = (counter + 1) % max_vias_per_row;
+      p_window.append(currVia.get_name(), tm.getText("viaInfo"), currVia);
+      counter = (counter + 1) % maxViasPerRow;
     }
   }
 }

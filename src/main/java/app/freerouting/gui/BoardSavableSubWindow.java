@@ -13,9 +13,9 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
   /** Reads the data of this frame from disc. Returns false, if the reading failed. */
   public boolean read(ObjectInputStream p_object_stream) {
     try {
-      SavedAttributes saved_attributes = (SavedAttributes) p_object_stream.readObject();
-      this.setBounds(saved_attributes.bounds);
-      this.setVisible(saved_attributes.is_visible);
+      SavedAttributes savedAttributes = (SavedAttributes) p_object_stream.readObject();
+      this.setBounds(savedAttributes.bounds);
+      this.setVisible(savedAttributes.isVisible);
       return true;
     } catch (Exception e) {
       FRLogger.error("SelectParameterWindow.read: read failed", e);
@@ -25,10 +25,10 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
 
   /** Saves this frame to disk. */
   public void save(ObjectOutputStream p_object_stream) {
-    SavedAttributes saved_attributes = new SavedAttributes(this.getBounds(), this.isVisible());
+    SavedAttributes savedAttributes = new SavedAttributes(this.getBounds(), this.isVisible());
 
     try {
-      p_object_stream.writeObject(saved_attributes);
+      p_object_stream.writeObject(savedAttributes);
     } catch (IOException e) {
       FRLogger.error("BoardSubWindow.save: save failed", e);
     }
@@ -54,11 +54,11 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
   private static class SavedAttributes implements Serializable {
 
     public final Rectangle bounds;
-    public final boolean is_visible;
+    public final boolean isVisible;
 
     public SavedAttributes(Rectangle p_bounds, boolean p_is_visible) {
       bounds = p_bounds;
-      is_visible = p_is_visible;
+      isVisible = p_is_visible;
     }
   }
 }

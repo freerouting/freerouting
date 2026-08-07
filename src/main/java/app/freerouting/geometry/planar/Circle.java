@@ -111,14 +111,14 @@ public class Circle implements ConvexShape, Serializable {
     int ly = center.y - radius;
     int uy = center.y + radius;
 
-    final double sqrt2_minus_1 = Math.sqrt(2) - 1;
-    final int ceil_corner_value = (int) Math.ceil(sqrt2_minus_1 * radius);
-    final int floor_corner_value = (int) Math.floor(sqrt2_minus_1 * radius);
+    final double sqrt2Minus1 = Math.sqrt(2) - 1;
+    final int ceilCornerValue = (int) Math.ceil(sqrt2Minus1 * radius);
+    final int floorCornerValue = (int) Math.floor(sqrt2Minus1 * radius);
 
-    int ulx = lx - (center.y + floor_corner_value);
-    int lrx = rx - (center.y - ceil_corner_value);
-    int llx = lx + (center.y - floor_corner_value);
-    int urx = rx + (center.y + ceil_corner_value);
+    int ulx = lx - (center.y + floorCornerValue);
+    int lrx = rx - (center.y - ceilCornerValue);
+    int llx = lx + (center.y - floorCornerValue);
+    int urx = rx + (center.y + ceilCornerValue);
     return new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
   }
 
@@ -138,34 +138,32 @@ public class Circle implements ConvexShape, Serializable {
    * the tile is at most p_max_segment_length.
    */
   public TileShape bounding_tile(int p_max_segment_length) {
-    int quadrant_division_count = this.radius / p_max_segment_length + 1;
-    if (quadrant_division_count <= 2) {
+    int quadrantDivisionCount = this.radius / p_max_segment_length + 1;
+    if (quadrantDivisionCount <= 2) {
       return this.bounding_octagon();
     }
-    Line[] tangent_line_arr = new Line[quadrant_division_count * 4];
-    for (int i = 0; i < quadrant_division_count; i++) {
+    Line[] tangentLineArr = new Line[quadrantDivisionCount * 4];
+    for (int i = 0; i < quadrantDivisionCount; i++) {
       // calculate the tangential points in the first quadrant
-      Vector border_delta;
+      Vector borderDelta;
       if (i == 0) {
-        border_delta = new IntVector(this.radius, 0);
+        borderDelta = new IntVector(this.radius, 0);
       } else {
-        double curr_angle = i * Math.PI / (2.0 * quadrant_division_count);
-        int curr_x = (int) Math.ceil(Math.sin(curr_angle) * this.radius);
-        int curr_y = (int) Math.ceil(Math.cos(curr_angle) * this.radius);
-        border_delta = new IntVector(curr_x, curr_y);
+        double currAngle = i * Math.PI / (2.0 * quadrantDivisionCount);
+        int currX = (int) Math.ceil(Math.sin(currAngle) * this.radius);
+        int currY = (int) Math.ceil(Math.cos(currAngle) * this.radius);
+        borderDelta = new IntVector(currX, currY);
       }
-      Point curr_a = this.center.translate_by(border_delta);
-      Point curr_b = curr_a.turn_90_degree(1, this.center);
-      Direction curr_dir = Direction.get_instance(curr_b.difference_by(this.center));
-      Line curr_tangent = new Line(curr_a, curr_dir);
-      tangent_line_arr[quadrant_division_count + i] = curr_tangent;
-      tangent_line_arr[2 * quadrant_division_count + i] =
-          curr_tangent.turn_90_degree(1, this.center);
-      tangent_line_arr[3 * quadrant_division_count + i] =
-          curr_tangent.turn_90_degree(2, this.center);
-      tangent_line_arr[i] = curr_tangent.turn_90_degree(3, this.center);
+      Point currA = this.center.translate_by(borderDelta);
+      Point currB = currA.turn_90_degree(1, this.center);
+      Direction currDir = Direction.get_instance(currB.difference_by(this.center));
+      Line currTangent = new Line(currA, currDir);
+      tangentLineArr[quadrantDivisionCount + i] = currTangent;
+      tangentLineArr[2 * quadrantDivisionCount + i] = currTangent.turn_90_degree(1, this.center);
+      tangentLineArr[3 * quadrantDivisionCount + i] = currTangent.turn_90_degree(2, this.center);
+      tangentLineArr[i] = currTangent.turn_90_degree(3, this.center);
     }
-    return TileShape.get_instance(tangent_line_arr);
+    return TileShape.get_instance(tangentLineArr);
   }
 
   @Override
@@ -184,26 +182,26 @@ public class Circle implements ConvexShape, Serializable {
 
   @Override
   public Circle turn_90_degree(int p_factor, IntPoint p_pole) {
-    IntPoint new_center = (IntPoint) center.turn_90_degree(p_factor, p_pole);
-    return new Circle(new_center, radius);
+    IntPoint newCenter = (IntPoint) center.turn_90_degree(p_factor, p_pole);
+    return new Circle(newCenter, radius);
   }
 
   @Override
   public Circle rotate_approx(double p_angle, FloatPoint p_pole) {
-    IntPoint new_center = center.to_float().rotate(p_angle, p_pole).round();
-    return new Circle(new_center, radius);
+    IntPoint newCenter = center.to_float().rotate(p_angle, p_pole).round();
+    return new Circle(newCenter, radius);
   }
 
   @Override
   public Circle mirror_vertical(IntPoint p_pole) {
-    IntPoint new_center = (IntPoint) center.mirror_vertical(p_pole);
-    return new Circle(new_center, radius);
+    IntPoint newCenter = (IntPoint) center.mirror_vertical(p_pole);
+    return new Circle(newCenter, radius);
   }
 
   @Override
   public Circle mirror_horizontal(IntPoint p_pole) {
-    IntPoint new_center = (IntPoint) center.mirror_horizontal(p_pole);
-    return new Circle(new_center, radius);
+    IntPoint newCenter = (IntPoint) center.mirror_horizontal(p_pole);
+    return new Circle(newCenter, radius);
   }
 
   @Override
@@ -223,15 +221,15 @@ public class Circle implements ConvexShape, Serializable {
 
   @Override
   public Circle offset(double p_offset) {
-    double new_radius = this.radius + p_offset;
-    int r = (int) Math.round(new_radius);
+    double newRadius = this.radius + p_offset;
+    int r = (int) Math.round(newRadius);
     return new Circle(this.center, r);
   }
 
   @Override
   public Circle shrink(double p_offset) {
-    double new_radius = this.radius - p_offset;
-    int r = Math.max((int) Math.round(new_radius), 1);
+    double newRadius = this.radius - p_offset;
+    int r = Math.max((int) Math.round(newRadius), 1);
     return new Circle(this.center, r);
   }
 
@@ -244,8 +242,8 @@ public class Circle implements ConvexShape, Serializable {
       FRLogger.warn("Circle.translate_by only implemented for IntVectors till now");
       return this;
     }
-    IntPoint new_center = (IntPoint) center.translate_by(p_vector);
-    return new Circle(new_center, radius);
+    IntPoint newCenter = (IntPoint) center.translate_by(p_vector);
+    return new Circle(newCenter, radius);
   }
 
   @Override
@@ -265,8 +263,8 @@ public class Circle implements ConvexShape, Serializable {
     if (p_offset == 0) {
       return this;
     }
-    int new_radius = radius + (int) Math.round(p_offset);
-    return new Circle(center, new_radius);
+    int newRadius = radius + (int) Math.round(p_offset);
+    return new Circle(center, newRadius);
   }
 
   @Override
@@ -282,9 +280,9 @@ public class Circle implements ConvexShape, Serializable {
 
   @Override
   public boolean intersects(Circle p_other) {
-    double d_square = radius + p_other.radius;
-    d_square *= d_square;
-    return center.distance_square(p_other.center) <= d_square;
+    double dSquare = radius + p_other.radius;
+    dSquare *= dSquare;
+    return center.distance_square(p_other.center) <= dSquare;
   }
 
   @Override
@@ -332,12 +330,12 @@ public class Circle implements ConvexShape, Serializable {
   public String to_string(Locale p_locale) {
     String result = "Circle: ";
     if (!center.equals(Point.ZERO)) {
-      String center_string = "center " + center;
-      result += center_string;
+      String centerString = "center " + center;
+      result += centerString;
     }
     NumberFormat nf = NumberFormat.getInstance(p_locale);
-    String radius_string = "radius " + nf.format(radius);
-    result += radius_string;
+    String radiusString = "radius " + nf.format(radius);
+    result += radiusString;
     return result;
   }
 

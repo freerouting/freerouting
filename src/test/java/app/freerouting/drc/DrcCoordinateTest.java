@@ -43,7 +43,7 @@ public class DrcCoordinateTest extends RoutingFixtureTest {
     JsonObject json = JsonParser.parseString(jsonReport).getAsJsonObject();
 
     // Check unconnected items
-    JsonArray unconnectedItems = json.getAsJsonArray("unconnected_items");
+    JsonArray unconnectedItems = json.getAsJsonArray("unconnectedItems");
     if (unconnectedItems != null && unconnectedItems.size() > 0) {
       JsonObject firstItem = unconnectedItems.get(0).getAsJsonObject();
       JsonArray items = firstItem.getAsJsonArray("items");

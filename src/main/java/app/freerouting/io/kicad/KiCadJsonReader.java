@@ -340,7 +340,7 @@ public final class KiCadJsonReader {
         KiCadBoardJson.NetClassJson nc = additionalNetClasses.get(i);
         int clNo = i + 2;
         NetClass boardNetClass =
-            boardRules.net_classes.append(nc.name, layerStructure, clearanceMatrix, false);
+            boardRules.netClasses.append(nc.name, layerStructure, clearanceMatrix, false);
         applyKiCadNetClassParameters(boardNetClass, nc, layerCount, scaleFactor, clNo);
         netClassIndexMap.put(nc.name, clNo);
       }
@@ -380,25 +380,25 @@ public final class KiCadJsonReader {
         defViaShapeArr[li] = defViaShape;
       }
       Padstack defaultViaPadstack =
-          board.library.padstacks.add("default_via", defViaShapeArr, true, false);
+          board.library.padstacks.add("defaultVia", defViaShapeArr, true, false);
       board.library.add_via_padstack(defaultViaPadstack);
 
       int defaultViaClClass =
-          defaultNetClass.default_item_clearance_classes.get(
+          defaultNetClass.defaultItemClearanceClasses.get(
               DefaultItemClearanceClasses.ItemClass.VIA);
       ViaInfo defaultViaInfo =
-          new ViaInfo("default_via", defaultViaPadstack, defaultViaClClass, true, boardRules);
-      boardRules.via_infos.add(defaultViaInfo);
+          new ViaInfo("defaultVia", defaultViaPadstack, defaultViaClClass, true, boardRules);
+      boardRules.viaInfos.add(defaultViaInfo);
 
       ViaRule defaultViaRule = new ViaRule("default");
       defaultViaRule.append_via(defaultViaInfo);
-      boardRules.via_rules.add(defaultViaRule);
+      boardRules.viaRules.add(defaultViaRule);
       defaultNetClass.set_via_rule(defaultViaRule);
 
       for (int i = 0; i < additionalNetClasses.size(); i++) {
         KiCadBoardJson.NetClassJson nc = additionalNetClasses.get(i);
         int clNo = i + 2;
-        NetClass boardNetClass = boardRules.net_classes.get(clNo - 1);
+        NetClass boardNetClass = boardRules.netClasses.get(clNo - 1);
 
         double viaDia = nc.viaDiameter > 0 ? nc.viaDiameter : defViaDia;
         double viaDrill = nc.viaDrill > 0 ? nc.viaDrill : defViaDrill;
@@ -421,14 +421,14 @@ public final class KiCadJsonReader {
         board.library.add_via_padstack(viaPadstack);
 
         int viaClClass =
-            boardNetClass.default_item_clearance_classes.get(
+            boardNetClass.defaultItemClearanceClasses.get(
                 DefaultItemClearanceClasses.ItemClass.VIA);
         ViaInfo viaInfo = new ViaInfo(viaName, viaPadstack, viaClClass, true, boardRules);
-        boardRules.via_infos.add(viaInfo);
+        boardRules.viaInfos.add(viaInfo);
 
         ViaRule viaRule = new ViaRule(nc.name);
         viaRule.append_via(viaInfo);
-        boardRules.via_rules.add(viaRule);
+        boardRules.viaRules.add(viaRule);
         boardNetClass.set_via_rule(viaRule);
       }
 
@@ -438,7 +438,7 @@ public final class KiCadJsonReader {
         Net boardNet = boardRules.nets.add(nj.name, 1, nj.containsPlane);
         int clNo = resolveNetClassIndex(netClassIndexMap, nj.className);
         boardNet.set_class(
-            boardRules.net_classes.get(clNo - 1)); // NetClass array indices are 0-based
+            boardRules.netClasses.get(clNo - 1)); // NetClass array indices are 0-based
       }
 
       // Automatically register any referenced nets that were not explicitly defined in the nets
@@ -481,7 +481,7 @@ public final class KiCadJsonReader {
         if (boardRules.nets.get(netName, 1) == null) {
           Net boardNet = boardRules.nets.add(netName, 1, false);
           // Fallback to default class (default net class is at index 0)
-          boardNet.set_class(boardRules.net_classes.get(0));
+          boardNet.set_class(boardRules.netClasses.get(0));
         }
       }
 
@@ -627,7 +627,7 @@ public final class KiCadJsonReader {
         for (int pIdx = 0; pIdx < comp.pads.size(); pIdx++) {
           KiCadBoardJson.PadJson pad = comp.pads.get(pIdx);
           Net targetNet = boardRules.nets.get(pad.netName, 1);
-          int netNo = targetNet != null ? targetNet.net_number : 0;
+          int netNo = targetNet != null ? targetNet.netNumber : 0;
           int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
           board.insert_pin(
               boardComp.no, pIdx, netNoArr, outlineClearanceNo, FixedState.SYSTEM_FIXED);
@@ -637,7 +637,7 @@ public final class KiCadJsonReader {
       // 10. Load conduction areas (copper pours)
       for (KiCadBoardJson.ConductionAreaJson zone : boardJson.conductionAreas) {
         Net targetNet = boardRules.nets.get(zone.netName, 1);
-        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int netNo = targetNet != null ? targetNet.netNumber : 0;
         int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
 
         // Build Area path polygon
@@ -656,7 +656,7 @@ public final class KiCadJsonReader {
       // 11. Load traces and vias (existing wiring)
       for (KiCadBoardJson.TraceJson tr : boardJson.traces) {
         Net targetNet = boardRules.nets.get(tr.netName, 1);
-        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int netNo = targetNet != null ? targetNet.netNumber : 0;
         int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
         int traceHalfWidth = (int) Math.round(tr.width * scaleFactor / 2.0);
 
@@ -673,7 +673,7 @@ public final class KiCadJsonReader {
 
       for (KiCadBoardJson.ViaJson vj : boardJson.vias) {
         Net targetNet = boardRules.nets.get(vj.netName, 1);
-        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int netNo = targetNet != null ? targetNet.netNumber : 0;
         int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
 
         IntPoint center =
@@ -765,7 +765,7 @@ public final class KiCadJsonReader {
     if (boardJson.conductionAreas != null) {
       for (KiCadBoardJson.ConductionAreaJson zone : boardJson.conductionAreas) {
         Net targetNet = board.rules.nets.get(zone.netName, 1);
-        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int netNo = targetNet != null ? targetNet.netNumber : 0;
         int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
 
         Point[] zonePoints = new Point[zone.polygon.size()];
@@ -785,7 +785,7 @@ public final class KiCadJsonReader {
     if (boardJson.traces != null) {
       for (KiCadBoardJson.TraceJson tr : boardJson.traces) {
         Net targetNet = board.rules.nets.get(tr.netName, 1);
-        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int netNo = targetNet != null ? targetNet.netNumber : 0;
         int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
         int traceHalfWidth = (int) Math.round(tr.width * scaleFactor / 2.0);
 
@@ -806,7 +806,7 @@ public final class KiCadJsonReader {
       int layerCount = board.get_layer_count();
       for (KiCadBoardJson.ViaJson vj : boardJson.vias) {
         Net targetNet = board.rules.nets.get(vj.netName, 1);
-        int netNo = targetNet != null ? targetNet.net_number : 0;
+        int netNo = targetNet != null ? targetNet.netNumber : 0;
         int[] netNoArr = netNo > 0 ? new int[] {netNo} : new int[0];
 
         IntPoint center =
@@ -926,15 +926,15 @@ public final class KiCadJsonReader {
       if (!pin1.name.equals(pin2.name)) {
         return false;
       }
-      if (pin1.padstack_no != pin2.padstack_no) {
+      if (pin1.padstackNo != pin2.padstackNo) {
         return false;
       }
-      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relative_location.to_float();
-      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.relative_location.to_float();
+      app.freerouting.geometry.planar.FloatPoint loc1 = pin1.relativeLocation.to_float();
+      app.freerouting.geometry.planar.FloatPoint loc2 = pin2.relativeLocation.to_float();
       if (Math.abs(loc1.x - loc2.x) > 0.001 || Math.abs(loc1.y - loc2.y) > 0.001) {
         return false;
       }
-      if (Math.abs(pin1.rotation_in_degree - pin2.rotation_in_degree) > 0.001) {
+      if (Math.abs(pin1.rotationInDegree - pin2.rotationInDegree) > 0.001) {
         return false;
       }
     }

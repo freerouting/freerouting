@@ -39,8 +39,8 @@ public class PowerPlaneValidationTest {
     BoardRules boardRules = new BoardRules(layerStructure, clearanceMatrix);
     boardRules.create_default_net_class();
     app.freerouting.rules.ViaRule dummyViaRule =
-        new app.freerouting.rules.ViaRule("default_via_rule");
-    boardRules.via_rules.add(dummyViaRule);
+        new app.freerouting.rules.ViaRule("defaultViaRule");
+    boardRules.viaRules.add(dummyViaRule);
     boardRules.get_default_net_class().set_via_rule(dummyViaRule);
 
     Communication communication = new Communication();
@@ -60,7 +60,7 @@ public class PowerPlaneValidationTest {
 
     // Add net
     Net gndNet = board.rules.nets.add("GND", 1, true);
-    int[] netNoArr = new int[] {gndNet.net_number};
+    int[] netNoArr = new int[] {gndNet.netNumber};
 
     // Add a conduction area to GND layer (layer index 1)
     Area area = TileShape.get_instance(100, 100, 10000, 10000);
@@ -83,7 +83,7 @@ public class PowerPlaneValidationTest {
 
     // Add net
     Net gndNet = board.rules.nets.add("GND", 1, true);
-    int[] netNoArr = new int[] {gndNet.net_number};
+    int[] netNoArr = new int[] {gndNet.netNumber};
 
     // Add conduction area so that "at least one conduction area" check passes
     Area area = TileShape.get_instance(100, 100, 10000, 10000);
@@ -146,9 +146,9 @@ public class PowerPlaneValidationTest {
     Area area2 = TileShape.get_instance(500, 500, 1500, 1500);
 
     board.insert_conduction_area(
-        area1, 1, new int[] {vcc3v3.net_number}, 0, false, FixedState.UNFIXED);
+        area1, 1, new int[] {vcc3v3.netNumber}, 0, false, FixedState.UNFIXED);
     board.insert_conduction_area(
-        area2, 1, new int[] {vcc5v.net_number}, 0, false, FixedState.UNFIXED);
+        area2, 1, new int[] {vcc5v.netNumber}, 0, false, FixedState.UNFIXED);
 
     HeadlessBoardManager manager = new HeadlessBoardManager(null);
     manager.board = board;
@@ -169,7 +169,7 @@ public class PowerPlaneValidationTest {
 
   @Test
   void testActiveLayerOverrideGuardOnPowerPlane() {
-    RoutingBoard board = createTestBoard(true); // Layer 1 (GND) is !is_signal
+    RoutingBoard board = createTestBoard(true); // Layer 1 (GND) is !isSignal
 
     app.freerouting.settings.RouterSettings settings =
         new app.freerouting.settings.sources.DefaultSettings().getSettings();
@@ -184,11 +184,11 @@ public class PowerPlaneValidationTest {
     settings.set_layer_active(1, true);
 
     app.freerouting.autoroute.AutorouteControl control =
-        new app.freerouting.autoroute.AutorouteControl(board, gndNet.net_number, settings);
+        new app.freerouting.autoroute.AutorouteControl(board, gndNet.netNumber, settings);
 
     // Assert that the override guard forced it to false
     assertFalse(
-        control.layer_active[1], "Override guard should force plane layer active state to false.");
+        control.layerActive[1], "Override guard should force plane layer active state to false.");
 
     String logs = FRLogger.getLogEntries().getAsString();
     assertTrue(

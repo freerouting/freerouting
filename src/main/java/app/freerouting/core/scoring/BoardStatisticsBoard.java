@@ -7,7 +7,7 @@ import java.io.Serializable;
 /** Basic parameters of a board. */
 public class BoardStatisticsBoard implements Serializable {
 
-  @SerializedName("bounding_box")
+  @SerializedName("boundingBox")
   public Rectangle2D.Float boundingBox;
 
   @SerializedName("size")

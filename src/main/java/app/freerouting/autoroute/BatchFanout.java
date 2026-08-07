@@ -17,9 +17,9 @@ import java.util.TreeSet;
 public final class BatchFanout {
 
   private final StoppableThread thread;
-  private final RoutingBoard routing_board;
+  private final RoutingBoard routingBoard;
   private final RouterSettings settings;
-  private final SortedSet<Component> sorted_components;
+  private final SortedSet<Component> sortedComponents;
   private final int totalSmdPinCount;
   private final int alreadyConnectedPinCount;
   private final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
@@ -31,39 +31,38 @@ public final class BatchFanout {
 
   private BatchFanout(RoutingBoard p_board, RouterSettings p_settings, StoppableThread p_thread) {
     this.thread = p_thread;
-    this.routing_board = p_board;
+    this.routingBoard = p_board;
     this.settings = p_settings;
     String sortingOrder =
         p_settings.fanout != null && p_settings.fanout.pinSortingOrder != null
             ? p_settings.fanout.pinSortingOrder
             : "outer_first";
-    Collection<app.freerouting.board.Pin> board_smd_pin_list = routing_board.get_smd_pins();
+    Collection<app.freerouting.board.Pin> boardSmdPinList = routingBoard.get_smd_pins();
     // Filter out SMD pins that belong to no net — they don't need fanout and would inflate
     // total pin counts and escape statistics.
-    Collection<app.freerouting.board.Pin> board_smd_pin_list_with_nets = new LinkedList<>();
-    for (app.freerouting.board.Pin pin : board_smd_pin_list) {
+    Collection<app.freerouting.board.Pin> boardSmdPinListWithNets = new LinkedList<>();
+    for (app.freerouting.board.Pin pin : boardSmdPinList) {
       if (pin.net_count() > 0) {
-        board_smd_pin_list_with_nets.add(pin);
+        boardSmdPinListWithNets.add(pin);
       }
     }
-    this.sorted_components = new TreeSet<>();
-    for (int i = 1; i <= routing_board.components.count(); ++i) {
-      app.freerouting.board.Component curr_board_component = routing_board.components.get(i);
-      Component curr_component =
-          new Component(
-              curr_board_component, board_smd_pin_list_with_nets, sortingOrder, routing_board);
-      if (curr_component.smd_pin_count > 0) {
-        sorted_components.add(curr_component);
+    this.sortedComponents = new TreeSet<>();
+    for (int i = 1; i <= routingBoard.components.count(); ++i) {
+      app.freerouting.board.Component currBoardComponent = routingBoard.components.get(i);
+      Component currComponent =
+          new Component(currBoardComponent, boardSmdPinListWithNets, sortingOrder, routingBoard);
+      if (currComponent.smdPinCount > 0) {
+        sortedComponents.add(currComponent);
       }
     }
     int pinCount = 0;
     int alreadyConnected = 0;
-    for (Component component : sorted_components) {
-      pinCount += component.smd_pin_count;
-      for (Component.Pin pin : component.smd_pins) {
+    for (Component component : sortedComponents) {
+      pinCount += component.smdPinCount;
+      for (Component.Pin pin : component.smdPins) {
         // A pin is already connected if all items in its connected set are on the pin's layer
         // and its unconnected set is empty — same logic as RoutingBoard.fanout().
-        app.freerouting.board.Pin boardPin = pin.board_pin;
+        app.freerouting.board.Pin boardPin = pin.boardPin;
         int netNo = boardPin.get_net_no(0);
         if (boardPin.get_unconnected_set(netNo).isEmpty()) {
           alreadyConnected++;
@@ -84,13 +83,13 @@ public final class BatchFanout {
       RouterSettings p_settings,
       StoppableThread p_thread,
       FanoutProgressListener progressListener) {
-    BatchFanout fanout_instance = new BatchFanout(p_board, p_settings, p_thread);
+    BatchFanout fanoutInstance = new BatchFanout(p_board, p_settings, p_thread);
     long fanoutStart = System.currentTimeMillis();
     if (p_settings.fanout != null && p_settings.fanout.timeoutString != null) {
       Long timeoutSeconds =
           app.freerouting.util.TextManager.parseTimespanString(p_settings.fanout.timeoutString);
       if (timeoutSeconds != null) {
-        fanout_instance.deadlineMs = fanoutStart + timeoutSeconds * 1000;
+        fanoutInstance.deadlineMs = fanoutStart + timeoutSeconds * 1000;
       }
     }
     int maxPasses =
@@ -103,21 +102,21 @@ public final class BatchFanout {
     int identicalPasses = 0;
     String lastBoardHash = p_board.get_hash();
     for (int i = 0; i < maxPasses; ++i) {
-      if (fanout_instance.deadlineMs != null
-          && System.currentTimeMillis() >= fanout_instance.deadlineMs) {
-        fanout_instance.isTimedOut = true;
+      if (fanoutInstance.deadlineMs != null
+          && System.currentTimeMillis() >= fanoutInstance.deadlineMs) {
+        fanoutInstance.isTimedOut = true;
         FRLogger.info("Fanout stage timed out before starting pass #" + (i + 1));
         break;
       }
       if (p_settings.fanout != null
           && p_settings.fanout.maxItems != null
           && p_settings.fanout.maxItems > 0
-          && fanout_instance.totalItemsFanouted >= p_settings.fanout.maxItems) {
+          && fanoutInstance.totalItemsFanouted >= p_settings.fanout.maxItems) {
         break;
       }
-      int routed_count = fanout_instance.fanout_pass(i, progressListener);
+      int routedCount = fanoutInstance.fanout_pass(i, progressListener);
       completedPasses++;
-      if (routed_count == 0) {
+      if (routedCount == 0) {
         break;
       }
       // Oscillation detector, complementing the single-pass board-hash check below: a
@@ -125,7 +124,7 @@ public final class BatchFanout {
       // board states, so consecutive hashes always differ — but the per-pass outcome
       // (routed count + via count) repeats exactly while ripup costs escalate uselessly
       // (observed: 14 identical passes on a dense SMD carrier).
-      long boardState = ((long) routed_count << 32) ^ p_board.get_vias().size();
+      long boardState = ((long) routedCount << 32) ^ p_board.get_vias().size();
       if (boardState == previousBoardState) {
         identicalPasses++;
         if (identicalPasses >= STAGNATION_PASS_LIMIT) {
@@ -141,7 +140,7 @@ public final class BatchFanout {
         identicalPasses = 0;
         previousBoardState = boardState;
       }
-      if (fanout_instance.isTimedOut) {
+      if (fanoutInstance.isTimedOut) {
         break;
       }
       String currentBoardHash = p_board.get_hash();
@@ -154,19 +153,19 @@ public final class BatchFanout {
     EscapeStatistics finalEscape = EscapeStatistics.fromBoardStatistics(stats);
     long totalDurationMillis = Math.max(0, System.currentTimeMillis() - fanoutStart);
     return new FanoutRunSummary(
-        completedPasses, totalDurationMillis, finalEscape, fanout_instance.isTimedOut);
+        completedPasses, totalDurationMillis, finalEscape, fanoutInstance.isTimedOut);
   }
 
   /** Routes a fanout pass and returns the number of new fanouted SMD-pins in this pass. */
   private int fanout_pass(int p_pass_no, FanoutProgressListener progressListener) {
     long passStart = System.currentTimeMillis();
     int pinsToGo = this.totalSmdPinCount;
-    int routed_count = 0;
-    int not_routed_count = 0;
-    int insert_error_count = 0;
-    int already_connected_count = 0;
-    int viasBeforePass = this.routing_board.get_vias().size();
-    int ripup_costs = this.settings.get_start_ripup_costs() * (p_pass_no + 1);
+    int routedCount = 0;
+    int notRoutedCount = 0;
+    int insertErrorCount = 0;
+    int alreadyConnectedCount = 0;
+    int viasBeforePass = this.routingBoard.get_vias().size();
+    int ripupCosts = this.settings.get_start_ripup_costs() * (p_pass_no + 1);
 
     long baseMillisPerPin =
         this.settings.fanout != null && this.settings.fanout.maxMillisecondsPerPin != null
@@ -176,7 +175,7 @@ public final class BatchFanout {
         (this.settings.fanout == null || this.settings.fanout.ripupAllowed == null)
             || Boolean.TRUE.equals(this.settings.fanout.ripupAllowed);
     // Negative ripup costs signal "no ripup" to RoutingBoard.fanout()
-    int effectiveRipupCosts = ripupAllowed ? ripup_costs : -1;
+    int effectiveRipupCosts = ripupAllowed ? ripupCosts : -1;
 
     FRLogger.trace(
         "BatchFanout.fanout_pass",
@@ -197,23 +196,23 @@ public final class BatchFanout {
         new app.freerouting.geometry.planar.Point[0]);
 
     this.progressThrottler.reset();
-    BoardStatistics progressStats = new BoardStatistics(this.routing_board, null, false);
+    BoardStatistics progressStats = new BoardStatistics(this.routingBoard, null, false);
     publishProgress(
         progressListener,
         p_pass_no,
-        ripup_costs,
+        ripupCosts,
         pinsToGo,
-        routed_count,
-        not_routed_count,
-        insert_error_count,
+        routedCount,
+        notRoutedCount,
+        insertErrorCount,
         0,
         new EscapeStatistics(this.totalSmdPinCount, 0, 0.0),
         false,
         passStart,
         progressStats);
     boolean maxLimitReached = false;
-    for (Component curr_component : this.sorted_components) {
-      for (Component.Pin curr_pin : curr_component.smd_pins) {
+    for (Component currComponent : this.sortedComponents) {
+      for (Component.Pin currPin : currComponent.smdPins) {
         if (this.settings.fanout != null
             && this.settings.fanout.maxItems != null
             && this.settings.fanout.maxItems > 0
@@ -223,19 +222,19 @@ public final class BatchFanout {
           maxLimitReached = true;
           break;
         }
-        double max_milliseconds = baseMillisPerPin * (p_pass_no + 1);
-        TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
-        String fullPinName = curr_component.board_component.name + "-" + curr_pin.board_pin.name();
-        int netNo = curr_pin.board_pin.get_net_no(0);
-        int targetCount = curr_pin.board_pin.get_unconnected_set(netNo).size();
+        double maxMilliseconds = baseMillisPerPin * (p_pass_no + 1);
+        TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
+        String fullPinName = currComponent.boardComponent.name + "-" + currPin.boardPin.name();
+        int netNo = currPin.boardPin.get_net_no(0);
+        int targetCount = currPin.boardPin.get_unconnected_set(netNo).size();
 
-        app.freerouting.rules.Net net = this.routing_board.rules.nets.get(netNo);
+        app.freerouting.rules.Net net = this.routingBoard.rules.nets.get(netNo);
         if (net != null) {
           app.freerouting.rules.NetClass netClass = net.get_class();
           app.freerouting.rules.ViaRule viaRule = netClass != null ? netClass.get_via_rule() : null;
           boolean hasBoardVias =
-              !this.routing_board.rules.via_rules.isEmpty()
-                  && this.routing_board.rules.via_rules.firstElement().via_count() > 0;
+              !this.routingBoard.rules.viaRules.isEmpty()
+                  && this.routingBoard.rules.viaRules.firstElement().via_count() > 0;
           boolean fallbackAllowed =
               this.settings.fanout != null
                   && Boolean.TRUE.equals(this.settings.fanout.fallbackToBoardVias)
@@ -261,24 +260,24 @@ public final class BatchFanout {
                 + ", targetCount="
                 + targetCount
                 + ", center="
-                + curr_pin.board_pin.get_center()
+                + currPin.boardPin.get_center()
                 + ", layer="
-                + curr_pin.board_pin.first_layer()
+                + currPin.boardPin.first_layer()
                 + ", pass="
                 + (p_pass_no + 1),
             fullPinName,
-            new app.freerouting.geometry.planar.Point[] {curr_pin.board_pin.get_center()});
+            new app.freerouting.geometry.planar.Point[] {currPin.boardPin.get_center()});
 
-        this.routing_board.start_marking_changed_area();
+        this.routingBoard.start_marking_changed_area();
         long pinStartNanos = System.nanoTime();
-        AutorouteAttemptResult curr_result =
-            this.routing_board.fanout(
-                curr_pin.board_pin, this.settings, effectiveRipupCosts, this.thread, time_limit);
+        AutorouteAttemptResult currResult =
+            this.routingBoard.fanout(
+                currPin.boardPin, this.settings, effectiveRipupCosts, this.thread, timeLimit);
         long pinDurationMs = (System.nanoTime() - pinStartNanos) / 1_000_000L;
 
-        switch (curr_result.state) {
+        switch (currResult.state) {
           case ROUTED -> {
-            ++routed_count;
+            ++routedCount;
             this.totalItemsFanouted++;
             FRLogger.trace(
                 "BatchFanout.fanout_pass",
@@ -292,10 +291,10 @@ public final class BatchFanout {
                     + ", targetCount="
                     + targetCount,
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {curr_pin.board_pin.get_center()});
+                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.get_center()});
           }
           case ALREADY_CONNECTED -> {
-            ++already_connected_count;
+            ++alreadyConnectedCount;
             FRLogger.trace(
                 "BatchFanout.fanout_pass",
                 "pin_already_connected",
@@ -306,12 +305,12 @@ public final class BatchFanout {
                     + ", targetCount="
                     + targetCount
                     + ", detail="
-                    + curr_result.details,
+                    + currResult.details,
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {curr_pin.board_pin.get_center()});
+                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.get_center()});
           }
           case FAILED -> {
-            ++not_routed_count;
+            ++notRoutedCount;
             this.totalItemsFanouted++;
             FRLogger.trace(
                 "BatchFanout.fanout_pass",
@@ -325,14 +324,14 @@ public final class BatchFanout {
                     + ", durationMs="
                     + pinDurationMs
                     + ", detail="
-                    + (curr_result.details == null || curr_result.details.isEmpty()
+                    + (currResult.details == null || currResult.details.isEmpty()
                         ? "no detail"
-                        : curr_result.details),
+                        : currResult.details),
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {curr_pin.board_pin.get_center()});
+                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.get_center()});
           }
           case INSERT_ERROR -> {
-            ++insert_error_count;
+            ++insertErrorCount;
             this.totalItemsFanouted++;
             FRLogger.trace(
                 "BatchFanout.fanout_pass",
@@ -342,19 +341,19 @@ public final class BatchFanout {
                     + ", net="
                     + netNo
                     + ", detail="
-                    + (curr_result.details == null || curr_result.details.isEmpty()
+                    + (currResult.details == null || currResult.details.isEmpty()
                         ? "no detail"
-                        : curr_result.details),
+                        : currResult.details),
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {curr_pin.board_pin.get_center()});
+                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.get_center()});
           }
           case NO_UNCONNECTED_NETS -> {
             FRLogger.trace(
                 "BatchFanout.fanout_pass",
                 "pin_no_unconnected_nets",
-                "pin=" + fullPinName + ", net=" + netNo + ", detail=" + curr_result.details,
+                "pin=" + fullPinName + ", net=" + netNo + ", detail=" + currResult.details,
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {curr_pin.board_pin.get_center()});
+                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.get_center()});
           }
           default -> {
             FRLogger.trace(
@@ -365,23 +364,23 @@ public final class BatchFanout {
                     + ", net="
                     + netNo
                     + ", state="
-                    + curr_result.state
+                    + currResult.state
                     + ", detail="
-                    + curr_result.details,
+                    + currResult.details,
                 fullPinName,
-                new app.freerouting.geometry.planar.Point[] {curr_pin.board_pin.get_center()});
+                new app.freerouting.geometry.planar.Point[] {currPin.boardPin.get_center()});
           }
         }
         --pinsToGo;
-        int extraViasThisPass = Math.max(0, this.routing_board.get_vias().size() - viasBeforePass);
+        int extraViasThisPass = Math.max(0, this.routingBoard.get_vias().size() - viasBeforePass);
         maybePublishProgress(
             progressListener,
             p_pass_no,
-            ripup_costs,
+            ripupCosts,
             pinsToGo,
-            routed_count,
-            not_routed_count,
-            insert_error_count,
+            routedCount,
+            notRoutedCount,
+            insertErrorCount,
             extraViasThisPass,
             false,
             passStart,
@@ -389,49 +388,49 @@ public final class BatchFanout {
         if (this.deadlineMs != null && System.currentTimeMillis() >= this.deadlineMs) {
           FRLogger.info("Fanout stage timed out.");
           this.isTimedOut = true;
-          BoardStatistics passStats = new BoardStatistics(this.routing_board, null, false);
+          BoardStatistics passStats = new BoardStatistics(this.routingBoard, null, false);
           EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
           publishProgress(
               progressListener,
               p_pass_no,
-              ripup_costs,
+              ripupCosts,
               pinsToGo,
-              routed_count,
-              not_routed_count,
-              insert_error_count,
+              routedCount,
+              notRoutedCount,
+              insertErrorCount,
               extraViasThisPass,
               escapeStats,
               true,
               passStart,
               passStats);
-          return routed_count;
+          return routedCount;
         }
         if (this.thread != null && this.thread.is_stop_auto_router_requested()) {
-          BoardStatistics passStats = new BoardStatistics(this.routing_board, null, false);
+          BoardStatistics passStats = new BoardStatistics(this.routingBoard, null, false);
           EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
           publishProgress(
               progressListener,
               p_pass_no,
-              ripup_costs,
+              ripupCosts,
               pinsToGo,
-              routed_count,
-              not_routed_count,
-              insert_error_count,
+              routedCount,
+              notRoutedCount,
+              insertErrorCount,
               extraViasThisPass,
               escapeStats,
               true,
               passStart,
               passStats);
-          return routed_count;
+          return routedCount;
         }
       }
       if (maxLimitReached) {
         break;
       }
     }
-    int extraViasThisPass = Math.max(0, this.routing_board.get_vias().size() - viasBeforePass);
+    int extraViasThisPass = Math.max(0, this.routingBoard.get_vias().size() - viasBeforePass);
     this.extraViasTotal += extraViasThisPass;
-    BoardStatistics passStats = new BoardStatistics(this.routing_board, null, false);
+    BoardStatistics passStats = new BoardStatistics(this.routingBoard, null, false);
     EscapeStatistics escapeStats = EscapeStatistics.fromBoardStatistics(passStats);
 
     long passDurationMs = System.currentTimeMillis() - passStart;
@@ -443,13 +442,13 @@ public final class BatchFanout {
             + ", durationMs="
             + passDurationMs
             + ", routed="
-            + routed_count
+            + routedCount
             + ", notRouted="
-            + not_routed_count
+            + notRoutedCount
             + ", insertErrors="
-            + insert_error_count
+            + insertErrorCount
             + ", alreadyConnected="
-            + already_connected_count
+            + alreadyConnectedCount
             + ", escaped="
             + escapeStats.escapedCount()
             + "/"
@@ -465,11 +464,11 @@ public final class BatchFanout {
           "fanout pass: "
               + (p_pass_no + 1)
               + ", routed: "
-              + routed_count
+              + routedCount
               + ", not routed: "
-              + not_routed_count
+              + notRoutedCount
               + ", errors: "
-              + insert_error_count
+              + insertErrorCount
               + ", extra vias: +"
               + extraViasThisPass
               + ", escaped SMD pins: "
@@ -480,22 +479,22 @@ public final class BatchFanout {
               + String.format("%.1f", escapeStats.escapedPercentage())
               + "%)");
     }
-    this.lastNotRoutedCount = not_routed_count;
+    this.lastNotRoutedCount = notRoutedCount;
     publishProgress(
         progressListener,
         p_pass_no,
-        ripup_costs,
+        ripupCosts,
         pinsToGo,
-        routed_count,
-        not_routed_count,
-        insert_error_count,
+        routedCount,
+        notRoutedCount,
+        insertErrorCount,
         extraViasThisPass,
         escapeStats,
         true,
         passStart,
         passStats);
 
-    return routed_count;
+    return routedCount;
   }
 
   private void maybePublishProgress(
@@ -515,8 +514,8 @@ public final class BatchFanout {
       // to avoid the cost of a full escape scan on every tick.
       EscapeStatistics interimEscape = new EscapeStatistics(this.totalSmdPinCount, 0, 0.0);
       if (progressStats != null) {
-        progressStats.vias.totalCount = this.routing_board.get_vias().size();
-        progressStats.traces.totalCount = this.routing_board.get_traces().size();
+        progressStats.vias.totalCount = this.routingBoard.get_vias().size();
+        progressStats.traces.totalCount = this.routingBoard.get_traces().size();
       }
       publishProgress(
           progressListener,
@@ -618,12 +617,12 @@ public final class BatchFanout {
 
   private static class Component implements Comparable<Component> {
 
-    final app.freerouting.board.Component board_component;
-    final int smd_pin_count;
-    final SortedSet<Pin> smd_pins;
+    final app.freerouting.board.Component boardComponent;
+    final int smdPinCount;
+    final SortedSet<Pin> smdPins;
 
     /** The center of gravity of all SMD pins of this component. */
-    final FloatPoint gravity_center_of_smd_pins;
+    final FloatPoint gravityCenterOfSmdPins;
 
     final String pinSortingOrder;
 
@@ -632,128 +631,126 @@ public final class BatchFanout {
         Collection<app.freerouting.board.Pin> p_board_smd_pin_list,
         String p_pin_sorting_order,
         RoutingBoard p_routing_board) {
-      this.board_component = p_board_component;
+      this.boardComponent = p_board_component;
       this.pinSortingOrder = p_pin_sorting_order;
 
       // calculate the center of gravity of all SMD pins of this component.
-      Collection<app.freerouting.board.Pin> curr_pin_list = new LinkedList<>();
-      int cmp_no = p_board_component.no;
+      Collection<app.freerouting.board.Pin> currPinList = new LinkedList<>();
+      int cmpNo = p_board_component.no;
       for (app.freerouting.board.Pin curr_board_pin : p_board_smd_pin_list) {
-        if (curr_board_pin.get_component_no() == cmp_no) {
-          curr_pin_list.add(curr_board_pin);
+        if (curr_board_pin.get_component_no() == cmpNo) {
+          currPinList.add(curr_board_pin);
         }
       }
       double x = 0;
       double y = 0;
-      for (app.freerouting.board.Pin curr_pin : curr_pin_list) {
-        FloatPoint curr_point = curr_pin.get_center().to_float();
-        x += curr_point.x;
-        y += curr_point.y;
+      for (app.freerouting.board.Pin currPin : currPinList) {
+        FloatPoint currPoint = currPin.get_center().to_float();
+        x += currPoint.x;
+        y += currPoint.y;
       }
-      this.smd_pin_count = curr_pin_list.size();
-      if (this.smd_pin_count > 0) {
-        x /= this.smd_pin_count;
-        y /= this.smd_pin_count;
+      this.smdPinCount = currPinList.size();
+      if (this.smdPinCount > 0) {
+        x /= this.smdPinCount;
+        y /= this.smdPinCount;
       }
-      this.gravity_center_of_smd_pins = new FloatPoint(x, y);
+      this.gravityCenterOfSmdPins = new FloatPoint(x, y);
 
       // calculate the sorted SMD pins of this component
-      this.smd_pins = new TreeSet<>();
+      this.smdPins = new TreeSet<>();
 
-      for (app.freerouting.board.Pin curr_board_pin : curr_pin_list) {
-        this.smd_pins.add(new Pin(curr_board_pin, p_board_smd_pin_list, p_routing_board));
+      for (app.freerouting.board.Pin curr_board_pin : currPinList) {
+        this.smdPins.add(new Pin(curr_board_pin, p_board_smd_pin_list, p_routing_board));
       }
     }
 
     /** Sort the components, so that components with more pins come first */
     @Override
     public int compareTo(Component p_other) {
-      int compare_value = this.smd_pin_count - p_other.smd_pin_count;
+      int compareValue = this.smdPinCount - p_other.smdPinCount;
       int result;
-      if (compare_value > 0) {
+      if (compareValue > 0) {
         result = -1;
-      } else if (compare_value < 0) {
+      } else if (compareValue < 0) {
         result = 1;
       } else {
-        result = this.board_component.no - p_other.board_component.no;
+        result = this.boardComponent.no - p_other.boardComponent.no;
       }
       return result;
     }
 
     class Pin implements Comparable<Pin> {
 
-      final app.freerouting.board.Pin board_pin;
-      final double distance_to_component_center;
-      final double distance_to_closest_on_net;
-      final int surroundings_density;
+      final app.freerouting.board.Pin boardPin;
+      final double distanceToComponentCenter;
+      final double distanceToClosestOnNet;
+      final int surroundingsDensity;
 
       Pin(
           app.freerouting.board.Pin p_board_pin,
           Collection<app.freerouting.board.Pin> p_board_smd_pin_list,
           RoutingBoard p_routing_board) {
-        this.board_pin = p_board_pin;
-        FloatPoint pin_location = p_board_pin.get_center().to_float();
-        this.distance_to_component_center = pin_location.distance(gravity_center_of_smd_pins);
+        this.boardPin = p_board_pin;
+        FloatPoint pinLocation = p_board_pin.get_center().to_float();
+        this.distanceToComponentCenter = pinLocation.distance(gravityCenterOfSmdPins);
 
-        // distance_to_closest_on_net calculation
+        // distanceToClosestOnNet calculation
         double minDistance = Double.MAX_VALUE;
         int netNo = p_board_pin.net_count() > 0 ? p_board_pin.get_net_no(0) : 0;
         if (netNo > 0) {
           for (app.freerouting.board.Pin otherPin : p_routing_board.get_pins()) {
             if (otherPin != p_board_pin && otherPin.contains_net(netNo)) {
-              double dist = pin_location.distance(otherPin.get_center().to_float());
+              double dist = pinLocation.distance(otherPin.get_center().to_float());
               if (dist < minDistance) {
                 minDistance = dist;
               }
             }
           }
         }
-        this.distance_to_closest_on_net = minDistance;
+        this.distanceToClosestOnNet = minDistance;
 
-        // surroundings_density calculation
+        // surroundingsDensity calculation
         double resolution =
             p_routing_board.communication.get_resolution(app.freerouting.board.Unit.UM);
         double maxDist = 20000.0 * resolution; // 20.0 mm in coordinate units
         int density = 0;
         for (app.freerouting.board.Pin otherPin : p_board_smd_pin_list) {
           if (otherPin != p_board_pin) {
-            double dist = pin_location.distance(otherPin.get_center().to_float());
+            double dist = pinLocation.distance(otherPin.get_center().to_float());
             if (dist <= maxDist) {
               density++;
             }
           }
         }
-        this.surroundings_density = density;
+        this.surroundingsDensity = density;
       }
 
       @Override
       public int compareTo(Pin p_other) {
         int result = 0;
         if ("inner_first".equals(pinSortingOrder)) {
-          double delta_dist =
-              this.distance_to_component_center - p_other.distance_to_component_center;
-          if (delta_dist > 0) {
+          double deltaDist = this.distanceToComponentCenter - p_other.distanceToComponentCenter;
+          if (deltaDist > 0) {
             result = 1;
-          } else if (delta_dist < 0) {
+          } else if (deltaDist < 0) {
             result = -1;
           }
         } else if ("outer_first".equals(pinSortingOrder)) {
-          double delta_dist =
-              this.distance_to_component_center - p_other.distance_to_component_center;
-          if (delta_dist > 0) {
+          double deltaDist = this.distanceToComponentCenter - p_other.distanceToComponentCenter;
+          if (deltaDist > 0) {
             result = -1;
-          } else if (delta_dist < 0) {
+          } else if (deltaDist < 0) {
             result = 1;
           }
-        } else if ("distance_to_closest_on_net".equals(pinSortingOrder)) {
-          double delta = this.distance_to_closest_on_net - p_other.distance_to_closest_on_net;
+        } else if ("distanceToClosestOnNet".equals(pinSortingOrder)) {
+          double delta = this.distanceToClosestOnNet - p_other.distanceToClosestOnNet;
           if (delta > 0) {
             result = 1;
           } else if (delta < 0) {
             result = -1;
           }
-        } else if ("surroundings_density".equals(pinSortingOrder)) {
-          int delta = p_other.surroundings_density - this.surroundings_density; // densest first
+        } else if ("surroundingsDensity".equals(pinSortingOrder)) {
+          int delta = p_other.surroundingsDensity - this.surroundingsDensity; // densest first
           if (delta > 0) {
             result = 1;
           } else if (delta < 0) {
@@ -761,7 +758,7 @@ public final class BatchFanout {
           }
         }
         if (result == 0) {
-          result = this.board_pin.pin_no - p_other.board_pin.pin_no;
+          result = this.boardPin.pinNo - p_other.boardPin.pinNo;
         }
         return result;
       }

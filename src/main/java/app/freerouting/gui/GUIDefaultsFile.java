@@ -18,24 +18,24 @@ import javax.swing.JFrame;
 /** Description of a text file, where the board independent interactive settings are stored. */
 public final class GUIDefaultsFile {
 
-  private final BoardFrame board_frame;
-  private final GuiBoardManager board_handling;
+  private final BoardFrame boardFrame;
+  private final GuiBoardManager boardHandling;
 
   /** Used, when reading a defaults file, null otherwise. */
   private final GUIDefaultsScanner scanner;
 
   /** Used, when writing a defaults file; null otherwise. */
-  private final IndentFileWriter out_file;
+  private final IndentFileWriter outFile;
 
   private GUIDefaultsFile(
       BoardFrame p_board_frame,
       GuiBoardManager p_board_handling,
       GUIDefaultsScanner p_scanner,
       IndentFileWriter p_output_file) {
-    board_frame = p_board_frame;
-    board_handling = p_board_handling;
+    boardFrame = p_board_frame;
+    boardHandling = p_board_handling;
     scanner = p_scanner;
-    out_file = p_output_file;
+    outFile = p_output_file;
   }
 
   /**
@@ -48,10 +48,9 @@ public final class GUIDefaultsFile {
       return false;
     }
 
-    IndentFileWriter output_file = new IndentFileWriter(p_output_stream);
+    IndentFileWriter outputFile = new IndentFileWriter(p_output_stream);
 
-    GUIDefaultsFile result =
-        new GUIDefaultsFile(p_board_frame, p_board_handling, null, output_file);
+    GUIDefaultsFile result = new GUIDefaultsFile(p_board_frame, p_board_handling, null, outputFile);
     try {
       result.write_defaults_scope();
     } catch (IOException _) {
@@ -60,7 +59,7 @@ public final class GUIDefaultsFile {
     }
 
     try {
-      output_file.close();
+      outputFile.close();
     } catch (IOException e) {
       FRLogger.error("unable to close defaults file", e);
       return false;
@@ -78,11 +77,11 @@ public final class GUIDefaultsFile {
       return false;
     }
     GUIDefaultsScanner scanner = new GUIDefaultsScanner(p_input_stream);
-    GUIDefaultsFile new_instance =
+    GUIDefaultsFile newInstance =
         new GUIDefaultsFile(p_board_frame, p_board_handling, scanner, null);
     boolean result;
     try {
-      result = new_instance.read_defaults_scope();
+      result = newInstance.read_defaults_scope();
     } catch (IOException e) {
       FRLogger.error("unable to read defaults file", e);
       result = false;
@@ -92,22 +91,22 @@ public final class GUIDefaultsFile {
 
   /** Skips the current scope. Returns false, if no legal scope was found. */
   private static boolean skip_scope(GUIDefaultsScanner p_scanner) {
-    int open_bracked_count = 1;
-    while (open_bracked_count > 0) {
-      Object curr_token;
+    int openBrackedCount = 1;
+    while (openBrackedCount > 0) {
+      Object currToken;
       try {
-        curr_token = p_scanner.next_token();
+        currToken = p_scanner.next_token();
       } catch (Exception e) {
         FRLogger.error("GUIDefaultsFile.skip_scope: Error while scanning file", e);
         return false;
       }
-      if (curr_token == null) {
+      if (currToken == null) {
         return false; // end of file
       }
-      if (curr_token == Keyword.OPEN_BRACKET) {
-        ++open_bracked_count;
-      } else if (curr_token == Keyword.CLOSED_BRACKET) {
-        --open_bracked_count;
+      if (currToken == Keyword.OPEN_BRACKET) {
+        ++openBrackedCount;
+      } else if (currToken == Keyword.CLOSED_BRACKET) {
+        --openBrackedCount;
       }
     }
     FRLogger.warn("GUIDefaultsFile.skip_scope: unknown scope skipped");
@@ -115,48 +114,48 @@ public final class GUIDefaultsFile {
   }
 
   private void write_defaults_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("gui_defaults");
+    outFile.start_scope();
+    outFile.write("gui_defaults");
     write_windows_scope();
     write_colors_scope();
     write_parameter_scope();
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   private boolean read_defaults_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
+    Object nextToken = this.scanner.next_token();
 
-    if (next_token != Keyword.OPEN_BRACKET) {
+    if (nextToken != Keyword.OPEN_BRACKET) {
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.GUI_DEFAULTS) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.GUI_DEFAULTS) {
       return false;
     }
 
     // read the direct subscopes of the gui_defaults scope
     for (; ; ) {
-      Object prev_token = next_token;
-      next_token = this.scanner.next_token();
-      if (next_token == null) {
+      Object prevToken = nextToken;
+      nextToken = this.scanner.next_token();
+      if (nextToken == null) {
         // end of file
         return true;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == Keyword.OPEN_BRACKET) {
-        if (next_token == Keyword.COLORS) {
+      if (prevToken == Keyword.OPEN_BRACKET) {
+        if (nextToken == Keyword.COLORS) {
           if (!read_colors_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.WINDOWS) {
+        } else if (nextToken == Keyword.WINDOWS) {
           if (!read_windows_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.PARAMETER) {
+        } else if (nextToken == Keyword.PARAMETER) {
           if (!read_parameter_scope()) {
             return false;
           }
@@ -166,31 +165,31 @@ public final class GUIDefaultsFile {
         }
       }
     }
-    this.board_frame.refresh_windows();
+    this.boardFrame.refresh_windows();
     return true;
   }
 
   private boolean read_windows_scope() throws IOException {
     // read the direct subscopes of the windows scope
-    Object next_token = null;
+    Object nextToken = null;
     for (; ; ) {
-      Object prev_token = next_token;
-      next_token = this.scanner.next_token();
-      if (next_token == null) {
+      Object prevToken = nextToken;
+      nextToken = this.scanner.next_token();
+      if (nextToken == null) {
         // unexpected end of file
         return false;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == Keyword.OPEN_BRACKET) {
-        if (!(next_token instanceof Keyword)) {
+      if (prevToken == Keyword.OPEN_BRACKET) {
+        if (!(nextToken instanceof Keyword)) {
           FRLogger.warn("GUIDefaultsFile.windows: Keyword expected");
           return false;
         }
-        if (!read_frame_scope((Keyword) next_token)) {
+        if (!read_frame_scope((Keyword) nextToken)) {
 
           return false;
         }
@@ -200,49 +199,49 @@ public final class GUIDefaultsFile {
   }
 
   private void write_windows_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("windows");
-    write_frame_scope(this.board_frame, "board_frame");
-    write_frame_scope(this.board_frame.color_manager, "color_manager");
-    write_frame_scope(this.board_frame.visibility_window, "object_visibility");
-    write_frame_scope(this.board_frame.display_misc_window, "display_miscellaneous");
+    outFile.start_scope();
+    outFile.write("windows");
+    write_frame_scope(this.boardFrame, "boardFrame");
+    write_frame_scope(this.boardFrame.colorManager, "colorManager");
+    write_frame_scope(this.boardFrame.visibilityWindow, "object_visibility");
+    write_frame_scope(this.boardFrame.displayMiscWindow, "display_miscellaneous");
 
-    write_frame_scope(this.board_frame.select_parameter_window, "select_parameter");
-    write_frame_scope(this.board_frame.route_parameter_window, "route_parameter");
-    write_frame_scope(this.board_frame.route_parameter_window.manual_rule_window, "manual_rules");
-    write_frame_scope(this.board_frame.move_parameter_window, "move_parameter");
-    write_frame_scope(this.board_frame.clearance_matrix_window, "clearance_matrix");
-    write_frame_scope(this.board_frame.via_window, "via_rules");
-    write_frame_scope(this.board_frame.edit_vias_window, "edit_vias");
-    write_frame_scope(this.board_frame.edit_net_rules_window, "edit_net_rules");
-    write_frame_scope(this.board_frame.assign_net_classes_window, "assign_net_rules");
-    write_frame_scope(this.board_frame.padstacks_window, "padstack_info");
-    write_frame_scope(this.board_frame.packages_window, "package_info");
-    write_frame_scope(this.board_frame.components_window, "component_info");
-    write_frame_scope(this.board_frame.net_info_window, "net_info");
-    write_frame_scope(this.board_frame.incompletes_window, "incompletes_info");
-    write_frame_scope(this.board_frame.clearance_violations_window, "violations_info");
-    out_file.end_scope();
+    write_frame_scope(this.boardFrame.selectParameterWindow, "select_parameter");
+    write_frame_scope(this.boardFrame.routeParameterWindow, "route_parameter");
+    write_frame_scope(this.boardFrame.routeParameterWindow.manualRuleWindow, "manual_rules");
+    write_frame_scope(this.boardFrame.moveParameterWindow, "move_parameter");
+    write_frame_scope(this.boardFrame.clearanceMatrixWindow, "clearanceMatrix");
+    write_frame_scope(this.boardFrame.viaWindow, "viaRules");
+    write_frame_scope(this.boardFrame.editViasWindow, "edit_vias");
+    write_frame_scope(this.boardFrame.editNetRulesWindow, "edit_net_rules");
+    write_frame_scope(this.boardFrame.assignNetClassesWindow, "assign_net_rules");
+    write_frame_scope(this.boardFrame.padstacksWindow, "padstack_info");
+    write_frame_scope(this.boardFrame.packagesWindow, "package_info");
+    write_frame_scope(this.boardFrame.componentsWindow, "component_info");
+    write_frame_scope(this.boardFrame.netInfoWindow, "net_info");
+    write_frame_scope(this.boardFrame.incompletesWindow, "incompletes_info");
+    write_frame_scope(this.boardFrame.clearanceViolationsWindow, "violations_info");
+    outFile.end_scope();
   }
 
   private boolean read_frame_scope(Keyword p_frame) throws IOException {
-    boolean is_visible;
-    Object next_token = this.scanner.next_token();
-    if (next_token == Keyword.VISIBLE) {
-      is_visible = true;
-    } else if (next_token == Keyword.NOT_VISIBLE) {
-      is_visible = false;
+    boolean isVisible;
+    Object nextToken = this.scanner.next_token();
+    if (nextToken == Keyword.VISIBLE) {
+      isVisible = true;
+    } else if (nextToken == Keyword.NOT_VISIBLE) {
+      isVisible = false;
     } else {
       FRLogger.warn("GUIDefaultsFile.read_frame_scope: visible or not_visible expected");
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.OPEN_BRACKET) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.OPEN_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_frame_scope: open_bracket expected");
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.BOUNDS) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.BOUNDS) {
       FRLogger.warn("GUIDefaultsFile.read_frame_scope: bounds expected");
       return false;
     }
@@ -251,47 +250,47 @@ public final class GUIDefaultsFile {
       return false;
     }
     for (int i = 0; i < 2; i++) {
-      next_token = this.scanner.next_token();
-      if (next_token != Keyword.CLOSED_BRACKET) {
+      nextToken = this.scanner.next_token();
+      if (nextToken != Keyword.CLOSED_BRACKET) {
         FRLogger.warn("GUIDefaultsFile.read_frame_scope: closing bracket expected");
         return false;
       }
     }
-    JFrame curr_frame;
+    JFrame currFrame;
     switch (p_frame) {
-      case BOARD_FRAME -> curr_frame = this.board_frame;
-      case COLOR_MANAGER -> curr_frame = this.board_frame.color_manager;
-      case OBJECT_VISIBILITY, LAYER_VISIBILITY -> curr_frame = this.board_frame.visibility_window;
-      case DISPLAY_MISCELLANEOUS -> curr_frame = this.board_frame.display_misc_window;
+      case BOARD_FRAME -> currFrame = this.boardFrame;
+      case COLOR_MANAGER -> currFrame = this.boardFrame.colorManager;
+      case OBJECT_VISIBILITY, LAYER_VISIBILITY -> currFrame = this.boardFrame.visibilityWindow;
+      case DISPLAY_MISCELLANEOUS -> currFrame = this.boardFrame.displayMiscWindow;
 
-      case SELECT_PARAMETER -> curr_frame = this.board_frame.select_parameter_window;
-      case ROUTE_PARAMETER -> curr_frame = this.board_frame.route_parameter_window;
-      case MANUAL_RULES -> curr_frame = this.board_frame.route_parameter_window.manual_rule_window;
-      case MOVE_PARAMETER -> curr_frame = this.board_frame.move_parameter_window;
-      case CLEARANCE_MATRIX -> curr_frame = this.board_frame.clearance_matrix_window;
-      case VIA_RULES -> curr_frame = this.board_frame.via_window;
-      case EDIT_VIAS -> curr_frame = this.board_frame.edit_vias_window;
-      case EDIT_NET_RULES -> curr_frame = this.board_frame.edit_net_rules_window;
-      case ASSIGN_NET_RULES -> curr_frame = this.board_frame.assign_net_classes_window;
-      case PADSTACK_INFO -> curr_frame = this.board_frame.padstacks_window;
-      case PACKAGE_INFO -> curr_frame = this.board_frame.packages_window;
-      case COMPONENT_INFO -> curr_frame = this.board_frame.components_window;
-      case NET_INFO -> curr_frame = this.board_frame.net_info_window;
-      case INCOMPLETES_INFO -> curr_frame = this.board_frame.incompletes_window;
-      case VIOLATIONS_INFO -> curr_frame = this.board_frame.clearance_violations_window;
+      case SELECT_PARAMETER -> currFrame = this.boardFrame.selectParameterWindow;
+      case ROUTE_PARAMETER -> currFrame = this.boardFrame.routeParameterWindow;
+      case MANUAL_RULES -> currFrame = this.boardFrame.routeParameterWindow.manualRuleWindow;
+      case MOVE_PARAMETER -> currFrame = this.boardFrame.moveParameterWindow;
+      case CLEARANCE_MATRIX -> currFrame = this.boardFrame.clearanceMatrixWindow;
+      case VIA_RULES -> currFrame = this.boardFrame.viaWindow;
+      case EDIT_VIAS -> currFrame = this.boardFrame.editViasWindow;
+      case EDIT_NET_RULES -> currFrame = this.boardFrame.editNetRulesWindow;
+      case ASSIGN_NET_RULES -> currFrame = this.boardFrame.assignNetClassesWindow;
+      case PADSTACK_INFO -> currFrame = this.boardFrame.padstacksWindow;
+      case PACKAGE_INFO -> currFrame = this.boardFrame.packagesWindow;
+      case COMPONENT_INFO -> currFrame = this.boardFrame.componentsWindow;
+      case NET_INFO -> currFrame = this.boardFrame.netInfoWindow;
+      case INCOMPLETES_INFO -> currFrame = this.boardFrame.incompletesWindow;
+      case VIOLATIONS_INFO -> currFrame = this.boardFrame.clearanceViolationsWindow;
       default -> {
         FRLogger.warn("GUIDefaultsFile.read_frame_scope: unknown frame");
         return false;
       }
     }
-    if (curr_frame != null) {
-      curr_frame.setVisible(is_visible);
+    if (currFrame != null) {
+      currFrame.setVisible(isVisible);
       if (p_frame == Keyword.BOARD_FRAME) {
-        curr_frame.setBounds(bounds);
+        currFrame.setBounds(bounds);
       } else {
         // Set only the location.
         // Do not change the size of the frame because it depends on the layer count.
-        curr_frame.setLocation(bounds.getLocation());
+        currFrame.setLocation(bounds.getLocation());
       }
     }
     return true;
@@ -300,12 +299,12 @@ public final class GUIDefaultsFile {
   private Rectangle read_rectangle() throws IOException {
     int[] coor = new int[4];
     for (int i = 0; i < 4; i++) {
-      Object next_token = this.scanner.next_token();
-      if (!(next_token instanceof Integer)) {
+      Object nextToken = this.scanner.next_token();
+      if (!(nextToken instanceof Integer)) {
         FRLogger.warn("GUIDefaultsFile.read_rectangle: Integer expected");
         return null;
       }
-      coor[i] = (Integer) next_token;
+      coor[i] = (Integer) nextToken;
     }
     return new Rectangle(coor[0], coor[1], coor[2], coor[3]);
   }
@@ -314,114 +313,114 @@ public final class GUIDefaultsFile {
     if (p_frame == null) {
       return;
     }
-    out_file.start_scope();
-    out_file.write(p_frame_name);
-    out_file.new_line();
+    outFile.start_scope();
+    outFile.write(p_frame_name);
+    outFile.new_line();
     if (p_frame.isVisible()) {
-      out_file.write("visible");
+      outFile.write("visible");
     } else {
-      out_file.write("not_visible");
+      outFile.write("not_visible");
     }
     write_bounds(p_frame.getBounds());
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   private void write_bounds(Rectangle p_bounds) throws IOException {
-    out_file.start_scope();
-    out_file.write("bounds");
-    out_file.new_line();
+    outFile.start_scope();
+    outFile.write("bounds");
+    outFile.new_line();
     int x = (int) p_bounds.getX();
-    out_file.write(String.valueOf(x));
+    outFile.write(String.valueOf(x));
     int y = (int) p_bounds.getY();
-    out_file.write(" ");
-    out_file.write(String.valueOf(y));
+    outFile.write(" ");
+    outFile.write(String.valueOf(y));
     int width = (int) p_bounds.getWidth();
-    out_file.write(" ");
-    out_file.write(String.valueOf(width));
+    outFile.write(" ");
+    outFile.write(String.valueOf(width));
     int height = (int) p_bounds.getHeight();
-    out_file.write(" ");
-    out_file.write(String.valueOf(height));
-    out_file.end_scope();
+    outFile.write(" ");
+    outFile.write(String.valueOf(height));
+    outFile.end_scope();
   }
 
   private boolean read_colors_scope() throws IOException {
     // read the direct subscopes of the colors scope
-    Object next_token = null;
+    Object nextToken = null;
     for (; ; ) {
-      Object prev_token = next_token;
-      next_token = this.scanner.next_token();
-      if (next_token == null) {
+      Object prevToken = nextToken;
+      nextToken = this.scanner.next_token();
+      if (nextToken == null) {
         // unexpected end of file
         return false;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == Keyword.OPEN_BRACKET) {
+      if (prevToken == Keyword.OPEN_BRACKET) {
 
-        if (next_token == Keyword.BACKGROUND) {
+        if (nextToken == Keyword.BACKGROUND) {
           if (!read_background_color()) {
             return false;
           }
-        } else if (next_token == Keyword.CONDUCTION) {
+        } else if (nextToken == Keyword.CONDUCTION) {
           if (!read_conduction_colors()) {
             return false;
           }
-        } else if (next_token == Keyword.HILIGHT) {
+        } else if (nextToken == Keyword.HILIGHT) {
           if (!read_hilight_color()) {
             return false;
           }
-        } else if (next_token == Keyword.INCOMPLETES) {
+        } else if (nextToken == Keyword.INCOMPLETES) {
           if (!read_incompletes_color()) {
             return false;
           }
-        } else if (next_token == Keyword.KEEPOUT) {
+        } else if (nextToken == Keyword.KEEPOUT) {
           if (!read_keepout_colors()) {
             return false;
           }
-        } else if (next_token == Keyword.OUTLINE) {
+        } else if (nextToken == Keyword.OUTLINE) {
           if (!read_outline_color()) {
             return false;
           }
-        } else if (next_token == Keyword.COMPONENT_FRONT) {
+        } else if (nextToken == Keyword.COMPONENT_FRONT) {
           if (!read_component_color(true)) {
             return false;
           }
-        } else if (next_token == Keyword.COMPONENT_BACK) {
+        } else if (nextToken == Keyword.COMPONENT_BACK) {
           if (!read_component_color(false)) {
             return false;
           }
-        } else if (next_token == Keyword.LENGTH_MATCHING) {
+        } else if (nextToken == Keyword.LENGTH_MATCHING) {
           if (!read_length_matching_color()) {
             return false;
           }
-        } else if (next_token == Keyword.PINS) {
+        } else if (nextToken == Keyword.PINS) {
           if (!read_pin_colors()) {
             return false;
           }
-        } else if (next_token == Keyword.TRACES) {
+        } else if (nextToken == Keyword.TRACES) {
           if (!read_trace_colors(false)) {
             return false;
           }
-        } else if (next_token == Keyword.FIXED_TRACES) {
+        } else if (nextToken == Keyword.FIXED_TRACES) {
           if (!read_trace_colors(true)) {
             return false;
           }
-        } else if (next_token == Keyword.VIA_KEEPOUT) {
+        } else if (nextToken == Keyword.VIA_KEEPOUT) {
           if (!read_via_keepout_colors()) {
             return false;
           }
-        } else if (next_token == Keyword.VIAS) {
+        } else if (nextToken == Keyword.VIAS) {
           if (!read_via_colors(false)) {
             return false;
           }
-        } else if (next_token == Keyword.FIXED_VIAS) {
+        } else if (nextToken == Keyword.FIXED_VIAS) {
           if (!read_via_colors(true)) {
             return false;
           }
-        } else if (next_token == Keyword.VIOLATIONS) {
+        } else if (nextToken == Keyword.VIOLATIONS) {
           if (!read_violations_color()) {
             return false;
           }
@@ -439,12 +438,12 @@ public final class GUIDefaultsFile {
     if (intensity < 0) {
       return false;
     }
-    this.board_handling.graphics_context.set_trace_color_intensity(intensity);
-    Color[] curr_colors = read_color_array();
-    if (curr_colors.length < 1) {
+    this.boardHandling.graphicsContext.set_trace_color_intensity(intensity);
+    Color[] currColors = read_color_array();
+    if (currColors.length < 1) {
       return false;
     }
-    this.board_handling.graphics_context.item_color_table.set_trace_colors(curr_colors, p_fixed);
+    this.boardHandling.graphicsContext.itemColorTable.set_trace_colors(currColors, p_fixed);
     return true;
   }
 
@@ -453,12 +452,12 @@ public final class GUIDefaultsFile {
     if (intensity < 0) {
       return false;
     }
-    this.board_handling.graphics_context.set_via_color_intensity(intensity);
-    Color[] curr_colors = read_color_array();
-    if (curr_colors.length < 1) {
+    this.boardHandling.graphicsContext.set_via_color_intensity(intensity);
+    Color[] currColors = read_color_array();
+    if (currColors.length < 1) {
       return false;
     }
-    this.board_handling.graphics_context.item_color_table.set_via_colors(curr_colors, p_fixed);
+    this.boardHandling.graphicsContext.itemColorTable.set_via_colors(currColors, p_fixed);
     return true;
   }
 
@@ -467,12 +466,12 @@ public final class GUIDefaultsFile {
     if (intensity < 0) {
       return false;
     }
-    this.board_handling.graphics_context.set_pin_color_intensity(intensity);
-    Color[] curr_colors = read_color_array();
-    if (curr_colors.length < 1) {
+    this.boardHandling.graphicsContext.set_pin_color_intensity(intensity);
+    Color[] currColors = read_color_array();
+    if (currColors.length < 1) {
       return false;
     }
-    this.board_handling.graphics_context.item_color_table.set_pin_colors(curr_colors);
+    this.boardHandling.graphicsContext.itemColorTable.set_pin_colors(currColors);
     return true;
   }
 
@@ -481,12 +480,12 @@ public final class GUIDefaultsFile {
     if (intensity < 0) {
       return false;
     }
-    this.board_handling.graphics_context.set_conduction_color_intensity(intensity);
-    Color[] curr_colors = read_color_array();
-    if (curr_colors.length < 1) {
+    this.boardHandling.graphicsContext.set_conduction_color_intensity(intensity);
+    Color[] currColors = read_color_array();
+    if (currColors.length < 1) {
       return false;
     }
-    this.board_handling.graphics_context.item_color_table.set_conduction_colors(curr_colors);
+    this.boardHandling.graphicsContext.itemColorTable.set_conduction_colors(currColors);
     return true;
   }
 
@@ -495,12 +494,12 @@ public final class GUIDefaultsFile {
     if (intensity < 0) {
       return false;
     }
-    this.board_handling.graphics_context.set_obstacle_color_intensity(intensity);
-    Color[] curr_colors = read_color_array();
-    if (curr_colors.length < 1) {
+    this.boardHandling.graphicsContext.set_obstacle_color_intensity(intensity);
+    Color[] currColors = read_color_array();
+    if (currColors.length < 1) {
       return false;
     }
-    this.board_handling.graphics_context.item_color_table.set_keepout_colors(curr_colors);
+    this.boardHandling.graphicsContext.itemColorTable.set_keepout_colors(currColors);
     return true;
   }
 
@@ -509,24 +508,24 @@ public final class GUIDefaultsFile {
     if (intensity < 0) {
       return false;
     }
-    this.board_handling.graphics_context.set_via_obstacle_color_intensity(intensity);
-    Color[] curr_colors = read_color_array();
-    if (curr_colors.length < 1) {
+    this.boardHandling.graphicsContext.set_via_obstacle_color_intensity(intensity);
+    Color[] currColors = read_color_array();
+    if (currColors.length < 1) {
       return false;
     }
-    this.board_handling.graphics_context.item_color_table.set_via_keepout_colors(curr_colors);
+    this.boardHandling.graphicsContext.itemColorTable.set_via_keepout_colors(currColors);
     return true;
   }
 
   private boolean read_background_color() throws IOException {
-    Color curr_color = read_color();
-    if (curr_color == null) {
+    Color currColor = read_color();
+    if (currColor == null) {
       return false;
     }
-    this.board_handling.graphics_context.other_color_table.set_background_color(curr_color);
-    this.board_frame.set_board_background(curr_color);
-    Object next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    this.boardHandling.graphicsContext.otherColorTable.set_background_color(currColor);
+    this.boardFrame.set_board_background(currColor);
+    Object nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_background_color: closing bracket expected");
       return false;
     }
@@ -538,14 +537,14 @@ public final class GUIDefaultsFile {
     if (intensity < 0) {
       return false;
     }
-    this.board_handling.graphics_context.set_hilight_color_intensity(intensity);
-    Color curr_color = read_color();
-    if (curr_color == null) {
+    this.boardHandling.graphicsContext.set_hilight_color_intensity(intensity);
+    Color currColor = read_color();
+    if (currColor == null) {
       return false;
     }
-    this.board_handling.graphics_context.other_color_table.set_hilight_color(curr_color);
-    Object next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    this.boardHandling.graphicsContext.otherColorTable.set_hilight_color(currColor);
+    Object nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_higlight_color: closing bracket expected");
       return false;
     }
@@ -557,14 +556,14 @@ public final class GUIDefaultsFile {
     if (intensity < 0) {
       return false;
     }
-    this.board_handling.graphics_context.set_incomplete_color_intensity(intensity);
-    Color curr_color = read_color();
-    if (curr_color == null) {
+    this.boardHandling.graphicsContext.set_incomplete_color_intensity(intensity);
+    Color currColor = read_color();
+    if (currColor == null) {
       return false;
     }
-    this.board_handling.graphics_context.other_color_table.set_incomplete_color(curr_color);
-    Object next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    this.boardHandling.graphicsContext.otherColorTable.set_incomplete_color(currColor);
+    Object nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_incompletes_color: closing bracket expected");
       return false;
     }
@@ -576,15 +575,14 @@ public final class GUIDefaultsFile {
     if (intensity < 0) {
       return false;
     }
-    this.board_handling.graphics_context.set_length_matching_area_color_intensity(intensity);
-    Color curr_color = read_color();
-    if (curr_color == null) {
+    this.boardHandling.graphicsContext.set_length_matching_area_color_intensity(intensity);
+    Color currColor = read_color();
+    if (currColor == null) {
       return false;
     }
-    this.board_handling.graphics_context.other_color_table.set_length_matching_area_color(
-        curr_color);
-    Object next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    this.boardHandling.graphicsContext.otherColorTable.set_length_matching_area_color(currColor);
+    Object nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_length_matching_color: closing bracket expected");
       return false;
     }
@@ -592,13 +590,13 @@ public final class GUIDefaultsFile {
   }
 
   private boolean read_violations_color() throws IOException {
-    Color curr_color = read_color();
-    if (curr_color == null) {
+    Color currColor = read_color();
+    if (currColor == null) {
       return false;
     }
-    this.board_handling.graphics_context.other_color_table.set_violations_color(curr_color);
-    Object next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    this.boardHandling.graphicsContext.otherColorTable.set_violations_color(currColor);
+    Object nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_violations_color: closing bracket expected");
       return false;
     }
@@ -606,13 +604,13 @@ public final class GUIDefaultsFile {
   }
 
   private boolean read_outline_color() throws IOException {
-    Color curr_color = read_color();
-    if (curr_color == null) {
+    Color currColor = read_color();
+    if (currColor == null) {
       return false;
     }
-    this.board_handling.graphics_context.other_color_table.set_outline_color(curr_color);
-    Object next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    this.boardHandling.graphicsContext.otherColorTable.set_outline_color(currColor);
+    Object nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_outline_color: closing bracket expected");
       return false;
     }
@@ -620,13 +618,13 @@ public final class GUIDefaultsFile {
   }
 
   private boolean read_component_color(boolean p_front) throws IOException {
-    Color curr_color = read_color();
-    if (curr_color == null) {
+    Color currColor = read_color();
+    if (currColor == null) {
       return false;
     }
-    this.board_handling.graphics_context.other_color_table.set_component_color(curr_color, p_front);
-    Object next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    this.boardHandling.graphicsContext.otherColorTable.set_component_color(currColor, p_front);
+    Object nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_component_color: closing bracket expected");
       return false;
     }
@@ -635,10 +633,10 @@ public final class GUIDefaultsFile {
 
   private double read_color_intensity() throws IOException {
     double result;
-    Object next_token = this.scanner.next_token();
-    if (next_token instanceof Double double1) {
+    Object nextToken = this.scanner.next_token();
+    if (nextToken instanceof Double double1) {
       result = double1;
-    } else if (next_token instanceof Integer integer) {
+    } else if (nextToken instanceof Integer integer) {
       result = integer;
     } else {
       FRLogger.warn("GUIDefaultsFile.read_color_intensity: Number expected");
@@ -649,18 +647,18 @@ public final class GUIDefaultsFile {
 
   /** reads a java.awt.Color from the defaults file. Returns null, if no valid color was found. */
   private Color read_color() throws IOException {
-    int[] rgb_color_arr = new int[3];
+    int[] rgbColorArr = new int[3];
     for (int i = 0; i < 3; i++) {
-      Object next_token = this.scanner.next_token();
-      if (!(next_token instanceof Integer)) {
-        if (next_token != Keyword.CLOSED_BRACKET) {
+      Object nextToken = this.scanner.next_token();
+      if (!(nextToken instanceof Integer)) {
+        if (nextToken != Keyword.CLOSED_BRACKET) {
           FRLogger.warn("GUIDefaultsFile.read_color: closing bracket expected");
         }
         return null;
       }
-      rgb_color_arr[i] = (Integer) next_token;
+      rgbColorArr[i] = (Integer) nextToken;
     }
-    return new Color(rgb_color_arr[0], rgb_color_arr[1], rgb_color_arr[2]);
+    return new Color(rgbColorArr[0], rgbColorArr[1], rgbColorArr[2]);
   }
 
   /**
@@ -668,16 +666,16 @@ public final class GUIDefaultsFile {
    * found.
    */
   private Color[] read_color_array() throws IOException {
-    Collection<Color> color_list = new LinkedList<>();
+    Collection<Color> colorList = new LinkedList<>();
     for (; ; ) {
-      Color curr_color = read_color();
-      if (curr_color == null) {
+      Color currColor = read_color();
+      if (currColor == null) {
         break;
       }
-      color_list.add(curr_color);
+      colorList.add(currColor);
     }
-    Color[] result = new Color[color_list.size()];
-    Iterator<Color> it = color_list.iterator();
+    Color[] result = new Color[colorList.size()];
+    Iterator<Color> it = colorList.iterator();
     for (int i = 0; i < result.length; i++) {
       result[i] = it.next();
     }
@@ -685,103 +683,103 @@ public final class GUIDefaultsFile {
   }
 
   private void write_colors_scope() throws IOException {
-    GraphicsContext graphics_context = this.board_handling.graphics_context;
-    out_file.start_scope();
-    out_file.write("colors");
-    out_file.start_scope();
-    out_file.write("background");
-    write_color_scope(graphics_context.get_background_color());
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("hilight");
-    write_color_intensity(graphics_context.get_hilight_color_intensity());
-    write_color_scope(graphics_context.get_hilight_color());
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("incompletes");
-    write_color_intensity(graphics_context.get_incomplete_color_intensity());
-    write_color_scope(graphics_context.get_incomplete_color());
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("outline");
-    write_color_scope(graphics_context.get_outline_color());
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("component_front");
-    write_color_scope(graphics_context.get_component_color(true));
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("component_back");
-    write_color_scope(graphics_context.get_component_color(false));
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("violations");
-    write_color_scope(graphics_context.get_violations_color());
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("length_matching");
-    write_color_intensity(graphics_context.get_length_matching_area_color_intensity());
-    write_color_scope(graphics_context.get_length_matching_area_color());
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("traces");
-    write_color_intensity(graphics_context.get_trace_color_intensity());
-    write_color(graphics_context.get_trace_colors(false));
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("fixed_traces");
-    write_color_intensity(graphics_context.get_trace_color_intensity());
-    write_color(graphics_context.get_trace_colors(true));
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("vias");
-    write_color_intensity(graphics_context.get_via_color_intensity());
-    write_color(graphics_context.get_via_colors(false));
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("fixed_vias");
-    write_color_intensity(graphics_context.get_via_color_intensity());
-    write_color(graphics_context.get_via_colors(true));
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("pins");
-    write_color_intensity(graphics_context.get_pin_color_intensity());
-    write_color(graphics_context.get_pin_colors());
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("conduction");
-    write_color_intensity(graphics_context.get_conduction_color_intensity());
-    write_color(graphics_context.get_conduction_colors());
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("keepout");
-    write_color_intensity(graphics_context.get_obstacle_color_intensity());
-    write_color(graphics_context.get_obstacle_colors());
-    out_file.end_scope();
-    out_file.start_scope();
-    out_file.write("via_keepout");
-    write_color_intensity(graphics_context.get_via_obstacle_color_intensity());
-    write_color(graphics_context.get_via_obstacle_colors());
-    out_file.end_scope();
-    out_file.end_scope();
+    GraphicsContext graphicsContext = this.boardHandling.graphicsContext;
+    outFile.start_scope();
+    outFile.write("colors");
+    outFile.start_scope();
+    outFile.write("background");
+    write_color_scope(graphicsContext.get_background_color());
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("hilight");
+    write_color_intensity(graphicsContext.get_hilight_color_intensity());
+    write_color_scope(graphicsContext.get_hilight_color());
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("incompletes");
+    write_color_intensity(graphicsContext.get_incomplete_color_intensity());
+    write_color_scope(graphicsContext.get_incomplete_color());
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("outline");
+    write_color_scope(graphicsContext.get_outline_color());
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("component_front");
+    write_color_scope(graphicsContext.get_component_color(true));
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("component_back");
+    write_color_scope(graphicsContext.get_component_color(false));
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("violations");
+    write_color_scope(graphicsContext.get_violations_color());
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("length_matching");
+    write_color_intensity(graphicsContext.get_length_matching_area_color_intensity());
+    write_color_scope(graphicsContext.get_length_matching_area_color());
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("traces");
+    write_color_intensity(graphicsContext.get_trace_color_intensity());
+    write_color(graphicsContext.get_trace_colors(false));
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("fixed_traces");
+    write_color_intensity(graphicsContext.get_trace_color_intensity());
+    write_color(graphicsContext.get_trace_colors(true));
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("vias");
+    write_color_intensity(graphicsContext.get_via_color_intensity());
+    write_color(graphicsContext.get_via_colors(false));
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("fixed_vias");
+    write_color_intensity(graphicsContext.get_via_color_intensity());
+    write_color(graphicsContext.get_via_colors(true));
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("pins");
+    write_color_intensity(graphicsContext.get_pin_color_intensity());
+    write_color(graphicsContext.get_pin_colors());
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("conduction");
+    write_color_intensity(graphicsContext.get_conduction_color_intensity());
+    write_color(graphicsContext.get_conduction_colors());
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("keepout");
+    write_color_intensity(graphicsContext.get_obstacle_color_intensity());
+    write_color(graphicsContext.get_obstacle_colors());
+    outFile.end_scope();
+    outFile.start_scope();
+    outFile.write("via_keepout");
+    write_color_intensity(graphicsContext.get_via_obstacle_color_intensity());
+    write_color(graphicsContext.get_via_obstacle_colors());
+    outFile.end_scope();
+    outFile.end_scope();
   }
 
   private void write_color_intensity(double p_value) throws IOException {
-    out_file.write(" ");
+    outFile.write(" ");
     float value = (float) p_value;
-    out_file.write(String.valueOf(value));
+    outFile.write(String.valueOf(value));
   }
 
   private void write_color_scope(Color p_color) throws IOException {
-    out_file.new_line();
+    outFile.new_line();
     int red = p_color.getRed();
-    out_file.write(String.valueOf(red));
-    out_file.write(" ");
+    outFile.write(String.valueOf(red));
+    outFile.write(" ");
     int green = p_color.getGreen();
-    out_file.write(String.valueOf(green));
-    out_file.write(" ");
+    outFile.write(String.valueOf(green));
+    outFile.write(" ");
     int blue = p_color.getBlue();
-    out_file.write(String.valueOf(blue));
+    outFile.write(String.valueOf(blue));
   }
 
   private void write_color(Color[] p_colors) throws IOException {
@@ -792,66 +790,66 @@ public final class GUIDefaultsFile {
 
   private boolean read_parameter_scope() throws IOException {
     // read the subscopes of the parameter scope
-    Object next_token = null;
+    Object nextToken = null;
     for (; ; ) {
-      Object prev_token = next_token;
-      next_token = this.scanner.next_token();
-      if (next_token == null) {
+      Object prevToken = nextToken;
+      nextToken = this.scanner.next_token();
+      if (nextToken == null) {
         // unexpected end of file
         return false;
       }
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == Keyword.OPEN_BRACKET) {
+      if (prevToken == Keyword.OPEN_BRACKET) {
 
-        if (next_token == Keyword.SELECTION_LAYERS) {
+        if (nextToken == Keyword.SELECTION_LAYERS) {
           if (!read_selection_layer_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.VIA_SNAP_TO_SMD_CENTER) {
+        } else if (nextToken == Keyword.VIA_SNAP_TO_SMD_CENTER) {
           if (!read_via_snap_to_smd_center_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.SHOVE_ENABLED) {
+        } else if (nextToken == Keyword.SHOVE_ENABLED) {
           if (!read_shove_enabled_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.DRAG_COMPONENTS_ENABLED) {
+        } else if (nextToken == Keyword.DRAG_COMPONENTS_ENABLED) {
           if (!read_drag_components_enabled_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.ROUTE_MODE) {
+        } else if (nextToken == Keyword.ROUTE_MODE) {
           if (!read_route_mode_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.PULL_TIGHT_REGION) {
+        } else if (nextToken == Keyword.PULL_TIGHT_REGION) {
           if (!read_pull_tight_region_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.PULL_TIGHT_ACCURACY) {
+        } else if (nextToken == Keyword.PULL_TIGHT_ACCURACY) {
           if (!read_pull_tight_accuracy_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.IGNORE_CONDUCTION_AREAS) {
+        } else if (nextToken == Keyword.IGNORE_CONDUCTION_AREAS) {
           if (!read_ignore_conduction_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.AUTOMATIC_LAYER_DIMMING) {
+        } else if (nextToken == Keyword.AUTOMATIC_LAYER_DIMMING) {
           if (!read_automatic_layer_dimming_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.CLEARANCE_COMPENSATION) {
+        } else if (nextToken == Keyword.CLEARANCE_COMPENSATION) {
           if (!read_clearance_compensation_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.HILIGHT_ROUTING_OBSTACLE) {
+        } else if (nextToken == Keyword.HILIGHT_ROUTING_OBSTACLE) {
           if (!read_hilight_routing_obstacle_scope()) {
             return false;
           }
-        } else if (next_token == Keyword.SELECTABLE_ITEMS) {
+        } else if (nextToken == Keyword.SELECTABLE_ITEMS) {
           if (!read_selectable_item_scope()) {
             return false;
           }
@@ -866,8 +864,8 @@ public final class GUIDefaultsFile {
   }
 
   private void write_parameter_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("parameter");
+    outFile.start_scope();
+    outFile.write("parameter");
     write_selection_layer_scope();
     write_selectable_item_scope();
     write_via_snap_to_smd_center_scope();
@@ -881,381 +879,374 @@ public final class GUIDefaultsFile {
     write_ignore_conduction_scope();
     write_automatic_layer_dimming_scope();
 
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   private boolean read_selection_layer_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
-    boolean select_on_all_layers;
-    if (next_token == Keyword.ALL_VISIBLE) {
-      select_on_all_layers = true;
-    } else if (next_token == Keyword.CURRENT_ONLY) {
-      select_on_all_layers = false;
+    Object nextToken = this.scanner.next_token();
+    boolean selectOnAllLayers;
+    if (nextToken == Keyword.ALL_VISIBLE) {
+      selectOnAllLayers = true;
+    } else if (nextToken == Keyword.CURRENT_ONLY) {
+      selectOnAllLayers = false;
     } else {
       FRLogger.warn("GUIDefaultsFile.read_selection_layer_scope: unexpected token");
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_selection_layer_scop: closing bracket expected");
       return false;
     }
-    this.board_handling
-        .getInteractiveSettings()
-        .set_select_on_all_visible_layers(select_on_all_layers);
+    this.boardHandling.getInteractiveSettings().set_select_on_all_visible_layers(selectOnAllLayers);
     return true;
   }
 
   private boolean read_shove_enabled_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
-    boolean shove_enabled;
-    if (next_token == Keyword.ON) {
-      shove_enabled = true;
-    } else if (next_token == Keyword.OFF) {
-      shove_enabled = false;
+    Object nextToken = this.scanner.next_token();
+    boolean shoveEnabled;
+    if (nextToken == Keyword.ON) {
+      shoveEnabled = true;
+    } else if (nextToken == Keyword.OFF) {
+      shoveEnabled = false;
     } else {
       FRLogger.warn("GUIDefaultsFile.read_shove_enabled_scope: unexpected token");
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_shove_enabled_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.getInteractiveSettings().set_push_enabled(shove_enabled);
+    this.boardHandling.getInteractiveSettings().set_push_enabled(shoveEnabled);
     return true;
   }
 
   private boolean read_drag_components_enabled_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
-    boolean drag_components_enabled;
-    if (next_token == Keyword.ON) {
-      drag_components_enabled = true;
-    } else if (next_token == Keyword.OFF) {
-      drag_components_enabled = false;
+    Object nextToken = this.scanner.next_token();
+    boolean dragComponentsEnabled;
+    if (nextToken == Keyword.ON) {
+      dragComponentsEnabled = true;
+    } else if (nextToken == Keyword.OFF) {
+      dragComponentsEnabled = false;
     } else {
       FRLogger.warn("GUIDefaultsFile.read_drag_components_enabled_scope: unexpected token");
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_drag_components_enabled_scope: closing bracket expected");
       return false;
     }
-    this.board_handling
-        .getInteractiveSettings()
-        .set_drag_components_enabled(drag_components_enabled);
+    this.boardHandling.getInteractiveSettings().set_drag_components_enabled(dragComponentsEnabled);
     return true;
   }
 
   private boolean read_ignore_conduction_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
-    boolean ignore_conduction;
-    if (next_token == Keyword.ON) {
-      ignore_conduction = true;
-    } else if (next_token == Keyword.OFF) {
-      ignore_conduction = false;
+    Object nextToken = this.scanner.next_token();
+    boolean ignoreConduction;
+    if (nextToken == Keyword.ON) {
+      ignoreConduction = true;
+    } else if (nextToken == Keyword.OFF) {
+      ignoreConduction = false;
     } else {
       FRLogger.warn("GUIDefaultsFile.read_ignore_conduction_scope: unexpected token");
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_ignore_conduction_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.set_ignore_conduction(ignore_conduction);
+    this.boardHandling.set_ignore_conduction(ignoreConduction);
     return true;
   }
 
   private void write_shove_enabled_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("shove_enabled ");
-    out_file.new_line();
-    if (this.board_handling.getInteractiveSettings().get_push_enabled()) {
-      out_file.write("on");
+    outFile.start_scope();
+    outFile.write("shoveEnabled ");
+    outFile.new_line();
+    if (this.boardHandling.getInteractiveSettings().get_push_enabled()) {
+      outFile.write("on");
     } else {
-      out_file.write("off");
+      outFile.write("off");
     }
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   private void write_drag_components_enabled_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("drag_components_enabled ");
-    out_file.new_line();
-    if (this.board_handling.getInteractiveSettings().get_drag_components_enabled()) {
-      out_file.write("on");
+    outFile.start_scope();
+    outFile.write("dragComponentsEnabled ");
+    outFile.new_line();
+    if (this.boardHandling.getInteractiveSettings().get_drag_components_enabled()) {
+      outFile.write("on");
     } else {
-      out_file.write("off");
+      outFile.write("off");
     }
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   private void write_ignore_conduction_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("ignore_conduction_areas ");
-    out_file.new_line();
-    if (this.board_handling.get_routing_board().rules.get_ignore_conduction()) {
-      out_file.write("on");
+    outFile.start_scope();
+    outFile.write("ignore_conduction_areas ");
+    outFile.new_line();
+    if (this.boardHandling.get_routing_board().rules.get_ignore_conduction()) {
+      outFile.write("on");
     } else {
-      out_file.write("off");
+      outFile.write("off");
     }
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   private void write_selection_layer_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("selection_layers ");
-    out_file.new_line();
-    if (this.board_handling.getInteractiveSettings().get_select_on_all_visible_layers()) {
-      out_file.write("all_visible");
+    outFile.start_scope();
+    outFile.write("selection_layers ");
+    outFile.new_line();
+    if (this.boardHandling.getInteractiveSettings().get_select_on_all_visible_layers()) {
+      outFile.write("all_visible");
     } else {
-      out_file.write("current_only");
+      outFile.write("current_only");
     }
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   private boolean read_route_mode_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
-    boolean is_stitch_mode;
-    if (next_token == Keyword.STITCHING) {
-      is_stitch_mode = true;
-    } else if (next_token == Keyword.DYNAMIC) {
-      is_stitch_mode = false;
+    Object nextToken = this.scanner.next_token();
+    boolean isStitchMode;
+    if (nextToken == Keyword.STITCHING) {
+      isStitchMode = true;
+    } else if (nextToken == Keyword.DYNAMIC) {
+      isStitchMode = false;
     } else {
       FRLogger.warn("GUIDefaultsFile.read_route_mode_scope: unexpected token");
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_selection_layer_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.getInteractiveSettings().set_stitch_route(is_stitch_mode);
+    this.boardHandling.getInteractiveSettings().set_stitch_route(isStitchMode);
     return true;
   }
 
   private void write_route_mode_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("route_mode ");
-    out_file.new_line();
-    if (this.board_handling.getInteractiveSettings().get_is_stitch_route()) {
-      out_file.write("stitching");
+    outFile.start_scope();
+    outFile.write("route_mode ");
+    outFile.new_line();
+    if (this.boardHandling.getInteractiveSettings().get_is_stitch_route()) {
+      outFile.write("stitching");
     } else {
-      out_file.write("dynamic");
+      outFile.write("dynamic");
     }
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   private boolean read_pull_tight_region_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
-    if (!(next_token instanceof Integer)) {
+    Object nextToken = this.scanner.next_token();
+    if (!(nextToken instanceof Integer)) {
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_region_scope: Integer expected");
       return false;
     }
-    int pull_tight_region = (Integer) next_token;
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    int pullTightRegion = (Integer) nextToken;
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_region_scope: closing bracket expected");
       return false;
     }
-    this.board_handling
+    this.boardHandling
         .getInteractiveSettings()
-        .set_current_pull_tight_region_width(pull_tight_region);
+        .set_current_pull_tight_region_width(pullTightRegion);
     return true;
   }
 
   private void write_pull_tight_region_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("pull_tight_region ");
-    out_file.new_line();
-    int pull_tight_region =
-        this.board_handling.getInteractiveSettings().get_trace_pull_tight_region_width();
-    out_file.write(String.valueOf(pull_tight_region));
-    out_file.end_scope();
+    outFile.start_scope();
+    outFile.write("pullTightRegion ");
+    outFile.new_line();
+    int pullTightRegion =
+        this.boardHandling.getInteractiveSettings().get_trace_pull_tight_region_width();
+    outFile.write(String.valueOf(pullTightRegion));
+    outFile.end_scope();
   }
 
   private boolean read_pull_tight_accuracy_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
-    if (!(next_token instanceof Integer)) {
+    Object nextToken = this.scanner.next_token();
+    if (!(nextToken instanceof Integer)) {
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_accuracy_scope: Integer expected");
       return false;
     }
-    int pull_tight_accuracy = (Integer) next_token;
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    int pullTightAccuracy = (Integer) nextToken;
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_accuracy_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.getInteractiveSettings().set_trace_pull_tight_accuracy(pull_tight_accuracy);
+    this.boardHandling.getInteractiveSettings().set_trace_pull_tight_accuracy(pullTightAccuracy);
     return true;
   }
 
   private void write_pull_tight_accuracy_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("pull_tight_accuracy ");
-    out_file.new_line();
-    int pull_tight_accuracy =
-        this.board_handling.getInteractiveSettings().get_trace_pull_tight_accuracy();
-    out_file.write(String.valueOf(pull_tight_accuracy));
-    out_file.end_scope();
+    outFile.start_scope();
+    outFile.write("pullTightAccuracy ");
+    outFile.new_line();
+    int pullTightAccuracy =
+        this.boardHandling.getInteractiveSettings().get_trace_pull_tight_accuracy();
+    outFile.write(String.valueOf(pullTightAccuracy));
+    outFile.end_scope();
   }
 
   private boolean read_automatic_layer_dimming_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
+    Object nextToken = this.scanner.next_token();
     double intensity;
-    if (next_token instanceof Double double1) {
+    if (nextToken instanceof Double double1) {
       intensity = double1;
-    } else if (next_token instanceof Integer integer) {
+    } else if (nextToken instanceof Integer integer) {
       intensity = integer;
     } else {
       FRLogger.warn("GUIDefaultsFile.read_automatic_layer_dimming_scope: Integer expected");
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_automatic_layer_dimming_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.graphics_context.set_auto_layer_dim_factor(intensity);
+    this.boardHandling.graphicsContext.set_auto_layer_dim_factor(intensity);
     return true;
   }
 
   private void write_automatic_layer_dimming_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("automatic_layer_dimming ");
-    out_file.new_line();
-    float layer_dimming = (float) this.board_handling.graphics_context.get_auto_layer_dim_factor();
-    out_file.write(String.valueOf(layer_dimming));
-    out_file.end_scope();
+    outFile.start_scope();
+    outFile.write("automatic_layer_dimming ");
+    outFile.new_line();
+    float layerDimming = (float) this.boardHandling.graphicsContext.get_auto_layer_dim_factor();
+    outFile.write(String.valueOf(layerDimming));
+    outFile.end_scope();
   }
 
   private boolean read_hilight_routing_obstacle_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
-    boolean hilight_obstacle;
-    if (next_token == Keyword.ON) {
-      hilight_obstacle = true;
-    } else if (next_token == Keyword.OFF) {
-      hilight_obstacle = false;
+    Object nextToken = this.scanner.next_token();
+    boolean hilightObstacle;
+    if (nextToken == Keyword.ON) {
+      hilightObstacle = true;
+    } else if (nextToken == Keyword.OFF) {
+      hilightObstacle = false;
     } else {
       FRLogger.warn("GUIDefaultsFile.read_hilight_routing_obstacle_scope: unexpected token");
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn(
           "GUIDefaultsFile.read_hilight_routing_obstacle_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.getInteractiveSettings().set_hilight_routing_obstacle(hilight_obstacle);
+    this.boardHandling.getInteractiveSettings().set_hilight_routing_obstacle(hilightObstacle);
     return true;
   }
 
   private void write_hilight_routing_obstacle_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("hilight_routing_obstacle ");
-    out_file.new_line();
-    if (this.board_handling.getInteractiveSettings().get_hilight_routing_obstacle()) {
-      out_file.write("on");
+    outFile.start_scope();
+    outFile.write("hilightRoutingObstacle ");
+    outFile.new_line();
+    if (this.boardHandling.getInteractiveSettings().get_hilight_routing_obstacle()) {
+      outFile.write("on");
     } else {
-      out_file.write("off");
+      outFile.write("off");
     }
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   private boolean read_clearance_compensation_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
-    boolean clearance_compensation;
-    if (next_token == Keyword.ON) {
-      clearance_compensation = true;
-    } else if (next_token == Keyword.OFF) {
-      clearance_compensation = false;
+    Object nextToken = this.scanner.next_token();
+    boolean clearanceCompensation;
+    if (nextToken == Keyword.ON) {
+      clearanceCompensation = true;
+    } else if (nextToken == Keyword.OFF) {
+      clearanceCompensation = false;
     } else {
       FRLogger.warn("GUIDefaultsFile.read_clearance_compensation_scope: unexpected token");
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_clearance_compensation_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.set_clearance_compensation(clearance_compensation);
+    this.boardHandling.set_clearance_compensation(clearanceCompensation);
     return true;
   }
 
   private void write_clearance_compensation_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("clearance_compensation ");
-    out_file.new_line();
-    if (this.board_handling
-        .get_routing_board()
-        .search_tree_manager
-        .is_clearance_compensation_used()) {
-      out_file.write("on");
+    outFile.start_scope();
+    outFile.write("clearanceCompensation ");
+    outFile.new_line();
+    if (this.boardHandling.get_routing_board().searchTreeManager.is_clearance_compensation_used()) {
+      outFile.write("on");
     } else {
-      out_file.write("off");
+      outFile.write("off");
     }
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   private boolean read_via_snap_to_smd_center_scope() throws IOException {
-    Object next_token = this.scanner.next_token();
+    Object nextToken = this.scanner.next_token();
     boolean snap;
-    if (next_token == Keyword.ON) {
+    if (nextToken == Keyword.ON) {
       snap = true;
-    } else if (next_token == Keyword.OFF) {
+    } else if (nextToken == Keyword.OFF) {
       snap = false;
     } else {
       FRLogger.warn("GUIDefaultsFile.read_via_snap_to_smd_center_scope: unexpected token");
       return false;
     }
-    next_token = this.scanner.next_token();
-    if (next_token != Keyword.CLOSED_BRACKET) {
+    nextToken = this.scanner.next_token();
+    if (nextToken != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("GUIDefaultsFile.read_via_snap_to_smd_center_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.getInteractiveSettings().set_via_snap_to_smd_center(snap);
+    this.boardHandling.getInteractiveSettings().set_via_snap_to_smd_center(snap);
     return true;
   }
 
   private void write_via_snap_to_smd_center_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("via_snap_to_smd_center ");
-    out_file.new_line();
-    if (this.board_handling.getInteractiveSettings().get_via_snap_to_smd_center()) {
-      out_file.write("on");
+    outFile.start_scope();
+    outFile.write("viaSnapToSmdCenter ");
+    outFile.new_line();
+    if (this.boardHandling.getInteractiveSettings().get_via_snap_to_smd_center()) {
+      outFile.write("on");
     } else {
-      out_file.write("off");
+      outFile.write("off");
     }
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   private boolean read_selectable_item_scope() throws IOException {
-    ItemSelectionFilter item_selection_filter =
-        this.board_handling.getInteractiveSettings().get_item_selection_filter();
-    item_selection_filter.deselect_all();
+    ItemSelectionFilter itemSelectionFilter =
+        this.boardHandling.getInteractiveSettings().get_item_selection_filter();
+    itemSelectionFilter.deselect_all();
     for (; ; ) {
-      Object next_token = this.scanner.next_token();
-      if (next_token == Keyword.CLOSED_BRACKET) {
+      Object nextToken = this.scanner.next_token();
+      if (nextToken == Keyword.CLOSED_BRACKET) {
         break;
       }
-      if (next_token == Keyword.TRACES) {
-        item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.TRACES, true);
-      } else if (next_token == Keyword.VIAS) {
-        item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.VIAS, true);
-      } else if (next_token == Keyword.PINS) {
-        item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.PINS, true);
-      } else if (next_token == Keyword.CONDUCTION) {
-        item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.CONDUCTION, true);
-      } else if (next_token == Keyword.KEEPOUT) {
-        item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.KEEPOUT, true);
-      } else if (next_token == Keyword.VIA_KEEPOUT) {
-        item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT, true);
-      } else if (next_token == Keyword.FIXED) {
-        item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.FIXED, true);
-      } else if (next_token == Keyword.UNFIXED) {
-        item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.UNFIXED, true);
+      if (nextToken == Keyword.TRACES) {
+        itemSelectionFilter.set_selected(ItemSelectionFilter.SelectableChoices.TRACES, true);
+      } else if (nextToken == Keyword.VIAS) {
+        itemSelectionFilter.set_selected(ItemSelectionFilter.SelectableChoices.VIAS, true);
+      } else if (nextToken == Keyword.PINS) {
+        itemSelectionFilter.set_selected(ItemSelectionFilter.SelectableChoices.PINS, true);
+      } else if (nextToken == Keyword.CONDUCTION) {
+        itemSelectionFilter.set_selected(ItemSelectionFilter.SelectableChoices.CONDUCTION, true);
+      } else if (nextToken == Keyword.KEEPOUT) {
+        itemSelectionFilter.set_selected(ItemSelectionFilter.SelectableChoices.KEEPOUT, true);
+      } else if (nextToken == Keyword.VIA_KEEPOUT) {
+        itemSelectionFilter.set_selected(ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT, true);
+      } else if (nextToken == Keyword.FIXED) {
+        itemSelectionFilter.set_selected(ItemSelectionFilter.SelectableChoices.FIXED, true);
+      } else if (nextToken == Keyword.UNFIXED) {
+        itemSelectionFilter.set_selected(ItemSelectionFilter.SelectableChoices.UNFIXED, true);
       } else {
         FRLogger.warn("GUIDefaultsFile.read_selectable_item_scope: unexpected token");
         return false;
@@ -1265,20 +1256,20 @@ public final class GUIDefaultsFile {
   }
 
   private void write_selectable_item_scope() throws IOException {
-    out_file.start_scope();
-    out_file.write("selectable_items ");
-    out_file.new_line();
-    ItemSelectionFilter item_selection_filter =
-        this.board_handling.getInteractiveSettings().get_item_selection_filter();
-    ItemSelectionFilter.SelectableChoices[] selectable_choices =
+    outFile.start_scope();
+    outFile.write("selectable_items ");
+    outFile.new_line();
+    ItemSelectionFilter itemSelectionFilter =
+        this.boardHandling.getInteractiveSettings().get_item_selection_filter();
+    ItemSelectionFilter.SelectableChoices[] selectableChoices =
         ItemSelectionFilter.SelectableChoices.values();
-    for (int i = 0; i < selectable_choices.length; i++) {
-      if (item_selection_filter.is_selected(selectable_choices[i])) {
-        out_file.write(selectable_choices[i].toString());
-        out_file.write(" ");
+    for (int i = 0; i < selectableChoices.length; i++) {
+      if (itemSelectionFilter.is_selected(selectableChoices[i])) {
+        outFile.write(selectableChoices[i].toString());
+        outFile.write(" ");
       }
     }
-    out_file.end_scope();
+    outFile.end_scope();
   }
 
   /** Keywords in the gui defaults file. */

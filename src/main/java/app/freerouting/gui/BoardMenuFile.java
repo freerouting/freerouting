@@ -18,64 +18,64 @@ import javax.swing.KeyStroke;
 /** Creates the file menu of a board frame. */
 public class BoardMenuFile extends JMenu {
 
-  public final JMenuItem file_save_as_menuitem;
+  public final JMenuItem fileSaveAsMenuitem;
   private final TextManager tm;
   private final List<Consumer<File>> openEventListeners = new ArrayList<>();
   private final List<Consumer<File>> saveAsEventListeners = new ArrayList<>();
 
   /** Creates a new instance of BoardFileMenu */
-  public BoardMenuFile(BoardFrame board_frame) {
-    tm = new TextManager(this.getClass(), board_frame.get_locale());
+  public BoardMenuFile(BoardFrame boardFrame) {
+    tm = new TextManager(this.getClass(), boardFrame.get_locale());
 
     setText(tm.getText("file"));
 
     // File / Open...
-    JMenuItem file_open_menuitem = new JMenuItem();
-    file_open_menuitem.setText(tm.getText("open"));
-    file_open_menuitem.setToolTipText(tm.getText("open_tooltip"));
-    file_open_menuitem.setAccelerator(
+    JMenuItem fileOpenMenuitem = new JMenuItem();
+    fileOpenMenuitem.setText(tm.getText("open"));
+    fileOpenMenuitem.setToolTipText(tm.getText("open_tooltip"));
+    fileOpenMenuitem.setAccelerator(
         KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
-    file_open_menuitem.addActionListener(
+    fileOpenMenuitem.addActionListener(
         _ -> {
-          File selected_file =
-              RoutingJob.showOpenDialog(globalSettings.guiSettings.inputDirectory, board_frame);
+          File selectedFile =
+              RoutingJob.showOpenDialog(globalSettings.guiSettings.inputDirectory, boardFrame);
 
-          openEventListeners.forEach(listener -> listener.accept(selected_file));
+          openEventListeners.forEach(listener -> listener.accept(selectedFile));
         });
-    file_open_menuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("file_open_menuitem", file_open_menuitem.getText()));
-    add(file_open_menuitem);
+    fileOpenMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("fileOpenMenuitem", fileOpenMenuitem.getText()));
+    add(fileOpenMenuitem);
 
     // File / Save as...
-    file_save_as_menuitem = new JMenuItem();
-    file_save_as_menuitem.setText(tm.getText("save_as"));
-    file_save_as_menuitem.setToolTipText(tm.getText("save_as_tooltip"));
-    file_save_as_menuitem.setAccelerator(
+    fileSaveAsMenuitem = new JMenuItem();
+    fileSaveAsMenuitem.setText(tm.getText("save_as"));
+    fileSaveAsMenuitem.setToolTipText(tm.getText("save_as_tooltip"));
+    fileSaveAsMenuitem.setAccelerator(
         KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
-    file_save_as_menuitem.addActionListener(
+    fileSaveAsMenuitem.addActionListener(
         _ -> {
-          File selected_file =
-              board_frame.showSaveAsDialog(
-                  globalSettings.guiSettings.inputDirectory, board_frame.routingJob.output);
+          File selectedFile =
+              boardFrame.showSaveAsDialog(
+                  globalSettings.guiSettings.inputDirectory, boardFrame.routingJob.output);
 
-          saveAsEventListeners.forEach(listener -> listener.accept(selected_file));
+          saveAsEventListeners.forEach(listener -> listener.accept(selectedFile));
         });
-    file_save_as_menuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("file_save_as_menuitem", file_save_as_menuitem.getText()));
+    fileSaveAsMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("fileSaveAsMenuitem", fileSaveAsMenuitem.getText()));
 
-    add(file_save_as_menuitem);
+    add(fileSaveAsMenuitem);
 
     // File / Exit
-    JMenuItem file_exit_menuitem = new JMenuItem();
-    file_exit_menuitem.setText(tm.getText("exit"));
-    file_exit_menuitem.setToolTipText(tm.getText("exit_tooltip"));
-    file_exit_menuitem.setAccelerator(
+    JMenuItem fileExitMenuitem = new JMenuItem();
+    fileExitMenuitem.setText(tm.getText("exit"));
+    fileExitMenuitem.setToolTipText(tm.getText("exit_tooltip"));
+    fileExitMenuitem.setAccelerator(
         KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
-    file_exit_menuitem.addActionListener(_ -> board_frame.dispose());
-    file_exit_menuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("file_exit_menuitem", file_exit_menuitem.getText()));
+    fileExitMenuitem.addActionListener(_ -> boardFrame.dispose());
+    fileExitMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("fileExitMenuitem", fileExitMenuitem.getText()));
 
-    add(file_exit_menuitem);
+    add(fileExitMenuitem);
   }
 
   public void addOpenEventListener(Consumer<File> listener) {

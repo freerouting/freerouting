@@ -66,7 +66,7 @@ public class SystemControllerMocked {
     return Response.ok(
             """
         {
-            "freerouting_version": "2.0.0,2024-10-14",
+            "freeroutingVersion": "2.0.0,2024-10-14",
             "app_started_at": "2024-10-14T10:56:26.730145900Z",
             "command_line_arguments": "",
             "architecture": "Windows 11,amd64,10.0",

@@ -19,11 +19,11 @@ public class InteractiveState {
   protected final TextManager tm;
 
   /** The intended state after this state is finished */
-  protected InteractiveState return_state;
+  protected InteractiveState returnState;
 
   /** Creates a new instance of InteractiveState */
   protected InteractiveState(InteractiveState p_return_state, GuiBoardManager p_board_handling) {
-    this.return_state = p_return_state;
+    this.returnState = p_return_state;
     this.hdlg = p_board_handling;
 
     this.tm = new TextManager(InteractiveState.class, p_board_handling.get_locale());
@@ -33,7 +33,7 @@ public class InteractiveState {
   public void draw(Graphics p_graphics) {}
 
   /**
-   * Default function to be overwritten in derived classes. Returns the return_state of this state,
+   * Default function to be overwritten in derived classes. Returns the returnState of this state,
    * if the state is left after the method, or else this state.
    */
   public InteractiveState left_button_clicked(FloatPoint p_location) {
@@ -48,7 +48,7 @@ public class InteractiveState {
   /*
    * Actions to be taken when a mouse button is released.
    * Default function to be overwritten in derived classes.
-   * Returns the return_state of this state, if the state is left
+   * Returns the returnState of this state, if the state is left
    * after the method, or else this state.
    */
   public InteractiveState button_released() {
@@ -62,13 +62,13 @@ public class InteractiveState {
 
   /**
    * Actions to be taken, when the location of the mouse pointer changes. Default function to be
-   * overwritten in derived classes. Returns the return_state of this state, if the state ends after
+   * overwritten in derived classes. Returns the returnState of this state, if the state ends after
    * the method, or else this state.
    */
   public InteractiveState mouse_moved() {
-    FloatPoint mouse_position =
-        hdlg.coordinate_transform.board_to_user(hdlg.get_current_mouse_position());
-    hdlg.screen_messages.set_mouse_position(mouse_position);
+    FloatPoint mousePosition =
+        hdlg.coordinateTransform.board_to_user(hdlg.get_current_mouse_position());
+    hdlg.screenMessages.set_mouse_position(mousePosition);
     return this;
   }
 
@@ -79,7 +79,7 @@ public class InteractiveState {
 
   /**
    * Actions to be taken when the mouse moves with a button pressed down. Default function to be
-   * overwritten in derived classes. Returns the return_state of this state, if the state is left
+   * overwritten in derived classes. Returns the returnState of this state, if the state is left
    * after the method, or else this state.
    */
   public InteractiveState mouse_dragged(FloatPoint p_point) {
@@ -93,7 +93,7 @@ public class InteractiveState {
 
   /**
    * Actions to be taken when the left mouse button is pressed down. Default function to be
-   * overwritten in derived classes. Returns the return_state of this state, if the state is left
+   * overwritten in derived classes. Returns the returnState of this state, if the state is left
    * after the method, or else this state.
    */
   public InteractiveState mouse_pressed(FloatPoint p_point) {
@@ -109,9 +109,9 @@ public class InteractiveState {
   public InteractiveState mouse_wheel_moved(int p_rotation) {
     FloatPoint mousePosition = hdlg.get_current_mouse_position();
     if (mousePosition != null) {
-      Point2D screen_mouse_pos =
-          hdlg.graphics_context.coordinate_transform.board_to_screen(mousePosition);
-      hdlg.get_panel().zoom_with_mouse_wheel(screen_mouse_pos, p_rotation);
+      Point2D screenMousePos =
+          hdlg.graphicsContext.coordinateTransform.board_to_screen(mousePosition);
+      hdlg.get_panel().zoom_with_mouse_wheel(screenMousePos, p_rotation);
     }
     return this;
   }
@@ -127,17 +127,16 @@ public class InteractiveState {
    */
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState result = this;
-    Point2D screen_mouse_pos =
-        hdlg.graphics_context.coordinate_transform.board_to_screen(
-            hdlg.get_current_mouse_position());
+    Point2D screenMousePos =
+        hdlg.graphicsContext.coordinateTransform.board_to_screen(hdlg.get_current_mouse_position());
     switch (p_key_char) {
-      case 'a' -> hdlg.get_panel().board_frame.zoom_all();
-      case 'c' -> hdlg.get_panel().center_display(screen_mouse_pos);
+      case 'a' -> hdlg.get_panel().boardFrame.zoom_all();
+      case 'c' -> hdlg.get_panel().center_display(screenMousePos);
       case 'f' ->
           result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
 
-      case 'o' -> hdlg.get_panel().zoom_out(screen_mouse_pos);
-      case 'z' -> hdlg.get_panel().zoom_in(screen_mouse_pos);
+      case 'o' -> hdlg.get_panel().zoom_out(screenMousePos);
+      case 'z' -> hdlg.get_panel().zoom_in(screenMousePos);
       case ',' ->
           // toggle the crosshair cursor
           hdlg.get_panel()
@@ -147,12 +146,12 @@ public class InteractiveState {
       default -> {
         if (Character.isDigit(p_key_char)) {
           // change the current layer to the p_key_char-ths signal layer
-          LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
+          LayerStructure layerStructure = hdlg.get_routing_board().layerStructure;
           int d = Character.digit(p_key_char, 10);
-          d = Math.min(d, layer_structure.signal_layer_count());
+          d = Math.min(d, layerStructure.signal_layer_count());
           // Board layers start at 0, keyboard input for layers starts at 1.
           d = Math.max(d - 1, 0);
-          d = layer_structure.get_no(layer_structure.get_signal_layer(d));
+          d = layerStructure.get_no(layerStructure.get_signal_layer(d));
           hdlg.set_current_layer(d);
         }
       }
@@ -167,11 +166,11 @@ public class InteractiveState {
 
   /**
    * Action to be taken, when this state is completed and exited. Default function to be overwritten
-   * in derived classes. Returns the return_state of this state.
+   * in derived classes. Returns the returnState of this state.
    */
   public InteractiveState complete() {
 
-    return this.return_state;
+    return this.returnState;
   }
 
   /** Wraps {@link #complete()} into a command for easier event testing. */
@@ -185,7 +184,7 @@ public class InteractiveState {
    */
   public InteractiveState cancel() {
 
-    return this.return_state;
+    return this.returnState;
   }
 
   /** Wraps {@link #cancel()} into a command for easier event testing. */
@@ -211,7 +210,7 @@ public class InteractiveState {
   }
 
   /**
-   * Returns the popup menu from board_panel, which is used in this interactive state. Default
+   * Returns the popup menu from boardPanel, which is used in this interactive state. Default
    * function to be overwritten in derived classes.
    */
   public JPopupMenu get_popup_menu() {

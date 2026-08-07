@@ -27,10 +27,10 @@ import javax.swing.JOptionPane;
  */
 public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetListener {
 
-  private final BoardPanel board_panel;
-  private boolean is_drag_active;
+  private final BoardPanel boardPanel;
+  private boolean isDragActive;
   // Flag to track if we're showing the ghosting overlay
-  private boolean is_ghosting_active;
+  private boolean isGhostingActive;
 
   /**
    * Creates a new drop target listener for the board panel.
@@ -38,14 +38,14 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
    * @param p_board_panel The board panel to attach the drop target to
    */
   public BoardPanelDropTargetListener(BoardPanel p_board_panel) {
-    this.board_panel = p_board_panel;
+    this.boardPanel = p_board_panel;
   }
 
   @Override
   public void dragEnter(DropTargetDragEvent event) {
     // Visual feedback when drag enters the panel
     setDragFeedback(true);
-    is_drag_active = true;
+    isDragActive = true;
     // Accept copy or move actions for files
     event.acceptDrag(DnDConstants.ACTION_COPY | DnDConstants.ACTION_MOVE);
   }
@@ -53,9 +53,9 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
   @Override
   public void dragOver(DropTargetDragEvent event) {
     // Maintain visual feedback during drag
-    if (!is_drag_active) {
+    if (!isDragActive) {
       setDragFeedback(true);
-      is_drag_active = true;
+      isDragActive = true;
     }
     event.acceptDrag(DnDConstants.ACTION_COPY | DnDConstants.ACTION_MOVE);
   }
@@ -70,14 +70,14 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
   public void dragExit(DropTargetEvent event) {
     // Remove visual feedback when drag exits
     setDragFeedback(false);
-    is_drag_active = false;
+    isDragActive = false;
   }
 
   @Override
   public void drop(DropTargetDropEvent event) {
     // Remove visual feedback immediately
     setDragFeedback(false);
-    is_drag_active = false;
+    isDragActive = false;
 
     Transferable transferable = event.getTransferable();
     if (transferable == null) {
@@ -109,9 +109,9 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
 
     } catch (Exception e) {
       FRLogger.error("Error processing dropped files", e);
-      if (board_panel != null) {
+      if (boardPanel != null) {
         JOptionPane.showMessageDialog(
-            board_panel,
+            boardPanel,
             "Error processing dropped file: " + e.getMessage(),
             "Error",
             JOptionPane.ERROR_MESSAGE);
@@ -126,9 +126,9 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
    * @param p_files The list of dropped files
    */
   private void processDroppedFiles(List<File> p_files) {
-    boolean file_loaded = false;
+    boolean fileLoaded = false;
 
-    if (board_panel == null || board_panel.board_frame == null) {
+    if (boardPanel == null || boardPanel.boardFrame == null) {
       FRLogger.warn("Board frame is not available for loading dropped file");
       return;
     }
@@ -165,10 +165,10 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
       }
 
       if (format == FileFormat.DSN || format == FileFormat.KICAD_DESIGN_JSON) {
-        if (!file_loaded) {
+        if (!fileLoaded) {
           // Load the first valid file
-          board_panel.board_frame.loadDroppedFile(file, format);
-          file_loaded = true;
+          boardPanel.boardFrame.loadDroppedFile(file, format);
+          fileLoaded = true;
         } else {
           // Log additional valid files for future multi-board support
           FRLogger.warn(
@@ -185,9 +185,9 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
       }
     }
 
-    if (!file_loaded) {
+    if (!fileLoaded) {
       JOptionPane.showMessageDialog(
-          board_panel,
+          boardPanel,
           "No valid DSN or JSON files found in drop",
           "Info",
           JOptionPane.INFORMATION_MESSAGE);
@@ -201,20 +201,20 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
    * @param p_active Whether the drag is active
    */
   private void setDragFeedback(boolean p_active) {
-    if (board_panel == null) {
+    if (boardPanel == null) {
       return;
     }
 
     if (p_active) {
       // Show ghosting overlay effect
-      is_ghosting_active = true;
-      board_panel.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-      board_panel.repaint();
+      isGhostingActive = true;
+      boardPanel.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+      boardPanel.repaint();
     } else {
       // Remove ghosting overlay effect
-      is_ghosting_active = false;
-      board_panel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-      board_panel.repaint();
+      isGhostingActive = false;
+      boardPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+      boardPanel.repaint();
     }
   }
 
@@ -224,6 +224,6 @@ public class BoardPanelDropTargetListener implements java.awt.dnd.DropTargetList
    * @return true if ghosting overlay is active
    */
   public boolean isGhostingActive() {
-    return is_ghosting_active;
+    return isGhostingActive;
   }
 }

@@ -186,7 +186,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see ScreenMessages
    */
-  public final ScreenMessages screen_messages;
+  public final ScreenMessages screenMessages;
 
   /**
    * Merger that consolidates router settings from multiple sources.
@@ -272,7 +272,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see GraphicsContext
    */
-  public GraphicsContext graphics_context;
+  public GraphicsContext graphicsContext;
 
   /**
    * Coordinate transformer for converting between different coordinate systems.
@@ -289,7 +289,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see CoordinateTransform
    */
-  public CoordinateTransform coordinate_transform;
+  public CoordinateTransform coordinateTransform;
 
   /**
    * Manager for detecting and displaying clearance violations between board items.
@@ -306,7 +306,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see ClearanceViolations
    */
-  public ClearanceViolations clearance_violations;
+  public ClearanceViolations clearanceViolations;
 
   /**
    * The currently active interactive state controlling user interaction behavior.
@@ -326,7 +326,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see InteractiveState
    */
-  InteractiveState interactive_state;
+  InteractiveState interactiveState;
 
   /**
    * Flag to force immediate board panel repaint, bypassing the throttle mechanism.
@@ -339,7 +339,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *   <li>User-requested manual refresh
    * </ul>
    */
-  boolean paint_immediately;
+  boolean paintImmediately;
 
   /**
    * The current locale for internationalized UI text and messages.
@@ -353,7 +353,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * <p>Controls the thread pool size for autorouting and batch optimization tasks.
    */
-  private int num_threads;
+  private int numThreads;
 
   /**
    * Strategy for updating the board during batch operations.
@@ -368,7 +368,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see BoardUpdateStrategy
    */
-  private BoardUpdateStrategy board_update_strategy;
+  private BoardUpdateStrategy boardUpdateStrategy;
 
   /**
    * The hybrid routing ratio configuration string.
@@ -376,7 +376,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>Defines the balance between different routing algorithms when using hybrid routing
    * approaches.
    */
-  private String hybrid_ratio;
+  private String hybridRatio;
 
   /**
    * Strategy for selecting which items to route during batch autorouting.
@@ -391,7 +391,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see ItemSelectionStrategy
    */
-  private ItemSelectionStrategy item_selection_strategy;
+  private ItemSelectionStrategy itemSelectionStrategy;
 
   /**
    * Thread managing long-running interactive actions in the background.
@@ -408,7 +408,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see InteractiveActionThread
    */
-  private InteractiveActionThread interactive_action_thread;
+  private InteractiveActionThread interactiveActionThread;
 
   /**
    * Visual display manager for incomplete connections (air wires/rats nest).
@@ -434,7 +434,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * <p>Prevents interactive modifications that could interfere with automated operations or corrupt
    * the board state.
    */
-  private boolean board_is_read_only;
+  private boolean boardIsReadOnly;
 
   /**
    * The current position of the mouse cursor in board coordinates.
@@ -447,7 +447,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *   <li>Visual feedback rendering
    * </ul>
    */
-  private FloatPoint current_mouse_position;
+  private FloatPoint currentMousePosition;
 
   /**
    * Array of points to highlight on the board for trace event visualization.
@@ -502,7 +502,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     this.settingsMerger = settingsMerger;
     this.locale = globalSettings.currentLocale;
     this.panel = p_panel;
-    this.screen_messages = p_panel.screen_messages;
+    this.screenMessages = p_panel.screenMessages;
     this.set_interactive_state(RouteMenuState.get_instance(this));
 
     this.tm = new TextManager(this.getClass(), globalSettings.currentLocale);
@@ -528,7 +528,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if ((logEntry.getType() == LogEntryType.Error)
         || (logEntry.getType() == LogEntryType.Warning)) {
       LogEntries entries = FRLogger.getLogEntries();
-      screen_messages.set_error_and_warning_count(
+      screenMessages.set_error_and_warning_count(
           entries.getErrorCount(), entries.getWarningCount());
     }
   }
@@ -557,7 +557,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
     }
     SwingUtilities.invokeLater(
         () -> {
-          screen_messages.set_trace_message(
+          screenMessages.set_trace_message(
               event.getOperation(), event.getMessage(), event.getImpactedItems());
           // Store the impacted points for drawing
           impactedPoints = event.getImpactedPoints();
@@ -597,7 +597,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #set_board_read_only(boolean)
    */
   public boolean is_board_read_only() {
-    return this.board_is_read_only;
+    return this.boardIsReadOnly;
   }
 
   /**
@@ -618,7 +618,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #is_board_read_only()
    */
   public void set_board_read_only(boolean p_value) {
-    this.board_is_read_only = p_value;
+    this.boardIsReadOnly = p_value;
     this.interactiveSettings.set_read_only(p_value);
 
     // Raise an event to notify the observers that the board read only property
@@ -664,7 +664,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *   <li>Updated continuously as the mouse moves
    *   <li>Used by interactive states for operation placement
    *   <li>Affected by snap-to-grid settings
-   *   <li>Transformed from screen coordinates through coordinate_transform
+   *   <li>Transformed from screen coordinates through coordinateTransform
    * </ul>
    *
    * @return the current mouse position in board coordinates
@@ -672,7 +672,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see CoordinateTransform
    */
   public FloatPoint get_current_mouse_position() {
-    return this.current_mouse_position;
+    return this.currentMousePosition;
   }
 
   /**
@@ -699,7 +699,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see RoutingBoard#change_conduction_is_obstacle(boolean)
    */
   public void set_ignore_conduction(boolean p_value) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return;
     }
     board.change_conduction_is_obstacle(!p_value);
@@ -728,28 +728,28 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see Pin#has_trace_exit_restrictions()
    */
   public void set_pin_edge_to_turn_dist(double p_value) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return;
     }
-    double edge_to_turn_dist = this.coordinate_transform.user_to_board(p_value);
-    if (edge_to_turn_dist != board.rules.get_pin_edge_to_turn_dist()) {
+    double edgeToTurnDist = this.coordinateTransform.user_to_board(p_value);
+    if (edgeToTurnDist != board.rules.get_pin_edge_to_turn_dist()) {
       // unfix the pin exit stubs
-      Collection<Pin> pin_list = board.get_pins();
-      for (Pin curr_pin : pin_list) {
-        if (curr_pin.has_trace_exit_restrictions()) {
-          Collection<Item> contact_list = curr_pin.get_normal_contacts();
-          for (Item curr_contact : contact_list) {
-            if ((curr_contact instanceof PolylineTrace trace)
-                && curr_contact.get_fixed_state() == FixedState.SHOVE_FIXED) {
+      Collection<Pin> pinList = board.get_pins();
+      for (Pin currPin : pinList) {
+        if (currPin.has_trace_exit_restrictions()) {
+          Collection<Item> contactList = currPin.get_normal_contacts();
+          for (Item currContact : contactList) {
+            if ((currContact instanceof PolylineTrace trace)
+                && currContact.get_fixed_state() == FixedState.SHOVE_FIXED) {
               if (trace.corner_count() == 2) {
-                curr_contact.set_fixed_state(FixedState.UNFIXED);
+                currContact.set_fixed_state(FixedState.UNFIXED);
               }
             }
           }
         }
       }
     }
-    board.rules.set_pin_edge_to_turn_dist(edge_to_turn_dist);
+    board.rules.set_pin_edge_to_turn_dist(edgeToTurnDist);
   }
 
   /**
@@ -771,19 +771,19 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see GraphicsContext#set_layer_visibility(int, double)
    */
   public void set_layer_visibility(int p_layer, double p_value) {
-    if (p_layer >= 0 && p_layer < graphics_context.layer_count()) {
-      graphics_context.set_layer_visibility(p_layer, p_value);
+    if (p_layer >= 0 && p_layer < graphicsContext.layer_count()) {
+      graphicsContext.set_layer_visibility(p_layer, p_value);
       if (p_value == 0 && interactiveSettings.get_layer() == p_layer) {
         // change the current layer to the best visible layer, if it becomes invisible;
-        double best_visibility = 0;
-        int best_visible_layer = 0;
-        for (int i = 0; i < graphics_context.layer_count(); i++) {
-          if (graphics_context.get_layer_visibility(i) > best_visibility) {
-            best_visibility = graphics_context.get_layer_visibility(i);
-            best_visible_layer = i;
+        double bestVisibility = 0;
+        int bestVisibleLayer = 0;
+        for (int i = 0; i < graphicsContext.layer_count(); i++) {
+          if (graphicsContext.get_layer_visibility(i) > bestVisibility) {
+            bestVisibility = graphicsContext.get_layer_visibility(i);
+            bestVisibleLayer = i;
           }
         }
-        interactiveSettings.set_layer(best_visible_layer);
+        interactiveSettings.set_layer(bestVisibleLayer);
       }
     }
   }
@@ -806,13 +806,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @param p_net_no the net number to get the trace width for
    * @param p_layer the layer index where the trace will be placed
    * @return the trace half-width in board units
-   * @see InteractiveSettings#manual_rule_selection
+   * @see InteractiveSettings#manualRuleSelection
    * @see BoardRules#get_trace_half_width(int, int)
    */
   public int get_trace_halfwidth(int p_net_no, int p_layer) {
     int result;
     if (interactiveSettings.get_manual_rule_selection()) {
-      result = interactiveSettings.manual_trace_half_width_arr[p_layer];
+      result = interactiveSettings.manualTraceHalfWidthArr[p_layer];
     } else {
       result = board.rules.get_trace_half_width(p_net_no, p_layer);
     }
@@ -842,15 +842,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (interactiveSettings.get_manual_rule_selection()) {
       return true;
     }
-    Net curr_net = this.board.rules.nets.get(p_net_no);
-    if (curr_net == null) {
+    Net currNet = this.board.rules.nets.get(p_net_no);
+    if (currNet == null) {
       return true;
     }
-    NetClass curr_net_class = curr_net.get_class();
-    if (curr_net_class == null) {
+    NetClass currNetClass = currNet.get_class();
+    if (currNetClass == null) {
       return true;
     }
-    return curr_net_class.is_active_routing_layer(p_layer);
+    return currNetClass.is_active_routing_layer(p_layer);
   }
 
   /**
@@ -904,7 +904,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public ViaRule get_via_rule(int p_net_no) {
     ViaRule result = null;
     if (interactiveSettings.get_manual_rule_selection()) {
-      result = board.rules.via_rules.get(this.interactiveSettings.get_manual_via_rule_index());
+      result = board.rules.viaRules.get(this.interactiveSettings.get_manual_via_rule_index());
     }
     if (result == null) {
       result = board.rules.nets.get(p_net_no).get_class().get_via_rule();
@@ -931,7 +931,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see BoardRules#set_default_trace_half_width(int, int)
    */
   public void set_default_trace_halfwidth(int p_layer, int p_value) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return;
     }
     if (p_layer >= 0 && p_layer <= board.get_layer_count()) {
@@ -956,10 +956,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see SearchTreeManager#set_clearance_compensation_used(boolean)
    */
   public void set_clearance_compensation(boolean p_value) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return;
     }
-    board.search_tree_manager.set_clearance_compensation_used(p_value);
+    board.searchTreeManager.set_clearance_compensation_used(p_value);
   }
 
   /**
@@ -980,7 +980,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see BoardRules#set_trace_angle_restriction(AngleRestriction)
    */
   public void set_current_snap_angle(AngleRestriction p_snap_angle) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return;
     }
     board.rules.set_trace_angle_restriction(p_snap_angle);
@@ -993,7 +993,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * operations. This method:
    *
    * <ul>
-   *   <li>Clamps the layer index to valid range [0, layer_count - 1]
+   *   <li>Clamps the layer index to valid range [0, layerCount - 1]
    *   <li>Updates the display to show the new active layer
    *   <li>Updates UI components to reflect the layer change
    * </ul>
@@ -1004,7 +1004,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #set_layer(int)
    */
   public void set_current_layer(int p_layer) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return;
     }
     int layer = Math.max(p_layer, 0);
@@ -1033,24 +1033,24 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #set_current_layer(int)
    */
   void set_layer(int p_layer_no) {
-    Layer curr_layer = board.layer_structure.arr[p_layer_no];
-    screen_messages.set_layer(curr_layer.name);
+    Layer currLayer = board.layerStructure.arr[p_layer_no];
+    screenMessages.set_layer(currLayer.name);
     interactiveSettings.set_layer(p_layer_no);
 
     // Change the selected layer in the select parameter window.
-    if ((!this.board_is_read_only) && (curr_layer.is_signal)) {
+    if ((!this.boardIsReadOnly) && (currLayer.isSignal)) {
       this.panel.set_selected_signal_layer(p_layer_no);
     }
 
     // make the layer visible, if it is invisible
-    if (graphics_context != null) {
-      if (graphics_context.get_layer_visibility(p_layer_no) == 0) {
-        graphics_context.set_layer_visibility(p_layer_no, 1);
-        if (panel != null && panel.board_frame != null) {
-          panel.board_frame.refresh_windows();
+    if (graphicsContext != null) {
+      if (graphicsContext.get_layer_visibility(p_layer_no) == 0) {
+        graphicsContext.set_layer_visibility(p_layer_no, 1);
+        if (panel != null && panel.boardFrame != null) {
+          panel.boardFrame.refresh_windows();
         }
       }
-      graphics_context.set_fully_visible_layer(p_layer_no);
+      graphicsContext.set_fully_visible_layer(p_layer_no);
     }
     repaint();
   }
@@ -1070,9 +1070,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see ScreenMessages#set_layer(String)
    */
   public void display_layer_message() {
-    screen_messages.clear_add_field();
-    Layer curr_layer = board.layer_structure.arr[this.interactiveSettings.get_layer()];
-    screen_messages.set_layer(curr_layer.name);
+    screenMessages.clear_add_field();
+    Layer currLayer = board.layerStructure.arr[this.interactiveSettings.get_layer()];
+    screenMessages.set_layer(currLayer.name);
   }
 
   /**
@@ -1127,8 +1127,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public void set_selectable(ItemSelectionFilter.SelectableChoices p_item_type, boolean p_value) {
     interactiveSettings.set_selectable(p_item_type, p_value);
-    if (!p_value && this.interactive_state instanceof InspectedItemState) {
-      set_interactive_state(((InspectedItemState) interactive_state).filter());
+    if (!p_value && this.interactiveState instanceof InspectedItemState) {
+      set_interactive_state(((InspectedItemState) interactiveState).filter());
     }
   }
 
@@ -1172,14 +1172,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see ClearanceViolations
    */
   public void toggle_clearance_violations() {
-    if (clearance_violations == null) {
-      clearance_violations = new ClearanceViolations(this.board.get_items());
-      Integer violation_count = (clearance_violations.list.size() + 1) / 2;
-      String curr_message = violation_count + " " + tm.getText("clearance_violations_found");
-      screen_messages.set_status_message(curr_message);
+    if (clearanceViolations == null) {
+      clearanceViolations = new ClearanceViolations(this.board.get_items());
+      Integer violationCount = (clearanceViolations.list.size() + 1) / 2;
+      String currMessage = violationCount + " " + tm.getText("clearance_violations_found");
+      screenMessages.set_status_message(currMessage);
     } else {
-      clearance_violations = null;
-      screen_messages.set_status_message("");
+      clearanceViolations = null;
+      screenMessages.set_status_message("");
     }
     repaint();
   }
@@ -1224,20 +1224,20 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (ratsnest == null) {
       return;
     }
-    Integer incomplete_count = ratsnest.incomplete_count();
-    int length_violation_count = ratsnest.length_violation_count();
-    String curr_message;
-    if (length_violation_count == 0) {
-      curr_message =
-          tm.getText("ratsnest_status_incomplete_only", Integer.toString(incomplete_count));
+    Integer incompleteCount = ratsnest.incomplete_count();
+    int lengthViolationCount = ratsnest.length_violation_count();
+    String currMessage;
+    if (lengthViolationCount == 0) {
+      currMessage =
+          tm.getText("ratsnest_status_incomplete_only", Integer.toString(incompleteCount));
     } else {
-      curr_message =
+      currMessage =
           tm.getText(
               "ratsnest_status_with_length_violations",
-              Integer.toString(incomplete_count),
-              Integer.toString(length_violation_count));
+              Integer.toString(incompleteCount),
+              Integer.toString(lengthViolationCount));
     }
-    screen_messages.set_status_message(curr_message);
+    screenMessages.set_status_message(currMessage);
   }
 
   /**
@@ -1446,15 +1446,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
     this.initialize_manual_trace_half_widths();
 
     // create the interactive/GUI settings with default values
-    double unit_factor = p_board_communication.coordinate_transform.board_to_dsn(1);
-    this.coordinate_transform =
+    double unitFactor = p_board_communication.coordinateTransform.board_to_dsn(1);
+    this.coordinateTransform =
         new CoordinateTransform(
-            1, p_board_communication.unit, unit_factor, p_board_communication.unit);
+            1, p_board_communication.unit, unitFactor, p_board_communication.unit);
 
     // create a graphics context for the board
-    Dimension panel_size = panel.getPreferredSize();
-    graphics_context =
-        new GraphicsContext(p_bounding_box, panel_size, p_layer_structure, this.locale);
+    Dimension panelSize = panel.getPreferredSize();
+    graphicsContext =
+        new GraphicsContext(p_bounding_box, panelSize, p_layer_structure, this.locale);
   }
 
   /**
@@ -1498,10 +1498,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Initialises manual trace half-widths from the board's default net class rules.
    *
    * <p>Copies the default trace width for each layer from the board's default net class into {@link
-   * InteractiveSettings#manual_trace_half_width_arr}. Must be called after the board is created or
+   * InteractiveSettings#manualTraceHalfWidthArr}. Must be called after the board is created or
    * loaded.
    *
-   * @see InteractiveSettings#manual_trace_half_width_arr
+   * @see InteractiveSettings#manualTraceHalfWidthArr
    * @see app.freerouting.rules.NetClass#get_trace_half_width(int)
    */
   @Override
@@ -1510,7 +1510,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
       return;
     }
     for (int i = 0; i < interactiveSettings.get_layer_count(); i++) {
-      interactiveSettings.manual_trace_half_width_arr[i] =
+      interactiveSettings.manualTraceHalfWidthArr[i] =
           this.board.rules.get_default_net_class().get_trace_half_width(i);
     }
   }
@@ -1572,25 +1572,25 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see CoordinateTransform
    */
   public void change_user_unit(Unit p_unit) {
-    screen_messages.set_unit_label(p_unit.toString());
-    CoordinateTransform old_transform = this.coordinate_transform;
-    this.coordinate_transform =
+    screenMessages.set_unit_label(p_unit.toString());
+    CoordinateTransform oldTransform = this.coordinateTransform;
+    this.coordinateTransform =
         new CoordinateTransform(
-            old_transform.user_unit_factor,
+            oldTransform.userUnitFactor,
             p_unit,
-            old_transform.board_unit_factor,
-            old_transform.board_unit);
+            oldTransform.boardUnitFactor,
+            oldTransform.boardUnit);
   }
 
   /**
    * Requests a repaint of the board panel.
    *
-   * <p>Repaint behavior depends on the paint_immediately flag:
+   * <p>Repaint behavior depends on the paintImmediately flag:
    *
    * <ul>
-   *   <li><strong>Immediate mode (paint_immediately=true):</strong> Forces synchronous repaint
-   *       (used during logfile playback)
-   *   <li><strong>Throttled mode (paint_immediately=false):</strong> Respects minimum interval
+   *   <li><strong>Immediate mode (paintImmediately=true):</strong> Forces synchronous repaint (used
+   *       during logfile playback)
+   *   <li><strong>Throttled mode (paintImmediately=false):</strong> Respects minimum interval
    *       between repaints to maintain responsive frame rate
    * </ul>
    *
@@ -1599,23 +1599,23 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see #interactive_repaint_interval
    * @see #background_repaint_interval
-   * @see #paint_immediately
+   * @see #paintImmediately
    */
   public void repaint() {
-    if (this.paint_immediately) {
+    if (this.paintImmediately) {
       final Rectangle MAX_RECTANGLE = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
       panel.paintImmediately(MAX_RECTANGLE);
     } else {
       // Use shorter interval for interactive dragging to ensure smooth visual feedback
-      long effective_interval =
+      long effectiveInterval =
           isInInteractiveDrag() ? interactive_repaint_interval : background_repaint_interval;
-      if (last_repainted_time < System.currentTimeMillis() - effective_interval) {
+      if (last_repainted_time < System.currentTimeMillis() - effectiveInterval) {
         last_repainted_time = System.currentTimeMillis();
 
         // Use partial repaint if we have an update box (more efficient)
-        Rectangle update_rect = get_graphics_update_rectangle();
-        if (update_rect.width > 0 && update_rect.height > 0) {
-          panel.repaint(update_rect);
+        Rectangle updateRect = get_graphics_update_rectangle();
+        if (updateRect.width > 0 && updateRect.height > 0) {
+          panel.repaint(updateRect);
         } else {
           panel.repaint();
         }
@@ -1632,14 +1632,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @return true if currently in a drag state (DragState or its subclasses)
    */
   private boolean isInInteractiveDrag() {
-    return interactive_state instanceof DragState;
+    return interactiveState instanceof DragState;
   }
 
   /**
    * Requests a repaint of a specific rectangular region of the board panel.
    *
    * <p>Partial repaint is more efficient than full repaint when only a small area has changed.
-   * Behavior depends on paint_immediately:
+   * Behavior depends on paintImmediately:
    *
    * <ul>
    *   <li><strong>Immediate mode:</strong> Synchronous repaint of the rectangle
@@ -1650,7 +1650,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #repaint()
    */
   public void repaint(Rectangle p_rect) {
-    if (this.paint_immediately) {
+    if (this.paintImmediately) {
       panel.paintImmediately(p_rect);
     } else {
       panel.repaint(p_rect);
@@ -1681,8 +1681,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public JPopupMenu get_current_popup_menu() {
     JPopupMenu result;
-    if (interactive_state != null) {
-      result = interactive_state.get_popup_menu();
+    if (interactiveState != null) {
+      result = interactiveState.get_popup_menu();
     } else {
       result = null;
     }
@@ -1713,19 +1713,19 @@ public class GuiBoardManager extends HeadlessBoardManager {
     if (board == null) {
       return;
     }
-    board.draw(p_graphics, graphics_context);
+    board.draw(p_graphics, graphicsContext);
 
     if (ratsnest != null) {
-      ratsnest.draw(p_graphics, graphics_context);
+      ratsnest.draw(p_graphics, graphicsContext);
     }
-    if (clearance_violations != null) {
-      clearance_violations.draw(p_graphics, graphics_context);
+    if (clearanceViolations != null) {
+      clearanceViolations.draw(p_graphics, graphicsContext);
     }
-    if (interactive_state != null) {
-      interactive_state.draw(p_graphics);
+    if (interactiveState != null) {
+      interactiveState.draw(p_graphics);
     }
-    if (interactive_action_thread != null) {
-      interactive_action_thread.draw(p_graphics);
+    if (interactiveActionThread != null) {
+      interactiveActionThread.draw(p_graphics);
     }
 
     // Draw indicators for impacted points from trace events
@@ -1752,32 +1752,32 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #handleTraceEvent(TraceEvent)
    */
   private void drawImpactedPointsIndicators(Graphics p_graphics) {
-    Color draw_color = graphics_context.get_hilight_color();
-    double draw_intensity = graphics_context.get_hilight_color_intensity();
-    int default_trace_half_width = board.rules.get_default_trace_half_width(0);
-    double radius = Math.max(5 * default_trace_half_width / 10, 500); // Minimum radius of 500
-    final double draw_width = 50.0;
+    Color drawColor = graphicsContext.get_hilight_color();
+    double drawIntensity = graphicsContext.get_hilight_color_intensity();
+    int defaultTraceHalfWidth = board.rules.get_default_trace_half_width(0);
+    double radius = Math.max(5 * defaultTraceHalfWidth / 10, 500); // Minimum radius of 500
+    final double drawWidth = 50.0;
 
     for (Point point : impactedPoints) {
       if (point != null) {
         FloatPoint center = point.to_float();
 
         // Draw an X marker (crosshair)
-        FloatPoint[] draw_points = new FloatPoint[2];
+        FloatPoint[] drawPoints = new FloatPoint[2];
 
         // Draw first diagonal line (top-left to bottom-right)
-        draw_points[0] = new FloatPoint(center.x - radius, center.y - radius);
-        draw_points[1] = new FloatPoint(center.x + radius, center.y + radius);
-        graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
+        drawPoints[0] = new FloatPoint(center.x - radius, center.y - radius);
+        drawPoints[1] = new FloatPoint(center.x + radius, center.y + radius);
+        graphicsContext.draw(drawPoints, drawWidth, drawColor, p_graphics, drawIntensity);
 
         // Draw second diagonal line (top-right to bottom-left)
-        draw_points[0] = new FloatPoint(center.x + radius, center.y - radius);
-        draw_points[1] = new FloatPoint(center.x - radius, center.y + radius);
-        graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
+        drawPoints[0] = new FloatPoint(center.x + radius, center.y - radius);
+        drawPoints[1] = new FloatPoint(center.x - radius, center.y + radius);
+        graphicsContext.draw(drawPoints, drawWidth, drawColor, p_graphics, drawIntensity);
 
         // Draw a circle around the point
-        graphics_context.draw_circle(
-            center, radius, draw_width, draw_color, p_graphics, draw_intensity);
+        graphicsContext.draw_circle(
+            center, radius, drawWidth, drawColor, p_graphics, drawIntensity);
       }
     }
   }
@@ -1792,7 +1792,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #undo()
    */
   public void generate_snapshot() {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return;
     }
     board.generate_snapshot();
@@ -1822,22 +1822,22 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see RoutingBoard#undo(Set)
    */
   public void undo() {
-    if (board_is_read_only || !(interactive_state instanceof MenuState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof MenuState)) {
       return;
     }
-    Set<Integer> changed_nets = new TreeSet<>();
-    if (board.undo(changed_nets)) {
-      for (Integer changed_net : changed_nets) {
+    Set<Integer> changedNets = new TreeSet<>();
+    if (board.undo(changedNets)) {
+      for (Integer changed_net : changedNets) {
         this.update_ratsnest(changed_net);
       }
-      if (!changed_nets.isEmpty()) {
+      if (!changedNets.isEmpty()) {
         // reset the start pass number in the autorouter in case
         // a batch autorouter is undone.
         // Pass tracking is now handled locally in the router algorithms
       }
-      screen_messages.set_status_message(tm.getText("undo"));
+      screenMessages.set_status_message(tm.getText("undo"));
     } else {
-      screen_messages.set_status_message(tm.getText("no_more_undo_possible"));
+      screenMessages.set_status_message(tm.getText("no_more_undo_possible"));
     }
     repaint();
   }
@@ -1866,17 +1866,17 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see RoutingBoard#redo(Set)
    */
   public void redo() {
-    if (board_is_read_only || !(interactive_state instanceof MenuState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof MenuState)) {
       return;
     }
-    Set<Integer> changed_nets = new TreeSet<>();
-    if (board.redo(changed_nets)) {
-      for (Integer changed_net : changed_nets) {
+    Set<Integer> changedNets = new TreeSet<>();
+    if (board.redo(changedNets)) {
+      for (Integer changed_net : changedNets) {
         this.update_ratsnest(changed_net);
       }
-      screen_messages.set_status_message(tm.getText("redo"));
+      screenMessages.set_status_message(tm.getText("redo"));
     } else {
-      screen_messages.set_status_message(tm.getText("no_more_redo_possible"));
+      screenMessages.set_status_message(tm.getText("no_more_redo_possible"));
     }
     repaint();
   }
@@ -1900,17 +1900,17 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #stop_autorouter_and_route_optimizer()
    */
   public void left_button_clicked(Point2D p_point) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       // We are currently busy working on the board and the user clicked on the canvas
       // with the left mouse button.
       this.stop_autorouter_and_route_optimizer();
       return;
     }
-    if (interactive_state != null && graphics_context != null) {
-      FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-      InteractiveState return_state =
-          execute_state_command(interactive_state.left_button_clicked_command(location));
-      apply_interactive_state_change(return_state, true, false);
+    if (interactiveState != null && graphicsContext != null) {
+      FloatPoint location = graphicsContext.coordinateTransform.screen_to_board(p_point);
+      InteractiveState returnState =
+          execute_state_command(interactiveState.left_button_clicked_command(location));
+      apply_interactive_state_change(returnState, true, false);
     }
   }
 
@@ -1935,24 +1935,23 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #pick_items(FloatPoint)
    */
   public void mouse_moved(Point2D p_point) {
-    if (interactive_state != null && graphics_context != null) {
-      this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
+    if (interactiveState != null && graphicsContext != null) {
+      this.currentMousePosition = graphicsContext.coordinateTransform.screen_to_board(p_point);
 
       // Always update the mouse position display, even when board is read-only
-      FloatPoint mouse_position = coordinate_transform.board_to_user(this.current_mouse_position);
-      screen_messages.set_mouse_position(mouse_position);
+      FloatPoint mousePosition = coordinateTransform.board_to_user(this.currentMousePosition);
+      screenMessages.set_mouse_position(mousePosition);
 
-      if (board_is_read_only) {
+      if (boardIsReadOnly) {
         // no interactive action when logfile is running, but mouse position is still updated
         return;
       }
 
-      InteractiveState return_state =
-          execute_state_command(interactive_state.mouse_moved_command());
-      Set<Item> hover_item = pick_items(this.current_mouse_position);
-      if (hover_item.size() == 1) {
-        String hover_info = hover_item.iterator().next().get_hover_info(locale);
-        this.panel.setToolTipText(hover_info);
+      InteractiveState returnState = execute_state_command(interactiveState.mouse_moved_command());
+      Set<Item> hoverItem = pick_items(this.currentMousePosition);
+      if (hoverItem.size() == 1) {
+        String hoverInfo = hoverItem.iterator().next().get_hover_info(locale);
+        this.panel.setToolTipText(hoverInfo);
       } else {
         this.panel.setToolTipText(null);
       }
@@ -1960,7 +1959,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
       // performance in interactive route.
       // If a repaint is necessary, it should be done in the individual mouse_moved
       // method of the class derived from InteractiveState
-      apply_interactive_state_change(return_state, true, false);
+      apply_interactive_state_change(returnState, true, false);
     }
   }
 
@@ -1974,12 +1973,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveState#mouse_pressed(FloatPoint)
    */
   public void mouse_pressed(Point2D p_point) {
-    if (interactive_state != null && graphics_context != null) {
-      this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
-      InteractiveState return_state =
-          execute_state_command(
-              interactive_state.mouse_pressed_command(this.current_mouse_position));
-      apply_interactive_state_change(return_state, false, false);
+    if (interactiveState != null && graphicsContext != null) {
+      this.currentMousePosition = graphicsContext.coordinateTransform.screen_to_board(p_point);
+      InteractiveState returnState =
+          execute_state_command(interactiveState.mouse_pressed_command(this.currentMousePosition));
+      apply_interactive_state_change(returnState, false, false);
     }
   }
 
@@ -1995,12 +1993,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveState#mouse_dragged(FloatPoint)
    */
   public void mouse_dragged(Point2D p_point) {
-    if (interactive_state != null && graphics_context != null) {
-      this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
-      InteractiveState return_state =
-          execute_state_command(
-              interactive_state.mouse_dragged_command(this.current_mouse_position));
-      apply_interactive_state_change(return_state, true, false);
+    if (interactiveState != null && graphicsContext != null) {
+      this.currentMousePosition = graphicsContext.coordinateTransform.screen_to_board(p_point);
+      InteractiveState returnState =
+          execute_state_command(interactiveState.mouse_dragged_command(this.currentMousePosition));
+      apply_interactive_state_change(returnState, true, false);
     }
   }
 
@@ -2015,10 +2012,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveState#button_released()
    */
   public void button_released() {
-    if (interactive_state != null) {
-      InteractiveState return_state =
-          execute_state_command(interactive_state.button_released_command());
-      apply_interactive_state_change(return_state, true, false);
+    if (interactiveState != null) {
+      InteractiveState returnState =
+          execute_state_command(interactiveState.button_released_command());
+      apply_interactive_state_change(returnState, true, false);
     }
   }
 
@@ -2039,11 +2036,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveState#mouse_wheel_moved(int)
    */
   public void mouse_wheel_moved(Point2D p_point, int p_rotation) {
-    if (interactive_state != null && graphics_context != null) {
-      this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
-      InteractiveState return_state =
-          execute_state_command(interactive_state.mouse_wheel_moved_command(p_rotation));
-      apply_interactive_state_change(return_state, true, false);
+    if (interactiveState != null && graphicsContext != null) {
+      this.currentMousePosition = graphicsContext.coordinateTransform.screen_to_board(p_point);
+      InteractiveState returnState =
+          execute_state_command(interactiveState.mouse_wheel_moved_command(p_rotation));
+      apply_interactive_state_change(returnState, true, false);
     }
   }
 
@@ -2061,13 +2058,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveState#key_typed(char)
    */
   public void key_typed_action(char p_key_char) {
-    if (board_is_read_only || interactive_state == null || graphics_context == null) {
+    if (boardIsReadOnly || interactiveState == null || graphicsContext == null) {
       // no interactive action when logfile is running or board graphics are not ready
       return;
     }
-    InteractiveState return_state =
-        execute_state_command(interactive_state.key_typed_command(p_key_char));
-    apply_interactive_state_change(return_state, true, true);
+    InteractiveState returnState =
+        execute_state_command(interactiveState.key_typed_command(p_key_char));
+    apply_interactive_state_change(returnState, true, true);
   }
 
   /**
@@ -2082,13 +2079,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #cancel_state()
    */
   public void return_from_state() {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
 
-    InteractiveState new_state = execute_state_command(interactive_state.complete_command());
-    apply_interactive_state_change(new_state, true, false);
+    InteractiveState newState = execute_state_command(interactiveState.complete_command());
+    apply_interactive_state_change(newState, true, false);
   }
 
   /**
@@ -2103,13 +2100,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #return_from_state()
    */
   public void cancel_state() {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
 
-    InteractiveState new_state = execute_state_command(interactive_state.cancel_command());
-    apply_interactive_state_change(new_state, true, false);
+    InteractiveState newState = execute_state_command(interactiveState.cancel_command());
+    apply_interactive_state_change(newState, true, false);
   }
 
   /**
@@ -2127,8 +2124,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public boolean change_layer_action(int p_new_layer) {
     boolean result = true;
-    if (interactive_state != null && !board_is_read_only) {
-      result = interactive_state.change_layer_action(p_new_layer);
+    if (interactiveState != null && !boardIsReadOnly) {
+      result = interactiveState.change_layer_action(p_new_layer);
     }
     return result;
   }
@@ -2143,8 +2140,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #set_route_menu_state()
    */
   public void set_inspect_menu_state() {
-    this.interactive_state = InspectMenuState.get_instance(this);
-    screen_messages.set_status_message(tm.getText("select_menu"));
+    this.interactiveState = InspectMenuState.get_instance(this);
+    screenMessages.set_status_message(tm.getText("select_menu"));
   }
 
   /**
@@ -2157,8 +2154,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #set_inspect_menu_state()
    */
   public void set_route_menu_state() {
-    this.interactive_state = RouteMenuState.get_instance(this);
-    screen_messages.set_status_message(tm.getText("route_menu"));
+    this.interactiveState = RouteMenuState.get_instance(this);
+    screenMessages.set_status_message(tm.getText("route_menu"));
   }
 
   /**
@@ -2169,8 +2166,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see DragMenuState
    */
   public void set_drag_menu_state() {
-    this.interactive_state = DragMenuState.get_instance(this);
-    screen_messages.set_status_message(tm.getText("drag_menu"));
+    this.interactiveState = DragMenuState.get_instance(this);
+    screenMessages.set_status_message(tm.getText("drag_menu"));
   }
 
   /**
@@ -2227,14 +2224,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
       // Register the singleton as the live GuiSettings source (priority 50) in the merger so
       // that every subsequent merge() call reflects the current interactive GUI state.
       this.settingsMerger.addOrReplaceSources(interactiveSettings);
-      coordinate_transform = (CoordinateTransform) p_design.readObject();
-      graphics_context = (GraphicsContext) p_design.readObject();
+      coordinateTransform = (CoordinateTransform) p_design.readObject();
+      graphicsContext = (GraphicsContext) p_design.readObject();
       originalBoardChecksum = calculateCrc32();
     } catch (Exception e) {
       routingJob.logError("Couldn't read design file", e);
       return false;
     }
-    screen_messages.set_layer(board.layer_structure.arr[interactiveSettings.get_layer()].name);
+    screenMessages.set_layer(board.layerStructure.arr[interactiveSettings.get_layer()].name);
     // Defer GUI refresh until surrounding load flow has recreated frame-managed subwindows.
     javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
     return true;
@@ -2263,7 +2260,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public boolean saveAsSpecctraDesignDsn(
       OutputStream p_output_stream, String p_design_name, boolean p_compat_mode) {
-    if (board_is_read_only || p_output_stream == null) {
+    if (boardIsReadOnly || p_output_stream == null) {
       return false;
     }
 
@@ -2295,7 +2292,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see HeadlessBoardManager#saveAsSpecctraSessionSes
    */
   public boolean saveAsSpecctraSessionSes(OutputStream outputStream, String designName) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return false;
     }
 
@@ -2315,7 +2312,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   public boolean saveSpecctraSessionSesAsEagleScriptScr(
       InputStream p_input_stream, OutputStream p_output_stream) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return false;
     }
     return app.freerouting.io.specctra.SesReader.saveSpecctraSessionSesAsEagleScriptScr(
@@ -2394,14 +2391,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
     this.initialize_manual_trace_half_widths();
     this.settingsMerger.addOrReplaceSources(this.interactiveSettings);
 
-    double unit_factor = this.board.communication.coordinate_transform.board_to_dsn(1);
-    this.coordinate_transform =
+    double unitFactor = this.board.communication.coordinateTransform.board_to_dsn(1);
+    this.coordinateTransform =
         new CoordinateTransform(
-            1, this.board.communication.unit, unit_factor, this.board.communication.unit);
-    Dimension panel_size = panel != null ? panel.getPreferredSize() : new Dimension(800, 600);
-    this.graphics_context =
+            1, this.board.communication.unit, unitFactor, this.board.communication.unit);
+    Dimension panelSize = panel != null ? panel.getPreferredSize() : new Dimension(800, 600);
+    this.graphicsContext =
         new GraphicsContext(
-            this.board.bounding_box, panel_size, this.board.layer_structure, this.locale);
+            this.board.boundingBox, panelSize, this.board.layerStructure, this.locale);
     this.set_layer(0);
   }
 
@@ -2436,12 +2433,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
     try {
       p_object_stream.writeObject(board);
       p_object_stream.writeObject(interactiveSettings);
-      p_object_stream.writeObject(coordinate_transform);
-      p_object_stream.writeObject(graphics_context);
+      p_object_stream.writeObject(coordinateTransform);
+      p_object_stream.writeObject(graphicsContext);
 
       originalBoardChecksum = calculateCrc32();
     } catch (Exception _) {
-      screen_messages.set_status_message(tm.getText("save_error"));
+      screenMessages.set_status_message(tm.getText("save_error"));
       result = false;
     }
     return result;
@@ -2467,13 +2464,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see RouteState
    */
   public void start_route(Point2D p_point) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState new_state = RouteState.get_instance(location, this.interactive_state, this);
-    set_interactive_state(new_state);
+    FloatPoint location = graphicsContext.coordinateTransform.screen_to_board(p_point);
+    InteractiveState newState = RouteState.get_instance(location, this.interactiveState, this);
+    set_interactive_state(newState);
   }
 
   /**
@@ -2489,12 +2486,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see MenuState#select_items(FloatPoint)
    */
   public void select_items(Point2D p_point) {
-    if (board_is_read_only || !(this.interactive_state instanceof MenuState)) {
+    if (boardIsReadOnly || !(this.interactiveState instanceof MenuState)) {
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState return_state = ((MenuState) interactive_state).select_items(location);
-    set_interactive_state(return_state);
+    FloatPoint location = graphicsContext.coordinateTransform.screen_to_board(p_point);
+    InteractiveState returnState = ((MenuState) interactiveState).select_items(location);
+    set_interactive_state(returnState);
   }
 
   /**
@@ -2509,10 +2506,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see MenuState
    */
   public void select_items_in_region() {
-    if (board_is_read_only || !(this.interactive_state instanceof MenuState)) {
+    if (boardIsReadOnly || !(this.interactiveState instanceof MenuState)) {
       return;
     }
-    set_interactive_state(InspectItemsInRegionState.get_instance(this.interactive_state, this));
+    set_interactive_state(InspectItemsInRegionState.get_instance(this.interactiveState, this));
   }
 
   /**
@@ -2531,14 +2528,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InspectedItemState
    */
   public void select_items(Set<Item> p_items) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
     this.display_layer_message();
-    if (interactive_state instanceof MenuState) {
-      set_interactive_state(InspectedItemState.get_instance(p_items, interactive_state, this));
-    } else if (interactive_state instanceof InspectedItemState state) {
+    if (interactiveState instanceof MenuState) {
+      set_interactive_state(InspectedItemState.get_instance(p_items, interactiveState, this));
+    } else if (interactiveState instanceof InspectedItemState state) {
       state.get_item_list().clear();
       state.get_item_list().addAll(p_items);
       repaint();
@@ -2558,12 +2555,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see MenuState#swap_pin(FloatPoint)
    */
   public void swap_pin(Point2D p_location) {
-    if (board_is_read_only || !(this.interactive_state instanceof MenuState)) {
+    if (boardIsReadOnly || !(this.interactiveState instanceof MenuState)) {
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_location);
-    InteractiveState return_state = ((MenuState) interactive_state).swap_pin(location);
-    set_interactive_state(return_state);
+    FloatPoint location = graphicsContext.coordinateTransform.screen_to_board(p_location);
+    InteractiveState returnState = ((MenuState) interactiveState).swap_pin(location);
+    set_interactive_state(returnState);
   }
 
   /**
@@ -2577,17 +2574,17 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see BoardPanel#zoom_frame(Point2D, Point2D)
    */
   public void zoom_selection() {
-    if (!(interactive_state instanceof InspectedItemState)) {
+    if (!(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    IntBox bounding_box =
-        this.board.get_bounding_box(((InspectedItemState) interactive_state).get_item_list());
-    bounding_box = bounding_box.offset(this.board.rules.get_max_trace_half_width());
-    Point2D lower_left =
-        this.graphics_context.coordinate_transform.board_to_screen(bounding_box.ll.to_float());
-    Point2D upper_right =
-        this.graphics_context.coordinate_transform.board_to_screen(bounding_box.ur.to_float());
-    this.panel.zoom_frame(lower_left, upper_right);
+    IntBox boundingBox =
+        this.board.get_bounding_box(((InspectedItemState) interactiveState).get_item_list());
+    boundingBox = boundingBox.offset(this.board.rules.get_max_trace_half_width());
+    Point2D lowerLeft =
+        this.graphicsContext.coordinateTransform.board_to_screen(boundingBox.ll.to_float());
+    Point2D upperRight =
+        this.graphicsContext.coordinateTransform.board_to_screen(boundingBox.ur.to_float());
+    this.panel.zoom_frame(lowerLeft, upperRight);
   }
 
   /**
@@ -2608,14 +2605,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InspectedItemState#toggle_select(FloatPoint)
    */
   public void toggle_select_action(Point2D p_point) {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState return_state =
-        ((InspectedItemState) interactive_state).toggle_select(location);
-    if (return_state != this.interactive_state) {
-      set_interactive_state(return_state);
+    FloatPoint location = graphicsContext.coordinateTransform.screen_to_board(p_point);
+    InteractiveState returnState = ((InspectedItemState) interactiveState).toggle_select(location);
+    if (returnState != this.interactiveState) {
+      set_interactive_state(returnState);
       repaint();
     }
   }
@@ -2651,10 +2647,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InspectedItemState#info()
    */
   public void display_selected_item_info() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    ((InspectedItemState) interactive_state).info();
+    ((InspectedItemState) interactiveState).info();
   }
 
   /**
@@ -2775,7 +2771,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   public InteractiveActionThread start_autorouter_and_route_optimizer(RoutingJob job) {
     // The auto-router and route optimizer can only be started if the board is not
     // read only
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       return null;
     }
 
@@ -2785,11 +2781,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
     // Start the auto-router and route optimizer
     // TODO: ideally we should only pass the board and the routerSettings to the
     // thread, and let the thread create the router and optimizer
-    this.interactive_action_thread =
+    this.interactiveActionThread =
         InteractiveActionThread.get_autorouter_and_route_optimizer_instance(this, job);
-    this.interactive_action_thread.start();
+    this.interactiveActionThread.start();
 
-    return this.interactive_action_thread;
+    return this.interactiveActionThread;
   }
 
   /**
@@ -2803,9 +2799,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveActionThread#requestStop()
    */
   public void stop_autorouter_and_route_optimizer() {
-    if (this.interactive_action_thread != null) {
+    if (this.interactiveActionThread != null) {
       // The left button is used to stop the interactive action thread.
-      this.interactive_action_thread.requestStop();
+      this.interactiveActionThread.requestStop();
     }
 
     this.set_board_read_only(false);
@@ -2821,10 +2817,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InspectedItemState#extent_to_whole_nets()
    */
   public void extend_selection_to_whole_nets() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(((InspectedItemState) interactive_state).extent_to_whole_nets());
+    set_interactive_state(((InspectedItemState) interactiveState).extent_to_whole_nets());
   }
 
   /**
@@ -2838,10 +2834,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InspectedItemState#extent_to_whole_components()
    */
   public void extend_selection_to_whole_components() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(((InspectedItemState) interactive_state).extent_to_whole_components());
+    set_interactive_state(((InspectedItemState) interactiveState).extent_to_whole_components());
   }
 
   /**
@@ -2855,11 +2851,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InspectedItemState#extent_to_whole_connected_sets()
    */
   public void extend_selection_to_whole_connected_sets() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(
-        ((InspectedItemState) interactive_state).extent_to_whole_connected_sets());
+    set_interactive_state(((InspectedItemState) interactiveState).extent_to_whole_connected_sets());
   }
 
   /**
@@ -2873,10 +2868,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InspectedItemState#extent_to_whole_connections()
    */
   public void extend_selection_to_whole_connections() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    set_interactive_state(((InspectedItemState) interactive_state).extent_to_whole_connections());
+    set_interactive_state(((InspectedItemState) interactiveState).extent_to_whole_connections());
   }
 
   /**
@@ -2890,10 +2885,10 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InspectedItemState#toggle_clearance_violations()
    */
   public void toggle_selected_item_violations() {
-    if (board_is_read_only || !(interactive_state instanceof InspectedItemState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof InspectedItemState)) {
       return;
     }
-    ((InspectedItemState) interactive_state).toggle_clearance_violations();
+    ((InspectedItemState) interactiveState).toggle_clearance_violations();
   }
 
   /**
@@ -2912,11 +2907,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see MoveItemState#turn_45_degree(int)
    */
   public void turn_45_degree(int p_factor) {
-    if (board_is_read_only || !(interactive_state instanceof MoveItemState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof MoveItemState)) {
       // no interactive action when logfile is running
       return;
     }
-    ((MoveItemState) interactive_state).turn_45_degree(p_factor);
+    ((MoveItemState) interactiveState).turn_45_degree(p_factor);
   }
 
   /**
@@ -2930,11 +2925,11 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see MoveItemState#change_placement_side()
    */
   public void change_placement_side() {
-    if (board_is_read_only || !(interactive_state instanceof MoveItemState)) {
+    if (boardIsReadOnly || !(interactiveState instanceof MoveItemState)) {
       // no interactive action when logfile is running
       return;
     }
-    ((MoveItemState) interactive_state).change_placement_side();
+    ((MoveItemState) interactiveState).change_placement_side();
   }
 
   /**
@@ -2946,7 +2941,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see ZoomRegionState
    */
   public void zoom_region() {
-    interactive_state = ZoomRegionState.get_instance(this.interactive_state, this);
+    interactiveState = ZoomRegionState.get_instance(this.interactiveState, this);
   }
 
   /**
@@ -2962,13 +2957,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see CircleConstructionState
    */
   public void start_circle(Point2D p_point) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
+    FloatPoint location = graphicsContext.coordinateTransform.screen_to_board(p_point);
     set_interactive_state(
-        CircleConstructionState.get_instance(location, this.interactive_state, this));
+        CircleConstructionState.get_instance(location, this.interactiveState, this));
   }
 
   /**
@@ -2983,13 +2978,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see TileConstructionState
    */
   public void start_tile(Point2D p_point) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
+    FloatPoint location = graphicsContext.coordinateTransform.screen_to_board(p_point);
     set_interactive_state(
-        TileConstructionState.get_instance(location, this.interactive_state, this));
+        TileConstructionState.get_instance(location, this.interactiveState, this));
   }
 
   /**
@@ -3004,13 +2999,13 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see PolygonShapeConstructionState
    */
   public void start_polygonshape_item(Point2D p_point) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
+    FloatPoint location = graphicsContext.coordinateTransform.screen_to_board(p_point);
     set_interactive_state(
-        PolygonShapeConstructionState.get_instance(location, this.interactive_state, this));
+        PolygonShapeConstructionState.get_instance(location, this.interactiveState, this));
   }
 
   /**
@@ -3025,14 +3020,14 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see HoleConstructionState
    */
   public void start_adding_hole(Point2D p_point) {
-    if (board_is_read_only) {
+    if (boardIsReadOnly) {
       // no interactive action when logfile is running
       return;
     }
-    FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState new_state =
-        HoleConstructionState.get_instance(location, this.interactive_state, this);
-    set_interactive_state(new_state);
+    FloatPoint location = graphicsContext.coordinateTransform.screen_to_board(p_point);
+    InteractiveState newState =
+        HoleConstructionState.get_instance(location, this.interactiveState, this);
+    set_interactive_state(newState);
   }
 
   /**
@@ -3047,12 +3042,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   Rectangle get_graphics_update_rectangle() {
     Rectangle result;
-    IntBox update_box = board.get_graphics_update_box();
-    if (update_box == null || update_box.is_empty()) {
+    IntBox updateBox = board.get_graphics_update_box();
+    if (updateBox == null || updateBox.is_empty()) {
       result = new Rectangle(0, 0, 0, 0);
     } else {
-      IntBox offset_box = update_box.offset(board.get_max_trace_half_width());
-      result = graphics_context.coordinate_transform.board_to_screen(offset_box);
+      IntBox offsetBox = updateBox.offset(board.get_max_trace_half_width());
+      result = graphicsContext.coordinateTransform.board_to_screen(offsetBox);
     }
     return result;
   }
@@ -3061,12 +3056,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * Finds all board items at the specified location on the active layer.
    *
    * <p>Uses the current item selection filter from interactive settings. If nothing is found on the
-   * active layer and select_on_all_visible_layers is enabled, searches all visible layers.
+   * active layer and selectOnAllVisibleLayers is enabled, searches all visible layers.
    *
    * @param p_location the position in board coordinates to search
    * @return a set of items at that location (may be empty)
    * @see #pick_items(FloatPoint, ItemSelectionFilter)
-   * @see InteractiveSettings#item_selection_filter
+   * @see InteractiveSettings#itemSelectionFilter
    */
   Set<Item> pick_items(FloatPoint p_location) {
     return pick_items(p_location, interactiveSettings.get_item_selection_filter());
@@ -3075,7 +3070,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
   /**
    * Finds all board items at the specified location with a custom item filter.
    *
-   * <p>Searches the active layer first. If nothing is found and select_on_all_visible_layers is
+   * <p>Searches the active layer first. If nothing is found and selectOnAllVisibleLayers is
    * enabled, expands the search to all visible layers (excluding the active layer). The item filter
    * determines which item types are considered.
    *
@@ -3089,8 +3084,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
     IntPoint location = p_location.round();
     Set<Item> result = board.pick_items(location, interactiveSettings.get_layer(), p_item_filter);
     if (result.isEmpty() && interactiveSettings.get_select_on_all_visible_layers()) {
-      for (int i = 0; i < graphics_context.layer_count(); i++) {
-        if (i == interactiveSettings.get_layer() || graphics_context.get_layer_visibility(i) <= 0) {
+      for (int i = 0; i < graphicsContext.layer_count(); i++) {
+        if (i == interactiveSettings.get_layer() || graphicsContext.get_layer_visibility(i) <= 0) {
           continue;
         }
         result.addAll(board.pick_items(location, i, p_item_filter));
@@ -3111,8 +3106,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see BoardPanel#move_mouse(Point2D)
    */
   void move_mouse(FloatPoint p_to_location) {
-    if (!board_is_read_only) {
-      panel.move_mouse(graphics_context.coordinate_transform.board_to_screen(p_to_location));
+    if (!boardIsReadOnly) {
+      panel.move_mouse(graphicsContext.coordinateTransform.board_to_screen(p_to_location));
     }
   }
 
@@ -3127,7 +3122,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #set_interactive_state(InteractiveState)
    */
   public InteractiveState get_interactive_state() {
-    return this.interactive_state;
+    return this.interactiveState;
   }
 
   /**
@@ -3137,16 +3132,16 @@ public class GuiBoardManager extends HeadlessBoardManager {
    */
   private InteractiveState execute_state_command(InteractiveCommand command) {
     if (command == null || !command.canExecute()) {
-      return this.interactive_state;
+      return this.interactiveState;
     }
     InteractiveState nextState = command.execute();
-    return nextState != null ? nextState : this.interactive_state;
+    return nextState != null ? nextState : this.interactiveState;
   }
 
   /** Applies a state transition and optional side effects in one place. */
   private void apply_interactive_state_change(
       InteractiveState nextState, boolean repaintAfterChange, boolean updateToolbarSelection) {
-    if (nextState == null || nextState == this.interactive_state) {
+    if (nextState == null || nextState == this.interactiveState) {
       return;
     }
     set_interactive_state(nextState);
@@ -3159,8 +3154,8 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   private void update_toolbar_selection_panel() {
-    if (panel != null && panel.board_frame != null) {
-      panel.board_frame.setToolbarModeSelectionPanelValue(get_interactive_state());
+    if (panel != null && panel.boardFrame != null) {
+      panel.boardFrame.setToolbarModeSelectionPanelValue(get_interactive_state());
     }
   }
 
@@ -3176,9 +3171,9 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see InteractiveState#set_toolbar()
    */
   public void set_interactive_state(InteractiveState p_state) {
-    if (p_state != null && p_state != interactive_state) {
-      this.interactive_state = p_state;
-      if (!this.board_is_read_only) {
+    if (p_state != null && p_state != interactiveState) {
+      this.interactiveState = p_state;
+      if (!this.boardIsReadOnly) {
         p_state.set_toolbar();
       }
     }
@@ -3195,15 +3190,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see GraphicsContext#change_design_bounds(IntBox)
    */
   public void adjust_design_bounds() {
-    IntBox new_bounding_box = this.board.get_bounding_box();
-    Collection<Item> board_items = this.board.get_items();
-    for (Item curr_item : board_items) {
-      IntBox curr_bounding_box = curr_item.bounding_box();
-      if (curr_bounding_box.ur.x < Integer.MAX_VALUE) {
-        new_bounding_box = new_bounding_box.union(curr_bounding_box);
+    IntBox newBoundingBox = this.board.get_bounding_box();
+    Collection<Item> boardItems = this.board.get_items();
+    for (Item currItem : boardItems) {
+      IntBox currBoundingBox = currItem.bounding_box();
+      if (currBoundingBox.ur.x < Integer.MAX_VALUE) {
+        newBoundingBox = newBoundingBox.union(currBoundingBox);
       }
     }
-    this.graphics_context.change_design_bounds(new_bounding_box);
+    this.graphicsContext.change_design_bounds(newBoundingBox);
   }
 
   /**
@@ -3223,15 +3218,15 @@ public class GuiBoardManager extends HeadlessBoardManager {
     FRLogger.getLogEntries().removeLogEntryAddedListener(this.logEntryAddedListener);
     FRLogger.removeTraceEventListener(this.traceEventListener);
     close_files();
-    graphics_context = null;
-    coordinate_transform = null;
+    graphicsContext = null;
+    coordinateTransform = null;
     // Clear the instance field and the static singleton so that a subsequent
     // getOrCreate/reset call (e.g. when reopening the application) starts fresh.
     interactiveSettings = null;
     InteractiveSettings.resetForTesting();
-    interactive_state = null;
+    interactiveState = null;
     ratsnest = null;
-    clearance_violations = null;
+    clearanceViolations = null;
     board = null;
   }
 
@@ -3245,7 +3240,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see BoardUpdateStrategy
    */
   public BoardUpdateStrategy get_board_update_strategy() {
-    return board_update_strategy;
+    return boardUpdateStrategy;
   }
 
   /**
@@ -3255,7 +3250,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see BoardUpdateStrategy
    */
   public void set_board_update_strategy(BoardUpdateStrategy p_board_update_strategy) {
-    board_update_strategy = p_board_update_strategy;
+    boardUpdateStrategy = p_board_update_strategy;
   }
 
   /**
@@ -3267,7 +3262,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @return the hybrid ratio string
    */
   public String get_hybrid_ratio() {
-    return hybrid_ratio;
+    return hybridRatio;
   }
 
   /**
@@ -3276,7 +3271,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @param p_hybrid_ratio the hybrid ratio configuration string
    */
   public void set_hybrid_ratio(String p_hybrid_ratio) {
-    hybrid_ratio = p_hybrid_ratio;
+    hybridRatio = p_hybrid_ratio;
   }
 
   /**
@@ -3289,7 +3284,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see ItemSelectionStrategy
    */
   public ItemSelectionStrategy get_item_selection_strategy() {
-    return item_selection_strategy;
+    return itemSelectionStrategy;
   }
 
   /**
@@ -3299,7 +3294,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see ItemSelectionStrategy
    */
   public void set_item_selection_strategy(ItemSelectionStrategy p_item_selection_strategy) {
-    item_selection_strategy = p_item_selection_strategy;
+    itemSelectionStrategy = p_item_selection_strategy;
   }
 
   /**
@@ -3311,12 +3306,12 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @return the effective number of threads (respecting global settings)
    */
   public int get_num_threads() {
-    if ((num_threads > 1) && (!globalSettings.featureFlags.multiThreading)) {
+    if ((numThreads > 1) && (!globalSettings.featureFlags.multiThreading)) {
       routingJob.logInfo("Multi-threading is disabled in the settings. Using single thread.");
-      num_threads = 1;
+      numThreads = 1;
     }
 
-    return num_threads;
+    return numThreads;
   }
 
   /**
@@ -3328,7 +3323,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @see #get_num_threads()
    */
   public void set_num_threads(int p_value) {
-    num_threads = p_value;
+    numThreads = p_value;
   }
 
   /**

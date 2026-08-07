@@ -33,37 +33,37 @@ public class AutorouteEngine {
    * The current search tree used in autorouting. It depends on the trac clearance class used in the
    * autoroute algorithm.
    */
-  public final ShapeSearchTree autoroute_search_tree;
+  public final ShapeSearchTree autorouteSearchTree;
 
   /**
-   * If maintain_database, the autorouter database is maintained after a connection is completed for
+   * If maintainDatabase, the autorouter database is maintained after a connection is completed for
    * performance reasons.
    */
-  public final boolean maintain_database;
+  public final boolean maintainDatabase;
 
   /** The 2-dimensional array of rectangular pages of ExpansionDrills */
-  final DrillPageArray drill_page_array;
+  final DrillPageArray drillPageArray;
 
   /** The PCB-board of this autoroute algorithm. */
   final RoutingBoard board;
 
   /** To be able to stop the expansion algorithm. */
-  Stoppable stoppable_thread;
+  Stoppable stoppableThread;
 
   /** The net number used for routing in this autoroute algorithm. */
-  private int net_no;
+  private int netNo;
 
   /** To stop the expansion algorithm after a time limit is exceeded. */
-  private TimeLimit time_limit;
+  private TimeLimit timeLimit;
 
   /** The list of incomplete expansion rooms on the routing board */
-  private List<IncompleteFreeSpaceExpansionRoom> incomplete_expansion_rooms;
+  private List<IncompleteFreeSpaceExpansionRoom> incompleteExpansionRooms;
 
   /** The list of complete expansion rooms on the routing board */
-  private List<CompleteFreeSpaceExpansionRoom> complete_expansion_rooms;
+  private List<CompleteFreeSpaceExpansionRoom> completeExpansionRooms;
 
   /** The count of expansion rooms created so far */
-  private int expansion_room_instance_count;
+  private int expansionRoomInstanceCount;
 
   /**
    * Creates a new instance of BoardAutorouteEngine If p_maintain_database, the autorouter database
@@ -72,43 +72,43 @@ public class AutorouteEngine {
   public AutorouteEngine(
       RoutingBoard p_board, int p_trace_clearance_class_no, boolean p_maintain_database) {
     this.board = p_board;
-    this.maintain_database = p_maintain_database;
-    this.net_no = -1;
-    this.autoroute_search_tree =
-        p_board.search_tree_manager.get_autoroute_tree(p_trace_clearance_class_no);
-    int max_drill_page_width = (int) (5 * p_board.rules.get_default_via_diameter());
-    max_drill_page_width = Math.max(max_drill_page_width, 10000);
-    this.drill_page_array = new DrillPageArray(this.board, max_drill_page_width);
-    this.stoppable_thread = null;
+    this.maintainDatabase = p_maintain_database;
+    this.netNo = -1;
+    this.autorouteSearchTree =
+        p_board.searchTreeManager.get_autoroute_tree(p_trace_clearance_class_no);
+    int maxDrillPageWidth = (int) (5 * p_board.rules.get_default_via_diameter());
+    maxDrillPageWidth = Math.max(maxDrillPageWidth, 10000);
+    this.drillPageArray = new DrillPageArray(this.board, maxDrillPageWidth);
+    this.stoppableThread = null;
   }
 
   public void init_connection(int p_net_no, Stoppable p_stoppable_thread, TimeLimit p_time_limit) {
-    if (this.maintain_database) {
-      if (p_net_no != this.net_no) {
-        if (this.complete_expansion_rooms != null) {
+    if (this.maintainDatabase) {
+      if (p_net_no != this.netNo) {
+        if (this.completeExpansionRooms != null) {
           // invalidate the net dependent complete free space expansion rooms.
-          Collection<CompleteFreeSpaceExpansionRoom> rooms_to_remove = new ArrayList<>();
-          for (CompleteFreeSpaceExpansionRoom curr_room : complete_expansion_rooms) {
-            if (curr_room.is_net_dependent()) {
-              rooms_to_remove.add(curr_room);
+          Collection<CompleteFreeSpaceExpansionRoom> roomsToRemove = new ArrayList<>();
+          for (CompleteFreeSpaceExpansionRoom currRoom : completeExpansionRooms) {
+            if (currRoom.is_net_dependent()) {
+              roomsToRemove.add(currRoom);
             }
           }
-          for (CompleteFreeSpaceExpansionRoom curr_room : rooms_to_remove) {
-            this.remove_complete_expansion_room(curr_room);
+          for (CompleteFreeSpaceExpansionRoom currRoom : roomsToRemove) {
+            this.remove_complete_expansion_room(currRoom);
           }
         }
         // invalidate the neighbour rooms of the items of p_net_no
-        Collection<Item> item_list = this.board.get_items();
-        for (Item curr_item : item_list) {
-          if (curr_item.contains_net(p_net_no)) {
-            this.board.additional_update_after_change(curr_item);
+        Collection<Item> itemList = this.board.get_items();
+        for (Item currItem : itemList) {
+          if (currItem.contains_net(p_net_no)) {
+            this.board.additional_update_after_change(currItem);
           }
         }
       }
     }
-    this.net_no = p_net_no;
-    this.stoppable_thread = p_stoppable_thread;
-    this.time_limit = p_time_limit;
+    this.netNo = p_net_no;
+    this.stoppableThread = p_stoppable_thread;
+    this.timeLimit = p_time_limit;
   }
 
   /**
@@ -125,16 +125,16 @@ public class AutorouteEngine {
     String sourceItems = String.join(", ", p_start_set.stream().map(Item::toString).toList());
     String targetItems = String.join(", ", p_dest_set.stream().map(Item::toString).toList());
 
-    MazeSearchAlgo maze_search_algo;
+    MazeSearchAlgo mazeSearchAlgo;
     try {
-      maze_search_algo = MazeSearchAlgo.get_instance(p_start_set, p_dest_set, this, p_ctrl);
+      mazeSearchAlgo = MazeSearchAlgo.get_instance(p_start_set, p_dest_set, this, p_ctrl);
     } catch (Exception e) {
       FRLogger.error(
           "AutorouteEngine.autoroute_connection: Exception in MazeSearchAlgo.get_instance", e);
-      maze_search_algo = null;
+      mazeSearchAlgo = null;
     }
 
-    if (maze_search_algo == null) {
+    if (mazeSearchAlgo == null) {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
@@ -144,41 +144,40 @@ public class AutorouteEngine {
               + ", because the maze search algorithm could not be created.");
     }
 
-    MazeSearchAlgo.Result search_result = null;
-    if (maze_search_algo != null) {
+    MazeSearchAlgo.Result searchResult = null;
+    if (mazeSearchAlgo != null) {
       try {
-        search_result = maze_search_algo.find_connection();
+        searchResult = mazeSearchAlgo.find_connection();
       } catch (Exception e) {
         FRLogger.error(
-            "AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection",
-            e);
+            "AutorouteEngine.autoroute_connection: Exception in mazeSearchAlgo.find_connection", e);
       }
     }
 
-    if (search_result != null) {
-      if (p_ctrl.net_no == 33 || p_ctrl.net_no == 66 || p_ctrl.net_no == 67) {
+    if (searchResult != null) {
+      if (p_ctrl.netNo == 33 || p_ctrl.netNo == 66 || p_ctrl.netNo == 67) {
         String destinationType =
-            search_result.destination_door != null
-                ? search_result.destination_door.getClass().getSimpleName()
+            searchResult.destinationDoor != null
+                ? searchResult.destinationDoor.getClass().getSimpleName()
                 : "null";
         FRLogger.trace(
             "compare_trace_maze_result_raw net="
-                + p_ctrl.net_no
+                + p_ctrl.netNo
                 + ", section="
-                + search_result.section_no_of_door
+                + searchResult.sectionNoOfDoor
                 + ", destination_type="
                 + destinationType);
       }
     }
 
-    LocateFoundConnectionAlgo autoroute_result = null;
-    if (search_result != null) {
+    LocateFoundConnectionAlgo autorouteResult = null;
+    if (searchResult != null) {
       try {
-        autoroute_result =
+        autorouteResult =
             LocateFoundConnectionAlgo.get_instance(
-                search_result,
+                searchResult,
                 p_ctrl,
-                this.autoroute_search_tree,
+                this.autorouteSearchTree,
                 board.rules.get_trace_angle_restriction(),
                 p_ripped_item_list,
                 p_ripup_costs);
@@ -192,13 +191,13 @@ public class AutorouteEngine {
     // Always clean up expansion rooms from the search tree, regardless of search outcome.
     // This mirrors v1.9's behavior: clear() is called before any early returns so that
     // stale CompleteFreeSpaceExpansionRoom objects don't pollute subsequent routing attempts.
-    if (!this.maintain_database) {
+    if (!this.maintainDatabase) {
       this.clear();
     } else {
       this.reset_all_doors();
     }
 
-    if (search_result == null) {
+    if (searchResult == null) {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
@@ -208,14 +207,14 @@ public class AutorouteEngine {
               + ", because no connection was found between their nets.");
     }
 
-    if (autoroute_result == null) {
+    if (autorouteResult == null) {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between " + sourceItems + " and " + targetItems + ".");
     }
 
-    if (!p_ctrl.layer_active[autoroute_result.start_layer]
-        || !p_ctrl.layer_active[autoroute_result.target_layer]) {
+    if (!p_ctrl.layerActive[autorouteResult.startLayer]
+        || !p_ctrl.layerActive[autorouteResult.targetLayer]) {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
@@ -225,7 +224,7 @@ public class AutorouteEngine {
               + ", because some of their layers are disabled.");
     }
 
-    if (autoroute_result.connection_items == null) {
+    if (autorouteResult.connectionItems == null) {
       FRLogger.debug("AutorouteEngine.autoroute_connection: result_items != null expected");
       return new AutorouteAttemptResult(
           AutorouteAttemptState.SKIPPED,
@@ -233,40 +232,40 @@ public class AutorouteEngine {
     }
 
     // Delete the ripped connections.
-    SortedSet<Item> ripped_connections = new TreeSet<>();
-    Set<Integer> changed_nets = new TreeSet<>();
-    Item.StopConnectionOption stop_connection_option;
-    if (p_ctrl.remove_unconnected_vias) {
-      stop_connection_option = Item.StopConnectionOption.NONE;
+    SortedSet<Item> rippedConnections = new TreeSet<>();
+    Set<Integer> changedNets = new TreeSet<>();
+    Item.StopConnectionOption stopConnectionOption;
+    if (p_ctrl.removeUnconnectedVias) {
+      stopConnectionOption = Item.StopConnectionOption.NONE;
     } else {
-      stop_connection_option = Item.StopConnectionOption.FANOUT_VIA;
+      stopConnectionOption = Item.StopConnectionOption.FANOUT_VIA;
     }
 
     for (Item curr_ripped_item : p_ripped_item_list) {
-      ripped_connections.addAll(curr_ripped_item.get_connection_items(stop_connection_option));
+      rippedConnections.addAll(curr_ripped_item.get_connection_items(stopConnectionOption));
       for (int i = 0; i < curr_ripped_item.net_count(); i++) {
-        changed_nets.add(curr_ripped_item.get_net_no(i));
+        changedNets.add(curr_ripped_item.get_net_no(i));
       }
     }
 
     // let the observers know the changes in the board database.
-    boolean observers_activated = !this.board.observers_active();
-    if (observers_activated) {
+    boolean observersActivated = !this.board.observers_active();
+    if (observersActivated) {
       this.board.start_notify_observers();
     }
 
-    board.remove_items(ripped_connections);
+    board.remove_items(rippedConnections);
 
-    for (int curr_net_no : changed_nets) {
-      this.board.remove_trace_tails(curr_net_no, stop_connection_option);
+    for (int currNetNo : changedNets) {
+      this.board.remove_trace_tails(currNetNo, stopConnectionOption);
     }
-    InsertFoundConnectionAlgo insert_found_connection_algo =
-        InsertFoundConnectionAlgo.get_instance(autoroute_result, board, p_ctrl);
+    InsertFoundConnectionAlgo insertFoundConnectionAlgo =
+        InsertFoundConnectionAlgo.get_instance(autorouteResult, board, p_ctrl);
 
-    if (observers_activated) {
+    if (observersActivated) {
       this.board.end_notify_observers();
     }
-    if (insert_found_connection_algo == null) {
+    if (insertFoundConnectionAlgo == null) {
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
@@ -281,51 +280,51 @@ public class AutorouteEngine {
 
   /** Returns the net number of the current connection to route. */
   public int get_net_no() {
-    return this.net_no;
+    return this.netNo;
   }
 
   /** Returns if the user has stopped the autorouter. */
   public boolean is_stop_requested() {
-    if (this.time_limit != null) {
-      if (this.time_limit.limit_exceeded()) {
+    if (this.timeLimit != null) {
+      if (this.timeLimit.limit_exceeded()) {
         return true;
       }
     }
-    if (this.stoppable_thread == null) {
+    if (this.stoppableThread == null) {
       return false;
     }
-    return this.stoppable_thread.isStopRequested();
+    return this.stoppableThread.isStopRequested();
   }
 
   /** Clears all temporary data */
   public void clear() {
-    if (complete_expansion_rooms != null) {
-      for (CompleteFreeSpaceExpansionRoom curr_room : complete_expansion_rooms) {
-        curr_room.remove_from_tree(this.autoroute_search_tree);
+    if (completeExpansionRooms != null) {
+      for (CompleteFreeSpaceExpansionRoom currRoom : completeExpansionRooms) {
+        currRoom.remove_from_tree(this.autorouteSearchTree);
       }
     }
-    complete_expansion_rooms = null;
-    incomplete_expansion_rooms = null;
-    expansion_room_instance_count = 0;
+    completeExpansionRooms = null;
+    incompleteExpansionRooms = null;
+    expansionRoomInstanceCount = 0;
     board.clear_all_item_temporary_autoroute_data();
   }
 
   /** Draws the shapes of the expansion rooms created so far. */
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity) {
-    if (complete_expansion_rooms == null) {
+    if (completeExpansionRooms == null) {
       return;
     }
-    for (CompleteFreeSpaceExpansionRoom curr_room : complete_expansion_rooms) {
-      curr_room.draw(p_graphics, p_graphics_context, p_intensity);
+    for (CompleteFreeSpaceExpansionRoom currRoom : completeExpansionRooms) {
+      currRoom.draw(p_graphics, p_graphics_context, p_intensity);
     }
-    Collection<Item> item_list = this.board.get_items();
-    for (Item curr_item : item_list) {
-      ItemAutorouteInfo autoroute_info = curr_item.get_autoroute_info();
-      if (autoroute_info != null) {
-        autoroute_info.draw(p_graphics, p_graphics_context, p_intensity);
+    Collection<Item> itemList = this.board.get_items();
+    for (Item currItem : itemList) {
+      ItemAutorouteInfo autorouteInfo = currItem.get_autoroute_info();
+      if (autorouteInfo != null) {
+        autorouteInfo.draw(p_graphics, p_graphics_context, p_intensity);
       }
     }
-    // this.drill_page_array.draw(p_graphics, p_graphics_context, p_intensity);
+    // this.drillPageArray.draw(p_graphics, p_graphics_context, p_intensity);
   }
 
   /**
@@ -336,13 +335,13 @@ public class AutorouteEngine {
    */
   public IncompleteFreeSpaceExpansionRoom add_incomplete_expansion_room(
       TileShape p_shape, int p_layer, TileShape p_contained_shape) {
-    IncompleteFreeSpaceExpansionRoom new_room =
+    IncompleteFreeSpaceExpansionRoom newRoom =
         new IncompleteFreeSpaceExpansionRoom(p_shape, p_layer, p_contained_shape);
-    if (this.incomplete_expansion_rooms == null) {
-      this.incomplete_expansion_rooms = new ArrayList<>();
+    if (this.incompleteExpansionRooms == null) {
+      this.incompleteExpansionRooms = new ArrayList<>();
     }
-    this.incomplete_expansion_rooms.add(new_room);
-    return new_room;
+    this.incompleteExpansionRooms.add(newRoom);
+    return newRoom;
   }
 
   /**
@@ -350,20 +349,20 @@ public class AutorouteEngine {
    * empty.
    */
   public IncompleteFreeSpaceExpansionRoom get_first_incomplete_expansion_room() {
-    if (incomplete_expansion_rooms == null) {
+    if (incompleteExpansionRooms == null) {
       return null;
     }
-    if (incomplete_expansion_rooms.isEmpty()) {
+    if (incompleteExpansionRooms.isEmpty()) {
       return null;
     }
-    Iterator<IncompleteFreeSpaceExpansionRoom> it = incomplete_expansion_rooms.iterator();
+    Iterator<IncompleteFreeSpaceExpansionRoom> it = incompleteExpansionRooms.iterator();
     return it.next();
   }
 
   /** Removes an incomplete room from the database. */
   public void remove_incomplete_expansion_room(IncompleteFreeSpaceExpansionRoom p_room) {
     this.remove_all_doors(p_room);
-    incomplete_expansion_rooms.remove(p_room);
+    incompleteExpansionRooms.remove(p_room);
   }
 
   /**
@@ -372,39 +371,39 @@ public class AutorouteEngine {
    */
   public void remove_complete_expansion_room(CompleteFreeSpaceExpansionRoom p_room) {
     // create new incomplete expansion rooms for all neighbours
-    TileShape room_shape = p_room.get_shape();
-    int room_layer = p_room.get_layer();
-    Collection<ExpansionDoor> room_doors = p_room.get_doors();
-    for (ExpansionDoor curr_door : room_doors) {
-      ExpansionRoom curr_neighbour = curr_door.other_room(p_room);
-      if (curr_neighbour == null) {
+    TileShape roomShape = p_room.get_shape();
+    int roomLayer = p_room.get_layer();
+    Collection<ExpansionDoor> roomDoors = p_room.get_doors();
+    for (ExpansionDoor currDoor : roomDoors) {
+      ExpansionRoom currNeighbour = currDoor.other_room(p_room);
+      if (currNeighbour == null) {
         continue;
       }
-      curr_neighbour.remove_door(curr_door);
-      TileShape neighbour_shape = curr_neighbour.get_shape();
-      TileShape intersection = room_shape.intersection(neighbour_shape);
+      currNeighbour.remove_door(currDoor);
+      TileShape neighbourShape = currNeighbour.get_shape();
+      TileShape intersection = roomShape.intersection(neighbourShape);
       if (intersection.dimension() == 1) {
-        // add a new incomplete room to curr_neighbour.
-        int[] touching_sides = room_shape.touching_sides(neighbour_shape);
-        Line[] line_arr = new Line[1];
-        line_arr[0] = neighbour_shape.border_line(touching_sides[1]).opposite();
-        Simplex new_incomplete_room_shape = Simplex.get_instance(line_arr);
-        IncompleteFreeSpaceExpansionRoom new_incomplete_room =
-            add_incomplete_expansion_room(new_incomplete_room_shape, room_layer, intersection);
-        ExpansionDoor new_door = new ExpansionDoor(curr_neighbour, new_incomplete_room, 1);
-        curr_neighbour.add_door(new_door);
-        new_incomplete_room.add_door(new_door);
+        // add a new incomplete room to currNeighbour.
+        int[] touchingSides = roomShape.touching_sides(neighbourShape);
+        Line[] lineArr = new Line[1];
+        lineArr[0] = neighbourShape.border_line(touchingSides[1]).opposite();
+        Simplex newIncompleteRoomShape = Simplex.get_instance(lineArr);
+        IncompleteFreeSpaceExpansionRoom newIncompleteRoom =
+            add_incomplete_expansion_room(newIncompleteRoomShape, roomLayer, intersection);
+        ExpansionDoor newDoor = new ExpansionDoor(currNeighbour, newIncompleteRoom, 1);
+        currNeighbour.add_door(newDoor);
+        newIncompleteRoom.add_door(newDoor);
       }
     }
     this.remove_all_doors(p_room);
-    p_room.remove_from_tree(this.autoroute_search_tree);
-    if (complete_expansion_rooms != null) {
-      complete_expansion_rooms.remove(p_room);
+    p_room.remove_from_tree(this.autorouteSearchTree);
+    if (completeExpansionRooms != null) {
+      completeExpansionRooms.remove(p_room);
     } else {
       FRLogger.warn(
-          "AutorouteEngine.remove_complete_expansion_room: this.complete_expansion_rooms is null");
+          "AutorouteEngine.remove_complete_expansion_room: this.completeExpansionRooms is null");
     }
-    this.drill_page_array.invalidate(room_shape);
+    this.drillPageArray.invalidate(roomShape);
   }
 
   /**
@@ -416,21 +415,21 @@ public class AutorouteEngine {
 
     try {
       Collection<CompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
-      TileShape from_door_shape = null;
-      SearchTreeObject ignore_object = null;
-      Collection<ExpansionDoor> room_doors = p_room.get_doors();
-      for (ExpansionDoor curr_door : room_doors) {
-        ExpansionRoom other_room = curr_door.other_room(p_room);
-        if (other_room instanceof CompleteFreeSpaceExpansionRoom room && curr_door.dimension == 2) {
-          from_door_shape = curr_door.get_shape();
-          ignore_object = room;
+      TileShape fromDoorShape = null;
+      SearchTreeObject ignoreObject = null;
+      Collection<ExpansionDoor> roomDoors = p_room.get_doors();
+      for (ExpansionDoor currDoor : roomDoors) {
+        ExpansionRoom otherRoom = currDoor.other_room(p_room);
+        if (otherRoom instanceof CompleteFreeSpaceExpansionRoom room && currDoor.dimension == 2) {
+          fromDoorShape = currDoor.get_shape();
+          ignoreObject = room;
           break;
         }
       }
       FRLogger.trace(
           "COMPLETE_ROOM input"
               + ", net="
-              + this.net_no
+              + this.netNo
               + ", layer="
               + p_room.get_layer()
               + ", room_bounds="
@@ -438,18 +437,17 @@ public class AutorouteEngine {
               + ", contained_bounds="
               + describe_shape_bounds(p_room.get_contained_shape())
               + ", from_door_bounds="
-              + describe_shape_bounds(from_door_shape)
-              + ", ignore_object="
-              + (ignore_object == null ? "null" : ignore_object.getClass().getSimpleName()));
-      Collection<IncompleteFreeSpaceExpansionRoom> completed_shapes =
-          this.autoroute_search_tree.complete_shape(
-              p_room, this.net_no, ignore_object, from_door_shape);
+              + describe_shape_bounds(fromDoorShape)
+              + ", ignoreObject="
+              + (ignoreObject == null ? "null" : ignoreObject.getClass().getSimpleName()));
+      Collection<IncompleteFreeSpaceExpansionRoom> completedShapes =
+          this.autorouteSearchTree.complete_shape(p_room, this.netNo, ignoreObject, fromDoorShape);
       int initialCandidateIndex = 0;
-      for (IncompleteFreeSpaceExpansionRoom initialCandidate : completed_shapes) {
+      for (IncompleteFreeSpaceExpansionRoom initialCandidate : completedShapes) {
         FRLogger.trace(
             "COMPLETE_ROOM initial_candidate"
                 + ", net="
-                + this.net_no
+                + this.netNo
                 + ", layer="
                 + initialCandidate.get_layer()
                 + ", index="
@@ -459,53 +457,53 @@ public class AutorouteEngine {
                 + ", incomplete_bounds="
                 + describe_shape_bounds(initialCandidate.get_shape())
                 + ", from_door_bounds="
-                + describe_shape_bounds(from_door_shape));
+                + describe_shape_bounds(fromDoorShape));
         ++initialCandidateIndex;
       }
       this.remove_incomplete_expansion_room(p_room);
-      boolean is_first_completed_room = true;
-      for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : completed_shapes) {
+      boolean isFirstCompletedRoom = true;
+      for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : completedShapes) {
         if (curr_incomplete_room.get_shape().dimension() != 2) {
           continue;
         }
-        if (is_first_completed_room) {
-          is_first_completed_room = false;
+        if (isFirstCompletedRoom) {
+          isFirstCompletedRoom = false;
           FRLogger.trace(
               "COMPLETE_ROOM first_candidate"
                   + ", net="
-                  + this.net_no
+                  + this.netNo
                   + ", layer="
                   + curr_incomplete_room.get_layer()
                   + ", incomplete_bounds="
                   + describe_shape_bounds(curr_incomplete_room.get_shape())
                   + ", from_door_bounds="
-                  + describe_shape_bounds(from_door_shape));
-          CompleteFreeSpaceExpansionRoom completed_room =
+                  + describe_shape_bounds(fromDoorShape));
+          CompleteFreeSpaceExpansionRoom completedRoom =
               this.add_complete_room(curr_incomplete_room);
-          if (completed_room != null) {
-            result.add(completed_room);
+          if (completedRoom != null) {
+            result.add(completedRoom);
           }
         } else {
           // the shape of the first completed room may have changed and may
           // intersect now with the other shapes. Therefore, the completed shapes
           // have to be recalculated.
-          Collection<IncompleteFreeSpaceExpansionRoom> curr_completed_shapes =
-              this.autoroute_search_tree.complete_shape(
-                  curr_incomplete_room, this.net_no, ignore_object, from_door_shape);
-          for (IncompleteFreeSpaceExpansionRoom tmp_room : curr_completed_shapes) {
+          Collection<IncompleteFreeSpaceExpansionRoom> currCompletedShapes =
+              this.autorouteSearchTree.complete_shape(
+                  curr_incomplete_room, this.netNo, ignoreObject, fromDoorShape);
+          for (IncompleteFreeSpaceExpansionRoom tmp_room : currCompletedShapes) {
             FRLogger.trace(
                 "COMPLETE_ROOM recalc_candidate"
                     + ", net="
-                    + this.net_no
+                    + this.netNo
                     + ", layer="
                     + tmp_room.get_layer()
                     + ", incomplete_bounds="
                     + describe_shape_bounds(tmp_room.get_shape())
                     + ", from_door_bounds="
-                    + describe_shape_bounds(from_door_shape));
-            CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(tmp_room);
-            if (completed_room != null) {
-              result.add(completed_room);
+                    + describe_shape_bounds(fromDoorShape));
+            CompleteFreeSpaceExpansionRoom completedRoom = this.add_complete_room(tmp_room);
+            if (completedRoom != null) {
+              result.add(completedRoom);
             }
           }
         }
@@ -520,25 +518,25 @@ public class AutorouteEngine {
   /** Calculates the doors and adds the completed room to the room database. */
   private CompleteFreeSpaceExpansionRoom add_complete_room(
       IncompleteFreeSpaceExpansionRoom p_room) {
-    CompleteFreeSpaceExpansionRoom completed_room =
+    CompleteFreeSpaceExpansionRoom completedRoom =
         (CompleteFreeSpaceExpansionRoom) calculate_doors(p_room);
-    if (completed_room == null || completed_room.get_shape().dimension() != 2) {
+    if (completedRoom == null || completedRoom.get_shape().dimension() != 2) {
       return null;
     }
-    if (complete_expansion_rooms == null) {
-      complete_expansion_rooms = new ArrayList<>();
+    if (completeExpansionRooms == null) {
+      completeExpansionRooms = new ArrayList<>();
     }
-    complete_expansion_rooms.add(completed_room);
-    this.autoroute_search_tree.insert(completed_room);
+    completeExpansionRooms.add(completedRoom);
+    this.autorouteSearchTree.insert(completedRoom);
     FRLogger.trace(
         "COMPLETE_ROOM added"
             + ", net="
-            + this.net_no
+            + this.netNo
             + ", layer="
-            + completed_room.get_layer()
+            + completedRoom.get_layer()
             + ", bounds="
-            + describe_shape_bounds(completed_room.get_shape()));
-    return completed_room;
+            + describe_shape_bounds(completedRoom.get_shape()));
+    return completedRoom;
   }
 
   private static String describe_shape_bounds(TileShape p_shape) {
@@ -555,9 +553,9 @@ public class AutorouteEngine {
    */
   private CompleteExpansionRoom calculate_doors(ExpansionRoom p_room) {
     CompleteExpansionRoom result;
-    if (this.autoroute_search_tree instanceof ShapeSearchTree90Degree) {
+    if (this.autorouteSearchTree instanceof ShapeSearchTree90Degree) {
       result = SortedOrthogonalRoomNeighbours.calculate(p_room, this);
-    } else if (this.autoroute_search_tree instanceof ShapeSearchTree45Degree) {
+    } else if (this.autorouteSearchTree instanceof ShapeSearchTree45Degree) {
       result = Sorted45DegreeRoomNeighbours.calculate(p_room, this);
     } else {
       result = SortedRoomNeighbours.calculate(p_room, this);
@@ -577,17 +575,17 @@ public class AutorouteEngine {
     // restart iteration on the updated door set.
     Iterator<ExpansionDoor> it = p_room.get_doors().iterator();
     while (it.hasNext()) {
-      ExpansionDoor curr_door = it.next();
-      // cast to ExpansionRoom because ExpansionDoor.other_room works differently with
+      ExpansionDoor currDoor = it.next();
+      // cast to ExpansionRoom because ExpansionDoor.otherRoom works differently with
       // parameter type CompleteExpansionRoom.
-      ExpansionRoom neighbour_room = curr_door.other_room((ExpansionRoom) p_room);
-      if (neighbour_room == null) {
+      ExpansionRoom neighbourRoom = currDoor.other_room((ExpansionRoom) p_room);
+      if (neighbourRoom == null) {
         continue;
       }
-      if (neighbour_room instanceof IncompleteFreeSpaceExpansionRoom room) {
+      if (neighbourRoom instanceof IncompleteFreeSpaceExpansionRoom room) {
         this.complete_expansion_room(room);
         it = p_room.get_doors().iterator();
-      } else if (neighbour_room instanceof ObstacleExpansionRoom obstacle_neighbour_room) {
+      } else if (neighbourRoom instanceof ObstacleExpansionRoom obstacle_neighbour_room) {
         if (!obstacle_neighbour_room.all_doors_calculated()) {
           this.calculate_doors(obstacle_neighbour_room);
           obstacle_neighbour_room.set_doors_calculated(true);
@@ -601,18 +599,18 @@ public class AutorouteEngine {
    * call of get_ddrills()
    */
   public void invalidate_drill_pages(TileShape p_shape) {
-    this.drill_page_array.invalidate(p_shape);
+    this.drillPageArray.invalidate(p_shape);
   }
 
   /** Removes all doors from p_room */
   void remove_all_doors(ExpansionRoom p_room) {
-    for (ExpansionDoor curr_door : p_room.get_doors()) {
-      ExpansionRoom other_room = curr_door.other_room(p_room);
-      if (other_room == null) {
+    for (ExpansionDoor currDoor : p_room.get_doors()) {
+      ExpansionRoom otherRoom = currDoor.other_room(p_room);
+      if (otherRoom == null) {
         continue;
       }
-      other_room.remove_door(curr_door);
-      if (other_room instanceof IncompleteFreeSpaceExpansionRoom room) {
+      otherRoom.remove_door(currDoor);
+      if (otherRoom instanceof IncompleteFreeSpaceExpansionRoom room) {
         this.remove_incomplete_expansion_room(room);
       }
     }
@@ -625,13 +623,13 @@ public class AutorouteEngine {
    */
   Set<CompleteFreeSpaceExpansionRoom> get_rooms_with_target_items(Set<Item> p_items) {
     Set<CompleteFreeSpaceExpansionRoom> result = new TreeSet<>();
-    if (this.complete_expansion_rooms != null) {
-      for (CompleteFreeSpaceExpansionRoom curr_room : this.complete_expansion_rooms) {
-        Collection<TargetItemExpansionDoor> target_door_list = curr_room.get_target_doors();
-        for (TargetItemExpansionDoor curr_target_door : target_door_list) {
-          Item curr_target_item = curr_target_door.item;
-          if (p_items.contains(curr_target_item)) {
-            result.add(curr_room);
+    if (this.completeExpansionRooms != null) {
+      for (CompleteFreeSpaceExpansionRoom currRoom : this.completeExpansionRooms) {
+        Collection<TargetItemExpansionDoor> targetDoorList = currRoom.get_target_doors();
+        for (TargetItemExpansionDoor curr_target_door : targetDoorList) {
+          Item currTargetItem = curr_target_door.item;
+          if (p_items.contains(currTargetItem)) {
+            result.add(currRoom);
           }
         }
       }
@@ -641,12 +639,12 @@ public class AutorouteEngine {
 
   /** Checks, if the internal datastructure is valid. */
   public boolean validate() {
-    if (complete_expansion_rooms == null) {
+    if (completeExpansionRooms == null) {
       return true;
     }
     boolean result = true;
-    for (CompleteFreeSpaceExpansionRoom curr_room : complete_expansion_rooms) {
-      if (!curr_room.validate(this)) {
+    for (CompleteFreeSpaceExpansionRoom currRoom : completeExpansionRooms) {
+      if (!currRoom.validate(this)) {
         result = false;
       }
     }
@@ -658,23 +656,23 @@ public class AutorouteEngine {
    * retained.
    */
   private void reset_all_doors() {
-    if (this.complete_expansion_rooms != null) {
-      for (ExpansionRoom curr_room : this.complete_expansion_rooms) {
-        curr_room.reset_doors();
+    if (this.completeExpansionRooms != null) {
+      for (ExpansionRoom currRoom : this.completeExpansionRooms) {
+        currRoom.reset_doors();
       }
     }
-    Collection<Item> item_list = this.board.get_items();
-    for (Item curr_item : item_list) {
-      ItemAutorouteInfo curr_autoroute_info = curr_item.get_autoroute_info_pur();
-      if (curr_autoroute_info != null) {
-        curr_autoroute_info.reset_doors();
-        curr_autoroute_info.set_precalculated_connection(null);
+    Collection<Item> itemList = this.board.get_items();
+    for (Item currItem : itemList) {
+      ItemAutorouteInfo currAutorouteInfo = currItem.get_autoroute_info_pur();
+      if (currAutorouteInfo != null) {
+        currAutorouteInfo.reset_doors();
+        currAutorouteInfo.set_precalculated_connection(null);
       }
     }
-    this.drill_page_array.reset();
+    this.drillPageArray.reset();
   }
 
   protected int generate_room_id_no() {
-    return ++expansion_room_instance_count;
+    return ++expansionRoomInstanceCount;
   }
 }

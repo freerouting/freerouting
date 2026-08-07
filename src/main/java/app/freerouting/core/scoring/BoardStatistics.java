@@ -69,7 +69,7 @@ public class BoardStatistics implements Serializable {
   @SerializedName("vias")
   public BoardStatisticsVias vias = new BoardStatisticsVias();
 
-  @SerializedName("clearance_violations")
+  @SerializedName("clearanceViolations")
   public BoardStatisticsClearanceViolations clearanceViolations =
       new BoardStatisticsClearanceViolations();
 
@@ -110,9 +110,9 @@ public class BoardStatistics implements Serializable {
     var bb = board.get_bounding_box();
 
     this.host =
-        board.communication.specctra_parser_info.host_cad
+        board.communication.specctraParserInfo.hostCad
             + ","
-            + board.communication.specctra_parser_info.host_version;
+            + board.communication.specctraParserInfo.hostVersion;
     if ((host == null) || host.isEmpty()) {
       this.host = "Freerouting," + Constants.FREEROUTING_VERSION;
     }
@@ -137,7 +137,7 @@ public class BoardStatistics implements Serializable {
 
     // Layers
     this.layers.totalCount = board.get_layer_count();
-    this.layers.signalCount = board.layer_structure.signal_layer_count();
+    this.layers.signalCount = board.layerStructure.signal_layer_count();
 
     // Items
     this.items.totalCount = 0;
@@ -148,24 +148,24 @@ public class BoardStatistics implements Serializable {
     this.items.pinCount = 0;
     this.items.componentOutlineCount = 0;
     this.items.otherCount = 0;
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.start_read_object();
     for (; ; ) {
-      Item curr_item = (Item) board.item_list.read_object(it);
-      if (curr_item == null) {
+      Item currItem = (Item) board.itemList.read_object(it);
+      if (currItem == null) {
         break;
       }
       this.items.totalCount++;
-      if (curr_item instanceof Trace) {
+      if (currItem instanceof Trace) {
         this.items.traceCount++;
-      } else if (curr_item instanceof Via) {
+      } else if (currItem instanceof Via) {
         this.items.viaCount++;
-      } else if (curr_item instanceof ConductionArea) {
+      } else if (currItem instanceof ConductionArea) {
         this.items.conductionAreaCount++;
-      } else if (curr_item instanceof DrillItem) {
+      } else if (currItem instanceof DrillItem) {
         this.items.drillItemCount++;
-      } else if (curr_item instanceof Pin) {
+      } else if (currItem instanceof Pin) {
         this.items.pinCount++;
-      } else if (curr_item instanceof ComponentOutline) {
+      } else if (currItem instanceof ComponentOutline) {
         this.items.componentOutlineCount++;
       } else {
         this.items.otherCount++;
@@ -180,7 +180,7 @@ public class BoardStatistics implements Serializable {
 
     // Nets
     this.nets.totalCount = board.rules.nets.max_net_no();
-    this.nets.classCount = board.rules.net_classes.count();
+    this.nets.classCount = board.rules.netClasses.count();
 
     // Traces
     this.traces.totalCount = board.get_traces().size();
@@ -191,7 +191,7 @@ public class BoardStatistics implements Serializable {
     // Raw board units vary wildly: KiCad exports at 1e-6 mm/unit (1 nm), while
     // EAGLE/Benchmark DSNs use ~0.1 µm/unit.  Without normalisation the trace-cost
     // term in getNormalizedScore() is thousands of times larger than
-    // max_connections * unroutedNetPenalty for high-resolution boards, forcing the
+    // maxConnections * unroutedNetPenalty for high-resolution boards, forcing the
     // score to 0 even for a perfectly-routed, zero-violation layout.
     double boardUnitToMmFactor =
         Unit.scale(1.0, board.communication.unit, Unit.MM)
@@ -233,28 +233,28 @@ public class BoardStatistics implements Serializable {
     }
 
     this.traces.totalWeightedLength = 0.0f;
-    int default_clearance_class = BoardRules.default_clearance_class();
-    Iterator<UndoableObjects.UndoableObjectNode> it2 = board.item_list.start_read_object();
+    int defaultClearanceClass = BoardRules.default_clearance_class();
+    Iterator<UndoableObjects.UndoableObjectNode> it2 = board.itemList.start_read_object();
     for (; ; ) {
-      UndoableObjects.Storable curr_item = board.item_list.read_object(it2);
-      if (curr_item == null) {
+      UndoableObjects.Storable currItem = board.itemList.read_object(it2);
+      if (currItem == null) {
         break;
       }
-      if (curr_item instanceof Trace curr_trace) {
-        FixedState fixed_state = curr_trace.get_fixed_state();
-        if (fixed_state == FixedState.UNFIXED || fixed_state == FixedState.SHOVE_FIXED) {
-          double weighted_trace_length =
-              curr_trace.get_length()
-                  * (curr_trace.get_half_width()
+      if (currItem instanceof Trace currTrace) {
+        FixedState fixedState = currTrace.get_fixed_state();
+        if (fixedState == FixedState.UNFIXED || fixedState == FixedState.SHOVE_FIXED) {
+          double weightedTraceLength =
+              currTrace.get_length()
+                  * (currTrace.get_half_width()
                       + board.clearance_value(
-                          curr_trace.clearance_class_no(),
-                          default_clearance_class,
-                          curr_trace.get_layer()));
-          if (fixed_state == FixedState.SHOVE_FIXED) {
+                          currTrace.clearance_class_no(),
+                          defaultClearanceClass,
+                          currTrace.get_layer()));
+          if (fixedState == FixedState.SHOVE_FIXED) {
             // to produce less violations with pin exit directions.
-            weighted_trace_length /= 2;
+            weightedTraceLength /= 2;
           }
-          this.traces.totalWeightedLength += (float) weighted_trace_length;
+          this.traces.totalWeightedLength += (float) weightedTraceLength;
         }
       }
     }
@@ -263,7 +263,7 @@ public class BoardStatistics implements Serializable {
     if (includeConnections) {
       var drc = new app.freerouting.drc.DesignRulesChecker(board, null);
       drc.calculateAllIncompletes();
-      this.connections.maximumCount = drc.max_connections;
+      this.connections.maximumCount = drc.maxConnections;
       this.connections.incompleteCount = drc.getIncompleteCount();
     }
 
@@ -447,8 +447,8 @@ public class BoardStatistics implements Serializable {
       // read the content as text
       String content = new String(data, StandardCharsets.UTF_8);
       // extract the host from the DSN file without splitting the whole content by lines
-      String host_cad = null;
-      String host_version = null;
+      String hostCad = null;
+      String hostVersion = null;
       int parserIndex = content.indexOf("(parser");
       if (parserIndex != -1) {
         int searchLimit = content.indexOf(")", parserIndex);
@@ -458,28 +458,28 @@ public class BoardStatistics implements Serializable {
           searchLimit = Math.min(content.length(), searchLimit + 1);
         }
         String parserScope = content.substring(parserIndex, searchLimit);
-        int hcIdx = parserScope.indexOf("(host_cad");
+        int hcIdx = parserScope.indexOf("(hostCad");
         if (hcIdx != -1) {
           int hcEnd = parserScope.indexOf(")", hcIdx);
           if (hcEnd != -1) {
             String val = parserScope.substring(hcIdx + 9, hcEnd).trim();
-            host_cad = TextManager.removeQuotes(val);
+            hostCad = TextManager.removeQuotes(val);
           }
         }
-        int hvIdx = parserScope.indexOf("(host_version");
+        int hvIdx = parserScope.indexOf("(hostVersion");
         if (hvIdx != -1) {
           int hvEnd = parserScope.indexOf(")", hvIdx);
           if (hvEnd != -1) {
             String val = parserScope.substring(hvIdx + 13, hvEnd).trim();
-            host_version = TextManager.removeQuotes(val);
+            hostVersion = TextManager.removeQuotes(val);
           }
         }
       }
 
-      if ((host_cad != null) && (host_version != null)) {
-        this.host = host_cad + "," + host_version;
-      } else if (host_cad != null) {
-        this.host = host_cad;
+      if ((hostCad != null) && (hostVersion != null)) {
+        this.host = hostCad + "," + hostVersion;
+      } else if (hostCad != null) {
+        this.host = hostCad;
       }
 
       // get the number of layers and nets in the DSN file

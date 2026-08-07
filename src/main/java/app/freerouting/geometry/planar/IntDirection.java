@@ -83,47 +83,47 @@ public class IntDirection extends Direction implements Serializable {
   @Override
   public Direction turn_45_degree(int p_factor) {
     int n = p_factor % 8;
-    int new_x;
-    int new_y;
+    int newX;
+    int newY;
     switch (n) {
       case 0 -> { // 0 degree
-        new_x = x;
-        new_y = y;
+        newX = x;
+        newY = y;
       }
       case 1 -> { // 45 degree
-        new_x = x - y;
-        new_y = x + y;
+        newX = x - y;
+        newY = x + y;
       }
       case 2 -> { // 90 degree
-        new_x = -y;
-        new_y = x;
+        newX = -y;
+        newY = x;
       }
       case 3 -> { // 135 degree
-        new_x = -x - y;
-        new_y = x - y;
+        newX = -x - y;
+        newY = x - y;
       }
       case 4 -> { // 180 degree
-        new_x = -x;
-        new_y = -y;
+        newX = -x;
+        newY = -y;
       }
       case 5 -> { // 225 degree
-        new_x = y - x;
-        new_y = -x - y;
+        newX = y - x;
+        newY = -x - y;
       }
       case 6 -> { // 270 degree
-        new_x = y;
-        new_y = -x;
+        newX = y;
+        newY = -x;
       }
       case 7 -> { // 315 degree
-        new_x = x + y;
-        new_y = y - x;
+        newX = x + y;
+        newY = y - x;
       }
       default -> {
-        new_x = 0;
-        new_y = 0;
+        newX = 0;
+        newY = 0;
       }
     }
-    return new IntDirection(new_x, new_y);
+    return new IntDirection(newX, newY);
   }
 
   /**

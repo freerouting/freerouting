@@ -15,39 +15,39 @@ public class ClearanceViolations {
   public final LinkedList<ClearanceViolation> list;
 
   /** The smallest clearance between items. */
-  public double global_smallest_clearance = Double.MAX_VALUE;
+  public double globalSmallestClearance = Double.MAX_VALUE;
 
   /** Creates a new instance of ClearanceViolations */
   public ClearanceViolations(Collection<Item> p_item_list) {
 
     this.list = new LinkedList<>();
-    for (Item curr_item : p_item_list) {
-      this.list.addAll(curr_item.clearance_violations());
-      if ((curr_item.smallest_clearance > 0)
-          && (curr_item.smallest_clearance < global_smallest_clearance)) {
-        global_smallest_clearance = curr_item.smallest_clearance;
+    for (Item currItem : p_item_list) {
+      this.list.addAll(currItem.clearance_violations());
+      if ((currItem.smallestClearance > 0)
+          && (currItem.smallestClearance < globalSmallestClearance)) {
+        globalSmallestClearance = currItem.smallestClearance;
       }
     }
 
     this.list.sort(
         (o1, o2) ->
             -Double.compare(
-                o1.expected_clearance - o1.actual_clearance,
-                o2.expected_clearance - o2.actual_clearance));
+                o1.expectedClearance - o1.actualClearance,
+                o2.expectedClearance - o2.actualClearance));
   }
 
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
-    Color draw_color = p_graphics_context.get_violations_color();
-    for (ClearanceViolation curr_violation : list) {
-      double intensity = p_graphics_context.get_layer_visibility(curr_violation.layer);
-      p_graphics_context.fill_area(curr_violation.shape, p_graphics, draw_color, intensity);
+    Color drawColor = p_graphics_context.get_violations_color();
+    for (ClearanceViolation currViolation : list) {
+      double intensity = p_graphics_context.get_layer_visibility(currViolation.layer);
+      p_graphics_context.fill_area(currViolation.shape, p_graphics, drawColor, intensity);
       // draw a circle around the violation.
-      double draw_radius = curr_violation.first_item.board.rules.get_min_trace_half_width() * 5;
+      double drawRadius = currViolation.firstItem.board.rules.get_min_trace_half_width() * 5;
       p_graphics_context.draw_circle(
-          curr_violation.shape.centre_of_gravity(),
-          draw_radius,
-          0.1 * draw_radius,
-          draw_color,
+          currViolation.shape.centre_of_gravity(),
+          drawRadius,
+          0.1 * drawRadius,
+          drawColor,
           p_graphics,
           intensity);
     }

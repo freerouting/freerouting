@@ -40,7 +40,7 @@ public final class SesReader {
   private SesReader(IJFlexScanner scanner, BasicBoard board, double scaleDenominator) {
     this.scanner = scanner;
     this.board = board;
-    this.specctraLayerStructure = new LayerStructure(board.layer_structure);
+    this.specctraLayerStructure = new LayerStructure(board.layerStructure);
     this.sessionFileScaleDenominator = scaleDenominator;
   }
 
@@ -70,7 +70,7 @@ public final class SesReader {
 
     // SES files use the same scale factor as SpecctraSesFileWriter: dsn_to_board(1) / resolution
     double scaleFactor =
-        board.communication.coordinate_transform.dsn_to_board(1) / board.communication.resolution;
+        board.communication.coordinateTransform.dsn_to_board(1) / board.communication.resolution;
 
     SesReader reader = new SesReader(scanner, board, scaleFactor);
 
@@ -216,7 +216,7 @@ public final class SesReader {
       ScopeKeyword.skip_scope(this.scanner);
       return;
     }
-    int netNo = net.net_number;
+    int netNo = net.netNumber;
     int[] netNoArr = new int[] {netNo};
 
     for (; ; ) {
@@ -283,10 +283,10 @@ public final class SesReader {
 
     try {
       int layerNo = wirePath.layer.no;
-      int[] boardCoordinates = new int[wirePath.coordinate_arr.length];
-      for (int i = 0; i < wirePath.coordinate_arr.length; i++) {
+      int[] boardCoordinates = new int[wirePath.coordinateArr.length];
+      for (int i = 0; i < wirePath.coordinateArr.length; i++) {
         boardCoordinates[i] =
-            (int) Math.round(wirePath.coordinate_arr[i] / sessionFileScaleDenominator);
+            (int) Math.round(wirePath.coordinateArr[i] / sessionFileScaleDenominator);
       }
 
       Point[] points = new Point[boardCoordinates.length / 2];
@@ -301,7 +301,7 @@ public final class SesReader {
           board
               .rules
               .get_default_net_class()
-              .default_item_clearance_classes
+              .defaultItemClearanceClasses
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
 
       board.insert_trace(
@@ -380,7 +380,7 @@ public final class SesReader {
           board
               .rules
               .get_default_net_class()
-              .default_item_clearance_classes
+              .defaultItemClearanceClasses
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA);
 
       board.insert_via(

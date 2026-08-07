@@ -27,6 +27,6 @@ public final class KiCadNetClassNames {
     if (isKiCadDefaultNetClassName(name)) {
       return rules.get_default_net_class();
     }
-    return rules.net_classes.get(name);
+    return rules.netClasses.get(name);
   }
 }

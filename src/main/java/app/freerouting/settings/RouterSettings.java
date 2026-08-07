@@ -62,24 +62,24 @@ public class RouterSettings implements Serializable, Cloneable {
   @SerializedName("layers")
   public transient LayerSettings[] layers;
 
-  public transient Boolean save_intermediate_stages = false;
+  public transient Boolean saveIntermediateStages = false;
 
   @SerializedName("ignore_net_classes")
   public transient String[] ignoreNetClasses;
 
   /** The accuracy of the pull tight algorithm. */
-  @SerializedName("trace_pull_tight_accuracy")
-  public Integer trace_pull_tight_accuracy;
+  @SerializedName("tracePullTightAccuracy")
+  public Integer tracePullTightAccuracy;
 
   @SerializedName("allowed_via_types")
-  public Boolean vias_allowed;
+  public Boolean viasAllowed;
 
   /**
    * If true, the trace width at static pins smaller the trace width will be lowered automatically
    * to the pin with, if necessary.
    */
-  @SerializedName("automatic_neckdown")
-  public Boolean automatic_neckdown;
+  @SerializedName("automaticNeckdown")
+  public Boolean automaticNeckdown;
 
   @SerializedName("optimizer")
   public OptimizerSettings optimizer;
@@ -187,10 +187,10 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public void setViasAllowed(Boolean value) {
-    Boolean oldValue = this.vias_allowed;
-    this.vias_allowed = value;
+    Boolean oldValue = this.viasAllowed;
+    this.viasAllowed = value;
     if (pcs != null) {
-      pcs.firePropertyChange("vias_allowed", oldValue, value);
+      pcs.firePropertyChange("viasAllowed", oldValue, value);
     }
   }
 
@@ -236,17 +236,17 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public void applyBoardSpecificOptimizations(RoutingBoard p_board) {
-    double horizontal_width = p_board.bounding_box.width();
-    double vertical_width = p_board.bounding_box.height();
+    double horizontalWidth = p_board.boundingBox.width();
+    double verticalWidth = p_board.boundingBox.height();
 
-    int layer_count = p_board.get_layer_count();
+    int layerCount = p_board.get_layer_count();
 
     // Track original values to log changes later
-    Boolean[] originalRoutable = new Boolean[layer_count];
-    Double[] originalBendCost = new Double[layer_count];
-    Boolean[] originalPrefHoriz = new Boolean[layer_count];
+    Boolean[] originalRoutable = new Boolean[layerCount];
+    Double[] originalBendCost = new Double[layerCount];
+    Boolean[] originalPrefHoriz = new Boolean[layerCount];
     if (layers != null) {
-      for (int i = 0; i < Math.min(layers.length, layer_count); i++) {
+      for (int i = 0; i < Math.min(layers.length, layerCount); i++) {
         if (layers[i] != null) {
           originalRoutable[i] = layers[i].routable;
           originalBendCost[i] = layers[i].bendCost;
@@ -268,22 +268,22 @@ public class RouterSettings implements Serializable, Cloneable {
 
     // additional costs against preferred direction with 1 digit behind the decimal
     // point.
-    double horizontal_add_costs_against_preferred_dir =
-        0.1 * Math.round(10 * horizontal_width / vertical_width);
+    double horizontalAddCostsAgainstPreferredDir =
+        0.1 * Math.round(10 * horizontalWidth / verticalWidth);
 
-    double vertical_add_costs_against_preferred_dir =
-        0.1 * Math.round(10 * vertical_width / horizontal_width);
+    double verticalAddCostsAgainstPreferredDir =
+        0.1 * Math.round(10 * verticalWidth / horizontalWidth);
 
     // make more horizontal preferred direction, if the board is horizontal.
 
-    boolean curr_preferred_direction_is_horizontal = horizontal_width < vertical_width;
+    boolean currPreferredDirectionIsHorizontal = horizontalWidth < verticalWidth;
 
     // initialize the layer specific settings.
-    if (layers == null || layers.length != layer_count) {
+    if (layers == null || layers.length != layerCount) {
       boardSpecificTraceCostsApplied = false;
       LayerSettings[] oldLayers = layers;
-      layers = new LayerSettings[layer_count];
-      for (int i = 0; i < layer_count; i++) {
+      layers = new LayerSettings[layerCount];
+      for (int i = 0; i < layerCount; i++) {
         if (oldLayers != null && i < oldLayers.length && oldLayers[i] != null) {
           layers[i] = oldLayers[i];
         } else {
@@ -292,20 +292,20 @@ public class RouterSettings implements Serializable, Cloneable {
       }
     } else {
       // Ensure no elements inside the layers array are null
-      for (int i = 0; i < layer_count; i++) {
+      for (int i = 0; i < layerCount; i++) {
         if (layers[i] == null) {
           layers[i] = new LayerSettings();
         }
       }
     }
     if (scoring.preferredDirectionTraceCost == null
-        || scoring.preferredDirectionTraceCost.length != layer_count) {
-      scoring.preferredDirectionTraceCost = new double[layer_count];
+        || scoring.preferredDirectionTraceCost.length != layerCount) {
+      scoring.preferredDirectionTraceCost = new double[layerCount];
       boardSpecificTraceCostsApplied = false;
     }
     if (scoring.undesiredDirectionTraceCost == null
-        || scoring.undesiredDirectionTraceCost.length != layer_count) {
-      scoring.undesiredDirectionTraceCost = new double[layer_count];
+        || scoring.undesiredDirectionTraceCost.length != layerCount) {
+      scoring.undesiredDirectionTraceCost = new double[layerCount];
       boardSpecificTraceCostsApplied = false;
     }
 
@@ -320,8 +320,8 @@ public class RouterSettings implements Serializable, Cloneable {
 
     boolean initializeTraceCosts = !Boolean.TRUE.equals(boardSpecificTraceCostsApplied);
 
-    for (int i = 0; i < layer_count; i++) {
-      if (!p_board.layer_structure.arr[i].is_signal) {
+    for (int i = 0; i < layerCount; i++) {
+      if (!p_board.layerStructure.arr[i].isSignal) {
         layers[i].routable = false;
       } else if (layers[i].routable == null) {
         layers[i].routable = true;
@@ -330,32 +330,32 @@ public class RouterSettings implements Serializable, Cloneable {
         layers[i].bendCost =
             scoring != null && scoring.defaultBendCost != null ? scoring.defaultBendCost : 0.0;
       }
-      if (p_board.layer_structure.arr[i].is_signal) {
-        curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
+      if (p_board.layerStructure.arr[i].isSignal) {
+        currPreferredDirectionIsHorizontal = !currPreferredDirectionIsHorizontal;
       }
       if (layers[i].preferredDirectionHorizontal == null) {
-        layers[i].preferredDirectionHorizontal = curr_preferred_direction_is_horizontal;
+        layers[i].preferredDirectionHorizontal = currPreferredDirectionIsHorizontal;
       }
 
       if (initializeTraceCosts) {
         scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost;
         scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
-        if (curr_preferred_direction_is_horizontal) {
-          scoring.undesiredDirectionTraceCost[i] += horizontal_add_costs_against_preferred_dir;
+        if (currPreferredDirectionIsHorizontal) {
+          scoring.undesiredDirectionTraceCost[i] += horizontalAddCostsAgainstPreferredDir;
         } else {
-          scoring.undesiredDirectionTraceCost[i] += vertical_add_costs_against_preferred_dir;
+          scoring.undesiredDirectionTraceCost[i] += verticalAddCostsAgainstPreferredDir;
         }
       }
     }
     if (initializeTraceCosts) {
-      int signal_layer_count = p_board.layer_structure.signal_layer_count();
-      if (signal_layer_count > 2) {
-        double outer_add_costs = 0.2 * signal_layer_count;
+      int signalLayerCount = p_board.layerStructure.signal_layer_count();
+      if (signalLayerCount > 2) {
+        double outerAddCosts = 0.2 * signalLayerCount;
         // increase costs on the outer layers.
-        scoring.preferredDirectionTraceCost[0] += outer_add_costs;
-        scoring.preferredDirectionTraceCost[layer_count - 1] += outer_add_costs;
-        scoring.undesiredDirectionTraceCost[0] += outer_add_costs;
-        scoring.undesiredDirectionTraceCost[layer_count - 1] += outer_add_costs;
+        scoring.preferredDirectionTraceCost[0] += outerAddCosts;
+        scoring.preferredDirectionTraceCost[layerCount - 1] += outerAddCosts;
+        scoring.undesiredDirectionTraceCost[0] += outerAddCosts;
+        scoring.undesiredDirectionTraceCost[layerCount - 1] += outerAddCosts;
       }
       boardSpecificTraceCostsApplied = true;
     }
@@ -364,7 +364,7 @@ public class RouterSettings implements Serializable, Cloneable {
     StringBuilder summary =
         new StringBuilder("applyBoardSpecificOptimizations changed parameters:");
     boolean changed = false;
-    for (int i = 0; i < layer_count; i++) {
+    for (int i = 0; i < layerCount; i++) {
       StringBuilder layerChanges = new StringBuilder();
 
       if (!java.util.Objects.equals(originalRoutable[i], layers[i].routable)) {
@@ -486,10 +486,10 @@ public class RouterSettings implements Serializable, Cloneable {
     result.neckWidthUm = this.neckWidthUm;
     result.strictDrc = this.strictDrc;
     result.ignoreNetClasses = this.ignoreNetClasses != null ? this.ignoreNetClasses.clone() : null;
-    result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
+    result.tracePullTightAccuracy = this.tracePullTightAccuracy;
     result.enabled = this.enabled;
-    result.vias_allowed = this.vias_allowed;
-    result.automatic_neckdown = this.automatic_neckdown;
+    result.viasAllowed = this.viasAllowed;
+    result.automaticNeckdown = this.automaticNeckdown;
     result.maxThreads = this.maxThreads;
 
     // Use proper clone() methods for nested objects
@@ -561,11 +561,11 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   public boolean get_vias_allowed() {
-    return vias_allowed != null ? vias_allowed : true;
+    return viasAllowed != null ? viasAllowed : true;
   }
 
   public void set_vias_allowed(boolean p_value) {
-    vias_allowed = p_value;
+    viasAllowed = p_value;
   }
 
   public int get_via_costs() {
@@ -788,7 +788,7 @@ public class RouterSettings implements Serializable, Cloneable {
    * to the pin with, if necessary.
    */
   public boolean get_automatic_neckdown() {
-    return this.automatic_neckdown != null && this.automatic_neckdown;
+    return this.automaticNeckdown != null && this.automaticNeckdown;
   }
 
   /**
@@ -796,7 +796,7 @@ public class RouterSettings implements Serializable, Cloneable {
    * to the pin with, if necessary.
    */
   public void set_automatic_neckdown(boolean p_value) {
-    this.automatic_neckdown = p_value;
+    this.automaticNeckdown = p_value;
   }
 
   /**
@@ -856,13 +856,13 @@ public class RouterSettings implements Serializable, Cloneable {
       this.maxThreads = availableProcessors;
     }
 
-    // Validate trace_pull_tight_accuracy
-    if (this.trace_pull_tight_accuracy < 1) {
+    // Validate tracePullTightAccuracy
+    if (this.tracePullTightAccuracy < 1) {
       FRLogger.warn(
-          "Invalid trace_pull_tight_accuracy value: "
-              + this.trace_pull_tight_accuracy
+          "Invalid tracePullTightAccuracy value: "
+              + this.tracePullTightAccuracy
               + ", using default 500");
-      this.trace_pull_tight_accuracy = 500;
+      this.tracePullTightAccuracy = 500;
     }
   }
 }

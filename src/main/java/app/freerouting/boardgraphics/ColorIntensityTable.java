@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class ColorIntensityTable implements Serializable {
 
   private final double[] arr;
-  private transient boolean missing_serialized_data_logged;
+  private transient boolean missingSerializedDataLogged;
 
   /**
    * Creates a new instance of ColorIntensityTable. The elements of p_intensities are expected
@@ -62,10 +62,10 @@ public class ColorIntensityTable implements Serializable {
   }
 
   private void log_missing_serialized_data_once(String methodName, int p_no) {
-    if (!missing_serialized_data_logged) {
+    if (!missingSerializedDataLogged) {
       FRLogger.warn(
           "ColorIntensityTable." + methodName + ": p_no " + p_no + " missing in serialized data");
-      missing_serialized_data_logged = true;
+      missingSerializedDataLogged = true;
     }
   }
 

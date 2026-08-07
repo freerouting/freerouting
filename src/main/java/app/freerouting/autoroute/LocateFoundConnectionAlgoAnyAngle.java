@@ -19,7 +19,7 @@ import java.util.SortedSet;
  */
 class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
 
-  private static final double c_tolerance = 1.0;
+  private static final double cTolerance = 1.0;
 
   /** Creates a new instance of LocateFoundConnectionAlgo */
   protected LocateFoundConnectionAlgoAnyAngle(
@@ -43,11 +43,11 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    * common room with the previous door.
    */
   private static FloatPoint calc_door_left_corner(BacktrackElement p_to_info) {
-    CompleteExpansionRoom from_room = p_to_info.door.other_room(p_to_info.next_room);
-    FloatPoint pole = from_room.get_shape().centre_of_gravity();
-    TileShape curr_to_door_shape = p_to_info.door.get_shape();
-    int left_most_corner_no = curr_to_door_shape.index_of_left_most_corner(pole);
-    return curr_to_door_shape.corner_approx(left_most_corner_no);
+    CompleteExpansionRoom fromRoom = p_to_info.door.other_room(p_to_info.nextRoom);
+    FloatPoint pole = fromRoom.get_shape().centre_of_gravity();
+    TileShape currToDoorShape = p_to_info.door.get_shape();
+    int leftMostCornerNo = currToDoorShape.index_of_left_most_corner(pole);
+    return currToDoorShape.corner_approx(leftMostCornerNo);
   }
 
   /**
@@ -55,11 +55,11 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    * common room with the previous door.
    */
   private static FloatPoint calc_door_right_corner(BacktrackElement p_to_info) {
-    CompleteExpansionRoom from_room = p_to_info.door.other_room(p_to_info.next_room);
-    FloatPoint pole = from_room.get_shape().centre_of_gravity();
-    TileShape curr_to_door_shape = p_to_info.door.get_shape();
-    int right_most_corner_no = curr_to_door_shape.index_of_right_most_corner(pole);
-    return curr_to_door_shape.corner_approx(right_most_corner_no);
+    CompleteExpansionRoom fromRoom = p_to_info.door.other_room(p_to_info.nextRoom);
+    FloatPoint pole = fromRoom.get_shape().centre_of_gravity();
+    TileShape currToDoorShape = p_to_info.door.get_shape();
+    int rightMostCornerNo = currToDoorShape.index_of_right_most_corner(pole);
+    return currToDoorShape.corner_approx(rightMostCornerNo);
   }
 
   /**
@@ -69,320 +69,291 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
   @Override
   protected Collection<FloatPoint> calculate_next_trace_corners() {
     Collection<FloatPoint> result = new LinkedList<>();
-    if (this.current_to_door_index >= this.current_target_door_index) {
-      if (this.current_to_door_index == this.current_target_door_index) {
-        FloatPoint nearest_point =
-            this.current_target_shape.nearest_point(this.current_from_point.round()).to_float();
-        ++this.current_to_door_index;
-        result.add(nearest_point);
+    if (this.currentToDoorIndex >= this.currentTargetDoorIndex) {
+      if (this.currentToDoorIndex == this.currentTargetDoorIndex) {
+        FloatPoint nearestPoint =
+            this.currentTargetShape.nearest_point(this.currentFromPoint.round()).to_float();
+        ++this.currentToDoorIndex;
+        result.add(nearestPoint);
       }
       return result;
     }
 
-    double trace_halfwidth_exact = this.ctrl.compensated_trace_half_width[this.current_trace_layer];
-    double trace_halfwidth_max = trace_halfwidth_exact + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
-    double trace_halfwidth_middle = trace_halfwidth_exact + c_tolerance;
+    double traceHalfwidthExact = this.ctrl.compensatedTraceHalfWidth[this.currentTraceLayer];
+    double traceHalfwidthMax = traceHalfwidthExact + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
+    double traceHalfwidthMiddle = traceHalfwidthExact + cTolerance;
 
-    BacktrackElement curr_to_info = this.backtrack_array[this.current_to_door_index];
-    FloatPoint door_left_corner = calc_door_left_corner(curr_to_info);
-    FloatPoint door_right_corner = calc_door_right_corner(curr_to_info);
-    if (this.current_from_point.side_of(door_left_corner, door_right_corner) != Side.ON_THE_RIGHT) {
-      // the door is already crossed at this.from_point
-      if (this.current_from_point.scalar_product(this.previous_from_point, door_left_corner) >= 0) {
+    BacktrackElement currToInfo = this.backtrackArray[this.currentToDoorIndex];
+    FloatPoint doorLeftCorner = calc_door_left_corner(currToInfo);
+    FloatPoint doorRightCorner = calc_door_right_corner(currToInfo);
+    if (this.currentFromPoint.side_of(doorLeftCorner, doorRightCorner) != Side.ON_THE_RIGHT) {
+      // the door is already crossed at this.fromPoint
+      if (this.currentFromPoint.scalar_product(this.previousFromPoint, doorLeftCorner) >= 0) {
         // Also the left corner of the door is passed.
         // That may not be the case if the door line is crossed almost parallel.
-        door_left_corner = null;
+        doorLeftCorner = null;
       }
-      if (this.current_from_point.scalar_product(this.previous_from_point, door_right_corner)
-          >= 0) {
+      if (this.currentFromPoint.scalar_product(this.previousFromPoint, doorRightCorner) >= 0) {
         // Also the right corner of the door is passed.
-        door_right_corner = null;
+        doorRightCorner = null;
       }
-      if (door_left_corner == null && door_right_corner == null) {
+      if (doorLeftCorner == null && doorRightCorner == null) {
         // The door is completely passed.
-        ++this.current_to_door_index;
-        result.add(this.current_from_point);
+        ++this.currentToDoorIndex;
+        result.add(this.currentFromPoint);
         return result;
       }
     }
 
-    // Calculate the visibility range for a trace line from current_from_point
+    // Calculate the visibility range for a trace line from currentFromPoint
     // through the interval from left_most_visible_point to right_most_visible_point,
     // by advancing the door index as far as possible, so that still something is visible.
 
-    boolean end_of_trace = false;
-    FloatPoint left_tangent_point;
-    FloatPoint right_tangent_point;
-    int new_door_ind = this.current_to_door_index;
-    int left_ind = new_door_ind;
-    int right_ind = new_door_ind;
-    int curr_door_ind = this.current_to_door_index + 1;
-    FloatPoint result_corner = null;
+    boolean endOfTrace = false;
+    FloatPoint leftTangentPoint;
+    FloatPoint rightTangentPoint;
+    int newDoorInd = this.currentToDoorIndex;
+    int leftInd = newDoorInd;
+    int rightInd = newDoorInd;
+    int currDoorInd = this.currentToDoorIndex + 1;
+    FloatPoint resultCorner = null;
 
     // construct a maximum length straight line through the doors
 
     for (; ; ) {
-      left_tangent_point =
-          this.current_from_point.right_tangential_point(door_left_corner, trace_halfwidth_max);
-      if (door_left_corner != null && left_tangent_point == null) {
+      leftTangentPoint =
+          this.currentFromPoint.right_tangential_point(doorLeftCorner, traceHalfwidthMax);
+      if (doorLeftCorner != null && leftTangentPoint == null) {
         FRLogger.trace(
             "LocateFoundConnectionAlgo.calculate_next_trace_corner: left tangent point is null");
-        left_tangent_point = door_left_corner;
+        leftTangentPoint = doorLeftCorner;
       }
-      right_tangent_point =
-          this.current_from_point.left_tangential_point(door_right_corner, trace_halfwidth_max);
-      if (door_right_corner != null && right_tangent_point == null) {
+      rightTangentPoint =
+          this.currentFromPoint.left_tangential_point(doorRightCorner, traceHalfwidthMax);
+      if (doorRightCorner != null && rightTangentPoint == null) {
         FRLogger.trace(
             "LocateFoundConnectionAlgo.calculate_next_trace_corner: right tangent point is null");
-        right_tangent_point = door_right_corner;
+        rightTangentPoint = doorRightCorner;
       }
-      if (left_tangent_point != null
-          && right_tangent_point != null
-          && right_tangent_point.side_of(this.current_from_point, left_tangent_point)
+      if (leftTangentPoint != null
+          && rightTangentPoint != null
+          && rightTangentPoint.side_of(this.currentFromPoint, leftTangentPoint)
               != Side.ON_THE_RIGHT) {
         // The gap between  left_most_visible_point and right_most_visible_point is too small
         // for a trace with the current half width.
 
-        double left_corner_distance = door_left_corner.distance(this.current_from_point);
-        double right_corner_distance = door_right_corner.distance(this.current_from_point);
-        if (left_corner_distance <= right_corner_distance) {
-          new_door_ind = left_ind;
-          result_corner =
+        double leftCornerDistance = doorLeftCorner.distance(this.currentFromPoint);
+        double rightCornerDistance = doorRightCorner.distance(this.currentFromPoint);
+        if (leftCornerDistance <= rightCornerDistance) {
+          newDoorInd = leftInd;
+          resultCorner =
               left_turn_next_corner(
-                  this.current_from_point,
-                  trace_halfwidth_max,
-                  door_left_corner,
-                  door_right_corner);
+                  this.currentFromPoint, traceHalfwidthMax, doorLeftCorner, doorRightCorner);
         } else {
-          new_door_ind = right_ind;
-          result_corner =
+          newDoorInd = rightInd;
+          resultCorner =
               right_turn_next_corner(
-                  this.current_from_point,
-                  trace_halfwidth_max,
-                  door_right_corner,
-                  door_left_corner);
+                  this.currentFromPoint, traceHalfwidthMax, doorRightCorner, doorLeftCorner);
         }
         break;
       }
-      if (curr_door_ind >= this.current_target_door_index) {
-        end_of_trace = true;
+      if (currDoorInd >= this.currentTargetDoorIndex) {
+        endOfTrace = true;
         break;
       }
-      BacktrackElement next_to_info = this.backtrack_array[curr_door_ind];
-      FloatPoint next_left_corner = calc_door_left_corner(next_to_info);
-      FloatPoint next_right_corner = calc_door_right_corner(next_to_info);
-      if (this.current_from_point.side_of(next_left_corner, next_right_corner)
-          != Side.ON_THE_RIGHT) {
-        // the door may be already crossed at this.from_point
-        if (door_left_corner == null
-            && this.current_from_point.scalar_product(this.previous_from_point, next_left_corner)
-                >= 0) {
+      BacktrackElement nextToInfo = this.backtrackArray[currDoorInd];
+      FloatPoint nextLeftCorner = calc_door_left_corner(nextToInfo);
+      FloatPoint nextRightCorner = calc_door_right_corner(nextToInfo);
+      if (this.currentFromPoint.side_of(nextLeftCorner, nextRightCorner) != Side.ON_THE_RIGHT) {
+        // the door may be already crossed at this.fromPoint
+        if (doorLeftCorner == null
+            && this.currentFromPoint.scalar_product(this.previousFromPoint, nextLeftCorner) >= 0) {
           // Also the left corner of the door is passed.
           // That may not be the case if the door line is crossed almost parallel.
-          next_left_corner = null;
+          nextLeftCorner = null;
         }
-        if (door_right_corner == null
-            && this.current_from_point.scalar_product(this.previous_from_point, next_right_corner)
-                >= 0) {
+        if (doorRightCorner == null
+            && this.currentFromPoint.scalar_product(this.previousFromPoint, nextRightCorner) >= 0) {
           // Also the right corner of the door is passed.
-          next_right_corner = null;
+          nextRightCorner = null;
         }
-        if (next_left_corner == null && next_right_corner == null) {
+        if (nextLeftCorner == null && nextRightCorner == null) {
           // The door is completely passed.
           // Should not happen because the previous door was not passed completely.
           FRLogger.trace(
               "LocateFoundConnectionAlgo.calculate_next_trace_corner: next door passed unexpected");
-          ++this.current_to_door_index;
-          result.add(this.current_from_point);
+          ++this.currentToDoorIndex;
+          result.add(this.currentFromPoint);
           return result;
         }
       }
-      if (door_left_corner != null && door_right_corner != null)
-      // otherwise the following side_of conditions may not be correct
+      if (doorLeftCorner != null && doorRightCorner != null)
+      // otherwise the following sideOf conditions may not be correct
       // even if all parameter points are defined
       {
-        if (next_left_corner.side_of(this.current_from_point, door_right_corner)
-            == Side.ON_THE_RIGHT) {
+        if (nextLeftCorner.side_of(this.currentFromPoint, doorRightCorner) == Side.ON_THE_RIGHT) {
           // bend to the right
-          new_door_ind = right_ind + 1;
-          result_corner =
+          newDoorInd = rightInd + 1;
+          resultCorner =
               right_turn_next_corner(
-                  this.current_from_point,
-                  trace_halfwidth_max,
-                  door_right_corner,
-                  next_left_corner);
+                  this.currentFromPoint, traceHalfwidthMax, doorRightCorner, nextLeftCorner);
           break;
         }
 
-        if (next_right_corner.side_of(this.current_from_point, door_left_corner)
-            == Side.ON_THE_LEFT) {
+        if (nextRightCorner.side_of(this.currentFromPoint, doorLeftCorner) == Side.ON_THE_LEFT) {
           // bend to the left
-          new_door_ind = left_ind + 1;
-          result_corner =
+          newDoorInd = leftInd + 1;
+          resultCorner =
               left_turn_next_corner(
-                  this.current_from_point,
-                  trace_halfwidth_max,
-                  door_left_corner,
-                  next_right_corner);
+                  this.currentFromPoint, traceHalfwidthMax, doorLeftCorner, nextRightCorner);
           break;
         }
       }
-      boolean visability_range_gets_smaller_on_the_right_side = door_right_corner == null;
-      if (door_right_corner != null
-          && next_right_corner.side_of(this.current_from_point, door_right_corner)
-              != Side.ON_THE_RIGHT) {
-        FloatPoint curr_tangential_point =
-            this.current_from_point.left_tangential_point(next_right_corner, trace_halfwidth_max);
-        if (curr_tangential_point != null) {
-          FloatLine check_line = new FloatLine(this.current_from_point, curr_tangential_point);
-          if (check_line.segment_distance(door_right_corner) >= trace_halfwidth_max) {
-            visability_range_gets_smaller_on_the_right_side = true;
+      boolean visabilityRangeGetsSmallerOnTheRightSide = doorRightCorner == null;
+      if (doorRightCorner != null
+          && nextRightCorner.side_of(this.currentFromPoint, doorRightCorner) != Side.ON_THE_RIGHT) {
+        FloatPoint currTangentialPoint =
+            this.currentFromPoint.left_tangential_point(nextRightCorner, traceHalfwidthMax);
+        if (currTangentialPoint != null) {
+          FloatLine checkLine = new FloatLine(this.currentFromPoint, currTangentialPoint);
+          if (checkLine.segment_distance(doorRightCorner) >= traceHalfwidthMax) {
+            visabilityRangeGetsSmallerOnTheRightSide = true;
           }
         }
       }
-      if (visability_range_gets_smaller_on_the_right_side) {
+      if (visabilityRangeGetsSmallerOnTheRightSide) {
         // The visibility range gets smaller on the right side.
-        door_right_corner = next_right_corner;
-        right_ind = curr_door_ind;
+        doorRightCorner = nextRightCorner;
+        rightInd = currDoorInd;
       }
-      boolean visability_range_gets_smaller_on_the_left_side = door_left_corner == null;
-      if (door_left_corner != null
-          && next_left_corner.side_of(this.current_from_point, door_left_corner)
-              != Side.ON_THE_LEFT) {
-        FloatPoint curr_tangential_point =
-            this.current_from_point.right_tangential_point(next_left_corner, trace_halfwidth_max);
-        if (curr_tangential_point != null) {
-          FloatLine check_line = new FloatLine(this.current_from_point, curr_tangential_point);
-          if (check_line.segment_distance(door_left_corner) >= trace_halfwidth_max) {
-            visability_range_gets_smaller_on_the_left_side = true;
+      boolean visabilityRangeGetsSmallerOnTheLeftSide = doorLeftCorner == null;
+      if (doorLeftCorner != null
+          && nextLeftCorner.side_of(this.currentFromPoint, doorLeftCorner) != Side.ON_THE_LEFT) {
+        FloatPoint currTangentialPoint =
+            this.currentFromPoint.right_tangential_point(nextLeftCorner, traceHalfwidthMax);
+        if (currTangentialPoint != null) {
+          FloatLine checkLine = new FloatLine(this.currentFromPoint, currTangentialPoint);
+          if (checkLine.segment_distance(doorLeftCorner) >= traceHalfwidthMax) {
+            visabilityRangeGetsSmallerOnTheLeftSide = true;
           }
         }
       }
-      if (visability_range_gets_smaller_on_the_left_side) {
+      if (visabilityRangeGetsSmallerOnTheLeftSide) {
         // The visibility range gets smaller on the left side.
-        door_left_corner = next_left_corner;
-        left_ind = curr_door_ind;
+        doorLeftCorner = nextLeftCorner;
+        leftInd = currDoorInd;
       }
-      ++curr_door_ind;
+      ++currDoorInd;
     }
 
-    if (end_of_trace) {
-      FloatPoint nearest_point =
-          this.current_target_shape.nearest_point(this.current_from_point.round()).to_float();
-      result_corner = nearest_point;
-      if (left_tangent_point != null
-          && nearest_point.side_of(this.current_from_point, left_tangent_point)
-              == Side.ON_THE_LEFT) {
+    if (endOfTrace) {
+      FloatPoint nearestPoint =
+          this.currentTargetShape.nearest_point(this.currentFromPoint.round()).to_float();
+      resultCorner = nearestPoint;
+      if (leftTangentPoint != null
+          && nearestPoint.side_of(this.currentFromPoint, leftTangentPoint) == Side.ON_THE_LEFT) {
         // The nearest target point is to the left of the visible range, add another corner
-        new_door_ind = left_ind + 1;
-        FloatPoint target_right_corner =
-            this.current_target_shape.corner_approx(
-                this.current_target_shape.index_of_right_most_corner(this.current_from_point));
-        FloatPoint curr_corner =
+        newDoorInd = leftInd + 1;
+        FloatPoint targetRightCorner =
+            this.currentTargetShape.corner_approx(
+                this.currentTargetShape.index_of_right_most_corner(this.currentFromPoint));
+        FloatPoint currCorner =
             right_left_tangential_point(
-                this.current_from_point,
-                target_right_corner,
-                door_left_corner,
-                trace_halfwidth_max);
-        if (curr_corner != null) {
-          result_corner = curr_corner;
-          end_of_trace = false;
+                this.currentFromPoint, targetRightCorner, doorLeftCorner, traceHalfwidthMax);
+        if (currCorner != null) {
+          resultCorner = currCorner;
+          endOfTrace = false;
         }
-      } else if (right_tangent_point != null
-          && nearest_point.side_of(this.current_from_point, right_tangent_point)
-              == Side.ON_THE_RIGHT) {
+      } else if (rightTangentPoint != null
+          && nearestPoint.side_of(this.currentFromPoint, rightTangentPoint) == Side.ON_THE_RIGHT) {
         // The nearest target point is to the right of the visible range, add another corner
-        FloatPoint target_left_corner =
-            this.current_target_shape.corner_approx(
-                this.current_target_shape.index_of_left_most_corner(this.current_from_point));
-        new_door_ind = right_ind + 1;
-        FloatPoint curr_corner =
+        FloatPoint targetLeftCorner =
+            this.currentTargetShape.corner_approx(
+                this.currentTargetShape.index_of_left_most_corner(this.currentFromPoint));
+        newDoorInd = rightInd + 1;
+        FloatPoint currCorner =
             left_right_tangential_point(
-                this.current_from_point,
-                target_left_corner,
-                door_right_corner,
-                trace_halfwidth_max);
-        if (curr_corner != null) {
-          result_corner = curr_corner;
-          end_of_trace = false;
+                this.currentFromPoint, targetLeftCorner, doorRightCorner, traceHalfwidthMax);
+        if (currCorner != null) {
+          resultCorner = currCorner;
+          endOfTrace = false;
         }
       }
     }
-    if (end_of_trace) {
-      new_door_ind = this.current_target_door_index;
+    if (endOfTrace) {
+      newDoorInd = this.currentTargetDoorIndex;
     }
 
     // Check clearance violation with the previous door shapes
     // and correct them in this case.
 
-    FloatLine check_line = new FloatLine(this.current_from_point, result_corner);
-    int check_from_door_index =
-        Math.max(this.current_to_door_index - 5, this.current_from_door_index + 1);
-    FloatPoint corrected_result = null;
-    int corrected_door_ind = 0;
-    for (int i = check_from_door_index; i < new_door_ind; i++) {
-      FloatPoint curr_left_corner = calc_door_left_corner(this.backtrack_array[i]);
-      double curr_dist = check_line.segment_distance(curr_left_corner);
-      if (Math.abs(curr_dist) < trace_halfwidth_middle) {
-        FloatPoint curr_corrected_result =
+    FloatLine checkLine = new FloatLine(this.currentFromPoint, resultCorner);
+    int checkFromDoorIndex = Math.max(this.currentToDoorIndex - 5, this.currentFromDoorIndex + 1);
+    FloatPoint correctedResult = null;
+    int correctedDoorInd = 0;
+    for (int i = checkFromDoorIndex; i < newDoorInd; i++) {
+      FloatPoint currLeftCorner = calc_door_left_corner(this.backtrackArray[i]);
+      double currDist = checkLine.segment_distance(currLeftCorner);
+      if (Math.abs(currDist) < traceHalfwidthMiddle) {
+        FloatPoint currCorrectedResult =
             right_left_tangential_point(
-                check_line.a, check_line.b, curr_left_corner, trace_halfwidth_max);
-        if (curr_corrected_result != null) {
-          if (corrected_result == null
-              || curr_corrected_result.side_of(this.current_from_point, corrected_result)
+                checkLine.a, checkLine.b, currLeftCorner, traceHalfwidthMax);
+        if (currCorrectedResult != null) {
+          if (correctedResult == null
+              || currCorrectedResult.side_of(this.currentFromPoint, correctedResult)
                   == Side.ON_THE_RIGHT) {
-            corrected_door_ind = i;
-            corrected_result = curr_corrected_result;
+            correctedDoorInd = i;
+            correctedResult = currCorrectedResult;
           }
         }
       }
-      FloatPoint curr_right_corner = calc_door_right_corner(this.backtrack_array[i]);
-      curr_dist = check_line.segment_distance(curr_right_corner);
-      if (Math.abs(curr_dist) < trace_halfwidth_middle) {
-        FloatPoint curr_corrected_result =
+      FloatPoint currRightCorner = calc_door_right_corner(this.backtrackArray[i]);
+      currDist = checkLine.segment_distance(currRightCorner);
+      if (Math.abs(currDist) < traceHalfwidthMiddle) {
+        FloatPoint currCorrectedResult =
             left_right_tangential_point(
-                check_line.a, check_line.b, curr_right_corner, trace_halfwidth_max);
-        if (curr_corrected_result != null) {
-          if (corrected_result == null
-              || curr_corrected_result.side_of(this.current_from_point, corrected_result)
+                checkLine.a, checkLine.b, currRightCorner, traceHalfwidthMax);
+        if (currCorrectedResult != null) {
+          if (correctedResult == null
+              || currCorrectedResult.side_of(this.currentFromPoint, correctedResult)
                   == Side.ON_THE_LEFT) {
-            corrected_door_ind = i;
-            corrected_result = curr_corrected_result;
+            correctedDoorInd = i;
+            correctedResult = currCorrectedResult;
           }
         }
       }
     }
-    if (corrected_result != null) {
-      result_corner = corrected_result;
-      new_door_ind = Math.max(corrected_door_ind, this.current_to_door_index);
+    if (correctedResult != null) {
+      resultCorner = correctedResult;
+      newDoorInd = Math.max(correctedDoorInd, this.currentToDoorIndex);
     }
 
-    this.current_to_door_index = new_door_ind;
-    if (result_corner != null && result_corner != this.current_from_point) {
-      result.add(result_corner);
+    this.currentToDoorIndex = newDoorInd;
+    if (resultCorner != null && resultCorner != this.currentFromPoint) {
+      result.add(resultCorner);
     }
-    if (this.ctrl.net_no == 33 || this.ctrl.net_no == 66 || this.ctrl.net_no == 67) {
+    if (this.ctrl.netNo == 33 || this.ctrl.netNo == 66 || this.ctrl.netNo == 67) {
       FRLogger.trace(
           "compare_trace_next_corners_raw net="
-              + this.ctrl.net_no
+              + this.ctrl.netNo
               + ", layer="
-              + this.current_trace_layer
+              + this.currentTraceLayer
               + ", from_door="
-              + this.current_from_door_index
+              + this.currentFromDoorIndex
               + ", to_door="
-              + this.current_to_door_index
+              + this.currentToDoorIndex
               + ", target_door="
-              + this.current_target_door_index
-              + ", end_of_trace="
-              + end_of_trace
+              + this.currentTargetDoorIndex
+              + ", endOfTrace="
+              + endOfTrace
               + ", corrected="
-              + (corrected_result != null)
+              + (correctedResult != null)
               + ", result_size="
               + result.size()
-              + ", result_corner="
-              + result_corner
+              + ", resultCorner="
+              + resultCorner
               + ", current_from="
-              + this.current_from_point);
+              + this.currentFromPoint);
     }
     return result;
   }
@@ -396,23 +367,23 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    */
   private FloatPoint right_turn_next_corner(
       FloatPoint p_from_corner, double p_dist, FloatPoint p_to_corner, FloatPoint p_next_corner) {
-    FloatPoint curr_tangential_point = p_from_corner.left_tangential_point(p_to_corner, p_dist);
-    if (curr_tangential_point == null) {
+    FloatPoint currTangentialPoint = p_from_corner.left_tangential_point(p_to_corner, p_dist);
+    if (currTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo.right_turn_next_corner: left tangential point is null");
       return p_from_corner;
     }
-    FloatLine first_line = new FloatLine(p_from_corner, curr_tangential_point);
-    curr_tangential_point =
-        p_to_corner.right_tangential_point(p_next_corner, 2 * p_dist + c_tolerance);
-    if (curr_tangential_point == null) {
+    FloatLine firstLine = new FloatLine(p_from_corner, currTangentialPoint);
+    currTangentialPoint =
+        p_to_corner.right_tangential_point(p_next_corner, 2 * p_dist + cTolerance);
+    if (currTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo.right_turn_next_corner: right tangential point is null");
       return p_from_corner;
     }
-    FloatLine second_line = new FloatLine(p_to_corner, curr_tangential_point);
-    second_line = second_line.translate(p_dist);
-    return first_line.intersection(second_line);
+    FloatLine secondLine = new FloatLine(p_to_corner, currTangentialPoint);
+    secondLine = secondLine.translate(p_dist);
+    return firstLine.intersection(secondLine);
   }
 
   /**
@@ -424,23 +395,22 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    */
   private FloatPoint left_turn_next_corner(
       FloatPoint p_from_corner, double p_dist, FloatPoint p_to_corner, FloatPoint p_next_corner) {
-    FloatPoint curr_tangential_point = p_from_corner.right_tangential_point(p_to_corner, p_dist);
-    if (curr_tangential_point == null) {
+    FloatPoint currTangentialPoint = p_from_corner.right_tangential_point(p_to_corner, p_dist);
+    if (currTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo.left_turn_next_corner: right tangential point is null");
       return p_from_corner;
     }
-    FloatLine first_line = new FloatLine(p_from_corner, curr_tangential_point);
-    curr_tangential_point =
-        p_to_corner.left_tangential_point(p_next_corner, 2 * p_dist + c_tolerance);
-    if (curr_tangential_point == null) {
+    FloatLine firstLine = new FloatLine(p_from_corner, currTangentialPoint);
+    currTangentialPoint = p_to_corner.left_tangential_point(p_next_corner, 2 * p_dist + cTolerance);
+    if (currTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo.left_turn_next_corner: left tangential point is null");
       return p_from_corner;
     }
-    FloatLine second_line = new FloatLine(p_to_corner, curr_tangential_point);
-    second_line = second_line.translate(-p_dist);
-    return first_line.intersection(second_line);
+    FloatLine secondLine = new FloatLine(p_to_corner, currTangentialPoint);
+    secondLine = secondLine.translate(-p_dist);
+    return firstLine.intersection(secondLine);
   }
 
   /**
@@ -450,21 +420,21 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    */
   private FloatPoint right_left_tangential_point(
       FloatPoint p_from_point, FloatPoint p_to_point, FloatPoint p_center, double p_dist) {
-    FloatPoint curr_tangential_point = p_from_point.right_tangential_point(p_center, p_dist);
-    if (curr_tangential_point == null) {
+    FloatPoint currTangentialPoint = p_from_point.right_tangential_point(p_center, p_dist);
+    if (currTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo. right_left_tangential_point: right tangential point is null");
       return null;
     }
-    FloatLine first_line = new FloatLine(p_from_point, curr_tangential_point);
-    curr_tangential_point = p_to_point.left_tangential_point(p_center, p_dist);
-    if (curr_tangential_point == null) {
+    FloatLine firstLine = new FloatLine(p_from_point, currTangentialPoint);
+    currTangentialPoint = p_to_point.left_tangential_point(p_center, p_dist);
+    if (currTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo. right_left_tangential_point: left tangential point is null");
       return null;
     }
-    FloatLine second_line = new FloatLine(p_to_point, curr_tangential_point);
-    return first_line.intersection(second_line);
+    FloatLine secondLine = new FloatLine(p_to_point, currTangentialPoint);
+    return firstLine.intersection(secondLine);
   }
 
   /**
@@ -474,20 +444,20 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    */
   private FloatPoint left_right_tangential_point(
       FloatPoint p_from_point, FloatPoint p_to_point, FloatPoint p_center, double p_dist) {
-    FloatPoint curr_tangential_point = p_from_point.left_tangential_point(p_center, p_dist);
-    if (curr_tangential_point == null) {
+    FloatPoint currTangentialPoint = p_from_point.left_tangential_point(p_center, p_dist);
+    if (currTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo. left_right_tangential_point: left tangential point is null");
       return null;
     }
-    FloatLine first_line = new FloatLine(p_from_point, curr_tangential_point);
-    curr_tangential_point = p_to_point.right_tangential_point(p_center, p_dist);
-    if (curr_tangential_point == null) {
+    FloatLine firstLine = new FloatLine(p_from_point, currTangentialPoint);
+    currTangentialPoint = p_to_point.right_tangential_point(p_center, p_dist);
+    if (currTangentialPoint == null) {
       FRLogger.trace(
           "LocateFoundConnectionAlgo. left_right_tangential_point: right tangential point is null");
       return null;
     }
-    FloatLine second_line = new FloatLine(p_to_point, curr_tangential_point);
-    return first_line.intersection(second_line);
+    FloatLine secondLine = new FloatLine(p_to_point, currTangentialPoint);
+    return firstLine.intersection(secondLine);
   }
 }

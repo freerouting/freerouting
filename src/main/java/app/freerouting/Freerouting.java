@@ -188,7 +188,7 @@ public class Freerouting {
 
     // Create a new routing job (but won't route it)
     RoutingJob drcJob = new RoutingJob(drcSession.id);
-    drcJob.drc = globalSettings.drc_report_file;
+    drcJob.drc = globalSettings.drcReportFile;
     try {
       FRLogger.info("Loading DSN file for DRC: " + globalSettings.initialInputFile);
       drcJob.setInput(globalSettings.initialInputFile);
@@ -204,20 +204,19 @@ public class Freerouting {
     }
 
     // Load session file if specified for DRC
-    if (globalSettings.design_session_filename != null) {
+    if (globalSettings.designSessionFilename != null) {
       try {
-        java.io.File sessionFile = new java.io.File(globalSettings.design_session_filename);
+        java.io.File sessionFile = new java.io.File(globalSettings.designSessionFilename);
         if (sessionFile.exists()) {
-          if (globalSettings.design_session_filename.toLowerCase().endsWith(".json")) {
+          if (globalSettings.designSessionFilename.toLowerCase().endsWith(".json")) {
             FRLogger.info(
-                "Loading KiCad JSON session file for DRC: "
-                    + globalSettings.design_session_filename);
+                "Loading KiCad JSON session file for DRC: " + globalSettings.designSessionFilename);
             try (java.io.FileReader jsonReader = new java.io.FileReader(sessionFile)) {
               app.freerouting.io.kicad.KiCadJsonReader.importSession(jsonReader, drcJob.board);
               FRLogger.info("KiCad JSON session file loaded for DRC successfully");
             }
           } else {
-            FRLogger.info("Loading SES file for DRC: " + globalSettings.design_session_filename);
+            FRLogger.info("Loading SES file for DRC: " + globalSettings.designSessionFilename);
             try (java.io.FileInputStream sesStream = new java.io.FileInputStream(sessionFile)) {
               SesImportSummary summary = SesReader.read(sesStream, drcJob.board);
               FRLogger.info(
@@ -232,8 +231,7 @@ public class Freerouting {
             }
           }
         } else {
-          FRLogger.warn(
-              "Session file for DRC not found: " + globalSettings.design_session_filename);
+          FRLogger.warn("Session file for DRC not found: " + globalSettings.designSessionFilename);
         }
       } catch (Exception e) {
         FRLogger.error("Failed to load session file for DRC", e);
@@ -259,7 +257,7 @@ public class Freerouting {
           new DsnFileSettings(drcJob.input.getData(), drcJob.input.getFilename()));
       var routerSettings = settingsMerger.merge();
       var finalStats = drcJob.board.get_statistics();
-      report.quality_score = (double) finalStats.getNormalizedScore(routerSettings.scoring);
+      report.qualityScore = (double) finalStats.getNormalizedScore(routerSettings.scoring);
     } catch (Exception e) {
       FRLogger.warn("Failed to calculate quality score for DRC report: " + e.getMessage());
     }
@@ -358,8 +356,8 @@ public class Freerouting {
     Handler apiHandler = context;
 
     // Configure CORS if origins are provided
-    if (apiServerSettings.cors_origins != null && !"".equals(apiServerSettings.cors_origins)) {
-      String allowedOrigins = apiServerSettings.cors_origins;
+    if (apiServerSettings.corsOrigins != null && !"".equals(apiServerSettings.corsOrigins)) {
+      String allowedOrigins = apiServerSettings.corsOrigins;
 
       CrossOriginHandler corsHandler = new CrossOriginHandler();
       corsHandler.setAllowCredentials(true);
@@ -462,8 +460,8 @@ public class Freerouting {
 
     Handler mcpHandler = context;
 
-    if (mcpServerSettings.cors_origins != null && !"".equals(mcpServerSettings.cors_origins)) {
-      String allowedOrigins = mcpServerSettings.cors_origins;
+    if (mcpServerSettings.corsOrigins != null && !"".equals(mcpServerSettings.corsOrigins)) {
+      String allowedOrigins = mcpServerSettings.corsOrigins;
 
       CrossOriginHandler corsHandler = new CrossOriginHandler();
       corsHandler.setAllowCredentials(true);
@@ -1145,14 +1143,14 @@ public class Freerouting {
     new Thread(checker).start();
 
     // Check if the user requested help
-    if (globalSettings.show_help_option) {
+    if (globalSettings.showHelpOption) {
       TextManager ctm = new TextManager(Freerouting.class, globalSettings.currentLocale);
       IO.print(ctm.getText("command_line_help"));
       System.exit(0);
     }
 
     // Disable GUI and API if in DRC-only mode
-    if (globalSettings.drc_report_file != null) {
+    if (globalSettings.drcReportFile != null) {
       globalSettings.guiSettings.isEnabled = false;
       globalSettings.apiServerSettings.isEnabled = false;
       globalSettings.mcpServerSettings.isEnabled = false;
@@ -1213,7 +1211,7 @@ public class Freerouting {
     if (!globalSettings.guiSettings.isEnabled
         && !globalSettings.apiServerSettings.isRunning
         && !globalSettings.mcpServerSettings.isRunning) {
-      if (globalSettings.drc_report_file != null) {
+      if (globalSettings.drcReportFile != null) {
         cliResult = InitializeDRC(globalSettings);
       } else {
         cliResult = InitializeCLI(globalSettings);

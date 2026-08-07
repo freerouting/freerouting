@@ -54,9 +54,9 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
 
   /** Creates a Direction whose angle with the x-axis is nearly equal to p_angle */
   public static Direction get_instance_approx(double p_angle) {
-    final double scale_factor = 10000;
-    int x = (int) Math.round(Math.cos(p_angle) * scale_factor);
-    int y = (int) Math.round(Math.sin(p_angle) * scale_factor);
+    final double scaleFactor = 10000;
+    int x = (int) Math.round(Math.cos(p_angle) * scaleFactor);
+    int y = (int) Math.round(Math.sin(p_angle) * scaleFactor);
     return get_instance(new IntVector(x, y));
   }
 
@@ -103,9 +103,9 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
       return false;
     }
     // check, that dir and other_dir do not point into opposite directions
-    Vector this_vector = get_vector();
-    Vector other_vector = p_other.get_vector();
-    return this_vector.projection(other_vector) == Signum.POSITIVE;
+    Vector thisVector = get_vector();
+    Vector otherVector = p_other.get_vector();
+    return thisVector.projection(otherVector) == Signum.POSITIVE;
   }
 
   /**
@@ -135,9 +135,8 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
     double length2 = v2.size();
     double x = v1.x / length1 + v2.x / length2;
     double y = v1.y / length1 + v2.y / length2;
-    final double scale_factor = 1000;
-    Vector vm =
-        new IntVector((int) Math.round(x * scale_factor), (int) Math.round(y * scale_factor));
+    final double scaleFactor = 1000;
+    Vector vm = new IntVector((int) Math.round(x * scaleFactor), (int) Math.round(y * scaleFactor));
     return Direction.get_instance(vm);
   }
 

@@ -28,8 +28,8 @@ import org.junit.jupiter.api.Test;
  * {@code isLayerActive == null} (layer count zero). The subsequent {@code AutorouteControl}
  * constructor iterates over the board's real layer count (e.g. 2), calls {@code
  * get_layer_active(0/1)}, and hits the range-guard warning {@code "[0..-1]"}. {@code
- * MazeSearchAlgo.get_instance()} then receives an all-false {@code layer_active} array and throws
- * an exception.
+ * MazeSearchAlgo.get_instance()} then receives an all-false {@code layerActive} array and throws an
+ * exception.
  *
  * <h2>Fix</h2>
  *
@@ -109,7 +109,7 @@ public class Issue676RoutingTest extends RoutingFixtureTest {
             + ". If 0, the DsnFileSettings/applyBoardSpecificOptimizations fix "
             + "has not taken effect.");
 
-    // Run the routing — should not throw or leave zero routed items due to all-false layer_active.
+    // Run the routing — should not throw or leave zero routed items due to all-false layerActive.
     RunRoutingJob(job);
 
     // Post-routing: layer count must still be 2.

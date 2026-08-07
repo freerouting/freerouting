@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
  *   <li>Load a board via {@link HeadlessBoardManager} (same board-reading logic).
  *   <li>Call {@link InteractiveSettings#reset(RoutingBoard)} – exactly what {@code
  *       GuiBoardManager.loadFromSpecctraDsn} does after the board is set.
- *   <li>Populate {@code manual_trace_half_width_arr} from board rules – exactly what {@code
+ *   <li>Populate {@code manualTraceHalfWidthArr} from board rules – exactly what {@code
  *       GuiBoardManager.initialize_manual_trace_half_widths()} does.
  *   <li>Register the singleton in a {@link SettingsMerger} and verify {@code merge()} reflects it.
  * </ol>
@@ -107,23 +107,21 @@ class GuiStartupHeadlessTest {
    * class.
    *
    * <p>This is the behaviour documented in the GUI load-path contract: after {@code
-   * initialize_manual_trace_half_widths()} each element of {@code manual_trace_half_width_arr}
-   * reflects the default trace rule for that layer.
+   * initialize_manual_trace_half_widths()} each element of {@code manualTraceHalfWidthArr} reflects
+   * the default trace rule for that layer.
    */
   @Test
   void initializeManualTraceHalfWidths_populatesArrayFromBoardRules() {
     // Replicate GuiBoardManager.initialize_manual_trace_half_widths() logic.
     for (int i = 0; i < settings.get_layer_count(); i++) {
       int ruleWidth = board.rules.get_default_net_class().get_trace_half_width(i);
-      settings.manual_trace_half_width_arr[i] = ruleWidth;
+      settings.manualTraceHalfWidthArr[i] = ruleWidth;
     }
 
     for (int i = 0; i < settings.get_layer_count(); i++) {
       assertTrue(
-          settings.manual_trace_half_width_arr[i] > 0,
-          "manual_trace_half_width_arr["
-              + i
-              + "] must be > 0 after initialisation from board rules");
+          settings.manualTraceHalfWidthArr[i] > 0,
+          "manualTraceHalfWidthArr[" + i + "] must be > 0 after initialisation from board rules");
     }
   }
 
@@ -165,8 +163,8 @@ class GuiStartupHeadlessTest {
     RouterSettings merged = merger.merge();
     assertNotNull(merged, "merge() must return non-null after mutation");
     assertTrue(
-        merged.automatic_neckdown,
-        "SettingsMerger.merge() must reflect the mutated automatic_neckdown value");
+        merged.automaticNeckdown,
+        "SettingsMerger.merge() must reflect the mutated automaticNeckdown value");
   }
 
   // ── Invariant 4: layer count matches board ────────────────────────────────

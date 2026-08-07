@@ -8,7 +8,7 @@ import java.util.Collection;
 public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom {
 
   /** A shape which should be contained in the completed shape. */
-  private TileShape contained_shape;
+  private TileShape containedShape;
 
   /**
    * Creates a new instance of IncompleteFreeSpaceExpansionRoom. If p_shape == null means p_shape is
@@ -17,15 +17,15 @@ public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom {
   public IncompleteFreeSpaceExpansionRoom(
       TileShape p_shape, int p_layer, TileShape p_contained_shape) {
     super(p_shape, p_layer);
-    contained_shape = p_contained_shape;
+    containedShape = p_contained_shape;
   }
 
   public TileShape get_contained_shape() {
-    return this.contained_shape;
+    return this.containedShape;
   }
 
   public void set_contained_shape(TileShape p_shape) {
-    this.contained_shape = p_shape;
+    this.containedShape = p_shape;
   }
 
   public Collection<TargetItemExpansionDoor> get_target_doors() {

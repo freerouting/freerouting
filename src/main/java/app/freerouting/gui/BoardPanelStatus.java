@@ -102,7 +102,7 @@ class BoardPanelStatus extends JPanel {
 
     // Initialize current layer label
     currentLayer = new JLabel();
-    tm.setText(currentLayer, "current_layer");
+    tm.setText(currentLayer, "currentLayer");
     rightMessagePanel.add(currentLayer, BorderLayout.CENTER);
 
     // Initialize current board score label

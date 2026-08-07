@@ -26,34 +26,34 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
    * Used only if a net is divided internally because of fromto rules for example For normal nets it
    * is always 1.
    */
-  public final int subnet_number;
+  public final int subnetNumber;
 
   /** The unique strict positive number of the net */
-  public final int net_number;
+  public final int netNumber;
 
   /** The net list, where this net belongs to. */
-  public final Nets net_list;
+  public final Nets netList;
 
   /** Indicates, if this net contains a power plane */
-  private boolean contains_plane;
+  private boolean containsPlane;
 
   /** The routing rule of this net */
-  private NetClass net_class;
+  private NetClass netClass;
 
   /** Creates a new instance of Net. p_net_list is the net list, where this net belongs to. */
   public Net(
       String p_name, int p_subnet_number, int p_no, Nets p_net_list, boolean p_contains_plane) {
     name = p_name;
-    subnet_number = p_subnet_number;
-    net_number = p_no;
-    contains_plane = p_contains_plane;
-    net_list = p_net_list;
-    net_class = p_net_list.get_board().rules.get_default_net_class();
+    subnetNumber = p_subnet_number;
+    netNumber = p_no;
+    containsPlane = p_contains_plane;
+    netList = p_net_list;
+    netClass = p_net_list.get_board().rules.get_default_net_class();
   }
 
   @Override
   public String toString() {
-    return "Net #" + this.net_number + " (" + this.name + ")";
+    return "Net #" + this.netNumber + " (" + this.name + ")";
   }
 
   /** Compares 2 nets by name. Useful for example to display nets in alphabetic order. */
@@ -64,27 +64,27 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
 
   /** Returns the class of this net. */
   public NetClass get_class() {
-    return this.net_class;
+    return this.netClass;
   }
 
   /** Sets the class of this net */
   public void set_class(NetClass p_rule) {
-    this.net_class = p_rule;
+    this.netClass = p_rule;
   }
 
   /** Returns the pins and conduction areas of this net. */
   public Collection<Item> get_terminal_items() {
     Collection<Item> result = new LinkedList<>();
-    BasicBoard board = this.net_list.get_board();
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+    BasicBoard board = this.netList.get_board();
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.start_read_object();
     for (; ; ) {
-      Item curr_item = (Item) board.item_list.read_object(it);
-      if (curr_item == null) {
+      Item currItem = (Item) board.itemList.read_object(it);
+      if (currItem == null) {
         break;
       }
-      if (curr_item instanceof Connectable) {
-        if (curr_item.contains_net(this.net_number) && !curr_item.is_routable()) {
-          result.add(curr_item);
+      if (currItem instanceof Connectable) {
+        if (currItem.contains_net(this.netNumber) && !currItem.is_routable()) {
+          result.add(currItem);
         }
       }
     }
@@ -94,15 +94,15 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   /** Returns the pins of this net. */
   public Collection<Pin> get_pins() {
     Collection<Pin> result = new LinkedList<>();
-    BasicBoard board = this.net_list.get_board();
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+    BasicBoard board = this.netList.get_board();
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.start_read_object();
     for (; ; ) {
-      Item curr_item = (Item) board.item_list.read_object(it);
-      if (curr_item == null) {
+      Item currItem = (Item) board.itemList.read_object(it);
+      if (currItem == null) {
         break;
       }
-      if (curr_item instanceof Pin pin) {
-        if (curr_item.contains_net(this.net_number)) {
+      if (currItem instanceof Pin pin) {
+        if (currItem.contains_net(this.netNumber)) {
           result.add(pin);
         }
       }
@@ -113,15 +113,15 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   /** Returns all items of this net. */
   public Collection<Item> get_items() {
     Collection<Item> result = new LinkedList<>();
-    BasicBoard board = this.net_list.get_board();
-    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+    BasicBoard board = this.netList.get_board();
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.start_read_object();
     for (; ; ) {
-      Item curr_item = (Item) board.item_list.read_object(it);
-      if (curr_item == null) {
+      Item currItem = (Item) board.itemList.read_object(it);
+      if (currItem == null) {
         break;
       }
-      if (curr_item.contains_net(this.net_number)) {
-        result.add(curr_item);
+      if (currItem.contains_net(this.netNumber)) {
+        result.add(currItem);
       }
     }
     return result;
@@ -129,23 +129,23 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
 
   /** Returns the cumulative trace length of all traces on the board belonging to this net. */
   public double get_trace_length() {
-    double cumulative_trace_length = 0;
-    Collection<Item> net_items = net_list.get_board().get_connectable_items(this.net_number);
-    for (Item curr_item : net_items) {
+    double cumulativeTraceLength = 0;
+    Collection<Item> netItems = netList.get_board().get_connectable_items(this.netNumber);
+    for (Item currItem : netItems) {
 
-      if (curr_item instanceof Trace trace) {
-        cumulative_trace_length += trace.get_length();
+      if (currItem instanceof Trace trace) {
+        cumulativeTraceLength += trace.get_length();
       }
     }
-    return cumulative_trace_length;
+    return cumulativeTraceLength;
   }
 
   /** Returns the count of vias on the board belonging to this net. */
   public int get_via_count() {
     int result = 0;
-    Collection<Item> net_items = net_list.get_board().get_connectable_items(this.net_number);
-    for (Item curr_item : net_items) {
-      if (curr_item instanceof Via) {
+    Collection<Item> netItems = netList.get_board().get_connectable_items(this.netNumber);
+    for (Item currItem : netItems) {
+      if (currItem instanceof Via) {
         ++result;
       }
     }
@@ -153,25 +153,25 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
   }
 
   public void set_contains_plane(boolean p_value) {
-    contains_plane = p_value;
+    containsPlane = p_value;
   }
 
   /**
    * Indicates, if this net contains a power plane. Used by the autorouter for setting the via costs
-   * to the cheap plane via costs. May also be true, if a layer covered with a conduction_area of
+   * to the cheap plane via costs. May also be true, if a layer covered with a conductionArea of
    * this net is a signal layer.
    */
   public boolean contains_plane() {
-    return contains_plane;
+    return containsPlane;
   }
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    int via_count = this.get_via_count();
-    double cumulative_trace_length = this.get_trace_length();
-    Collection<Item> terminal_items = this.get_terminal_items();
-    Collection<Printable> terminals = new LinkedList<>(terminal_items);
-    int terminal_item_count = terminals.size();
+    int viaCount = this.get_via_count();
+    double cumulativeTraceLength = this.get_trace_length();
+    Collection<Item> terminalItems = this.get_terminal_items();
+    Collection<Printable> terminals = new LinkedList<>(terminalItems);
+    int terminalItemCount = terminals.size();
 
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
@@ -179,15 +179,15 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     p_window.append_bold(this.name);
     p_window.append_bold(": ");
     p_window.append(tm.getText("class") + " ");
-    p_window.append(net_class.get_name(), tm.getText("net_class"), net_class);
+    p_window.append(netClass.get_name(), tm.getText("netClass"), netClass);
     p_window.append(", ");
     p_window.append_objects(
-        String.valueOf(terminal_item_count), tm.getText("terminal_items_2"), terminals);
-    p_window.append(" " + tm.getText("terminal_items"));
-    p_window.append(", " + tm.getText("via_count") + " ");
-    p_window.append(String.valueOf(via_count));
-    p_window.append(", " + tm.getText("trace_length") + " ");
-    p_window.append(cumulative_trace_length);
+        String.valueOf(terminalItemCount), tm.getText("terminal_items_2"), terminals);
+    p_window.append(" " + tm.getText("terminalItems"));
+    p_window.append(", " + tm.getText("viaCount") + " ");
+    p_window.append(String.valueOf(viaCount));
+    p_window.append(", " + tm.getText("traceLength") + " ");
+    p_window.append(cumulativeTraceLength);
     p_window.newline();
   }
 }

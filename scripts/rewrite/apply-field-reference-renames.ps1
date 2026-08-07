@@ -1,7 +1,7 @@
 # Applies cross-file field reference renames using build/field-renames.tsv
 # produced by RenameInstanceFieldsToCamelCase.
 param(
-    [string[]]$TargetPackages = @(),
+    [string]$TargetPackages = "",
     [string[]]$SourceRoots = @("src/main/java", "src/test/java"),
     [string]$RenameMapPath = "build/field-renames.tsv"
 )
@@ -14,17 +14,27 @@ Set-Location $rootDir
 [Console]::WriteLine("Working Dir: $rootDir")
 [Console]::WriteLine("RenameMapPath input: $RenameMapPath")
 
+$targetPkgList = @()
+if (-not [string]::IsNullOrWhiteSpace($TargetPackages)) {
+    $targetPkgList = $TargetPackages.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_.Length -gt 0 }
+}
+
 $fullMapPath = Join-Path $rootDir $RenameMapPath
 if (-not (Test-Path $fullMapPath)) {
-    [Console]::WriteLine("No rename map at $fullMapPath - skipping field reference cleanup.")
-    exit 0
+    $fallbackPath = Join-Path $rootDir "src/rewrite/.field-renames.tsv"
+    if (Test-Path $fallbackPath) {
+        $fullMapPath = $fallbackPath
+    } else {
+        [Console]::WriteLine("No rename map at $fullMapPath or $fallbackPath - skipping field reference cleanup.")
+        exit 0
+    }
 }
 
 [Console]::WriteLine("Reading map from: $fullMapPath")
 $lines = [IO.File]::ReadAllLines($fullMapPath)
 [Console]::WriteLine("Read $($lines.Length) lines.")
 
-$renames = @{}
+$renames = [System.Collections.Generic.Dictionary[string, string]]::new([System.StringComparer]::Ordinal)
 $tabChar = [char]9
 foreach ($line in $lines) {
     if ([string]::IsNullOrWhiteSpace($line)) { continue }
@@ -33,17 +43,17 @@ foreach ($line in $lines) {
         $classFqn = $parts[0].Trim()
         $oldName  = $parts[1].Trim()
         $newName  = $parts[2].Trim()
-        if ($TargetPackages.Length -gt 0) {
+        if ($targetPkgList.Count -gt 0) {
             $matched = $false
-            foreach ($pkg in $TargetPackages) {
-                if ($classFqn.StartsWith($pkg)) { $matched = $true; break }
+            foreach ($pkg in $targetPkgList) {
+                if ($classFqn -eq $pkg -or $classFqn.StartsWith("$pkg.")) { $matched = $true; break }
             }
             if (-not $matched) { continue }
         }
         if ($oldName -and $newName -and ($oldName -cne $newName)) {
             $renames[$oldName] = $newName
         }
-    } elseif ($parts.Length -ge 2 -and $TargetPackages.Length -eq 0) {
+    } elseif ($parts.Length -ge 2 -and $targetPkgList.Count -eq 0) {
         $oldName = $parts[0].Trim()
         $newName = $parts[1].Trim()
         if ($oldName -and $newName -and ($oldName -cne $newName)) {
@@ -61,13 +71,15 @@ if ($renames.Count -eq 0) {
 
 $memberRegex = [regex]::new("\.(?<name>[A-Za-z0-9_]+)(?!\s*\()(?![A-Za-z0-9_])")
 $thisRegex = [regex]::new("(?<![.\w])this\.(?<name>[A-Za-z0-9_]+)\b(?!\s*\()(?![A-Za-z0-9_])")
+$wordRegex = [regex]::new("\b(?<name>[a-z][a-z0-9]*_[a-z0-9_]*)\b(?!\s*\()")
 
 function Apply-FieldRenames {
     param(
         [string]$Content,
-        [hashtable]$Renames,
+        [System.Collections.Generic.Dictionary[string, string]]$Renames,
         [regex]$MemberRegex,
-        [regex]$ThisRegex
+        [regex]$ThisRegex,
+        [regex]$WordRegex
     )
     $updated = $MemberRegex.Replace($Content, [System.Text.RegularExpressions.MatchEvaluator]{
         param($m)
@@ -85,6 +97,14 @@ function Apply-FieldRenames {
         }
         return $m.Value
     })
+    $updated = $WordRegex.Replace($updated, [System.Text.RegularExpressions.MatchEvaluator]{
+        param($m)
+        $old = $m.Groups['name'].Value
+        if ($Renames.ContainsKey($old)) {
+            return $Renames[$old]
+        }
+        return $m.Value
+    })
     return $updated
 }
 
@@ -97,7 +117,7 @@ $files = foreach ($root in $SourceRoots) {
 $changedFiles = 0
 foreach ($file in $files) {
     $content = [IO.File]::ReadAllText($file.FullName)
-    $updated = Apply-FieldRenames -Content $content -Renames $renames -MemberRegex $memberRegex -ThisRegex $thisRegex
+    $updated = Apply-FieldRenames -Content $content -Renames $renames -MemberRegex $memberRegex -ThisRegex $thisRegex -WordRegex $wordRegex
     if ($updated -ne $content) {
         [IO.File]::WriteAllText($file.FullName, $updated)
         $changedFiles++

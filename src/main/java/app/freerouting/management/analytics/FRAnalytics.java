@@ -80,7 +80,7 @@ public final class FRAnalytics {
         "file_save_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/SaveAndExit");
     appLocationTable.put(
         "file_cancel_and_exit_menuitem", "app.freerouting.gui/Board/Menu/File/CancelAndExit");
-    appLocationTable.put("file_save_as_menuitem", "app.freerouting.gui/Board/Menu/File/SaveAs");
+    appLocationTable.put("fileSaveAsMenuitem", "app.freerouting.gui/Board/Menu/File/SaveAs");
     appLocationTable.put(
         "file_write_logfile_menuitem", "app.freerouting.gui/Board/Menu/File/MacroRecording");
     appLocationTable.put(
@@ -93,48 +93,45 @@ public final class FRAnalytics {
         "file_write_eagle_session_script_menuitem",
         "app.freerouting.gui/Board/Menu/File/ExportAsEagleScript");
     appLocationTable.put(
-        "display_visibility_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Visibility");
+        "displayVisibilityMenuitem", "app.freerouting.gui/Board/Menu/Appearance/Visibility");
     appLocationTable.put(
-        "display_colors_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Colors");
+        "displayColorsMenuitem", "app.freerouting.gui/Board/Menu/Appearance/Colors");
     appLocationTable.put(
-        "display_miscellaneous_menuitem",
-        "app.freerouting.gui/Board/Menu/Appearance/Miscellaneous");
+        "displayMiscellaneousMenuitem", "app.freerouting.gui/Board/Menu/Appearance/Miscellaneous");
     appLocationTable.put(
-        "settings_selection_menuitem", "app.freerouting.gui/Board/Menu/Settings/Selection");
+        "settingsSelectionMenuitem", "app.freerouting.gui/Board/Menu/Settings/Selection");
     appLocationTable.put(
-        "settings_routing_menuitem", "app.freerouting.gui/Board/Menu/Settings/Routing");
+        "settingsRoutingMenuitem", "app.freerouting.gui/Board/Menu/Settings/Routing");
     appLocationTable.put(
-        "settings_autorouter_menuitem", "app.freerouting.gui/Board/Menu/Settings/AutoRouter");
+        "settingsAutorouterMenuitem", "app.freerouting.gui/Board/Menu/Settings/AutoRouter");
     appLocationTable.put(
-        "settings_controls_menuitem", "app.freerouting.gui/Board/Menu/Settings/Controls");
+        "settingsControlsMenuitem", "app.freerouting.gui/Board/Menu/Settings/Controls");
     appLocationTable.put(
-        "rules_clearance_menuitem", "app.freerouting.gui/Board/Menu/Rules/ClearanceMatrix");
-    appLocationTable.put("rules_vias_menuitem", "app.freerouting.gui/Board/Menu/Rules/Vias");
-    appLocationTable.put("rules_nets_menuitem", "app.freerouting.gui/Board/Menu/Rules/Nets");
+        "rulesClearanceMenuitem", "app.freerouting.gui/Board/Menu/Rules/ClearanceMatrix");
+    appLocationTable.put("rulesViasMenuitem", "app.freerouting.gui/Board/Menu/Rules/Vias");
+    appLocationTable.put("rulesNetsMenuitem", "app.freerouting.gui/Board/Menu/Rules/Nets");
     appLocationTable.put(
-        "rules_net_class_menuitem", "app.freerouting.gui/Board/Menu/Rules/NetClasses");
-    appLocationTable.put("info_packages_menuitem", "app.freerouting.gui/Board/Menu/Info/Packages");
+        "rulesNetClassMenuitem", "app.freerouting.gui/Board/Menu/Rules/NetClasses");
+    appLocationTable.put("infoPackagesMenuitem", "app.freerouting.gui/Board/Menu/Info/Packages");
+    appLocationTable.put("infoPadstacksMenuitem", "app.freerouting.gui/Board/Menu/Info/Padstacks");
     appLocationTable.put(
-        "info_padstacks_menuitem", "app.freerouting.gui/Board/Menu/Info/Padstacks");
+        "infoComponentsMenuitem", "app.freerouting.gui/Board/Menu/Info/Components");
     appLocationTable.put(
-        "info_components_menuitem", "app.freerouting.gui/Board/Menu/Info/Components");
+        "infoIncompletesMenuitem", "app.freerouting.gui/Board/Menu/Info/IncompleteRoutes");
     appLocationTable.put(
-        "info_incompletes_menuitem", "app.freerouting.gui/Board/Menu/Info/IncompleteRoutes");
+        "infoLengthViolationsMenuitem", "app.freerouting.gui/Board/Menu/Info/LengthViolations");
     appLocationTable.put(
-        "info_length_violations_menuitem", "app.freerouting.gui/Board/Menu/Info/LengthViolations");
-    appLocationTable.put(
-        "info_clearance_violations_menuitem",
+        "infoClearanceViolationsMenuitem",
         "app.freerouting.gui/Board/Menu/Info/ClearanceViolations");
     appLocationTable.put(
-        "info_unconnected_routes_menuitem",
-        "app.freerouting.gui/Board/Menu/Info/UnconnectedRoutes");
+        "infoUnconnectedRoutesMenuitem", "app.freerouting.gui/Board/Menu/Info/UnconnectedRoutes");
     appLocationTable.put(
-        "info_route_stubs_menuitem", "app.freerouting.gui/Board/Menu/Info/RoutedStubs");
+        "infoRouteStubsMenuitem", "app.freerouting.gui/Board/Menu/Info/RoutedStubs");
 
     appLocationTable.put(
-        "other_delete_all_tracks_menuitem",
+        "otherDeleteAllTracksMenuitem",
         "app.freerouting.gui/Board/Menu/Other/DeleteAllTracksAndVias");
-    appLocationTable.put("help_about_menuitem", "app.freerouting.gui/Board/Menu/Help/About");
+    appLocationTable.put("helpAboutMenuitem", "app.freerouting.gui/Board/Menu/Help/About");
   }
 
   private static AnalyticsClient analytics;
@@ -421,7 +418,7 @@ public final class FRAnalytics {
       properties.put("nets_incomplete", Integer.toString(netsIncomplete));
     }
     if (clearanceViolations != null) {
-      properties.put("clearance_violations", Integer.toString(clearanceViolations));
+      properties.put("clearanceViolations", Integer.toString(clearanceViolations));
     }
     if (boardHash != null) {
       properties.put("board_hash", boardHash);
@@ -467,10 +464,10 @@ public final class FRAnalytics {
       String hostName, String hostVersion, int layerCount, int componentCount, int netCount) {
     Map<String, String> properties = new HashMap<>();
     properties.put("host_name", hostName);
-    properties.put("host_version", hostVersion);
-    properties.put("layer_count", Integer.toString(layerCount));
+    properties.put("hostVersion", hostVersion);
+    properties.put("layerCount", Integer.toString(layerCount));
     properties.put("component_count", Integer.toString(componentCount));
-    properties.put("net_count", Integer.toString(netCount));
+    properties.put("netCount", Integer.toString(netCount));
 
     trackAnonymousAction(permanent_user_id, "Board Loaded", properties);
   }

@@ -9,10 +9,10 @@ import app.freerouting.geometry.planar.TileShape;
 public class TargetItemExpansionDoor implements ExpandableObject {
 
   public final Item item;
-  public final int tree_entry_no;
+  public final int treeEntryNo;
   public final CompleteExpansionRoom room;
   private final TileShape shape;
-  private final MazeSearchElement maze_search_info;
+  private final MazeSearchElement mazeSearchInfo;
 
   /** Creates a new instance of ItemExpansionInfo */
   public TargetItemExpansionDoor(
@@ -21,15 +21,15 @@ public class TargetItemExpansionDoor implements ExpandableObject {
       CompleteExpansionRoom p_room,
       ShapeSearchTree p_search_tree) {
     item = p_item;
-    tree_entry_no = p_tree_entry_no;
+    treeEntryNo = p_tree_entry_no;
     room = p_room;
     if (room == null) {
       this.shape = Simplex.EMPTY;
     } else {
-      TileShape item_shape = item.get_tree_shape(p_search_tree, tree_entry_no);
-      this.shape = item_shape.intersection(room.get_shape());
+      TileShape itemShape = item.get_tree_shape(p_search_tree, treeEntryNo);
+      this.shape = itemShape.intersection(room.get_shape());
     }
-    maze_search_info = new MazeSearchElement();
+    mazeSearchInfo = new MazeSearchElement();
   }
 
   @Override
@@ -43,8 +43,8 @@ public class TargetItemExpansionDoor implements ExpandableObject {
   }
 
   public boolean is_destination_door() {
-    ItemAutorouteInfo item_info = this.item.get_autoroute_info();
-    return !item_info.is_start_info();
+    ItemAutorouteInfo itemInfo = this.item.get_autoroute_info();
+    return !itemInfo.is_start_info();
   }
 
   @Override
@@ -54,7 +54,7 @@ public class TargetItemExpansionDoor implements ExpandableObject {
 
   @Override
   public MazeSearchElement get_maze_search_element(int p_no) {
-    return maze_search_info;
+    return mazeSearchInfo;
   }
 
   @Override
@@ -64,7 +64,7 @@ public class TargetItemExpansionDoor implements ExpandableObject {
 
   @Override
   public void reset() {
-    maze_search_info.reset();
+    mazeSearchInfo.reset();
   }
 
   @Override

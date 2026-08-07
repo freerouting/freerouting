@@ -29,7 +29,7 @@ class MazeListElementTest {
     queue.add(lowerCost);
 
     MazeListElement first = queue.first();
-    assertSame(lowerCost, first, "Lower sorting_value must be expanded first");
+    assertSame(lowerCost, first, "Lower sortingValue must be expanded first");
   }
 
   private static final class TestDoor implements ExpandableObject {

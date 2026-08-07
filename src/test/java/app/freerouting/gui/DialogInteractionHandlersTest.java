@@ -106,11 +106,11 @@ class DialogInteractionHandlersTest {
     verify(netClass).set_pull_tight(false);
 
     NetClass fieldNetClass = mock(NetClass.class);
-    assertFalse(fieldNetClass.is_ignored_by_autorouter);
+    assertFalse(fieldNetClass.isIgnoredByAutorouter);
     WindowNetClasses.applyAutorouterIgnoreSelection(fieldNetClass, true);
-    assertTrue(fieldNetClass.is_ignored_by_autorouter);
+    assertTrue(fieldNetClass.isIgnoredByAutorouter);
     WindowNetClasses.applyAutorouterIgnoreSelection(fieldNetClass, false);
-    assertFalse(fieldNetClass.is_ignored_by_autorouter);
+    assertFalse(fieldNetClass.isIgnoredByAutorouter);
   }
 
   @Test

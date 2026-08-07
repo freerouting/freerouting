@@ -8,58 +8,56 @@ import javax.swing.JMenuItem;
 
 public class PopupMenuStitchRoute extends PopupMenuDisplay {
 
-  private final PopupMenuChangeLayer change_layer_menu;
+  private final PopupMenuChangeLayer changeLayerMenu;
 
   /** Creates a new instance of PopupMenuStitchRoute */
   public PopupMenuStitchRoute(BoardFrame p_board_frame) {
     super(p_board_frame);
-    LayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
+    LayerStructure layerStructure = boardPanel.boardHandling.get_routing_board().layerStructure;
 
-    if (layer_structure.arr.length > 0) {
-      change_layer_menu = new PopupMenuChangeLayer(p_board_frame);
-      this.add(change_layer_menu, 0);
+    if (layerStructure.arr.length > 0) {
+      changeLayerMenu = new PopupMenuChangeLayer(p_board_frame);
+      this.add(changeLayerMenu, 0);
     } else {
-      change_layer_menu = null;
+      changeLayerMenu = null;
     }
 
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
-    JMenuItem popup_insert_menuitem = new JMenuItem();
-    popup_insert_menuitem.setText(tm.getText("insert"));
-    popup_insert_menuitem.addActionListener(
-        _ ->
-            board_panel.board_handling.left_button_clicked(
-                board_panel.right_button_click_location));
-    popup_insert_menuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("popup_insert_menuitem", popup_insert_menuitem.getText()));
+    JMenuItem popupInsertMenuitem = new JMenuItem();
+    popupInsertMenuitem.setText(tm.getText("insert"));
+    popupInsertMenuitem.addActionListener(
+        _ -> boardPanel.boardHandling.left_button_clicked(boardPanel.rightButtonClickLocation));
+    popupInsertMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupInsertMenuitem", popupInsertMenuitem.getText()));
 
-    this.add(popup_insert_menuitem, 0);
+    this.add(popupInsertMenuitem, 0);
 
-    JMenuItem popup_done_menuitem = new JMenuItem();
-    popup_done_menuitem.setText(tm.getText("done"));
-    popup_done_menuitem.addActionListener(_ -> board_panel.board_handling.return_from_state());
-    popup_done_menuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("popup_done_menuitem", popup_done_menuitem.getText()));
+    JMenuItem popupDoneMenuitem = new JMenuItem();
+    popupDoneMenuitem.setText(tm.getText("done"));
+    popupDoneMenuitem.addActionListener(_ -> boardPanel.boardHandling.return_from_state());
+    popupDoneMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupDoneMenuitem", popupDoneMenuitem.getText()));
 
-    this.add(popup_done_menuitem, 1);
+    this.add(popupDoneMenuitem, 1);
 
-    JMenuItem popup_cancel_menuitem = new JMenuItem();
-    popup_cancel_menuitem.setText(tm.getText("cancel"));
-    popup_cancel_menuitem.addActionListener(_ -> board_panel.board_handling.cancel_state());
-    popup_cancel_menuitem.addActionListener(
-        _ -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
+    JMenuItem popupCancelMenuitem = new JMenuItem();
+    popupCancelMenuitem.setText(tm.getText("cancel"));
+    popupCancelMenuitem.addActionListener(_ -> boardPanel.boardHandling.cancel_state());
+    popupCancelMenuitem.addActionListener(
+        _ -> FRAnalytics.buttonClicked("popupCancelMenuitem", popupCancelMenuitem.getText()));
 
-    this.add(popup_cancel_menuitem, 2);
+    this.add(popupCancelMenuitem, 2);
 
-    Layer curr_layer =
-        layer_structure.arr[board_panel.board_handling.getInteractiveSettings().get_layer()];
-    disable_layer_item(layer_structure.get_signal_layer_no(curr_layer));
+    Layer currLayer =
+        layerStructure.arr[boardPanel.boardHandling.getInteractiveSettings().get_layer()];
+    disable_layer_item(layerStructure.get_signal_layer_no(currLayer));
   }
 
-  /** Disables the p_no-th item in the change_layer_menu. */
+  /** Disables the p_no-th item in the changeLayerMenu. */
   void disable_layer_item(int p_no) {
-    if (this.change_layer_menu != null) {
-      this.change_layer_menu.disable_item(p_no);
+    if (this.changeLayerMenu != null) {
+      this.changeLayerMenu.disable_item(p_no);
     }
   }
 }

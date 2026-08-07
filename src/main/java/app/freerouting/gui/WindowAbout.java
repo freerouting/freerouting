@@ -25,32 +25,32 @@ public class WindowAbout extends BoardSavableSubWindow {
    * Creates and initializes a new "About" dialog window.
    *
    * @param p_locale the locale to determine the language of the displayed texts.
-   * @param freerouting_version the version string of the Freerouting application.
+   * @param freeroutingVersion the version string of the Freerouting application.
    */
-  public WindowAbout(Locale p_locale, String freerouting_version) {
+  public WindowAbout(Locale p_locale, String freeroutingVersion) {
     setLanguage(p_locale);
     this.setTitle(tm.getText("title"));
 
     // Initialize panel and layout in one step
-    final JPanel window_panel = new JPanel(new GridBagLayout());
-    this.add(window_panel);
+    final JPanel windowPanel = new JPanel(new GridBagLayout());
+    this.add(windowPanel);
 
-    GridBagConstraints gridbag_constraints = new GridBagConstraints();
-    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    GridBagConstraints gridbagConstraints = new GridBagConstraints();
+    gridbagConstraints.insets = new Insets(5, 10, 5, 10);
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
 
     // Inlining the JLabels reduces variable clutter.
     // Passing constraints directly into add() handles the GridBag setup automatically.
-    window_panel.add(new JLabel(tm.getText("description")), gridbag_constraints);
+    windowPanel.add(new JLabel(tm.getText("description")), gridbagConstraints);
 
-    String version_string = tm.getText("version") + " " + freerouting_version;
-    window_panel.add(new JLabel(version_string), gridbag_constraints);
+    String versionString = tm.getText("version") + " " + freeroutingVersion;
+    windowPanel.add(new JLabel(versionString), gridbagConstraints);
 
-    window_panel.add(new JLabel(tm.getText("warranty")), gridbag_constraints);
+    windowPanel.add(new JLabel(tm.getText("warranty")), gridbagConstraints);
 
     // Dynamically split and add the homepage/support panels
-    window_panel.add(createMixedTextPanel(tm.getText("homepage")), gridbag_constraints);
-    window_panel.add(createMixedTextPanel(tm.getText("support")), gridbag_constraints);
+    windowPanel.add(createMixedTextPanel(tm.getText("homepage")), gridbagConstraints);
+    windowPanel.add(createMixedTextPanel(tm.getText("support")), gridbagConstraints);
 
     this.setResizable(false);
     this.setMinimumSize(new Dimension(450, 220));

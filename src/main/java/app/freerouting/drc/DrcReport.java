@@ -17,49 +17,49 @@ public class DrcReport {
   public final String $schema = "https://schemas.kicad.org/drc.v1.json";
 
   /** Coordinate units used in the report (e.g., "mm", "mil") */
-  @SerializedName("coordinate_units")
-  public final String coordinate_units;
+  @SerializedName("coordinateUnits")
+  public final String coordinateUnits;
 
   /** Date and time when the report was generated */
   @SerializedName("date")
   public final String date;
 
   /** Version of KiCad that generated the report (this is "N/A" for Freerouting) */
-  @SerializedName("kicad_version")
-  public final String kicad_version = "N/A";
+  @SerializedName("kicadVersion")
+  public final String kicadVersion = "N/A";
 
   /** Version of Freerouting that generated the report */
-  @SerializedName("freerouting_version")
-  public final String freerouting_version;
+  @SerializedName("freeroutingVersion")
+  public final String freeroutingVersion;
 
   /** Source file name */
   @SerializedName("source")
   public final String source;
 
   /** List of unconnected items (empty for now) */
-  @SerializedName("unconnected_items")
-  public final List<DrcViolation> unconnected_items;
+  @SerializedName("unconnectedItems")
+  public final List<DrcViolation> unconnectedItems;
 
   /** List of violations found */
   @SerializedName("violations")
   public final List<DrcViolation> violations;
 
   /** Schematic parity issues (empty for now) */
-  @SerializedName("schematic_parity")
-  public final List<Object> schematic_parity;
+  @SerializedName("schematicParity")
+  public final List<Object> schematicParity;
 
   /** Quality score of the board */
-  @SerializedName("quality_score")
-  public Double quality_score;
+  @SerializedName("qualityScore")
+  public Double qualityScore;
 
   public DrcReport(String coordinateUnits, String source, String version) {
-    this.coordinate_units = coordinateUnits;
+    this.coordinateUnits = coordinateUnits;
     this.source = source;
-    this.freerouting_version = version;
+    this.freeroutingVersion = version;
     this.date = ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     this.violations = new ArrayList<>();
-    this.unconnected_items = new ArrayList<>();
-    this.schematic_parity = new ArrayList<>();
+    this.unconnectedItems = new ArrayList<>();
+    this.schematicParity = new ArrayList<>();
   }
 
   /** Add a violation to the report */
@@ -69,6 +69,6 @@ public class DrcReport {
 
   /** Add an unconnected item to the report */
   public void addUnconnectedItem(DrcViolation item) {
-    this.unconnected_items.add(item);
+    this.unconnectedItems.add(item);
   }
 }

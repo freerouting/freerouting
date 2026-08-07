@@ -28,15 +28,15 @@ public class Resolution extends ScopeKeyword {
   public boolean read_scope(ReadScopeParameter p_par) {
     try {
       // read the unit
-      Object next_token = p_par.scanner.next_token();
-      if (!(next_token instanceof String)) {
+      Object nextToken = p_par.scanner.next_token();
+      if (!(nextToken instanceof String)) {
         FRLogger.warn(
             "Resolution.read_scope: string expected at '"
                 + p_par.scanner.get_scope_identifier()
                 + "'");
         return false;
       }
-      p_par.unit = Unit.from_string((String) next_token);
+      p_par.unit = Unit.from_string((String) nextToken);
       if (p_par.unit == null) {
         FRLogger.warn(
             "Resolution.read_scope: unit mil, inch or mm expected at '"
@@ -45,18 +45,18 @@ public class Resolution extends ScopeKeyword {
         return false;
       }
       // read the scale factor
-      next_token = p_par.scanner.next_token();
-      if (!(next_token instanceof Integer)) {
+      nextToken = p_par.scanner.next_token();
+      if (!(nextToken instanceof Integer)) {
         FRLogger.warn(
             "Resolution.read_scope: integer expected at '"
                 + p_par.scanner.get_scope_identifier()
                 + "'");
         return false;
       }
-      p_par.resolution = (Integer) next_token;
+      p_par.resolution = (Integer) nextToken;
       // overread the closing bracket
-      next_token = p_par.scanner.next_token();
-      if (next_token != CLOSED_BRACKET) {
+      nextToken = p_par.scanner.next_token();
+      if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Resolution.read_scope: closing bracket expected at '"
                 + p_par.scanner.get_scope_identifier()

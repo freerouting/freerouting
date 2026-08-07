@@ -20,31 +20,31 @@ public class DynamicRouteState extends RouteState {
   /** ends routing */
   @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
-    if (this.observers_activated) {
+    if (this.observersActivated) {
       hdlg.get_routing_board().end_notify_observers();
-      this.observers_activated = false;
+      this.observersActivated = false;
     }
-    for (int curr_net_no : this.route.net_no_arr) {
-      hdlg.update_ratsnest(curr_net_no);
+    for (int currNetNo : this.route.netNoArr) {
+      hdlg.update_ratsnest(currNetNo);
     }
-    return this.return_state;
+    return this.returnState;
   }
 
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
   public InteractiveState key_typed(char p_key_char) {
-    InteractiveState curr_return_state = this;
+    InteractiveState currReturnState = this;
     if (p_key_char == 's') {
       hdlg.generate_snapshot();
     } else {
-      curr_return_state = super.key_typed(p_key_char);
+      currReturnState = super.key_typed(p_key_char);
     }
-    return curr_return_state;
+    return currReturnState;
   }
 
   @Override
   public JPopupMenu get_popup_menu() {
-    return hdlg.get_panel().popup_menu_dynamic_route;
+    return hdlg.get_panel().popupMenuDynamicRoute;
   }
 
   @Override

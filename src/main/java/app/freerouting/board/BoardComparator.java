@@ -48,28 +48,27 @@ public class BoardComparator {
     // 2. Bounding Box
     IntBox box1 = board1.get_bounding_box();
     IntBox box2 = board2.get_bounding_box();
-    double box1_ll_x = box1.ll.x * scale1;
-    double box1_ll_y = box1.ll.y * scale1;
-    double box1_ur_x = box1.ur.x * scale1;
-    double box1_ur_y = box1.ur.y * scale1;
+    double box1LlX = box1.ll.x * scale1;
+    double box1LlY = box1.ll.y * scale1;
+    double box1UrX = box1.ur.x * scale1;
+    double box1UrY = box1.ur.y * scale1;
 
-    double box2_ll_x = box2.ll.x * scale2;
-    double box2_ll_y = box2.ll.y * scale2;
-    double box2_ur_x = box2.ur.x * scale2;
-    double box2_ur_y = box2.ur.y * scale2;
+    double box2LlX = box2.ll.x * scale2;
+    double box2LlY = box2.ll.y * scale2;
+    double box2UrX = box2.ur.x * scale2;
+    double box2UrY = box2.ur.y * scale2;
 
-    if (Math.abs(box1_ll_x - box2_ll_x) > epsilonMm
-        || Math.abs(box1_ll_y - box2_ll_y) > epsilonMm
-        || Math.abs(box1_ur_x - box2_ur_x) > epsilonMm
-        || Math.abs(box1_ur_y - box2_ur_y) > epsilonMm) {
+    if (Math.abs(box1LlX - box2LlX) > epsilonMm
+        || Math.abs(box1LlY - box2LlY) > epsilonMm
+        || Math.abs(box1UrX - box2UrX) > epsilonMm
+        || Math.abs(box1UrY - box2UrY) > epsilonMm) {
       equal = false;
       report.append(
           String.format(
               "[-] Bounding Box mismatch:\n"
                   + "    Board 1: LL(%.4f, %.4f) UR(%.4f, %.4f) mm\n"
                   + "    Board 2: LL(%.4f, %.4f) UR(%.4f, %.4f) mm\n\n",
-              box1_ll_x, box1_ll_y, box1_ur_x, box1_ur_y, box2_ll_x, box2_ll_y, box2_ur_x,
-              box2_ur_y));
+              box1LlX, box1LlY, box1UrX, box1UrY, box2LlX, box2LlY, box2UrX, box2UrY));
     } else {
       report.append("[+] Bounding Boxes match.\n");
     }
@@ -86,16 +85,16 @@ public class BoardComparator {
     } else {
       report.append(String.format("[+] Layer counts match: %d\n", layersCount1));
       for (int i = 0; i < layersCount1; i++) {
-        String name1 = board1.layer_structure.arr[i].name;
-        String name2 = board2.layer_structure.arr[i].name;
+        String name1 = board1.layerStructure.arr[i].name;
+        String name2 = board2.layerStructure.arr[i].name;
         if (!name1.equalsIgnoreCase(name2)) {
           equal = false;
           report.append(
               String.format(
                   "[-] Layer %d name mismatch: Board 1 = '%s', Board 2 = '%s'\n", i, name1, name2));
         }
-        boolean isSignal1 = board1.layer_structure.arr[i].is_signal;
-        boolean isSignal2 = board2.layer_structure.arr[i].is_signal;
+        boolean isSignal1 = board1.layerStructure.arr[i].isSignal;
+        boolean isSignal2 = board2.layerStructure.arr[i].isSignal;
         if (isSignal1 != isSignal2) {
           equal = false;
           report.append(
@@ -495,9 +494,9 @@ public class BoardComparator {
     int condCount2 = 0;
     int obstCount1 = 0;
     int obstCount2 = 0;
-    Iterator<UndoableObjects.UndoableObjectNode> it1 = board1.item_list.start_read_object();
+    Iterator<UndoableObjects.UndoableObjectNode> it1 = board1.itemList.start_read_object();
     for (; ; ) {
-      Item item = (Item) board1.item_list.read_object(it1);
+      Item item = (Item) board1.itemList.read_object(it1);
       if (item == null) {
         break;
       }
@@ -510,9 +509,9 @@ public class BoardComparator {
         obstCount1++;
       }
     }
-    Iterator<UndoableObjects.UndoableObjectNode> it2 = board2.item_list.start_read_object();
+    Iterator<UndoableObjects.UndoableObjectNode> it2 = board2.itemList.start_read_object();
     for (; ; ) {
-      Item item = (Item) board2.item_list.read_object(it2);
+      Item item = (Item) board2.itemList.read_object(it2);
       if (item == null) {
         break;
       }
@@ -642,8 +641,8 @@ public class BoardComparator {
 
   private static Map<String, NetClass> buildNetClassMap(RoutingBoard board) {
     Map<String, NetClass> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    for (int i = 0; i < board.rules.net_classes.count(); i++) {
-      NetClass netClass = board.rules.net_classes.get(i);
+    for (int i = 0; i < board.rules.netClasses.count(); i++) {
+      NetClass netClass = board.rules.netClasses.get(i);
       if (netClass != null) {
         map.put(netClass.get_name(), netClass);
       }
@@ -685,7 +684,7 @@ public class BoardComparator {
   }
 
   private static String packageKey(app.freerouting.core.Package pkg) {
-    return pkg.name + (pkg.is_front ? ":front" : ":back");
+    return pkg.name + (pkg.isFront ? ":front" : ":back");
   }
 
   private static boolean reportMissingKeys(

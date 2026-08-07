@@ -2,14 +2,14 @@ package app.freerouting.autoroute;
 
 public class ItemRouteResult implements Comparable<ItemRouteResult> {
 
-  private final int item_id;
-  private final float improvement_percentage;
-  private final int via_count_before;
-  private final int via_count_after;
-  private final double trace_length_before;
-  private final double trace_length_after;
-  private final int incomplete_count_before;
-  private final int incomplete_count_after;
+  private final int itemId;
+  private final float improvementPercentage;
+  private final int viaCountBefore;
+  private final int viaCountAfter;
+  private final double traceLengthBefore;
+  private final double traceLengthAfter;
+  private final int incompleteCountBefore;
+  private final int incompleteCountAfter;
   private boolean improved;
 
   public ItemRouteResult(int p_item_id) {
@@ -25,27 +25,27 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
       double p_trace_length_after,
       int p_incomplete_count_before,
       int p_incomplete_count_after) {
-    item_id = p_item_id;
-    via_count_before = p_via_count_before;
-    via_count_after = p_via_count_after;
-    trace_length_before = p_trace_length_before;
-    trace_length_after = p_trace_length_after;
-    incomplete_count_before = p_incomplete_count_before;
-    incomplete_count_after = p_incomplete_count_after;
+    itemId = p_item_id;
+    viaCountBefore = p_via_count_before;
+    viaCountAfter = p_via_count_after;
+    traceLengthBefore = p_trace_length_before;
+    traceLengthAfter = p_trace_length_after;
+    incompleteCountBefore = p_incomplete_count_before;
+    incompleteCountAfter = p_incomplete_count_after;
 
-    if (incomplete_count_after < incomplete_count_before) {
+    if (incompleteCountAfter < incompleteCountBefore) {
       improved = true;
-    } else if (incomplete_count_after > incomplete_count_before) {
+    } else if (incompleteCountAfter > incompleteCountBefore) {
       improved = false;
-    } else { // incomplete_count_after == incomplete_count_before
-      if (via_count_after < via_count_before) {
+    } else { // incompleteCountAfter == incompleteCountBefore
+      if (viaCountAfter < viaCountBefore) {
         improved = true;
-      } else if (via_count_after > via_count_before) {
+      } else if (viaCountAfter > viaCountBefore) {
         improved = false;
-      } else { // via_count_after == via_count_before
-        if (trace_length_after < trace_length_before) {
+      } else { // viaCountAfter == viaCountBefore
+        if (traceLengthAfter < traceLengthBefore) {
           improved = true;
-        } else if (trace_length_after > trace_length_before) {
+        } else if (traceLengthAfter > traceLengthBefore) {
           improved = false;
         } else {
           improved = false;
@@ -53,31 +53,30 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
       }
     }
 
-    improvement_percentage =
+    improvementPercentage =
         (float)
-            (via_count_before != 0 && trace_length_before != 0
+            (viaCountBefore != 0 && traceLengthBefore != 0
                 ? 1.0
-                    - (((via_count_after / via_count_before)
-                            + (trace_length_after / trace_length_before))
+                    - (((viaCountAfter / viaCountBefore) + (traceLengthAfter / traceLengthBefore))
                         / 2)
                 : 0);
   }
 
   @Override
   public int compareTo(ItemRouteResult r) {
-    if (incomplete_count_after < r.incomplete_count_after) {
+    if (incompleteCountAfter < r.incompleteCountAfter) {
       return -1;
-    } else if (incomplete_count_after > r.incomplete_count_after) {
+    } else if (incompleteCountAfter > r.incompleteCountAfter) {
       return 1;
-    } else { // incomplete_count_after == r.incomplete_count_after
-      if (via_count_after < r.via_count_after) {
+    } else { // incompleteCountAfter == r.incompleteCountAfter
+      if (viaCountAfter < r.viaCountAfter) {
         return -1;
-      } else if (via_count_after > r.via_count_after) {
+      } else if (viaCountAfter > r.viaCountAfter) {
         return 1;
-      } else { // via_count_after == r.via_count_after
-        if (trace_length_after < r.trace_length_after) {
+      } else { // viaCountAfter == r.viaCountAfter
+        if (traceLengthAfter < r.traceLengthAfter) {
           return -1;
-        } else if (trace_length_after > r.trace_length_after) {
+        } else if (traceLengthAfter > r.traceLengthAfter) {
           return 1;
         } else {
           return 0;
@@ -91,7 +90,7 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
   }
 
   public int item_id() {
-    return this.item_id;
+    return this.itemId;
   }
 
   public boolean improved() {
@@ -99,27 +98,27 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
   }
 
   public float improvement_percentage() {
-    return this.improvement_percentage;
+    return this.improvementPercentage;
   }
 
   public int via_count() {
-    return via_count_after;
+    return viaCountAfter;
   }
 
   public double trace_length() {
-    return trace_length_after;
+    return traceLengthAfter;
   }
 
   public int incomplete_count() {
-    return incomplete_count_after;
+    return incompleteCountAfter;
   }
 
   public int via_count_reduced() {
-    return via_count_before - via_count_after;
+    return viaCountBefore - viaCountAfter;
   }
 
   public double length_reduced() {
-    return trace_length_before - trace_length_after;
+    return traceLengthBefore - traceLengthAfter;
   }
 
   public void update_improved(boolean p_improved) {
@@ -127,6 +126,6 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
   }
 
   public int incomplete_count_before() {
-    return incomplete_count_before;
+    return incompleteCountBefore;
   }
 }

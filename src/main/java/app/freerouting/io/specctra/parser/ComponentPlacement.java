@@ -8,14 +8,14 @@ import java.util.Map;
 public class ComponentPlacement {
 
   /** The name of the corresponding library component */
-  public final String lib_name;
+  public final String libName;
 
   /** The list of ComponentLocations of the library component on the board. */
   public final Collection<ComponentLocation> locations;
 
   /** Creates a new instance of ComponentPlacement */
   public ComponentPlacement(String p_lib_name) {
-    lib_name = p_lib_name;
+    libName = p_lib_name;
     locations = new LinkedList<>();
   }
 
@@ -31,13 +31,13 @@ public class ComponentPlacement {
      * True, if the component is placed at the component side. Else the component is placed at the
      * solder side.
      */
-    public final boolean is_front;
+    public final boolean isFront;
 
     /** The rotation of the component in degree. */
     public final double rotation;
 
     /** If true, the component cannot be moved. */
-    public final boolean position_fixed;
+    public final boolean positionFixed;
 
     /** The entries of this map are of type ItemClearanceInfo, the keys are the pin names. */
     public final Map<String, ItemClearanceInfo> pin_infos;
@@ -46,7 +46,7 @@ public class ComponentPlacement {
     public final Map<String, ItemClearanceInfo> via_keepout_infos;
     public final Map<String, ItemClearanceInfo> place_keepout_infos;
 
-    public final String part_number;
+    public final String partNumber;
 
     ComponentLocation(
         String p_name,
@@ -61,25 +61,25 @@ public class ComponentPlacement {
         String p_part_number) {
       name = p_name;
       coor = p_coor;
-      is_front = p_is_front;
+      isFront = p_is_front;
       rotation = p_rotation;
-      position_fixed = p_position_fixed;
+      positionFixed = p_position_fixed;
       pin_infos = p_pin_infos;
       keepout_infos = p_keepout_infos;
       via_keepout_infos = p_via_keepout_infos;
       place_keepout_infos = p_place_keepout_infos;
-      part_number = p_part_number;
+      partNumber = p_part_number;
     }
   }
 
   public static class ItemClearanceInfo {
 
     public final String name;
-    public final String clearance_class;
+    public final String clearanceClass;
 
     ItemClearanceInfo(String p_name, String p_clearance_class) {
       name = p_name;
-      clearance_class = p_clearance_class;
+      clearanceClass = p_clearance_class;
     }
   }
 }

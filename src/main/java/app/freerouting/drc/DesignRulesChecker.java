@@ -26,9 +26,9 @@ public class DesignRulesChecker {
 
   private final BasicBoard board;
   private final DesignRulesCheckerSettings drcSettings;
-  public int max_connections;
+  public int maxConnections;
   // State for incomplete connections (ratsnest)
-  private NetIncompletes[] net_incompletes;
+  private NetIncompletes[] netIncompletes;
 
   public DesignRulesChecker(BasicBoard board, DesignRulesCheckerSettings drcSettings) {
     this.board = board;
@@ -53,8 +53,8 @@ public class DesignRulesChecker {
 
         // Deduplicate violations - A-B and B-A are the same violation
         for (ClearanceViolation violation : itemViolations) {
-          int id1 = violation.first_item.get_id_no();
-          int id2 = violation.second_item.get_id_no();
+          int id1 = violation.firstItem.get_id_no();
+          int id2 = violation.secondItem.get_id_no();
 
           // Create a unique key using sorted IDs to avoid duplicates
           String key =
@@ -147,7 +147,7 @@ public class DesignRulesChecker {
         // A trace is dangling if either its start or end has no contacts
         if (startContacts.isEmpty() || endContacts.isEmpty()) {
           // Only add if not already in the list
-          if (!unconnectedItems.stream().anyMatch(ui -> ui.first_item == trace)) {
+          if (!unconnectedItems.stream().anyMatch(ui -> ui.firstItem == trace)) {
             unconnectedItems.add(new UnconnectedItems(trace, null, "track_dangling"));
           }
         }
@@ -226,19 +226,19 @@ public class DesignRulesChecker {
           "drc_violation",
           "DRC violation: type=clearance"
               + ", item1="
-              + violation.first_item.toString()
+              + violation.firstItem.toString()
               + ", item2="
-              + violation.second_item.toString()
+              + violation.secondItem.toString()
               + ", layer="
               + violation.layer
               + ", expected="
-              + (violation.expected_clearance / 10000.0)
+              + (violation.expectedClearance / 10000.0)
               + "mm"
               + ", actual="
-              + (violation.actual_clearance / 10000.0)
+              + (violation.actualClearance / 10000.0)
               + "mm"
               + ", delta="
-              + ((violation.expected_clearance - violation.actual_clearance) / 10000.0)
+              + ((violation.expectedClearance - violation.actualClearance) / 10000.0)
               + "mm",
           "DRC Check",
           new Point[] {violation.shape.centre_of_gravity().round()});
@@ -249,7 +249,7 @@ public class DesignRulesChecker {
 
     FRLogger.trace(
         "DesignRulesChecker.generateReport",
-        "unconnected_items",
+        "unconnectedItems",
         "Unconnected items found: count=" + unconnectedItems.size(),
         "DRC Check",
         new Point[0]);
@@ -271,7 +271,7 @@ public class DesignRulesChecker {
         "DRC check completed: total_violations="
             + report.violations.size()
             + ", total_unconnected="
-            + report.unconnected_items.size(),
+            + report.unconnectedItems.size(),
         "DRC Check",
         new Point[0]);
 
@@ -289,45 +289,45 @@ public class DesignRulesChecker {
     List<DrcViolationItem> items = new ArrayList<>();
 
     // Create items for first and second objects
-    String firstItemDesc = getItemDescription(violation.first_item);
-    String secondItemDesc = getItemDescription(violation.second_item);
+    String firstItemDesc = getItemDescription(violation.firstItem);
+    String secondItemDesc = getItemDescription(violation.secondItem);
 
     // Position is the center of gravity of the violation shape
-    var firstItemCenterOfGravity = violation.first_item.bounding_box().centre_of_gravity();
+    var firstItemCenterOfGravity = violation.firstItem.bounding_box().centre_of_gravity();
     DrcPosition firstItemPos =
         new DrcPosition(
             convertCoordinate(firstItemCenterOfGravity.x, coordinateUnit),
             convertCoordinate(firstItemCenterOfGravity.y, coordinateUnit));
-    var secondItemCenterOfGravity = violation.second_item.bounding_box().centre_of_gravity();
+    var secondItemCenterOfGravity = violation.secondItem.bounding_box().centre_of_gravity();
     DrcPosition secondItemPos =
         new DrcPosition(
             convertCoordinate(secondItemCenterOfGravity.x, coordinateUnit),
             convertCoordinate(secondItemCenterOfGravity.y, coordinateUnit));
 
     // Use item IDs as UUIDs (they are unique within the board)
-    String firstUuid = String.valueOf(violation.first_item.get_id_no());
-    String secondUuid = String.valueOf(violation.second_item.get_id_no());
+    String firstUuid = String.valueOf(violation.firstItem.get_id_no());
+    String secondUuid = String.valueOf(violation.secondItem.get_id_no());
 
     items.add(new DrcViolationItem(firstItemDesc, firstItemPos, firstUuid));
     items.add(new DrcViolationItem(secondItemDesc, secondItemPos, secondUuid));
 
     // Determine violation type
     String type = "clearance";
-    if (isHole(violation.first_item) || isHole(violation.second_item)) {
-      type = "hole_clearance";
+    if (isHole(violation.firstItem) || isHole(violation.secondItem)) {
+      type = "holeClearance";
     }
 
     // Create violation description
     String description;
-    if ("hole_clearance".equals(type)) {
+    if ("holeClearance".equals(type)) {
       description =
           "Hole clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)"
               .formatted(
                   firstItemDesc,
                   secondItemDesc,
-                  convertCoordinate(violation.expected_clearance, coordinateUnit),
+                  convertCoordinate(violation.expectedClearance, coordinateUnit),
                   coordinateUnit,
-                  convertCoordinate(violation.actual_clearance, coordinateUnit),
+                  convertCoordinate(violation.actualClearance, coordinateUnit),
                   coordinateUnit);
     } else {
       description =
@@ -335,9 +335,9 @@ public class DesignRulesChecker {
               .formatted(
                   firstItemDesc,
                   secondItemDesc,
-                  convertCoordinate(violation.expected_clearance, coordinateUnit),
+                  convertCoordinate(violation.expectedClearance, coordinateUnit),
                   coordinateUnit,
-                  convertCoordinate(violation.actual_clearance, coordinateUnit),
+                  convertCoordinate(violation.actualClearance, coordinateUnit),
                   coordinateUnit);
     }
 
@@ -362,7 +362,7 @@ public class DesignRulesChecker {
     if ("track_dangling".equals(unconnectedItems.type)
         || "via_dangling".equals(unconnectedItems.type)) {
       // For dangling items, show only the single item
-      Item item = unconnectedItems.first_item;
+      Item item = unconnectedItems.firstItem;
 
       String itemDesc;
       if ("via_dangling".equals(unconnectedItems.type)) {
@@ -393,7 +393,7 @@ public class DesignRulesChecker {
 
     // Create items for all items from the unconnected net
     // This provides better visibility of all affected components/pins
-    for (Item item : unconnectedItems.all_items) {
+    for (Item item : unconnectedItems.allItems) {
       String itemDesc = getItemDescription(item);
       var itemCenterOfGravity = item.bounding_box().centre_of_gravity();
       DrcPosition itemPos =
@@ -405,12 +405,12 @@ public class DesignRulesChecker {
     }
 
     // Create violation description using the first two representative items
-    String fromItemDesc = getItemDescription(unconnectedItems.first_item);
-    if (unconnectedItems.second_item != null) {
-      String toItemDesc = getItemDescription(unconnectedItems.second_item);
+    String fromItemDesc = getItemDescription(unconnectedItems.firstItem);
+    if (unconnectedItems.secondItem != null) {
+      String toItemDesc = getItemDescription(unconnectedItems.secondItem);
       description =
           "Unconnected items: %s and %s (%d total items in net)"
-              .formatted(fromItemDesc, toItemDesc, unconnectedItems.all_items.size());
+              .formatted(fromItemDesc, toItemDesc, unconnectedItems.allItems.size());
     } else {
       description = "Unconnected item: %s".formatted(fromItemDesc);
     }
@@ -467,7 +467,7 @@ public class DesignRulesChecker {
     // Add layer information
     if (item instanceof Trace trace) {
       int layer = trace.get_layer();
-      String layerName = board.layer_structure.arr[layer].name;
+      String layerName = board.layerStructure.arr[layer].name;
       desc.append(" on ").append(layerName);
 
       // Add length information
@@ -492,7 +492,7 @@ public class DesignRulesChecker {
   private double convertCoordinate(double boardCoordinate, String coordinateUnit) {
     // First, convert from board's internal coordinate system to DSN coordinates (in
     // the board's unit)
-    double dsnCoordinate = board.communication.coordinate_transform.board_to_dsn(boardCoordinate);
+    double dsnCoordinate = board.communication.coordinateTransform.board_to_dsn(boardCoordinate);
 
     // Get the board's native unit
     Unit boardUnit = board.communication.unit;
@@ -528,32 +528,32 @@ public class DesignRulesChecker {
    * may have multiple connections with some connections completed while others remain incomplete.
    */
   public void calculateAllIncompletes() {
-    int max_net_no = board.rules.nets.max_net_no();
+    int maxNetNo = board.rules.nets.max_net_no();
     // Create the net item lists at once for performance reasons.
-    java.util.Vector<Collection<Item>> net_item_lists = new java.util.Vector<>(max_net_no);
-    for (int i = 0; i < max_net_no; i++) {
-      net_item_lists.add(new java.util.LinkedList<>());
+    java.util.Vector<Collection<Item>> netItemLists = new java.util.Vector<>(maxNetNo);
+    for (int i = 0; i < maxNetNo; i++) {
+      netItemLists.add(new java.util.LinkedList<>());
     }
     java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it =
-        board.item_list.start_read_object();
+        board.itemList.start_read_object();
     for (; ; ) {
-      Item curr_item = (Item) board.item_list.read_object(it);
-      if (curr_item == null) {
+      Item currItem = (Item) board.itemList.read_object(it);
+      if (currItem == null) {
         break;
       }
-      if (curr_item instanceof app.freerouting.board.Connectable) {
-        for (int i = 0; i < curr_item.net_count(); i++) {
-          net_item_lists.get(curr_item.get_net_no(i) - 1).add(curr_item);
+      if (currItem instanceof app.freerouting.board.Connectable) {
+        for (int i = 0; i < currItem.net_count(); i++) {
+          netItemLists.get(currItem.get_net_no(i) - 1).add(currItem);
         }
       }
     }
     // Correct formula: for each net with ≥2 items, (items - 1) connections are needed
     // (minimum spanning tree). Nets with 0 or 1 items contribute 0.
-    // The old formula (total_items - net_count) incorrectly included empty nets in the
-    // denominator, producing a max_connections value that was too small and could even be
+    // The old formula (total_items - netCount) incorrectly included empty nets in the
+    // denominator, producing a maxConnections value that was too small and could even be
     // negative or zero, which caused getNormalizedScore() to always return 0.
-    this.max_connections =
-        net_item_lists.stream()
+    this.maxConnections =
+        netItemLists.stream()
             .filter(list -> !list.isEmpty())
             .mapToInt(
                 list -> {
@@ -565,36 +565,36 @@ public class DesignRulesChecker {
                 })
             .sum();
 
-    int totalItems = net_item_lists.stream().mapToInt(Collection::size).sum();
+    int totalItems = netItemLists.stream().mapToInt(Collection::size).sum();
     FRLogger.trace(
         "DesignRulesChecker.calculateAllIncompletes",
-        "max_connections",
-        "Calculated max_connections="
-            + this.max_connections
+        "maxConnections",
+        "Calculated maxConnections="
+            + this.maxConnections
             + ", total_items="
             + totalItems
-            + ", net_count="
-            + net_item_lists.size()
-            + " (formula: total_items - net_count)",
+            + ", netCount="
+            + netItemLists.size()
+            + " (formula: total_items - netCount)",
         "Incomplete Count",
         new Point[0]);
 
     int[] focusNets = new int[] {98, 99};
     for (int netNo : focusNets) {
-      if (netNo >= 1 && netNo <= net_item_lists.size()) {
-        int netItems = net_item_lists.get(netNo - 1).size();
+      if (netNo >= 1 && netNo <= netItemLists.size()) {
+        int netItemsCount = netItemLists.get(netNo - 1).size();
         Net net = board.rules.nets.get(netNo);
         String netName = net != null ? net.name : "unknown";
         FRLogger.trace(
             "DesignRulesChecker.calculateAllIncompletes",
-            "net_item_count",
-            "Net item count: net=" + netNo + ", name=" + netName + ", items=" + netItems,
+            "netItemCount",
+            "Net item count: net=" + netNo + ", name=" + netName + ", items=" + netItemsCount,
             "Net #" + netNo + " (" + netName + ")",
             new Point[0]);
 
         // Let's validate all the polyline traces for this net
-        var net_items = net_item_lists.get(netNo - 1);
-        for (Item item : net_items) {
+        var netItems = netItemLists.get(netNo - 1);
+        for (Item item : netItems) {
           if (item instanceof PolylineTrace trace) {
             // trace.validateAndLogPolylineIntegrity();
           }
@@ -602,11 +602,11 @@ public class DesignRulesChecker {
       }
     }
 
-    this.net_incompletes = new NetIncompletes[max_net_no];
-    for (int i = 0; i < net_incompletes.length; i++) {
-      // net_no is 1-based, index is 0-based
-      int net_no = i + 1;
-      net_incompletes[i] = new NetIncompletes(net_no, net_item_lists.get(i), board);
+    this.netIncompletes = new NetIncompletes[maxNetNo];
+    for (int i = 0; i < netIncompletes.length; i++) {
+      // netNo is 1-based, index is 0-based
+      int netNo = i + 1;
+      netIncompletes[i] = new NetIncompletes(netNo, netItemLists.get(i), board);
     }
   }
 
@@ -616,13 +616,13 @@ public class DesignRulesChecker {
    * @param netNo The number of the net to recalculate.
    */
   public void recalculateNetIncompletes(int netNo) {
-    if (net_incompletes == null) {
+    if (netIncompletes == null) {
       calculateAllIncompletes();
       return;
     }
-    if (netNo >= 1 && netNo <= net_incompletes.length) {
-      Collection<Item> item_list = board.get_connectable_items(netNo);
-      net_incompletes[netNo - 1] = new NetIncompletes(netNo, item_list, board);
+    if (netNo >= 1 && netNo <= netIncompletes.length) {
+      Collection<Item> itemList = board.get_connectable_items(netNo);
+      netIncompletes[netNo - 1] = new NetIncompletes(netNo, itemList, board);
     }
   }
 
@@ -633,23 +633,23 @@ public class DesignRulesChecker {
    * @param itemList The collection of items belonging to the net.
    */
   public void recalculateNetIncompletes(int netNo, Collection<Item> itemList) {
-    if (net_incompletes == null) {
+    if (netIncompletes == null) {
       calculateAllIncompletes(); // Initialize if not already done, though this might be expensive
       // if we only
       // want one net. catch-22.
       // But effectively we need the array initialized.
     }
-    if (netNo >= 1 && netNo <= net_incompletes.length) {
+    if (netNo >= 1 && netNo <= netIncompletes.length) {
       // copy itemList, because it will be changed inside the constructor of
       // NetIncompletes
       Collection<Item> items = new java.util.LinkedList<>(itemList);
-      net_incompletes[netNo - 1] = new NetIncompletes(netNo, items, board);
+      netIncompletes[netNo - 1] = new NetIncompletes(netNo, items, board);
     }
   }
 
   /** Returns the total number of incomplete connections (airlines) across all nets. */
   public int getIncompleteCount() {
-    if (net_incompletes == null) {
+    if (netIncompletes == null) {
       calculateAllIncompletes();
     }
 
@@ -657,10 +657,10 @@ public class DesignRulesChecker {
     StringBuilder detailsBuilder = new StringBuilder();
     int netsWithIncompletes = 0;
 
-    for (int i = 0; i < net_incompletes.length; i++) {
-      int netIncompletes = net_incompletes[i].count();
-      if (netIncompletes > 0) {
-        result += netIncompletes;
+    for (int i = 0; i < netIncompletes.length; i++) {
+      int count = this.netIncompletes[i].count();
+      if (count > 0) {
+        result += count;
         netsWithIncompletes++;
         if (netsWithIncompletes <= 10) { // Log first 10 nets with incompletes
           Net net = board.rules.nets.get(i + 1);
@@ -694,21 +694,21 @@ public class DesignRulesChecker {
 
   /** Returns the number of incomplete connections for a specific net. */
   public int getIncompleteCount(int netNo) {
-    if (net_incompletes == null) {
+    if (netIncompletes == null) {
       calculateAllIncompletes();
     }
-    if (netNo <= 0 || netNo > net_incompletes.length) {
+    if (netNo <= 0 || netNo > netIncompletes.length) {
       return 0;
     }
 
-    int result = net_incompletes[netNo - 1].count();
+    int result = netIncompletes[netNo - 1].count();
     Net net = board.rules.nets.get(netNo);
     String netName = net != null ? net.name : "unknown";
 
     FRLogger.trace(
         "DesignRulesChecker.getIncompleteCount",
         "net_incomplete_count",
-        "Net incomplete count: net=" + netNo + ", name=" + netName + ", incomplete_count=" + result,
+        "Net incomplete count: net=" + netNo + ", name=" + netName + ", incompleteCount=" + result,
         "Net #" + netNo + " (" + netName + ")",
         new Point[0]);
 
@@ -717,12 +717,12 @@ public class DesignRulesChecker {
 
   /** Returns the total number of nets that violate length restrictions. */
   public int getLengthViolationCount() {
-    if (net_incompletes == null) {
+    if (netIncompletes == null) {
       calculateAllIncompletes();
     }
     int result = 0;
-    for (int i = 0; i < net_incompletes.length; i++) {
-      if (net_incompletes[i].get_length_violation() != 0) {
+    for (int i = 0; i < netIncompletes.length; i++) {
+      if (netIncompletes[i].get_length_violation() != 0) {
         ++result;
       }
     }
@@ -731,13 +731,13 @@ public class DesignRulesChecker {
 
   /** Returns the magnitude of the length violation for the specified net. */
   public double getLengthViolation(int netNo) {
-    if (net_incompletes == null) {
+    if (netIncompletes == null) {
       calculateAllIncompletes();
     }
-    if (netNo <= 0 || netNo > net_incompletes.length) {
+    if (netNo <= 0 || netNo > netIncompletes.length) {
       return 0;
     }
-    return net_incompletes[netNo - 1].get_length_violation();
+    return netIncompletes[netNo - 1].get_length_violation();
   }
 
   /**
@@ -746,13 +746,13 @@ public class DesignRulesChecker {
    * @return true if the status of any length violation has changed.
    */
   public boolean recalculateLengthViolations() {
-    if (net_incompletes == null) {
+    if (netIncompletes == null) {
       calculateAllIncompletes();
       return true; // Technically changed from nothing to something
     }
     boolean result = false;
-    for (int i = 0; i < net_incompletes.length; i++) {
-      if (net_incompletes[i].calc_length_violation()) {
+    for (int i = 0; i < netIncompletes.length; i++) {
+      if (netIncompletes[i].calc_length_violation()) {
         result = true;
       }
     }
@@ -761,17 +761,17 @@ public class DesignRulesChecker {
 
   /** Retrieves all airlines (incomplete connections) for the entire board. */
   public AirLine[] getAllAirlines() {
-    if (net_incompletes == null) {
+    if (netIncompletes == null) {
       calculateAllIncompletes();
     }
     int count = getIncompleteCount();
     AirLine[] result = new AirLine[count];
-    int curr_index = 0;
-    for (int i = 0; i < net_incompletes.length; i++) {
-      Collection<AirLine> curr_list = net_incompletes[i].incompletes;
-      for (AirLine curr_line : curr_list) {
-        result[curr_index] = curr_line;
-        ++curr_index;
+    int currIndex = 0;
+    for (int i = 0; i < netIncompletes.length; i++) {
+      Collection<AirLine> currList = netIncompletes[i].incompletes;
+      for (AirLine currLine : currList) {
+        result[currIndex] = currLine;
+        ++currIndex;
       }
     }
     return result;
@@ -781,13 +781,13 @@ public class DesignRulesChecker {
    * Gets the NetIncompletes object for a specific net. Useful for drawing or detailed inspection.
    */
   public NetIncompletes getNetIncompletes(int netNo) {
-    if (net_incompletes == null) {
+    if (netIncompletes == null) {
       calculateAllIncompletes();
     }
-    if (netNo <= 0 || netNo > net_incompletes.length) {
+    if (netNo <= 0 || netNo > netIncompletes.length) {
       return null;
     }
-    return net_incompletes[netNo - 1];
+    return netIncompletes[netNo - 1];
   }
 
   /**

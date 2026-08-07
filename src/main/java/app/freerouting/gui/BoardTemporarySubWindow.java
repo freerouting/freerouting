@@ -6,12 +6,12 @@ import java.awt.event.WindowEvent;
 /** Class for temporary subwindows of the board frame */
 public class BoardTemporarySubWindow extends BoardSubWindow {
 
-  protected final BoardFrame board_frame;
+  protected final BoardFrame boardFrame;
 
   /** Creates a new instance of BoardTemporarySubWindow */
   public BoardTemporarySubWindow(BoardFrame p_board_frame) {
-    this.board_frame = p_board_frame;
-    p_board_frame.temporary_subwindows.add(this);
+    this.boardFrame = p_board_frame;
+    p_board_frame.temporarySubwindows.add(this);
 
     this.addWindowListener(
         new WindowAdapter() {
@@ -29,7 +29,7 @@ public class BoardTemporarySubWindow extends BoardSubWindow {
 
   @Override
   public void dispose() {
-    this.board_frame.temporary_subwindows.remove(this);
+    this.boardFrame.temporarySubwindows.remove(this);
     super.dispose();
   }
 }

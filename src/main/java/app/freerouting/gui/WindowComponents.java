@@ -24,44 +24,43 @@ public class WindowComponents extends WindowObjectListWithFilter {
   /** Fills the list with the board components. */
   @Override
   protected void fill_list() {
-    Components components =
-        this.board_frame.board_panel.board_handling.get_routing_board().components;
-    Component[] sorted_arr = new Component[components.count()];
-    for (int i = 0; i < sorted_arr.length; i++) {
-      sorted_arr[i] = components.get(i + 1);
+    Components components = this.boardFrame.boardPanel.boardHandling.get_routing_board().components;
+    Component[] sortedArr = new Component[components.count()];
+    for (int i = 0; i < sortedArr.length; i++) {
+      sortedArr[i] = components.get(i + 1);
     }
-    Arrays.sort(sorted_arr);
-    for (int i = 0; i < sorted_arr.length; i++) {
-      this.add_to_list(sorted_arr[i]);
+    Arrays.sort(sortedArr);
+    for (int i = 0; i < sortedArr.length; i++) {
+      this.add_to_list(sortedArr[i]);
     }
     this.list.setVisibleRowCount(Math.min(components.count(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
   protected void select_instances() {
-    List<Object> selected_components = list.getSelectedValuesList();
-    if (selected_components.isEmpty()) {
+    List<Object> selectedComponents = list.getSelectedValuesList();
+    if (selectedComponents.isEmpty()) {
       return;
     }
-    RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-    Set<Item> selected_items = new TreeSet<>();
-    Collection<Item> board_items = routing_board.get_items();
-    for (Item curr_item : board_items) {
-      if (curr_item.get_component_no() > 0) {
-        Component curr_component = routing_board.components.get(curr_item.get_component_no());
-        boolean component_matches = false;
-        for (int i = 0; i < selected_components.size(); i++) {
-          if (curr_component == selected_components.get(i)) {
-            component_matches = true;
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.get_routing_board();
+    Set<Item> selectedItems = new TreeSet<>();
+    Collection<Item> boardItems = routingBoard.get_items();
+    for (Item currItem : boardItems) {
+      if (currItem.get_component_no() > 0) {
+        Component currComponent = routingBoard.components.get(currItem.get_component_no());
+        boolean componentMatches = false;
+        for (int i = 0; i < selectedComponents.size(); i++) {
+          if (currComponent == selectedComponents.get(i)) {
+            componentMatches = true;
             break;
           }
         }
-        if (component_matches) {
-          selected_items.add(curr_item);
+        if (componentMatches) {
+          selectedItems.add(currItem);
         }
       }
     }
-    board_frame.board_panel.board_handling.select_items(selected_items);
-    board_frame.board_panel.board_handling.zoom_selection();
+    boardFrame.boardPanel.boardHandling.select_items(selectedItems);
+    boardFrame.boardPanel.boardHandling.zoom_selection();
   }
 }

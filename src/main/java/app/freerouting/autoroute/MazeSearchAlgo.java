@@ -41,57 +41,57 @@ public class MazeSearchAlgo {
   private static final int ALREADY_RIPPED_COSTS = 1;
 
   /** The autoroute engine of this expansion algorithm. */
-  public final AutorouteEngine autoroute_engine;
+  public final AutorouteEngine autorouteEngine;
 
   final AutorouteControl ctrl;
 
   /** The queue of expanded elements used in this search algorithm. */
-  final SortedSet<MazeListElement> maze_expansion_list;
+  final SortedSet<MazeListElement> mazeExpansionList;
 
   /**
    * Used for calculating of a good lower bound for the distance between a new MazeExpansionElement
    * and the destination set of the expansion.
    */
-  final DestinationDistance destination_distance;
+  final DestinationDistance destinationDistance;
 
   /** The search tree for expanding. It is the tree compensated for the current net. */
-  private final ShapeSearchTree search_tree;
+  private final ShapeSearchTree searchTree;
 
-  private final Random random_generator = new Random();
+  private final Random randomGenerator = new Random();
 
   /** The destination door found by the expanding algorithm. */
-  private ExpandableObject destination_door;
+  private ExpandableObject destinationDoor;
 
-  private int section_no_of_destination_door;
+  private int sectionNoOfDestinationDoor;
 
   /** Creates a new instance of MazeSearchAlgo */
   MazeSearchAlgo(AutorouteEngine p_autoroute_engine, AutorouteControl p_ctrl) {
-    autoroute_engine = p_autoroute_engine;
+    autorouteEngine = p_autoroute_engine;
     ctrl = p_ctrl;
-    random_generator.setSeed(
-        p_ctrl.ripup_costs); // Keep v1.9 deterministic randomization across passes.
-    this.search_tree = p_autoroute_engine.autoroute_search_tree;
-    maze_expansion_list =
+    randomGenerator.setSeed(
+        p_ctrl.ripupCosts); // Keep v1.9 deterministic randomization across passes.
+    this.searchTree = p_autoroute_engine.autorouteSearchTree;
+    mazeExpansionList =
         new TreeSet<>() {
           @Override
           public boolean add(MazeListElement p_element) {
-            if (ctrl.is_fanout && ctrl.fanout_start_pin_center != null) {
-              app.freerouting.geometry.planar.FloatPoint pin_center_float =
-                  ctrl.fanout_start_pin_center.to_float();
+            if (ctrl.isFanout && ctrl.fanoutStartPinCenter != null) {
+              app.freerouting.geometry.planar.FloatPoint pinCenterFloat =
+                  ctrl.fanoutStartPinCenter.to_float();
               boolean onStartLayer =
-                  p_element.next_room != null
-                      && p_element.next_room.get_layer() == ctrl.fanout_start_pin_layer;
+                  p_element.nextRoom != null
+                      && p_element.nextRoom.get_layer() == ctrl.fanoutStartPinLayer;
               if (onStartLayer) {
                 double maxLen =
                     ctrl.settings.fanout != null && ctrl.settings.fanout.maxEscapeLengthMm != null
                         ? ctrl.settings.fanout.maxEscapeLengthMm * 1000.0
                         : 3000.0;
                 double resolution =
-                    autoroute_engine.board.communication.get_resolution(
+                    autorouteEngine.board.communication.get_resolution(
                         app.freerouting.board.Unit.UM);
-                app.freerouting.geometry.planar.FloatPoint entry_point =
-                    p_element.shape_entry.a.middle_point(p_element.shape_entry.b);
-                double dist = entry_point.distance(pin_center_float);
+                app.freerouting.geometry.planar.FloatPoint entryPoint =
+                    p_element.shapeEntry.a.middle_point(p_element.shapeEntry.b);
+                double dist = entryPoint.distance(pinCenterFloat);
                 if (dist > maxLen * resolution) {
                   return false;
                 }
@@ -102,9 +102,9 @@ public class MazeSearchAlgo {
                         ? ctrl.settings.fanout.minEscapeLengthMm * 1000.0
                         : 500.0;
                 double resolution =
-                    autoroute_engine.board.communication.get_resolution(
+                    autorouteEngine.board.communication.get_resolution(
                         app.freerouting.board.Unit.UM);
-                double drillDist = drill.location.to_float().distance(pin_center_float);
+                double drillDist = drill.location.to_float().distance(pinCenterFloat);
                 if (drillDist < minLen * resolution) {
                   return false;
                 }
@@ -113,9 +113,9 @@ public class MazeSearchAlgo {
             return super.add(p_element);
           }
         };
-    destination_distance =
+    destinationDistance =
         new DestinationDistance(
-            ctrl.trace_costs, ctrl.layer_active, ctrl.min_normal_via_cost, ctrl.min_cheap_via_cost);
+            ctrl.traceCosts, ctrl.layerActive, ctrl.minNormalViaCost, ctrl.minCheapViaCost);
   }
 
   /**
@@ -127,10 +127,10 @@ public class MazeSearchAlgo {
       Set<Item> p_destination_items,
       AutorouteEngine p_autoroute_database,
       AutorouteControl p_ctrl) {
-    MazeSearchAlgo new_instance = new MazeSearchAlgo(p_autoroute_database, p_ctrl);
+    MazeSearchAlgo newInstance = new MazeSearchAlgo(p_autoroute_database, p_ctrl);
     MazeSearchAlgo result;
-    if (new_instance.init(p_start_items, p_destination_items)) {
-      result = new_instance;
+    if (newInstance.init(p_start_items, p_destination_items)) {
+      result = newInstance;
     } else {
       result = null;
     }
@@ -143,15 +143,14 @@ public class MazeSearchAlgo {
    */
   private static void reduce_trace_shapes_at_tie_pins(
       Collection<Item> p_item_list, int p_own_net_no, ShapeSearchTree p_autoroute_tree) {
-    for (Item curr_item : p_item_list) {
-      if ((curr_item instanceof Pin curr_tie_pin) && curr_item.net_count() > 1) {
-        Collection<Item> pin_contacts = curr_item.get_normal_contacts();
-        for (Item curr_contact : pin_contacts) {
-          if (!(curr_contact instanceof PolylineTrace) || curr_contact.contains_net(p_own_net_no)) {
+    for (Item currItem : p_item_list) {
+      if ((currItem instanceof Pin curr_tie_pin) && currItem.net_count() > 1) {
+        Collection<Item> pinContacts = currItem.get_normal_contacts();
+        for (Item currContact : pinContacts) {
+          if (!(currContact instanceof PolylineTrace) || currContact.contains_net(p_own_net_no)) {
             continue;
           }
-          p_autoroute_tree.reduce_trace_shape_at_tie_pin(
-              curr_tie_pin, (PolylineTrace) curr_contact);
+          p_autoroute_tree.reduce_trace_shape_at_tie_pin(curr_tie_pin, (PolylineTrace) currContact);
         }
       }
     }
@@ -163,34 +162,34 @@ public class MazeSearchAlgo {
    */
   private static double calc_fanout_via_ripup_cost_factor(Trace p_trace) {
     final double FANOUT_COST_CONST = 20000;
-    Collection<Item> curr_end_contacts;
+    Collection<Item> currEndContacts;
     for (int i = 0; i < 2; i++) {
       if (i == 0) {
-        curr_end_contacts = p_trace.get_start_contacts();
+        currEndContacts = p_trace.get_start_contacts();
       } else {
-        curr_end_contacts = p_trace.get_end_contacts();
+        currEndContacts = p_trace.get_end_contacts();
       }
-      if (curr_end_contacts.size() != 1) {
+      if (currEndContacts.size() != 1) {
         continue;
       }
-      Item curr_trace_contact = curr_end_contacts.iterator().next();
-      boolean protect_fanout_via = false;
-      if (curr_trace_contact instanceof Pin
-          && curr_trace_contact.first_layer() == curr_trace_contact.last_layer()) {
-        protect_fanout_via = true;
-      } else if (curr_trace_contact instanceof PolylineTrace contact_trace
-          && curr_trace_contact.get_fixed_state() == FixedState.SHOVE_FIXED) {
+      Item currTraceContact = currEndContacts.iterator().next();
+      boolean protectFanoutVia = false;
+      if (currTraceContact instanceof Pin
+          && currTraceContact.first_layer() == currTraceContact.last_layer()) {
+        protectFanoutVia = true;
+      } else if (currTraceContact instanceof PolylineTrace contactTrace
+          && currTraceContact.get_fixed_state() == FixedState.SHOVE_FIXED) {
         // look for shove fixed exit traces of SMD-pins
-        if (contact_trace.corner_count() == 2) {
-          protect_fanout_via = true;
+        if (contactTrace.corner_count() == 2) {
+          protectFanoutVia = true;
         }
       }
 
-      if (protect_fanout_via) {
-        double fanout_via_cost_factor = p_trace.get_half_width() / p_trace.get_length();
-        fanout_via_cost_factor *= fanout_via_cost_factor;
-        fanout_via_cost_factor *= FANOUT_COST_CONST;
-        return Math.max(fanout_via_cost_factor, 1);
+      if (protectFanoutVia) {
+        double fanoutViaCostFactor = p_trace.get_half_width() / p_trace.get_length();
+        fanoutViaCostFactor *= fanoutViaCostFactor;
+        fanoutViaCostFactor *= FANOUT_COST_CONST;
+        return Math.max(fanoutViaCostFactor, 1);
       }
     }
     return 1;
@@ -201,34 +200,34 @@ public class MazeSearchAlgo {
    * projection is empty.
    */
   private static FloatLine segment_projection(FloatLine p_from_segment, FloatLine p_to_segment) {
-    FloatLine check_segment = p_from_segment.adjust_direction(p_to_segment);
-    FloatLine first_projection = p_to_segment.segment_projection(check_segment);
-    FloatLine second_projection = p_to_segment.segment_projection_2(check_segment);
+    FloatLine checkSegment = p_from_segment.adjust_direction(p_to_segment);
+    FloatLine firstProjection = p_to_segment.segment_projection(checkSegment);
+    FloatLine secondProjection = p_to_segment.segment_projection_2(checkSegment);
     FloatLine result;
-    if (first_projection != null && second_projection != null) {
-      FloatPoint result_a;
-      if (first_projection.a == p_to_segment.a || second_projection.a == p_to_segment.a) {
-        result_a = p_to_segment.a;
-      } else if (first_projection.a.distance_square(p_to_segment.a)
-          <= second_projection.a.distance_square(p_to_segment.a)) {
-        result_a = first_projection.a;
+    if (firstProjection != null && secondProjection != null) {
+      FloatPoint resultA;
+      if (firstProjection.a == p_to_segment.a || secondProjection.a == p_to_segment.a) {
+        resultA = p_to_segment.a;
+      } else if (firstProjection.a.distance_square(p_to_segment.a)
+          <= secondProjection.a.distance_square(p_to_segment.a)) {
+        resultA = firstProjection.a;
       } else {
-        result_a = second_projection.a;
+        resultA = secondProjection.a;
       }
-      FloatPoint result_b;
-      if (first_projection.b == p_to_segment.b || second_projection.b == p_to_segment.b) {
-        result_b = p_to_segment.b;
-      } else if (first_projection.b.distance_square(p_to_segment.b)
-          <= second_projection.b.distance_square(p_to_segment.b)) {
-        result_b = first_projection.b;
+      FloatPoint resultB;
+      if (firstProjection.b == p_to_segment.b || secondProjection.b == p_to_segment.b) {
+        resultB = p_to_segment.b;
+      } else if (firstProjection.b.distance_square(p_to_segment.b)
+          <= secondProjection.b.distance_square(p_to_segment.b)) {
+        resultB = firstProjection.b;
       } else {
-        result_b = second_projection.b;
+        resultB = secondProjection.b;
       }
-      result = new FloatLine(result_a, result_b);
-    } else if (first_projection != null) {
-      result = first_projection;
+      result = new FloatLine(resultA, resultB);
+    } else if (firstProjection != null) {
+      result = firstProjection;
     } else {
-      result = second_projection;
+      result = secondProjection;
     }
     return result;
   }
@@ -243,10 +242,10 @@ public class MazeSearchAlgo {
     while (occupy_next_element()) {
       continue;
     }
-    if (this.destination_door == null) {
+    if (this.destinationDoor == null) {
       return null;
     }
-    return new Result(this.destination_door, this.section_no_of_destination_door);
+    return new Result(this.destinationDoor, this.sectionNoOfDestinationDoor);
   }
 
   /**
@@ -254,74 +253,74 @@ public class MazeSearchAlgo {
    * exhausted or the destination is reached.
    */
   public boolean occupy_next_element() {
-    if (this.destination_door != null) {
+    if (this.destinationDoor != null) {
       return false; // destination already reached
     }
-    MazeListElement list_element = null;
-    MazeSearchElement curr_door_section = null;
+    MazeListElement listElement = null;
+    MazeSearchElement currDoorSection = null;
     // Search the next element, which is not yet expanded.
-    boolean next_element_found = false;
-    while (!maze_expansion_list.isEmpty()) {
-      if (this.autoroute_engine.is_stop_requested()) {
+    boolean nextElementFound = false;
+    while (!mazeExpansionList.isEmpty()) {
+      if (this.autorouteEngine.is_stop_requested()) {
         return false;
       }
 
-      Iterator<MazeListElement> it = maze_expansion_list.iterator();
-      list_element = it.next();
+      Iterator<MazeListElement> it = mazeExpansionList.iterator();
+      listElement = it.next();
       it.remove();
 
-      int curr_section_no = list_element.section_no_of_door;
-      curr_door_section = list_element.door.get_maze_search_element(curr_section_no);
+      int currSectionNo = listElement.sectionNoOfDoor;
+      currDoorSection = listElement.door.get_maze_search_element(currSectionNo);
 
-      if (!curr_door_section.is_occupied) {
-        next_element_found = true;
+      if (!currDoorSection.isOccupied) {
+        nextElementFound = true;
         break;
       }
     }
-    if (!next_element_found) {
+    if (!nextElementFound) {
       return false;
     }
-    curr_door_section.backtrack_door = list_element.backtrack_door;
-    curr_door_section.section_no_of_backtrack_door = list_element.section_no_of_backtrack_door;
-    curr_door_section.room_ripped = list_element.room_ripped;
-    curr_door_section.ripup_cost = list_element.ripup_cost;
-    curr_door_section.adjustment = list_element.adjustment;
+    currDoorSection.backtrackDoor = listElement.backtrackDoor;
+    currDoorSection.sectionNoOfBacktrackDoor = listElement.sectionNoOfBacktrackDoor;
+    currDoorSection.roomRipped = listElement.roomRipped;
+    currDoorSection.ripupCost = listElement.ripupCost;
+    currDoorSection.adjustment = listElement.adjustment;
 
-    if (list_element.door instanceof DrillPage) {
-      expand_to_drills_of_page(list_element);
+    if (listElement.door instanceof DrillPage) {
+      expand_to_drills_of_page(listElement);
       return true;
     }
 
-    if (list_element.door instanceof TargetItemExpansionDoor curr_door) {
-      if (curr_door.is_destination_door()) {
+    if (listElement.door instanceof TargetItemExpansionDoor currDoor) {
+      if (currDoor.is_destination_door()) {
         // The destination is reached.
-        this.destination_door = curr_door;
-        this.section_no_of_destination_door = list_element.section_no_of_door;
+        this.destinationDoor = currDoor;
+        this.sectionNoOfDestinationDoor = listElement.sectionNoOfDoor;
         return false;
       }
     }
-    if (ctrl.is_fanout
-        && list_element.door instanceof ExpansionDrill
-        && list_element.backtrack_door instanceof ExpansionDrill) {
+    if (ctrl.isFanout
+        && listElement.door instanceof ExpansionDrill
+        && listElement.backtrackDoor instanceof ExpansionDrill) {
       // algorithm completed after the first drill;
-      this.destination_door = list_element.door;
-      this.section_no_of_destination_door = list_element.section_no_of_door;
+      this.destinationDoor = listElement.door;
+      this.sectionNoOfDestinationDoor = listElement.sectionNoOfDoor;
       return false;
     }
-    if (ctrl.vias_allowed
-        && list_element.door instanceof ExpansionDrill
-        && !(list_element.backtrack_door instanceof ExpansionDrill)) {
-      expand_to_other_layers(list_element);
+    if (ctrl.viasAllowed
+        && listElement.door instanceof ExpansionDrill
+        && !(listElement.backtrackDoor instanceof ExpansionDrill)) {
+      expand_to_other_layers(listElement);
     }
 
-    if (list_element.next_room != null) {
-      if (!expand_to_room_doors(list_element)) {
+    if (listElement.nextRoom != null) {
+      if (!expand_to_room_doors(listElement)) {
         return true; // occupation by ripup is delayed or nothing was expanded
         // In case nothing was expanded allow the section to be occupied from
         // somewhere else, if the next room is thin.
       }
     }
-    curr_door_section.is_occupied = true;
+    currDoorSection.isOccupied = true;
     return true;
   }
 
@@ -333,245 +332,243 @@ public class MazeSearchAlgo {
 
     // Complete the neighbour rooms to make sure, that the
     // doors of this room will not change later on.
-    int layer_no = p_list_element.next_room.get_layer();
+    int layerNo = p_list_element.nextRoom.get_layer();
 
-    boolean layer_active = ctrl.layer_active[layer_no];
-    if (!layer_active) {
-      if (autoroute_engine.board.layer_structure.arr[layer_no].is_signal) {
+    boolean layerActive = ctrl.layerActive[layerNo];
+    if (!layerActive) {
+      if (autorouteEngine.board.layerStructure.arr[layerNo].isSignal) {
         return true;
       }
     }
 
-    double half_width = ctrl.compensated_trace_half_width[layer_no];
-    boolean curr_door_is_small = false;
-    if (p_list_element.door instanceof ExpansionDoor curr_door) {
-      double half_width_add = half_width + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
-      if (this.ctrl.with_neckdown) {
+    double halfWidth = ctrl.compensatedTraceHalfWidth[layerNo];
+    boolean currDoorIsSmall = false;
+    if (p_list_element.door instanceof ExpansionDoor currDoor) {
+      double halfWidthAdd = halfWidth + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
+      if (this.ctrl.withNeckdown) {
         // try evtl. neckdown at a destination pin
-        double neck_down_half_width = check_neck_down_at_dest_pin(p_list_element.next_room);
-        if (neck_down_half_width > 0) {
-          half_width_add = Math.min(half_width_add, neck_down_half_width);
-          half_width = half_width_add;
+        double neckDownHalfWidth = check_neck_down_at_dest_pin(p_list_element.nextRoom);
+        if (neckDownHalfWidth > 0) {
+          halfWidthAdd = Math.min(halfWidthAdd, neckDownHalfWidth);
+          halfWidth = halfWidthAdd;
         }
       }
-      curr_door_is_small = door_is_small(curr_door, 2 * half_width_add);
+      currDoorIsSmall = door_is_small(currDoor, 2 * halfWidthAdd);
     }
 
-    int doorCountBeforeCompletion = p_list_element.next_room.get_doors().size();
-    this.autoroute_engine.complete_neighbour_rooms(p_list_element.next_room);
-    int doorCountAfterCompletion = p_list_element.next_room.get_doors().size();
+    int doorCountBeforeCompletion = p_list_element.nextRoom.get_doors().size();
+    this.autorouteEngine.complete_neighbour_rooms(p_list_element.nextRoom);
+    int doorCountAfterCompletion = p_list_element.nextRoom.get_doors().size();
     FRLogger.trace(
         "ROOM_COMPLETE_SYNC"
             + ", net="
-            + ctrl.net_no
+            + ctrl.netNo
             + ", layer="
-            + layer_no
+            + layerNo
             + ", from_section="
-            + p_list_element.section_no_of_door
+            + p_list_element.sectionNoOfDoor
             + ", backtrack_section="
-            + p_list_element.section_no_of_backtrack_door
+            + p_list_element.sectionNoOfBacktrackDoor
             + ", from_door="
             + describe_expandable(p_list_element.door)
-            + ", next_room="
-            + describe_room(p_list_element.next_room)
+            + ", nextRoom="
+            + describe_room(p_list_element.nextRoom)
             + ", door_count_before="
             + doorCountBeforeCompletion
             + ", door_count_after="
             + doorCountAfterCompletion);
 
-    FloatPoint shape_entry_middle =
-        p_list_element.shape_entry.a.middle_point(p_list_element.shape_entry.b);
+    FloatPoint shapeEntryMiddle =
+        p_list_element.shapeEntry.a.middle_point(p_list_element.shapeEntry.b);
 
-    if (this.ctrl.with_neckdown && p_list_element.door instanceof TargetItemExpansionDoor door) {
+    if (this.ctrl.withNeckdown && p_list_element.door instanceof TargetItemExpansionDoor door) {
       // try evtl. neckdown at a start pin
-      Item start_item = door.item;
-      if (start_item instanceof Pin pin) {
-        double neckdown_half_width = pin.get_trace_neckdown_halfwidth(layer_no);
-        if (neckdown_half_width > 0) {
-          half_width = Math.min(half_width, neckdown_half_width);
+      Item startItem = door.item;
+      if (startItem instanceof Pin pin) {
+        double neckdownHalfWidth = pin.get_trace_neckdown_halfwidth(layerNo);
+        if (neckdownHalfWidth > 0) {
+          halfWidth = Math.min(halfWidth, neckdownHalfWidth);
         }
       }
     }
 
-    boolean next_room_is_thick = true;
-    if (p_list_element.next_room instanceof ObstacleExpansionRoom room) {
-      next_room_is_thick = room_shape_is_thick(room);
+    boolean nextRoomIsThick = true;
+    if (p_list_element.nextRoom instanceof ObstacleExpansionRoom room) {
+      nextRoomIsThick = room_shape_is_thick(room);
     } else {
-      TileShape next_room_shape = p_list_element.next_room.get_shape();
-      if (next_room_shape.min_width() < 2 * half_width) {
-        next_room_is_thick = false; // to prevent problems with the opposite side
-      } else if (!p_list_element.already_checked
+      TileShape nextRoomShape = p_list_element.nextRoom.get_shape();
+      if (nextRoomShape.min_width() < 2 * halfWidth) {
+        nextRoomIsThick = false; // to prevent problems with the opposite side
+      } else if (!p_list_element.alreadyChecked
           && p_list_element.door.get_dimension() == 1
-          && !curr_door_is_small) {
+          && !currDoorIsSmall) {
         // The algorithm below works only, if p_location is on the border of p_room_shape.
         // That is only the case for 1 dimensional doors.
         // For small doors the check is done in check_leaving_via below.
 
-        FloatPoint[] nearest_points =
-            next_room_shape.nearest_border_points_approx(shape_entry_middle, 2);
-        if (nearest_points.length < 2) {
-          FRLogger.warn("MazeSearchAlgo.expand_to_room_doors: nearest_points.length == 2 expected");
-          next_room_is_thick = false;
+        FloatPoint[] nearestPoints =
+            nextRoomShape.nearest_border_points_approx(shapeEntryMiddle, 2);
+        if (nearestPoints.length < 2) {
+          FRLogger.warn("MazeSearchAlgo.expand_to_room_doors: nearestPoints.length == 2 expected");
+          nextRoomIsThick = false;
         } else {
-          double curr_dist = nearest_points[1].distance(shape_entry_middle);
-          next_room_is_thick = curr_dist > half_width + 1;
+          double currDist = nearestPoints[1].distance(shapeEntryMiddle);
+          nextRoomIsThick = currDist > halfWidth + 1;
         }
       }
     }
-    if (!layer_active && p_list_element.door instanceof ExpansionDrill drill) {
+    if (!layerActive && p_list_element.door instanceof ExpansionDrill drill) {
       // check for drill to a foreign conduction area on split plane.
-      Point drill_location = drill.location;
+      Point drillLocation = drill.location;
       ItemSelectionFilter filter =
           new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.CONDUCTION);
-      Set<Item> picked_items = autoroute_engine.board.pick_items(drill_location, layer_no, filter);
-      for (Item curr_item : picked_items) {
-        if (!curr_item.contains_net(ctrl.net_no)) {
+      Set<Item> pickedItems = autorouteEngine.board.pick_items(drillLocation, layerNo, filter);
+      for (Item currItem : pickedItems) {
+        if (!currItem.contains_net(ctrl.netNo)) {
           return true;
         }
       }
     }
-    boolean something_expanded =
-        expand_to_target_doors(
-            p_list_element, next_room_is_thick, curr_door_is_small, shape_entry_middle);
+    boolean somethingExpanded =
+        expand_to_target_doors(p_list_element, nextRoomIsThick, currDoorIsSmall, shapeEntryMiddle);
 
-    if (!layer_active) {
+    if (!layerActive) {
       return true;
     }
 
-    int ripup_costs = 0;
+    int ripupCosts = 0;
 
-    if (p_list_element.next_room instanceof FreeSpaceExpansionRoom) {
-      if (!p_list_element.already_checked) {
-        if (curr_door_is_small) {
-          boolean enter_through_small_door = false;
-          if (next_room_is_thick) {
+    if (p_list_element.nextRoom instanceof FreeSpaceExpansionRoom) {
+      if (!p_list_element.alreadyChecked) {
+        if (currDoorIsSmall) {
+          boolean enterThroughSmallDoor = false;
+          if (nextRoomIsThick) {
             // check to enter the thick room from a ripped item through a small door (after
             // ripup)
-            enter_through_small_door = check_leaving_ripped_item(p_list_element);
+            enterThroughSmallDoor = check_leaving_ripped_item(p_list_element);
           }
-          if (!enter_through_small_door) {
-            return something_expanded;
+          if (!enterThroughSmallDoor) {
+            return somethingExpanded;
           }
         }
       }
-    } else if (p_list_element.next_room instanceof ObstacleExpansionRoom obstacle_room) {
+    } else if (p_list_element.nextRoom instanceof ObstacleExpansionRoom obstacle_room) {
 
-      if (!p_list_element.already_checked) {
-        boolean room_rippable = false;
-        if (this.ctrl.ripup_allowed) {
-          ripup_costs = check_ripup(p_list_element, obstacle_room.get_item(), curr_door_is_small);
-          room_rippable = ripup_costs >= 0;
+      if (!p_list_element.alreadyChecked) {
+        boolean roomRippable = false;
+        if (this.ctrl.ripupAllowed) {
+          ripupCosts = check_ripup(p_list_element, obstacle_room.get_item(), currDoorIsSmall);
+          roomRippable = ripupCosts >= 0;
         }
 
-        if (ripup_costs != ALREADY_RIPPED_COSTS && next_room_is_thick) {
-          Item obstacle_item = obstacle_room.get_item();
-          if (!curr_door_is_small
-              && this.ctrl.max_shove_trace_recursion_depth > 0
-              && obstacle_item instanceof PolylineTrace) {
+        if (ripupCosts != ALREADY_RIPPED_COSTS && nextRoomIsThick) {
+          Item obstacleItem = obstacle_room.get_item();
+          if (!currDoorIsSmall
+              && this.ctrl.maxShoveTraceRecursionDepth > 0
+              && obstacleItem instanceof PolylineTrace) {
             boolean shoved = shove_trace_room(p_list_element, obstacle_room);
             if (!shoved) {
-              if (ripup_costs > 0) {
+              if (ripupCosts > 0) {
                 // delay the occupation by ripup to allow shoving the room by another door
                 // sections.
-                MazeListElement new_element =
+                MazeListElement newElement =
                     new MazeListElement(
                         p_list_element.door,
-                        p_list_element.section_no_of_door,
-                        p_list_element.backtrack_door,
-                        p_list_element.section_no_of_backtrack_door,
-                        p_list_element.expansion_value + ripup_costs,
-                        p_list_element.sorting_value + ripup_costs,
-                        p_list_element.next_room,
-                        p_list_element.shape_entry,
+                        p_list_element.sectionNoOfDoor,
+                        p_list_element.backtrackDoor,
+                        p_list_element.sectionNoOfBacktrackDoor,
+                        p_list_element.expansionValue + ripupCosts,
+                        p_list_element.sortingValue + ripupCosts,
+                        p_list_element.nextRoom,
+                        p_list_element.shapeEntry,
                         true,
                         p_list_element.adjustment,
                         true);
-                new_element.ripup_cost = (int) ripup_costs;
-                this.maze_expansion_list.add(new_element);
+                newElement.ripupCost = (int) ripupCosts;
+                this.mazeExpansionList.add(newElement);
               }
-              return something_expanded;
+              return somethingExpanded;
             }
           }
         }
-        if (!room_rippable) {
+        if (!roomRippable) {
           return true;
         }
       }
     }
 
-    List<ExpansionDoor> room_doors_snapshot =
-        new LinkedList<>(p_list_element.next_room.get_doors());
+    List<ExpansionDoor> roomDoorsSnapshot = new LinkedList<>(p_list_element.nextRoom.get_doors());
     FRLogger.trace(
         "ROOM_DOOR context from_section="
-            + p_list_element.section_no_of_door
+            + p_list_element.sectionNoOfDoor
             + ", backtrack_section="
-            + p_list_element.section_no_of_backtrack_door
+            + p_list_element.sectionNoOfBacktrackDoor
             + ", from_door="
             + describe_expandable(p_list_element.door)
-            + ", next_room="
-            + describe_room(p_list_element.next_room)
+            + ", nextRoom="
+            + describe_room(p_list_element.nextRoom)
             + ", net="
-            + ctrl.net_no);
-    for (int door_index = 0; door_index < room_doors_snapshot.size(); door_index++) {
-      ExpansionDoor candidate_door = room_doors_snapshot.get(door_index);
+            + ctrl.netNo);
+    for (int door_index = 0; door_index < roomDoorsSnapshot.size(); door_index++) {
+      ExpansionDoor candidateDoor = roomDoorsSnapshot.get(door_index);
       FRLogger.trace(
           "ROOM_DOOR candidate index="
               + door_index
               + ", from_section="
-              + p_list_element.section_no_of_door
+              + p_list_element.sectionNoOfDoor
               + ", backtrack_section="
-              + p_list_element.section_no_of_backtrack_door
+              + p_list_element.sectionNoOfBacktrackDoor
               + ", from_door="
               + describe_expandable(p_list_element.door)
-              + ", next_room="
-              + describe_room(p_list_element.next_room)
+              + ", nextRoom="
+              + describe_room(p_list_element.nextRoom)
               + ", candidate="
-              + describe_expandable(candidate_door)
+              + describe_expandable(candidateDoor)
               + ", net="
-              + ctrl.net_no);
+              + ctrl.netNo);
     }
 
-    for (ExpansionDoor to_door : room_doors_snapshot) {
+    for (ExpansionDoor to_door : roomDoorsSnapshot) {
       if (to_door == p_list_element.door) {
         continue;
       }
       if (expand_to_door(
           to_door,
           p_list_element,
-          ripup_costs,
-          next_room_is_thick,
+          ripupCosts,
+          nextRoomIsThick,
           MazeSearchElement.Adjustment.NONE)) {
-        something_expanded = true;
+        somethingExpanded = true;
       }
     }
 
     // Expand also the drill pages intersecting the room.
-    if (ctrl.vias_allowed && !(p_list_element.door instanceof ExpansionDrill)) {
-      if ((something_expanded || next_room_is_thick)
-          && p_list_element.next_room instanceof CompleteFreeSpaceExpansionRoom) {
-        // avoid setting something_expanded to true when next_room is thin to allow
+    if (ctrl.viasAllowed && !(p_list_element.door instanceof ExpansionDrill)) {
+      if ((somethingExpanded || nextRoomIsThick)
+          && p_list_element.nextRoom instanceof CompleteFreeSpaceExpansionRoom) {
+        // avoid setting somethingExpanded to true when nextRoom is thin to allow
         // occupying by
         // different sections of the door
-        Collection<DrillPage> overlapping_drill_pages =
-            this.autoroute_engine.drill_page_array.overlapping_pages(
-                p_list_element.next_room.get_shape());
+        Collection<DrillPage> overlappingDrillPages =
+            this.autorouteEngine.drillPageArray.overlapping_pages(
+                p_list_element.nextRoom.get_shape());
         {
-          for (DrillPage to_drill_page : overlapping_drill_pages) {
+          for (DrillPage to_drill_page : overlappingDrillPages) {
             expand_to_drill_page(to_drill_page, p_list_element);
-            something_expanded = true;
+            somethingExpanded = true;
           }
         }
-      } else if (p_list_element.next_room instanceof ObstacleExpansionRoom room) {
-        Item curr_obstacle_item = room.get_item();
-        if (curr_obstacle_item instanceof Via curr_via) {
-          ExpansionDrill via_drill_info =
-              curr_via.get_autoroute_drill_info(this.autoroute_engine.autoroute_search_tree);
-          expand_to_drill(via_drill_info, p_list_element, ripup_costs);
+      } else if (p_list_element.nextRoom instanceof ObstacleExpansionRoom room) {
+        Item currObstacleItem = room.get_item();
+        if (currObstacleItem instanceof Via currVia) {
+          ExpansionDrill viaDrillInfo =
+              currVia.get_autoroute_drill_info(this.autorouteEngine.autorouteSearchTree);
+          expand_to_drill(viaDrillInfo, p_list_element, ripupCosts);
         }
       }
     }
 
-    return something_expanded;
+    return somethingExpanded;
   }
 
   /** Expand the target doors of the room. Returns true, if at least 1 target door was expanded */
@@ -581,72 +578,71 @@ public class MazeSearchAlgo {
       boolean p_curr_door_is_small,
       FloatPoint p_shape_entry_middle) {
     if (p_curr_door_is_small) {
-      boolean enter_through_small_door = false;
+      boolean enterThroughSmallDoor = false;
       if (p_list_element.door instanceof ExpansionDoor) {
-        CompleteExpansionRoom from_room = p_list_element.door.other_room(p_list_element.next_room);
-        if (from_room instanceof ObstacleExpansionRoom) {
+        CompleteExpansionRoom fromRoom = p_list_element.door.other_room(p_list_element.nextRoom);
+        if (fromRoom instanceof ObstacleExpansionRoom) {
           // otherwise entering through the small door may fail, because it was not
           // checked.
-          enter_through_small_door = true;
+          enterThroughSmallDoor = true;
         }
       }
-      if (!enter_through_small_door) {
+      if (!enterThroughSmallDoor) {
         return false;
       }
     }
     boolean result = false;
-    for (TargetItemExpansionDoor to_door : p_list_element.next_room.get_target_doors()) {
+    for (TargetItemExpansionDoor to_door : p_list_element.nextRoom.get_target_doors()) {
       if (to_door == p_list_element.door) {
         continue;
       }
       // Validate index before calling - prevents warning when indices become stale
       // during routing
-      int tree_shape_count =
-          to_door.item.tree_shape_count(this.autoroute_engine.autoroute_search_tree);
-      if (to_door.tree_entry_no < 0 || to_door.tree_entry_no >= tree_shape_count) {
+      int treeShapeCount = to_door.item.tree_shape_count(this.autorouteEngine.autorouteSearchTree);
+      if (to_door.treeEntryNo < 0 || to_door.treeEntryNo >= treeShapeCount) {
         // Index out of range (trace was modified during routing)
         continue;
       }
-      TileShape target_shape =
+      TileShape targetShape =
           ((Connectable) to_door.item)
               .get_trace_connection_shape(
-                  this.autoroute_engine.autoroute_search_tree, to_door.tree_entry_no);
-      if (target_shape == null) {
+                  this.autorouteEngine.autorouteSearchTree, to_door.treeEntryNo);
+      if (targetShape == null) {
         // Item's tree shape index out of range (can happen when traces are modified
         // during routing)
         continue;
       }
-      FloatPoint connection_point = target_shape.nearest_point_approx(p_shape_entry_middle);
+      FloatPoint connectionPoint = targetShape.nearest_point_approx(p_shape_entry_middle);
       if (!p_next_room_is_thick) {
         // check the line from p_shape_entry_middle to the nearest point.
-        int[] curr_net_no_arr = new int[1];
-        curr_net_no_arr[0] = this.ctrl.net_no;
-        int curr_layer = p_list_element.next_room.get_layer();
-        IntPoint[] check_points = new IntPoint[2];
-        check_points[0] = p_shape_entry_middle.round();
-        check_points[1] = connection_point.round();
-        if (!check_points[0].equals(check_points[1])) {
-          Polyline check_polyline = new Polyline(check_points);
-          boolean check_ok =
-              autoroute_engine.board.check_forced_trace_polyline(
-                  check_polyline,
-                  ctrl.trace_half_width[curr_layer],
-                  curr_layer,
-                  curr_net_no_arr,
-                  ctrl.trace_clearance_class_no,
-                  ctrl.max_shove_trace_recursion_depth,
-                  ctrl.max_shove_via_recursion_depth,
-                  ctrl.max_spring_over_recursion_depth);
-          if (!check_ok) {
+        int[] currNetNoArr = new int[1];
+        currNetNoArr[0] = this.ctrl.netNo;
+        int currLayer = p_list_element.nextRoom.get_layer();
+        IntPoint[] checkPoints = new IntPoint[2];
+        checkPoints[0] = p_shape_entry_middle.round();
+        checkPoints[1] = connectionPoint.round();
+        if (!checkPoints[0].equals(checkPoints[1])) {
+          Polyline checkPolyline = new Polyline(checkPoints);
+          boolean checkOk =
+              autorouteEngine.board.check_forced_trace_polyline(
+                  checkPolyline,
+                  ctrl.traceHalfWidth[currLayer],
+                  currLayer,
+                  currNetNoArr,
+                  ctrl.traceClearanceClassNo,
+                  ctrl.maxShoveTraceRecursionDepth,
+                  ctrl.maxShoveViaRecursionDepth,
+                  ctrl.maxSpringOverRecursionDepth);
+          if (!checkOk) {
             continue;
           }
         }
       }
 
-      FloatLine new_shape_entry = new FloatLine(connection_point, connection_point);
+      FloatLine newShapeEntry = new FloatLine(connectionPoint, connectionPoint);
 
       if (expand_to_door_section(
-          to_door, 0, new_shape_entry, p_list_element, 0, MazeSearchElement.Adjustment.NONE)) {
+          to_door, 0, newShapeEntry, p_list_element, 0, MazeSearchElement.Adjustment.NONE)) {
         result = true;
       }
     }
@@ -660,82 +656,80 @@ public class MazeSearchAlgo {
       int p_add_costs,
       boolean p_next_room_is_thick,
       MazeSearchElement.Adjustment p_adjustment) {
-    double half_width = ctrl.compensated_trace_half_width[p_list_element.next_room.get_layer()];
-    boolean something_expanded = false;
-    FloatLine[] line_sections = p_to_door.get_section_segments(half_width);
+    double halfWidth = ctrl.compensatedTraceHalfWidth[p_list_element.nextRoom.get_layer()];
+    boolean somethingExpanded = false;
+    FloatLine[] lineSections = p_to_door.get_section_segments(halfWidth);
 
-    for (int i = 0; i < line_sections.length; i++) {
-      if (p_to_door.section_arr[i].is_occupied) {
+    for (int i = 0; i < lineSections.length; i++) {
+      if (p_to_door.sectionArr[i].isOccupied) {
         continue;
       }
-      FloatLine new_shape_entry;
+      FloatLine newShapeEntry;
       if (p_next_room_is_thick) {
-        new_shape_entry = line_sections[i];
+        newShapeEntry = lineSections[i];
         if (p_to_door.dimension == 1
-            && line_sections.length == 1
-            && p_to_door.first_room instanceof CompleteFreeSpaceExpansionRoom
-            && p_to_door.second_room instanceof CompleteFreeSpaceExpansionRoom) {
+            && lineSections.length == 1
+            && p_to_door.firstRoom instanceof CompleteFreeSpaceExpansionRoom
+            && p_to_door.secondRoom instanceof CompleteFreeSpaceExpansionRoom) {
           // check entering the p_to_door at an acute corner of the shape of
-          // p_list_element.next_room
-          FloatPoint shape_entry_middle = new_shape_entry.a.middle_point(new_shape_entry.b);
-          TileShape room_shape = p_list_element.next_room.get_shape();
-          if (room_shape.min_width() < 2 * half_width) {
+          // p_list_element.nextRoom
+          FloatPoint shapeEntryMiddle = newShapeEntry.a.middle_point(newShapeEntry.b);
+          TileShape roomShape = p_list_element.nextRoom.get_shape();
+          if (roomShape.min_width() < 2 * halfWidth) {
             return false;
           }
-          FloatPoint[] nearest_points =
-              room_shape.nearest_border_points_approx(shape_entry_middle, 2);
-          if (nearest_points.length < 2
-              || nearest_points[1].distance(shape_entry_middle) <= half_width + 1) {
+          FloatPoint[] nearestPoints = roomShape.nearest_border_points_approx(shapeEntryMiddle, 2);
+          if (nearestPoints.length < 2
+              || nearestPoints[1].distance(shapeEntryMiddle) <= halfWidth + 1) {
             return false;
           }
         }
       } else {
-        // expand only doors on the opposite side of the room from the shape_entry.
+        // expand only doors on the opposite side of the room from the shapeEntry.
         if (p_to_door.dimension == 1
             && i == 0
-            && line_sections[0].b.distance_square(line_sections[0].a) < 1) {
+            && lineSections[0].b.distance_square(lineSections[0].a) < 1) {
           // p_to_door is small belonging to a via or thin room
           continue;
         }
-        new_shape_entry = segment_projection(p_list_element.shape_entry, line_sections[i]);
-        if (new_shape_entry == null) {
+        newShapeEntry = segment_projection(p_list_element.shapeEntry, lineSections[i]);
+        if (newShapeEntry == null) {
           continue;
         }
       }
 
       if (expand_to_door_section(
-          p_to_door, i, new_shape_entry, p_list_element, p_add_costs, p_adjustment)) {
-        something_expanded = true;
+          p_to_door, i, newShapeEntry, p_list_element, p_add_costs, p_adjustment)) {
+        somethingExpanded = true;
       }
     }
-    return something_expanded;
+    return somethingExpanded;
   }
 
   /** Checks, if the width p_door is big enough for a trace with width p_trace_width. */
   private boolean door_is_small(ExpansionDoor p_door, double p_trace_width) {
     if (p_door.dimension == 1
-        || p_door.first_room instanceof CompleteFreeSpaceExpansionRoom
-            && p_door.second_room instanceof CompleteFreeSpaceExpansionRoom) {
-      TileShape door_shape = p_door.get_shape();
-      if (door_shape.is_empty()) {
-        FRLogger.trace("MazeSearchAlgo:check_door_width door_shape is empty");
+        || p_door.firstRoom instanceof CompleteFreeSpaceExpansionRoom
+            && p_door.secondRoom instanceof CompleteFreeSpaceExpansionRoom) {
+      TileShape doorShape = p_door.get_shape();
+      if (doorShape.is_empty()) {
+        FRLogger.trace("MazeSearchAlgo:check_door_width doorShape is empty");
         return true;
       }
 
-      double door_length;
-      AngleRestriction angle_restriction =
-          autoroute_engine.board.rules.get_trace_angle_restriction();
-      if (angle_restriction == AngleRestriction.NINETY_DEGREE) {
-        IntBox door_box = door_shape.bounding_box();
-        door_length = door_box.max_width();
-      } else if (angle_restriction == AngleRestriction.FORTYFIVE_DEGREE) {
-        IntOctagon door_oct = door_shape.bounding_octagon();
-        door_length = door_oct.max_width();
+      double doorLength;
+      AngleRestriction angleRestriction = autorouteEngine.board.rules.get_trace_angle_restriction();
+      if (angleRestriction == AngleRestriction.NINETY_DEGREE) {
+        IntBox doorBox = doorShape.bounding_box();
+        doorLength = doorBox.max_width();
+      } else if (angleRestriction == AngleRestriction.FORTYFIVE_DEGREE) {
+        IntOctagon doorOct = doorShape.bounding_octagon();
+        doorLength = doorOct.max_width();
       } else {
-        FloatLine door_line_segment = door_shape.diagonal_corner_segment();
-        door_length = door_line_segment.b.distance(door_line_segment.a);
+        FloatLine doorLineSegment = doorShape.diagonal_corner_segment();
+        doorLength = doorLineSegment.b.distance(doorLineSegment.a);
       }
-      return door_length < p_trace_width;
+      return doorLength < p_trace_width;
     }
     return false;
   }
@@ -748,17 +742,17 @@ public class MazeSearchAlgo {
       MazeListElement p_from_element,
       int p_add_costs,
       MazeSearchElement.Adjustment p_adjustment) {
-    boolean door_section_occupied = p_door.get_maze_search_element(p_section_no).is_occupied;
-    if (door_section_occupied || p_shape_entry == null) {
+    boolean doorSectionOccupied = p_door.get_maze_search_element(p_section_no).isOccupied;
+    if (doorSectionOccupied || p_shape_entry == null) {
       FRLogger.trace(
           "RAW_SECTION skip selected_section="
               + p_section_no
               + ", from_section="
-              + p_from_element.section_no_of_door
+              + p_from_element.sectionNoOfDoor
               + ", backtrack_section="
-              + p_from_element.section_no_of_backtrack_door
+              + p_from_element.sectionNoOfBacktrackDoor
               + ", occupied="
-              + door_section_occupied
+              + doorSectionOccupied
               + ", shape_entry_null="
               + (p_shape_entry == null)
               + ", adjustment="
@@ -772,24 +766,24 @@ public class MazeSearchAlgo {
               + ", from_door_bounds="
               + describe_expandable_bounds(p_from_element.door)
               + ", net="
-              + ctrl.net_no);
+              + ctrl.netNo);
       FRLogger.trace(
           "MazeSearchAlgo.expand_to_door_section",
           "skip_assign_raw",
           "selected_section="
               + p_section_no
               + ", from_section="
-              + p_from_element.section_no_of_door
+              + p_from_element.sectionNoOfDoor
               + ", backtrack_section="
-              + p_from_element.section_no_of_backtrack_door
+              + p_from_element.sectionNoOfBacktrackDoor
               + ", occupied="
-              + door_section_occupied
+              + doorSectionOccupied
               + ", shape_entry_null="
               + (p_shape_entry == null)
               + ", adjustment="
               + p_adjustment,
           "Net #"
-              + ctrl.net_no
+              + ctrl.netNo
               + ", door="
               + describe_expandable(p_door)
               + ", door_bounds="
@@ -801,79 +795,79 @@ public class MazeSearchAlgo {
           to_impacted_points(p_shape_entry));
       return false;
     }
-    CompleteExpansionRoom next_room = p_door.other_room(p_from_element.next_room);
-    int layer = p_from_element.next_room.get_layer();
-    FloatPoint shape_entry_middle = p_shape_entry.a.middle_point(p_shape_entry.b);
+    CompleteExpansionRoom nextRoom = p_door.other_room(p_from_element.nextRoom);
+    int layer = p_from_element.nextRoom.get_layer();
+    FloatPoint shapeEntryMiddle = p_shape_entry.a.middle_point(p_shape_entry.b);
 
-    double bend_cost_penalty = 0.0;
-    if (ctrl.bendCosts[layer] > 0.0 && p_from_element.backtrack_door != null) {
-      FloatPoint from_mid = p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b);
+    double bendCostPenalty = 0.0;
+    if (ctrl.bendCosts[layer] > 0.0 && p_from_element.backtrackDoor != null) {
+      FloatPoint fromMid = p_from_element.shapeEntry.a.middle_point(p_from_element.shapeEntry.b);
       // Build vectors prev→curr and curr→next to detect a direction change.
-      FloatPoint backtrack_cog = p_from_element.backtrack_door.get_shape().centre_of_gravity();
-      double prev_dx = from_mid.x - backtrack_cog.x;
-      double prev_dy = from_mid.y - backtrack_cog.y;
-      double next_dx = shape_entry_middle.x - from_mid.x;
-      double next_dy = shape_entry_middle.y - from_mid.y;
-      double cross_product = prev_dx * next_dy - prev_dy * next_dx;
-      double sq_len_prev = prev_dx * prev_dx + prev_dy * prev_dy;
-      double sq_len_next = next_dx * next_dx + next_dy * next_dy;
+      FloatPoint backtrackCog = p_from_element.backtrackDoor.get_shape().centre_of_gravity();
+      double prevDx = fromMid.x - backtrackCog.x;
+      double prevDy = fromMid.y - backtrackCog.y;
+      double nextDx = shapeEntryMiddle.x - fromMid.x;
+      double nextDy = shapeEntryMiddle.y - fromMid.y;
+      double crossProduct = prevDx * nextDy - prevDy * nextDx;
+      double sqLenPrev = prevDx * prevDx + prevDy * prevDy;
+      double sqLenNext = nextDx * nextDx + nextDy * nextDy;
       // Use a normalized threshold (sin² of angle > 0.01, approx. 5.7°) to be scale-independent.
-      if (sq_len_prev > 0.0
-          && sq_len_next > 0.0
-          && (cross_product * cross_product) > 0.01 * sq_len_prev * sq_len_next) {
-        bend_cost_penalty = ctrl.bendCosts[layer];
+      if (sqLenPrev > 0.0
+          && sqLenNext > 0.0
+          && (crossProduct * crossProduct) > 0.01 * sqLenPrev * sqLenNext) {
+        bendCostPenalty = ctrl.bendCosts[layer];
       }
     }
 
-    double expansion_value =
-        p_from_element.expansion_value
+    double expansionValue =
+        p_from_element.expansionValue
             + p_add_costs
-            + bend_cost_penalty
-            + shape_entry_middle.weighted_distance(
-                p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b),
-                ctrl.trace_costs[layer].horizontal,
-                ctrl.trace_costs[layer].vertical);
-    double sorting_value =
-        expansion_value + this.destination_distance.calculate(shape_entry_middle, layer);
-    boolean room_ripped =
+            + bendCostPenalty
+            + shapeEntryMiddle.weighted_distance(
+                p_from_element.shapeEntry.a.middle_point(p_from_element.shapeEntry.b),
+                ctrl.traceCosts[layer].horizontal,
+                ctrl.traceCosts[layer].vertical);
+    double sortingValue =
+        expansionValue + this.destinationDistance.calculate(shapeEntryMiddle, layer);
+    boolean roomRipped =
         p_add_costs > 0 && p_adjustment == MazeSearchElement.Adjustment.NONE
-            || p_from_element.already_checked && p_from_element.room_ripped;
+            || p_from_element.alreadyChecked && p_from_element.roomRipped;
 
-    MazeListElement new_element =
+    MazeListElement newElement =
         new MazeListElement(
             p_door,
             p_section_no,
             p_from_element.door,
-            p_from_element.section_no_of_door,
-            expansion_value,
-            sorting_value,
-            next_room,
+            p_from_element.sectionNoOfDoor,
+            expansionValue,
+            sortingValue,
+            nextRoom,
             p_shape_entry,
-            room_ripped,
+            roomRipped,
             p_adjustment,
             false);
     // Store the direct ripup cost on this element (non-zero only when this specific door
-    // caused a ripup; propagated room_ripped from a parent keeps ripup_cost=0).
+    // caused a ripup; propagated roomRipped from a parent keeps ripupCost=0).
     if (p_add_costs > 0 && p_adjustment == MazeSearchElement.Adjustment.NONE) {
-      new_element.ripup_cost = (int) p_add_costs;
+      newElement.ripupCost = (int) p_add_costs;
     }
     FRLogger.trace(
         "RAW_SECTION assign selected_section="
             + p_section_no
             + ", from_section="
-            + p_from_element.section_no_of_door
+            + p_from_element.sectionNoOfDoor
             + ", backtrack_section="
-            + p_from_element.section_no_of_backtrack_door
+            + p_from_element.sectionNoOfBacktrackDoor
             + ", add_costs="
             + p_add_costs
             + ", adjustment="
             + p_adjustment
-            + ", room_ripped="
-            + room_ripped
-            + ", expansion_value="
-            + expansion_value
-            + ", sorting_value="
-            + sorting_value
+            + ", roomRipped="
+            + roomRipped
+            + ", expansionValue="
+            + expansionValue
+            + ", sortingValue="
+            + sortingValue
             + ", door="
             + describe_expandable(p_door)
             + ", door_bounds="
@@ -883,28 +877,28 @@ public class MazeSearchAlgo {
             + ", from_door_bounds="
             + describe_expandable_bounds(p_from_element.door)
             + ", net="
-            + ctrl.net_no);
+            + ctrl.netNo);
     FRLogger.trace(
         "MazeSearchAlgo.expand_to_door_section",
         "assign_raw",
         "selected_section="
             + p_section_no
             + ", from_section="
-            + p_from_element.section_no_of_door
+            + p_from_element.sectionNoOfDoor
             + ", backtrack_section="
-            + p_from_element.section_no_of_backtrack_door
+            + p_from_element.sectionNoOfBacktrackDoor
             + ", add_costs="
             + p_add_costs
             + ", adjustment="
             + p_adjustment
-            + ", room_ripped="
-            + room_ripped
-            + ", expansion_value="
-            + expansion_value
-            + ", sorting_value="
-            + sorting_value,
+            + ", roomRipped="
+            + roomRipped
+            + ", expansionValue="
+            + expansionValue
+            + ", sortingValue="
+            + sortingValue,
         "Net #"
-            + ctrl.net_no
+            + ctrl.netNo
             + ", door="
             + describe_expandable(p_door)
             + ", door_bounds="
@@ -914,7 +908,7 @@ public class MazeSearchAlgo {
             + ", from_door_bounds="
             + describe_expandable_bounds(p_from_element.door),
         to_impacted_points(p_shape_entry));
-    this.maze_expansion_list.add(new_element);
+    this.mazeExpansionList.add(newElement);
     return true;
   }
 
@@ -922,30 +916,30 @@ public class MazeSearchAlgo {
     if (p_door == null) {
       return "null";
     }
-    String section_count = safe_maze_section_count(p_door);
+    String sectionCount = safe_maze_section_count(p_door);
     if (p_door instanceof TargetItemExpansionDoor targetDoor) {
       return "TargetItemExpansionDoor"
           + "/item="
           + targetDoor.item.get_id_no()
           + "/tree_entry="
-          + targetDoor.tree_entry_no
+          + targetDoor.treeEntryNo
           + "/dim="
           + p_door.get_dimension()
           + "/sections="
-          + section_count;
+          + sectionCount;
     }
     if (p_door instanceof ExpansionDrill drill) {
       return "ExpansionDrill"
           + "/location="
           + drill.location
           + "/layers="
-          + drill.first_layer
+          + drill.firstLayer
           + "-"
-          + drill.last_layer
+          + drill.lastLayer
           + "/dim="
           + p_door.get_dimension()
           + "/sections="
-          + section_count;
+          + sectionCount;
     }
     IntBox bounds = p_door.get_shape().bounding_box();
     return p_door.getClass().getSimpleName()
@@ -961,7 +955,7 @@ public class MazeSearchAlgo {
         + "/dim="
         + p_door.get_dimension()
         + "/sections="
-        + section_count;
+        + sectionCount;
   }
 
   private static String safe_maze_section_count(ExpandableObject p_door) {
@@ -1007,15 +1001,15 @@ public class MazeSearchAlgo {
   }
 
   private boolean shouldTraceFanoutDiagnostics() {
-    return ctrl.is_fanout
-        && ctrl.fanout_start_pin_name != null
-        && ctrl.fanout_start_pin_name.startsWith("U27-");
+    return ctrl.isFanout
+        && ctrl.fanoutStartPinName != null
+        && ctrl.fanoutStartPinName.startsWith("U27-");
   }
 
   private String fanoutDiagnosticLabel() {
-    return ctrl.fanout_start_pin_name == null
-        ? "fanout-pin(net=" + ctrl.net_no + ")"
-        : ctrl.fanout_start_pin_name;
+    return ctrl.fanoutStartPinName == null
+        ? "fanout-pin(net=" + ctrl.netNo + ")"
+        : ctrl.fanoutStartPinName;
   }
 
   private void traceFanoutDiagnostic(String event, String message) {
@@ -1028,22 +1022,21 @@ public class MazeSearchAlgo {
             + ", pin="
             + fanoutDiagnosticLabel()
             + ", net="
-            + ctrl.net_no
+            + ctrl.netNo
             + ", "
             + message);
   }
 
   private void expand_to_drill(
       ExpansionDrill p_drill, MazeListElement p_from_element, int p_add_costs) {
-    int layer = p_from_element.next_room.get_layer();
-    int trace_half_width = this.ctrl.compensated_trace_half_width[layer];
-    boolean room_shape_is_thin =
-        p_from_element.next_room.get_shape().min_width() < 2 * trace_half_width;
+    int layer = p_from_element.nextRoom.get_layer();
+    int traceHalfWidth = this.ctrl.compensatedTraceHalfWidth[layer];
+    boolean roomShapeIsThin = p_from_element.nextRoom.get_shape().min_width() < 2 * traceHalfWidth;
 
-    if (room_shape_is_thin) {
+    if (roomShapeIsThin) {
       // expand only drills intersecting the backtrack door
-      if (p_from_element.backtrack_door == null
-          || !p_drill.get_shape().intersects(p_from_element.backtrack_door.get_shape())) {
+      if (p_from_element.backtrackDoor == null
+          || !p_drill.get_shape().intersects(p_from_element.backtrackDoor.get_shape())) {
         traceFanoutDiagnostic(
             "drill_rejected_thin_room_no_backtrack_intersection",
             "drill="
@@ -1051,79 +1044,76 @@ public class MazeSearchAlgo {
                 + ", from_door="
                 + describe_expandable(p_from_element.door)
                 + ", backtrack="
-                + describe_expandable(p_from_element.backtrack_door)
+                + describe_expandable(p_from_element.backtrackDoor)
                 + ", room="
-                + describe_room(p_from_element.next_room));
+                + describe_room(p_from_element.nextRoom));
         return;
       }
     }
 
-    double via_radius = ctrl.via_radius_arr[layer];
-    ConvexShape shrinked_drill_shape = p_drill.get_shape().shrink(via_radius);
-    FloatPoint compare_corner =
-        p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b);
+    double viaRadius = ctrl.viaRadiusArr[layer];
+    ConvexShape shrinkedDrillShape = p_drill.get_shape().shrink(viaRadius);
+    FloatPoint compareCorner =
+        p_from_element.shapeEntry.a.middle_point(p_from_element.shapeEntry.b);
     if (p_from_element.door instanceof DrillPage
-        && p_from_element.backtrack_door instanceof TargetItemExpansionDoor door) {
-      // If expansion comes from a pin with trace exit directions the expansion_value
+        && p_from_element.backtrackDoor instanceof TargetItemExpansionDoor door) {
+      // If expansion comes from a pin with trace exit directions the expansionValue
       // is calculated
       // from the nearest trace exit point instead from the center olf the pin.
-      Item from_item = door.item;
-      if (from_item instanceof Pin pin) {
-        FloatPoint nearest_exit_corner =
-            pin.nearest_trace_exit_corner(p_drill.location.to_float(), trace_half_width, layer);
-        if (nearest_exit_corner != null) {
-          compare_corner = nearest_exit_corner;
+      Item fromItem = door.item;
+      if (fromItem instanceof Pin pin) {
+        FloatPoint nearestExitCorner =
+            pin.nearest_trace_exit_corner(p_drill.location.to_float(), traceHalfWidth, layer);
+        if (nearestExitCorner != null) {
+          compareCorner = nearestExitCorner;
         }
       }
     }
-    FloatPoint nearest_point = shrinked_drill_shape.nearest_point_approx(compare_corner);
-    FloatLine shape_entry = new FloatLine(nearest_point, nearest_point);
-    int section_no = layer - p_drill.first_layer;
-    double expansion_value =
-        p_from_element.expansion_value
+    FloatPoint nearestPoint = shrinkedDrillShape.nearest_point_approx(compareCorner);
+    FloatLine shapeEntry = new FloatLine(nearestPoint, nearestPoint);
+    int sectionNo = layer - p_drill.firstLayer;
+    double expansionValue =
+        p_from_element.expansionValue
             + p_add_costs
-            + nearest_point.weighted_distance(
-                compare_corner,
-                ctrl.trace_costs[layer].horizontal,
-                ctrl.trace_costs[layer].vertical);
-    ExpandableObject new_backtrack_door;
-    int new_section_no_of_backtrack_door;
+            + nearestPoint.weighted_distance(
+                compareCorner, ctrl.traceCosts[layer].horizontal, ctrl.traceCosts[layer].vertical);
+    ExpandableObject newBacktrackDoor;
+    int newSectionNoOfBacktrackDoor;
     if (p_from_element.door instanceof DrillPage) {
-      new_backtrack_door = p_from_element.backtrack_door;
-      new_section_no_of_backtrack_door = p_from_element.section_no_of_backtrack_door;
+      newBacktrackDoor = p_from_element.backtrackDoor;
+      newSectionNoOfBacktrackDoor = p_from_element.sectionNoOfBacktrackDoor;
     } else {
       // Expanded directly through already existing via
       // The step expand_to_drill_page is skipped
-      new_backtrack_door = p_from_element.door;
-      new_section_no_of_backtrack_door = p_from_element.section_no_of_door;
-      expansion_value += ctrl.min_normal_via_cost;
+      newBacktrackDoor = p_from_element.door;
+      newSectionNoOfBacktrackDoor = p_from_element.sectionNoOfDoor;
+      expansionValue += ctrl.minNormalViaCost;
     }
-    double sorting_value =
-        expansion_value + this.destination_distance.calculate(nearest_point, layer);
-    MazeListElement new_element =
+    double sortingValue = expansionValue + this.destinationDistance.calculate(nearestPoint, layer);
+    MazeListElement newElement =
         new MazeListElement(
             p_drill,
-            section_no,
-            new_backtrack_door,
-            new_section_no_of_backtrack_door,
-            expansion_value,
-            sorting_value,
+            sectionNo,
+            newBacktrackDoor,
+            newSectionNoOfBacktrackDoor,
+            expansionValue,
+            sortingValue,
             null,
-            shape_entry,
-            p_from_element.room_ripped,
+            shapeEntry,
+            p_from_element.roomRipped,
             MazeSearchElement.Adjustment.NONE,
             false);
-    this.maze_expansion_list.add(new_element);
+    this.mazeExpansionList.add(newElement);
     traceFanoutDiagnostic(
         "drill_accepted",
         "drill="
             + describe_expandable(p_drill)
             + ", room="
-            + describe_room(p_from_element.next_room)
-            + ", nearest_point="
-            + nearest_point
-            + ", expansion_value="
-            + expansion_value);
+            + describe_room(p_from_element.nextRoom)
+            + ", nearestPoint="
+            + nearestPoint
+            + ", expansionValue="
+            + expansionValue);
   }
 
   /**
@@ -1132,91 +1122,91 @@ public class MazeSearchAlgo {
    */
   private void expand_to_drill_page(DrillPage p_drill_page, MazeListElement p_from_element) {
 
-    int layer = p_from_element.next_room.get_layer();
-    FloatPoint from_element_shape_entry_middle =
-        p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b);
-    FloatPoint nearest_point = p_drill_page.shape.nearest_point(from_element_shape_entry_middle);
-    double expansion_value = p_from_element.expansion_value + ctrl.min_normal_via_cost;
-    double sorting_value =
-        expansion_value
-            + nearest_point.weighted_distance(
-                from_element_shape_entry_middle,
-                ctrl.trace_costs[layer].horizontal,
-                ctrl.trace_costs[layer].vertical)
-            + this.destination_distance.calculate(nearest_point, layer);
-    MazeListElement new_element =
+    int layer = p_from_element.nextRoom.get_layer();
+    FloatPoint fromElementShapeEntryMiddle =
+        p_from_element.shapeEntry.a.middle_point(p_from_element.shapeEntry.b);
+    FloatPoint nearestPoint = p_drill_page.shape.nearest_point(fromElementShapeEntryMiddle);
+    double expansionValue = p_from_element.expansionValue + ctrl.minNormalViaCost;
+    double sortingValue =
+        expansionValue
+            + nearestPoint.weighted_distance(
+                fromElementShapeEntryMiddle,
+                ctrl.traceCosts[layer].horizontal,
+                ctrl.traceCosts[layer].vertical)
+            + this.destinationDistance.calculate(nearestPoint, layer);
+    MazeListElement newElement =
         new MazeListElement(
             p_drill_page,
             layer,
             p_from_element.door,
-            p_from_element.section_no_of_door,
-            expansion_value,
-            sorting_value,
-            p_from_element.next_room,
-            p_from_element.shape_entry,
-            p_from_element.room_ripped,
+            p_from_element.sectionNoOfDoor,
+            expansionValue,
+            sortingValue,
+            p_from_element.nextRoom,
+            p_from_element.shapeEntry,
+            p_from_element.roomRipped,
             MazeSearchElement.Adjustment.NONE,
             false);
-    this.maze_expansion_list.add(new_element);
+    this.mazeExpansionList.add(newElement);
   }
 
   private void expand_to_drills_of_page(MazeListElement p_from_element) {
-    int from_room_layer = p_from_element.section_no_of_door;
-    DrillPage drill_page = (DrillPage) p_from_element.door;
-    Collection<ExpansionDrill> drill_list =
-        drill_page.get_drills(this.autoroute_engine, this.ctrl.attach_smd_allowed);
+    int fromRoomLayer = p_from_element.sectionNoOfDoor;
+    DrillPage drillPage = (DrillPage) p_from_element.door;
+    Collection<ExpansionDrill> drillList =
+        drillPage.get_drills(this.autorouteEngine, this.ctrl.attachSmdAllowed);
     if (shouldTraceFanoutDiagnostics()) {
       traceFanoutDiagnostic(
           "drill_page_scan",
           "candidate_count="
-              + drill_list.size()
-              + ", attach_smd_allowed="
-              + this.ctrl.attach_smd_allowed
+              + drillList.size()
+              + ", attachSmdAllowed="
+              + this.ctrl.attachSmdAllowed
               + ", room="
-              + describe_room(p_from_element.next_room)
+              + describe_room(p_from_element.nextRoom)
               + ", from_door="
               + describe_expandable(p_from_element.door));
-      if (drill_list.isEmpty()) {
+      if (drillList.isEmpty()) {
         traceFanoutDiagnostic("drill_page_empty", "no_candidates=true");
       }
     }
     // Track the first room-mismatch per fanout attempt for first-mismatch investigation.
     boolean firstMismatchLogged = false;
-    for (ExpansionDrill curr_drill : drill_list) {
-      int section_no = from_room_layer - curr_drill.first_layer;
-      if (section_no < 0 || section_no >= curr_drill.room_arr.length) {
+    for (ExpansionDrill currDrill : drillList) {
+      int sectionNo = fromRoomLayer - currDrill.firstLayer;
+      if (sectionNo < 0 || sectionNo >= currDrill.roomArr.length) {
         traceFanoutDiagnostic(
             "drill_rejected_section_out_of_range",
             "drill="
-                + describe_expandable(curr_drill)
+                + describe_expandable(currDrill)
                 + ", section="
-                + section_no
+                + sectionNo
                 + ", room_arr_len="
-                + curr_drill.room_arr.length);
+                + currDrill.roomArr.length);
         continue;
       }
-      if (curr_drill.room_arr[section_no] != p_from_element.next_room) {
+      if (currDrill.roomArr[sectionNo] != p_from_element.nextRoom) {
         traceFanoutDiagnostic(
             "drill_rejected_room_mismatch",
             "drill="
-                + describe_expandable(curr_drill)
+                + describe_expandable(currDrill)
                 + ", expected_room="
-                + describe_room(p_from_element.next_room)
+                + describe_room(p_from_element.nextRoom)
                 + ", drill_room="
-                + describe_room(curr_drill.room_arr[section_no]));
+                + describe_room(currDrill.roomArr[sectionNo]));
         // Log the first mismatch per page-scan with extra geometric context for investigation.
         if (!firstMismatchLogged && shouldTraceFanoutDiagnostics()) {
           firstMismatchLogged = true;
-          CompleteExpansionRoom expRoom = p_from_element.next_room;
-          CompleteExpansionRoom drillRoom = curr_drill.room_arr[section_no];
+          CompleteExpansionRoom expRoom = p_from_element.nextRoom;
+          CompleteExpansionRoom drillRoom = currDrill.roomArr[sectionNo];
           FRLogger.trace(
               "FANOUT_DIAG event=first_room_mismatch_detail"
                   + ", pin="
                   + fanoutDiagnosticLabel()
                   + ", net="
-                  + ctrl.net_no
-                  + ", drill_location="
-                  + curr_drill.location
+                  + ctrl.netNo
+                  + ", drillLocation="
+                  + currDrill.location
                   + ", expansion_room_id="
                   + System.identityHashCode(expRoom)
                   + ", expansion_room_bounds="
@@ -1230,187 +1220,184 @@ public class MazeSearchAlgo {
                       ? p_from_element.door.getClass().getSimpleName()
                       : "null")
                   + ", backtrack_door_type="
-                  + (p_from_element.backtrack_door != null
-                      ? p_from_element.backtrack_door.getClass().getSimpleName()
+                  + (p_from_element.backtrackDoor != null
+                      ? p_from_element.backtrackDoor.getClass().getSimpleName()
                       : "null")
-                  + ", section_no="
-                  + section_no
+                  + ", sectionNo="
+                  + sectionNo
                   + ", layer="
-                  + from_room_layer);
+                  + fromRoomLayer);
         }
         continue;
       }
-      if (curr_drill.get_maze_search_element(section_no).is_occupied) {
+      if (currDrill.get_maze_search_element(sectionNo).isOccupied) {
         traceFanoutDiagnostic(
             "drill_rejected_section_occupied",
-            "drill=" + describe_expandable(curr_drill) + ", section=" + section_no);
+            "drill=" + describe_expandable(currDrill) + ", section=" + sectionNo);
         continue;
       }
-      expand_to_drill(curr_drill, p_from_element, 0);
+      expand_to_drill(currDrill, p_from_element, 0);
     }
   }
 
   /** Tries to expand other layers by inserting a via. */
   private void expand_to_other_layers(MazeListElement p_list_element) {
-    int via_lower_bound = 0;
-    int via_upper_bound = -1;
-    ExpansionDrill curr_drill = (ExpansionDrill) p_list_element.door;
-    int from_layer = curr_drill.first_layer + p_list_element.section_no_of_door;
-    boolean smd_attached_on_component_side = false;
-    boolean smd_attached_on_solder_side = false;
-    boolean room_ripped;
-    if (curr_drill.room_arr[p_list_element.section_no_of_door]
-        instanceof ObstacleExpansionRoom room) {
+    int viaLowerBound = 0;
+    int viaUpperBound = -1;
+    ExpansionDrill currDrill = (ExpansionDrill) p_list_element.door;
+    int fromLayer = currDrill.firstLayer + p_list_element.sectionNoOfDoor;
+    boolean smdAttachedOnComponentSide = false;
+    boolean smdAttachedOnSolderSide = false;
+    boolean roomRipped;
+    if (currDrill.roomArr[p_list_element.sectionNoOfDoor] instanceof ObstacleExpansionRoom room) {
       // check ripup of an existing via
-      if (!this.ctrl.ripup_allowed) {
+      if (!this.ctrl.ripupAllowed) {
         return;
       }
-      Item curr_obstacle_item = room.get_item();
-      if (!(curr_obstacle_item instanceof Via)) {
+      Item currObstacleItem = room.get_item();
+      if (!(currObstacleItem instanceof Via)) {
         return;
       }
-      Padstack curr_obstacle_padstack = ((Via) curr_obstacle_item).get_padstack();
-      if (!this.ctrl.via_rule.contains_padstack(curr_obstacle_padstack)
-          || curr_obstacle_item.clearance_class_no() != this.ctrl.via_clearance_class) {
+      Padstack currObstaclePadstack = ((Via) currObstacleItem).get_padstack();
+      if (!this.ctrl.viaRule.contains_padstack(currObstaclePadstack)
+          || currObstacleItem.clearance_class_no() != this.ctrl.viaClearanceClass) {
         return;
       }
-      via_lower_bound = curr_obstacle_padstack.from_layer();
-      via_upper_bound = curr_obstacle_padstack.to_layer();
-      room_ripped = true;
+      viaLowerBound = currObstaclePadstack.from_layer();
+      viaUpperBound = currObstaclePadstack.to_layer();
+      roomRipped = true;
     } else {
-      int[] net_no_arr = new int[1];
-      net_no_arr[0] = ctrl.net_no;
+      int[] netNoArr = new int[1];
+      netNoArr[0] = ctrl.netNo;
 
-      room_ripped = false;
-      int via_lower_limit = Math.max(curr_drill.first_layer, ctrl.via_lower_bound);
-      int via_upper_limit = Math.min(curr_drill.last_layer, ctrl.via_upper_bound);
+      roomRipped = false;
+      int viaLowerLimit = Math.max(currDrill.firstLayer, ctrl.viaLowerBound);
+      int viaUpperLimit = Math.min(currDrill.lastLayer, ctrl.viaUpperBound);
       // Calculate the lower bound of possible vias.
-      int curr_layer = from_layer;
+      int currLayer = fromLayer;
       for (; ; ) {
-        TileShape curr_room_shape =
-            curr_drill.room_arr[curr_layer - curr_drill.first_layer].get_shape();
-        ForcedPadAlgo.CheckDrillResult drill_result =
-            check_layer_with_any_matching_via(curr_drill, curr_layer, curr_room_shape, net_no_arr);
-        if (drill_result == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
-          via_lower_bound = curr_layer + 1;
+        TileShape currRoomShape = currDrill.roomArr[currLayer - currDrill.firstLayer].get_shape();
+        ForcedPadAlgo.CheckDrillResult drillResult =
+            check_layer_with_any_matching_via(currDrill, currLayer, currRoomShape, netNoArr);
+        if (drillResult == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+          viaLowerBound = currLayer + 1;
           break;
-        } else if (drill_result == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
-          if (curr_layer == 0) {
-            smd_attached_on_component_side = true;
-          } else if (curr_layer == ctrl.layer_count - 1) {
-            smd_attached_on_solder_side = true;
+        } else if (drillResult == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
+          if (currLayer == 0) {
+            smdAttachedOnComponentSide = true;
+          } else if (currLayer == ctrl.layerCount - 1) {
+            smdAttachedOnSolderSide = true;
           }
         }
-        if (curr_layer <= via_lower_limit) {
-          via_lower_bound = via_lower_limit;
+        if (currLayer <= viaLowerLimit) {
+          viaLowerBound = viaLowerLimit;
           break;
         }
-        --curr_layer;
+        --currLayer;
       }
-      if (via_lower_bound > curr_drill.first_layer) {
+      if (viaLowerBound > currDrill.firstLayer) {
         return;
       }
-      curr_layer = from_layer + 1;
+      currLayer = fromLayer + 1;
       for (; ; ) {
-        if (curr_layer > via_upper_limit) {
-          via_upper_bound = via_upper_limit;
+        if (currLayer > viaUpperLimit) {
+          viaUpperBound = viaUpperLimit;
           break;
         }
-        TileShape curr_room_shape =
-            curr_drill.room_arr[curr_layer - curr_drill.first_layer].get_shape();
-        ForcedPadAlgo.CheckDrillResult drill_result =
-            check_layer_with_any_matching_via(curr_drill, curr_layer, curr_room_shape, net_no_arr);
-        if (drill_result == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
-          via_upper_bound = curr_layer - 1;
+        TileShape currRoomShape = currDrill.roomArr[currLayer - currDrill.firstLayer].get_shape();
+        ForcedPadAlgo.CheckDrillResult drillResult =
+            check_layer_with_any_matching_via(currDrill, currLayer, currRoomShape, netNoArr);
+        if (drillResult == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+          viaUpperBound = currLayer - 1;
           break;
-        } else if (drill_result == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
-          if (curr_layer == ctrl.layer_count - 1) {
-            smd_attached_on_solder_side = true;
+        } else if (drillResult == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
+          if (currLayer == ctrl.layerCount - 1) {
+            smdAttachedOnSolderSide = true;
           }
         }
-        ++curr_layer;
+        ++currLayer;
       }
-      if (via_upper_bound < curr_drill.last_layer) {
+      if (viaUpperBound < currDrill.lastLayer) {
         return;
       }
     }
 
-    for (int to_layer = via_lower_bound; to_layer <= via_upper_bound; to_layer++) {
-      if (to_layer == from_layer) {
+    for (int toLayer = viaLowerBound; toLayer <= viaUpperBound; toLayer++) {
+      if (toLayer == fromLayer) {
         continue;
       }
       // check, there is a fitting via mask.
-      int curr_first_layer;
-      int curr_last_layer;
-      if (to_layer < from_layer) {
-        curr_first_layer = to_layer;
-        curr_last_layer = from_layer;
+      int currFirstLayer;
+      int currLastLayer;
+      if (toLayer < fromLayer) {
+        currFirstLayer = toLayer;
+        currLastLayer = fromLayer;
       } else {
-        curr_first_layer = from_layer;
-        curr_last_layer = to_layer;
+        currFirstLayer = fromLayer;
+        currLastLayer = toLayer;
       }
-      boolean mask_found = false;
-      for (int i = 0; i < ctrl.via_info_arr.length; i++) {
-        AutorouteControl.ViaMask curr_via_info = ctrl.via_info_arr[i];
-        if (curr_first_layer >= curr_via_info.from_layer
-            && curr_last_layer <= curr_via_info.to_layer
-            && curr_via_info.from_layer >= via_lower_bound
-            && curr_via_info.to_layer <= via_upper_bound) {
-          boolean mask_ok = true;
-          if (curr_via_info.from_layer == 0 && smd_attached_on_component_side
-              || curr_via_info.to_layer == ctrl.layer_count - 1 && smd_attached_on_solder_side) {
-            mask_ok = curr_via_info.attach_smd_allowed;
+      boolean maskFound = false;
+      for (int i = 0; i < ctrl.viaInfoArr.length; i++) {
+        AutorouteControl.ViaMask currViaInfo = ctrl.viaInfoArr[i];
+        if (currFirstLayer >= currViaInfo.fromLayer
+            && currLastLayer <= currViaInfo.toLayer
+            && currViaInfo.fromLayer >= viaLowerBound
+            && currViaInfo.toLayer <= viaUpperBound) {
+          boolean maskOk = true;
+          if (currViaInfo.fromLayer == 0 && smdAttachedOnComponentSide
+              || currViaInfo.toLayer == ctrl.layerCount - 1 && smdAttachedOnSolderSide) {
+            maskOk = currViaInfo.attachSmdAllowed;
           }
-          if (mask_ok) {
-            mask_found = true;
+          if (maskOk) {
+            maskFound = true;
             break;
           }
         }
       }
-      if (!mask_found) {
+      if (!maskFound) {
         continue;
       }
-      MazeSearchElement curr_drill_layer_info =
-          curr_drill.get_maze_search_element(to_layer - curr_drill.first_layer);
-      if (curr_drill_layer_info.is_occupied) {
+      MazeSearchElement currDrillLayerInfo =
+          currDrill.get_maze_search_element(toLayer - currDrill.firstLayer);
+      if (currDrillLayerInfo.isOccupied) {
         continue;
       }
-      double expansion_value =
-          p_list_element.expansion_value + ctrl.add_via_costs[from_layer].to_layer[to_layer];
-      FloatPoint shape_entry_middle =
-          p_list_element.shape_entry.a.middle_point(p_list_element.shape_entry.b);
-      double sorting_value =
-          expansion_value + this.destination_distance.calculate(shape_entry_middle, to_layer);
-      int curr_room_index = to_layer - curr_drill.first_layer;
-      MazeListElement new_element =
+      double expansionValue =
+          p_list_element.expansionValue + ctrl.addViaCosts[fromLayer].toLayer[toLayer];
+      FloatPoint shapeEntryMiddle =
+          p_list_element.shapeEntry.a.middle_point(p_list_element.shapeEntry.b);
+      double sortingValue =
+          expansionValue + this.destinationDistance.calculate(shapeEntryMiddle, toLayer);
+      int currRoomIndex = toLayer - currDrill.firstLayer;
+      MazeListElement newElement =
           new MazeListElement(
-              curr_drill,
-              curr_room_index,
-              curr_drill,
-              p_list_element.section_no_of_door,
-              expansion_value,
-              sorting_value,
-              curr_drill.room_arr[curr_room_index],
-              p_list_element.shape_entry,
-              room_ripped,
+              currDrill,
+              currRoomIndex,
+              currDrill,
+              p_list_element.sectionNoOfDoor,
+              expansionValue,
+              sortingValue,
+              currDrill.roomArr[currRoomIndex],
+              p_list_element.shapeEntry,
+              roomRipped,
               MazeSearchElement.Adjustment.NONE,
               false);
-      this.maze_expansion_list.add(new_element);
+      this.mazeExpansionList.add(newElement);
     }
   }
 
   private ForcedPadAlgo.CheckDrillResult check_layer_with_any_matching_via(
       ExpansionDrill p_drill, int p_layer, TileShape p_room_shape, int[] p_net_no_arr) {
     boolean drillableWithAttachSmd = false;
-    for (int i = 0; i < this.ctrl.via_rule.via_count(); i++) {
-      ViaInfo viaInfo = this.ctrl.via_rule.get_via(i);
+    for (int i = 0; i < this.ctrl.viaRule.via_count(); i++) {
+      ViaInfo viaInfo = this.ctrl.viaRule.get_via(i);
       Padstack viaPadstack = viaInfo.get_padstack();
       if (p_layer < viaPadstack.from_layer() || p_layer > viaPadstack.to_layer()) {
         continue;
       }
       ConvexShape viaShape = viaPadstack.get_shape(p_layer);
       double viaRadius = viaShape == null ? 0 : 0.5 * viaShape.max_width();
-      double requiredRadius = Math.max(viaRadius, this.ctrl.trace_half_width[p_layer]);
+      double requiredRadius = Math.max(viaRadius, this.ctrl.traceHalfWidth[p_layer]);
       ForcedPadAlgo.CheckDrillResult result =
           ForcedViaAlgo.check_layer(
               requiredRadius,
@@ -1420,11 +1407,11 @@ public class MazeSearchAlgo {
               p_drill.location,
               p_layer,
               p_net_no_arr,
-              this.ctrl.max_shove_trace_recursion_depth,
+              this.ctrl.maxShoveTraceRecursionDepth,
               0,
-              this.autoroute_engine.board,
-              this.ctrl.trace_half_width[p_layer],
-              this.ctrl.trace_clearance_class_no);
+              this.autorouteEngine.board,
+              this.ctrl.traceHalfWidth[p_layer],
+              this.ctrl.traceClearanceClassNo);
       if (result == ForcedPadAlgo.CheckDrillResult.DRILLABLE) {
         return result;
       }
@@ -1439,160 +1426,158 @@ public class MazeSearchAlgo {
 
   /** Initializes the maze search algorithm. Returns false if the initialisation failed. */
   private boolean init(Set<Item> p_start_items, Set<Item> p_destination_items) {
-    reduce_trace_shapes_at_tie_pins(p_start_items, this.ctrl.net_no, this.search_tree);
-    reduce_trace_shapes_at_tie_pins(p_destination_items, this.ctrl.net_no, this.search_tree);
+    reduce_trace_shapes_at_tie_pins(p_start_items, this.ctrl.netNo, this.searchTree);
+    reduce_trace_shapes_at_tie_pins(p_destination_items, this.ctrl.netNo, this.searchTree);
     // process the destination items
-    boolean destination_ok = false;
-    for (Item curr_item : p_destination_items) {
-      if (this.autoroute_engine.is_stop_requested()) {
+    boolean destinationOk = false;
+    for (Item currItem : p_destination_items) {
+      if (this.autorouteEngine.is_stop_requested()) {
         return false;
       }
-      ItemAutorouteInfo curr_info = curr_item.get_autoroute_info();
-      curr_info.set_start_info(false);
-      for (int i = 0; i < curr_item.tree_shape_count(this.search_tree); i++) {
-        TileShape curr_tree_shape = curr_item.get_tree_shape(this.search_tree, i);
-        if (curr_tree_shape != null) {
-          destination_distance.join(curr_tree_shape.bounding_box(), curr_item.shape_layer(i));
+      ItemAutorouteInfo currInfo = currItem.get_autoroute_info();
+      currInfo.set_start_info(false);
+      for (int i = 0; i < currItem.tree_shape_count(this.searchTree); i++) {
+        TileShape currTreeShape = currItem.get_tree_shape(this.searchTree, i);
+        if (currTreeShape != null) {
+          destinationDistance.join(currTreeShape.bounding_box(), currItem.shape_layer(i));
         }
       }
-      destination_ok = true;
+      destinationOk = true;
     }
-    if (!destination_ok && this.ctrl.is_fanout) {
+    if (!destinationOk && this.ctrl.isFanout) {
       // destination set is not needed for fanout
-      IntBox board_bounding_box = this.autoroute_engine.board.bounding_box;
-      destination_distance.join(board_bounding_box, 0);
-      destination_distance.join(board_bounding_box, this.ctrl.layer_count - 1);
-      destination_ok = true;
+      IntBox boardBoundingBox = this.autorouteEngine.board.boundingBox;
+      destinationDistance.join(boardBoundingBox, 0);
+      destinationDistance.join(boardBoundingBox, this.ctrl.layerCount - 1);
+      destinationOk = true;
     }
 
-    if (!destination_ok) {
+    if (!destinationOk) {
       FRLogger.debug(
           "MazeSearchAlgo.init: Failed - no valid destination items found"
               + " (dest set size: "
               + p_destination_items.size()
-              + ", is_fanout: "
-              + this.ctrl.is_fanout
+              + ", isFanout: "
+              + this.ctrl.isFanout
               + ")");
       return false;
     }
     // process the start items
-    Collection<IncompleteFreeSpaceExpansionRoom> start_rooms = new LinkedList<>();
-    for (Item curr_item : p_start_items) {
-      if (this.autoroute_engine.is_stop_requested()) {
+    Collection<IncompleteFreeSpaceExpansionRoom> startRooms = new LinkedList<>();
+    for (Item currItem : p_start_items) {
+      if (this.autorouteEngine.is_stop_requested()) {
         return false;
       }
-      ItemAutorouteInfo curr_info = curr_item.get_autoroute_info();
-      curr_info.set_start_info(true);
-      if (curr_item instanceof Connectable connectable) {
-        for (int i = 0; i < curr_item.tree_shape_count(search_tree); i++) {
-          TileShape contained_shape = connectable.get_trace_connection_shape(search_tree, i);
-          IncompleteFreeSpaceExpansionRoom new_start_room =
-              autoroute_engine.add_incomplete_expansion_room(
-                  null, curr_item.shape_layer(i), contained_shape);
-          start_rooms.add(new_start_room);
+      ItemAutorouteInfo currInfo = currItem.get_autoroute_info();
+      currInfo.set_start_info(true);
+      if (currItem instanceof Connectable connectable) {
+        for (int i = 0; i < currItem.tree_shape_count(searchTree); i++) {
+          TileShape containedShape = connectable.get_trace_connection_shape(searchTree, i);
+          IncompleteFreeSpaceExpansionRoom newStartRoom =
+              autorouteEngine.add_incomplete_expansion_room(
+                  null, currItem.shape_layer(i), containedShape);
+          startRooms.add(newStartRoom);
         }
       }
     }
 
     // complete the start rooms
-    Collection<CompleteFreeSpaceExpansionRoom> completed_start_rooms = new LinkedList<>();
+    Collection<CompleteFreeSpaceExpansionRoom> completedStartRooms = new LinkedList<>();
 
-    if (this.autoroute_engine.maintain_database) {
+    if (this.autorouteEngine.maintainDatabase) {
       // add the completed start rooms carried over from the last autoroute to the
       // start rooms.
-      completed_start_rooms.addAll(
-          this.autoroute_engine.get_rooms_with_target_items(p_start_items));
+      completedStartRooms.addAll(this.autorouteEngine.get_rooms_with_target_items(p_start_items));
     }
 
-    for (IncompleteFreeSpaceExpansionRoom curr_room : start_rooms) {
-      if (this.autoroute_engine.is_stop_requested()) {
+    for (IncompleteFreeSpaceExpansionRoom currRoom : startRooms) {
+      if (this.autorouteEngine.is_stop_requested()) {
         return false;
       }
-      Collection<CompleteFreeSpaceExpansionRoom> curr_completed_rooms =
-          autoroute_engine.complete_expansion_room(curr_room);
-      completed_start_rooms.addAll(curr_completed_rooms);
+      Collection<CompleteFreeSpaceExpansionRoom> currCompletedRooms =
+          autorouteEngine.complete_expansion_room(currRoom);
+      completedStartRooms.addAll(currCompletedRooms);
     }
 
     // Put the ItemExpansionDoors of the completed start rooms into
-    // the maze_expansion_list.
-    boolean start_ok = false;
-    int expansion_doors_found = 0;
-    int expansion_doors_destination = 0;
-    for (CompleteFreeSpaceExpansionRoom curr_room : completed_start_rooms) {
-      for (TargetItemExpansionDoor curr_door : curr_room.get_target_doors()) {
-        expansion_doors_found++;
-        if (this.autoroute_engine.is_stop_requested()) {
+    // the mazeExpansionList.
+    boolean startOk = false;
+    int expansionDoorsFound = 0;
+    int expansionDoorsDestination = 0;
+    for (CompleteFreeSpaceExpansionRoom currRoom : completedStartRooms) {
+      for (TargetItemExpansionDoor currDoor : currRoom.get_target_doors()) {
+        expansionDoorsFound++;
+        if (this.autorouteEngine.is_stop_requested()) {
           return false;
         }
-        if (curr_door.is_destination_door()) {
-          expansion_doors_destination++;
+        if (currDoor.is_destination_door()) {
+          expansionDoorsDestination++;
           continue;
         }
-        TileShape connection_shape =
-            ((Connectable) curr_door.item)
-                .get_trace_connection_shape(search_tree, curr_door.tree_entry_no);
-        connection_shape = connection_shape.intersection(curr_door.room.get_shape());
-        FloatPoint curr_center = connection_shape.centre_of_gravity();
-        FloatLine shape_entry = new FloatLine(curr_center, curr_center);
-        double sorting_value =
-            this.destination_distance.calculate(curr_center, curr_room.get_layer());
-        MazeListElement new_list_element =
+        TileShape connectionShape =
+            ((Connectable) currDoor.item)
+                .get_trace_connection_shape(searchTree, currDoor.treeEntryNo);
+        connectionShape = connectionShape.intersection(currDoor.room.get_shape());
+        FloatPoint currCenter = connectionShape.centre_of_gravity();
+        FloatLine shapeEntry = new FloatLine(currCenter, currCenter);
+        double sortingValue = this.destinationDistance.calculate(currCenter, currRoom.get_layer());
+        MazeListElement newListElement =
             new MazeListElement(
-                curr_door,
+                currDoor,
                 0,
                 null,
                 0,
                 0,
-                sorting_value,
-                curr_room,
-                shape_entry,
+                sortingValue,
+                currRoom,
+                shapeEntry,
                 false,
                 MazeSearchElement.Adjustment.NONE,
                 false);
-        maze_expansion_list.add(new_list_element);
-        start_ok = true;
+        mazeExpansionList.add(newListElement);
+        startOk = true;
       }
     }
-    if (!start_ok) {
+    if (!startOk) {
       FRLogger.debug(
           "MazeSearchAlgo.init: Failed - no accessible expansion doors found"
               + " (start items: "
               + p_start_items.size()
               + ", start rooms: "
-              + start_rooms.size()
+              + startRooms.size()
               + ", completed start rooms: "
-              + completed_start_rooms.size()
+              + completedStartRooms.size()
               + ", expansion doors found: "
-              + expansion_doors_found
+              + expansionDoorsFound
               + ", destination doors: "
-              + expansion_doors_destination
-              + ", ripup_allowed: "
-              + this.ctrl.ripup_allowed
-              + ", ripup_costs: "
-              + this.ctrl.ripup_costs
+              + expansionDoorsDestination
+              + ", ripupAllowed: "
+              + this.ctrl.ripupAllowed
+              + ", ripupCosts: "
+              + this.ctrl.ripupCosts
               + ")");
     }
-    return start_ok;
+    return startOk;
   }
 
   private boolean room_shape_is_thick(ObstacleExpansionRoom p_obstacle_room) {
-    Item obstacle_item = p_obstacle_room.get_item();
+    Item obstacleItem = p_obstacle_room.get_item();
     int layer = p_obstacle_room.get_layer();
-    double obstacle_half_width;
-    if (obstacle_item instanceof Trace trace) {
-      obstacle_half_width =
+    double obstacleHalfWidth;
+    if (obstacleItem instanceof Trace trace) {
+      obstacleHalfWidth =
           trace.get_half_width()
-              + this.search_tree.clearance_compensation_value(
-                  obstacle_item.clearance_class_no(), layer);
+              + this.searchTree.clearance_compensation_value(
+                  obstacleItem.clearance_class_no(), layer);
 
-    } else if (obstacle_item instanceof Via via) {
-      TileShape via_shape = via.get_tree_shape_on_layer(this.search_tree, layer);
-      obstacle_half_width = 0.5 * via_shape.max_width();
+    } else if (obstacleItem instanceof Via via) {
+      TileShape viaShape = via.get_tree_shape_on_layer(this.searchTree, layer);
+      obstacleHalfWidth = 0.5 * viaShape.max_width();
     } else {
       FRLogger.warn("MazeSearchAlgo. room_shape_is_thick: unexpected obstacle item");
-      obstacle_half_width = 0;
+      obstacleHalfWidth = 0;
     }
-    return obstacle_half_width >= this.ctrl.compensated_trace_half_width[layer];
+    return obstacleHalfWidth >= this.ctrl.compensatedTraceHalfWidth[layer];
   }
 
   /**
@@ -1614,82 +1599,82 @@ public class MazeSearchAlgo {
         return -1;
       }
     }
-    CompleteExpansionRoom previous_room = p_list_element.door.other_room(p_list_element.next_room);
-    boolean room_was_shoved = p_list_element.adjustment != MazeSearchElement.Adjustment.NONE;
-    Item previous_item = null;
-    if (previous_room instanceof ObstacleExpansionRoom room) {
-      previous_item = room.get_item();
+    CompleteExpansionRoom previousRoom = p_list_element.door.other_room(p_list_element.nextRoom);
+    boolean roomWasShoved = p_list_element.adjustment != MazeSearchElement.Adjustment.NONE;
+    Item previousItem = null;
+    if (previousRoom instanceof ObstacleExpansionRoom room) {
+      previousItem = room.get_item();
     }
-    if (room_was_shoved) {
-      if (previous_item != null
-          && previous_item != p_obstacle_item
-          && previous_item.shares_net(p_obstacle_item)) {
+    if (roomWasShoved) {
+      if (previousItem != null
+          && previousItem != p_obstacle_item
+          && previousItem.shares_net(p_obstacle_item)) {
         // The ripped trace may start at a fork.
         return -1;
       }
-    } else if (previous_item == p_obstacle_item) {
+    } else if (previousItem == p_obstacle_item) {
       return ALREADY_RIPPED_COSTS;
     }
 
-    double fanout_via_cost_factor = 1.0;
-    double cost_factor = 1;
+    double fanoutViaCostFactor = 1.0;
+    double costFactor = 1;
     boolean preserveFanoutProtection =
-        !this.ctrl.remove_unconnected_vias
-            && this.ctrl.ripup_costs <= (this.ctrl.settings.get_start_ripup_costs() * 2);
+        !this.ctrl.removeUnconnectedVias
+            && this.ctrl.ripupCosts <= (this.ctrl.settings.get_start_ripup_costs() * 2);
     if (p_obstacle_item instanceof Trace obstacle_trace) {
-      cost_factor = obstacle_trace.get_half_width();
+      costFactor = obstacle_trace.get_half_width();
       if (preserveFanoutProtection) {
         // protect traces between SMD-pins and fanout vias
-        fanout_via_cost_factor = calc_fanout_via_ripup_cost_factor(obstacle_trace);
+        fanoutViaCostFactor = calc_fanout_via_ripup_cost_factor(obstacle_trace);
       }
     } else if (p_obstacle_item instanceof Via) {
-      boolean look_if_fanout_via = preserveFanoutProtection;
-      Collection<Item> contact_list = p_obstacle_item.get_normal_contacts();
-      int contact_count = 0;
-      for (Item curr_contact : contact_list) {
-        if (!(curr_contact instanceof Trace obstacle_trace) || curr_contact.is_user_fixed()) {
+      boolean lookIfFanoutVia = preserveFanoutProtection;
+      Collection<Item> contactList = p_obstacle_item.get_normal_contacts();
+      int contactCount = 0;
+      for (Item currContact : contactList) {
+        if (!(currContact instanceof Trace obstacle_trace) || currContact.is_user_fixed()) {
           return -1;
         }
-        ++contact_count;
-        cost_factor = Math.max(cost_factor, obstacle_trace.get_half_width());
-        if (look_if_fanout_via && !this.ctrl.is_fanout) {
-          double curr_fanout_via_cost_factor = calc_fanout_via_ripup_cost_factor(obstacle_trace);
-          if (curr_fanout_via_cost_factor > 1) {
-            fanout_via_cost_factor = curr_fanout_via_cost_factor;
-            look_if_fanout_via = false;
+        ++contactCount;
+        costFactor = Math.max(costFactor, obstacle_trace.get_half_width());
+        if (lookIfFanoutVia && !this.ctrl.isFanout) {
+          double currFanoutViaCostFactor = calc_fanout_via_ripup_cost_factor(obstacle_trace);
+          if (currFanoutViaCostFactor > 1) {
+            fanoutViaCostFactor = currFanoutViaCostFactor;
+            lookIfFanoutVia = false;
           }
         }
       }
-      if (fanout_via_cost_factor <= 1) {
+      if (fanoutViaCostFactor <= 1) {
         // not a fanout via
-        cost_factor *= 0.5 * Math.max(contact_count - 1, 0);
+        costFactor *= 0.5 * Math.max(contactCount - 1, 0);
       }
     }
 
-    double ripup_cost = this.ctrl.ripup_costs * cost_factor;
+    double ripupCost = this.ctrl.ripupCosts * costFactor;
     double detour = 1;
-    double trace_length = 0;
-    double min_trace_length = 0;
-    int item_count = 0;
+    double traceLength = 0;
+    double minTraceLength = 0;
+    int itemCount = 0;
     String connectionItemIds = "[]";
-    if (fanout_via_cost_factor <= 1
+    if (fanoutViaCostFactor <= 1
         && !this.ctrl
-            .is_fanout) // p_obstacle_item does not belong to a fanout, and not during fanout pass
+            .isFanout) // p_obstacle_item does not belong to a fanout, and not during fanout pass
     {
-      Connection obstacle_connection = Connection.get(p_obstacle_item);
-      if (obstacle_connection != null) {
-        detour = obstacle_connection.get_detour();
-        trace_length = obstacle_connection.trace_length();
-        item_count = obstacle_connection.item_list.size();
-        if (obstacle_connection.start_point != null && obstacle_connection.end_point != null) {
-          min_trace_length =
-              obstacle_connection
-                  .start_point
+      Connection obstacleConnection = Connection.get(p_obstacle_item);
+      if (obstacleConnection != null) {
+        detour = obstacleConnection.get_detour();
+        traceLength = obstacleConnection.trace_length();
+        itemCount = obstacleConnection.itemList.size();
+        if (obstacleConnection.startPoint != null && obstacleConnection.endPoint != null) {
+          minTraceLength =
+              obstacleConnection
+                  .startPoint
                   .to_float()
-                  .distance(obstacle_connection.end_point.to_float());
+                  .distance(obstacleConnection.endPoint.to_float());
         }
         StringBuilder sb = new StringBuilder("[");
-        for (app.freerouting.board.Item ci : obstacle_connection.item_list) {
+        for (app.freerouting.board.Item ci : obstacleConnection.itemList) {
           if (sb.length() > 1) {
             sb.append(",");
           }
@@ -1699,17 +1684,17 @@ public class MazeSearchAlgo {
         connectionItemIds = sb.toString();
       }
     }
-    boolean randomize = this.ctrl.ripup_pass_no >= 4 && this.ctrl.ripup_pass_no % 3 != 0;
+    boolean randomize = this.ctrl.ripupPassNo >= 4 && this.ctrl.ripupPassNo % 3 != 0;
     if (randomize) {
       // shuffle the result to avoid repetitive loops
-      double random_number = this.random_generator.nextDouble();
-      double random_factor = 0.5 + random_number * random_number;
-      detour *= random_factor;
+      double randomNumber = this.randomGenerator.nextDouble();
+      double randomFactor = 0.5 + randomNumber * randomNumber;
+      detour *= randomFactor;
     }
-    ripup_cost /= detour;
+    ripupCost /= detour;
 
-    ripup_cost *= fanout_via_cost_factor;
-    int result = Math.max((int) ripup_cost, 1);
+    ripupCost *= fanoutViaCostFactor;
+    int result = Math.max((int) ripupCost, 1);
     final int MAX_RIPUP_COSTS = Integer.MAX_VALUE / 100;
     result = Math.min(result, MAX_RIPUP_COSTS);
     String obstacleNets = "[]";
@@ -1722,25 +1707,25 @@ public class MazeSearchAlgo {
     }
     FRLogger.trace(
         "CHECK_RIPUP net="
-            + ctrl.net_no
+            + ctrl.netNo
             + ", obstacle_id="
             + (p_obstacle_item instanceof app.freerouting.board.Item obstItem
                 ? obstItem.get_id_no()
                 : -1)
             + ", obstacle_nets="
             + obstacleNets
-            + ", connection_items="
+            + ", connectionItems="
             + connectionItemIds
-            + ", half_width="
-            + cost_factor
-            + ", ripup_costs="
-            + this.ctrl.ripup_costs
-            + ", trace_length="
-            + trace_length
-            + ", min_trace_length="
-            + min_trace_length
-            + ", item_count="
-            + item_count
+            + ", halfWidth="
+            + costFactor
+            + ", ripupCosts="
+            + this.ctrl.ripupCosts
+            + ", traceLength="
+            + traceLength
+            + ", minTraceLength="
+            + minTraceLength
+            + ", itemCount="
+            + itemCount
             + ", detour="
             + detour
             + ", result="
@@ -1755,9 +1740,8 @@ public class MazeSearchAlgo {
    */
   private boolean shove_trace_room(
       MazeListElement p_list_element, ObstacleExpansionRoom p_obstacle_room) {
-    if (p_list_element.section_no_of_door != 0
-        && p_list_element.section_no_of_door
-            != p_list_element.door.maze_search_element_count() - 1) {
+    if (p_list_element.sectionNoOfDoor != 0
+        && p_list_element.sectionNoOfDoor != p_list_element.door.maze_search_element_count() - 1) {
       // No delay of occupation necessary because inner sections of a door are
       // currently not
       // shoved.
@@ -1765,64 +1749,64 @@ public class MazeSearchAlgo {
     }
     boolean result = false;
     if (p_list_element.adjustment != MazeSearchElement.Adjustment.RIGHT) {
-      Collection<MazeShoveTraceAlgo.DoorSection> left_to_door_section_list = new LinkedList<>();
+      Collection<MazeShoveTraceAlgo.DoorSection> leftToDoorSectionList = new LinkedList<>();
 
       if (MazeShoveTraceAlgo.check_shove_trace_line(
           p_list_element,
           p_obstacle_room,
-          this.autoroute_engine.board,
+          this.autorouteEngine.board,
           this.ctrl,
           false,
-          left_to_door_section_list)) {
+          leftToDoorSectionList)) {
         result = true;
       }
 
-      for (MazeShoveTraceAlgo.DoorSection curr_left_door_section : left_to_door_section_list) {
-        MazeSearchElement.Adjustment curr_adjustment;
+      for (MazeShoveTraceAlgo.DoorSection curr_left_door_section : leftToDoorSectionList) {
+        MazeSearchElement.Adjustment currAdjustment;
         if (curr_left_door_section.door.dimension == 2) {
           // the door is the link door to the next room
-          curr_adjustment = MazeSearchElement.Adjustment.LEFT;
+          currAdjustment = MazeSearchElement.Adjustment.LEFT;
         } else {
-          curr_adjustment = MazeSearchElement.Adjustment.NONE;
+          currAdjustment = MazeSearchElement.Adjustment.NONE;
         }
 
         expand_to_door_section(
             curr_left_door_section.door,
-            curr_left_door_section.section_no,
-            curr_left_door_section.section_line,
+            curr_left_door_section.sectionNo,
+            curr_left_door_section.sectionLine,
             p_list_element,
             0,
-            curr_adjustment);
+            currAdjustment);
       }
     }
 
     if (p_list_element.adjustment != MazeSearchElement.Adjustment.LEFT) {
-      Collection<MazeShoveTraceAlgo.DoorSection> right_to_door_section_list = new LinkedList<>();
+      Collection<MazeShoveTraceAlgo.DoorSection> rightToDoorSectionList = new LinkedList<>();
 
       if (MazeShoveTraceAlgo.check_shove_trace_line(
           p_list_element,
           p_obstacle_room,
-          this.autoroute_engine.board,
+          this.autorouteEngine.board,
           this.ctrl,
           true,
-          right_to_door_section_list)) {
+          rightToDoorSectionList)) {
         result = true;
       }
-      for (MazeShoveTraceAlgo.DoorSection curr_right_door_section : right_to_door_section_list) {
-        MazeSearchElement.Adjustment curr_adjustment;
+      for (MazeShoveTraceAlgo.DoorSection curr_right_door_section : rightToDoorSectionList) {
+        MazeSearchElement.Adjustment currAdjustment;
         if (curr_right_door_section.door.dimension == 2) {
           // the door is the link door to the next room
-          curr_adjustment = MazeSearchElement.Adjustment.RIGHT;
+          currAdjustment = MazeSearchElement.Adjustment.RIGHT;
         } else {
-          curr_adjustment = MazeSearchElement.Adjustment.NONE;
+          currAdjustment = MazeSearchElement.Adjustment.NONE;
         }
         expand_to_door_section(
             curr_right_door_section.door,
-            curr_right_door_section.section_no,
-            curr_right_door_section.section_line,
+            curr_right_door_section.sectionNo,
+            curr_right_door_section.sectionLine,
             p_list_element,
             0,
-            curr_adjustment);
+            currAdjustment);
       }
     }
     return result;
@@ -1833,8 +1817,8 @@ public class MazeSearchAlgo {
    * the neck down width in this case, or 0, if no such pin was found,
    */
   private double check_neck_down_at_dest_pin(CompleteExpansionRoom p_room) {
-    Collection<TargetItemExpansionDoor> target_doors = p_room.get_target_doors();
-    for (TargetItemExpansionDoor curr_target_door : target_doors) {
+    Collection<TargetItemExpansionDoor> targetDoors = p_room.get_target_doors();
+    for (TargetItemExpansionDoor curr_target_door : targetDoors) {
       if (curr_target_door.item instanceof Pin pin) {
         return pin.get_trace_neckdown_halfwidth(p_room.get_layer());
       }
@@ -1851,53 +1835,53 @@ public class MazeSearchAlgo {
     if (p_list_element.door.get_dimension() != 1) {
       return false;
     }
-    TileShape door_shape = p_list_element.door.get_shape();
+    TileShape doorShape = p_list_element.door.get_shape();
 
     // Get the line of the 1 dimensional door.
-    Line door_line = null;
-    FloatPoint prev_corner = door_shape.corner_approx(0);
-    int corner_count = door_shape.border_line_count();
-    for (int i = 1; i < corner_count; i++) {
+    Line doorLine = null;
+    FloatPoint prevCorner = doorShape.corner_approx(0);
+    int cornerCount = doorShape.border_line_count();
+    for (int i = 1; i < cornerCount; i++) {
       // skip lines of length 0
-      FloatPoint next_corner = door_shape.corner_approx(i);
-      if (next_corner.distance_square(prev_corner) > 1) {
-        door_line = door_shape.border_line(i - 1);
+      FloatPoint nextCorner = doorShape.corner_approx(i);
+      if (nextCorner.distance_square(prevCorner) > 1) {
+        doorLine = doorShape.border_line(i - 1);
         break;
       }
-      prev_corner = next_corner;
+      prevCorner = nextCorner;
     }
-    if (door_line == null) {
+    if (doorLine == null) {
       return false;
     }
 
-    IntPoint door_center = door_shape.centre_of_gravity().round();
-    int curr_layer = p_list_element.next_room.get_layer();
-    int check_radius =
-        this.ctrl.compensated_trace_half_width[curr_layer] + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
-    // create a perpendicular line segment of length 2 * check_radius through the
+    IntPoint doorCenter = doorShape.centre_of_gravity().round();
+    int currLayer = p_list_element.nextRoom.get_layer();
+    int checkRadius =
+        this.ctrl.compensatedTraceHalfWidth[currLayer] + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
+    // create a perpendicular line segment of length 2 * checkRadius through the
     // door center
-    Line[] line_arr = new Line[3];
-    line_arr[0] = door_line.translate(check_radius);
-    line_arr[1] = new Line(door_center, door_line.direction().turn_45_degree(2));
-    line_arr[2] = door_line.translate(-check_radius);
+    Line[] lineArr = new Line[3];
+    lineArr[0] = doorLine.translate(checkRadius);
+    lineArr[1] = new Line(doorCenter, doorLine.direction().turn_45_degree(2));
+    lineArr[2] = doorLine.translate(-checkRadius);
 
-    Polyline check_polyline = new Polyline(line_arr);
-    TileShape check_shape = check_polyline.offset_shape(check_radius, 0);
-    int[] ignore_net_nos = new int[1];
-    ignore_net_nos[0] = this.ctrl.net_no;
-    Set<SearchTreeObject> overlapping_objects = new TreeSet<>();
-    this.autoroute_engine.autoroute_search_tree.overlapping_objects(
-        check_shape, curr_layer, ignore_net_nos, overlapping_objects);
+    Polyline checkPolyline = new Polyline(lineArr);
+    TileShape checkShape = checkPolyline.offset_shape(checkRadius, 0);
+    int[] ignoreNetNos = new int[1];
+    ignoreNetNos[0] = this.ctrl.netNo;
+    Set<SearchTreeObject> overlappingObjects = new TreeSet<>();
+    this.autorouteEngine.autorouteSearchTree.overlapping_objects(
+        checkShape, currLayer, ignoreNetNos, overlappingObjects);
 
-    for (SearchTreeObject curr_object : overlapping_objects) {
-      if (!(curr_object instanceof Item curr_item) || curr_object == p_ignore_item) {
+    for (SearchTreeObject currObject : overlappingObjects) {
+      if (!(currObject instanceof Item currItem) || currObject == p_ignore_item) {
         continue;
       }
-      if (!curr_item.shares_net(p_ignore_item)) {
+      if (!currItem.shares_net(p_ignore_item)) {
         return false;
       }
-      Set<Item> curr_contacts = curr_item.get_normal_contacts();
-      if (!curr_contacts.contains(p_ignore_item)) {
+      Set<Item> currContacts = currItem.get_normal_contacts();
+      if (!currContacts.contains(p_ignore_item)) {
         return false;
       }
     }
@@ -1906,29 +1890,29 @@ public class MazeSearchAlgo {
 
   /** Checks entering a thick room from a via or trace through a small door (after ripup) */
   private boolean check_leaving_ripped_item(MazeListElement p_list_element) {
-    if (!(p_list_element.door instanceof ExpansionDoor curr_door)) {
+    if (!(p_list_element.door instanceof ExpansionDoor currDoor)) {
       return false;
     }
-    CompleteExpansionRoom from_room = curr_door.other_room(p_list_element.next_room);
-    if (!(from_room instanceof ObstacleExpansionRoom)) {
+    CompleteExpansionRoom fromRoom = currDoor.other_room(p_list_element.nextRoom);
+    if (!(fromRoom instanceof ObstacleExpansionRoom)) {
       return false;
     }
-    Item curr_item = ((ObstacleExpansionRoom) from_room).get_item();
-    if (!curr_item.is_routable()) {
+    Item currItem = ((ObstacleExpansionRoom) fromRoom).get_item();
+    if (!currItem.is_routable()) {
       return false;
     }
-    return enter_through_small_door(p_list_element, curr_item);
+    return enter_through_small_door(p_list_element, currItem);
   }
 
   /** The result type of MazeSearchAlgo.find_connection */
   public static class Result {
 
-    public final ExpandableObject destination_door;
-    public final int section_no_of_door;
+    public final ExpandableObject destinationDoor;
+    public final int sectionNoOfDoor;
 
     Result(ExpandableObject p_destination_door, int p_section_no_of_door) {
-      destination_door = p_destination_door;
-      section_no_of_door = p_section_no_of_door;
+      destinationDoor = p_destination_door;
+      sectionNoOfDoor = p_section_no_of_door;
     }
   }
 
@@ -1939,26 +1923,26 @@ public class MazeSearchAlgo {
   static class ShoveResult {
 
     /** The opposite door to be expanded */
-    final ExpansionDoor opposite_door;
+    final ExpansionDoor oppositeDoor;
 
     /** The doors at the adjusted edge of the room shape to be expanded. */
-    final Collection<ExpansionDoor> side_doors;
+    final Collection<ExpansionDoor> sideDoors;
 
     /** The passing point of a trace through the from_door after adjustment. */
-    final FloatPoint from_door_passing_point;
+    final FloatPoint fromDoorPassingPoint;
 
     /** The passing point of a trace through the opposite door after adjustment. */
-    final FloatPoint opposite_door_passing_point;
+    final FloatPoint oppositeDoorPassingPoint;
 
     ShoveResult(
         ExpansionDoor p_opposite_door,
         Collection<ExpansionDoor> p_side_doors,
         FloatPoint p_from_door_passing_point,
         FloatPoint p_opposite_door_passing_point) {
-      opposite_door = p_opposite_door;
-      side_doors = p_side_doors;
-      from_door_passing_point = p_from_door_passing_point;
-      opposite_door_passing_point = p_opposite_door_passing_point;
+      oppositeDoor = p_opposite_door;
+      sideDoors = p_side_doors;
+      fromDoorPassingPoint = p_from_door_passing_point;
+      oppositeDoorPassingPoint = p_opposite_door_passing_point;
     }
   }
 }

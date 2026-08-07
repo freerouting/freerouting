@@ -29,47 +29,47 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
   @Override
   protected void fill_list() {
     Padstacks padstacks =
-        this.board_frame.board_panel.board_handling.get_routing_board().library.padstacks;
-    Padstack[] sorted_arr = new Padstack[padstacks.count()];
-    for (int i = 0; i < sorted_arr.length; i++) {
-      sorted_arr[i] = padstacks.get(i + 1);
+        this.boardFrame.boardPanel.boardHandling.get_routing_board().library.padstacks;
+    Padstack[] sortedArr = new Padstack[padstacks.count()];
+    for (int i = 0; i < sortedArr.length; i++) {
+      sortedArr[i] = padstacks.get(i + 1);
     }
-    Arrays.sort(sorted_arr);
-    for (int i = 0; i < sorted_arr.length; i++) {
-      this.add_to_list(sorted_arr[i]);
+    Arrays.sort(sortedArr);
+    for (int i = 0; i < sortedArr.length; i++) {
+      this.add_to_list(sortedArr[i]);
     }
     this.list.setVisibleRowCount(Math.min(padstacks.count(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
   protected void select_instances() {
-    List<Object> selected_padstacks = list.getSelectedValuesList();
-    if (selected_padstacks.isEmpty()) {
+    List<Object> selectedPadstacks = list.getSelectedValuesList();
+    if (selectedPadstacks.isEmpty()) {
       return;
     }
-    Collection<Padstack> padstack_list = new LinkedList<>();
-    for (int i = 0; i < selected_padstacks.size(); i++) {
-      padstack_list.add((Padstack) selected_padstacks.get(i));
+    Collection<Padstack> padstackList = new LinkedList<>();
+    for (int i = 0; i < selectedPadstacks.size(); i++) {
+      padstackList.add((Padstack) selectedPadstacks.get(i));
     }
-    RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-    Set<Item> board_instances = new TreeSet<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = routing_board.item_list.start_read_object();
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.get_routing_board();
+    Set<Item> boardInstances = new TreeSet<>();
+    Iterator<UndoableObjects.UndoableObjectNode> it = routingBoard.itemList.start_read_object();
     for (; ; ) {
-      UndoableObjects.Storable curr_object = routing_board.item_list.read_object(it);
-      if (curr_object == null) {
+      UndoableObjects.Storable currObject = routingBoard.itemList.read_object(it);
+      if (currObject == null) {
         break;
       }
-      if (curr_object instanceof DrillItem item) {
-        Padstack curr_padstack = item.get_padstack();
-        for (Padstack curr_selected_padstack : padstack_list) {
-          if (curr_padstack == curr_selected_padstack) {
-            board_instances.add((Item) curr_object);
+      if (currObject instanceof DrillItem item) {
+        Padstack currPadstack = item.get_padstack();
+        for (Padstack curr_selected_padstack : padstackList) {
+          if (currPadstack == curr_selected_padstack) {
+            boardInstances.add((Item) currObject);
             break;
           }
         }
       }
     }
-    board_frame.board_panel.board_handling.select_items(board_instances);
-    board_frame.board_panel.board_handling.zoom_selection();
+    boardFrame.boardPanel.boardHandling.select_items(boardInstances);
+    boardFrame.boardPanel.boardHandling.zoom_selection();
   }
 }

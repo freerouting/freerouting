@@ -7,27 +7,27 @@ import javax.swing.JComboBox;
 /** A Combo Box with an item for each clearance class of the board. */
 public class ComboBoxClearance extends JComboBox<ComboBoxClearance.ClearanceClass> {
 
-  private ClearanceClass[] class_arr;
+  private ClearanceClass[] classArr;
 
   /** Creates a new instance of ClearanceComboBox */
   public ComboBoxClearance(ClearanceMatrix p_clearance_matrix) {
-    this.class_arr = new ClearanceClass[p_clearance_matrix.get_class_count()];
-    for (int i = 0; i < this.class_arr.length; i++) {
-      this.class_arr[i] = new ClearanceClass(p_clearance_matrix.get_name(i), i);
+    this.classArr = new ClearanceClass[p_clearance_matrix.get_class_count()];
+    for (int i = 0; i < this.classArr.length; i++) {
+      this.classArr[i] = new ClearanceClass(p_clearance_matrix.get_name(i), i);
     }
-    this.setModel(new DefaultComboBoxModel<>(this.class_arr));
+    this.setModel(new DefaultComboBoxModel<>(this.classArr));
     this.setSelectedIndex(1);
   }
 
   /** Adjusts this combo box to p_new_clearance_matrix. */
   public void adjust(ClearanceMatrix p_new_clearance_matrix) {
-    int old_index = this.get_selected_class_index();
-    this.class_arr = new ClearanceClass[p_new_clearance_matrix.get_class_count()];
-    for (int i = 0; i < this.class_arr.length; i++) {
-      this.class_arr[i] = new ClearanceClass(p_new_clearance_matrix.get_name(i), i);
+    int oldIndex = this.get_selected_class_index();
+    this.classArr = new ClearanceClass[p_new_clearance_matrix.get_class_count()];
+    for (int i = 0; i < this.classArr.length; i++) {
+      this.classArr[i] = new ClearanceClass(p_new_clearance_matrix.get_name(i), i);
     }
-    this.setModel(new DefaultComboBoxModel<>(this.class_arr));
-    this.setSelectedIndex(Math.min(old_index, this.class_arr.length - 1));
+    this.setModel(new DefaultComboBoxModel<>(this.classArr));
+    this.setSelectedIndex(Math.min(oldIndex, this.classArr.length - 1));
   }
 
   /** Returns the index of the selected clearance class in the clearance matrix. */
@@ -37,7 +37,7 @@ public class ComboBoxClearance extends JComboBox<ComboBoxClearance.ClearanceClas
 
   /** Returns the number of clearance classes in this combo box. */
   public int get_class_count() {
-    return this.class_arr.length;
+    return this.classArr.length;
   }
 
   /** Contains the name of a clearance class and its index in the clearance matrix. */

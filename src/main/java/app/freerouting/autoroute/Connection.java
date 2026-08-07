@@ -13,13 +13,13 @@ public final class Connection {
   private static final double DETOUR_ADD = 100;
   private static final double DETOUR_ITEM_COST = 0.1;
 
-  /** If the connection ens in empty space, start_point or end_point may be null. */
-  public final Point start_point;
+  /** If the connection ens in empty space, startPoint or endPoint may be null. */
+  public final Point startPoint;
 
-  public final int start_layer;
-  public final Point end_point;
-  public final int end_layer;
-  public final Set<Item> item_list;
+  public final int startLayer;
+  public final Point endPoint;
+  public final int endLayer;
+  public final Set<Item> itemList;
 
   /** Creates a new instance of Connection */
   private Connection(
@@ -28,11 +28,11 @@ public final class Connection {
       Point p_end_point,
       int p_end_layer,
       Set<Item> p_item_list) {
-    start_point = p_start_point;
-    start_layer = p_start_layer;
-    end_point = p_end_point;
-    end_layer = p_end_layer;
-    item_list = p_item_list;
+    startPoint = p_start_point;
+    startLayer = p_start_layer;
+    endPoint = p_end_point;
+    endLayer = p_end_layer;
+    itemList = p_item_list;
   }
 
   /**
@@ -44,95 +44,91 @@ public final class Connection {
     if (!p_item.is_routable()) {
       return null;
     }
-    Connection precalculated_connection =
-        p_item.get_autoroute_info().get_precalculated_connection();
-    if (precalculated_connection != null) {
-      return precalculated_connection;
+    Connection precalculatedConnection = p_item.get_autoroute_info().get_precalculated_connection();
+    if (precalculatedConnection != null) {
+      return precalculatedConnection;
     }
     Set<Item> contacts = p_item.get_normal_contacts();
-    Set<Item> connection_items = new TreeSet<>();
-    connection_items.add(p_item);
+    Set<Item> connectionItems = new TreeSet<>();
+    connectionItems.add(p_item);
 
-    Point start_point = null;
-    int start_layer = 0;
-    Point end_point = null;
-    int end_layer = 0;
+    Point startPoint = null;
+    int startLayer = 0;
+    Point endPoint = null;
+    int endLayer = 0;
 
-    for (Item curr_item : contacts) {
-      Point prev_contact_point = p_item.normal_contact_point(curr_item);
-      if (prev_contact_point == null) {
+    for (Item currItem : contacts) {
+      Point prevContactPoint = p_item.normal_contact_point(currItem);
+      if (prevContactPoint == null) {
         // no unique contact point
         continue;
       }
-      int prev_contact_layer = p_item.first_common_layer(curr_item);
-      boolean fork_found = false;
+      int prevContactLayer = p_item.first_common_layer(currItem);
+      boolean forkFound = false;
       if (p_item instanceof Trace start_trace) {
         // Check, that there is only 1 contact at this location.
         // Only for pins and vias items of more than 1 connection
         // are collected
-        Collection<Item> check_contacts =
-            start_trace.get_normal_contacts(prev_contact_point, false);
-        if (check_contacts.size() != 1) {
-          fork_found = true;
+        Collection<Item> checkContacts = start_trace.get_normal_contacts(prevContactPoint, false);
+        if (checkContacts.size() != 1) {
+          forkFound = true;
         }
       }
-      // Search from curr_item along the contacts
+      // Search from currItem along the contacts
       // until the next fork or nonroute item.
       for (; ; ) {
-        if (!curr_item.is_routable() || fork_found) {
+        if (!currItem.is_routable() || forkFound) {
           // connection ends
-          if (start_point == null) {
-            start_point = prev_contact_point;
-            start_layer = prev_contact_layer;
-          } else if (!prev_contact_point.equals(start_point)) {
-            end_point = prev_contact_point;
-            end_layer = prev_contact_layer;
+          if (startPoint == null) {
+            startPoint = prevContactPoint;
+            startLayer = prevContactLayer;
+          } else if (!prevContactPoint.equals(startPoint)) {
+            endPoint = prevContactPoint;
+            endLayer = prevContactLayer;
           }
           break;
         }
-        connection_items.add(curr_item);
-        Collection<Item> curr_item_contacts = curr_item.get_normal_contacts();
+        connectionItems.add(currItem);
+        Collection<Item> currItemContacts = currItem.get_normal_contacts();
         // filter the contacts at the previous contact point,
         // because we were already there.
         // If then there is not exactly 1 new contact left, there is
         // a stub or a fork.
-        Point next_contact_point = null;
-        int next_contact_layer = -1;
-        Item next_contact = null;
-        for (Item tmp_contact : curr_item_contacts) {
-          int tmp_contact_layer = curr_item.first_common_layer(tmp_contact);
-          if (tmp_contact_layer >= 0) {
-            Point tmp_contact_point = curr_item.normal_contact_point(tmp_contact);
-            if (tmp_contact_point == null) {
+        Point nextContactPoint = null;
+        int nextContactLayer = -1;
+        Item nextContact = null;
+        for (Item tmp_contact : currItemContacts) {
+          int tmpContactLayer = currItem.first_common_layer(tmp_contact);
+          if (tmpContactLayer >= 0) {
+            Point tmpContactPoint = currItem.normal_contact_point(tmp_contact);
+            if (tmpContactPoint == null) {
               // no unique contact point
-              fork_found = true;
+              forkFound = true;
               break;
             }
-            if (prev_contact_layer != tmp_contact_layer
-                || !prev_contact_point.equals(tmp_contact_point)) {
-              next_contact_point = tmp_contact_point;
-              next_contact_layer = tmp_contact_layer;
-              if (next_contact != null) {
+            if (prevContactLayer != tmpContactLayer || !prevContactPoint.equals(tmpContactPoint)) {
+              nextContactPoint = tmpContactPoint;
+              nextContactLayer = tmpContactLayer;
+              if (nextContact != null) {
                 // second new contact found
-                fork_found = true;
+                forkFound = true;
                 break;
               }
-              next_contact = tmp_contact;
+              nextContact = tmp_contact;
             }
           }
         }
-        if (next_contact == null) {
+        if (nextContact == null) {
           break;
         }
-        curr_item = next_contact;
-        prev_contact_point = next_contact_point;
-        prev_contact_layer = next_contact_layer;
+        currItem = nextContact;
+        prevContactPoint = nextContactPoint;
+        prevContactLayer = nextContactLayer;
       }
     }
-    Connection result =
-        new Connection(start_point, start_layer, end_point, end_layer, connection_items);
-    for (Item curr_item : connection_items) {
-      curr_item.get_autoroute_info().set_precalculated_connection(result);
+    Connection result = new Connection(startPoint, startLayer, endPoint, endLayer, connectionItems);
+    for (Item currItem : connectionItems) {
+      currItem.get_autoroute_info().set_precalculated_connection(result);
     }
     return result;
   }
@@ -140,8 +136,8 @@ public final class Connection {
   /** Returns the cumulative length of the traces in this connection. */
   public double trace_length() {
     double result = 0;
-    for (Item curr_item : item_list) {
-      if (curr_item instanceof Trace trace) {
+    for (Item currItem : itemList) {
+      if (currItem instanceof Trace trace) {
         result += trace.get_length();
       }
     }
@@ -153,11 +149,11 @@ public final class Connection {
    * length.
    */
   public double get_detour() {
-    if (start_point == null || end_point == null) {
+    if (startPoint == null || endPoint == null) {
       return Integer.MAX_VALUE;
     }
-    double min_trace_length = start_point.to_float().distance(end_point.to_float());
-    return (this.trace_length() + DETOUR_ADD) / (min_trace_length + DETOUR_ADD)
-        + DETOUR_ITEM_COST * (item_list.size() - 1);
+    double minTraceLength = startPoint.to_float().distance(endPoint.to_float());
+    return (this.trace_length() + DETOUR_ADD) / (minTraceLength + DETOUR_ADD)
+        + DETOUR_ITEM_COST * (itemList.size() - 1);
   }
 }

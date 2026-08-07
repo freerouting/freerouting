@@ -54,10 +54,10 @@ public class IntPoint extends Point implements Serializable {
 
   @Override
   public IntOctagon surrounding_octagon() {
-    int tmp_1 = x - y;
-    int tmp_2 = x + y;
+    int tmp1 = x - y;
+    int tmp2 = x + y;
 
-    return new IntOctagon(x, y, x, y, tmp_1, tmp_1, tmp_2, tmp_2);
+    return new IntOctagon(x, y, x, y, tmp1, tmp1, tmp2, tmp2);
   }
 
   @Override
@@ -135,35 +135,35 @@ public class IntPoint extends Point implements Serializable {
     BigInteger vxvy = BigInteger.valueOf((long) v.x * v.y);
     BigInteger denominator = vxvx.add(vyvy);
     BigInteger det = BigInteger.valueOf(((IntPoint) p_line.a).determinant((IntPoint) p_line.b));
-    BigInteger point_x = BigInteger.valueOf(x);
-    BigInteger point_y = BigInteger.valueOf(y);
+    BigInteger pointX = BigInteger.valueOf(x);
+    BigInteger pointY = BigInteger.valueOf(y);
 
-    BigInteger tmp1 = vxvx.multiply(point_x);
-    BigInteger tmp2 = vxvy.multiply(point_y);
+    BigInteger tmp1 = vxvx.multiply(pointX);
+    BigInteger tmp2 = vxvy.multiply(pointY);
     tmp1 = tmp1.add(tmp2);
     tmp2 = det.multiply(BigInteger.valueOf(v.y));
-    BigInteger proj_x = tmp1.add(tmp2);
+    BigInteger projX = tmp1.add(tmp2);
 
-    tmp1 = vxvy.multiply(point_x);
-    tmp2 = vyvy.multiply(point_y);
+    tmp1 = vxvy.multiply(pointX);
+    tmp2 = vyvy.multiply(pointY);
     tmp1 = tmp1.add(tmp2);
     tmp2 = det.multiply(BigInteger.valueOf(v.x));
-    BigInteger proj_y = tmp1.subtract(tmp2);
+    BigInteger projY = tmp1.subtract(tmp2);
 
     int signum = denominator.signum();
     if (signum != 0) {
       if (signum < 0) {
         denominator = denominator.negate();
-        proj_x = proj_x.negate();
-        proj_y = proj_y.negate();
+        projX = projX.negate();
+        projY = projY.negate();
       }
-      if (proj_x.mod(denominator).signum() == 0 && proj_y.mod(denominator).signum() == 0) {
-        proj_x = proj_x.divide(denominator);
-        proj_y = proj_y.divide(denominator);
-        return new IntPoint(proj_x.intValue(), proj_y.intValue());
+      if (projX.mod(denominator).signum() == 0 && projY.mod(denominator).signum() == 0) {
+        projX = projX.divide(denominator);
+        projY = projY.divide(denominator);
+        return new IntPoint(projX.intValue(), projY.intValue());
       }
     }
-    return new RationalPoint(proj_x, proj_y, denominator);
+    return new RationalPoint(projX, projY, denominator);
   }
 
   /**
@@ -193,9 +193,9 @@ public class IntPoint extends Point implements Serializable {
    */
   public IntPoint orthogonal_projection(IntPoint p_other) {
     IntPoint result;
-    int horizontal_distance = Math.abs(this.x - p_other.x);
-    int vertical_distance = Math.abs(this.y - p_other.y);
-    if (horizontal_distance <= vertical_distance) {
+    int horizontalDistance = Math.abs(this.x - p_other.x);
+    int verticalDistance = Math.abs(this.y - p_other.y);
+    if (horizontalDistance <= verticalDistance) {
       // projection onto the vertical line through p_other
       result = new IntPoint(p_other.x, this.y);
     } else {
@@ -212,34 +212,34 @@ public class IntPoint extends Point implements Serializable {
   public IntPoint fortyfive_degree_projection(IntPoint p_other) {
     int dx = this.x - p_other.x;
     int dy = this.y - p_other.y;
-    double[] dist_arr = new double[4];
-    dist_arr[0] = Math.abs(dx);
-    dist_arr[1] = Math.abs(dy);
-    double diagonal_1 = ((double) dy - (double) dx) / 2;
-    double diagonal_2 = ((double) dy + (double) dx) / 2;
-    dist_arr[2] = Math.abs(diagonal_1);
-    dist_arr[3] = Math.abs(diagonal_2);
-    double min_dist = dist_arr[0];
+    double[] distArr = new double[4];
+    distArr[0] = Math.abs(dx);
+    distArr[1] = Math.abs(dy);
+    double diagonal1 = ((double) dy - (double) dx) / 2;
+    double diagonal2 = ((double) dy + (double) dx) / 2;
+    distArr[2] = Math.abs(diagonal1);
+    distArr[3] = Math.abs(diagonal2);
+    double minDist = distArr[0];
     for (int i = 1; i < 4; i++) {
-      if (dist_arr[i] < min_dist) {
-        min_dist = dist_arr[i];
+      if (distArr[i] < minDist) {
+        minDist = distArr[i];
       }
     }
     IntPoint result;
-    if (min_dist == dist_arr[0]) {
+    if (minDist == distArr[0]) {
       // projection onto the vertical line through p_other
       result = new IntPoint(p_other.x, this.y);
-    } else if (min_dist == dist_arr[1]) {
+    } else if (minDist == distArr[1]) {
       // projection onto the horizontal line through p_other
       result = new IntPoint(this.x, p_other.y);
-    } else if (min_dist == dist_arr[2]) {
+    } else if (minDist == distArr[2]) {
       // projection onto the right diagonal line through p_other
-      int diagonal_value = (int) diagonal_2;
-      result = new IntPoint(p_other.x + diagonal_value, p_other.y + diagonal_value);
+      int diagonalValue = (int) diagonal2;
+      result = new IntPoint(p_other.x + diagonalValue, p_other.y + diagonalValue);
     } else {
       // projection onto the left diagonal line through p_other
-      int diagonal_value = (int) diagonal_1;
-      result = new IntPoint(p_other.x - diagonal_value, p_other.y + diagonal_value);
+      int diagonalValue = (int) diagonal1;
+      result = new IntPoint(p_other.x - diagonalValue, p_other.y + diagonalValue);
     }
     return result;
   }

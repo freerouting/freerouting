@@ -89,11 +89,11 @@ public class FloatPoint implements Serializable {
   /** Computes the weighted distance to p_other. */
   public double weighted_distance(
       FloatPoint p_other, double p_horizontal_weight, double p_vertical_weight) {
-    double delta_x = this.x - p_other.x;
-    double delta_y = this.y - p_other.y;
-    delta_x *= p_horizontal_weight;
-    delta_y *= p_vertical_weight;
-    return Math.sqrt(delta_x * delta_x + delta_y * delta_y);
+    double deltaX = this.x - p_other.x;
+    double deltaY = this.y - p_other.y;
+    deltaX *= p_horizontal_weight;
+    deltaY *= p_vertical_weight;
+    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
   }
 
   /** rounds the coordinates from an object of class Point_double to an object of class IntPoint */
@@ -107,26 +107,26 @@ public class FloatPoint implements Serializable {
    */
   public IntPoint round_to_the_right(Direction p_dir) {
     FloatPoint dir = p_dir.get_vector().to_float();
-    int rounded_x;
+    int roundedX;
 
     if (dir.y > 0) {
-      rounded_x = (int) Math.ceil(x);
+      roundedX = (int) Math.ceil(x);
     } else if (dir.y < 0) {
-      rounded_x = (int) Math.floor(x);
+      roundedX = (int) Math.floor(x);
     } else {
-      rounded_x = (int) Math.round(x);
+      roundedX = (int) Math.round(x);
     }
 
-    int rounded_y;
+    int roundedY;
 
     if (dir.x > 0) {
-      rounded_y = (int) Math.floor(y);
+      roundedY = (int) Math.floor(y);
     } else if (dir.x < 0) {
-      rounded_y = (int) Math.ceil(y);
+      roundedY = (int) Math.ceil(y);
     } else {
-      rounded_y = (int) Math.round(y);
+      roundedY = (int) Math.round(y);
     }
-    return new IntPoint(rounded_x, rounded_y);
+    return new IntPoint(roundedX, roundedY);
   }
 
   /**
@@ -134,19 +134,19 @@ public class FloatPoint implements Serializable {
    * the y coordinate a multiple of p_vertical_grid.
    */
   public IntPoint round_to_grid(int p_horizontal_grid, int p_vertical_grid) {
-    double rounded_x;
+    double roundedX;
     if (p_horizontal_grid > 0) {
-      rounded_x = Math.rint(this.x / p_horizontal_grid) * p_horizontal_grid;
+      roundedX = Math.rint(this.x / p_horizontal_grid) * p_horizontal_grid;
     } else {
-      rounded_x = this.x;
+      roundedX = this.x;
     }
-    double rounded_y;
+    double roundedY;
     if (p_vertical_grid > 0) {
-      rounded_y = Math.rint(this.y / p_vertical_grid) * p_vertical_grid;
+      roundedY = Math.rint(this.y / p_vertical_grid) * p_vertical_grid;
     } else {
-      rounded_y = this.y;
+      roundedY = this.y;
     }
-    return new IntPoint((int) rounded_x, (int) rounded_y);
+    return new IntPoint((int) roundedX, (int) roundedY);
   }
 
   /**
@@ -155,26 +155,26 @@ public class FloatPoint implements Serializable {
    */
   public IntPoint round_to_the_left(Direction p_dir) {
     FloatPoint dir = p_dir.get_vector().to_float();
-    int rounded_x;
+    int roundedX;
 
     if (dir.y > 0) {
-      rounded_x = (int) Math.floor(x);
+      roundedX = (int) Math.floor(x);
     } else if (dir.y < 0) {
-      rounded_x = (int) Math.ceil(x);
+      roundedX = (int) Math.ceil(x);
     } else {
-      rounded_x = (int) Math.round(x);
+      roundedX = (int) Math.round(x);
     }
 
-    int rounded_y;
+    int roundedY;
 
     if (dir.x > 0) {
-      rounded_y = (int) Math.ceil(y);
+      roundedY = (int) Math.ceil(y);
     } else if (dir.x < 0) {
-      rounded_y = (int) Math.floor(y);
+      roundedY = (int) Math.floor(y);
     } else {
-      rounded_y = (int) Math.round(y);
+      roundedY = (int) Math.round(y);
     }
-    return new IntPoint(rounded_x, rounded_y);
+    return new IntPoint(roundedX, roundedY);
   }
 
   /** Adds the coordinates of this FloatPoint and p_other. */
@@ -196,14 +196,14 @@ public class FloatPoint implements Serializable {
   /** Calculates the scalar product of (p_1 - this). with (p_2 - this). */
   public double scalar_product(FloatPoint p_1, FloatPoint p_2) {
     if (p_1 == null || p_2 == null) {
-      FRLogger.warn("FloatPoint.scalar_product: parameter point is null");
+      FRLogger.warn("FloatPoint.scalarProduct: parameter point is null");
       return 0;
     }
-    double dx_1 = p_1.x - this.x;
-    double dx_2 = p_2.x - this.x;
-    double dy_1 = p_1.y - this.y;
-    double dy_2 = p_2.y - this.y;
-    return dx_1 * dx_2 + dy_1 * dy_2;
+    double dx1 = p_1.x - this.x;
+    double dx2 = p_2.x - this.x;
+    double dy1 = p_1.y - this.y;
+    double dy2 = p_2.y - this.y;
+    return dx1 * dx2 + dy1 * dy2;
   }
 
   /**
@@ -216,9 +216,9 @@ public class FloatPoint implements Serializable {
       return this;
     }
     double length = Math.sqrt(x * x + y * y);
-    double new_x = (x * p_new_size) / length;
-    double new_y = (y * p_new_size) / length;
-    return new FloatPoint(new_x, new_y);
+    double newX = (x * p_new_size) / length;
+    double newY = (y * p_new_size) / length;
+    return new FloatPoint(newX, newY);
   }
 
   /**
@@ -233,9 +233,9 @@ public class FloatPoint implements Serializable {
       return p_to_point;
     }
     double length = Math.sqrt(dx * dx + dy * dy);
-    double new_x = this.x + (dx * p_new_length) / length;
-    double new_y = this.y + (dy * p_new_length) / length;
-    return new FloatPoint(new_x, new_y);
+    double newX = this.x + (dx * p_new_length) / length;
+    double newY = this.y + (dy * p_new_length) / length;
+    return new FloatPoint(newX, newY);
   }
 
   /** Returns the middle point between this point and p_to_point. */
@@ -243,9 +243,9 @@ public class FloatPoint implements Serializable {
     if (p_to_point == this) {
       return this;
     }
-    double middle_x = 0.5 * (this.x + p_to_point.x);
-    double middle_y = 0.5 * (this.y + p_to_point.y);
-    return new FloatPoint(middle_x, middle_y);
+    double middleX = 0.5 * (this.x + p_to_point.x);
+    double middleY = 0.5 * (this.y + p_to_point.y);
+    return new FloatPoint(middleX, middleY);
   }
 
   /**
@@ -254,11 +254,11 @@ public class FloatPoint implements Serializable {
    * Collinearity is not defined, because numerical calculations ar not exact for FloatPoints.
    */
   public Side side_of(FloatPoint p_1, FloatPoint p_2) {
-    double d21_x = p_2.x - p_1.x;
-    double d21_y = p_2.y - p_1.y;
-    double d01_x = this.x - p_1.x;
-    double d01_y = this.y - p_1.y;
-    double determinant = d21_x * d01_y - d21_y * d01_x;
+    double d21X = p_2.x - p_1.x;
+    double d21Y = p_2.y - p_1.y;
+    double d01X = this.x - p_1.x;
+    double d01Y = this.y - p_1.y;
+    double determinant = d21X * d01Y - d21Y * d01X;
     return Side.of(determinant);
   }
 
@@ -270,11 +270,11 @@ public class FloatPoint implements Serializable {
 
     double dx = x - p_pole.x;
     double dy = y - p_pole.y;
-    double sin_angle = Math.sin(p_angle);
-    double cos_angle = Math.cos(p_angle);
-    double new_dx = dx * cos_angle - dy * sin_angle;
-    double new_dy = dx * sin_angle + dy * cos_angle;
-    return new FloatPoint(p_pole.x + new_dx, p_pole.y + new_dy);
+    double sinAngle = Math.sin(p_angle);
+    double cosAngle = Math.cos(p_angle);
+    double newDx = dx * cosAngle - dy * sinAngle;
+    double newDy = dx * sinAngle + dy * cosAngle;
+    return new FloatPoint(p_pole.x + newDx, p_pole.y + newDy);
   }
 
   /** Turns this FloatPoint by p_factor times 90 degree around ZERO. */
@@ -286,31 +286,31 @@ public class FloatPoint implements Serializable {
     while (n >= 4) {
       n -= 4;
     }
-    double new_x;
-    double new_y;
+    double newX;
+    double newY;
     switch (n) {
       case 0 -> { // 0 degree
-        new_x = x;
-        new_y = y;
+        newX = x;
+        newY = y;
       }
       case 1 -> { // 90 degree
-        new_x = -y;
-        new_y = x;
+        newX = -y;
+        newY = x;
       }
       case 2 -> { // 180 degree
-        new_x = -x;
-        new_y = -y;
+        newX = -x;
+        newY = -y;
       }
       case 3 -> { // 270 degree
-        new_x = y;
-        new_y = -x;
+        newX = y;
+        newY = -x;
       }
       default -> {
-        new_x = 0;
-        new_y = 0;
+        newX = 0;
+        newY = 0;
       }
     }
-    return new FloatPoint(new_x, new_y);
+    return new FloatPoint(newX, newY);
   }
 
   /** Turns this FloatPoint by p_factor times 90 degree around p_pole. */
@@ -324,35 +324,35 @@ public class FloatPoint implements Serializable {
    * Checks, if this point is contained in the box spanned by p_1 and p_2 with the input tolerance.
    */
   public boolean is_contained_in_box(FloatPoint p_1, FloatPoint p_2, double p_tolerance) {
-    double min_x;
-    double max_x;
+    double minX;
+    double maxX;
     if (p_1.x < p_2.x) {
-      min_x = p_1.x;
-      max_x = p_2.x;
+      minX = p_1.x;
+      maxX = p_2.x;
     } else {
-      min_x = p_2.x;
-      max_x = p_1.x;
+      minX = p_2.x;
+      maxX = p_1.x;
     }
-    if (this.x < min_x - p_tolerance || this.x > max_x + p_tolerance) {
+    if (this.x < minX - p_tolerance || this.x > maxX + p_tolerance) {
       return false;
     }
-    double min_y;
-    double max_y;
+    double minY;
+    double maxY;
     if (p_1.y < p_2.y) {
-      min_y = p_1.y;
-      max_y = p_2.y;
+      minY = p_1.y;
+      maxY = p_2.y;
     } else {
-      min_y = p_2.y;
-      max_y = p_1.y;
+      minY = p_2.y;
+      maxY = p_1.y;
     }
-    return this.y >= min_y - p_tolerance && this.y <= max_y + p_tolerance;
+    return this.y >= minY - p_tolerance && this.y <= maxY + p_tolerance;
   }
 
   /** Creates the smallest IntBox containing this point. */
   public IntBox bounding_box() {
-    IntPoint lower_left = new IntPoint((int) Math.floor(this.x), (int) Math.floor(this.y));
-    IntPoint upper_right = new IntPoint((int) Math.ceil(this.x), (int) Math.ceil(this.y));
-    return new IntBox(lower_left, upper_right);
+    IntPoint lowerLeft = new IntPoint((int) Math.floor(this.x), (int) Math.floor(this.y));
+    IntPoint upperRight = new IntPoint((int) Math.ceil(this.x), (int) Math.ceil(this.y));
+    return new IntBox(lowerLeft, upperRight);
   }
 
   /**
@@ -370,51 +370,51 @@ public class FloatPoint implements Serializable {
 
     double dx = Math.abs(this.x - p_to_point.x);
     double dy = Math.abs(this.y - p_to_point.y);
-    boolean situation_turned = dy > dx;
+    boolean situationTurned = dy > dx;
     FloatPoint pole;
-    FloatPoint circle_center;
+    FloatPoint circleCenter;
 
-    if (situation_turned) {
+    if (situationTurned) {
       // turn the situation by 90 degree
       pole = new FloatPoint(-this.y, this.x);
-      circle_center = new FloatPoint(-p_to_point.y, p_to_point.x);
+      circleCenter = new FloatPoint(-p_to_point.y, p_to_point.x);
     } else {
       pole = this;
-      circle_center = p_to_point;
+      circleCenter = p_to_point;
     }
 
-    dx = pole.x - circle_center.x;
-    dy = pole.y - circle_center.y;
-    double dx_square = dx * dx;
-    double dy_square = dy * dy;
-    double dist_square = dx_square + dy_square;
-    double radius_square = p_distance * p_distance;
-    double discriminant = radius_square * dy_square - (radius_square - dx_square) * dist_square;
+    dx = pole.x - circleCenter.x;
+    dy = pole.y - circleCenter.y;
+    double dxSquare = dx * dx;
+    double dySquare = dy * dy;
+    double distSquare = dxSquare + dySquare;
+    double radiusSquare = p_distance * p_distance;
+    double discriminant = radiusSquare * dySquare - (radiusSquare - dxSquare) * distSquare;
 
     if (discriminant <= 0) {
       // pole is inside the circle.
       return new FloatPoint[0];
     }
-    double square_root = Math.sqrt(discriminant);
+    double squareRoot = Math.sqrt(discriminant);
 
     FloatPoint[] result = new FloatPoint[2];
 
-    double a1 = radius_square * dy;
-    double dy1 = (a1 + p_distance * square_root) / dist_square;
-    double dy2 = (a1 - p_distance * square_root) / dist_square;
+    double a1 = radiusSquare * dy;
+    double dy1 = (a1 + p_distance * squareRoot) / distSquare;
+    double dy2 = (a1 - p_distance * squareRoot) / distSquare;
 
-    double first_point_y = dy1 + circle_center.y;
-    double first_point_x = (radius_square - dy * dy1) / dx + circle_center.x;
-    double second_point_y = dy2 + circle_center.y;
-    double second_point_x = (radius_square - dy * dy2) / dx + circle_center.x;
+    double firstPointY = dy1 + circleCenter.y;
+    double firstPointX = (radiusSquare - dy * dy1) / dx + circleCenter.x;
+    double secondPointY = dy2 + circleCenter.y;
+    double secondPointX = (radiusSquare - dy * dy2) / dx + circleCenter.x;
 
-    if (situation_turned) {
+    if (situationTurned) {
       // turn the result by 270 degree
-      result[0] = new FloatPoint(first_point_y, -first_point_x);
-      result[1] = new FloatPoint(second_point_y, -second_point_x);
+      result[0] = new FloatPoint(firstPointY, -firstPointX);
+      result[1] = new FloatPoint(secondPointY, -secondPointX);
     } else {
-      result[0] = new FloatPoint(first_point_x, first_point_y);
-      result[1] = new FloatPoint(second_point_x, second_point_y);
+      result[0] = new FloatPoint(firstPointX, firstPointY);
+      result[1] = new FloatPoint(secondPointX, secondPointY);
     }
     return result;
   }
@@ -427,15 +427,15 @@ public class FloatPoint implements Serializable {
     if (p_to_point == null) {
       return null;
     }
-    FloatPoint[] tangent_points = tangential_points(p_to_point, p_distance);
-    if (tangent_points.length < 2) {
+    FloatPoint[] tangentPoints = tangential_points(p_to_point, p_distance);
+    if (tangentPoints.length < 2) {
       return null;
     }
     FloatPoint result;
-    if (p_to_point.side_of(this, tangent_points[0]) == Side.ON_THE_RIGHT) {
-      result = tangent_points[0];
+    if (p_to_point.side_of(this, tangentPoints[0]) == Side.ON_THE_RIGHT) {
+      result = tangentPoints[0];
     } else {
-      result = tangent_points[1];
+      result = tangentPoints[1];
     }
     return result;
   }
@@ -448,15 +448,15 @@ public class FloatPoint implements Serializable {
     if (p_to_point == null) {
       return null;
     }
-    FloatPoint[] tangent_points = tangential_points(p_to_point, p_distance);
-    if (tangent_points.length < 2) {
+    FloatPoint[] tangentPoints = tangential_points(p_to_point, p_distance);
+    if (tangentPoints.length < 2) {
       return null;
     }
     FloatPoint result;
-    if (p_to_point.side_of(this, tangent_points[0]) == Side.ON_THE_LEFT) {
-      result = tangent_points[0];
+    if (p_to_point.side_of(this, tangentPoints[0]) == Side.ON_THE_LEFT) {
+      result = tangentPoints[0];
     } else {
-      result = tangent_points[1];
+      result = tangentPoints[1];
     }
     return result;
   }
@@ -467,23 +467,21 @@ public class FloatPoint implements Serializable {
    * (this, p_1) and (p_1, p_2).
    */
   public FloatPoint circle_center(FloatPoint p_1, FloatPoint p_2) {
-    double slope_1 = (p_1.y - this.y) / (p_1.x - this.x);
-    double slope_2 = (p_2.y - p_1.y) / (p_2.x - p_1.x);
-    double x_center =
-        (slope_1 * slope_2 * (this.y - p_2.y)
-                + slope_2 * (this.x + p_1.x)
-                - slope_1 * (p_1.x + p_2.x))
-            / (2 * (slope_2 - slope_1));
-    double y_center = (0.5 * (this.x + p_1.x) - x_center) / slope_1 + 0.5 * (this.y + p_1.y);
-    return new FloatPoint(x_center, y_center);
+    double slope1 = (p_1.y - this.y) / (p_1.x - this.x);
+    double slope2 = (p_2.y - p_1.y) / (p_2.x - p_1.x);
+    double xCenter =
+        (slope1 * slope2 * (this.y - p_2.y) + slope2 * (this.x + p_1.x) - slope1 * (p_1.x + p_2.x))
+            / (2 * (slope2 - slope1));
+    double yCenter = (0.5 * (this.x + p_1.x) - xCenter) / slope1 + 0.5 * (this.y + p_1.y);
+    return new FloatPoint(xCenter, yCenter);
   }
 
   /** Returns true, if this point is contained in the circle through p_1, p_2 and p_3. */
   public boolean inside_circle(FloatPoint p_1, FloatPoint p_2, FloatPoint p_3) {
     FloatPoint center = p_1.circle_center(p_2, p_3);
-    double radius_square = center.distance_square(p_1);
+    double radiusSquare = center.distance_square(p_1);
     return this.distance_square(center)
-        < radius_square - 1; // - 1 is a tolerance for numerical stability.
+        < radiusSquare - 1; // - 1 is a tolerance for numerical stability.
   }
 
   public String to_string(Locale p_locale) {

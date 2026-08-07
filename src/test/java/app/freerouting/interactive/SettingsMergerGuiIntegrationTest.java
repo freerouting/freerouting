@@ -74,15 +74,15 @@ class SettingsMergerGuiIntegrationTest {
     // Build a merger with default + the live InteractiveSettings source at priority 50.
     SettingsMerger merger = new SettingsMerger(new DefaultSettings(), interactiveSettings);
 
-    // Change trace_pull_tight_accuracy via the setter (fires PropertyChangeEvent).
+    // Change tracePullTightAccuracy via the setter (fires PropertyChangeEvent).
     interactiveSettings.set_trace_pull_tight_accuracy(123);
 
     RouterSettings merged = merger.merge();
 
     assertEquals(
         123,
-        merged.trace_pull_tight_accuracy,
-        "merge() must reflect the live trace_pull_tight_accuracy from InteractiveSettings");
+        merged.tracePullTightAccuracy,
+        "merge() must reflect the live tracePullTightAccuracy from InteractiveSettings");
   }
 
   /**
@@ -95,12 +95,12 @@ class SettingsMergerGuiIntegrationTest {
     SettingsMerger merger = new SettingsMerger(new DefaultSettings(), interactiveSettings);
 
     interactiveSettings.set_trace_pull_tight_accuracy(300);
-    assertEquals(300, merger.merge().trace_pull_tight_accuracy);
+    assertEquals(300, merger.merge().tracePullTightAccuracy);
 
     interactiveSettings.set_trace_pull_tight_accuracy(750);
     assertEquals(
         750,
-        merger.merge().trace_pull_tight_accuracy,
+        merger.merge().tracePullTightAccuracy,
         "merge() must re-read getSettings() on every call — results must not be cached");
   }
 
@@ -124,7 +124,7 @@ class SettingsMergerGuiIntegrationTest {
     RouterSettings merged = merger.merge();
     assertEquals(
         999,
-        merged.trace_pull_tight_accuracy,
+        merged.tracePullTightAccuracy,
         "InteractiveSettings must have replaced the plain GuiSettings placeholder");
   }
 
@@ -148,20 +148,20 @@ class SettingsMergerGuiIntegrationTest {
     SettingsMerger merger = new SettingsMerger(new DefaultSettings());
     RouterSettings merged = merger.merge();
 
-    // The default value for trace_pull_tight_accuracy is 500 (from DefaultSettings).
+    // The default value for tracePullTightAccuracy is 500 (from DefaultSettings).
     assertEquals(
         500,
-        merged.trace_pull_tight_accuracy,
-        "Without a GuiSettings source, defaults must supply trace_pull_tight_accuracy");
+        merged.tracePullTightAccuracy,
+        "Without a GuiSettings source, defaults must supply tracePullTightAccuracy");
   }
 
   /**
-   * Verifies that the {@code automatic_neckdown} field — the second field mapped by {@link
+   * Verifies that the {@code automaticNeckdown} field — the second field mapped by {@link
    * InteractiveSettings#getSettings()} — flows through the merger when set to {@code true}.
    *
    * <p><strong>Architectural note:</strong> {@link app.freerouting.util.ReflectionUtil#copyFields}
    * skips fields whose value equals the Java-language default for that type. For {@code Boolean},
-   * the skip-sentinel is {@code false}. This means {@code InteractiveSettings.automatic_neckdown =
+   * the skip-sentinel is {@code false}. This means {@code InteractiveSettings.automaticNeckdown =
    * false} <em>cannot</em> override a higher-priority {@code true} coming from {@link
    * DefaultSettings} through the current merger architecture — the {@code false} value is silently
    * ignored as "no opinion". Only {@code Boolean.TRUE} (non-default) propagates through {@code
@@ -179,8 +179,8 @@ class SettingsMergerGuiIntegrationTest {
 
     RouterSettings merged = merger.merge();
     assertTrue(
-        merged.automatic_neckdown,
-        "InteractiveSettings.automatic_neckdown=true must be reflected by merge()");
+        merged.automaticNeckdown,
+        "InteractiveSettings.automaticNeckdown=true must be reflected by merge()");
   }
 
   /**

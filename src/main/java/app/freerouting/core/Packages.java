@@ -8,17 +8,17 @@ import java.util.Vector;
 /** Describes a library of component packages. */
 public class Packages implements Serializable {
 
-  final Padstacks padstack_list;
+  final Padstacks padstackList;
 
   /** The array of packages in this object */
-  private final Vector<Package> package_arr = new Vector<>();
+  private final Vector<Package> packageArr = new Vector<>();
 
   /**
    * Creates a new instance of Packages. p_padstack_list is the list of padstacks used for the pins
    * of the packages in this data structure.
    */
   public Packages(Padstacks p_padstack_list) {
-    this.padstack_list = p_padstack_list;
+    this.padstackList = p_padstack_list;
   }
 
   /**
@@ -28,32 +28,32 @@ public class Packages implements Serializable {
     if (p_name == null) {
       return null;
     }
-    Package other_side_package = null;
-    for (Package curr_package : package_arr) {
-      if (curr_package != null && curr_package.name.equalsIgnoreCase(p_name)) {
-        if (curr_package.is_front == p_is_front) {
-          return curr_package;
+    Package otherSidePackage = null;
+    for (Package currPackage : packageArr) {
+      if (currPackage != null && currPackage.name.equalsIgnoreCase(p_name)) {
+        if (currPackage.isFront == p_is_front) {
+          return currPackage;
         }
-        other_side_package = curr_package;
+        otherSidePackage = currPackage;
       }
     }
     String baseName = p_name.replaceAll("::\\d+$", "");
     if (!baseName.equalsIgnoreCase(p_name)) {
-      for (Package curr_package : package_arr) {
-        if (curr_package != null && curr_package.name.equalsIgnoreCase(baseName)) {
-          if (curr_package.is_front == p_is_front) {
-            return curr_package;
+      for (Package currPackage : packageArr) {
+        if (currPackage != null && currPackage.name.equalsIgnoreCase(baseName)) {
+          if (currPackage.isFront == p_is_front) {
+            return currPackage;
           }
-          other_side_package = curr_package;
+          otherSidePackage = currPackage;
         }
       }
     }
-    return other_side_package;
+    return otherSidePackage;
   }
 
   /** Returns the package with index p_package_no. Packages numbers are from 1 to package count. */
   public Package get(int p_package_no) {
-    Package result = package_arr.elementAt(p_package_no - 1);
+    Package result = packageArr.elementAt(p_package_no - 1);
     if (result != null && result.no != p_package_no) {
       FRLogger.warn("Padstacks.get: inconsistent padstack number");
     }
@@ -62,7 +62,7 @@ public class Packages implements Serializable {
 
   /** Returns the count of packages in this object. */
   public int count() {
-    return package_arr.size();
+    return packageArr.size();
   }
 
   /** Appends a new package with the input data to this object. */
@@ -76,10 +76,10 @@ public class Packages implements Serializable {
       Package.Keepout[] p_via_keepout_arr,
       Package.Keepout[] p_place_keepout_arr,
       boolean p_is_front) {
-    Package new_package =
+    Package newPackage =
         new Package(
             p_name,
-            package_arr.size() + 1,
+            packageArr.size() + 1,
             p_pin_arr,
             p_outline,
             p_outline_widths,
@@ -89,8 +89,8 @@ public class Packages implements Serializable {
             p_place_keepout_arr,
             p_is_front,
             this);
-    package_arr.add(new_package);
-    return new_package;
+    packageArr.add(newPackage);
+    return newPackage;
   }
 
   /**
@@ -98,10 +98,10 @@ public class Packages implements Serializable {
    * internally.
    */
   public Package add(Package.Pin[] p_pin_arr) {
-    String package_name = "Package#" + (package_arr.size() + 1);
+    String packageName = "Package#" + (packageArr.size() + 1);
 
     return add(
-        package_name,
+        packageName,
         p_pin_arr,
         null,
         null,

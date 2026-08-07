@@ -9,8 +9,8 @@ public class OptimizeRouteTask implements Runnable {
 
   public final RoutingBoard board;
   private final BatchOptimizerMultiThreaded optimizer;
-  private final int pass_no;
-  private final boolean with_preferred_directions;
+  private final int passNo;
+  private final boolean withPreferredDirections;
   private final RoutingJob job;
   private Item itemToOptimize;
   private ItemRouteResult optimizationResult;
@@ -18,17 +18,17 @@ public class OptimizeRouteTask implements Runnable {
   public OptimizeRouteTask(
       BatchOptimizerMultiThreaded p_optimizer,
       RoutingJob job,
-      int item_id,
+      int itemId,
       int p_pass_no,
       boolean p_with_preferred_directions) {
     optimizer = p_optimizer;
 
     this.job = job;
     this.board = job.board.deepCopy();
-    itemToOptimize = this.board.get_item(item_id);
+    itemToOptimize = this.board.get_item(itemId);
 
-    pass_no = p_pass_no;
-    with_preferred_directions = p_with_preferred_directions;
+    passNo = p_pass_no;
+    withPreferredDirections = p_with_preferred_directions;
   }
 
   @Override
@@ -40,10 +40,9 @@ public class OptimizeRouteTask implements Runnable {
     }
 
     optimizationResult =
-        new BatchOptimizer(this.job)
-            .opt_route_item(itemToOptimize, with_preferred_directions, true);
+        new BatchOptimizer(this.job).opt_route_item(itemToOptimize, withPreferredDirections, true);
 
-    boolean winning_candidate = optimizer.is_winning_candidate(this);
+    boolean winningCandidate = optimizer.is_winning_candidate(this);
 
     long duration = System.currentTimeMillis() - startTime;
     long minutes = duration / 60000;
@@ -57,26 +56,26 @@ public class OptimizeRouteTask implements Runnable {
             + " for item #"
             + itemToOptimize.get_id_no()
             + " on pass "
-            + pass_no
+            + passNo
             + " in "
             + minutes
             + " m "
             + sec
             + "s."
             + " Best so far: "
-            + winning_candidate
+            + winningCandidate
             + ", improved: "
             + optimizationResult.improved()
             + ", via reduction: "
             + optimizationResult.via_count_reduced()
-            + (winning_candidate
+            + (winningCandidate
                 ? (", length reduction: " + (int) optimizationResult.length_reduced())
                 : "")
             + ", incomplete trace reduction: "
             + (optimizationResult.incomplete_count_before()
                 - optimizationResult.incomplete_count()));
 
-    if (!winning_candidate) {
+    if (!winningCandidate) {
       clean();
     }
   }

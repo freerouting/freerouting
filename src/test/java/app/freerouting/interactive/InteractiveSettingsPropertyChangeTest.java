@@ -190,14 +190,14 @@ class InteractiveSettingsPropertyChangeTest {
   }
 
   // -------------------------------------------------------------------------
-  // read_only gate
+  // readOnly gate
   // -------------------------------------------------------------------------
 
   @Test
   void setter_doesNotFireEvent_whenReadOnly() {
     settings.set_read_only(true);
     var events = collectEvents(InteractiveSettings.PROP_LAYER, () -> settings.set_layer(5));
-    assertEquals(0, events.size(), "No events expected when read_only is true");
+    assertEquals(0, events.size(), "No events expected when readOnly is true");
     settings.set_read_only(false);
   }
 }

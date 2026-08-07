@@ -26,22 +26,22 @@ public final class InspectItemsInRegionState extends SelectRegionState {
   public static InspectItemsInRegionState get_instance(
       FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling) {
     p_board_handling.display_layer_message();
-    InspectItemsInRegionState new_instance =
+    InspectItemsInRegionState newInstance =
         new InspectItemsInRegionState(p_parent_state, p_board_handling);
-    new_instance.corner1 = p_location;
-    new_instance.hdlg.screen_messages.set_status_message(
-        new_instance.tm.getText("drag_left_mouse_button_to_select_items_in_region"));
-    return new_instance;
+    newInstance.corner1 = p_location;
+    newInstance.hdlg.screenMessages.set_status_message(
+        newInstance.tm.getText("drag_left_mouse_button_to_select_items_in_region"));
+    return newInstance;
   }
 
   @Override
   public InteractiveState complete() {
     if (!hdlg.is_board_read_only()) {
-      hdlg.screen_messages.set_status_message("");
+      hdlg.screenMessages.set_status_message("");
       corner2 = hdlg.get_current_mouse_position();
       this.select_all_in_region();
     }
-    return this.return_state;
+    return this.returnState;
   }
 
   /** Selects all items in the rectangle defined by corner1 and corner2. */
@@ -52,38 +52,38 @@ public final class InspectItemsInRegionState extends SelectRegionState {
     IntBox b =
         new IntBox(
             Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
-    int select_layer;
+    int selectLayer;
     if (hdlg.getInteractiveSettings().get_select_on_all_visible_layers()) {
-      select_layer = -1;
+      selectLayer = -1;
     } else {
-      select_layer = hdlg.getInteractiveSettings().get_layer();
+      selectLayer = hdlg.getInteractiveSettings().get_layer();
     }
-    Set<Item> found_items =
+    Set<Item> foundItems =
         hdlg.getInteractiveSettings()
             .get_item_selection_filter()
-            .filter(hdlg.get_routing_board().overlapping_items(b, select_layer));
+            .filter(hdlg.get_routing_board().overlapping_items(b, selectLayer));
     if (hdlg.getInteractiveSettings().get_select_on_all_visible_layers()) {
       // remove items, which are not visible
-      Set<Item> visible_items = new TreeSet<>();
-      for (Item curr_item : found_items) {
-        for (int i = curr_item.first_layer(); i <= curr_item.last_layer(); i++) {
-          if (hdlg.graphics_context.get_layer_visibility(i) > 0) {
-            visible_items.add(curr_item);
+      Set<Item> visibleItems = new TreeSet<>();
+      for (Item currItem : foundItems) {
+        for (int i = currItem.first_layer(); i <= currItem.last_layer(); i++) {
+          if (hdlg.graphicsContext.get_layer_visibility(i) > 0) {
+            visibleItems.add(currItem);
             break;
           }
         }
       }
-      found_items = visible_items;
+      foundItems = visibleItems;
     }
-    boolean something_found = !found_items.isEmpty();
-    if (something_found) {
-      if (this.return_state instanceof InspectedItemState state) {
-        state.get_item_list().addAll(found_items);
+    boolean somethingFound = !foundItems.isEmpty();
+    if (somethingFound) {
+      if (this.returnState instanceof InspectedItemState state) {
+        state.get_item_list().addAll(foundItems);
       } else {
-        this.return_state = InspectedItemState.get_instance(found_items, this.return_state, hdlg);
+        this.returnState = InspectedItemState.get_instance(foundItems, this.returnState, hdlg);
       }
     } else {
-      hdlg.screen_messages.set_status_message(tm.getText("nothing_selected"));
+      hdlg.screenMessages.set_status_message(tm.getText("nothing_selected"));
     }
   }
 }

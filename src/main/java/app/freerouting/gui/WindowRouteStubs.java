@@ -26,127 +26,124 @@ public class WindowRouteStubs extends CleanupWindows {
     this.tm = new TextManager(CleanupWindows.class, p_board_frame.get_locale());
 
     this.setTitle(tm.getText("route_stubs"));
-    this.list_empty_message.setText(tm.getText("no_route_stubs_found"));
+    this.listEmptyMessage.setText(tm.getText("no_route_stubs_found"));
   }
 
   @Override
   protected void fill_list() {
-    BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
+    BasicBoard routingBoard = this.boardFrame.boardPanel.boardHandling.get_routing_board();
 
-    SortedSet<RouteStubInfo> route_stub_info_set = new TreeSet<>();
+    SortedSet<RouteStubInfo> routeStubInfoSet = new TreeSet<>();
 
-    Collection<Item> board_items = routing_board.get_items();
-    for (Item curr_item : board_items) {
-      if (!(curr_item instanceof Trace || curr_item instanceof Via)) {
+    Collection<Item> boardItems = routingBoard.get_items();
+    for (Item currItem : boardItems) {
+      if (!(currItem instanceof Trace || currItem instanceof Via)) {
         continue;
       }
-      if (curr_item.net_count() != 1) {
+      if (currItem.net_count() != 1) {
         continue;
       }
 
-      FloatPoint stub_location;
-      int stub_layer;
-      if (curr_item instanceof Via via) {
-        Collection<Item> contact_list = curr_item.get_all_contacts();
-        if (contact_list.isEmpty()) {
-          stub_layer = curr_item.first_layer();
+      FloatPoint stubLocation;
+      int stubLayer;
+      if (currItem instanceof Via via) {
+        Collection<Item> contactList = currItem.get_all_contacts();
+        if (contactList.isEmpty()) {
+          stubLayer = currItem.first_layer();
         } else {
-          Iterator<Item> it = contact_list.iterator();
-          Item curr_contact_item = it.next();
-          int first_contact_first_layer = curr_contact_item.first_layer();
-          int first_contact_last_layer = curr_contact_item.last_layer();
-          boolean all_contacts_on_one_layer = true;
+          Iterator<Item> it = contactList.iterator();
+          Item currContactItem = it.next();
+          int firstContactFirstLayer = currContactItem.first_layer();
+          int firstContactLastLayer = currContactItem.last_layer();
+          boolean allContactsOnOneLayer = true;
           while (it.hasNext()) {
-            curr_contact_item = it.next();
-            if (curr_contact_item.first_layer() != first_contact_first_layer
-                || curr_contact_item.last_layer() != first_contact_last_layer) {
-              all_contacts_on_one_layer = false;
+            currContactItem = it.next();
+            if (currContactItem.first_layer() != firstContactFirstLayer
+                || currContactItem.last_layer() != firstContactLastLayer) {
+              allContactsOnOneLayer = false;
               break;
             }
           }
-          if (!all_contacts_on_one_layer) {
+          if (!allContactsOnOneLayer) {
             continue;
           }
-          if (curr_item.first_layer() >= first_contact_first_layer
-              && curr_item.last_layer() <= first_contact_first_layer) {
-            stub_layer = first_contact_first_layer;
+          if (currItem.first_layer() >= firstContactFirstLayer
+              && currItem.last_layer() <= firstContactFirstLayer) {
+            stubLayer = firstContactFirstLayer;
           } else {
-            stub_layer = first_contact_last_layer;
+            stubLayer = firstContactLastLayer;
           }
         }
-        stub_location = via.get_center().to_float();
+        stubLocation = via.get_center().to_float();
       } else {
-        Trace curr_trace = (Trace) curr_item;
-        if (curr_trace.get_start_contacts().isEmpty()) {
-          stub_location = curr_trace.first_corner().to_float();
-        } else if (curr_trace.get_end_contacts().isEmpty()) {
-          stub_location = curr_trace.last_corner().to_float();
+        Trace currTrace = (Trace) currItem;
+        if (currTrace.get_start_contacts().isEmpty()) {
+          stubLocation = currTrace.first_corner().to_float();
+        } else if (currTrace.get_end_contacts().isEmpty()) {
+          stubLocation = currTrace.last_corner().to_float();
         } else {
           continue;
         }
-        stub_layer = curr_trace.get_layer();
+        stubLayer = currTrace.get_layer();
       }
-      RouteStubInfo curr_route_stub_info = new RouteStubInfo(curr_item, stub_location, stub_layer);
-      route_stub_info_set.add(curr_route_stub_info);
+      RouteStubInfo currRouteStubInfo = new RouteStubInfo(currItem, stubLocation, stubLayer);
+      routeStubInfoSet.add(currRouteStubInfo);
     }
 
-    for (RouteStubInfo curr_info : route_stub_info_set) {
-      this.add_to_list(curr_info);
+    for (RouteStubInfo currInfo : routeStubInfoSet) {
+      this.add_to_list(currInfo);
     }
-    this.list.setVisibleRowCount(Math.min(route_stub_info_set.size(), DEFAULT_TABLE_SIZE));
+    this.list.setVisibleRowCount(Math.min(routeStubInfoSet.size(), DEFAULT_TABLE_SIZE));
   }
 
   @Override
   protected void select_instances() {
-    List<Object> selected_list_values = list.getSelectedValuesList();
-    if (selected_list_values.isEmpty()) {
+    List<Object> selectedListValues = list.getSelectedValuesList();
+    if (selectedListValues.isEmpty()) {
       return;
     }
-    Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_list_values.size(); i++) {
-      selected_items.add(((RouteStubInfo) selected_list_values.get(i)).stub_item);
+    Set<Item> selectedItems = new TreeSet<>();
+    for (int i = 0; i < selectedListValues.size(); i++) {
+      selectedItems.add(((RouteStubInfo) selectedListValues.get(i)).stubItem);
     }
-    GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-    board_handling.select_items(selected_items);
-    board_handling.zoom_selection();
+    GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+    boardHandling.select_items(selectedItems);
+    boardHandling.zoom_selection();
   }
 
   /** Describes information of a route stub in the list. */
   private class RouteStubInfo implements Comparable<RouteStubInfo> {
 
-    private final Item stub_item;
+    private final Item stubItem;
     private final Net net;
     private final FloatPoint location;
-    private final int layer_no;
+    private final int layerNo;
 
     public RouteStubInfo(Item p_stub, FloatPoint p_location, int p_layer_no) {
-      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
-      this.stub_item = p_stub;
-      this.location = board_handling.coordinate_transform.board_to_user(p_location);
-      this.layer_no = p_layer_no;
-      int net_no = p_stub.get_net_no(0);
-      this.net = board_handling.get_routing_board().rules.nets.get(net_no);
+      GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
+      this.stubItem = p_stub;
+      this.location = boardHandling.coordinateTransform.board_to_user(p_location);
+      this.layerNo = p_layer_no;
+      int netNo = p_stub.get_net_no(0);
+      this.net = boardHandling.get_routing_board().rules.nets.get(netNo);
     }
 
     @Override
     public String toString() {
-      String item_string;
-      if (this.stub_item instanceof Trace) {
-        item_string = tm.getText("trace");
+      String itemString;
+      if (this.stubItem instanceof Trace) {
+        itemString = tm.getText("trace");
       } else {
-        item_string = tm.getText("via");
+        itemString = tm.getText("via");
       }
-      String layer_name =
-          board_frame.board_panel.board_handling.get_routing_board()
-              .layer_structure
-              .arr[layer_no]
-              .name;
+      String layerName =
+          boardFrame.boardPanel.boardHandling.get_routing_board().layerStructure.arr[layerNo].name;
       return tm.getText(
           "route_stub_row_message",
-          item_string,
+          itemString,
           this.net.name,
-          this.location.to_string(board_frame.get_locale()),
-          layer_name);
+          this.location.to_string(boardFrame.get_locale()),
+          layerName);
     }
 
     @Override
@@ -159,7 +156,7 @@ public class WindowRouteStubs extends CleanupWindows {
         result = Signum.as_int(this.location.y - p_other.location.y);
       }
       if (result == 0) {
-        result = this.layer_no - p_other.layer_no;
+        result = this.layerNo - p_other.layerNo;
       }
       return result;
     }

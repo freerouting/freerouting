@@ -72,31 +72,31 @@ public class IntVector extends Vector implements Serializable {
     while (n >= 4) {
       n -= 4;
     }
-    int new_x;
-    int new_y;
+    int newX;
+    int newY;
     switch (n) {
       case 0 -> { // 0 degree
-        new_x = x;
-        new_y = y;
+        newX = x;
+        newY = y;
       }
       case 1 -> { // 90 degree
-        new_x = -y;
-        new_y = x;
+        newX = -y;
+        newY = x;
       }
       case 2 -> { // 180 degree
-        new_x = -x;
-        new_y = -y;
+        newX = -x;
+        newY = -y;
       }
       case 3 -> { // 270 degree
-        new_x = y;
-        new_y = -x;
+        newX = y;
+        newY = -x;
       }
       default -> {
-        new_x = 0;
-        new_y = 0;
+        newX = 0;
+        newY = 0;
       }
     }
-    return new IntVector(new_x, new_y);
+    return new IntVector(newX, newY);
   }
 
   @Override
@@ -182,8 +182,8 @@ public class IntVector extends Vector implements Serializable {
 
   @Override
   public Vector change_length_approx(double p_length) {
-    FloatPoint new_point = this.to_float().change_size(p_length);
-    return new_point.round().difference_by(Point.ZERO);
+    FloatPoint newPoint = this.to_float().change_size(p_length);
+    return newPoint.round().difference_by(Point.ZERO);
   }
 
   @Override

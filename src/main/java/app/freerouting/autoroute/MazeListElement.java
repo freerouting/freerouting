@@ -12,41 +12,41 @@ public class MazeListElement implements Comparable<MazeListElement> {
   final ExpandableObject door;
 
   /** The section number of the door (or the layer of the drill) */
-  final int section_no_of_door;
+  final int sectionNoOfDoor;
 
   /** The door, from which this door was expanded */
-  final ExpandableObject backtrack_door;
+  final ExpandableObject backtrackDoor;
 
   /** The section number of the backtrack door */
-  final int section_no_of_backtrack_door;
+  final int sectionNoOfBacktrackDoor;
 
   /** The weighted distance to the start of the expansion */
-  final double expansion_value;
+  final double expansionValue;
 
   /**
    * The expansion value plus the shortest distance to a destination. The list is sorted in
    * ascending order by this value.
    */
-  final double sorting_value;
+  final double sortingValue;
 
   /** The next room, which will be expanded from this maze search element */
-  final CompleteExpansionRoom next_room;
+  final CompleteExpansionRoom nextRoom;
 
   /**
    * Point of the region of the expansion door, which has the shortest distance to the backtrack
    * door.
    */
-  final FloatLine shape_entry;
+  final FloatLine shapeEntry;
 
-  final boolean room_ripped;
+  final boolean roomRipped;
   final MazeSearchElement.Adjustment adjustment;
-  final boolean already_checked;
+  final boolean alreadyChecked;
 
   /**
-   * The ripup cost paid to enter the next_room through this door. Non-zero only when room_ripped is
+   * The ripup cost paid to enter the nextRoom through this door. Non-zero only when roomRipped is
    * true and this element was directly created by expand_to_door_section with a positive add_costs.
    */
-  int ripup_cost;
+  int ripupCost;
 
   /** Creates a new instance of ExpansionInfo */
   public MazeListElement(
@@ -62,31 +62,31 @@ public class MazeListElement implements Comparable<MazeListElement> {
       MazeSearchElement.Adjustment p_adjustment,
       boolean p_already_checked) {
     door = p_door;
-    section_no_of_door = p_section_no_of_door;
-    backtrack_door = p_backtrack_door;
-    section_no_of_backtrack_door = p_section_no_of_backtrack_door;
-    expansion_value = p_expansion_value;
-    sorting_value = p_sorting_value;
-    next_room = p_next_room;
-    shape_entry = p_shape_entry;
-    room_ripped = p_room_ripped;
+    sectionNoOfDoor = p_section_no_of_door;
+    backtrackDoor = p_backtrack_door;
+    sectionNoOfBacktrackDoor = p_section_no_of_backtrack_door;
+    expansionValue = p_expansion_value;
+    sortingValue = p_sorting_value;
+    nextRoom = p_next_room;
+    shapeEntry = p_shape_entry;
+    roomRipped = p_room_ripped;
     adjustment = p_adjustment;
-    already_checked = p_already_checked;
+    alreadyChecked = p_already_checked;
   }
 
   @Override
   public int compareTo(MazeListElement p_other) {
-    if (this.sorting_value < p_other.sorting_value) {
+    if (this.sortingValue < p_other.sortingValue) {
       return -1;
     }
-    if (this.sorting_value > p_other.sorting_value) {
+    if (this.sortingValue > p_other.sortingValue) {
       return 1;
     }
-    // Tie-break 1: expansion_value
-    if (this.expansion_value < p_other.expansion_value) {
+    // Tie-break 1: expansionValue
+    if (this.expansionValue < p_other.expansionValue) {
       return -1;
     }
-    if (this.expansion_value > p_other.expansion_value) {
+    if (this.expansionValue > p_other.expansionValue) {
       return 1;
     }
     // Tie-break 2: door id
@@ -98,11 +98,11 @@ public class MazeListElement implements Comparable<MazeListElement> {
     if (id1 > id2) {
       return 1;
     }
-    // Tie-break 3: section_no
-    if (this.section_no_of_door < p_other.section_no_of_door) {
+    // Tie-break 3: sectionNo
+    if (this.sectionNoOfDoor < p_other.sectionNoOfDoor) {
       return -1;
     }
-    if (this.section_no_of_door > p_other.section_no_of_door) {
+    if (this.sectionNoOfDoor > p_other.sectionNoOfDoor) {
       return 1;
     }
     // If truly equal (same door, same section, same values), return 0 to avoid duplicates in the

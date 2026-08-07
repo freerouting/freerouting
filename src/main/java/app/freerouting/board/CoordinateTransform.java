@@ -13,45 +13,45 @@ import java.util.Locale;
 public class CoordinateTransform implements Serializable {
 
   /** The unit used for user coordinates */
-  public final Unit user_unit;
+  public final Unit userUnit;
 
   /** The factor of the user unit */
-  public final double user_unit_factor;
+  public final double userUnitFactor;
 
   /** The unit used for board coordinates */
-  public final Unit board_unit;
+  public final Unit boardUnit;
 
   /** The factor of the board unit */
-  public final double board_unit_factor;
+  public final double boardUnitFactor;
 
   /**
    * The factor used for transforming coordinates between user coordinate space and board coordinate
    * space
    */
-  private final double scale_factor;
+  private final double scaleFactor;
 
   /** Creates a new instance of CoordinateTransform */
   public CoordinateTransform(
       double p_user_unit_factor, Unit p_user_unit, double p_board_unit_factor, Unit p_board_unit) {
-    user_unit = p_user_unit;
-    board_unit = p_board_unit;
-    user_unit_factor = p_user_unit_factor;
-    board_unit_factor = p_board_unit_factor;
-    scale_factor = board_unit_factor / user_unit_factor;
+    userUnit = p_user_unit;
+    boardUnit = p_board_unit;
+    userUnitFactor = p_user_unit_factor;
+    boardUnitFactor = p_board_unit_factor;
+    scaleFactor = boardUnitFactor / userUnitFactor;
 
-    if (user_unit_factor != 1.0) {
-      throw new RuntimeException("user_unit_factor must be 1.0");
+    if (userUnitFactor != 1.0) {
+      throw new RuntimeException("userUnitFactor must be 1.0");
     }
   }
 
   /** Scale a value from the board to the user coordinate system. */
   public double board_to_user(double p_value) {
-    return Unit.scale(p_value * scale_factor, board_unit, user_unit);
+    return Unit.scale(p_value * scaleFactor, boardUnit, userUnit);
   }
 
   /** Scale a value from the user to the board coordinate system. */
   public double user_to_board(double p_value) {
-    return Unit.scale(p_value / scale_factor, user_unit, board_unit);
+    return Unit.scale(p_value / scaleFactor, userUnit, boardUnit);
   }
 
   /**
@@ -97,10 +97,10 @@ public class CoordinateTransform implements Serializable {
 
   public PrintableShape.Polygon board_to_user(PolylineShape p_shape, Locale p_locale) {
     FloatPoint[] corners = p_shape.corner_approx_arr();
-    FloatPoint[] transformed_corners = new FloatPoint[corners.length];
+    FloatPoint[] transformedCorners = new FloatPoint[corners.length];
     for (int i = 0; i < corners.length; i++) {
-      transformed_corners[i] = board_to_user(corners[i]);
+      transformedCorners[i] = board_to_user(corners[i]);
     }
-    return new PrintableShape.Polygon(transformed_corners, p_locale);
+    return new PrintableShape.Polygon(transformedCorners, p_locale);
   }
 }

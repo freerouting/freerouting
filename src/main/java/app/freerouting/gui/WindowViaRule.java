@@ -23,101 +23,97 @@ import javax.swing.ListSelectionModel;
 /** Window for editing a single via rule. */
 public class WindowViaRule extends WindowBase {
 
-  private final ViaRule via_rule;
+  private final ViaRule viaRule;
 
   /** the list of possible vias in a rule */
-  private final ViaInfos via_list;
+  private final ViaInfos viaList;
 
-  private final JPanel main_panel;
-  private final JList<ViaInfo> rule_list;
-  private final DefaultListModel<ViaInfo> rule_list_model;
+  private final JPanel mainPanel;
+  private final JList<ViaInfo> ruleList;
+  private final DefaultListModel<ViaInfo> ruleListModel;
 
   /** Creates a new instance of ViaRuleWindow */
   public WindowViaRule(ViaRule p_via_rule, ViaInfos p_via_list, BoardFrame p_board_frame) {
     super(300, 150);
 
-    this.via_rule = p_via_rule;
-    this.via_list = p_via_list;
+    this.viaRule = p_via_rule;
+    this.viaList = p_via_list;
 
     setLanguage(p_board_frame.get_locale());
 
     this.setTitle(tm.getText("title") + " " + p_via_rule.name);
 
-    this.main_panel = new JPanel();
-    main_panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    main_panel.setLayout(new BorderLayout());
+    this.mainPanel = new JPanel();
+    mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    mainPanel.setLayout(new BorderLayout());
 
-    this.rule_list_model = new DefaultListModel<>();
-    this.rule_list = new JList<>(this.rule_list_model);
+    this.ruleListModel = new DefaultListModel<>();
+    this.ruleList = new JList<>(this.ruleListModel);
 
-    this.rule_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    this.rule_list.setVisibleRowCount(10);
-    JScrollPane list_scroll_pane = new JScrollPane(this.rule_list);
-    list_scroll_pane.setPreferredSize(new Dimension(200, 100));
-    this.main_panel.add(list_scroll_pane, BorderLayout.CENTER);
+    this.ruleList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    this.ruleList.setVisibleRowCount(10);
+    JScrollPane listScrollPane = new JScrollPane(this.ruleList);
+    listScrollPane.setPreferredSize(new Dimension(200, 100));
+    this.mainPanel.add(listScrollPane, BorderLayout.CENTER);
 
     // fill the list
     for (int i = 0; i < p_via_rule.via_count(); i++) {
-      this.rule_list_model.addElement(p_via_rule.get_via(i));
+      this.ruleListModel.addElement(p_via_rule.get_via(i));
     }
 
     // Add a panel with buttons for editing the via list.
 
-    JPanel button_panel = new JPanel();
-    this.main_panel.add(button_panel, BorderLayout.SOUTH);
+    JPanel buttonPanel = new JPanel();
+    this.mainPanel.add(buttonPanel, BorderLayout.SOUTH);
     GridBagLayout gridbag = new GridBagLayout();
-    button_panel.setLayout(gridbag);
-    GridBagConstraints gridbag_constraints = new GridBagConstraints();
+    buttonPanel.setLayout(gridbag);
+    GridBagConstraints gridbagConstraints = new GridBagConstraints();
 
-    final JButton rules_vias_rules_edit_append_button = new JButton(tm.getText("append"));
-    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
-    gridbag.setConstraints(rules_vias_rules_edit_append_button, gridbag_constraints);
-    rules_vias_rules_edit_append_button.setToolTipText(tm.getText("append_tooltip"));
-    rules_vias_rules_edit_append_button.addActionListener(new AppendListener());
-    rules_vias_rules_edit_append_button.addActionListener(
+    final JButton rulesViasRulesEditAppendButton = new JButton(tm.getText("append"));
+    gridbagConstraints.gridwidth = GridBagConstraints.RELATIVE;
+    gridbag.setConstraints(rulesViasRulesEditAppendButton, gridbagConstraints);
+    rulesViasRulesEditAppendButton.setToolTipText(tm.getText("append_tooltip"));
+    rulesViasRulesEditAppendButton.addActionListener(new AppendListener());
+    rulesViasRulesEditAppendButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_rules_edit_append_button",
-                rules_vias_rules_edit_append_button.getText()));
-    button_panel.add(rules_vias_rules_edit_append_button);
+                "rulesViasRulesEditAppendButton", rulesViasRulesEditAppendButton.getText()));
+    buttonPanel.add(rulesViasRulesEditAppendButton);
 
-    final JButton rules_vias_rules_edit_remove_button = new JButton(tm.getText("remove"));
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(rules_vias_rules_edit_remove_button, gridbag_constraints);
-    rules_vias_rules_edit_remove_button.setToolTipText(tm.getText("remove_tooltip"));
-    rules_vias_rules_edit_remove_button.addActionListener(new DeleteListener());
-    rules_vias_rules_edit_remove_button.addActionListener(
+    final JButton rulesViasRulesEditRemoveButton = new JButton(tm.getText("remove"));
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(rulesViasRulesEditRemoveButton, gridbagConstraints);
+    rulesViasRulesEditRemoveButton.setToolTipText(tm.getText("remove_tooltip"));
+    rulesViasRulesEditRemoveButton.addActionListener(new DeleteListener());
+    rulesViasRulesEditRemoveButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_rules_edit_remove_button",
-                rules_vias_rules_edit_remove_button.getText()));
-    button_panel.add(rules_vias_rules_edit_remove_button);
+                "rulesViasRulesEditRemoveButton", rulesViasRulesEditRemoveButton.getText()));
+    buttonPanel.add(rulesViasRulesEditRemoveButton);
 
-    final JButton rules_vias_rules_edit_move_up_button = new JButton(tm.getText("move_up"));
-    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
-    gridbag.setConstraints(rules_vias_rules_edit_move_up_button, gridbag_constraints);
-    rules_vias_rules_edit_move_up_button.setToolTipText(tm.getText("move_up_tooltip"));
-    rules_vias_rules_edit_move_up_button.addActionListener(new MoveUpListener());
-    rules_vias_rules_edit_move_up_button.addActionListener(
+    final JButton rulesViasRulesEditMoveUpButton = new JButton(tm.getText("move_up"));
+    gridbagConstraints.gridwidth = GridBagConstraints.RELATIVE;
+    gridbag.setConstraints(rulesViasRulesEditMoveUpButton, gridbagConstraints);
+    rulesViasRulesEditMoveUpButton.setToolTipText(tm.getText("move_up_tooltip"));
+    rulesViasRulesEditMoveUpButton.addActionListener(new MoveUpListener());
+    rulesViasRulesEditMoveUpButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_rules_edit_move_up_button",
-                rules_vias_rules_edit_move_up_button.getText()));
-    button_panel.add(rules_vias_rules_edit_move_up_button);
+                "rulesViasRulesEditMoveUpButton", rulesViasRulesEditMoveUpButton.getText()));
+    buttonPanel.add(rulesViasRulesEditMoveUpButton);
 
-    final JButton rules_vias_rules_edit_move_down_button = new JButton(tm.getText("move_down"));
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(rules_vias_rules_edit_move_down_button, gridbag_constraints);
-    rules_vias_rules_edit_move_down_button.setToolTipText(tm.getText("move_down_tooltip"));
-    rules_vias_rules_edit_move_down_button.addActionListener(new MoveDownListener());
-    rules_vias_rules_edit_move_down_button.addActionListener(
+    final JButton rulesViasRulesEditMoveDownButton = new JButton(tm.getText("move_down"));
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(rulesViasRulesEditMoveDownButton, gridbagConstraints);
+    rulesViasRulesEditMoveDownButton.setToolTipText(tm.getText("move_down_tooltip"));
+    rulesViasRulesEditMoveDownButton.addActionListener(new MoveDownListener());
+    rulesViasRulesEditMoveDownButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_vias_rules_edit_move_down_button",
-                rules_vias_rules_edit_move_down_button.getText()));
-    button_panel.add(rules_vias_rules_edit_move_down_button);
+                "rulesViasRulesEditMoveDownButton", rulesViasRulesEditMoveDownButton.getText()));
+    buttonPanel.add(rulesViasRulesEditMoveDownButton);
 
-    this.add(main_panel);
+    this.add(mainPanel);
     this.pack();
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     this.setVisible(true);
@@ -125,50 +121,50 @@ public class WindowViaRule extends WindowBase {
 
   /** Swaps the position of the vias with index p_1 and p_2. */
   private void swap_position(int p_1, int p_2) {
-    ViaInfo via_1 = this.rule_list_model.get(p_1);
-    ViaInfo via_2 = this.rule_list_model.get(p_2);
-    if (via_1 == null || via_2 == null) {
+    ViaInfo via1 = this.ruleListModel.get(p_1);
+    ViaInfo via2 = this.ruleListModel.get(p_2);
+    if (via1 == null || via2 == null) {
       return;
     }
-    this.rule_list_model.set(p_1, via_2);
-    this.rule_list_model.set(p_2, via_1);
-    this.via_rule.swap(via_1, via_2);
+    this.ruleListModel.set(p_1, via2);
+    this.ruleListModel.set(p_2, via1);
+    this.viaRule.swap(via1, via2);
   }
 
   private class AppendListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      Object[] possible_values = new Object[via_list.count() - via_rule.via_count()];
-      if (possible_values.length == 0) {
+      Object[] possibleValues = new Object[viaList.count() - viaRule.via_count()];
+      if (possibleValues.length == 0) {
         return;
       }
-      int curr_index = 0;
-      for (int i = 0; i < via_list.count(); i++) {
-        ViaInfo curr_via = via_list.get(i);
-        if (!via_rule.contains(curr_via)) {
-          if (curr_index >= possible_values.length) {
+      int currIndex = 0;
+      for (int i = 0; i < viaList.count(); i++) {
+        ViaInfo currVia = viaList.get(i);
+        if (!viaRule.contains(currVia)) {
+          if (currIndex >= possibleValues.length) {
             FRLogger.warn("ViaRuleWindow.AppendListener.actionPerformed: index inconsistent");
             break;
           }
-          possible_values[curr_index] = curr_via;
-          ++curr_index;
+          possibleValues[currIndex] = currVia;
+          ++currIndex;
         }
       }
-      assert (curr_index == possible_values.length);
-      Object selected_value =
+      assert (currIndex == possibleValues.length);
+      Object selectedValue =
           JOptionPane.showInputDialog(
               null,
               tm.getText("choose_via_to_append"),
               tm.getText("append_via_to_rule"),
               JOptionPane.INFORMATION_MESSAGE,
               null,
-              possible_values,
-              possible_values[0]);
-      if (selected_value != null) {
-        ViaInfo selected_via = (ViaInfo) selected_value;
-        via_rule.append_via(selected_via);
-        rule_list_model.addElement(selected_via);
+              possibleValues,
+              possibleValues[0]);
+      if (selectedValue != null) {
+        ViaInfo selectedVia = (ViaInfo) selectedValue;
+        viaRule.append_via(selectedVia);
+        ruleListModel.addElement(selectedVia);
       }
     }
   }
@@ -177,12 +173,12 @@ public class WindowViaRule extends WindowBase {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      ViaInfo selected_via = rule_list.getSelectedValue();
-      if (selected_via != null) {
+      ViaInfo selectedVia = ruleList.getSelectedValue();
+      if (selectedVia != null) {
         if (WindowMessage.confirm(
-            tm.getText("remove_via_from_rule_confirm", selected_via.get_name(), via_rule.name))) {
-          rule_list_model.removeElement(selected_via);
-          via_rule.remove_via(selected_via);
+            tm.getText("remove_via_from_rule_confirm", selectedVia.get_name(), viaRule.name))) {
+          ruleListModel.removeElement(selectedVia);
+          viaRule.remove_via(selectedVia);
         }
       }
     }
@@ -192,12 +188,12 @@ public class WindowViaRule extends WindowBase {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      int selected_index = rule_list.getSelectedIndex();
-      if (selected_index <= 0) {
+      int selectedIndex = ruleList.getSelectedIndex();
+      if (selectedIndex <= 0) {
         return;
       }
-      swap_position(selected_index - 1, selected_index);
-      rule_list.setSelectedIndex(selected_index - 1);
+      swap_position(selectedIndex - 1, selectedIndex);
+      ruleList.setSelectedIndex(selectedIndex - 1);
     }
   }
 
@@ -205,12 +201,12 @@ public class WindowViaRule extends WindowBase {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      int selected_index = rule_list.getSelectedIndex();
-      if (selected_index < 0 || selected_index >= rule_list_model.getSize() - 1) {
+      int selectedIndex = ruleList.getSelectedIndex();
+      if (selectedIndex < 0 || selectedIndex >= ruleListModel.getSize() - 1) {
         return;
       }
-      swap_position(selected_index, selected_index + 1);
-      rule_list.setSelectedIndex(selected_index + 1);
+      swap_position(selectedIndex, selectedIndex + 1);
+      ruleList.setSelectedIndex(selectedIndex + 1);
     }
   }
 }

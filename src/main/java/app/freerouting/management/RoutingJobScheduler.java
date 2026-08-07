@@ -120,18 +120,18 @@ public final class RoutingJobScheduler {
                               job.routerSettings.applyBoardSpecificOptimizations(job.board);
 
                               // Load session file if specified
-                              if (globalSettings.design_session_filename != null) {
+                              if (globalSettings.designSessionFilename != null) {
                                 try {
                                   java.io.File sessionFile =
-                                      new java.io.File(globalSettings.design_session_filename);
+                                      new java.io.File(globalSettings.designSessionFilename);
                                   if (sessionFile.exists()) {
                                     if (globalSettings
-                                        .design_session_filename
+                                        .designSessionFilename
                                         .toLowerCase()
                                         .endsWith(".json")) {
                                       FRLogger.info(
                                           "Loading KiCad JSON session file: "
-                                              + globalSettings.design_session_filename);
+                                              + globalSettings.designSessionFilename);
                                       try (java.io.FileReader jsonReader =
                                           new java.io.FileReader(sessionFile)) {
                                         app.freerouting.io.kicad.KiCadJsonReader.importSession(
@@ -142,7 +142,7 @@ public final class RoutingJobScheduler {
                                     } else {
                                       FRLogger.info(
                                           "Loading SES file: "
-                                              + globalSettings.design_session_filename);
+                                              + globalSettings.designSessionFilename);
                                       java.io.FileInputStream sesStream =
                                           new java.io.FileInputStream(sessionFile);
                                       SesImportSummary summary =
@@ -160,7 +160,7 @@ public final class RoutingJobScheduler {
                                   } else {
                                     FRLogger.warn(
                                         "Session file not found: "
-                                            + globalSettings.design_session_filename);
+                                            + globalSettings.designSessionFilename);
                                   }
                                 } catch (Exception e) {
                                   FRLogger.error("Failed to load session file", e);

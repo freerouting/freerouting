@@ -43,13 +43,13 @@ public class Circle extends Shape {
   @Override
   public app.freerouting.geometry.planar.Shape transform_to_board_rel(
       CoordinateTransform p_coordinate_transform) {
-    int[] new_coor = new int[3];
-    new_coor[0] = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[0]) / 2);
+    int[] newCoor = new int[3];
+    newCoor[0] = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[0]) / 2);
     for (int i = 1; i < 3; i++) {
-      new_coor[i] = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[i]));
+      newCoor[i] = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[i]));
     }
     return new app.freerouting.geometry.planar.Circle(
-        new IntPoint(new_coor[1], new_coor[2]), new_coor[0]);
+        new IntPoint(newCoor[1], newCoor[2]), newCoor[0]);
   }
 
   @Override
@@ -83,8 +83,8 @@ public class Circle extends Shape {
     p_identifier_type.write(this.layer.name, p_file);
     for (int i = 0; i < coor.length; i++) {
       p_file.write(" ");
-      int curr_coor = (int) Math.round(coor[i]);
-      p_file.write(String.valueOf(curr_coor));
+      int currCoor = (int) Math.round(coor[i]);
+      p_file.write(String.valueOf(currCoor));
     }
     p_file.write(")");
   }

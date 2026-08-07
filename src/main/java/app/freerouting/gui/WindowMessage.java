@@ -16,20 +16,20 @@ public final class WindowMessage extends WindowBase {
   private WindowMessage(String[] p_message_arr) {
     super(300, 100);
 
-    final JPanel main_panel = new JPanel();
+    final JPanel mainPanel = new JPanel();
     final GridBagLayout gridbag = new GridBagLayout();
-    main_panel.setLayout(gridbag);
-    final GridBagConstraints gridbag_constraints = new GridBagConstraints();
-    gridbag_constraints.insets = new Insets(40, 40, 40, 40);
-    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    mainPanel.setLayout(gridbag);
+    final GridBagConstraints gridbagConstraints = new GridBagConstraints();
+    gridbagConstraints.insets = new Insets(40, 40, 40, 40);
+    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     for (int i = 0; i < p_message_arr.length; i++) {
-      final JLabel message_label = new JLabel();
-      message_label.setText(p_message_arr[i]);
+      final JLabel messageLabel = new JLabel();
+      messageLabel.setText(p_message_arr[i]);
 
-      gridbag.setConstraints(message_label, gridbag_constraints);
-      main_panel.add(message_label, gridbag_constraints);
+      gridbag.setConstraints(messageLabel, gridbagConstraints);
+      mainPanel.add(messageLabel, gridbagConstraints);
     }
-    this.add(main_panel);
+    this.add(mainPanel);
     this.pack();
     this.setLocation(500, 400);
     this.setVisible(true);
@@ -37,9 +37,9 @@ public final class WindowMessage extends WindowBase {
 
   /** Displays a window with the input message at the center of the screen. */
   public static WindowMessage show(String p_message) {
-    String[] message_arr = new String[1];
-    message_arr[0] = p_message;
-    return new WindowMessage(message_arr);
+    String[] messageArr = new String[1];
+    messageArr[0] = p_message;
+    return new WindowMessage(messageArr);
   }
 
   /** Displays a window with the input messages at the center of the screen. */
@@ -74,9 +74,9 @@ public final class WindowMessage extends WindowBase {
             options,
             options[defaultOption]);
     optionPane.createDialog(null, "").setVisible(true);
-    String selected_option = (String) optionPane.getValue();
+    String selectedOption = (String) optionPane.getValue();
 
-    if (selected_option.equals(yesOption)) {
+    if (selectedOption.equals(yesOption)) {
       FRAnalytics.buttonClicked("dialog_yes", message);
       return true;
     } else {

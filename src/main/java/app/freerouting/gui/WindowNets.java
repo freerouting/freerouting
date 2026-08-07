@@ -43,9 +43,9 @@ import javax.swing.text.StyledDocument;
 
 public class WindowNets extends WindowObjectListWithFilter {
 
-  private final JLabel net_count_label;
-  private final JCheckBox filter_incompletes_checkbox;
-  private final NetInfoTextPane info_pane;
+  private final JLabel netCountLabel;
+  private final JCheckBox filterIncompletesCheckbox;
+  private final NetInfoTextPane infoPane;
 
   /** Creates a new instance of NetsWindow */
   public WindowNets(BoardFrame p_board_frame) {
@@ -55,44 +55,44 @@ public class WindowNets extends WindowObjectListWithFilter {
     this.setTitle(tm.getText("title"));
 
     // Net count and explanation label at the top
-    this.net_count_label = new JLabel();
-    this.net_count_label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    this.netCountLabel = new JLabel();
+    this.netCountLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
     JPanel headerPanel = new JPanel(new BorderLayout());
-    headerPanel.add(this.net_count_label, BorderLayout.NORTH);
+    headerPanel.add(this.netCountLabel, BorderLayout.NORTH);
 
     JPanel filterControlPanel = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-    if (this.input_panel != null) {
-      this.south_panel.remove(this.input_panel);
-      filterControlPanel.add(this.input_panel);
+    if (this.inputPanel != null) {
+      this.southPanel.remove(this.inputPanel);
+      filterControlPanel.add(this.inputPanel);
     }
 
     // Filter incompletes checkbox instead of button
-    this.filter_incompletes_checkbox = new JCheckBox(tm.getText("filter_incompletes"));
-    this.filter_incompletes_checkbox.setToolTipText(tm.getText("filter_incompletes_tooltip"));
-    this.filter_incompletes_checkbox.addActionListener(_ -> recalculate());
-    filterControlPanel.add(this.filter_incompletes_checkbox);
+    this.filterIncompletesCheckbox = new JCheckBox(tm.getText("filter_incompletes"));
+    this.filterIncompletesCheckbox.setToolTipText(tm.getText("filter_incompletes_tooltip"));
+    this.filterIncompletesCheckbox.addActionListener(_ -> recalculate());
+    filterControlPanel.add(this.filterIncompletesCheckbox);
 
     headerPanel.add(filterControlPanel, BorderLayout.CENTER);
-    this.main_panel.add(headerPanel, BorderLayout.NORTH);
+    this.mainPanel.add(headerPanel, BorderLayout.NORTH);
 
     // Selected Net Info Pane
-    this.info_pane = new NetInfoTextPane();
-    JScrollPane infoScrollPane = new JScrollPane(this.info_pane);
+    this.infoPane = new NetInfoTextPane();
+    JScrollPane infoScrollPane = new JScrollPane(this.infoPane);
     infoScrollPane.setPreferredSize(new Dimension(150, 80));
-    this.center_panel.add(infoScrollPane, BorderLayout.SOUTH);
+    this.centerPanel.add(infoScrollPane, BorderLayout.SOUTH);
 
-    JPanel curr_button_panel = new JPanel();
-    this.south_panel.add(curr_button_panel, BorderLayout.NORTH);
+    JPanel currButtonPanel = new JPanel();
+    this.southPanel.add(currButtonPanel, BorderLayout.NORTH);
 
-    final JButton rules_nets_assign_class_button = new JButton(tm.getText("assign_class"));
-    curr_button_panel.add(rules_nets_assign_class_button);
-    rules_nets_assign_class_button.setToolTipText(tm.getText("assign_class_tooltip"));
-    rules_nets_assign_class_button.addActionListener(new AssignClassListener());
-    rules_nets_assign_class_button.addActionListener(
+    final JButton rulesNetsAssignClassButton = new JButton(tm.getText("assign_class"));
+    currButtonPanel.add(rulesNetsAssignClassButton);
+    rulesNetsAssignClassButton.setToolTipText(tm.getText("assign_class_tooltip"));
+    rulesNetsAssignClassButton.addActionListener(new AssignClassListener());
+    rulesNetsAssignClassButton.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
-                "rules_nets_assign_class_button", rules_nets_assign_class_button.getText()));
+                "rulesNetsAssignClassButton", rulesNetsAssignClassButton.getText()));
   }
 
   @Override
@@ -118,9 +118,9 @@ public class WindowNets extends WindowObjectListWithFilter {
   @Override
   protected void add_to_list(Object p_object) {
     if (p_object instanceof Net net) {
-      if (this.filter_incompletes_checkbox.isSelected()) {
-        RatsNest ratsnest = board_frame.board_panel.board_handling.get_ratsnest();
-        if (ratsnest.incomplete_count(net.net_number) == 0) {
+      if (this.filterIncompletesCheckbox.isSelected()) {
+        RatsNest ratsnest = boardFrame.boardPanel.boardHandling.get_ratsnest();
+        if (ratsnest.incomplete_count(net.netNumber) == 0) {
           return;
         }
       }
@@ -148,7 +148,7 @@ public class WindowNets extends WindowObjectListWithFilter {
               if (value instanceof Net net) {
                 setText(
                     "Net #"
-                        + net.net_number
+                        + net.netNumber
                         + " ("
                         + net.name
                         + ") - Class: "
@@ -175,123 +175,123 @@ public class WindowNets extends WindowObjectListWithFilter {
   }
 
   private void update_selected_net_info() {
-    if (this.info_pane == null) {
+    if (this.infoPane == null) {
       return;
     }
-    this.info_pane.setText("");
-    List<Object> selected_nets = this.list.getSelectedValuesList();
-    if (selected_nets == null || selected_nets.isEmpty()) {
+    this.infoPane.setText("");
+    List<Object> selectedNets = this.list.getSelectedValuesList();
+    if (selectedNets == null || selectedNets.isEmpty()) {
       return;
     }
-    for (Object obj : selected_nets) {
+    for (Object obj : selectedNets) {
       if (obj instanceof Net net) {
-        net.print_info(this.info_pane, board_frame.get_locale());
+        net.print_info(this.infoPane, boardFrame.get_locale());
       }
     }
-    this.info_pane.setCaretPosition(0);
+    this.infoPane.setCaretPosition(0);
   }
 
   /** Fills the list with the nets in the net list. */
   @Override
   protected void fill_list() {
-    Nets nets = this.board_frame.board_panel.board_handling.get_routing_board().rules.nets;
-    List<Net> net_list = new java.util.ArrayList<>();
+    Nets nets = this.boardFrame.boardPanel.boardHandling.get_routing_board().rules.nets;
+    List<Net> netList = new java.util.ArrayList<>();
     for (int i = 0; i < nets.max_net_no(); i++) {
       Net net = nets.get(i + 1);
       if (net != null) {
-        net_list.add(net);
+        netList.add(net);
       }
     }
-    net_list.sort(java.util.Comparator.comparingInt(n -> n.net_number));
-    for (Net net : net_list) {
+    netList.sort(java.util.Comparator.comparingInt(n -> n.netNumber));
+    for (Net net : netList) {
       this.add_to_list(net);
     }
-    this.list.setVisibleRowCount(Math.min(net_list.size(), DEFAULT_TABLE_SIZE));
+    this.list.setVisibleRowCount(Math.min(netList.size(), DEFAULT_TABLE_SIZE));
 
-    if (this.net_count_label != null) {
+    if (this.netCountLabel != null) {
       String explanation = tm.getText("net_explanation");
-      String countSentence = tm.getText("net_count", String.valueOf(net_list.size()));
-      this.net_count_label.setText(
+      String countSentence = tm.getText("netCount", String.valueOf(netList.size()));
+      this.netCountLabel.setText(
           "<html>" + explanation.replace("\n", "<br>") + "<b>" + countSentence + "</b></html>");
     }
   }
 
   @Override
   protected void select_instances() {
-    List<Object> selected_nets = list.getSelectedValuesList();
-    if (selected_nets.isEmpty()) {
+    List<Object> selectedNets = list.getSelectedValuesList();
+    if (selectedNets.isEmpty()) {
       return;
     }
-    int[] selected_net_numbers = new int[selected_nets.size()];
-    for (int i = 0; i < selected_nets.size(); i++) {
-      selected_net_numbers[i] = ((Net) selected_nets.get(i)).net_number;
+    int[] selectedNetNumbers = new int[selectedNets.size()];
+    for (int i = 0; i < selectedNets.size(); i++) {
+      selectedNetNumbers[i] = ((Net) selectedNets.get(i)).netNumber;
     }
-    RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-    Set<Item> selected_items = new TreeSet<>();
-    Collection<Item> board_items = routing_board.get_items();
-    for (Item curr_item : board_items) {
-      boolean item_matches = false;
-      for (int curr_net_no : selected_net_numbers) {
-        if (curr_item.contains_net(curr_net_no)) {
-          item_matches = true;
+    RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.get_routing_board();
+    Set<Item> selectedItems = new TreeSet<>();
+    Collection<Item> boardItems = routingBoard.get_items();
+    for (Item currItem : boardItems) {
+      boolean itemMatches = false;
+      for (int currNetNo : selectedNetNumbers) {
+        if (currItem.contains_net(currNetNo)) {
+          itemMatches = true;
           break;
         }
       }
-      if (item_matches) {
-        selected_items.add(curr_item);
+      if (itemMatches) {
+        selectedItems.add(currItem);
       }
     }
-    board_frame.board_panel.board_handling.select_items(selected_items);
-    board_frame.board_panel.board_handling.zoom_selection();
+    boardFrame.boardPanel.boardHandling.select_items(selectedItems);
+    boardFrame.boardPanel.boardHandling.zoom_selection();
   }
 
   private class AssignClassListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      List<Object> selected_nets = list.getSelectedValuesList();
-      if (selected_nets.isEmpty()) {
+      List<Object> selectedNets = list.getSelectedValuesList();
+      if (selectedNets.isEmpty()) {
         return;
       }
-      NetClasses net_classes =
-          board_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
-      NetClass[] class_arr = new NetClass[net_classes.count()];
-      for (int i = 0; i < class_arr.length; i++) {
-        class_arr[i] = net_classes.get(i);
+      NetClasses netClasses =
+          boardFrame.boardPanel.boardHandling.get_routing_board().rules.netClasses;
+      NetClass[] classArr = new NetClass[netClasses.count()];
+      for (int i = 0; i < classArr.length; i++) {
+        classArr[i] = netClasses.get(i);
       }
-      Object selected_value =
+      Object selectedValue =
           JOptionPane.showInputDialog(
               null,
               tm.getText("assign_net_class_prompt"),
               tm.getText("assign_net_class_dialog_title"),
               JOptionPane.INFORMATION_MESSAGE,
               null,
-              class_arr,
-              class_arr[0]);
-      if (!(selected_value instanceof NetClass selected_class)) {
+              classArr,
+              classArr[0]);
+      if (!(selectedValue instanceof NetClass selected_class)) {
         return;
       }
-      for (int i = 0; i < selected_nets.size(); i++) {
-        ((Net) selected_nets.get(i)).set_class(selected_class);
+      for (int i = 0; i < selectedNets.size(); i++) {
+        ((Net) selectedNets.get(i)).set_class(selected_class);
       }
-      board_frame.refresh_windows();
+      boardFrame.refresh_windows();
     }
   }
 
   private class NetInfoTextPane extends JTextPane implements ObjectInfoPanel {
-    private final NumberFormat number_format;
+    private final NumberFormat numberFormat;
 
     public NetInfoTextPane() {
       this.setEditable(false);
-      this.number_format = NumberFormat.getInstance(board_frame.get_locale());
-      this.number_format.setMaximumFractionDigits(4);
+      this.numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+      this.numberFormat.setMaximumFractionDigits(4);
 
       StyledDocument document = this.getStyledDocument();
-      Style default_style =
+      Style defaultStyle =
           StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
-      document.addStyle("normal", default_style);
-      Style bold_style = document.addStyle("bold", default_style);
-      StyleConstants.setBold(bold_style, true);
+      document.addStyle("normal", defaultStyle);
+      Style boldStyle = document.addStyle("bold", defaultStyle);
+      StyleConstants.setBold(boldStyle, true);
     }
 
     private boolean append(String p_string, String p_style) {
@@ -316,35 +316,35 @@ public class WindowNets extends WindowObjectListWithFilter {
 
     @Override
     public boolean append(double p_value) {
-      CoordinateTransform coordinate_transform =
-          board_frame.board_panel.board_handling.coordinate_transform;
-      Float value = (float) coordinate_transform.board_to_user(p_value);
-      return append(number_format.format(value));
+      CoordinateTransform coordinateTransform =
+          boardFrame.boardPanel.boardHandling.coordinateTransform;
+      Float value = (float) coordinateTransform.board_to_user(p_value);
+      return append(numberFormat.format(value));
     }
 
     @Override
     public boolean append_without_transforming(double p_value) {
       Float value = (float) p_value;
-      return append(number_format.format(value));
+      return append(numberFormat.format(value));
     }
 
     @Override
     public boolean append(FloatPoint p_point) {
-      CoordinateTransform coordinate_transform =
-          board_frame.board_panel.board_handling.coordinate_transform;
-      FloatPoint transformed_point = coordinate_transform.board_to_user(p_point);
-      return append(transformed_point.to_string(board_frame.get_locale()));
+      CoordinateTransform coordinateTransform =
+          boardFrame.boardPanel.boardHandling.coordinateTransform;
+      FloatPoint transformedPoint = coordinateTransform.board_to_user(p_point);
+      return append(transformedPoint.to_string(boardFrame.get_locale()));
     }
 
     @Override
     public boolean append(Shape p_shape, Locale p_locale) {
-      CoordinateTransform coordinate_transform =
-          board_frame.board_panel.board_handling.coordinate_transform;
-      PrintableShape transformed_shape = coordinate_transform.board_to_user(p_shape, p_locale);
-      if (transformed_shape == null) {
+      CoordinateTransform coordinateTransform =
+          boardFrame.boardPanel.boardHandling.coordinateTransform;
+      PrintableShape transformedShape = coordinateTransform.board_to_user(p_shape, p_locale);
+      if (transformedShape == null) {
         return false;
       }
-      return append(transformed_shape.toString());
+      return append(transformedShape.toString());
     }
 
     @Override
@@ -360,16 +360,16 @@ public class WindowNets extends WindowObjectListWithFilter {
     @Override
     public boolean append(
         String p_button_name, String p_window_title, ObjectInfoPanel.Printable p_object) {
-      Collection<ObjectInfoPanel.Printable> object_list = new LinkedList<>();
-      object_list.add(p_object);
-      return append_objects(p_button_name, p_window_title, object_list);
+      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>();
+      objectList.add(p_object);
+      return append_objects(p_button_name, p_window_title, objectList);
     }
 
     @Override
     public boolean append_items(
         String p_button_name, String p_window_title, Collection<Item> p_items) {
-      Collection<ObjectInfoPanel.Printable> object_list = new LinkedList<>(p_items);
-      return append_objects(p_button_name, p_window_title, object_list);
+      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>(p_items);
+      return append_objects(p_button_name, p_window_title, objectList);
     }
 
     @Override
@@ -377,44 +377,44 @@ public class WindowNets extends WindowObjectListWithFilter {
         String p_button_name,
         String p_window_title,
         Collection<ObjectInfoPanel.Printable> p_objects) {
-      JButton object_info_button = new JButton();
-      object_info_button.setText(p_button_name);
-      object_info_button.setBorderPainted(false);
-      object_info_button.setContentAreaFilled(false);
-      object_info_button.setMargin(new Insets(0, 0, 0, 0));
-      object_info_button.setAlignmentY(0.75f);
-      object_info_button.setForeground(Color.blue);
+      JButton objectInfoButton = new JButton();
+      objectInfoButton.setText(p_button_name);
+      objectInfoButton.setBorderPainted(false);
+      objectInfoButton.setContentAreaFilled(false);
+      objectInfoButton.setMargin(new Insets(0, 0, 0, 0));
+      objectInfoButton.setAlignmentY(0.75f);
+      objectInfoButton.setForeground(Color.blue);
 
-      object_info_button.addActionListener(
+      objectInfoButton.addActionListener(
           e -> {
-            Collection<WindowObjectInfo.Printable> info_objects = new LinkedList<>();
+            Collection<WindowObjectInfo.Printable> infoObjects = new LinkedList<>();
             for (ObjectInfoPanel.Printable p : p_objects) {
               if (p instanceof WindowObjectInfo.Printable wp) {
-                info_objects.add(wp);
+                infoObjects.add(wp);
               }
             }
-            CoordinateTransform coordinate_transform =
-                board_frame.board_panel.board_handling.coordinate_transform;
-            WindowObjectInfo new_window =
+            CoordinateTransform coordinateTransform =
+                boardFrame.boardPanel.boardHandling.coordinateTransform;
+            WindowObjectInfo newWindow =
                 WindowObjectInfo.display(
-                    p_window_title, info_objects, board_frame, coordinate_transform);
+                    p_window_title, infoObjects, boardFrame, coordinateTransform);
             Point loc = getLocation();
-            Point new_window_location = new Point((int) (loc.getX() + 30), (int) (loc.getY() + 30));
-            new_window.setLocation(new_window_location);
-            subwindows.add(new_window);
+            Point newWindowLocation = new Point((int) (loc.getX() + 30), (int) (loc.getY() + 30));
+            newWindow.setLocation(newWindowLocation);
+            subwindows.add(newWindow);
           });
-      object_info_button.addActionListener(
-          _ -> FRAnalytics.buttonClicked("object_info_button", object_info_button.getText()));
+      objectInfoButton.addActionListener(
+          _ -> FRAnalytics.buttonClicked("objectInfoButton", objectInfoButton.getText()));
 
       StyledDocument document = this.getStyledDocument();
-      Style default_style =
+      Style defaultStyle =
           StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
-      Style button_style = document.addStyle(p_button_name, default_style);
-      StyleConstants.setAlignment(button_style, StyleConstants.ALIGN_CENTER);
-      StyleConstants.setComponent(button_style, object_info_button);
+      Style buttonStyle = document.addStyle(p_button_name, defaultStyle);
+      StyleConstants.setAlignment(buttonStyle, StyleConstants.ALIGN_CENTER);
+      StyleConstants.setComponent(buttonStyle, objectInfoButton);
 
       try {
-        document.insertString(document.getLength(), p_button_name, button_style);
+        document.insertString(document.getLength(), p_button_name, buttonStyle);
       } catch (BadLocationException _) {
         return false;
       }

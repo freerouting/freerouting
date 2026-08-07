@@ -49,8 +49,8 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
 
   /** Returns true, if p_via_info is contained in the via list of this rule. */
   public boolean contains(ViaInfo p_via_info) {
-    for (ViaInfo curr_info : this.list) {
-      if (p_via_info == curr_info) {
+    for (ViaInfo currInfo : this.list) {
+      if (p_via_info == currInfo) {
         return true;
       }
     }
@@ -59,8 +59,8 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
 
   /** Returns true, if this rule contains a via with padstack p_padstack */
   public boolean contains_padstack(Padstack p_padstack) {
-    for (ViaInfo curr_info : this.list) {
-      if (curr_info.get_padstack() == p_padstack) {
+    for (ViaInfo currInfo : this.list) {
+      if (currInfo.get_padstack() == p_padstack) {
         return true;
       }
     }
@@ -72,10 +72,10 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
    * Returns null, if no such via exists.
    */
   public ViaInfo get_layer_range(int p_from_layer, int p_to_layer) {
-    for (ViaInfo curr_info : this.list) {
-      if (curr_info.get_padstack().from_layer() == p_from_layer
-          && curr_info.get_padstack().to_layer() == p_to_layer) {
-        return curr_info;
+    for (ViaInfo currInfo : this.list) {
+      if (currInfo.get_padstack().from_layer() == p_from_layer
+          && currInfo.get_padstack().to_layer() == p_to_layer) {
+        return currInfo;
       }
     }
     return null;
@@ -86,16 +86,16 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
    * the list.
    */
   public boolean swap(ViaInfo p_1, ViaInfo p_2) {
-    int index_1 = this.list.indexOf(p_1);
-    int index_2 = this.list.indexOf(p_2);
-    if (index_1 < 0 || index_2 < 0) {
+    int index1 = this.list.indexOf(p_1);
+    int index2 = this.list.indexOf(p_2);
+    if (index1 < 0 || index2 < 0) {
       return false;
     }
-    if (index_1 == index_2) {
+    if (index1 == index2) {
       return true;
     }
-    this.list.set(index_1, p_2);
-    this.list.set(index_2, p_1);
+    this.list.set(index1, p_2);
+    this.list.set(index2, p_1);
     return true;
   }
 
@@ -107,11 +107,11 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
     p_window.append_bold(this.name);
     p_window.append_bold(":");
     int counter = 0;
-    boolean first_time = true;
-    final int max_vias_per_row = 5;
-    for (ViaInfo curr_via : this.list) {
-      if (first_time) {
-        first_time = false;
+    boolean firstTime = true;
+    final int maxViasPerRow = 5;
+    for (ViaInfo currVia : this.list) {
+      if (firstTime) {
+        firstTime = false;
       } else {
         p_window.append(", ");
       }
@@ -119,8 +119,8 @@ public class ViaRule implements Serializable, ObjectInfoPanel.Printable {
         p_window.newline();
         p_window.indent();
       }
-      p_window.append(curr_via.get_name(), tm.getText("via_info"), curr_via);
-      counter = (counter + 1) % max_vias_per_row;
+      p_window.append(currVia.get_name(), tm.getText("viaInfo"), currVia);
+      counter = (counter + 1) % maxViasPerRow;
     }
   }
 }

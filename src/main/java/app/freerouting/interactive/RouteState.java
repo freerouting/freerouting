@@ -25,8 +25,8 @@ import java.util.TreeSet;
 public class RouteState extends InteractiveState {
 
   protected Route route;
-  protected boolean observers_activated;
-  private Set<Item> routing_target_set;
+  protected boolean observersActivated;
+  private Set<Item> routingTargetSet;
 
   /**
    * Creates a new instance of RouteState If p_logfile != null, the creation of the route is stored
@@ -47,125 +47,125 @@ public class RouteState extends InteractiveState {
     }
     p_board_handling.display_layer_message();
     IntPoint location = p_location.round();
-    Item picked_item = start_ok(location, p_board_handling);
-    if (picked_item == null) {
+    Item pickedItem = start_ok(location, p_board_handling);
+    if (pickedItem == null) {
       return null;
     }
-    int net_count = picked_item.net_count();
-    if (net_count <= 0) {
+    int netCount = pickedItem.net_count();
+    if (netCount <= 0) {
       return null;
     }
-    int[] route_net_no_arr;
-    if (picked_item instanceof Pin pin && net_count > 1) {
+    int[] routeNetNoArr;
+    if (pickedItem instanceof Pin pin && netCount > 1) {
       // tie pin, remove nets, which are already connected to this pin on the current
       // layer.
-      route_net_no_arr =
+      routeNetNoArr =
           get_route_net_numbers_at_tie_pin(
               pin, p_board_handling.getInteractiveSettings().get_layer());
     } else {
-      route_net_no_arr = new int[net_count];
-      for (int i = 0; i < net_count; i++) {
-        route_net_no_arr[i] = picked_item.get_net_no(i);
+      routeNetNoArr = new int[netCount];
+      for (int i = 0; i < netCount; i++) {
+        routeNetNoArr[i] = pickedItem.get_net_no(i);
       }
     }
-    if (route_net_no_arr.length == 0) {
+    if (routeNetNoArr.length == 0) {
       return null;
     }
-    RoutingBoard routing_board = p_board_handling.get_routing_board();
-    int[] trace_half_widths = new int[routing_board.get_layer_count()];
-    boolean[] layer_active_arr = new boolean[trace_half_widths.length];
-    for (int i = 0; i < trace_half_widths.length; i++) {
-      trace_half_widths[i] = p_board_handling.get_trace_halfwidth(route_net_no_arr[0], i);
-      layer_active_arr[i] = false;
-      for (int j = 0; j < route_net_no_arr.length; j++) {
-        if (p_board_handling.is_active_routing_layer(route_net_no_arr[j], i)) {
-          layer_active_arr[i] = true;
+    RoutingBoard routingBoard = p_board_handling.get_routing_board();
+    int[] traceHalfWidths = new int[routingBoard.get_layer_count()];
+    boolean[] layerActiveArr = new boolean[traceHalfWidths.length];
+    for (int i = 0; i < traceHalfWidths.length; i++) {
+      traceHalfWidths[i] = p_board_handling.get_trace_halfwidth(routeNetNoArr[0], i);
+      layerActiveArr[i] = false;
+      for (int j = 0; j < routeNetNoArr.length; j++) {
+        if (p_board_handling.is_active_routing_layer(routeNetNoArr[j], i)) {
+          layerActiveArr[i] = true;
         }
       }
     }
 
-    int trace_clearance_class = p_board_handling.get_trace_clearance_class(route_net_no_arr[0]);
-    boolean start_ok = true;
-    if (picked_item instanceof Trace picked_trace) {
-      Point picked_corner = picked_trace.nearest_end_point(location);
-      if (picked_corner instanceof IntPoint point
-          && p_location.distance(picked_corner.to_float()) < 5 * picked_trace.get_half_width()) {
+    int traceClearanceClass = p_board_handling.get_trace_clearance_class(routeNetNoArr[0]);
+    boolean startOk = true;
+    if (pickedItem instanceof Trace pickedTrace) {
+      Point pickedCorner = pickedTrace.nearest_end_point(location);
+      if (pickedCorner instanceof IntPoint point
+          && p_location.distance(pickedCorner.to_float()) < 5 * pickedTrace.get_half_width()) {
         location = point;
       } else {
-        if (picked_trace instanceof PolylineTrace trace) {
-          FloatPoint nearest_point = trace.polyline().nearest_point_approx(p_location);
-          location = nearest_point.round();
+        if (pickedTrace instanceof PolylineTrace trace) {
+          FloatPoint nearestPoint = trace.polyline().nearest_point_approx(p_location);
+          location = nearestPoint.round();
         }
-        if (!routing_board.connect_to_trace(
+        if (!routingBoard.connect_to_trace(
             location,
-            picked_trace,
-            picked_trace.get_half_width(),
-            picked_trace.clearance_class_no())) {
-          start_ok = false;
+            pickedTrace,
+            pickedTrace.get_half_width(),
+            pickedTrace.clearance_class_no())) {
+          startOk = false;
         }
       }
-      if (start_ok && !p_board_handling.getInteractiveSettings().get_manual_rule_selection()) {
+      if (startOk && !p_board_handling.getInteractiveSettings().get_manual_rule_selection()) {
         // Pick up the half with and the clearance class of the found trace.
-        int[] new_trace_half_widths = new int[trace_half_widths.length];
-        System.arraycopy(trace_half_widths, 0, new_trace_half_widths, 0, trace_half_widths.length);
-        new_trace_half_widths[picked_trace.get_layer()] = picked_trace.get_half_width();
-        trace_half_widths = new_trace_half_widths;
-        trace_clearance_class = picked_trace.clearance_class_no();
+        int[] newTraceHalfWidths = new int[traceHalfWidths.length];
+        System.arraycopy(traceHalfWidths, 0, newTraceHalfWidths, 0, traceHalfWidths.length);
+        newTraceHalfWidths[pickedTrace.get_layer()] = pickedTrace.get_half_width();
+        traceHalfWidths = newTraceHalfWidths;
+        traceClearanceClass = pickedTrace.clearance_class_no();
       }
-    } else if (picked_item instanceof DrillItem drill_item) {
+    } else if (pickedItem instanceof DrillItem drill_item) {
       Point center = drill_item.get_center();
       if (center instanceof IntPoint point) {
         location = point;
       }
     }
-    if (!start_ok) {
+    if (!startOk) {
       return null;
     }
 
-    Net curr_net = routing_board.rules.nets.get(route_net_no_arr[0]);
-    if (curr_net == null) {
+    Net currNet = routingBoard.rules.nets.get(routeNetNoArr[0]);
+    if (currNet == null) {
       return null;
     }
     // Switch to stitch mode for nets, which are shove fixed.
-    boolean is_stitch_route =
+    boolean isStitchRoute =
         p_board_handling.getInteractiveSettings().get_is_stitch_route()
-            || curr_net.get_class().is_shove_fixed()
-            || !curr_net.get_class().get_pull_tight();
-    routing_board.generate_snapshot();
-    RouteState new_instance;
-    if (is_stitch_route) {
-      new_instance = new StitchRouteState(p_parent_state, p_board_handling);
+            || currNet.get_class().is_shove_fixed()
+            || !currNet.get_class().get_pull_tight();
+    routingBoard.generate_snapshot();
+    RouteState newInstance;
+    if (isStitchRoute) {
+      newInstance = new StitchRouteState(p_parent_state, p_board_handling);
     } else {
-      new_instance = new DynamicRouteState(p_parent_state, p_board_handling);
+      newInstance = new DynamicRouteState(p_parent_state, p_board_handling);
     }
-    new_instance.routing_target_set = picked_item.get_unconnected_set(-1);
+    newInstance.routingTargetSet = pickedItem.get_unconnected_set(-1);
 
-    new_instance.route =
+    newInstance.route =
         new Route(
             location,
             p_board_handling.getInteractiveSettings().get_layer(),
-            trace_half_widths,
-            layer_active_arr,
-            route_net_no_arr,
-            trace_clearance_class,
-            p_board_handling.get_via_rule(route_net_no_arr[0]),
+            traceHalfWidths,
+            layerActiveArr,
+            routeNetNoArr,
+            traceClearanceClass,
+            p_board_handling.get_via_rule(routeNetNoArr[0]),
             p_board_handling.getInteractiveSettings().get_push_enabled(),
             p_board_handling.getInteractiveSettings().get_trace_pull_tight_region_width(),
             p_board_handling.getInteractiveSettings().get_trace_pull_tight_accuracy(),
-            picked_item,
-            new_instance.routing_target_set,
-            routing_board,
-            is_stitch_route,
+            pickedItem,
+            newInstance.routingTargetSet,
+            routingBoard,
+            isStitchRoute,
             p_board_handling.getInteractiveSettings().get_automatic_neckdown(),
             p_board_handling.getInteractiveSettings().get_via_snap_to_smd_center(),
             p_board_handling.getInteractiveSettings().get_hilight_routing_obstacle());
-    new_instance.observers_activated = !routing_board.observers_active();
-    if (new_instance.observers_activated) {
-      routing_board.start_notify_observers();
+    newInstance.observersActivated = !routingBoard.observers_active();
+    if (newInstance.observersActivated) {
+      routingBoard.start_notify_observers();
     }
     p_board_handling.repaint();
-    new_instance.display_default_message();
-    return new_instance;
+    newInstance.display_default_message();
+    return newInstance;
   }
 
   /**
@@ -173,61 +173,61 @@ public class RouteState extends InteractiveState {
    * routing at p_location, or null, if no such item was found.
    */
   protected static Item start_ok(IntPoint p_location, GuiBoardManager p_hdlg) {
-    RoutingBoard routing_board = p_hdlg.get_routing_board();
+    RoutingBoard routingBoard = p_hdlg.get_routing_board();
 
     /*
      * look if an already existing trace ends at p_start_corner
      * and pick it up in this case.
      */
-    Item picked_item =
-        routing_board.pick_nearest_routing_item(
+    Item pickedItem =
+        routingBoard.pick_nearest_routing_item(
             p_location, p_hdlg.getInteractiveSettings().get_layer(), null);
-    int layer_count = routing_board.get_layer_count();
-    if (picked_item == null && p_hdlg.getInteractiveSettings().get_select_on_all_visible_layers()) {
+    int layerCount = routingBoard.get_layer_count();
+    if (pickedItem == null && p_hdlg.getInteractiveSettings().get_select_on_all_visible_layers()) {
       // Nothing found on preferred layer, try the other visible layers.
       // Prefer the outer layers.
-      picked_item = pick_routing_item(p_location, 0, p_hdlg);
-      if (picked_item == null) {
-        picked_item = pick_routing_item(p_location, layer_count - 1, p_hdlg);
+      pickedItem = pick_routing_item(p_location, 0, p_hdlg);
+      if (pickedItem == null) {
+        pickedItem = pick_routing_item(p_location, layerCount - 1, p_hdlg);
       }
       // prefer signal layers
-      if (picked_item == null) {
-        for (int i = 1; i < layer_count - 1; i++) {
-          if (routing_board.layer_structure.arr[i].is_signal) {
-            picked_item = pick_routing_item(p_location, i, p_hdlg);
-            if (picked_item != null) {
+      if (pickedItem == null) {
+        for (int i = 1; i < layerCount - 1; i++) {
+          if (routingBoard.layerStructure.arr[i].isSignal) {
+            pickedItem = pick_routing_item(p_location, i, p_hdlg);
+            if (pickedItem != null) {
               break;
             }
           }
         }
       }
-      if (picked_item == null) {
-        for (int i = 1; i < layer_count - 1; i++) {
-          if (!routing_board.layer_structure.arr[i].is_signal) {
-            picked_item = pick_routing_item(p_location, i, p_hdlg);
-            if (picked_item != null) {
+      if (pickedItem == null) {
+        for (int i = 1; i < layerCount - 1; i++) {
+          if (!routingBoard.layerStructure.arr[i].isSignal) {
+            pickedItem = pick_routing_item(p_location, i, p_hdlg);
+            if (pickedItem != null) {
               break;
             }
           }
         }
       }
     }
-    return picked_item;
+    return pickedItem;
   }
 
   private static Item pick_routing_item(
       IntPoint p_location, int p_layer_no, GuiBoardManager p_hdlg) {
 
     if (p_layer_no == p_hdlg.getInteractiveSettings().get_layer()
-        || (p_hdlg.graphics_context.get_layer_visibility(p_layer_no) <= 0)) {
+        || (p_hdlg.graphicsContext.get_layer_visibility(p_layer_no) <= 0)) {
       return null;
     }
-    Item picked_item =
+    Item pickedItem =
         p_hdlg.get_routing_board().pick_nearest_routing_item(p_location, p_layer_no, null);
-    if (picked_item != null) {
-      p_hdlg.set_layer(picked_item.first_layer());
+    if (pickedItem != null) {
+      p_hdlg.set_layer(pickedItem.first_layer());
     }
-    return picked_item;
+    return pickedItem;
   }
 
   /**
@@ -235,23 +235,23 @@ public class RouteState extends InteractiveState {
    * p_layer.
    */
   static int[] get_route_net_numbers_at_tie_pin(Pin p_pin, int p_layer) {
-    Set<Integer> net_number_list = new TreeSet<>();
+    Set<Integer> netNumberList = new TreeSet<>();
     for (int i = 0; i < p_pin.net_count(); i++) {
-      net_number_list.add(p_pin.get_net_no(i));
+      netNumberList.add(p_pin.get_net_no(i));
     }
     Set<Item> contacts = p_pin.get_normal_contacts();
-    for (Item curr_contact : contacts) {
-      if (curr_contact.first_layer() <= p_layer && curr_contact.last_layer() >= p_layer) {
-        for (int i = 0; i < curr_contact.net_count(); i++) {
-          net_number_list.remove(curr_contact.get_net_no(i));
+    for (Item currContact : contacts) {
+      if (currContact.first_layer() <= p_layer && currContact.last_layer() >= p_layer) {
+        for (int i = 0; i < currContact.net_count(); i++) {
+          netNumberList.remove(currContact.get_net_no(i));
         }
       }
     }
-    int[] result = new int[net_number_list.size()];
-    int curr_ind = 0;
-    for (Integer curr_net_number : net_number_list) {
-      result[curr_ind] = curr_net_number;
-      ++curr_ind;
+    int[] result = new int[netNumberList.size()];
+    int currInd = 0;
+    for (Integer curr_net_number : netNumberList) {
+      result[currInd] = curr_net_number;
+      ++currInd;
     }
     return result;
   }
@@ -259,46 +259,46 @@ public class RouteState extends InteractiveState {
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
   public InteractiveState key_typed(char p_key_char) {
-    InteractiveState curr_return_state = this;
+    InteractiveState currReturnState = this;
     if (Character.isDigit(p_key_char)) {
       // change to the p_key_char-ths signal layer
-      LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
+      LayerStructure layerStructure = hdlg.get_routing_board().layerStructure;
       int d = Character.digit(p_key_char, 10);
-      d = Math.min(d, layer_structure.signal_layer_count());
+      d = Math.min(d, layerStructure.signal_layer_count());
       // Board layers start at 0, keyboard input for layers starts at 1.
       d = Math.max(d - 1, 0);
-      Layer new_layer = layer_structure.get_signal_layer(d);
-      d = layer_structure.get_no(new_layer);
+      Layer newLayer = layerStructure.get_signal_layer(d);
+      d = layerStructure.get_no(newLayer);
 
       if (d >= 0) {
         change_layer_action(d);
       }
     } else if (p_key_char == '+') {
       // change to the next signal layer
-      LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
-      int current_layer_no = hdlg.getInteractiveSettings().get_layer();
+      LayerStructure layerStructure = hdlg.get_routing_board().layerStructure;
+      int currentLayerNo = hdlg.getInteractiveSettings().get_layer();
       do {
-        ++current_layer_no;
-      } while (current_layer_no < layer_structure.arr.length
-          && !layer_structure.arr[current_layer_no].is_signal);
-      if (current_layer_no < layer_structure.arr.length) {
-        change_layer_action(current_layer_no);
+        ++currentLayerNo;
+      } while (currentLayerNo < layerStructure.arr.length
+          && !layerStructure.arr[currentLayerNo].isSignal);
+      if (currentLayerNo < layerStructure.arr.length) {
+        change_layer_action(currentLayerNo);
       }
     } else if (p_key_char == '-') {
       // change to the previous signal layer
-      LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
-      int current_layer_no = hdlg.getInteractiveSettings().get_layer();
+      LayerStructure layerStructure = hdlg.get_routing_board().layerStructure;
+      int currentLayerNo = hdlg.getInteractiveSettings().get_layer();
       do {
-        --current_layer_no;
-      } while (current_layer_no >= 0 && !layer_structure.arr[current_layer_no].is_signal);
-      if (current_layer_no >= 0) {
-        change_layer_action(current_layer_no);
+        --currentLayerNo;
+      } while (currentLayerNo >= 0 && !layerStructure.arr[currentLayerNo].isSignal);
+      if (currentLayerNo >= 0) {
+        change_layer_action(currentLayerNo);
       }
 
     } else {
-      curr_return_state = super.key_typed(p_key_char);
+      currReturnState = super.key_typed(p_key_char);
     }
-    return curr_return_state;
+    return currReturnState;
   }
 
   /**
@@ -306,22 +306,22 @@ public class RouteState extends InteractiveState {
    * completed by connecting to a target.
    */
   public InteractiveState add_corner(FloatPoint p_location) {
-    boolean route_completed = route.next_corner(p_location);
-    String layer_string =
-        hdlg.get_routing_board().layer_structure.arr[route.nearest_target_layer()].name;
-    hdlg.screen_messages.set_target_layer(layer_string);
-    if (route_completed) {
-      if (this.observers_activated) {
+    boolean routeCompleted = route.next_corner(p_location);
+    String layerString =
+        hdlg.get_routing_board().layerStructure.arr[route.nearest_target_layer()].name;
+    hdlg.screenMessages.set_target_layer(layerString);
+    if (routeCompleted) {
+      if (this.observersActivated) {
         hdlg.get_routing_board().end_notify_observers();
-        this.observers_activated = false;
+        this.observersActivated = false;
       }
     }
     InteractiveState result;
-    if (route_completed) {
-      result = this.return_state;
-      hdlg.screen_messages.clear();
-      for (int curr_net_no : this.route.net_no_arr) {
-        hdlg.update_ratsnest(curr_net_no);
+    if (routeCompleted) {
+      result = this.returnState;
+      hdlg.screenMessages.clear();
+      for (int currNetNo : this.route.netNoArr) {
+        hdlg.update_ratsnest(currNetNo);
       }
     } else {
       result = this;
@@ -336,30 +336,28 @@ public class RouteState extends InteractiveState {
     Trace tail =
         hdlg.get_routing_board()
             .get_trace_tail(
-                route.get_last_corner(),
-                hdlg.getInteractiveSettings().get_layer(),
-                route.net_no_arr);
+                route.get_last_corner(), hdlg.getInteractiveSettings().get_layer(), route.netNoArr);
     if (tail != null) {
-      Collection<Item> remove_items = tail.get_connection_items(Item.StopConnectionOption.VIA);
+      Collection<Item> removeItems = tail.get_connection_items(Item.StopConnectionOption.VIA);
       if (hdlg.getInteractiveSettings().get_push_enabled()) {
         hdlg.get_routing_board()
             .remove_items_and_pull_tight(
-                remove_items,
+                removeItems,
                 hdlg.getInteractiveSettings().get_trace_pull_tight_region_width(),
                 hdlg.getInteractiveSettings().get_trace_pull_tight_accuracy());
       } else {
-        hdlg.get_routing_board().remove_items(remove_items);
+        hdlg.get_routing_board().remove_items(removeItems);
       }
     }
-    if (this.observers_activated) {
+    if (this.observersActivated) {
       hdlg.get_routing_board().end_notify_observers();
-      this.observers_activated = false;
+      this.observersActivated = false;
     }
-    hdlg.screen_messages.clear();
-    for (int curr_net_no : this.route.net_no_arr) {
-      hdlg.update_ratsnest(curr_net_no);
+    hdlg.screenMessages.clear();
+    for (int currNetNo : this.route.netNoArr) {
+      hdlg.update_ratsnest(currNetNo);
     }
-    return this.return_state;
+    return this.returnState;
   }
 
   @Override
@@ -367,73 +365,71 @@ public class RouteState extends InteractiveState {
     boolean result = true;
     if (p_new_layer >= 0 && p_new_layer < hdlg.get_routing_board().get_layer_count()) {
       if (this.route != null && !this.route.is_layer_active(p_new_layer)) {
-        String layer_name = hdlg.get_routing_board().layer_structure.arr[p_new_layer].name;
-        hdlg.screen_messages.set_status_message(
-            tm.getText("layer_not_changed_inactive_net_message", layer_name));
+        String layerName = hdlg.get_routing_board().layerStructure.arr[p_new_layer].name;
+        hdlg.screenMessages.set_status_message(
+            tm.getText("layer_not_changed_inactive_net_message", layerName));
       }
-      boolean change_layer_succeeded = route.change_layer(p_new_layer);
-      if (change_layer_succeeded) {
-        boolean connected_to_plane = false;
+      boolean changeLayerSucceeded = route.change_layer(p_new_layer);
+      if (changeLayerSucceeded) {
+        boolean connectedToPlane = false;
         // check, if the layer change resulted in a connection to a power plane.
-        int old_layer = hdlg.getInteractiveSettings().get_layer();
-        ItemSelectionFilter selection_filter =
+        int oldLayer = hdlg.getInteractiveSettings().get_layer();
+        ItemSelectionFilter selectionFilter =
             new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.VIAS);
-        Collection<Item> picked_items =
-            hdlg.get_routing_board()
-                .pick_items(route.get_last_corner(), old_layer, selection_filter);
-        Via new_via = null;
-        for (Item curr_via : picked_items) {
-          if (curr_via.shares_net_no(route.net_no_arr)) {
-            new_via = (Via) curr_via;
+        Collection<Item> pickedItems =
+            hdlg.get_routing_board().pick_items(route.get_last_corner(), oldLayer, selectionFilter);
+        Via newVia = null;
+        for (Item currVia : pickedItems) {
+          if (currVia.shares_net_no(route.netNoArr)) {
+            newVia = (Via) currVia;
             break;
           }
         }
-        if (new_via != null) {
-          int from_layer;
-          int to_layer;
-          if (old_layer < p_new_layer) {
-            from_layer = old_layer + 1;
-            to_layer = p_new_layer;
+        if (newVia != null) {
+          int fromLayer;
+          int toLayer;
+          if (oldLayer < p_new_layer) {
+            fromLayer = oldLayer + 1;
+            toLayer = p_new_layer;
           } else {
-            from_layer = p_new_layer;
-            to_layer = old_layer - 1;
+            fromLayer = p_new_layer;
+            toLayer = oldLayer - 1;
           }
-          Collection<Item> contacts = new_via.get_normal_contacts();
-          for (Item curr_item : contacts) {
-            if (curr_item instanceof ConductionArea curr_area) {
-              if (curr_area.get_layer() >= from_layer && curr_area.get_layer() <= to_layer) {
-                connected_to_plane = true;
+          Collection<Item> contacts = newVia.get_normal_contacts();
+          for (Item currItem : contacts) {
+            if (currItem instanceof ConductionArea currArea) {
+              if (currArea.get_layer() >= fromLayer && currArea.get_layer() <= toLayer) {
+                connectedToPlane = true;
                 break;
               }
             }
           }
         }
 
-        if (connected_to_plane) {
-          hdlg.set_interactive_state(this.return_state);
-          for (int curr_net_no : this.route.net_no_arr) {
-            hdlg.update_ratsnest(curr_net_no);
+        if (connectedToPlane) {
+          hdlg.set_interactive_state(this.returnState);
+          for (int currNetNo : this.route.netNoArr) {
+            hdlg.update_ratsnest(currNetNo);
           }
         } else {
           hdlg.set_layer(p_new_layer);
-          String layer_name = hdlg.get_routing_board().layer_structure.arr[p_new_layer].name;
-          hdlg.screen_messages.set_status_message(
-              tm.getText("layer_changed_to_message", layer_name));
+          String layerName = hdlg.get_routing_board().layerStructure.arr[p_new_layer].name;
+          hdlg.screenMessages.set_status_message(tm.getText("layer_changed_to_message", layerName));
           // make the current situation restorable by undo
           hdlg.get_routing_board().generate_snapshot();
         }
       } else {
-        int shove_failing_layer = hdlg.get_routing_board().get_shove_failing_layer();
-        if (shove_failing_layer >= 0) {
-          String layer_name =
+        int shoveFailingLayer = hdlg.get_routing_board().get_shove_failing_layer();
+        if (shoveFailingLayer >= 0) {
+          String layerName =
               hdlg.get_routing_board()
-                  .layer_structure
+                  .layerStructure
                   .arr[hdlg.get_routing_board().get_shove_failing_layer()]
                   .name;
-          hdlg.screen_messages.set_status_message(
-              tm.getText("layer_not_changed_obstacle_message", layer_name));
+          hdlg.screenMessages.set_status_message(
+              tm.getText("layer_not_changed_obstacle_message", layerName));
         } else {
-          FRLogger.warn("RouteState.change_layer_action: shove_failing_layer not set");
+          FRLogger.warn("RouteState.change_layer_action: shoveFailingLayer not set");
         }
         result = false;
       }
@@ -445,15 +441,15 @@ public class RouteState extends InteractiveState {
   @Override
   public void draw(Graphics p_graphics) {
     if (route != null) {
-      route.draw(p_graphics, hdlg.graphics_context);
+      route.draw(p_graphics, hdlg.graphicsContext);
     }
   }
 
   @Override
   public void display_default_message() {
     if (route != null) {
-      Net curr_net = hdlg.get_routing_board().rules.nets.get(route.net_no_arr[0]);
-      hdlg.screen_messages.set_status_message(tm.getText("routing_net_message", curr_net.name));
+      Net currNet = hdlg.get_routing_board().rules.nets.get(route.netNoArr[0]);
+      hdlg.screenMessages.set_status_message(tm.getText("routing_net_message", currNet.name));
     }
   }
 }

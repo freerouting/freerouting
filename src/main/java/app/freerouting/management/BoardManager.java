@@ -121,7 +121,7 @@ public interface BoardManager {
    * <p>The method copies trace half-widths for each layer from the default net class to the manual
    * trace width settings array.
    *
-   * @see app.freerouting.interactive.InteractiveSettings#manual_trace_half_width_arr
+   * @see app.freerouting.interactive.InteractiveSettings#manualTraceHalfWidthArr
    * @see app.freerouting.rules.NetClass#get_trace_half_width(int)
    */
   void initialize_manual_trace_half_widths();

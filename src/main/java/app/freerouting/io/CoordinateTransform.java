@@ -19,25 +19,25 @@ import java.io.Serializable;
  */
 public class CoordinateTransform implements Serializable {
 
-  private final double scale_factor;
-  private final double base_x;
-  private final double base_y;
+  private final double scaleFactor;
+  private final double baseX;
+  private final double baseY;
 
   /** Creates a new instance of CoordinateTransform. */
   public CoordinateTransform(double p_scale_factor, double p_base_x, double p_base_y) {
-    scale_factor = p_scale_factor;
-    base_x = p_base_x;
-    base_y = p_base_y;
+    scaleFactor = p_scale_factor;
+    baseX = p_base_x;
+    baseY = p_base_y;
   }
 
   /** Scale a value from the board to the external coordinate system */
   public double board_to_dsn(double p_val) {
-    return p_val / scale_factor;
+    return p_val / scaleFactor;
   }
 
   /** Scale a value from the external to the board coordinate system */
   public double dsn_to_board(double p_val) {
-    return p_val * scale_factor;
+    return p_val * scaleFactor;
   }
 
   /**
@@ -46,8 +46,8 @@ public class CoordinateTransform implements Serializable {
    */
   public double[] board_to_dsn(FloatPoint p_point) {
     double[] result = new double[2];
-    result[0] = board_to_dsn(p_point.x) + base_x;
-    result[1] = board_to_dsn(p_point.y) + base_y;
+    result[0] = board_to_dsn(p_point.x) + baseX;
+    result[1] = board_to_dsn(p_point.y) + baseY;
     return result;
   }
 
@@ -69,8 +69,8 @@ public class CoordinateTransform implements Serializable {
   public double[] board_to_dsn(FloatPoint[] p_points) {
     double[] result = new double[2 * p_points.length];
     for (int i = 0; i < p_points.length; i++) {
-      result[2 * i] = board_to_dsn(p_points[i].x) + base_x;
-      result[2 * i + 1] = board_to_dsn(p_points[i].y) + base_y;
+      result[2 * i] = board_to_dsn(p_points[i].x) + baseX;
+      result[2 * i + 1] = board_to_dsn(p_points[i].y) + baseY;
     }
     return result;
   }
@@ -84,10 +84,10 @@ public class CoordinateTransform implements Serializable {
     for (int i = 0; i < p_lines.length; i++) {
       FloatPoint a = p_lines[i].a.to_float();
       FloatPoint b = p_lines[i].b.to_float();
-      result[4 * i] = board_to_dsn(a.x) + base_x;
-      result[4 * i + 1] = board_to_dsn(a.y) + base_y;
-      result[4 * i + 2] = board_to_dsn(b.x) + base_x;
-      result[4 * i + 3] = board_to_dsn(b.y) + base_y;
+      result[4 * i] = board_to_dsn(a.x) + baseX;
+      result[4 * i + 1] = board_to_dsn(a.y) + baseY;
+      result[4 * i + 2] = board_to_dsn(b.x) + baseX;
+      result[4 * i + 3] = board_to_dsn(b.y) + baseY;
     }
     return result;
   }
@@ -118,8 +118,8 @@ public class CoordinateTransform implements Serializable {
 
   /** Transforms an external tuple to a geometry.planar.FloatPoint */
   public FloatPoint dsn_to_board(double[] p_tuple) {
-    double x = dsn_to_board(p_tuple[0] - base_x);
-    double y = dsn_to_board(p_tuple[1] - base_y);
+    double x = dsn_to_board(p_tuple[0] - baseX);
+    double y = dsn_to_board(p_tuple[1] - baseY);
     return new FloatPoint(x, y);
   }
 
@@ -135,20 +135,20 @@ public class CoordinateTransform implements Serializable {
   /** Transforms a geometry.planar.Intbox to the coordinates of a Rectangle. */
   public double[] board_to_dsn(IntBox p_box) {
     double[] result = new double[4];
-    result[0] = p_box.ll.x / scale_factor + base_x;
-    result[1] = p_box.ll.y / scale_factor + base_y;
-    result[2] = p_box.ur.x / scale_factor + base_x;
-    result[3] = p_box.ur.y / scale_factor + base_y;
+    result[0] = p_box.ll.x / scaleFactor + baseX;
+    result[1] = p_box.ll.y / scaleFactor + baseY;
+    result[2] = p_box.ur.x / scaleFactor + baseX;
+    result[3] = p_box.ur.y / scaleFactor + baseY;
     return result;
   }
 
   /** Transforms a geometry.planar.Intbox to a Rectangle in relative (vector) coordinates. */
   public double[] board_to_dsn_rel(IntBox p_box) {
     double[] result = new double[4];
-    result[0] = p_box.ll.x / scale_factor;
-    result[1] = p_box.ll.y / scale_factor;
-    result[2] = p_box.ur.x / scale_factor;
-    result[3] = p_box.ur.y / scale_factor;
+    result[0] = p_box.ll.x / scaleFactor;
+    result[1] = p_box.ll.y / scaleFactor;
+    result[2] = p_box.ur.x / scaleFactor;
+    result[3] = p_box.ur.y / scaleFactor;
     return result;
   }
 
@@ -163,8 +163,8 @@ public class CoordinateTransform implements Serializable {
       result = new Polygon(p_layer, coors);
     } else if (p_board_shape instanceof app.freerouting.geometry.planar.Circle board_circle) {
       double diameter = 2 * board_to_dsn(board_circle.radius);
-      double[] center_coor = board_to_dsn(board_circle.center.to_float());
-      result = new Circle(p_layer, diameter, center_coor[0], center_coor[1]);
+      double[] centerCoor = board_to_dsn(board_circle.center.to_float());
+      result = new Circle(p_layer, diameter, centerCoor[0], centerCoor[1]);
     } else {
       FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
       result = null;
@@ -186,8 +186,8 @@ public class CoordinateTransform implements Serializable {
       result = new Polygon(p_layer, coors);
     } else if (p_board_shape instanceof app.freerouting.geometry.planar.Circle board_circle) {
       double diameter = 2 * board_to_dsn(board_circle.radius);
-      double[] center_coor = board_to_dsn_rel(board_circle.center.to_float());
-      result = new Circle(p_layer, diameter, center_coor[0], center_coor[1]);
+      double[] centerCoor = board_to_dsn_rel(board_circle.center.to_float());
+      result = new Circle(p_layer, diameter, centerCoor[0], centerCoor[1]);
     } else {
       FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
       result = null;
