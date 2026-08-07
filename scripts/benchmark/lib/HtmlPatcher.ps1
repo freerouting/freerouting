@@ -1,7 +1,8 @@
 function Update-BenchmarksHtml {
     param(
         [Hashtable]$Cache,
-        [string]$HtmlPath
+        [string]$HtmlPath,
+        [string]$FixturesDir = (Get-BenchmarkFixturesDir)
     )
 
     if (-not (Test-Path $HtmlPath)) {
@@ -9,11 +10,7 @@ function Update-BenchmarksHtml {
         return
     }
 
-    $runs = @()
-    foreach ($key in $Cache.Keys) {
-        $runs += $Cache[$key]
-    }
-
+    $runs = Get-ActiveBenchmarkRuns $Cache $FixturesDir
     $grouped = $runs | Group-Object -Property { $_.fixture.relative_path } | Sort-Object -Property Name
 
     # Build premium styled HTML

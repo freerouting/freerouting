@@ -61,7 +61,9 @@ if ($ReportOnly) {
 
 # Discover files
 $binaries = @(Get-ChildItem $BinariesDir -Filter "*.jar" | Where-Object { $_.Name -like $FilterBinary })
-$fixtures = @(Get-ChildItem $FixturesDir -Recurse -Filter "*.dsn" | Where-Object { $_.Name -like $FilterFixture })
+$fixtures = @(Get-ChildItem $FixturesDir -Recurse -Filter "*.dsn" | Where-Object {
+    $_.Name -like $FilterFixture -and (Test-IsActiveBenchmarkFixtureFile $_)
+})
 
 if ($binaries.Count -eq 0) {
     Write-Error "No Freerouting binaries found in: $BinariesDir"

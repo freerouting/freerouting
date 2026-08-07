@@ -69,18 +69,55 @@ function Format-MarkdownTable {
     return $sb.ToString()
 }
 
+function Get-RunScoreValue {
+    param($Run)
+
+    if ($Run.drc.final_quality_score -ne $null) { return [double]$Run.drc.final_quality_score }
+    if ($Run.quality.quality_score -ne $null) { return [double]$Run.quality.quality_score }
+    return $null
+}
+
+function Test-RunIsFailed {
+    param($Run)
+
+    $isTimeout = $Run.exit.timed_out -eq $true
+    $isLoadError = $false
+
+    $loadErrorVal = $Run.log_analysis.load_error
+    $timedOutVal = $Run.log_analysis.timed_out
+    if ($Run.log_file -and (Test-Path $Run.log_file) -and ($loadErrorVal -eq $null -or $timedOutVal -eq $null)) {
+        $logMetrics = Get-PhaseMetrics $Run.log_file $Run.binary.version_label
+        $loadErrorVal = $logMetrics.load_error
+        $timedOutVal = $logMetrics.timed_out
+    }
+
+    if ($timedOutVal -eq $true) { $isTimeout = $true }
+    if ($loadErrorVal -eq $true) { $isLoadError = $true }
+
+    $hasTime = $false
+    if ($Run.phases.fanout.duration_seconds -ne $null) { $hasTime = $true }
+    if ($Run.phases.autorouter.duration_seconds -ne $null) { $hasTime = $true }
+    if ($Run.phases.optimizer.duration_seconds -ne $null) { $hasTime = $true }
+    if (-not $hasTime) { $isLoadError = $true }
+
+    if ($isTimeout -or $isLoadError) { return $true }
+
+    $score = Get-RunScoreValue $Run
+    if ($score -eq $null -or $score -eq 0) { return $true }
+
+    return $false
+}
+
 function Export-MarkdownReport {
     param(
         [Hashtable]$Cache,
         [string]$MdPath,
         [string]$CsvPath,
-        [string]$ChartDataPath
+        [string]$ChartDataPath,
+        [string]$FixturesDir = (Get-BenchmarkFixturesDir)
     )
 
-    $runs = @()
-    foreach ($key in $Cache.Keys) {
-        $runs += $Cache[$key]
-    }
+    $runs = Get-ActiveBenchmarkRuns $Cache $FixturesDir
 
     $grouped = $runs | Group-Object -Property { $_.fixture.relative_path } | Sort-Object -Property Name
     $groupedByFolder = $runs | Group-Object -Property { $_.fixture.group } | Sort-Object -Property Name
@@ -99,82 +136,74 @@ function Export-MarkdownReport {
     [void]$sb.AppendLine("## Summary Table (Best Results per Fixture)")
     [void]$sb.AppendLine()
 
-    $summaryHeaders = @("Fixture Group", "Fixture", "Best Version", "Unrouted", "Violations", "Score", "CPU Time (s)", "Peak Heap (MB)")
-    $summaryAlignments = @("L", "L", "L", "R", "R", "R", "R", "R")
-    $summaryRows = [System.Collections.ArrayList]::new()
+    $versionStats = @{}
 
-    foreach ($g in $grouped) {
-        $validRuns = $g.Group | Where-Object {
-            $run = $_
-            $isTimeout = $run.exit.timed_out -eq $true
-            $isLoadError = $false
+    foreach ($verGroup in ($runs | Group-Object -Property { $_.binary.version_label })) {
+        $version = $verGroup.Name
+        $fixtureCount = 0
+        $failures = 0
+        $nonPerfect = 0
+        $avgScoreValues = [System.Collections.ArrayList]::new()
 
-            $loadErrorVal = $run.log_analysis.load_error
-            $timedOutVal = $run.log_analysis.timed_out
-            if ($run.log_file -and (Test-Path $run.log_file) -and ($loadErrorVal -eq $null -or $timedOutVal -eq $null)) {
-                $logMetrics = Get-PhaseMetrics $run.log_file $run.binary.version_label
-                $loadErrorVal = $logMetrics.load_error
-                $timedOutVal = $logMetrics.timed_out
+        foreach ($fixtureGroup in $grouped) {
+            $versionRuns = $fixtureGroup.Group | Where-Object { $_.binary.version_label -eq $version }
+            if (-not $versionRuns) { continue }
+
+            $latestRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
+            $fixtureCount++
+
+            $failed = Test-RunIsFailed $latestRun
+            $score = Get-RunScoreValue $latestRun
+
+            if ($failed) {
+                $failures++
             }
-
-            if ($timedOutVal -eq $true) { $isTimeout = $true }
-            if ($loadErrorVal -eq $true) { $isLoadError = $true }
-
-            $hasTime = $false
-            if ($run.phases.fanout.duration_seconds -ne $null) { $hasTime = $true }
-            if ($run.phases.autorouter.duration_seconds -ne $null) { $hasTime = $true }
-            if ($run.phases.optimizer.duration_seconds -ne $null) { $hasTime = $true }
-            if (-not $hasTime) { $isLoadError = $true }
-
-            -not $isTimeout -and -not $isLoadError
+            if ($score -ne $null -and $score -lt 1000) {
+                $nonPerfect++
+            }
+            if (-not $failed -and $score -ne $null -and $score -lt 1000) {
+                [void]$avgScoreValues.Add($score)
+            }
         }
 
-        if ($validRuns) {
-            $bestRun = $validRuns | Sort-Object -Property @{ Expression = {
-                if ($_.drc.final_unrouted -ne $null) { $_.drc.final_unrouted } elseif ($_.quality.final_unrouted -ne $null) { $_.quality.final_unrouted } else { 99999 }
-            }; Ascending = $true }, @{ Expression = {
-                if ($_.drc.final_violations -ne $null) { $_.drc.final_violations } elseif ($_.quality.clearance_violations -ne $null) { $_.quality.clearance_violations } else { 99999 }
-            }; Ascending = $true }, @{ Expression = {
-                if ($_.drc.final_quality_score -ne $null) { $_.drc.final_quality_score } elseif ($_.quality.quality_score -ne $null) { $_.quality.quality_score } else { 0.0 }
-            }; Descending = $true }, @{ Expression = {
-                $ver = $_.binary.version_label
-                if ($ver -match '^s(\d+)\.(\d+)\.(\d+)') {
-                    return 99999999 + [int]"$($matches[1])$($matches[2])$($matches[3])"
-                }
-                if ($ver -match '^(\d+)\.(\d+)\.(\d+)') {
-                    return ([int]$matches[1] * 10000) + ([int]$matches[2] * 100) + [int]$matches[3]
-                }
-                return 0
-            }; Descending = $true } | Select-Object -First 1
+        $avgScore = $null
+        if ($avgScoreValues.Count -gt 0) {
+            $avgScore = (($avgScoreValues | Measure-Object -Average).Average)
+        }
 
-            $groupName = $bestRun.fixture.group
-            $filename = $bestRun.fixture.filename
-            $version = $bestRun.binary.version_label
-            
-            $unrouted = if ($bestRun.drc.final_unrouted -ne $null) { $bestRun.drc.final_unrouted } elseif ($bestRun.quality.final_unrouted -ne $null) { $bestRun.quality.final_unrouted } else { "N/A" }
-            $violations = if ($bestRun.drc.final_violations -ne $null) { $bestRun.drc.final_violations } elseif ($bestRun.quality.clearance_violations -ne $null) { $bestRun.quality.clearance_violations } else { "N/A" }
-            $score = if ($bestRun.drc.final_quality_score -ne $null) { $bestRun.drc.final_quality_score.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } elseif ($bestRun.quality.quality_score -ne $null) { $bestRun.quality.quality_score.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
-            
-            $cpu = if ($bestRun.quality.total_cpu_seconds -ne $null) { $bestRun.quality.total_cpu_seconds.ToString("F2", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
-            $heap = if ($bestRun.quality.peak_heap_mb -ne $null) { [math]::Round($bestRun.quality.peak_heap_mb).ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
-
-            # Create markdown links
-            $groupLink = "[$groupName](../fixtures/$groupName)"
-            $fixtureLink = "[$filename](../fixtures/$($bestRun.fixture.relative_path))"
-
-            $null = $summaryRows.Add(@($groupLink, $fixtureLink, "**$version**", $unrouted, $violations, $score, $cpu, $heap))
-        } else {
-            $firstRun = $g.Group[0]
-            $groupName = $firstRun.fixture.group
-            $filename = $firstRun.fixture.filename
-            $groupLink = "[$groupName](../fixtures/$groupName)"
-            $fixtureLink = "[$filename](../fixtures/$($firstRun.fixture.relative_path))"
-            $null = $summaryRows.Add(@($groupLink, $fixtureLink, "*All failed*", "N/A", "N/A", "N/A", "N/A", "N/A"))
+        $versionStats[$version] = [PSCustomObject]@{
+            Version      = $version
+            FixtureCount = $fixtureCount
+            Failures     = $failures
+            NonPerfect   = $nonPerfect
+            AvgScore     = $avgScore
         }
     }
-    
-    $sortedSummaryRows = $summaryRows | Sort-Object -Property { $_[0] }, { $_[1] }
-    [void]$sb.AppendLine((Format-MarkdownTable $summaryHeaders $summaryAlignments $sortedSummaryRows))
+
+    $maxAvgScore = ($versionStats.Values | Where-Object { $_.AvgScore -ne $null } | Measure-Object -Property AvgScore -Maximum).Maximum
+
+    $summaryHeaders = @("Version", "Fixture Count", "Failures", "Non-perfect", "Avg. Score")
+    $summaryAlignments = @("L", "R", "R", "R", "R")
+    $summaryRows = [System.Collections.ArrayList]::new()
+
+    foreach ($stat in ($versionStats.Values | Sort-Object -Property Version)) {
+        $avgScoreStr = if ($stat.AvgScore -ne $null) {
+            $formatted = $stat.AvgScore.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture)
+            if ($maxAvgScore -ne $null -and $stat.AvgScore -eq $maxAvgScore) { "**$formatted**" } else { $formatted }
+        } else {
+            "N/A"
+        }
+
+        $null = $summaryRows.Add(@(
+            $stat.Version,
+            $stat.FixtureCount,
+            $stat.Failures,
+            $stat.NonPerfect,
+            $avgScoreStr
+        ))
+    }
+
+    [void]$sb.AppendLine((Format-MarkdownTable $summaryHeaders $summaryAlignments $summaryRows))
     [void]$sb.AppendLine()
 
     $upArrowGreen = "$([char]0x2191)$([char]::ConvertFromUtf32(0x1F7E2))" # ↑🟢
