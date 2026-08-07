@@ -133,7 +133,8 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
        ```
 * Change `ext.publishing.versionId` in `\gradle\project-info.gradle` again to `2.3.5-SNAPSHOT`
 
-* Test and publish a new version of the Python Freerouting Client on PyPi.org (in the separate `freerouting-python-client` repository)
+* Test and publish a new version of the Python Freerouting Client on PyPI (in the separate `freerouting-python-client` repository). **Keep the PyPI package version in sync with the Freerouting GA release** (same semver as `ext.publishing.versionId`).
+* Bump and publish `@freerouting/freerouting-mcp-server` on [npm](https://www.npmjs.com/package/@freerouting/freerouting-mcp-server) (`integrations/mcp-server`). **Use the same semver as the Freerouting GA release.**
 * Optionally regenerate non-official SDK scaffolds from this repository before preparing SDK PRs:
     * `./scripts/sdk/regenerate-all.ps1 -SharedVersion 2.3.4`
     * `./scripts/sdk/generate-javascript-client.ps1`
@@ -142,29 +143,35 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 
 ## How to update the MCP Server NPM package
 
-The `@freerouting/freerouting-mcp-server` package is stored under the `integrations/mcp-server` folder. 
+The `@freerouting/freerouting-mcp-server` package lives in `integrations/mcp-server`. Its npm semver tracks the main Freerouting release (not an independent version line).
 
-If you make modifications to the MCP node bridge client code:
+When preparing a Freerouting GA release (or shipping MCP bridge fixes between releases):
 
-1. **Log in to NPM**:
-   Ensure you are logged into your npm account with access to the `@freerouting` scope:
+1. **Log in to npm** (requires access to the `@freerouting` scope):
    ```bash
    npm login
    ```
-2. **Navigate to the directory**:
+2. **Navigate to the package directory**:
    ```bash
    cd integrations/mcp-server
    ```
-3. **Increment the package version**:
-   Update the `"version"` field in `package.json` manually (e.g. from `1.0.0` to `1.0.1`), or use the npm version command:
+3. **Set the package version** to match the Freerouting GA release (same value as `ext.publishing.versionId`):
    ```bash
-   npm version patch
+   npm version <version> --no-git-tag-version
    ```
-4. **Publish the package**:
+   Or edit `"version"` in `package.json` manually.
+4. **Verify the package manifest** before publishing:
+   ```bash
+   npm pkg fix
+   ```
+   The `bin` entry must map the command name to `./src/index.js` (with the `./` prefix), and `src/index.js` must start with `#!/usr/bin/env node`. If npm warns that the bin script was removed during publish, fix these two items and publish again.
+5. **Publish**:
    ```bash
    npm publish
    ```
-   *(Note: The first time the package is published, you must run `npm publish --access public` due to the scoped package name).*
+   *(The first publish of this scoped package required `npm publish --access public`; subsequent releases inherit public access.)*
+
+End users should run `npx -y @freerouting/freerouting-mcp-server` without a version pin so they always receive the latest bridge compatible with the public API.
 
 ## Client API SDK strategy
 

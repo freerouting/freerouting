@@ -2,6 +2,8 @@
 
 This guide describes how to connect Freerouting to LLM-based coding assistants (like Cursor, Cline, or Claude Desktop) using the Model Context Protocol (MCP), and details the step-by-step API/tool workflows required to complete routing jobs.
 
+> **Use the latest release.** For the public API bridge, run `npx -y @freerouting/freerouting-mcp-server` without a version suffix so npm always installs the current package. Pin a specific version only when you need a reproducible CI or production lockfile.
+
 ---
 
 ## 1. Setup Options
@@ -64,7 +66,9 @@ This option runs the entire routing engine **locally on your machine**. All PCB 
 Click **+ New MCP Server** and enter:
 - **Name**: `freerouting-mcp`
 - **Type**: `command`
-- **Command**: `java -jar C:/path/to/freerouting-current-executable.jar --api_server.enabled=true --api_server.authentication.enabled=false --mcp_server.enabled=true --mcp_server.authentication.enabled=false --mcp_server.stdio=true --gui.enabled=false`
+- **Command**: `java -jar C:/path/to/freerouting.jar --api_server.enabled=true --api_server.authentication.enabled=false --mcp_server.enabled=true --mcp_server.authentication.enabled=false --mcp_server.stdio=true --gui.enabled=false`
+
+> Download the latest `freerouting-<version>.jar` from the [Releases](https://github.com/freerouting/freerouting/releases) page and use its path above.
 
 > **Note:** `--mcp_server.stdio=true` must be passed as a CLI argument (or set via the `FREEROUTING__MCP_SERVER__STDIO=true` environment variable). Setting `mcp_server.stdio` only in `freerouting.json` has no effect because the stdout redirect must happen before logging is initialised — if you do so, a warning will be printed to the log.
 
@@ -76,7 +80,7 @@ Click **+ New MCP Server** and enter:
       "command": "java",
       "args": [
         "-jar",
-        "C:/path/to/freerouting-current-executable.jar",
+        "C:/path/to/freerouting.jar",
         "--api_server.enabled=true",
         "--api_server.authentication.enabled=false",
         "--mcp_server.enabled=true",
@@ -166,6 +170,7 @@ To prevent confusion, both **single underscore** (convention in Python CLI) and 
 - Environment Host: `FREEROUTING_ENVIRONMENT_HOST` or `FREEROUTING__ENVIRONMENT__HOST`
 - API Key: `FREEROUTING_API_KEY` (NPX mode only)
 - API URL: `FREEROUTING_API_URL` (NPX mode only, default is `https://api.freerouting.app/v1/mcp`)
+- MCP debug log: `FREEROUTING_MCP_DEBUG` (NPX mode only; writes to `~/.freerouting/mcp-debug.log` when `true` or `1`)
 
 ### Precedence and Default Behaviors
 

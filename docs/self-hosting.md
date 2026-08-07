@@ -141,14 +141,16 @@ Use this approach when you cannot or do not want to use Docker.
 
 - [Java JRE 25+](https://adoptium.net/temurin/releases/) (select your OS, `JRE` package type, version `25`)
 - The Freerouting executable JAR from the [Releases page](https://github.com/freerouting/freerouting/releases)
-  (file name: `freerouting-2.3.0.jar` or `freerouting-executable.jar`)
+  (release artifacts are named `freerouting-<version>.jar`; a build-from-source output may be named `freerouting-executable.jar`)
+
+Throughout this guide, `freerouting.jar` means the JAR you downloaded — **always use the latest release** unless you have a specific reason to pin a version.
 
 ### Quick start
 
 Run Freerouting in headless API-server mode:
 
 ```bash
-java -jar freerouting-2.3.0.jar \
+java -jar freerouting.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false
@@ -159,7 +161,7 @@ This starts the API server on `http://127.0.0.1:37864` (localhost only).
 To accept connections from other machines on your network:
 
 ```bash
-java -jar freerouting-2.3.0.jar \
+java -jar freerouting.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false \
@@ -171,7 +173,7 @@ java -jar freerouting-2.3.0.jar \
 To persist logs and data to a specific directory:
 
 ```bash
-java -jar freerouting-2.3.0.jar \
+java -jar freerouting.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false \
@@ -192,7 +194,7 @@ After=network.target
 [Service]
 Type=simple
 User=freerouting
-ExecStart=java -jar /opt/freerouting/freerouting-2.3.0.jar \
+ExecStart=java -jar /opt/freerouting/freerouting.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false \
@@ -228,7 +230,7 @@ Create `~/Library/LaunchAgents/app.freerouting.plist`:
   <array>
     <string>/usr/bin/java</string>
     <string>-jar</string>
-    <string>/opt/freerouting/freerouting-2.3.0.jar</string>
+    <string>/opt/freerouting/freerouting.jar</string>
     <string>--gui.enabled=false</string>
     <string>--api_server.enabled=true</string>
     <string>--api_server.authentication.enabled=false</string>
@@ -251,7 +253,7 @@ launchctl load ~/Library/LaunchAgents/app.freerouting.plist
 #### Windows — NSSM (Non-Sucking Service Manager)
 
 ```powershell
-nssm install Freerouting "java" "-jar C:\freerouting\freerouting-2.3.0.jar --gui.enabled=false --api_server.enabled=true --api_server.authentication.enabled=false --user_data_path=C:\freerouting\data"
+nssm install Freerouting "java" "-jar C:\freerouting\freerouting.jar --gui.enabled=false --api_server.enabled=true --api_server.authentication.enabled=false --user_data_path=C:\freerouting\data"
 nssm start Freerouting
 ```
 
@@ -328,10 +330,16 @@ A healthy response looks like:
 
 ```json
 {
-  "version": "2.3.0",
-  "status": "healthy"
+  "status": "OK",
+  "cpu_load": 6.8,
+  "ram_used": 35,
+  "ram_available": 36,
+  "storage_available": 917557,
+  "session_count": 0
 }
 ```
+
+The installed Freerouting version is available from `GET /v1/system/environment` (`freerouting_version` field).
 
 You can also open `http://localhost:37864/v1/system/status` in a browser.
 

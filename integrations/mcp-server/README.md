@@ -1,8 +1,12 @@
 # @freerouting/freerouting-mcp-server
 
+[![npm version](https://img.shields.io/npm/v/@freerouting/freerouting-mcp-server.svg)](https://www.npmjs.com/package/@freerouting/freerouting-mcp-server)
+
 Model Context Protocol (MCP) server for the public [Freerouting API](https://www.freerouting.app).
 
 This is a lightweight, zero-dependency bridge that lets LLM-based coding assistants (like Cursor, Cline, or Claude Desktop) communicate natively with the Freerouting autorouter over stdio.
+
+**Always use the latest release:** `npx -y @freerouting/freerouting-mcp-server` (no version suffix).
 
 ---
 
@@ -15,7 +19,7 @@ This is a lightweight, zero-dependency bridge that lets LLM-based coding assista
 
 ## Quick Start (NPX)
 
-You do not need to install this package manually. You can run it instantly using `npx`.
+You do not need to install this package manually. Run the latest release instantly with `npx -y` (the `-y` flag skips the install prompt; omitting a `@version` suffix always resolves to the current npm release).
 
 ### 1. Cursor Setup
 1. Open Cursor and go to **Settings > Features > MCP**.
@@ -79,9 +83,10 @@ You can customize the behavior of the bridge using the following environment var
 | --- | --- | --- |
 | `FREEROUTING_API_KEY` | Your Freerouting API authorization token (Bearer) | (Required) |
 | `FREEROUTING_API_URL` | Endpoint to target | `https://api.freerouting.app/v1/mcp` |
-| `FREEROUTING_PROFILE_ID` | Custom user profile UUID | (Generated dummy UUID) |
+| `FREEROUTING_PROFILE_ID` | Custom user profile UUID | (Generated and persisted in `~/.freerouting/profile_id`) |
 | `FREEROUTING_PROFILE_EMAIL` | Custom identifier email | (Optional; header omitted if not set) |
-| `FREEROUTING_ENVIRONMENT_HOST` | Client identification string sent in the `Freerouting-Environment-Host` header | (Optional; the server auto-detects the value when the header is absent) |
+| `FREEROUTING_ENVIRONMENT_HOST` | Client identification string sent in the `Freerouting-Environment-Host` header | (Auto-detected from the MCP client `initialize` handshake when not set) |
+| `FREEROUTING_MCP_DEBUG` | Write debug logs to `~/.freerouting/mcp-debug.log` | `false` (set to `true` or `1` to enable) |
 
 ---
 

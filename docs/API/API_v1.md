@@ -483,7 +483,7 @@ Operational controls:
 
 For complete setup instructions (configuration, startup commands, verification, and troubleshooting), see:
 
-- [`docs/API/MCP.md`](MCP.md)
+- [`docs/API/MCP.md`](MCP.md) — includes NPX bridge setup via [`@freerouting/freerouting-mcp-server`](https://www.npmjs.com/package/@freerouting/freerouting-mcp-server) (use `npx -y` for the latest release) and local Java stdio mode
 
 ---
 
