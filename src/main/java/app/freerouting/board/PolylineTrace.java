@@ -1,4 +1,4 @@
-wpackage app.freerouting.board;
+package app.freerouting.board;
 
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Signum;

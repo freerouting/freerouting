@@ -456,7 +456,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     panel.add(via_rule_label);
 
     var viaRules = guiBoardManager.get_routing_board().rules.via_rules;
-    if (viaRules != null && !viaRules.isEmpty()) {
+    if (viaRules != null && viaRules.length > 0) {
       this.manual_via_rule_combo_box = new JComboBox<>(viaRules);
     } else {
       this.manual_via_rule_combo_box = new JComboBox<>();
