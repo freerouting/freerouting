@@ -175,12 +175,12 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.53'
     implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.53'
 
-    // OpenRewrite:
+    // OpenRewrite (all versions verified current as of Aug 2026; rewrite-migrate-java
+    // transitively provides org.openrewrite:rewrite-gradle for the MigrateToGradle9 recipe):
     rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
     rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.41.0'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
     rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.43.0'
-    rewrite 'org.openrewrite.recipe:rewrite-gradle:0.1.0'
 
     // ArchUnit: package-architecture enforcement
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.5.0'
@@ -553,12 +553,21 @@ tasks.named('testSlow') {
 }
 
 rewrite {
-    // --- PHASE 1: Hygiene (Run first to reduce noise) ---
-    // activeRecipe("org.openrewrite.java.cleanup.RemoveUnusedImports")
-    // activeRecipe("org.openrewrite.java.cleanup.CommonStaticAnalysis")
+    // Fail fast on misspelled / nonexistent recipe names instead of silently skipping them.
+    failOnInvalidActiveRecipes = true
+
+    // Protect the v1.9 reference implementation (src_v19 source set) — it must stay unmodified.
+    exclusion("src_v19/**")
+    exclusion("**/src_v19/**")
+
+    // --- PHASE 1: Hygiene (run first to reduce noise) ---
+    // activeRecipe("org.openrewrite.java.RemoveUnusedImports")
+    // activeRecipe("org.openrewrite.staticanalysis.CommonStaticAnalysis")
     // activeRecipe("org.openrewrite.java.format.AutoFormat")
 
-    // --- PHASE 2: Naming Convention (Your specific snake_case fix) ---
+    // --- PHASE 2: Naming Convention (snake_case -> camelCase) ---
+    // WARNING: renaming private fields breaks Java-serialization compatibility of saved
+    // .frb GUI session files (renamed fields deserialize to defaults).
     // activeRecipe("org.openrewrite.staticanalysis.RenameLocalVariablesToCamelCase")
     // activeRecipe("org.openrewrite.staticanalysis.RenamePrivateFieldsToCamelCase")
 
@@ -573,7 +582,9 @@ rewrite {
     // activeRecipe("org.openrewrite.java.migrate.UpgradeToJava25")
 
     // --- PHASE 6: Modern Java Features (Optional Polish) ---
-    // activeRecipe("org.openrewrite.java.cleanup.UsePrimitivePatterns")
+    // activeRecipe("org.openrewrite.staticanalysis.InstanceOfPatternMatch")
+    // activeRecipe("org.openrewrite.java.migrate.lang.UseTextBlocks")
+    // activeRecipe("org.openrewrite.java.migrate.SwitchPatternMatching")
 
     // --- Configuration ---
     checkstyleConfigFile = file("config/checkstyle/google_checks.xml")
