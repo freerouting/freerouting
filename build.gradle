@@ -206,10 +206,12 @@ def includeSlowTests = providers.gradleProperty('includeSlowTests')
     .orElse(false)
 
 // Configuration-cache-safe git revision (replaces net.nemerosa.versioning, which shells out via JGit).
-def buildRevision = providers.exec {
-    workingDir(layout.projectDirectory.asFile)
-    commandLine('git', 'rev-parse', 'HEAD')
-}.standardOutput.asText.map { it.trim() }.get()
+def buildRevision = providers.environmentVariable('BUILD_REVISION')
+    .orElse(
+        providers.exec {
+            workingDir(layout.projectDirectory.asFile)
+            commandLine('git', 'rev-parse', 'HEAD')
+        }.standardOutput.asText.map { it.trim() })
 
 def manifestAttributes = [
         'Automatic-Module-Name' : 'app.freerouting',
@@ -217,7 +219,7 @@ def manifestAttributes = [
         'Created-By'            : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
         'Build-Date'            : project.buildDate,
         'Build-Time'            : project.buildTime,
-        'Build-Revision'        : buildRevision,
+        'Build-Revision'        : buildRevision.get(),
         'Specification-Title'   : project.name,
         'Specification-Version' : project.version,
         'Implementation-Title'  : project.name,

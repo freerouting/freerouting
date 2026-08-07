@@ -64,3 +64,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
           provenance: false
+          build-args: |
+            BUILD_REVISION=${{ github.sha }}

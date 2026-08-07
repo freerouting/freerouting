@@ -4,15 +4,23 @@ FROM eclipse-temurin:25-jdk-jammy AS build
 # Set the working directory in the container
 WORKDIR /app
 
+# Git revision for jar manifest (build.gradle reads BUILD_REVISION or shells out to git).
+ARG BUILD_REVISION
+ENV BUILD_REVISION=${BUILD_REVISION}
+
 # Copy the current directory contents into the container at /app
 COPY . /app
 
 # Gradle build the application and produce the executable fat jar.
+# git is required when BUILD_REVISION is unset (local docker build); CI passes the sha.
 # Tests are intentionally skipped here: they require a functional loopback
 # network interface that is not reliably available under QEMU emulation used
 # for cross-platform (linux/arm64) builds. Tests are run separately on the
 # native CI runner before this image is built.
-RUN ./gradlew executableJar -x test
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/* \
+    && ./gradlew executableJar -x test
 
 # Stage 2: Create the final image
 FROM eclipse-temurin:25-jre-jammy
