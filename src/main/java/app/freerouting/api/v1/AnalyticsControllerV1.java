@@ -153,9 +153,10 @@ public class AnalyticsControllerV1 {
     }
 
     try {
-      BigQueryClient.getInstance(Constants.FREEROUTING_VERSION,
-          globalSettings.usageAndDiagnosticData.bigqueryServiceAccountKey)
-          .identify(identifyPayload.userId, identifyPayload.anonymousId, identifyPayload.traits);
+      BigQueryClient client = BigQueryClient.getInstance(Constants.FREEROUTING_VERSION,
+          globalSettings.usageAndDiagnosticData.bigqueryServiceAccountKey);
+      client.identify(identifyPayload.userId, identifyPayload.anonymousId, identifyPayload.traits);
+      client.upsertUserSnapshot(identifyPayload.userId, identifyPayload.anonymousId, identifyPayload.traits);
     } catch (Exception e) {
       return Response
           .status(Response.Status.INTERNAL_SERVER_ERROR)

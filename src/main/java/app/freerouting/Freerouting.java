@@ -1003,6 +1003,9 @@ public class Freerouting {
     FRAnalytics.setEnabled(allowAnalytics);
     FRAnalytics.setUserId(globalSettings.userProfileSettings.userId, globalSettings.userProfileSettings.userEmail);
     FRAnalytics.identify();
+    if (!globalSettings.userProfileSettings.userEmail.isBlank()) {
+      FRAnalytics.refreshIdentity();
+    }
     try {
       Thread.sleep(1000);
     } catch (Exception _) {

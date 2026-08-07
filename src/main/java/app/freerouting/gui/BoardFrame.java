@@ -279,16 +279,19 @@ public class BoardFrame extends WindowBase {
             saveRulesAs(this.routingJob.getRulesFile(), this.routingJob.input.getFilename(),
                 board_panel.board_handling);
           }
+          FRAnalytics.fileSaved("SES", this.routingJob.getOutputFileDetails());
           FRAnalytics.buttonClicked("fileio_saveses", this.routingJob.getOutputFileDetails());
           break;
         case KICAD_SESSION_JSON:
           // Save the file as a KiCad session JSON file
           this.saveAsKiCadJson(this.routingJob.output.getFile(), this.routingJob.input.getFilename());
+          FRAnalytics.fileSaved("KICAD_SESSION_JSON", this.routingJob.getOutputFileDetails());
           FRAnalytics.buttonClicked("fileio_savekicadjson", this.routingJob.getOutputFileDetails());
           break;
         case DSN:
           // Save the file as a Specctra DSN file
           this.saveAsSpecctraDesignDsn(this.routingJob.output.getFile(), this.routingJob.input.getFilename(), false);
+          FRAnalytics.fileSaved("DSN", this.routingJob.getOutputFileDetails());
           FRAnalytics.buttonClicked("fileio_savedsn", this.routingJob.getOutputFileDetails());
           break;
         case FRB:
@@ -296,11 +299,13 @@ public class BoardFrame extends WindowBase {
           // The binary data is captured into routingJob.output.data during serialization
           // so it can be reused without re-serializing
           this.saveAsBinary(this.routingJob.output.getFile());
+          FRAnalytics.fileSaved("FRB", this.routingJob.getOutputFileDetails());
           FRAnalytics.buttonClicked("fileio_savefrb", this.routingJob.getOutputFileDetails());
           break;
         case SCR:
           // Save the file as an Eagle script file
           this.saveAsEagleScriptScr(this.routingJob.getEagleScriptFile(), this.routingJob.input.getFilename());
+          FRAnalytics.fileSaved("SCR", this.routingJob.input.getFilename());
           FRAnalytics.buttonClicked("fileio_savescr", "");
           break;
         default:

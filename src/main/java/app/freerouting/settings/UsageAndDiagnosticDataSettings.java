@@ -25,4 +25,15 @@ public class UsageAndDiagnosticDataSettings implements Serializable {
   public transient String bigqueryServiceAccountKey;
   @SerializedName("logger_key")
   public transient String loggerKey = TextManager.generateRandomAlphanumericString(32);
+  /**
+   * High-volume, low-value GUI navigation events. Disabled by default to reduce BigQuery cost.
+   */
+  @SerializedName("track_window_changed")
+  public boolean trackWindowChanged = false;
+  /**
+   * High-volume, low-value GUI click events. Disabled by default; use {@code Profile Updated}
+   * and {@code File Saved} for actionable signals instead.
+   */
+  @SerializedName("track_button_clicked")
+  public boolean trackButtonClicked = false;
 }

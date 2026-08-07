@@ -1,5 +1,6 @@
 package app.freerouting.api;
 
+import app.freerouting.management.analytics.AnalyticsRequestContext;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.gson.GsonProvider;
 import jakarta.annotation.Priority;
@@ -50,6 +51,7 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
   private static final String PROP_METHOD = "app.freerouting.analytics.method";
   private static final String PROP_PATH = "app.freerouting.analytics.path";
   private static final String PROP_USER_ID = "app.freerouting.analytics.userId";
+  private static final String ENVIRONMENT_HOST_HEADER = "Freerouting-Environment-Host";
 
   // -------------------------------------------------------------------------
   // ContainerRequestFilter — runs before the controller
@@ -61,6 +63,7 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
     // canonical "METHOD v1/..." string used throughout FRAnalytics.
     requestContext.setProperty(PROP_METHOD, requestContext.getMethod());
     requestContext.setProperty(PROP_PATH, requestContext.getUriInfo().getPath(true));
+    AnalyticsRequestContext.setEnvironmentHost(requestContext.getHeaderString(ENVIRONMENT_HOST_HEADER));
 
     // Resolve the caller's UUID from the standard profile header (mirrors
     // BaseController.AuthenticateUser() without throwing on failure).
@@ -82,7 +85,8 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
   public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
       throws IOException {
 
-    int status = responseContext.getStatus();
+    try {
+      int status = responseContext.getStatus();
 
     // Only track error responses.  2xx / 3xx paths are already tracked by the
     // individual controller methods with full request/response payloads.
@@ -108,6 +112,9 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
     String errorBody = serializeEntity(responseContext.getEntity());
 
     FRAnalytics.apiEndpointCalled(apiMethod, "", errorBody, userId);
+    } finally {
+      AnalyticsRequestContext.clear();
+    }
   }
 
   // -------------------------------------------------------------------------

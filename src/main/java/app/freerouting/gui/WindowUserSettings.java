@@ -4,7 +4,6 @@ import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.util.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -169,6 +168,7 @@ JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEm
             globalSettings.userProfileSettings.userId,
             globalSettings.userProfileSettings.userEmail);
         FRAnalytics.refreshIdentity();
+        FRAnalytics.profileUpdated();
         try {
           GlobalSettings.saveAsJson(globalSettings);
         } catch (IOException ex) {
@@ -177,7 +177,7 @@ JTextField emailField = new JTextField(globalSettings.userProfileSettings.userEm
         profileDialog.dispose();
       }
     });
-    updateButton.addActionListener(_ -> FRAnalytics.buttonClicked("update_button", GsonProvider.GSON.toJson(globalSettings)));
+    updateButton.addActionListener(_ -> { /* profile analytics emitted in save handler */ });
     profileDialog.add(updateButton, gbc);
 
     // Enable the Update button if email or checkboxes change

@@ -98,6 +98,7 @@ public class FRAnalytics {
   private static long totalRouteOptimizerRuntime;
   private static long autorouterStartedAt;
   private static long routeOptimizerStartedAt;
+  private static String sessionId;
 
   private FRAnalytics() {
   }
@@ -148,6 +149,10 @@ public class FRAnalytics {
       return;
     }
 
+    if (!isEventTrackingEnabled(action)) {
+      return;
+    }
+
     try {
       Properties p = new Properties();
       p.put("current_time_utc", Instant
@@ -158,6 +163,9 @@ public class FRAnalytics {
       p.put("app_current_location", appCurrentLocation);
       p.put("app_previous_location", appPreviousLocation);
       p.put("app_window_title", appWindowTitle);
+      if (sessionId != null) {
+        p.put("session_id", sessionId);
+      }
       if (properties != null) {
         p.putAll(properties);
       }
@@ -166,6 +174,14 @@ public class FRAnalytics {
     } catch (Exception e) {
       FRLogger.error("Exception in FRAnalytics.trackAnonymousAction: " + e.getMessage(), e);
     }
+  }
+
+  private static boolean isEventTrackingEnabled(String action) {
+    return switch (action) {
+      case "Window Changed" -> globalSettings.usageAndDiagnosticData.trackWindowChanged;
+      case "Button Clicked" -> globalSettings.usageAndDiagnosticData.trackButtonClicked;
+      default -> true;
+    };
   }
 
   public static void identify() {
@@ -195,9 +211,23 @@ public class FRAnalytics {
     traits.put("client_version", globalSettings.version);
     traits.put("os_name", System.getProperty("os.name"));
     traits.put("os_version", System.getProperty("os.version"));
+    traits.put("system_language", Locale.getDefault().toString());
+    traits.put("gui_language", globalSettings.currentLocale.toString());
     traits.put("allow_telemetry", Boolean.toString(globalSettings.userProfileSettings.isTelemetryAllowed));
     traits.put("allow_contact", Boolean.toString(globalSettings.userProfileSettings.isContactAllowed));
     return traits;
+  }
+
+  /**
+   * Emitted when the user saves profile settings. Uses explicit fields instead of serialising
+   * the full settings object.
+   */
+  public static void profileUpdated() {
+    Map<String, String> properties = new HashMap<>();
+    properties.put("user_email", permanent_user_email);
+    properties.put("allow_contact", Boolean.toString(globalSettings.userProfileSettings.isContactAllowed));
+    properties.put("allow_telemetry", Boolean.toString(globalSettings.userProfileSettings.isTelemetryAllowed));
+    trackAnonymousAction(permanent_user_id, "Profile Updated", properties);
   }
 
   public static void setAppLocation(String windowClassName, String windowTitle) {
@@ -244,11 +274,13 @@ public class FRAnalytics {
       String osName, String osArchitecture, String osVersion, String javaVersion,
       String javaVendor, Locale systemLanguage, Locale guiLanguage, int cpuCoreCount, long ramAmount, String host,
       int width, int height, int dpi) {
+    sessionId = UUID.randomUUID().toString();
     appStartedAt = Instant
         .now()
         .getEpochSecond();
 
     Map<String, String> properties = new HashMap<>();
+    properties.put("session_id", sessionId);
     properties.put("build_version", freeroutingVersion);
     properties.put("build_date", freeroutingBuildDate);
     properties.put("command_line_arguments", commandLineArguments);
@@ -274,6 +306,9 @@ public class FRAnalytics {
         .getEpochSecond();
 
     Map<String, String> properties = new HashMap<>();
+    if (sessionId != null) {
+      properties.put("session_id", sessionId);
+    }
     properties.put("session_count", String.valueOf(sessionCount));
     properties.put("total_autorouter_runtime", String.valueOf(totalAutorouterRuntime));
     properties.put("total_route_optimizer_runtime", String.valueOf(totalRouteOptimizerRuntime));
@@ -305,7 +340,8 @@ public class FRAnalytics {
     trackAnonymousAction(permanent_user_id, "Auto-router Started", properties);
   }
 
-  public static void autorouterFinished() {
+  public static void autorouterFinished(Integer netsTotal, Integer netsIncomplete, Integer clearanceViolations,
+      String boardHash, Float normalizedScore) {
     long autorouterFinishedAt = Instant
         .now()
         .getEpochSecond();
@@ -313,9 +349,23 @@ public class FRAnalytics {
     totalAutorouterRuntime += autorouterRuntime;
 
     Map<String, String> properties = new HashMap<>();
-    properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
     properties.put("session_count", String.valueOf(sessionCount));
     properties.put("autorouter_runtime", String.valueOf(autorouterRuntime));
+    if (netsTotal != null) {
+      properties.put("nets_total", Integer.toString(netsTotal));
+    }
+    if (netsIncomplete != null) {
+      properties.put("nets_incomplete", Integer.toString(netsIncomplete));
+    }
+    if (clearanceViolations != null) {
+      properties.put("clearance_violations", Integer.toString(clearanceViolations));
+    }
+    if (boardHash != null) {
+      properties.put("board_hash", boardHash);
+    }
+    if (normalizedScore != null) {
+      properties.put("normalized_score", Float.toString(normalizedScore));
+    }
 
     trackAnonymousAction(permanent_user_id, "Auto-router Finished", properties);
   }
@@ -405,6 +455,10 @@ public class FRAnalytics {
     properties.put("api_method", apiMethod);
     properties.put("api_request", requestBody);
     properties.put("api_response", responseBody);
+    String environmentHost = AnalyticsRequestContext.getEnvironmentHost();
+    if (environmentHost != null) {
+      properties.put("environment_host", environmentHost);
+    }
 
     // Determine the effective identity: prefer the per-request caller UUID over the
     // static permanent_user_id (which is always null in headless / API-only mode).

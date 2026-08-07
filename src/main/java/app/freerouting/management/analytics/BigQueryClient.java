@@ -152,6 +152,32 @@ public class BigQueryClient implements AnalyticsClient {
     sendPayloadAsync(payload);
   }
 
+  /**
+   * Appends a snapshot row to the {@code users} dimension table. Queries should take the latest
+   * row per {@code anonymous_id} (or {@code user_id}) ordered by {@code received_at}.
+   */
+  public void upsertUserSnapshot(String userId, String anonymousId, Traits traits) throws IOException {
+    Traits snapshotTraits = new Traits();
+    if (traits != null) {
+      snapshotTraits.putAll(traits);
+    }
+    snapshotTraits.put("last_seen", Instant
+        .now()
+        .toString());
+
+    Payload payload = new Payload();
+    payload.userId = userId;
+    payload.anonymousId = anonymousId;
+    payload.context = new Context();
+    payload.context.library = new Library();
+    payload.context.library.name = LIBRARY_NAME;
+    payload.context.library.version = LIBRARY_VERSION;
+    payload.event = "users";
+    payload.traits = snapshotTraits;
+
+    sendPayloadAsync(payload);
+  }
+
   @Override
   public void track(String userId, String anonymousId, String event, Properties properties) throws IOException {
     Payload payload = new Payload();

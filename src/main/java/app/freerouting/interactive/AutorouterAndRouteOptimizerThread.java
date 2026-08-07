@@ -584,7 +584,12 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
                   bs.connections.incompleteCount, bs.clearanceViolations.totalCount)));
         }
       }
-      FRAnalytics.autorouterFinished();
+      FRAnalytics.autorouterFinished(
+          bs.nets.totalCount,
+          bs.connections.incompleteCount,
+          bs.clearanceViolations.totalCount,
+          boardManager.get_routing_board().get_hash(),
+          scoreBeforeOptimization);
 
       Thread.sleep(100);
 
@@ -641,6 +646,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
           if (boardManager.saveAsSpecctraSessionSes(baos, routingJob.name)) {
             routingJob.output.setData(baos.toByteArray());
+            FRAnalytics.fileSaved("SES", routingJob.name);
           }
         } catch (Exception e) {
           routingJob.logError("Couldn't save the output into the job object.", e);
