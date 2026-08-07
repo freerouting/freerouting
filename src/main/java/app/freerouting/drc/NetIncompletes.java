@@ -261,7 +261,7 @@ public class NetIncompletes {
     /**
      * Returns the length of the violation of the length restriction of the net.
      *
-     * @return > 0 if too long, < 0 if too short, 0 if valid.
+     * @return positive if too long, negative if too short, 0 if valid.
      */
     public double get_length_violation() {
         return this.length_violation;

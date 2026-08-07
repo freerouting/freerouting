@@ -190,7 +190,7 @@ public class BoardPanel extends JPanel {
   public JPopupMenu popup_menu_main;
 
   /**
-   * Popup menu for dynamic (push & shove) routing operations.
+   * Popup menu for dynamic (push and shove) routing operations.
    *
    * @see PopupMenuDynamicRoute
    */
@@ -789,7 +789,7 @@ public class BoardPanel extends JPanel {
    * Panel size is capped at 10,000,000 pixels to prevent Java rendering exceptions
    * on large zooms.
    *
-   * @param p_factor the zoom multiplication factor (>1 zooms in, <1 zooms out)
+   * @param p_factor the zoom multiplication factor (greater than 1 zooms in, less than 1 zooms out)
    * @param p_location the screen position that should remain fixed during zoom
    * @return the adjusted cursor location after zoom and viewport adjustment
    *

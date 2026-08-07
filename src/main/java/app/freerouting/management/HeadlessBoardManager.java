@@ -54,8 +54,8 @@ import java.io.OutputStream;
  * <p><strong>Design Pattern:</strong>
  * This class implements the {@link BoardManager} interface, providing headless-specific
  * implementations while maintaining compatibility with the broader board management
- * architecture. It can be used as a drop-in replacement for {@link GuiBoardManager}
- * when GUI is not needed.
+ * architecture. It can be used as a drop-in replacement for
+ * {@link app.freerouting.interactive.GuiBoardManager} when GUI is not needed.
  *
  * <p><strong>Thread Safety:</strong>
  * The {@link #replaceRoutingBoard(RoutingBoard)} method is synchronized to allow
@@ -72,7 +72,7 @@ import java.io.OutputStream;
  * }</pre>
  *
  * @see BoardManager
- * @see GuiBoardManager
+ * @see app.freerouting.interactive.GuiBoardManager
  * @see RoutingBoard
  * @see RoutingJob
  */
@@ -95,7 +95,7 @@ public class HeadlessBoardManager implements BoardManager {
    * <p>Typically used for logging, progress reporting, or coordinating with external systems.
    *
    * @see ThreadActionListener
-   * @see InteractiveActionThread
+   * @see app.freerouting.interactive.InteractiveActionThread
    */
   public ThreadActionListener autorouter_listener;
 
@@ -207,7 +207,8 @@ public class HeadlessBoardManager implements BoardManager {
 
   /**
    * Returns {@code null} in headless mode. GUI-specific interactive settings are not applicable
-   * outside of a GUI session. Use {@link GuiBoardManager#getInteractiveSettings()} to obtain
+   * outside of a GUI session. Use
+   * {@link app.freerouting.interactive.GuiBoardManager#getInteractiveSettings()} to obtain
    * settings in GUI mode.
    *
    * @return {@code null} always in headless mode
@@ -219,7 +220,8 @@ public class HeadlessBoardManager implements BoardManager {
 
   /**
    * No-op in headless mode. Manual trace half-widths are managed by the GUI layer via
-   * {@link InteractiveSettings}; this method has no effect when running without a GUI.
+   * {@link app.freerouting.interactive.InteractiveSettings}; this method has no effect when
+   * running without a GUI.
    */
   @Override
   public void initialize_manual_trace_half_widths() {
@@ -253,7 +255,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @param p_board_communication communication interface for external integration
    *
    * @see RoutingBoard#RoutingBoard
-   * @see InteractiveSettings
+   * @see app.freerouting.interactive.InteractiveSettings
    */
   @Override
   public void create_board(

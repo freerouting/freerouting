@@ -23,12 +23,12 @@ import java.util.List;
  * Reads a Specctra DSN file and returns a fully constructed
  * {@link app.freerouting.board.BasicBoard} wrapped in a typed {@link BoardReadResult}.
  *
- * <p>This class has <em>no</em> dependency on {@link app.freerouting.interactive.BoardManager},
+ * <p>This class has <em>no</em> dependency on {@link app.freerouting.management.BoardManager},
  * {@link app.freerouting.core.RoutingJob}, or any GUI class. Board construction happens
  * internally via an anonymous minimal shim embedded in {@link ReadScopeParameter}.
  *
  * <p>Replaces the read path previously found in
- * {@link app.freerouting.io.specctra.parser.DsnFile#read} (now {@link Deprecated}).
+ * {@link app.freerouting.io.specctra.parser.DsnFile} (now an empty shell).
  */
 public final class DsnReader {
 

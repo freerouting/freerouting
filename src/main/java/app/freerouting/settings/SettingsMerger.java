@@ -11,7 +11,7 @@ import java.util.List;
  *
  * <h2>How merging works</h2>
  * Sources are sorted by ascending priority and applied one on top of another.
- * {@link DefaultSettings} (priority 0) always provides the initial base.
+ * {@link app.freerouting.settings.sources.DefaultSettings} (priority 0) always provides the initial base.
  * Every subsequent source calls {@link RouterSettings#applyNewValuesFrom}, which
  * delegates to {@link app.freerouting.util.ReflectionUtil#copyFields}.
  * That method iterates the public, non-static fields of the incoming

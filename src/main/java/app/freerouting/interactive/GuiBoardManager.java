@@ -1494,7 +1494,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * singleton (and its listener list) is discarded.
    *
    * <p>This method is a no-op when {@code interactiveSettings} is {@code null} (headless mode) or
-   * when there is no {@link BoardFrame} attached.
+   * when there is no {@link app.freerouting.gui.BoardFrame} attached.
    */
   public void refreshGuiFromSettings() {
     if (interactiveSettings == null || panel == null) {
@@ -2219,7 +2219,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @param p_compat_mode true for compatibility mode, false for full format
    * @return true if save succeeded, false otherwise
    *
-   * @see DsnFile#write
+   * @see DsnWriter#write
    */
   public boolean saveAsSpecctraDesignDsn(OutputStream p_output_stream, String p_design_name, boolean p_compat_mode) {
     if (board_is_read_only || p_output_stream == null) {
@@ -2273,7 +2273,7 @@ public class GuiBoardManager extends HeadlessBoardManager {
    * @param p_output_stream the stream to write the Eagle script to
    * @return true if conversion succeeded, false otherwise
    *
-   * @see SessionToEagle
+   * @see app.freerouting.io.specctra.parser.SessionToEagle
    */
   public boolean saveSpecctraSessionSesAsEagleScriptScr(InputStream p_input_stream, OutputStream p_output_stream) {
     if (board_is_read_only) {
@@ -2283,17 +2283,34 @@ public class GuiBoardManager extends HeadlessBoardManager {
   }
 
   /**
-   * Loads a board design from a Specctra DSN format file.
+   * Applies a previously parsed board result and rebinds GUI interactive settings.
    *
    * <p>Extends the base implementation by resetting and rebinding the
-   * {@link InteractiveSettings} singleton to the newly loaded board, then setting the initial
-   * layer to 0. {@code super.loadFromSpecctraDsn} uses
-   * {@link app.freerouting.io.specctra.parser.DsnFile#readBoard} which bypasses
-   * {@code create_board} and therefore does not initialise {@code interactiveSettings}. This
-   * override guarantees {@code interactiveSettings} is always valid and bound to the current
-   * board before {@link #set_layer} is called.
+   * {@link InteractiveSettings} singleton to the newly loaded board. DSN reading via
+   * {@link app.freerouting.io.specctra.DsnReader#readBoard} bypasses {@code create_board}
+   * and therefore does not initialise {@code interactiveSettings}; this override guarantees
+   * it is always valid and bound to the current board.
    *
-   * <p>Calling this method a second time (e.g. to open a new design in the same window)
+   * @param dsnResult the parsed board result to apply
+   * @param inputFilename the source filename used for analytics and logging
+   * @param analyticsFormat the analytics format label for the load event
+   * @return the result of the load operation including success status and any warnings
+   *
+   * @see HeadlessBoardManager#applyParsedBoardResult
+   */
+  @Override
+  public BoardReadResult applyParsedBoardResult(BoardReadResult dsnResult, String inputFilename,
+      String analyticsFormat) {
+    BoardReadResult result = super.applyParsedBoardResult(dsnResult, inputFilename, analyticsFormat);
+    setupGuiAfterBoardLoad(result);
+    return result;
+  }
+
+  /**
+   * Loads a board design from a Specctra DSN format file.
+   *
+   * <p>Extends the base implementation by scheduling a GUI refresh after a successful load.
+   * Calling this method a second time (e.g. to open a new design in the same window)
    * discards the previous {@link InteractiveSettings} instance and creates a fresh one
    * via {@link InteractiveSettings#reset(RoutingBoard)}.
    *
@@ -2304,14 +2321,6 @@ public class GuiBoardManager extends HeadlessBoardManager {
    *
    * @see HeadlessBoardManager#loadFromSpecctraDsn
    */
-  @Override
-  public BoardReadResult applyParsedBoardResult(BoardReadResult dsnResult, String inputFilename,
-      String analyticsFormat) {
-    BoardReadResult result = super.applyParsedBoardResult(dsnResult, inputFilename, analyticsFormat);
-    setupGuiAfterBoardLoad(result);
-    return result;
-  }
-
   @Override
   public BoardReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers,
       IdentificationNumberGenerator identificationNumberGenerator) {

@@ -20,7 +20,7 @@ import java.io.OutputStream;
  * dependency on {@link app.freerouting.interactive.GuiBoardManager}.
  *
  * <p>Replaces the write path previously found in
- * {@link app.freerouting.io.specctra.parser.RulesFile#write} (now {@link Deprecated}).
+ * {@link app.freerouting.io.specctra.parser.RulesFile} (now an empty shell).
  */
 public final class RulesWriter {
 

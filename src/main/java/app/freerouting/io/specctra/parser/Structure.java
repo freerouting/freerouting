@@ -610,7 +610,7 @@ public class Structure extends ScopeKeyword {
   }
 
   /**
-   * Converts a dsn clearance rule into a board clearance rule. If p_layer_no < 0,
+   * Converts a dsn clearance rule into a board clearance rule. If p_layer_no is negative,
    * the rule is set on all layers. Returns true, if the string smd_to_turn_gap
    * was found.
    */

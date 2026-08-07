@@ -26,11 +26,12 @@ import java.util.Arrays;
  *
  * <p><strong>Singleton contract:</strong> exactly one instance exists for the lifetime of a GUI
  * session. Use {@link #getOrCreate(RoutingBoard)} to obtain it. In headless mode the instance is
- * {@code null}; use {@link BoardManager#getInteractiveSettings()} to safely obtain it.
+ * {@code null}; use {@link app.freerouting.management.BoardManager#getInteractiveSettings()}
+ * to safely obtain it.
  *
  * <p><strong>Two-way binding:</strong> every setter fires a named {@link java.beans.PropertyChangeEvent}
  * via {@link PropertyChangeSupport}. GUI panels should register as {@link PropertyChangeListener}s
- * on this instance and call {@link #refresh()} (or update individual controls) in their
+ * on this instance and call {@code refresh()} (or update individual controls) in their
  * {@code propertyChange} callback. Use {@link #addPropertyChangeListener} /
  * {@link #removePropertyChangeListener} to subscribe.
  *
@@ -73,18 +74,8 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
    * Returns the singleton, creating it (bound to {@code board}) if not yet initialised.
    *
    * <p>In headless mode this method is never called; use
-   * {@link BoardManager#getInteractiveSettings()} to safely obtain the instance (returns
-   * {@code null} when headless).
-   *
-   * @param board the routing board to bind the settings to on first creation
-   * @return the singleton {@link InteractiveSettings} instance
-   */
-  /**
-   * Returns the singleton, creating it (bound to {@code board}) if not yet initialised.
-   *
-   * <p>In headless mode this method is never called; use
-   * {@link BoardManager#getInteractiveSettings()} to safely obtain the instance (returns
-   * {@code null} when headless).
+   * {@link app.freerouting.management.BoardManager#getInteractiveSettings()} to safely obtain
+   * the instance (returns {@code null} when headless).
    *
    * @param board the routing board to bind the settings to on first creation
    * @param routerSettings the active job settings to bind to the GUI
@@ -236,9 +227,9 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
   private int trace_pull_tight_region_width;
   /** Via snaps to smd center, if attach smd is allowed. */
   private boolean via_snap_to_smd_center;
-  /** The horizontal placement grid when moving components, if &gt; 0. */
+  /** The horizontal placement grid when moving components, if positive. */
   private int horizontal_component_grid;
-  /** The vertical placement grid when moving components, if &gt; 0. */
+  /** The vertical placement grid when moving components, if positive. */
   private int vertical_component_grid;
   /** Indicates if the routing rule selection is manual by the user or automatic by the net rules. */
   private boolean manual_rule_selection;
@@ -550,7 +541,7 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
     return this.trace_pull_tight_region_width;
   }
 
-  /** The horizontal placement grid when moving components, if &gt; 0. */
+  /** The horizontal placement grid when moving components, if positive. */
   public int get_horizontal_component_grid() {
     return this.horizontal_component_grid;
   }
@@ -567,7 +558,7 @@ public class InteractiveSettings extends GuiSettings implements Serializable {
     pcs.firePropertyChange(PROP_HORIZONTAL_COMPONENT_GRID, old, p_value);
   }
 
-  /** The vertical placement grid when moving components, if &gt; 0. */
+  /** The vertical placement grid when moving components, if positive. */
   public int get_vertical_component_grid() {
     return this.vertical_component_grid;
   }

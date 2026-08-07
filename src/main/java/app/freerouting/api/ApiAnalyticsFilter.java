@@ -34,7 +34,7 @@ import java.util.UUID;
  * {@code api_response}.
  *
  * <h2>Double-tracking guard</h2>
- * Responses with status &lt; 400 are intentionally skipped — those paths delegate analytics to
+ * Responses with status below 400 are intentionally skipped — those paths delegate analytics to
  * the individual controller methods, which include richer request/response payloads.
  *
  * <h2>Priority</h2>
